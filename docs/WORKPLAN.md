@@ -173,7 +173,9 @@ phone on the same Wi-Fi (prints both URLs).
 
 ## Later (parked, not planned)
 
-More restaurants; photos of signature dishes; "open now" from hours
-data; per-person shortlists ("Booth's usuals" — names stay out of the
-repo, so this needs local-only storage); shareable group shortlist
-links; te reo Māori UI toggle.
+Post-launch direction now lives in **`docs/ROADMAP.md`** — the order
+tally (Job 3), location & maps, the design pass, content growth, richer
+dish data, and the health-app north star, sequenced and checked against
+the hard constraints. The small parked ideas (more restaurants, dish
+photos, "open now", per-person shortlists → local-only, shareable
+shortlist links, te reo Māori toggle) are folded in there.
