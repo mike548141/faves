@@ -1,2 +1,12 @@
 .DS_Store
 *.icloud
+
+# Raw menu scans, board photos and Notes exports — transcribed into
+# site/data, never shipped. Keep the folder structure + README; ignore
+# the drops themselves.
+intake/**
+!intake/README.md
+!intake/menus/
+!intake/menus/.gitkeep
+!intake/recipes/
+!intake/recipes/.gitkeep
