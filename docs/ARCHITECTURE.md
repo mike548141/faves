@@ -70,7 +70,10 @@ afternoon.
   "city": "Wellington",
   "address": "Ghuznee St, Wellington",
   "phone": "+64 4 ...",              // tel: link for ordering
-  "website": null,                   // or URL
+  "website": null,                   // or URL (the venue's own site)
+  "ordering": [                      // 0..n online-order links (link out, never build)
+    { "platform": "Uber Eats", "url": "https://..." }
+  ],
   "services": ["dine-in", "takeaway"],
   "hours": null,                     // optional: [{"days":"Mon–Fri","open":"11:30","close":"21:00"}]
   "vibe": ["cheap-and-cheerful"],    // free-form chips shown on cards
@@ -93,6 +96,31 @@ afternoon.
 }
 ```
 
+### Cook at Home (recipes) — `kind: "recipes"`
+
+The one non-venue record type. A single collection,
+`data/restaurants/cook-at-home.json`, holds home recipes so "cook
+tonight" sits in the same list (and the "pick for us" shuffle) as the
+takeaways. It reuses the restaurant shape with a `kind` discriminator:
+
+- `kind`: `"venue"` (default when absent) or `"recipes"`.
+- For `"recipes"`, the venue-only fields relax: `area`/`city`/`address`
+  may be `null`, `services` is an empty list (a recipe is neither
+  dine-in nor takeaway), and there is no contact/order card.
+- Each menu item may carry recipe fields, all optional:
+  - `serves`: integer (shown where a dish price would be).
+  - `time`: string, e.g. `"40 min"`.
+  - `ingredients`: list of strings.
+  - `steps`: list of strings (the method, rendered as an ordered list).
+- `section` groups recipes (e.g. "Weeknight dinners"); `picks`,
+  `tags`, `desc`, search and dietary chips all work unchanged.
+
+Rendering: the menu screen shows ingredients + method in a collapsed
+`<details>` per recipe; the home card is an accent-tinted pin showing a
+recipe count; the collection is excluded from the area/cuisine filter
+facets. This is the recorded deviation permitted by the "record it here
+first" rule — no other content types are planned.
+
 ### Tag vocabulary (closed set — extend here, not ad hoc)
 
 - Dietary: `v` (vegetarian), `vg` (vegan), `gf`, `df`
@@ -112,6 +140,11 @@ UI must never present absence of an allergen tag as "allergen-free".
 - Prices are numbers (NZD) or null — never strings.
 - `status` gates UI: `stub` restaurants render as "menu coming soon"
   cards, never as empty menus.
+- `ordering` is a (possibly empty) list of `{platform, url}` — external
+  online-order links only (Uber Eats, Delivereasy, the venue's own
+  ordering page …). We link out; we never take payment. `website` is
+  the venue's own site; `ordering` is where a customer can buy. Keep
+  these URLs owner-confirmed — delivery links rot.
 
 ## Service worker strategy
 

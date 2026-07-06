@@ -1,0 +1,27 @@
+{
+  "id": "wellington-kebab-grill",
+  "name": "Wellington Kebab Grill",
+  "cuisine": [
+    "Turkish",
+    "Mediterranean",
+    "Kebabs"
+  ],
+  "area": "Johnsonville",
+  "city": "Wellington",
+  "address": "114 Johnsonville Road, Johnsonville, Wellington 6037",
+  "services": [
+    "takeaway"
+  ],
+  "phone": "+64 4 478 4780",
+  "website": "https://wellingtonkebabgrill.co.nz",
+  "ordering": [
+    { "platform": "Easy Eats", "url": "https://easyeats.kiwi/store/wellingtonkebabgrill" },
+    { "platform": "Uber Eats", "url": "https://www.ubereats.com/nz/store/wellington-kebab-grill/T4Hv2EdQS_2Dc-0r7_VRPw" }
+  ],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

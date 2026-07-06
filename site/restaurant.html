@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-NZ">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Menu — Faves</title>
+    <meta name="description" content="Menu, prices and allergen info." />
+    <meta name="theme-color" content="#faf5ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body class="menu-page">
+    <p class="skip"><a href="index.html">← All restaurants</a></p>
+
+    <main id="menu-root" class="wrap" aria-busy="true">
+      <p id="menu-loading" class="menu-status">Loading menu…</p>
+      <p id="menu-error" class="menu-status" hidden>
+        Couldn’t load this menu. <a href="index.html">Go back to all restaurants</a>,
+        or check your connection and reload.
+      </p>
+      <noscript>
+        <p class="menu-status">
+          This menu needs JavaScript to load. <a href="index.html">Back to all restaurants</a>.
+        </p>
+      </noscript>
+    </main>
+
+    <script type="module" src="js/menu.js"></script>
+  </body>
+</html>

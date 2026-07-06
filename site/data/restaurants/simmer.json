@@ -1,0 +1,29 @@
+{
+  "id": "simmer",
+  "name": "Simmer",
+  "cuisine": [
+    "Cafe",
+    "Brunch"
+  ],
+  "area": "Churton Park",
+  "city": "Wellington",
+  "address": "103D Westchester Drive, Churton Park, Wellington 6037",
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 478 5224",
+  "website": null,
+  "ordering": [],
+  "hours": [
+    { "days": "Mon–Wed", "open": "07:00", "close": "16:00" },
+    { "days": "Thu–Fri", "open": "07:00", "close": "21:00" },
+    { "days": "Sat", "open": "09:00", "close": "21:00" },
+    { "days": "Sun", "open": "09:00", "close": "16:00" }
+  ],
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

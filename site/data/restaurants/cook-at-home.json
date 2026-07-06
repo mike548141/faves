@@ -1,0 +1,89 @@
+{
+  "id": "cook-at-home",
+  "name": "Cook at Home",
+  "kind": "recipes",
+  "cuisine": [
+    "Home cooking"
+  ],
+  "area": "Home",
+  "city": null,
+  "address": null,
+  "services": [],
+  "phone": null,
+  "website": null,
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [
+    "Weeknight Butter Chicken"
+  ],
+  "verified": null,
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Weeknight dinners",
+      "items": [
+        {
+          "name": "Weeknight Butter Chicken",
+          "desc": "Rich, mild tomato and cream curry that comes together in one pan. A reliable crowd-pleaser.",
+          "serves": 4,
+          "time": "40 min",
+          "ingredients": [
+            "600g boneless chicken thighs, diced",
+            "1 cup plain yoghurt",
+            "2 tbsp butter",
+            "1 onion, finely diced",
+            "3 cloves garlic, crushed",
+            "1 tbsp grated ginger",
+            "2 tbsp garam masala",
+            "1 tsp ground cumin",
+            "1 tsp paprika",
+            "400g tin crushed tomatoes",
+            "150ml cream",
+            "Salt, to taste",
+            "Coriander and steamed rice, to serve"
+          ],
+          "steps": [
+            "Marinate the chicken in the yoghurt and half the garam masala for 20 minutes (or overnight).",
+            "Melt the butter in a large pan over medium heat and soften the onion, garlic and ginger.",
+            "Stir in the remaining spices and cook for a minute until fragrant.",
+            "Add the tomatoes and simmer for 10 minutes until thickened.",
+            "Add the chicken and cook through, about 10 minutes.",
+            "Stir through the cream, season, and simmer gently for 5 minutes.",
+            "Serve over rice, scattered with coriander."
+          ],
+          "tags": ["gf-option"]
+        }
+      ]
+    },
+    {
+      "section": "Quick & easy",
+      "items": [
+        {
+          "name": "Garlic Butter Pasta",
+          "desc": "A 20-minute pantry dinner — garlic, butter, lemon and parmesan.",
+          "serves": 2,
+          "time": "20 min",
+          "ingredients": [
+            "200g spaghetti or linguine",
+            "3 tbsp butter",
+            "4 cloves garlic, thinly sliced",
+            "½ tsp chilli flakes (optional)",
+            "Zest and juice of 1 lemon",
+            "Handful of parsley, chopped",
+            "50g parmesan, grated",
+            "Salt and black pepper"
+          ],
+          "steps": [
+            "Cook the pasta in well-salted boiling water until al dente. Reserve a cup of pasta water before draining.",
+            "Melt the butter over low heat and gently cook the garlic and chilli until fragrant but not browned.",
+            "Add the drained pasta with a splash of pasta water and toss to coat.",
+            "Off the heat, stir through the lemon, parsley and parmesan, loosening with more pasta water as needed.",
+            "Season and serve immediately."
+          ],
+          "tags": ["v"]
+        }
+      ]
+    }
+  ]
+}

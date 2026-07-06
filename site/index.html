@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-NZ">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Faves — our favourite Wellington kai</title>
+    <meta name="description" content="Menus for our favourite Wellington restaurants and takeaways, in one place." />
+    <meta name="theme-color" content="#faf5ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="wrap">
+        <h1 class="app-title">Faves</h1>
+        <p class="app-sub">Our favourite Wellington kai — menus, in one place.</p>
+      </div>
+    </header>
+
+    <main id="main" class="wrap">
+      <div class="results-head">
+        <h2 class="sr-only">Restaurants</h2>
+        <p id="result-count" class="result-count" role="status" aria-live="polite"></p>
+      </div>
+
+      <p class="fallback-note">Showing all places. Turn on JavaScript to filter and shuffle.</p>
+
+      <!-- Fail-soft: this static list shows even if scripts fail. JS replaces it. -->
+      <ul id="restaurant-list" class="card-grid">
+        <li class="card card-recipes" data-status="menu-complete">
+          <a class="card-link" href="restaurant.html?id=cook-at-home">
+            <h3 class="card-name">Cook at Home</h3>
+            <p class="card-meta"><span class="card-area">Cook at home</span><span>Recipes</span></p>
+            <div class="chip-row"><span class="chip chip-recipes">🏠 Recipes</span></div>
+          </a>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Takeaway @ Churton</h3>
+            <p class="card-meta"><span class="card-area">Churton Park</span><span>Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Spices Indian</h3>
+            <p class="card-meta"><span class="card-area">Churton Park</span><span>Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="menu-complete">
+          <a class="card-link" href="restaurant.html?id=kk-malaysian">
+            <h3 class="card-name">KK Malaysian</h3>
+            <p class="card-meta"><span class="card-area">Te Aro</span><span>Dine-in, Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-cuisine">Malaysian</span></div>
+          </a>
+        </li>
+        <li class="card" data-status="menu-complete">
+          <a class="card-link" href="restaurant.html?id=rs-satay-noodle-house">
+            <h3 class="card-name">R &amp; S Satay Noodle House</h3>
+            <p class="card-meta"><span class="card-area">Te Aro</span><span>Dine-in, Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-cuisine">Malaysian</span><span class="chip chip-cuisine">Chinese</span></div>
+          </a>
+        </li>
+        <li class="card" data-status="menu-complete">
+          <a class="card-link" href="restaurant.html?id=kc-cafe">
+            <h3 class="card-name">KC Cafe</h3>
+            <p class="card-meta"><span class="card-area">Courtenay Place</span><span>Dine-in, Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-cuisine">Chinese</span><span class="chip chip-cuisine">Malaysian</span></div>
+          </a>
+        </li>
+        <li class="card" data-status="menu-complete">
+          <a class="card-link" href="restaurant.html?id=sprig-and-fern-tawa">
+            <h3 class="card-name">Sprig + Fern Tawa</h3>
+            <p class="card-meta"><span class="card-area">Tawa</span><span>Dine-in</span></p>
+            <div class="chip-row"><span class="chip chip-cuisine">Gastropub</span></div>
+          </a>
+        </li>
+        <li class="card" data-status="menu-complete">
+          <a class="card-link" href="restaurant.html?id=khandallah-trading-company">
+            <h3 class="card-name">Khandallah Trading Company</h3>
+            <p class="card-meta"><span class="card-area">Khandallah</span><span>Dine-in, Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-cuisine">Gastropub</span><span class="chip chip-cuisine">Cafe</span></div>
+          </a>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Charley Noble Eatery &amp; Bar</h3>
+            <p class="card-meta"><span class="card-area">Te Aro</span><span>Dine-in</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Wellington Kebab Grill</h3>
+            <p class="card-meta"><span class="card-area">Johnsonville</span><span>Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Marigold Takeaway</h3>
+            <p class="card-meta"><span class="card-area">Johnsonville</span><span>Takeaway, Dine-in</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Simmer</h3>
+            <p class="card-meta"><span class="card-area">Churton Park</span><span>Dine-in, Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Thai Tara Express</h3>
+            <p class="card-meta"><span class="card-area">Johnsonville</span><span>Dine-in, Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+      </ul>
+
+      <p id="empty-state" class="empty" hidden>No places match those filters. Try widening them.</p>
+    </main>
+
+    <nav class="filter-bar" aria-label="Filter restaurants">
+      <div class="filter-bar-inner">
+        <div class="segmented" role="group" aria-label="Service">
+          <button type="button" data-service="all" aria-pressed="true">Everywhere</button>
+          <button type="button" data-service="takeaway" aria-pressed="false">Takeaway</button>
+          <button type="button" data-service="dine-in" aria-pressed="false">Dine-in</button>
+        </div>
+        <div class="select-field">
+          <label class="sr-only" for="filter-area">Area</label>
+          <select id="filter-area" data-active="all"></select>
+        </div>
+        <div class="select-field">
+          <label class="sr-only" for="filter-cuisine">Cuisine</label>
+          <select id="filter-cuisine" data-active="all"></select>
+        </div>
+      </div>
+    </nav>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

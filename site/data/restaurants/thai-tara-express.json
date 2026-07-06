@@ -1,0 +1,26 @@
+{
+  "id": "thai-tara-express",
+  "name": "Thai Tara Express",
+  "cuisine": [
+    "Thai"
+  ],
+  "area": "Johnsonville",
+  "city": "Wellington",
+  "address": "114 Johnsonville Road, Johnsonville, Wellington 6037",
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 477 6809",
+  "website": null,
+  "ordering": [
+    { "platform": "Uber Eats", "url": "https://www.ubereats.com/nz/store/thai-tara-express/D5Cf4DgDQdqOHFpsb2_QCA" },
+    { "platform": "DoorDash", "url": "https://www.doordash.com/store/thai-tara-express-wellington-23417449/" }
+  ],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

@@ -15,19 +15,39 @@ stubs.
 The stubs in `site/data/restaurants/` contain only what we knew at
 creation; details marked `null`/`stub` are unverified.
 
-- [ ] For each restaurant: confirm exact name, address, phone, website,
+- [x] For each restaurant: confirm exact name, address, phone, website,
       services, hours (official site, Facebook, or a phone call — note
-      the source in the commit message).
-- [ ] Capture full menus with prices into the JSON schema
+      the source in the commit message). *Done via web research
+      2026-07-06; a handful of fields still need owner confirmation —
+      see "Owner to confirm" below.*
+- [~] Capture full menus with prices into the JSON schema
       (`docs/ARCHITECTURE.md`). Sources: restaurant websites, online
       ordering pages, or photos of paper menus supplied by the owner
       of this repo (ask for them — takeaway paper menus are often the
-      only source of truth).
-- [ ] Tag dishes: dietary, allergens (nuts/peanuts especially), heat.
+      only source of truth). *5 of 7 captured online. Takeaway @
+      Churton and Spices Indian have no reliable online menu — need
+      owner photos.*
+- [x] Tag dishes: dietary, allergens (nuts/peanuts especially), heat.
       Only tag what the menu states or the restaurant confirms —
-      remember "no tag = not stated", never guess allergens.
+      remember "no tag = not stated", never guess allergens. *Tagged
+      strictly from printed markers + peanut/nut mentions in item
+      descriptions. Shellfish and heat NOT auto-derived from dish
+      names — pending owner/menu confirmation.*
 - [ ] Fill `picks` for each restaurant (ask the repo owner).
-- [ ] Set `verified` date and `status` (`menu-complete` → `verified`).
+- [~] Set `verified` date and `status` (`menu-complete` → `verified`).
+      *5 set to `menu-complete` (verified 2026-07-06); 2 remain `stub`
+      pending menus. None promoted to `verified` — that needs owner
+      sign-off on prices + picks.*
+
+**Owner to confirm (2026-07-06):** menu photos for Takeaway @ Churton &
+Spices Indian. Picks: KK Malaysian & R & S done; Spices held until its
+menu lands (Mild Chicken Korma, Garlic Naan); still need KC Cafe,
+Sprig + Fern, KTC. Prices: KK Malaysian, KC
+Cafe and R & S prices are delivery/online-ordering (KK & KC marked up)
+— prefer in-store; hours conflicts (KK, KC, KTC, Takeaway); dine-in at
+R & S and food-takeaway at Sprig + Fern; third-party phone numbers.
+Name corrected: "Spring & Fern" → **Sprig + Fern**. Menu capture
+verified via `tools/validate.py`.
 
 **Accept when**: all 7 files validate against the schema; at least 5 of
 7 reach `menu-complete`; no invented data (anything unconfirmed stays
@@ -48,15 +68,19 @@ touch, Lighthouse a11y = 100.
 
 ## Phase 3 — Menu screen
 
-- [ ] `site/restaurant.html?id=…`: header with call/website/hours,
+- [x] `site/restaurant.html?id=…`: header with call/website/hours,
       sticky section nav tracking scroll, dish rows with price + tags.
-- [ ] Allergen tags render as prominent warnings (text + icon).
-- [ ] "Our picks" block up top; menu search; dietary chips that dim
+- [x] Allergen tags render as prominent warnings (text + icon).
+- [x] "Our picks" block up top; menu search; dietary chips that dim
       rather than hide.
-- [ ] Deep-linkable: every restaurant has a stable shareable URL.
+- [x] Deep-linkable: every restaurant has a stable shareable URL.
+      *Stub ids degrade to a "full menu coming soon" note.*
 
 **Accept when**: a first-timer can pick a dish from KK Malaysian
 unaided on a phone; a regular can find a known dish in < 5 s via search.
+*Built and render-verified in real Chrome 2026-07-06 (picks, peanut
+warnings, section nav, dietary chips). Owner to confirm search/scroll
+feel on a phone.*
 
 ## Phase 4 — "Pick for us" (the party trick)
 
@@ -105,6 +129,24 @@ his devices.
 
 **Accept when**: a guest with nothing but the URL can browse menus on
 their phone.
+
+## Addendum — 2026-07-06 (batch 2)
+
+Five venues added as stubs (facts web-researched, sources in agent
+notes; menus still to capture): **Charley Noble Eatery & Bar** (Te Aro;
+note the owner's list said "Charlie"), **Wellington Kebab Grill**
+(Johnsonville), **Marigold Takeaway** (Johnsonville — Thai/Vietnamese,
+*not* Indian; confirm it's the intended place), **Simmer** (Churton
+Park), **Thai Tara Express** (Johnsonville).
+
+**Cook at Home** shipped as the first `kind: "recipes"` record
+(`cook-at-home.json`) — first-class recipes with ingredients + method,
+rendered and browser-verified. Decision recorded in ARCHITECTURE.md.
+The two recipes in it are generic placeholders to prove the UI; replace
+them from the Apple Notes export.
+
+Next: owner drops menu scans/board photos and Notes recipes into
+`intake/` → transcribe into the schema. See `intake/README.md`.
 
 ## Later (parked, not planned)
 

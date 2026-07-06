@@ -68,6 +68,34 @@ accounts, no logins. The *repo* is private (curation is ours); the
 | Spring & Fern | Tawa, Wellington | |
 | Khandallah Trading Company (KTC) | Khandallah, Wellington | |
 
+## Future direction — a gift to the restaurants (parked, post-v1)
+
+Beyond the household use, this could be given to the restaurants
+themselves: a clean, current, phone-friendly page of their own menu
+that makes it easier for *all* their customers to browse and to order.
+Most of these are small suburban places without a decent mobile menu of
+their own — this fills that gap for them.
+
+Implications, noted so later phases lean the right way (no v1 scope
+change):
+
+- **Ordering stays "link out", never "build".** "Buy from them" means
+  deep-linking each place to *its own* ordering channel (their site, or
+  Delivereasy/Uber Eats), not payments in-app. This keeps the existing
+  non-goal intact. The per-restaurant shareable URL is already the seed
+  of a "here's your page" to hand an owner.
+- **Real in-store prices matter more.** A page gifted to a business
+  must show *its* prices, not a delivery platform's marked-up ones.
+  Where our only source is Delivereasy/Uber Eats (currently KK
+  Malaysian, KC Cafe, R & S), prefer owner-supplied menu photos to lock
+  in dine-in prices before any such gifting.
+- **"Our picks" is household-facing.** Charming for our guests, odd on
+  a page handed to the owner. Likely a view that hides picks in a
+  business-facing mode — a design call for Phase 2+, not now.
+- **Freshness earns its keep.** The "verified on" date and an easy
+  update path matter more when a business relies on the page being
+  current.
+
 ## Non-goals (v1)
 
 - No ordering/payments integration — we link to phone/website.

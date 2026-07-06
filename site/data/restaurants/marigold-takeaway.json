@@ -1,0 +1,25 @@
+{
+  "id": "marigold-takeaway",
+  "name": "Marigold Takeaway",
+  "cuisine": [
+    "Thai",
+    "Vietnamese",
+    "Lao"
+  ],
+  "area": "Johnsonville",
+  "city": "Wellington",
+  "address": "66 Broderick Road, Johnsonville, Wellington 6037",
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "phone": "+64 4 260 3315",
+  "website": null,
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

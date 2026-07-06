@@ -1,16 +1,22 @@
 {
   "id": "takeaway-at-churton",
   "name": "Takeaway @ Churton",
-  "cuisine": [],
+  "cuisine": [
+    "Fish and chips",
+    "Chinese"
+  ],
   "area": "Churton Park",
   "city": "Wellington",
-  "address": "Churton Park, Wellington",
+  "address": "101 Westchester Drive, Churton Park, Wellington 6037",
   "services": [
     "takeaway"
   ],
-  "phone": null,
-  "website": null,
-  "hours": null,
+  "phone": "+64 4 499 8785",
+  "website": "http://takeawayatchurton.edan.io",
+  "ordering": [],
+  "hours": [
+    { "days": "Tue–Sun", "open": "10:30", "close": "20:30" }
+  ],
   "vibe": [],
   "picks": [],
   "verified": null,

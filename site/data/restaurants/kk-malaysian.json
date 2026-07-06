@@ -6,17 +6,86 @@
   ],
   "area": "Te Aro",
   "city": "Wellington",
-  "address": "Ghuznee St, Wellington",
+  "address": "54 Ghuznee St, Te Aro, Wellington 6011",
   "services": [
-    "takeaway",
-    "dine-in"
+    "dine-in",
+    "takeaway"
   ],
-  "phone": null,
+  "phone": "+64 4 385 6698",
   "website": null,
+  "ordering": [
+    { "platform": "Delivereasy", "url": "https://www.delivereasy.co.nz/kk-malaysia-wellington-delivered" }
+  ],
   "hours": null,
   "vibe": [],
-  "picks": [],
-  "verified": null,
-  "status": "stub",
-  "menu": []
+  "picks": [
+    "Chicken Curry",
+    "Roti Chanai",
+    "Nasi Goreng",
+    "Chicken Mee Goreng"
+  ],
+  "verified": "2026-07-06",
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Starters",
+      "items": [
+        { "name": "Chicken Satay", "desc": "6 sticks of satay served with peanut sauce.", "price": 24.0, "tags": ["contains-peanuts"] },
+        { "name": "Beef Satay", "desc": "6 sticks of satay served with peanut sauce.", "price": 24.0, "tags": ["contains-peanuts"] },
+        { "name": "Fried Won Tons", "desc": "6 pieces of won tons filled with chicken mince and veges, served with sweet and sour sauce.", "price": 15.0, "tags": [] },
+        { "name": "Chicken Wings", "desc": "6 pieces of crispy deep fried chicken wings, served with chilli sauce.", "price": 17.5, "tags": [] },
+        { "name": "Won Ton Soup", "desc": null, "price": 15.5, "tags": [] },
+        { "name": "Spring Rolls", "desc": null, "price": 15.5, "tags": [] }
+      ]
+    },
+    {
+      "section": "Noodles",
+      "items": [
+        { "name": "Chicken Mee Goreng", "desc": "Stir fried egg noodles flavoured with Malaysian spices.", "price": 25.0, "tags": [] },
+        { "name": "Seafood Mee Goreng", "desc": "Stir fried egg noodles flavoured with Malaysian spices.", "price": 25.0, "tags": [] },
+        { "name": "Sin Chew Mee Hoon", "desc": "Stir fried rice noodles with chicken, shrimp, cabbage, carrots, tomatoes, onion, and eggs.", "price": 25.0, "tags": [] },
+        { "name": "Char Kuey Teow", "desc": "Thick flat rice noodles stir fried with chicken, shrimps, fishcakes, and eggs.", "price": 25.0, "tags": [] }
+      ]
+    },
+    {
+      "section": "Rice",
+      "items": [
+        { "name": "Nasi Goreng", "desc": "Malaysian style fried rice with combination of shrimps, chicken, mixed vegetables, and eggs.", "price": 25.0, "tags": [] },
+        { "name": "Hainanese Chicken Rice", "desc": "Tasty rice served with cucumbers and specially blended chilli sauce.", "price": 26.0, "tags": [] },
+        { "name": "Nasi Lemak", "desc": "Aromatic coconut rice served with rendang, peanuts, egg, cucumber, and sambal on the side. Chicken or beef options available.", "price": 26.0, "tags": ["contains-peanuts"] },
+        { "name": "Beef Rendang", "desc": "Beef in spiced dry curry blended with desiccated coconut. Served with steamed rice.", "price": 26.0, "tags": [] },
+        { "name": "Chicken Rendang", "desc": "Chicken in spiced dry curry blended with desiccated coconut. Served with steamed rice.", "price": 26.0, "tags": [] },
+        { "name": "Chicken Sambal", "desc": "Boneless chicken pieces cooked in sweet and sour chilli sauce. Served with steamed rice.", "price": 26.0, "tags": [] },
+        { "name": "Kung Po Beef", "desc": "Boneless beef pieces stir fried with onions and peanuts in tangy sauce. Served with steamed rice.", "price": 26.0, "tags": ["contains-peanuts"] },
+        { "name": "Kung Po Chicken", "desc": "Boneless chicken pieces stir fried with onions and peanuts in tangy sauce. Served with steamed rice.", "price": 26.0, "tags": ["contains-peanuts"] },
+        { "name": "Sweet & Sour Chicken", "desc": "Boneless chicken pieces stir fried with pineapple pieces, onions, capsicum, and tomatoes with sweet and sour sauce. Served with steamed rice.", "price": 26.0, "tags": [] }
+      ]
+    },
+    {
+      "section": "Curry",
+      "items": [
+        { "name": "Roti Chanai", "desc": "Traditional plain roti served with creamy chicken or vege curry.", "price": 19.0, "tags": [] },
+        { "name": "Chicken Curry", "desc": "Boneless chicken pieces in creamy curry. Served with steamed rice.", "price": 26.0, "tags": [] },
+        { "name": "Vegetarian Curry", "desc": "Mixed vegetables in creamy curry. Served with steamed rice.", "price": 24.5, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Laksa",
+      "items": [
+        { "name": "Curry Laksa", "desc": "Egg noodles with chicken pieces, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.", "price": 25.0, "tags": [] },
+        { "name": "Seafood Laksa", "desc": "Egg noodles with prawns, mussels, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.", "price": 26.0, "tags": [] },
+        { "name": "Vegetarian Laksa", "desc": "Egg noodles with an assortment of vegetables and egg in creamy laksa soup.", "price": 24.5, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Extras",
+      "items": [
+        { "name": "Plain Roti", "desc": null, "price": 5.0, "tags": [] },
+        { "name": "Steamed Rice", "desc": null, "price": 5.0, "tags": [] },
+        { "name": "Coconut Rice", "desc": null, "price": 5.5, "tags": [] },
+        { "name": "Steamed Vegetables", "desc": null, "price": 8.0, "tags": [] },
+        { "name": "Peanut Sauce", "desc": null, "price": 5.0, "tags": ["contains-peanuts"] }
+      ]
+    }
+  ]
 }

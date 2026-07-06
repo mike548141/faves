@@ -6,14 +6,19 @@
   ],
   "area": "Churton Park",
   "city": "Wellington",
-  "address": "Churton Park, Wellington",
+  "address": "B2/69 Lakewood Avenue, Churton Park, Wellington 6037",
   "services": [
-    "takeaway",
-    "dine-in"
+    "takeaway"
   ],
-  "phone": null,
-  "website": null,
-  "hours": null,
+  "phone": "+64 4 477 2226",
+  "website": "https://spicesindian.co.nz",
+  "ordering": [
+    { "platform": "Uber Eats", "url": "https://www.ubereats.com/nz/store/spices-churton-park/dkK2sdfOTguEKUARpRIYNw" },
+    { "platform": "Easy Eats", "url": "https://easyeats.kiwi/store/spices" }
+  ],
+  "hours": [
+    { "days": "Mon–Sun", "open": "16:00", "close": "21:30" }
+  ],
   "vibe": [],
   "picks": [],
   "verified": null,

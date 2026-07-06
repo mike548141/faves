@@ -1,0 +1,27 @@
+{
+  "id": "charley-noble",
+  "name": "Charley Noble Eatery & Bar",
+  "cuisine": [
+    "Grill",
+    "Steakhouse",
+    "Seafood"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "Ground Floor, Huddart Parker Building, 1 Post Office Square, Te Aro, Wellington 6011",
+  "services": [
+    "dine-in"
+  ],
+  "phone": "+64 4 282 0254",
+  "website": "https://www.charleynoble.co.nz",
+  "ordering": [],
+  "hours": [
+    { "days": "Mon–Fri", "open": "11:30", "close": null },
+    { "days": "Sat–Sun", "open": "17:00", "close": null }
+  ],
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

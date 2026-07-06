@@ -2,21 +2,135 @@
   "id": "rs-satay-noodle-house",
   "name": "R & S Satay Noodle House",
   "cuisine": [
-    "Malaysian"
+    "Malaysian",
+    "Chinese"
   ],
   "area": "Te Aro",
   "city": "Wellington",
-  "address": "Cuba St, Wellington",
+  "address": "148 Cuba St, Te Aro, Wellington 6011",
   "services": [
-    "takeaway",
-    "dine-in"
+    "dine-in",
+    "takeaway"
   ],
-  "phone": null,
-  "website": null,
-  "hours": null,
+  "phone": "+64 4 385 1496",
+  "website": "https://www.randssataynoodlehouse.co.nz",
+  "ordering": [
+    { "platform": "Order on our site", "url": "https://www.randssataynoodlehouse.co.nz/menu" }
+  ],
+  "hours": [
+    { "days": "Tue–Sun", "open": "11:00", "close": "20:00" }
+  ],
   "vibe": [],
-  "picks": [],
-  "verified": null,
-  "status": "stub",
-  "menu": []
+  "picks": [
+    "Chicken Noodles Soup"
+  ],
+  "verified": "2026-07-06",
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Kua Teaw Dishes (Noodle Soup)",
+      "items": [
+        { "name": "Combination Noodle Soup", "desc": null, "price": 32.8, "tags": [] },
+        { "name": "Chicken Noodles Soup", "desc": null, "price": 31.2, "tags": [] },
+        { "name": "Seafood Noodles Soup", "desc": null, "price": 33.8, "tags": [] },
+        { "name": "Beef Noodles Soup", "desc": null, "price": 32.8, "tags": [] },
+        { "name": "Satay Noodles Soup (Chicken or Beef)", "desc": null, "price": 32.8, "tags": [] },
+        { "name": "Seafood Deluxe", "desc": null, "price": 38.8, "tags": [] }
+      ]
+    },
+    {
+      "section": "Satay Dishes (Beef or Chicken)",
+      "items": [
+        { "name": "Combination Satay", "desc": null, "price": 31.2, "tags": [] },
+        { "name": "Supreme Satay", "desc": null, "price": 32.8, "tags": [] },
+        { "name": "Sweet & Sour Satay", "desc": null, "price": 32.8, "tags": [] },
+        { "name": "Satay Burger", "desc": null, "price": 17.3, "tags": [] },
+        { "name": "Vegetarian Satay", "desc": null, "price": 29.7, "tags": ["v"] },
+        { "name": "Satay Sauce on Rice or Noodles", "desc": null, "price": 14.0, "tags": [] }
+      ]
+    },
+    {
+      "section": "Chew Kua Tew Dishes (Fried Noodles)",
+      "items": [
+        { "name": "Combination Chew Kua Teaw", "desc": null, "price": 32.2, "tags": [] },
+        { "name": "Seafood Chew Kua Teaw", "desc": null, "price": 33.8, "tags": [] },
+        { "name": "Vegetarian Chew Kua Teaw", "desc": null, "price": 32.2, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Rice Dishes",
+      "items": [
+        { "name": "Chicken Rice", "desc": null, "price": 30.5, "tags": [] }
+      ]
+    },
+    {
+      "section": "Malaysian Style Dishes",
+      "items": [
+        { "name": "Curry Laksa", "desc": null, "price": 32.8, "tags": [] },
+        { "name": "Kway Teow Th'ng", "desc": null, "price": 26.4, "tags": [] },
+        { "name": "Combination Fried Noodles", "desc": null, "price": 36.3, "tags": [] },
+        { "name": "Hokkien Char", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Curry Chicken Rice", "desc": null, "price": 34.7, "tags": [] },
+        { "name": "Hainanese Chicken Rice (Fried or Boiled)", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Deep Fried Crumbed Prawn", "desc": null, "price": 17.3, "tags": [] },
+        { "name": "Deep Fried Chicken Wings", "desc": null, "price": 17.3, "tags": [] },
+        { "name": "Deep Fried Spring Rolls (Vegetarian)", "desc": null, "price": 10.7, "tags": ["v"] },
+        { "name": "Deep Fried Money Bag (Vegetarian)", "desc": null, "price": 10.7, "tags": ["v"] },
+        { "name": "Wonton & BBQ Pork Noodles Soup", "desc": null, "price": 30.5, "tags": [] },
+        { "name": "Wonton & BBQ Pork Noodles", "desc": null, "price": 34.7, "tags": [] },
+        { "name": "Kai See Mein", "desc": null, "price": 32.2, "tags": [] },
+        { "name": "Roti Canai", "desc": null, "price": 21.5, "tags": [] },
+        { "name": "Roti", "desc": null, "price": 7.4, "tags": [] },
+        { "name": "BBQ Pork on Rice", "desc": null, "price": 36.3, "tags": [] },
+        { "name": "Mince Beef on Rice", "desc": null, "price": 31.2, "tags": [] },
+        { "name": "Dry Fried Kua Teaw (Chicken or Beef)", "desc": null, "price": 35.5, "tags": [] },
+        { "name": "Tumeric Glutinous Rice", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Pork Balls Noodles Soup", "desc": null, "price": 28.9, "tags": [] },
+        { "name": "Combination Balls Noodles Soup", "desc": null, "price": 28.9, "tags": [] },
+        { "name": "Tom Yum Noodles Soup (Chicken or Seafood)", "desc": null, "price": 33.8, "tags": [] },
+        { "name": "Mee Goreng (Chicken, Beef or Seafood)", "desc": null, "price": 35.5, "tags": [] },
+        { "name": "Fried Rice (Chicken, Beef or Seafood)", "desc": null, "price": 35.5, "tags": [] },
+        { "name": "Fried Mee Hoon", "desc": null, "price": 35.5, "tags": [] },
+        { "name": "Fried Chicken & BBQ Pork on Rice", "desc": null, "price": 39.6, "tags": [] },
+        { "name": "Deep Fried Chicken Wings on Rice", "desc": null, "price": 26.4, "tags": [] }
+      ]
+    },
+    {
+      "section": "Special Malaysia Style Dishes",
+      "items": [
+        { "name": "Spring Onion & Ginger on Steamed Rice", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Chicken with Mixed Vegetables on Rice", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Malaysian Style Gong Poh Chicken on Rice", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Malaysian Style Sweet & Sour", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Stir Fried Satay Chicken on Rice", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Combination Three Style on Rice", "desc": null, "price": 26.4, "tags": [] },
+        { "name": "Stir Fried Chicken & Pineapple on Rice", "desc": null, "price": 30.5, "tags": [] },
+        { "name": "Malaysian Style Sweet & Sour Prawns", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Lemon Chicken", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Chicken Rendang", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Beef Rendang", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Sambal Chicken", "desc": null, "price": 37.1, "tags": [] },
+        { "name": "Sambal Fish", "desc": null, "price": 41.3, "tags": [] },
+        { "name": "Sambal Squid", "desc": null, "price": 41.3, "tags": [] },
+        { "name": "Sambal Prawns", "desc": null, "price": 41.3, "tags": [] },
+        { "name": "Curry Fish", "desc": null, "price": 41.3, "tags": [] },
+        { "name": "Nasi Lemak", "desc": null, "price": 39.6, "tags": [] },
+        { "name": "Satay Roll", "desc": null, "price": 30.5, "tags": [] },
+        { "name": "Satay Sticks (6 Sticks)", "desc": null, "price": 30.5, "tags": [] },
+        { "name": "Homemade Prawns Wonton Soup", "desc": null, "price": 30.5, "tags": [] },
+        { "name": "Chicken & Mushroom with Egg Noodles on Hot Plate", "desc": null, "price": 42.9, "tags": [] }
+      ]
+    },
+    {
+      "section": "Extras",
+      "items": [
+        { "name": "Steamed Rice", "desc": null, "price": 6.1, "tags": [] },
+        { "name": "Coconut Rice", "desc": null, "price": 7.7, "tags": [] },
+        { "name": "Garlic Rice", "desc": null, "price": 7.7, "tags": [] },
+        { "name": "Plain Noodle Soup", "desc": null, "price": 10.3, "tags": [] },
+        { "name": "Steamed Plain Noodle", "desc": null, "price": 7.7, "tags": [] },
+        { "name": "Plain Roti", "desc": null, "price": 7.2, "tags": [] }
+      ]
+    }
+  ]
 }

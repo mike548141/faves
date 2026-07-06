@@ -2,21 +2,157 @@
   "id": "khandallah-trading-company",
   "name": "Khandallah Trading Company",
   "cuisine": [
+    "Gastropub",
     "Cafe"
   ],
   "area": "Khandallah",
   "city": "Wellington",
-  "address": "Khandallah, Wellington",
+  "address": "Corner Agra Crescent & Ganges Road, Khandallah, Wellington 6035",
   "services": [
     "dine-in",
     "takeaway"
   ],
-  "phone": null,
-  "website": null,
-  "hours": null,
+  "phone": "+64 4 479 4157",
+  "website": "https://stargroup.nz/venues/khandallah-trading-company",
+  "ordering": [],
+  "hours": [
+    { "days": "Mon", "open": "16:00", "close": "21:00" },
+    { "days": "Tue–Wed", "open": "12:00", "close": "21:00" },
+    { "days": "Thu", "open": "12:00", "close": "22:00" },
+    { "days": "Fri–Sat", "open": "12:00", "close": "23:00" },
+    { "days": "Sun", "open": "12:00", "close": "21:00" }
+  ],
   "vibe": [],
   "picks": [],
-  "verified": null,
-  "status": "stub",
-  "menu": []
+  "verified": "2026-07-06",
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Pub Snacks",
+      "items": [
+        { "name": "Pull-Apart Garlic Loaf", "desc": "Garlic butter.", "price": 14.0, "tags": ["v"] },
+        { "name": "Korean-Fried Cauliflower", "desc": "Korean BBQ sauce, pickles.", "price": 20.0, "tags": ["v", "gf-option"] },
+        { "name": "Salt & Pepper Squid", "desc": "Garlic aioli, fresh lemon.", "price": 22.5, "tags": [] },
+        { "name": "Sticky Pork Belly Bites", "desc": "Gochujang BBQ glaze, chilli, sesame seeds.", "price": 24.0, "tags": [] },
+        { "name": "Loaded Fries", "desc": "BBQ brisket, cheesy sauce, chipotle mayo, pickles, green onion.", "price": 25.5, "tags": [] },
+        { "name": "Garlic Chilli Prawns", "desc": "Blistered cherry tomatoes, green onion, chilli aioli on roti.", "price": 26.0, "tags": [] },
+        { "name": "Glazed Pork & Wagyu Brisket Meatballs", "desc": "Smoky herb butter jus, mustard cream, cheddar dust.", "price": 24.5, "tags": [] },
+        { "name": "Buttermilk Fried Chicken", "desc": "Honey sriracha, ranch, garden pickles.", "price": 24.5, "tags": [] },
+        { "name": "Onion Rings", "desc": "Chipotle mayo.", "price": 14.5, "tags": ["v"] },
+        { "name": "Fries", "desc": "Confit garlic aioli.", "price": 13.0, "tags": ["v"] },
+        { "name": "Tools Down Platter", "desc": "Sticky pork belly bites, buttermilk fried chicken, Korean fried cauliflower, salt & pepper squid, pork & wagyu brisket meatballs, grilled focaccia.", "price": 69.0, "tags": [] }
+      ]
+    },
+    {
+      "section": "Pub Mains",
+      "items": [
+        { "name": "Chicken Schnitty", "desc": "Crumbed chicken breast, green herb slaw, gravy. Choose fries or mash.", "price": 32.5, "tags": [] },
+        { "name": "Fish & Chips", "desc": "Beer-battered daily catch, house fries, green herb slaw, tartare sauce.", "price": 29.5, "tags": [] },
+        { "name": "Potato Gnocchi", "desc": "Leek & peas, Italian tomato sauce, lemon ricotta verde, crispy kale.", "price": 29.5, "tags": ["v"] },
+        { "name": "Twice Cooked Pork Belly", "desc": "Potato gratin, winter greens, pear & fig relish, jus.", "price": 38.0, "tags": ["gf"] },
+        { "name": "Fettuccine Carbonara", "desc": "Creamy carbonara sauce, chicken, bacon, Grana Padano.", "price": 29.5, "tags": ["gf-option"] },
+        { "name": "Classic Caesar", "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow. Add grilled chicken +$8.", "price": 24.0, "tags": ["gf-option"] },
+        { "name": "Green Tahini Bowl", "desc": "Roast carrots, lemon ricotta verde, winter leaves, toasted buckwheat, pumpkin seed crunch. Add grilled chicken +$8.", "price": 22.0, "tags": ["v", "gf"] }
+      ]
+    },
+    {
+      "section": "Butcher's Cut Steak",
+      "items": [
+        { "name": "Butcher's Cut Steak", "desc": "Rotating cut of premium NZ beef, fries, café de Paris butter, red wine jus, charred winter greens.", "price": 42.0, "tags": ["gf-option"] }
+      ]
+    },
+    {
+      "section": "Burgers",
+      "items": [
+        { "name": "Cheeseburger", "desc": "150g brisket patty, American cheese, special sauce, ketchup, sweet & spicy pickles, milk bun, fries. No gluten added bun +$2.5 or lettuce bun available.", "price": 27.0, "tags": ["gf-option"] },
+        { "name": "The Cluckerson", "desc": "Crispy-fried chicken, American cheese, chipotle mayo, ranch, sweet & spicy pickles, lettuce, milk bun, fries.", "price": 29.5, "tags": [] },
+        { "name": "The Hallouminati", "desc": "Grilled halloumi, house-made vegan patty, American cheese, special sauce, sweet & spicy pickles, ranch, red onion, milk bun, fries.", "price": 29.5, "tags": ["v", "gf-option"] }
+      ]
+    },
+    {
+      "section": "Sides",
+      "items": [
+        { "name": "Cos Lettuce", "desc": "Pumpkin seed crunch, house dressing.", "price": 12.0, "tags": ["v", "gf"] },
+        { "name": "Charred Winter Greens", "desc": "Garlic butter.", "price": 14.0, "tags": ["v", "gf"] }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "items": [
+        { "name": "American Chocolate Brownie Sundae", "desc": "Chocolate peanut butter granola, vanilla ice cream, chocolate sauce.", "price": 16.0, "tags": ["gf-option", "contains-peanuts"] },
+        { "name": "Baked Cheesecake Pop", "desc": "Chocolate crackle, raspberry gel, sherbert.", "price": 14.0, "tags": [] },
+        { "name": "Sticky Date Pudding", "desc": "Butterscotch sauce, vanilla ice cream.", "price": 15.0, "tags": [] }
+      ]
+    },
+    {
+      "section": "Brunch",
+      "items": [
+        { "name": "Rosti Benedict", "desc": "House-made rosti, poached eggs, hollandaise. Choose bacon, hot-smoked salmon or kale & mushrooms.", "price": 27.5, "tags": ["gf"] },
+        { "name": "Eggs Your Way", "desc": "Toasted sourdough.", "price": 16.5, "tags": ["gf-option"] },
+        { "name": "Avocado on Toast", "desc": "Toasted sourdough, smashed avocado, poached egg, rocket, parmesan.", "price": 26.0, "tags": ["v", "gf-option"] },
+        { "name": "Breakfast Burger", "desc": "Fried egg, bacon, cheese, relish, rocket. Choose fries or rosti.", "price": 29.0, "tags": ["gf-option"] },
+        { "name": "Mushroom on Toast", "desc": "Creamy mushroom selection, sourdough, chives, poached free range eggs, parmesan.", "price": 27.5, "tags": ["v", "gf-option"] },
+        { "name": "Chicken Waffles", "desc": "Buttermilk fried chicken, bacon, maple syrup, mascarpone.", "price": 27.0, "tags": [] },
+        { "name": "Sweet Waffles", "desc": "Mixed berries, mascarpone, maple syrup.", "price": 23.0, "tags": ["v"] },
+        { "name": "Big Breakfast", "desc": "Bacon, house sausage, Anna potatoes, charred greens, mushrooms, Southern baked beans, eggs your way, sourdough.", "price": 31.0, "tags": ["gf-option"] }
+      ]
+    },
+    {
+      "section": "Brunch Add Ons",
+      "items": [
+        { "name": "Eggs (2)", "desc": null, "price": 7.0, "tags": [] },
+        { "name": "Bacon", "desc": null, "price": 7.0, "tags": [] },
+        { "name": "Rosti", "desc": null, "price": 6.0, "tags": [] },
+        { "name": "Halloumi", "desc": null, "price": 8.0, "tags": [] },
+        { "name": "Mushrooms", "desc": null, "price": 8.0, "tags": [] },
+        { "name": "Southern Baked Beans", "desc": null, "price": 5.0, "tags": [] },
+        { "name": "Hollandaise", "desc": null, "price": 5.0, "tags": [] },
+        { "name": "No Gluten Added Bread", "desc": null, "price": 3.0, "tags": ["gf"] }
+      ]
+    },
+    {
+      "section": "Kids (12 and under, served with kids' sundae)",
+      "items": [
+        { "name": "Mini Beast Burger", "desc": "Beef patty, cheese, ketchup, toasted bun, fries.", "price": 15.5, "tags": [] },
+        { "name": "Chook & Chips", "desc": "Crumbed chicken bites, fries, tomato sauce.", "price": 15.5, "tags": [] },
+        { "name": "Lil' Fish & Flicks", "desc": "Crispy fish bites, fries, tartare sauce.", "price": 15.5, "tags": [] },
+        { "name": "Meatballs", "desc": "Italian tomato sauce, fettucine, cheese.", "price": 15.5, "tags": [] },
+        { "name": "Grilled Chicken & Mash", "desc": "Gravy, greens.", "price": 15.5, "tags": ["gf"] },
+        { "name": "Fettucine", "desc": "Italian tomato sauce, mozzarella.", "price": 15.5, "tags": ["v"] },
+        { "name": "Cheese & Bacon Loaded Fries", "desc": "Cheese sauce, mozzarella, gravy.", "price": 15.5, "tags": ["v-option"] }
+      ]
+    },
+    {
+      "section": "Coffee & Tea",
+      "items": [
+        { "name": "Espresso", "desc": null, "price": 4.5, "tags": [] },
+        { "name": "Long Black", "desc": "Large $6.0.", "price": 5.0, "tags": [] },
+        { "name": "Americano", "desc": "Large $6.0.", "price": 5.0, "tags": [] },
+        { "name": "Latte", "desc": "Large $6.5.", "price": 5.5, "tags": [] },
+        { "name": "Flat White", "desc": "Large $6.5.", "price": 5.5, "tags": [] },
+        { "name": "Cappuccino", "desc": "Large $6.5.", "price": 5.5, "tags": [] },
+        { "name": "Mocha", "desc": "Large $6.5.", "price": 5.5, "tags": [] },
+        { "name": "Chai Latte", "desc": "Large $6.5.", "price": 5.5, "tags": [] },
+        { "name": "Hot Chocolate", "desc": "Large $6.5.", "price": 5.5, "tags": [] },
+        { "name": "Iced (Coffee / Mocha / Chocolate)", "desc": null, "price": 9.0, "tags": [] },
+        { "name": "Tea", "desc": "English Breakfast, Earl Grey, Peppermint, Green, or Lemon, Honey & Ginger.", "price": 5.0, "tags": [] }
+      ]
+    },
+    {
+      "section": "Refreshments",
+      "items": [
+        { "name": "Coca-Cola / Coke Zero Sugar", "desc": null, "price": 6.5, "tags": [] },
+        { "name": "Schweppes Soda Water", "desc": null, "price": 3.0, "tags": [] },
+        { "name": "Schweppes Tonic Water", "desc": null, "price": 5.0, "tags": [] },
+        { "name": "Schweppes Lemonade / Ginger Ale / Ginger Beer", "desc": null, "price": 6.5, "tags": [] },
+        { "name": "Schweppes Lemon, Lime & Bitters", "desc": null, "price": 7.0, "tags": [] },
+        { "name": "Red Bull (Energy / Sugarfree / Coconut Edition Sugarfree)", "desc": null, "price": 7.0, "tags": [] },
+        { "name": "Keri Juice (Apple / Pineapple / Orange / Cranberry / Tomato)", "desc": null, "price": 6.5, "tags": [] },
+        { "name": "Remedy Kombucha (Cherry Plum / Raspberry Lemonade)", "desc": null, "price": 8.0, "tags": [] },
+        { "name": "Voyage Water (Sparkling / Still) 500ml", "desc": "1L $11.5.", "price": 7.0, "tags": [] },
+        { "name": "Pink Panther (Kids)", "desc": null, "price": 7.0, "tags": [] },
+        { "name": "Strawberry Fizz (Kids)", "desc": null, "price": 6.0, "tags": [] }
+      ]
+    }
+  ]
 }
