@@ -1,0 +1,22 @@
+{
+  "id": "rs-satay-noodle-house",
+  "name": "R & S Satay Noodle House",
+  "cuisine": [
+    "Malaysian"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "Cuba St, Wellington",
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

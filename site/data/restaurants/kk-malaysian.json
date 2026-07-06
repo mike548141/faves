@@ -1,0 +1,22 @@
+{
+  "id": "kk-malaysian",
+  "name": "KK Malaysian",
+  "cuisine": [
+    "Malaysian"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "Ghuznee St, Wellington",
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

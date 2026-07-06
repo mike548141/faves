@@ -1,0 +1,22 @@
+{
+  "id": "kc-cafe",
+  "name": "KC Cafe",
+  "cuisine": [
+    "Chinese"
+  ],
+  "area": "Courtenay Place",
+  "city": "Wellington",
+  "address": "Courtenay Place, Wellington",
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "spices-indian",
+  "name": "Spices Indian",
+  "cuisine": [
+    "Indian"
+  ],
+  "area": "Churton Park",
+  "city": "Wellington",
+  "address": "Churton Park, Wellington",
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

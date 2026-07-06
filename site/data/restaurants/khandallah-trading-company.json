@@ -1,0 +1,22 @@
+{
+  "id": "khandallah-trading-company",
+  "name": "Khandallah Trading Company",
+  "cuisine": [
+    "Cafe"
+  ],
+  "area": "Khandallah",
+  "city": "Wellington",
+  "address": "Khandallah, Wellington",
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": null,
+  "website": null,
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}
