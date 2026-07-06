@@ -15,9 +15,15 @@ without recording the decision in `docs/ARCHITECTURE.md`.
   menu data; the whole site must work in flight mode after first visit.
 - **New Zealand English** throughout (favourite, organise). Correct
   macrons on te reo Māori words. Prices in NZD.
-- **No personal data.** No names of household members, no addresses of
-  people, no health details. Restaurants and menus only. Allergen
-  tagging is a product feature, not a personal disclosure.
+- **No personal data — one owner-approved exception.** No addresses of
+  people, no phone/contact details, no health details, anywhere. For
+  restaurants and menus: no personal data at all. **Exception
+  (owner-approved 2026-07-06):** home recipes in the Cook at Home
+  collection may keep family attributions in their titles/notes (e.g.
+  "Booth's Ginger Crunch", "a Clements family dessert") at the owner's
+  discretion — it's a public site and that call is his. Still never
+  addresses, contact details, or health details. Allergen tagging is a
+  product feature, not a personal disclosure.
 - **Accessibility is non-negotiable.** WCAG 2.2 AA, semantic HTML,
   visible focus, prefers-reduced-motion respected, dark mode supported.
 

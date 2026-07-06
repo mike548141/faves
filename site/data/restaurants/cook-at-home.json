@@ -15,73 +15,585 @@
   "hours": null,
   "vibe": [],
   "picks": [
-    "Weeknight Butter Chicken"
+    "Easy Pad Thai",
+    "Booth's Ginger Crunch",
+    "Shane's Ribs",
+    "Sticky Date Pudding"
   ],
   "verified": null,
   "status": "menu-complete",
   "menu": [
     {
-      "section": "Weeknight dinners",
+      "section": "Dinners",
       "items": [
         {
-          "name": "Weeknight Butter Chicken",
-          "desc": "Rich, mild tomato and cream curry that comes together in one pan. A reliable crowd-pleaser.",
-          "serves": 4,
-          "time": "40 min",
+          "name": "Easy Pad Thai",
+          "desc": null,
           "ingredients": [
-            "600g boneless chicken thighs, diced",
-            "1 cup plain yoghurt",
-            "2 tbsp butter",
-            "1 onion, finely diced",
-            "3 cloves garlic, crushed",
-            "1 tbsp grated ginger",
-            "2 tbsp garam masala",
-            "1 tsp ground cumin",
-            "1 tsp paprika",
-            "400g tin crushed tomatoes",
-            "150ml cream",
-            "Salt, to taste",
-            "Coriander and steamed rice, to serve"
+            "200g rice stick noodles (available in supermarkets)",
+            "4 tablespoons peanut oil",
+            "3 cloves garlic, chopped",
+            "2 shallots, chopped (or 1 medium red onion)",
+            "3 eggs, whisked",
+            "2 tablespoons fish sauce",
+            "1 tablespoon lime juice",
+            "2 teaspoons palm sugar (or brown sugar)",
+            "1 cup finely chopped cooked chicken, cooked pork and/or prawns",
+            "½ cup roasted peanuts",
+            "1 cup bean sprouts",
+            "¾ cup loosely packed coriander leaves",
+            "Sweet chilli sauce",
+            "1 lime, cut into wedges"
           ],
           "steps": [
-            "Marinate the chicken in the yoghurt and half the garam masala for 20 minutes (or overnight).",
-            "Melt the butter in a large pan over medium heat and soften the onion, garlic and ginger.",
-            "Stir in the remaining spices and cook for a minute until fragrant.",
-            "Add the tomatoes and simmer for 10 minutes until thickened.",
-            "Add the chicken and cook through, about 10 minutes.",
-            "Stir through the cream, season, and simmer gently for 5 minutes.",
-            "Serve over rice, scattered with coriander."
+            "Soak the noodles in hot water for around 15 minutes or until soft, rinse in cold water, drain and set aside.",
+            "Heat the oil in a wok or large fry pan and cook the garlic and shallots for a minute, taking care not to burn.",
+            "Add the egg and allow to set for a minute, stir, then add the noodles, prawns and meat and toss to combine.",
+            "Add the fish sauce, lime juice and palm sugar and stir to mix.",
+            "Add the peanuts and sprouts, heat through, then transfer to a serving dish.",
+            "Sprinkle with coriander, drizzle with sweet chilli sauce and serve with lime wedges."
           ],
-          "tags": ["gf-option"]
+          "tags": ["contains-peanuts", "contains-shellfish"]
+        },
+        {
+          "name": "Famous Brade Green Chicken Curry",
+          "desc": null,
+          "ingredients": [
+            "Chicken",
+            "Onion",
+            "Rubbed mint & rubbed basil (a lot — about a tablespoon)",
+            "Green curry paste, about a tablespoon (e.g. Masterfoods)",
+            "1 can coconut cream and 1 can coconut milk",
+            "Peas, as many as you like",
+            "Brown sugar, to taste"
+          ],
+          "steps": [
+            "Brown the chicken and onion in a pan.",
+            "Add the rubbed mint and rubbed basil (use plenty for the flavour, about a tablespoon).",
+            "Add the green curry paste, about a tablespoon.",
+            "Add the coconut cream and coconut milk.",
+            "Add the peas.",
+            "Let it simmer for a while, then add brown sugar to taste — the more you add, the milder the heat."
+          ],
+          "tags": ["df", "spicy-1"]
+        },
+        {
+          "name": "Jesse's Garlic Chicken Thighs",
+          "desc": null,
+          "ingredients": [
+            "6–8 garlic cloves, crushed",
+            "1 onion, chopped thin",
+            "Chilli flakes, a sprinkle",
+            "Salt, as needed",
+            "Pepper, as needed",
+            "Chicken thighs",
+            "1 cup chicken stock",
+            "1 can evaporated milk",
+            "1 packet chicken cup-of-soup (cream of chicken)"
+          ],
+          "steps": [
+            "Heat oil in a pan or tagine.",
+            "Sauté the garlic, onion, chilli, salt and pepper.",
+            "Once the onion is softened, lightly brown the chicken thighs.",
+            "Add the chicken stock and slowly reduce down (approx half).",
+            "Add the powdered chicken soup and mix.",
+            "Slowly add the evaporated milk so it doesn't split.",
+            "Reduce the heat, put the lid on and cook a further 15 minutes.",
+            "A few minutes before serving, add green beans or chopped bok choy.",
+            "Serve with rice."
+          ],
+          "tags": ["spicy-1"]
+        },
+        {
+          "name": "Shane's Ribs",
+          "desc": "Made up from a few recipes, but it went something like this.",
+          "time": "8 hr (slow cooker)",
+          "ingredients": [
+            "1 tsp coriander seeds",
+            "1 tsp cumin seeds",
+            "1 tsp salt",
+            "2 garlic cloves",
+            "½ a dried chilli, all ground up",
+            "½ cup Whitlock's smoky BBQ sauce",
+            "½ cup Coke",
+            "3 tbsp brown sugar",
+            "Pork ribs"
+          ],
+          "steps": [
+            "Mix everything (except the ribs) over medium heat for 10 minutes.",
+            "Put the ribs and sauce in a slow cooker and mix.",
+            "Cook on low for 8 hours.",
+            "Remove the ribs, reduce the sauce in a pot until thick, then pour over the ribs."
+          ],
+          "tags": ["spicy-1"]
+        },
+        {
+          "name": "Lamb Shanks",
+          "desc": null,
+          "time": "2 hr",
+          "ingredients": [
+            "Lamb shanks",
+            "Flour, to coat",
+            "Garlic",
+            "¼ cup balsamic vinegar",
+            "1 can chopped tomatoes",
+            "1½ cups beef stock or water",
+            "Herbs"
+          ],
+          "steps": [
+            "Coat the lamb shanks in flour and brown in a pan.",
+            "Add the garlic, balsamic vinegar, tomatoes, beef stock and herbs.",
+            "Bring the mixture to the boil.",
+            "Put the shanks in an oven dish and pour the mixture over.",
+            "Bake at 180°C for 2 hours."
+          ],
+          "tags": []
+        },
+        {
+          "name": "Slow-Cooked Chicken Noodle Soup",
+          "desc": null,
+          "ingredients": [
+            "4 potatoes, peeled & diced",
+            "4 carrots, peeled & sliced",
+            "1 brown onion, sliced",
+            "4 cloves garlic, crushed",
+            "2L chicken stock",
+            "1 packet chicken soup",
+            "6 chicken thighs",
+            "Noodles"
+          ],
+          "steps": [
+            "Add the potatoes, carrots, onion, garlic, stock, soup and chicken thighs to the slow cooker and cook until tender.",
+            "Once cooked and ready to serve, cook the noodles and add them into the soup."
+          ],
+          "tags": []
+        },
+        {
+          "name": "Mussels",
+          "desc": null,
+          "ingredients": [
+            "2 cups dry white wine",
+            "Spring onion",
+            "Garlic",
+            "6 tablespoons butter",
+            "Mussels, rinsed and scrubbed"
+          ],
+          "steps": [
+            "Heat the wine, spring onion, garlic and butter in a pot.",
+            "Add the rinsed and scrubbed mussels and cook covered for 5 minutes, until the shells open."
+          ],
+          "tags": ["contains-shellfish"]
+        },
+        {
+          "name": "BBQ Prawns",
+          "desc": null,
+          "ingredients": [
+            "Olive oil",
+            "Garlic",
+            "Herbs",
+            "Lemon juice & pulp",
+            "Splash of white wine (optional)",
+            "Prawns"
+          ],
+          "steps": [
+            "Marinate the prawns in the fridge for at least an hour.",
+            "Put on the BBQ, turning only once.",
+            "Cook until golden brown."
+          ],
+          "tags": ["gf", "df", "contains-shellfish"]
         }
       ]
     },
     {
-      "section": "Quick & easy",
+      "section": "Breakfast",
       "items": [
         {
-          "name": "Garlic Butter Pasta",
-          "desc": "A 20-minute pantry dinner — garlic, butter, lemon and parmesan.",
-          "serves": 2,
-          "time": "20 min",
+          "name": "Perfectly Pretty Hotcakes",
+          "desc": "Makes 10–15.",
+          "time": "~50 min",
           "ingredients": [
-            "200g spaghetti or linguine",
-            "3 tbsp butter",
-            "4 cloves garlic, thinly sliced",
-            "½ tsp chilli flakes (optional)",
-            "Zest and juice of 1 lemon",
-            "Handful of parsley, chopped",
-            "50g parmesan, grated",
-            "Salt and black pepper"
+            "2 tbsp fresh lemon juice",
+            "2 cups milk",
+            "2¼ cups plain flour",
+            "2 tsp baking powder",
+            "1 tsp baking soda",
+            "Pinch of salt",
+            "3 free-range eggs",
+            "¼ cup caster sugar",
+            "2 tbsp melted butter, plus extra for frying",
+            "1 tsp vanilla essence or paste",
+            "Pure maple syrup, to serve",
+            "Butter or whipped cream, to serve"
           ],
           "steps": [
-            "Cook the pasta in well-salted boiling water until al dente. Reserve a cup of pasta water before draining.",
-            "Melt the butter over low heat and gently cook the garlic and chilli until fragrant but not browned.",
-            "Add the drained pasta with a splash of pasta water and toss to coat.",
-            "Off the heat, stir through the lemon, parsley and parmesan, loosening with more pasta water as needed.",
-            "Season and serve immediately."
+            "Add the lemon juice to a non-metallic bowl, pour in the milk and whisk to combine. Leave to sit for 5 minutes to curdle.",
+            "Sift the flour, baking powder, baking soda and salt into another bowl and whisk to combine evenly.",
+            "Beat the eggs and sugar until thick and pale, then beat in the melted butter.",
+            "Make a well in the dry ingredients, add the egg mixture, soured milk and vanilla, and whisk gently from the centre until smooth.",
+            "Heat a large non-stick frying pan over medium-low heat. To test, flick a few drops of water in — they should dance. Add a little butter if needed, and cook a small sacrificial hotcake first.",
+            "Cook each hotcake for a minute or so until bubbles form and pop, then flip and cook through until golden on both sides.",
+            "Serve with lashings of maple syrup and butter or cream."
           ],
           "tags": ["v"]
+        }
+      ]
+    },
+    {
+      "section": "Baking & sweets",
+      "items": [
+        {
+          "name": "Booth's Ginger Crunch",
+          "desc": "Base doubled and icing tripled from the original recipe.",
+          "ingredients": [
+            "250g butter, softened",
+            "1 cup sugar",
+            "3 cups plain flour",
+            "2 tsp baking powder",
+            "4 tsp ginger",
+            "Ginger icing: 225g butter",
+            "Ginger icing: 2¼ cups icing sugar",
+            "Ginger icing: 6 tablespoons golden syrup",
+            "Ginger icing: 9 teaspoons ginger"
+          ],
+          "steps": [],
+          "tags": ["v"]
+        },
+        {
+          "name": "B's Dope-As Brownie",
+          "desc": null,
+          "time": "~22 min",
+          "ingredients": [
+            "100g dark chocolate, preferably Whittaker's",
+            "100g butter",
+            "1 cup sugar",
+            "2 eggs",
+            "½ cup flour",
+            "⅓ cup cocoa",
+            "½ tsp baking powder"
+          ],
+          "steps": [
+            "Melt the butter and chocolate in a pot, then take off the heat and stir in the sugar and eggs. Mix in all the dry ingredients.",
+            "Optional toppings — anything goes, but Whittaker's creamy caramel poked in is good, as is Nestlé tinned caramel, raspberries, etc.",
+            "Best cooked in a cast-iron dish, or doubled in a baking pan.",
+            "Bake at 170°C for about 22 minutes."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Chocolate Chewy Cookies",
+          "desc": null,
+          "time": "15 min",
+          "ingredients": [
+            "2 cups flour",
+            "½ tsp baking soda",
+            "185g melted butter",
+            "1 cup brown sugar",
+            "¼ cup white sugar",
+            "1 tsp vanilla",
+            "1 egg",
+            "1–1½ cups chocolate"
+          ],
+          "steps": [
+            "Mix into a dough and roll into balls.",
+            "Bake for 15 minutes at 170°C."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Gingerbread Cookies",
+          "desc": null,
+          "ingredients": [
+            "250g butter",
+            "1 cup packed brown sugar",
+            "3½ tbsp ginger",
+            "5 tsp cinnamon",
+            "2 tsp mixed spice",
+            "2 eggs",
+            "1 cup golden syrup",
+            "5 cups flour",
+            "½ tsp baking powder",
+            "1 tsp baking soda"
+          ],
+          "steps": [
+            "Cream together the butter and brown sugar.",
+            "Add the ginger, cinnamon and mixed spice.",
+            "Mix in the eggs and golden syrup.",
+            "Slowly add the flour, baking powder and baking soda.",
+            "Chill in cling film for 30 minutes.",
+            "Roll out to about 4–5mm and cut.",
+            "Chill in the fridge for 5–10 minutes.",
+            "Bake on the pizza setting for 8 minutes at 180°C."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Liège Waffles",
+          "desc": "Plan to let the dough rest in the fridge overnight for light, flavourful waffles.",
+          "serves": 12,
+          "ingredients": [
+            "¾ cup milk, warmed",
+            "1 tablespoon active dry yeast",
+            "1 tablespoon cane sugar",
+            "2¾ cups flour",
+            "3 large eggs",
+            "1 tablespoon maple syrup or honey",
+            "¼ cup melted butter",
+            "2 teaspoons vanilla extract",
+            "½ teaspoon salt",
+            "Pearled sugar (or coarse sugar)"
+          ],
+          "steps": [
+            "Place the milk, yeast, cane sugar and 1 cup of flour in a bowl and mix into a soft dough with an electric mixer. Let rest for about 15 minutes.",
+            "Whisk together the eggs, maple syrup or honey, butter and vanilla. Add to the dough with the remaining flour and salt, and mix into a soft, sticky dough. Cover and let rise in a warm place for 1 hour.",
+            "Punch down the dough and scrape it from the sides. Loosely cover and rest in the fridge overnight.",
+            "Divide the dough into 12 portions, shape into balls and roll in pearled sugar. Wrap individually (they can be frozen at this point).",
+            "Heat the waffle iron, press the dough on and cook until golden and crisp."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Orange Yoghurt Cake",
+          "desc": null,
+          "time": "~1 hr",
+          "ingredients": [
+            "125g butter",
+            "1 tablespoon grated orange rind",
+            "1 cup caster sugar",
+            "3 eggs, separated",
+            "2 cups self-raising flour",
+            "¼ cup orange juice",
+            "1 cup natural yoghurt"
+          ],
+          "steps": [
+            "Prepare a 20cm cake tin or loaf tin.",
+            "Cream the butter, orange rind and sugar until light and fluffy, then beat in the egg yolks one at a time.",
+            "Add half the sifted flour with half the yoghurt and half the orange juice; mix well, then repeat with the rest.",
+            "Beat the egg whites to soft peaks.",
+            "Fold a third of the egg whites into the batter to lighten it, then fold in the rest very lightly.",
+            "Bake at 160°C for about 1 hour."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Queen Cakes",
+          "desc": "Makes 21.",
+          "time": "~12 min",
+          "ingredients": [
+            "125g butter",
+            "125g sugar",
+            "2 eggs",
+            "175g flour",
+            "1 teaspoon baking powder",
+            "50g sultanas or currants"
+          ],
+          "steps": [
+            "Cream the butter and sugar, beat in the eggs one at a time, sift in the flour and baking powder, then add the sultanas.",
+            "Put the mixture into greased patty tins (makes 21).",
+            "Bake for 10–12 minutes at 200°C."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Upside-Down Plum Cake",
+          "desc": null,
+          "ingredients": [
+            "Topping: 2 tablespoons butter, melted",
+            "Topping: 2 tablespoons brown sugar",
+            "Topping: ½ teaspoon fresh lime juice",
+            "Topping: 4 prune plums, not peeled, cut into 6 wedges each",
+            "Batter: 1⅔ cups plain flour, sifted",
+            "Batter: ¾ teaspoon baking soda",
+            "Batter: ½ teaspoon baking powder",
+            "Batter: ¼ teaspoon salt",
+            "Batter: pinch of freshly grated nutmeg",
+            "Batter: ½ teaspoon cinnamon",
+            "Batter: ½ cup butter, at room temperature",
+            "Batter: 1 cup sugar",
+            "Batter: 2 eggs",
+            "Batter: ¾ cup milk"
+          ],
+          "steps": [
+            "Preheat the oven to 175°C (350°F).",
+            "Pour the melted butter into a 10-inch cake pan and swirl to coat the inside.",
+            "Sprinkle the brown sugar over, arrange the plum wedges in a single layer and drizzle with lime juice. Set aside.",
+            "Sift together the flour, baking soda, baking powder, salt, nutmeg and cinnamon and set aside.",
+            "Cream the butter and sugar until light and fluffy, then add the eggs and beat until smooth.",
+            "Alternating, add a third of the dry ingredients and a third of the milk, beating between additions, then beat for 1 minute.",
+            "Pour the batter over the plum wedges and bake for about 60 minutes, until a skewer comes out clean.",
+            "Cool in the pan on a wire rack for 30 minutes, then invert onto a plate to serve."
+          ],
+          "tags": ["v"]
+        }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "items": [
+        {
+          "name": "Sticky Date Pudding",
+          "desc": null,
+          "ingredients": [
+            "185g dates",
+            "1 cup water",
+            "60g butter",
+            "1 tsp baking soda",
+            "185g flour",
+            "1 tsp baking powder",
+            "1 tsp vanilla",
+            "Sauce: 150g brown sugar",
+            "Sauce: 60g butter",
+            "Sauce: 150ml cream"
+          ],
+          "steps": [
+            "Cook the dates in the water.",
+            "Beat in the butter and remaining pudding ingredients.",
+            "Pour into a tin and bake at 190°C for 25 minutes.",
+            "For the sauce, place all the sauce ingredients in a pot, bring to the boil stirring, and boil for 5 minutes.",
+            "Cover the pudding with the hot sauce."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Chocolate Self-Saucing Pudding",
+          "desc": "A Clements family dessert since the early 1980s — adapted from the Edmonds cookbook to a double mixture.",
+          "serves": 12,
+          "time": "~1 hr 10 min",
+          "ingredients": [
+            "1½ cups (375 ml) white sugar",
+            "200g butter, softened",
+            "2 eggs",
+            "2 tsp (10 ml) vanilla essence",
+            "2½ cups (625 ml) white flour",
+            "4 tsp (20 ml) baking powder",
+            "2 tbsp (30 ml) cocoa",
+            "Water or milk, as required for a thick batter",
+            "Sauce: 1 cup (250 ml) brown sugar",
+            "Sauce: ½ cup (125 ml) cocoa",
+            "Sauce: 2 tbsp (30 ml) cornflour",
+            "Sauce: 4 cups (1 L) boiling water"
+          ],
+          "steps": [
+            "Preheat the oven to 180°C and line a 3–4L ovenproof dish with baking paper, or grease it.",
+            "Beat together the white sugar, softened butter, eggs and vanilla.",
+            "Sift the flour, baking powder and cocoa together, then fold into the beaten mixture, adding water or milk as needed for a thick cake batter.",
+            "Spoon the mixture into the dish.",
+            "Sprinkle over the brown sugar, cocoa and cornflour, then gently pour the boiling water over the back of a spoon to make the sauce.",
+            "Bake at 180°C for 70 minutes, or until cooked through (try covering two-thirds of the dish with a lid)."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Tiramisu",
+          "desc": "Coffee-soaked sponge fingers layered with creamy mascarpone and dusted with dark cocoa.",
+          "serves": 6,
+          "time": "30 min + chill",
+          "ingredients": [
+            "6 egg yolks",
+            "1 cup caster sugar",
+            "250g mascarpone",
+            "500ml cream",
+            "1 tsp vanilla extract",
+            "1½ cups espresso, at room temperature",
+            "400g sponge finger biscuits",
+            "3 tbsp dark cocoa powder, for dusting"
+          ],
+          "steps": [
+            "Bring a medium pot of water to a simmer and set aside a square serving dish (about 20 x 20cm).",
+            "Place the egg yolks and caster sugar in a large heatproof bowl that will sit over the pot without touching the water.",
+            "Set the bowl over the pot and whisk continuously for about 10 minutes, until light and fluffy. Remove and cool for 2 minutes.",
+            "Whisk the mascarpone into the cooled egg mixture.",
+            "In a separate bowl, whisk the cream and vanilla to stiff peaks, then gently fold into the mascarpone mixture.",
+            "Briefly dip the biscuits in the espresso and arrange in a single layer in the dish.",
+            "Spread over half the mascarpone mixture, repeat with a second layer of biscuits and mascarpone, and dust with cocoa.",
+            "Chill for at least 3 hours, ideally overnight. Don't let the biscuits get too soggy when dipping."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Pumpkin Pie",
+          "desc": null,
+          "ingredients": [
+            "2 cups pumpkin (canned or purée)",
+            "2 eggs",
+            "1¼ cups half and half (or whole milk)",
+            "⅔ cup brown sugar",
+            "Pinch of salt",
+            "2 tablespoons butter, melted",
+            "1¼ teaspoons cinnamon",
+            "½ teaspoon ground nutmeg",
+            "¼ teaspoon ground cloves",
+            "½ teaspoon ground ginger",
+            "1 x 9-inch pie crust"
+          ],
+          "steps": [
+            "Preheat the oven to 220°C (425°F).",
+            "Place the pumpkin in a bowl, add the melted butter and stir well.",
+            "In a separate bowl, beat the eggs well, then beat in the milk, brown sugar, salt and spices until blended. Add the pumpkin mixture and mix well.",
+            "Pour into the pie shell and bake at 220°C for 10 minutes.",
+            "Reduce the heat to 175°C (350°F) and bake a further 30–40 minutes, until the filling is firm.",
+            "Cool and serve with whipped cream."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Caramel Banana",
+          "desc": "Warm caramelised banana spooned over vanilla ice cream.",
+          "ingredients": [
+            "Bananas, sliced",
+            "Butter",
+            "Brown sugar (liberal amounts)",
+            "Vanilla ice cream, to serve"
+          ],
+          "steps": [
+            "Pre-heat a frying pan on a gentle temperature and slice the bananas.",
+            "Melt some butter, then add liberal amounts of brown sugar. As the sugar starts to melt, add the banana.",
+            "Stir slowly to let the banana soften the sugar. Once melted into a caramel sauce, spoon the banana and sauce over vanilla ice cream."
+          ],
+          "tags": ["v"]
+        }
+      ]
+    },
+    {
+      "section": "Sides & basics",
+      "items": [
+        {
+          "name": "Creamy Mushrooms",
+          "desc": null,
+          "ingredients": [
+            "30g butter",
+            "200g mushrooms",
+            "Garlic",
+            "250ml cream",
+            "Parmesan cheese (optional)"
+          ],
+          "steps": [
+            "Heat the butter, then add the mushrooms and garlic and cook until soft.",
+            "Turn the heat up high, add the cream and bring to the boil.",
+            "Wait until the cream has thickened. Nice with parmesan stirred through."
+          ],
+          "tags": ["v"]
+        },
+        {
+          "name": "Turkish Flatbread",
+          "desc": "Makes 1 large flatbread.",
+          "ingredients": [
+            "Approx. 2 cups flour",
+            "2 tbsp olive oil (or yoghurt)",
+            "1–2 level tsp sea salt",
+            "1 small packet dried yeast",
+            "Lukewarm water (approx. 300–400ml, see method)",
+            "A few tsp each of sesame seeds and black cumin seeds, for sprinkling"
+          ],
+          "steps": [
+            "Place the flour, yeast and salt in a large bowl and stir to mix.",
+            "Add the water bit by bit, mixing to a very soft, almost sloppy dough — thicker than sponge cake mixture but softer than usual bread dough.",
+            "Cover with a tea towel and rise in a warm place for about 1 hour. Preheat the oven to 250°C with a large baking tray on the middle rack.",
+            "Remove the hot tray, sprinkle with flour, scrape the dough onto it and gently press into shape, pushing your fingers in a few times.",
+            "Spray or brush with a mix of cold water and a dash of olive oil, then sprinkle with the seeds.",
+            "Bake for about 12 minutes, brush/spray again, then bake a further 5–8 minutes until golden.",
+            "Wrap the hot bread tightly in a tea towel to keep a soft crust, then serve in chunks or split and stuffed."
+          ],
+          "tags": ["vg", "df"]
         }
       ]
     }
