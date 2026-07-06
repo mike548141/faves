@@ -27,9 +27,35 @@ site/
 | Build step | **None** | `site/` is what ships. Removes a whole class of failure. |
 | Data | **JSON, one file per restaurant** | Adding a restaurant = add one file + one id in `index.json`. Git is the CMS: history, review, rollback for free. |
 | Offline | **Service worker precache** | Menus are small text; precache everything. Whole app works in flight mode / dodgy reception outside the takeaway. |
-| Hosting | **Cloudflare Pages** from the private GitHub repo | Free static hosting off a private repo (GitHub Pages would need a paid plan for that), global CDN, and it slots into the existing Cloudflare estate. Custom domain later via Cloudflare DNS. |
+| Hosting | **Cloudflare Pages** (recommended) or a public **AWS S3 bucket** | See "Hosting options" below. Either works because the artifact is plain static files — the decision is deferrable to Phase 7 without touching the app. |
 | Rendering | **Client-side from JSON** | Two tiny HTML shells + fetch. Precached data makes it instant; no SSG needed at this scale. |
 | Repo | Private; site public | Curation and picks are ours; the URL is shareable with guests. |
+
+## Hosting options
+
+Two viable targets; both are in the existing estate (Cloudflare and AWS).
+
+**Cloudflare Pages — recommended.** Connects directly to the private
+GitHub repo: push to `main` → deployed (build command none, output dir
+`site/`). Free tier, global CDN, automatic HTTPS, custom domain via the
+existing Cloudflare DNS, and preview URLs per branch for free. Zero
+moving parts on our side.
+
+**AWS S3 public bucket — fallback/alternative.** Static website hosting
+on a public-read bucket. Costs cents/month at this size, but is more
+assembly required: no HTTPS or custom domain without CloudFront (or
+Cloudflare proxied in front of the bucket), no repo integration (deploy
+is `aws s3 sync site/ s3://<bucket> --delete`, manual or via GitHub
+Actions), and S3 website endpoints don't serve HTTP/2. Choose this only
+if there's a reason to keep the artifact in AWS.
+
+Note the PWA constraint either way: service workers require HTTPS, so a
+bare S3 website endpoint (HTTP-only) is not sufficient on its own —
+S3 hosting in practice means S3 + CloudFront or S3 + Cloudflare.
+
+The app is host-agnostic (plain files, relative paths, no server
+logic), so this decision is made in Phase 7 and reversible in an
+afternoon.
 
 ## Data model
 

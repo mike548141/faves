@@ -92,8 +92,13 @@ his devices.
 
 ## Phase 7 — Deploy
 
-- [ ] Cloudflare Pages project connected to this private repo; build
-      command none, output dir `site/`.
+- [ ] Pick the host per ARCHITECTURE.md "Hosting options" — Cloudflare
+      Pages (recommended) or public S3. Confirm with the repo owner.
+- [ ] Cloudflare Pages path: project connected to this private repo;
+      build command none, output dir `site/`.
+- [ ] S3 path (only if chosen): public-read bucket + `aws s3 sync`
+      deploy step, fronted by CloudFront or Cloudflare for HTTPS
+      (required for the service worker).
 - [ ] Custom domain on existing Cloudflare DNS (owner to choose the
       hostname); HTTPS enforced.
 - [ ] README updated with the live URL and the edit-→-deploy flow.
