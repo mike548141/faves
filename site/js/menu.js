@@ -173,6 +173,12 @@ function renderHeader(r) {
       ? r.verified
       : d.toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" });
     bits.push(el("p", { className: "menu-verified", textContent: `Verified ${nice}` }));
+  } else if (!isRecipes) {
+    bits.push(
+      el("p", { className: "menu-caveat" }, [
+        "⚠ Menu items and prices need a refresh — confirm with the venue when you order.",
+      ])
+    );
   }
 
   return el("header", { className: "menu-header" }, bits);

@@ -148,6 +148,29 @@ them from the Apple Notes export.
 Next: owner drops menu scans/board photos and Notes recipes into
 `intake/` → transcribe into the schema. See `intake/README.md`.
 
+## Addendum — 2026-07-06 (batch 3): menus in, all flagged for refresh
+
+Menus transcribed from `intake/` scans (prices from paper menus, not
+delivery apps). Every venue's `verified` is now `null`, which the menu
+screen renders as a "menu items and prices need a refresh" caveat.
+**All need a fresh in-store check of items + pricing before promoting to
+`verified`:**
+
+- **KC Cafe** — only scan is 2015; kept its current online menu. Needs a
+  fresh board photo.
+- **R & S Satay Noodle House** — board photo has no prices; kept the
+  existing priced menu. Confirm items + prices.
+- **Takeaway @ Churton** — scan is 2019; prices likely risen.
+- **Spices Indian** — scan 2023; re-check prices.
+- **Thai Tara Express** — undated PDF; confirm current.
+- **KK Malaysian, Khandallah Trading Co, Sprig + Fern Tawa** — captured
+  online 2026; confirm against in-store.
+- **Charley Noble, Wellington Kebab Grill, Marigold, Simmer** — still
+  stubs; need menus (owner photos).
+
+Dev/testing: `python3 tools/serve.py` serves `site/` to the laptop and a
+phone on the same Wi-Fi (prints both URLs).
+
 ## Later (parked, not planned)
 
 More restaurants; photos of signature dishes; "open now" from hours

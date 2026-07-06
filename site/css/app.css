@@ -822,3 +822,21 @@ html {
   font-weight: 700;
   color: var(--accent);
 }
+
+/* "Needs a refresh" caveat — shown on menus with no verified date. */
+.menu-caveat {
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  border: 1px solid var(--warn);
+  border-radius: var(--radius);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  line-height: 1.4;
+}
+@media (prefers-color-scheme: dark) {
+  .menu-caveat {
+    color: var(--warn);
+  }
+}

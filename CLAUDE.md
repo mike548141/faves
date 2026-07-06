@@ -37,7 +37,8 @@ without recording the decision in `docs/ARCHITECTURE.md`.
 ## Verify before committing
 
 ```sh
-cd site && python3 -m http.server 8080
+python3 tools/serve.py        # laptop + phone (same Wi-Fi); prints both URLs
+python3 tools/validate.py     # data validates against the schema
 ```
 
 Exercise the change in a real browser at mobile width. JSON data must
