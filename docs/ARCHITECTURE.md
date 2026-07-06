@@ -41,6 +41,16 @@ GitHub repo: push to `main` → deployed (build command none, output dir
 existing Cloudflare DNS, and preview URLs per branch for free. Zero
 moving parts on our side.
 
+**Decision (2026-07-07): Cloudflare Pages at `lets-eat.myspot.nz`.**
+Hosting is provisioned as code — [`tools/deploy.json`](../tools/deploy.json)
+declares the Pages project, build config and custom domain;
+[`tools/deploy.py`](../tools/deploy.py) reconciles it idempotently
+against the Cloudflare API (stdlib only). A **subdomain**, not the path
+`myspot.nz/lets-eat`, because a Pages project serves a whole hostname at
+its root; a path prefix would need a repo restructure or a Worker
+router. The app is already origin-portable (relative paths, `./`-scoped
+manifest), so the subdomain needs no app changes. Runbook: [`docs/DEPLOY.md`](DEPLOY.md).
+
 **AWS S3 public bucket — fallback/alternative.** Static website hosting
 on a public-read bucket. Costs cents/month at this size, but is more
 assembly required: no HTTPS or custom domain without CloudFront (or

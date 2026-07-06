@@ -1,0 +1,21 @@
+{
+  "account_name": null,
+  "account_id": null,
+
+  "pages_project": "faves",
+  "production_branch": "main",
+
+  "github": {
+    "owner": "mike548141",
+    "repo": "faves"
+  },
+
+  "build": {
+    "build_command": "",
+    "destination_dir": "site",
+    "root_dir": ""
+  },
+
+  "custom_domains": ["lets-eat.myspot.nz"],
+  "zone": "myspot.nz"
+}
