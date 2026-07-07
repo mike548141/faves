@@ -29,3 +29,6 @@ deliberation those compact docs omit.
   `kind:"recipes"` record reusing the venue shape
 - [0004](0004-cloudflare-pages-subdomain.md) — Cloudflare Pages at a
   subdomain, not S3 and not a path prefix
+- [0005](0005-native-maps-handoff.md) — native maps handoff (Apple
+  Maps / Android `geo:` / desktop Google) at exact coordinates, not one
+  vendor's web map

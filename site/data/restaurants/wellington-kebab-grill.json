@@ -9,6 +9,8 @@
   "area": "Johnsonville",
   "city": "Wellington",
   "address": "114 Johnsonville Road, Johnsonville, Wellington 6037",
+  "lat": -41.22509,
+  "lng": 174.80705,
   "services": [
     "takeaway"
   ],

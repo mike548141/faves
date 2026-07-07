@@ -7,6 +7,8 @@
   "area": "Te Aro",
   "city": "Wellington",
   "address": "54 Ghuznee St, Te Aro, Wellington 6011",
+  "lat": -41.2931,
+  "lng": 174.77551,
   "services": [
     "dine-in",
     "takeaway"

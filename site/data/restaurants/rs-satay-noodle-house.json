@@ -8,6 +8,8 @@
   "area": "Te Aro",
   "city": "Wellington",
   "address": "148 Cuba St, Te Aro, Wellington 6011",
+  "lat": -41.29379,
+  "lng": 174.7751,
   "services": [
     "dine-in",
     "takeaway"

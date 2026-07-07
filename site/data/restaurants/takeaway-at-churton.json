@@ -8,6 +8,8 @@
   "area": "Churton Park",
   "city": "Wellington",
   "address": "101A Westchester Drive, Churton Park, Wellington 6037",
+  "lat": -41.20232,
+  "lng": 174.80782,
   "services": [
     "takeaway"
   ],

@@ -100,6 +100,23 @@ def check_restaurant(path):
         if v is not None and not isinstance(v, str):
             err(rid, f"{field} must be a string or null")
 
+    # lat / lng: optional decimal coordinates for the maps handoff and
+    # (later) distance sort. If given they must be real numbers in range;
+    # both-or-neither. A venue without them is only a warning — a new stub
+    # may land before it's geocoded.
+    lat, lng = data.get("lat"), data.get("lng")
+    for field, val, lo, hi in (("lat", lat, -90, 90), ("lng", lng, -180, 180)):
+        if val is None:
+            continue
+        if isinstance(val, bool) or not isinstance(val, (int, float)):
+            err(rid, f"{field} must be a number")
+        elif not (lo <= val <= hi):
+            err(rid, f"{field} {val} out of range [{lo}, {hi}]")
+    if (lat is None) != (lng is None):
+        err(rid, "lat and lng must be set together")
+    elif lat is None and not is_recipes:
+        warn(rid, "no coordinates (lat/lng) set — maps opens by address only")
+
     # ordering: optional list of {platform, url}
     ordering = data.get("ordering")
     if ordering is not None:

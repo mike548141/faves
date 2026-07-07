@@ -10,6 +10,12 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Native maps handoff (roadmap Theme 2): tapping a venue's address on the
+  menu screen now opens the device's own maps app — Apple Maps on
+  iOS/macOS, the default maps app via a `geo:` link on Android, Google
+  Maps on desktop — at exact coordinates. Added `lat`/`lng` (WGS84) to
+  every venue in the schema, geocoded from their addresses, with
+  validation and unit tests (`site/js/geo.js`).
 - "Pick for us" (Phase 4): a shuffle over the filtered set that lands on
   one place with a deep link; instant under reduced-motion.
 - Offline PWA (Phase 5): service worker precaches the app shell and all

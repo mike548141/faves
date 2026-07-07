@@ -9,6 +9,8 @@
   "area": "Johnsonville",
   "city": "Wellington",
   "address": "66 Broderick Road, Johnsonville, Wellington 6037",
+  "lat": -41.22406,
+  "lng": 174.80125,
   "services": [
     "takeaway",
     "dine-in"

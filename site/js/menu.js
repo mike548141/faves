@@ -3,6 +3,7 @@
 // allergen warnings. Search hides non-matches; dietary chips dim them.
 
 import { loadRestaurant } from "./data.js";
+import { mapsUrl } from "./geo.js";
 
 const root = document.getElementById("menu-root");
 
@@ -84,11 +85,14 @@ function contactCard(r) {
     );
   }
 
-  // Pickup address — link out to maps.
+  // Pickup address — hand off to the device's own maps app (see geo.js).
   if (r.address) {
-    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.address)}`;
+    const href = mapsUrl(r);
+    // Only http(s) links open a browser tab; a geo:/maps: scheme launches
+    // an app in place, where target/rel are meaningless.
+    const web = href.startsWith("http");
     rows.push(
-      el("a", { className: "contact-row", href: mapsUrl, rel: "noopener", target: "_blank" }, [
+      el("a", { className: "contact-row", href, ...(web ? { rel: "noopener", target: "_blank" } : {}) }, [
         el("span", { className: "contact-ico", textContent: "📍", "aria-hidden": "true" }),
         el("span", { className: "contact-text" }, [
           el("span", { className: "contact-label", textContent: "Pickup" }),

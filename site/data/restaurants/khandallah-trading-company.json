@@ -8,6 +8,8 @@
   "area": "Khandallah",
   "city": "Wellington",
   "address": "Corner Agra Crescent & Ganges Road, Khandallah, Wellington 6035",
+  "lat": -41.24646,
+  "lng": 174.7915,
   "services": [
     "dine-in",
     "takeaway"

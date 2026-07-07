@@ -84,6 +84,8 @@ afternoon.
   "area": "Te Aro",                  // suburb-level grouping for filters
   "city": "Wellington",
   "address": "Ghuznee St, Wellington",
+  "lat": -41.29310,                  // optional decimal degrees (WGS84); both or neither
+  "lng": 174.77551,                  // feeds the native-maps handoff + (later) distance sort
   "phone": "+64 4 ...",              // tel: link for ordering
   "website": null,                   // or URL (the venue's own site)
   "ordering": [                      // 0..n online-order links (link out, never build)
@@ -160,6 +162,14 @@ UI must never present absence of an allergen tag as "allergen-free".
   ordering page …). We link out; we never take payment. `website` is
   the venue's own site; `ordering` is where a customer can buy. Keep
   these URLs owner-confirmed — delivery links rot.
+- `lat`/`lng` are optional decimal degrees (WGS84), set together or not
+  at all. When present, the menu screen's address row hands off to the
+  device's native maps app at those exact coordinates (`site/js/geo.js`);
+  when absent it falls back to an address search. They also seed the
+  distance-sorted "what's close" list (roadmap Theme 2). Geocode from the
+  address with a dev-time tool (OpenStreetMap Nominatim) — never invent
+  them; a wrong pin is worse than no pin (an absent pair just searches by
+  text). `validate.py` warns when a venue has none.
 
 ## Service worker strategy
 

@@ -9,6 +9,8 @@
   "area": "Te Aro",
   "city": "Wellington",
   "address": "Ground Floor, Huddart Parker Building, 1 Post Office Square, Te Aro, Wellington 6011",
+  "lat": -41.28511,
+  "lng": 174.77754,
   "services": [
     "dine-in"
   ],
