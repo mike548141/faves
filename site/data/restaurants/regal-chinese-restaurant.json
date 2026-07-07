@@ -1,0 +1,26 @@
+{
+  "id": "regal-chinese-restaurant",
+  "name": "Regal Chinese Restaurant",
+  "cuisine": [
+    "Chinese",
+    "Yum cha",
+    "Cantonese"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "7/9 Courtenay Place, Te Aro, Wellington 6011",
+  "lat": -41.29421,
+  "lng": 174.7831,
+  "services": [
+    "dine-in"
+  ],
+  "phone": "+64 4 384 6656",
+  "website": "https://www.regalchinesewellington.com/",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

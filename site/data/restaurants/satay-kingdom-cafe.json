@@ -1,0 +1,26 @@
+{
+  "id": "satay-kingdom-cafe",
+  "name": "Satay Kingdom Cafe",
+  "cuisine": [
+    "Malaysian",
+    "Indonesian"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "Shop 212, Left Bank, Cuba Mall, Te Aro, Wellington 6011",
+  "lat": -41.29252,
+  "lng": 174.77538,
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "phone": null,
+  "website": "https://www.sataykingdomcafe.co.nz/",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

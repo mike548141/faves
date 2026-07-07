@@ -1,0 +1,26 @@
+{
+  "id": "new-chapter-cafe",
+  "name": "New Chapter",
+  "cuisine": [
+    "Cafe",
+    "Coffee"
+  ],
+  "area": "Pipitea",
+  "city": "Wellington",
+  "address": "5 Bunny Street, Pipitea, Wellington 6011",
+  "lat": -41.28025,
+  "lng": 174.77993,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": null,
+  "website": "https://cafenewchapter.com/",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

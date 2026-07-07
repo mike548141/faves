@@ -10,6 +10,12 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- 11 more Wellington venues as stubs (facts web-researched + geocoded;
+  menus to follow): Regal Chinese, Babaili Malatang, New Chapter, Gold
+  Lining, Pizza Pomodoro, Gong Cha, Satay Kingdom Cafe, Rock Yard
+  Vietnamese, Cozy Cake Shop, The Catch Sushi Bar, Kaffee Eis. Adds new
+  areas (Pipitea, Wellington Central) and cuisines (bubble tea, gelato,
+  hotpot, sushi, yum cha…) to the filters.
 - "Open now" filter: a toggle in the home results head narrows the list
   to venues open right now (or closing soon), using the hours engine.
   Combines with the service/area/cuisine filters and the "Pick for us"

@@ -1,0 +1,25 @@
+{
+  "id": "rock-yard-restaurant",
+  "name": "Rock Yard Vietnamese Restaurant",
+  "cuisine": [
+    "Vietnamese"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "18 Allen Street, Te Aro, Wellington 6011",
+  "lat": -41.293,
+  "lng": 174.78224,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 381 3930",
+  "website": "https://www.rockyard.co.nz/",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

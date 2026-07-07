@@ -1,0 +1,25 @@
+{
+  "id": "cozy-cake-shop",
+  "name": "Cozy Cake Shop",
+  "cuisine": [
+    "Cake shop",
+    "Bakery"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "101 Manners Street, Te Aro, Wellington 6011",
+  "lat": -41.29146,
+  "lng": 174.77746,
+  "services": [
+    "takeaway"
+  ],
+  "phone": "+64 4 384 3114",
+  "website": null,
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

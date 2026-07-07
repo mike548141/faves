@@ -1,0 +1,25 @@
+{
+  "id": "gong-cha",
+  "name": "Gong Cha",
+  "cuisine": [
+    "Bubble tea"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "57 Manners Street, Te Aro, Wellington 6011",
+  "lat": -41.29044,
+  "lng": 174.77629,
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "phone": "+64 4 499 8666",
+  "website": "https://www.gongcha.co.nz/",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

@@ -1,0 +1,25 @@
+{
+  "id": "gold-lining-cafe",
+  "name": "Gold Lining",
+  "cuisine": [
+    "Cafe"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "address": "1 Whitmore Street, Wellington Central, Wellington 6011",
+  "lat": -41.28171,
+  "lng": 174.77872,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": null,
+  "website": null,
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

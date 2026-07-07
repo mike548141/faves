@@ -1,0 +1,26 @@
+{
+  "id": "pizza-pomodoro",
+  "name": "Pizza Pomodoro",
+  "cuisine": [
+    "Pizza",
+    "Italian"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "13 Leeds Street, Te Aro, Wellington 6011",
+  "lat": -41.29263,
+  "lng": 174.77668,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 381 2929",
+  "website": "https://www.pizzapomodoro.co.nz/",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

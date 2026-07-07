@@ -1,0 +1,26 @@
+{
+  "id": "babaili-malatang",
+  "name": "Babaili Malatang",
+  "cuisine": [
+    "Chinese",
+    "Hotpot"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "45 Dixon Street, Te Aro, Wellington 6011",
+  "lat": -41.29195,
+  "lng": 174.77688,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 22 644 4411",
+  "website": "https://www.babaili.co.nz/babaili-malatang",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

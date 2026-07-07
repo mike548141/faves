@@ -1,0 +1,26 @@
+{
+  "id": "the-catch-sushi-bar",
+  "name": "The Catch Sushi Bar",
+  "cuisine": [
+    "Sushi",
+    "Japanese"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "48 Courtenay Place, Te Aro, Wellington 6011",
+  "lat": -41.29343,
+  "lng": 174.78166,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": null,
+  "website": "https://www.thecatchsushibar.co.nz/",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

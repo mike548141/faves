@@ -1,0 +1,26 @@
+{
+  "id": "kaffee-eis",
+  "name": "Kaffee Eis",
+  "cuisine": [
+    "Gelato",
+    "Coffee"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "29 Courtenay Place, Te Aro, Wellington 6011",
+  "lat": -41.2939,
+  "lng": 174.78207,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 384 8040",
+  "website": "https://kaffeeeis.co.nz/",
+  "ordering": [],
+  "hours": null,
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}
