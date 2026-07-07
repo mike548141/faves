@@ -127,6 +127,38 @@ Recommend **(b) now** (small, reversible, reusable), **(a) later** only if
 needed. Both **⚑** need the owner to confirm the direction before schema
 lands.
 
+## Theme 4c — User contributions (request a place, report an update)
+
+Owner idea (2026-07-08): let people **request a restaurant be added**, and
+**report changes** — a new dish, a price that's moved, a photo of the menu
+or a dish. This is the public-facing front door to the existing `intake/`
+pipeline (drop material in → transcribe to schema).
+
+The honest shape within the constraints (no backend, no accounts, no
+external requests in the artifact):
+
+- **`mailto:` links** `[S]` — *recommended.* A "Suggest a place" and a
+  per-venue "Something changed? Tell us" link that opens the user's mail
+  app pre-filled (subject + a template body, the venue id baked in). Zero
+  backend, zero dependency, works from the installed PWA. Photos: the user
+  attaches them in their mail app (mailto can't carry attachments), which
+  is exactly what feeds `intake/`. The only cost is exposing the owner's
+  contact email — a `role`-style inbox (not personal) keeps the no-
+  personal-data line clean, and pairs with the `security.txt` in Theme 7.
+- **A tiny prefill form** `[M]` — a `<form>` that assembles the report and
+  opens the `mailto:` with the body filled from the fields (still no
+  backend). Nicer UX; more code. Do only if the bare links prove too
+  blunt.
+- **Third-party form (Google Form / Formspree)** `[M]` **⚑ ✗ by default** —
+  would capture submissions *with* photo uploads, but sends user data to a
+  third party and adds an external destination. It's a link-out (not a
+  bundled dependency, so it doesn't break offline), but it dilutes the
+  "no third-party, no accounts" stance. Only if the owner explicitly wants
+  managed intake with image uploads.
+
+Recommend the **`mailto:` links** first — smallest, honest, and it already
+has a home in `intake/`. **⚑ owner to supply the intake email address.**
+
 ## Theme 5 — Richer dish data
 
 - **More allergens** `[S][schema]` — extend the closed tag set (egg,
@@ -144,6 +176,18 @@ lands.
   into a 1–3 scale in the data (still ours, still static); (b)
   **local-only personal ratings** in `localStorage` (same store as the
   order tally). Recommend **(a)+(b), not public**.
+- **Hearted favourites (local-only)** `[M]` — owner idea (2026-07-08). A
+  ❤ toggle on any dish (restaurant menus *and* Cook-at-Home) saves it to
+  `localStorage`; a "Favourites" view gathers them across venues so it's
+  quick to pick the usual. No account, no backend, stays on the device —
+  the same personal-layer store as the order tally (Theme 1) and local
+  ratings above; nothing personal enters the repo. This is the
+  *simplest* first step of that layer (a heart is binary where a rating
+  is a scale), so it's a good place to build the `localStorage` plumbing
+  once and reuse. Natural extensions: heart whole *venues* too (favourite
+  places), surface hearts in "Pick for us", and feed the health app's
+  eating diary (Theme 6). Pairs neatly with `goesWith` (Theme 4b) — a
+  favourite dish can suggest its usual companions.
 
 ## Theme 6 — North star: the health tie-in
 
