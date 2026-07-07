@@ -10,6 +10,11 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- "Open now" filter: a toggle in the home results head narrows the list
+  to venues open right now (or closing soon), using the hours engine.
+  Combines with the service/area/cuisine filters and the "Pick for us"
+  shuffle; venues with unknown hours drop out (the honest reading of
+  "open").
 - Recommended pairings: a menu item can carry a `goesWith` list ("goes
   well with…") shown as deep-link chips to the paired dishes, in the same
   record or cross-record. Seeded on Cook-at-Home mains (e.g. Shane's Ribs

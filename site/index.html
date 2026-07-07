@@ -36,10 +36,15 @@
       <div class="results-head">
         <h2 class="sr-only">Restaurants</h2>
         <p id="result-count" class="result-count" role="status" aria-live="polite"></p>
-        <!-- JS + geolocation only; app.js unhides it when available. -->
-        <button type="button" id="near-me" class="near-me" aria-pressed="false" hidden>
-          <span aria-hidden="true">📍</span> <span class="near-me-label">Near me</span>
-        </button>
+        <div class="list-toggles">
+          <button type="button" id="open-now" class="list-toggle" aria-pressed="false">
+            <span aria-hidden="true">🟢</span> Open now
+          </button>
+          <!-- JS + geolocation only; app.js unhides it when available. -->
+          <button type="button" id="near-me" class="near-me list-toggle" aria-pressed="false" hidden>
+            <span aria-hidden="true">📍</span> <span class="near-me-label">Near me</span>
+          </button>
+        </div>
       </div>
       <p id="geo-status" class="geo-status" role="status" aria-live="polite" hidden></p>
       <p id="tz-note" class="tz-note" hidden>Open/closed times are New Zealand time.</p>

@@ -112,3 +112,30 @@ test("applyFilters: an over-constrained filter yields nothing", () => {
   });
   assert.deepEqual(shown, []);
 });
+
+// "Open now" filter — needs the hours engine + a fixed `now`.
+const dailyHours = (o, c) =>
+  Object.fromEntries(["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((d) => [d, [[o, c]]]));
+
+const OPEN_FIXTURE = [
+  { id: "open", services: ["takeaway"], cuisine: [], hours: dailyHours("09:00", "22:00") },
+  { id: "shut", services: ["takeaway"], cuisine: [], hours: dailyHours("18:00", "22:00") },
+  { id: "nohours", services: ["takeaway"], cuisine: [], hours: null },
+  { id: "cook", kind: "recipes", services: [], cuisine: [] },
+];
+const MON_NOON = { dow: 1, minutes: 12 * 60 };
+
+test("openNow: keeps only currently-open venues; unknown-hours + recipes drop", () => {
+  const shown = applyFilters(OPEN_FIXTURE, { ...DEFAULT_FILTERS, openNow: true }, MON_NOON);
+  assert.deepEqual(shown.map((r) => r.id), ["open"]);
+});
+
+test("openNow off (the default) keeps everything regardless of hours", () => {
+  const shown = applyFilters(OPEN_FIXTURE, DEFAULT_FILTERS, MON_NOON);
+  assert.equal(shown.length, 4);
+});
+
+test("openNow with no `now` is a safe no-op", () => {
+  const shown = applyFilters(OPEN_FIXTURE, { ...DEFAULT_FILTERS, openNow: true });
+  assert.equal(shown.length, 4);
+});

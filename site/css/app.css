@@ -166,9 +166,16 @@ main {
   font-weight: 600;
 }
 
-/* "Near me" distance-sort toggle (roadmap Theme 2). Hidden until app.js
-   confirms geolocation is available. */
-.near-me {
+/* Shared pill toggles in the results head: "Open now" (filter) and
+   "Near me" (distance sort). "Near me" stays hidden until app.js confirms
+   geolocation is available. */
+.list-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.list-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
@@ -183,16 +190,16 @@ main {
   white-space: nowrap;
   cursor: pointer;
 }
-.near-me[aria-pressed="true"] {
+.list-toggle[aria-pressed="true"] {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-ink);
 }
-.near-me:disabled {
+.list-toggle:disabled {
   opacity: 0.6;
   cursor: progress;
 }
-.near-me:active {
+.list-toggle:active {
   transform: scale(0.97);
 }
 .geo-status {

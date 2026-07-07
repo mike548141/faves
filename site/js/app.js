@@ -125,9 +125,9 @@ function init(restaurants) {
   const state = { ...DEFAULT_FILTERS, origin: null };
 
   function render() {
-    let shown = applyFilters(restaurants, state);
+    const now = nzNow(); // one clock read per render: filter, sort and cards
+    let shown = applyFilters(restaurants, state, now);
     if (state.origin) shown = sortByDistance(shown, state.origin);
-    const now = nzNow(); // one clock read per render, shared by every card
     listEl.replaceChildren(...shown.map((r) => card(r, now)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
@@ -165,9 +165,23 @@ function init(restaurants) {
     if (note) note.hidden = false;
   }
 
+  wireOpenNow(state, render);
+
   render();
-  initPicker(() => applyFilters(restaurants, state));
+  initPicker(() => applyFilters(restaurants, state, nzNow()));
   document.body.classList.add("app-ready");
+}
+
+// "Open now" filter: show only venues currently open (or closing soon).
+// Unknown-hours venues and recipes drop out — the honest reading of "open".
+function wireOpenNow(state, render) {
+  const btn = document.getElementById("open-now");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    state.openNow = !state.openNow;
+    btn.setAttribute("aria-pressed", String(state.openNow));
+    render();
+  });
 }
 
 // "Near me": sort the list by distance from the device's location. Purely

@@ -1,6 +1,8 @@
 // Pure filter logic — no DOM. Kept separate so it is trivial to reason
 // about and reuse (e.g. the "Pick for us" picker filters the same way).
 
+import { openStatus } from "./hours.js";
+
 /** Unique, sorted areas and cuisines present in the data. */
 export function deriveFacets(restaurants) {
   const areas = new Set();
@@ -16,11 +18,18 @@ export function deriveFacets(restaurants) {
   return { areas: sort(areas), cuisines: sort(cuisines) };
 }
 
-/** Filter state shape: { service: 'all'|'takeaway'|'dine-in', area, cuisine }. */
-export const DEFAULT_FILTERS = { service: "all", area: "all", cuisine: "all" };
+/**
+ * Filter state shape:
+ * { service: 'all'|'takeaway'|'dine-in', area, cuisine, openNow: bool }.
+ */
+export const DEFAULT_FILTERS = { service: "all", area: "all", cuisine: "all", openNow: false };
 
-/** Apply combinable filters. Every clause is AND-ed. */
-export function applyFilters(restaurants, state) {
+/**
+ * Apply combinable filters. Every clause is AND-ed. `now` ({dow, minutes})
+ * is required only for the openNow clause; a venue whose hours are unknown
+ * (or a recipe, which has none) is treated as not-open, so it drops out.
+ */
+export function applyFilters(restaurants, state, now = null) {
   return restaurants.filter((r) => {
     if (state.service !== "all" && !(r.services || []).includes(state.service)) {
       return false;
@@ -28,6 +37,10 @@ export function applyFilters(restaurants, state) {
     if (state.area !== "all" && r.area !== state.area) return false;
     if (state.cuisine !== "all" && !(r.cuisine || []).includes(state.cuisine)) {
       return false;
+    }
+    if (state.openNow && now) {
+      const st = openStatus(r.hours, now).state;
+      if (st !== "open" && st !== "closing-soon") return false;
     }
     return true;
   });
