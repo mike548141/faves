@@ -1,0 +1,23 @@
+# CI for Faves. The site ships build-less, so this is a correctness gate,
+# not a build: it proves the menu data validates against the schema
+# before anything reaches `main` (and `main` auto-deploys to Cloudflare
+# Pages). stdlib-only Python — nothing to install.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: menu data validates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate restaurant JSON against the schema
+        run: python3 tools/validate.py
