@@ -40,3 +40,8 @@ for loading into context. Convention adopted from `ros`/`tiki`
   markers, and lockstep rules in `CLAUDE.md`. Corrected the stale "no
   Node/brew" wording (Node now exists for dev tooling only; the site
   still ships build-less). No `man` page — faves is a website, not a CLI.
+  Added JS unit tests (`node --test`, zero-dep, in CI) for the pure
+  filter logic, `CHANGELOG.md`, and `docs/MODEL-ECONOMICS.md` (adapted
+  from ros: Opus builds / Fable reviews, session hygiene, ~27k read-path
+  budget). Not adopted (N/A here): ros's secrets/sops tooling, the
+  immutable `archive/`, and ruff/mypy on the four stdlib `tools/` scripts.

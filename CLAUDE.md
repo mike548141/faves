@@ -57,6 +57,10 @@ data is the most likely regression.
 Adopted from the `ros`/`tiki` repos (2026-07-08), adapted to a
 build-less static site. See `CONTRIBUTING.md` for the fuller version.
 
+- **Model & token economics:** `docs/MODEL-ECONOMICS.md` — which model
+  does what (Opus builds, Fable reviews — scoped and short), session
+  hygiene, and the read-path budget. Consult it before choosing a model
+  or starting a billed review (`/code-review ultra`, Fable).
 - **Commit as you work.** Small, focused commits — one concern each —
   landed continuously, not one end-of-session dump. Cloudflare Pages
   deploys from `main`, so a push *is* a deploy; only push (and only
