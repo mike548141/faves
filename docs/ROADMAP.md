@@ -183,7 +183,11 @@ dependency.
 
 ## Also parked (small)
 
-- **"Open now"** from the `hours` data on cards.
+- ~~**"Open now"** from the `hours` data on cards.~~ ✅ **done
+  2026-07-08** — grew into a full live status (open/closing-soon/closed +
+  relative time) on cards and the menu screen, on a structured per-day
+  hours model computed in NZ time ([ADR 0006]). A natural follow-on: an
+  "Open now" *filter* in the bottom bar (the status is already computed).
 - **Shareable group shortlist links** (encode the shortlist in the URL —
   no backend needed).
 - **Te reo Māori UI toggle.**

@@ -4,6 +4,7 @@
 
 import { loadRestaurant } from "./data.js";
 import { mapsUrl } from "./geo.js";
+import { openStatus, groupWeek, nzNow } from "./hours.js";
 
 const root = document.getElementById("menu-root");
 
@@ -102,25 +103,36 @@ function contactCard(r) {
     );
   }
 
-  // Opening hours.
-  if (r.hours?.length) {
-    const hours = el("ul", { className: "hours-list" });
-    for (const h of r.hours) {
-      const time = h.open && h.close ? `${h.open}–${h.close}` : h.open || "";
-      hours.append(
-        el("li", {}, [
-          el("span", { className: "hours-days", textContent: h.days }),
-          el("span", { className: "hours-time", textContent: time }),
-        ])
-      );
+  // Opening hours: a live "Open · until 9pm" status, then the week grouped
+  // into ranges (splits shown as "12pm–3pm, 5pm–9pm"), today highlighted.
+  if (r.hours) {
+    const now = nzNow();
+    const st = openStatus(r.hours, now);
+    const list = el("ul", { className: "hours-list" });
+    for (const wk of groupWeek(r.hours)) {
+      const li = el("li", {}, [
+        el("span", { className: "hours-days", textContent: wk.days }),
+        el("span", { className: "hours-time", textContent: wk.text }),
+      ]);
+      if (wk.dows.includes(now.dow)) li.classList.add("is-today");
+      list.append(li);
     }
+    const text = el("span", { className: "contact-text" }, [
+      el("span", { className: "contact-label", textContent: "Hours" }),
+    ]);
+    if (st.state !== "unknown") {
+      const badge = el("span", {
+        className: "hours-badge",
+        textContent: st.detail ? `${st.label} · ${st.detail}` : st.label,
+      });
+      badge.dataset.state = st.state;
+      text.append(badge);
+    }
+    text.append(list);
     rows.push(
       el("div", { className: "contact-row contact-hours" }, [
         el("span", { className: "contact-ico", textContent: "🕐", "aria-hidden": "true" }),
-        el("span", { className: "contact-text" }, [
-          el("span", { className: "contact-label", textContent: "Hours" }),
-          hours,
-        ]),
+        text,
       ])
     );
   }

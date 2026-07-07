@@ -17,10 +17,15 @@
   "phone": "+64 4 282 0254",
   "website": "https://www.charleynoble.co.nz",
   "ordering": [],
-  "hours": [
-    { "days": "Mon–Fri", "open": "11:30", "close": null },
-    { "days": "Sat–Sun", "open": "17:00", "close": null }
-  ],
+  "hours": {
+    "mon": [["11:30", null]],
+    "tue": [["11:30", null]],
+    "wed": [["11:30", null]],
+    "thu": [["11:30", null]],
+    "fri": [["11:30", null]],
+    "sat": [["17:00", null]],
+    "sun": [["17:00", null]]
+  },
   "vibe": [],
   "picks": [],
   "verified": null,

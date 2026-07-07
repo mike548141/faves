@@ -20,9 +20,15 @@
     { "platform": "Order on our site", "url": "https://www.kccafeandtakeaway.co.nz/menu" },
     { "platform": "Delivereasy", "url": "https://www.delivereasy.co.nz/kc-cafe-wellington-chinese-delivery" }
   ],
-  "hours": [
-    { "days": "Mon–Sun", "open": "11:00", "close": "22:00" }
-  ],
+  "hours": {
+    "mon": [["11:00", "22:00"]],
+    "tue": [["11:00", "22:00"]],
+    "wed": [["11:00", "22:00"]],
+    "thu": [["11:00", "22:00"]],
+    "fri": [["11:00", "22:00"]],
+    "sat": [["11:00", "22:00"]],
+    "sun": [["11:00", "22:00"]]
+  },
   "vibe": [],
   "picks": [],
   "verified": null,

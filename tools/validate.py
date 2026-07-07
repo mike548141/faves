@@ -29,6 +29,8 @@ TAGS = {
 }
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
+DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 errors = []
 warnings = []
@@ -132,15 +134,37 @@ def check_restaurant(path):
                 ):
                     err(rid, f"ordering entry malformed: {o!r}")
 
-    # hours: null or list of {days, open, close}
+    # hours: null, or a full week keyed mon..sun. Each day is a list of
+    # [open, close] intervals ([] = closed); multiple intervals express a
+    # lunch/dinner split. Times are "HH:MM" 24h; close may be null ("late"/
+    # open-ended). close, when given, must be after open — past-midnight is
+    # expressed with a null close, not a wrap (see ADR 0006).
     hours = data.get("hours")
     if hours is not None:
-        if not isinstance(hours, list):
-            err(rid, "hours must be null or a list")
+        if not isinstance(hours, dict):
+            err(rid, "hours must be null or an object keyed mon..sun")
+        elif set(hours) != set(DAYS):
+            err(rid, f"hours must have exactly the 7 day keys {DAYS}, got {sorted(hours)}")
         else:
-            for h in hours:
-                if not isinstance(h, dict) or "days" not in h:
-                    err(rid, f"hours entry malformed: {h!r}")
+            for day, intervals in hours.items():
+                if not isinstance(intervals, list):
+                    err(rid, f"hours[{day}] must be a list of intervals")
+                    continue
+                for iv in intervals:
+                    if not (isinstance(iv, list) and len(iv) == 2):
+                        err(rid, f"hours[{day}] interval must be [open, close], got {iv!r}")
+                        continue
+                    o, c = iv
+                    if not (isinstance(o, str) and TIME_RE.match(o)):
+                        err(rid, f"hours[{day}] open {o!r} must be 'HH:MM'")
+                    if c is not None and not (isinstance(c, str) and TIME_RE.match(c)):
+                        err(rid, f"hours[{day}] close {c!r} must be 'HH:MM' or null")
+                    if (
+                        isinstance(o, str) and TIME_RE.match(o)
+                        and isinstance(c, str) and TIME_RE.match(c)
+                        and c <= o
+                    ):
+                        err(rid, f"hours[{day}] close {c} must be after open {o}")
 
     # status
     status = data.get("status")

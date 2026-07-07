@@ -19,9 +19,15 @@
   "ordering": [
     { "platform": "Order on our site", "url": "https://www.randssataynoodlehouse.co.nz/menu" }
   ],
-  "hours": [
-    { "days": "Tue–Sun", "open": "11:00", "close": "20:00" }
-  ],
+  "hours": {
+    "mon": [],
+    "tue": [["11:00", "20:00"]],
+    "wed": [["11:00", "20:00"]],
+    "thu": [["11:00", "20:00"]],
+    "fri": [["11:00", "20:00"]],
+    "sat": [["11:00", "20:00"]],
+    "sun": [["11:00", "20:00"]]
+  },
   "vibe": [],
   "picks": [
     "Chicken Noodles Soup"

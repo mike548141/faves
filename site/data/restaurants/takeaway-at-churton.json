@@ -16,9 +16,15 @@
   "phone": "+64 4 499 8785",
   "website": "http://takeawayatchurton.edan.io",
   "ordering": [],
-  "hours": [
-    { "days": "Tue–Sun", "open": "10:30", "close": "20:30" }
-  ],
+  "hours": {
+    "mon": [],
+    "tue": [["10:30", "20:30"]],
+    "wed": [["10:30", "20:30"]],
+    "thu": [["10:30", "20:30"]],
+    "fri": [["10:30", "20:30"]],
+    "sat": [["10:30", "20:30"]],
+    "sun": [["10:30", "20:30"]]
+  },
   "vibe": [],
   "picks": [
     "Fish Dinner",

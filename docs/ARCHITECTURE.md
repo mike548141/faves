@@ -92,7 +92,7 @@ afternoon.
     { "platform": "Uber Eats", "url": "https://..." }
   ],
   "services": ["dine-in", "takeaway"],
-  "hours": null,                     // optional: [{"days":"Mon–Fri","open":"11:30","close":"21:00"}]
+  "hours": null,                     // null, or a full week (see below)
   "vibe": ["cheap-and-cheerful"],    // free-form chips shown on cards
   "picks": ["Char kway teow"],       // "our picks" — dish names, must exist in menu
   "verified": null,                  // ISO date the menu was last checked, e.g. "2026-07-10"
@@ -162,6 +162,16 @@ UI must never present absence of an allergen tag as "allergen-free".
   ordering page …). We link out; we never take payment. `website` is
   the venue's own site; `ordering` is where a customer can buy. Keep
   these URLs owner-confirmed — delivery links rot.
+- `hours` is `null` (not stated) or a **full week** keyed `mon`…`sun`
+  (all seven keys required). Each day is a list of `[open, close]`
+  intervals in `"HH:MM"` 24h local time: `[]` = closed that day; two or
+  more intervals express a lunch/dinner split, e.g.
+  `"mon": [["12:00","15:00"],["17:00","21:00"]]`. `close` may be `null`
+  meaning open-ended ("late"). `close`, when given, must be after `open`
+  — past-midnight is expressed with a `null` close, never a wrap. The
+  hours engine (`site/js/hours.js`) computes a live open/closed status
+  from this in **Pacific/Auckland** time (not the viewer's clock), and a
+  grouped weekly display; see ADR 0006.
 - `lat`/`lng` are optional decimal degrees (WGS84), set together or not
   at all. When present, the menu screen's address row hands off to the
   device's native maps app at those exact coordinates (`site/js/geo.js`);

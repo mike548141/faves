@@ -17,13 +17,15 @@
   "phone": "+64 4 479 4157",
   "website": "https://stargroup.nz/venues/khandallah-trading-company",
   "ordering": [],
-  "hours": [
-    { "days": "Mon", "open": "16:00", "close": "21:00" },
-    { "days": "Tue–Wed", "open": "12:00", "close": "21:00" },
-    { "days": "Thu", "open": "12:00", "close": "22:00" },
-    { "days": "Fri–Sat", "open": "12:00", "close": "23:00" },
-    { "days": "Sun", "open": "12:00", "close": "21:00" }
-  ],
+  "hours": {
+    "mon": [["16:00", "21:00"]],
+    "tue": [["12:00", "21:00"]],
+    "wed": [["12:00", "21:00"]],
+    "thu": [["12:00", "22:00"]],
+    "fri": [["12:00", "23:00"]],
+    "sat": [["12:00", "23:00"]],
+    "sun": [["12:00", "21:00"]]
+  },
   "vibe": [],
   "picks": [],
   "verified": null,

@@ -15,11 +15,15 @@
   "phone": "+64 4 232 1111",
   "website": "https://sprigandfern.co.nz/pages/tawa",
   "ordering": [],
-  "hours": [
-    { "days": "Mon–Tue", "open": "11:30", "close": "21:00" },
-    { "days": "Wed–Fri", "open": "11:30", "close": "late" },
-    { "days": "Sat–Sun", "open": "10:00", "close": "late" }
-  ],
+  "hours": {
+    "mon": [["11:30", "21:00"]],
+    "tue": [["11:30", "21:00"]],
+    "wed": [["11:30", null]],
+    "thu": [["11:30", null]],
+    "fri": [["11:30", null]],
+    "sat": [["10:00", null]],
+    "sun": [["10:00", null]]
+  },
   "vibe": [
     "craft beer",
     "beer garden",

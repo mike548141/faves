@@ -32,3 +32,6 @@ deliberation those compact docs omit.
 - [0005](0005-native-maps-handoff.md) — native maps handoff (Apple
   Maps / Android `geo:` / desktop Google) at exact coordinates, not one
   vendor's web map
+- [0006](0006-hours-model-and-timezone.md) — structured per-day hours
+  (intervals, splits, "late"), live status computed in NZ time not the
+  device clock

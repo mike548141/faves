@@ -10,6 +10,14 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Live opening-hours status: home cards and the menu screen now show
+  "Open · until 9pm" / "Closing soon · closes in 30 min" / "Closed ·
+  opens 5pm", computed in New Zealand time (not the viewer's clock) so
+  it's right for a guest browsing from anywhere. The menu screen also
+  shows the week grouped into ranges with today highlighted, and
+  lunch/dinner splits rendered inline ("12pm–3pm, 5pm–9pm"). Backed by a
+  new machine-readable hours model and a pure engine (`site/js/hours.js`)
+  with unit tests.
 - "Near me" distance sort (roadmap Theme 2): a home-screen toggle that
   uses the device location (`navigator.geolocation`) + haversine to sort
   venues nearest-first, showing each one's distance ("1.2 km") on its

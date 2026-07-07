@@ -5,6 +5,7 @@
 import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
 import { sortByDistance, formatDistance } from "./distance.js";
+import { openStatus, nzNow } from "./hours.js";
 import { initPicker } from "./picker.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
@@ -21,7 +22,17 @@ function servicesText(services = []) {
   return services.map((s) => SERVICE_LABEL[s] || s).join(", ");
 }
 
-function card(r) {
+// Live open/closed badge from the venue's hours (null hours → no badge).
+function hoursBadge(r, now) {
+  const st = openStatus(r.hours, now);
+  if (st.state === "unknown") return null;
+  const text = st.detail ? `${st.label} · ${st.detail}` : st.label;
+  const badge = el("span", { className: "hours-badge", textContent: text });
+  badge.dataset.state = st.state;
+  return el("p", { className: "card-hours" }, [badge]);
+}
+
+function card(r, now) {
   const isRecipes = r.kind === "recipes";
   const name = el("h3", { className: "card-name", textContent: r.name });
 
@@ -58,6 +69,9 @@ function card(r) {
     }
   }
 
+  // A venue (not a stub, not recipes) gets a live open/closed badge.
+  const badge = !isRecipes && r.status !== "stub" ? hoursBadge(r, now) : null;
+
   const li = el("li", { className: isRecipes ? "card card-recipes" : "card" });
   li.dataset.status = r.status;
 
@@ -67,6 +81,7 @@ function card(r) {
     const link = el("a", { className: "card-link", href: `restaurant.html?id=${r.id}` }, [
       name,
       meta,
+      badge,
       chips,
     ]);
     li.append(link);
@@ -99,7 +114,8 @@ function init(restaurants) {
   function render() {
     let shown = applyFilters(restaurants, state);
     if (state.origin) shown = sortByDistance(shown, state.origin);
-    listEl.replaceChildren(...shown.map(card));
+    const now = nzNow(); // one clock read per render, shared by every card
+    listEl.replaceChildren(...shown.map((r) => card(r, now)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
     const total = restaurants.length;
