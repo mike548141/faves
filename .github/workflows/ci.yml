@@ -21,3 +21,17 @@ jobs:
           python-version: "3.12"
       - name: Validate restaurant JSON against the schema
         run: python3 tools/validate.py
+
+  test:
+    name: JS unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      # No install step — there are no dependencies. package.json exists
+      # only to declare ESM + the test script; node's built-in runner does
+      # the rest.
+      - name: Run the unit tests
+        run: node --test

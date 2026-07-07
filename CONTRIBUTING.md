@@ -14,7 +14,13 @@ JSON, served as-is — see ADR [0001](docs/decisions/0001-zero-build-vanilla.md)
 ```sh
 python3 tools/serve.py        # serves site/ to laptop + phone; prints both URLs
 python3 tools/validate.py     # checks all menu data against the schema
+node --test                   # JS unit tests (or: npm test) — needs Node, no install
 ```
+
+`node --test` needs Node but **no `npm install`** — there are no
+dependencies. The root `package.json` exists only to declare that
+`site/js` is ES modules and to hold the test script; it is never a build
+or runtime dependency, and `site/` still ships build-less.
 
 Optional dev tooling uses Node, if present — never as a build or runtime
 dependency, only to measure:
@@ -36,6 +42,9 @@ npx lighthouse http://localhost:8080/index.html \
 - **Data validates.** Menu JSON must pass `tools/validate.py` (schema in
   `ARCHITECTURE.md`). `picks` must name a real menu item exactly. Never
   invent facts — unconfirmed fields stay `null`; **no tag ≠ allergen-free**.
+- **Tests before behaviour for pure logic.** New pure functions (like
+  those in `site/js/filters.js`) ship with a `tests/*.test.js` unit test.
+  DOM-coupled code stays browser + Lighthouse verified.
 - **Comments say _why_, not _what_** — constraints and non-obvious
   reasons only.
 - **Record real decisions.** Rejecting a plausible alternative, or

@@ -1,0 +1,9 @@
+{
+  "name": "faves",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only manifest: declares that site/js is ES modules and provides the test script. NOT a build or runtime dependency — the site ships build-less (site/ is the whole product, no npm install, no bundler). See docs/decisions/0001-zero-build-vanilla.md.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

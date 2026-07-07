@@ -1,6 +1,11 @@
 .DS_Store
 *.icloud
 
+# Node is dev-tooling only (tests, Lighthouse). There are no
+# dependencies; if anyone runs `npm install`, keep its output out.
+node_modules/
+package-lock.json
+
 # Secrets — the Cloudflare token lives in the environment, never in the
 # repo. Ignore common local token/env files just in case.
 .env

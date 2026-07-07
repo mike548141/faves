@@ -45,6 +45,7 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
 ```sh
 python3 tools/serve.py        # laptop + phone (same Wi-Fi); prints both URLs
 python3 tools/validate.py     # data validates against the schema
+node --test                   # JS unit tests (pure logic); no npm install needed
 ```
 
 Exercise the change in a real browser at mobile width. JSON data must
@@ -67,9 +68,10 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
 - **Documentation as code.** Significant decisions that reject a
   plausible alternative or rest on hard-won evidence get a short ADR in
   `docs/decisions/` (never edit an accepted one — supersede it).
-  Reversible implementation choices get a code comment instead. Append a
-  `docs/SESSIONS.md` entry (append-only, newest last) before finishing a
-  session.
+  Reversible implementation choices get a code comment instead. Add a
+  line under _Unreleased_ in `CHANGELOG.md` when a user-visible feature
+  or fix lands. Append a `docs/SESSIONS.md` entry (append-only, newest
+  last) before finishing a session.
 - **Comments say _why_, not _what_** — constraints, platform quirks,
   non-obvious reasons; never a restatement of the code.
 - **TODO markers:** `#!#` in any language; more `#` = higher priority
