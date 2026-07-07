@@ -916,16 +916,29 @@ html {
   padding-top: var(--space-4);
 }
 .section-title {
+  /* Pin the heading just under the sticky jump-nav, so which section
+     you're in stays visible while scrolling its dishes (it's pushed up by
+     the next heading). z below the nav (5) so the nav always wins. */
+  position: sticky;
+  top: calc(var(--nav-h) - 1px);
+  z-index: 4;
+  margin: 0 0 var(--space-1);
+  padding: var(--space-2) 0;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  margin-bottom: var(--space-2);
 }
 .dish-list {
   display: grid;
   gap: var(--space-1);
 }
 .dish {
+  /* Clear the sticky jump-nav + sticky section heading when a pick or
+     "goes well with" link jumps to this dish. */
+  scroll-margin-top: calc(var(--nav-h) + 3.2rem);
   padding: var(--space-3) 0;
   border-bottom: 1px solid var(--line);
 }

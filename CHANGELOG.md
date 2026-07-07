@@ -64,6 +64,11 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- Menu section headings now stick under the jump-nav while you scroll a
+  long menu, so which section you're in ("Pub Snacks", "Pub Mains") stays
+  visible instead of scrolling away; the next heading pushes it up. Dish
+  deep-links (picks, "goes well with") account for the taller sticky
+  stack.
 - Restaurant cards now respond to hover: the whole card lifts with a
   deeper shadow, an accent border, and the name tints to accent. Only on
   cards that link somewhere (not "coming soon" stubs), only on true-hover
