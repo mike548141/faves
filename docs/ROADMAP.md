@@ -79,8 +79,19 @@ The umbrella "better UX and design", with your concrete asks:
   link, order summary right). One CSS grid; mobile stays single-column.
 - **Sticky search on phones** `[S][design]` — keep the menu search
   reachable while scrolling a long menu (sticky under the section nav).
-  **⚑ minor**: decide whether the *home* screen also gains a persistent
-  search field, or whether today's sticky bottom filter bar is enough.
+  Partly addressed already: menu **section headings** now stick under the
+  jump-nav (2026-07-08); the menu *search field* sticking is the remaining
+  piece.
+- **Global search from the home screen** `[M]` — owner ask (2026-07-08):
+  one search box on the home page that jumps straight to a **restaurant or
+  a dish** by name ("mee goreng" → KK Malaysian's dish; "sprig" → the
+  venue). All client-side over the already-loaded data (every menu is in
+  memory / precached), so it's offline-safe and zero-dep — an index built
+  once at load, results grouped "Places / Dishes", each linking to the
+  venue (dish results deep-link to `#dish-…`). This supersedes the older
+  "does the home screen need a persistent search field?" question — yes,
+  and it searches dishes too, not just filters venues. Pairs with the menu
+  search (same matching logic can be shared).
 - General polish to the "oh, this is nice" bar (`DESIGN.md` mood):
   spacing, motion, empty states, and the new cart UI.
 
@@ -158,6 +169,10 @@ external requests in the artifact):
 
 Recommend the **`mailto:` links** first — smallest, honest, and it already
 has a home in `intake/`. **⚑ owner to supply the intake email address.**
+**Named / personalised feedback** (owner ask, 2026-07-08) is free here: the
+mailto template (or the prefill form) can include an optional "your name"
+field, so a report arrives attributed — no account needed, the sender just
+types it. (Their email address comes with the message anyway.)
 
 ## Theme 5 — Richer dish data
 
@@ -188,6 +203,16 @@ has a home in `intake/`. **⚑ owner to supply the intake email address.**
   places), surface hearts in "Pick for us", and feed the health app's
   eating diary (Theme 6). Pairs neatly with `goesWith` (Theme 4b) — a
   favourite dish can suggest its usual companions.
+  - **Multiple people's favourites** `[M]` **⚑ (account tension)** — owner
+    asked (2026-07-08) whether several people could each keep their own
+    hearts. On *one shared device*: yes, cheaply — local **profiles** (a
+    "who's this?" name picker, each a separate `localStorage` bucket), no
+    accounts. Across *different devices* the same person's hearts syncing:
+    that needs an account + backend, which breaks the no-accounts /
+    no-backend non-goals — out of scope for Faves. The honest split: local
+    profiles here; anything cross-device belongs to a *separate signed-in
+    app* (the same seam as the health app, Theme 6, which can own identity
+    and sync). Constraint-free win now: device-local profiles.
 
 ## Theme 6 — North star: the health tie-in
 
