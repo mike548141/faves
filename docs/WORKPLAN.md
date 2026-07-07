@@ -115,9 +115,14 @@ data files. Owner to install on iOS/Android and flight-mode test.*
 
 ## Phase 6 — Polish and quality gate
 
-- [ ] Lighthouse mobile: Perf ≥ 95, A11y 100, BP 100, SEO ≥ 95.
-      *Needs the deployed HTTPS URL (no Node on this machine) — run via
-      PageSpeed Insights or DevTools after Phase 7.*
+- [x] Lighthouse mobile: Perf ≥ 95, A11y 100, BP 100, SEO ≥ 95.
+      *Run 2026-07-08 via `npx lighthouse` (Node now on the machine)
+      against the dev server, mobile emulation. Home: Perf 97 / A11y 100
+      / BP 100 / SEO 100. Menu (kk-malaysian): Perf 100 / A11y 100 /
+      BP 100 / SEO 100. One contrast fail (dark-mode "Call to order"
+      label) fixed → A11y 100. Scores are a floor: localhost has no
+      Brotli/HTTP-2, so the CDN will only do better. Re-confirm on the
+      live URL post-deploy.*
 - [~] First-visit transfer < 300 KB; test on a real phone and tablet,
       both colour schemes, portrait + landscape.
       *Measured 2026-07-08: shell + all menu data = 176.9 KB raw,

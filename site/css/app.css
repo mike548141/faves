@@ -598,7 +598,9 @@ html {
   background: var(--accent);
 }
 .contact-call .contact-label {
-  color: color-mix(in srgb, var(--accent-ink) 75%, transparent);
+  /* Full ink, not softened: keeps AA contrast on the lighter dark-mode
+     accent. Hierarchy vs the value comes from size + uppercase. */
+  color: var(--accent-ink);
 }
 .contact-call .contact-value,
 .contact-call .contact-ico {
