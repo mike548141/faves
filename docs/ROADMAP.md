@@ -97,12 +97,40 @@ desktop; Lighthouse a11y stays 100.
   paper/in-store, **never** delivery apps).
 - **More dishes & home recipes** — same pipeline; the placeholder recipes
   in `cook-at-home.json` get replaced from the Notes export.
-- **Dish photos** `[L][schema]` — add `image` per item, lazy-loaded (the
-  transfer budget already excludes photos). *Owner photos of the actual
-  dish* preferred; generic stock only as a fallback, captioned "serving
-  suggestion", properly licensed and **self-hosted** (no hotlinking — the
-  offline/no-external-request rule). Large sourcing effort; roll out
-  per-restaurant as photos arrive.
+- **Dish photos** `[L][schema]` **⚑ owner re-requested 2026-07-08** — add
+  `image` per item, lazy-loaded (the transfer budget already excludes
+  photos). *Owner photos of the actual dish* preferred; generic stock only
+  as a fallback, captioned "serving suggestion", properly licensed and
+  **self-hosted** (no hotlinking — the offline/no-external-request rule).
+  The *engineering* is small (an `image`/`alt` field, `loading="lazy"`
+  `<img>` with an aspect-ratio box so layout doesn't shift, and the SW's
+  existing capped image cache already covers offline). The *cost is
+  sourcing*: it's gated on actual photos. Cheapest path to value — ship
+  the rendering behind the field, then roll out per-restaurant as the
+  owner drops photos into `intake/`. A card thumbnail + a menu-row image
+  are the two placements.
+
+## Theme 4b — Meals vs dishes: pairings & "goes with"
+
+Owner idea (2026-07-08): Cook-at-Home (and menus) are flat lists of
+individual dishes, but people eat *meals*. Two shapes, not exclusive:
+
+- **(b) Recommended pairings** `[M][schema]` — *recommended first.* Add an
+  optional `goesWith` per item: a list of dish names (same record, or
+  `id#dish` cross-record). Opening a recipe/dish shows "Goes well with …"
+  chips that deep-link. Light, additive, honest (it's our curation, no
+  backend), and it **generalises to restaurant dishes** later ("add a
+  Sprig + Fern drink to this"). Natural bridge to the order tally (Theme
+  1) and the "meal" seed for the health app (Theme 6).
+- **(a) Reorganise around meals** `[L][schema][design]` — a `meal` becomes
+  a first-class set (main + sides + dessert); Cook-at-Home sections become
+  curated meals rather than dish categories. More expressive but a bigger
+  reorg of the data + UI, and it hard-codes one grouping. Better *after*
+  (b) exists, if flat-list-plus-pairings proves too loose.
+
+Recommend **(b) now** (small, reversible, reusable), **(a) later** only if
+needed. Both **⚑** need the owner to confirm the direction before schema
+lands.
 
 ## Theme 5 — Richer dish data
 
