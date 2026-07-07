@@ -65,3 +65,20 @@ for loading into context. Convention adopted from `ros`/`tiki`
   list. **Owner still to decide:** whether the flagship Order tally
   (Theme 1) is in — that unlocks its STRATEGY non-goal clarification — and
   the SBOM format/location (Theme 7 remainder).
+
+- **2026-07-08 (roadmap Theme 2, step 3 — "what's close")**: Cashed in the
+  coordinates with the distance-sorted list. New `site/js/distance.js`
+  (pure: haversine + `sortByDistance` + `formatDistance`) and a "📍 Near
+  me" toggle in the home results-head, JS+geolocation-gated (hidden when
+  unavailable). On tap it requests the device location, sorts venues
+  nearest-first and shows each one's distance on its card; coordless
+  records (Cook-at-Home, un-geocoded stubs) sink to the end keeping order;
+  a second tap restores the curated order. Declining the permission is a
+  first-class path — a matter-of-fact status line, list unchanged. No tile
+  map by design (needs a CDN library + external tiles → breaks three
+  constraints; see ADR 0005). 9 new JS tests (29 total) using real
+  Wellington coords; VERSION → 2026-07-08.5; `distance.js` precached.
+  Real-browser check (Chrome): `app-ready`, the Near-me button renders
+  unhidden, 13 cards, no errors. Docs: CHANGELOG, ROADMAP Theme 2 all
+  three items ticked. This closes Theme 2; Theme 3 (design pass — sticky
+  search, right-hand info panel) is the next unblocked work.

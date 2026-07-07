@@ -4,6 +4,7 @@
 
 import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
+import { sortByDistance, formatDistance } from "./distance.js";
 import { initPicker } from "./picker.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
@@ -32,7 +33,14 @@ function card(r) {
       el("span", { textContent: n ? `${n} recipe${n === 1 ? "" : "s"}` : "Recipes coming soon" }),
     ]);
   } else {
+    // In "Near me" mode a venue carries distanceKm; show it first, as the
+    // most decision-relevant fact once you've asked "what's close".
+    const dist =
+      r.distanceKm != null
+        ? el("span", { className: "card-distance", textContent: `📍 ${formatDistance(r.distanceKm)}` })
+        : null;
     meta = el("p", { className: "card-meta" }, [
+      dist,
       el("span", { className: "card-area", textContent: r.area || "" }),
       el("span", { textContent: servicesText(r.services) }),
     ]);
@@ -85,10 +93,12 @@ function init(restaurants) {
   fillSelect(areaSel, areas, "All areas");
   fillSelect(cuisineSel, cuisines, "All cuisines");
 
-  const state = { ...DEFAULT_FILTERS };
+  // origin holds the user's {lat, lng} once "Near me" is on; null otherwise.
+  const state = { ...DEFAULT_FILTERS, origin: null };
 
   function render() {
-    const shown = applyFilters(restaurants, state);
+    let shown = applyFilters(restaurants, state);
+    if (state.origin) shown = sortByDistance(shown, state.origin);
     listEl.replaceChildren(...shown.map(card));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
@@ -118,9 +128,63 @@ function init(restaurants) {
     render();
   });
 
+  wireNearMe(state, render);
+
   render();
   initPicker(() => applyFilters(restaurants, state));
   document.body.classList.add("app-ready");
+}
+
+// "Near me": sort the list by distance from the device's location. Purely
+// additive — geolocation is feature-detected and the button stays hidden
+// (and the plain list stays) where it's unavailable or blocked.
+function wireNearMe(state, render) {
+  const btn = document.getElementById("near-me");
+  const status = document.getElementById("geo-status");
+  if (!btn || !("geolocation" in navigator)) return;
+  btn.hidden = false;
+
+  const setStatus = (msg) => {
+    status.textContent = msg || "";
+    status.hidden = !msg;
+  };
+  const setPressed = (on) => {
+    btn.setAttribute("aria-pressed", String(on));
+    btn.querySelector(".near-me-label").textContent = on ? "Nearest first" : "Near me";
+  };
+
+  btn.addEventListener("click", () => {
+    if (state.origin) {
+      // Toggle off → back to the curated order.
+      state.origin = null;
+      setPressed(false);
+      setStatus("");
+      render();
+      return;
+    }
+    btn.disabled = true;
+    setStatus("Finding your location…");
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        btn.disabled = false;
+        state.origin = { lat: coords.latitude, lng: coords.longitude };
+        setPressed(true);
+        setStatus("Sorted by distance from you.");
+        render();
+      },
+      (err) => {
+        btn.disabled = false;
+        setPressed(false);
+        // Denied is the common, non-error case; be matter-of-fact.
+        setStatus(
+          err.code === err.PERMISSION_DENIED
+            ? "Location off — showing our usual order."
+            : "Couldn't get your location — showing our usual order."
+        );
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+    );
+  });
 }
 
 loadRestaurants()

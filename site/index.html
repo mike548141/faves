@@ -36,7 +36,12 @@
       <div class="results-head">
         <h2 class="sr-only">Restaurants</h2>
         <p id="result-count" class="result-count" role="status" aria-live="polite"></p>
+        <!-- JS + geolocation only; app.js unhides it when available. -->
+        <button type="button" id="near-me" class="near-me" aria-pressed="false" hidden>
+          <span aria-hidden="true">📍</span> <span class="near-me-label">Near me</span>
+        </button>
       </div>
+      <p id="geo-status" class="geo-status" role="status" aria-live="polite" hidden></p>
 
       <p class="fallback-note">Showing all places. Turn on JavaScript to filter and shuffle.</p>
 

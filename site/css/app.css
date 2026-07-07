@@ -160,6 +160,41 @@ main {
   font-weight: 600;
 }
 
+/* "Near me" distance-sort toggle (roadmap Theme 2). Hidden until app.js
+   confirms geolocation is available. */
+.near-me {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  min-height: 44px;
+  padding: 0.35em 0.9em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.near-me[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.near-me:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.near-me:active {
+  transform: scale(0.97);
+}
+.geo-status {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  margin-bottom: var(--space-3);
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -214,6 +249,15 @@ main {
   font-size: var(--step-sub);
 }
 .card-area::after {
+  content: "·";
+  margin-inline: 0.4em;
+  color: var(--line);
+}
+.card-distance {
+  color: var(--accent);
+  font-weight: 700;
+}
+.card-distance::after {
   content: "·";
   margin-inline: 0.4em;
   color: var(--line);

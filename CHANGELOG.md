@@ -10,6 +10,12 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- "Near me" distance sort (roadmap Theme 2): a home-screen toggle that
+  uses the device location (`navigator.geolocation`) + haversine to sort
+  venues nearest-first, showing each one's distance ("1.2 km") on its
+  card. No tile map, no map library, no external request — offline-safe
+  and zero-dependency; declining the location permission just keeps the
+  usual order. Pure logic in `site/js/distance.js` with unit tests.
 - Native maps handoff (roadmap Theme 2): tapping a venue's address on the
   menu screen now opens the device's own maps app — Apple Maps on
   iOS/macOS, the default maps app via a `geo:` link on Android, Google

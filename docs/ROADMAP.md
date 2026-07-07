@@ -52,15 +52,18 @@ sanity-checks the total — on a phone, offline.
 
 ## Theme 2 — Location & maps
 
-- **Coordinates in the schema** `[S][schema]` — add `lat`/`lng` per venue.
-  Tiny data chore; do it first, it unblocks the two below.
-- **Native maps handoff** `[S]` **⚑** — tapping an address opens the
-  device's *default* maps app: Apple Maps on iOS/macOS, Google or a
-  `geo:` URI on Android, via platform detection. Cheap, daily payoff.
-- **"What's close" = distance-sorted list** `[M][constraint]` — use
-  `navigator.geolocation` + haversine to sort the home list by distance
-  ("1.2 km"). No tiles, no map library → stays offline-safe and zero-dep.
-  Delivers ~80% of the "what's near me" value.
+- **Coordinates in the schema** `[S][schema]` ✅ **done 2026-07-08** —
+  `lat`/`lng` on every venue, geocoded from addresses (Nominatim,
+  dev-time only). Unblocked the two below.
+- **Native maps handoff** `[S]` ✅ **done 2026-07-08** (ADR 0005) — the
+  menu screen's address row opens the device's *default* maps app: Apple
+  Maps on iOS/macOS, a `geo:` link to the default app on Android, Google
+  Maps on desktop, via platform detection (`site/js/geo.js`).
+- **"What's close" = distance-sorted list** `[M][constraint]` ✅ **done
+  2026-07-08** — a "📍 Near me" home-screen toggle uses
+  `navigator.geolocation` + haversine (`site/js/distance.js`) to sort the
+  list by distance ("1.2 km" on each card). No tiles, no map library →
+  offline-safe and zero-dep. Delivers ~80% of the "what's near me" value.
 - **A real tile map view** `[L][constraint ✗]` — tile maps need an
   external tile source *and* a map library (CDN), which breaks "no
   external requests / offline-safe / no CDN". Recommend **not** building
