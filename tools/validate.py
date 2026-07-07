@@ -34,6 +34,9 @@ DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 errors = []
 warnings = []
+# {id: set(dish names)} for the whole dataset — populated before checks so
+# cross-record `goesWith` ("id#Dish") references can be resolved.
+ALL_NAMES = {}
 
 
 def err(rid, msg):
@@ -42,6 +45,17 @@ def err(rid, msg):
 
 def warn(rid, msg):
     warnings.append(f"[{rid}] {msg}")
+
+
+def check_image(rid, obj, where):
+    """image is an optional self-hosted path; alt is required when set."""
+    img = obj.get("image")
+    if img is not None and not (isinstance(img, str) and img.strip()):
+        err(rid, f"{where}: image must be a non-empty string path or null")
+    if isinstance(img, str) and img.strip():
+        alt = obj.get("alt")
+        if not (isinstance(alt, str) and alt.strip()):
+            err(rid, f"{where}: alt text is required when image is set (a11y)")
 
 
 def check_restaurant(path):
@@ -119,6 +133,9 @@ def check_restaurant(path):
     elif lat is None and not is_recipes:
         warn(rid, "no coordinates (lat/lng) set — maps opens by address only")
 
+    # image / alt: optional self-hosted card photo; alt required when set.
+    check_image(rid, data, "card image")
+
     # ordering: optional list of {platform, url}
     ordering = data.get("ordering")
     if ordering is not None:
@@ -178,6 +195,7 @@ def check_restaurant(path):
 
     # menu + collect item names for picks check
     item_names = set()
+    pairings = []  # (dish_name, ref) — validated after all names are known
     menu = data.get("menu")
     if not isinstance(menu, list):
         err(rid, "menu must be a list")
@@ -222,6 +240,18 @@ def check_restaurant(path):
             if time is not None and not isinstance(time, str):
                 err(rid, f"time for {name!r} must be a string or absent")
 
+            # Dish photo (optional, self-hosted); alt required when set.
+            check_image(rid, item, f"item {name!r}")
+
+            # Pairings: collect now, resolve after all names are known.
+            gw = item.get("goesWith")
+            if gw is not None and (
+                not isinstance(gw, list) or not all(isinstance(x, str) for x in gw)
+            ):
+                err(rid, f"goesWith for {name!r} must be a list of strings or absent")
+            elif gw:
+                pairings.extend((name, ref) for ref in gw)
+
     # status/menu consistency
     if status == "stub" and menu:
         warn(rid, "status is 'stub' but a menu is present")
@@ -238,6 +268,17 @@ def check_restaurant(path):
                 err(rid, f"pick {p!r} does not match any menu item name")
     if status in ("menu-complete", "verified") and not picks:
         warn(rid, "no picks set yet")
+
+    # goesWith pairings must resolve — same-record dish name, or "id#Dish".
+    for dish, ref in pairings:
+        if "#" in ref:
+            ref_id, _, ref_name = ref.partition("#")
+            if ref_id not in ALL_NAMES:
+                err(rid, f"goesWith {ref!r} on {dish!r}: unknown restaurant id {ref_id!r}")
+            elif ref_name not in ALL_NAMES[ref_id]:
+                err(rid, f"goesWith {ref!r} on {dish!r}: no dish {ref_name!r} in {ref_id}")
+        elif ref not in item_names:
+            err(rid, f"goesWith {ref!r} on {dish!r} does not match a dish in this menu")
 
     return rid
 
@@ -261,6 +302,21 @@ def main():
     for fid in file_ids:
         if fid not in index:
             warn("index", f"file {fid}.json is not listed in index.json")
+
+    # Pre-pass: collect every dish name per id so cross-record `goesWith`
+    # references can be resolved during the checks below.
+    for path in files:
+        try:
+            d = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        names = set()
+        for section in d.get("menu", []) or []:
+            for item in (section.get("items", []) if isinstance(section, dict) else []):
+                n = item.get("name")
+                if isinstance(n, str):
+                    names.add(n)
+        ALL_NAMES[path.stem] = names
 
     for path in files:
         check_restaurant(path)

@@ -10,6 +10,16 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Recommended pairings: a menu item can carry a `goesWith` list ("goes
+  well with…") shown as deep-link chips to the paired dishes, in the same
+  record or cross-record. Seeded on Cook-at-Home mains (e.g. Shane's Ribs
+  → Creamy Mushrooms, Turkish Flatbread, Sticky Date Pudding). See ADR
+  0007 (chosen over reorganising Cook-at-Home around meals).
+- Dish & venue photos: schema + rendering are in place — an optional
+  `image` (+ required `alt`) on a venue shows a card photo, and on a menu
+  item a dish photo, both lazy-loaded with a reserved aspect box (no
+  layout shift) and self-hosted (offline-safe). Rolls out per venue as
+  the owner adds photos to `intake/`.
 - Live opening-hours status: home cards and the menu screen now show
   "Open · until 9pm" / "Closing soon · closes in 30 min" / "Closed ·
   opens 5pm", computed in New Zealand time (not the viewer's clock) so

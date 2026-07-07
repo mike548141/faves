@@ -35,3 +35,6 @@ deliberation those compact docs omit.
 - [0006](0006-hours-model-and-timezone.md) — structured per-day hours
   (intervals, splits, "late"), live status computed in NZ time not the
   device clock
+- [0007](0007-pairings-not-meal-reorg.md) — recommended pairings
+  (`goesWith` deep-links) instead of reorganising Cook-at-Home around
+  meals

@@ -220,6 +220,33 @@ function renderPicks(r, allItems) {
   ]);
 }
 
+// Deep-link chips for "goes well with": a same-record dish name, or a
+// cross-record "id#Dish Name". Anchors match the dish li ids below.
+function pairingLinks(refs) {
+  const wrap = el("div", { className: "dish-pairs" }, [
+    el("span", { className: "dish-pairs-label", textContent: "Goes well with" }),
+  ]);
+  for (const ref of refs) {
+    const hash = ref.indexOf("#");
+    const [id, name] = hash === -1 ? [null, ref] : [ref.slice(0, hash), ref.slice(hash + 1)];
+    const href = id ? `restaurant.html?id=${id}#dish-${slug(name)}` : `#dish-${slug(name)}`;
+    wrap.append(el("a", { className: "pair-chip", href, textContent: name }));
+  }
+  return wrap;
+}
+
+// Lazy-loaded, layout-stable dish photo (only when the item has one).
+function dishPhoto(item) {
+  if (!item.image) return null;
+  return el("img", {
+    className: "dish-photo",
+    src: item.image,
+    alt: item.alt || "",
+    loading: "lazy",
+    decoding: "async",
+  });
+}
+
 function renderDish(item, isRecipes = false) {
   // The price slot doubles as a recipe meta chip (serves · time).
   const recipeMeta = isRecipes
@@ -240,7 +267,10 @@ function renderDish(item, isRecipes = false) {
     el("h3", { className: "dish-name", textContent: item.name }),
     aside,
   ]);
+  // Note: li.append() below stringifies null, so only push real nodes.
   const children = [head];
+  const photo = dishPhoto(item);
+  if (photo) children.push(photo);
   if (item.desc) {
     children.push(el("p", { className: "dish-desc", textContent: item.desc }));
   }
@@ -251,6 +281,9 @@ function renderDish(item, isRecipes = false) {
   }
   if (isRecipes && (item.ingredients?.length || item.steps?.length)) {
     children.push(renderRecipeDetail(item));
+  }
+  if (item.goesWith?.length) {
+    children.push(pairingLinks(item.goesWith));
   }
   const li = el("li", { className: isRecipes ? "dish recipe" : "dish", id: `dish-${slug(item.name)}` });
   li.dataset.name = item.name.toLowerCase();

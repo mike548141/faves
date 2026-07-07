@@ -93,6 +93,8 @@ afternoon.
   ],
   "services": ["dine-in", "takeaway"],
   "hours": null,                     // null, or a full week (see below)
+  "image": null,                     // optional self-hosted card photo, e.g. "img/kk/hero.jpg"
+  "alt": null,                       // required when image is set (a11y)
   "vibe": ["cheap-and-cheerful"],    // free-form chips shown on cards
   "picks": ["Char kway teow"],       // "our picks" — dish names, must exist in menu
   "verified": null,                  // ISO date the menu was last checked, e.g. "2026-07-10"
@@ -105,7 +107,10 @@ afternoon.
           "name": "Char kway teow",
           "desc": "Flat rice noodles wok-fried with egg, bean sprouts and soy.",
           "price": 18.5,             // NZD; null if market/varies
-          "tags": ["spicy-1"]        // see tag vocabulary
+          "tags": ["spicy-1"],       // see tag vocabulary
+          "image": null,             // optional self-hosted dish photo (lazy-loaded)
+          "alt": null,               // required when image is set
+          "goesWith": ["Roti"]       // optional pairings: dish names, or "id#Dish" cross-record
         }
       ]
     }
@@ -172,6 +177,17 @@ UI must never present absence of an allergen tag as "allergen-free".
   hours engine (`site/js/hours.js`) computes a live open/closed status
   from this in **Pacific/Auckland** time (not the viewer's clock), and a
   grouped weekly display; see ADR 0006.
+- `image` (venue card photo, or a menu item's dish photo) is an optional
+  **self-hosted** path — no hotlinking (offline / no-external-request
+  rule); store under `site/img/`. Photos are excluded from the transfer
+  budget and lazy-loaded. When `image` is set, `alt` is **required**
+  (accessibility). Prefer the owner's photo of the real dish; generic
+  stock only as a captioned fallback, properly licensed.
+- `goesWith` (menu item) is an optional list of pairing references —
+  "goes well with" suggestions shown on the dish. Each is either a dish
+  `name` in the **same** record, or a cross-record `"restaurant-id#Dish
+  Name"`. Every reference must resolve to a real dish (validated), the
+  same discipline as `picks`. It's our curation — no backend, no ratings.
 - `lat`/`lng` are optional decimal degrees (WGS84), set together or not
   at all. When present, the menu screen's address row hands off to the
   device's native maps app at those exact coordinates (`site/js/geo.js`);

@@ -358,6 +358,17 @@ main {
   margin-top: var(--space-2);
 }
 
+/* Card photo: full-bleeds to the card edges (cancels the link padding) and
+   reserves its box via aspect-ratio so lazy-loading causes no layout shift. */
+.card-photo {
+  display: block;
+  width: calc(100% + 2 * var(--space-3));
+  margin: calc(-1 * var(--space-3)) calc(-1 * var(--space-3)) var(--space-3);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
 /* ---------- Empty state ---------- */
 .empty {
   padding: var(--space-5) var(--space-3);
@@ -935,6 +946,45 @@ html {
   flex-wrap: wrap;
   gap: var(--space-1);
   margin-top: var(--space-2);
+}
+.dish-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius);
+  margin-top: var(--space-2);
+  background: var(--surface-2);
+}
+
+/* "Goes well with" pairings — deep-link chips to other dishes. */
+.dish-pairs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+.dish-pairs-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-right: 0.2em;
+}
+.pair-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.25em 0.7em;
+  border-radius: var(--radius-chip);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.pair-chip:hover {
+  text-decoration: underline;
 }
 
 /* Tag chips */

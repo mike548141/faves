@@ -22,6 +22,18 @@ function servicesText(services = []) {
   return services.map((s) => SERVICE_LABEL[s] || s).join(", ");
 }
 
+// Lazy, layout-stable card photo (only when the venue has one).
+function cardPhoto(r) {
+  if (!r.image) return null;
+  return el("img", {
+    className: "card-photo",
+    src: r.image,
+    alt: r.alt || "",
+    loading: "lazy",
+    decoding: "async",
+  });
+}
+
 // Live open/closed badge from the venue's hours (null hours → no badge).
 function hoursBadge(r, now) {
   const st = openStatus(r.hours, now);
@@ -76,9 +88,10 @@ function card(r, now) {
   li.dataset.status = r.status;
 
   if (r.status === "stub") {
-    li.append(el("div", { className: "card-body" }, [name, meta, chips]));
+    li.append(el("div", { className: "card-body" }, [cardPhoto(r), name, meta, chips]));
   } else {
     const link = el("a", { className: "card-link", href: `restaurant.html?id=${r.id}` }, [
+      cardPhoto(r),
       name,
       meta,
       badge,

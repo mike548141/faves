@@ -97,31 +97,26 @@ desktop; Lighthouse a11y stays 100.
   paper/in-store, **never** delivery apps).
 - **More dishes & home recipes** — same pipeline; the placeholder recipes
   in `cook-at-home.json` get replaced from the Notes export.
-- **Dish photos** `[L][schema]` **⚑ owner re-requested 2026-07-08** — add
-  `image` per item, lazy-loaded (the transfer budget already excludes
-  photos). *Owner photos of the actual dish* preferred; generic stock only
-  as a fallback, captioned "serving suggestion", properly licensed and
-  **self-hosted** (no hotlinking — the offline/no-external-request rule).
-  The *engineering* is small (an `image`/`alt` field, `loading="lazy"`
-  `<img>` with an aspect-ratio box so layout doesn't shift, and the SW's
-  existing capped image cache already covers offline). The *cost is
-  sourcing*: it's gated on actual photos. Cheapest path to value — ship
-  the rendering behind the field, then roll out per-restaurant as the
-  owner drops photos into `intake/`. A card thumbnail + a menu-row image
-  are the two placements.
+- **Dish photos** `[L][schema]` ✅ **rendering done 2026-07-08** — the
+  `image`/`alt` field + lazy-loaded `<img>` with an aspect-ratio box (no
+  layout shift) ships on both placements: a venue **card photo** and a
+  menu **dish photo**, self-hosted (offline-safe), the SW's capped image
+  cache already covering them. *Now purely a sourcing task*: drop owner
+  photos into `intake/` → they light up per venue. Generic stock only as a
+  captioned, licensed fallback.
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
 Owner idea (2026-07-08): Cook-at-Home (and menus) are flat lists of
 individual dishes, but people eat *meals*. Two shapes, not exclusive:
 
-- **(b) Recommended pairings** `[M][schema]` — *recommended first.* Add an
-  optional `goesWith` per item: a list of dish names (same record, or
-  `id#dish` cross-record). Opening a recipe/dish shows "Goes well with …"
-  chips that deep-link. Light, additive, honest (it's our curation, no
-  backend), and it **generalises to restaurant dishes** later ("add a
-  Sprig + Fern drink to this"). Natural bridge to the order tally (Theme
-  1) and the "meal" seed for the health app (Theme 6).
+- **(b) Recommended pairings** `[M][schema]` ✅ **done 2026-07-08** (ADR
+  0007) — optional `goesWith` per item (dish names, same record or
+  `id#dish` cross-record) → "Goes well with …" deep-link chips. Seeded on
+  Cook-at-Home mains. Light, additive, our curation (no backend), and it
+  **generalises to restaurant dishes** ("add a Sprig + Fern drink to
+  this"). Bridge to the order tally (Theme 1) and the "meal" seed for the
+  health app (Theme 6).
 - **(a) Reorganise around meals** `[L][schema][design]` — a `meal` becomes
   a first-class set (main + sides + dessert); Cook-at-Home sections become
   curated meals rather than dish categories. More expressive but a bigger

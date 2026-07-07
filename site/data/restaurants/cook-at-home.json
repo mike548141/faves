@@ -75,7 +75,8 @@
             "Add the peas.",
             "Let it simmer for a while, then add brown sugar to taste — the more you add, the milder the heat."
           ],
-          "tags": ["df", "spicy-1"]
+          "tags": ["df", "spicy-1"],
+          "goesWith": ["Turkish Flatbread"]
         },
         {
           "name": "Jesse's Garlic Chicken Thighs",
@@ -125,7 +126,8 @@
             "Cook on low for 8 hours.",
             "Remove the ribs, reduce the sauce in a pot until thick, then pour over the ribs."
           ],
-          "tags": ["spicy-1"]
+          "tags": ["spicy-1"],
+          "goesWith": ["Creamy Mushrooms", "Turkish Flatbread", "Sticky Date Pudding"]
         },
         {
           "name": "Lamb Shanks",
@@ -147,7 +149,8 @@
             "Put the shanks in an oven dish and pour the mixture over.",
             "Bake at 180°C for 2 hours."
           ],
-          "tags": []
+          "tags": [],
+          "goesWith": ["Creamy Mushrooms"]
         },
         {
           "name": "Slow-Cooked Chicken Noodle Soup",
@@ -182,7 +185,8 @@
             "Heat the wine, spring onion, garlic and butter in a pot.",
             "Add the rinsed and scrubbed mussels and cook covered for 5 minutes, until the shells open."
           ],
-          "tags": ["contains-shellfish"]
+          "tags": ["contains-shellfish"],
+          "goesWith": ["Turkish Flatbread"]
         },
         {
           "name": "BBQ Prawns",
@@ -200,7 +204,8 @@
             "Put on the BBQ, turning only once.",
             "Cook until golden brown."
           ],
-          "tags": ["gf", "df", "contains-shellfish"]
+          "tags": ["gf", "df", "contains-shellfish"],
+          "goesWith": ["Turkish Flatbread"]
         }
       ]
     },
