@@ -8,10 +8,11 @@ CSS design system, vanilla ES-module JavaScript, and JSON data files.
 
 ```
 site/
-  index.html            app shell (list, filters, picker)
+  index.html            app shell (list, filters, global search, picker)
   restaurant.html       menu view (?id=<restaurant-id>)
   css/app.css           design tokens + components (single file)
-  js/                   ES modules (data.js, filters.js, picker.js, menu.js, sw-register.js)
+  js/                   ES modules (data.js, filters.js, picker.js, menu.js,
+                        search.js, slug.js, sw-register.js)
   data/index.json       ordered list of restaurant ids
   data/restaurants/     <id>.json — one file per restaurant, menu included
   img/                  icons, photos (lazy-loaded)

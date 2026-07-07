@@ -5,6 +5,7 @@
 import { loadRestaurant } from "./data.js";
 import { mapsUrl } from "./geo.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
+import { slug } from "./slug.js";
 
 const root = document.getElementById("menu-root");
 
@@ -13,9 +14,6 @@ const el = (tag, props = {}, children = []) => {
   for (const child of [].concat(children)) if (child != null) node.append(child);
   return node;
 };
-
-const slug = (s) =>
-  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 const money = (n) =>
   n == null ? "" : `$${Number(n).toFixed(2).replace(/\.00$/, "")}`;

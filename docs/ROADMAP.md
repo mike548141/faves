@@ -101,16 +101,18 @@ The umbrella "better UX and design", with your concrete asks:
   Partly addressed already: menu **section headings** now stick under the
   jump-nav (2026-07-08); the menu *search field* sticking is the remaining
   piece.
-- **Global search from the home screen** `[M]` — owner ask (2026-07-08):
+- **Global search from the home screen** `[M]` ✅ **done 2026-07-08** —
   one search box on the home page that jumps straight to a **restaurant or
-  a dish** by name ("mee goreng" → KK Malaysian's dish; "sprig" → the
-  venue). All client-side over the already-loaded data (every menu is in
-  memory / precached), so it's offline-safe and zero-dep — an index built
-  once at load, results grouped "Places / Dishes", each linking to the
-  venue (dish results deep-link to `#dish-…`). This supersedes the older
-  "does the home screen need a persistent search field?" question — yes,
-  and it searches dishes too, not just filters venues. Pairs with the menu
-  search (same matching logic can be shared).
+  a dish** by name ("mee goreng" → the dish across every venue; "sprig" →
+  the venue; "gastropub" → venues by cuisine). All client-side over the
+  already-loaded data (`site/js/search.js`, pure + unit-tested), so it's
+  offline-safe and zero-dep — an index built once at load, results grouped
+  "Places / Dishes", each linking to the venue (dish results deep-link to
+  `#dish-…` via the shared `slug.js`, or to the recipe page for Cook at
+  Home). While a query is live the browse cards, filters and shuffle hide
+  (`body.searching`); clearing restores them. Superseded the older "does
+  the home screen need a persistent search field?" question — yes, and it
+  searches dish names + descriptions + ingredients, not just venue names.
 - General polish to the "oh, this is nice" bar (`DESIGN.md` mood):
   spacing, motion, empty states, and the new cart UI.
 

@@ -33,7 +33,29 @@
     </header>
 
     <main id="main" class="wrap">
-      <div class="results-head">
+      <!-- Global search: places + dishes, over the already-loaded data.
+           JS-only enhancement; app.js unhides it. Hidden by default so the
+           no-JS fallback list isn't preceded by a dead input. -->
+      <form class="search-field" role="search" id="search-form" hidden>
+        <label class="sr-only" for="search-input">Search places and dishes</label>
+        <span class="search-icon" aria-hidden="true">🔍</span>
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Search places or dishes…"
+          autocomplete="off"
+          enterkeyhint="search"
+        />
+      </form>
+
+      <!-- Populated by app.js while a query is active; browse view hidden. -->
+      <section id="search-results" class="search-results" aria-label="Search results" hidden>
+        <p id="search-summary" class="search-summary" role="status" aria-live="polite"></p>
+        <div id="search-groups"></div>
+      </section>
+
+      <div class="results-head browse-only">
         <h2 class="sr-only">Restaurants</h2>
         <p id="result-count" class="result-count" role="status" aria-live="polite"></p>
         <div class="list-toggles">
@@ -46,13 +68,13 @@
           </button>
         </div>
       </div>
-      <p id="geo-status" class="geo-status" role="status" aria-live="polite" hidden></p>
-      <p id="tz-note" class="tz-note" hidden>Open/closed times are New Zealand time.</p>
+      <p id="geo-status" class="geo-status browse-only" role="status" aria-live="polite" hidden></p>
+      <p id="tz-note" class="tz-note browse-only" hidden>Open/closed times are New Zealand time.</p>
 
-      <p class="fallback-note">Showing all places. Turn on JavaScript to filter and shuffle.</p>
+      <p class="fallback-note browse-only">Showing all places. Turn on JavaScript to filter and shuffle.</p>
 
       <!-- Fail-soft: this static list shows even if scripts fail. JS replaces it. -->
-      <ul id="restaurant-list" class="card-grid">
+      <ul id="restaurant-list" class="card-grid browse-only">
         <li class="card card-recipes" data-status="menu-complete">
           <a class="card-link" href="restaurant.html?id=cook-at-home">
             <h3 class="card-name">Cook at Home</h3>
@@ -223,7 +245,7 @@
         </li>
       </ul>
 
-      <p id="empty-state" class="empty" hidden>No places match those filters. Try widening them.</p>
+      <p id="empty-state" class="empty browse-only" hidden>No places match those filters. Try widening them.</p>
     </main>
 
     <nav class="filter-bar" aria-label="Filter restaurants">

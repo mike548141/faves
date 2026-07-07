@@ -7,6 +7,7 @@ import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
 import { sortByDistance, formatDistance } from "./distance.js";
 import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
+import { buildIndex, search } from "./search.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -166,10 +167,98 @@ function init(restaurants) {
   }
 
   wireOpenNow(state, render);
+  wireSearch(restaurants);
 
   render();
   initPicker(() => applyFilters(restaurants, state, nzNow()));
   document.body.classList.add("app-ready");
+}
+
+// Global search: one box that jumps to a place or a dish by name across all
+// venues (and Cook at Home). Runs over the already-loaded data — offline,
+// zero-dep. While a query is live, the browse view (cards, filters, toggles)
+// hides via `body.searching` and a grouped results list takes its place;
+// clearing the box restores browse. Purely additive to the fail-soft list.
+function wireSearch(restaurants) {
+  const form = document.getElementById("search-form");
+  const input = document.getElementById("search-input");
+  const results = document.getElementById("search-results");
+  const summary = document.getElementById("search-summary");
+  const groups = document.getElementById("search-groups");
+  if (!form || !input) return;
+
+  form.hidden = false;
+  const index = buildIndex(restaurants);
+
+  // A tab-hint icon precedes the venue name so the two groups read at a glance.
+  const placeIcon = (p) => (p.kind === "recipes" ? "🏠" : "🍽️");
+
+  function renderResults(q) {
+    const { places, dishes } = search(index, q);
+    groups.replaceChildren();
+
+    if (places.total === 0 && dishes.total === 0) {
+      summary.textContent = `Nothing matches “${q}”. Try a place or dish name.`;
+      return;
+    }
+    summary.textContent =
+      `${places.total} place${places.total === 1 ? "" : "s"}, ` +
+      `${dishes.total} dish${dishes.total === 1 ? "" : "es"} for “${q}”.`;
+
+    if (places.items.length) {
+      groups.append(resultGroup("Places", places, (p) =>
+        resultRow(`restaurant.html?id=${p.id}`, `${placeIcon(p)} ${p.name}`,
+          [p.area, (p.cuisine || []).join(", ")].filter(Boolean).join(" · "))
+      ));
+    }
+    if (dishes.items.length) {
+      groups.append(resultGroup("Dishes", dishes, (d) =>
+        resultRow(d.href, d.name,
+          [d.venueName, d.section].filter(Boolean).join(" · "))
+      ));
+    }
+  }
+
+  function resultGroup(title, { items, total }, rowFor) {
+    const head = el("h3", { className: "search-group-title" }, [
+      el("span", { textContent: title }),
+      el("span", {
+        className: "search-group-count",
+        textContent: total > items.length ? `${items.length} of ${total}` : String(total),
+      }),
+    ]);
+    const list = el("ul", { className: "search-list" }, items.map(rowFor));
+    return el("section", { className: "search-group" }, [head, list]);
+  }
+
+  function resultRow(href, name, sub) {
+    return el("li", { className: "search-row" }, [
+      el("a", { className: "search-link", href }, [
+        el("span", { className: "search-row-name", textContent: name }),
+        sub ? el("span", { className: "search-row-sub", textContent: sub }) : null,
+      ]),
+    ]);
+  }
+
+  function update() {
+    const q = input.value.trim();
+    const active = q.length >= 2;
+    document.body.classList.toggle("searching", active);
+    results.hidden = !active;
+    if (active) renderResults(q);
+    else groups.replaceChildren();
+  }
+
+  input.addEventListener("input", update);
+  // Submit is a no-op (results are live); just don't reload the page.
+  form.addEventListener("submit", (e) => e.preventDefault());
+  // Esc clears and returns to browse, even from the native clear button path.
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && input.value) {
+      input.value = "";
+      update();
+    }
+  });
 }
 
 // "Open now" filter: show only venues currently open (or closing soon).

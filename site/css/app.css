@@ -213,6 +213,107 @@ main {
   margin-bottom: var(--space-3);
 }
 
+/* ---------- Global search (home) ---------- */
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+.search-icon {
+  position: absolute;
+  left: 0.85em;
+  font-size: 1rem;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.search-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6em 0.9em 0.6em 2.4em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-body);
+}
+.search-input::placeholder {
+  color: var(--ink-soft);
+}
+
+/* Search mode: browse view + bottom filter bar + shuffle FAB step aside so
+   the results own the screen. */
+body.searching .browse-only,
+body.searching .filter-bar,
+body.searching .pick-fab {
+  display: none;
+}
+
+.search-summary {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+.search-group {
+  margin-bottom: var(--space-4);
+}
+.search-group-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--step-sub);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-2);
+}
+.search-group-count {
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.search-list {
+  display: grid;
+  gap: var(--space-1);
+}
+.search-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  min-height: 44px;
+  justify-content: center;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color 0.14s ease, background 0.14s ease;
+}
+.search-row-name {
+  font-weight: 600;
+  color: var(--ink);
+}
+.search-row-sub {
+  font-size: var(--step-sub);
+  color: var(--ink-soft);
+}
+@media (hover: hover) {
+  .search-link:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .search-link:hover .search-row-name {
+    color: var(--accent);
+  }
+}
+.search-link:focus-within,
+.search-link:focus-visible {
+  border-color: var(--accent);
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: 1fr;

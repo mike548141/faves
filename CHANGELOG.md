@@ -10,6 +10,13 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Global search on the home screen: one box finds a **place or a dish**
+  by name (also matching area, cuisine and — for dishes — description and
+  ingredients) across every venue and Cook at Home. Results group into
+  "Places" and "Dishes"; a dish links straight to its row on the menu
+  (or its full recipe page). Runs entirely over the already-loaded data,
+  so it's offline and zero-dependency. While a query is live the browse
+  cards, filters and shuffle step aside; clearing the box restores them.
 - Full recipe pages: tapping a Cook at Home dish name opens its own
   focused, shareable page (`recipe.html?id=…&dish=…`) — ingredients,
   method, serves/time, photo, allergen/dietary tags and "goes well with"

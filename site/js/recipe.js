@@ -5,6 +5,7 @@
 // keeping with the other screen modules.
 
 import { loadRestaurant } from "./data.js";
+import { slug } from "./slug.js";
 
 const root = document.getElementById("recipe-root");
 
@@ -13,9 +14,6 @@ const el = (tag, props = {}, children = []) => {
   for (const child of [].concat(children)) if (child != null) node.append(child);
   return node;
 };
-
-const slug = (s) =>
-  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 // --- Tag vocabulary → display (mirrors menu.js) ----------------------
 const DIETARY = {
