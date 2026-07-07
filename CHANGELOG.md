@@ -21,6 +21,8 @@ freshness separately from this file.
   `CONTRIBUTING.md`, and this changelog.
 - JS unit tests for the pure filter logic (`node --test`), run in CI
   alongside menu-data validation.
+- Zero-dependency guard (`tools/check_no_deps.py`, a CI job) enforcing
+  the no-third-party-components invariant from ADR 0001.
 
 ### Changed
 - Corrected the `CLAUDE.md` zero-build wording: Node may be used for dev

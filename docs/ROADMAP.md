@@ -161,13 +161,13 @@ against dependency creep.
   `/.well-known/sbom` on the site, or attached to a tagged release. **⚑
   owner picks format + publish location** (and whether to cover just the
   shipped `site/` or also the dev toolchain — Node, the test runner).
-- **Zero-dependency CI guard** `[S]` — a CI check that fails if
-  `package.json` ever gains a `dependencies`/`devDependencies` entry, or
-  a lockfile/`node_modules` appears. This machine-enforces the invariant
-  ADR 0001 rests on, so the "no dependencies" promise can't rot silently.
-  Cheap, and it's what actually protects the SBOM's emptiness. *(Small
-  enough to pull forward pre-launch — it guards the `package.json` we
-  just introduced for tests.)*
+- **Zero-dependency CI guard** `[S]` ✅ **done 2026-07-08** —
+  `tools/check_no_deps.py` fails if `package.json` gains any dependency
+  key, or a lockfile/`node_modules` appears; wired into CI as its own
+  job. Machine-enforces the invariant ADR 0001 rests on, so the "no
+  dependencies" promise can't rot silently — and it's what protects the
+  SBOM's emptiness. Pulled forward pre-launch since it guards the
+  `package.json` introduced for tests.
 - **`security.txt` + provenance metadata** `[S]` — a `/.well-known/
   security.txt` (contact + policy) is cheap good-citizenship for a public
   site. Build provenance/attestation (SLSA-style) is **N/A today** —

@@ -22,6 +22,19 @@ jobs:
       - name: Validate restaurant JSON against the schema
         run: python3 tools/validate.py
 
+  guard:
+    name: zero dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Fails if package.json ever grows a dependency, or a lockfile /
+      # node_modules appears — the invariant ADR 0001 rests on.
+      - name: Assert no third-party dependencies
+        run: python3 tools/check_no_deps.py
+
   test:
     name: JS unit tests
     runs-on: ubuntu-latest

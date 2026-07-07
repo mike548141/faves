@@ -45,6 +45,7 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
 ```sh
 python3 tools/serve.py        # laptop + phone (same Wi-Fi); prints both URLs
 python3 tools/validate.py     # data validates against the schema
+python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 node --test                   # JS unit tests (pure logic); no npm install needed
 ```
 
