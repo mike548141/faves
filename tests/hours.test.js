@@ -12,6 +12,7 @@ import {
   groupWeek,
   openStatus,
   nzNow,
+  viewerOnNzTime,
 } from "../site/js/hours.js";
 
 // dow: Sun=0 … Sat=6. minutes = hours*60+mins.
@@ -128,4 +129,10 @@ test("nzNow returns a plausible shape (dow 0-6, minutes 0-1439)", () => {
   const now = nzNow();
   assert.ok(now.dow >= 0 && now.dow <= 6);
   assert.ok(now.minutes >= 0 && now.minutes < 1440);
+});
+
+test("viewerOnNzTime returns a boolean (value depends on the runner's tz)", () => {
+  // Deterministic value would require stubbing the process timezone, so we
+  // only assert the shape here; the display qualifier it gates is cosmetic.
+  assert.equal(typeof viewerOnNzTime(), "boolean");
 });

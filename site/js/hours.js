@@ -17,6 +17,21 @@ const DOW = { mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6, sun: 0 }; // → g
 const WEEK = 7 * 24 * 60; // minutes in a week
 const CLOSING_SOON = 60; // minutes: "closing soon" / "opens soon" window
 
+/**
+ * True when the viewer's device is on the same wall-clock as NZ right now,
+ * so displayed venue hours need no "NZ time" qualifier. We store hours as
+ * venue-local time (NOT UTC — a fixed UTC instant would drift across NZ's
+ * DST switch); status is always computed correctly in the venue's zone, so
+ * this is only about disambiguating the *displayed* clock for a viewer
+ * whose device sits in a different timezone.
+ */
+export function viewerOnNzTime(date = new Date()) {
+  const nz = nzNow(date);
+  const local = date.getHours() * 60 + date.getMinutes();
+  const diff = Math.abs(local - nz.minutes);
+  return Math.min(diff, 1440 - diff) <= 1;
+}
+
 /** Minutes since midnight from "HH:MM"; null passes through. */
 export function toMinutes(hhmm) {
   if (hhmm == null) return null;

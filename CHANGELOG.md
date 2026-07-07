@@ -23,7 +23,11 @@ freshness separately from this file.
 - Live opening-hours status: home cards and the menu screen now show
   "Open · until 9pm" / "Closing soon · closes in 30 min" / "Closed ·
   opens 5pm", computed in New Zealand time (not the viewer's clock) so
-  it's right for a guest browsing from anywhere. The menu screen also
+  it's right for a guest browsing from anywhere (hours are stored as
+  venue-local time, never UTC — a fixed UTC instant would drift across
+  NZ's daylight-saving switch; a viewer whose device isn't on NZ time
+  sees an unobtrusive "NZ time" label rather than a misleading
+  conversion). The menu screen also
   shows the week grouped into ranges with today highlighted, and
   lunch/dinner splits rendered inline ("12pm–3pm, 5pm–9pm"). Backed by a
   new machine-readable hours model and a pure engine (`site/js/hours.js`)

@@ -5,7 +5,7 @@
 import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
 import { sortByDistance, formatDistance } from "./distance.js";
-import { openStatus, nzNow } from "./hours.js";
+import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
@@ -158,6 +158,12 @@ function init(restaurants) {
   });
 
   wireNearMe(state, render);
+
+  // Only a viewer off NZ time needs telling the badges are NZ time.
+  if (!viewerOnNzTime()) {
+    const note = document.getElementById("tz-note");
+    if (note) note.hidden = false;
+  }
 
   render();
   initPicker(() => applyFilters(restaurants, state));

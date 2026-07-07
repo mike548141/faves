@@ -200,6 +200,11 @@ main {
   font-size: var(--step-sub);
   margin-bottom: var(--space-3);
 }
+.tz-note {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  margin-bottom: var(--space-3);
+}
 
 .card-grid {
   display: grid;

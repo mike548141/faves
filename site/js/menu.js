@@ -4,7 +4,7 @@
 
 import { loadRestaurant } from "./data.js";
 import { mapsUrl } from "./geo.js";
-import { openStatus, groupWeek, nzNow } from "./hours.js";
+import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 
 const root = document.getElementById("menu-root");
 
@@ -117,8 +117,13 @@ function contactCard(r) {
       if (wk.dows.includes(now.dow)) li.classList.add("is-today");
       list.append(li);
     }
+    // Label the clock as NZ time only for a viewer whose device isn't on
+    // it — locals (the common case) see no redundant qualifier.
     const text = el("span", { className: "contact-text" }, [
-      el("span", { className: "contact-label", textContent: "Hours" }),
+      el("span", {
+        className: "contact-label",
+        textContent: viewerOnNzTime() ? "Hours" : "Hours · NZ time",
+      }),
     ]);
     if (st.state !== "unknown") {
       const badge = el("span", {
