@@ -21,6 +21,11 @@ site/
 
 ## Decisions and rationale
 
+This table is the compact current truth. The fuller deliberation behind
+the significant calls — the alternatives weighed and why they lost —
+lives as ADRs in [`decisions/`](decisions/); write a new one before
+deviating from the architecture.
+
 | Decision | Choice | Why |
 |---|---|---|
 | Framework | **None** (vanilla) | 7–20 restaurants is trivially small. No toolchain exists on the dev machine (no Node/brew) and none is wanted: nothing to install, nothing to rot, instant onboarding for any future editor (human or AI). Performance ceiling is higher than any framework. |

@@ -1,14 +1,20 @@
 # Faves — instructions for AI builders
 
 Read `docs/STRATEGY.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, then
-work from `docs/WORKPLAN.md`. Do not deviate from the architecture
-without recording the decision in `docs/ARCHITECTURE.md`.
+work from `docs/WORKPLAN.md`. Skim the tail of `docs/SESSIONS.md` for
+where the last session left off. Do not deviate from the architecture
+without recording the decision — a short ADR in `docs/decisions/`
+(see its README) for anything a future session might re-propose, and a
+line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
 
 ## Hard constraints
 
-- **Zero build step.** `site/` is served as-is. No Node, no npm, no
-  bundlers, no frameworks, no CDN dependencies. Vanilla HTML + CSS +
-  ES-module JavaScript only. (This machine has no Node/brew — by design.)
+- **Zero build step.** `site/` is served as-is. No bundlers, no
+  frameworks, no npm dependencies, no CDN dependencies in the shipped
+  artifact. Vanilla HTML + CSS + ES-module JavaScript only — what's in
+  `site/` is the whole product. Node may exist on the machine for dev
+  tooling (Lighthouse, JS tests), but it is never a build or runtime
+  dependency: the site must run with nothing but a static file server.
 - **Mobile first.** Design and test at 390 px first, then tablet, then
   desktop. Every interactive target ≥ 44 px.
 - **Offline capable.** Service worker precaches the app shell and all
@@ -44,3 +50,39 @@ python3 tools/validate.py     # data validates against the schema
 Exercise the change in a real browser at mobile width. JSON data must
 validate against the schema in `docs/ARCHITECTURE.md` — malformed menu
 data is the most likely regression.
+
+## Working conventions
+
+Adopted from the `ros`/`tiki` repos (2026-07-08), adapted to a
+build-less static site. See `CONTRIBUTING.md` for the fuller version.
+
+- **Commit as you work.** Small, focused commits — one concern each —
+  landed continuously, not one end-of-session dump. Cloudflare Pages
+  deploys from `main`, so a push *is* a deploy; only push (and only
+  branch off `main`) when asked.
+- **Commit message style:** `area: imperative subject`, lower-case,
+  concise, noting how it was verified where useful. Areas in play:
+  `data` (menu JSON), `home`/`menu`/`picker` (screens), `css`,
+  `pwa`/`sw`, `a11y`, `seo`, `docs`, `deploy`, `tools`.
+- **Documentation as code.** Significant decisions that reject a
+  plausible alternative or rest on hard-won evidence get a short ADR in
+  `docs/decisions/` (never edit an accepted one — supersede it).
+  Reversible implementation choices get a code comment instead. Append a
+  `docs/SESSIONS.md` entry (append-only, newest last) before finishing a
+  session.
+- **Comments say _why_, not _what_** — constraints, platform quirks,
+  non-obvious reasons; never a restatement of the code.
+- **TODO markers:** `#!#` in any language; more `#` = higher priority
+  (`#!#` nice-to-have → `#!####` blocking).
+- **Lockstep rules** (change these together, in one commit):
+  - Bump `VERSION` in `site/sw.js` on *any* change under `site/` — it's
+    what tells installed phones to refetch; stale = offline visitors
+    keep old menus.
+  - Keep the no-JS fallback `<ul>` in `site/index.html` in step with
+    `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
+  - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
+    in `site/data/index.json` + a fallback `<li>`; then `validate.py`.
+
+There is no `man` page: faves ships a website, not a CLI. The `tools/`
+scripts are the only command surface — keep their `--help`/argparse and
+module docstrings current instead.

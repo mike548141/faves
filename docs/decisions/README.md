@@ -1,0 +1,31 @@
+# Decision records
+
+Short ADRs preserving the *deliberation* behind significant decisions —
+the alternatives weighed, why they lost, and the evidence — which
+`ARCHITECTURE.md` (current truth, compact) deliberately compresses away.
+
+Write one when a decision (a) rejected a plausible alternative a future
+session might re-propose, or (b) rests on evidence that took real work
+to gather. Don't write one for reversible implementation choices — a
+code comment covers those (the "comments say why" rule).
+
+Format: one file, numbered `NNNN-slug.md`, about half a page. Sections:
+**Status** (accepted / superseded-by-NNNN), **Date**, **Context**,
+**Decision**, **Rejected** (each alternative + why it lost),
+**Consequences**. Never edit an accepted ADR's substance — supersede it
+with a new one.
+
+Records 0001–0004 were backfilled 2026-07-08 from decisions already made
+and recorded in `ARCHITECTURE.md`/`STRATEGY.md`; they capture the
+deliberation those compact docs omit.
+
+## Index
+
+- [0001](0001-zero-build-vanilla.md) — zero build step, vanilla
+  HTML/CSS/ES-modules, no framework
+- [0002](0002-json-per-restaurant-git-as-cms.md) — one JSON file per
+  restaurant, git as the CMS (no database, no admin UI)
+- [0003](0003-recipes-as-kind-not-separate-type.md) — Cook at Home as a
+  `kind:"recipes"` record reusing the venue shape
+- [0004](0004-cloudflare-pages-subdomain.md) — Cloudflare Pages at a
+  subdomain, not S3 and not a path prefix
