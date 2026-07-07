@@ -69,6 +69,25 @@ sanity-checks the total — on a phone, offline.
   external requests / offline-safe / no CDN". Recommend **not** building
   it; if ever, only as an online-only progressive enhancement. The
   distance list is the 80/20.
+- **Drive time from me to a venue** `[M]` — owner ask (2026-07-08). A live
+  in-app drive time needs a routing API (Google/Mapbox Directions) — an
+  external, keyed, usually-paid call → breaks offline / no-external /
+  no-dependency. Two honest options: (a) **hand off to the maps app**,
+  which already shows real-time drive time — one tweak to the maps link to
+  request *directions* rather than a pin (we have coords); (b) a **rough
+  in-app estimate** from the haversine distance we already compute (÷ an
+  assumed urban speed) — free and offline, but crude (straight-line, no
+  traffic), so label it "~". Recommend (a) for accuracy, optionally (b) as
+  an at-a-glance hint. A live routed time in-app is **✗** on constraints.
+- **Restaurants with multiple locations** `[M][schema]` — owner ask; real
+  now (Kaffee Eis, Gong Cha). Two shapes: (a) one record with a
+  `locations: [{address, lat, lng, phone, hours}]` array (shared
+  name/menu/cuisine) — DRY, and "Near me"/"Open now" pick the *nearest*
+  branch; (b) separate records per branch — simpler, but duplicates the
+  menu and clutters the list. Recommend **(a)**: extend the schema so
+  distance/maps/hours resolve per-branch while the menu stays single.
+  Touches the hours engine (per-branch hours) and distance sort (nearest
+  branch). Do it before adding many chains.
 
 ## Theme 3 — UX & design pass
 
@@ -176,6 +195,14 @@ types it. (Their email address comes with the message anyway.)
 
 ## Theme 5 — Richer dish data
 
+- **Typical price per person** `[S]` — owner ask (2026-07-08). We already
+  hold every menu price, so derive a band per venue — a $/$$/$$$ chip, or
+  "~$25pp" from the mean main-course price — computed from our own data,
+  no external source. Cheap, offline, honest (label it an estimate from
+  our menu; prices are already flagged as needing an in-store refresh).
+  Show it on the card and menu header; it also sharpens "Pick for us"
+  ("cheap eats tonight"). Optionally a curated override field where the
+  computed band misleads (e.g. a venue that's mains-only vs. banquet).
 - **More allergens** `[S][schema]` — extend the closed tag set (egg,
   dairy/milk, gluten, soy, sesame) in `ARCHITECTURE.md`. Cheap to add;
   the honest part is *populating* it — "no tag = not stated" means owner
@@ -191,6 +218,20 @@ types it. (Their email address comes with the message anyway.)
   into a 1–3 scale in the data (still ours, still static); (b)
   **local-only personal ratings** in `localStorage` (same store as the
   order tally). Recommend **(a)+(b), not public**.
+- **See public ratings / reviews** `[S]` — owner ask (2026-07-08).
+  *Embedding* Google/Tripadvisor ratings means their API (keys, ToS,
+  external requests, breaks offline) or scraping (against ToS, brittle) —
+  **✗**. The honest, zero-cost version: a **"See reviews" link-out** that
+  opens the venue's Google Maps listing (same handoff pattern as the maps
+  link — we already have coords/name). Live rating numbers in-app are not
+  worth the constraint break; the link gets you the full, current reviews.
+- **Popular / busy times** `[M][constraint ✗]` — owner ask. Google's
+  "popular times" has **no official public API**; the only ways to get it
+  are unsupported scraping or unofficial libraries (against ToS, fragile).
+  Recommend **not** ingesting it. If wanted, the "See reviews" link-out to
+  the Google listing already surfaces busy times there. A legitimate
+  in-app alternative *later*: infer rough busyness from our own order-tally
+  usage once that exists (Theme 1) — but that's a weak signal at our scale.
 - **Hearted favourites (local-only)** `[M]` — owner idea (2026-07-08). A
   ❤ toggle on any dish (restaurant menus *and* Cook-at-Home) saves it to
   `localStorage`; a "Favourites" view gathers them across venues so it's
