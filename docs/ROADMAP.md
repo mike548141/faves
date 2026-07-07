@@ -141,6 +141,43 @@ This stays a *direction*, not a phase — but Themes 1 and 5 are the hooks
 that make it possible later, so building them "leaning the right way"
 costs nothing now.
 
+## Theme 7 — Provenance & supply-chain: the verifiable zero-dependency claim
+
+Faves' defining property is that the shipped artifact has **no
+third-party components** (ADR [0001](decisions/0001-zero-build-vanilla.md)):
+no npm packages, no CDN, no framework. This theme makes that claim
+*checkable* rather than merely stated. Note the honest framing: for a
+zero-dependency site an SBOM is **not** vulnerability management (there's
+nothing third-party to scan) — its value is attestation + a tripwire
+against dependency creep.
+
+- **SBOM publishing** `[S]` **⚑** — publish a machine-readable Software
+  Bill of Materials (SPDX or CycloneDX) as a provenance attestation. It
+  will be near-empty, which is the point: it *proves* the zero-dep claim
+  and any future entry shows up as a diff. Generation options, cheapest
+  first: GitHub's native dependency-graph SPDX export (zero tooling, via
+  repo settings / API), or a CI step with a generator. Publish options:
+  a CI build artifact, a committed `sbom.spdx.json`, served at
+  `/.well-known/sbom` on the site, or attached to a tagged release. **⚑
+  owner picks format + publish location** (and whether to cover just the
+  shipped `site/` or also the dev toolchain — Node, the test runner).
+- **Zero-dependency CI guard** `[S]` — a CI check that fails if
+  `package.json` ever gains a `dependencies`/`devDependencies` entry, or
+  a lockfile/`node_modules` appears. This machine-enforces the invariant
+  ADR 0001 rests on, so the "no dependencies" promise can't rot silently.
+  Cheap, and it's what actually protects the SBOM's emptiness. *(Small
+  enough to pull forward pre-launch — it guards the `package.json` we
+  just introduced for tests.)*
+- **`security.txt` + provenance metadata** `[S]` — a `/.well-known/
+  security.txt` (contact + policy) is cheap good-citizenship for a public
+  site. Build provenance/attestation (SLSA-style) is **N/A today** —
+  Cloudflare Pages serves static files with no build to attest; revisit
+  only if a real pipeline ever appears.
+
+Effort **S** overall, no runtime/offline impact. **Accept when**: an SBOM
+is published for the deployed site and CI fails on an unexpected
+dependency.
+
 ## Also parked (small)
 
 - **"Open now"** from the `hours` data on cards.
@@ -164,6 +201,10 @@ By value-per-effort and dependency order:
 6. **Extended allergens** (S) → **curated/local ratings** (M) →
    **nutrition where owned** (L).
 7. **Health app** — a separate project once the above have matured.
+
+**Parallel, any time (Theme 7):** the zero-dependency CI guard is a cheap
+pre-launch win; SBOM publishing can land alongside the Phase 7 deploy so
+the live site ships with a provenance artifact from day one.
 
 **Two owner calls before starting:**
 1. Confirm the **order tally** is in — then the one-line non-goal
