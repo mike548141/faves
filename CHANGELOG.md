@@ -37,6 +37,11 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- Restaurant cards now respond to hover: the whole card lifts with a
+  deeper shadow, an accent border, and the name tints to accent. Only on
+  cards that link somewhere (not "coming soon" stubs), only on true-hover
+  devices (no sticky state after a touch tap), and motion-free under
+  `prefers-reduced-motion`; keyboard focus gets the same accent border.
 - Corrected the `CLAUDE.md` zero-build wording: Node may be used for dev
   tooling (Lighthouse, tests) but is never a build or runtime dependency;
   the site still ships build-less.

@@ -36,6 +36,7 @@
   --radius: 14px;
   --radius-chip: 999px;
   --shadow: 0 1px 2px rgba(43, 36, 32, 0.06), 0 6px 18px rgba(43, 36, 32, 0.07);
+  --shadow-lift: 0 2px 6px rgba(43, 36, 32, 0.1), 0 14px 32px rgba(43, 36, 32, 0.13);
   --bar-h: 4.6rem;
 }
 
@@ -55,6 +56,7 @@
     --warn-ink: #ffd8d0;
     --focus: #6ea8ff;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.35);
+    --shadow-lift: 0 2px 6px rgba(0, 0, 0, 0.5), 0 14px 32px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -213,6 +215,7 @@ main {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, border-color 0.14s ease;
 }
 .card-link,
 .card-body {
@@ -220,14 +223,38 @@ main {
   padding: var(--space-3);
   height: 100%;
 }
-.card-link {
-  transition: transform 0.12s ease, border-color 0.12s ease;
+.card-link .card-name {
+  transition: color 0.14s ease;
 }
-.card-link:hover {
+
+/* Hover response — only for cards that link somewhere (stubs don't), and
+   only on devices that truly hover, so touch screens don't get a sticky
+   hover state after a tap. The whole card lifts; keyboard focus gets the
+   same accent border via :focus-within (the focus ring still shows). */
+.card:has(.card-link):focus-within {
   border-color: var(--accent);
 }
-.card-link:active {
-  transform: scale(0.99);
+@media (hover: hover) {
+  .card:has(.card-link):hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--accent);
+  }
+  .card:has(.card-link):hover .card-name {
+    color: var(--accent);
+  }
+  .card:has(.card-link):active {
+    transform: translateY(-1px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: box-shadow 0.14s ease, border-color 0.14s ease;
+  }
+  .card:has(.card-link):hover,
+  .card:has(.card-link):active {
+    transform: none;
+  }
 }
 .card[data-status="stub"] {
   background: var(--surface-2);
