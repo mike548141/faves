@@ -3,7 +3,7 @@
 //
 // VERSION is the cache-buster: bump it whenever anything in site/
 // changes — menu data especially. See README "Editing menu data".
-const VERSION = "2026-07-08.12";
+const VERSION = "2026-07-08.13";
 
 const CACHE = `faves-${VERSION}`;
 const IMG_CACHE = "faves-img-v1";
@@ -13,6 +13,7 @@ const SHELL = [
   "./",
   "index.html",
   "restaurant.html",
+  "recipe.html",
   "css/app.css",
   "js/app.js",
   "js/data.js",
@@ -22,6 +23,7 @@ const SHELL = [
   "js/hours.js",
   "js/menu.js",
   "js/picker.js",
+  "js/recipe.js",
   "js/sw-register.js",
   "data/index.json",
   "site.webmanifest",

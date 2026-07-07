@@ -10,6 +10,10 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Full recipe pages: tapping a Cook at Home dish name opens its own
+  focused, shareable page (`recipe.html?id=…&dish=…`) — ingredients,
+  method, serves/time, photo, allergen/dietary tags and "goes well with"
+  links to the other recipes. The inline quick-expand stays on the list.
 - 11 more Wellington venues as stubs (facts web-researched + geocoded;
   menus to follow): Regal Chinese, Babaili Malatang, New Chapter, Gold
   Lining, Pizza Pomodoro, Gong Cha, Satay Kingdom Cafe, Rock Yard

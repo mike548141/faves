@@ -140,8 +140,12 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
 Rendering: the menu screen shows ingredients + method in a collapsed
 `<details>` per recipe; the home card is an accent-tinted pin showing a
 recipe count; the collection is excluded from the area/cuisine filter
-facets. This is the recorded deviation permitted by the "record it here
-first" rule — no other content types are planned.
+facets. Each recipe's name also links to a focused full page,
+`recipe.html?id=<collection>&dish=<slug>` (`site/js/recipe.js`), showing
+the whole recipe + pairings — deep-linkable and shareable; the SW serves
+it via `ignoreSearch` like `restaurant.html`. This is the recorded
+deviation permitted by the "record it here first" rule — no other content
+types are planned.
 
 ### Tag vocabulary (closed set — extend here, not ad hoc)
 

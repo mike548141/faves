@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en-NZ">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Recipe — Faves</title>
+    <meta name="description" content="A recipe to cook at home: ingredients and method." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Faves" />
+    <meta property="og:title" content="Recipe — Faves" />
+    <meta property="og:description" content="A recipe to cook at home from one of our favourites." />
+    <meta property="og:image" content="https://lets-eat.myspot.nz/icons/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_NZ" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#faf5ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="icons/favicon.svg" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body class="menu-page">
+    <p class="skip"><a id="recipe-back" href="index.html">← Back</a></p>
+
+    <main id="recipe-root" class="wrap" aria-busy="true">
+      <p id="recipe-loading" class="menu-status">Loading recipe…</p>
+      <p id="recipe-error" class="menu-status" hidden>
+        Couldn’t find this recipe. <a href="index.html">Back to all restaurants</a>.
+      </p>
+      <noscript>
+        <p class="menu-status">
+          This recipe needs JavaScript to load. <a href="index.html">Back to all restaurants</a>.
+        </p>
+      </noscript>
+    </main>
+
+    <script type="module" src="js/recipe.js"></script>
+    <script type="module" src="js/sw-register.js"></script>
+  </body>
+</html>

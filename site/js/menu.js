@@ -252,7 +252,7 @@ function dishPhoto(item) {
   });
 }
 
-function renderDish(item, isRecipes = false) {
+function renderDish(item, isRecipes = false, collectionId = null) {
   // The price slot doubles as a recipe meta chip (serves · time).
   const recipeMeta = isRecipes
     ? [item.serves ? `Serves ${item.serves}` : null, item.time || null]
@@ -268,10 +268,20 @@ function renderDish(item, isRecipes = false) {
         textContent: item.price == null ? "—" : money(item.price),
       });
 
-  const head = el("div", { className: "dish-head" }, [
-    el("h3", { className: "dish-name", textContent: item.name }),
-    aside,
-  ]);
+  // A recipe's name links to its own full page; a restaurant dish is plain
+  // text (its detail already lives inline on the menu).
+  const nameEl =
+    isRecipes && collectionId
+      ? el("h3", { className: "dish-name" }, [
+          el("a", {
+            className: "dish-name-link",
+            href: `recipe.html?id=${collectionId}&dish=${slug(item.name)}`,
+            textContent: item.name,
+          }),
+        ])
+      : el("h3", { className: "dish-name", textContent: item.name });
+
+  const head = el("div", { className: "dish-head" }, [nameEl, aside]);
   // Note: li.append() below stringifies null, so only push real nodes.
   const children = [head];
   const photo = dishPhoto(item);
@@ -394,7 +404,7 @@ function render(r) {
       el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
     );
     const dishes = el("ul", { className: "dish-list" });
-    for (const item of section.items) dishes.append(renderDish(item, isRecipes));
+    for (const item of section.items) dishes.append(renderDish(item, isRecipes, r.id));
     const sec = el("section", { className: "menu-section", id }, [
       el("h2", { className: "section-title", textContent: section.section }),
       dishes,
