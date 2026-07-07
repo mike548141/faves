@@ -4,6 +4,7 @@
 
 import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
+import { initPicker } from "./picker.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -118,6 +119,7 @@ function init(restaurants) {
   });
 
   render();
+  initPicker(() => applyFilters(restaurants, state));
   document.body.classList.add("app-ready");
 }
 

@@ -55,12 +55,14 @@ null).
 
 ## Phase 2 — App shell and home screen
 
-- [ ] `site/index.html` + `css/app.css`: design tokens (colour both
+- [x] `site/index.html` + `css/app.css`: design tokens (colour both
       schemes, type scale, spacing), restaurant cards from
       `data/index.json`, stub cards render "menu coming soon".
-- [ ] Sticky bottom filter bar: service (takeaway/dine-in/all), area,
+- [x] Sticky bottom filter bar: service (takeaway/dine-in/all), area,
       cuisine — instant, combinable, result count announced.
-- [ ] Fail-soft: if JS fails, a basic list of restaurants still shows.
+- [x] Fail-soft: if JS fails, a basic list of restaurants still shows.
+      *(Built alongside Phase 3; render-verified in real Chrome. The
+      Lighthouse a11y = 100 acceptance check runs in Phase 6.)*
 
 **Accept when**: on a 390 px viewport it looks intentional and polished
 (judge it against DESIGN.md's mood), filters work with keyboard and
@@ -84,32 +86,51 @@ feel on a phone.*
 
 ## Phase 4 — "Pick for us" (the party trick)
 
-- [ ] Shuffle animation over the *filtered* set → lands on one card →
+- [x] Shuffle animation over the *filtered* set → lands on one card →
       "again" / "that's the one" (links to menu).
-- [ ] Feels playful, < 3 s, respects reduced-motion (instant result).
+- [x] Feels playful, < 3 s, respects reduced-motion (instant result).
 
 **Accept when**: it makes someone smile in a hallway test.
+*Built 2026-07-08: 🎲 "Pick for us" button above the filter bar opens a
+dialog; names flick past easing out over ~1.8 s, land with a 🎉, then
+"That's the one" (deep link) / "Go again". Empty filter set gets a 🤷
+and a nudge to widen. Reduced motion = instant result. Owner to
+hallway-test.*
 
 ## Phase 5 — PWA and offline
 
-- [ ] `manifest.webmanifest` (icons 192/512 + maskable, theme colours
-      both schemes, standalone).
-- [ ] `sw.js` per ARCHITECTURE.md: precache shell + all data;
-      network-first data, cache-first shell; versioned cache.
-- [ ] Document the "bump `VERSION` when editing data" rule in README.
+- [x] `site.webmanifest` (icons 192/512 + maskable, theme colours,
+      standalone) — shipped earlier with the icon set.
+- [x] `sw.js` per ARCHITECTURE.md: precache shell + all data;
+      network-first data, cache-first shell (`ignoreSearch` so one
+      cached `restaurant.html` answers every `?id=` deep link);
+      versioned cache + capped runtime image cache.
+- [x] Document the "bump `VERSION` when editing data" rule in README.
 
 **Accept when**: installable on iOS Safari and Android Chrome; in
 flight mode after one visit, every menu opens.
+*Built 2026-07-08. Verified via the dev-server log: registration
+triggers the install precache, which fetched the full shell and all 13
+data files. Owner to install on iOS/Android and flight-mode test.*
 
 ## Phase 6 — Polish and quality gate
 
 - [ ] Lighthouse mobile: Perf ≥ 95, A11y 100, BP 100, SEO ≥ 95.
-- [ ] First-visit transfer < 300 KB; test on a real phone and tablet,
+      *Needs the deployed HTTPS URL (no Node on this machine) — run via
+      PageSpeed Insights or DevTools after Phase 7.*
+- [~] First-visit transfer < 300 KB; test on a real phone and tablet,
       both colour schemes, portrait + landscape.
-- [ ] OG/meta tags so the link unfurls nicely in Messages/WhatsApp.
-- [ ] Cross-check every `picks` entry matches a menu item; add a tiny
+      *Measured 2026-07-08: shell + all menu data = 176.9 KB raw,
+      45.3 KB gzipped — well under budget. Real-device pass = owner.*
+- [x] OG/meta tags so the link unfurls nicely in Messages/WhatsApp.
+      *og:/twitter: tags on both shells, canonical on the home page,
+      1200×630 `icons/og-image.png` (padded from the app icon with
+      `sips`). URLs baked for `lets-eat.myspot.nz`.*
+- [x] Cross-check every `picks` entry matches a menu item; add a tiny
       `python3` validation script (`tools/validate.py`, stdlib only) and
       run it in the pre-commit checklist.
+      *`tools/validate.py` already errors on any pick that doesn't match
+      a menu item name exactly — shipped with the batch-3 menu work.*
 
 **Accept when**: all numbers green and the owner has smoke-tested on
 his devices.

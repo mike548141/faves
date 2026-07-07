@@ -37,8 +37,18 @@ docs/                  ← strategy, architecture, design, work plan
 ## Run locally
 
 ```sh
-cd site && python3 -m http.server 8080
-# open http://localhost:8080
+python3 tools/serve.py     # serves site/ — prints laptop + phone URLs
+python3 tools/validate.py  # checks all menu data against the schema
 ```
 
 No toolchain, no dependencies, no build. What's in `site/` is what ships.
+
+## Editing menu data
+
+1. Edit the JSON in `site/data/restaurants/` (schema in
+   [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
+2. Run `python3 tools/validate.py`.
+3. **Bump `VERSION` in `site/sw.js`** — the service worker precaches all
+   menu data, and the version bump is what tells installed phones to
+   fetch the new cache. Skip it and offline visitors keep stale menus.
+4. Check the change in a browser at mobile width, then commit.

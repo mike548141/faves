@@ -356,6 +356,134 @@ main {
   color: var(--accent);
 }
 
+/* ---------- Pick for us (Phase 4) ---------- */
+.pick-fab {
+  position: fixed;
+  right: var(--space-3);
+  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3));
+  z-index: 11;
+  display: none;
+  align-items: center;
+  gap: 0.45em;
+  min-height: 48px;
+  padding: 0.6em 1.2em;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--step-body);
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.app-ready .pick-fab {
+  display: inline-flex;
+}
+.pick-fab:active {
+  transform: scale(0.96);
+}
+
+.picker {
+  width: min(100% - 2rem, 24rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0;
+  box-shadow: var(--shadow);
+}
+.picker::backdrop {
+  background: rgba(23, 19, 16, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.picker-inner {
+  position: relative;
+  padding: var(--space-4);
+  text-align: center;
+}
+.picker-close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.picker-close:hover {
+  background: var(--surface-2);
+}
+.picker-dice {
+  font-size: 2.6rem;
+  line-height: 1.2;
+}
+.picker-dice.rolling {
+  animation: dice-roll 0.35s ease-in-out infinite alternate;
+}
+@keyframes dice-roll {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+.picker-stage {
+  min-height: 7.5rem;
+  display: grid;
+  place-items: center;
+  padding: var(--space-2) 0;
+}
+.picker-cycle {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.picker-eyebrow {
+  font-size: var(--step-sub);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+.picker-name {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-top: var(--space-1);
+}
+.picker-meta {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  margin-top: var(--space-1);
+}
+.picker-chips {
+  justify-content: center;
+}
+.picker-actions {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.picker-go {
+  justify-content: center;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.picker-again {
+  justify-content: center;
+  background: var(--surface);
+  cursor: pointer;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;
