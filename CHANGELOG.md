@@ -112,6 +112,12 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- Clearer navigation on the home screen: the **"Faves" wordmark is now a
+  home button** — already on the home screen it exits any open search or
+  favourites view and scrolls to the top (a plain link to the home page if
+  JavaScript's off). The favourites view gained an obvious **"‹ All places"**
+  button, since pressing the Favourites toggle again to get back wasn't
+  discoverable.
 - Favourite hearts are larger and higher-contrast — a clear outline heart
   when unsaved, a filled accent heart when saved — with a springy pop when
   you save and a hover scale on pointer devices (motion-free under

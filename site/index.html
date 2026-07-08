@@ -28,7 +28,7 @@
     <header class="app-header">
       <div class="wrap app-header-inner">
         <div>
-          <h1 class="app-title">Faves</h1>
+          <h1 class="app-title"><a href="index.html" class="app-home-link">Faves</a></h1>
           <p class="app-sub">Our favourite Wellington kai — menus, in one place.</p>
         </div>
         <!-- JS-only; settings-ui.js unhides + wires it (it only affects the
@@ -72,6 +72,12 @@
 
       <!-- Favourites view: gathers hearted venues + dishes from localStorage. -->
       <section id="favourites-panel" class="search-results" aria-label="Your favourites" hidden>
+        <div class="panel-head">
+          <h2 class="panel-title">Favourites</h2>
+          <button type="button" id="favourites-done" class="panel-done">
+            <span aria-hidden="true">‹</span> All places
+          </button>
+        </div>
         <p id="favourites-summary" class="search-summary" role="status" aria-live="polite"></p>
         <div id="favourites-groups"></div>
       </section>

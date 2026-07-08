@@ -213,6 +213,52 @@ main {
   margin-bottom: var(--space-3);
 }
 
+/* "Faves" wordmark doubles as a home button. */
+.app-home-link {
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .app-home-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* Search / favourites panel header with an explicit way back to the list. */
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.panel-title {
+  font-size: var(--step-name);
+  font-weight: 800;
+}
+.panel-done {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  padding: 0.4em 0.9em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--accent);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .panel-done:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+
 /* ---------- Global search (home) ---------- */
 .search-field {
   position: relative;

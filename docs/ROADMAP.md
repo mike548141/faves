@@ -153,6 +153,46 @@ The umbrella "better UX and design", with your concrete asks:
 - **Info panel on the right when there's room** `[M][design]` —
   responsive two-column on tablet/desktop (menu left; contact, hours, map
   link, order summary right). One CSS grid; mobile stays single-column.
+  - **Order-online buttons in that right column** `[S][design]` — owner ask
+    (2026-07-08): on a wide screen, move the "Order online" buttons (Uber
+    Eats, Delivereasy, the venue site) to the right of the phone/address/
+    hours block as a **column of buttons with each platform's icon/logo**.
+    Fits inside the two-column layout above. Logos must be **self-hosted**
+    (offline / no-hotlink rule) — bundle small SVG/PNG marks under
+    `site/img/` (mind each platform's brand-usage terms). Mobile keeps the
+    current stacked layout.
+- **Navigation & wayfinding** ✅ **done 2026-07-08** — the "Faves" wordmark
+  is a home button (exits any open view + scrolls top on the home screen;
+  a plain link to `index.html` otherwise), and the favourites view gained
+  an explicit "‹ All places" exit (the toggle-again gesture wasn't
+  discoverable). **Still open:** the menu screen's **"← All restaurants"
+  back link is easy to miss on desktop** (owner, 2026-07-08) — make it a
+  more prominent control (a proper button / bigger target), part of the
+  header rework below.
+- **Overflow "⋯" / menu button** `[M][design]` — owner idea (2026-07-08):
+  the home header is getting busy (⚙ settings, ♥ Favourites, search, plus
+  the Open-now/Near-me toggles). Consolidate **Favourites + Settings**
+  (and anything future) under one menu button to reclaim space. Owner's own
+  steer: **leave the Open-now / Near-me toggles as-is** — they act on the
+  main list and belong with it — and **definitely leave the per-restaurant
+  dish filters** where they are. So: a small overflow menu for
+  account-less "app chrome" (favourites view, settings, later: te reo
+  toggle, about), not for list filters.
+- **Nest dishes under their place in Favourites** `[M]` — owner idea
+  (2026-07-08): drop the separate "Places" vs "Dishes" lists; show each
+  favourited **dish as a child under its venue**, and show the venue as the
+  parent **even when the venue itself isn't favourited** (a hearted dish
+  implies its place). Reads more like "my usual at each spot". Touches the
+  favourites view renderer (`app.js` + `results-view.js`); group dish
+  favourites by `venueId`, synthesise a parent header per venue (favourited
+  or not), and keep the inline un-heart per row.
+- **Collapse the "needs a refresh" caveat into an info icon** `[S][design]`
+  — owner idea (2026-07-08): the menu screen's "Menu items and prices need
+  a refresh…" line is a always-on distraction. Replace it with a small
+  **ⓘ icon beside the venue name**; tap/hover reveals the message
+  (accessible disclosure — a `<button aria-expanded>` + popover, not a
+  bare `title`, so it works on touch). Declutters the header. Sits next to
+  the venue ♥ already there.
 - **Sticky search on phones** `[S][design]` — keep the menu search
   reachable while scrolling a long menu (sticky under the section nav).
   Partly addressed already: menu **section headings** now stick under the
@@ -170,6 +210,18 @@ The umbrella "better UX and design", with your concrete asks:
   (`body.searching`); clearing restores them. Superseded the older "does
   the home screen need a persistent search field?" question — yes, and it
   searches dish names + descriptions + ingredients, not just venue names.
+- **Page footer** `[S]` — owner idea (2026-07-08): a simple footer with a
+  short **privacy note** and an attribution ("made by **cakeIT**"). The
+  privacy story is genuinely strong and worth stating plainly: no accounts,
+  no backend, no third-party scripts, no analytics — your favourites, order
+  and settings never leave your device; the only network calls are fetching
+  the site's own static files from the host. Pairs with the
+  `/.well-known/security.txt` + provenance work in **Theme 7** (same "here's
+  how this site treats you" surface). Keep it light and it stays within the
+  no-personal-data rule (a business attribution is fine; no contact details
+  beyond a role inbox if the Theme 4c mailto lands). Note: the app already
+  ships a full **favicon / icon set** (`favicon.ico`, `icons/favicon.svg`,
+  `apple-touch-icon.png`, PWA 192/512 + maskable, and a 1200×630 og-image).
 - General polish to the "oh, this is nice" bar (`DESIGN.md` mood):
   spacing, motion, empty states, and the new cart UI.
 
@@ -266,6 +318,27 @@ types it. (Their email address comes with the message anyway.)
   dairy/milk, gluten, soy, sesame) in `ARCHITECTURE.md`. Cheap to add;
   the honest part is *populating* it — "no tag = not stated" means owner
   or menu confirmation, never guesses.
+- **Dietary / allergy preferences (personal)** `[M]` — owner ask
+  (2026-07-08): let the viewer set their own dietary needs once — no nuts,
+  vegetarian, gluten-free, etc. — and have the app apply them everywhere:
+  pre-select the menu's dietary chips, and **flag/foreground the matching
+  allergen warnings** (a nut-allergy profile makes `contains-nuts` shout).
+  Device-local, in the same `settings.js` preferences store. **Safety
+  framing is load-bearing:** this must *surface* our tags, never imply
+  safety we can't vouch for — "no tag = not stated" still holds, so the
+  copy stays "based on what venues told us; always confirm for allergies".
+  A filter/highlight, not a guarantee. Pairs with "More allergens" above
+  (richer tags make the preference more useful).
+- **Personal tag overrides (local)** `[M]` — owner idea (2026-07-08): let a
+  user **add / edit / remove tags on a venue or dish for themselves** (e.g.
+  tag Sprig + Fern as a "coffee" place), stored **locally** — our curated
+  tags stay the source of truth in the repo; the user's overlay lives in
+  `localStorage` (same personal layer as favourites/order). The home
+  filters + search would fold in the user's tags too. Design calls: keep
+  user tags visually distinct from ours (they're personal, unverified), and
+  a clean merge model (add-to / hide ours?). A natural feeder for Theme 4c
+  (a good personal tag could be *suggested* back via the report link). Bigger
+  than favourites — an editing UI + a tag store + merge into filter/search.
 - **Nutritional info** `[L][constraint-data]` — small suburban venues
   rarely publish reliable nutrition, and inventing it is both dishonest
   and a health-claim risk. Realistic path: compute it only where we own

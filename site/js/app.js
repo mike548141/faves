@@ -190,6 +190,7 @@ function init(restaurants) {
   wireOpenNow(state, render);
   wireSearch(restaurants);
   wireFavourites();
+  wireHomeButton();
   initSettingsUI();
   // Hearting something, or changing a distance dial, re-ranks the list (also
   // covers un-favouriting in the view, or a change synced from another tab).
@@ -313,6 +314,21 @@ function exitFavourites() {
   if (panel) panel.hidden = true;
 }
 
+// The "Faves" wordmark acts as a home button (iPhone-style): already on the
+// home screen, tapping it exits any open search/favourites view and scrolls
+// to the top rather than reloading. If JS is off it's still a plain link to
+// index.html, so it always goes home.
+function wireHomeButton() {
+  const link = document.querySelector(".app-home-link");
+  if (!link) return;
+  link.addEventListener("click", (e) => {
+    e.preventDefault();
+    exitSearch();
+    exitFavourites();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
 // Favourites view: a ♥ toggle beside the search box opens a panel that
 // gathers the venues and dishes hearted across the app (from localStorage,
 // so it works offline and needs no data reload). Rows link out and carry
@@ -358,6 +374,10 @@ function wireFavourites() {
   btn.addEventListener("click", () =>
     open(!document.body.classList.contains("faves-view"))
   );
+  // An explicit, obvious way back to the full list (the toggle alone wasn't
+  // discoverable as the exit).
+  const done = document.getElementById("favourites-done");
+  if (done) done.addEventListener("click", () => open(false));
 
   const countEl = btn.querySelector(".favourites-count");
   const updateCount = () => {
