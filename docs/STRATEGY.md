@@ -98,7 +98,11 @@ change):
 
 ## Non-goals (v1)
 
-- No ordering/payments integration — we link to phone/website.
+- No ordering/payments integration — we link to phone/website. The
+  order tally (a device-local notepad that groups what you want and
+  totals an estimate) is *not* this: no payment, no account, no
+  restaurant integration; it still hands off to phone/website to
+  actually order.
 - No user accounts, reviews, or comments.
 - No admin UI — menus are edited as JSON in the repo.
 - No scraping/live sync of menus — curated by hand, dated, and marked

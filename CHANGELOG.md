@@ -10,6 +10,15 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Order tally: as people call out what they want, tap **＋** on a dish to
+  build one running order. A floating order button (on every screen) opens
+  a list grouped by restaurant — each with a subtotal and a **Call** link
+  — plus an estimated grand total (captioned "confirm at the till", since
+  our prices need an in-store refresh). **Collect mode** ticks items off at
+  pickup. Kept on the device only (`localStorage`) — no account, no
+  backend, no payment; it still hands off to phone/website to actually
+  order. Cook-at-Home recipes carry no stepper (that's for cooking, not an
+  order).
 - Global search on the home screen: one box finds a **place or a dish**
   by name (also matching area, cuisine and — for dishes — description and
   ingredients) across every venue and Cook at Home. Results group into

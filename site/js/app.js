@@ -8,6 +8,7 @@ import { sortByDistance, formatDistance } from "./distance.js";
 import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
+import { initOrderUI } from "./cart-ui.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -171,6 +172,7 @@ function init(restaurants) {
 
   render();
   initPicker(() => applyFilters(restaurants, state, nzNow()));
+  initOrderUI();
   document.body.classList.add("app-ready");
 }
 

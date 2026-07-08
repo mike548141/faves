@@ -16,6 +16,18 @@ resolution noted inline; **⚑** a decision only the owner can make.
 
 ## Theme 1 — From *decided* to *ordered*: the Order tally ★ flagship
 
+> ✅ **Shipped 2026-07-08.** Built as designed below (`site/js/cart.js`
+> model + `cart-ui.js`): a `+ / −` stepper on restaurant dish rows, a
+> floating order button on every screen, a dialog grouped by venue with
+> subtotals + a per-venue Call link, an estimated grand total (captioned
+> "confirm at the till"), collect mode, and clear. `localStorage`-backed
+> with a private-mode memory fallback; cross-tab synced. The STRATEGY
+> non-goal clarification landed (⚑ resolved). **Deferred from v1:** the
+> stepper on Cook-at-Home (that's cooking, not ordering — it's the
+> eating-diary hook for the health app, Theme 6) and multi-person local
+> profiles (single shared order for now). Owner to hallway-test at a real
+> family order.
+
 **The reframe.** Strategy names two jobs (*what shall we get?* and
 *what's on their menu?*). This is the missing **Job 3 — "right, let's
 order"**: as people call out what they want, build one running list

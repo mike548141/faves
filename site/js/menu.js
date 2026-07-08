@@ -6,6 +6,7 @@ import { loadRestaurant } from "./data.js";
 import { mapsUrl } from "./geo.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { slug } from "./slug.js";
+import { dishStepper, initOrderUI } from "./cart-ui.js";
 
 const root = document.getElementById("menu-root");
 
@@ -250,7 +251,8 @@ function dishPhoto(item) {
   });
 }
 
-function renderDish(item, isRecipes = false, collectionId = null) {
+function renderDish(item, isRecipes = false, r = null) {
+  const collectionId = r?.id ?? null;
   // The price slot doubles as a recipe meta chip (serves · time).
   const recipeMeta = isRecipes
     ? [item.serves ? `Serves ${item.serves}` : null, item.time || null]
@@ -297,6 +299,21 @@ function renderDish(item, isRecipes = false, collectionId = null) {
   }
   if (item.goesWith?.length) {
     children.push(pairingLinks(item.goesWith));
+  }
+  // Order tally: restaurant dishes get a quantity stepper. Recipes don't —
+  // Cook at Home is for cooking, not an order to read down the phone.
+  if (!isRecipes && r) {
+    children.push(
+      el("div", { className: "dish-actions" }, [
+        dishStepper({
+          venueId: r.id,
+          venueName: r.name,
+          phone: r.phone,
+          name: item.name,
+          price: item.price ?? null,
+        }),
+      ])
+    );
   }
   const li = el("li", { className: isRecipes ? "dish recipe" : "dish", id: `dish-${slug(item.name)}` });
   li.dataset.name = item.name.toLowerCase();
@@ -402,7 +419,7 @@ function render(r) {
       el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
     );
     const dishes = el("ul", { className: "dish-list" });
-    for (const item of section.items) dishes.append(renderDish(item, isRecipes, r.id));
+    for (const item of section.items) dishes.append(renderDish(item, isRecipes, r));
     const sec = el("section", { className: "menu-section", id }, [
       el("h2", { className: "section-title", textContent: section.section }),
       dishes,
@@ -470,6 +487,10 @@ function render(r) {
 }
 
 // --- Boot ------------------------------------------------------------
+// The order FAB rides along on every screen so a running order is always
+// reachable — even on a stub page or if this menu fails to load.
+initOrderUI();
+
 const id = new URLSearchParams(location.search).get("id");
 const errorEl = document.getElementById("menu-error");
 const loadingEl = document.getElementById("menu-loading");

@@ -6,6 +6,7 @@
 
 import { loadRestaurant } from "./data.js";
 import { slug } from "./slug.js";
+import { initOrderUI } from "./cart-ui.js";
 
 const root = document.getElementById("recipe-root");
 
@@ -134,4 +135,5 @@ async function main() {
   }
 }
 
+initOrderUI(); // the running order stays reachable from the recipe screen too
 main();

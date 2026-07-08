@@ -12,7 +12,7 @@ site/
   restaurant.html       menu view (?id=<restaurant-id>)
   css/app.css           design tokens + components (single file)
   js/                   ES modules (data.js, filters.js, picker.js, menu.js,
-                        search.js, slug.js, sw-register.js)
+                        search.js, slug.js, cart.js, cart-ui.js, sw-register.js)
   data/index.json       ordered list of restaurant ids
   data/restaurants/     <id>.json — one file per restaurant, menu included
   img/                  icons, photos (lazy-loaded)
@@ -201,6 +201,25 @@ UI must never present absence of an allergen tag as "allergen-free".
   address with a dev-time tool (OpenStreetMap Nominatim) — never invent
   them; a wrong pin is worse than no pin (an absent pair just searches by
   text). `validate.py` warns when a venue has none.
+
+### Client-side personal layer (order tally)
+
+The order tally is the first **device-local** state: a running order kept
+in `localStorage` (`faves.order.v1`), never in the repo and never sent
+anywhere. The model is `site/js/cart.js` — pure grouping/total maths
+(`groupByVenue`, `orderTotal`) plus a thin, injectable store with a
+memory fallback when storage is blocked (Safari private mode). The UI
+(`site/js/cart-ui.js`) injects a floating order button + dialog onto every
+screen and a `+ / −` stepper onto restaurant dish rows; a single shared
+`order` singleton keeps the menu steppers and the dialog in sync, and a
+`storage` event keeps tabs in step. Deliberately **not** ordering: no
+payment, no account, no backend — it hands off to phone/website to order
+(STRATEGY non-goal). Prices are an *estimate* (our menu data is flagged
+as needing an in-store refresh), captioned as such. This is the reusable
+seam for later local-only personal features (favourites, ratings) and the
+bridge to the health app's eating diary (roadmap Themes 5–6). Recipes
+(Cook at Home) carry no stepper — that collection is for cooking, not an
+order to read down the phone.
 
 ## Service worker strategy
 

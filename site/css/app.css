@@ -714,6 +714,278 @@ body.searching .pick-fab {
   cursor: pointer;
 }
 
+/* ---------- Order tally (Theme 1) ---------- */
+/* Dish quantity stepper (shared by the menu row and the order dialog). */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.stepper-add {
+  min-height: 40px;
+  padding: 0.35em 0.9em;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-chip);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.stepper-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.stepper-btn:active,
+.stepper-add:active {
+  transform: scale(0.94);
+}
+.stepper-count {
+  min-width: 1.4em;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.dish-actions {
+  margin-top: var(--space-2);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* The floating order button. Bottom-left so it clears the pick FAB (right)
+   and, on the home screen, sits above the filter bar like the pick FAB. */
+.order-fab {
+  position: fixed;
+  left: var(--space-3);
+  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3));
+  z-index: 12;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  min-height: 48px;
+  padding: 0.6em 1.1em;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: var(--step-body);
+  font-weight: 700;
+  box-shadow: var(--shadow-lift);
+  cursor: pointer;
+}
+.menu-page .order-fab {
+  bottom: calc(env(safe-area-inset-bottom) + var(--space-3));
+}
+.order-fab[hidden] {
+  display: none;
+}
+.order-fab:active {
+  transform: scale(0.96);
+}
+.order-fab-count {
+  min-width: 1.5em;
+  padding: 0.05em 0.4em;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* The order dialog: a bottom sheet on phones, a centred card on wide. */
+.order-sheet {
+  width: 100%;
+  max-width: 34rem;
+  max-height: 85vh;
+  margin: auto auto 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-lift);
+}
+@media (min-width: 34rem) {
+  .order-sheet {
+    margin: auto;
+    border-radius: var(--radius);
+  }
+}
+.order-sheet::backdrop {
+  background: rgba(23, 19, 16, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.order-inner {
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+}
+.order-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+.order-title {
+  font-size: var(--step-name);
+}
+.order-close {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.order-close:hover {
+  background: var(--surface-2);
+}
+.order-body {
+  overflow-y: auto;
+  padding: var(--space-3);
+  -webkit-overflow-scrolling: touch;
+}
+.order-empty {
+  color: var(--ink-soft);
+  text-align: center;
+  padding: var(--space-4) var(--space-2);
+}
+.order-group {
+  margin-bottom: var(--space-4);
+}
+.order-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.order-group-name {
+  font-size: var(--step-body);
+  font-weight: 700;
+}
+.order-call {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.3em 0.8em;
+  border-radius: var(--radius-chip);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.order-lines {
+  display: grid;
+  gap: var(--space-2);
+}
+.order-line {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.order-line-name {
+  flex: 1;
+  min-width: 0;
+}
+.order-line-price {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.order-line.collected .order-line-name {
+  text-decoration: line-through;
+  color: var(--ink-soft);
+}
+.order-collect-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  cursor: pointer;
+}
+.order-check {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent);
+  flex: none;
+}
+.order-subtotal {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.order-subtotal-amount {
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.order-foot {
+  padding: var(--space-3);
+  border-top: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.order-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--step-name);
+  font-weight: 800;
+}
+.order-total {
+  font-variant-numeric: tabular-nums;
+}
+.order-caption {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  margin-top: var(--space-1);
+}
+.order-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.order-collect-toggle,
+.order-clear {
+  flex: 1;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-body);
+  font-weight: 600;
+  cursor: pointer;
+}
+.order-collect-toggle[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.order-clear.confirming {
+  border-color: var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;
