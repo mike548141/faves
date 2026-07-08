@@ -140,7 +140,15 @@ function card(r, now) {
       badge,
       chips,
     ]);
-    li.append(link);
+    // Heart the place straight from the browse card. It sits as a sibling of
+    // the link (never nested — a button inside an <a> is invalid and untappable)
+    // and floats top-right over the card via absolute positioning.
+    const heart = heartButton(
+      { type: "venue", venueId: r.id, venueName: r.name, isRecipe: isRecipes },
+      r.name
+    );
+    heart.classList.add("card-heart");
+    li.append(link, heart);
   }
   return li;
 }

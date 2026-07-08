@@ -496,6 +496,7 @@ body.faves-view .pick-fab {
 
 /* ---------- Cards ---------- */
 .card {
+  position: relative; /* anchor for the corner heart */
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -511,6 +512,17 @@ body.faves-view .pick-fab {
 }
 .card-link .card-name {
   transition: color 0.14s ease;
+}
+/* The heart floats in the card's top-right corner, clear of the name. It's a
+   sibling of the link (not nested), so it z-stacks above and stays tappable. */
+.card-heart {
+  position: absolute;
+  top: calc(var(--space-2) - 2px);
+  right: calc(var(--space-2) - 2px);
+  z-index: 1;
+}
+.card-link .card-name {
+  padding-right: 2.5rem; /* reserve the corner the heart occupies */
 }
 
 /* Hover response — only for cards that link somewhere (stubs don't), and
