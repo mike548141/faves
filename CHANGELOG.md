@@ -10,6 +10,11 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **More allergen tags available**: the menu vocabulary now also covers
+  **egg, dairy, gluten, soy and sesame** (alongside nuts, peanuts and
+  shellfish), each rendering as the same prominent ⚠ warning. These only
+  appear where a venue or menu states them — "no tag = not stated" — so
+  they'll fill in as menus are confirmed.
 - **Published SBOM** (provenance): a CycloneDX Software Bill of Materials at
   `/.well-known/sbom.json` makes the "no third-party components" promise
   *checkable* — its dependency list is empty by construction, and CI fails if

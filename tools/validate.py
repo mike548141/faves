@@ -25,6 +25,8 @@ KINDS = {"venue", "recipes"}
 TAGS = {
     "v", "vg", "gf", "df",
     "contains-nuts", "contains-peanuts", "contains-shellfish",
+    "contains-egg", "contains-dairy", "contains-gluten",
+    "contains-soy", "contains-sesame",
     "spicy-1", "spicy-2", "spicy-3",
     "gf-option", "v-option",
 }

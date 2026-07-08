@@ -26,6 +26,11 @@ const ALLERGEN = {
   "contains-nuts": "Contains nuts",
   "contains-peanuts": "Contains peanuts",
   "contains-shellfish": "Contains shellfish",
+  "contains-egg": "Contains egg",
+  "contains-dairy": "Contains dairy",
+  "contains-gluten": "Contains gluten",
+  "contains-soy": "Contains soy",
+  "contains-sesame": "Contains sesame",
 };
 const isAllergen = (t) => t in ALLERGEN;
 const isSpicy = (t) => /^spicy-[123]$/.test(t);

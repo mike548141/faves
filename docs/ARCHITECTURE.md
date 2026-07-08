@@ -158,7 +158,8 @@ types are planned.
 
 - Dietary: `v` (vegetarian), `vg` (vegan), `gf`, `df`
 - Allergens (warnings, rendered prominently): `contains-nuts`,
-  `contains-peanuts`, `contains-shellfish`
+  `contains-peanuts`, `contains-shellfish`, `contains-egg`,
+  `contains-dairy`, `contains-gluten`, `contains-soy`, `contains-sesame`
 - Heat: `spicy-1` … `spicy-3`
 - Options: `gf-option`, `v-option`
 

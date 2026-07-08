@@ -373,10 +373,15 @@ types it. (Their email address comes with the message anyway.)
   test. KC Cafe was the only affected file. node --test 119→120; validate +
   check_no_deps clean; badge render-verified via headless Chrome DOM dump at
   390px.
-- **More allergens** `[S][schema]` — extend the closed tag set (egg,
-  dairy/milk, gluten, soy, sesame) in `ARCHITECTURE.md`. Cheap to add;
-  the honest part is *populating* it — "no tag = not stated" means owner
-  or menu confirmation, never guesses.
+- **More allergens** `[S][schema]` ✅ **vocabulary done 2026-07-09** —
+  extended the closed allergen tag set with `contains-egg`,
+  `contains-dairy`, `contains-gluten`, `contains-soy`, `contains-sesame`
+  (ARCHITECTURE.md, `validate.py`, and the `ALLERGEN` display maps in
+  `menu.js` + `recipe.js`; they render as the same ⚠ warning chips). The
+  honest part remains *populating* it — "no tag = not stated" means owner or
+  menu confirmation, never guesses — so **no existing dishes were tagged**;
+  that lands via `intake/`. Makes the personal allergy preference below more
+  useful.
 - **Dietary / allergy preferences (personal)** `[M]` — owner ask
   (2026-07-08): let the viewer set their own dietary needs once — no nuts,
   vegetarian, gluten-free, etc. — and have the app apply them everywhere:
