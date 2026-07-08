@@ -134,6 +134,11 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- The home header is **decluttered into a "⋯" overflow menu**: Favourites and
+  Settings now live under one button top-right, freeing the search field to
+  span the full row. The Open-now / Cheap-eats / Near-me toggles stay with the
+  list where they belong. Keyboard-navigable (arrows, Escape) and closes on an
+  outside tap.
 - The price band can now be **curated** where the menu-median misleads. The
   automatic $/$$/$$$ still derives from a venue's own prices, but a place can
   carry an explicit `priceBand` (and optional `pricePerPerson`) that wins —

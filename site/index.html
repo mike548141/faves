@@ -31,19 +31,55 @@
           <h1 class="app-title"><a href="index.html" class="app-home-link">Faves</a></h1>
           <p class="app-sub">Our favourite Wellington kai — menus, in one place.</p>
         </div>
-        <!-- JS-only; settings-ui.js unhides + wires it (it only affects the
-             client-side ranking, which needs JS anyway). -->
-        <button type="button" id="settings-btn" class="settings-btn" hidden aria-label="Distance settings">
-          <span aria-hidden="true">⚙</span>
-        </button>
+        <!-- Overflow menu: consolidates the account-less "app chrome"
+             (Favourites, Settings) under one ⋯ button to keep the header
+             uncluttered. JS-only — overflow-ui.js unhides the wrapper and
+             wires open/close; the two items keep their own IDs so app.js /
+             settings-ui.js wire them exactly as before, just relocated. -->
+        <div class="overflow" hidden>
+          <button
+            type="button"
+            id="overflow-btn"
+            class="overflow-btn"
+            aria-label="More"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="overflow-menu"
+          >
+            <span aria-hidden="true">⋯</span>
+          </button>
+          <div id="overflow-menu" class="overflow-menu" role="menu" aria-label="More" hidden>
+            <button
+              type="button"
+              id="favourites-toggle"
+              class="overflow-item fav-toggle"
+              role="menuitem"
+              aria-pressed="false"
+              hidden
+            >
+              <span class="overflow-item-icon" aria-hidden="true">♥</span>
+              <span class="fav-toggle-label">Favourites</span>
+              <span class="favourites-count" aria-hidden="true"></span>
+            </button>
+            <button
+              type="button"
+              id="settings-btn"
+              class="overflow-item"
+              role="menuitem"
+              hidden
+            >
+              <span class="overflow-item-icon" aria-hidden="true">⚙</span>
+              <span>Settings</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
     <main id="main" class="wrap">
-      <!-- Global search + favourites toggle. Both are JS-only enhancements
-           (app.js unhides them); hidden by default so the no-JS fallback
-           list isn't preceded by dead controls. The toggle sits outside the
-           browse-only region so it stays reachable in the favourites view. -->
+      <!-- Global search. JS-only enhancement (app.js unhides it); hidden by
+           default so the no-JS fallback list isn't preceded by a dead control.
+           Favourites moved to the header overflow menu. -->
       <div class="home-tools">
         <form class="search-field" role="search" id="search-form" hidden>
           <label class="sr-only" for="search-input">Search places and dishes</label>
@@ -57,11 +93,6 @@
             enterkeyhint="search"
           />
         </form>
-        <button type="button" id="favourites-toggle" class="fav-toggle list-toggle" aria-pressed="false" hidden>
-          <span aria-hidden="true">♥</span>
-          <span class="fav-toggle-label">Favourites</span>
-          <span class="favourites-count" aria-hidden="true"></span>
-        </button>
       </div>
 
       <!-- Populated by app.js while a query is active; browse view hidden. -->

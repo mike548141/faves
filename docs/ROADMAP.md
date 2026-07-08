@@ -175,15 +175,15 @@ The umbrella "better UX and design", with your concrete asks:
   2026-07-08** is now a proper bordered pill button (≥44 px, hover tint)
   instead of a faint text link — it was easy to miss on desktop
   (`.skip a`).
-- **Overflow "⋯" / menu button** `[M][design]` — owner idea (2026-07-08):
-  the home header is getting busy (⚙ settings, ♥ Favourites, search, plus
-  the Open-now/Near-me toggles). Consolidate **Favourites + Settings**
-  (and anything future) under one menu button to reclaim space. Owner's own
-  steer: **leave the Open-now / Near-me toggles as-is** — they act on the
-  main list and belong with it — and **definitely leave the per-restaurant
-  dish filters** where they are. So: a small overflow menu for
-  account-less "app chrome" (favourites view, settings, later: te reo
-  toggle, about), not for list filters.
+- **Overflow "⋯" / menu button** `[M][design]` ✅ **done 2026-07-08** — a ⋯
+  button top-right of the home header opens a small popup holding
+  **Favourites + Settings** (`overflow-ui.js`); the search field reclaims the
+  full row. The two items keep their IDs so app.js / settings-ui.js wire them
+  unchanged — the module only owns open/close + the keyboard model (arrows,
+  Escape, outside-tap). Per the owner's steer the **Open-now / Cheap-eats /
+  Near-me toggles stayed with the list**, and the per-restaurant dish filters
+  are untouched. Room for future chrome (te reo toggle, about) in the same
+  menu. Verified via CDP at 390px.
 - **Nest dishes under their place in Favourites** `[M]` ✅ **done
   2026-07-08** — the favourites view groups by `venueId` (first-seen order):
   each place is a parent header (accent-soft, its own venue heart) with the

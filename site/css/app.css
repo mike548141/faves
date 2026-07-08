@@ -1246,6 +1246,94 @@ body:not(.menu-page) {
   transform: scale(0.94);
 }
 
+/* Header overflow ("⋯") menu — Favourites + Settings under one button. */
+.overflow {
+  position: relative;
+  flex: none;
+  margin-top: var(--space-1);
+}
+.overflow-btn {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.16s ease, border-color 0.16s ease, transform 0.12s ease;
+}
+@media (hover: hover) {
+  .overflow-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+}
+.overflow-btn:active {
+  transform: scale(0.94);
+}
+.overflow-btn[aria-expanded="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.overflow-menu {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  z-index: 20;
+  min-width: 12rem;
+  padding: var(--space-1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.overflow-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5em 0.7em;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--step-body);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .overflow-item:hover {
+    background: var(--surface-2);
+  }
+}
+.overflow-item:active {
+  background: var(--surface-2);
+}
+.overflow-item-icon {
+  width: 1.4em;
+  font-size: 1.1rem;
+  text-align: center;
+}
+/* The favourites count sits at the far edge of its row (the pressed-state
+   recolour is inherited from .fav-toggle[aria-pressed] above). */
+.overflow-item .favourites-count:not(:empty) {
+  margin-left: auto;
+  min-width: 1.4em;
+  padding: 0.05em 0.4em;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
 .settings-sheet {
   width: 100%;
   max-width: 34rem;

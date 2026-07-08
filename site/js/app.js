@@ -15,6 +15,7 @@ import { heartButton } from "./favourites-ui.js";
 import { groupSection, resultRow } from "./results-view.js";
 import { settings } from "./settings.js";
 import { initSettingsUI } from "./settings-ui.js";
+import { initOverflowMenu } from "./overflow-ui.js";
 import { priceBand } from "./price.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
@@ -227,6 +228,7 @@ function init(restaurants) {
   wireFavourites();
   wireHomeButton();
   initSettingsUI();
+  initOverflowMenu();
   // Hearting something, or changing a distance dial, re-ranks the list (also
   // covers un-favouriting in the view, or a change synced from another tab).
   favourites.subscribe(render);
