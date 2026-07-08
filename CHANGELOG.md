@@ -170,5 +170,16 @@ freshness separately from this file.
   the site still ships build-less.
 
 ### Fixed
+- Menu screen no longer scrolls sideways on a narrow phone — the sticky
+  toolbar's jump-nav strip now shrinks and scrolls within itself instead
+  of pushing the whole page wider than the viewport.
+- Home filter bar wraps to two rows on a phone so the **Area** and **Cuisine**
+  selects stay full width and legible (they were collapsing to ~39px stubs at
+  390px); the service toggle gets its own row above them.
+- Reduced-motion now genuinely disables smooth scrolling — the smooth-scroll
+  rule is gated behind `prefers-reduced-motion: no-preference` instead of
+  being silently overridden.
+- Touch targets brought up to the 44px minimum: the menu section jump-nav
+  links, dietary chips, quantity steppers, and "goes well with" pairing chips.
 - Dark-mode colour contrast on the "Call to order" label (WCAG 2.2 AA),
   bringing the menu screen to Lighthouse Accessibility 100.

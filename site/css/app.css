@@ -716,8 +716,23 @@ body.faves-view .pick-fab {
   width: min(100% - 2 * var(--space-3), 60rem);
   margin-inline: auto;
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
   align-items: center;
+}
+/* Mobile: the service toggle + two selects won't fit legibly on one row at
+   390px (the selects collapsed to ~39px stubs). Give the segmented toggle its
+   own full-width row and let the two selects share the row below. --bar-h is
+   bumped to match so the body padding and both FABs clear the taller bar in
+   lockstep (see body:not(.menu-page) below). At ≥34rem it all fits one row. */
+.filter-bar-inner .segmented {
+  flex: 1 1 100%;
+}
+.filter-bar-inner .segmented button {
+  flex: 1 1 auto;
+}
+body:not(.menu-page) {
+  --bar-h: 7.6rem;
 }
 
 .segmented {
@@ -778,6 +793,23 @@ body.faves-view .pick-fab {
 .select-field select:not([data-active="all"]) {
   border-color: var(--accent);
   color: var(--accent);
+}
+
+/* Wide enough for the toggle + both selects on one row; undo the mobile
+   two-row layout and reset the bar height. */
+@media (min-width: 34rem) {
+  body:not(.menu-page) {
+    --bar-h: 4.6rem;
+  }
+  .filter-bar-inner {
+    flex-wrap: nowrap;
+  }
+  .filter-bar-inner .segmented {
+    flex: 0 0 auto;
+  }
+  .filter-bar-inner .segmented button {
+    flex: 0 0 auto;
+  }
 }
 
 /* ---------- Pick for us (Phase 4) ---------- */
@@ -916,7 +948,9 @@ body.faves-view .pick-fab {
   gap: var(--space-1);
 }
 .stepper-add {
-  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 0.35em 0.9em;
   border: 1px solid var(--accent);
   border-radius: var(--radius-chip);
@@ -928,8 +962,8 @@ body.faves-view .pick-fab {
   cursor: pointer;
 }
 .stepper-btn {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--line);
   border-radius: var(--radius-chip);
   background: var(--surface);
@@ -1313,12 +1347,15 @@ body.faves-view .pick-fab {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
-  html {
-    scroll-behavior: auto;
-  }
 }
-html {
-  scroll-behavior: smooth;
+/* Only smooth-scroll when the user hasn't asked for reduced motion. An
+   unconditional `html { scroll-behavior: smooth }` outranks a reduce-scoped
+   override by source order (equal specificity), so gate the smooth rule
+   itself rather than trying to override it. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* ================= Menu screen ================= */
@@ -1569,6 +1606,13 @@ html {
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
 }
+/* Grid items default to min-width:auto, so the jump-nav strip refuses to
+   shrink below its content and pushes the whole menu screen wider than the
+   viewport (Fable saw 423px at 390). Let children shrink so the nav's own
+   overflow-x scroll takes over instead. */
+.menu-toolbar > * {
+  min-width: 0;
+}
 .menu-search {
   width: 100%;
   min-height: 46px;
@@ -1586,7 +1630,9 @@ html {
   gap: var(--space-1);
 }
 .diet-chip {
-  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 0.4em 0.9em;
   border-radius: var(--radius-chip);
   border: 1px solid var(--line);
@@ -1617,6 +1663,9 @@ html {
 }
 .section-link {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 0.4em 0.85em;
   border-radius: var(--radius-chip);
   font-size: var(--step-sub);
@@ -1719,7 +1768,7 @@ html {
 .pair-chip {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
+  min-height: 44px;
   padding: 0.25em 0.7em;
   border-radius: var(--radius-chip);
   background: var(--accent-soft);
