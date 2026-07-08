@@ -351,10 +351,24 @@ types it. (Their email address comes with the message anyway.)
   **"Pick for us" inherits it for free** (no picker-specific plumbing). First
   built inside the picker dialog, then moved to the main list — a filter is a
   list question, not a dice question (owner + Fable UX review agreed).
-  **Still open:** the curated `priceBand` override for venues where the computed
-  band misleads (Fable flagged Khandallah Trading Co reads "$", R & S Satay
-  "$$$" — the cheap filter amplifies misbanding, so this is now load-bearing
-  for trust).
+  The curated `priceBand` override ✅ **done 2026-07-08** — a record may carry
+  an authoritative `priceBand` (+ optional `pricePerPerson`) that wins over the
+  median where it misleads; set "$$" on Khandallah Trading Co (was "$") and
+  R & S Satay (was "$$$"), which also corrects the cheap-eats filter.
+- **Dish order-codes, separate from the name** `[S][schema]` — owner ask
+  (2026-07-09). Some venues number their dishes on the board and take orders by
+  number ("two number 14s and one 22"). KC Cafe's menu was transcribed from a
+  photo with the numbers **baked into the name** ("1. Chicken Curry on Rice",
+  159/169 items) — useful to the customer *only if the venue recognises the
+  number*, but wrong as part of the dish name (breaks search, picks matching,
+  and sort). Plan: an optional item field — `code` (string, e.g. `"14"`) — for
+  the venue's own identifier; **strip the leading `N.`/`N)` prefix out of
+  `name` into `code`** for KC Cafe; render the code as a distinct badge on the
+  dish row (e.g. a muted `#14` chip, not run into the title), and let search
+  match it. Only populate `code` where the venue actually orders by number
+  (most don't — "no code = not stated"). Touches: schema in `ARCHITECTURE.md`,
+  `validate.py` (optional string, picks still match the *stripped* name),
+  `menu.js` dish row, `search.js`. Currently KC Cafe is the only affected file.
 - **More allergens** `[S][schema]` — extend the closed tag set (egg,
   dairy/milk, gluten, soy, sesame) in `ARCHITECTURE.md`. Cheap to add;
   the honest part is *populating* it — "no tag = not stated" means owner
