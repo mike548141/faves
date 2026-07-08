@@ -10,6 +10,9 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Page footer on the home screen: a short privacy note — no accounts, no
+  tracking, no third-party scripts, your favourites, order and settings
+  stay on your device — and a "Made by cakeIT" attribution.
 - Smarter default order: the home list now floats the places you can
   actually order from *right now* to the top and sinks the rest — open
   (right up to closing time) and opening-within-the-hour venues lead;
@@ -112,6 +115,11 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- The menu "needs a refresh" caveat is no longer an always-on banner: it's
+  tucked behind a small **ⓘ beside the venue name** that reveals the note
+  on tap (and on hover for mouse users), so the header reads clean. An
+  accessible disclosure — a real button with `aria-expanded`, closes on
+  Escape or an outside tap — not a bare tooltip, so it works on touch.
 - Clearer navigation on the home screen: the **"Faves" wordmark is now a
   home button** — already on the home screen it exits any open search or
   favourites view and scrolls to the top (a plain link to the home page if

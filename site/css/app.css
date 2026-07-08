@@ -1839,9 +1839,44 @@ html {
   color: var(--accent);
 }
 
-/* "Needs a refresh" caveat — shown on menus with no verified date. */
-.menu-caveat {
-  margin-top: var(--space-3);
+/* "Needs a refresh" note — behind an ⓘ disclosure beside the venue name,
+   so the header stays uncluttered until you ask for it. */
+.menu-title-group {
+  position: relative; /* positioning context for the note popover */
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  min-width: 0; /* let a long title wrap rather than shove the heart off */
+}
+.caveat-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -0.1em; /* sit against the title's cap height */
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  background: none;
+  border: none;
+  border-radius: var(--radius-chip);
+  cursor: pointer;
+}
+.caveat-btn:hover,
+.caveat-btn[aria-expanded="true"] {
+  color: var(--warn);
+}
+.caveat-note {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 20;
+  width: max-content;
+  max-width: min(28rem, 88vw);
+  margin-top: var(--space-1);
   padding: var(--space-2) var(--space-3);
   background: var(--warn-bg);
   color: var(--warn-ink);
@@ -1850,9 +1885,47 @@ html {
   font-size: var(--step-sub);
   font-weight: 600;
   line-height: 1.4;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+}
+.caveat-note.is-open {
+  display: block;
+}
+/* Mouse users get a hover reveal too; touch/keyboard use the click toggle. */
+@media (hover: hover) and (pointer: fine) {
+  .caveat-btn:hover ~ .caveat-note {
+    display: block;
+  }
 }
 @media (prefers-color-scheme: dark) {
-  .menu-caveat {
+  .caveat-note {
     color: var(--warn);
   }
+}
+
+/* ---------- Site footer ---------- */
+/* The privacy story is genuinely strong for this site, so it earns a plain
+   statement. Business attribution only — no contact details (personal-data
+   rule). Lives inside <main> so the fixed filter bar's bottom padding keeps
+   it clear of the bar. */
+.site-footer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  text-align: center;
+}
+.footer-privacy {
+  max-width: 46ch;
+  margin-inline: auto;
+  line-height: 1.55;
+  text-wrap: balance;
+}
+.footer-made {
+  margin-top: var(--space-2);
+  font-size: 0.8rem;
+}
+.footer-brand {
+  font-weight: 700;
+  color: var(--ink);
 }

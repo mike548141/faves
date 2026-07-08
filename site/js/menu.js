@@ -188,13 +188,22 @@ function renderHeader(r) {
     r.name
   );
   venueHeart.classList.add("heart-lg");
-  const bits = [
-    el("div", { className: "menu-title-row" }, [
-      el("h1", { className: "menu-title", textContent: r.name }),
-      venueHeart,
-    ]),
-    el("p", { className: "menu-sub", textContent: meta }),
-  ];
+
+  // Title + heart. An unverified venue tucks its "needs a refresh" note
+  // behind an ⓘ disclosure next to the name (see caveatDisclosure) rather
+  // than an always-on banner, so the header reads clean.
+  const titleGroup = el("div", { className: "menu-title-group" }, [
+    el("h1", { className: "menu-title", textContent: r.name }),
+  ]);
+  const titleRow = el("div", { className: "menu-title-row" }, [titleGroup, venueHeart]);
+  if (!r.verified && !isRecipes) {
+    const [caveatBtn, caveatNote] = caveatDisclosure(r.id);
+    // Button after the title, note absolutely positioned within the group
+    // (its positioning context) so it can appear on hover of its sibling.
+    titleGroup.append(caveatBtn, caveatNote);
+  }
+
+  const bits = [titleRow, el("p", { className: "menu-sub", textContent: meta })];
 
   // Venues get a contact card + order links; a recipe collection has neither.
   if (!isRecipes) {
@@ -209,15 +218,54 @@ function renderHeader(r) {
       ? r.verified
       : d.toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" });
     bits.push(el("p", { className: "menu-verified", textContent: `Verified ${nice}` }));
-  } else if (!isRecipes) {
-    bits.push(
-      el("p", { className: "menu-caveat" }, [
-        "⚠ Menu items and prices need a refresh — confirm with the venue when you order.",
-      ])
-    );
   }
 
   return el("header", { className: "menu-header" }, bits);
+}
+
+// The "menu needs a refresh" note as an accessible disclosure: a small ⓘ
+// button beside the venue name that reveals the note on tap/click (and on
+// hover for mouse users, via CSS). A button + aria-expanded, not a bare
+// `title`, so it works on touch. Returns [button, note] for the caller to
+// place — the note must be a later sibling of the button for the hover
+// reveal to work.
+function caveatDisclosure(id) {
+  const noteId = `menu-caveat-${id}`;
+  const btn = el("button", { type: "button", className: "caveat-btn", textContent: "ⓘ" });
+  btn.setAttribute("aria-label", "Why this menu needs a refresh");
+  btn.setAttribute("aria-expanded", "false");
+  btn.setAttribute("aria-controls", noteId);
+
+  const note = el("span", {
+    id: noteId,
+    className: "caveat-note",
+    textContent:
+      "⚠ Menu items and prices need a refresh — confirm with the venue when you order.",
+  });
+  note.setAttribute("role", "note");
+
+  const isOpen = () => btn.getAttribute("aria-expanded") === "true";
+  const onDocPointer = (e) => {
+    if (!btn.contains(e.target) && !note.contains(e.target)) setOpen(false);
+  };
+  const onKey = (e) => {
+    if (e.key === "Escape") {
+      setOpen(false);
+      btn.focus();
+    }
+  };
+  function setOpen(open) {
+    if (open === isOpen()) return;
+    btn.setAttribute("aria-expanded", String(open));
+    note.classList.toggle("is-open", open);
+    // Capture-phase so it still closes when an inner handler stops bubbling.
+    const fn = open ? "addEventListener" : "removeEventListener";
+    document[fn]("click", onDocPointer, true);
+    document[fn]("keydown", onKey);
+  }
+  btn.addEventListener("click", () => setOpen(!isOpen()));
+
+  return [btn, note];
 }
 
 function renderPicks(r, allItems) {

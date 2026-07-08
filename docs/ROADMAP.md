@@ -187,12 +187,15 @@ The umbrella "better UX and design", with your concrete asks:
   favourites by `venueId`, synthesise a parent header per venue (favourited
   or not), and keep the inline un-heart per row.
 - **Collapse the "needs a refresh" caveat into an info icon** `[S][design]`
-  — owner idea (2026-07-08): the menu screen's "Menu items and prices need
-  a refresh…" line is a always-on distraction. Replace it with a small
-  **ⓘ icon beside the venue name**; tap/hover reveals the message
-  (accessible disclosure — a `<button aria-expanded>` + popover, not a
-  bare `title`, so it works on touch). Declutters the header. Sits next to
-  the venue ♥ already there.
+  ✅ **done 2026-07-08** — the menu screen's always-on "Menu items and
+  prices need a refresh…" banner is now a small **ⓘ beside the venue name**
+  (`caveatDisclosure` in `menu.js`): a real `<button aria-expanded>` that
+  reveals the note as a popover on tap, and on hover for pointer devices via
+  CSS; closes on Escape (returning focus) or an outside tap. Not a bare
+  `title`, so it works on touch. Sits between the venue name and its ♥; the
+  popover is anchored within the title group so it never overflows the
+  viewport (verified via CDP at 390 px: left 16 → right 359 of 390).
+  Declutters the header.
 - **Sticky search on phones** `[S][design]` — keep the menu search
   reachable while scrolling a long menu (sticky under the section nav).
   Partly addressed already: menu **section headings** now stick under the
@@ -210,12 +213,16 @@ The umbrella "better UX and design", with your concrete asks:
   (`body.searching`); clearing restores them. Superseded the older "does
   the home screen need a persistent search field?" question — yes, and it
   searches dish names + descriptions + ingredients, not just venue names.
-- **Page footer** `[S]` — owner idea (2026-07-08): a simple footer with a
-  short **privacy note** and an attribution ("made by **cakeIT**"). The
-  privacy story is genuinely strong and worth stating plainly: no accounts,
-  no backend, no third-party scripts, no analytics — your favourites, order
-  and settings never leave your device; the only network calls are fetching
-  the site's own static files from the host. Pairs with the
+- **Page footer** `[S]` ✅ **done 2026-07-08** — a `.site-footer` on the
+  home screen: a short **privacy note** (no accounts, no tracking, no
+  third-party scripts; favourites, order and settings stay on your device —
+  the only thing fetched is the site's own pages) and a "Made by **cakeIT**"
+  attribution. Static HTML so it shows without JS; lives inside `<main>` so
+  the fixed filter bar's bottom padding keeps it clear of the bar (verified:
+  footer bottom 702 ≤ bar top 732 at an 800 px viewport). Business
+  attribution only — no contact details (personal-data rule). Still to do
+  from the original note: a **role inbox** contact once the Theme 4c mailto
+  lands. Pairs with the
   `/.well-known/security.txt` + provenance work in **Theme 7** (same "here's
   how this site treats you" surface). Keep it light and it stays within the
   no-personal-data rule (a business attribution is fine; no contact details
