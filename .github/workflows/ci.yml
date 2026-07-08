@@ -34,6 +34,11 @@ jobs:
       # node_modules appears — the invariant ADR 0001 rests on.
       - name: Assert no third-party dependencies
         run: python3 tools/check_no_deps.py
+      # The published SBOM must match the shipped tree — deterministic, so a
+      # stale commit fails here (ADR 0008). Proves the zero-dep claim, and any
+      # future third-party entry shows up as a diff.
+      - name: Assert the committed SBOM is current
+        run: python3 tools/gen_sbom.py --check
 
   test:
     name: JS unit tests

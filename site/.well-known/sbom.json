@@ -1,0 +1,53 @@
+{
+  "serialNumber": "urn:uuid:fa7f998d-5ad8-504c-a898-df2da62d7bd0",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "tools": [
+      {
+        "vendor": "Faves",
+        "name": "gen_sbom.py",
+        "version": "1.0.0"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "bom-ref": "faves",
+      "name": "faves",
+      "description": "Faves — a build-less, offline-capable static PWA for browsing favourite restaurant menus. Vanilla HTML + CSS + ES-module JavaScript; no bundler, no framework, no CDN.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/mike548141/faves"
+        },
+        {
+          "type": "website",
+          "url": "https://lets-eat.myspot.nz"
+        },
+        {
+          "type": "documentation",
+          "url": "https://github.com/mike548141/faves/blob/main/docs/decisions/0001-zero-build-vanilla.md"
+        }
+      ]
+    },
+    "properties": [
+      {
+        "name": "faves:thirdPartyComponents",
+        "value": "0"
+      },
+      {
+        "name": "faves:zeroDependencyGuard",
+        "value": "tools/check_no_deps.py"
+      }
+    ]
+  },
+  "components": []
+}

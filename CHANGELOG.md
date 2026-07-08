@@ -10,6 +10,11 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Published SBOM** (provenance): a CycloneDX Software Bill of Materials at
+  `/.well-known/sbom.json` makes the "no third-party components" promise
+  *checkable* — its dependency list is empty by construction, and CI fails if
+  the committed file ever drifts from the shipped tree. Invisible to users;
+  it's for anyone auditing what the site ships.
 - **Dish order-numbers**: where a place takes orders by number ("two number
   14s, thanks"), the menu now shows that number as a small muted **#code
   badge** beside the dish — distinct from its name — and you can **search by
