@@ -53,3 +53,13 @@ export function priceLabel(record) {
   const p = priceBand(record);
   return p ? `${p.band} · ~$${p.perPerson}pp` : null;
 }
+
+/**
+ * Is this a "cheap eats" venue? True only for the "$" band — self-consistent
+ * with the chip the user already sees on the card. A venue with too little
+ * price data (null band) is *not* cheap: we can't vouch that it is, and
+ * "no tag = not stated" is the house rule. Drives the picker's cheap-eats mode.
+ */
+export function isCheapEats(record) {
+  return priceBand(record)?.band === "$";
+}

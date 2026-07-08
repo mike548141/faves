@@ -15,7 +15,7 @@ import { heartButton } from "./favourites-ui.js";
 import { groupSection, resultRow } from "./results-view.js";
 import { settings } from "./settings.js";
 import { initSettingsUI } from "./settings-ui.js";
-import { priceBand } from "./price.js";
+import { priceBand, isCheapEats } from "./price.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -221,9 +221,12 @@ function init(restaurants) {
   // The shuffle prefers places you can actually order from now (open or
   // opening soon, and within your reach radius if we know where you are); it
   // falls back to the whole filtered set if none are available, never dead-ends.
-  initPicker(() => {
+  initPicker(({ cheapOnly } = {}) => {
     const now = nzNow();
-    const filtered = applyFilters(restaurants, state, now);
+    let filtered = applyFilters(restaurants, state, now);
+    // Cheap-eats mode narrows to $ venues *before* the availability preference,
+    // so a closed cheap place still beats an open pricey one within this mode.
+    if (cheapOnly) filtered = filtered.filter(isCheapEats);
     const { farKm } = settings.get();
     const available = filtered.filter((r) => isAvailableNow(r, { now, origin: state.origin, farKm }));
     return available.length ? available : filtered;

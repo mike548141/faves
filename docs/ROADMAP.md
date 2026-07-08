@@ -329,10 +329,14 @@ types it. (Their email address comes with the message anyway.)
   cheap sides don't skew it), banded $ ≤ $15, $$ ≤ $30, $$$ above; hidden
   when there are < 3 priced items (stubs, recipes, thin menus). Captioned
   "estimated from the menu" and honest that our prices need an in-store
-  refresh. **Still open:** the curated override field for venues where the
-  computed band misleads (mains-only vs. banquet), and wiring it into "Pick
-  for us" as a *cheap-eats* mode (the chip data is there; the picker filter
-  isn't built yet).
+  refresh. The **cheap-eats picker mode** ✅ **done 2026-07-08** — a 💸 toggle
+  in "Pick for us" narrows the roll to the **$** band (`isCheapEats` in
+  `price.js`, self-consistent with the card chip; a null-band venue is *not*
+  cheap — we can't vouch it is). Applied to the filtered set *before* the
+  availability preference (a closed cheap place still beats an open pricey one
+  within the mode), flipping it re-rolls, and an empty cheap set gets its own
+  "turn off Cheap eats or widen" nudge. **Still open:** the curated override
+  field for venues where the computed band misleads (mains-only vs. banquet).
 - **More allergens** `[S][schema]` — extend the closed tag set (egg,
   dairy/milk, gluten, soy, sesame) in `ARCHITECTURE.md`. Cheap to add;
   the honest part is *populating* it — "no tag = not stated" means owner

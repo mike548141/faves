@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { pricedItems, priceBand, priceLabel } from "../site/js/price.js";
+import { pricedItems, priceBand, priceLabel, isCheapEats } from "../site/js/price.js";
 
 const venue = (prices) => ({
   menu: [{ section: "All", items: prices.map((price, i) => ({ name: `d${i}`, price })) }],
@@ -53,4 +53,16 @@ test("priceBand: null for a stub with no menu", () => {
 test("priceLabel: compact chip text or null", () => {
   assert.equal(priceLabel(venue([18, 24, 30])), "$$ · ~$24pp");
   assert.equal(priceLabel(venue([10])), null);
+});
+
+test("isCheapEats: only the $ band counts as cheap", () => {
+  assert.equal(isCheapEats(venue([8, 10, 12])), true); // median 10 → $
+  assert.equal(isCheapEats(venue([18, 24, 30])), false); // $$
+  assert.equal(isCheapEats(venue([30, 40, 50])), false); // $$$
+});
+
+test("isCheapEats: false when there's too little price data (null band)", () => {
+  assert.equal(isCheapEats(venue([10, 12])), false); // < 3 items
+  assert.equal(isCheapEats({ kind: "recipes", menu: venue([5, 5, 5]).menu }), false);
+  assert.equal(isCheapEats({}), false);
 });
