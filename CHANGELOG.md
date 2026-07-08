@@ -10,6 +10,11 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Two-column menu on tablet and desktop**: when there's room, the menu sits
+  on the left and a **sticky info column** (call/pickup, hours, and the
+  Order-online buttons) rides alongside it on the right, so contact details
+  stay in view while you scroll a long menu. The order links stack in that
+  column. On a phone it's unchanged — everything stacks in one column.
 - **"Cheap eats" filter** on the home screen: a 💸 toggle beside "Open now"
   narrows the list to the **$** places (the ones already chip-flagged cheap on
   their cards). Combines with every other filter, and **"Pick for us" inherits

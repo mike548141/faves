@@ -222,12 +222,9 @@ function renderHeader(r) {
     bits.push(el("p", { className: "menu-price" }, parts));
   }
 
-  // Venues get a contact card + order links; a recipe collection has neither.
-  if (!isRecipes) {
-    bits.push(contactCard(r));
-    const order = orderCard(r);
-    if (order) bits.push(order);
-  }
+  // The contact + order cards used to live here; on wide screens they move to
+  // a right-hand info column (see renderAside / the .menu-twocol grid), so the
+  // header now carries only the title block.
 
   if (r.verified) {
     const d = new Date(r.verified);
@@ -238,6 +235,18 @@ function renderHeader(r) {
   }
 
   return el("header", { className: "menu-header" }, bits);
+}
+
+// The venue info column: contact card (phone, pickup/map, hours) + order-online
+// links. Stacks under the header on a phone; on a tablet/desktop it moves to a
+// sticky right-hand column beside the menu (see the .menu-twocol grid). Recipe
+// collections have neither, so callers skip this for them. Returns null when
+// there's nothing to show.
+function renderAside(r) {
+  const cards = [contactCard(r)];
+  const order = orderCard(r);
+  if (order) cards.push(order);
+  return el("aside", { className: "menu-aside", "aria-label": "Contact and ordering" }, cards);
 }
 
 // The "menu needs a refresh" note as an accessible disclosure: a small ⓘ
@@ -440,20 +449,36 @@ function render(r) {
   const allItems = r.menu.flatMap((s) => s.items);
 
   root.replaceChildren();
+  root.classList.remove("menu-twocol");
   root.setAttribute("aria-busy", "false");
   root.append(renderHeader(r));
 
-  const picks = renderPicks(r, allItems);
-  if (picks) root.append(picks);
+  // Contact + order info. Its own column on wide screens; stacked under the
+  // header on a phone. Recipe collections have no contact/order.
+  const aside = isRecipes ? null : renderAside(r);
+  if (aside) root.append(aside);
 
-  // Stub / empty menu: show a friendly note instead of empty controls.
+  // The menu proper lives in its own block so it can sit left of the aside in
+  // the two-column layout (and so nothing else needs to know about the grid).
+  const main = el("div", { className: "menu-main" });
+  root.append(main);
+
+  const picks = renderPicks(r, allItems);
+  if (picks) main.append(picks);
+
+  // Stub / empty menu: show a friendly note instead of empty controls. Stay
+  // single-column — there's no menu to sit beside the info column.
   if (allItems.length === 0) {
     const note = isRecipes
       ? "Recipes coming soon."
       : "Full menu coming soon" + (r.phone ? " — call ahead to order in the meantime." : ".");
-    root.append(el("p", { className: "menu-status" }, [note]));
+    main.append(el("p", { className: "menu-status" }, [note]));
     return;
   }
+
+  // A venue with a real menu + an info column gets the two-column grid on wide
+  // screens (the CSS gates it by width; the class just opts this page in).
+  if (aside) root.classList.add("menu-twocol");
 
   // Search + section nav share one sticky toolbar so both stay reachable
   // while scrolling a long menu (was: search scrolled away, only the nav
@@ -500,8 +525,8 @@ function render(r) {
   nav.append(navScroll);
 
   const toolbar = el("div", { className: "menu-toolbar" }, [search, nav]);
-  root.append(toolbar);
-  if (dietRow) root.append(dietRow);
+  main.append(toolbar);
+  if (dietRow) main.append(dietRow);
 
   const menuWrap = el("div", { className: "menu-sections" });
   const sectionEls = [];
@@ -519,10 +544,10 @@ function render(r) {
     sectionEls.push(sec);
     menuWrap.append(sec);
   }
-  root.append(menuWrap);
+  main.append(menuWrap);
 
   const noResults = el("p", { className: "menu-status", hidden: true, textContent: "No dishes match." });
-  root.append(noResults);
+  main.append(noResults);
 
   // --- View logic: search hides, dietary dims -----------------------
   const dishSatisfiesDiet = (dish) => {

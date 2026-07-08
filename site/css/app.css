@@ -1374,6 +1374,45 @@ body:not(.menu-page) {
 .menu-page {
   padding-bottom: var(--space-5);
 }
+
+/* Two-column menu on tablet/desktop: the menu on the left, a sticky info
+   column (contact, hours, map link, order buttons) on the right. Opt-in via
+   .menu-twocol (set by menu.js only for a venue with a real menu). Mobile
+   stays single-column — the grid simply doesn't apply below the breakpoint,
+   so the header → aside → main DOM order reads as the familiar stack. */
+@media (min-width: 48rem) {
+  .menu-twocol {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    grid-template-areas:
+      "header header"
+      "main   aside";
+    column-gap: var(--space-5);
+    align-items: start;
+  }
+  .menu-twocol > .menu-header {
+    grid-area: header;
+  }
+  .menu-twocol > .menu-main {
+    grid-area: main;
+    min-width: 0; /* let long dish text wrap rather than widen the column */
+  }
+  .menu-twocol > .menu-aside {
+    grid-area: aside;
+    position: sticky;
+    top: var(--space-3);
+    align-self: start; /* don't stretch to row height, or sticky can't work */
+  }
+  /* First info card sits flush with the top of the menu column beside it. */
+  .menu-twocol > .menu-aside > :first-child {
+    margin-top: 0;
+  }
+  /* The narrow column reads better with the order buttons stacked. */
+  .menu-twocol > .menu-aside .order-links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
 /* Back-to-list control on the menu/recipe pages. A proper bordered pill
    (not a faint text link) so it reads as a control and is easy to hit —
    it was easy to miss on desktop. */

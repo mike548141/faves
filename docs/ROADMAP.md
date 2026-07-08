@@ -150,17 +150,23 @@ sanity-checks the total — on a phone, offline.
 
 The umbrella "better UX and design", with your concrete asks:
 
-- **Info panel on the right when there's room** `[M][design]` —
-  responsive two-column on tablet/desktop (menu left; contact, hours, map
-  link, order summary right). One CSS grid; mobile stays single-column.
+- **Info panel on the right when there's room** `[M][design]` ✅ **done
+  2026-07-08** — a `.menu-twocol` CSS grid (`min-width: 48rem`): the header
+  spans the top, the menu sits left, and a **sticky** info column (contact
+  card — call/pickup/hours — plus the Order-online buttons) rides on the
+  right. Opt-in per page (venues with a real menu only; stubs and recipe
+  collections stay single-column). Mobile is untouched — the grid just
+  doesn't apply, so the header → aside → main DOM order reads as the old
+  stack. `renderAside` in `menu.js`; verified via CDP at 1024 px + 390 px.
   - **Order-online buttons in that right column** `[S][design]` — owner ask
     (2026-07-08): on a wide screen, move the "Order online" buttons (Uber
     Eats, Delivereasy, the venue site) to the right of the phone/address/
     hours block as a **column of buttons with each platform's icon/logo**.
-    Fits inside the two-column layout above. Logos must be **self-hosted**
-    (offline / no-hotlink rule) — bundle small SVG/PNG marks under
-    `site/img/` (mind each platform's brand-usage terms). Mobile keeps the
-    current stacked layout.
+    *The column-of-buttons layout ✅ landed with the two-column panel above
+    (`.menu-twocol .order-links` stacks them).* **Still open:** the
+    per-platform **logos** — must be **self-hosted** (offline / no-hotlink
+    rule), bundle small SVG/PNG marks under `site/img/` (mind each
+    platform's brand-usage terms). Mobile keeps the current stacked layout.
 - **Navigation & wayfinding** ✅ **done 2026-07-08** — the "Faves" wordmark
   is a home button (exits any open view + scrolls top on the home screen;
   a plain link to `index.html` otherwise), and the favourites view gained
