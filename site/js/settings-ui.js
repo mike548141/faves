@@ -1,9 +1,15 @@
-// Settings dialog for the two ranking distances (settings.js): how much
-// nearer a favourite counts, and how far is "too far tonight". Injected on
-// the home screen (the only place ranking applies). Sliders write straight
-// to the store; the home list re-ranks live via app.js's own subscription.
+// The Settings dialog, injected on the home screen (opened from the ⋯ menu).
+// Two sections:
+//   • Food preferences — your dietary needs and the allergens to flag. These
+//     apply on every menu: dietary needs pre-select the menu's dietary chips,
+//     flagged allergens make matching ⚠ warnings shout. Safety framing is
+//     load-bearing: we surface what venues told us, never assert safety.
+//   • Distance — the two ranking dials (settings.js): how much nearer a
+//     favourite counts, and how far is "too far tonight".
+// Everything writes straight to the store; the home list re-ranks live via
+// app.js's own subscription, and each menu reads the preferences on load.
 
-import { settings, BOUNDS } from "./settings.js";
+import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS } from "./settings.js";
 
 const el = (tag, props = {}, children = []) => {
   const node = Object.assign(document.createElement(tag), props);
@@ -25,10 +31,40 @@ function field({ id, label, hint, min, max, step }) {
   return { row, input, out };
 }
 
+// A group of multi-select toggle chips backed by one list on the diet prefs
+// (`kind` is "dietary" or "avoid"). Toggling rewrites the whole diet object.
+function prefChips(prefs, kind) {
+  // Avoided allergens read as a warning (red) when set; dietary needs as accent.
+  const cls = kind === "avoid" ? "pref-chips pref-chips-avoid" : "pref-chips";
+  const group = el("div", { className: cls, role: "group" });
+  const chips = [];
+  for (const p of prefs) {
+    const chip = el("button", {
+      type: "button",
+      className: "pref-chip",
+      textContent: p.label,
+      "aria-pressed": "false",
+    });
+    chip.dataset.key = p.key;
+    chip.addEventListener("click", () => {
+      const diet = settings.get().diet;
+      const set = new Set(diet[kind]);
+      set.has(p.key) ? set.delete(p.key) : set.add(p.key);
+      settings.set({ diet: { ...diet, [kind]: [...set] } });
+    });
+    chips.push({ key: p.key, chip });
+    group.append(chip);
+  }
+  return { group, chips, kind };
+}
+
 export function initSettingsUI() {
   const btn = document.getElementById("settings-btn");
   if (!btn || document.querySelector(".settings-sheet")) return;
   btn.hidden = false;
+
+  const dietary = prefChips(DIETARY_PREFS, "dietary");
+  const avoid = prefChips(ALLERGEN_PREFS, "avoid");
 
   const fav = field({
     id: "set-fav-boost",
@@ -52,7 +88,7 @@ export function initSettingsUI() {
   const dialog = el("dialog", { className: "settings-sheet", "aria-labelledby": "settings-title" }, [
     el("div", { className: "settings-inner" }, [
       el("div", { className: "settings-head" }, [
-        el("h2", { id: "settings-title", className: "settings-title", textContent: "Distance settings" }),
+        el("h2", { id: "settings-title", className: "settings-title", textContent: "Settings" }),
         (() => {
           const c = el("button", { type: "button", className: "settings-close", textContent: "✕" });
           c.setAttribute("aria-label", "Close");
@@ -60,17 +96,37 @@ export function initSettingsUI() {
           return c;
         })(),
       ]),
+
+      // --- Food preferences ---
+      el("h3", { className: "settings-group-title", textContent: "Food preferences" }),
+      el("p", { className: "settings-sub", textContent: "Your dietary needs" }),
+      dietary.group,
+      el("p", { className: "settings-sub", textContent: "Allergens to flag" }),
+      avoid.group,
+      el("p", { className: "settings-safety" }, [
+        el("strong", { textContent: "Always confirm for allergies. " }),
+        "We only show what venues told us — no tag means not stated, not that a " +
+          "dish is free of it. This highlights and filters; it isn't a guarantee.",
+      ]),
+
+      // --- Distance ---
+      el("h3", { className: "settings-group-title", textContent: "Distance" }),
       el("p", { className: "settings-note", textContent: "These shape the home order when “Near me” is on." }),
       fav.row,
       far.row,
+
       el("div", { className: "settings-actions" }, [resetBtn]),
     ]),
   ]);
   document.body.append(dialog);
 
-  // Reflect the current settings into the sliders + their value labels.
+  // Reflect the current settings into every control.
   function sync() {
     const s = settings.get();
+    const dietarySet = new Set(s.diet.dietary);
+    for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
+    const avoidSet = new Set(s.diet.avoid);
+    for (const { key, chip } of avoid.chips) chip.setAttribute("aria-pressed", String(avoidSet.has(key)));
     fav.input.value = String(s.favBoostKm);
     fav.out.textContent = `${s.favBoostKm} km`;
     far.input.value = String(s.farKm);
@@ -89,7 +145,7 @@ export function initSettingsUI() {
     if (e.target === dialog) dialog.close();
   });
 
-  // Keep sliders in step with the store (reset, or a change from another tab).
+  // Keep controls in step with the store (reset, or a change from another tab).
   settings.subscribe(sync);
   window.addEventListener("storage", (e) => {
     if (e.key === "faves.settings.v1") settings.reload();

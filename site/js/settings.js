@@ -17,7 +17,35 @@ import { FAR_KM, FAV_BOOST_KM } from "./ranking.js";
 
 const KEY = "faves.settings.v1";
 
-export const DEFAULTS = { favBoostKm: FAV_BOOST_KM, farKm: FAR_KM };
+// Personal food preferences (device-local). `dietary` pre-selects the menu's
+// dietary chips; `avoid` foregrounds matching allergen warnings. Both are
+// subsets of the closed tag vocabulary (docs/ARCHITECTURE.md). Load-bearing
+// safety framing: this *surfaces* our tags, it never asserts safety — "no tag
+// = not stated", never "allergen-free". A filter/highlight, not a guarantee.
+export const DIETARY_PREFS = [
+  { key: "v", label: "Vegetarian" },
+  { key: "vg", label: "Vegan" },
+  { key: "gf", label: "Gluten free" },
+  { key: "df", label: "Dairy free" },
+];
+export const ALLERGEN_PREFS = [
+  { key: "contains-nuts", label: "Nuts" },
+  { key: "contains-peanuts", label: "Peanuts" },
+  { key: "contains-shellfish", label: "Shellfish" },
+  { key: "contains-egg", label: "Egg" },
+  { key: "contains-dairy", label: "Dairy" },
+  { key: "contains-gluten", label: "Gluten" },
+  { key: "contains-soy", label: "Soy" },
+  { key: "contains-sesame", label: "Sesame" },
+];
+const DIETARY_KEYS = new Set(DIETARY_PREFS.map((p) => p.key));
+const ALLERGEN_KEYS = new Set(ALLERGEN_PREFS.map((p) => p.key));
+
+export const DEFAULTS = {
+  favBoostKm: FAV_BOOST_KM,
+  farKm: FAR_KM,
+  diet: { dietary: [], avoid: [] },
+};
 
 // [min, max] accepted for each; values outside are clamped in, non-numbers
 // fall back to the default.
@@ -29,10 +57,33 @@ function clampField(value, key) {
   return Math.min(hi, Math.max(lo, value));
 }
 
+// Keep only known keys, in vocabulary order, deduped — a hand-edited or stale
+// value can't smuggle in a bogus tag that would never match a dish.
+function cleanKeys(arr, allowed) {
+  if (!Array.isArray(arr)) return [];
+  const seen = new Set();
+  const out = [];
+  for (const x of arr) {
+    if (allowed.has(x) && !seen.has(x)) {
+      seen.add(x);
+      out.push(x);
+    }
+  }
+  return out;
+}
+
+function sanitiseDiet(d) {
+  return {
+    dietary: cleanKeys(d?.dietary, DIETARY_KEYS),
+    avoid: cleanKeys(d?.avoid, ALLERGEN_KEYS),
+  };
+}
+
 function sanitise(obj) {
   return {
     favBoostKm: clampField(obj?.favBoostKm, "favBoostKm"),
     farKm: clampField(obj?.farKm, "farKm"),
+    diet: sanitiseDiet(obj?.diet),
   };
 }
 
@@ -43,7 +94,7 @@ export function createSettings(storage) {
     try {
       return sanitise(JSON.parse(storage.getItem(KEY) || "{}"));
     } catch {
-      return { ...DEFAULTS };
+      return sanitise({}); // fresh defaults (never alias DEFAULTS' arrays)
     }
   }
 
@@ -66,7 +117,7 @@ export function createSettings(storage) {
       commit();
     },
     reset() {
-      state = { ...DEFAULTS };
+      state = sanitise({}); // fresh defaults (never alias DEFAULTS' arrays)
       commit();
     },
     reload() {

@@ -382,17 +382,25 @@ types it. (Their email address comes with the message anyway.)
   menu confirmation, never guesses — so **no existing dishes were tagged**;
   that lands via `intake/`. Makes the personal allergy preference below more
   useful.
-- **Dietary / allergy preferences (personal)** `[M]` — owner ask
-  (2026-07-08): let the viewer set their own dietary needs once — no nuts,
-  vegetarian, gluten-free, etc. — and have the app apply them everywhere:
-  pre-select the menu's dietary chips, and **flag/foreground the matching
-  allergen warnings** (a nut-allergy profile makes `contains-nuts` shout).
-  Device-local, in the same `settings.js` preferences store. **Safety
-  framing is load-bearing:** this must *surface* our tags, never imply
-  safety we can't vouch for — "no tag = not stated" still holds, so the
-  copy stays "based on what venues told us; always confirm for allergies".
-  A filter/highlight, not a guarantee. Pairs with "More allergens" above
-  (richer tags make the preference more useful).
+- **Dietary / allergy preferences (personal)** `[M]` ✅ **done 2026-07-09** —
+  owner ask. The Settings dialog (⋯ menu) gained a **Food preferences**
+  section: pick your **dietary needs** (veg/vegan/GF/DF) and the **allergens
+  to flag** (the full 8-tag set), device-local in the same `settings.js`
+  store (`diet: {dietary, avoid}`, sanitised to the closed vocabulary,
+  unit-tested). Applied on every menu: dietary needs **pre-select the
+  matching dietary chips** (so non-matching dishes dim on load), and a
+  flagged allergen makes the matching ⚠ warning **shout** (filled-red
+  `is-flagged` chip) with a warning rail down the whole dish row
+  (`.dish-flagged`); recipe pages foreground flagged allergens too. **Safety
+  framing is load-bearing and shipped:** a note reads "Always confirm for
+  allergies — we only show what venues told us; no tag means not stated, not
+  free of it. This highlights and filters; it isn't a guarantee." Avoided
+  allergens read red (danger), dietary needs read accent. Verified via
+  headless Chrome at 390px with a seeded profile (contains-nuts flagged +
+  rails, veg chip pre-pressed, 161 non-veg dishes dimmed). Pairs with "More
+  allergens" (the richer tag set makes it more useful). *Fixed en route: the
+  diet chip's `aria-pressed` was set as an ineffective JS property, never the
+  attribute the CSS matches — pre-selected chips didn't look pressed.*
 - **Personal tag overrides (local)** `[M]` — owner idea (2026-07-08): let a
   user **add / edit / remove tags on a venue or dish for themselves** (e.g.
   tag Sprig + Fern as a "coffee" place), stored **locally** — our curated

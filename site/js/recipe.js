@@ -8,8 +8,10 @@ import { loadRestaurant } from "./data.js";
 import { slug } from "./slug.js";
 import { initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
+import { settings } from "./settings.js";
 
 const root = document.getElementById("recipe-root");
+const EMPTY_SET = new Set();
 
 const el = (tag, props = {}, children = []) => {
   const node = Object.assign(document.createElement(tag), props);
@@ -35,8 +37,11 @@ const ALLERGEN = {
 const isAllergen = (t) => t in ALLERGEN;
 const isSpicy = (t) => /^spicy-[123]$/.test(t);
 
-function tagChip(t) {
-  if (isAllergen(t)) return el("span", { className: "tag tag-allergen", textContent: `⚠ ${ALLERGEN[t]}` });
+function tagChip(t, avoid = EMPTY_SET) {
+  if (isAllergen(t)) {
+    const cls = avoid.has(t) ? "tag tag-allergen is-flagged" : "tag tag-allergen";
+    return el("span", { className: cls, textContent: `⚠ ${ALLERGEN[t]}` });
+  }
   if (isSpicy(t)) {
     const level = Number(t.slice(-1));
     return el("span", { className: "tag tag-spicy", textContent: `${"🌶".repeat(level)} Spicy` });
@@ -94,8 +99,10 @@ function render(collection, item) {
   }
 
   if (item.tags?.length) {
+    // Foreground any allergen the viewer flagged in their preferences.
+    const avoid = new Set(settings.get().diet.avoid);
     const tags = el("div", { className: "dish-tags" });
-    for (const t of tagOrder(item.tags)) tags.append(tagChip(t));
+    for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid));
     parts.push(tags);
   }
 

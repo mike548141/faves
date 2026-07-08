@@ -10,6 +10,13 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Personal food preferences**: set your **dietary needs** (vegetarian,
+  vegan, gluten-free, dairy-free) and the **allergens to flag** once in
+  Settings, and every menu applies them — your dietary chips come
+  pre-selected, and a flagged allergen's ⚠ warning is made to shout with a
+  warning rail down the dish. It stays on your device. Framed honestly:
+  always confirm for allergies — we only show what venues told us, and no
+  tag means "not stated", not "free of it". A highlight, not a guarantee.
 - **More allergen tags available**: the menu vocabulary now also covers
   **egg, dairy, gluten, soy and sesame** (alongside nuts, peanuts and
   shellfish), each rendering as the same prominent ⚠ warning. These only

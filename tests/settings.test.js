@@ -56,6 +56,45 @@ test("corrupt stored payload → defaults", () => {
   assert.deepEqual(s.get(), DEFAULTS);
 });
 
+test("diet: defaults to empty preference lists", () => {
+  const s = createSettings(fakeStorage());
+  assert.deepEqual(s.get().diet, { dietary: [], avoid: [] });
+});
+
+test("diet: keeps known keys, drops unknown, dedupes; persists", () => {
+  const storage = fakeStorage();
+  const s = createSettings(storage);
+  s.set({
+    diet: {
+      dietary: ["vg", "vg", "gf", "bogus"],
+      avoid: ["contains-nuts", "contains-nuts", "nope"],
+    },
+  });
+  assert.deepEqual(s.get().diet.dietary, ["vg", "gf"]);
+  assert.deepEqual(s.get().diet.avoid, ["contains-nuts"]);
+  // Re-hydrates from the same storage.
+  assert.deepEqual(createSettings(storage).get().diet.dietary, ["vg", "gf"]);
+});
+
+test("diet: a distance-only patch leaves preferences intact", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ diet: { dietary: ["v"], avoid: [] } });
+  s.set({ favBoostKm: 12 });
+  assert.deepEqual(s.get().diet.dietary, ["v"]);
+});
+
+test("diet: reset clears preferences", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ diet: { dietary: ["gf"], avoid: ["contains-soy"] } });
+  s.reset();
+  assert.deepEqual(s.get().diet, { dietary: [], avoid: [] });
+});
+
+test("diet: a non-array or corrupt value falls back to empty", () => {
+  const s = createSettings(fakeStorage('{"diet":{"dietary":"gf","avoid":null}}'));
+  assert.deepEqual(s.get().diet, { dietary: [], avoid: [] });
+});
+
 test("subscribe fires on change; unsubscribe stops it", () => {
   const s = createSettings(fakeStorage());
   let calls = 0;

@@ -9,8 +9,10 @@ import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { priceBand } from "./price.js";
+import { settings } from "./settings.js";
 
 const root = document.getElementById("menu-root");
+const EMPTY_SET = new Set();
 
 const el = (tag, props = {}, children = []) => {
   const node = Object.assign(document.createElement(tag), props);
@@ -43,10 +45,12 @@ const ALLERGEN = {
 const isAllergen = (t) => t in ALLERGEN;
 const isSpicy = (t) => /^spicy-[123]$/.test(t);
 
-function tagChip(t) {
+function tagChip(t, avoid = EMPTY_SET) {
   if (isAllergen(t)) {
+    // If the viewer flagged this allergen in their preferences, make it shout.
+    const flagged = avoid.has(t);
     return el("span", {
-      className: "tag tag-allergen",
+      className: flagged ? "tag tag-allergen is-flagged" : "tag tag-allergen",
       textContent: `⚠ ${ALLERGEN[t]}`,
     });
   }
@@ -346,7 +350,7 @@ function dishPhoto(item) {
   });
 }
 
-function renderDish(item, isRecipes = false, r = null) {
+function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
   const collectionId = r?.id ?? null;
   // The price slot doubles as a recipe meta chip (serves · time).
   const recipeMeta = isRecipes
@@ -400,7 +404,7 @@ function renderDish(item, isRecipes = false, r = null) {
   }
   if (item.tags?.length) {
     const tags = el("div", { className: "dish-tags" });
-    for (const t of tagOrder(item.tags)) tags.append(tagChip(t));
+    for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid));
     children.push(tags);
   }
   if (isRecipes && (item.ingredients?.length || item.steps?.length)) {
@@ -432,7 +436,12 @@ function renderDish(item, isRecipes = false, r = null) {
     }
     children.push(actions);
   }
-  const li = el("li", { className: isRecipes ? "dish recipe" : "dish", id: `dish-${slug(item.name)}` });
+  // A dish carrying an allergen the viewer flagged gets a warning accent so it
+  // stands out while scanning — surfacing our tag, never asserting safety.
+  const hasFlagged = (item.tags || []).some((t) => avoid.has(t));
+  const cls =
+    (isRecipes ? "dish recipe" : "dish") + (hasFlagged ? " dish-flagged" : "");
+  const li = el("li", { className: cls, id: `dish-${slug(item.name)}` });
   li.dataset.name = item.name.toLowerCase();
   // Include ingredients in the search haystack so "lemon" finds the pasta.
   li.dataset.desc = [item.desc, ...(item.ingredients || [])]
@@ -511,6 +520,12 @@ function render(r) {
     "aria-label": "Search this menu",
   });
 
+  // Personal food preferences (settings.js): the viewer's dietary needs
+  // pre-select the matching menu chips, and flagged allergens shout below.
+  const prefs = settings.get().diet;
+  const avoid = new Set(prefs.avoid);
+  const preselect = new Set(prefs.dietary);
+
   const presentTags = new Set(allItems.flatMap((i) => i.tags || []));
   const activeDiet = new Set();
   const dietChips = [];
@@ -521,12 +536,16 @@ function render(r) {
   if (available.length) {
     dietRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Dietary filters" });
     for (const f of available) {
+      const on = preselect.has(f.key);
+      if (on) activeDiet.add(f.key);
       const chip = el("button", {
         type: "button",
         className: "diet-chip",
         textContent: f.label,
-        "aria-pressed": "false",
       });
+      // setAttribute (not an el() prop): "aria-pressed" is not an IDL property,
+      // so Object.assign wouldn't reflect it to the attribute the CSS matches.
+      chip.setAttribute("aria-pressed", String(on));
       chip.dataset.key = f.key;
       chip.addEventListener("click", () => {
         if (activeDiet.has(f.key)) activeDiet.delete(f.key);
@@ -555,7 +574,7 @@ function render(r) {
       el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
     );
     const dishes = el("ul", { className: "dish-list" });
-    for (const item of section.items) dishes.append(renderDish(item, isRecipes, r));
+    for (const item of section.items) dishes.append(renderDish(item, isRecipes, r, avoid));
     const sec = el("section", { className: "menu-section", id }, [
       el("h2", { className: "section-title", textContent: section.section }),
       dishes,
@@ -628,6 +647,9 @@ function render(r) {
     root.style.setProperty("--toolbar-h", `${Math.round(toolbar.getBoundingClientRect().height)}px`);
   requestAnimationFrame(setToolbarH);
   addEventListener("resize", setToolbarH);
+
+  // Apply any pre-selected dietary preferences now (dims non-matching dishes).
+  if (activeDiet.size) applyView();
 }
 
 // --- Boot ------------------------------------------------------------
