@@ -4,8 +4,17 @@
 // our prices are already flagged as needing an in-store refresh, so this is
 // a ballpark for "how pricey is this place", not a quote. Pure + unit-tested;
 // the UI (cards, menu header) formats and captions it.
+//
+// The median misleads for menus that mix mains with lots of cheap sides/
+// drinks (a gastropub reads "$") or few, pricey items (a noodle house reads
+// "$$$"), and the cheap-eats filter amplifies that. So a record may carry a
+// *curated* override that wins over the derived figure:
+//   priceBand:      "$" | "$$" | "$$$"   authoritative band
+//   pricePerPerson: <positive NZD>       authoritative typical spend
+// Either can be set alone. `curated` in the result tells the UI to caption it
+// as our call rather than "estimated from the menu".
 
-// Fewer than this many priced items → not a meaningful signal, show nothing.
+// Fewer than this many priced items → not a meaningful signal on its own.
 const MIN_ITEMS = 3;
 
 // NZD bands for a casual-eatery context (takeaways → gastropubs).
@@ -15,6 +24,9 @@ const BANDS = [
   { max: 30, band: "$$" },
   { max: Infinity, band: "$$$" },
 ];
+
+const BAND_LETTERS = new Set(BANDS.map((b) => b.band));
+const bandOf = (perPerson) => BANDS.find((b) => perPerson <= b.max).band;
 
 /** Every positive numeric price across a record's menu sections. */
 export function pricedItems(record) {
@@ -35,23 +47,51 @@ function median(nums) {
 }
 
 /**
- * A price signal for a venue, or `null` when there's too little data (a
- * stub, a recipe collection, or a menu with < MIN_ITEMS priced items).
- * → { band: "$" | "$$" | "$$$", perPerson: <rounded NZD>, count }
+ * A price signal for a venue, or `null` when there's nothing to say (a
+ * recipe collection, or a menu with < MIN_ITEMS priced items and no curated
+ * override). A curated band shows even for a thin/stub menu — that's the point.
+ * → { band: "$"|"$$"|"$$$", perPerson: <rounded NZD>|null, count, curated }
+ *   perPerson is null when we have no figure that agrees with the band, so
+ *   the UI shows the band alone rather than a contradictory "~$Npp".
  */
 export function priceBand(record) {
   if (record?.kind === "recipes") return null; // cooking, not spending
+
+  const curatedBand = BAND_LETTERS.has(record?.priceBand) ? record.priceBand : null;
+  const curatedPP =
+    typeof record?.pricePerPerson === "number" &&
+    Number.isFinite(record.pricePerPerson) &&
+    record.pricePerPerson > 0
+      ? record.pricePerPerson
+      : null;
+
   const prices = pricedItems(record);
-  if (prices.length < MIN_ITEMS) return null;
-  const perPerson = median(prices);
-  const { band } = BANDS.find((b) => perPerson <= b.max);
-  return { band, perPerson: Math.round(perPerson), count: prices.length };
+  const derived = prices.length >= MIN_ITEMS ? median(prices) : null;
+  if (!curatedBand && !curatedPP && derived === null) return null;
+
+  // Band: curated wins; else from a curated figure; else from the median.
+  const band = curatedBand || bandOf(curatedPP ?? derived);
+
+  // Per-person: curated wins; else the median, but only when it agrees with
+  // the band (so an overridden band never carries a contradictory figure).
+  let perPerson = curatedPP;
+  if (perPerson === null && derived !== null && bandOf(derived) === band) {
+    perPerson = derived;
+  }
+
+  return {
+    band,
+    perPerson: perPerson === null ? null : Math.round(perPerson),
+    count: prices.length,
+    curated: Boolean(curatedBand || curatedPP),
+  };
 }
 
-/** Compact label for a chip, e.g. "$$ · ~$28pp". */
+/** Compact label for a chip, e.g. "$$ · ~$28pp" (or "$$" with no figure). */
 export function priceLabel(record) {
   const p = priceBand(record);
-  return p ? `${p.band} · ~$${p.perPerson}pp` : null;
+  if (!p) return null;
+  return p.perPerson === null ? p.band : `${p.band} · ~$${p.perPerson}pp`;
 }
 
 /**

@@ -20,6 +20,7 @@ RESTAURANTS = DATA / "restaurants"
 
 SERVICES = {"dine-in", "takeaway"}
 STATUSES = {"stub", "menu-complete", "verified"}
+PRICE_BANDS = {"$", "$$", "$$$"}
 KINDS = {"venue", "recipes"}
 TAGS = {
     "v", "vg", "gf", "df",
@@ -192,6 +193,17 @@ def check_restaurant(path):
     verified = data.get("verified")
     if verified is not None and not (isinstance(verified, str) and DATE_RE.match(verified)):
         err(rid, f"verified must be null or an ISO date (YYYY-MM-DD), got {verified!r}")
+
+    # Curated price override (see site/js/price.js). Both optional; when set
+    # they win over the median derived from the menu prices.
+    price_band = data.get("priceBand")
+    if price_band is not None and price_band not in PRICE_BANDS:
+        err(rid, f"priceBand {price_band!r} not in {sorted(PRICE_BANDS)}")
+    price_pp = data.get("pricePerPerson")
+    if price_pp is not None and not (
+        isinstance(price_pp, (int, float)) and not isinstance(price_pp, bool) and price_pp > 0
+    ):
+        err(rid, f"pricePerPerson must be a positive number, got {price_pp!r}")
 
     # menu + collect item names for picks check
     item_names = set()

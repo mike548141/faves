@@ -66,3 +66,52 @@ test("isCheapEats: false when there's too little price data (null band)", () => 
   assert.equal(isCheapEats({ kind: "recipes", menu: venue([5, 5, 5]).menu }), false);
   assert.equal(isCheapEats({}), false);
 });
+
+// ---- Curated override (priceBand / pricePerPerson win over the median) ----
+
+const curated = (prices, extra) => ({ ...venue(prices), ...extra });
+
+test("priceBand: curated band overrides a misleading median", () => {
+  // The KTC case: a cheap median (bar snacks drag it down) but it's a $$ place.
+  const p = priceBand(curated([8, 10, 12], { priceBand: "$$" }));
+  assert.equal(p.band, "$$");
+  assert.equal(p.curated, true);
+  // Median ($) disagrees with the curated band → no contradictory figure.
+  assert.equal(p.perPerson, null);
+});
+
+test("priceBand: curated band keeps the median figure when it agrees", () => {
+  const p = priceBand(curated([18, 24, 30], { priceBand: "$$" }));
+  assert.equal(p.band, "$$");
+  assert.equal(p.perPerson, 24); // median agrees with $$ → shown
+  assert.equal(p.curated, true);
+});
+
+test("priceBand: curated pricePerPerson sets both figure and band", () => {
+  const p = priceBand(curated([8, 10, 12], { pricePerPerson: 28 }));
+  assert.equal(p.perPerson, 28);
+  assert.equal(p.band, "$$"); // 28 → $$
+  assert.equal(p.curated, true);
+});
+
+test("priceBand: curated band shows even with a thin/empty menu", () => {
+  assert.deepEqual(
+    { band: priceBand({ priceBand: "$$$", menu: [] }).band, curated: true },
+    { band: "$$$", curated: true }
+  );
+});
+
+test("priceBand: invalid curated band is ignored (falls back to median)", () => {
+  const p = priceBand(curated([8, 10, 12], { priceBand: "cheap" }));
+  assert.equal(p.band, "$"); // median
+  assert.equal(p.curated, false);
+});
+
+test("priceLabel: curated band with no figure shows the band alone", () => {
+  assert.equal(priceLabel(curated([8, 10, 12], { priceBand: "$$" })), "$$");
+});
+
+test("isCheapEats: a curated $$ band is not cheap even with a cheap median", () => {
+  assert.equal(isCheapEats(curated([8, 10, 12], { priceBand: "$$" })), false);
+  assert.equal(isCheapEats(curated([40, 40, 40], { priceBand: "$" })), true);
+});

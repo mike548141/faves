@@ -48,15 +48,29 @@ function cardPhoto(r) {
 function priceChip(r) {
   const p = priceBand(r);
   if (!p) return null;
+  const hasFigure = p.perPerson !== null;
   const chip = el("span", { className: "chip chip-price" }, [
     el("span", { className: "price-band", textContent: p.band }),
-    ` ~$${p.perPerson}pp`,
+    ...(hasFigure ? [` ~$${p.perPerson}pp`] : []),
   ]);
-  chip.title = `About $${p.perPerson} per person — estimated from ${p.count} menu prices`;
-  chip.setAttribute(
-    "aria-label",
-    `Around ${p.perPerson} dollars per person, estimated from the menu`
-  );
+  // Curated band = our call; derived band = estimated from the menu prices.
+  if (p.curated) {
+    chip.title = hasFigure
+      ? `About $${p.perPerson} per person — our estimate for this place`
+      : `Typical price band for this place`;
+    chip.setAttribute(
+      "aria-label",
+      hasFigure
+        ? `Around ${p.perPerson} dollars per person`
+        : `Price band ${p.band.length} of 3`
+    );
+  } else {
+    chip.title = `About $${p.perPerson} per person — estimated from ${p.count} menu prices`;
+    chip.setAttribute(
+      "aria-label",
+      `Around ${p.perPerson} dollars per person, estimated from the menu`
+    );
+  }
   return chip;
 }
 

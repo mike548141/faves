@@ -209,13 +209,17 @@ function renderHeader(r) {
   // Typical spend per person, derived from this venue's own menu prices.
   const pb = priceBand(r);
   if (pb) {
-    bits.push(
-      el("p", { className: "menu-price" }, [
-        el("span", { className: "price-band", textContent: pb.band }),
-        ` about $${pb.perPerson} per person `,
-        el("span", { className: "price-est", textContent: "· estimated from the menu" }),
-      ])
-    );
+    const parts = [el("span", { className: "price-band", textContent: pb.band })];
+    if (pb.perPerson !== null) {
+      parts.push(` about $${pb.perPerson} per person `);
+      // Curated figure is our call; a derived one is read off the menu prices.
+      const est = pb.curated ? "· our estimate" : "· estimated from the menu";
+      parts.push(el("span", { className: "price-est", textContent: est }));
+    } else {
+      // Curated band with no per-person figure — don't leave a lone "$$".
+      parts.push(" typical price band");
+    }
+    bits.push(el("p", { className: "menu-price" }, parts));
   }
 
   // Venues get a contact card + order links; a recipe collection has neither.

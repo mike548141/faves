@@ -101,6 +101,8 @@ afternoon.
   "alt": null,                       // required when image is set (a11y)
   "vibe": ["cheap-and-cheerful"],    // free-form chips shown on cards
   "picks": ["Char kway teow"],       // "our picks" — dish names, must exist in menu
+  "priceBand": null,                 // optional curated "$"|"$$"|"$$$" — overrides the
+  "pricePerPerson": null,            // median (price.js) when it misleads; figure optional
   "verified": null,                  // ISO date the menu was last checked, e.g. "2026-07-10"
   "status": "stub",                  // stub | menu-complete | verified
   "menu": [

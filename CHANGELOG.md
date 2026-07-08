@@ -129,6 +129,14 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- The price band can now be **curated** where the menu-median misleads. The
+  automatic $/$$/$$$ still derives from a venue's own prices, but a place can
+  carry an explicit `priceBand` (and optional `pricePerPerson`) that wins —
+  so a gastropub whose median is dragged down by bar snacks reads "$$", not
+  "$", and a noodle house with a few pricey combos reads "$$", not "$$$".
+  Curated bands are captioned as our call ("typical price band") rather than
+  "estimated from the menu", and they correct the "Cheap eats" filter too.
+  Set on Khandallah Trading Company and R & S Satay Noodle House.
 - The **Favourites view now nests dishes under their place** instead of
   separate "Places" and "Dishes" lists — each spot is a heading with the
   dishes you've hearted there beneath it (the place shows even if you've
