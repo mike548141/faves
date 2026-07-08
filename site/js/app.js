@@ -253,7 +253,7 @@ function init(restaurants) {
     const { farKm } = settings.get();
     const available = filtered.filter((r) => isAvailableNow(r, { now, origin: state.origin, farKm }));
     return available.length ? available : filtered;
-  });
+  }, (r) => favouriteVenueIds().has(r.id));
   initOrderUI();
   document.body.classList.add("app-ready");
 }
