@@ -313,14 +313,18 @@ types it. (Their email address comes with the message anyway.)
 
 ## Theme 5 — Richer dish data
 
-- **Typical price per person** `[S]` — owner ask (2026-07-08). We already
-  hold every menu price, so derive a band per venue — a $/$$/$$$ chip, or
-  "~$25pp" from the mean main-course price — computed from our own data,
-  no external source. Cheap, offline, honest (label it an estimate from
-  our menu; prices are already flagged as needing an in-store refresh).
-  Show it on the card and menu header; it also sharpens "Pick for us"
-  ("cheap eats tonight"). Optionally a curated override field where the
-  computed band misleads (e.g. a venue that's mains-only vs. banquet).
+- **Typical price per person** `[S]` ✅ **done 2026-07-08** — a $/$$/$$$
+  chip with a "~$Npp" estimate on the home card and the menu header,
+  computed from the venue's *own* listed prices (`site/js/price.js`, pure +
+  unit-tested). The signal is the **median** of a venue's priced items
+  (~one dish per person; median, not mean, so a couple of pricey specials or
+  cheap sides don't skew it), banded $ ≤ $15, $$ ≤ $30, $$$ above; hidden
+  when there are < 3 priced items (stubs, recipes, thin menus). Captioned
+  "estimated from the menu" and honest that our prices need an in-store
+  refresh. **Still open:** the curated override field for venues where the
+  computed band misleads (mains-only vs. banquet), and wiring it into "Pick
+  for us" as a *cheap-eats* mode (the chip data is there; the picker filter
+  isn't built yet).
 - **More allergens** `[S][schema]` — extend the closed tag set (egg,
   dairy/milk, gluten, soy, sesame) in `ARCHITECTURE.md`. Cheap to add;
   the honest part is *populating* it — "no tag = not stated" means owner

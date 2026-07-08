@@ -15,6 +15,7 @@ import { heartButton } from "./favourites-ui.js";
 import { groupSection } from "./results-view.js";
 import { settings } from "./settings.js";
 import { initSettingsUI } from "./settings-ui.js";
+import { priceBand } from "./price.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -40,6 +41,23 @@ function cardPhoto(r) {
     loading: "lazy",
     decoding: "async",
   });
+}
+
+// Typical price-per-person chip, derived from the venue's own menu prices
+// (null when there's too little data — stubs, recipes, thin menus).
+function priceChip(r) {
+  const p = priceBand(r);
+  if (!p) return null;
+  const chip = el("span", { className: "chip chip-price" }, [
+    el("span", { className: "price-band", textContent: p.band }),
+    ` ~$${p.perPerson}pp`,
+  ]);
+  chip.title = `About $${p.perPerson} per person — estimated from ${p.count} menu prices`;
+  chip.setAttribute(
+    "aria-label",
+    `Around ${p.perPerson} dollars per person, estimated from the menu`
+  );
+  return chip;
 }
 
 // Live open/closed badge from the venue's hours (null hours → no badge).
@@ -84,6 +102,8 @@ function card(r, now) {
   } else if (isRecipes) {
     chips.append(el("span", { className: "chip chip-recipes", textContent: "🏠 Recipes" }));
   } else {
+    const pc = priceChip(r);
+    if (pc) chips.append(pc);
     for (const c of r.cuisine || []) {
       chips.append(el("span", { className: "chip chip-cuisine", textContent: c }));
     }

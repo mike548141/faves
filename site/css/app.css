@@ -579,6 +579,31 @@ body.faves-view .pick-fab {
   background: var(--accent-soft);
   color: var(--accent);
 }
+/* Typical price-per-person, derived from the venue's own menu prices. */
+.chip-price {
+  background: var(--surface-2);
+  color: var(--ink-soft);
+}
+.chip-price .price-band {
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+/* Menu-header spend line: "$$ about $28 per person · estimated from the menu" */
+.menu-price {
+  margin-top: var(--space-2);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.menu-price .price-band {
+  font-weight: 800;
+  color: var(--ink);
+  margin-right: 0.15em;
+}
+.menu-price .price-est {
+  color: var(--ink-soft);
+  opacity: 0.85;
+}
 .chip-service {
   background: transparent;
   border: 1px solid var(--line);

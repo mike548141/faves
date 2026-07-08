@@ -8,6 +8,7 @@ import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
+import { priceBand } from "./price.js";
 
 const root = document.getElementById("menu-root");
 
@@ -204,6 +205,18 @@ function renderHeader(r) {
   }
 
   const bits = [titleRow, el("p", { className: "menu-sub", textContent: meta })];
+
+  // Typical spend per person, derived from this venue's own menu prices.
+  const pb = priceBand(r);
+  if (pb) {
+    bits.push(
+      el("p", { className: "menu-price" }, [
+        el("span", { className: "price-band", textContent: pb.band }),
+        ` about $${pb.perPerson} per person `,
+        el("span", { className: "price-est", textContent: "· estimated from the menu" }),
+      ])
+    );
+  }
 
   // Venues get a contact card + order links; a recipe collection has neither.
   if (!isRecipes) {

@@ -10,6 +10,12 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Typical price per person: each place with a menu now shows a small
+  **$/$$/$$$ chip with a "~$Npp" estimate** (on the home card and the menu
+  header), worked out from that venue's own listed prices — no external
+  source. It's a ballpark ("estimated from the menu", and our prices are
+  already flagged as needing an in-store refresh), handy for "cheap eats or
+  a treat tonight?".
 - Two more places in the pizza department: **Hell Pizza Newlands** and
   **Pizza Hut Johnsonville**. Menus still to capture (they show as "Menu
   coming soon"), but they carry address, phone, hours and coordinates, so
