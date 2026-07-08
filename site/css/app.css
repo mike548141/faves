@@ -1852,6 +1852,20 @@ body:not(.menu-page) {
   font-weight: 600;
   line-height: 1.25;
 }
+/* The venue's order-number badge — muted, monospace-numeric, kept visually
+   separate from the dish title (it's a code, not part of the name). */
+.dish-code {
+  display: inline-block;
+  margin-right: var(--space-2);
+  padding: 0.05em 0.4em;
+  border-radius: 6px;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: 0.85em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  vertical-align: baseline;
+}
 .dish-price {
   flex: 0 0 auto;
   font-weight: 700;

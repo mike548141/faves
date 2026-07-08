@@ -229,6 +229,10 @@ def check_restaurant(path):
                 err(rid, f"price for {name!r} must be a number or null (not a string)")
             if isinstance(price, bool):
                 err(rid, f"price for {name!r} must not be a boolean")
+            # code: optional venue order-number (a string, kept out of name).
+            code = item.get("code")
+            if code is not None and not (isinstance(code, str) and code.strip()):
+                err(rid, f"code for {name!r} must be a non-empty string or absent")
             tags = item.get("tags", [])
             if not isinstance(tags, list):
                 err(rid, f"tags for {name!r} must be a list")

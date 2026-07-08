@@ -355,20 +355,24 @@ types it. (Their email address comes with the message anyway.)
   an authoritative `priceBand` (+ optional `pricePerPerson`) that wins over the
   median where it misleads; set "$$" on Khandallah Trading Co (was "$") and
   R & S Satay (was "$$$"), which also corrects the cheap-eats filter.
-- **Dish order-codes, separate from the name** `[S][schema]` — owner ask
-  (2026-07-09). Some venues number their dishes on the board and take orders by
-  number ("two number 14s and one 22"). KC Cafe's menu was transcribed from a
-  photo with the numbers **baked into the name** ("1. Chicken Curry on Rice",
-  159/169 items) — useful to the customer *only if the venue recognises the
-  number*, but wrong as part of the dish name (breaks search, picks matching,
-  and sort). Plan: an optional item field — `code` (string, e.g. `"14"`) — for
-  the venue's own identifier; **strip the leading `N.`/`N)` prefix out of
-  `name` into `code`** for KC Cafe; render the code as a distinct badge on the
-  dish row (e.g. a muted `#14` chip, not run into the title), and let search
-  match it. Only populate `code` where the venue actually orders by number
-  (most don't — "no code = not stated"). Touches: schema in `ARCHITECTURE.md`,
-  `validate.py` (optional string, picks still match the *stripped* name),
-  `menu.js` dish row, `search.js`. Currently KC Cafe is the only affected file.
+- **Dish order-codes, separate from the name** `[S][schema]` ✅ **done
+  2026-07-09** — owner ask. Some venues number their dishes on the board and
+  take orders by number ("two number 14s and one 22"). KC Cafe's menu was
+  transcribed from a photo with the numbers **baked into the name** ("1.
+  Chicken Curry on Rice", 159/169 items) — useful only if the venue recognises
+  the number, but wrong as part of the dish name (broke search, slugs, picks
+  matching, and sort). Added an optional item field `code` (non-empty string,
+  e.g. `"14"`); **stripped the leading `N.`/`N)` prefix out of `name` into
+  `code`** for KC Cafe (159 items, surgical text edit preserving formatting; no
+  stripped-name collisions); renders as a muted `#14` badge on the dish row
+  (a `.dish-code` span before a new `.dish-name-text` span, so it never runs
+  into the title), and **search matches it** (`code` joins the dish haystack).
+  Only populated where the venue actually orders by number ("no code = not
+  stated"). Schema + rule in `ARCHITECTURE.md`, `validate.py` (optional string;
+  picks still match the *stripped* name), `menu.js` dish row, `search.js` +
+  test. KC Cafe was the only affected file. node --test 119→120; validate +
+  check_no_deps clean; badge render-verified via headless Chrome DOM dump at
+  390px.
 - **More allergens** `[S][schema]` — extend the closed tag set (egg,
   dairy/milk, gluten, soy, sesame) in `ARCHITECTURE.md`. Cheap to add;
   the honest part is *populating* it — "no tag = not stated" means owner

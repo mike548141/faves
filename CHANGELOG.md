@@ -10,6 +10,11 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Dish order-numbers**: where a place takes orders by number ("two number
+  14s, thanks"), the menu now shows that number as a small muted **#code
+  badge** beside the dish — distinct from its name — and you can **search by
+  the number** to find the dish. KC Cafe's board numbers (previously baked
+  into the dish names) now render this way.
 - **Two-column menu on tablet and desktop**: when there's room, the menu sits
   on the left and a **sticky info column** (call/pickup, hours, and the
   Order-online buttons) rides alongside it on the right, so contact details

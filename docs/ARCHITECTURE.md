@@ -111,6 +111,7 @@ afternoon.
       "items": [
         {
           "name": "Char kway teow",
+          "code": null,              // optional: the venue's own order number ("14"), if it takes orders by number
           "desc": "Flat rice noodles wok-fried with egg, bean sprouts and soy.",
           "price": 18.5,             // NZD; null if market/varies
           "tags": ["spicy-1"],       // see tag vocabulary
@@ -202,6 +203,13 @@ UI must never present absence of an allergen tag as "allergen-free".
   budget and lazy-loaded. When `image` is set, `alt` is **required**
   (accessibility). Prefer the owner's photo of the real dish; generic
   stock only as a captioned fallback, properly licensed.
+- `code` (menu item) is an optional **non-empty string** — the venue's own
+  order number for the dish, where it takes orders by number ("two number
+  14s"). It is distinct from the `name`: never bake the number into the name
+  (it breaks search, slugs, picks and sort). Only set it where the venue
+  actually orders by number ("no code = not stated"); most venues have none.
+  Rendered as a muted `#code` badge on the dish row, and matched by search.
+  Picks and `goesWith` still reference the stripped `name`, never the code.
 - `goesWith` (menu item) is an optional list of pairing references —
   "goes well with" suggestions shown on the dish. Each is either a dish
   `name` in the **same** record, or a cross-record `"restaurant-id#Dish

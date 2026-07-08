@@ -358,18 +358,32 @@ function renderDish(item, isRecipes = false, r = null) {
         textContent: item.price == null ? "—" : money(item.price),
       });
 
+  // Some venues take orders by number; render that code as a distinct badge
+  // rather than run into the title (it's kept out of `name` in the data).
+  const codeBadge = item.code
+    ? el("span", {
+        className: "dish-code",
+        textContent: `#${item.code}`,
+        title: "Order number",
+      })
+    : null;
+
   // A recipe's name links to its own full page; a restaurant dish is plain
   // text (its detail already lives inline on the menu).
   const nameEl =
     isRecipes && collectionId
       ? el("h3", { className: "dish-name" }, [
+          codeBadge,
           el("a", {
             className: "dish-name-link",
             href: `recipe.html?id=${collectionId}&dish=${slug(item.name)}`,
             textContent: item.name,
           }),
-        ])
-      : el("h3", { className: "dish-name", textContent: item.name });
+        ].filter(Boolean))
+      : el("h3", { className: "dish-name" }, [
+          codeBadge,
+          el("span", { className: "dish-name-text", textContent: item.name }),
+        ].filter(Boolean));
 
   const head = el("div", { className: "dish-head" }, [nameEl, aside]);
   // Note: li.append() below stringifies null, so only push real nodes.

@@ -19,7 +19,7 @@ const FIXTURE = [
       {
         section: "Noodles",
         items: [
-          { name: "Mee Goreng", desc: "Spicy fried noodles" },
+          { name: "Mee Goreng", desc: "Spicy fried noodles", code: "14" },
           { name: "Char Kway Teow", desc: "Wok-fried flat rice noodles" },
         ],
       },
@@ -88,6 +88,12 @@ test("search: a recipe dish deep-links to the recipe page", () => {
 test("search: ingredients are searchable (menu.js parity)", () => {
   const { dishes } = search(index, "lemon");
   assert.deepEqual(dishes.items.map((d) => d.name), ["Shane's Ribs"]);
+});
+
+test("search: a venue order-code matches its dish", () => {
+  // "two number 14s" off the board should find the dish carrying code "14".
+  const { dishes } = search(index, "14");
+  assert.deepEqual(dishes.items.map((d) => d.name), ["Mee Goreng"]);
 });
 
 test("search: name-start ranks above a later-word or description hit", () => {

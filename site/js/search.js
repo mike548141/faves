@@ -46,7 +46,9 @@ export function buildIndex(restaurants) {
           href: isRecipe
             ? `recipe.html?id=${r.id}&dish=${slug(item.name)}`
             : `restaurant.html?id=${r.id}#dish-${slug(item.name)}`,
-          hay: norm([item.name, item.desc, ingredients].join(" ")),
+          // The venue's order-number (e.g. "14") joins the haystack so a
+          // guest reading "two number 14s" off the board can find it.
+          hay: norm([item.name, item.desc, ingredients, item.code].join(" ")),
         });
       }
     }
