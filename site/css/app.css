@@ -1520,11 +1520,18 @@ html {
   font-variant-numeric: tabular-nums;
 }
 
-/* Controls */
-.menu-controls {
+/* Sticky toolbar: search + section nav pinned together (see menu.js). */
+.menu-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 6;
   margin-top: var(--space-4);
   display: grid;
   gap: var(--space-2);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
 }
 .menu-search {
   width: 100%;
@@ -1537,6 +1544,7 @@ html {
   font-size: var(--step-body);
 }
 .diet-chips {
+  margin-top: var(--space-3);
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
@@ -1558,17 +1566,8 @@ html {
   color: var(--surface);
 }
 
-/* Sticky section nav */
-.section-nav {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  margin-top: var(--space-3);
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--line);
-}
+/* Section jump-nav. Sits inside the sticky .menu-toolbar, which owns the
+   pin, background and border — so the nav itself is just the scroll strip. */
 .section-nav-scroll {
   display: flex;
   gap: var(--space-1);
@@ -1597,15 +1596,15 @@ html {
 
 /* Sections + dishes */
 .menu-section {
-  scroll-margin-top: calc(var(--nav-h) + var(--space-2));
+  scroll-margin-top: calc(var(--toolbar-h, 6.6rem) + var(--space-2));
   padding-top: var(--space-4);
 }
 .section-title {
-  /* Pin the heading just under the sticky jump-nav, so which section
-     you're in stays visible while scrolling its dishes (it's pushed up by
-     the next heading). z below the nav (5) so the nav always wins. */
+  /* Pin the heading just under the sticky toolbar (search + jump-nav), so
+     which section you're in stays visible while scrolling its dishes (it's
+     pushed up by the next heading). z below the toolbar (6) so it wins. */
   position: sticky;
-  top: calc(var(--nav-h) - 1px);
+  top: calc(var(--toolbar-h, 6.6rem) - 1px);
   z-index: 4;
   margin: 0 0 var(--space-1);
   padding: var(--space-2) 0;
@@ -1621,9 +1620,9 @@ html {
   gap: var(--space-1);
 }
 .dish {
-  /* Clear the sticky jump-nav + sticky section heading when a pick or
+  /* Clear the sticky toolbar + sticky section heading when a pick or
      "goes well with" link jumps to this dish. */
-  scroll-margin-top: calc(var(--nav-h) + 3.2rem);
+  scroll-margin-top: calc(var(--toolbar-h, 6.6rem) + 3.2rem);
   padding: var(--space-3) 0;
   border-bottom: 1px solid var(--line);
 }

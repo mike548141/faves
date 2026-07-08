@@ -125,6 +125,9 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- On a long menu, the **search box now stays pinned** at the top alongside
+  the section jump-nav, so you can filter the menu without scrolling back
+  up. The dietary chips sit just below and scroll with the dishes.
 - The menu "needs a refresh" caveat is no longer an always-on banner: it's
   tucked behind a small **ⓘ beside the venue name** that reveals the note
   on tap (and on hover for mouse users), so the header reads clean. An

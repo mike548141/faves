@@ -196,11 +196,17 @@ The umbrella "better UX and design", with your concrete asks:
   popover is anchored within the title group so it never overflows the
   viewport (verified via CDP at 390 px: left 16 → right 359 of 390).
   Declutters the header.
-- **Sticky search on phones** `[S][design]` — keep the menu search
-  reachable while scrolling a long menu (sticky under the section nav).
-  Partly addressed already: menu **section headings** now stick under the
-  jump-nav (2026-07-08); the menu *search field* sticking is the remaining
-  piece.
+- **Sticky search on phones** `[S][design]` ✅ **done 2026-07-08** — the
+  menu search box and the section jump-nav now share one **sticky
+  `.menu-toolbar`** pinned at the top (search above, nav below), so both
+  stay reachable while scrolling a long menu. Section headings pin just
+  under the toolbar (its height is JS-measured into `--toolbar-h`, so the
+  offsets stay exact whatever the render); dish deep-links (`#dish-…`,
+  picks, "goes well with") clear it too. Dietary chips dropped out of the
+  pin to a row just below (they filter the sections and scroll away),
+  keeping the pinned chrome light. Chose search-above-nav over the
+  literal "under the section nav" so search (the primary action) leads and
+  the reading/tab order stays natural.
 - **Global search from the home screen** `[M]` ✅ **done 2026-07-08** —
   one search box on the home page that jumps straight to a **restaurant or
   a dish** by name ("mee goreng" → the dish across every venue; "sprig" →

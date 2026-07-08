@@ -451,7 +451,10 @@ function render(r) {
     return;
   }
 
-  // Controls: search + dietary chips.
+  // Search + section nav share one sticky toolbar so both stay reachable
+  // while scrolling a long menu (was: search scrolled away, only the nav
+  // stuck). Dietary chips sit just below it and scroll with the content
+  // they filter — keeping the pinned chrome light.
   const search = el("input", {
     type: "search",
     className: "menu-search",
@@ -459,7 +462,6 @@ function render(r) {
     autocomplete: "off",
     "aria-label": "Search this menu",
   });
-  const controls = el("div", { className: "menu-controls" }, [search]);
 
   const presentTags = new Set(allItems.flatMap((i) => i.tags || []));
   const activeDiet = new Set();
@@ -467,8 +469,9 @@ function render(r) {
   const available = DIET_FILTERS.filter((f) =>
     f.satisfies.some((t) => presentTags.has(t))
   );
+  let dietRow = null;
   if (available.length) {
-    const chipRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Dietary filters" });
+    dietRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Dietary filters" });
     for (const f of available) {
       const chip = el("button", {
         type: "button",
@@ -484,17 +487,17 @@ function render(r) {
         applyView();
       });
       dietChips.push({ f, chip });
-      chipRow.append(chip);
+      dietRow.append(chip);
     }
-    controls.append(chipRow);
   }
-  root.append(controls);
 
-  // Section nav (sticky) + sections.
   const nav = el("nav", { className: "section-nav", "aria-label": "Menu sections" });
   const navScroll = el("div", { className: "section-nav-scroll" });
   nav.append(navScroll);
-  root.append(nav);
+
+  const toolbar = el("div", { className: "menu-toolbar" }, [search, nav]);
+  root.append(toolbar);
+  if (dietRow) root.append(dietRow);
 
   const menuWrap = el("div", { className: "menu-sections" });
   const sectionEls = [];
@@ -569,6 +572,14 @@ function render(r) {
     { rootMargin: "-45% 0px -50% 0px" }
   );
   for (const sec of sectionEls) spy.observe(sec);
+
+  // Pin section headings (and dish scroll-jumps) just below the sticky
+  // toolbar, whatever height it renders at. Measured once — the toolbar is a
+  // single search + one-row nav, so its height is stable.
+  const setToolbarH = () =>
+    root.style.setProperty("--toolbar-h", `${Math.round(toolbar.getBoundingClientRect().height)}px`);
+  requestAnimationFrame(setToolbarH);
+  addEventListener("resize", setToolbarH);
 }
 
 // --- Boot ------------------------------------------------------------
