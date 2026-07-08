@@ -312,8 +312,17 @@ external requests in the artifact):
   "no third-party, no accounts" stance. Only if the owner explicitly wants
   managed intake with image uploads.
 
-Recommend the **`mailto:` links** first — smallest, honest, and it already
-has a home in `intake/`. **⚑ owner to supply the intake email address.**
+**⚑ owner decided 2026-07-08: no email, and parked ("decide later") — ship
+the deploy first.** So `mailto:` is out. When revisited, the honest candidates
+are: **GitHub Issues** (a pre-filled `issues/new` link to a *public*
+`faves-feedback` repo — keeps the code repo private; free, no backend, natural
+triage; the sender needs a GitHub account); or a **Cloudflare Pages form +
+edge function** (no account/third-party for the sender, supports photo uploads
+to R2, but adds serverless code + a spam guard). Third-party forms remain
+✗-by-default. Original (now superseded) recommendation below.
+
+~~Recommend the **`mailto:` links** first — smallest, honest, and it already
+has a home in `intake/`. **⚑ owner to supply the intake email address.**~~
 **Named / personalised feedback** (owner ask, 2026-07-08) is free here: the
 mailto template (or the prefill form) can include an optional "your name"
 field, so a report arrives attributed — no account needed, the sender just
@@ -329,14 +338,17 @@ types it. (Their email address comes with the message anyway.)
   cheap sides don't skew it), banded $ ≤ $15, $$ ≤ $30, $$$ above; hidden
   when there are < 3 priced items (stubs, recipes, thin menus). Captioned
   "estimated from the menu" and honest that our prices need an in-store
-  refresh. The **cheap-eats picker mode** ✅ **done 2026-07-08** — a 💸 toggle
-  in "Pick for us" narrows the roll to the **$** band (`isCheapEats` in
-  `price.js`, self-consistent with the card chip; a null-band venue is *not*
-  cheap — we can't vouch it is). Applied to the filtered set *before* the
-  availability preference (a closed cheap place still beats an open pricey one
-  within the mode), flipping it re-rolls, and an empty cheap set gets its own
-  "turn off Cheap eats or widen" nudge. **Still open:** the curated override
-  field for venues where the computed band misleads (mains-only vs. banquet).
+  refresh. The **cheap-eats filter** ✅ **done 2026-07-08** — a 💸 toggle in the
+  home list-toggles row (beside "Open now") narrows the list to the **$** band
+  (`isCheapEats` in `price.js`, self-consistent with the card chip; a null-band
+  venue is *not* cheap — we can't vouch it is). AND-ed in `applyFilters`, so
+  **"Pick for us" inherits it for free** (no picker-specific plumbing). First
+  built inside the picker dialog, then moved to the main list — a filter is a
+  list question, not a dice question (owner + Fable UX review agreed).
+  **Still open:** the curated `priceBand` override for venues where the computed
+  band misleads (Fable flagged Khandallah Trading Co reads "$", R & S Satay
+  "$$$" — the cheap filter amplifies misbanding, so this is now load-bearing
+  for trust).
 - **More allergens** `[S][schema]` — extend the closed tag set (egg,
   dairy/milk, gluten, soy, sesame) in `ARCHITECTURE.md`. Cheap to add;
   the honest part is *populating* it — "no tag = not stated" means owner
@@ -373,13 +385,20 @@ types it. (Their email address comes with the message anyway.)
   into a 1–3 scale in the data (still ours, still static); (b)
   **local-only personal ratings** in `localStorage` (same store as the
   order tally). Recommend **(a)+(b), not public**.
-- **See public ratings / reviews** `[S]` — owner ask (2026-07-08).
-  *Embedding* Google/Tripadvisor ratings means their API (keys, ToS,
-  external requests, breaks offline) or scraping (against ToS, brittle) —
-  **✗**. The honest, zero-cost version: a **"See reviews" link-out** that
-  opens the venue's Google Maps listing (same handoff pattern as the maps
-  link — we already have coords/name). Live rating numbers in-app are not
-  worth the constraint break; the link gets you the full, current reviews.
+- **See public ratings / reviews** `[M]` ⚑ **owner decided 2026-07-08:
+  show the number when online, link-out when offline.** The honest read: a
+  static site can't fetch a live Google rating (the Places API is keyed,
+  billed, and its ToS govern display + caching; a public site can't hold the
+  key safely). So the shape is a **progressive enhancement**: a small
+  **Cloudflare Pages Function** proxies the key, fetches the rating on demand,
+  caches it at the edge, and shows it inline with "powered by Google"
+  attribution; **offline or on failure it degrades to a "See reviews"
+  link-out** to the venue's Maps listing. This is the *first* external service
+  in an otherwise zero-third-party app — the shipped `site/` artifact stays
+  zero-dep (the fetch is runtime + optional), but the deployed *system* gains
+  one billed online dependency. **Write an ADR when built; sequenced after the
+  Cloudflare Pages deploy (Phase 7).** Dish-level ratings stay curated (Google
+  rates places, not dishes).
 - **Popular / busy times** `[M][constraint ✗]` — owner ask. Google's
   "popular times" has **no official public API**; the only ways to get it
   are unsupported scraping or unofficial libraries (against ToS, fragile).
@@ -448,16 +467,14 @@ zero-dependency site an SBOM is **not** vulnerability management (there's
 nothing third-party to scan) — its value is attestation + a tripwire
 against dependency creep.
 
-- **SBOM publishing** `[S]` **⚑** — publish a machine-readable Software
-  Bill of Materials (SPDX or CycloneDX) as a provenance attestation. It
-  will be near-empty, which is the point: it *proves* the zero-dep claim
-  and any future entry shows up as a diff. Generation options, cheapest
-  first: GitHub's native dependency-graph SPDX export (zero tooling, via
-  repo settings / API), or a CI step with a generator. Publish options:
-  a CI build artifact, a committed `sbom.spdx.json`, served at
-  `/.well-known/sbom` on the site, or attached to a tagged release. **⚑
-  owner picks format + publish location** (and whether to cover just the
-  shipped `site/` or also the dev toolchain — Node, the test runner).
+- **SBOM publishing** `[S]` — **decided 2026-07-08 (owner delegated the call):
+  CycloneDX 1.5 JSON, committed + served at `/.well-known/sbom.json`,
+  generated by a small stdlib `tools/` script** (stays zero-dep, reproducible,
+  CI-checkable) covering the shipped `site/` — which is near-empty, exactly the
+  point: it *proves* the zero-dep claim and any future entry shows up as a diff.
+  Dev toolchain (Node, test runner) is out of the shipped SBOM. **Build
+  alongside the Phase 7 deploy** so the live site ships with provenance from
+  day one.
 - **Zero-dependency CI guard** `[S]` ✅ **done 2026-07-08** —
   `tools/check_no_deps.py` fails if `package.json` gains any dependency
   key, or a lockfile/`node_modules` appears; wired into CI as its own
@@ -507,7 +524,9 @@ By value-per-effort and dependency order:
 pre-launch win; SBOM publishing can land alongside the Phase 7 deploy so
 the live site ships with a provenance artifact from day one.
 
-**Two owner calls before starting:**
-1. Confirm the **order tally** is in — then the one-line non-goal
-   clarification lands in `STRATEGY.md`.
-2. **Ratings = curated + local, not public** — agreed?
+**Owner calls — resolved 2026-07-08:**
+1. Order tally: **in** (shipped); STRATEGY non-goal clarification landed.
+2. Ratings: **show the live number when online (edge-function proxy),
+   link-out when offline; dish ratings curated** — see Theme 5.
+3. Feedback intake: **no email; parked** — deploy first (Theme 4c).
+4. SBOM: **CycloneDX JSON at `/.well-known/sbom.json`** — see Theme 7.

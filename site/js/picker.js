@@ -38,9 +38,9 @@ function chips(r) {
 }
 
 /**
- * Wire up the picker. `getCandidates(opts)` returns the currently filtered
- * restaurant list — the shuffle always respects the filter bar. `opts` carries
- * the in-dialog options: `{ cheapOnly }` restricts the roll to $ venues.
+ * Wire up the picker. `getCandidates` returns the currently filtered
+ * restaurant list — the shuffle always respects the filter bar (including
+ * the "Cheap eats" and "Open now" toggles).
  */
 export function initPicker(getCandidates) {
   const fab = document.getElementById("pick-btn");
@@ -55,9 +55,6 @@ export function initPicker(getCandidates) {
   const goEl = document.getElementById("picker-go");
   const againBtn = document.getElementById("picker-again");
   const closeBtn = document.getElementById("picker-close");
-  const cheapBtn = document.getElementById("picker-cheap");
-
-  const cheapOn = () => cheapBtn?.getAttribute("aria-pressed") === "true";
 
   let timer = null;
   const stop = () => {
@@ -89,9 +86,7 @@ export function initPicker(getCandidates) {
     resultEl.replaceChildren(
       el("p", {
         className: "picker-meta",
-        textContent: cheapOn()
-          ? "No cheap eats match those filters — turn off Cheap eats or widen them."
-          : "Nothing matches those filters — widen them and roll again.",
+        textContent: "Nothing matches those filters — widen them and roll again.",
       })
     );
     actionsEl.hidden = true;
@@ -103,7 +98,7 @@ export function initPicker(getCandidates) {
     actionsEl.hidden = true;
     dice.textContent = "🎲";
 
-    const candidates = getCandidates({ cheapOnly: cheapOn() });
+    const candidates = getCandidates();
     if (!candidates.length) return showEmpty();
 
     const finalPick = candidates[rand(candidates.length)];
@@ -131,11 +126,6 @@ export function initPicker(getCandidates) {
     shuffle();
   });
   againBtn.addEventListener("click", shuffle);
-  // Flipping "Cheap eats" re-rolls straight away, so the change is felt.
-  cheapBtn?.addEventListener("click", () => {
-    cheapBtn.setAttribute("aria-pressed", cheapOn() ? "false" : "true");
-    shuffle();
-  });
   closeBtn.addEventListener("click", () => dialog.close());
   dialog.addEventListener("close", stop);
   dialog.addEventListener("click", (e) => {

@@ -10,11 +10,10 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
-- **Cheap eats mode in "Pick for us":** a 💸 toggle in the shuffle dialog
-  narrows the roll to the **$** places (the ones already chip-flagged as
-  cheap on their cards), so a broke-but-hungry group can still let the dice
-  decide. It respects the current filters and prefers somewhere open, just
-  like a normal roll; if nothing cheap fits, it nudges you to widen.
+- **"Cheap eats" filter** on the home screen: a 💸 toggle beside "Open now"
+  narrows the list to the **$** places (the ones already chip-flagged cheap on
+  their cards). Combines with every other filter, and **"Pick for us" inherits
+  it** — flip it on and the shuffle only rolls cheap places.
 - Typical price per person: each place with a menu now shows a small
   **$/$$/$$$ chip with a "~$Npp" estimate** (on the home card and the menu
   header), worked out from that venue's own listed prices — no external

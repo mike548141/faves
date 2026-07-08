@@ -842,12 +842,6 @@ body.faves-view .pick-fab {
 .picker-close:hover {
   background: var(--surface-2);
 }
-.picker-opts {
-  display: flex;
-  justify-content: center;
-  /* Clear the absolutely-positioned close button in the top-right corner. */
-  margin: 0 var(--space-5) var(--space-2);
-}
 .picker-dice {
   font-size: 2.6rem;
   line-height: 1.2;

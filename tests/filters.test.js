@@ -139,3 +139,22 @@ test("openNow with no `now` is a safe no-op", () => {
   const shown = applyFilters(OPEN_FIXTURE, { ...DEFAULT_FILTERS, openNow: true });
   assert.equal(shown.length, 4);
 });
+
+// "Cheap eats" filter — needs priced menus (see price.isCheapEats: $ band only).
+const menuOf = (...prices) => [{ section: "All", items: prices.map((price, i) => ({ name: `d${i}`, price })) }];
+const CHEAP_FIXTURE = [
+  { id: "cheap", services: [], cuisine: [], menu: menuOf(8, 10, 12) }, // median 10 → $
+  { id: "mid", services: [], cuisine: [], menu: menuOf(18, 24, 30) }, // $$
+  { id: "thin", services: [], cuisine: [], menu: menuOf(6, 6) }, // < 3 priced → no band
+  { id: "cook", kind: "recipes", services: [], cuisine: [], menu: menuOf(5, 5, 5) },
+];
+
+test("cheap: keeps only $ venues; unpriced/thin/recipes drop out", () => {
+  const shown = applyFilters(CHEAP_FIXTURE, { ...DEFAULT_FILTERS, cheap: true });
+  assert.deepEqual(shown.map((r) => r.id), ["cheap"]);
+});
+
+test("cheap off (the default) keeps every venue regardless of price", () => {
+  const shown = applyFilters(CHEAP_FIXTURE, DEFAULT_FILTERS);
+  assert.equal(shown.length, 4);
+});

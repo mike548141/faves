@@ -15,7 +15,7 @@ import { heartButton } from "./favourites-ui.js";
 import { groupSection, resultRow } from "./results-view.js";
 import { settings } from "./settings.js";
 import { initSettingsUI } from "./settings-ui.js";
-import { priceBand, isCheapEats } from "./price.js";
+import { priceBand } from "./price.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -208,6 +208,7 @@ function init(restaurants) {
   }
 
   wireOpenNow(state, render);
+  wireCheapEats(state, render);
   wireSearch(restaurants);
   wireFavourites();
   wireHomeButton();
@@ -221,12 +222,10 @@ function init(restaurants) {
   // The shuffle prefers places you can actually order from now (open or
   // opening soon, and within your reach radius if we know where you are); it
   // falls back to the whole filtered set if none are available, never dead-ends.
-  initPicker(({ cheapOnly } = {}) => {
+  initPicker(() => {
     const now = nzNow();
-    let filtered = applyFilters(restaurants, state, now);
-    // Cheap-eats mode narrows to $ venues *before* the availability preference,
-    // so a closed cheap place still beats an open pricey one within this mode.
-    if (cheapOnly) filtered = filtered.filter(isCheapEats);
+    // Respects the whole filter bar, Cheap eats and Open now included.
+    const filtered = applyFilters(restaurants, state, now);
     const { farKm } = settings.get();
     const available = filtered.filter((r) => isAvailableNow(r, { now, origin: state.origin, farKm }));
     return available.length ? available : filtered;
@@ -465,16 +464,28 @@ function wireFavourites() {
   updateCount();
 }
 
-// "Open now" filter: show only venues currently open (or closing soon).
-// Unknown-hours venues and recipes drop out — the honest reading of "open".
-function wireOpenNow(state, render) {
-  const btn = document.getElementById("open-now");
+// A plain boolean list toggle: flip a flag on `state`, reflect aria-pressed,
+// re-render. Shared by "Open now" and "Cheap eats" (both AND-ed in filters.js).
+function wireListToggle(id, key, state, render) {
+  const btn = document.getElementById(id);
   if (!btn) return;
   btn.addEventListener("click", () => {
-    state.openNow = !state.openNow;
-    btn.setAttribute("aria-pressed", String(state.openNow));
+    state[key] = !state[key];
+    btn.setAttribute("aria-pressed", String(state[key]));
     render();
   });
+}
+
+// "Open now": only venues currently open (or closing soon). Unknown-hours
+// venues and recipes drop out — the honest reading of "open".
+function wireOpenNow(state, render) {
+  wireListToggle("open-now", "openNow", state, render);
+}
+
+// "Cheap eats": only the $ price band (price.isCheapEats). A venue we can't
+// price stays out — no implied bargain.
+function wireCheapEats(state, render) {
+  wireListToggle("cheap-eats", "cheap", state, render);
 }
 
 // "Near me": sort the list by distance from the device's location. Purely
