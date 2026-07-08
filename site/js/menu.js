@@ -7,6 +7,7 @@ import { mapsUrl } from "./geo.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
+import { heartButton } from "./favourites-ui.js";
 
 const root = document.getElementById("menu-root");
 
@@ -175,8 +176,23 @@ function renderHeader(r) {
   const meta = isRecipes
     ? "Recipes for the nights you'd rather stay in"
     : [r.cuisine?.join(" · "), r.area].filter(Boolean).join(" — ");
+  // Title row carries a ♥ to favourite the whole venue (or collection).
+  const venueHeart = heartButton(
+    {
+      type: "venue",
+      venueId: r.id,
+      venueName: r.name,
+      isRecipe: isRecipes,
+      sub: meta,
+    },
+    r.name
+  );
+  venueHeart.classList.add("heart-lg");
   const bits = [
-    el("h1", { className: "menu-title", textContent: r.name }),
+    el("div", { className: "menu-title-row" }, [
+      el("h1", { className: "menu-title", textContent: r.name }),
+      venueHeart,
+    ]),
     el("p", { className: "menu-sub", textContent: meta }),
   ];
 
@@ -300,20 +316,28 @@ function renderDish(item, isRecipes = false, r = null) {
   if (item.goesWith?.length) {
     children.push(pairingLinks(item.goesWith));
   }
-  // Order tally: restaurant dishes get a quantity stepper. Recipes don't —
-  // Cook at Home is for cooking, not an order to read down the phone.
-  if (!isRecipes && r) {
-    children.push(
-      el("div", { className: "dish-actions" }, [
+  // Actions: a ♥ on every dish (restaurant + recipe); a quantity stepper on
+  // restaurant dishes only — Cook at Home is for cooking, not an order to
+  // read down the phone.
+  if (r) {
+    const actions = el("div", { className: "dish-actions" }, [
+      heartButton(
+        { type: "dish", venueId: r.id, venueName: r.name, name: item.name, isRecipe: isRecipes },
+        item.name
+      ),
+    ]);
+    if (!isRecipes) {
+      actions.append(
         dishStepper({
           venueId: r.id,
           venueName: r.name,
           phone: r.phone,
           name: item.name,
           price: item.price ?? null,
-        }),
-      ])
-    );
+        })
+      );
+    }
+    children.push(actions);
   }
   const li = el("li", { className: isRecipes ? "dish recipe" : "dish", id: `dish-${slug(item.name)}` });
   li.dataset.name = item.name.toLowerCase();

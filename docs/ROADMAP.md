@@ -246,16 +246,22 @@ types it. (Their email address comes with the message anyway.)
   the Google listing already surfaces busy times there. A legitimate
   in-app alternative *later*: infer rough busyness from our own order-tally
   usage once that exists (Theme 1) — but that's a weak signal at our scale.
-- **Hearted favourites (local-only)** `[M]` — owner idea (2026-07-08). A
-  ❤ toggle on any dish (restaurant menus *and* Cook-at-Home) saves it to
-  `localStorage`; a "Favourites" view gathers them across venues so it's
-  quick to pick the usual. No account, no backend, stays on the device —
-  the same personal-layer store as the order tally (Theme 1) and local
-  ratings above; nothing personal enters the repo. This is the
-  *simplest* first step of that layer (a heart is binary where a rating
-  is a scale), so it's a good place to build the `localStorage` plumbing
-  once and reuse. Natural extensions: heart whole *venues* too (favourite
-  places), surface hearts in "Pick for us", and feed the health app's
+- **Hearted favourites (local-only)** `[M]` ✅ **done 2026-07-08** — a
+  ♥ toggle on any dish (restaurant menus *and* Cook at Home) *and* on a
+  whole venue saves it to `localStorage` (`site/js/favourites.js` model +
+  `favourites-ui.js` heart, both unit-tested/DOM-free split). A
+  **Favourites** toggle beside the home search opens a view (shares the
+  search panel's grouped renderer, `results-view.js`) that gathers saved
+  Places + Dishes, each deep-linking there via the shared `slug`, with an
+  inline heart to remove. Built the shared `store.js` (`safeStorage` with a
+  private-mode fallback) and refactored the order tally onto it too. No
+  account, no backend, stays on the device — the same personal-layer store
+  as the order tally (Theme 1) and local ratings above; nothing personal
+  enters the repo. It built the `localStorage` plumbing (`store.js`) that
+  local ratings and profiles will reuse. **Still open:** surface hearts in
+  "Pick for us" (favour the usual), heart-from-the-home-card (needs the
+  card restructure — a button can't nest in the card's `<a>`), and feed the
+  health app's
   eating diary (Theme 6). Pairs neatly with `goesWith` (Theme 4b) — a
   favourite dish can suggest its usual companions.
   - **Multiple people's favourites** `[M]` **⚑ (account tension)** — owner

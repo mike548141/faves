@@ -9,6 +9,9 @@ import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
 import { initOrderUI } from "./cart-ui.js";
+import { favourites, favHref } from "./favourites.js";
+import { heartButton } from "./favourites-ui.js";
+import { groupSection } from "./results-view.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -169,6 +172,7 @@ function init(restaurants) {
 
   wireOpenNow(state, render);
   wireSearch(restaurants);
+  wireFavourites();
 
   render();
   initPicker(() => applyFilters(restaurants, state, nzNow()));
@@ -195,6 +199,9 @@ function wireSearch(restaurants) {
   // A tab-hint icon precedes the venue name so the two groups read at a glance.
   const placeIcon = (p) => (p.kind === "recipes" ? "🏠" : "🍽️");
 
+  const groupCount = ({ items, total }) =>
+    total > items.length ? `${items.length} of ${total}` : total;
+
   function renderResults(q) {
     const { places, dishes } = search(index, q);
     groups.replaceChildren();
@@ -208,43 +215,37 @@ function wireSearch(restaurants) {
       `${dishes.total} dish${dishes.total === 1 ? "" : "es"} for “${q}”.`;
 
     if (places.items.length) {
-      groups.append(resultGroup("Places", places, (p) =>
-        resultRow(`restaurant.html?id=${p.id}`, `${placeIcon(p)} ${p.name}`,
-          [p.area, (p.cuisine || []).join(", ")].filter(Boolean).join(" · "))
-      ));
+      groups.append(
+        groupSection({
+          title: "Places",
+          count: groupCount(places),
+          rows: places.items.map((p) => ({
+            name: `${placeIcon(p)} ${p.name}`,
+            sub: [p.area, (p.cuisine || []).join(", ")].filter(Boolean).join(" · "),
+            href: `restaurant.html?id=${p.id}`,
+          })),
+        })
+      );
     }
     if (dishes.items.length) {
-      groups.append(resultGroup("Dishes", dishes, (d) =>
-        resultRow(d.href, d.name,
-          [d.venueName, d.section].filter(Boolean).join(" · "))
-      ));
+      groups.append(
+        groupSection({
+          title: "Dishes",
+          count: groupCount(dishes),
+          rows: dishes.items.map((d) => ({
+            name: d.name,
+            sub: [d.venueName, d.section].filter(Boolean).join(" · "),
+            href: d.href,
+          })),
+        })
+      );
     }
-  }
-
-  function resultGroup(title, { items, total }, rowFor) {
-    const head = el("h3", { className: "search-group-title" }, [
-      el("span", { textContent: title }),
-      el("span", {
-        className: "search-group-count",
-        textContent: total > items.length ? `${items.length} of ${total}` : String(total),
-      }),
-    ]);
-    const list = el("ul", { className: "search-list" }, items.map(rowFor));
-    return el("section", { className: "search-group" }, [head, list]);
-  }
-
-  function resultRow(href, name, sub) {
-    return el("li", { className: "search-row" }, [
-      el("a", { className: "search-link", href }, [
-        el("span", { className: "search-row-name", textContent: name }),
-        sub ? el("span", { className: "search-row-sub", textContent: sub }) : null,
-      ]),
-    ]);
   }
 
   function update() {
     const q = input.value.trim();
     const active = q.length >= 2;
+    if (active) exitFavourites(); // search and the favourites view are exclusive
     document.body.classList.toggle("searching", active);
     results.hidden = !active;
     if (active) renderResults(q);
@@ -261,6 +262,83 @@ function wireSearch(restaurants) {
       update();
     }
   });
+}
+
+// Search and the Favourites view both take over the browse area, so turning
+// one on turns the other off. These operate on the DOM (not closures) so
+// either wiring can call the other.
+function exitSearch() {
+  const input = document.getElementById("search-input");
+  const results = document.getElementById("search-results");
+  if (input) input.value = "";
+  document.body.classList.remove("searching");
+  if (results) results.hidden = true;
+}
+function exitFavourites() {
+  const btn = document.getElementById("favourites-toggle");
+  const panel = document.getElementById("favourites-panel");
+  if (btn) btn.setAttribute("aria-pressed", "false");
+  document.body.classList.remove("faves-view");
+  if (panel) panel.hidden = true;
+}
+
+// Favourites view: a ♥ toggle beside the search box opens a panel that
+// gathers the venues and dishes hearted across the app (from localStorage,
+// so it works offline and needs no data reload). Rows link out and carry
+// their own heart to un-favourite in place. Empty until you save something.
+function wireFavourites() {
+  const btn = document.getElementById("favourites-toggle");
+  const panel = document.getElementById("favourites-panel");
+  const summary = document.getElementById("favourites-summary");
+  const groups = document.getElementById("favourites-groups");
+  if (!btn || !panel) return;
+  btn.hidden = false;
+
+  const favRow = (e) => ({
+    name: e.type === "venue" ? `${e.isRecipe ? "🏠" : "🍽️"} ${e.venueName}` : e.name,
+    sub: e.sub || (e.type === "dish" ? e.venueName : ""),
+    href: favHref(e),
+    trailing: heartButton(e, e.name || e.venueName),
+  });
+
+  function render() {
+    const venues = favourites.venues();
+    const dishes = favourites.dishes();
+    groups.replaceChildren();
+    if (venues.length === 0 && dishes.length === 0) {
+      summary.textContent = "No favourites yet. Tap ♡ on a place or a dish to save it here.";
+      return;
+    }
+    summary.textContent =
+      `${venues.length} place${venues.length === 1 ? "" : "s"}, ` +
+      `${dishes.length} dish${dishes.length === 1 ? "" : "es"} saved.`;
+    if (venues.length) groups.append(groupSection({ title: "Places", rows: venues.map(favRow) }));
+    if (dishes.length) groups.append(groupSection({ title: "Dishes", rows: dishes.map(favRow) }));
+  }
+
+  function open(on) {
+    if (on) exitSearch();
+    btn.setAttribute("aria-pressed", String(on));
+    document.body.classList.toggle("faves-view", on);
+    panel.hidden = !on;
+    if (on) render();
+  }
+
+  btn.addEventListener("click", () =>
+    open(!document.body.classList.contains("faves-view"))
+  );
+
+  const countEl = btn.querySelector(".favourites-count");
+  const updateCount = () => {
+    const n = favourites.count();
+    if (countEl) countEl.textContent = n ? String(n) : "";
+    if (document.body.classList.contains("faves-view")) render();
+  };
+  favourites.subscribe(updateCount);
+  window.addEventListener("storage", (e) => {
+    if (e.key === "faves.favourites.v1") favourites.reload();
+  });
+  updateCount();
 }
 
 // "Open now" filter: show only venues currently open (or closing soon).

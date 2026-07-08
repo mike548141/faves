@@ -10,6 +10,8 @@
 // is a thin localStorage wrapper over it, with a memory fallback so a
 // locked-down browser (Safari private mode) degrades rather than throws.
 
+import { safeStorage } from "./store.js";
+
 const KEY = "faves.order.v1";
 
 /** Total number of items (sum of quantities). */
@@ -47,24 +49,6 @@ export function groupByVenue(items) {
     if (i.price == null) g.hasUnpriced = true;
   }
   return [...groups.values()];
-}
-
-// localStorage that never throws: falls back to an in-memory shim if the
-// real thing is unavailable or blocked (private mode, disabled storage).
-function safeStorage() {
-  try {
-    const probe = "__faves_probe__";
-    globalThis.localStorage.setItem(probe, "1");
-    globalThis.localStorage.removeItem(probe);
-    return globalThis.localStorage;
-  } catch {
-    const mem = new Map();
-    return {
-      getItem: (k) => (mem.has(k) ? mem.get(k) : null),
-      setItem: (k, v) => mem.set(k, v),
-      removeItem: (k) => mem.delete(k),
-    };
-  }
 }
 
 /**

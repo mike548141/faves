@@ -241,12 +241,77 @@ main {
   color: var(--ink-soft);
 }
 
-/* Search mode: browse view + bottom filter bar + shuffle FAB step aside so
-   the results own the screen. */
+/* Search / favourites mode: browse view + bottom filter bar + shuffle FAB
+   step aside so the results own the screen. */
 body.searching .browse-only,
 body.searching .filter-bar,
-body.searching .pick-fab {
+body.searching .pick-fab,
+body.faves-view .browse-only,
+body.faves-view .filter-bar,
+body.faves-view .pick-fab {
   display: none;
+}
+
+/* Search box + Favourites toggle share a row above the results. */
+.home-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.home-tools .search-field {
+  flex: 1;
+  margin-bottom: 0;
+}
+.fav-toggle {
+  flex: none;
+}
+.fav-toggle[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.fav-toggle .favourites-count:not(:empty) {
+  min-width: 1.4em;
+  padding: 0.05em 0.35em;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.fav-toggle[aria-pressed="true"] .favourites-count:not(:empty) {
+  background: var(--accent-ink);
+  color: var(--accent);
+}
+
+/* Heart toggle (dish rows, venue/recipe header, favourites view). */
+.heart {
+  flex: none;
+  width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.heart[aria-pressed="false"] {
+  color: var(--ink-soft);
+}
+.heart:active {
+  transform: scale(0.9);
+}
+.heart-lg {
+  font-size: 1.6rem;
+}
+/* In a result row the heart is a full-height tap target on the right. */
+.search-row .heart {
+  align-self: stretch;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
 }
 
 .search-summary {
@@ -280,7 +345,14 @@ body.searching .pick-fab {
   display: grid;
   gap: var(--space-1);
 }
+.search-row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+}
 .search-link {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.15em;
@@ -1033,6 +1105,15 @@ html {
 .menu-header {
   padding: var(--space-3) 0 var(--space-4);
   border-bottom: 1px solid var(--line);
+}
+.menu-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.menu-title-row .heart {
+  margin-top: -0.1em;
 }
 .menu-title {
   font-size: var(--step-title);

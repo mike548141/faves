@@ -33,26 +33,40 @@
     </header>
 
     <main id="main" class="wrap">
-      <!-- Global search: places + dishes, over the already-loaded data.
-           JS-only enhancement; app.js unhides it. Hidden by default so the
-           no-JS fallback list isn't preceded by a dead input. -->
-      <form class="search-field" role="search" id="search-form" hidden>
-        <label class="sr-only" for="search-input">Search places and dishes</label>
-        <span class="search-icon" aria-hidden="true">🔍</span>
-        <input
-          type="search"
-          id="search-input"
-          class="search-input"
-          placeholder="Search places or dishes…"
-          autocomplete="off"
-          enterkeyhint="search"
-        />
-      </form>
+      <!-- Global search + favourites toggle. Both are JS-only enhancements
+           (app.js unhides them); hidden by default so the no-JS fallback
+           list isn't preceded by dead controls. The toggle sits outside the
+           browse-only region so it stays reachable in the favourites view. -->
+      <div class="home-tools">
+        <form class="search-field" role="search" id="search-form" hidden>
+          <label class="sr-only" for="search-input">Search places and dishes</label>
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input
+            type="search"
+            id="search-input"
+            class="search-input"
+            placeholder="Search places or dishes…"
+            autocomplete="off"
+            enterkeyhint="search"
+          />
+        </form>
+        <button type="button" id="favourites-toggle" class="fav-toggle list-toggle" aria-pressed="false" hidden>
+          <span aria-hidden="true">♥</span>
+          <span class="fav-toggle-label">Favourites</span>
+          <span class="favourites-count" aria-hidden="true"></span>
+        </button>
+      </div>
 
       <!-- Populated by app.js while a query is active; browse view hidden. -->
       <section id="search-results" class="search-results" aria-label="Search results" hidden>
         <p id="search-summary" class="search-summary" role="status" aria-live="polite"></p>
         <div id="search-groups"></div>
+      </section>
+
+      <!-- Favourites view: gathers hearted venues + dishes from localStorage. -->
+      <section id="favourites-panel" class="search-results" aria-label="Your favourites" hidden>
+        <p id="favourites-summary" class="search-summary" role="status" aria-live="polite"></p>
+        <div id="favourites-groups"></div>
       </section>
 
       <div class="results-head browse-only">

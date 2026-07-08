@@ -10,6 +10,12 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Hearted favourites: tap **♡** on any dish (restaurant menus *and* Cook at
+  Home) or on a whole venue to save it. A **Favourites** toggle beside the
+  home search opens a view that gathers everything you've saved — Places
+  and Dishes — each linking straight there, with an inline heart to remove
+  it. Kept on the device only (`localStorage`), like the order tally; works
+  offline, no account.
 - Order tally: as people call out what they want, tap **＋** on a dish to
   build one running order. A floating order button (on every screen) opens
   a list grouped by restaurant — each with a subtotal and a **Call** link

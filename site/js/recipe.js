@@ -7,6 +7,7 @@
 import { loadRestaurant } from "./data.js";
 import { slug } from "./slug.js";
 import { initOrderUI } from "./cart-ui.js";
+import { heartButton } from "./favourites-ui.js";
 
 const root = document.getElementById("recipe-root");
 
@@ -64,7 +65,17 @@ function render(collection, item) {
   back.textContent = `← ${collection.name}`;
 
   const parts = [];
-  parts.push(el("h1", { className: "menu-title", textContent: item.name }));
+  const heart = heartButton(
+    { type: "dish", venueId: id, venueName: collection.name, name: item.name, isRecipe: true },
+    item.name
+  );
+  heart.classList.add("heart-lg");
+  parts.push(
+    el("div", { className: "menu-title-row" }, [
+      el("h1", { className: "menu-title", textContent: item.name }),
+      heart,
+    ])
+  );
 
   const metaBits = [item.serves ? `Serves ${item.serves}` : null, item.time || null].filter(Boolean);
   if (metaBits.length) parts.push(el("p", { className: "menu-sub", textContent: metaBits.join(" · ") }));
