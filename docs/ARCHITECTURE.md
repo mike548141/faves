@@ -186,9 +186,11 @@ UI must never present absence of an allergen tag as "allergen-free".
   from this in **Pacific/Auckland** time (not the viewer's clock), and a
   grouped weekly display; see ADR 0006. That status also drives the home
   list's **default order** (`site/js/ranking.js`): open/opening-soon
-  venues float up, closed ones sink, and — when a location is known —
-  anything past a reachable radius (`FAR_KM`) sinks too; distance is the
-  within-tier tie-break. "Pick for us" shuffles only the available set.
+  venues float up, closed ones sink, favourites (a hearted venue or one
+  holding a hearted dish) lift within a tier, and — when a location is
+  known — anything past a reachable radius (`FAR_KM`) sinks too. Sort key:
+  reachable → availability → favourite → nearest → curated. "Pick for us"
+  shuffles only the available set.
 - `image` (venue card photo, or a menu item's dish photo) is an optional
   **self-hosted** path — no hotlinking (offline / no-external-request
   rule); store under `site/img/`. Photos are excluded from the transfer

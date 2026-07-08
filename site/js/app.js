@@ -130,12 +130,16 @@ function init(restaurants) {
   // origin holds the user's {lat, lng} once "Near me" is on; null otherwise.
   const state = { ...DEFAULT_FILTERS, origin: null };
 
+  // Venues you've hearted, or that hold a dish you've hearted — a favourite
+  // dish lifts its whole venue. Flattened to venue ids for the ranker.
+  const favouriteVenueIds = () => new Set(favourites.items().map((e) => e.venueId));
+
   function render() {
     const now = nzNow(); // one clock read per render: filter, rank and cards
     let shown = applyFilters(restaurants, state, now);
-    // Default order floats open/nearby venues up, sinks closed/faraway ones;
-    // distance refines it only once "Near me" has given us an origin.
-    shown = rankVenues(shown, { now, origin: state.origin });
+    // Default order floats open/favourite/nearby venues up, sinks
+    // closed/faraway ones; distance refines it once "Near me" gives an origin.
+    shown = rankVenues(shown, { now, origin: state.origin, favouriteIds: favouriteVenueIds() });
     listEl.replaceChildren(...shown.map((r) => card(r, now)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
@@ -176,6 +180,9 @@ function init(restaurants) {
   wireOpenNow(state, render);
   wireSearch(restaurants);
   wireFavourites();
+  // Hearting something re-ranks the list (e.g. after un-favouriting in the
+  // view, or a change synced from another tab).
+  favourites.subscribe(render);
 
   render();
   // The shuffle prefers places you can actually order from now (open or

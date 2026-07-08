@@ -70,13 +70,17 @@ sanity-checks the total — on a phone, offline.
   (`site/js/ranking.js`, pure + unit-tested). Open (right up to closing
   time — you might be 2 minutes away) and opening-within-the-hour venues
   float to the top; unknown-hours sit above definitely-closed; closed sinks
-  to the bottom. When "Near me" is on, distance refines the order *and* a
-  venue past a "reachable tonight" radius (`FAR_KM`, 50 km straight-line —
-  the Queenstown-favourite case) sinks below everything nearby. "Pick for
-  us" now shuffles only the available set (falling back to all if none), so
-  the dice won't land somewhere closed or unreachable. Superseded the plain
-  distance sort (`sortByDistance` removed; distance is now a tie-break
-  within an availability tier). Cook at Home ranks as always-available.
+  to the bottom. **Favourites** lift within a tier — a hearted venue, or one
+  holding a hearted dish (dish favourites flatten to their venue id), ranks
+  above equal-availability places without overriding availability (a closed
+  favourite still sits below anywhere open). When "Near me" is on, distance
+  refines the rest *and* a venue past a "reachable tonight" radius (`FAR_KM`,
+  50 km straight-line — the Queenstown-favourite case) sinks below
+  everything nearby. Full sort key: reachable → availability → favourite →
+  nearest → curated. "Pick for us" shuffles only the available set (falling
+  back to all if none), so the dice won't land somewhere closed or
+  unreachable. Superseded the plain distance sort (`sortByDistance`
+  removed). Cook at Home ranks as always-available.
 
 
 - **Coordinates in the schema** `[S][schema]` ✅ **done 2026-07-08** —

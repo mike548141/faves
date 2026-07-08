@@ -5,14 +5,19 @@
 //  1. Open status (always available — from hours + the NZ clock). A place
 //     that's open (right up to closing time — you might be 2 minutes away)
 //     or opening within the hour beats one that's shut for the night.
-//  2. Distance (only when we know where you are, i.e. "Near me"). A
+//  2. Favourites (from the device-local heart store). A place you've
+//     hearted — or one holding a dish you've hearted — is one you actually
+//     want, so among places of equal availability it lifts above the rest.
+//     It does NOT override availability: a closed favourite you can't order
+//     from still sits below anywhere that's open.
+//  3. Distance (only when we know where you are, i.e. "Near me"). A
 //     favourite in another town is great when you're there and useless the
 //     rest of the time, so beyond a "reachable tonight" radius it sinks
 //     below everything nearby.
 //
-// Pure (no DOM/network) so it's unit-tested. Replaces the old plain
-// distance sort — distance is now the tie-break within an availability
-// tier, not the whole story.
+// Sort order is lexicographic: reachable → availability → favourite →
+// nearest → curated. Pure (no DOM/network) so it's unit-tested; favourites
+// arrive as a plain Set of venue ids so this stays store-agnostic.
 
 import { openStatus } from "./hours.js";
 import { haversineKm } from "./distance.js";
@@ -57,22 +62,25 @@ export function isAvailableNow(r, { now, origin = null } = {}) {
 
 /**
  * Rank venues for the home list. Sort order:
- *   reachable-before-faraway → availability tier → nearest → curated order.
- * `origin` ({lat,lng}) is optional; without it only open-status ranks
- * (curated order is the tie-break) and nothing is demoted for distance.
- * Venues with coordinates gain a `distanceKm` field when origin is known,
- * for the card to display — same contract the old sortByDistance had. The
- * input array is not mutated.
+ *   reachable → availability tier → favourite → nearest → curated order.
+ * `origin` ({lat,lng}) is optional; without it only open-status + favourites
+ * rank and nothing is demoted for distance. `favouriteIds` is a Set of venue
+ * ids the viewer has hearted (the venue itself or any dish it holds — the
+ * caller flattens dish favourites to their venue id); omit or pass null to
+ * ignore favourites. Venues with coordinates gain a `distanceKm` field when
+ * origin is known, for the card to display. The input array is not mutated.
  */
-export function rankVenues(restaurants, { now, origin = null } = {}) {
+export function rankVenues(restaurants, { now, origin = null, favouriteIds = null } = {}) {
   const keyed = restaurants.map((r, i) => {
     const c = origin && coordsOf(r);
     const dist = c ? haversineKm(origin, c) : Infinity;
     const far = origin && dist !== Infinity && dist > FAR_KM ? 1 : 0;
-    return { r, i, tier: availabilityTier(r, now), dist, far };
+    const fav = favouriteIds && favouriteIds.has(r.id) ? 0 : 1;
+    return { r, i, tier: availabilityTier(r, now), fav, dist, far };
   });
   keyed.sort(
-    (a, b) => a.far - b.far || a.tier - b.tier || a.dist - b.dist || a.i - b.i
+    (a, b) =>
+      a.far - b.far || a.tier - b.tier || a.fav - b.fav || a.dist - b.dist || a.i - b.i
   );
   return keyed.map(({ r, dist }) =>
     origin && dist !== Infinity ? { ...r, distanceKm: dist } : r

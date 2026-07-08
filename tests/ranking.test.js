@@ -69,6 +69,41 @@ test("rankVenues (origin): a faraway venue sinks below everything reachable", ()
   assert.deepEqual(out.map((r) => r.id), ["closed-near", "open-far"]);
 });
 
+test("rankVenues: a favourite lifts above equal-availability non-favourites", () => {
+  const a = { id: "a", hours: week("09:00", "22:00") };
+  const b = { id: "b", hours: week("09:00", "22:00") }; // the favourite
+  const c = { id: "c", hours: week("09:00", "22:00") };
+  const order = rankVenues([a, b, c], { now: MON_NOON, favouriteIds: new Set(["b"]) });
+  assert.deepEqual(order.map((r) => r.id), ["b", "a", "c"]); // b jumps its curated peers
+});
+
+test("rankVenues: favourites do NOT override availability (closed fav stays low)", () => {
+  const openPlain = { id: "open", hours: week("09:00", "22:00") };
+  const closedFav = { id: "closed-fav", hours: week("18:00", "22:00") };
+  const order = rankVenues([closedFav, openPlain], {
+    now: MON_NOON,
+    favouriteIds: new Set(["closed-fav"]),
+  }).map((r) => r.id);
+  assert.deepEqual(order, ["open", "closed-fav"]); // open you can order from wins
+});
+
+test("rankVenues (origin): a favourite outranks a nearer non-favourite when both open", () => {
+  const near = { id: "near", lat: -41.287, lng: 174.776, hours: week("09:00", "22:00") };
+  const favFar = { id: "fav-far", lat: -41.32, lng: 174.80, hours: week("09:00", "22:00") };
+  const order = rankVenues([near, favFar], {
+    now: MON_NOON,
+    origin: CBD,
+    favouriteIds: new Set(["fav-far"]),
+  }).map((r) => r.id);
+  assert.deepEqual(order, ["fav-far", "near"]); // favourite beats distance within the tier
+});
+
+test("rankVenues: no favouriteIds → favourites are simply ignored", () => {
+  const a = { id: "a", hours: week("09:00", "22:00") };
+  const b = { id: "b", hours: week("09:00", "22:00") };
+  assert.deepEqual(rankVenues([a, b], { now: MON_NOON }).map((r) => r.id), ["a", "b"]);
+});
+
 test("isAvailableNow: open/opening-soon/unknown are available; closed is not", () => {
   assert.equal(isAvailableNow(openNear, { now: MON_NOON }), true);
   assert.equal(isAvailableNow(soonNear, { now: MON_NOON }), true);

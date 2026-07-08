@@ -13,10 +13,14 @@ freshness separately from this file.
 - Smarter default order: the home list now floats the places you can
   actually order from *right now* to the top and sinks the rest — open
   (right up to closing time) and opening-within-the-hour venues lead;
-  closed ones drop to the bottom. With "Near me" on, distance refines it
-  and a venue too far to reach tonight (a favourite in another town) sinks
-  below everything nearby. "Pick for us" draws from the available set too,
-  so the dice won't land on somewhere closed or unreachable.
+  closed ones drop to the bottom. Your **favourites** lift within that
+  order — a hearted venue, or one holding a dish you've hearted, ranks
+  above equal-availability places (but a *closed* favourite still stays
+  below anywhere open — it lifts, it doesn't override). With "Near me" on,
+  distance refines the rest and a venue too far to reach tonight (a
+  favourite in another town) sinks below everything nearby. "Pick for us"
+  draws from the available set too, so the dice won't land on somewhere
+  closed or unreachable.
 - Hearted favourites: tap **♡** on any dish (restaurant menus *and* Cook at
   Home) or on a whole venue to save it. A **Favourites** toggle beside the
   home search opens a view that gathers everything you've saved — Places
