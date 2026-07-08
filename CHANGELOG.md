@@ -10,6 +10,10 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Two more places in the pizza department: **Hell Pizza Newlands** and
+  **Pizza Hut Johnsonville**. Menus still to capture (they show as "Menu
+  coming soon"), but they carry address, phone, hours and coordinates, so
+  they rank by "open now" and distance like everywhere else.
 - Page footer on the home screen: a short privacy note — no accounts, no
   tracking, no third-party scripts, your favourites, order and settings
   stay on your device — and a "Made by cakeIT" attribution.

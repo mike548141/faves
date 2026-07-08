@@ -1,0 +1,32 @@
+{
+  "id": "hell-pizza-newlands",
+  "name": "Hell Pizza Newlands",
+  "cuisine": [
+    "Pizza"
+  ],
+  "area": "Newlands",
+  "city": "Wellington",
+  "address": "225 Newlands Road, Newlands, Wellington 6037",
+  "lat": -41.22360,
+  "lng": 174.82280,
+  "services": [
+    "takeaway"
+  ],
+  "phone": "+64 4 478 6007",
+  "website": "https://hellpizza.com",
+  "ordering": [],
+  "hours": {
+    "mon": [["16:30", "21:00"]],
+    "tue": [["16:30", "22:00"]],
+    "wed": [["16:30", "22:00"]],
+    "thu": [["11:30", "22:00"]],
+    "fri": [["11:30", "23:00"]],
+    "sat": [["11:30", "21:30"]],
+    "sun": [["11:30", "22:00"]]
+  },
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}
