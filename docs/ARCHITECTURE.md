@@ -13,9 +13,9 @@ site/
   css/app.css           design tokens + components (single file)
   js/                   ES modules (data.js, filters.js, ranking.js,
                         distance.js, hours.js, picker.js, menu.js, search.js,
-                        slug.js, store.js, cart.js, cart-ui.js,
-                        favourites.js, favourites-ui.js, results-view.js,
-                        sw-register.js)
+                        slug.js, store.js, settings.js, settings-ui.js,
+                        cart.js, cart-ui.js, favourites.js, favourites-ui.js,
+                        results-view.js, sw-register.js)
   data/index.json       ordered list of restaurant ids
   data/restaurants/     <id>.json — one file per restaurant, menu included
   img/                  icons, photos (lazy-loaded)
@@ -187,10 +187,13 @@ UI must never present absence of an allergen tag as "allergen-free".
   grouped weekly display; see ADR 0006. That status also drives the home
   list's **default order** (`site/js/ranking.js`): open/opening-soon
   venues float up, closed ones sink, favourites (a hearted venue or one
-  holding a hearted dish) lift within a tier, and — when a location is
-  known — anything past a reachable radius (`FAR_KM`) sinks too. Sort key:
-  reachable → availability → favourite → nearest → curated. "Pick for us"
-  shuffles only the available set.
+  holding a hearted dish) lift within a tier via a *weighted* metric — a
+  favourite counts as `favBoostKm` nearer, so it doesn't simply always beat
+  distance — and, when a location is known, anything past a reachable
+  radius (`farKm`, gated on actual distance) sinks too. Sort key: reachable
+  → availability → effective (favourite-boosted) distance → favourite
+  tiebreak → curated. Both distances are viewer-tunable (`settings.js`,
+  device-local); "Pick for us" shuffles only the available set.
 - `image` (venue card photo, or a menu item's dish photo) is an optional
   **self-hosted** path — no hotlinking (offline / no-external-request
   rule); store under `site/img/`. Photos are excluded from the transfer
@@ -232,6 +235,10 @@ crashing. Each feature is split model (DOM-free, unit-tested) / UI:
   alone; the deep-link href is derived from the shared `slug`).
   `favourites-ui.js` is the `♥` toggle; the home "Favourites" view reuses
   the search panel's grouped renderer (`results-view.js`).
+- **Settings** (`faves.settings.v1`): `settings.js` — the viewer's two
+  ranking distances (`favBoostKm`, `farKm`), clamped/sanitised on read so a
+  bad value can't break the sort; `settings-ui.js` is the ⚙ dialog. The
+  first preferences surface, and the seam for future per-user options.
 
 A `storage` event keeps other tabs in step. Recipes (Cook at Home) can be
 *favourited* but carry no order stepper — that collection is for cooking,

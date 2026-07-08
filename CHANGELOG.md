@@ -14,13 +14,18 @@ freshness separately from this file.
   actually order from *right now* to the top and sinks the rest — open
   (right up to closing time) and opening-within-the-hour venues lead;
   closed ones drop to the bottom. Your **favourites** lift within that
-  order — a hearted venue, or one holding a dish you've hearted, ranks
-  above equal-availability places (but a *closed* favourite still stays
-  below anywhere open — it lifts, it doesn't override). With "Near me" on,
-  distance refines the rest and a venue too far to reach tonight (a
-  favourite in another town) sinks below everything nearby. "Pick for us"
-  draws from the available set too, so the dice won't land on somewhere
-  closed or unreachable.
+  order — a hearted venue, or one holding a dish you've hearted, is treated
+  as ~10 km nearer rather than always winning, so a favourite 8 km away
+  beats a place 2 km away but a favourite 30 km away doesn't (a *closed*
+  favourite still stays below anywhere open — it lifts, it doesn't
+  override). With "Near me" on, distance refines the rest and a venue too
+  far to reach tonight (a favourite in another town) sinks below everything
+  nearby. "Pick for us" draws from the available set too, so the dice won't
+  land on somewhere closed or unreachable.
+- Distance settings (⚙ on the home screen): tune how much nearer a
+  favourite counts (default 10 km) and how far is "too far to reach
+  tonight" (default 50 km), with live sliders. Saved on the device; they
+  reshape the order the moment you change them.
 - Hearted favourites: tap **♡** on any dish (restaurant menus *and* Cook at
   Home) or on a whole venue to save it. A **Favourites** toggle beside the
   home search opens a view that gathers everything you've saved — Places

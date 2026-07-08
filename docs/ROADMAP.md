@@ -70,17 +70,43 @@ sanity-checks the total — on a phone, offline.
   (`site/js/ranking.js`, pure + unit-tested). Open (right up to closing
   time — you might be 2 minutes away) and opening-within-the-hour venues
   float to the top; unknown-hours sit above definitely-closed; closed sinks
-  to the bottom. **Favourites** lift within a tier — a hearted venue, or one
-  holding a hearted dish (dish favourites flatten to their venue id), ranks
-  above equal-availability places without overriding availability (a closed
-  favourite still sits below anywhere open). When "Near me" is on, distance
-  refines the rest *and* a venue past a "reachable tonight" radius (`FAR_KM`,
-  50 km straight-line — the Queenstown-favourite case) sinks below
-  everything nearby. Full sort key: reachable → availability → favourite →
-  nearest → curated. "Pick for us" shuffles only the available set (falling
-  back to all if none), so the dice won't land somewhere closed or
-  unreachable. Superseded the plain distance sort (`sortByDistance`
-  removed). Cook at Home ranks as always-available.
+  to the bottom. **Favourites** lift within a tier via a *weighted* metric,
+  not a hard win: a favourite (a hearted venue, or one holding a hearted
+  dish — dish favourites flatten to their venue id) is treated as
+  `favBoostKm` (default 10 km) nearer, so a favourite 8 km away beats a
+  plain place 2 km away, but a favourite 30 km away (→ 20) sits below it.
+  Never overrides availability (a closed favourite stays below anywhere
+  open). When "Near me" is on, a venue past a "reachable tonight" radius
+  (`farKm`, default 50 km straight-line — the Queenstown case, gated on
+  *actual* distance) sinks below everything nearby. Full sort key: reachable
+  → availability → effective (boosted) distance → favourite-tiebreak →
+  curated. "Pick for us" shuffles only the available set (falling back to
+  all if none). Both distances are **user-tunable** (see below). Superseded
+  the plain distance sort (`sortByDistance` removed). Cook at Home ranks as
+  always-available.
+- **User settings for the distance dials** `[S]` ✅ **done 2026-07-08** —
+  owner ask. A ⚙ on the home header opens a settings dialog with two live
+  sliders: how much nearer a favourite counts (`favBoostKm`, 0–30) and the
+  reachable radius (`farKm`, 5–100). Device-local (`site/js/settings.js`,
+  `faves.settings.v1`, clamped/sanitised on read, unit-tested); the list
+  re-ranks the instant you drag. First real **preferences** surface — the
+  seam for future per-user options (te reo toggle, default filters).
+- **Pick along a route** `[L][constraint]` — owner idea (2026-07-08): pick a
+  place *between where I am and a destination I name* (e.g. grab dinner on
+  the drive home). The honest constraint read: a true "near the route"
+  needs a **routing/directions API** (Google/Mapbox) to get the polyline —
+  external, keyed, usually paid → breaks offline / no-dependency, same wall
+  as live drive-time (Theme 5). Zero-dep approximations we *can* do with the
+  coords we already hold: (a) rank venues by how little they **detour** the
+  straight line origal→destination (perpendicular distance to the segment,
+  or `dist(origin,v)+dist(v,dest) − dist(origin,dest)` as an added-distance
+  cost) — pure haversine maths, offline, no API; crude vs real roads but
+  useful; (b) hand the two endpoints to the **maps app** for a real routed
+  search (the geo.js handoff pattern). The destination input could reuse the
+  geocoder (dev-time) or accept a picked venue. Recommend (a) as an offline
+  "least-detour" sort mode + (b) for accuracy — a live routed corridor is
+  **✗** on constraints. Pairs with the availability ranking (only rank
+  open/reachable candidates along the way).
 
 
 - **Coordinates in the schema** `[S][schema]` ✅ **done 2026-07-08** —

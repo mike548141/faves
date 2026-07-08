@@ -95,7 +95,65 @@ test("rankVenues (origin): a favourite outranks a nearer non-favourite when both
     origin: CBD,
     favouriteIds: new Set(["fav-far"]),
   }).map((r) => r.id);
-  assert.deepEqual(order, ["fav-far", "near"]); // favourite beats distance within the tier
+  // fav-far ≈ 4 km; boosted by the default 10 km → −6, beats near at ~0 km.
+  assert.deepEqual(order, ["fav-far", "near"]);
+});
+
+// A venue at ~`km` straight-line north of CBD (1° lat ≈ 111.19 km).
+const at = (km) => ({ lat: CBD.lat + km / 111.19, lng: CBD.lng, hours: week("09:00", "22:00") });
+
+test("weighted: a favourite 30 km away sits BELOW a non-favourite 2 km away", () => {
+  const favFar = { id: "fav-30", ...at(30) };
+  const near = { id: "plain-2", ...at(2) };
+  const order = rankVenues([favFar, near], {
+    now: MON_NOON,
+    origin: CBD,
+    favouriteIds: new Set(["fav-30"]),
+  }).map((r) => r.id);
+  // 30 − 10 boost = 20 effective, still worse than 2 → the near plain one wins.
+  assert.deepEqual(order, ["plain-2", "fav-30"]);
+});
+
+test("weighted: between two favourites, the nearer one ranks higher", () => {
+  const favNear = { id: "fav-2", ...at(2) };
+  const favFar = { id: "fav-30", ...at(30) };
+  const order = rankVenues([favFar, favNear], {
+    now: MON_NOON,
+    origin: CBD,
+    favouriteIds: new Set(["fav-2", "fav-30"]),
+  }).map((r) => r.id);
+  assert.deepEqual(order, ["fav-2", "fav-30"]);
+});
+
+test("weighted: a bigger favBoostKm can push a favourite above a nearer plain venue", () => {
+  const fav8 = { id: "fav-8", ...at(8) };
+  const plain2 = { id: "plain-2", ...at(2) };
+  const opts = { now: MON_NOON, origin: CBD, favouriteIds: new Set(["fav-8"]) };
+  // boost 0 → distance rules → plain-2 first
+  assert.deepEqual(
+    rankVenues([fav8, plain2], { ...opts, favBoostKm: 0 }).map((r) => r.id),
+    ["plain-2", "fav-8"]
+  );
+  // boost 10 → fav-8 counts as −2 → it leads
+  assert.deepEqual(
+    rankVenues([fav8, plain2], { ...opts, favBoostKm: 10 }).map((r) => r.id),
+    ["fav-8", "plain-2"]
+  );
+});
+
+test("farKm param overrides the default reachability gate", () => {
+  const near = { id: "near", ...at(2) };
+  const mid = { id: "mid", ...at(40) };
+  // Default 50 km: 40 km is reachable, so distance orders them (near first).
+  assert.deepEqual(
+    rankVenues([mid, near], { now: MON_NOON, origin: CBD }).map((r) => r.id),
+    ["near", "mid"]
+  );
+  // farKm 20: 40 km is now "too far" → sinks below the reachable near one.
+  const tight = rankVenues([mid, near], { now: MON_NOON, origin: CBD, farKm: 20 });
+  assert.deepEqual(tight.map((r) => r.id), ["near", "mid"]);
+  assert.equal(isAvailableNow(mid, { now: MON_NOON, origin: CBD, farKm: 20 }), false);
+  assert.equal(isAvailableNow(mid, { now: MON_NOON, origin: CBD }), true);
 });
 
 test("rankVenues: no favouriteIds → favourites are simply ignored", () => {

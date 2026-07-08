@@ -7,26 +7,37 @@
 //     or opening within the hour beats one that's shut for the night.
 //  2. Favourites (from the device-local heart store). A place you've
 //     hearted — or one holding a dish you've hearted — is one you actually
-//     want, so among places of equal availability it lifts above the rest.
-//     It does NOT override availability: a closed favourite you can't order
-//     from still sits below anywhere that's open.
+//     want. Rather than always beating distance, a favourite is treated as
+//     `favBoostKm` nearer than it is: a favourite 8 km away (→ −2) outranks
+//     a non-favourite 2 km away, but a favourite 30 km away (→ 20) sits
+//     below one 2 km away. It never overrides availability: a closed
+//     favourite you can't order from still sits below anywhere open.
 //  3. Distance (only when we know where you are, i.e. "Near me"). A
 //     favourite in another town is great when you're there and useless the
-//     rest of the time, so beyond a "reachable tonight" radius it sinks
-//     below everything nearby.
+//     rest of the time, so beyond a "reachable tonight" radius (`farKm`,
+//     measured on ACTUAL distance — the boost is preference, not reach) it
+//     sinks below everything nearby.
 //
-// Sort order is lexicographic: reachable → availability → favourite →
-// nearest → curated. Pure (no DOM/network) so it's unit-tested; favourites
-// arrive as a plain Set of venue ids so this stays store-agnostic.
+// Sort order is lexicographic: reachable → availability → effective
+// distance (favourite-boosted) → favourite-tiebreak → curated. Pure (no
+// DOM/network) so it's unit-tested; favourites arrive as a plain Set of
+// venue ids and the two distances as params, so this stays store-agnostic.
+// The viewer can tune both distances (settings.js).
 
 import { openStatus } from "./hours.js";
 import { haversineKm } from "./distance.js";
 
-// Straight-line km beyond which a venue is "another town" — not somewhere
-// you'd go for tonight's dinner. Tunable; 50 km comfortably keeps the whole
-// Wellington region reachable while catching a Queenstown/Auckland
-// favourite. Only applied when we actually know the viewer's location.
+// Product defaults, also the source of truth for settings.js DEFAULTS.
+// FAR_KM: straight-line km beyond which a venue is "another town" — 50 km
+// keeps the whole Wellington region reachable while catching a Queenstown/
+// Auckland favourite. FAV_BOOST_KM: how much nearer a favourite is treated
+// as being. Both only apply when we know the viewer's location.
 export const FAR_KM = 50;
+export const FAV_BOOST_KM = 10;
+
+// Safe numeric compare (Infinity − Infinity is NaN, which would corrupt a
+// subtraction-based comparator; coordless venues carry Infinity distance).
+const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
 /**
  * Availability tier — lower is more useful right now:
@@ -53,10 +64,10 @@ const coordsOf = (r) =>
  * the night, and (if we know where you are) within reach. Used by the "Pick
  * for us" shuffle so the dice doesn't land on a closed or faraway place.
  */
-export function isAvailableNow(r, { now, origin = null } = {}) {
+export function isAvailableNow(r, { now, origin = null, farKm = FAR_KM } = {}) {
   if (availabilityTier(r, now) === 3) return false;
   const c = origin && coordsOf(r);
-  if (c && haversineKm(origin, c) > FAR_KM) return false;
+  if (c && haversineKm(origin, c) > farKm) return false;
   return true;
 }
 
@@ -70,17 +81,30 @@ export function isAvailableNow(r, { now, origin = null } = {}) {
  * ignore favourites. Venues with coordinates gain a `distanceKm` field when
  * origin is known, for the card to display. The input array is not mutated.
  */
-export function rankVenues(restaurants, { now, origin = null, favouriteIds = null } = {}) {
+export function rankVenues(
+  restaurants,
+  { now, origin = null, favouriteIds = null, favBoostKm = FAV_BOOST_KM, farKm = FAR_KM } = {}
+) {
   const keyed = restaurants.map((r, i) => {
     const c = origin && coordsOf(r);
     const dist = c ? haversineKm(origin, c) : Infinity;
-    const far = origin && dist !== Infinity && dist > FAR_KM ? 1 : 0;
-    const fav = favouriteIds && favouriteIds.has(r.id) ? 0 : 1;
-    return { r, i, tier: availabilityTier(r, now), fav, dist, far };
+    const isFav = !!(favouriteIds && favouriteIds.has(r.id));
+    // "Too far" gates on actual distance — a favourite in another town is
+    // still unreachable; the boost only reorders, it doesn't extend reach.
+    const far = origin && dist !== Infinity && dist > farKm ? 1 : 0;
+    // Effective distance: a favourite counts as favBoostKm nearer. Coordless
+    // venues stay at Infinity (no coords to boost). favTie separates
+    // favourites when there's no location (all Infinity) or an exact tie.
+    const effective = dist === Infinity ? Infinity : dist - (isFav ? favBoostKm : 0);
+    return { r, i, tier: availabilityTier(r, now), effective, favTie: isFav ? 0 : 1, dist, far };
   });
   keyed.sort(
     (a, b) =>
-      a.far - b.far || a.tier - b.tier || a.fav - b.fav || a.dist - b.dist || a.i - b.i
+      a.far - b.far ||
+      a.tier - b.tier ||
+      cmp(a.effective, b.effective) ||
+      a.favTie - b.favTie ||
+      a.i - b.i
   );
   return keyed.map(({ r, dist }) =>
     origin && dist !== Infinity ? { ...r, distanceKm: dist } : r

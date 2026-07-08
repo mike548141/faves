@@ -26,9 +26,16 @@
   </head>
   <body>
     <header class="app-header">
-      <div class="wrap">
-        <h1 class="app-title">Faves</h1>
-        <p class="app-sub">Our favourite Wellington kai — menus, in one place.</p>
+      <div class="wrap app-header-inner">
+        <div>
+          <h1 class="app-title">Faves</h1>
+          <p class="app-sub">Our favourite Wellington kai — menus, in one place.</p>
+        </div>
+        <!-- JS-only; settings-ui.js unhides + wires it (it only affects the
+             client-side ranking, which needs JS anyway). -->
+        <button type="button" id="settings-btn" class="settings-btn" hidden aria-label="Distance settings">
+          <span aria-hidden="true">⚙</span>
+        </button>
       </div>
     </header>
 

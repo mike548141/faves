@@ -1,0 +1,68 @@
+// Unit tests for the user settings model (site/js/settings.js) — the two
+// distance dials behind the home ranking. Storage is faked; pure otherwise.
+// Run: `node --test`.
+
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { createSettings, DEFAULTS, BOUNDS } from "../site/js/settings.js";
+
+function fakeStorage(initial = null) {
+  const m = new Map();
+  if (initial != null) m.set("faves.settings.v1", initial);
+  return {
+    getItem: (k) => (m.has(k) ? m.get(k) : null),
+    setItem: (k, v) => m.set(k, v),
+    removeItem: (k) => m.delete(k),
+  };
+}
+
+test("defaults when storage is empty", () => {
+  const s = createSettings(fakeStorage());
+  assert.deepEqual(s.get(), DEFAULTS);
+});
+
+test("set merges a partial patch and persists", () => {
+  const storage = fakeStorage();
+  const s = createSettings(storage);
+  s.set({ favBoostKm: 15 });
+  assert.equal(s.get().favBoostKm, 15);
+  assert.equal(s.get().farKm, DEFAULTS.farKm); // untouched
+  // A fresh store over the same storage re-hydrates the change.
+  assert.equal(createSettings(storage).get().favBoostKm, 15);
+});
+
+test("values are clamped into bounds", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ favBoostKm: 999, farKm: -4 });
+  assert.equal(s.get().favBoostKm, BOUNDS.favBoostKm[1]);
+  assert.equal(s.get().farKm, BOUNDS.farKm[0]);
+});
+
+test("non-numeric values fall back to the default", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ favBoostKm: "lots", farKm: NaN });
+  assert.deepEqual(s.get(), DEFAULTS);
+});
+
+test("reset restores defaults", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ favBoostKm: 0, farKm: 200 });
+  s.reset();
+  assert.deepEqual(s.get(), DEFAULTS);
+});
+
+test("corrupt stored payload → defaults", () => {
+  const s = createSettings(fakeStorage("{ broken"));
+  assert.deepEqual(s.get(), DEFAULTS);
+});
+
+test("subscribe fires on change; unsubscribe stops it", () => {
+  const s = createSettings(fakeStorage());
+  let calls = 0;
+  const off = s.subscribe(() => calls++);
+  s.set({ farKm: 25 });
+  assert.equal(calls, 1);
+  off();
+  s.set({ farKm: 30 });
+  assert.equal(calls, 1);
+});

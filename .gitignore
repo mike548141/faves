@@ -22,3 +22,6 @@ intake/**
 !intake/menus/.gitkeep
 !intake/recipes/
 !intake/recipes/.gitkeep
+
+# Claude Code personal settings (shared allowlist IS committed)
+.claude/settings.local.json

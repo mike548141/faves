@@ -13,6 +13,8 @@ import { initOrderUI } from "./cart-ui.js";
 import { favourites, favHref } from "./favourites.js";
 import { heartButton } from "./favourites-ui.js";
 import { groupSection } from "./results-view.js";
+import { settings } from "./settings.js";
+import { initSettingsUI } from "./settings-ui.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -139,7 +141,15 @@ function init(restaurants) {
     let shown = applyFilters(restaurants, state, now);
     // Default order floats open/favourite/nearby venues up, sinks
     // closed/faraway ones; distance refines it once "Near me" gives an origin.
-    shown = rankVenues(shown, { now, origin: state.origin, favouriteIds: favouriteVenueIds() });
+    // The favourite pull + reachable radius are the viewer's own dials.
+    const { favBoostKm, farKm } = settings.get();
+    shown = rankVenues(shown, {
+      now,
+      origin: state.origin,
+      favouriteIds: favouriteVenueIds(),
+      favBoostKm,
+      farKm,
+    });
     listEl.replaceChildren(...shown.map((r) => card(r, now)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
@@ -180,18 +190,21 @@ function init(restaurants) {
   wireOpenNow(state, render);
   wireSearch(restaurants);
   wireFavourites();
-  // Hearting something re-ranks the list (e.g. after un-favouriting in the
-  // view, or a change synced from another tab).
+  initSettingsUI();
+  // Hearting something, or changing a distance dial, re-ranks the list (also
+  // covers un-favouriting in the view, or a change synced from another tab).
   favourites.subscribe(render);
+  settings.subscribe(render);
 
   render();
   // The shuffle prefers places you can actually order from now (open or
-  // opening soon, and within reach if we know where you are); it falls back
-  // to the whole filtered set only if none are available, so it never dead-ends.
+  // opening soon, and within your reach radius if we know where you are); it
+  // falls back to the whole filtered set if none are available, never dead-ends.
   initPicker(() => {
     const now = nzNow();
     const filtered = applyFilters(restaurants, state, now);
-    const available = filtered.filter((r) => isAvailableNow(r, { now, origin: state.origin }));
+    const { farKm } = settings.get();
+    const available = filtered.filter((r) => isAvailableNow(r, { now, origin: state.origin, farKm }));
     return available.length ? available : filtered;
   });
   initOrderUI();
