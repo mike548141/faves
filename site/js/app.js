@@ -4,7 +4,8 @@
 
 import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
-import { sortByDistance, formatDistance } from "./distance.js";
+import { formatDistance } from "./distance.js";
+import { rankVenues, isAvailableNow } from "./ranking.js";
 import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
@@ -130,9 +131,11 @@ function init(restaurants) {
   const state = { ...DEFAULT_FILTERS, origin: null };
 
   function render() {
-    const now = nzNow(); // one clock read per render: filter, sort and cards
+    const now = nzNow(); // one clock read per render: filter, rank and cards
     let shown = applyFilters(restaurants, state, now);
-    if (state.origin) shown = sortByDistance(shown, state.origin);
+    // Default order floats open/nearby venues up, sinks closed/faraway ones;
+    // distance refines it only once "Near me" has given us an origin.
+    shown = rankVenues(shown, { now, origin: state.origin });
     listEl.replaceChildren(...shown.map((r) => card(r, now)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
@@ -175,7 +178,15 @@ function init(restaurants) {
   wireFavourites();
 
   render();
-  initPicker(() => applyFilters(restaurants, state, nzNow()));
+  // The shuffle prefers places you can actually order from now (open or
+  // opening soon, and within reach if we know where you are); it falls back
+  // to the whole filtered set only if none are available, so it never dead-ends.
+  initPicker(() => {
+    const now = nzNow();
+    const filtered = applyFilters(restaurants, state, now);
+    const available = filtered.filter((r) => isAvailableNow(r, { now, origin: state.origin }));
+    return available.length ? available : filtered;
+  });
   initOrderUI();
   document.body.classList.add("app-ready");
 }

@@ -11,8 +11,9 @@ site/
   index.html            app shell (list, filters, global search, picker)
   restaurant.html       menu view (?id=<restaurant-id>)
   css/app.css           design tokens + components (single file)
-  js/                   ES modules (data.js, filters.js, picker.js, menu.js,
-                        search.js, slug.js, store.js, cart.js, cart-ui.js,
+  js/                   ES modules (data.js, filters.js, ranking.js,
+                        distance.js, hours.js, picker.js, menu.js, search.js,
+                        slug.js, store.js, cart.js, cart-ui.js,
                         favourites.js, favourites-ui.js, results-view.js,
                         sw-register.js)
   data/index.json       ordered list of restaurant ids
@@ -183,7 +184,11 @@ UI must never present absence of an allergen tag as "allergen-free".
   — past-midnight is expressed with a `null` close, never a wrap. The
   hours engine (`site/js/hours.js`) computes a live open/closed status
   from this in **Pacific/Auckland** time (not the viewer's clock), and a
-  grouped weekly display; see ADR 0006.
+  grouped weekly display; see ADR 0006. That status also drives the home
+  list's **default order** (`site/js/ranking.js`): open/opening-soon
+  venues float up, closed ones sink, and — when a location is known —
+  anything past a reachable radius (`FAR_KM`) sinks too; distance is the
+  within-tier tie-break. "Pick for us" shuffles only the available set.
 - `image` (venue card photo, or a menu item's dish photo) is an optional
   **self-hosted** path — no hotlinking (offline / no-external-request
   rule); store under `site/img/`. Photos are excluded from the transfer

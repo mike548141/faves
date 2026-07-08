@@ -10,6 +10,13 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- Smarter default order: the home list now floats the places you can
+  actually order from *right now* to the top and sinks the rest — open
+  (right up to closing time) and opening-within-the-hour venues lead;
+  closed ones drop to the bottom. With "Near me" on, distance refines it
+  and a venue too far to reach tonight (a favourite in another town) sinks
+  below everything nearby. "Pick for us" draws from the available set too,
+  so the dice won't land on somewhere closed or unreachable.
 - Hearted favourites: tap **♡** on any dish (restaurant menus *and* Cook at
   Home) or on a whole venue to save it. A **Favourites** toggle beside the
   home search opens a view that gathers everything you've saved — Places
@@ -96,6 +103,10 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- Favourite hearts are larger and higher-contrast — a clear outline heart
+  when unsaved, a filled accent heart when saved — with a springy pop when
+  you save and a hover scale on pointer devices (motion-free under
+  prefers-reduced-motion).
 - Menu section headings now stick under the jump-nav while you scroll a
   long menu, so which section you're in ("Pub Snacks", "Pub Mains") stays
   visible instead of scrolling away; the next heading pushes it up. Dish

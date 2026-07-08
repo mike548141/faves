@@ -285,26 +285,58 @@ body.faves-view .pick-fab {
   color: var(--accent);
 }
 
-/* Heart toggle (dish rows, venue/recipe header, favourites view). */
+/* Heart toggle (dish rows, venue/recipe header, favourites view). Larger
+   and higher-contrast than a bare glyph so it reads as a real control; the
+   unsaved state is a clear outline heart, the saved state a filled accent
+   heart. A springy pop on hover/press makes the toggle feel tactile. */
 .heart {
   flex: none;
-  width: 44px;
-  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  min-height: 48px;
   border: 0;
+  border-radius: var(--radius-chip);
   background: transparent;
-  color: var(--accent);
-  font-size: 1.25rem;
+  color: var(--ink-soft);
+  font-size: 1.7rem;
   line-height: 1;
   cursor: pointer;
+  transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.16s ease, background 0.16s ease;
 }
-.heart[aria-pressed="false"] {
-  color: var(--ink-soft);
+.heart[aria-pressed="true"] {
+  color: var(--accent);
+}
+@media (hover: hover) {
+  .heart:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    transform: scale(1.18);
+  }
 }
 .heart:active {
-  transform: scale(0.9);
+  transform: scale(0.86);
+}
+.heart:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+/* A gentle pop when a heart becomes filled (respects reduced-motion via the
+   global rule that flattens animation durations). */
+.heart[aria-pressed="true"] {
+  animation: heart-pop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes heart-pop {
+  0% { transform: scale(0.7); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
 }
 .heart-lg {
-  font-size: 1.6rem;
+  width: 52px;
+  height: 52px;
+  font-size: 2.1rem;
 }
 /* In a result row the heart is a full-height tap target on the right. */
 .search-row .heart {
