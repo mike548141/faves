@@ -125,6 +125,11 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- The **Favourites view now nests dishes under their place** instead of
+  separate "Places" and "Dishes" lists — each spot is a heading with the
+  dishes you've hearted there beneath it (the place shows even if you've
+  only hearted a dish of it, with a heart to also save the whole place).
+  Reads like "my usual at each spot".
 - The **← All restaurants** back link on a menu or recipe page is now a
   clear bordered button instead of a faint text link — it was easy to miss,
   especially on desktop.

@@ -464,6 +464,25 @@ body.faves-view .pick-fab {
   border-color: var(--accent);
 }
 
+/* Favourites view: hearted dishes nested under their place. The venue is
+   the parent (shown even if only a dish of it is hearted); its dishes sit
+   on an indented rail beneath, reading like "my usual at each spot". */
+.fav-venue-group {
+  margin-bottom: var(--space-4);
+}
+.fav-venue-head .fav-venue-link {
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+.fav-venue-head .search-row-name {
+  font-weight: 700;
+}
+.fav-venue-group .search-row:not(.fav-venue-head) {
+  margin-left: var(--space-3);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--line);
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: 1fr;

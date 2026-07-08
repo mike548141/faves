@@ -12,7 +12,7 @@ import { buildIndex, search } from "./search.js";
 import { initOrderUI } from "./cart-ui.js";
 import { favourites, favHref } from "./favourites.js";
 import { heartButton } from "./favourites-ui.js";
-import { groupSection } from "./results-view.js";
+import { groupSection, resultRow } from "./results-view.js";
 import { settings } from "./settings.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { priceBand } from "./price.js";
@@ -361,26 +361,76 @@ function wireFavourites() {
   if (!btn || !panel) return;
   btn.hidden = false;
 
-  const favRow = (e) => ({
-    name: e.type === "venue" ? `${e.isRecipe ? "🏠" : "🍽️"} ${e.venueName}` : e.name,
-    sub: e.sub || (e.type === "dish" ? e.venueName : ""),
-    href: favHref(e),
-    trailing: heartButton(e, e.name || e.venueName),
-  });
+  // One venue group: the place as a parent (shown even when only a dish of
+  // it is hearted — a hearted dish implies its place), with its hearted
+  // dishes nested beneath. The parent's heart reflects the *venue's* own
+  // favourite state (filled = saved, empty = tap to also save the place);
+  // each dish keeps its own un-heart. Reads like "my usual at each spot".
+  function favVenueGroup(venueId, g) {
+    const venueName = g.venueName || "This place";
+    const venueEntry =
+      g.venue || { type: "venue", venueId, venueName, isRecipe: g.isRecipe, sub: g.sub };
+    const head = el("li", { className: "search-row fav-venue-head" }, [
+      el("a", { className: "search-link fav-venue-link", href: `restaurant.html?id=${venueId}` }, [
+        el("span", {
+          className: "search-row-name",
+          textContent: `${g.isRecipe ? "🏠" : "🍽️"} ${venueName}`,
+        }),
+        g.sub ? el("span", { className: "search-row-sub", textContent: g.sub }) : null,
+      ]),
+      heartButton(venueEntry, venueName),
+    ]);
+    const dishRows = g.dishes.map((e) =>
+      resultRow({
+        name: e.name,
+        // The venue is the parent now, so don't repeat its name as the sub.
+        sub: e.sub && e.sub !== venueName ? e.sub : "",
+        href: favHref(e),
+        trailing: heartButton(e, e.name),
+      })
+    );
+    return el("section", { className: "search-group fav-venue-group" }, [
+      el("ul", { className: "search-list" }, [head, ...dishRows]),
+    ]);
+  }
 
   function render() {
-    const venues = favourites.venues();
-    const dishes = favourites.dishes();
+    const items = favourites.items();
     groups.replaceChildren();
-    if (venues.length === 0 && dishes.length === 0) {
+    if (items.length === 0) {
       summary.textContent = "No favourites yet. Tap ♡ on a place or a dish to save it here.";
       return;
     }
+    // Group by venue, preserving first-seen order. Facts (name, recipe flag,
+    // area/cuisine sub) come from whichever entry carries them — the venue if
+    // hearted, otherwise a dish of it.
+    const order = [];
+    const byVenue = new Map();
+    for (const e of items) {
+      let g = byVenue.get(e.venueId);
+      if (!g) {
+        g = { venue: null, dishes: [], venueName: "", isRecipe: false, sub: "" };
+        byVenue.set(e.venueId, g);
+        order.push(e.venueId);
+      }
+      if (e.type === "venue") {
+        g.venue = e;
+        g.sub = e.sub || g.sub;
+      } else {
+        g.dishes.push(e);
+      }
+      g.venueName = g.venueName || e.venueName;
+      g.isRecipe = g.isRecipe || !!e.isRecipe;
+    }
+    let dishTotal = 0;
+    for (const id of order) {
+      const g = byVenue.get(id);
+      dishTotal += g.dishes.length;
+      groups.append(favVenueGroup(id, g));
+    }
     summary.textContent =
-      `${venues.length} place${venues.length === 1 ? "" : "s"}, ` +
-      `${dishes.length} dish${dishes.length === 1 ? "" : "es"} saved.`;
-    if (venues.length) groups.append(groupSection({ title: "Places", rows: venues.map(favRow) }));
-    if (dishes.length) groups.append(groupSection({ title: "Dishes", rows: dishes.map(favRow) }));
+      `${order.length} place${order.length === 1 ? "" : "s"}, ` +
+      `${dishTotal} dish${dishTotal === 1 ? "" : "es"} saved.`;
   }
 
   function open(on) {

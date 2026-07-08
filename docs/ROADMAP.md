@@ -178,14 +178,16 @@ The umbrella "better UX and design", with your concrete asks:
   dish filters** where they are. So: a small overflow menu for
   account-less "app chrome" (favourites view, settings, later: te reo
   toggle, about), not for list filters.
-- **Nest dishes under their place in Favourites** `[M]` — owner idea
-  (2026-07-08): drop the separate "Places" vs "Dishes" lists; show each
-  favourited **dish as a child under its venue**, and show the venue as the
-  parent **even when the venue itself isn't favourited** (a hearted dish
-  implies its place). Reads more like "my usual at each spot". Touches the
-  favourites view renderer (`app.js` + `results-view.js`); group dish
-  favourites by `venueId`, synthesise a parent header per venue (favourited
-  or not), and keep the inline un-heart per row.
+- **Nest dishes under their place in Favourites** `[M]` ✅ **done
+  2026-07-08** — the favourites view groups by `venueId` (first-seen order):
+  each place is a parent header (accent-soft, its own venue heart) with the
+  hearted dishes nested on an indented rail beneath. The venue shows **even
+  when only a dish of it is hearted** — its heart is then empty (tap to also
+  save the place); a favourited venue shows it filled. Each dish keeps its
+  inline un-heart, and the dish sub no longer repeats the venue name.
+  Bespoke renderer in `app.js` reusing `resultRow` from `results-view.js`;
+  summary now "N places, M dishes saved". Browser-verified at 390px with a
+  seeded mix (favourited venue + dishes, a dish-only venue, a recipe).
 - **Collapse the "needs a refresh" caveat into an info icon** `[S][design]`
   ✅ **done 2026-07-08** — the menu screen's always-on "Menu items and
   prices need a refresh…" banner is now a small **ⓘ beside the venue name**
