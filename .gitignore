@@ -23,5 +23,6 @@ intake/**
 !intake/recipes/
 !intake/recipes/.gitkeep
 
-# Claude Code personal settings (shared allowlist IS committed)
-.claude/settings.local.json
+# Claude Code config is local tooling, not part of the shipped product —
+# each machine/user manages its own; keep it out of this public repo.
+.claude/
