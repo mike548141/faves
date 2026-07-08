@@ -455,10 +455,13 @@ types it. (Their email address comes with the message anyway.)
   account, no backend, stays on the device — the same personal-layer store
   as the order tally (Theme 1) and local ratings above; nothing personal
   enters the repo. It built the `localStorage` plumbing (`store.js`) that
-  local ratings and profiles will reuse. **Still open:** surface hearts in
-  "Pick for us" (favour the usual), heart-from-the-home-card (needs the
-  card restructure — a button can't nest in the card's `<a>`), and feed the
-  health app's
+  local ratings and profiles will reuse. **Surface hearts in "Pick for us"
+  (favour the usual)** ✅ **done 2026-07-09** — the shuffle draws with a small
+  weight (`FAV_WEIGHT`) on favourited venues (`weightedPick`, pure +
+  unit-tested), leaning toward the usual without excluding the rest.
+  **Heart-from-the-home-card** ✅ **done 2026-07-09** — the ♥ toggle sits on
+  each browse card as a sibling of the link (not nested in the `<a>`),
+  absolutely positioned top-right. **Still open:** feed the health app's
   eating diary (Theme 6). Pairs neatly with `goesWith` (Theme 4b) — a
   favourite dish can suggest its usual companions.
   - **Multiple people's favourites** `[M]` **⚑ (account tension)** — owner

@@ -10,6 +10,12 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Heart a place from the home screen**: the ♥ favourite toggle now sits on
+  every browse card, so you can save the usual without opening its menu. It
+  stays in sync with the heart on the menu screen and in your Favourites view.
+- **"Pick for us" favours the usual**: the shuffle now leans toward the places
+  you've hearted (a favourite counts a little more in the draw) — without ever
+  excluding the rest, so the roll is still a surprise.
 - **Personal food preferences**: set your **dietary needs** (vegetarian,
   vegan, gluten-free, dairy-free) and the **allergens to flag** once in
   Settings, and every menu applies them — your dietary chips come
