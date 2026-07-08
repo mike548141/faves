@@ -932,6 +932,12 @@ body:not(.menu-page) {
   font-size: var(--step-sub);
   margin-top: var(--space-1);
 }
+.picker-fave-note {
+  margin-top: var(--space-1);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  color: var(--accent);
+}
 .picker-chips {
   justify-content: center;
 }

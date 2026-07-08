@@ -96,10 +96,16 @@ export function initPicker(getCandidates, isFavourite = () => false) {
     dice.textContent = "🎉";
     cycleEl.hidden = true;
     cycleEl.textContent = "";
+    // Name it when the roll lands on a favourite, so the "favour the usual"
+    // weighting is visible rather than a silent thumb on the scale.
+    const fave = isFavourite(pick)
+      ? el("p", { className: "picker-fave-note", textContent: "♥ one of your usuals" })
+      : null;
     resultEl.replaceChildren(
       el("p", { className: "picker-eyebrow", textContent: "Tonight it’s…" }),
       el("h3", { className: "picker-name", textContent: pick.name }),
       el("p", { className: "picker-meta", textContent: metaText(pick) }),
+      fave,
       chips(pick)
     );
     goEl.href = `restaurant.html?id=${pick.id}`;
