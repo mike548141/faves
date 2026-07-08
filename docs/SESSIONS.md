@@ -550,9 +550,10 @@ for loading into context. Convention adopted from `ros`/`tiki`
      steer the Open-now/Cheap-eats/Near-me list toggles and the per-restaurant
      dish filters stayed put. Added to the SW SHELL.
 
-  node --test 119 pass throughout; validate + check_no_deps clean.
-  **Not done — needs the owner:** the Fable review's **P3 nits** weren't
-  carried into this file last session (only P1/P2 were); that detail lived in
-  the prior session's task output and is now gone. Paste the P3 list, or
-  re-run a scoped Fable UX pass, to action them. Everything is committed to
-  `main`, not pushed (no deploy yet — Phase 7).
+  node --test 119 pass throughout; validate + check_no_deps clean. Everything
+  is committed to `main`, not pushed (no deploy yet — Phase 7).
+
+  *(The earlier note above mentions Fable's "P3 nits" as a follow-up — dropped:
+  that list was never recorded and only lived in the prior review's scratch
+  output, now gone. Not worth chasing; a fresh review would reflect today's UI
+  anyway. Do not re-open it as a task.)*
