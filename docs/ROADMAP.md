@@ -165,10 +165,10 @@ The umbrella "better UX and design", with your concrete asks:
   is a home button (exits any open view + scrolls top on the home screen;
   a plain link to `index.html` otherwise), and the favourites view gained
   an explicit "‹ All places" exit (the toggle-again gesture wasn't
-  discoverable). **Still open:** the menu screen's **"← All restaurants"
-  back link is easy to miss on desktop** (owner, 2026-07-08) — make it a
-  more prominent control (a proper button / bigger target), part of the
-  header rework below.
+  discoverable). The menu/recipe **"← All restaurants" back link** ✅ **done
+  2026-07-08** is now a proper bordered pill button (≥44 px, hover tint)
+  instead of a faint text link — it was easy to miss on desktop
+  (`.skip a`).
 - **Overflow "⋯" / menu button** `[M][design]` — owner idea (2026-07-08):
   the home header is getting busy (⚙ settings, ♥ Favourites, search, plus
   the Open-now/Near-me toggles). Consolidate **Favourites + Settings**

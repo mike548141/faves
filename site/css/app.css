@@ -1318,13 +1318,30 @@ html {
 .menu-page {
   padding-bottom: var(--space-5);
 }
+/* Back-to-list control on the menu/recipe pages. A proper bordered pill
+   (not a faint text link) so it reads as a control and is easy to hit —
+   it was easy to miss on desktop. */
 .skip {
-  padding: var(--space-2) var(--space-3) 0;
+  padding: var(--space-3) var(--space-3) 0;
 }
 .skip a {
-  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 44px;
+  padding: 0.4em 1em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
   font-size: var(--step-sub);
-  font-weight: 600;
+  font-weight: 700;
+}
+@media (hover: hover) and (pointer: fine) {
+  .skip a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 }
 .menu-status {
   padding: var(--space-5) var(--space-3);

@@ -125,6 +125,9 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- The **← All restaurants** back link on a menu or recipe page is now a
+  clear bordered button instead of a faint text link — it was easy to miss,
+  especially on desktop.
 - On a long menu, the **search box now stays pinned** at the top alongside
   the section jump-nav, so you can filter the menu without scrolling back
   up. The dietary chips sit just below and scroll with the dishes.

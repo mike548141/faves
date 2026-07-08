@@ -424,3 +424,10 @@ for loading into context. Convention adopted from `ros`/`tiki`
   pins at 107, a dish scrollIntoView lands clear of the toolbar. node --test
   108 pass; check_no_deps clean. VERSION → 2026-07-08.24 (menu.js/css only,
   no new module). CHANGELOG + ROADMAP updated (item done).
+
+- **2026-07-08 (prominent back link, Theme 3)**: Made the menu/recipe
+  "← All restaurants" back link a proper bordered pill button (`.skip a`:
+  inline-flex, ≥44 px, border + surface bg, accent hover on pointer devices)
+  instead of a faint muted text link — the owner flagged it easy to miss on
+  desktop. CSS-only, applies to restaurant.html + recipe.html. Verified at
+  1024 px and 390 px. VERSION → 2026-07-08.25. CHANGELOG + ROADMAP updated.
