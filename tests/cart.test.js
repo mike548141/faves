@@ -9,6 +9,7 @@ import {
   orderCount,
   orderTotal,
   groupByVenue,
+  mergeItems,
 } from "../site/js/cart.js";
 
 // A Map-backed stand-in for localStorage.
@@ -120,6 +121,55 @@ test("tolerates a corrupt storage payload (starts empty)", () => {
   assert.equal(o.count(), 0);
   o.add(kk);
   assert.equal(o.count(), 1);
+});
+
+// --- mergeItems: the receive side of group ordering (Theme 1b) ------------
+
+const line = (over = {}) => ({
+  venueId: "kk", venueName: "KK", phone: "04 555", name: "Mee Goreng",
+  price: 18, qty: 1, collected: false, ...over,
+});
+
+test("mergeItems into an empty order just adds the incoming lines", () => {
+  const out = mergeItems([], [line({ qty: 2 })]);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].qty, 2);
+  assert.equal(out[0].collected, false);
+});
+
+test("mergeItems sums quantities of a matching (venueId, name) line", () => {
+  const base = [line({ qty: 2, collected: true })];
+  const out = mergeItems(base, [line({ qty: 3 })]);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].qty, 5);
+  // an existing collected flag is preserved, not reset by the merge
+  assert.equal(out[0].collected, true);
+});
+
+test("mergeItems appends a same-name dish from a different venue", () => {
+  const out = mergeItems([line()], [line({ venueId: "sf", venueName: "Sprig + Fern" })]);
+  assert.equal(out.length, 2);
+});
+
+test("mergeItems does not mutate its inputs", () => {
+  const base = [line({ qty: 1 })];
+  const incoming = [line({ qty: 4 })];
+  const snapshot = JSON.stringify(base);
+  mergeItems(base, incoming);
+  assert.equal(JSON.stringify(base), snapshot);
+  assert.equal(incoming[0].qty, 4);
+});
+
+test("order.merge folds a decoded share into the store and persists", () => {
+  const o = createOrder(fakeStorage());
+  o.add(kk); // 1× Mee Goreng
+  o.merge([
+    { venueId: "kk", venueName: "KK Malaysian", phone: "04 555", name: "Mee Goreng", price: 18, qty: 2 },
+    { venueId: "sf", venueName: "Sprig + Fern", phone: null, name: "Pilsner", price: 12, qty: 1 },
+  ]);
+  assert.equal(o.qtyOf("kk", "Mee Goreng"), 3);
+  assert.equal(o.qtyOf("sf", "Pilsner"), 1);
+  assert.equal(o.count(), 4);
 });
 
 test("orderCount / orderTotal helpers are pure", () => {

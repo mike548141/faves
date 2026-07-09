@@ -1232,6 +1232,104 @@ body:not(.menu-page) {
   color: var(--warn-ink);
 }
 
+/* ---------- Group ordering: send + receive (Theme 1b) ---------- */
+/* The primary "Send to the orderer" action, and the accent buttons in the
+   send/receive dialogs, share this filled-accent look. */
+.order-send {
+  width: 100%;
+  min-height: 46px;
+  margin-top: var(--space-2);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--step-body);
+  font-weight: 700;
+  cursor: pointer;
+}
+.order-send:hover {
+  filter: brightness(0.96);
+}
+/* The share + receive sheets reuse .order-sheet's frame. */
+.share-sheet,
+.recv-sheet {
+  width: 100%;
+  max-width: 34rem;
+  max-height: 85vh;
+  margin: auto auto 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-lift);
+}
+@media (min-width: 34rem) {
+  .share-sheet,
+  .recv-sheet {
+    margin: auto;
+    border-radius: var(--radius);
+  }
+}
+.share-sheet::backdrop,
+.recv-sheet::backdrop {
+  background: rgba(23, 19, 16, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.share-body {
+  display: grid;
+  gap: var(--space-3);
+}
+.share-name,
+.share-link {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-body);
+}
+.share-link {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--step-sub);
+}
+.share-status {
+  min-height: 1.2em;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+/* When .order-send shares an .order-actions row (send + receive dialogs),
+   it flexes evenly beside its sibling instead of taking the full width. */
+.order-actions .order-send {
+  width: auto;
+  flex: 1;
+  margin-top: 0;
+}
+.recv-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.recv-group {
+  display: grid;
+  gap: 0.15em;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--line);
+}
+.recv-venue {
+  font-weight: 700;
+}
+.recv-lines {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+
 /* ---------- Settings (distance dials) ---------- */
 .app-header-inner {
   display: flex;

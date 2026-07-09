@@ -5,7 +5,8 @@
 // it rides along on the home, menu and recipe screens without duplicating
 // markup. The model lives in cart.js; this is purely presentation + wiring.
 
-import { order } from "./cart.js";
+import { order, groupByVenue } from "./cart.js";
+import { encodeShare, decodeShare, buildShareUrl, readShareToken } from "./share-codec.js";
 
 const el = (tag, props = {}, children = []) => {
   const node = document.createElement(tag);
@@ -101,6 +102,10 @@ export function initOrderUI() {
   ]);
   collectBtn.setAttribute("aria-pressed", "false");
   const clearBtn = el("button", { type: "button", className: "order-clear", textContent: "Clear" });
+  const sendBtn = el("button", { type: "button", className: "order-send" }, [
+    el("span", { "aria-hidden": "true", textContent: "📤 " }),
+    "Send to the orderer",
+  ]);
 
   const dialog = el("dialog", { className: "order-sheet", "aria-labelledby": "order-title" }, [
     el("div", { className: "order-inner" }, [
@@ -123,12 +128,102 @@ export function initOrderUI() {
           className: "order-caption",
           textContent: "Estimated from our menu — confirm at the till.",
         }),
+        sendBtn,
         el("div", { className: "order-actions" }, [collectBtn, clearBtn]),
       ]),
     ]),
   ]);
 
-  document.body.append(fab, dialog);
+  // ----- Send: hand your finished picks to the orderer (Theme 1b, ADR 0009).
+  // The order-sheet chrome stays English for now: the te reo pass is deferred
+  // for the order sheet (its strings need interpolation the engine lacks yet).
+  const nameInput = el("input", {
+    type: "text",
+    className: "share-name",
+    maxLength: 40,
+    placeholder: "Your name (optional)",
+  });
+  nameInput.setAttribute("aria-label", "Your name, so they know whose picks these are");
+  const shareStatus = el("p", { className: "share-status" });
+  shareStatus.setAttribute("role", "status");
+  const linkField = el("input", { type: "text", className: "share-link", readOnly: true, hidden: true });
+  linkField.setAttribute("aria-label", "Shareable link — copy and send it");
+  const shareBtn = el("button", { type: "button", className: "order-send", textContent: "Share…" });
+  const copyBtn = el("button", { type: "button", className: "order-collect-toggle", textContent: "Copy link" });
+  // navigator.share is the AirDrop/Messages path (iOS/most mobile); where it's
+  // absent (many desktops) fall back to Copy link alone.
+  if (!(typeof navigator !== "undefined" && navigator.share)) shareBtn.hidden = true;
+
+  const sendDialog = el("dialog", { className: "share-sheet", "aria-labelledby": "share-title" }, [
+    el("div", { className: "order-inner" }, [
+      el("div", { className: "order-head" }, [
+        el("h2", { id: "share-title", className: "order-title", textContent: "Send your picks" }),
+        (() => {
+          const b = el("button", { type: "button", className: "order-close", textContent: "✕" });
+          b.setAttribute("aria-label", "Close");
+          b.addEventListener("click", () => sendDialog.close());
+          return b;
+        })(),
+      ]),
+      el("div", { className: "order-body share-body" }, [
+        el("p", {
+          className: "order-caption",
+          textContent: "Hand your order to whoever's phoning it in — AirDrop, Messages, or a copied link. Nothing is sent to a server.",
+        }),
+        nameInput,
+        el("div", { className: "order-actions" }, [shareBtn, copyBtn]),
+        linkField,
+        shareStatus,
+      ]),
+    ]),
+  ]);
+
+  function buildOutgoingUrl() {
+    const token = encodeShare({ type: "order", label: nameInput.value, groups: order.groups() });
+    // Land the host on the home screen; the receive handler runs on every page.
+    return buildShareUrl(token, location.origin + "/");
+  }
+
+  sendBtn.addEventListener("click", () => {
+    shareStatus.textContent = "";
+    linkField.hidden = true;
+    sendDialog.showModal();
+  });
+
+  shareBtn.addEventListener("click", async () => {
+    try {
+      await navigator.share({ title: "My Faves order", text: "Here are my picks:", url: buildOutgoingUrl() });
+      shareStatus.textContent = "Sent.";
+    } catch (err) {
+      // AbortError = the user closed the share sheet themselves; stay quiet.
+      if (err && err.name !== "AbortError") shareStatus.textContent = "Couldn't open the share sheet — try Copy link.";
+    }
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    const url = buildOutgoingUrl();
+    try {
+      await navigator.clipboard.writeText(url);
+      shareStatus.textContent = "Link copied — paste it to them.";
+    } catch {
+      // Clipboard blocked (or non-HTTPS origin): reveal the link to copy by hand.
+      linkField.hidden = false;
+      linkField.value = url;
+      linkField.focus();
+      linkField.select();
+      shareStatus.textContent = "Copy this link and send it to them.";
+    }
+  });
+
+  sendDialog.addEventListener("close", () => {
+    shareStatus.textContent = "";
+    linkField.hidden = true;
+  });
+  sendDialog.addEventListener("click", (e) => {
+    if (e.target === sendDialog) sendDialog.close();
+  });
+
+  document.body.append(fab, dialog, sendDialog);
 
   let collectMode = false;
   let confirmingClear = false;
@@ -193,6 +288,7 @@ export function initOrderUI() {
 
   function refresh() {
     renderFab();
+    sendBtn.hidden = order.count() === 0; // nothing to send from an empty order
     if (dialog.open) {
       renderBody();
       renderTotal();
@@ -237,5 +333,90 @@ export function initOrderUI() {
     if (e.key === "faves.order.v1") order.reload();
   });
 
+  // ----- Receive: someone shared their picks with us (Theme 1b) -----------
+  // Confirm before merging (never a silent add), and fail soft on a dud link.
+  function showReceive(decoded) {
+    const recvBody = el("div", { className: "order-body share-body" });
+    const actions = el("div", { className: "order-actions" });
+    const recvDialog = el("dialog", { className: "recv-sheet", "aria-labelledby": "recv-title" }, [
+      el("div", { className: "order-inner" }, [
+        el("div", { className: "order-head" }, [
+          el("h2", { id: "recv-title", className: "order-title" }),
+          (() => {
+            const b = el("button", { type: "button", className: "order-close", textContent: "✕" });
+            b.setAttribute("aria-label", "Close");
+            b.addEventListener("click", () => recvDialog.close());
+            return b;
+          })(),
+        ]),
+        recvBody,
+        el("div", { className: "order-foot" }, [actions]),
+      ]),
+    ]);
+    const title = recvDialog.querySelector("#recv-title");
+
+    if (!decoded) {
+      title.textContent = "That link didn't work";
+      recvBody.append(
+        el("p", {
+          className: "order-caption",
+          textContent: "This shared order didn't come through — ask them to send it again.",
+        })
+      );
+      const ok = el("button", { type: "button", className: "order-send", textContent: "OK" });
+      ok.addEventListener("click", () => recvDialog.close());
+      actions.append(ok);
+    } else {
+      const whose = decoded.label ? `${decoded.label}'s` : "these";
+      const n = decoded.items.reduce((s, i) => s + i.qty, 0);
+      title.textContent = `Add ${whose} ${plural(n, "item")}?`;
+      const list = el("ul", { className: "recv-list" });
+      for (const g of groupByVenue(decoded.items)) {
+        list.append(
+          el("li", { className: "recv-group" }, [
+            el("span", { className: "recv-venue", textContent: g.venueName || "Order" }),
+            el("span", {
+              className: "recv-lines",
+              textContent: g.items.map((i) => `${i.qty}× ${i.name}`).join(", "),
+            }),
+          ])
+        );
+      }
+      recvBody.append(list);
+      const no = el("button", { type: "button", className: "order-clear", textContent: "Not now" });
+      no.addEventListener("click", () => recvDialog.close());
+      const yes = el("button", { type: "button", className: "order-send", textContent: "Add to my order" });
+      yes.addEventListener("click", () => {
+        order.merge(decoded.items);
+        recvDialog.close();
+        // Show the merged result straight away.
+        collectMode = false;
+        collectBtn.setAttribute("aria-pressed", "false");
+        renderBody();
+        renderTotal();
+        dialog.showModal();
+      });
+      actions.append(no, yes);
+    }
+
+    recvDialog.addEventListener("close", () => recvDialog.remove());
+    recvDialog.addEventListener("click", (e) => {
+      if (e.target === recvDialog) recvDialog.close();
+    });
+    document.body.append(recvDialog);
+    recvDialog.showModal();
+  }
+
+  function handleIncomingShare() {
+    const token = readShareToken(location.hash);
+    if (!token) return;
+    // Consume the fragment first, so a refresh or a re-share doesn't re-prompt
+    // and the picks don't linger in the address bar.
+    history.replaceState(null, "", location.pathname + location.search);
+    showReceive(decodeShare(token));
+  }
+
   renderFab();
+  refresh();
+  handleIncomingShare();
 }

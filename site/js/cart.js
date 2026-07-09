@@ -52,6 +52,37 @@ export function groupByVenue(items) {
 }
 
 /**
+ * Merge `incoming` lines into `base`, summing quantities of matching
+ * (venueId, name) lines and appending the rest in first-seen order. Returns a
+ * new array and never mutates its inputs — the receive side of group ordering
+ * (Theme 1b): a decoded shared order folds into whatever the host already has.
+ * `collected` is preserved on existing lines and starts false on new ones.
+ */
+export function mergeItems(base, incoming) {
+  const out = base.map((i) => ({ ...i }));
+  const idxOf = new Map(out.map((i, idx) => [`${i.venueId}\n${i.name}`, idx]));
+  for (const inc of incoming) {
+    const key = `${inc.venueId}\n${inc.name}`;
+    const at = idxOf.get(key);
+    if (at != null) {
+      out[at].qty += inc.qty;
+    } else {
+      out.push({
+        venueId: inc.venueId,
+        venueName: inc.venueName,
+        phone: inc.phone || null,
+        name: inc.name,
+        price: inc.price ?? null,
+        qty: inc.qty,
+        collected: false,
+      });
+      idxOf.set(key, out.length - 1);
+    }
+  }
+  return out;
+}
+
+/**
  * Create an order store over a storage backend (injectable for tests).
  * Subscribers are notified on every mutation and on cross-tab changes.
  */
@@ -127,6 +158,13 @@ export function createOrder(storage) {
         ex.collected = !ex.collected;
         commit();
       }
+    },
+
+    /** Fold a decoded shared order (group ordering, Theme 1b) into this one,
+     *  summing matching lines. `incoming` is share-codec's decoded item list. */
+    merge(incoming) {
+      items = mergeItems(items, incoming);
+      commit();
     },
 
     clear() {
