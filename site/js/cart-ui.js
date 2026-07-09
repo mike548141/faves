@@ -7,6 +7,30 @@
 
 import { order, groupByVenue } from "./cart.js";
 import { encodeShare, decodeShare, buildShareUrl, readShareToken } from "./share-codec.js";
+import { encodeQR } from "./qr.js";
+
+// Paint a QR of `url` onto `canvas`, dark-on-light with a 4-module quiet zone.
+// Colours are hard-coded (not theme tokens): a scanner needs dark modules on a
+// light field regardless of the page's light/dark mode. Throws (via encodeQR)
+// if the URL is too long for the largest supported symbol — caller handles it.
+function drawQR(canvas, url) {
+  const { size, modules } = encodeQR(url);
+  const quiet = 4;
+  const dim = size + quiet * 2;
+  const scale = Math.max(2, Math.floor(300 / dim)); // aim for a ~260–300px symbol
+  const px = dim * scale;
+  canvas.width = px;
+  canvas.height = px;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, px, px);
+  ctx.fillStyle = "#000";
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      if (modules[r][c]) ctx.fillRect((c + quiet) * scale, (r + quiet) * scale, scale, scale);
+    }
+  }
+}
 
 const el = (tag, props = {}, children = []) => {
   const node = document.createElement(tag);
@@ -154,6 +178,18 @@ export function initOrderUI() {
   // absent (many desktops) fall back to Copy link alone.
   if (!(typeof navigator !== "undefined" && navigator.share)) shareBtn.hidden = true;
 
+  // QR is the fallback when the share sheet isn't the right path: two phones,
+  // one not on Apple, no shared network — the orderer just points a camera.
+  const qrBtn = el("button", { type: "button", className: "order-collect-toggle", textContent: "Show QR code" });
+  qrBtn.setAttribute("aria-expanded", "false");
+  const qrCanvas = el("canvas", { className: "share-qr-canvas" });
+  qrCanvas.setAttribute("role", "img");
+  qrCanvas.setAttribute("aria-label", "QR code of your order link — scan it with the orderer's camera");
+  const qrWrap = el("div", { className: "share-qr", hidden: true }, [
+    qrCanvas,
+    el("p", { className: "order-caption", textContent: "Point the orderer's camera at this." }),
+  ]);
+
   const sendDialog = el("dialog", { className: "share-sheet", "aria-labelledby": "share-title" }, [
     el("div", { className: "order-inner" }, [
       el("div", { className: "order-head" }, [
@@ -172,6 +208,8 @@ export function initOrderUI() {
         }),
         nameInput,
         el("div", { className: "order-actions" }, [shareBtn, copyBtn]),
+        qrBtn,
+        qrWrap,
         linkField,
         shareStatus,
       ]),
@@ -184,10 +222,34 @@ export function initOrderUI() {
     return buildShareUrl(token, location.origin + "/");
   }
 
+  function hideQR() {
+    qrWrap.hidden = true;
+    qrBtn.setAttribute("aria-expanded", "false");
+    qrBtn.textContent = "Show QR code";
+  }
+
   sendBtn.addEventListener("click", () => {
     shareStatus.textContent = "";
     linkField.hidden = true;
+    hideQR();
     sendDialog.showModal();
+  });
+
+  qrBtn.addEventListener("click", () => {
+    if (!qrWrap.hidden) {
+      hideQR();
+      return;
+    }
+    try {
+      drawQR(qrCanvas, buildOutgoingUrl());
+      qrWrap.hidden = false;
+      qrBtn.setAttribute("aria-expanded", "true");
+      qrBtn.textContent = "Hide QR code";
+      shareStatus.textContent = "";
+    } catch {
+      // Only trips on an implausibly huge order (beyond the largest symbol).
+      shareStatus.textContent = "This order's too big for a QR code — use Copy link.";
+    }
   });
 
   shareBtn.addEventListener("click", async () => {
@@ -218,6 +280,7 @@ export function initOrderUI() {
   sendDialog.addEventListener("close", () => {
     shareStatus.textContent = "";
     linkField.hidden = true;
+    hideQR();
   });
   sendDialog.addEventListener("click", (e) => {
     if (e.target === sendDialog) sendDialog.close();

@@ -18,7 +18,12 @@ freshness separately from this file.
   order, grouped by venue. Nothing is sent to a server: the picks ride inside
   the link's `#fragment`, which browsers never transmit. A garbled link just
   says "that link didn't work — ask them to resend". No pairing, no install,
-  no account. (QR-code fallback still to come.)
+  no account.
+- **Scan-to-send QR fallback**: the send dialog now offers **Show QR code** — a
+  QR of the order link rendered on the spot, so the orderer can point a camera
+  at it when AirDrop or a copied link isn't the right path (two phones, one not
+  Apple, no shared network). It's drawn by a tiny built-in encoder — no library,
+  no network, no service — and stays dark-on-light so it scans in dark mode too.
 - **Te reo Māori UI toggle**: a language switch in Settings (English / Te Reo
   Māori) that puts the app's chrome — buttons, labels, headings — into te reo,
   with correct tohutō. The menu content itself (dish names, descriptions,

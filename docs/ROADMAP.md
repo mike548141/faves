@@ -72,12 +72,16 @@ sanity-checks the total — on a phone, offline.
 
 ## Theme 1b — Group ordering: send your picks to the orderer
 
-**Mostly done 2026-07-10** — codec + send (share sheet / copy link) +
-receive-with-confirmation shipped and verified; **QR-code fallback is the
-one piece still to build** (a zero-dep local QR renderer — a self-contained
-chunk deferred to keep this slice clean; the share sheet already covers the
-all-Apple household). See the session log. What follows is the original
-sketch, kept for the QR work and the shortlist fold-in.
+**Done 2026-07-10** — codec + send (share sheet / copy link) +
+receive-with-confirmation shipped and verified, and the **QR-code fallback
+now shipped too**: a zero-dep byte-mode QR encoder (`site/js/qr.js`, level M,
+versions 1–20) drawn to canvas in the send dialog, dark-on-light so it scans
+in dark mode. Encoder maths pinned to the ISO/IEC 18004 constants in tests and
+proven by an independent decode round-trip across versions; browser-verified
+end-to-end (order → Show QR → the code's own link decodes back to the order).
+Remaining acceptance is a real phone-camera scan (owner). Only the parked
+**shareable shortlist links** are left — the codec already carries the type.
+What follows is the original sketch.
 
 Owner ask (2026-07-09), decision in **[ADR 0009]**. The scenario: five
 people at the house, each picking dishes in Faves on their own phone;

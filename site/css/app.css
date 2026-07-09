@@ -1302,6 +1302,21 @@ body:not(.menu-page) {
   color: var(--ink-soft);
   font-size: var(--step-sub);
 }
+.share-qr {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+}
+.share-qr-canvas {
+  /* Always on a white card so the code scans in dark mode too; the canvas
+     already paints its own quiet zone, this just frames it. */
+  width: min(280px, 80vw);
+  height: auto;
+  padding: var(--space-2);
+  border-radius: var(--radius-chip);
+  background: #fff;
+  image-rendering: pixelated; /* keep module edges crisp when scaled */
+}
 /* When .order-send shares an .order-actions row (send + receive dialogs),
    it flexes evenly beside its sibling instead of taking the full width. */
 .order-actions .order-send {
