@@ -10,6 +10,15 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Send your picks to the orderer**: when a few people are ordering from
+  one place, each can build their own picks on their own phone, then tap
+  **Send to the orderer** on the order sheet. It hands the order to the OS
+  share sheet (AirDrop, Messages) — or a copied link — and opening it on the
+  host's phone asks "Add Ruth's 6 items?" before merging them into the running
+  order, grouped by venue. Nothing is sent to a server: the picks ride inside
+  the link's `#fragment`, which browsers never transmit. A garbled link just
+  says "that link didn't work — ask them to resend". No pairing, no install,
+  no account. (QR-code fallback still to come.)
 - **Te reo Māori UI toggle**: a language switch in Settings (English / Te Reo
   Māori) that puts the app's chrome — buttons, labels, headings — into te reo,
   with correct tohutō. The menu content itself (dish names, descriptions,

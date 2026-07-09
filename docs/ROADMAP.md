@@ -72,6 +72,13 @@ sanity-checks the total — on a phone, offline.
 
 ## Theme 1b — Group ordering: send your picks to the orderer
 
+**Mostly done 2026-07-10** — codec + send (share sheet / copy link) +
+receive-with-confirmation shipped and verified; **QR-code fallback is the
+one piece still to build** (a zero-dep local QR renderer — a self-contained
+chunk deferred to keep this slice clean; the share sheet already covers the
+all-Apple household). See the session log. What follows is the original
+sketch, kept for the QR work and the shortlist fold-in.
+
 Owner ask (2026-07-09), decision in **[ADR 0009]**. The scenario: five
 people at the house, each picking dishes in Faves on their own phone;
 everything lands on the host's order list so one person phones it in
