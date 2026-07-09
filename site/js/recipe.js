@@ -15,7 +15,13 @@ const root = document.getElementById("recipe-root");
 const EMPTY_SET = new Set();
 
 const el = (tag, props = {}, children = []) => {
-  const node = Object.assign(document.createElement(tag), props);
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    // Hyphenated keys (aria-*, data-*) are attributes, not IDL properties —
+    // plain assignment would set an inert JS expando the browser ignores.
+    if (k.includes("-")) node.setAttribute(k, v);
+    else node[k] = v;
+  }
   for (const child of [].concat(children)) if (child != null) node.append(child);
   return node;
 };
