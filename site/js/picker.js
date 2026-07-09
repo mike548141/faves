@@ -3,6 +3,8 @@
 // name-flicker, lands on one, then offers "go again" / "that's the
 // one". With prefers-reduced-motion the result is instant.
 
+import { t } from "./reo.js";
+
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 // Guarded so the pure helpers below import cleanly under `node --test` (no
 // window). In the browser this resolves to the real media-query list.
@@ -99,10 +101,10 @@ export function initPicker(getCandidates, isFavourite = () => false) {
     // Name it when the roll lands on a favourite, so the "favour the usual"
     // weighting is visible rather than a silent thumb on the scale.
     const fave = isFavourite(pick)
-      ? el("p", { className: "picker-fave-note", textContent: "♥ one of your usuals" })
+      ? el("p", { className: "picker-fave-note", textContent: t("pick.usual", "♥ one of your usuals") })
       : null;
     resultEl.replaceChildren(
-      el("p", { className: "picker-eyebrow", textContent: "Tonight it’s…" }),
+      el("p", { className: "picker-eyebrow", textContent: t("pick.eyebrow", "Tonight it’s…") }),
       el("h3", { className: "picker-name", textContent: pick.name }),
       el("p", { className: "picker-meta", textContent: metaText(pick) }),
       fave,
@@ -120,7 +122,7 @@ export function initPicker(getCandidates, isFavourite = () => false) {
     resultEl.replaceChildren(
       el("p", {
         className: "picker-meta",
-        textContent: "Nothing matches those filters — widen them and roll again.",
+        textContent: t("pick.empty", "Nothing matches those filters — widen them and roll again."),
       })
     );
     actionsEl.hidden = true;

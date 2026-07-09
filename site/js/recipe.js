@@ -9,6 +9,7 @@ import { slug } from "./slug.js";
 import { initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
+import { initReo } from "./reo.js";
 
 const root = document.getElementById("recipe-root");
 const EMPTY_SET = new Set();
@@ -159,4 +160,5 @@ async function main() {
 }
 
 initOrderUI(); // the running order stays reachable from the recipe screen too
+initReo(); // sets <html lang>; the back link is set to the collection name by render()
 main();

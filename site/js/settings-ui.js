@@ -31,6 +31,25 @@ function field({ id, label, hint, min, max, step }) {
   return { row, input, out };
 }
 
+// The language switch: two buttons in their own tongue (a language is always
+// shown in its own name, whatever the current UI language). Writes settings
+// .lang; reo.js re-translates the whole document off the store subscription.
+function langControl() {
+  const group = el("div", { className: "segmented lang-segmented", role: "group" });
+  group.setAttribute("aria-label", "Language");
+  const buttons = [
+    { lang: "en", label: "English" },
+    { lang: "mi", label: "Te Reo Māori" },
+  ].map(({ lang, label }) => {
+    const b = el("button", { type: "button", textContent: label, "aria-pressed": "false" });
+    b.dataset.lang = lang;
+    b.addEventListener("click", () => settings.set({ lang }));
+    group.append(b);
+    return b;
+  });
+  return { group, buttons };
+}
+
 // A group of multi-select toggle chips backed by one list on the diet prefs
 // (`kind` is "dietary" or "avoid"). Toggling rewrites the whole diet object.
 function prefChips(prefs, kind) {
@@ -63,6 +82,7 @@ export function initSettingsUI() {
   if (!btn || document.querySelector(".settings-sheet")) return;
   btn.hidden = false;
 
+  const lang = langControl();
   const dietary = prefChips(DIETARY_PREFS, "dietary");
   const avoid = prefChips(ALLERGEN_PREFS, "avoid");
 
@@ -88,7 +108,11 @@ export function initSettingsUI() {
   const dialog = el("dialog", { className: "settings-sheet", "aria-labelledby": "settings-title" }, [
     el("div", { className: "settings-inner" }, [
       el("div", { className: "settings-head" }, [
-        el("h2", { id: "settings-title", className: "settings-title", textContent: "Settings" }),
+        (() => {
+          const h = el("h2", { id: "settings-title", className: "settings-title", textContent: "Settings" });
+          h.dataset.i18n = "settings.title";
+          return h;
+        })(),
         (() => {
           const c = el("button", { type: "button", className: "settings-close", textContent: "✕" });
           c.setAttribute("aria-label", "Close");
@@ -96,6 +120,14 @@ export function initSettingsUI() {
           return c;
         })(),
       ]),
+
+      // --- Language / Te Reo ---
+      (() => {
+        const h = el("h3", { className: "settings-group-title", textContent: "Language" });
+        h.dataset.i18n = "settings.langTitle";
+        return h;
+      })(),
+      lang.group,
 
       // --- Food preferences ---
       el("h3", { className: "settings-group-title", textContent: "Food preferences" }),
@@ -123,6 +155,7 @@ export function initSettingsUI() {
   // Reflect the current settings into every control.
   function sync() {
     const s = settings.get();
+    for (const b of lang.buttons) b.setAttribute("aria-pressed", String(b.dataset.lang === s.lang));
     const dietarySet = new Set(s.diet.dietary);
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
     const avoidSet = new Set(s.diet.avoid);

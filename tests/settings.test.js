@@ -56,6 +56,15 @@ test("corrupt stored payload → defaults", () => {
   assert.deepEqual(s.get(), DEFAULTS);
 });
 
+test("lang: defaults to English, keeps a known language, rejects an unknown one", () => {
+  const s = createSettings(fakeStorage());
+  assert.equal(s.get().lang, "en");
+  s.set({ lang: "mi" });
+  assert.equal(s.get().lang, "mi");
+  s.set({ lang: "fr" }); // not in LANGS
+  assert.equal(s.get().lang, "en");
+});
+
 test("diet: defaults to empty preference lists", () => {
   const s = createSettings(fakeStorage());
   assert.deepEqual(s.get().diet, { dietary: [], avoid: [] });

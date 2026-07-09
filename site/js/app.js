@@ -17,6 +17,7 @@ import { settings } from "./settings.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { priceBand } from "./price.js";
+import { initReo } from "./reo.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -153,8 +154,10 @@ function card(r, now) {
   return li;
 }
 
-function fillSelect(select, values, allLabel) {
-  select.append(el("option", { value: "all", textContent: allLabel }));
+function fillSelect(select, values, allLabel, i18nKey) {
+  const all = el("option", { value: "all", textContent: allLabel });
+  if (i18nKey) all.dataset.i18n = i18nKey; // "All areas"/"All cuisines" translate; the values are place/cuisine names, left as-is
+  select.append(all);
   for (const v of values) {
     select.append(el("option", { value: v, textContent: v }));
   }
@@ -169,8 +172,8 @@ function init(restaurants) {
   const serviceBtns = [...document.querySelectorAll(".segmented button")];
 
   const { areas, cuisines } = deriveFacets(restaurants);
-  fillSelect(areaSel, areas, "All areas");
-  fillSelect(cuisineSel, cuisines, "All cuisines");
+  fillSelect(areaSel, areas, "All areas", "filter.allAreas");
+  fillSelect(cuisineSel, cuisines, "All cuisines", "filter.allCuisines");
 
   // origin holds the user's {lat, lng} once "Near me" is on; null otherwise.
   const state = { ...DEFAULT_FILTERS, origin: null };
@@ -255,6 +258,10 @@ function init(restaurants) {
     return available.length ? available : filtered;
   }, (r) => favouriteVenueIds().has(r.id));
   initOrderUI();
+  // After all static chrome, the filled selects and the JS-built dialogs are
+  // in the DOM, apply the stored UI language across the lot in one pass (and
+  // re-apply live whenever it's toggled in Settings).
+  initReo();
   document.body.classList.add("app-ready");
 }
 

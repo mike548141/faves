@@ -29,7 +29,7 @@
       <div class="wrap app-header-inner">
         <div>
           <h1 class="app-title"><a href="index.html" class="app-home-link">Faves</a></h1>
-          <p class="app-sub">Our favourite Wellington kai — menus, in one place.</p>
+          <p class="app-sub" data-i18n="app.sub">Our favourite Wellington kai — menus, in one place.</p>
         </div>
         <!-- Overflow menu: consolidates the account-less "app chrome"
              (Favourites, Settings) under one ⋯ button to keep the header
@@ -42,13 +42,14 @@
             id="overflow-btn"
             class="overflow-btn"
             aria-label="More"
+            data-i18n-aria="nav.more"
             aria-haspopup="true"
             aria-expanded="false"
             aria-controls="overflow-menu"
           >
             <span aria-hidden="true">⋯</span>
           </button>
-          <div id="overflow-menu" class="overflow-menu" role="menu" aria-label="More" hidden>
+          <div id="overflow-menu" class="overflow-menu" role="menu" aria-label="More" data-i18n-aria="nav.more" hidden>
             <button
               type="button"
               id="favourites-toggle"
@@ -58,7 +59,7 @@
               hidden
             >
               <span class="overflow-item-icon" aria-hidden="true">♥</span>
-              <span class="fav-toggle-label">Favourites</span>
+              <span class="fav-toggle-label" data-i18n="nav.favourites">Favourites</span>
               <span class="favourites-count" aria-hidden="true"></span>
             </button>
             <button
@@ -69,7 +70,7 @@
               hidden
             >
               <span class="overflow-item-icon" aria-hidden="true">⚙</span>
-              <span>Settings</span>
+              <span data-i18n="nav.settings">Settings</span>
             </button>
           </div>
         </div>
@@ -89,6 +90,7 @@
             id="search-input"
             class="search-input"
             placeholder="Search places or dishes…"
+            data-i18n-ph="search.ph"
             autocomplete="off"
             enterkeyhint="search"
           />
@@ -104,9 +106,9 @@
       <!-- Favourites view: gathers hearted venues + dishes from localStorage. -->
       <section id="favourites-panel" class="search-results" aria-label="Your favourites" hidden>
         <div class="panel-head">
-          <h2 class="panel-title">Favourites</h2>
+          <h2 class="panel-title" data-i18n="fav.title">Favourites</h2>
           <button type="button" id="favourites-done" class="panel-done">
-            <span aria-hidden="true">‹</span> All places
+            <span aria-hidden="true">‹</span> <span data-i18n="fav.allPlaces">All places</span>
           </button>
         </div>
         <p id="favourites-summary" class="search-summary" role="status" aria-live="polite"></p>
@@ -118,21 +120,21 @@
         <p id="result-count" class="result-count" role="status" aria-live="polite"></p>
         <div class="list-toggles">
           <button type="button" id="open-now" class="list-toggle" aria-pressed="false">
-            <span aria-hidden="true">🟢</span> Open now
+            <span aria-hidden="true">🟢</span> <span data-i18n="toggle.openNow">Open now</span>
           </button>
           <!-- Narrows the list to the $ price band (see price.isCheapEats);
                the "Pick for us" shuffle inherits it via applyFilters. -->
           <button type="button" id="cheap-eats" class="list-toggle" aria-pressed="false">
-            <span aria-hidden="true">💸</span> Cheap eats
+            <span aria-hidden="true">💸</span> <span data-i18n="toggle.cheapEats">Cheap eats</span>
           </button>
           <!-- JS + geolocation only; app.js unhides it when available. -->
           <button type="button" id="near-me" class="near-me list-toggle" aria-pressed="false" hidden>
-            <span aria-hidden="true">📍</span> <span class="near-me-label">Near me</span>
+            <span aria-hidden="true">📍</span> <span class="near-me-label" data-i18n="toggle.nearMe">Near me</span>
           </button>
         </div>
       </div>
       <p id="geo-status" class="geo-status browse-only" role="status" aria-live="polite" hidden></p>
-      <p id="tz-note" class="tz-note browse-only" hidden>Open/closed times are New Zealand time.</p>
+      <p id="tz-note" class="tz-note browse-only" data-i18n="tz.note" hidden>Open/closed times are New Zealand time.</p>
 
       <p class="fallback-note browse-only">Showing all places. Turn on JavaScript to filter and shuffle.</p>
 
@@ -322,7 +324,7 @@
         </li>
       </ul>
 
-      <p id="empty-state" class="empty browse-only" hidden>No places match those filters. Try widening them.</p>
+      <p id="empty-state" class="empty browse-only" data-i18n="result.empty" hidden>No places match those filters. Try widening them.</p>
 
       <footer class="site-footer">
         <p class="footer-privacy">
@@ -330,16 +332,16 @@
           order and settings stay on your device — the only thing this site
           ever fetches is its own pages.
         </p>
-        <p class="footer-made">Made by <span class="footer-brand">cakeIT</span></p>
+        <p class="footer-made"><span data-i18n="footer.made">Made by</span> <span class="footer-brand">cakeIT</span></p>
       </footer>
     </main>
 
     <nav class="filter-bar" aria-label="Filter restaurants">
       <div class="filter-bar-inner">
         <div class="segmented" role="group" aria-label="Service">
-          <button type="button" data-service="all" aria-pressed="true">Everywhere</button>
-          <button type="button" data-service="takeaway" aria-pressed="false">Takeaway</button>
-          <button type="button" data-service="dine-in" aria-pressed="false">Dine-in</button>
+          <button type="button" data-service="all" aria-pressed="true" data-i18n="service.all">Everywhere</button>
+          <button type="button" data-service="takeaway" aria-pressed="false" data-i18n="service.takeaway">Takeaway</button>
+          <button type="button" data-service="dine-in" aria-pressed="false" data-i18n="service.dineIn">Dine-in</button>
         </div>
         <div class="select-field">
           <label class="sr-only" for="filter-area">Area</label>
@@ -353,12 +355,12 @@
     </nav>
 
     <button type="button" id="pick-btn" class="pick-fab">
-      <span aria-hidden="true">🎲</span> Pick for us
+      <span aria-hidden="true">🎲</span> <span data-i18n="pick.button">Pick for us</span>
     </button>
 
     <dialog id="picker" class="picker" aria-labelledby="picker-title">
       <div class="picker-inner">
-        <button type="button" id="picker-close" class="picker-close" aria-label="Close">✕</button>
+        <button type="button" id="picker-close" class="picker-close" aria-label="Close" data-i18n-aria="generic.close">✕</button>
         <h2 id="picker-title" class="sr-only">Pick for us</h2>
         <p id="picker-dice" class="picker-dice" aria-hidden="true">🎲</p>
         <div class="picker-stage">
@@ -366,9 +368,9 @@
           <div id="picker-result" class="picker-result" role="status"></div>
         </div>
         <div id="picker-actions" class="picker-actions" hidden>
-          <a id="picker-go" class="btn picker-go" href="#">That’s the one</a>
+          <a id="picker-go" class="btn picker-go" href="#" data-i18n="pick.go">That’s the one</a>
           <button type="button" id="picker-again" class="btn picker-again">
-            <span aria-hidden="true">🎲</span> Go again
+            <span aria-hidden="true">🎲</span> <span data-i18n="pick.again">Go again</span>
           </button>
         </div>
       </div>

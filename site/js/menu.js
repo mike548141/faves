@@ -10,6 +10,7 @@ import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
+import { initReo } from "./reo.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -656,6 +657,10 @@ function render(r) {
 // The order FAB rides along on every screen so a running order is always
 // reachable — even on a stub page or if this menu fails to load.
 initOrderUI();
+// Apply the stored UI language to the static chrome (the back link) and set
+// <html lang>. Menu content stays as the venue wrote it; the generated
+// menu-screen chrome (section nav, picks, dietary chips) is a follow-up.
+initReo();
 
 const id = new URLSearchParams(location.search).get("id");
 const errorEl = document.getElementById("menu-error");

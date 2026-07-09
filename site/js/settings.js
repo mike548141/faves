@@ -41,10 +41,16 @@ export const ALLERGEN_PREFS = [
 const DIETARY_KEYS = new Set(DIETARY_PREFS.map((p) => p.key));
 const ALLERGEN_KEYS = new Set(ALLERGEN_PREFS.map((p) => p.key));
 
+// UI language for the app chrome (not the menu content). English is the
+// source; "mi" is te reo Māori. Kept here (not in reo.js) so the store has no
+// dependency on the presentation layer and the value is sanitised on read.
+export const LANGS = ["en", "mi"];
+
 export const DEFAULTS = {
   favBoostKm: FAV_BOOST_KM,
   farKm: FAR_KM,
   diet: { dietary: [], avoid: [] },
+  lang: "en",
 };
 
 // [min, max] accepted for each; values outside are clamped in, non-numbers
@@ -84,6 +90,7 @@ function sanitise(obj) {
     favBoostKm: clampField(obj?.favBoostKm, "favBoostKm"),
     farKm: clampField(obj?.farKm, "farKm"),
     diet: sanitiseDiet(obj?.diet),
+    lang: LANGS.includes(obj?.lang) ? obj.lang : DEFAULTS.lang,
   };
 }
 
