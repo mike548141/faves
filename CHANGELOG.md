@@ -14,8 +14,11 @@ freshness separately from this file.
   Māori) that puts the app's chrome — buttons, labels, headings — into te reo,
   with correct tohutō. The menu content itself (dish names, descriptions,
   places) stays as the venues wrote it. Your choice stays on your device. This
-  first pass covers the home screen and shared dialogs; more screens follow,
-  and the wording will get a reo review before launch.
+  first pass covers the home screen and shared dialogs; a second pass the
+  same day extended it to the menu and recipe screens (contact and ordering
+  labels, picks, search, recipe headings). Allergen warnings and other
+  safety text stay in English for now — deliberately, until the wording gets
+  a reo review before launch.
 - **Heart a place from the home screen**: the ♥ favourite toggle now sits on
   every browse card, so you can save the usual without opening its menu. It
   stays in sync with the heart on the menu screen and in your Favourites view.
@@ -222,6 +225,9 @@ freshness separately from this file.
   the site still ships build-less.
 
 ### Fixed
+- **Screen-reader labels actually attached**: several hidden accessibility
+  labels on the menu screen and order sheet were being set in a way browsers
+  ignore, so assistive tech never saw them. They're now real attributes.
 - Menu screen no longer scrolls sideways on a narrow phone — the sticky
   toolbar's jump-nav strip now shrinks and scrolls within itself instead
   of pushing the whole page wider than the viewport.

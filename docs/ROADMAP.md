@@ -551,12 +551,18 @@ dependency.
   attributes (+ `t()` for JS-built strings), capturing the English source so
   the switch is lossless, and sets `<html lang>`. Menu content stays as venues
   wrote it. Store-backed (`settings.lang`, sanitised). **Scope:** home screen +
-  the Pick-for-us/Settings dialogs + menu/recipe back-links. **Follow-ups:** the
-  generated menu-screen chrome (section nav, picks, dietary chips, order
-  buttons), the longer prose (privacy note, allergy-safety copy — deliberately
-  English until reviewed), and a **reo review of the wording** before the
-  public launch (Phase 7). Missing keys fall back to English, so extending is
-  purely additive.
+  the Pick-for-us/Settings dialogs + menu/recipe back-links; **2026-07-09
+  (same day, second pass): the generated menu + recipe screen chrome too** —
+  contact/order labels, picks heading, search, stub/loading notes, recipe
+  headings, and the screens' aria labels (JS-built nodes carry `data-i18n`
+  and are translated after render). **Still English deliberately:** all
+  safety text (allergen/dietary tags + filters, the refresh caveat, allergy
+  framing, privacy note, error prose), interpolated strings ("Serves 4",
+  hours badges, order-sheet counts — the engine swaps whole strings only),
+  and venue content. **Follow-ups:** the order sheet + favourites chrome
+  (wants string interpolation), and a **reo review of the wording** before
+  the public launch (Phase 7). Missing keys fall back to English, so
+  extending is purely additive.
 
 ---
 
