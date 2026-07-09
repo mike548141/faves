@@ -10,7 +10,7 @@ import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
-import { initReo } from "./reo.js";
+import { initReo, translate } from "./reo.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -96,7 +96,7 @@ function contactCard(r) {
       el("a", { className: "contact-row contact-call", href: `tel:${r.phone.replace(/\s+/g, "")}` }, [
         el("span", { className: "contact-ico", textContent: "📞", "aria-hidden": "true" }),
         el("span", { className: "contact-text" }, [
-          el("span", { className: "contact-label", textContent: "Call to order" }),
+          el("span", { className: "contact-label", "data-i18n": "menu.call", textContent: "Call to order" }),
           el("span", { className: "contact-value", textContent: r.phone }),
         ]),
       ])
@@ -113,7 +113,7 @@ function contactCard(r) {
       el("a", { className: "contact-row", href, ...(web ? { rel: "noopener", target: "_blank" } : {}) }, [
         el("span", { className: "contact-ico", textContent: "📍", "aria-hidden": "true" }),
         el("span", { className: "contact-text" }, [
-          el("span", { className: "contact-label", textContent: "Pickup" }),
+          el("span", { className: "contact-label", "data-i18n": "menu.pickup", textContent: "Pickup" }),
           el("span", { className: "contact-value", textContent: r.address }),
         ]),
       ])
@@ -136,10 +136,12 @@ function contactCard(r) {
     }
     // Label the clock as NZ time only for a viewer whose device isn't on
     // it — locals (the common case) see no redundant qualifier.
+    const onNz = viewerOnNzTime();
     const text = el("span", { className: "contact-text" }, [
       el("span", {
         className: "contact-label",
-        textContent: viewerOnNzTime() ? "Hours" : "Hours · NZ time",
+        "data-i18n": onNz ? "menu.hours" : "menu.hoursNz",
+        textContent: onNz ? "Hours" : "Hours · NZ time",
       }),
     ]);
     if (st.state !== "unknown") {
@@ -182,8 +184,8 @@ function orderCard(r) {
       })
     );
   }
-  return el("section", { className: "order-block", "aria-label": "Order online" }, [
-    el("h2", { className: "order-head", textContent: "Order online" }),
+  return el("section", { className: "order-block", "aria-label": "Order online", "data-i18n-aria": "menu.orderOnline" }, [
+    el("h2", { className: "order-head", "data-i18n": "menu.orderOnline", textContent: "Order online" }),
     btns,
   ]);
 }
@@ -262,7 +264,7 @@ function renderAside(r) {
   const cards = [contactCard(r)];
   const order = orderCard(r);
   if (order) cards.push(order);
-  return el("aside", { className: "menu-aside", "aria-label": "Contact and ordering" }, cards);
+  return el("aside", { className: "menu-aside", "aria-label": "Contact and ordering", "data-i18n-aria": "menu.aside.aria" }, cards);
 }
 
 // The "menu needs a refresh" note as an accessible disclosure: a small ⓘ
@@ -324,8 +326,8 @@ function renderPicks(r, allItems) {
       ])
     );
   }
-  return el("section", { className: "picks", "aria-label": "Our picks" }, [
-    el("h2", { className: "picks-head", textContent: "If it’s your first time, try…" }),
+  return el("section", { className: "picks", "aria-label": "Our picks", "data-i18n-aria": "menu.picksAria" }, [
+    el("h2", { className: "picks-head", "data-i18n": "menu.picksHead", textContent: "If it’s your first time, try…" }),
     list,
   ]);
 }
@@ -334,7 +336,7 @@ function renderPicks(r, allItems) {
 // cross-record "id#Dish Name". Anchors match the dish li ids below.
 function pairingLinks(refs) {
   const wrap = el("div", { className: "dish-pairs" }, [
-    el("span", { className: "dish-pairs-label", textContent: "Goes well with" }),
+    el("span", { className: "dish-pairs-label", "data-i18n": "menu.goesWith", textContent: "Goes well with" }),
   ]);
   for (const ref of refs) {
     const hash = ref.indexOf("#");
@@ -465,15 +467,15 @@ function renderRecipeDetail(item) {
   if (item.ingredients?.length) {
     const ul = el("ul", { className: "ingredients" });
     for (const ing of item.ingredients) ul.append(el("li", { textContent: ing }));
-    body.push(el("h4", { className: "recipe-head", textContent: "Ingredients" }), ul);
+    body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }), ul);
   }
   if (item.steps?.length) {
     const ol = el("ol", { className: "method" });
     for (const step of item.steps) ol.append(el("li", { textContent: step }));
-    body.push(el("h4", { className: "recipe-head", textContent: "Method" }), ol);
+    body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" }), ol);
   }
   return el("details", { className: "recipe-detail" }, [
-    el("summary", { className: "recipe-summary", textContent: "Ingredients & method" }),
+    el("summary", { className: "recipe-summary", "data-i18n": "recipe.detail", textContent: "Ingredients & method" }),
     el("div", { className: "recipe-body" }, body),
   ]);
 }
@@ -504,10 +506,13 @@ function render(r) {
   // Stub / empty menu: show a friendly note instead of empty controls. Stay
   // single-column — there's no menu to sit beside the info column.
   if (allItems.length === 0) {
-    const note = isRecipes
-      ? "Recipes coming soon."
-      : "Full menu coming soon" + (r.phone ? " — call ahead to order in the meantime." : ".");
-    main.append(el("p", { className: "menu-status" }, [note]));
+    // Whole-string i18n keys per variant — the engine swaps complete strings.
+    const [key, note] = isRecipes
+      ? ["recipe.stub", "Recipes coming soon."]
+      : r.phone
+        ? ["menu.stubCall", "Full menu coming soon — call ahead to order in the meantime."]
+        : ["menu.stub", "Full menu coming soon."];
+    main.append(el("p", { className: "menu-status", "data-i18n": key, textContent: note }));
     return;
   }
 
@@ -525,6 +530,8 @@ function render(r) {
     placeholder: isRecipes ? "Search recipes…" : "Search this menu…",
     autocomplete: "off",
     "aria-label": "Search this menu",
+    "data-i18n-ph": isRecipes ? "menu.search.recipes.ph" : "menu.search.ph",
+    "data-i18n-aria": "menu.search.aria",
   });
 
   // Personal food preferences (settings.js): the viewer's dietary needs
@@ -541,7 +548,7 @@ function render(r) {
   );
   let dietRow = null;
   if (available.length) {
-    dietRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Dietary filters" });
+    dietRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Dietary filters", "data-i18n-aria": "menu.diet.aria" });
     for (const f of available) {
       const on = preselect.has(f.key);
       if (on) activeDiet.add(f.key);
@@ -565,7 +572,7 @@ function render(r) {
     }
   }
 
-  const nav = el("nav", { className: "section-nav", "aria-label": "Menu sections" });
+  const nav = el("nav", { className: "section-nav", "aria-label": "Menu sections", "data-i18n-aria": "menu.sections.aria" });
   const navScroll = el("div", { className: "section-nav-scroll" });
   nav.append(navScroll);
 
@@ -591,7 +598,7 @@ function render(r) {
   }
   main.append(menuWrap);
 
-  const noResults = el("p", { className: "menu-status", hidden: true, textContent: "No dishes match." });
+  const noResults = el("p", { className: "menu-status", hidden: true, "data-i18n": "menu.noMatch", textContent: "No dishes match." });
   main.append(noResults);
 
   // --- View logic: search hides, dietary dims -----------------------
@@ -664,8 +671,9 @@ function render(r) {
 // reachable — even on a stub page or if this menu fails to load.
 initOrderUI();
 // Apply the stored UI language to the static chrome (the back link) and set
-// <html lang>. Menu content stays as the venue wrote it; the generated
-// menu-screen chrome (section nav, picks, dietary chips) is a follow-up.
+// <html lang>. Menu content — dish names, descriptions, section names — stays
+// as the venue wrote it; generated chrome carries data-i18n and is translated
+// after render() below. Safety text (tags, caveats) stays English (reo.js).
 initReo();
 
 const id = new URLSearchParams(location.search).get("id");
@@ -681,8 +689,15 @@ function fail() {
 if (!id) {
   fail();
 } else {
-  loadRestaurant(id).then(render).catch((err) => {
-    console.error("Faves menu:", err);
-    fail();
-  });
+  loadRestaurant(id)
+    .then((r) => {
+      render(r);
+      // The chrome renders in English with data-i18n keys; this applies the
+      // stored language to it (later switches re-translate the whole page).
+      translate(root);
+    })
+    .catch((err) => {
+      console.error("Faves menu:", err);
+      fail();
+    });
 }

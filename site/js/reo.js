@@ -13,10 +13,14 @@
 // the whole document (this module subscribes to the store).
 //
 // ⚠ WORDING IS A FIRST PASS and wants a reo review before the public launch
-// (Phase 7). Macrons (tohutō) are intentional — do not strip them. Longer
-// prose (the privacy note, the allergy-safety copy, menu-screen chrome) is
-// left in English on purpose until reviewed, rather than ship uncertain te reo
-// on safety-critical text: it falls through to English automatically.
+// (Phase 7). Macrons (tohutō) are intentional — do not strip them. Safety
+// text stays English on purpose until reviewed, rather than ship uncertain te
+// reo where a misreading could hurt someone: allergen/dietary tag chips and
+// filter labels, the "menu needs a refresh" caveat, the allergy-preferences
+// framing, the privacy note, and error prose. It all falls through to English
+// automatically. Also still English: strings built by interpolation ("Serves
+// 4", "Verified 3 Jul", open-hours badges, order-sheet counts) — the engine
+// swaps whole strings only.
 
 import { settings, LANGS } from "./settings.js";
 
@@ -65,6 +69,33 @@ const MI = {
   // Settings dialog
   "settings.title": "Ngā Tautuhinga",
   "settings.langTitle": "Te Reo",
+  // Menu screen chrome (dish names, descriptions and section names are
+  // venue content and are never translated; safety text stays English — see
+  // the header note)
+  "menu.loading": "E uta ana te tahua kai…", // draft
+  "menu.call": "Waea atu ki te ōta", // draft
+  "menu.pickup": "Tiki atu", // draft
+  "menu.hours": "Ngā hāora",
+  "menu.hoursNz": "Ngā hāora · wā o Aotearoa", // draft
+  "menu.orderOnline": "Ōta ā-ipurangi", // draft
+  "menu.picksHead": "He wā tuatahi nōu? Whakamātauria…", // draft
+  "menu.picksAria": "Ā mātou kōwhiringa", // draft
+  "menu.goesWith": "He pai i te taha o", // draft
+  "menu.search.ph": "Rapua tēnei tahua kai…",
+  "menu.search.recipes.ph": "Rapua ngā tohutao…",
+  "menu.search.aria": "Rapua tēnei tahua kai",
+  "menu.sections.aria": "Ngā wāhanga o te tahua kai",
+  "menu.diet.aria": "Ngā tātari kai",
+  "menu.aside.aria": "Te whakapā me te ōta", // draft
+  "menu.noMatch": "Kāore he kai e tau ana.",
+  "menu.stub": "Kei te haere mai te tahua kai katoa.",
+  "menu.stubCall": "Kei te haere mai te tahua kai katoa — waea atu ki te ōta i te wā nei.", // draft
+  // Recipe screens (Cook at Home)
+  "recipe.loading": "E uta ana te tohutao…", // draft
+  "recipe.stub": "Kei te haere mai ngā tohutao.", // draft
+  "recipe.ingredients": "Ngā huānga", // draft
+  "recipe.method": "Te tukanga", // draft
+  "recipe.detail": "Ngā huānga me te tukanga", // draft
 };
 
 // documentElement lang value per language, for screen-reader pronunciation.

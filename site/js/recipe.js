@@ -9,7 +9,7 @@ import { slug } from "./slug.js";
 import { initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
-import { initReo } from "./reo.js";
+import { initReo, translate } from "./reo.js";
 
 const root = document.getElementById("recipe-root");
 const EMPTY_SET = new Set();
@@ -114,13 +114,13 @@ function render(collection, item) {
   }
 
   if (item.ingredients?.length) {
-    parts.push(el("h2", { className: "recipe-head", textContent: "Ingredients" }));
+    parts.push(el("h2", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }));
     const ul = el("ul", { className: "ingredients" });
     for (const ing of item.ingredients) ul.append(el("li", { textContent: ing }));
     parts.push(ul);
   }
   if (item.steps?.length) {
-    parts.push(el("h2", { className: "recipe-head", textContent: "Method" }));
+    parts.push(el("h2", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" }));
     const ol = el("ol", { className: "method" });
     for (const step of item.steps) ol.append(el("li", { textContent: step }));
     parts.push(ol);
@@ -128,7 +128,7 @@ function render(collection, item) {
 
   if (item.goesWith?.length) {
     const wrap = el("div", { className: "dish-pairs" }, [
-      el("span", { className: "dish-pairs-label", textContent: "Goes well with" }),
+      el("span", { className: "dish-pairs-label", "data-i18n": "menu.goesWith", textContent: "Goes well with" }),
     ]);
     for (const ref of item.goesWith) {
       const hash = ref.indexOf("#");
@@ -146,6 +146,9 @@ function render(collection, item) {
 
   // recipe-body so the shared .ingredients/.method list styling applies.
   root.replaceChildren(el("article", { className: "recipe-detail-page recipe-body" }, parts));
+  // Chrome renders in English with data-i18n keys; apply the stored language
+  // (later switches re-translate the whole page via reo's subscription).
+  translate(root);
   root.setAttribute("aria-busy", "false");
 }
 
