@@ -10,6 +10,12 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Te reo Māori UI toggle**: a language switch in Settings (English / Te Reo
+  Māori) that puts the app's chrome — buttons, labels, headings — into te reo,
+  with correct tohutō. The menu content itself (dish names, descriptions,
+  places) stays as the venues wrote it. Your choice stays on your device. This
+  first pass covers the home screen and shared dialogs; more screens follow,
+  and the wording will get a reo review before launch.
 - **Heart a place from the home screen**: the ♥ favourite toggle now sits on
   every browse card, so you can save the usual without opening its menu. It
   stays in sync with the heart on the menu screen and in your Favourites view.

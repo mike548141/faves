@@ -545,7 +545,18 @@ dependency.
   filter toggle** in the home results head.
 - **Shareable group shortlist links** (encode the shortlist in the URL —
   no backend needed).
-- **Te reo Māori UI toggle.**
+- ~~**Te reo Māori UI toggle.**~~ ✅ **first pass done 2026-07-09** — a
+  device-local language switch in Settings (English / Te Reo Māori). A small
+  i18n engine (`site/js/reo.js`) translates the app *chrome* via `data-i18n`
+  attributes (+ `t()` for JS-built strings), capturing the English source so
+  the switch is lossless, and sets `<html lang>`. Menu content stays as venues
+  wrote it. Store-backed (`settings.lang`, sanitised). **Scope:** home screen +
+  the Pick-for-us/Settings dialogs + menu/recipe back-links. **Follow-ups:** the
+  generated menu-screen chrome (section nav, picks, dietary chips, order
+  buttons), the longer prose (privacy note, allergy-safety copy — deliberately
+  English until reviewed), and a **reo review of the wording** before the
+  public launch (Phase 7). Missing keys fall back to English, so extending is
+  purely additive.
 
 ---
 
