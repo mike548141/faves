@@ -7,6 +7,7 @@ import {
   createFavourites,
   favKey,
   favHref,
+  groupForShare,
 } from "../site/js/favourites.js";
 
 function fakeStorage(initial = null) {
@@ -96,4 +97,36 @@ test("tolerates a corrupt storage payload", () => {
   assert.equal(f.count(), 0);
   f.toggle(dish);
   assert.equal(f.count(), 1);
+});
+
+test("merge adds only absent entries and returns the count added", () => {
+  const f = createFavourites(fakeStorage());
+  f.toggle(dish); // already have this one
+  const added = f.merge([dish, venue, recipe]);
+  assert.equal(added, 2); // venue + recipe are new; dish is skipped
+  assert.equal(f.count(), 3);
+  assert.equal(f.has(venue), true);
+  assert.equal(f.has(recipe), true);
+});
+
+test("merge dedupes within the incoming list and is idempotent", () => {
+  const f = createFavourites(fakeStorage());
+  assert.equal(f.merge([venue, venue, dish]), 2); // duplicate venue counted once
+  assert.equal(f.count(), 2);
+  assert.equal(f.merge([venue, dish]), 0); // nothing new the second time
+  assert.equal(f.count(), 2);
+});
+
+test("groupForShare groups by venue with venueFav and dish names", () => {
+  const groups = groupForShare([venue, dish, recipe]);
+  assert.equal(groups.length, 2); // kk-malaysian and cook-at-home
+  const kk = groups[0];
+  assert.equal(kk.venueId, "kk-malaysian");
+  assert.equal(kk.venueName, "KK Malaysian");
+  assert.equal(kk.venueFav, true); // the venue itself is hearted
+  assert.deepEqual(kk.dishes, ["Mee Goreng"]);
+  const cah = groups[1];
+  assert.equal(cah.venueFav, false); // only a dish of it is hearted
+  assert.equal(cah.isRecipe, true);
+  assert.deepEqual(cah.dishes, ["Shane's Ribs"]);
 });

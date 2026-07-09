@@ -1250,6 +1250,10 @@ body:not(.menu-page) {
 .order-send:hover {
   filter: brightness(0.96);
 }
+/* "Share these" sits under the favourites summary, above the grouped list. */
+.fav-share {
+  margin-bottom: var(--space-3);
+}
 /* The share + receive sheets reuse .order-sheet's frame. */
 .share-sheet,
 .recv-sheet {

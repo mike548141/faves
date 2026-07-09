@@ -19,6 +19,35 @@ const KEY = "faves.favourites.v1";
 export const favKey = (e) =>
   e.type === "venue" ? `v:${e.venueId}` : `d:${e.venueId} ${e.name}`;
 
+/**
+ * Group a flat favourites list by venue for sharing (Theme 1b shortlist), in
+ * first-seen order: `{ venueId, venueName, isRecipe, sub, venueFav, dishes }`.
+ * `venueFav` marks a whole-place heart; `dishes` is the hearted dish names.
+ * Facts (name, recipe flag, sub) come from whichever entry carries them —
+ * mirrors the Favourites view's own grouping so the share matches what's shown.
+ */
+export function groupForShare(items) {
+  const order = [];
+  const byVenue = new Map();
+  for (const e of items) {
+    let g = byVenue.get(e.venueId);
+    if (!g) {
+      g = { venueId: e.venueId, venueName: "", isRecipe: false, sub: "", venueFav: false, dishes: [] };
+      byVenue.set(e.venueId, g);
+      order.push(e.venueId);
+    }
+    if (e.type === "venue") {
+      g.venueFav = true;
+    } else {
+      g.dishes.push(e.name);
+    }
+    g.venueName = g.venueName || e.venueName || "";
+    g.isRecipe = g.isRecipe || !!e.isRecipe;
+    g.sub = g.sub || e.sub || "";
+  }
+  return order.map((id) => byVenue.get(id));
+}
+
 /** Deep link for a favourite — a venue's menu, or a dish's row / recipe. */
 export function favHref(e) {
   if (e.type === "venue") return `restaurant.html?id=${e.venueId}`;
@@ -72,6 +101,27 @@ export function createFavourites(storage) {
     removeKey(k) {
       items = items.filter((i) => favKey(i) !== k);
       commit();
+    },
+
+    /**
+     * Add every entry not already saved (received shortlist share). Never
+     * removes or duplicates; commits once. Returns how many were newly added,
+     * so the UI can say "Added 3 favourites" (or note there were no new ones).
+     */
+    merge(entries) {
+      const present = new Set(items.map(favKey));
+      const fresh = [];
+      for (const e of entries || []) {
+        const k = favKey(e);
+        if (present.has(k)) continue;
+        present.add(k); // guard against duplicates within the incoming list too
+        fresh.push(e);
+      }
+      if (fresh.length) {
+        items = [...items, ...fresh];
+        commit();
+      }
+      return fresh.length;
     },
 
     venues: () => items.filter((i) => i.type === "venue"),

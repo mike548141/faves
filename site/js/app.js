@@ -10,8 +10,10 @@ import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
 import { initOrderUI } from "./cart-ui.js";
-import { favourites, favHref } from "./favourites.js";
+import { favourites, favHref, groupForShare } from "./favourites.js";
 import { heartButton } from "./favourites-ui.js";
+import { encodeShortlist, buildShareUrl } from "./share-codec.js";
+import { openShareDialog } from "./share-ui.js";
 import { groupSection, resultRow } from "./results-view.js";
 import { settings } from "./settings.js";
 import { initSettingsUI } from "./settings-ui.js";
@@ -391,8 +393,28 @@ function wireFavourites() {
   const panel = document.getElementById("favourites-panel");
   const summary = document.getElementById("favourites-summary");
   const groups = document.getElementById("favourites-groups");
+  const shareBtn = document.getElementById("favourites-share");
   if (!btn || !panel) return;
   btn.hidden = false;
+
+  // Share the current shortlist (Theme 1b): the same dialog the order sheet
+  // uses, encoding a `shortlist` payload instead of an order. Hidden when
+  // there's nothing saved. Re-reads favourites on each action (name edits).
+  if (shareBtn) {
+    shareBtn.addEventListener("click", () => {
+      openShareDialog({
+        heading: "Share your favourites",
+        blurb: "Send your list of places and dishes — AirDrop, Messages, a copied link, or a QR to scan. Opening it lets them save the ones they like. Nothing is sent to a server.",
+        nameAriaLabel: "Your name, so they know whose list this is",
+        shareTitle: "My Faves shortlist",
+        shareText: "A few places and dishes I like:",
+        buildUrl: (name) => {
+          const token = encodeShortlist({ label: name, groups: groupForShare(favourites.items()) });
+          return buildShareUrl(token, location.origin + "/");
+        },
+      });
+    });
+  }
 
   // One venue group: the place as a parent (shown even when only a dish of
   // it is hearted — a hearted dish implies its place), with its hearted
@@ -432,8 +454,10 @@ function wireFavourites() {
     groups.replaceChildren();
     if (items.length === 0) {
       summary.textContent = "No favourites yet. Tap ♡ on a place or a dish to save it here.";
+      if (shareBtn) shareBtn.hidden = true;
       return;
     }
+    if (shareBtn) shareBtn.hidden = false;
     // Group by venue, preserving first-seen order. Facts (name, recipe flag,
     // area/cuisine sub) come from whichever entry carries them — the venue if
     // hearted, otherwise a dish of it.

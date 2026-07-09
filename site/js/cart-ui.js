@@ -7,30 +7,8 @@
 
 import { order, groupByVenue } from "./cart.js";
 import { encodeShare, decodeShare, buildShareUrl, readShareToken } from "./share-codec.js";
-import { encodeQR } from "./qr.js";
-
-// Paint a QR of `url` onto `canvas`, dark-on-light with a 4-module quiet zone.
-// Colours are hard-coded (not theme tokens): a scanner needs dark modules on a
-// light field regardless of the page's light/dark mode. Throws (via encodeQR)
-// if the URL is too long for the largest supported symbol — caller handles it.
-function drawQR(canvas, url) {
-  const { size, modules } = encodeQR(url);
-  const quiet = 4;
-  const dim = size + quiet * 2;
-  const scale = Math.max(2, Math.floor(300 / dim)); // aim for a ~260–300px symbol
-  const px = dim * scale;
-  canvas.width = px;
-  canvas.height = px;
-  const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "#fff";
-  ctx.fillRect(0, 0, px, px);
-  ctx.fillStyle = "#000";
-  for (let r = 0; r < size; r++) {
-    for (let c = 0; c < size; c++) {
-      if (modules[r][c]) ctx.fillRect((c + quiet) * scale, (r + quiet) * scale, scale, scale);
-    }
-  }
-}
+import { favourites, groupForShare } from "./favourites.js";
+import { openShareDialog } from "./share-ui.js";
 
 const el = (tag, props = {}, children = []) => {
   const node = document.createElement(tag);
@@ -158,135 +136,25 @@ export function initOrderUI() {
     ]),
   ]);
 
-  // ----- Send: hand your finished picks to the orderer (Theme 1b, ADR 0009).
-  // The order-sheet chrome stays English for now: the te reo pass is deferred
-  // for the order sheet (its strings need interpolation the engine lacks yet).
-  const nameInput = el("input", {
-    type: "text",
-    className: "share-name",
-    maxLength: 40,
-    placeholder: "Your name (optional)",
-  });
-  nameInput.setAttribute("aria-label", "Your name, so they know whose picks these are");
-  const shareStatus = el("p", { className: "share-status" });
-  shareStatus.setAttribute("role", "status");
-  const linkField = el("input", { type: "text", className: "share-link", readOnly: true, hidden: true });
-  linkField.setAttribute("aria-label", "Shareable link — copy and send it");
-  const shareBtn = el("button", { type: "button", className: "order-send", textContent: "Share…" });
-  const copyBtn = el("button", { type: "button", className: "order-collect-toggle", textContent: "Copy link" });
-  // navigator.share is the AirDrop/Messages path (iOS/most mobile); where it's
-  // absent (many desktops) fall back to Copy link alone.
-  if (!(typeof navigator !== "undefined" && navigator.share)) shareBtn.hidden = true;
-
-  // QR is the fallback when the share sheet isn't the right path: two phones,
-  // one not on Apple, no shared network — the orderer just points a camera.
-  const qrBtn = el("button", { type: "button", className: "order-collect-toggle", textContent: "Show QR code" });
-  qrBtn.setAttribute("aria-expanded", "false");
-  const qrCanvas = el("canvas", { className: "share-qr-canvas" });
-  qrCanvas.setAttribute("role", "img");
-  qrCanvas.setAttribute("aria-label", "QR code of your order link — scan it with the orderer's camera");
-  const qrWrap = el("div", { className: "share-qr", hidden: true }, [
-    qrCanvas,
-    el("p", { className: "order-caption", textContent: "Point the orderer's camera at this." }),
-  ]);
-
-  const sendDialog = el("dialog", { className: "share-sheet", "aria-labelledby": "share-title" }, [
-    el("div", { className: "order-inner" }, [
-      el("div", { className: "order-head" }, [
-        el("h2", { id: "share-title", className: "order-title", textContent: "Send your picks" }),
-        (() => {
-          const b = el("button", { type: "button", className: "order-close", textContent: "✕" });
-          b.setAttribute("aria-label", "Close");
-          b.addEventListener("click", () => sendDialog.close());
-          return b;
-        })(),
-      ]),
-      el("div", { className: "order-body share-body" }, [
-        el("p", {
-          className: "order-caption",
-          textContent: "Hand your order to whoever's phoning it in — AirDrop, Messages, or a copied link. Nothing is sent to a server.",
-        }),
-        nameInput,
-        el("div", { className: "order-actions" }, [shareBtn, copyBtn]),
-        qrBtn,
-        qrWrap,
-        linkField,
-        shareStatus,
-      ]),
-    ]),
-  ]);
-
-  function buildOutgoingUrl() {
-    const token = encodeShare({ type: "order", label: nameInput.value, groups: order.groups() });
-    // Land the host on the home screen; the receive handler runs on every page.
-    return buildShareUrl(token, location.origin + "/");
-  }
-
-  function hideQR() {
-    qrWrap.hidden = true;
-    qrBtn.setAttribute("aria-expanded", "false");
-    qrBtn.textContent = "Show QR code";
-  }
-
+  // ----- Send: hand your finished picks to the orderer (Theme 1b, ADR 0009),
+  // via the shared share dialog (share sheet / copy link / QR). It re-encodes
+  // the current order each time an action fires, so a late name edit is caught.
   sendBtn.addEventListener("click", () => {
-    shareStatus.textContent = "";
-    linkField.hidden = true;
-    hideQR();
-    sendDialog.showModal();
+    openShareDialog({
+      heading: "Send your picks",
+      blurb: "Hand your order to whoever's phoning it in — AirDrop, Messages, a copied link, or a QR to scan. Nothing is sent to a server.",
+      nameAriaLabel: "Your name, so they know whose picks these are",
+      shareTitle: "My Faves order",
+      shareText: "Here are my picks:",
+      buildUrl: (name) => {
+        const token = encodeShare({ type: "order", label: name, groups: order.groups() });
+        // Land the host on the home screen; the receive handler runs on every page.
+        return buildShareUrl(token, location.origin + "/");
+      },
+    });
   });
 
-  qrBtn.addEventListener("click", () => {
-    if (!qrWrap.hidden) {
-      hideQR();
-      return;
-    }
-    try {
-      drawQR(qrCanvas, buildOutgoingUrl());
-      qrWrap.hidden = false;
-      qrBtn.setAttribute("aria-expanded", "true");
-      qrBtn.textContent = "Hide QR code";
-      shareStatus.textContent = "";
-    } catch {
-      // Only trips on an implausibly huge order (beyond the largest symbol).
-      shareStatus.textContent = "This order's too big for a QR code — use Copy link.";
-    }
-  });
-
-  shareBtn.addEventListener("click", async () => {
-    try {
-      await navigator.share({ title: "My Faves order", text: "Here are my picks:", url: buildOutgoingUrl() });
-      shareStatus.textContent = "Sent.";
-    } catch (err) {
-      // AbortError = the user closed the share sheet themselves; stay quiet.
-      if (err && err.name !== "AbortError") shareStatus.textContent = "Couldn't open the share sheet — try Copy link.";
-    }
-  });
-
-  copyBtn.addEventListener("click", async () => {
-    const url = buildOutgoingUrl();
-    try {
-      await navigator.clipboard.writeText(url);
-      shareStatus.textContent = "Link copied — paste it to them.";
-    } catch {
-      // Clipboard blocked (or non-HTTPS origin): reveal the link to copy by hand.
-      linkField.hidden = false;
-      linkField.value = url;
-      linkField.focus();
-      linkField.select();
-      shareStatus.textContent = "Copy this link and send it to them.";
-    }
-  });
-
-  sendDialog.addEventListener("close", () => {
-    shareStatus.textContent = "";
-    linkField.hidden = true;
-    hideQR();
-  });
-  sendDialog.addEventListener("click", (e) => {
-    if (e.target === sendDialog) sendDialog.close();
-  });
-
-  document.body.append(fab, dialog, sendDialog);
+  document.body.append(fab, dialog);
 
   let collectMode = false;
   let confirmingClear = false;
@@ -418,17 +286,54 @@ export function initOrderUI() {
     ]);
     const title = recvDialog.querySelector("#recv-title");
 
+    const closeBtn = (label = "OK") => {
+      const b = el("button", { type: "button", className: "order-send", textContent: label });
+      b.addEventListener("click", () => recvDialog.close());
+      return b;
+    };
+
     if (!decoded) {
       title.textContent = "That link didn't work";
       recvBody.append(
         el("p", {
           className: "order-caption",
-          textContent: "This shared order didn't come through — ask them to send it again.",
+          textContent: "This shared link didn't come through — ask them to send it again.",
         })
       );
-      const ok = el("button", { type: "button", className: "order-send", textContent: "OK" });
-      ok.addEventListener("click", () => recvDialog.close());
-      actions.append(ok);
+      actions.append(closeBtn());
+    } else if (decoded.type === "shortlist") {
+      // Someone shared their favourites; confirm, then merge into ours.
+      const whose = decoded.label ? `${decoded.label}'s` : "these";
+      title.textContent = `Add ${whose} ${plural(decoded.items.length, "favourite")}?`;
+      const list = el("ul", { className: "recv-list" });
+      for (const g of groupForShare(decoded.items)) {
+        const bits = [...g.dishes];
+        if (g.venueFav) bits.unshift("the place");
+        list.append(
+          el("li", { className: "recv-group" }, [
+            el("span", { className: "recv-venue", textContent: (g.isRecipe ? "🏠 " : "🍽️ ") + (g.venueName || "A place") }),
+            el("span", { className: "recv-lines", textContent: bits.join(", ") }),
+          ])
+        );
+      }
+      recvBody.append(list);
+      const no = el("button", { type: "button", className: "order-clear", textContent: "Not now" });
+      no.addEventListener("click", () => recvDialog.close());
+      const yes = el("button", { type: "button", className: "order-send", textContent: "Add to favourites" });
+      yes.addEventListener("click", () => {
+        const added = favourites.merge(decoded.items);
+        title.textContent = added ? "Added to your favourites" : "Already in your favourites";
+        recvBody.replaceChildren(
+          el("p", {
+            className: "order-caption",
+            textContent: added
+              ? `${plural(added, "favourite")} added — find them under Favourites.`
+              : "You'd already saved all of these.",
+          })
+        );
+        actions.replaceChildren(closeBtn("Done"));
+      });
+      actions.append(no, yes);
     } else {
       const whose = decoded.label ? `${decoded.label}'s` : "these";
       const n = decoded.items.reduce((s, i) => s + i.qty, 0);

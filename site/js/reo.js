@@ -52,6 +52,7 @@ const MI = {
   // Favourites view
   "fav.title": "Ngā Makau",
   "fav.allPlaces": "Ngā wāhi katoa",
+  "fav.share": "Tuaritia ēnei",
   // "Pick for us"
   "pick.button": "Whiriwhiria mā mātou",
   "pick.eyebrow": "I tēnei pō, ko…",

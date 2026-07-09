@@ -79,8 +79,10 @@ versions 1–20) drawn to canvas in the send dialog, dark-on-light so it scans
 in dark mode. Encoder maths pinned to the ISO/IEC 18004 constants in tests and
 proven by an independent decode round-trip across versions; browser-verified
 end-to-end (order → Show QR → the code's own link decodes back to the order).
-Remaining acceptance is a real phone-camera scan (owner). Only the parked
-**shareable shortlist links** are left — the codec already carries the type.
+The parked **shareable shortlist links** shipped the same day: the Favourites
+view shares its list through the same dialog, encoding a `shortlist` payload
+that merges into the receiver's favourites on confirm. **Theme 1b is fully
+closed**; the only remaining acceptance is a real phone-camera scan (owner).
 What follows is the original sketch.
 
 Owner ask (2026-07-09), decision in **[ADR 0009]**. The scenario: five
@@ -598,10 +600,13 @@ dependency.
   relative time) on cards and the menu screen, on a structured per-day
   hours model computed in NZ time ([ADR 0006]), **plus an "Open now"
   filter toggle** in the home results head.
-- **Shareable group shortlist links** (encode the shortlist in the URL —
-  no backend needed). *2026-07-09: fold into the Theme 1b codec — same
-  URL encode/decode, a `shortlist` payload type instead of `order`
-  ([ADR 0009]). Build it as part of, or straight after, Theme 1b.*
+- ~~**Shareable group shortlist links** (encode the shortlist in the URL —
+  no backend needed).~~ ✅ **done 2026-07-10** — a "Share these" button in the
+  Favourites view sends the shortlist through the same share dialog as an
+  order (share sheet / copy link / QR), encoding a `shortlist` payload
+  ([ADR 0009]); opening the link offers to merge the places and dishes into
+  the receiver's own favourites, recipe flag preserved so recipe favourites
+  still deep-link correctly.
 - ~~**Te reo Māori UI toggle.**~~ ✅ **first pass done 2026-07-09** — a
   device-local language switch in Settings (English / Te Reo Māori). A small
   i18n engine (`site/js/reo.js`) translates the app *chrome* via `data-i18n`

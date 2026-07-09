@@ -24,6 +24,12 @@ freshness separately from this file.
   at it when AirDrop or a copied link isn't the right path (two phones, one not
   Apple, no shared network). It's drawn by a tiny built-in encoder — no library,
   no network, no service — and stays dark-on-light so it scans in dark mode too.
+- **Share your favourites**: the Favourites view gains a **Share these** button
+  that sends your whole shortlist — places and dishes — the same way an order
+  goes out (AirDrop, Messages, a copied link, or a QR to scan). Whoever opens it
+  gets "Add Ruth's 5 favourites?" and can save the ones they like into their own
+  favourites; recipe favourites keep linking to the recipe, not a dead end. Same
+  no-server, fragment-only design as order sharing.
 - **Te reo Māori UI toggle**: a language switch in Settings (English / Te Reo
   Māori) that puts the app's chrome — buttons, labels, headings — into te reo,
   with correct tohutō. The menu content itself (dish names, descriptions,

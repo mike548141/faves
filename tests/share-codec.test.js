@@ -5,6 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   encodeShare,
+  encodeShortlist,
   decodeShare,
   buildShareUrl,
   readShareToken,
@@ -66,9 +67,9 @@ test("preserves macrons / non-ASCII (UTF-8, not Latin-1)", () => {
   assert.equal(decoded.items[0].name, "Kūmara chips");
 });
 
-test("supports the shortlist payload type", () => {
-  const decoded = decodeShare(encodeShare({ type: "shortlist", groups }));
-  assert.equal(decoded.type, "shortlist");
+test("encodeShare is order-only; a shortlist type is rejected", () => {
+  // Shortlists have their own wire shape — encodeShortlist, not encodeShare.
+  assert.throws(() => encodeShare({ type: "shortlist", groups }), /order-only/);
 });
 
 test("unknown share type throws at encode", () => {
@@ -161,4 +162,52 @@ test("end-to-end: encode -> URL -> read token -> decode", () => {
   const back = decodeShare(readShareToken(url));
   assert.equal(back.label, "Booth");
   assert.equal(back.items.length, 3);
+});
+
+// --- Shortlist payload (shared favourites) ---------------------------------
+
+// groupForShare()-shaped input: what the Favourites view hands the encoder.
+const shortlistGroups = [
+  { venueId: "kk", venueName: "KK Malaysian", isRecipe: false, sub: "Tawa · Malaysian", venueFav: true, dishes: ["Mee Goreng", "Roti Canai"] },
+  { venueId: "cah", venueName: "Cook at Home", isRecipe: true, sub: "", venueFav: false, dishes: ["Ōtaki Kūmara"] },
+];
+
+test("round-trips a shortlist to flat favourites entries", () => {
+  const decoded = decodeShare(encodeShortlist({ label: "Ruth", groups: shortlistGroups }));
+  assert.equal(decoded.type, "shortlist");
+  assert.equal(decoded.label, "Ruth");
+  // venue heart + 2 dishes for KK, then 1 recipe dish for Cook at Home
+  assert.equal(decoded.items.length, 4);
+  assert.deepEqual(decoded.items[0], { type: "venue", venueId: "kk", venueName: "KK Malaysian", isRecipe: false, sub: "Tawa · Malaysian" });
+  assert.deepEqual(decoded.items[1], { type: "dish", name: "Mee Goreng", venueId: "kk", venueName: "KK Malaysian", isRecipe: false, sub: "Tawa · Malaysian" });
+  // the recipe flag survives so the received favourite deep-links to recipe.html
+  const recipeDish = decoded.items.find((i) => i.venueId === "cah");
+  assert.equal(recipeDish.isRecipe, true);
+  assert.equal(recipeDish.name, "Ōtaki Kūmara"); // macron survives the round-trip
+});
+
+test("shortlist without a venue heart yields only dish entries", () => {
+  const decoded = decodeShare(encodeShortlist({ groups: [
+    { venueId: "kk", venueName: "KK Malaysian", venueFav: false, dishes: ["Roti"] },
+  ] }));
+  assert.equal(decoded.items.length, 1);
+  assert.equal(decoded.items[0].type, "dish");
+});
+
+test("shortlist drops groups with neither a venue heart nor any dish", () => {
+  const decoded = decodeShare(encodeShortlist({ groups: [
+    { venueId: "empty", venueName: "Nothing", venueFav: false, dishes: [] },
+    { venueId: "kk", venueName: "KK", venueFav: true, dishes: [] },
+  ] }));
+  assert.equal(decoded.items.length, 1);
+  assert.equal(decoded.items[0].venueId, "kk");
+});
+
+test("an all-empty shortlist decodes to null (a dud)", () => {
+  assert.equal(decodeShare(encodeShortlist({ groups: [] })), null);
+});
+
+test("order and shortlist tokens decode to their own type", () => {
+  assert.equal(decodeShare(encodeShare({ groups })).type, "order");
+  assert.equal(decodeShare(encodeShortlist({ groups: shortlistGroups })).type, "shortlist");
 });
