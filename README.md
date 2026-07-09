@@ -23,6 +23,7 @@ Strategy, architecture, and work plan are set. The app is built from
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Stack, data model, PWA, hosting — with decision rationale |
 | [docs/DESIGN.md](docs/DESIGN.md) | Visual direction and mobile-first design rules |
 | [docs/WORKPLAN.md](docs/WORKPLAN.md) | Phased build plan with acceptance criteria |
+| [docs/DEPLOY.md](docs/DEPLOY.md) | Cloudflare Pages hosting — one-time setup and the deploy flow |
 | [CLAUDE.md](CLAUDE.md) | Standing instructions for AI builders |
 
 ## Layout
@@ -52,3 +53,18 @@ No toolchain, no dependencies, no build. What's in `site/` is what ships.
    menu data, and the version bump is what tells installed phones to
    fetch the new cache. Skip it and offline visitors keep stale menus.
 4. Check the change in a browser at mobile width, then commit.
+
+## Deploy
+
+Hosting is **Cloudflare Pages**, git-connected to this repo. Once set up,
+the everyday flow is nothing more than:
+
+```sh
+git push origin main    # Cloudflare builds and deploys; branches get preview URLs
+```
+
+- **Live:** https://lets-eat.myspot.nz (default: `https://faves.pages.dev`)
+- **First-time setup** (authorise the GitHub App, scoped API token, then
+  `python3 tools/deploy.py apply`) is a one-off — see
+  [docs/DEPLOY.md](docs/DEPLOY.md). Hosting config is code in
+  [tools/deploy.json](tools/deploy.json).

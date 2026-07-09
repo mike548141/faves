@@ -142,16 +142,28 @@ his devices.
 
 ## Phase 7 — Deploy
 
-- [ ] Pick the host per ARCHITECTURE.md "Hosting options" — Cloudflare
-      Pages (recommended) or public S3. Confirm with the repo owner.
-- [ ] Cloudflare Pages path: project connected to this private repo;
-      build command none, output dir `site/`.
-- [ ] S3 path (only if chosen): public-read bucket + `aws s3 sync`
-      deploy step, fronted by CloudFront or Cloudflare for HTTPS
-      (required for the service worker).
-- [ ] Custom domain on existing Cloudflare DNS (owner to choose the
-      hostname); HTTPS enforced.
-- [ ] README updated with the live URL and the edit-→-deploy flow.
+- [x] Pick the host per ARCHITECTURE.md "Hosting options". *Cloudflare
+      Pages at `lets-eat.myspot.nz`, owner-confirmed 2026-07-10 (also
+      recorded in ARCHITECTURE 2026-07-07). Hosting is config-as-code:
+      `tools/deploy.json` + `tools/deploy.py` (stdlib, reconciles the CF
+      API idempotently); runbook in `docs/DEPLOY.md`.*
+- [~] Cloudflare Pages path: project connected to this private repo;
+      build command none, output dir `site/`. *Config declared; `main`
+      pushed to GitHub (`mike548141/faves`) 2026-07-10 so the source is
+      live. Creating the project needs the owner's one-time browser +
+      token steps (authorise the CF GitHub App; scoped API token →
+      `CLOUDFLARE_API_TOKEN`), then `python3 tools/deploy.py apply`.*
+- [ ] S3 path (only if chosen): N/A — Cloudflare Pages chosen.
+- [~] Custom domain on existing Cloudflare DNS; HTTPS enforced.
+      *`lets-eat.myspot.nz` declared in `deploy.json`; `deploy.py apply`
+      attaches it and Cloudflare auto-creates the proxied CNAME + cert.*
+- [x] README updated with the live URL and the edit-→-deploy flow.
+      *README "Deploy" section + `docs/DEPLOY.md`.*
+
+**Owner to run (one-time, browser/token — not scriptable):** authorise
+the Cloudflare GitHub App on the repo, create a scoped API token, then
+`python3 tools/deploy.py apply`. See `docs/DEPLOY.md`. After that, every
+push to `main` deploys.
 
 **Accept when**: a guest with nothing but the URL can browse menus on
 their phone.
