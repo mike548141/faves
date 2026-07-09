@@ -38,3 +38,9 @@ deliberation those compact docs omit.
 - [0007](0007-pairings-not-meal-reorg.md) — recommended pairings
   (`goesWith` deep-links) instead of reorganising Cook-at-Home around
   meals
+- [0008](0008-sbom-committed-and-deterministic.md) — SBOM committed at
+  `/.well-known/sbom.json`, deterministic and CI-checked
+- [0009](0009-group-orders-share-urls-not-connections.md) — group
+  ordering shares finished picks as URL fragments (share sheet / QR),
+  not live connections (Bluetooth / WebRTC / backend-room rejected);
+  records the owner's softened stance on a future lightweight backend

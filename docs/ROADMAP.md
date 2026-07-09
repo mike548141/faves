@@ -12,6 +12,14 @@ v1 scope.
 `[constraint]` sits in tension with a hard constraint or non-goal —
 resolution noted inline; **⚑** a decision only the owner can make.
 
+**On "no backend" (owner steer, 2026-07-09).** The stance softened from
+*never* to *not yet*: a lightweight backend (e.g. a Cloudflare Worker)
+is an acceptable **future** direction — live group-order rooms, feedback
+intake — but adopting one is a deliberate step that needs its own ADR
+first ([ADR 0009] records the steer). Until that ADR exists, items
+blocked on "breaks the no-backend non-goal" stay blocked; they are
+deferred, not refused.
+
 ---
 
 ## Theme 1 — From *decided* to *ordered*: the Order tally ★ flagship
@@ -61,6 +69,42 @@ Effort **M**. Client-side only, offline-native, zero backend.
 **Accept when**: at a real family order, one person takes everyone's
 requests, reads the list down the phone, ticks it off at pickup, and
 sanity-checks the total — on a phone, offline.
+
+## Theme 1b — Group ordering: send your picks to the orderer
+
+Owner ask (2026-07-09), decision in **[ADR 0009]**. The scenario: five
+people at the house, each picking dishes in Faves on their own phone;
+everything lands on the host's order list so one person phones it in
+and collects. Extends Theme 1, which shipped a *single shared* order
+and explicitly deferred multi-person.
+
+**Shape (per ADR 0009): share the finished picks, not a live session.**
+Bluetooth is impossible browser-to-browser (and absent from iOS Safari);
+serverless WebRTC needs ~2 QR scans per guest and dies when phones lock;
+a backend room breaks no-backend (deferred — see the steer note up top).
+Instead:
+
+- **Send**: a "Send to the orderer" action on the order sheet encodes
+  the guest's order into a **URL fragment** and hands it to the OS
+  share sheet (AirDrop / Messages), with a **QR code** fallback
+  (rendered locally — zero-dep, no chart API).
+- **Receive**: opening the link merges those lines into the host's
+  existing `cart.js` order, grouped by venue as today, with a
+  confirmation ("Add Ruth's 4 items?") rather than a silent merge.
+  An optional guest-typed label ("Ruth") rides along — device-local,
+  never in the repo, same posture as favourites.
+- **Codec**: one compact, versioned URL scheme (venue id + dish name or
+  code + qty; compressed). **Design it once to also carry the parked
+  "shareable shortlist links"** — same encode/decode, different payload
+  type. Fragment (`#…`) not query string, so picks never appear in any
+  server log. Unknown versions / malformed payloads fail soft to "this
+  link didn't work — ask them to resend".
+
+Effort **M** (codec + share/QR UI + merge flow + tests). Client-side
+only, offline at the house once loaded. **Accept when**: at a real
+five-person dinner, every guest's picks reach the host's phone without
+anyone pairing, installing, or reading out a dish name — and one bad
+link inconveniences only its sender.
 
 ## Theme 2 — Location & maps
 
@@ -544,7 +588,9 @@ dependency.
   hours model computed in NZ time ([ADR 0006]), **plus an "Open now"
   filter toggle** in the home results head.
 - **Shareable group shortlist links** (encode the shortlist in the URL —
-  no backend needed).
+  no backend needed). *2026-07-09: fold into the Theme 1b codec — same
+  URL encode/decode, a `shortlist` payload type instead of `order`
+  ([ADR 0009]). Build it as part of, or straight after, Theme 1b.*
 - ~~**Te reo Māori UI toggle.**~~ ✅ **first pass done 2026-07-09** — a
   device-local language switch in Settings (English / Te Reo Māori). A small
   i18n engine (`site/js/reo.js`) translates the app *chrome* via `data-i18n`
