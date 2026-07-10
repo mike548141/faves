@@ -191,6 +191,11 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- The **"needs a refresh" ⓘ** beside an unverified venue's name now reads as a
+  caution — orange and a little larger, with a soft halo when hovered/open —
+  rather than a passive grey hint.
+- The **"Faves" wordmark** no longer underlines on hover; it warms to the
+  accent colour and lifts slightly, a cleaner cue that it takes you home.
 - The home header is **decluttered into a "⋯" overflow menu**: Favourites and
   Settings now live under one button top-right, freeing the search field to
   span the full row. The Open-now / Cheap-eats / Near-me toggles stay with the

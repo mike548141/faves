@@ -306,6 +306,61 @@ The umbrella "better UX and design", with your concrete asks:
 **Accept when**: judged against `DESIGN.md` at 390 px, tablet and
 desktop; Lighthouse a11y stays 100.
 
+### Test-drive fixes — owner, 2026-07-10
+
+From driving the test server. Two trivial ones fixed same day; the rest
+sit here. Effort in `[S/M]`.
+
+- ✅ **Home wordmark hover** `[S]` — **done 2026-07-10**. Dropped the
+  underline; the "Faves" wordmark now warms to the accent and lifts 1 px on
+  hover (reduced-motion drops the lift). `.app-home-link`.
+- ✅ **"Needs a refresh" ⓘ more prominent** `[S]` — **done 2026-07-10**. The
+  disclosure ⓘ beside an unverified venue's name is now orange (`--warn`) by
+  default and a touch larger (1.45rem), with a soft halo on hover/open — it
+  reads as a caution, not a passive hint. `.caveat-btn`.
+- **Home ranking pass** `[M]` — two asks, both in `ranking.js` (pure,
+  unit-tested — extend the comparator + tests):
+  - **Pin Cook at Home to the top.** Today `recipes` share availability
+    tier 0 with open venues but then sort by curated order/distance; give
+    the recipe collection a top-of-list key so it always anchors. Owner also
+    mused it could live **top-right** — that's a grid-order question (the
+    list is a 2-col grid), decide alongside.
+  - **Sink no-menu (stub) venues below everything orderable.** A "menu
+    coming soon" stub currently interleaves with open, nearby, menu'd
+    places; add a "has a usable menu" signal so stubs fall to the bottom.
+- **Restaurant page: contact block collapses on scroll** `[M]` — as you
+  scroll the dishes, shrink the contact card (phone/address/hours/order-
+  online) upward to a compact Call button (or sticky mini-bar), letting the
+  dish list + category nav use the full width. Mobile-first; the wide
+  two-column layout already parks contact in a sticky aside, so this is the
+  narrow-screen analogue.
+- **Restaurant page: back-to-top button** `[S]` — a floating "↑ top" control
+  on long dish lists, appearing only after you've scrolled down a bit;
+  respects reduced-motion (instant vs smooth scroll).
+- **Footer privacy line → behind an "About" surface** `[M]` — the privacy
+  blurb ("No accounts, no tracking…") is good copy but too prominent sitting
+  in the footer. Move it behind an **About Faves** item in the ⋯ menu (a
+  small modal, same pattern as Settings) or a Privacy disclosure, freeing
+  the footer. Folds into the "About / About-this-site" idea already noted
+  above in this theme.
+- **Settings: language control shouldn't look like tabs** `[S]` — the
+  English / Te Reo Māori pair reads as tabs that swap the panel below. Use a
+  control that clearly picks a language and scales to more (a labelled
+  radio group or a select), so adding a third language later is trivial.
+- **Settings: collapsible chip groups** `[S]` — when the dietary-needs or
+  allergen chips wrap past ~1 line, collapse the overflow behind a "more"
+  toggle so the panel stays scannable.
+- **Settings: allergen caveat → ⓘ info tip** `[S]` — move the "Always
+  confirm for allergies…" paragraph into an ⓘ disclosure beside the
+  "Allergens to flag" heading, reusing the `.caveat-btn`/`.caveat-note`
+  pattern, so it's available on demand without dominating the panel.
+- **Overflow menu "stuck open"** `[S][watch]` — reported 2026-07-10 but
+  **not reproducible in the current build**: CDP confirms both close paths
+  (menu-item click and outside click) hide it, no console errors. Most
+  likely a stale service-worker cache on the reporting browser (hard-reload
+  clears it). Leave as a watch item; add defensive hardening only if it
+  recurs on a freshly-loaded build.
+
 ## Theme 4 — Content growth (ongoing, in parallel)
 
 - **More favourite restaurants.** The master list lives *outside* the
