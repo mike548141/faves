@@ -65,8 +65,9 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   or starting a billed review (`/code-review ultra`, Fable).
 - **Commit as you work.** Small, focused commits — one concern each —
   landed continuously, not one end-of-session dump. Cloudflare Pages
-  deploys from `main`, so a push *is* a deploy; only push (and only
-  branch off `main`) when asked.
+  deploys from `main`, so a push *is* a deploy — and the owner has given
+  standing authorisation (2026-07-10) to **commit and push at your
+  discretion**, deploy included. Still branch off `main` only when asked.
 - **Commit message style:** `area: imperative subject`, lower-case,
   concise, noting how it was verified where useful. Areas in play:
   `data` (menu JSON), `home`/`menu`/`picker` (screens), `css`,
