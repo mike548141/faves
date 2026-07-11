@@ -328,6 +328,14 @@ sit here. Effort in `[S/M]`.
   - **Sink no-menu (stub) venues below everything orderable.** A "menu
     coming soon" stub currently interleaves with open, nearby, menu'd
     places; add a "has a usable menu" signal so stubs fall to the bottom.
+  - **Surfaced 2026-07-12 (owner test-drive):** with "Near me" on, Marigold
+    Takeaway (2.4 km) ranked above Simmer (400 m) though both are closed,
+    menu-less and unfavourited. Root cause: Marigold has `hours: null` →
+    openStatus "unknown" → tier 2, which beats Simmer's known-closed tier 3,
+    *before* distance is considered. Fold into this pass: for non-orderable
+    stubs, proximity is the only useful signal — sort them by distance, not by
+    the unknown-vs-closed tier. (Also a content gap: Marigold's hours are
+    simply missing.)
 - **Restaurant page: contact block collapses on scroll** `[M]` — as you
   scroll the dishes, shrink the contact card (phone/address/hours/order-
   online) upward to a compact Call button (or sticky mini-bar), letting the
@@ -360,6 +368,21 @@ sit here. Effort in `[S/M]`.
   overrides the UA `[hidden] { display: none }` at equal specificity, so the
   attribute could never hide the popup and it rendered open on load. Fixed with
   a `.overflow-menu[hidden] { display: none }` guard in `app.css`.
+
+### Test-drive fixes — owner, 2026-07-12
+
+Second device pass, after the site went live. Effort in `[S/M]`.
+
+- **Home: "Pick for us" FAB eats phone real estate** `[S]` — on iPhone the
+  floating "Pick for us" button occupies valuable space above the list.
+  Either hide it on scroll-down (reveal on scroll-up, the common app pattern)
+  or relocate it — e.g. into the ⋯ menu, or a slimmer inline control. Keep the
+  ≥44 px target and reduced-motion behaviour.
+- **⋯ menu: "Share this app"** `[S]` — add a menu item that shares the site
+  itself (its public URL) via the Web Share API, falling back to copy-link —
+  distinct from the existing "share your favourites"/"send your picks" flows,
+  which share *content*. This shares the app so others can install it. Reuse
+  the share plumbing in `share-ui.js` where sensible.
 
 ## Theme 4 — Content growth (ongoing, in parallel)
 
