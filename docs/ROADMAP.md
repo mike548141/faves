@@ -352,8 +352,11 @@ sit here. Effort in `[S/M]`.
   the footer. Folds into the "About / About-this-site" idea already noted
   above in this theme.
 - **Settings: language control shouldn't look like tabs** `[S]` ✅ **done
-  2026-07-12** — replaced the segmented pill with a labelled radio group
-  (`.lang-radios`); reads as "choose one language" and scales to a third row.
+  2026-07-12** — replaced the segmented pill with a compact `<select>` dropdown
+  (`.lang-select`, styled like the home Area/Cuisine selects); reads as "choose
+  one language", stays tidy, and scales by adding an `<option>`. (Briefly a
+  radio group; switched to a dropdown on owner feedback that it took too much
+  space.)
 - **Settings: collapsible chip groups** `[S]` ✅ **done 2026-07-12** — dietary
   and allergen chip groups clamp to one row behind a "Show all N" toggle
   (`collapsible()` in settings-ui.js), shown only when the chips actually
