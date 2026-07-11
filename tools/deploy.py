@@ -180,10 +180,17 @@ def ensure_project(acct, cfg, apply):
     return existing
 
 
-def ensure_domains(acct, cfg, apply):
+def ensure_domains(acct, cfg, apply, project):
     name = cfg["pages_project"]
     want = cfg.get("custom_domains", [])
     if not want:
+        return
+    if project is None:
+        # Plan mode with the project not yet created: the domains endpoint
+        # would 404. Nothing exists, so everything is an attach.
+        for domain in want:
+            print(f"  domain {domain}: MISSING -> will attach after "
+                  "project creation")
         return
     have = {d["name"] for d in (cf(
         "GET", f"/accounts/{acct}/pages/projects/{name}/domains") or [])}
@@ -207,8 +214,8 @@ def main():
     cfg = load_config()
     acct = resolve_account_id(cfg)
     print(f"account: {acct}   mode: {cmd.upper()}")
-    ensure_project(acct, cfg, apply)
-    ensure_domains(acct, cfg, apply)
+    project = ensure_project(acct, cfg, apply)
+    ensure_domains(acct, cfg, apply, project)
     if not apply:
         print("\nplan only — nothing changed. Run `apply` to make it so.")
     else:
