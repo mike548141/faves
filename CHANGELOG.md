@@ -199,6 +199,11 @@ freshness separately from this file.
   clear is WebKit-only and missing on mobile, so we ship our own everywhere).
 
 ### Changed
+- **Home ordering pass**: the **Cook at Home** recipes collection is now pinned
+  to the top of the list, and **"menu coming soon" venues sink below everything
+  you can actually order from**. With "Near me" on, those menu-less places now
+  sort by distance among themselves — so a closed café 400 m away no longer sits
+  below an unknown-hours one 2 km away. "Pick for us" also skips menu-less stubs.
 - **Settings language picker** is now a compact dropdown instead of a segmented
   pill, so it reads as "choose a language" rather than tabs, stays tidy in the
   dialog, and scales when a third language is added. Its field labels ("Your

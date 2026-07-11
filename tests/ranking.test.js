@@ -186,3 +186,34 @@ test("rankVenues does not mutate its input", () => {
   rankVenues(input, { now: MON_NOON, origin: CBD });
   assert.equal(JSON.stringify(input), snap);
 });
+
+// --- Pinning + stubs (menu-less "coming soon" venues) ---
+
+test("rankVenues: Cook at Home (recipes) is pinned to the very top", () => {
+  // Even against an open, nearby venue, the recipes collection anchors #1.
+  const order = rankVenues([openNear, recipes], { now: MON_NOON, origin: CBD }).map((r) => r.id);
+  assert.deepEqual(order, ["cook-at-home", "open-near"]);
+});
+
+test("rankVenues: menu-less stubs sink below everything orderable", () => {
+  // An OPEN stub still ranks below a CLOSED orderable venue — you can't order
+  // from a stub, so availability doesn't rescue it.
+  const openStub = { id: "open-stub", status: "stub", lat: -41.29, lng: 174.78, hours: week("09:00", "22:00") };
+  const order = rankVenues([openStub, closedNear], { now: MON_NOON }).map((r) => r.id);
+  assert.deepEqual(order, ["closed-near", "open-stub"]);
+});
+
+test("rankVenues (origin): among stubs, the nearer one wins even if it's closed", () => {
+  // The reported bug: a closed stub 400 m away sat below an unknown-hours stub
+  // 2.4 km away, because "unknown" (tier 2) beat "closed" (tier 3). For stubs
+  // that tier is ignored, so distance decides.
+  const closedNearStub = { id: "simmer", status: "stub", lat: -41.287, lng: 174.776, hours: week("18:00", "22:00") };
+  const unknownFarStub = { id: "marigold", status: "stub", lat: -41.32, lng: 174.8, hours: null };
+  const order = rankVenues([unknownFarStub, closedNearStub], { now: MON_NOON, origin: CBD }).map((r) => r.id);
+  assert.deepEqual(order, ["simmer", "marigold"]);
+});
+
+test("isAvailableNow: a stub is never available (nothing to order)", () => {
+  const openStub = { id: "s", status: "stub", hours: week("09:00", "22:00") };
+  assert.equal(isAvailableNow(openStub, { now: MON_NOON }), false);
+});

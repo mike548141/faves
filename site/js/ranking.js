@@ -18,10 +18,15 @@
 //     measured on ACTUAL distance — the boost is preference, not reach) it
 //     sinks below everything nearby.
 //
-// Sort order is lexicographic: reachable → availability → effective
-// distance (favourite-boosted) → favourite-tiebreak → curated. Pure (no
-// DOM/network) so it's unit-tested; favourites arrive as a plain Set of
-// venue ids and the two distances as params, so this stays store-agnostic.
+//  4. A usable menu. A "menu coming soon" stub can be found by name but not
+//     ordered from, so it sinks below everything orderable; among stubs,
+//     proximity (not open-status) is the only useful signal.
+//
+// Sort order is lexicographic: pinned (the Cook-at-Home recipes collection
+// always anchors the top) → orderable-before-stub → reachable → availability
+// → effective distance (favourite-boosted) → favourite-tiebreak → curated.
+// Pure (no DOM/network) so it's unit-tested; favourites arrive as a plain Set
+// of venue ids and the two distances as params, so this stays store-agnostic.
 // The viewer can tune both distances (settings.js).
 
 import { openStatus } from "./hours.js";
@@ -38,6 +43,11 @@ export const FAV_BOOST_KM = 10;
 // Safe numeric compare (Infinity − Infinity is NaN, which would corrupt a
 // subtraction-based comparator; coordless venues carry Infinity distance).
 const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+
+// A "stub" is a venue with no usable menu yet (status "stub"): you can find it
+// by name, but there's nothing to order — so it sinks below everything
+// orderable and is skipped by the "Pick for us" shuffle.
+const isStub = (r) => r.status === "stub";
 
 /**
  * Availability tier — lower is more useful right now:
@@ -65,6 +75,7 @@ const coordsOf = (r) =>
  * for us" shuffle so the dice doesn't land on a closed or faraway place.
  */
 export function isAvailableNow(r, { now, origin = null, farKm = FAR_KM } = {}) {
+  if (isStub(r)) return false; // nothing to order from a "menu coming soon" stub
   if (availabilityTier(r, now) === 3) return false;
   const c = origin && coordsOf(r);
   if (c && haversineKm(origin, c) > farKm) return false;
@@ -89,6 +100,7 @@ export function rankVenues(
     const c = origin && coordsOf(r);
     const dist = c ? haversineKm(origin, c) : Infinity;
     const isFav = !!(favouriteIds && favouriteIds.has(r.id));
+    const stub = isStub(r) ? 1 : 0;
     // "Too far" gates on actual distance — a favourite in another town is
     // still unreachable; the boost only reorders, it doesn't extend reach.
     const far = origin && dist !== Infinity && dist > farKm ? 1 : 0;
@@ -96,15 +108,26 @@ export function rankVenues(
     // venues stay at Infinity (no coords to boost). favTie separates
     // favourites when there's no location (all Infinity) or an exact tie.
     const effective = dist === Infinity ? Infinity : dist - (isFav ? favBoostKm : 0);
-    return { r, i, tier: availabilityTier(r, now), effective, favTie: isFav ? 0 : 1, dist, far };
+    // Availability ranks only *within* the orderable group. For a stub it's
+    // meaningless — and worse, "unknown hours" (tier 2) would beat "known
+    // closed" (tier 3), so a nearer closed stub sank below a farther unknown
+    // one. Zero it for stubs so they order by distance instead.
+    const tier = stub ? 0 : availabilityTier(r, now);
+    return {
+      r, i, effective, dist, far, tier, stub,
+      pinned: r.kind === "recipes" ? 0 : 1, // Cook at Home always anchors the top
+      favTie: isFav ? 0 : 1,
+    };
   });
   keyed.sort(
     (a, b) =>
-      a.far - b.far ||
-      a.tier - b.tier ||
-      cmp(a.effective, b.effective) ||
-      a.favTie - b.favTie ||
-      a.i - b.i
+      a.pinned - b.pinned || // the recipes collection is pinned to the very top
+      a.stub - b.stub || // orderable venues above menu-less "coming soon" stubs
+      a.far - b.far || // reachable (within farKm) before too-far
+      a.tier - b.tier || // availability, within the orderable group
+      cmp(a.effective, b.effective) || // favourite-boosted distance
+      a.favTie - b.favTie || // separate favourites on an exact tie
+      a.i - b.i // curated order
   );
   return keyed.map(({ r, dist }) =>
     origin && dist !== Infinity ? { ...r, distanceKm: dist } : r

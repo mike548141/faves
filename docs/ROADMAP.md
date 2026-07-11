@@ -318,24 +318,18 @@ sit here. Effort in `[S/M]`.
   disclosure ⓘ beside an unverified venue's name is now orange (`--warn`) by
   default and a touch larger (1.45rem), with a soft halo on hover/open — it
   reads as a caution, not a passive hint. `.caveat-btn`.
-- **Home ranking pass** `[M]` — two asks, both in `ranking.js` (pure,
-  unit-tested — extend the comparator + tests):
-  - **Pin Cook at Home to the top.** Today `recipes` share availability
-    tier 0 with open venues but then sort by curated order/distance; give
-    the recipe collection a top-of-list key so it always anchors. Owner also
-    mused it could live **top-right** — that's a grid-order question (the
-    list is a 2-col grid), decide alongside.
-  - **Sink no-menu (stub) venues below everything orderable.** A "menu
-    coming soon" stub currently interleaves with open, nearby, menu'd
-    places; add a "has a usable menu" signal so stubs fall to the bottom.
-  - **Surfaced 2026-07-12 (owner test-drive):** with "Near me" on, Marigold
-    Takeaway (2.4 km) ranked above Simmer (400 m) though both are closed,
-    menu-less and unfavourited. Root cause: Marigold has `hours: null` →
-    openStatus "unknown" → tier 2, which beats Simmer's known-closed tier 3,
-    *before* distance is considered. Fold into this pass: for non-orderable
-    stubs, proximity is the only useful signal — sort them by distance, not by
-    the unknown-vs-closed tier. (Also a content gap: Marigold's hours are
-    simply missing.)
+- **Home ranking pass** `[M]` ✅ **done 2026-07-12** — added two sort keys to
+  `ranking.js` ahead of the existing ones: `pinned` (the Cook-at-Home recipes
+  collection always anchors the top) and `stub` (menu-less "coming soon" venues
+  sink below everything orderable). Availability tier is zeroed for stubs so
+  they order by distance, and `isAvailableNow` now excludes stubs so "Pick for
+  us" won't land on one. 4 new unit tests; verified live over CDP with a
+  geolocated origin. Still open: the **top-right** grid-position idea for Cook
+  at Home (a CSS grid-order question, not ranking) — left for later.
+  - **Near-me finding (Simmer/Marigold) resolved by the above.** With stubs
+    ordered by distance, the closed café 400 m away now outranks the
+    unknown-hours one 2.4 km away. (Content gap remains: Marigold's hours are
+    still missing — worth filling.)
 - **Restaurant page: contact block collapses on scroll** `[M]` — as you
   scroll the dishes, shrink the contact card (phone/address/hours/order-
   online) upward to a compact Call button (or sticky mini-bar), letting the
