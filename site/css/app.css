@@ -70,6 +70,14 @@
 *::after {
   box-sizing: border-box;
 }
+/* The whole app hides/shows via the `hidden` attribute (no inline display
+   toggles anywhere). The UA's [hidden]{display:none} loses to any author rule
+   that sets display (flex/grid/…) at equal specificity — which silently broke
+   the overflow menu and the QR card (they showed when hidden). This guard makes
+   the attribute always win, app-wide, so the pattern can't regress again. */
+[hidden] {
+  display: none !important;
+}
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -1084,9 +1092,6 @@ body:not(.menu-page) {
 .menu-page .order-fab {
   bottom: calc(env(safe-area-inset-bottom) + var(--space-3));
 }
-.order-fab[hidden] {
-  display: none;
-}
 .order-fab:active {
   transform: scale(0.96);
 }
@@ -1367,11 +1372,14 @@ body:not(.menu-page) {
 }
 .share-qr-canvas {
   /* Always on a white card so the code scans in dark mode too; the canvas
-     already paints its own quiet zone, this just frames it. */
+     already paints its own quiet zone, this just frames it. Radius stays small
+     (--radius, not the pill --radius-chip) — a canvas is clipped by its
+     border-radius, and a pill radius rounds the QR into an oval, shaving the
+     corner finder patterns and making it unscannable. */
   width: min(280px, 80vw);
   height: auto;
   padding: var(--space-2);
-  border-radius: var(--radius-chip);
+  border-radius: var(--radius);
   background: #fff;
   image-rendering: pixelated; /* keep module edges crisp when scaled */
 }
@@ -1465,11 +1473,6 @@ body:not(.menu-page) {
 .overflow-btn[aria-expanded="true"] {
   color: var(--accent);
   border-color: var(--accent);
-}
-/* [hidden] alone loses to the .overflow-menu display below (attr selector has
-   lower specificity), so the popup stayed open on load — restore fail-closed. */
-.overflow-menu[hidden] {
-  display: none;
 }
 .overflow-menu {
   position: absolute;
@@ -1738,7 +1741,9 @@ body:not(.menu-page) {
   position: relative;
 }
 .chips-collapsible.is-collapsed:not(.fits) .pref-chips {
-  max-height: 44px;
+  /* One 44px chip row + half the row-gap, so the clip lands in the gap below
+     row 1 (not through a chip's rounded bottom) yet keeps row 2 hidden. */
+  max-height: calc(44px + var(--space-1) / 2);
   overflow: hidden;
 }
 .chips-collapsible.is-collapsed:not(.fits)::after {

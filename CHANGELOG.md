@@ -268,6 +268,15 @@ freshness separately from this file.
   the site still ships build-less.
 
 ### Fixed
+- **QR share card fixed three ways**: it no longer shows an empty white oval
+  before you tap "Show QR code", **Hide QR code** now actually hides it, and the
+  code renders as a proper square instead of being clipped to a pill (which was
+  shaving off the corner finder patterns and could stop it scanning). Root cause
+  was a CSS rule that let elements ignore their `hidden` attribute; a single
+  app-wide guard now makes `hidden` always win, so this class of bug can't recur.
+- **Selected dietary/allergen chip no longer looks clipped**: when a chip group
+  was collapsed to one row, the clamp cut through the pressed chip's rounded
+  bottom; it now clips in the gap below the row.
 - **Opening a restaurant no longer fails with "This site can't be reached."**
   Cloudflare Pages 308-redirects `/restaurant.html` → `/restaurant`, and the
   service worker was caching (and returning) that redirected response — which
