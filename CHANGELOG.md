@@ -194,6 +194,11 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Added
+- **Hell Pizza Newlands** now has a full menu (99 items) — transcribed from
+  their official site and flagged "confirm prices with the venue" (web-sourced,
+  not yet checked in store).
+- **Back-to-top button on long menus**: a floating ↑ appears once you've
+  scrolled down and returns you to the top (instant under reduced-motion).
 - **Clear button in the search field**: a circular ✕ appears once you've typed,
   wiping the query and refocusing the box in one tap (the native `type=search`
   clear is WebKit-only and missing on mobile, so we ship our own everywhere).

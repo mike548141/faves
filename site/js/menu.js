@@ -636,10 +636,37 @@ function render(r) {
   if (activeDiet.size) applyView();
 }
 
+// A floating "back to top" control for long menus. It appears only after you've
+// scrolled down a bit and scrolls back up (instant under reduced-motion). Sits
+// bottom-right, opposite the bottom-left order FAB, so they never collide.
+function initBackToTop() {
+  const btn = el("button", {
+    type: "button",
+    className: "to-top",
+    hidden: true,
+    "aria-label": "Back to top",
+    "data-i18n-aria": "nav.backToTop",
+  }, [el("span", { "aria-hidden": "true", textContent: "↑" })]);
+  document.body.append(btn);
+
+  const onScroll = () => {
+    btn.hidden = window.scrollY < 600;
+  };
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  btn.addEventListener("click", () => {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    btn.blur();
+  });
+}
+
 // --- Boot ------------------------------------------------------------
 // The order FAB rides along on every screen so a running order is always
 // reachable — even on a stub page or if this menu fails to load.
 initOrderUI();
+initBackToTop();
 // Apply the stored UI language to the static chrome (the back link) and set
 // <html lang>. Menu content — dish names, descriptions, section names — stays
 // as the venue wrote it; generated chrome carries data-i18n and is translated

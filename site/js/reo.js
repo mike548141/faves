@@ -33,6 +33,7 @@ const MI = {
   // Search
   "search.ph": "Rapua he wāhi, he kai rānei…",
   "search.clear": "Whakawātea rapu",
+  "nav.backToTop": "Hoki ki runga",
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",
