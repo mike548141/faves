@@ -32,6 +32,7 @@ const MI = {
   "app.sub": "Ā mātou kai tino pai o Pōneke — ngā tahua kai, kotahi te wāhi.", // draft
   // Search
   "search.ph": "Rapua he wāhi, he kai rānei…",
+  "search.clear": "Whakawātea rapu",
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",

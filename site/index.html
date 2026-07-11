@@ -94,6 +94,19 @@
             autocomplete="off"
             enterkeyhint="search"
           />
+          <!-- Custom clear ✕ (the native type=search one is WebKit-only and
+               absent on mobile). app.js shows it whenever the field has text
+               and refocuses the input after clearing. -->
+          <button
+            type="button"
+            id="search-clear"
+            class="search-clear"
+            aria-label="Clear search"
+            data-i18n-aria="search.clear"
+            hidden
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
         </form>
       </div>
 

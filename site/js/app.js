@@ -275,6 +275,7 @@ function init(restaurants) {
 function wireSearch(restaurants) {
   const form = document.getElementById("search-form");
   const input = document.getElementById("search-input");
+  const clear = document.getElementById("search-clear");
   const results = document.getElementById("search-results");
   const summary = document.getElementById("search-summary");
   const groups = document.getElementById("search-groups");
@@ -335,11 +336,20 @@ function wireSearch(restaurants) {
     if (active) exitFavourites(); // search and the favourites view are exclusive
     document.body.classList.toggle("searching", active);
     results.hidden = !active;
+    // The clear ✕ tracks any text at all (even one char you'd want to wipe),
+    // not just an active ≥2-char search.
+    if (clear) clear.hidden = input.value.length === 0;
     if (active) renderResults(q);
     else groups.replaceChildren();
   }
 
   input.addEventListener("input", update);
+  if (clear)
+    clear.addEventListener("click", () => {
+      input.value = "";
+      update();
+      input.focus(); // keep the keyboard up so you can retype straight away
+    });
   // Submit is a no-op (results are live); just don't reload the page.
   form.addEventListener("submit", (e) => e.preventDefault());
   // Esc clears and returns to browse, even from the native clear button path.
@@ -357,7 +367,9 @@ function wireSearch(restaurants) {
 function exitSearch() {
   const input = document.getElementById("search-input");
   const results = document.getElementById("search-results");
+  const clear = document.getElementById("search-clear");
   if (input) input.value = "";
+  if (clear) clear.hidden = true;
   document.body.classList.remove("searching");
   if (results) results.hidden = true;
 }

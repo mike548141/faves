@@ -193,6 +193,11 @@ freshness separately from this file.
 - Zero-dependency guard (`tools/check_no_deps.py`, a CI job) enforcing
   the no-third-party-components invariant from ADR 0001.
 
+### Added
+- **Clear button in the search field**: a circular ✕ appears once you've typed,
+  wiping the query and refocusing the box in one tap (the native `type=search`
+  clear is WebKit-only and missing on mobile, so we ship our own everywhere).
+
 ### Changed
 - **Settings language picker** is now a radio group instead of a segmented
   pill, so it clearly reads as "choose a language" rather than tabs — and it
