@@ -50,6 +50,7 @@ const MI = {
   "nav.favourites": "Ngā Makau",
   "nav.settings": "Ngā Tautuhinga",
   "nav.about": "Mō tēnei", // draft
+  "nav.shareApp": "Tuaritia tēnei taupānga", // draft
   "nav.allRestaurants": "← Ngā wharekai katoa",
   "nav.back": "← Hoki",
   // Favourites view

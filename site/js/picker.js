@@ -170,4 +170,27 @@ export function initPicker(getCandidates, isFavourite = () => false) {
     // Click on the backdrop (outside the content) closes.
     if (!inner.contains(e.target)) dialog.close();
   });
+
+  // Tuck the FAB away while scrolling *down* so it stops covering the list you're
+  // reading; bring it back on any upward scroll, or near the top. rAF-throttled
+  // and CSS-animated (transform, not display) so it never fights the view-state
+  // rules that already hide it in search/favourites. Home only — the FAB doesn't
+  // exist on other screens.
+  let lastY = window.scrollY;
+  let ticking = false;
+  addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (y > lastY + 4 && y > 160) fab.classList.add("is-tucked");
+        else if (y < lastY - 4 || y < 80) fab.classList.remove("is-tucked");
+        lastY = y;
+        ticking = false;
+      });
+    },
+    { passive: true }
+  );
 }

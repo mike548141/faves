@@ -916,6 +916,24 @@ body:not(.menu-page) {
 .pick-fab:active {
   transform: scale(0.96);
 }
+/* Auto-hide on scroll-down (picker.js toggles .is-tucked): slide it off the
+   bottom edge so it stops covering the list, then slide back on scroll-up. */
+.pick-fab {
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+.pick-fab.is-tucked {
+  transform: translateY(150%);
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pick-fab {
+    transition: opacity 0.2s ease;
+  }
+  .pick-fab.is-tucked {
+    transform: none;
+  }
+}
 
 .picker {
   width: min(100% - 2rem, 24rem);
@@ -2690,4 +2708,36 @@ body:not(.menu-page) {
   border-top: 1px solid var(--line);
   font-size: 0.85rem;
   color: var(--ink-soft);
+}
+
+/* Transient status toast (toast.js) — bottom-centre, sits clear of the filter
+   bar, fades in/out. Reduced motion keeps the fade but drops the slide. */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-4));
+  transform: translate(-50%, 0.75rem);
+  z-index: 20;
+  max-width: min(90vw, 30rem);
+  padding: 0.7em 1.1em;
+  border-radius: var(--radius-chip);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  text-align: center;
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.toast.is-shown {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    transform: translate(-50%, 0);
+    transition: opacity 0.18s ease;
+  }
 }

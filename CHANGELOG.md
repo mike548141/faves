@@ -194,6 +194,11 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Added
+- **Share this app**: a ⋯-menu item that hands the app's URL to the OS share
+  sheet (AirDrop / Messages), or copies the link with a toast where native
+  sharing isn't available.
+- **Pick-for-us tucks away on scroll**: the floating "Pick for us" button slides
+  out of the way as you scroll down the list and slides back when you scroll up.
 - **About surface**: an "About" item in the ⋯ menu (and an "About & privacy"
   link in the footer) opens a dialog covering what Faves is, its privacy stance,
   and how it works offline. The footer's inline privacy note now lives there;
