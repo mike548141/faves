@@ -72,6 +72,16 @@
               <span class="overflow-item-icon" aria-hidden="true">⚙</span>
               <span data-i18n="nav.settings">Settings</span>
             </button>
+            <button
+              type="button"
+              id="about-btn"
+              class="overflow-item"
+              role="menuitem"
+              hidden
+            >
+              <span class="overflow-item-icon" aria-hidden="true">ⓘ</span>
+              <span data-i18n="nav.about">About</span>
+            </button>
           </div>
         </div>
       </div>
@@ -350,10 +360,16 @@
       <p id="empty-state" class="empty browse-only" data-i18n="result.empty" hidden>No places match those filters. Try widening them.</p>
 
       <footer class="site-footer">
+        <!-- No-JS visitors keep the full privacy note here; about-ui.js hides
+             it and reveals the "About & privacy" link (which opens the About
+             dialog carrying the same, fuller text). -->
         <p class="footer-privacy">
           No accounts, no tracking, no third-party scripts. Your favourites,
           order and settings stay on your device — the only thing this site
           ever fetches is its own pages.
+        </p>
+        <p class="footer-about" hidden>
+          <button type="button" id="about-open" class="footer-link" data-i18n="footer.about">About &amp; privacy</button>
         </p>
         <p class="footer-made"><span data-i18n="footer.made">Made by</span> <span class="footer-brand">cakeIT</span></p>
       </footer>

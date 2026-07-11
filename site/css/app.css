@@ -2647,3 +2647,47 @@ body:not(.menu-page) {
   font-weight: 700;
   color: var(--ink);
 }
+/* Footer "About & privacy" link — a button styled as a text link (it opens the
+   About dialog rather than navigating), sized to a comfortable tap target. */
+.footer-link {
+  display: inline-block;
+  min-height: 44px;
+  padding: 0.4em 0.2em;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.footer-link:hover {
+  color: var(--accent);
+}
+
+/* About dialog. Reuses .settings-sheet for the sheet/backdrop/head; these
+   style only its prose. */
+.about-lede {
+  color: var(--ink);
+  line-height: 1.55;
+  margin-bottom: var(--space-4);
+}
+.about-group {
+  margin-bottom: var(--space-4);
+}
+.about-group-title {
+  font-size: var(--step-sub);
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+}
+.about-text {
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.about-made {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}

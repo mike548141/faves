@@ -194,6 +194,10 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Added
+- **About surface**: an "About" item in the ⋯ menu (and an "About & privacy"
+  link in the footer) opens a dialog covering what Faves is, its privacy stance,
+  and how it works offline. The footer's inline privacy note now lives there;
+  a no-JS visitor still sees the note in the footer.
 - **Contact bar collapses on scroll (mobile)**: once the full contact card
   scrolls out of view, a slim bar pins to the top with the open-now status and
   a "call to order" button, so ordering stays one tap away down a long menu.

@@ -49,6 +49,7 @@ const MI = {
   "nav.more": "Ētahi atu",
   "nav.favourites": "Ngā Makau",
   "nav.settings": "Ngā Tautuhinga",
+  "nav.about": "Mō tēnei", // draft
   "nav.allRestaurants": "← Ngā wharekai katoa",
   "nav.back": "← Hoki",
   // Favourites view
@@ -69,6 +70,7 @@ const MI = {
   "tz.note": "Kei te wā o Aotearoa ngā wā tuwhera/kati.", // draft
   // Footer
   "footer.made": "Nā",
+  "footer.about": "Mō tēnei me te tūmataiti", // draft
   // Settings dialog
   "settings.title": "Ngā Tautuhinga",
   "settings.langTitle": "Te Reo",

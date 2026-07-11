@@ -17,6 +17,7 @@ import { openShareDialog } from "./share-ui.js";
 import { groupSection, resultRow } from "./results-view.js";
 import { settings } from "./settings.js";
 import { initSettingsUI } from "./settings-ui.js";
+import { initAboutUI } from "./about-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { priceBand } from "./price.js";
 import { initReo } from "./reo.js";
@@ -241,6 +242,7 @@ function init(restaurants) {
   wireFavourites();
   wireHomeButton();
   initSettingsUI();
+  initAboutUI();
   initOverflowMenu();
   // Hearting something, or changing a distance dial, re-ranks the list (also
   // covers un-favouriting in the view, or a change synced from another tab).
