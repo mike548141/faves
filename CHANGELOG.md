@@ -199,9 +199,10 @@ freshness separately from this file.
   clear is WebKit-only and missing on mobile, so we ship our own everywhere).
 
 ### Changed
-- **Settings language picker** is now a radio group instead of a segmented
-  pill, so it clearly reads as "choose a language" rather than tabs — and it
-  scales cleanly when a third language is added.
+- **Settings language picker** is now a compact dropdown instead of a segmented
+  pill, so it reads as "choose a language" rather than tabs, stays tidy in the
+  dialog, and scales when a third language is added. Its field labels ("Your
+  dietary needs", "Allergens to flag") are now full-contrast and body-sized.
 - **Settings dietary/allergen chips collapse to one row** with a "Show all"
   toggle when they'd otherwise wrap and dominate the panel; if they fit one
   row, no toggle appears.

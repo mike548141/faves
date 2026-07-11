@@ -1627,61 +1627,79 @@ body:not(.menu-page) {
 /* Food preferences section of the settings dialog. */
 .settings-group-title {
   margin: var(--space-5) 0 var(--space-2);
-  font-size: var(--step-body);
+  font-size: 1.15rem; /* between the dialog title and the body-sized field labels */
   font-weight: 700;
 }
 .settings-group-title:first-of-type {
   margin-top: 0;
 }
+/* Field labels ("Your dietary needs", "Allergens to flag"): full-contrast and
+   body-sized so they read as real headings, a clear step below the bold
+   section titles above them. */
 .settings-sub {
   margin: var(--space-3) 0 var(--space-2);
-  color: var(--ink-soft);
-  font-size: var(--step-sub);
+  color: var(--ink);
+  font-size: var(--step-body);
   font-weight: 600;
 }
-/* Language picker: a radio list, not a segmented toggle — it reads as "choose
-   one language", scales to more rows, and each row is a full ≥44px target. */
-.lang-radios {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+/* Language picker: a compact dropdown matching the home Area/Cuisine selects. */
+.lang-select {
+  position: relative;
+  display: inline-block;
+  min-width: 12rem;
 }
-.lang-radio {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
+.lang-select-input {
+  width: 100%;
   min-height: 44px;
-  padding: 0 var(--space-2);
+  padding: 0.5em 2.4em 0.5em 0.85em;
   border: 1px solid var(--line);
   border-radius: var(--radius-chip);
   background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-body);
   font-weight: 600;
+  appearance: none;
   cursor: pointer;
 }
-.lang-radio-input {
-  width: 1.15em;
-  height: 1.15em;
-  accent-color: var(--accent);
-  cursor: pointer;
+.lang-select::after {
+  content: "";
+  position: absolute;
+  right: 0.9em;
+  top: 50%;
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid var(--ink-soft);
+  border-bottom: 2px solid var(--ink-soft);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
 }
-.lang-radio:has(.lang-radio-input:checked) {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.lang-radio:focus-within {
+.lang-select-input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* Heading + its ⓘ caveat share a row; relative so the note anchors to it. */
+/* Heading + its ⓘ caveat share a row; relative so the note anchors to it. The
+   row owns the heading's vertical margins so the two align on one baseline. */
 .settings-sub-row {
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-1);
+  margin: var(--space-3) 0 var(--space-2);
 }
 .settings-sub-row .settings-sub {
-  margin-bottom: var(--space-1);
+  margin: 0;
+}
+/* The caveat ⓘ keeps a 44px tap target but a smaller glyph, sized to the
+   heading beside it (the menu's larger 1.45rem ⓘ sits by a big venue name);
+   left-aligned so it hugs the heading rather than floating mid-box. */
+.settings-sub-row .caveat-btn {
+  justify-content: flex-start;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding-left: 0.1em;
+  font-size: 1.05rem;
 }
 .pref-chips {
   display: flex;

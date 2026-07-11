@@ -32,26 +32,24 @@ function field({ id, label, hint, min, max, step }) {
   return { row, input, out };
 }
 
-// The language picker: a radio group, each option named in its own tongue (a
-// language is always shown in its own name, whatever the current UI language).
-// Radios — not a segmented toggle — so it reads unmistakably as "choose one
-// language" rather than tabs that swap the panel, and scales to a third
-// language by adding a row. Writes settings.lang; reo.js re-translates the
-// whole document off the store subscription.
+// The language picker: a compact <select>, each option named in its own tongue
+// (a language is always shown in its own name, whatever the current UI
+// language). A dropdown — not a segmented toggle or a stack of radios — keeps
+// the dialog tight, reads unmistakably as "choose one", and scales to more
+// languages by adding an <option>. Styled to match the home Area/Cuisine
+// selects. Writes settings.lang; reo.js re-translates off the store.
 function langControl() {
-  const group = el("div", { className: "lang-radios", role: "radiogroup" });
-  group.setAttribute("aria-label", "Language");
-  const inputs = [
+  const select = el("select", { className: "lang-select-input" });
+  select.setAttribute("aria-label", "Language");
+  for (const { lang, label } of [
     { lang: "en", label: "English" },
     { lang: "mi", label: "Te Reo Māori" },
-  ].map(({ lang, label }) => {
-    const input = el("input", { type: "radio", name: "faves-lang", value: lang, className: "lang-radio-input" });
-    input.addEventListener("change", () => settings.set({ lang }));
-    const row = el("label", { className: "lang-radio" }, [input, el("span", { textContent: label })]);
-    group.append(row);
-    return input;
-  });
-  return { group, inputs };
+  ]) {
+    select.append(el("option", { value: lang, textContent: label }));
+  }
+  select.addEventListener("change", () => settings.set({ lang: select.value }));
+  const group = el("div", { className: "lang-select" }, [select]);
+  return { group, select };
 }
 
 // A group of multi-select toggle chips backed by one list on the diet prefs
@@ -214,7 +212,7 @@ export function initSettingsUI() {
   // Reflect the current settings into every control.
   function sync() {
     const s = settings.get();
-    for (const input of lang.inputs) input.checked = input.value === s.lang;
+    lang.select.value = s.lang;
     const dietarySet = new Set(s.diet.dietary);
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
     const avoidSet = new Set(s.diet.avoid);
