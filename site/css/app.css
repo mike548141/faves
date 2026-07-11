@@ -1154,6 +1154,17 @@ body:not(.menu-page) {
     transition: none;
   }
 }
+/* On the home list the bottom-right already holds the "Pick for us" pill (above
+   the fixed filter bar), so sit the back-to-top clear above both — the pick FAB
+   tucks on scroll-down, but this keeps them from colliding mid-list on the way
+   back up. Suppressed in search / favourites, which drop the bar and FAB. */
+body:not(.menu-page) .to-top {
+  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3) + 3.6rem);
+}
+body.searching .to-top,
+body.faves-view .to-top {
+  display: none;
+}
 .order-fab-count {
   min-width: 1.5em;
   padding: 0.05em 0.4em;
@@ -1577,6 +1588,11 @@ body:not(.menu-page) {
   font-size: 1.1rem;
   text-align: center;
 }
+/* The gear glyph (⚙ U+2699) draws small inside its em box next to ♥/⤴/ⓘ, so it
+   reads as undersized at the shared 1.1rem — nudge it up to match visually. */
+#settings-btn .overflow-item-icon {
+  font-size: 1.35rem;
+}
 /* The favourites count sits at the far edge of its row (the pressed-state
    recolour is inherited from .fav-toggle[aria-pressed] above). */
 .overflow-item .favourites-count:not(:empty) {
@@ -1801,19 +1817,13 @@ body:not(.menu-page) {
 }
 .chips-collapsible.is-collapsed:not(.fits) .pref-chips {
   /* One 44px chip row + half the row-gap, so the clip lands in the gap below
-     row 1 (not through a chip's rounded bottom) yet keeps row 2 hidden. */
+     row 1 (not through a chip's rounded bottom) yet keeps row 2 hidden. The
+     clip is clean (row 2 is fully hidden, no half-chip peek), so no fade
+     overlay is needed — an earlier gradient here bled over the bottom of the
+     row-1 chips and muddied a selected chip's fill. The "Show all N" toggle is
+     the affordance that there's more. */
   max-height: calc(44px + var(--space-1) / 2);
   overflow: hidden;
-}
-.chips-collapsible.is-collapsed:not(.fits)::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 2.4rem; /* sit just above the toggle */
-  height: 1.4rem;
-  background: linear-gradient(to bottom, transparent, var(--surface));
-  pointer-events: none;
 }
 .chips-toggle {
   margin-top: var(--space-1);
@@ -2186,12 +2196,16 @@ body:not(.menu-page) {
   top: calc(var(--contact-bar-h) + env(safe-area-inset-top));
 }
 
-/* Sticky toolbar: search + section nav pinned together (see menu.js). */
+/* Sticky toolbar: search + section nav pinned together (see menu.js). The top
+   padding gives the search pill breathing room from the viewport edge when
+   pinned (its rounded top was clipping flush against top:0); the blurred
+   background still starts at 0 so nothing shows above it. */
 .menu-toolbar {
   position: sticky;
   top: 0;
   z-index: 6;
   margin-top: var(--space-4);
+  padding-top: var(--space-2);
   display: grid;
   gap: var(--space-2);
   background: color-mix(in srgb, var(--bg) 92%, transparent);
@@ -2206,15 +2220,27 @@ body:not(.menu-page) {
 .menu-toolbar > * {
   min-width: 0;
 }
+/* Wraps the search input + its clear ✕ so the button can sit inside the pill. */
+.menu-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 .menu-search {
   width: 100%;
   min-height: 46px;
-  padding: 0.6em 0.9em;
+  /* Right padding reserves room for the clear ✕ so text never underlaps it. */
+  padding: 0.6em 3em 0.6em 0.9em;
   border: 1px solid var(--line);
   border-radius: var(--radius-chip);
   background: var(--surface);
   color: var(--ink);
   font-size: var(--step-body);
+}
+/* Suppress the browser's own (WebKit-only) clear affordance — we ship our own. */
+.menu-search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 .diet-chips {
   margin-top: var(--space-3);
@@ -2657,8 +2683,16 @@ body:not(.menu-page) {
   line-height: 1.55;
   text-wrap: balance;
 }
-.footer-made {
+/* About link + "Made by" share one centred row to keep the footer compact. */
+.footer-line {
   margin-top: var(--space-2);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+}
+.footer-made {
   font-size: 0.8rem;
 }
 .footer-brand {
@@ -2668,7 +2702,8 @@ body:not(.menu-page) {
 /* Footer "About & privacy" link — a button styled as a text link (it opens the
    About dialog rather than navigating), sized to a comfortable tap target. */
 .footer-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   min-height: 44px;
   padding: 0.4em 0.2em;
   border: 0;

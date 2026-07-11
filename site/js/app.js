@@ -20,6 +20,7 @@ import { initSettingsUI } from "./settings-ui.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { initOverflowMenu } from "./overflow-ui.js";
+import { initBackToTop } from "./to-top.js";
 import { priceBand } from "./price.js";
 import { initReo } from "./reo.js";
 
@@ -246,6 +247,7 @@ function init(restaurants) {
   initAboutUI();
   initShareApp();
   initOverflowMenu();
+  initBackToTop();
   // Hearting something, or changing a distance dial, re-ranks the list (also
   // covers un-favouriting in the view, or a change synced from another tab).
   favourites.subscribe(render);

@@ -80,7 +80,7 @@ export function initAboutUI() {
   const footerLink = document.getElementById("about-open");
   if (footerNote) footerNote.hidden = true;
   if (footerLink) {
-    footerLink.closest(".footer-about").hidden = false;
+    footerLink.hidden = false;
     footerLink.addEventListener("click", open);
   }
 }

@@ -12,6 +12,7 @@ import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
 import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
+import { initBackToTop } from "./to-top.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -518,6 +519,14 @@ function render(r) {
     "data-i18n-ph": isRecipes ? "menu.search.recipes.ph" : "menu.search.ph",
     "data-i18n-aria": "menu.search.aria",
   });
+  // Custom clear ✕, same as the home search (the native type=search clear is
+  // WebKit-only and absent on mobile). Shown whenever the field has any text.
+  const searchClear = el(
+    "button",
+    { type: "button", className: "search-clear", hidden: true, "aria-label": "Clear search", "data-i18n-aria": "search.clear" },
+    [el("span", { "aria-hidden": "true", textContent: "✕" })]
+  );
+  const searchField = el("div", { className: "menu-search-field" }, [search, searchClear]);
 
   // Personal food preferences (settings.js): the viewer's dietary needs
   // pre-select the matching menu chips, and flagged allergens shout below.
@@ -561,7 +570,7 @@ function render(r) {
   const navScroll = el("div", { className: "section-nav-scroll" });
   nav.append(navScroll);
 
-  const toolbar = el("div", { className: "menu-toolbar" }, [search, nav]);
+  const toolbar = el("div", { className: "menu-toolbar" }, [searchField, nav]);
   main.append(toolbar);
   if (dietRow) main.append(dietRow);
 
@@ -598,6 +607,7 @@ function render(r) {
 
   function applyView() {
     const q = search.value.trim().toLowerCase();
+    searchClear.hidden = search.value.length === 0;
     let visibleTotal = 0;
     for (const sec of sectionEls) {
       let visibleInSection = 0;
@@ -618,9 +628,34 @@ function render(r) {
   }
 
   search.addEventListener("input", applyView);
+  // Esc also clears (mirrors the native/home behaviour), keeping focus.
+  search.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && search.value) {
+      search.value = "";
+      applyView();
+    }
+  });
+  searchClear.addEventListener("click", () => {
+    search.value = "";
+    applyView();
+    search.focus(); // keep the keyboard up so you can retype straight away
+  });
 
   // --- Scroll-spy: highlight the section in view --------------------
   const links = [...navScroll.querySelectorAll(".section-link")];
+
+  // Keep the highlighted jump-link in view: scroll the horizontal nav strip so
+  // the active chip is centred (skipped when it's already near centre, and
+  // instant under reduced motion). Otherwise, deep in the menu, the section
+  // you're reading has no visible chip. Scrolls the strip only, not the page.
+  const centerNavLink = (link) => {
+    const nr = navScroll.getBoundingClientRect();
+    const lr = link.getBoundingClientRect();
+    const delta = lr.left + lr.width / 2 - (nr.left + nr.width / 2);
+    if (Math.abs(delta) < 4) return;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    navScroll.scrollBy({ left: delta, behavior: reduce ? "auto" : "smooth" });
+  };
   const spy = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
@@ -628,9 +663,11 @@ function render(r) {
           const id = e.target.id;
           for (const l of links) {
             const on = l.getAttribute("href") === `#${id}`;
+            const became = on && !l.classList.contains("active");
             l.classList.toggle("active", on);
             if (on) l.setAttribute("aria-current", "true");
             else l.removeAttribute("aria-current");
+            if (became) centerNavLink(l);
           }
         }
       }
@@ -703,32 +740,6 @@ function initContactBar(bar, cardEl) {
     { threshold: 0 }
   );
   io.observe(cardEl);
-}
-
-// A floating "back to top" control for long menus. It appears only after you've
-// scrolled down a bit and scrolls back up (instant under reduced-motion). Sits
-// bottom-right, opposite the bottom-left order FAB, so they never collide.
-function initBackToTop() {
-  const btn = el("button", {
-    type: "button",
-    className: "to-top",
-    hidden: true,
-    "aria-label": "Back to top",
-    "data-i18n-aria": "nav.backToTop",
-  }, [el("span", { "aria-hidden": "true", textContent: "↑" })]);
-  document.body.append(btn);
-
-  const onScroll = () => {
-    btn.hidden = window.scrollY < 600;
-  };
-  addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
-
-  btn.addEventListener("click", () => {
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
-    btn.blur();
-  });
 }
 
 // --- Boot ------------------------------------------------------------

@@ -193,7 +193,18 @@ freshness separately from this file.
 - Zero-dependency guard (`tools/check_no_deps.py`, a CI job) enforcing
   the no-third-party-components invariant from ADR 0001.
 
+### Fixed
+- **In-menu search** now has the same clear ✕ as the home search, and the
+  pinned search bar no longer clips against the top edge when you scroll.
+- **Section jump-nav** now scrolls sideways to keep the section you're reading
+  visible and highlighted, instead of leaving it off-screen deep in a menu.
+- **Collapsed allergen chips** no longer bleed a fade over a selected chip.
+- **Settings gear icon** in the ⋯ menu sized to match the other icons.
+
 ### Added
+- **Back-to-top on the restaurant list** too (it was menu-only); it sits clear
+  of the "Pick for us" pill and the filter bar.
+- **Footer** now puts "About & privacy" and "Made by cakeIT" on one line.
 - **Share this app**: a ⋯-menu item that hands the app's URL to the OS share
   sheet (AirDrop / Messages), or copies the link with a toast where native
   sharing isn't available.
