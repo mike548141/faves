@@ -1,0 +1,34 @@
+{
+  "id": "groundup-cafe",
+  "name": "Groundup Cafe",
+  "cuisine": [
+    "Cafe",
+    "Brunch"
+  ],
+  "area": "Pāuatahanui",
+  "city": "Porirua",
+  "address": "15 Paekākāriki Hill Road, Pāuatahanui 5381",
+  "lat": -41.10487,
+  "lng": 174.91647,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 234 1082",
+  "website": null,
+  "ordering": [],
+  "hours": {
+    "mon": [["07:30", "17:00"]],
+    "tue": [["07:30", "17:00"]],
+    "wed": [["07:30", "17:00"]],
+    "thu": [["07:30", "17:00"]],
+    "fri": [["07:30", "17:00"]],
+    "sat": [["07:30", "17:00"]],
+    "sun": [["07:30", "17:00"]]
+  },
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}
