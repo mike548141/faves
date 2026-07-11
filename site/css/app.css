@@ -1420,6 +1420,11 @@ body:not(.menu-page) {
   color: var(--accent);
   border-color: var(--accent);
 }
+/* [hidden] alone loses to the .overflow-menu display below (attr selector has
+   lower specificity), so the popup stayed open on load — restore fail-closed. */
+.overflow-menu[hidden] {
+  display: none;
+}
 .overflow-menu {
   position: absolute;
   top: calc(100% + var(--space-1));

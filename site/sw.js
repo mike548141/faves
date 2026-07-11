@@ -3,7 +3,7 @@
 //
 // VERSION is the cache-buster: bump it whenever anything in site/
 // changes — menu data especially. See README "Editing menu data".
-const VERSION = "2026-07-10.46";
+const VERSION = "2026-07-12.47";
 
 const CACHE = `faves-${VERSION}`;
 const IMG_CACHE = "faves-img-v1";
@@ -51,11 +51,21 @@ const SHELL = [
   "icons/apple-touch-icon.png",
 ];
 
+// Cloudflare Pages 308-redirects /foo.html → /foo (and /index.html → /), so a
+// naive fetch of a shell page yields a *redirected* response. The browser
+// refuses to return a redirected response to a navigation (net::ERR_FAILED),
+// and cache.match would hand one straight back — so copy the body into a fresh,
+// non-redirected Response before it ever reaches the cache or a navigation.
+async function fetchClean(url) {
+  const res = await fetch(url);
+  return res.redirected ? new Response(res.body, res) : res;
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE);
-      await cache.addAll(SHELL);
+      await Promise.all(SHELL.map(async (u) => cache.put(u, await fetchClean(u))));
       // Every menu listed in the index, so offline covers all data.
       const ids = await (await cache.match("data/index.json")).json();
       await cache.addAll(ids.map((id) => `data/restaurants/${id}.json`));
@@ -97,7 +107,11 @@ self.addEventListener("fetch", (event) => {
 // restaurant.html entry answer every ?id=… deep link.
 async function cacheFirst(req) {
   const hit = await caches.match(req, { ignoreSearch: true });
-  return hit || fetch(req);
+  if (hit) return hit;
+  // Cache miss (e.g. a fresh deep link): the network copy of a shell page may be
+  // redirected by Cloudflare — strip that so a navigation doesn't fail.
+  const res = await fetch(req);
+  return res.redirected ? new Response(res.body, res) : res;
 }
 
 // Data: menu edits should appear promptly when online, but the cache

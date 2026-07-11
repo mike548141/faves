@@ -354,12 +354,13 @@ sit here. Effort in `[S/M]`.
   confirm for allergies…" paragraph into an ⓘ disclosure beside the
   "Allergens to flag" heading, reusing the `.caveat-btn`/`.caveat-note`
   pattern, so it's available on demand without dominating the panel.
-- **Overflow menu "stuck open"** `[S][watch]` — reported 2026-07-10 but
-  **not reproducible in the current build**: CDP confirms both close paths
-  (menu-item click and outside click) hide it, no console errors. Most
-  likely a stale service-worker cache on the reporting browser (hard-reload
-  clears it). Leave as a watch item; add defensive hardening only if it
-  recurs on a freshly-loaded build.
+- **Overflow menu "stuck open"** `[S]` — **RESOLVED 2026-07-12.** The
+  2026-07-10 "not reproducible" call was a misdiagnosis: CDP checked the
+  `hidden` *attribute* (which the JS toggles correctly) but not the *computed
+  style*. Real cause was CSS — `.overflow-menu { display: flex }` (author rule)
+  overrides the UA `[hidden] { display: none }` at equal specificity, so the
+  attribute could never hide the popup and it rendered open on load. Fixed with
+  a `.overflow-menu[hidden] { display: none }` guard in `app.css`.
 
 ## Theme 4 — Content growth (ongoing, in parallel)
 

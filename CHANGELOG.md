@@ -253,6 +253,14 @@ freshness separately from this file.
   the site still ships build-less.
 
 ### Fixed
+- **Opening a restaurant no longer fails with "This site can't be reached."**
+  Cloudflare Pages 308-redirects `/restaurant.html` → `/restaurant`, and the
+  service worker was caching (and returning) that redirected response — which
+  browsers refuse to hand to a page navigation. The worker now strips the
+  redirect before caching or serving, so deep links and offline both work.
+- **Header ⋯ menu no longer stuck open**: a CSS rule kept the popup visible
+  regardless of its `hidden` attribute, so it rendered open on load; it now
+  hides correctly when closed.
 - **Screen-reader labels actually attached**: several hidden accessibility
   labels on the menu screen and order sheet were being set in a way browsers
   ignore, so assistive tech never saw them. They're now real attributes.
