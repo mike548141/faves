@@ -194,6 +194,10 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Added
+- **Contact bar collapses on scroll (mobile)**: once the full contact card
+  scrolls out of view, a slim bar pins to the top with the open-now status and
+  a "call to order" button, so ordering stays one tap away down a long menu.
+  Desktop keeps its sticky info column.
 - **Hell Pizza Newlands** now has a full menu (99 items) — transcribed from
   their official site and flagged "confirm prices with the venue" (web-sourced,
   not yet checked in store).

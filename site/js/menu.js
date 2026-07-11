@@ -458,12 +458,27 @@ function render(r) {
   root.replaceChildren();
   root.classList.remove("menu-twocol");
   root.setAttribute("aria-busy", "false");
+  // A prior render's compact bar (body-level, so replaceChildren misses it).
+  document.querySelector(".contact-bar")?.remove();
+  document.body.classList.remove("contact-bar-open");
   root.append(renderHeader(r));
 
   // Contact + order info. Its own column on wide screens; stacked under the
   // header on a phone. Recipe collections have no contact/order.
   const aside = isRecipes ? null : renderAside(r);
   if (aside) root.append(aside);
+
+  // Mobile: pin a compact call/status bar once the full card scrolls away.
+  // Body-level (like the FAB) so its fixed position is viewport-relative, and
+  // translated here since the boot's translate() only scopes to `root`.
+  if (aside) {
+    const bar = compactContactBar(r);
+    if (bar) {
+      document.body.append(bar);
+      translate(bar);
+      initContactBar(bar, aside.querySelector(".contact-card"));
+    }
+  }
 
   // The menu proper lives in its own block so it can sit left of the aside in
   // the two-column layout (and so nothing else needs to know about the grid).
@@ -634,6 +649,60 @@ function render(r) {
 
   // Apply any pre-selected dietary preferences now (dims non-matching dishes).
   if (activeDiet.size) applyView();
+}
+
+// A slim contact bar that pins to the top of the menu on mobile once the full
+// contact card has scrolled out of view — so "call to order" and the open-now
+// status stay one tap away while you read down a long menu. Desktop keeps the
+// sticky aside column instead (CSS suppresses this bar there). Returns null
+// when there's nothing worth pinning (no phone and no determinate status).
+function compactContactBar(r) {
+  const inner = el("div", { className: "contact-bar-inner" });
+
+  // Open-now status, mirroring the full card's badge (dot + "Open · until 9pm").
+  if (r.hours) {
+    const st = openStatus(r.hours, nzNow());
+    if (st.state !== "unknown") {
+      const badge = el("span", {
+        className: "hours-badge contact-bar-status",
+        textContent: st.detail ? `${st.label} · ${st.detail}` : st.label,
+      });
+      badge.dataset.state = st.state;
+      inner.append(badge);
+    }
+  }
+
+  // Call is the star: a compact tel: button. It's why the bar exists for
+  // phone-order venues, so it stays reachable the whole way down the menu.
+  if (r.phone) {
+    inner.append(
+      el("a", { className: "contact-bar-call", href: `tel:${r.phone.replace(/\s+/g, "")}` }, [
+        el("span", { className: "contact-ico", textContent: "📞", "aria-hidden": "true" }),
+        el("span", { "data-i18n": "menu.call", textContent: "Call to order" }),
+      ])
+    );
+  }
+
+  if (!inner.childElementCount) return null;
+  return el("div", { className: "contact-bar", hidden: true }, [inner]);
+}
+
+// Reveal the compact bar (and drop the sticky toolbar below it) once the full
+// contact card scrolls out of view. An IntersectionObserver on the card is
+// cheaper and jitter-free vs a scroll listener; the .contact-bar-open body
+// class is what CSS keys the toolbar offset off. Falls back to always-hidden
+// where IntersectionObserver is missing — the full card still works.
+function initContactBar(bar, cardEl) {
+  if (!cardEl || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(
+    ([entry]) => {
+      const show = !entry.isIntersecting;
+      bar.hidden = !show;
+      document.body.classList.toggle("contact-bar-open", show);
+    },
+    { threshold: 0 }
+  );
+  io.observe(cardEl);
 }
 
 // A floating "back to top" control for long menus. It appears only after you've
