@@ -36,24 +36,28 @@ If you think you've already authorised the App, you have — re-running the
 flow just shows the repo already granted. `deploy.py apply` will confirm
 by succeeding.
 
-### 2. Create a scoped API token (browser, ~2 min)
+### 2. The API token (minted, not hand-made)
 
-Dashboard -> **My Profile -> API Tokens -> Create Token -> Custom token**:
+The deploy token is an **account-owned child token** minted in code from
+the estate's parent minting token (owner's decision, 2026-07-11), scoped
+to exactly:
 
 | Scope | Permission |
 | --- | --- |
-| Account · Cloudflare Pages | Edit |
-| Zone · DNS | Edit |
-| Zone · Zone | Read |
+| Account · Pages | Edit |
+| Zone · DNS (`myspot.nz` only) | Edit |
+| Zone · Zone (`myspot.nz` only) | Read |
 
-Restrict **Account Resources** to your account and **Zone Resources** to
-`myspot.nz`. Copy the token — it is shown once.
+Both tokens live in the macOS **login keychain** (`cloudflare-token-mint`
+= parent, `cloudflare-faves-deploy` = this repo's child) — never in the
+repo, a dotfile, or a transcript. Source it per-shell:
 
 ```sh
-export CLOUDFLARE_API_TOKEN=...        # do NOT commit this anywhere
+export CLOUDFLARE_API_TOKEN=$(security find-generic-password -s cloudflare-faves-deploy -w)
 ```
 
-The token is read from the environment only. It never touches the repo.
+To roll: delete the child in the dashboard (or via the parent token's
+API) and mint a fresh one; the parent can enumerate every child it made.
 
 ### 3. Provision
 
@@ -63,9 +67,15 @@ python3 tools/deploy.py apply          # create project + attach domain
 ```
 
 `apply` creates the git-connected Pages project (build command none,
-output dir `site/`) and attaches `lets-eat.myspot.nz`; Cloudflare
-auto-creates the proxied CNAME and provisions HTTPS because the zone is
-in the same account.
+output dir `site/`), attaches `lets-eat.myspot.nz`, **and creates the
+proxied CNAME itself** — the dashboard flow auto-creates that record but
+the API attach does not (verified live 2026-07-11). HTTPS provisions in
+the background because the zone is in the same account.
+
+**Python note:** the python.org 3.14 install on this machine has no CA
+certificates wired up (its "Install Certificates" post-step was never
+run), so `python3 tools/deploy.py` fails TLS verification. Run it with
+the system interpreter instead: `/usr/bin/python3 tools/deploy.py plan`.
 
 ## Everyday deploys
 

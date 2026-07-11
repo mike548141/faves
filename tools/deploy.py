@@ -190,20 +190,49 @@ def ensure_domains(acct, cfg, apply, project):
         # would 404. Nothing exists, so everything is an attach.
         for domain in want:
             print(f"  domain {domain}: MISSING -> will attach after "
-                  "project creation")
+                  "project creation (+ proxied CNAME)")
         return
     have = {d["name"] for d in (cf(
         "GET", f"/accounts/{acct}/pages/projects/{name}/domains") or [])}
     for domain in want:
         if domain in have:
             print(f"  domain {domain}: attached")
-            continue
-        print(f"  domain {domain}: MISSING -> will attach "
-              "(Cloudflare auto-creates the proxied CNAME)")
-        if apply:
-            cf("POST", f"/accounts/{acct}/pages/projects/{name}/domains",
-               {"name": domain})
-            print("    attached; certificate provisions in the background")
+        else:
+            print(f"  domain {domain}: MISSING -> will attach")
+            if apply:
+                cf("POST", f"/accounts/{acct}/pages/projects/{name}/domains",
+                   {"name": domain})
+                print("    attached; certificate provisions in the background")
+        ensure_cname(cfg, domain, name, apply)
+
+
+def ensure_cname(cfg, domain, project_name, apply):
+    """The dashboard flow creates the CNAME for you; the API attach does
+    not (verified live 2026-07-11) — so reconcile the DNS record too."""
+    zone_name = cfg.get("zone")
+    if not zone_name:
+        print("    (no `zone` in deploy.json — create the CNAME yourself)")
+        return
+    zones = cf("GET", f"/zones?name={zone_name}") or []
+    if not zones:
+        sys.exit(f"Zone {zone_name!r} not visible to this token.")
+    zone_id = zones[0]["id"]
+    target = f"{project_name}.pages.dev"
+    recs = cf("GET", f"/zones/{zone_id}/dns_records?name={domain}") or []
+    if any(r["type"] == "CNAME" and r["content"] == target and r["proxied"]
+           for r in recs):
+        print(f"  cname {domain} -> {target}: present (proxied)")
+        return
+    if recs:
+        sys.exit(f"{domain} already has DNS records that aren't the "
+                 f"expected proxied CNAME to {target} — resolve by hand.")
+    print(f"  cname {domain} -> {target}: MISSING -> will create (proxied)")
+    if apply:
+        cf("POST", f"/zones/{zone_id}/dns_records", {
+            "type": "CNAME", "name": domain, "content": target,
+            "proxied": True,
+            "comment": "Pages custom domain (managed by tools/deploy.py)"})
+        print("    created")
 
 
 def main():

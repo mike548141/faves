@@ -10,6 +10,9 @@ freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **The site is live.** Faves now publishes on Cloudflare Pages: every
+  push to `main` deploys to <https://faves.pages.dev>, with
+  <https://lets-eat.myspot.nz> attached as the real address.
 - **Send your picks to the orderer**: when a few people are ordering from
   one place, each can build their own picks on their own phone, then tap
   **Send to the orderer** on the order sheet. It hands the order to the OS
