@@ -11,6 +11,7 @@ import { heartButton } from "./favourites-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
 import { initReo, translate } from "./reo.js";
+import { disclosure } from "./disclosure.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -274,42 +275,11 @@ function renderAside(r) {
 // place — the note must be a later sibling of the button for the hover
 // reveal to work.
 function caveatDisclosure(id) {
-  const noteId = `menu-caveat-${id}`;
-  const btn = el("button", { type: "button", className: "caveat-btn", textContent: "ⓘ" });
-  btn.setAttribute("aria-label", "Why this menu needs a refresh");
-  btn.setAttribute("aria-expanded", "false");
-  btn.setAttribute("aria-controls", noteId);
-
-  const note = el("span", {
-    id: noteId,
-    className: "caveat-note",
-    textContent:
-      "⚠ Menu items and prices need a refresh — confirm with the venue when you order.",
+  return disclosure({
+    noteId: `menu-caveat-${id}`,
+    label: "Why this menu needs a refresh",
+    text: "⚠ Menu items and prices need a refresh — confirm with the venue when you order.",
   });
-  note.setAttribute("role", "note");
-
-  const isOpen = () => btn.getAttribute("aria-expanded") === "true";
-  const onDocPointer = (e) => {
-    if (!btn.contains(e.target) && !note.contains(e.target)) setOpen(false);
-  };
-  const onKey = (e) => {
-    if (e.key === "Escape") {
-      setOpen(false);
-      btn.focus();
-    }
-  };
-  function setOpen(open) {
-    if (open === isOpen()) return;
-    btn.setAttribute("aria-expanded", String(open));
-    note.classList.toggle("is-open", open);
-    // Capture-phase so it still closes when an inner handler stops bubbling.
-    const fn = open ? "addEventListener" : "removeEventListener";
-    document[fn]("click", onDocPointer, true);
-    document[fn]("keydown", onKey);
-  }
-  btn.addEventListener("click", () => setOpen(!isOpen()));
-
-  return [btn, note];
 }
 
 function renderPicks(r, allItems) {

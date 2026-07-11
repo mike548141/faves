@@ -10,6 +10,7 @@
 // app.js's own subscription, and each menu reads the preferences on load.
 
 import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS } from "./settings.js";
+import { disclosure } from "./disclosure.js";
 
 const el = (tag, props = {}, children = []) => {
   const node = Object.assign(document.createElement(tag), props);
@@ -31,23 +32,26 @@ function field({ id, label, hint, min, max, step }) {
   return { row, input, out };
 }
 
-// The language switch: two buttons in their own tongue (a language is always
-// shown in its own name, whatever the current UI language). Writes settings
-// .lang; reo.js re-translates the whole document off the store subscription.
+// The language picker: a radio group, each option named in its own tongue (a
+// language is always shown in its own name, whatever the current UI language).
+// Radios — not a segmented toggle — so it reads unmistakably as "choose one
+// language" rather than tabs that swap the panel, and scales to a third
+// language by adding a row. Writes settings.lang; reo.js re-translates the
+// whole document off the store subscription.
 function langControl() {
-  const group = el("div", { className: "segmented lang-segmented", role: "group" });
+  const group = el("div", { className: "lang-radios", role: "radiogroup" });
   group.setAttribute("aria-label", "Language");
-  const buttons = [
+  const inputs = [
     { lang: "en", label: "English" },
     { lang: "mi", label: "Te Reo Māori" },
   ].map(({ lang, label }) => {
-    const b = el("button", { type: "button", textContent: label, "aria-pressed": "false" });
-    b.dataset.lang = lang;
-    b.addEventListener("click", () => settings.set({ lang }));
-    group.append(b);
-    return b;
+    const input = el("input", { type: "radio", name: "faves-lang", value: lang, className: "lang-radio-input" });
+    input.addEventListener("change", () => settings.set({ lang }));
+    const row = el("label", { className: "lang-radio" }, [input, el("span", { textContent: label })]);
+    group.append(row);
+    return input;
   });
-  return { group, buttons };
+  return { group, inputs };
 }
 
 // A group of multi-select toggle chips backed by one list on the diet prefs
@@ -77,6 +81,40 @@ function prefChips(prefs, kind) {
   return { group, chips, kind };
 }
 
+// Wrap a chip group so that, when the chips wrap past one row, the overflow is
+// clamped behind a "Show all" toggle — keeping the dialog scannable. The toggle
+// only appears when the chips genuinely overflow (measured on open/resize, when
+// the dialog actually has a width); if they fit one row the clamp is dropped so
+// there's no needless fade. Returns { wrap, refresh } — call refresh() whenever
+// the group's available width may have changed.
+function collapsible(group, count) {
+  const toggle = el("button", { type: "button", className: "chips-toggle", hidden: true });
+  toggle.setAttribute("aria-expanded", "false");
+  const wrap = el("div", { className: "chips-collapsible is-collapsed" }, [group, toggle]);
+  let expanded = false;
+
+  function label() {
+    toggle.textContent = expanded ? "Show fewer" : `Show all ${count}`;
+  }
+  function setExpanded(v) {
+    expanded = v;
+    wrap.classList.toggle("is-collapsed", !v);
+    toggle.setAttribute("aria-expanded", String(v));
+    label();
+  }
+  toggle.addEventListener("click", () => setExpanded(!expanded));
+  label();
+
+  function refresh() {
+    if (expanded) return; // never fight a user who has opened the group
+    // Measure against the collapsed clamp: taller than one row ⇒ offer the toggle.
+    const overflowing = group.scrollHeight - group.clientHeight > 2;
+    toggle.hidden = !overflowing;
+    wrap.classList.toggle("fits", !overflowing); // fits one row ⇒ no clamp, no fade
+  }
+  return { wrap, refresh };
+}
+
 export function initSettingsUI() {
   const btn = document.getElementById("settings-btn");
   if (!btn || document.querySelector(".settings-sheet")) return;
@@ -85,6 +123,32 @@ export function initSettingsUI() {
   const lang = langControl();
   const dietary = prefChips(DIETARY_PREFS, "dietary");
   const avoid = prefChips(ALLERGEN_PREFS, "avoid");
+  const dietaryCollapse = collapsible(dietary.group, DIETARY_PREFS.length);
+  const avoidCollapse = collapsible(avoid.group, ALLERGEN_PREFS.length);
+
+  // The always-confirm allergy caveat now lives behind an ⓘ beside the
+  // "Allergens to flag" heading (same disclosure as the menu caution) — on
+  // demand rather than a standing block, but still one orange tap away. Safety
+  // wording is load-bearing, so it stays verbatim and English (like all our
+  // caveats). The heading row is position:relative so the note anchors to it.
+  const [caveatBtn, caveatNote] = disclosure({
+    noteId: "settings-allergen-caveat",
+    label: "About allergen flagging",
+    text: (() => {
+      const frag = document.createDocumentFragment();
+      frag.append(
+        el("strong", { textContent: "Always confirm for allergies. " }),
+        "We only show what venues told us — no tag means not stated, not that a " +
+          "dish is free of it. This highlights and filters; it isn't a guarantee."
+      );
+      return frag;
+    })(),
+  });
+  const allergenHeadRow = el("div", { className: "settings-sub-row" }, [
+    el("p", { className: "settings-sub", textContent: "Allergens to flag" }),
+    caveatBtn,
+    caveatNote,
+  ]);
 
   const fav = field({
     id: "set-fav-boost",
@@ -132,14 +196,9 @@ export function initSettingsUI() {
       // --- Food preferences ---
       el("h3", { className: "settings-group-title", textContent: "Food preferences" }),
       el("p", { className: "settings-sub", textContent: "Your dietary needs" }),
-      dietary.group,
-      el("p", { className: "settings-sub", textContent: "Allergens to flag" }),
-      avoid.group,
-      el("p", { className: "settings-safety" }, [
-        el("strong", { textContent: "Always confirm for allergies. " }),
-        "We only show what venues told us — no tag means not stated, not that a " +
-          "dish is free of it. This highlights and filters; it isn't a guarantee.",
-      ]),
+      dietaryCollapse.wrap,
+      allergenHeadRow,
+      avoidCollapse.wrap,
 
       // --- Distance ---
       el("h3", { className: "settings-group-title", textContent: "Distance" }),
@@ -155,7 +214,7 @@ export function initSettingsUI() {
   // Reflect the current settings into every control.
   function sync() {
     const s = settings.get();
-    for (const b of lang.buttons) b.setAttribute("aria-pressed", String(b.dataset.lang === s.lang));
+    for (const input of lang.inputs) input.checked = input.value === s.lang;
     const dietarySet = new Set(s.diet.dietary);
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
     const avoidSet = new Set(s.diet.avoid);
@@ -170,9 +229,19 @@ export function initSettingsUI() {
   far.input.addEventListener("input", () => settings.set({ farKm: Number(far.input.value) }));
   resetBtn.addEventListener("click", () => settings.reset());
 
+  // Chip overflow can only be measured once the dialog is on screen with a
+  // real width — so refresh after showModal, and again on resize while open.
+  function refreshCollapsibles() {
+    dietaryCollapse.refresh();
+    avoidCollapse.refresh();
+  }
   btn.addEventListener("click", () => {
     sync();
     dialog.showModal();
+    refreshCollapsibles();
+  });
+  window.addEventListener("resize", () => {
+    if (dialog.open) refreshCollapsibles();
   });
   dialog.addEventListener("click", (e) => {
     if (e.target === dialog) dialog.close();

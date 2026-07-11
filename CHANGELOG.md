@@ -194,6 +194,15 @@ freshness separately from this file.
   the no-third-party-components invariant from ADR 0001.
 
 ### Changed
+- **Settings language picker** is now a radio group instead of a segmented
+  pill, so it clearly reads as "choose a language" rather than tabs — and it
+  scales cleanly when a third language is added.
+- **Settings dietary/allergen chips collapse to one row** with a "Show all"
+  toggle when they'd otherwise wrap and dominate the panel; if they fit one
+  row, no toggle appears.
+- **Settings allergen safety caveat** moved behind an ⓘ tip beside the
+  "Allergens to flag" heading (the same disclosure as the menu caution),
+  freeing the panel while keeping the always-confirm wording one tap away.
 - The **"needs a refresh" ⓘ** beside an unverified venue's name now reads as a
   caution — orange and a little larger, with a soft halo when hovered/open —
   rather than a passive grey hint.

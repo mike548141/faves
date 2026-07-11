@@ -1593,30 +1593,49 @@ body:not(.menu-page) {
   font-size: var(--step-sub);
   font-weight: 600;
 }
-/* The language switch: two full-width segments, ≥44px targets (the base
-   .segmented button is 40px, fine for the compact filter bar but a primary
-   dialog control wants the full tap size). */
-.lang-segmented {
+/* Language picker: a radio list, not a segmented toggle — it reads as "choose
+   one language", scales to more rows, and each row is a full ≥44px target. */
+.lang-radios {
   display: flex;
-  width: 100%;
+  flex-direction: column;
+  gap: var(--space-1);
 }
-.lang-segmented button {
-  flex: 1;
+.lang-radio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   min-height: 44px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  font-weight: 600;
+  cursor: pointer;
 }
-.settings-safety {
-  margin-top: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  border-left: 3px solid var(--warn);
-  background: var(--warn-bg);
-  color: var(--warn-ink);
-  font-size: var(--step-sub);
-  border-radius: var(--radius);
+.lang-radio-input {
+  width: 1.15em;
+  height: 1.15em;
+  accent-color: var(--accent);
+  cursor: pointer;
 }
-@media (prefers-color-scheme: dark) {
-  .settings-safety {
-    color: var(--ink);
-  }
+.lang-radio:has(.lang-radio-input:checked) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.lang-radio:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Heading + its ⓘ caveat share a row; relative so the note anchors to it. */
+.settings-sub-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.settings-sub-row .settings-sub {
+  margin-bottom: var(--space-1);
 }
 .pref-chips {
   display: flex;
@@ -1646,6 +1665,40 @@ body:not(.menu-page) {
   background: var(--warn);
   border-color: var(--warn);
   color: var(--surface);
+}
+
+/* Collapsible chip group: clamp to one 44px row until "Show all" is tapped, so
+   a long allergen list doesn't dominate the dialog. .fits (set by JS when the
+   chips don't overflow) drops the clamp and fade entirely. */
+.chips-collapsible {
+  position: relative;
+}
+.chips-collapsible.is-collapsed:not(.fits) .pref-chips {
+  max-height: 44px;
+  overflow: hidden;
+}
+.chips-collapsible.is-collapsed:not(.fits)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2.4rem; /* sit just above the toggle */
+  height: 1.4rem;
+  background: linear-gradient(to bottom, transparent, var(--surface));
+  pointer-events: none;
+}
+.chips-toggle {
+  margin-top: var(--space-1);
+  padding: 0.35em 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  cursor: pointer;
+}
+.chips-toggle:hover {
+  text-decoration: underline;
 }
 
 @media (prefers-reduced-motion: reduce) {

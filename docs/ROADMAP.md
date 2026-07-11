@@ -343,17 +343,16 @@ sit here. Effort in `[S/M]`.
   small modal, same pattern as Settings) or a Privacy disclosure, freeing
   the footer. Folds into the "About / About-this-site" idea already noted
   above in this theme.
-- **Settings: language control shouldn't look like tabs** `[S]` — the
-  English / Te Reo Māori pair reads as tabs that swap the panel below. Use a
-  control that clearly picks a language and scales to more (a labelled
-  radio group or a select), so adding a third language later is trivial.
-- **Settings: collapsible chip groups** `[S]` — when the dietary-needs or
-  allergen chips wrap past ~1 line, collapse the overflow behind a "more"
-  toggle so the panel stays scannable.
-- **Settings: allergen caveat → ⓘ info tip** `[S]` — move the "Always
-  confirm for allergies…" paragraph into an ⓘ disclosure beside the
-  "Allergens to flag" heading, reusing the `.caveat-btn`/`.caveat-note`
-  pattern, so it's available on demand without dominating the panel.
+- **Settings: language control shouldn't look like tabs** `[S]` ✅ **done
+  2026-07-12** — replaced the segmented pill with a labelled radio group
+  (`.lang-radios`); reads as "choose one language" and scales to a third row.
+- **Settings: collapsible chip groups** `[S]` ✅ **done 2026-07-12** — dietary
+  and allergen chip groups clamp to one row behind a "Show all N" toggle
+  (`collapsible()` in settings-ui.js), shown only when the chips actually
+  overflow (measured on open/resize).
+- **Settings: allergen caveat → ⓘ info tip** `[S]` ✅ **done 2026-07-12** —
+  the always-confirm caveat now sits behind an ⓘ beside "Allergens to flag",
+  via a shared `disclosure.js` extracted from menu.js's caveat pattern.
 - **Overflow menu "stuck open"** `[S]` — **RESOLVED 2026-07-12.** The
   2026-07-10 "not reproducible" call was a misdiagnosis: CDP checked the
   `hidden` *attribute* (which the JS toggles correctly) but not the *computed
