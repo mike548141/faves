@@ -20,7 +20,50 @@
     { "platform": "Easy Eats", "url": "https://easyeats.kiwi/store/wellingtonkebabgrill" },
     { "platform": "Uber Eats", "url": "https://www.ubereats.com/nz/store/wellington-kebab-grill/T4Hv2EdQS_2Dc-0r7_VRPw" }
   ],
-  "hours": null,
+  "hours": {
+    "mon": [
+      [
+        "10:30",
+        "21:00"
+      ]
+    ],
+    "tue": [
+      [
+        "10:30",
+        "21:00"
+      ]
+    ],
+    "wed": [
+      [
+        "10:30",
+        "21:00"
+      ]
+    ],
+    "thu": [
+      [
+        "10:30",
+        "21:00"
+      ]
+    ],
+    "fri": [
+      [
+        "10:30",
+        "21:30"
+      ]
+    ],
+    "sat": [
+      [
+        "10:30",
+        "21:30"
+      ]
+    ],
+    "sun": [
+      [
+        "10:30",
+        "21:00"
+      ]
+    ]
+  },
   "vibe": [],
   "picks": [],
   "verified": null,

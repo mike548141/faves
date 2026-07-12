@@ -19,7 +19,50 @@
     { "platform": "Uber Eats", "url": "https://www.ubereats.com/nz/store/thai-tara-express/D5Cf4DgDQdqOHFpsb2_QCA" },
     { "platform": "DoorDash", "url": "https://www.doordash.com/store/thai-tara-express-wellington-23417449/" }
   ],
-  "hours": null,
+  "hours": {
+    "mon": [
+      [
+        "16:30",
+        "21:00"
+      ]
+    ],
+    "tue": [
+      [
+        "11:30",
+        "21:30"
+      ]
+    ],
+    "wed": [
+      [
+        "11:30",
+        "21:30"
+      ]
+    ],
+    "thu": [
+      [
+        "11:30",
+        "21:30"
+      ]
+    ],
+    "fri": [
+      [
+        "11:30",
+        "21:30"
+      ]
+    ],
+    "sat": [
+      [
+        "11:30",
+        "21:30"
+      ]
+    ],
+    "sun": [
+      [
+        "11:30",
+        "21:30"
+      ]
+    ]
+  },
   "vibe": [],
   "picks": [
     "Pad thai",
