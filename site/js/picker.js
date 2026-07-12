@@ -4,6 +4,7 @@
 // one". With prefers-reduced-motion the result is instant.
 
 import { t } from "./reo.js";
+import { el } from "./dom.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 // Guarded so the pure helpers below import cleanly under `node --test` (no
@@ -34,12 +35,6 @@ export function weightedPick(items, isFav = () => false, rnd = Math.random) {
   }
   return items[items.length - 1]; // float guard: fall through to the last
 }
-
-const el = (tag, props = {}, children = []) => {
-  const node = Object.assign(document.createElement(tag), props);
-  for (const child of [].concat(children)) if (child) node.append(child);
-  return node;
-};
 
 function metaText(r) {
   if (r.kind === "recipes") {

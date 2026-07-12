@@ -23,16 +23,9 @@ import { initOverflowMenu } from "./overflow-ui.js";
 import { initBackToTop } from "./to-top.js";
 import { priceBand } from "./price.js";
 import { initReo } from "./reo.js";
+import { el } from "./dom.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
-
-const el = (tag, props = {}, children = []) => {
-  const node = Object.assign(document.createElement(tag), props);
-  for (const child of [].concat(children)) {
-    if (child) node.append(child);
-  }
-  return node;
-};
 
 function servicesText(services = []) {
   return services.map((s) => SERVICE_LABEL[s] || s).join(", ");

@@ -10,18 +10,7 @@
 // note and app description English until a reo review); only the chrome labels
 // carry data-i18n.
 
-const el = (tag, props = {}, children = []) => {
-  const node = document.createElement(tag);
-  for (const [k, v] of Object.entries(props)) {
-    // Hyphenated keys (aria-*, data-*) are attributes, not IDL properties —
-    // plain assignment sets an inert expando, so aria-labelledby / data-i18n
-    // (the dialog's accessible name, the "Made by" translation key) go missing.
-    if (k.includes("-")) node.setAttribute(k, v);
-    else node[k] = v;
-  }
-  for (const child of [].concat(children)) if (child != null) node.append(child);
-  return node;
-};
+import { el } from "./dom.js";
 
 function group(title, ...paras) {
   return el("section", { className: "about-group" }, [

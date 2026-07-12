@@ -11,12 +11,7 @@
 
 import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS } from "./settings.js";
 import { disclosure } from "./disclosure.js";
-
-const el = (tag, props = {}, children = []) => {
-  const node = Object.assign(document.createElement(tag), props);
-  for (const child of [].concat(children)) if (child != null) node.append(child);
-  return node;
-};
+import { el } from "./dom.js";
 
 function field({ id, label, hint, min, max, step }) {
   const input = el("input", { type: "range", id, min, max, step, className: "settings-range" });

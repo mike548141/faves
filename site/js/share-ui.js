@@ -12,16 +12,7 @@
 // strings is deferred (they need interpolation reo.js doesn't have yet).
 
 import { encodeQR } from "./qr.js";
-
-const el = (tag, props = {}, children = []) => {
-  const node = document.createElement(tag);
-  for (const [k, v] of Object.entries(props)) {
-    if (k.includes("-")) node.setAttribute(k, v);
-    else node[k] = v;
-  }
-  for (const child of [].concat(children)) if (child != null) node.append(child);
-  return node;
-};
+import { el } from "./dom.js";
 
 // Paint a QR of `url` onto `canvas`, dark-on-light with a 4-module quiet zone.
 // Colours are hard-coded (not theme tokens): a scanner needs dark modules on a

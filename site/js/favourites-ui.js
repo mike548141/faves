@@ -4,12 +4,7 @@
 // (favourites.js) is DOM-free and unit-tested; this is presentation only.
 
 import { favourites } from "./favourites.js";
-
-const el = (tag, props = {}, children = []) => {
-  const node = Object.assign(document.createElement(tag), props);
-  for (const child of [].concat(children)) if (child != null) node.append(child);
-  return node;
-};
+import { el } from "./dom.js";
 
 /**
  * A ♥ / ♡ toggle for one favourite `entry`

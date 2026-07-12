@@ -202,9 +202,9 @@ freshness separately from this file.
 - **Settings gear icon** in the ⋯ menu sized to match the other icons.
 - **Offline reliability**: if a file fails to download during a deploy, the
   install now aborts instead of caching the broken file and serving it offline.
-- **Screen readers & te reo**: the back-to-top ↑ button and the About dialog now
-  carry proper accessible names, and their labels translate with the rest of the
-  chrome (they were silently inert before).
+- **Screen readers & te reo**: the back-to-top ↑ button, the About dialog and
+  the Settings dialog now carry proper accessible names, and their labels
+  translate with the rest of the chrome (they were silently inert before).
 - **Settings "Show all" toggle** reappears after you rotate or resize the sheet
   narrower again — it used to vanish for good once the chips had fit one row.
 - **"Pick for us" button** no longer stays hidden off-screen after you open then

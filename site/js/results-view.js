@@ -3,11 +3,7 @@
 // DOM building — the callers supply the data and (optionally) a trailing
 // control per row (e.g. a heart to un-favourite in place).
 
-const el = (tag, props = {}, children = []) => {
-  const node = Object.assign(document.createElement(tag), props);
-  for (const child of [].concat(children)) if (child != null) node.append(child);
-  return node;
-};
+import { el } from "./dom.js";
 
 /** One row: a link (name + optional sub) plus an optional trailing node. */
 export function resultRow({ name, sub, href, trailing }) {

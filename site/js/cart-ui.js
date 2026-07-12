@@ -9,18 +9,7 @@ import { order, groupByVenue } from "./cart.js";
 import { encodeShare, decodeShare, buildShareUrl, readShareToken } from "./share-codec.js";
 import { favourites, groupForShare } from "./favourites.js";
 import { openShareDialog } from "./share-ui.js";
-
-const el = (tag, props = {}, children = []) => {
-  const node = document.createElement(tag);
-  for (const [k, v] of Object.entries(props)) {
-    // Hyphenated keys (aria-*, data-*) are attributes, not IDL properties —
-    // plain assignment would set an inert JS expando the browser ignores.
-    if (k.includes("-")) node.setAttribute(k, v);
-    else node[k] = v;
-  }
-  for (const child of [].concat(children)) if (child != null) node.append(child);
-  return node;
-};
+import { el } from "./dom.js";
 
 const money = (n) => "$" + Number(n).toFixed(2).replace(/\.00$/, "");
 const tel = (p) => "tel:" + p.replace(/\s+/g, "");
