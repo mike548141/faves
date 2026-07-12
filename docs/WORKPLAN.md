@@ -147,26 +147,23 @@ his devices.
       recorded in ARCHITECTURE 2026-07-07). Hosting is config-as-code:
       `tools/deploy.json` + `tools/deploy.py` (stdlib, reconciles the CF
       API idempotently); runbook in `docs/DEPLOY.md`.*
-- [~] Cloudflare Pages path: project connected to this private repo;
-      build command none, output dir `site/`. *Config declared; `main`
-      pushed to GitHub (`mike548141/faves`) 2026-07-10 so the source is
-      live. Creating the project needs the owner's one-time browser +
-      token steps (authorise the CF GitHub App; scoped API token →
-      `CLOUDFLARE_API_TOKEN`), then `python3 tools/deploy.py apply`.*
+- [x] Cloudflare Pages path: project connected to this private repo;
+      build command none, output dir `site/`. *Live at
+      `lets-eat.myspot.nz` (200, real site — verified 2026-07-12).
+      Owner ran the one-time CF GitHub App authorise + scoped token +
+      `deploy.py apply`; every push to `main` now deploys.*
 - [ ] S3 path (only if chosen): N/A — Cloudflare Pages chosen.
-- [~] Custom domain on existing Cloudflare DNS; HTTPS enforced.
-      *`lets-eat.myspot.nz` declared in `deploy.json`; `deploy.py apply`
-      attaches it and Cloudflare auto-creates the proxied CNAME + cert.*
+- [x] Custom domain on existing Cloudflare DNS; HTTPS enforced.
+      *`lets-eat.myspot.nz` serving over HTTPS (verified 2026-07-12).*
 - [x] README updated with the live URL and the edit-→-deploy flow.
       *README "Deploy" section + `docs/DEPLOY.md`.*
 
-**Owner to run (one-time, browser/token — not scriptable):** authorise
-the Cloudflare GitHub App on the repo, create a scoped API token, then
-`python3 tools/deploy.py apply`. See `docs/DEPLOY.md`. After that, every
-push to `main` deploys.
+**Done (2026-07-12):** owner authorised the Cloudflare GitHub App,
+created a scoped API token, and ran `python3 tools/deploy.py apply`.
+Every push to `main` now deploys. See `docs/DEPLOY.md` for the flow.
 
 **Accept when**: a guest with nothing but the URL can browse menus on
-their phone.
+their phone. ✅ Met — `lets-eat.myspot.nz` live and serving.
 
 ## Addendum — 2026-07-06 (batch 2)
 
