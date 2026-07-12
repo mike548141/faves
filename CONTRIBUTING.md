@@ -56,11 +56,11 @@ npx lighthouse http://localhost:8080/index.html \
 
 - **Commit as you work** — small, focused commits, one concern each.
   `main` auto-deploys to Cloudflare Pages, so a push is a deploy — and
-  the standing grant (see `CLAUDE.md` / atelier AUTONOMY) covers commit
-  and push at discretion, deploy included. Don't end a session asking
-  permission to commit, update `CHANGELOG.md`, or append to
-  `docs/SESSIONS.md` — those are part of finishing the work, not
-  favours to offer. Branching off `main` is the one thing to ask about.
+  routine deploys are inside the doctrine floor (see `CLAUDE.md`).
+  Don't end a session asking permission to commit, update
+  `CHANGELOG.md`, or append to `docs/SESSIONS.md` — those are part of
+  finishing the work, not favours to offer. Branching off `main` is
+  the one thing to ask about.
 - **Message style:** `area: imperative subject` (e.g. `picker: land on
   the filtered set`, `data: refresh KK Malaysian prices`, `a11y: fix
   dark-mode contrast on the call label`). Note how you verified it.

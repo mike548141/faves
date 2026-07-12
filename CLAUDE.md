@@ -91,12 +91,11 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   hygiene, and the read-path budget. Consult it before choosing a model
   or starting a billed review (`/code-review ultra`, Fable).
 - **Commit as you work.** Small, focused commits — one concern each —
-  landed continuously, not one end-of-session dump. The estate-wide
-  standing grant applies (atelier AUTONOMY: commit + push + manage PRs
-  at discretion — the grant-history table there is the canonical
-  record). This repo's only delta: Cloudflare Pages deploys from
-  `main`, so a push *is* a deploy — and routine deploys are inside the
-  grant. Still branch off `main` only when asked.
+  landed continuously, not one end-of-session dump. Commit/push
+  autonomy is the doctrine floor above (grant history: atelier
+  AUTONOMY's table). This repo's only delta: Cloudflare Pages deploys
+  from `main`, so a push *is* a deploy — and routine deploys are inside
+  the grant. Still branch off `main` only when asked.
 - **Commit message style:** `area: imperative subject`, lower-case,
   concise, noting how it was verified where useful. Areas in play:
   `data` (menu JSON), `home`/`menu`/`picker` (screens), `css`,
