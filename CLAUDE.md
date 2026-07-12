@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@2b8da3b`)
+## Doctrine — inherited from atelier (pinned `atelier@b07087c`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -17,8 +17,11 @@ in atelier and is read on demand — never wholesale.
   sever your own access; installing an unapproved tool or adding a new trust
   surface (deploy keys, webhooks, OAuth/app grants). Everything recoverable —
   commit/push/PR included — just proceed.
+- **Concurrency:** `git pull --rebase --autostash` at session start; push after
+  each commit. Uncommitted changes this session didn't make ⇒ another session
+  is live: move to a worktree — never work around or absorb them.
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
-  session start run `git -C "../atelier" log --oneline 2b8da3b..HEAD`; any
+  session start run `git -C "../atelier" log --oneline b07087c..HEAD`; any
   output means the house doctrine moved — read it, then bump the pin above
   deliberately.
 - **This repo's visibility:** PRIVATE for now — a push is not publication. But

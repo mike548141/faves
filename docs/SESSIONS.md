@@ -1103,3 +1103,10 @@ for loading into context. Convention adopted from `ros`/`tiki`
   (owner-flagged): hours, phone, Easy Eats link all match; no change.
   Verified: validate.py, check_no_deps.py, node --test all pass; SW
   VERSION → 2026-07-12.66.
+  Session close: atelier drift read (2b8da3b → b07087c, 11 commits —
+  new REACH.md fetch-ladder + credential-boundary doctrine; CONCURRENCY
+  gained the dirty-tree backstop, sync bookends, and solo trunk-based
+  default; PROPAGATION now stamps a Concurrency line into the floor
+  block). Floor unmoved. Pin bumped and the Concurrency line added to
+  CLAUDE.md's inlined block per the updated template. Docs only — no
+  `site/` change beyond the earlier hours commit, no further SW bump.
