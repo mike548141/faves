@@ -2,12 +2,19 @@
 
 Notable changes to Faves, newest first. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). This is a
-curated site, not a released package, so there are no version tags yet —
-everything sits under _Unreleased_ until the first public launch.
-Per-restaurant "verified on" dates in the menu data track content
-freshness separately from this file.
+curated site, not a released package — versions here are milestones,
+not tags. Per-restaurant "verified on" dates in the menu data track
+content freshness separately from this file.
 
 ## [Unreleased]
+
+_Nothing yet._
+
+## [1.0.0] — 2026-07-12 · launch
+
+Live at <https://lets-eat.myspot.nz>, installed on the owner's iPhone,
+and the link shared with family — launch day. Everything below shipped
+between first commit and today.
 
 ### Added
 - **The site is live.** Faves now publishes on Cloudflare Pages: every

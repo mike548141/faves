@@ -1084,3 +1084,6 @@ for loading into context. Convention adopted from `ros`/`tiki`
   (Theme 1b), the family-order hallway test, detailed device checks
   (schemes/orientations/tablet), and re-running Lighthouse against the
   live URL. Docs only — no `site/` change, no SW bump.
+  Owner call, same day: family-share counts as launch day — CHANGELOG's
+  Unreleased block cut to **[1.0.0] — 2026-07-12 · launch**; fresh empty
+  Unreleased opened for post-launch work.
