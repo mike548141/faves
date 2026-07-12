@@ -13,6 +13,8 @@
 
 import { encodeQR } from "./qr.js";
 import { el } from "./dom.js";
+import { wireDialog } from "./dialog.js";
+import { tryNativeShare, canNativeShare, copyText } from "./share-core.js";
 
 // Paint a QR of `url` onto `canvas`, dark-on-light with a 4-module quiet zone.
 // Colours are hard-coded (not theme tokens): a scanner needs dark modules on a
@@ -66,7 +68,7 @@ export function openShareDialog({
   const copyBtn = el("button", { type: "button", className: "order-collect-toggle", textContent: "Copy link" });
   // navigator.share is the AirDrop/Messages path (iOS/most mobile); where it's
   // absent (many desktops) fall back to Copy link alone.
-  if (!(typeof navigator !== "undefined" && navigator.share)) shareBtn.hidden = true;
+  if (!canNativeShare()) shareBtn.hidden = true;
 
   const qrBtn = el("button", { type: "button", className: "order-collect-toggle", textContent: "Show QR code" });
   qrBtn.setAttribute("aria-expanded", "false");
@@ -78,16 +80,15 @@ export function openShareDialog({
     el("p", { className: "order-caption", textContent: "Point the other phone's camera at this." }),
   ]);
 
+  // The order-sheet family stays English for now (see file header), so this ✕ is
+  // a plain button rather than dialog.js's i18n closeButton().
+  const closeBtn = el("button", { type: "button", className: "order-close", textContent: "✕", "aria-label": "Close" });
+
   const dialog = el("dialog", { className: "share-sheet", "aria-labelledby": "share-title" }, [
     el("div", { className: "order-inner" }, [
       el("div", { className: "order-head" }, [
         el("h2", { id: "share-title", className: "order-title", textContent: heading }),
-        (() => {
-          const b = el("button", { type: "button", className: "order-close", textContent: "✕" });
-          b.setAttribute("aria-label", "Close");
-          b.addEventListener("click", () => dialog.close());
-          return b;
-        })(),
+        closeBtn,
       ]),
       el("div", { className: "order-body share-body" }, [
         el("p", { className: "order-caption", textContent: blurb }),
@@ -110,21 +111,17 @@ export function openShareDialog({
   }
 
   shareBtn.addEventListener("click", async () => {
-    try {
-      await navigator.share({ title: shareTitle, text: shareText, url: currentUrl() });
-      status.textContent = "Sent.";
-    } catch (err) {
-      // AbortError = the user closed the share sheet themselves; stay quiet.
-      if (err && err.name !== "AbortError") status.textContent = "Couldn't open the share sheet — try Copy link.";
-    }
+    const r = await tryNativeShare({ title: shareTitle, text: shareText, url: currentUrl() });
+    if (r === "shared") status.textContent = "Sent.";
+    // "dismissed" = the user closed the sheet themselves; stay quiet.
+    else if (r === "unavailable") status.textContent = "Couldn't open the share sheet — try Copy link.";
   });
 
   copyBtn.addEventListener("click", async () => {
     const url = currentUrl();
-    try {
-      await navigator.clipboard.writeText(url);
+    if (await copyText(url)) {
       status.textContent = "Link copied — paste it to them.";
-    } catch {
+    } else {
       // Clipboard blocked (or non-HTTPS origin): reveal the link to copy by hand.
       linkField.hidden = false;
       linkField.value = url;
@@ -152,9 +149,7 @@ export function openShareDialog({
   });
 
   dialog.addEventListener("close", () => dialog.remove());
-  dialog.addEventListener("click", (e) => {
-    if (e.target === dialog) dialog.close();
-  });
+  wireDialog(dialog, { closeBtn });
 
   document.body.append(dialog);
   dialog.showModal();

@@ -7,6 +7,7 @@
 // overflow-ui.js), so feedback is a toast rather than anything inline.
 
 import { toast } from "./toast.js";
+import { tryNativeShare, copyText } from "./share-core.js";
 
 const SHARE_TITLE = "Faves";
 const SHARE_TEXT = "Faves — menus for our favourite Wellington places to eat.";
@@ -25,25 +26,9 @@ export function initShareApp() {
 
   btn.addEventListener("click", async () => {
     const url = appUrl();
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url });
-      } catch (err) {
-        // AbortError = the user dismissed the sheet themselves; stay quiet.
-        if (err && err.name !== "AbortError") await copyLink(url);
-      }
-      return;
-    }
-    await copyLink(url);
-  });
-}
-
-async function copyLink(url) {
-  try {
-    await navigator.clipboard.writeText(url);
-    toast("Link copied — paste it to a friend.");
-  } catch {
+    // Shared or dismissed by the user ⇒ done; only a genuine miss falls back.
+    if ((await tryNativeShare({ title: SHARE_TITLE, text: SHARE_TEXT, url })) !== "unavailable") return;
     // Clipboard blocked (or a non-secure origin): surface the URL to copy by hand.
-    toast(url);
-  }
+    toast((await copyText(url)) ? "Link copied — paste it to a friend." : url);
+  });
 }
