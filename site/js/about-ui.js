@@ -11,6 +11,8 @@
 // carry data-i18n.
 
 import { el } from "./dom.js";
+import { closeButton, wireDialog } from "./dialog.js";
+import { translate } from "./reo.js";
 
 function group(title, ...paras) {
   return el("section", { className: "about-group" }, [
@@ -19,16 +21,10 @@ function group(title, ...paras) {
   ]);
 }
 
-export function initAboutUI() {
-  const btn = document.getElementById("about-btn");
-  // Guard against a double-init leaving two dialogs on the page.
-  if (!btn || document.querySelector(".about-sheet")) return;
-  btn.hidden = false;
-
-  const close = el("button", { type: "button", className: "settings-close", textContent: "✕" });
-  close.setAttribute("aria-label", "Close");
-  close.dataset.i18nAria = "generic.close";
-
+// Build the dialog DOM. Deferred to first open (see initAboutUI) — most sessions
+// never open About, so there's no point spending the boot on ~10 nodes.
+function buildDialog() {
+  const close = closeButton();
   const title = el("h2", { id: "about-title", className: "settings-title", textContent: "About Faves" });
 
   const dialog = el("dialog", { className: "settings-sheet about-sheet", "aria-labelledby": "about-title" }, [
@@ -61,14 +57,24 @@ export function initAboutUI() {
     ]),
   ]);
   document.body.append(dialog);
+  // The boot-time translate pass already ran; translate this subtree now that it
+  // exists (and later language switches re-translate the whole document).
+  translate(dialog);
+  return wireDialog(dialog, { closeBtn: close });
+}
 
-  close.addEventListener("click", () => dialog.close());
-  // Backdrop (click on the dialog element itself, outside .settings-inner).
-  dialog.addEventListener("click", (e) => {
-    if (e.target === dialog) dialog.close();
-  });
+export function initAboutUI() {
+  const btn = document.getElementById("about-btn");
+  // Guard against a double-init wiring the openers twice.
+  if (!btn || btn.dataset.wired) return;
+  btn.dataset.wired = "1";
+  btn.hidden = false;
 
-  const open = () => dialog.showModal();
+  let dialog = null;
+  const open = () => {
+    if (!dialog) dialog = buildDialog(); // lazily build the DOM on first open
+    dialog.showModal();
+  };
   btn.addEventListener("click", open);
 
   // Swap the no-JS footer privacy note for the compact link that opens here.

@@ -3,7 +3,7 @@
 //
 // VERSION is the cache-buster: bump it whenever anything in site/
 // changes — menu data especially. See README "Editing menu data".
-const VERSION = "2026-07-12.61";
+const VERSION = "2026-07-12.62";
 
 const CACHE = `faves-${VERSION}`;
 const IMG_CACHE = "faves-img-v1";
@@ -20,6 +20,7 @@ const SHELL = [
   "js/cart.js",
   "js/cart-ui.js",
   "js/data.js",
+  "js/dialog.js",
   "js/disclosure.js",
   "js/distance.js",
   "js/dom.js",
@@ -125,9 +126,8 @@ async function cacheFirst(req) {
   const hit = await caches.match(req, { ignoreSearch: true });
   if (hit) return hit;
   // Cache miss (e.g. a fresh deep link): the network copy of a shell page may be
-  // redirected by Cloudflare — strip that so a navigation doesn't fail.
-  const res = await fetch(req);
-  return res.redirected ? new Response(res.body, res) : res;
+  // redirected by Cloudflare — fetchClean strips that so a navigation doesn't fail.
+  return fetchClean(req);
 }
 
 // Data: menu edits should appear promptly when online, but the cache

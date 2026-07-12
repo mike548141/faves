@@ -5,6 +5,7 @@
 
 import { t } from "./reo.js";
 import { el } from "./dom.js";
+import { wireDialog } from "./dialog.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 // Guarded so the pure helpers below import cleanly under `node --test` (no
@@ -159,12 +160,9 @@ export function initPicker(getCandidates, isFavourite = () => false) {
     shuffle();
   });
   againBtn.addEventListener("click", shuffle);
-  closeBtn.addEventListener("click", () => dialog.close());
   dialog.addEventListener("close", stop);
-  dialog.addEventListener("click", (e) => {
-    // Click on the backdrop (outside the content) closes.
-    if (!inner.contains(e.target)) dialog.close();
-  });
+  // ✕ + backdrop (a click outside .picker-inner) close; Escape is native.
+  wireDialog(dialog, { closeBtn, inner });
 
   // Tuck the FAB away while scrolling *down* so it stops covering the list you're
   // reading; bring it back on any upward scroll, or near the top. rAF-throttled

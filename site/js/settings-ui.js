@@ -12,6 +12,7 @@
 import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS } from "./settings.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
+import { closeButton, wireDialog } from "./dialog.js";
 
 function field({ id, label, hint, min, max, step }) {
   const input = el("input", { type: "range", id, min, max, step, className: "settings-range" });
@@ -165,6 +166,7 @@ export function initSettingsUI() {
   });
 
   const resetBtn = el("button", { type: "button", className: "settings-reset", textContent: "Reset to defaults" });
+  const close = closeButton();
 
   const dialog = el("dialog", { className: "settings-sheet", "aria-labelledby": "settings-title" }, [
     el("div", { className: "settings-inner" }, [
@@ -174,12 +176,7 @@ export function initSettingsUI() {
           h.dataset.i18n = "settings.title";
           return h;
         })(),
-        (() => {
-          const c = el("button", { type: "button", className: "settings-close", textContent: "✕" });
-          c.setAttribute("aria-label", "Close");
-          c.addEventListener("click", () => dialog.close());
-          return c;
-        })(),
+        close,
       ]),
 
       // --- Language / Te Reo ---
@@ -240,9 +237,7 @@ export function initSettingsUI() {
   window.addEventListener("resize", () => {
     if (dialog.open) refreshCollapsibles();
   });
-  dialog.addEventListener("click", (e) => {
-    if (e.target === dialog) dialog.close();
-  });
+  wireDialog(dialog, { closeBtn: close });
 
   // Keep controls in step with the store (reset, or a change from another tab).
   settings.subscribe(sync);
