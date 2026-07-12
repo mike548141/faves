@@ -11,8 +11,8 @@ content freshness separately from this file.
 ### Added
 - **Opening hours for 15 more venues** — every restaurant now shows
   live open/closed status. Hours researched online (venue sites where
-  they exist, aggregators otherwise); Wellington Kebab Grill's are the
-  least certain (its own site says "TBC") and deserve a phone check.
+  they exist, aggregators otherwise); confirmation folds into the
+  owner's general menu/details verification pass.
 
 ## [1.0.0] — 2026-07-12 · launch
 
