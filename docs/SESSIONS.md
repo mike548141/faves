@@ -1068,3 +1068,9 @@ for loading into context. Convention adopted from `ros`/`tiki`
   landing (the #7 cleanup commits touched neither file; the new
   COMMUNICATION.md doc is unrelated territory). Docs only — no `site/`
   change, no SW bump.
+  Same-session follow-up: stripped the hand-restated grant scope the first
+  pass had left behind — each repo now carries managed floor + delta only
+  (4a95c17 here; rpi 741377d; hitchbots eba418f, which also bumped its pin) —
+  and bumped this repo's atelier pin 05b4a98 → 2b8da3b after reading the
+  drift (signing hardening, browser-fetch instrument, COMMUNICATION.md,
+  AUTONOMY ask-names-both-sources; floor unmoved).
