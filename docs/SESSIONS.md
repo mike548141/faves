@@ -1074,3 +1074,13 @@ for loading into context. Convention adopted from `ros`/`tiki`
   and bumped this repo's atelier pin 05b4a98 → 2b8da3b after reading the
   drift (signing hardening, browser-fetch instrument, COMMUNICATION.md,
   AUTONOMY ask-names-both-sources; floor unmoved).
+
+- **2026-07-12 (Fable: launch recorded — owner acceptance progress)**:
+  The site is launched: live at lets-eat.myspot.nz and the link is
+  shared with family. Owner installed the PWA on iPhone — saves to the
+  home screen, functions normally — so Phase 5's iOS install acceptance
+  is passed (WORKPLAN updated). Remaining owner acceptance narrows to:
+  flight-mode test, Android install, a real phone-camera QR scan
+  (Theme 1b), the family-order hallway test, detailed device checks
+  (schemes/orientations/tablet), and re-running Lighthouse against the
+  live URL. Docs only — no `site/` change, no SW bump.

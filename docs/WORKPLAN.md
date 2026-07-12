@@ -111,7 +111,9 @@ hallway-test.*
 flight mode after one visit, every menu opens.
 *Built 2026-07-08. Verified via the dev-server log: registration
 triggers the install precache, which fetched the full shell and all 13
-data files. Owner to install on iOS/Android and flight-mode test.*
+data files. **Owner installed on iPhone 2026-07-12** — saves to the
+home screen and functions normally. Still pending: Android install,
+flight-mode test.*
 
 ## Phase 6 — Polish and quality gate
 
@@ -126,7 +128,10 @@ data files. Owner to install on iOS/Android and flight-mode test.*
 - [~] First-visit transfer < 300 KB; test on a real phone and tablet,
       both colour schemes, portrait + landscape.
       *Measured 2026-07-08: shell + all menu data = 176.9 KB raw,
-      45.3 KB gzipped — well under budget. Real-device pass = owner.*
+      45.3 KB gzipped — well under budget. Real-device pass = owner:
+      iPhone general pass 2026-07-12 (site launched, link shared with
+      family); detailed checks (both schemes, orientations, tablet)
+      pending.*
 - [x] OG/meta tags so the link unfurls nicely in Messages/WhatsApp.
       *og:/twitter: tags on both shells, canonical on the home page,
       1200×630 `icons/og-image.png` (padded from the app icon with
