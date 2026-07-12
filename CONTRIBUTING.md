@@ -56,8 +56,8 @@ npx lighthouse http://localhost:8080/index.html \
 
 - **Commit as you work** — small, focused commits, one concern each.
   `main` auto-deploys to Cloudflare Pages, so a push is a deploy — and
-  the owner's standing grant (2026-07-10) covers **commit and push at
-  your discretion**, deploy included. Don't end a session asking
+  the standing grant (see `CLAUDE.md` / atelier AUTONOMY) covers commit
+  and push at discretion, deploy included. Don't end a session asking
   permission to commit, update `CHANGELOG.md`, or append to
   `docs/SESSIONS.md` — those are part of finishing the work, not
   favours to offer. Branching off `main` is the one thing to ask about.

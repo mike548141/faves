@@ -1052,3 +1052,19 @@ for loading into context. Convention adopted from `ros`/`tiki`
   overlap; settings latch still returns; zero console errors throughout. SW
   `.59→.65` across the session; static suite green (validate 27, no-deps, SBOM,
   176 tests). The unrelated in-flight edits noted above remain untouched.
+
+- **2026-07-12 (Fable: doctrine drift — why a session asked before committing)**:
+  Investigated why a live session asked permission to commit despite the
+  2026-07-10 standing grant. Root cause: `CONTRIBUTING.md` still said "only
+  push when the owner asks" (written 2026-07-08, pre-grant) — the session hit
+  a CLAUDE.md-vs-CONTRIBUTING contradiction and correctly stopped, but didn't
+  name the conflict in its ask. Fixed the stale line (91a4da5), swept all 14
+  estate repos: `rpi` carried the same stale posture (fixed there too);
+  everything else consistent. Then, per the owner, moved to inherit-form: the
+  grant's canonical record is atelier AUTONOMY's grant-history table; this
+  repo's CLAUDE.md/CONTRIBUTING now point at it and keep only the
+  push-is-a-deploy delta. Added the ask-names-both-sources rule to atelier
+  AUTONOMY.md. All edits re-verified against parallel-session work before
+  landing (the #7 cleanup commits touched neither file; the new
+  COMMUNICATION.md doc is unrelated territory). Docs only — no `site/`
+  change, no SW bump.
