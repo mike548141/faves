@@ -668,6 +668,31 @@ Effort **S** overall, no runtime/offline impact. **Accept when**: an SBOM
 is published for the deployed site and CI fails on an unexpected
 dependency.
 
+## Theme 8 — Making the repo public (parked; owner-gated)
+
+Assessed 2026-07-12: publishable, but sequenced. Flipping visibility is a
+floor action (one-way door — forks/copies survive any later unpublish) and
+stays the owner's explicit call. Order matters:
+
+1. **GitHub PAT refresh first** (already queued estate-side). The session
+   log (`docs/SESSIONS.md`, 2026-07-12 deploy entry) records the current
+   PAT as classic + broad and lists unhardened credential roots
+   (AWS/Google/TrueNAS); git history preserves that line forever, so the
+   fix is making it *historical* — refresh the credential, don't redact
+   the log.
+2. **Branch protection before visibility** — a push to `main` is a deploy;
+   public means drive-by PRs/issues. Require review, restrict push.
+3. **Owner confirms the docs' family texture.** The 2026-07-06 approval
+   covered recipe attributions in site data; the docs also use family
+   first names in feature examples and acceptance notes (ROADMAP Themes
+   1/1b, SESSIONS). Same first-names-only level, but publishing extends
+   the approval from the site to the workshop notes — confirm or trim.
+
+Verified clean 2026-07-12 (tree + full history): no secrets (the one
+token line reads from Keychain; "share tokens" are client-side codec),
+Apache 2.0 licence present, only `mike@cxi.nz` in commit metadata,
+home-area inference no worse than the live site already allows.
+
 ## Also parked (small)
 
 - ~~**"Open now"** from the `hours` data on cards.~~ ✅ **done
