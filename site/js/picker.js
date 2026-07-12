@@ -193,4 +193,18 @@ export function initPicker(getCandidates, isFavourite = () => false) {
     },
     { passive: true }
   );
+
+  // Search / favourites hide the FAB via display:none (body.searching /
+  // body.faves-view). While hidden it takes no scroll events, so a tuck set
+  // before entering those views would survive and leave "Pick for us"
+  // translated off-screen on return. Clear it the moment browse comes back.
+  new MutationObserver(() => {
+    const browsing =
+      !document.body.classList.contains("searching") &&
+      !document.body.classList.contains("faves-view");
+    if (browsing && fab.classList.contains("is-tucked")) {
+      fab.classList.remove("is-tucked");
+      lastY = window.scrollY;
+    }
+  }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
 }

@@ -4,7 +4,14 @@
 // against a double-append so either caller can invoke it safely.
 
 const el = (tag, props = {}, children = []) => {
-  const node = Object.assign(document.createElement(tag), props);
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    // Hyphenated keys (aria-*, data-*) are attributes, not IDL properties —
+    // plain assignment would set an inert expando the browser ignores, leaving
+    // the ↑ button unnamed to screen readers and untranslatable.
+    if (k.includes("-")) node.setAttribute(k, v);
+    else node[k] = v;
+  }
   for (const child of [].concat(children)) if (child != null) node.append(child);
   return node;
 };

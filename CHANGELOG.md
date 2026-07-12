@@ -200,6 +200,18 @@ freshness separately from this file.
   visible and highlighted, instead of leaving it off-screen deep in a menu.
 - **Collapsed allergen chips** no longer bleed a fade over a selected chip.
 - **Settings gear icon** in the ⋯ menu sized to match the other icons.
+- **Offline reliability**: if a file fails to download during a deploy, the
+  install now aborts instead of caching the broken file and serving it offline.
+- **Screen readers & te reo**: the back-to-top ↑ button and the About dialog now
+  carry proper accessible names, and their labels translate with the rest of the
+  chrome (they were silently inert before).
+- **Settings "Show all" toggle** reappears after you rotate or resize the sheet
+  narrower again — it used to vanish for good once the chips had fit one row.
+- **"Pick for us" button** no longer stays hidden off-screen after you open then
+  close search while scrolled down the list.
+- **Menu toolbar** no longer drops down by a row's height on a short desktop
+  window (the mobile contact bar's offset was leaking onto desktop).
+- **"Show all" toggle** is now a full 44px tap target.
 
 ### Added
 - **Back-to-top on the restaurant list** too (it was menu-only); it sits clear

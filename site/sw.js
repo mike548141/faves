@@ -3,7 +3,7 @@
 //
 // VERSION is the cache-buster: bump it whenever anything in site/
 // changes — menu data especially. See README "Editing menu data".
-const VERSION = "2026-07-12.59";
+const VERSION = "2026-07-12.60";
 
 const CACHE = `faves-${VERSION}`;
 const IMG_CACHE = "faves-img-v1";
@@ -70,7 +70,17 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE);
-      await Promise.all(SHELL.map(async (u) => cache.put(u, await fetchClean(u))));
+      // Per-URL put (not cache.addAll) so redirected shell pages get cleaned
+      // first — but keep addAll's response.ok guard by hand: a 404/500 during a
+      // deploy race must reject the install, not silently cache a broken asset
+      // that offline visitors then serve until the next VERSION bump.
+      await Promise.all(
+        SHELL.map(async (u) => {
+          const res = await fetchClean(u);
+          if (!res.ok) throw new Error(`SW install: ${u} → ${res.status}`);
+          await cache.put(u, res);
+        })
+      );
       // Every menu listed in the index, so offline covers all data.
       const ids = await (await cache.match("data/index.json")).json();
       await cache.addAll(ids.map((id) => `data/restaurants/${id}.json`));

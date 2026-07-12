@@ -1827,6 +1827,9 @@ body.faves-view .to-top {
 }
 .chips-toggle {
   margin-top: var(--space-1);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* interactive-target floor (CLAUDE.md) — padding alone gave ~29px */
   padding: 0.35em 0;
   border: 0;
   background: none;
@@ -2183,7 +2186,12 @@ body.faves-view .to-top {
     background: var(--accent-strong, var(--accent));
   }
 }
-/* Desktop has the sticky aside column, so the bar never applies there. */
+.contact-bar-open .menu-toolbar {
+  top: calc(var(--contact-bar-h) + env(safe-area-inset-top));
+}
+/* Desktop has the sticky aside column, so the bar never applies there. This
+   must come *after* the offset rule above (equal specificity) so the reset
+   wins on wide screens even if .contact-bar-open lingers on <body>. */
 @media (min-width: 48rem) {
   .contact-bar {
     display: none !important;
@@ -2191,9 +2199,6 @@ body.faves-view .to-top {
   .contact-bar-open .menu-toolbar {
     top: 0;
   }
-}
-.contact-bar-open .menu-toolbar {
-  top: calc(var(--contact-bar-h) + env(safe-area-inset-top));
 }
 
 /* Sticky toolbar: search + section nav pinned together (see menu.js). The top

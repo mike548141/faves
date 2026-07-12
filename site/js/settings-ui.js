@@ -106,6 +106,10 @@ function collapsible(group, count) {
   function refresh() {
     if (expanded) return; // never fight a user who has opened the group
     // Measure against the collapsed clamp: taller than one row ⇒ offer the toggle.
+    // .fits removes the max-height, so it must come off *before* measuring —
+    // otherwise scrollHeight === clientHeight and the clamp/toggle could never
+    // return once the chips have fit even once (e.g. landscape → portrait).
+    wrap.classList.remove("fits");
     const overflowing = group.scrollHeight - group.clientHeight > 2;
     toggle.hidden = !overflowing;
     wrap.classList.toggle("fits", !overflowing); // fits one row ⇒ no clamp, no fade

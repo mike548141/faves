@@ -731,15 +731,28 @@ function compactContactBar(r) {
 // where IntersectionObserver is missing — the full card still works.
 function initContactBar(bar, cardEl) {
   if (!cardEl || !("IntersectionObserver" in window)) return;
+  // The bar is a mobile affordance only (desktop has the sticky aside column,
+  // where CSS forces it display:none). Match that 48rem breakpoint here so we
+  // never toggle .contact-bar-open on desktop — otherwise the sticky toolbar
+  // picks up a ~3rem offset for a bar that isn't shown. Re-evaluated on resize.
+  const mobile = matchMedia("(max-width: 47.999rem)");
   const io = new IntersectionObserver(
     ([entry]) => {
-      const show = !entry.isIntersecting;
+      const show = mobile.matches && !entry.isIntersecting;
       bar.hidden = !show;
       document.body.classList.toggle("contact-bar-open", show);
     },
     { threshold: 0 }
   );
   io.observe(cardEl);
+  // A desktop→mobile resize (or rotate) won't re-fire the observer on its own;
+  // nudge it so the class reflects the new width without needing a scroll.
+  mobile.addEventListener("change", () => {
+    if (!mobile.matches) {
+      bar.hidden = true;
+      document.body.classList.remove("contact-bar-open");
+    }
+  });
 }
 
 // --- Boot ------------------------------------------------------------
