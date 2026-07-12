@@ -363,7 +363,7 @@ function penalty(modules, size) {
     }
   }
 
-  // Rule 3: finder-like 1:1:3:1:1 patterns, horizontal and vertical.
+  // Rule 3: finder-like 1:1:3:1:1 patterns, horizontal and vertical. // leakscan:allow: QR finder-pattern ratio, ipv6-shaped by accident
   const pat1 = [true, false, true, true, true, false, true, false, false, false, false];
   const pat2 = [false, false, false, false, true, false, true, true, true, false, true];
   const matches = (get, i) => {

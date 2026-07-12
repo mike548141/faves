@@ -23,10 +23,10 @@ def lan_ip():
     """Best-effort primary LAN IP. No packets are actually sent."""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        s.connect(("8.8.8.8", 80))
+        s.connect(("8.8.8.8", 80))  # leakscan:allow: Google public DNS, a well-known constant
         return s.getsockname()[0]
     except OSError:
-        return "127.0.0.1"
+        return "127.0.0.1"  # leakscan:allow: loopback literal
     finally:
         s.close()
 
