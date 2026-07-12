@@ -14,6 +14,7 @@ import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
 import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
+import { wireSearchClear } from "./search-clear.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -617,18 +618,8 @@ function render(r) {
   }
 
   search.addEventListener("input", applyView);
-  // Esc also clears (mirrors the native/home behaviour), keeping focus.
-  search.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && search.value) {
-      search.value = "";
-      applyView();
-    }
-  });
-  searchClear.addEventListener("click", () => {
-    search.value = "";
-    applyView();
-    search.focus(); // keep the keyboard up so you can retype straight away
-  });
+  // Custom ✕ + Escape both clear the field (shared with the home search).
+  wireSearchClear(search, searchClear, applyView);
 
   // --- Scroll-spy: highlight the section in view --------------------
   const links = [...navScroll.querySelectorAll(".section-link")];

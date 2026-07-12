@@ -24,6 +24,7 @@ import { initBackToTop } from "./to-top.js";
 import { priceBand } from "./price.js";
 import { initReo } from "./reo.js";
 import { el } from "./dom.js";
+import { wireSearchClear } from "./search-clear.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 
@@ -343,21 +344,10 @@ function wireSearch(restaurants) {
   }
 
   input.addEventListener("input", update);
-  if (clear)
-    clear.addEventListener("click", () => {
-      input.value = "";
-      update();
-      input.focus(); // keep the keyboard up so you can retype straight away
-    });
+  // Custom ✕ + Escape both clear the field (shared with the in-menu search).
+  wireSearchClear(input, clear, update);
   // Submit is a no-op (results are live); just don't reload the page.
   form.addEventListener("submit", (e) => e.preventDefault());
-  // Esc clears and returns to browse, even from the native clear button path.
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && input.value) {
-      input.value = "";
-      update();
-    }
-  });
 }
 
 // Search and the Favourites view both take over the browse area, so turning
