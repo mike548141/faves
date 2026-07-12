@@ -330,21 +330,30 @@ sit here. Effort in `[S/M]`.
     ordered by distance, the closed café 400 m away now outranks the
     unknown-hours one 2.4 km away. (Content gap remains: Marigold's hours are
     still missing — worth filling.)
-- **Restaurant page: contact block collapses on scroll** `[M]` — as you
-  scroll the dishes, shrink the contact card (phone/address/hours/order-
-  online) upward to a compact Call button (or sticky mini-bar), letting the
-  dish list + category nav use the full width. Mobile-first; the wide
-  two-column layout already parks contact in a sticky aside, so this is the
-  narrow-screen analogue.
-- **Restaurant page: back-to-top button** `[S]` — a floating "↑ top" control
-  on long dish lists, appearing only after you've scrolled down a bit;
-  respects reduced-motion (instant vs smooth scroll).
-- **Footer privacy line → behind an "About" surface** `[M]` — the privacy
-  blurb ("No accounts, no tracking…") is good copy but too prominent sitting
-  in the footer. Move it behind an **About Faves** item in the ⋯ menu (a
-  small modal, same pattern as Settings) or a Privacy disclosure, freeing
-  the footer. Folds into the "About / About-this-site" idea already noted
-  above in this theme.
+- **Restaurant page: contact block collapses on scroll** `[M]` ✅ **done
+  2026-07-12** (`f33ff42`) — on phones, once the contact card scrolls out of
+  view a compact `.contact-bar` (open-now status + a Call button) slides in,
+  driven by an IntersectionObserver on the card (cheaper + jitter-free vs a
+  scroll listener). Phone-only — never toggled on desktop, where the sticky
+  two-column aside already parks contact. Its real height is measured into
+  `--contact-bar-h` (`c5dc185`) so the toolbar offset can't overlap it at
+  large font settings. Original sketch below.
+  - _Sketch:_ as you scroll the dishes, shrink the contact card upward to a
+    compact Call button, letting the dish list + category nav use the full
+    width. The narrow-screen analogue of the wide two-column sticky aside.
+- **Restaurant page: back-to-top button** `[S]` ✅ **done 2026-07-12**
+  (`5f5a456`; scroll listener rAF-throttled in `c5dc185`) — a body-level
+  floating "↑" control (`to-top.js`) shared by the menu screen and the home
+  list, revealed only after scrolling down a bit, instant scroll under
+  prefers-reduced-motion. Guarded against a double-append so either caller
+  can init it safely.
+- **Footer privacy line → behind an "About" surface** `[M]` ✅ **done
+  2026-07-12** (`78a2cc4`) — the privacy blurb now lives in an **About**
+  `<dialog>` (`about-ui.js`, modelled on the Settings sheet), opened from both
+  the ⋯ menu (`#about-btn`) and a compact footer "About & privacy" link
+  (`#about-open`). Progressive enhancement: no-JS visitors keep the full
+  privacy paragraph inline; JS hides it and reveals the link, so the footer
+  slims without losing the fail-soft copy.
 - **Settings: language control shouldn't look like tabs** `[S]` ✅ **done
   2026-07-12** — replaced the segmented pill with a compact `<select>` dropdown
   (`.lang-select`, styled like the home Area/Cuisine selects); reads as "choose
@@ -370,16 +379,18 @@ sit here. Effort in `[S/M]`.
 
 Second device pass, after the site went live. Effort in `[S/M]`.
 
-- **Home: "Pick for us" FAB eats phone real estate** `[S]` — on iPhone the
-  floating "Pick for us" button occupies valuable space above the list.
-  Either hide it on scroll-down (reveal on scroll-up, the common app pattern)
-  or relocate it — e.g. into the ⋯ menu, or a slimmer inline control. Keep the
-  ≥44 px target and reduced-motion behaviour.
-- **⋯ menu: "Share this app"** `[S]` — add a menu item that shares the site
-  itself (its public URL) via the Web Share API, falling back to copy-link —
-  distinct from the existing "share your favourites"/"send your picks" flows,
-  which share *content*. This shares the app so others can install it. Reuse
-  the share plumbing in `share-ui.js` where sensible.
+- **Home: "Pick for us" FAB eats phone real estate** `[S]` ✅ **done
+  2026-07-12** (`5f2b618`) — took the hide-on-scroll route (kept in place, not
+  relocated): the FAB gains `.is-tucked` while scrolling *down* past ~160 px
+  and returns on scroll-up or near the top (`picker.js`, rAF-throttled). The
+  ≥44 px target and reduced-motion behaviour are untouched; it also un-tucks
+  when a browse view reopens.
+- **⋯ menu: "Share this app"** `[S]` ✅ **done 2026-07-12** (`5f2b618`) — a
+  "Share this app" item in the ⋯ menu (`#share-app-btn`, `share-app.js`) hands
+  the app's own canonical URL to `navigator.share`, falling back to copy-link
+  + a toast where native share is absent. Shares the *app* (so others can
+  install it), distinct from the favourites/picks flows that share *content*;
+  reuses the `share-core.js` share/clipboard primitives.
 
 ## Theme 4 — Content growth (ongoing, in parallel)
 
