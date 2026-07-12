@@ -234,8 +234,16 @@ export function initSettingsUI() {
     dialog.showModal();
     refreshCollapsibles();
   });
+  // rAF-throttle so a drag-resize coalesces to one measure per frame rather than
+  // forcing a reflow per chip group on every resize event.
+  let resizeTick = false;
   window.addEventListener("resize", () => {
-    if (dialog.open) refreshCollapsibles();
+    if (!dialog.open || resizeTick) return;
+    resizeTick = true;
+    requestAnimationFrame(() => {
+      resizeTick = false;
+      if (dialog.open) refreshCollapsibles();
+    });
   });
   wireDialog(dialog, { closeBtn: close });
 

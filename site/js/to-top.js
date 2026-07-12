@@ -20,11 +20,19 @@ export function initBackToTop() {
   );
   document.body.append(btn);
 
+  // rAF-throttled (like the picker FAB) so a fast scroll coalesces to one
+  // read+write per frame rather than one per scroll event.
+  let ticking = false;
   const onScroll = () => {
-    btn.hidden = window.scrollY < 600;
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      btn.hidden = window.scrollY < 600;
+      ticking = false;
+    });
   };
   addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  btn.hidden = window.scrollY < 600; // initial state, no need to wait for a frame
 
   btn.addEventListener("click", () => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;

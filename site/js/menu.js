@@ -628,28 +628,30 @@ function render(r) {
   // the active chip is centred (skipped when it's already near centre, and
   // instant under reduced motion). Otherwise, deep in the menu, the section
   // you're reading has no visible chip. Scrolls the strip only, not the page.
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const centerNavLink = (link) => {
     const nr = navScroll.getBoundingClientRect();
     const lr = link.getBoundingClientRect();
     const delta = lr.left + lr.width / 2 - (nr.left + nr.width / 2);
     if (Math.abs(delta) < 4) return;
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    navScroll.scrollBy({ left: delta, behavior: reduce ? "auto" : "smooth" });
+    navScroll.scrollBy({ left: delta, behavior: reduceMotion.matches ? "auto" : "smooth" });
   };
   const spy = new IntersectionObserver(
     (entries) => {
       for (const e of entries) {
-        if (e.isIntersecting) {
-          const id = e.target.id;
-          for (const l of links) {
-            const on = l.getAttribute("href") === `#${id}`;
-            const became = on && !l.classList.contains("active");
-            l.classList.toggle("active", on);
-            if (on) l.setAttribute("aria-current", "true");
-            else l.removeAttribute("aria-current");
-            if (became) centerNavLink(l);
-          }
+        if (!e.isIntersecting) continue;
+        const id = e.target.id;
+        // Do all the class/attr writes first, note which link *became* active,
+        // then read its rect once — so centring doesn't force a reflow mid-loop.
+        let activated = null;
+        for (const l of links) {
+          const on = l.getAttribute("href") === `#${id}`;
+          if (on && !l.classList.contains("active")) activated = l;
+          l.classList.toggle("active", on);
+          if (on) l.setAttribute("aria-current", "true");
+          else l.removeAttribute("aria-current");
         }
+        if (activated) centerNavLink(activated);
       }
     },
     { rootMargin: "-45% 0px -50% 0px" }
@@ -716,11 +718,24 @@ function initContactBar(bar, cardEl) {
   // never toggle .contact-bar-open on desktop — otherwise the sticky toolbar
   // picks up a ~3rem offset for a bar that isn't shown. Re-evaluated on resize.
   const mobile = matchMedia("(max-width: 47.999rem)");
+  // The toolbar offset and the bar's own min-height both key off --contact-bar-h.
+  // Its 3rem default is only a guess; at large font settings the bar's content
+  // is taller and the toolbar would overlap it. Measure the *inner* (not the
+  // bar, whose box adds the safe-area padding — measuring that and feeding it
+  // back would grow the bar every pass) and pin the var to it. Measured lazily
+  // on first show, when the bar finally has a real width.
+  const inner = bar.querySelector(".contact-bar-inner");
+  let measured = false;
   const io = new IntersectionObserver(
     ([entry]) => {
       const show = mobile.matches && !entry.isIntersecting;
       bar.hidden = !show;
       document.body.classList.toggle("contact-bar-open", show);
+      if (show && inner && !measured) {
+        measured = true;
+        const h = Math.ceil(inner.getBoundingClientRect().height);
+        if (h) document.documentElement.style.setProperty("--contact-bar-h", `${h}px`);
+      }
     },
     { threshold: 0 }
   );
