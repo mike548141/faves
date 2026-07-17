@@ -11,11 +11,9 @@ site/
   index.html            app shell (list, filters, global search, picker)
   restaurant.html       menu view (?id=<restaurant-id>)
   css/app.css           design tokens + components (single file)
-  js/                   ES modules (data.js, filters.js, ranking.js,
-                        distance.js, hours.js, picker.js, menu.js, search.js,
-                        slug.js, store.js, settings.js, settings-ui.js,
-                        cart.js, cart-ui.js, favourites.js, favourites-ui.js,
-                        results-view.js, sw-register.js)
+  js/                   ES modules, one per concern (data, filters, ranking,
+                        hours, search, cart, favourites, settings, …) — model
+                        split from *-ui.js where a feature has both
   data/index.json       ordered list of restaurant ids
   data/restaurants/     <id>.json — one file per restaurant, menu included
   img/                  icons, photos (lazy-loaded)
@@ -36,45 +34,29 @@ deviating from the architecture.
 | Build step | **None** | `site/` is what ships. Removes a whole class of failure. |
 | Data | **JSON, one file per restaurant** | Adding a restaurant = add one file + one id in `index.json`. Git is the CMS: history, review, rollback for free. |
 | Offline | **Service worker precache** | Menus are small text; precache everything. Whole app works in flight mode / dodgy reception outside the takeaway. |
-| Hosting | **Cloudflare Pages** (recommended) or a public **AWS S3 bucket** | See "Hosting options" below. Either works because the artifact is plain static files — the decision is deferrable to Phase 7 without touching the app. |
+| Hosting | **Cloudflare Pages** (`lets-eat.myspot.nz`) | Decided 2026-07-07 (ADR 0004); AWS S3 + CloudFront is the host-agnostic fallback. See "Hosting" below. |
 | Rendering | **Client-side from JSON** | Two tiny HTML shells + fetch. Precached data makes it instant; no SSG needed at this scale. |
 | Repo | Private; site public | Curation and picks are ours; the URL is shareable with guests. |
 
-## Hosting options
+## Hosting
 
-Two viable targets; both are in the existing estate (Cloudflare and AWS).
+**Cloudflare Pages at `lets-eat.myspot.nz` (decided 2026-07-07, ADR 0004).**
+Connects to the private GitHub repo: push to `main` → deployed (no build
+command, output dir `site/`); free tier, global CDN, automatic HTTPS, custom
+domain via the existing Cloudflare DNS, per-branch preview URLs. Provisioned as
+code — [`tools/deploy.json`](../tools/deploy.json) declares the Pages project,
+build config and domain; [`tools/deploy.py`](../tools/deploy.py) reconciles it
+idempotently against the Cloudflare API (stdlib only). A **subdomain**, not a
+`myspot.nz/lets-eat` path, because a Pages project serves a whole hostname at
+root (a path prefix would need a Worker router); the app is already
+origin-portable (relative paths, `./`-scoped manifest), so the subdomain needs
+no app changes. Runbook: [`docs/DEPLOY.md`](DEPLOY.md).
 
-**Cloudflare Pages — recommended.** Connects directly to the private
-GitHub repo: push to `main` → deployed (build command none, output dir
-`site/`). Free tier, global CDN, automatic HTTPS, custom domain via the
-existing Cloudflare DNS, and preview URLs per branch for free. Zero
-moving parts on our side.
-
-**Decision (2026-07-07): Cloudflare Pages at `lets-eat.myspot.nz`.**
-Hosting is provisioned as code — [`tools/deploy.json`](../tools/deploy.json)
-declares the Pages project, build config and custom domain;
-[`tools/deploy.py`](../tools/deploy.py) reconciles it idempotently
-against the Cloudflare API (stdlib only). A **subdomain**, not the path
-`myspot.nz/lets-eat`, because a Pages project serves a whole hostname at
-its root; a path prefix would need a repo restructure or a Worker
-router. The app is already origin-portable (relative paths, `./`-scoped
-manifest), so the subdomain needs no app changes. Runbook: [`docs/DEPLOY.md`](DEPLOY.md).
-
-**AWS S3 public bucket — fallback/alternative.** Static website hosting
-on a public-read bucket. Costs cents/month at this size, but is more
-assembly required: no HTTPS or custom domain without CloudFront (or
-Cloudflare proxied in front of the bucket), no repo integration (deploy
-is `aws s3 sync site/ s3://<bucket> --delete`, manual or via GitHub
-Actions), and S3 website endpoints don't serve HTTP/2. Choose this only
-if there's a reason to keep the artifact in AWS.
-
-Note the PWA constraint either way: service workers require HTTPS, so a
-bare S3 website endpoint (HTTP-only) is not sufficient on its own —
-S3 hosting in practice means S3 + CloudFront or S3 + Cloudflare.
-
-The app is host-agnostic (plain files, relative paths, no server
-logic), so this decision is made in Phase 7 and reversible in an
-afternoon.
+**Fallback:** a public AWS S3 bucket (cents/month) fronted by CloudFront or
+Cloudflare — the PWA's service worker requires HTTPS, so a bare S3 website
+endpoint won't do, and a bare bucket has no custom domain or repo integration
+(`aws s3 sync site/ …` to deploy). The app is host-agnostic, so the choice is
+reversible in an afternoon.
 
 ## Data model
 
@@ -141,18 +123,15 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
   - `time`: string, e.g. `"40 min"`.
   - `ingredients`: list of strings.
   - `steps`: list of strings (the method, rendered as an ordered list).
-- `section` groups recipes (e.g. "Weeknight dinners"); `picks`,
-  `tags`, `desc`, search and dietary chips all work unchanged.
+- `section` groups recipes (e.g. "Weeknight dinners"); `picks`, `tags`, `desc`, search and dietary chips all work unchanged.
 
 Rendering: the menu screen shows ingredients + method in a collapsed
-`<details>` per recipe; the home card is an accent-tinted pin showing a
-recipe count; the collection is excluded from the area/cuisine filter
-facets. Each recipe's name also links to a focused full page,
-`recipe.html?id=<collection>&dish=<slug>` (`site/js/recipe.js`), showing
-the whole recipe + pairings — deep-linkable and shareable; the SW serves
-it via `ignoreSearch` like `restaurant.html`. This is the recorded
-deviation permitted by the "record it here first" rule — no other content
-types are planned.
+`<details>` per recipe; the home card is an accent-tinted pin with a recipe
+count; the collection is excluded from the area/cuisine facets. Each recipe
+name also links to a focused page `recipe.html?id=<collection>&dish=<slug>`
+(`site/js/recipe.js`) — the whole recipe + pairings, deep-linkable, SW-served
+via `ignoreSearch` like `restaurant.html`, and the one sanctioned extra page
+type (recorded per the docs-as-code rule; no others planned).
 
 ### Tag vocabulary (closed set — extend here, not ad hoc)
 
@@ -175,10 +154,9 @@ UI must never present absence of an allergen tag as "allergen-free".
 - `status` gates UI: `stub` restaurants render as "menu coming soon"
   cards, never as empty menus.
 - `ordering` is a (possibly empty) list of `{platform, url}` — external
-  online-order links only (Uber Eats, Delivereasy, the venue's own
-  ordering page …). We link out; we never take payment. `website` is
-  the venue's own site; `ordering` is where a customer can buy. Keep
-  these URLs owner-confirmed — delivery links rot.
+  online-order links (Uber Eats, Delivereasy, the venue's own ordering page):
+  where a customer can buy, distinct from `website` (the venue's own site).
+  Keep these owner-confirmed — delivery links rot.
 - `hours` is `null` (not stated) or a **full week** keyed `mon`…`sun`
   (all seven keys required). Each day is a list of `[open, close]`
   intervals in `"HH:MM"` 24h local time: `[]` = closed that day; two or
@@ -189,15 +167,13 @@ UI must never present absence of an allergen tag as "allergen-free".
   hours engine (`site/js/hours.js`) computes a live open/closed status
   from this in **Pacific/Auckland** time (not the viewer's clock), and a
   grouped weekly display; see ADR 0006. That status also drives the home
-  list's **default order** (`site/js/ranking.js`): open/opening-soon
-  venues float up, closed ones sink, favourites (a hearted venue or one
-  holding a hearted dish) lift within a tier via a *weighted* metric — a
-  favourite counts as `favBoostKm` nearer, so it doesn't simply always beat
-  distance — and, when a location is known, anything past a reachable
-  radius (`farKm`, gated on actual distance) sinks too. Sort key: reachable
-  → availability → effective (favourite-boosted) distance → favourite
-  tiebreak → curated. Both distances are viewer-tunable (`settings.js`,
-  device-local); "Pick for us" shuffles only the available set.
+  list's **default order** (`site/js/ranking.js`, sort key: reachable →
+  availability → favourite-boosted distance → favourite tiebreak → curated):
+  favourites lift within a tier via a *weighted* metric (a favourite counts
+  as `favBoostKm` nearer, not an outright win), and a known location sinks
+  anything past a reachable radius (`farKm`). Both distances are
+  viewer-tunable (`settings.js`, device-local); "Pick for us" shuffles only
+  the available set.
 - `image` (venue card photo, or a menu item's dish photo) is an optional
   **self-hosted** path — no hotlinking (offline / no-external-request
   rule); store under `site/img/`. Photos are excluded from the transfer
@@ -248,14 +224,12 @@ crashing. Each feature is split model (DOM-free, unit-tested) / UI:
   the search panel's grouped renderer (`results-view.js`).
 - **Settings** (`faves.settings.v1`): `settings.js` — the viewer's two
   ranking distances (`favBoostKm`, `farKm`), clamped/sanitised on read so a
-  bad value can't break the sort; `settings-ui.js` is the ⚙ dialog. The
-  first preferences surface, and the seam for future per-user options.
+  bad value can't break the sort; `settings-ui.js` is the ⚙ dialog.
 
 A `storage` event keeps other tabs in step. Recipes (Cook at Home) can be
 *favourited* but carry no order stepper — that collection is for cooking,
 not an order to read down the phone. This layer is the reusable seam for
-later local-only features (ratings, per-person profiles) and the bridge to
-the health app's eating diary (roadmap Themes 5–6).
+later local-only features and the bridge to the health app (roadmap Themes 5–6).
 
 ## Service worker strategy
 
