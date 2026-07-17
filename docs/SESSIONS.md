@@ -11,24 +11,6 @@ A substantial session may also put full detail in `docs/sessions/` and carry
 a one-line pointer here. Convention adopted from `ros`/`tiki` (2026-07-08);
 rotation added 2026-07-18.
 
-- **2026-07-12 (Opus: real-device UX fixes — menu + home chrome)**: A batch of
-  seven fixes from device review. **Menu search** gained the home search's clear
-  ✕ (wrapped in `.menu-search-field`; Esc clears). **Pinned toolbar** got
-  `padding-top` so the search pill stops clipping against `top:0` (desktop
-  0→10px; clear of the mobile contact bar). **Section jump-nav** now follows the
-  scroll — scroll-spy centres the active chip in the horizontal strip so the
-  section you're reading stays visible/highlighted deep in a menu. **Back-to-top**
-  extracted to a shared `to-top.js` and added to the home list (was menu-only);
-  on home it stacks above the "Pick for us" pill + filter bar (10px gap, verified
-  no overlap on scroll-up) and hides in search/favourites. **Footer** now puts
-  "About & privacy" + "Made by cakeIT" on one centred row (also simplified the
-  about-ui footer swap). **Collapsed allergen chips**: removed the fade gradient
-  that bled over a selected chip's fill (the clamp already hides row 2 cleanly).
-  **Settings gear ⚙** bumped to 1.35rem to match ♥/⤴/ⓘ. All verified over CDP at
-  390px + 1440px; verify suite green. SW `.58→.59`. Note: `code-review` deferred
-  — a good candidate before the next content push given the volume of chrome
-  churn this session.
-
 - **2026-07-12 (Fable: code review of the UX/chrome block)**: The deferred
   review, scoped to `8706f23~1..HEAD` under `site/` (~1.19k insertions, 17
   files). Eight finder angles fanned out on Opus, every candidate verified
@@ -236,3 +218,17 @@ rotation added 2026-07-18.
   owner-gated (a security contact / brand assets + usage terms). Net: the
   buildable no-owner-input engineering was already done; remaining work needs
   owner intake or a decision. Docs only — no `site/` change, no SW bump.
+
+- **2026-07-18 (Opus: file-size harvest — SESSIONS/ROADMAP/ARCHITECTURE under
+  budget)**: Focused file-size-hygiene session from atelier's roadmap (`sizescan`
+  flagged three current-truth docs over budget); worktree `sessions-roadmap-harvest`,
+  docs only. **SESSIONS.md 1157→238** — adopted the rotation the ros/tiki index
+  convention implies but faves never made: the recent tail stays in the loaded
+  index, the older 44 entries moved **verbatim** to a new `SESSIONS-ARCHIVE.md`.
+  **ROADMAP.md 766→299** — current-truth/history split: every *resolved* item
+  (shipped, decided-against ✗, owner-parked) moved verbatim to a new
+  `ROADMAP-DONE.md` behind a lean pointer, open/future work kept; done by a
+  scripted line-range partition, verified verbatim + no gap/overlap.
+  **ARCHITECTURE.md 276→250** — trimmed without losing facts (Hosting → the made
+  decision; stale row fixed; prose de-duplicated; rot-prone `js/` list
+  condensed). `sizescan` clean across all three.
