@@ -98,6 +98,7 @@ const MI = {
   "menu.picksHead": "He wā tuatahi nōu? Whakamātauria…", // draft
   "menu.picksAria": "Ā mātou kōwhiringa", // draft
   "menu.goesWith": "He pai i te taha o", // draft
+  "rating.our": "Tā mātou whakatauranga", // draft — curated household rating label
   "menu.search.ph": "Rapua tēnei tahua kai…",
   "menu.search.recipes.ph": "Rapua ngā tohutao…",
   "menu.search.aria": "Rapua tēnei tahua kai",

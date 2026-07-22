@@ -10,6 +10,7 @@ import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
+import { ratingControl, curatedRating } from "./ratings-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
 import { profiles, PROFILES_KEY } from "./profiles.js";
@@ -254,6 +255,18 @@ function renderHeader(r) {
 
   const bits = [titleRow, el("p", { className: "menu-sub", textContent: meta })];
 
+  // Venue marks: our optional curated household rating (static, from the data;
+  // absent today — the feature ships dormant) sits beside the viewer's own
+  // interactive personal rating, which is styled distinctly as their unverified
+  // mark (ratings-ui.js). Grouped on their own row so the header title reads clean.
+  const venueRating = ratingControl(
+    { type: "venue", venueId: r.id, venueName: r.name, isRecipe: isRecipes },
+    r.name
+  );
+  bits.push(
+    el("div", { className: "menu-rating-row" }, [curatedRating(r.rating), venueRating])
+  );
+
   // Typical spend per person, derived from this venue's own menu prices.
   const pb = priceBand(r);
   if (pb) {
@@ -322,6 +335,9 @@ function renderPicks(r, allItems) {
         item && item.price != null
           ? el("span", { className: "pick-price", textContent: money(item.price) })
           : null,
+        // Optional curated household rating for this pick (static, from the
+        // data; absent today — dormant until the owner supplies real values).
+        curatedRating(item?.rating),
       ])
     );
   }
@@ -425,11 +441,10 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
   // restaurant dishes only — Cook at Home is for cooking, not an order to
   // read down the phone.
   if (r) {
+    const dishEntry = { type: "dish", venueId: r.id, venueName: r.name, name: item.name, isRecipe: isRecipes };
     const actions = el("div", { className: "dish-actions" }, [
-      heartButton(
-        { type: "dish", venueId: r.id, venueName: r.name, name: item.name, isRecipe: isRecipes },
-        item.name
-      ),
+      ratingControl(dishEntry, item.name),
+      heartButton(dishEntry, item.name),
     ]);
     if (!isRecipes) {
       actions.append(
