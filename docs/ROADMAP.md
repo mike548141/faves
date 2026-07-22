@@ -312,7 +312,8 @@ home-area inference no worse than the live site already allows.
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
 UI toggle first pass (2026-07-09, `reo.js` — chrome only; safety text stays
-English, a pre-launch reo **wording review** still owed). Detail →
+English, a pre-launch reo **wording review** still owed — [~] claimed
+2026-07-22-1210, wt: faves-wave5-reo-review). Detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 ---
