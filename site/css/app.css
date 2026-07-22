@@ -1629,6 +1629,23 @@ body.faves-view .to-top {
   text-align: center;
 }
 
+/* "Browsing as <name>" — an unobtrusive marker of the active device-local
+   profile at the top of the ⋯ menu. Muted; not interactive. */
+.overflow-caption {
+  padding: 0.2em 0.7em 0.5em;
+  margin-bottom: 0.2em;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.overflow-caption .profile-caption-name {
+  color: var(--ink);
+  font-weight: 700;
+}
+.overflow-caption:has(.profile-caption-name:empty) {
+  display: none; /* nothing to show before JS fills the name */
+}
+
 .settings-sheet {
   width: 100%;
   max-width: 34rem;
@@ -1863,6 +1880,104 @@ body.faves-view .to-top {
 }
 .chips-toggle:hover {
   text-decoration: underline;
+}
+
+/* Device-local profiles section (settings dialog): the "who's using Faves?"
+   switcher. Native radios drive the switch, styled as chips; one inline form
+   does Add/Rename; Delete confirms inline. All targets ≥44px. */
+.profile-section {
+  margin-bottom: var(--space-2);
+}
+.profile-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+.profile-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.4em 1em;
+  border-radius: var(--radius-chip);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: var(--step-body);
+  font-weight: 600;
+  cursor: pointer;
+}
+.profile-chip:has(input:checked) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+/* Keyboard focus lands on the visually-hidden radio — surface it on the chip. */
+.profile-chip:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.profile-actions,
+.profile-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.profile-btn {
+  min-height: 46px;
+  padding: 0.5em 1.1em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-body);
+  font-weight: 600;
+  cursor: pointer;
+}
+.profile-btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.profile-btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.profile-btn-danger {
+  color: var(--warn);
+  border-color: var(--warn);
+}
+.profile-btn-danger:not([disabled]) {
+  /* keep the danger cue readable in both themes */
+  background: var(--warn-bg);
+}
+.profile-form,
+.profile-confirm {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface-2);
+}
+.profile-name-input {
+  width: 100%;
+  min-height: 46px;
+  margin-bottom: var(--space-2);
+  padding: 0.4em 0.7em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-body);
+}
+.profile-name-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.profile-confirm-text {
+  margin-bottom: var(--space-2);
+  color: var(--ink);
+  font-size: var(--step-sub);
 }
 
 @media (prefers-reduced-motion: reduce) {

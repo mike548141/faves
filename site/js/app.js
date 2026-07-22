@@ -17,6 +17,7 @@ import { encodeShortlist, buildShareUrl } from "./share-codec.js";
 import { openShareDialog } from "./share-ui.js";
 import { groupSection, resultRow } from "./results-view.js";
 import { settings } from "./settings.js";
+import { profiles, PROFILES_KEY } from "./profiles.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
@@ -246,6 +247,7 @@ function init(restaurants) {
   wireFavourites();
   wireHomeButton();
   initSettingsUI();
+  wireProfiles();
   initAboutUI();
   initShareApp();
   initOverflowMenu();
@@ -523,9 +525,31 @@ function wireFavourites() {
   };
   favourites.subscribe(updateCount);
   window.addEventListener("storage", (e) => {
-    if (e.key === "faves.favourites.v1") favourites.reload();
+    // Favourites are now namespaced by the active profile.
+    if (e.key === profiles.scopedKey("faves.favourites.v1")) favourites.reload();
   });
   updateCount();
+}
+
+// Device-local profiles: reflect who's active in the ⋯ menu caption, and keep
+// the per-profile stores pointed at them. A switch — here or in another tab —
+// re-reads favourites + settings so hearts and the (safety-critical) allergen
+// prefs always match whoever is browsing; the store subscriptions then re-rank
+// the list and re-sync the settings chips.
+function wireProfiles() {
+  const nameEl = document.querySelector(".profile-caption-name");
+  const updateCaption = () => { if (nameEl) nameEl.textContent = profiles.active().name; };
+
+  profiles.subscribe(() => {
+    favourites.reload();
+    settings.reload();
+    updateCaption();
+  });
+  // Another tab changed the roster or switched profile.
+  window.addEventListener("storage", (e) => {
+    if (e.key === PROFILES_KEY) profiles.reload();
+  });
+  updateCaption();
 }
 
 // A plain boolean list toggle: flip a flag on `state`, reflect aria-pressed,

@@ -10,9 +10,11 @@
 // app.js's own subscription, and each menu reads the preferences on load.
 
 import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS } from "./settings.js";
+import { profiles } from "./profiles.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
+import { t, translate } from "./reo.js";
 
 function field({ id, label, hint, min, max, step }) {
   const input = el("input", { type: "range", id, min, max, step, className: "settings-range" });
@@ -113,11 +115,169 @@ function collapsible(group, count) {
   return { wrap, refresh };
 }
 
+// The profiles section — a "who's using Faves?" switcher at the top of the
+// dialog. Several people share one phone; each profile is a separate bucket of
+// favourites + food preferences (profiles.js). Switching re-points those stores
+// live so nobody browses under someone else's allergy filter. First names only,
+// device-local, nothing sent anywhere — the privacy line says so plainly.
+//
+// Native radios back the switch (real keyboard + screen-reader semantics, styled
+// as chips). One shared inline form does Add and Rename; Delete uses an inline
+// confirm (removing a person wipes their data, so it's a stop-and-confirm), and
+// the last profile can never be deleted. A visually-hidden live region announces
+// each change. Returns { section, refresh } — refresh() rebuilds the radio list
+// and re-applies which actions are available.
+function profileSection() {
+  const status = el("p", { className: "sr-only", role: "status", "aria-live": "polite" });
+  const announce = (msg) => { status.textContent = ""; status.textContent = msg; };
+
+  const heading = el("h3", { className: "settings-group-title", textContent: "Who’s using Faves?" });
+  heading.dataset.i18n = "profile.title";
+  // Privacy framing stays English on purpose (like the app's other privacy
+  // prose — reo.js leaves it English until a reo review).
+  const privacy = el("p", {
+    className: "settings-note",
+    textContent: "Profiles stay on this device — nothing is sent anywhere, and no one else can see them.",
+  });
+
+  const list = el("div", { className: "profile-list", role: "radiogroup" });
+  list.setAttribute("aria-label", "Choose who’s using Faves");
+  list.dataset.i18nAria = "profile.choose";
+
+  const addBtn = el("button", { type: "button", className: "profile-btn", "data-act": "add", textContent: "Add someone" });
+  addBtn.dataset.i18n = "profile.add";
+  const renameBtn = el("button", { type: "button", className: "profile-btn", "data-act": "rename", textContent: "Rename" });
+  renameBtn.dataset.i18n = "profile.rename";
+  const deleteBtn = el("button", { type: "button", className: "profile-btn profile-btn-danger", "data-act": "delete", textContent: "Delete" });
+  deleteBtn.dataset.i18n = "profile.delete";
+  const actions = el("div", { className: "profile-actions" }, [addBtn, renameBtn, deleteBtn]);
+
+  // Shared Add/Rename form. `mode` is "add" | "rename"; hidden until invoked.
+  const nameInput = el("input", {
+    type: "text", id: "profile-name-input", className: "profile-name-input",
+    maxLength: 24, autocomplete: "off", autocapitalize: "words", enterKeyHint: "done",
+  });
+  const nameLabel = el("label", { className: "sr-only", htmlFor: "profile-name-input", textContent: "First name" });
+  nameLabel.dataset.i18n = "profile.firstName";
+  const saveBtn = el("button", { type: "submit", className: "profile-btn profile-btn-primary", textContent: "Save" });
+  saveBtn.dataset.i18n = "profile.save";
+  const formCancel = el("button", { type: "button", className: "profile-btn", "data-act": "cancel", textContent: "Cancel" });
+  formCancel.dataset.i18n = "generic.cancel";
+  const form = el("form", { className: "profile-form", hidden: true }, [
+    nameLabel, nameInput, el("div", { className: "profile-form-actions" }, [saveBtn, formCancel]),
+  ]);
+  let mode = "add";
+
+  // Inline delete confirm — its own group so the destructive action is a
+  // deliberate second tap, never a stray one.
+  const confirmText = el("p", { className: "profile-confirm-text" });
+  const confirmDelete = el("button", { type: "button", className: "profile-btn profile-btn-danger", "data-act": "confirm-delete", textContent: "Delete" });
+  confirmDelete.dataset.i18n = "profile.delete";
+  const confirmCancel = el("button", { type: "button", className: "profile-btn", "data-act": "cancel", textContent: "Cancel" });
+  confirmCancel.dataset.i18n = "generic.cancel";
+  const confirm = el("div", { className: "profile-confirm", role: "group", hidden: true }, [
+    confirmText, el("div", { className: "profile-form-actions" }, [confirmDelete, confirmCancel]),
+  ]);
+  confirm.setAttribute("aria-label", "Confirm delete");
+
+  function hidePanels(restoreFocus = true) {
+    form.hidden = true;
+    confirm.hidden = true;
+    // Add is always present + enabled — a safe home for focus so a keyboard user
+    // is never dropped to <body> when a panel closes (or its control vanishes).
+    if (restoreFocus) addBtn.focus();
+  }
+  function openForm(nextMode) {
+    mode = nextMode;
+    confirm.hidden = true;
+    nameInput.value = nextMode === "rename" ? profiles.active().name : "";
+    form.hidden = false;
+    nameInput.focus();
+    nameInput.select();
+  }
+  function openConfirm() {
+    form.hidden = true;
+    confirmText.textContent =
+      `Delete ${profiles.active().name}? This removes their favourites and food ` +
+      `preferences from this device. It can’t be undone.`;
+    confirm.hidden = false;
+    confirmDelete.focus();
+  }
+
+  addBtn.addEventListener("click", () => openForm("add"));
+  renameBtn.addEventListener("click", () => openForm("rename"));
+  deleteBtn.addEventListener("click", openConfirm);
+  formCancel.addEventListener("click", hidePanels);
+  confirmCancel.addEventListener("click", hidePanels);
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = nameInput.value;
+    if (mode === "rename") {
+      if (profiles.rename(profiles.activeId(), name)) announce(`Renamed to ${profiles.active().name}.`);
+    } else {
+      const id = profiles.create(name);
+      if (id) announce(`Added ${profiles.active().name}. Now browsing as ${profiles.active().name}.`);
+    }
+    hidePanels();
+  });
+  confirmDelete.addEventListener("click", () => {
+    const name = profiles.active().name;
+    if (profiles.remove(profiles.activeId())) announce(`Deleted ${name}. Now browsing as ${profiles.active().name}.`);
+    hidePanels();
+  });
+
+  // Switching profile: native radio change. profiles.setActive triggers the
+  // store subscribers (favourites/settings reload + re-render) elsewhere.
+  list.addEventListener("change", (e) => {
+    const radio = e.target.closest('input[type="radio"]');
+    if (!radio) return;
+    if (profiles.setActive(radio.value)) {
+      hidePanels(false); // keep focus on the radio the user just activated
+      announce(`Now browsing as ${profiles.active().name}.`);
+    }
+  });
+
+  // Signature of the roster (ids + names). A mere active-profile *switch* leaves
+  // it unchanged, so we only flip the `checked` flags — the radio DOM nodes
+  // survive and keyboard focus stays put. A full rebuild happens only when the
+  // roster genuinely changes (add / rename / delete).
+  let lastSig = null;
+  function refresh() {
+    const people = profiles.list();
+    const activeId = profiles.activeId();
+    const sig = people.map((p) => `${p.id}\n${p.name}`).join("|");
+    if (sig === lastSig) {
+      for (const r of list.querySelectorAll("input.profile-radio")) r.checked = r.value === activeId;
+    } else {
+      lastSig = sig;
+      list.replaceChildren(
+        ...people.map((p) => {
+          const input = el("input", { type: "radio", name: "faves-profile", className: "sr-only profile-radio", value: p.id });
+          input.checked = p.id === activeId;
+          const label = el("label", { className: "profile-chip" }, [input, el("span", { textContent: p.name })]);
+          return label;
+        })
+      );
+    }
+    // The last profile can't be deleted (someone must stay active).
+    deleteBtn.disabled = people.length <= 1;
+  }
+
+  const section = el("section", { className: "profile-section" }, [
+    heading, privacy, list, actions, form, confirm, status,
+  ]);
+  refresh();
+  translate(section); // pick up te reo on the freshly built subtree
+  return { section, refresh };
+}
+
 export function initSettingsUI() {
   const btn = document.getElementById("settings-btn");
   if (!btn || document.querySelector(".settings-sheet")) return;
   btn.hidden = false;
 
+  const profileUi = profileSection();
   const lang = langControl();
   const dietary = prefChips(DIETARY_PREFS, "dietary");
   const avoid = prefChips(ALLERGEN_PREFS, "avoid");
@@ -178,6 +338,9 @@ export function initSettingsUI() {
         })(),
         close,
       ]),
+
+      // --- Who's using Faves? (device-local profiles) ---
+      profileUi.section,
 
       // --- Language / Te Reo ---
       (() => {
@@ -249,8 +412,12 @@ export function initSettingsUI() {
 
   // Keep controls in step with the store (reset, or a change from another tab).
   settings.subscribe(sync);
+  // Rebuild the profile radios whenever the roster or active profile changes
+  // (here, or synced from another tab via app.js's registry listener).
+  profiles.subscribe(profileUi.refresh);
   window.addEventListener("storage", (e) => {
-    if (e.key === "faves.settings.v1") settings.reload();
+    // The settings key is now namespaced by the active profile.
+    if (e.key === profiles.scopedKey("faves.settings.v1")) settings.reload();
   });
   sync();
 }

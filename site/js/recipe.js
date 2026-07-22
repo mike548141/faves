@@ -9,6 +9,7 @@ import { slug } from "./slug.js";
 import { initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
+import { profiles, PROFILES_KEY } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { el } from "./dom.js";
 
@@ -159,4 +160,15 @@ async function main() {
 
 initOrderUI(); // the running order stays reachable from the recipe screen too
 initReo(); // sets <html lang>; the back link is set to the collection name by render()
+
+// Recipe allergen prefs are read once at render (settings.get().diet.avoid). If
+// another tab switches profile, reload so this page re-applies the right
+// person's prefs rather than showing a stale allergen filter.
+const activeProfileAtLoad = profiles.activeId();
+window.addEventListener("storage", (e) => {
+  if (e.key !== PROFILES_KEY) return;
+  profiles.reload();
+  if (profiles.activeId() !== activeProfileAtLoad) location.reload();
+});
+
 main();

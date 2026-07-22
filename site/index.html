@@ -50,6 +50,12 @@
             <span aria-hidden="true">⋯</span>
           </button>
           <div id="overflow-menu" class="overflow-menu" role="menu" aria-label="More" data-i18n-aria="nav.more" hidden>
+            <!-- Unobtrusive marker of who's browsing (device-local profiles).
+                 Not a menuitem, so arrow-key nav skips it; JS fills the name. -->
+            <p class="overflow-caption">
+              <span data-i18n="profile.browsingAs">Browsing as</span>
+              <span class="profile-caption-name"></span>
+            </p>
             <button
               type="button"
               id="favourites-toggle"
