@@ -3,7 +3,9 @@
 // allergen warnings. Search hides non-matches; dietary chips dim them.
 
 import { loadRestaurant } from "./data.js";
-import { mapsUrl } from "./geo.js";
+import { mapsUrl, recallOrigin } from "./geo.js";
+import { orderedBranches, isMultiLocation, branchAsPlace } from "./locations.js";
+import { formatDistance } from "./distance.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
@@ -79,83 +81,116 @@ const DIET_FILTERS = [
   { key: "df", label: "Dairy free", satisfies: ["df"] },
 ];
 
-function contactCard(r) {
-  const rows = [];
+// Phone — the primary way to order. Big and first.
+function callRow(phone) {
+  return el("a", { className: "contact-row contact-call", href: `tel:${phone.replace(/\s+/g, "")}` }, [
+    el("span", { className: "contact-ico", textContent: "📞", "aria-hidden": "true" }),
+    el("span", { className: "contact-text" }, [
+      el("span", { className: "contact-label", "data-i18n": "menu.call", textContent: "Call to order" }),
+      el("span", { className: "contact-value", textContent: phone }),
+    ]),
+  ]);
+}
 
-  // Phone — the primary way to order. Big and first.
-  if (r.phone) {
-    rows.push(
-      el("a", { className: "contact-row contact-call", href: `tel:${r.phone.replace(/\s+/g, "")}` }, [
-        el("span", { className: "contact-ico", textContent: "📞", "aria-hidden": "true" }),
-        el("span", { className: "contact-text" }, [
-          el("span", { className: "contact-label", "data-i18n": "menu.call", textContent: "Call to order" }),
-          el("span", { className: "contact-value", textContent: r.phone }),
-        ]),
-      ])
-    );
-  }
+// Pickup address — hand off to the maps app for *driving directions* from the
+// viewer's location, so it shows the real drive time (see geo.js). `place` is a
+// {name,address,lat,lng} — for a multi-location venue it's the chosen branch, so
+// the directions target that branch, not the primary one.
+function addressRow(place) {
+  const href = mapsUrl(place);
+  // All handoffs are http(s) universal links now (they open the native maps
+  // app on mobile, a browser on desktop), so target/rel apply. Kept as a
+  // guard in case a non-http scheme returns here again.
+  const web = href.startsWith("http");
+  return el("a", { className: "contact-row", href, ...(web ? { rel: "noopener", target: "_blank" } : {}) }, [
+    el("span", { className: "contact-ico", textContent: "📍", "aria-hidden": "true" }),
+    el("span", { className: "contact-text" }, [
+      el("span", { className: "contact-label", "data-i18n": "menu.pickup", textContent: "Pickup" }),
+      el("span", { className: "contact-value", textContent: place.address }),
+    ]),
+  ]);
+}
 
-  // Pickup address — hand off to the maps app for *driving directions* from
-  // the viewer's location, so it shows the real drive time (see geo.js).
-  if (r.address) {
-    const href = mapsUrl(r);
-    // All handoffs are http(s) universal links now (they open the native maps
-    // app on mobile, a browser on desktop), so target/rel apply. Kept as a
-    // guard in case a non-http scheme returns here again.
-    const web = href.startsWith("http");
-    rows.push(
-      el("a", { className: "contact-row", href, ...(web ? { rel: "noopener", target: "_blank" } : {}) }, [
-        el("span", { className: "contact-ico", textContent: "📍", "aria-hidden": "true" }),
-        el("span", { className: "contact-text" }, [
-          el("span", { className: "contact-label", "data-i18n": "menu.pickup", textContent: "Pickup" }),
-          el("span", { className: "contact-value", textContent: r.address }),
-        ]),
-      ])
-    );
-  }
-
-  // Opening hours: a live "Open · until 9pm" status, then the week grouped
-  // into ranges (splits shown as "12pm–3pm, 5pm–9pm"), today highlighted.
-  if (r.hours) {
-    const now = nzNow();
-    const st = openStatus(r.hours, now);
-    const list = el("ul", { className: "hours-list" });
-    for (const wk of groupWeek(r.hours)) {
-      const li = el("li", {}, [
-        el("span", { className: "hours-days", textContent: wk.days }),
-        el("span", { className: "hours-time", textContent: wk.text }),
-      ]);
-      if (wk.dows.includes(now.dow)) li.classList.add("is-today");
-      list.append(li);
-    }
-    // Label the clock as NZ time only for a viewer whose device isn't on
-    // it — locals (the common case) see no redundant qualifier.
-    const onNz = viewerOnNzTime();
-    const text = el("span", { className: "contact-text" }, [
-      el("span", {
-        className: "contact-label",
-        "data-i18n": onNz ? "menu.hours" : "menu.hoursNz",
-        textContent: onNz ? "Hours" : "Hours · NZ time",
-      }),
+// Opening hours: a live "Open · until 9pm" status, then the week grouped into
+// ranges (splits shown as "12pm–3pm, 5pm–9pm"), today highlighted.
+function hoursRow(hours, now) {
+  const st = openStatus(hours, now);
+  const list = el("ul", { className: "hours-list" });
+  for (const wk of groupWeek(hours)) {
+    const li = el("li", {}, [
+      el("span", { className: "hours-days", textContent: wk.days }),
+      el("span", { className: "hours-time", textContent: wk.text }),
     ]);
-    if (st.state !== "unknown") {
-      const badge = el("span", {
-        className: "hours-badge",
-        textContent: st.detail ? `${st.label} · ${st.detail}` : st.label,
-      });
-      badge.dataset.state = st.state;
-      text.append(badge);
-    }
-    text.append(list);
-    rows.push(
-      el("div", { className: "contact-row contact-hours" }, [
-        el("span", { className: "contact-ico", textContent: "🕐", "aria-hidden": "true" }),
-        text,
-      ])
-    );
+    if (wk.dows.includes(now.dow)) li.classList.add("is-today");
+    list.append(li);
   }
+  // Label the clock as NZ time only for a viewer whose device isn't on it —
+  // locals (the common case) see no redundant qualifier.
+  const onNz = viewerOnNzTime();
+  const text = el("span", { className: "contact-text" }, [
+    el("span", {
+      className: "contact-label",
+      "data-i18n": onNz ? "menu.hours" : "menu.hoursNz",
+      textContent: onNz ? "Hours" : "Hours · NZ time",
+    }),
+  ]);
+  if (st.state !== "unknown") {
+    const badge = el("span", {
+      className: "hours-badge",
+      textContent: st.detail ? `${st.label} · ${st.detail}` : st.label,
+    });
+    badge.dataset.state = st.state;
+    text.append(badge);
+  }
+  text.append(list);
+  return el("div", { className: "contact-row contact-hours" }, [
+    el("span", { className: "contact-ico", textContent: "🕐", "aria-hidden": "true" }),
+    text,
+  ]);
+}
 
-  return el("div", { className: "contact-card" }, rows);
+// The call / address / hours rows for one branch, in order (any may be absent).
+function branchRows(r, b, now) {
+  const rows = [];
+  if (b.phone) rows.push(callRow(b.phone));
+  if (b.address) rows.push(addressRow(branchAsPlace(r, b)));
+  if (b.hours) rows.push(hoursRow(b.hours, now));
+  return rows;
+}
+
+// One branch of a multi-location venue: a heading (its label, or its address as
+// a fallback name) with a distance chip when we know the viewer's location, then
+// that branch's own call / address / hours rows. A real heading — not a bare
+// row — so a screen-reader user can navigate branch-by-branch.
+function branchBlock(r, b, now) {
+  const heading = b.label || b.address || r.name;
+  const head = el("h3", { className: "branch-head" }, [
+    el("span", { className: "branch-name", textContent: heading }),
+    b.distanceKm != null && b.distanceKm !== Infinity
+      ? el("span", { className: "branch-distance", textContent: `📍 ${formatDistance(b.distanceKm)}` })
+      : null,
+  ]);
+  return el("section", { className: "contact-branch", "aria-label": `${r.name} — ${heading}` }, [
+    head,
+    ...branchRows(r, b, now),
+  ]);
+}
+
+// The contact block: for a single-location venue, the familiar call/address/
+// hours rows. For a multi-location venue (locations.js, ADR 0011), one block per
+// branch — nearest first when the home screen has captured the viewer's location
+// this session (recallOrigin), else data order — each with its own directions
+// link, phone and hours.
+function contactCard(r) {
+  const now = nzNow();
+  if (!isMultiLocation(r)) {
+    return el("div", { className: "contact-card" }, branchRows(r, orderedBranches(r)[0], now));
+  }
+  const branches = orderedBranches(r, recallOrigin());
+  return el("div", { className: "contact-card contact-card-multi" }, [
+    el("h2", { className: "contact-branches-head", "data-i18n": "menu.branches", textContent: "All branches" }),
+    ...branches.map((b) => branchBlock(r, b, now)),
+  ]);
 }
 
 function orderCard(r) {

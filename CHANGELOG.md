@@ -18,6 +18,11 @@ content freshness separately from this file.
   live open/closed status. Hours researched online (venue sites where
   they exist, aggregators otherwise); confirmation folds into the
   owner's general menu/details verification pass.
+- **Restaurants with multiple branches** — a venue can now list several
+  branches that share one menu but each have their own address, hours,
+  phone and map pin. "Near me", the drive-time hint and the open/closed
+  badge all use the branch nearest you; the menu screen lists every
+  branch, nearest first, each with its own directions link and hours.
 
 ### Changed
 - **Cook at Home sits top-right** on wider layouts — on the two-column

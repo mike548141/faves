@@ -67,3 +67,35 @@ export function mapsUrlFor(r, platform) {
 export function mapsUrl(r) {
   return mapsUrlFor(r, detectPlatform());
 }
+
+// The viewer's last-known location ({lat,lng}) from the home screen's "Near me",
+// kept for this browsing session only (sessionStorage) so the menu screen can
+// order a multi-location venue's branches nearest-first and target the nearest
+// for its maps handoff — WITHOUT prompting for location again. Device-local and
+// ephemeral: never persisted to the repo, never sent anywhere (same discipline
+// as the localStorage personal layer). Degrades silently where storage is
+// blocked (Safari private mode).
+const ORIGIN_KEY = "faves.origin.v1";
+
+/** Remember (origin) or forget (null/undefined) the Near-me location. */
+export function rememberOrigin(origin) {
+  try {
+    if (origin && typeof origin.lat === "number" && typeof origin.lng === "number") {
+      sessionStorage.setItem(ORIGIN_KEY, JSON.stringify({ lat: origin.lat, lng: origin.lng }));
+    } else {
+      sessionStorage.removeItem(ORIGIN_KEY);
+    }
+  } catch {
+    /* storage unavailable — the menu screen simply won't know the location */
+  }
+}
+
+/** The remembered Near-me location, or null when unset/unavailable. */
+export function recallOrigin() {
+  try {
+    const v = JSON.parse(sessionStorage.getItem(ORIGIN_KEY) || "null");
+    return v && typeof v.lat === "number" && typeof v.lng === "number" ? v : null;
+  } catch {
+    return null;
+  }
+}
