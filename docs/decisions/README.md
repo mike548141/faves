@@ -54,3 +54,8 @@ deliberation those compact docs omit.
   hearts on a shared phone): a registry + profile-scoped storage wrapper,
   scoping favourites + settings by whole store; migration copies old data into
   the default profile; cross-device sync stays out of scope (Theme 6)
+- [0013](0013-ratings-curated-and-local.md) — ratings: a curated household 1–3
+  rating (optional data field, schema+render only, ships dormant) + device-local
+  per-profile personal ratings; public/crowd ratings stay rejected (three
+  non-goals), the online Google-rating edge function is a separate owner-gated
+  item; direction ⚑ awaits owner ratification
