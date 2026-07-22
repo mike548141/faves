@@ -195,15 +195,19 @@ out (no official API). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   and a health-claim risk. Realistic path: compute it only where we own
   the recipe (Cook-at-Home) or the venue supplies it. Don't fake
   restaurant nutrition. Feeds Theme 6.
-- [~] **Ratings / feedback** `[M]` **⚑** (claimed 2026-07-22-1145, wt:
-  faves-wave4-local-ratings — building the recorded recommendation (a)+(b):
-  (b) in full, (a) as schema+render only, no invented rating data; owner
-  ratification of the direction still owed) — public crowd ratings need a
-  backend + moderation + accounts, breaking three non-goals. Two honest
-  options that don't: (a) **curated household rating** — extend `picks`
-  into a 1–3 scale in the data (still ours, still static); (b)
-  **local-only personal ratings** in `localStorage` (same store as the
-  order tally). Recommend **(a)+(b), not public**.
+- ✅ **Ratings / feedback** `[M]` **⚑ shipped, direction awaits owner
+  ratification** (shipped 2026-07-22, wt: faves-wave4-local-ratings; ADR 0013) —
+  built the recorded recommendation **(a)+(b), not public**: (b) **local-only
+  personal ratings** in full — a keyboard-operable ☆☆☆ 1–3 control on venues +
+  dishes, per-profile in `localStorage` (`faves.ratings.v1`), styled distinctly
+  from our curation; (a) **curated household rating** as **schema + render only**
+  — an optional integer `rating: 1..3` on venues/menu items (`validate.py`
+  enforced), rendered where picks render, **no data invented** so it ships
+  dormant. Public crowd ratings **stay rejected** (backend + moderation +
+  accounts break three non-goals). **⚑ still stands:** the owner must ratify the
+  (a)+(b)-not-public direction *and* supply the curated `rating` values before
+  (a) shows anything. The live-Google-rating edge function below is a **separate,
+  owner-gated** item (billing) — out of scope for this change.
 - **See public ratings / reviews** `[M]` ⚑ **owner decided 2026-07-08:
   show the number when online, link-out when offline.** The honest read: a
   static site can't fetch a live Google rating (the Places API is keyed,

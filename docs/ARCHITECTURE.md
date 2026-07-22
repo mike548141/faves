@@ -93,6 +93,8 @@ reversible in an afternoon.
   "priceBand": null,                 // optional curated "$"|"$$"|"$$$" — overrides the
   "pricePerPerson": null,            // median (price.js) when it misleads; figure optional
   "verified": null,                  // ISO date the menu was last checked, e.g. "2026-07-10"
+  "rating": null,                    // optional curated household rating, integer 1..3 (ours,
+                                     //   static). Distinct from device-local personal ratings.
   "status": "stub",                  // stub | menu-complete | verified
   "menu": [
     {
@@ -106,6 +108,7 @@ reversible in an afternoon.
           "tags": ["spicy-1"],       // see tag vocabulary
           "image": null,             // optional self-hosted dish photo (lazy-loaded)
           "alt": null,               // required when image is set
+          "rating": null,            // optional curated household rating, integer 1..3 (ours)
           "goesWith": ["Roti"]       // optional pairings: dish names, or "id#Dish" cross-record
         }
       ]
@@ -202,7 +205,17 @@ UI must never present absence of an allergen tag as "allergen-free".
   "goes well with" suggestions shown on the dish. Each is either a dish
   `name` in the **same** record, or a cross-record `"restaurant-id#Dish
   Name"`. Every reference must resolve to a real dish (validated), the
-  same discipline as `picks`. It's our curation — no backend, no ratings.
+  same discipline as `picks`. It's our curation — no backend, no crowd ratings.
+- `rating` (venue top-level and/or menu item) is an optional **curated
+  household rating** — our own static integer `1..3` (validated; a bool/float/
+  out-of-range is rejected). Absent = not rated; the field ships **dormant**
+  (no data yet — owner supplies real values). It renders where picks render (a
+  "Our rating ★★☆" pill) and on the venue header, styled distinctly from the
+  device-local **personal ratings** (`site/js/ratings.js`, per-profile
+  `localStorage`) so ours-verified never reads as the viewer's-own-unverified.
+  **Public / crowd ratings stay rejected** (backend + moderation + accounts
+  break three non-goals — ADR 0013); the online Google-rating edge function is
+  a separate, owner-gated item (ROADMAP Theme 5).
 - `lat`/`lng` are optional decimal degrees (WGS84), set together or not
   at all. When present, the menu screen's address row hands off to the
   device's native maps app at those exact coordinates (`site/js/geo.js`);
@@ -228,7 +241,7 @@ UI must never present absence of an allergen tag as "allergen-free".
   first, each with its own directions link, phone and hours; a one-branch array
   renders identically to a flat single-location venue.
 
-### Client-side personal layer (order tally, favourites, profiles)
+### Client-side personal layer (order tally, favourites, ratings, profiles)
 
 **Device-local** state kept in `localStorage`, never in the repo and never
 sent anywhere. All of it sits on `site/js/store.js` — a `safeStorage()`
@@ -241,9 +254,9 @@ each with their own hearts. A device-level registry `faves.profiles.v1`
 (`{v, activeId, profiles:[{id,name}]}`) names them; per-profile stores keep
 their KEY constant but read through `profileScopedStorage()`, which rewrites
 the key to `faves.p.<activeId>.<base>` (`scopeKey`). So a switch + `reload()`
-re-points the whole layer with no consumer rewrite. **Per-profile:** favourites
-and *all* of settings (dietary/allergen prefs — safety-critical; ranking dials;
-reo language). **Shared/device:** the order tally (one order for the table) and
+re-points the whole layer with no consumer rewrite. **Per-profile:** favourites,
+personal ratings, and *all* of settings (dietary/allergen prefs — safety-critical;
+ranking dials; reo language). **Shared/device:** the order tally (one order for the table) and
 the ephemeral Near-me origin. `migrate()` folds pre-profiles data into a default
 profile on upgrade (copies, doesn't move, so a briefly-cached old asset still
 works; idempotent). The switcher lives in the ⚙ Settings dialog; the menu/recipe
@@ -264,6 +277,12 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   alone; the deep-link href is derived from the shared `slug`).
   `favourites-ui.js` is the `♥` toggle; the home "Favourites" view reuses
   the search panel's grouped renderer (`results-view.js`).
+- **Ratings** (`faves.ratings.v1`): `ratings.js` — the viewer's own 1–3 marks
+  on venues + dishes, a flat `{ key: 1..3 }` map keyed like favourites,
+  clamped/sanitised on read. `ratings-ui.js` is the keyboard-operable ☆☆☆
+  control (personal, `--personal` violet) plus the static curated "Our rating"
+  badge (`--accent`); rendered on the menu header + dish rows. Per-profile (a
+  rating is personal); no averaging, no sharing, no public ratings (ADR 0013).
 - **Settings** (`faves.settings.v1`): `settings.js` — dietary/allergen prefs
   (`diet`), the two ranking distances (`favBoostKm`, `farKm`) and the reo
   language, clamped/sanitised on read so a bad value can't break the sort;

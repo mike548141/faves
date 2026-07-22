@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Rate your favourites** — you can now give any venue or dish your own
+  personal ★ rating (1–3) on its menu. Your ratings stay on your device,
+  per person (they follow your profile, like your hearts), and are never
+  shared or averaged with anyone — no public or crowd ratings. Menus can
+  also carry *our* curated "Our rating" mark, shown distinctly from your
+  own; that's added by us in the site data (none set yet).
 - **Profiles for a shared phone** — several people can each keep their
   own favourites and food preferences on one device. A "who's using
   Faves?" switcher in Settings lets you add someone (first name only),

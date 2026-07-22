@@ -7,7 +7,8 @@
 // layer.
 //
 // WHAT IS PER-PROFILE vs SHARED (recorded in ADR 0012):
-//   • Per-profile — favourites (`faves.favourites.v1`) and *all* of settings
+//   • Per-profile — favourites (`faves.favourites.v1`), personal ratings
+//     (`faves.ratings.v1`: the viewer's own 1–3 marks) and *all* of settings
 //     (`faves.settings.v1`: dietary/allergen prefs [safety-critical — allergies
 //     differ per person], plus the ranking dials and the reo language). We
 //     scope by whole store, not by field: shattering one store's fields across
@@ -34,7 +35,7 @@ export const PROFILES_KEY = "faves.profiles.v1";
 
 // The base keys that are per-profile. Add one here when a new per-profile store
 // lands — this is the single list `migrate` copies forward and `remove` purges.
-export const SCOPED_BASE_KEYS = ["faves.favourites.v1", "faves.settings.v1"];
+export const SCOPED_BASE_KEYS = ["faves.favourites.v1", "faves.settings.v1", "faves.ratings.v1"];
 
 // The first profile's id is deterministic ("default") so two tabs migrating at
 // once converge on the same key instead of minting two rival profiles.
