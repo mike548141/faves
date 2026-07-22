@@ -7,60 +7,30 @@
   ],
   "area": "Te Aro",
   "city": "Wellington",
-  "address": "29 Courtenay Place, Te Aro, Wellington 6011",
-  "lat": -41.2939,
-  "lng": 174.78207,
   "services": [
     "dine-in",
     "takeaway"
   ],
-  "phone": "+64 4 384 8040",
   "website": "https://kaffeeeis.co.nz/",
   "ordering": [],
-  "hours": {
-    "mon": [
-      [
-        "07:30",
-        "22:30"
-      ]
-    ],
-    "tue": [
-      [
-        "07:30",
-        "22:30"
-      ]
-    ],
-    "wed": [
-      [
-        "07:30",
-        "22:30"
-      ]
-    ],
-    "thu": [
-      [
-        "07:30",
-        "22:30"
-      ]
-    ],
-    "fri": [
-      [
-        "07:30",
-        "23:00"
-      ]
-    ],
-    "sat": [
-      [
-        "13:00",
-        "22:00"
-      ]
-    ],
-    "sun": [
-      [
-        "12:00",
-        "21:00"
-      ]
-    ]
-  },
+  "locations": [
+    {
+      "label": "Courtenay Place",
+      "address": "29 Courtenay Place, Te Aro, Wellington 6011",
+      "lat": -41.2939,
+      "lng": 174.78207,
+      "phone": "+64 4 384 8040",
+      "hours": {
+        "mon": [["07:30", "22:30"]],
+        "tue": [["07:30", "22:30"]],
+        "wed": [["07:30", "22:30"]],
+        "thu": [["07:30", "22:30"]],
+        "fri": [["07:30", "23:00"]],
+        "sat": [["13:00", "22:00"]],
+        "sun": [["12:00", "21:00"]]
+      }
+    }
+  ],
   "vibe": [],
   "picks": [],
   "verified": null,

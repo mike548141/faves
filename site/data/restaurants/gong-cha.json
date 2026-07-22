@@ -6,60 +6,30 @@
   ],
   "area": "Te Aro",
   "city": "Wellington",
-  "address": "57 Manners Street, Te Aro, Wellington 6011",
-  "lat": -41.29044,
-  "lng": 174.77629,
   "services": [
     "takeaway",
     "dine-in"
   ],
-  "phone": "+64 4 499 8666",
   "website": "https://www.gongcha.co.nz/",
   "ordering": [],
-  "hours": {
-    "mon": [
-      [
-        "10:00",
-        "21:00"
-      ]
-    ],
-    "tue": [
-      [
-        "10:00",
-        "21:00"
-      ]
-    ],
-    "wed": [
-      [
-        "10:00",
-        "21:00"
-      ]
-    ],
-    "thu": [
-      [
-        "10:00",
-        "21:00"
-      ]
-    ],
-    "fri": [
-      [
-        "10:00",
-        "21:00"
-      ]
-    ],
-    "sat": [
-      [
-        "10:00",
-        "21:00"
-      ]
-    ],
-    "sun": [
-      [
-        "10:00",
-        "21:00"
-      ]
-    ]
-  },
+  "locations": [
+    {
+      "label": "Manners Street",
+      "address": "57 Manners Street, Te Aro, Wellington 6011",
+      "lat": -41.29044,
+      "lng": 174.77629,
+      "phone": "+64 4 499 8666",
+      "hours": {
+        "mon": [["10:00", "21:00"]],
+        "tue": [["10:00", "21:00"]],
+        "wed": [["10:00", "21:00"]],
+        "thu": [["10:00", "21:00"]],
+        "fri": [["10:00", "21:00"]],
+        "sat": [["10:00", "21:00"]],
+        "sun": [["10:00", "21:00"]]
+      }
+    }
+  ],
   "vibe": [],
   "picks": [],
   "verified": null,

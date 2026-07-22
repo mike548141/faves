@@ -44,3 +44,9 @@ deliberation those compact docs omit.
   ordering shares finished picks as URL fragments (share sheet / QR),
   not live connections (Bluetooth / WebRTC / backend-room rejected);
   records the owner's softened stance on a future lightweight backend
+- [0010](0010-drive-time-directions-handoff.md) — the address maps
+  handoff requests driving directions from the viewer's location (real
+  live drive time), plus a rough straight-line "~N min" card hint
+- [0011](0011-multi-location-venues.md) — venues with several branches as
+  one record + an optional `locations` array (shared menu), resolved by
+  the nearest branch for distance / status / maps; not separate records

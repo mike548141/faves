@@ -6,6 +6,7 @@ import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
 import { formatDistance, formatDriveTime } from "./distance.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
+import { rememberOrigin } from "./geo.js";
 import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
@@ -573,6 +574,7 @@ function wireNearMe(state, render) {
     if (state.origin) {
       // Toggle off → back to the curated order.
       state.origin = null;
+      rememberOrigin(null); // the menu screen forgets it too
       setPressed(false);
       setStatus("");
       render();
@@ -584,6 +586,7 @@ function wireNearMe(state, render) {
       ({ coords }) => {
         btn.disabled = false;
         state.origin = { lat: coords.latitude, lng: coords.longitude };
+        rememberOrigin(state.origin); // let the menu screen order branches nearest-first
         setPressed(true);
         setStatus("Sorted by distance from you.");
         render();

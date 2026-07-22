@@ -141,6 +141,42 @@ test("weighted: a bigger favBoostKm can push a favourite above a nearer plain ve
   );
 });
 
+test("Near me: nearest sorts first NUMERICALLY (2.5 km before 10 km, not text order)", () => {
+  // Regression for the owner's report. Under a lexicographic compare of the
+  // formatted labels, "10 km" < "2.5 km" (‘1’ < ‘2’) would float the 10 km
+  // venue up. Both open (same tier) so distance alone decides — nearest wins.
+  const near = { id: "near-2_5", ...at(2.5) };
+  const far = { id: "far-10", ...at(10) };
+  assert.deepEqual(
+    rankVenues([far, near], { now: MON_NOON, origin: CBD }).map((r) => r.id),
+    ["near-2_5", "far-10"]
+  );
+});
+
+test("Near me: a nearer CLOSED venue outranks a farther OPEN one ('Nearest first' = distance leads)", () => {
+  // The exact reported case: with "Nearest first" on, distance is the primary
+  // key, so a 2.5 km closed venue sits above a 10 km open one (availability is
+  // still shown as a badge and has its own "Open now" filter). Fails under the
+  // old availability-before-distance order.
+  const closedNear2 = { id: "closed-2_5", lat: at(2.5).lat, lng: at(2.5).lng, hours: week("18:00", "22:00") };
+  const openFar10 = { id: "open-10", lat: at(10).lat, lng: at(10).lng, hours: week("09:00", "22:00") };
+  assert.deepEqual(
+    rankVenues([openFar10, closedNear2], { now: MON_NOON, origin: CBD }).map((r) => r.id),
+    ["closed-2_5", "open-10"]
+  );
+});
+
+test("Default order (no location) still floats open above closed regardless of distance", () => {
+  // Without an origin we can't measure distance, so availability leads — a
+  // closed venue must not jump an open one just because it's listed first.
+  const openV = { id: "open", hours: week("09:00", "22:00") };
+  const closedV = { id: "closed", hours: week("18:00", "22:00") };
+  assert.deepEqual(
+    rankVenues([closedV, openV], { now: MON_NOON }).map((r) => r.id),
+    ["open", "closed"]
+  );
+});
+
 test("farKm param overrides the default reachability gate", () => {
   const near = { id: "near", ...at(2) };
   const mid = { id: "mid", ...at(40) };
@@ -216,4 +252,42 @@ test("rankVenues (origin): among stubs, the nearer one wins even if it's closed"
 test("isAvailableNow: a stub is never available (nothing to order)", () => {
   const openStub = { id: "s", status: "stub", hours: week("09:00", "22:00") };
   assert.equal(isAvailableNow(openStub, { now: MON_NOON }), false);
+});
+
+// --- Multi-location venues (locations[] branches, ADR 0011) ---
+// A two-branch chain: a near branch open at noon, a far branch closed at noon.
+const chain = {
+  id: "chain",
+  locations: [
+    { label: "near", lat: -41.29, lng: 174.78, hours: week("09:00", "22:00") },
+    { label: "far", lat: -45.0312, lng: 168.6626, hours: week("18:00", "22:00") },
+  ],
+};
+
+test("availabilityTier: a multi-location venue uses the nearest branch's hours", () => {
+  // No origin → primary (near, open) → tier 0.
+  assert.equal(availabilityTier(chain, MON_NOON), 0);
+  // Origin by the near branch → its open hours → tier 0.
+  assert.equal(availabilityTier(chain, MON_NOON, CBD), 0);
+  // Origin down in Queenstown → the far branch (closed at noon) → tier 3.
+  assert.equal(availabilityTier(chain, MON_NOON, { lat: -45.03, lng: 168.66 }), 3);
+});
+
+test("rankVenues: distance + card hours come from the nearest branch", () => {
+  const [out] = rankVenues([chain], { now: MON_NOON, origin: CBD });
+  // Distance is to the near branch (~a few km), not the Queenstown one.
+  assert.ok(out.distanceKm < 5);
+  // The card is handed the near branch's (open) hours.
+  assert.deepEqual(out.hours, week("09:00", "22:00"));
+});
+
+test("rankVenues: a nearby-open branch floats the chain above a closed single venue", () => {
+  const order = rankVenues([closedNear, chain], { now: MON_NOON, origin: CBD }).map((r) => r.id);
+  assert.deepEqual(order, ["chain", "closed-near"]);
+});
+
+test("isAvailableNow: a multi-location venue is available when its nearest branch is open", () => {
+  assert.equal(isAvailableNow(chain, { now: MON_NOON, origin: CBD }), true);
+  // Nearest branch is the far one (closed at noon) → not available.
+  assert.equal(isAvailableNow(chain, { now: MON_NOON, origin: { lat: -45.03, lng: 168.66 } }), false);
 });

@@ -2088,6 +2088,46 @@ body.faves-view .to-top {
   color: var(--ink-soft);
 }
 
+/* Multi-location venues (ADR 0011): one block per branch inside the contact
+   card, each with its own directions link, phone and hours. A single-location
+   venue never gets these classes, so its card is unchanged. */
+.contact-branches-head {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  background: var(--surface-2, var(--surface));
+  border-bottom: 1px solid var(--line);
+}
+.contact-branch {
+  border-bottom: 1px solid var(--line);
+}
+.contact-branch:last-child {
+  border-bottom: 0;
+}
+/* The branch's own rows shouldn't double the divider with the section border. */
+.contact-branch .contact-row:last-child {
+  border-bottom: 0;
+}
+.branch-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3) 0;
+  font-size: 1rem;
+}
+.branch-distance {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
 /* Order online */
 .order-block {
   margin-top: var(--space-3);

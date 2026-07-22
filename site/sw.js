@@ -3,7 +3,7 @@
 //
 // VERSION is the cache-buster: bump it whenever anything in site/
 // changes — menu data especially. See README "Editing menu data".
-const VERSION = "2026-07-22.67";
+const VERSION = "2026-07-22.69";
 
 const CACHE = `faves-${VERSION}`;
 const IMG_CACHE = "faves-img-v1";
@@ -29,6 +29,7 @@ const SHELL = [
   "js/filters.js",
   "js/geo.js",
   "js/hours.js",
+  "js/locations.js",
   "js/menu.js",
   "js/picker.js",
   "js/price.js",

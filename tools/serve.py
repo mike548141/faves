@@ -8,6 +8,7 @@ both URLs, and disables caching so a reload always shows your latest
 edit. Ctrl-C to stop. Stdlib only — no install, no build step.
 """
 
+import argparse
 import http.server
 import socket
 import socketserver
@@ -56,7 +57,16 @@ class Server(socketserver.ThreadingTCPServer):
 
 
 def main():
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8080
+    # argparse so `serve.py --help` prints usage instead of crashing on the old
+    # unconditional int(sys.argv[1]); the positional port keeps the same default.
+    parser = argparse.ArgumentParser(
+        description="Faves dev server — serve site/ to this laptop and your phone.",
+    )
+    parser.add_argument(
+        "port", nargs="?", type=int, default=8080,
+        help="TCP port to bind (default: 8080)",
+    )
+    port = parser.parse_args().port
     if not SITE.is_dir():
         sys.exit(f"error: {SITE} not found")
 

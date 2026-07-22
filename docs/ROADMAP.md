@@ -71,23 +71,38 @@ the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   muted + "~"). A live in-app routed time stays **✗** on the offline/keyed-API
   constraint. Rationale + rejected alternatives → ADR 0010. Android dropped the
   vendor-neutral `geo:` pin (it has no directions mode).
-- [~] **Restaurants with multiple locations** `[M][schema]` (claimed 2026-07-22-1040, wt: faves-wave2-multi-location) — owner ask; real
-  now (Kaffee Eis, Gong Cha). Two shapes: (a) one record with a
-  `locations: [{address, lat, lng, phone, hours}]` array (shared
-  name/menu/cuisine) — DRY, and "Near me"/"Open now" pick the *nearest*
-  branch; (b) separate records per branch — simpler, but duplicates the
-  menu and clutters the list. Recommend **(a)**: extend the schema so
-  distance/maps/hours resolve per-branch while the menu stays single.
-  Touches the hours engine (per-branch hours) and distance sort (nearest
-  branch). Do it before adding many chains.
+- ✅ **Restaurants with multiple locations** `[M][schema]` — **shipped
+  2026-07-22** (shape (a), ADR 0011). One record per venue with an optional
+  `locations: [{label?, address, lat, lng, phone, hours}]` array sharing the
+  name/menu/cuisine; single-location records unchanged. `site/js/locations.js`
+  reconciles both shapes and resolves the **nearest** branch, so "Near me"
+  distance, the drive-time hint, the card's open/closed badge and the maps
+  handoff all use it (the **primary** branch when location is unknown — not
+  "any branch open", which would fight the distance shown). The menu screen
+  lists every branch, nearest first, each with its own directions link, phone
+  and hours (`site/js/menu.js`); `data.js` normalises the primary branch to the
+  top level so existing consumers keep working; `validate.py` validates the
+  branches. Kaffee Eis + Gong Cha converted to their one verified branch each —
+  **second branches deferred** (need real addresses + a dev-time geocode; a
+  content session appends them, no code change). `ba4fdea`, `eb23bbf`,
+  `8739e7a`.
 
 ## Owner-reported — 2026-07-22 (raw notes, stored verbatim)
 
-- [~] **Bug: "Nearest first" sorts 10 km above 2.5 km** (claimed
-  2026-07-22-1100, wt: faves-wave2-multi-location) — owner report: "Selected
-  'Nearest first' and restaurants 10km are sorted higher on the list than
-  restaurants 2.5km away. I suspect it is sorting as text rather than as a
-  number."
+- ✅ **Bug: "Nearest first" sorts 10 km above 2.5 km** — **fixed 2026-07-22**
+  (`566aa20`). Owner report: "Selected 'Nearest first' and restaurants 10km are
+  sorted higher on the list than restaurants 2.5km away. I suspect it is sorting
+  as text rather than as a number." **Root cause was NOT a text sort** — every
+  distance compare was already numeric. The sort-key *order* put availability
+  (and the favourite boost) ahead of distance, so a farther-but-open (or
+  hearted) venue floated above a nearer one, contradicting the "Nearest first"
+  label. Fix: when "Nearest first" is on (origin known), distance leads;
+  availability + favourite tiebreak follow. Default order (no location) is
+  unchanged (open still floats up). Open/closed still shows as a badge + the
+  "Open now" filter; favourites keep their `favBoostKm` pull.
+  ⚠️ **Owner note:** if a *hearted* 10 km venue still shows above a plain 2.5 km
+  one, that's the (deliberate, tested) favourite weighting — say if you'd rather
+  "Nearest first" ignore hearts entirely.
 - [ ] **Split versioning: app vs config vs data** `[M]` — owner idea: "Should
   have a different version for the app vs the data it holds vs the
   configuration so that it can trigger a refresh based of any of them changing

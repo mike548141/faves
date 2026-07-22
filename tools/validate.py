@@ -61,6 +61,60 @@ def check_image(rid, obj, where):
             err(rid, f"{where}: alt text is required when image is set (a11y)")
 
 
+def check_coords(rid, obj, where):
+    """lat/lng on `obj`: optional decimal coordinates for the maps handoff and
+    distance sort. If given they must be real numbers in range, both-or-neither.
+    Returns True when a usable pair is present. Used for both the top-level venue
+    (single location) and each branch of a multi-location venue."""
+    lat, lng = obj.get("lat"), obj.get("lng")
+    for field, val, lo, hi in (("lat", lat, -90, 90), ("lng", lng, -180, 180)):
+        if val is None:
+            continue
+        if isinstance(val, bool) or not isinstance(val, (int, float)):
+            err(rid, f"{where}: {field} must be a number")
+        elif not (lo <= val <= hi):
+            err(rid, f"{where}: {field} {val} out of range [{lo}, {hi}]")
+    if (lat is None) != (lng is None):
+        err(rid, f"{where}: lat and lng must be set together")
+    return lat is not None and lng is not None
+
+
+def check_hours(rid, hours, where):
+    """hours on `obj`: null, or a full week keyed mon..sun. Each day is a list of
+    [open, close] intervals ([] = closed); multiple intervals express a
+    lunch/dinner split. Times are "HH:MM" 24h; close may be null ("late"/
+    open-ended). close, when given, must be after open — past-midnight is
+    expressed with a null close, not a wrap (see ADR 0006). Used for both the
+    top-level venue and each branch of a multi-location venue."""
+    if hours is None:
+        return
+    if not isinstance(hours, dict):
+        err(rid, f"{where}: hours must be null or an object keyed mon..sun")
+        return
+    if set(hours) != set(DAYS):
+        err(rid, f"{where}: hours must have exactly the 7 day keys {DAYS}, got {sorted(hours)}")
+        return
+    for day, intervals in hours.items():
+        if not isinstance(intervals, list):
+            err(rid, f"{where}: hours[{day}] must be a list of intervals")
+            continue
+        for iv in intervals:
+            if not (isinstance(iv, list) and len(iv) == 2):
+                err(rid, f"{where}: hours[{day}] interval must be [open, close], got {iv!r}")
+                continue
+            o, c = iv
+            if not (isinstance(o, str) and TIME_RE.match(o)):
+                err(rid, f"{where}: hours[{day}] open {o!r} must be 'HH:MM'")
+            if c is not None and not (isinstance(c, str) and TIME_RE.match(c)):
+                err(rid, f"{where}: hours[{day}] close {c!r} must be 'HH:MM' or null")
+            if (
+                isinstance(o, str) and TIME_RE.match(o)
+                and isinstance(c, str) and TIME_RE.match(c)
+                and c <= o
+            ):
+                err(rid, f"{where}: hours[{day}] close {c} must be after open {o}")
+
+
 def check_restaurant(path):
     rid = path.stem
     try:
@@ -82,9 +136,21 @@ def check_restaurant(path):
         err(rid, f"kind {kind!r} not in {sorted(KINDS)}")
     is_recipes = kind == "recipes"
 
+    # A venue may carry a `locations` array (multiple branches sharing one
+    # name/menu/cuisine — see ADR 0011). When present, per-branch fields
+    # (address/lat/lng/phone/hours) live on each branch, so the top-level
+    # `address` is no longer required.
+    locations = data.get("locations")
+    is_multi = locations is not None
+
     # required string fields. name always; the location fields only make
-    # sense for a real venue.
-    required_strings = ("name",) if is_recipes else ("name", "area", "city", "address")
+    # sense for a real venue; a multi-location venue keeps its address per branch.
+    if is_recipes:
+        required_strings = ("name",)
+    elif is_multi:
+        required_strings = ("name", "area", "city")
+    else:
+        required_strings = ("name", "area", "city", "address")
     for field in required_strings:
         if not isinstance(data.get(field), str) or not data.get(field).strip():
             err(rid, f"{field} must be a non-empty string")
@@ -119,22 +185,45 @@ def check_restaurant(path):
         if v is not None and not isinstance(v, str):
             err(rid, f"{field} must be a string or null")
 
-    # lat / lng: optional decimal coordinates for the maps handoff and
-    # (later) distance sort. If given they must be real numbers in range;
-    # both-or-neither. A venue without them is only a warning — a new stub
-    # may land before it's geocoded.
-    lat, lng = data.get("lat"), data.get("lng")
-    for field, val, lo, hi in (("lat", lat, -90, 90), ("lng", lng, -180, 180)):
-        if val is None:
-            continue
-        if isinstance(val, bool) or not isinstance(val, (int, float)):
-            err(rid, f"{field} must be a number")
-        elif not (lo <= val <= hi):
-            err(rid, f"{field} {val} out of range [{lo}, {hi}]")
-    if (lat is None) != (lng is None):
-        err(rid, "lat and lng must be set together")
-    elif lat is None and not is_recipes:
-        warn(rid, "no coordinates (lat/lng) set — maps opens by address only")
+    # locations / lat / lng / hours: either a single top-level location, or a
+    # `locations` array of branches (ADR 0011). Coordinates are optional
+    # (a new stub may land before it's geocoded) — that's only a warning — but
+    # when given must be real numbers in range, both-or-neither. Hours likewise
+    # validate per branch. When `locations` is set, the per-branch fields must
+    # NOT also sit at the top level (they'd be ambiguous).
+    if is_multi:
+        if not isinstance(locations, list) or not locations:
+            err(rid, "locations must be a non-empty list when present")
+            locations = []
+        for field in ("address", "lat", "lng", "phone", "hours"):
+            if data.get(field) is not None:
+                err(rid, f"{field} must live on each branch, not top-level, when 'locations' is set")
+        seen_labels = set()
+        for i, b in enumerate(locations):
+            where = f"locations[{i}]"
+            if not isinstance(b, dict):
+                err(rid, f"{where} must be an object")
+                continue
+            addr = b.get("address")
+            if not (isinstance(addr, str) and addr.strip()):
+                err(rid, f"{where}: address must be a non-empty string")
+            label = b.get("label")
+            if label is not None and not (isinstance(label, str) and label.strip()):
+                err(rid, f"{where}: label must be a non-empty string or null")
+            elif isinstance(label, str):
+                if label in seen_labels:
+                    err(rid, f"{where}: duplicate branch label {label!r}")
+                seen_labels.add(label)
+            phone = b.get("phone")
+            if phone is not None and not isinstance(phone, str):
+                err(rid, f"{where}: phone must be a string or null")
+            if not check_coords(rid, b, where):
+                warn(rid, f"{where}: no coordinates (lat/lng) — maps opens by address only")
+            check_hours(rid, b.get("hours"), where)
+    else:
+        if not check_coords(rid, data, "card") and not is_recipes:
+            warn(rid, "no coordinates (lat/lng) set — maps opens by address only")
+        check_hours(rid, data.get("hours"), "card")
 
     # image / alt: optional self-hosted card photo; alt required when set.
     check_image(rid, data, "card image")
@@ -153,38 +242,6 @@ def check_restaurant(path):
                     or not o["url"].startswith("http")
                 ):
                     err(rid, f"ordering entry malformed: {o!r}")
-
-    # hours: null, or a full week keyed mon..sun. Each day is a list of
-    # [open, close] intervals ([] = closed); multiple intervals express a
-    # lunch/dinner split. Times are "HH:MM" 24h; close may be null ("late"/
-    # open-ended). close, when given, must be after open — past-midnight is
-    # expressed with a null close, not a wrap (see ADR 0006).
-    hours = data.get("hours")
-    if hours is not None:
-        if not isinstance(hours, dict):
-            err(rid, "hours must be null or an object keyed mon..sun")
-        elif set(hours) != set(DAYS):
-            err(rid, f"hours must have exactly the 7 day keys {DAYS}, got {sorted(hours)}")
-        else:
-            for day, intervals in hours.items():
-                if not isinstance(intervals, list):
-                    err(rid, f"hours[{day}] must be a list of intervals")
-                    continue
-                for iv in intervals:
-                    if not (isinstance(iv, list) and len(iv) == 2):
-                        err(rid, f"hours[{day}] interval must be [open, close], got {iv!r}")
-                        continue
-                    o, c = iv
-                    if not (isinstance(o, str) and TIME_RE.match(o)):
-                        err(rid, f"hours[{day}] open {o!r} must be 'HH:MM'")
-                    if c is not None and not (isinstance(c, str) and TIME_RE.match(c)):
-                        err(rid, f"hours[{day}] close {c!r} must be 'HH:MM' or null")
-                    if (
-                        isinstance(o, str) and TIME_RE.match(o)
-                        and isinstance(c, str) and TIME_RE.match(c)
-                        and c <= o
-                    ):
-                        err(rid, f"hours[{day}] close {c} must be after open {o}")
 
     # status
     status = data.get("status")
