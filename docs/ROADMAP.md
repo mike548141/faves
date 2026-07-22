@@ -71,7 +71,7 @@ the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   muted + "~"). A live in-app routed time stays **✗** on the offline/keyed-API
   constraint. Rationale + rejected alternatives → ADR 0010. Android dropped the
   vendor-neutral `geo:` pin (it has no directions mode).
-- **Restaurants with multiple locations** `[M][schema]` — owner ask; real
+- [~] **Restaurants with multiple locations** `[M][schema]` (claimed 2026-07-22-1040, wt: faves-wave2-multi-location) — owner ask; real
   now (Kaffee Eis, Gong Cha). Two shapes: (a) one record with a
   `locations: [{address, lat, lng, phone, hours}]` array (shared
   name/menu/cuisine) — DRY, and "Near me"/"Open now" pick the *nearest*
