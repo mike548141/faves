@@ -64,9 +64,11 @@ npx lighthouse http://localhost:8080/index.html \
 - **Message style:** `area: imperative subject` (e.g. `picker: land on
   the filtered set`, `data: refresh KK Malaysian prices`, `a11y: fix
   dark-mode contrast on the call label`). Note how you verified it.
-- **Lockstep** (same commit): bump `VERSION` in `site/sw.js` on any
-  `site/` change; keep the no-JS fallback list in `site/index.html` in
-  step with `site/data/index.json`. Full list in `CLAUDE.md`.
+- **Lockstep** (same commit): bump the right version constant in
+  `site/sw.js` — data-only change under `site/data/` → `DATA_VERSION`;
+  any other `site/` change → `SHELL_VERSION`; both → both (ADR 0015).
+  Keep the no-JS fallback list in `site/index.html` in step with
+  `site/data/index.json`. Full list in `CLAUDE.md`.
 
 ## Verify before committing
 

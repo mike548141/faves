@@ -49,9 +49,12 @@ No toolchain, no dependencies, no build. What's in `site/` is what ships.
 1. Edit the JSON in `site/data/restaurants/` (schema in
    [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
 2. Run `python3 tools/validate.py`.
-3. **Bump `VERSION` in `site/sw.js`** — the service worker precaches all
-   menu data, and the version bump is what tells installed phones to
-   fetch the new cache. Skip it and offline visitors keep stale menus.
+3. **Bump `DATA_VERSION` in `site/sw.js`** — the service worker precaches
+   all menu data, and the version bump is what tells installed phones to
+   fetch the new data cache. Skip it and offline visitors keep stale
+   menus. (A menu edit only touches `DATA_VERSION`; the shell cache is
+   left alone so phones don't re-download the app — ADR 0015. Changed
+   HTML/CSS/JS too? bump `SHELL_VERSION` as well.)
 4. Check the change in a browser at mobile width, then commit.
 
 ## Deploy

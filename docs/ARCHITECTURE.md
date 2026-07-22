@@ -304,13 +304,24 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
 
 ## Service worker strategy
 
-- **Precache** on install: both HTML shells, CSS, JS, `index.json`,
-  every restaurant JSON, icons.
+- **Precache** on install, split into two independently-versioned caches
+  (ADR 0015): a **shell cache** (`SHELL_VERSION` → both HTML shells, CSS,
+  JS, `site.webmanifest`, icons) and a **data cache** (`DATA_VERSION` →
+  `index.json` + every restaurant JSON). Bumping one constant rebuilds
+  only that cache on the next install; the other survives untouched, so a
+  data-only menu edit no longer re-downloads the whole shell. `index.json`
+  is **data** (it lists which restaurants exist); `site.webmanifest` is
+  shell; there is no separate "config" cache (see ADR 0015). Install skips
+  an already-complete cache and uses a `__cache_ready__` sentinel so an
+  interrupted install rebuilds rather than serving a half-filled cache.
 - **Network-first with cache fallback** for data (so menu edits appear
-  promptly), **cache-first** for shell assets, versioned cache name
-  bumped by a `VERSION` constant in `sw.js` (updating it is part of the
-  data-edit checklist).
-- Photos: cache-on-demand with a size-capped runtime cache.
+  promptly), **cache-first** for shell assets. Any byte change to `sw.js`
+  triggers the browser's SW update cycle; the version constants then
+  decide which cache(s) rebuild. **Lockstep:** data-only change under
+  `site/data/` → bump `DATA_VERSION`; any other `site/` change → bump
+  `SHELL_VERSION`; both → both.
+- Photos: cache-on-demand with a size-capped runtime cache
+  (`faves-img-v1`, version-free so it survives every bump).
 
 ## Constraints
 

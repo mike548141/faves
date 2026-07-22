@@ -139,9 +139,12 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
 - **TODO markers:** `#!#` in any language; more `#` = higher priority
   (`#!#` nice-to-have → `#!####` blocking).
 - **Lockstep rules** (change these together, in one commit):
-  - Bump `VERSION` in `site/sw.js` on *any* change under `site/` — it's
-    what tells installed phones to refetch; stale = offline visitors
-    keep old menus.
+  - Bump the right version constant in `site/sw.js` — it's what tells
+    installed phones to refetch; stale = offline visitors keep old menus.
+    Data-only change under `site/data/` → bump `DATA_VERSION`; any other
+    change under `site/` → bump `SHELL_VERSION`; a change touching both →
+    bump both. Split caches so a menu edit no longer re-downloads the
+    whole shell (ADR 0015).
   - Keep the no-JS fallback `<ul>` in `site/index.html` in step with
     `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
