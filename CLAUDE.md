@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@d371169`)
+## Doctrine — inherited from atelier (pinned `atelier@9e7e031`)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -13,17 +13,41 @@ in atelier and is read on demand — never wholesale.
 - **Always stop and confirm (the floor):** making a private repo public or
   widening its audience; anything truly destructive or irreversible; secrets;
   spending money; anything touching people's safety; widening your own grant
-  (record the principal's decision, never originate it); a lockout-class change that could
-  sever your own access; installing an unapproved tool or adding a new trust
-  surface (deploy keys, webhooks, OAuth/app grants). Everything recoverable —
-  commit/push/PR included — just proceed.
-- **Concurrency:** `git pull --rebase --autostash` at session start; push after
-  each commit. Uncommitted changes this session didn't make ⇒ another session
-  is live: move to a worktree — never work around or absorb them.
+  (record the principal's decision, never originate it); a lockout-class change
+  that could sever your own access; installing an unapproved tool or adding a
+  new trust surface (deploy keys, webhooks, OAuth/app grants). Each such
+  confirmation is an *informed* one — the agent puts what it wants to do, why,
+  and the likely impact in plain language first; an approval given without that
+  account is not a decision the doctrine recognises (`00-APEX.md`). Everything
+  recoverable — commit/push/PR included — just proceed.
+- **Concurrency:** assume another session may be live — a clean tree is not
+  proof you're alone. `git pull --rebase --autostash` at session start; push
+  after each commit. Take a worktree by default for write-heavy or multi-commit
+  work; uncommitted changes this session didn't make are positive proof ⇒ move
+  to a worktree — never work around or absorb them (`CONCURRENCY.md`). Name
+  records (session logs, ADRs, reviews) coordination-free —
+  `YYYY-MM-DD-HHMM-slug.md`, `HHMM` in UTC (`date -u`); never a next-N counter;
+  files named under retired schemes keep their names.
+- **Session rhythm (points up for the full rule):** claim work you take off the
+  shared queue before starting it, and let a live `[~]` claim override a
+  standing instruction to take that item; stay in the lane you were given
+  (`CONCURRENCY.md`); flag when economics favour a fresh session, and on
+  overload stop at a safe point, record, and hand off (`MODEL-ECONOMICS.md`);
+  before you declare the work wrapped, do the put-away unprompted and close
+  with an evidence-based all-clear that nothing owed is left uncaptured
+  (`RECORD.md`).
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
-  session start run `git -C "../atelier" log --oneline d371169..HEAD`; any
+  session start run `git -C "../atelier" log --oneline 9e7e031..HEAD`; any
   output means the house doctrine moved — read it, then bump the pin above
   deliberately.
+- **Estate resources — point up, don't re-derive:** providers & account plans,
+  financial constraints & plan entitlements, licences, credentials, shared
+  estate tooling, and the estate inventory live in the operator's **private
+  estate-root repo** (atelier's private counterpart). Reference it for these;
+  never re-derive them locally or copy its contents down. This repo is
+  publication-bound: reference the root by local-path convention only, never
+  by name — a public repo naming the estate's credential/inventory root is
+  reconnaissance.
 - **This repo's visibility:** PRIVATE for now — a push is not publication. But
   this is a **public-site project** headed for release, so treat content as
   publication-bound (no personal data beyond the owner-approved recipe exception
