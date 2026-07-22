@@ -8,6 +8,14 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **Menu edits no longer re-download the whole app.** The offline cache
+  is now split in two — the app itself and the menu data have separate
+  versions — so when a menu changes your phone fetches just the updated
+  menus, not the entire app again. Nothing changes for you day to day;
+  updates are simply smaller and quicker on mobile data. (Everything
+  still works fully offline after the first visit.)
+
 ### Added
 - **Pick along a route** — heading somewhere and want dinner on the way?
   Tap **Along a route** (next to Near me), choose where you're heading —

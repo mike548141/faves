@@ -11,6 +11,7 @@ build but are printed so gaps (e.g. missing picks) stay visible.
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -377,6 +378,39 @@ def check_restaurant(path):
     return rid
 
 
+def check_version_bump():
+    """Best-effort reminder (never fails the build): if menu data changed in the
+    working tree but site/sw.js didn't, DATA_VERSION was almost certainly not
+    bumped — installed phones would keep serving stale menus offline (ADR 0015).
+    Deliberately shallow: it doesn't parse which constant moved, just flags the
+    common "forgot to bump anything" slip. Silently skips when git isn't
+    available or this isn't a checkout, so the validator still runs standalone."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(ROOT), "status", "--porcelain"],
+            capture_output=True, text=True, timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return
+    if out.returncode != 0:
+        return
+    paths = set()
+    for line in out.stdout.splitlines():
+        if not line:
+            continue
+        path = line[3:]  # strip the 2 status chars + space
+        if " -> " in path:  # rename: "old -> new"
+            path = path.split(" -> ", 1)[1]
+        paths.add(path)
+    data_dirty = any(p.startswith("site/data/") for p in paths)
+    sw_dirty = "site/sw.js" in paths
+    if data_dirty and not sw_dirty:
+        warnings.append(
+            "[version] site/data changed but site/sw.js did not — bump "
+            "DATA_VERSION in site/sw.js so installed phones refetch the menus"
+        )
+
+
 def main():
     if not RESTAURANTS.is_dir():
         print(f"error: {RESTAURANTS} not found", file=sys.stderr)
@@ -414,6 +448,8 @@ def main():
 
     for path in files:
         check_restaurant(path)
+
+    check_version_bump()
 
     for w in warnings:
         print(f"warning: {w}")
