@@ -81,6 +81,20 @@ the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   Touches the hours engine (per-branch hours) and distance sort (nearest
   branch). Do it before adding many chains.
 
+## Owner-reported — 2026-07-22 (raw notes, stored verbatim)
+
+- [~] **Bug: "Nearest first" sorts 10 km above 2.5 km** (claimed
+  2026-07-22-1100, wt: faves-wave2-multi-location) — owner report: "Selected
+  'Nearest first' and restaurants 10km are sorted higher on the list than
+  restaurants 2.5km away. I suspect it is sorting as text rather than as a
+  number."
+- [ ] **Split versioning: app vs config vs data** `[M]` — owner idea: "Should
+  have a different version for the app vs the data it holds vs the
+  configuration so that it can trigger a refresh based of any of them changing
+  but only download the part(s) that change." Today one `VERSION` in `sw.js`
+  invalidates the whole precache; a split would let a data-only change refresh
+  just `site/data/*`. Touches the SW cache strategy (ADR-worthy when built).
+
 ## Theme 3 — UX & design pass
 
 > ✅ **Shipped 2026-07-08 → 12** — the design pass + both owner test-drive
