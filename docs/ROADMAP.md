@@ -110,13 +110,22 @@ moves them to `ROADMAP-DONE.md`):
   ⚠️ **Owner note:** if a *hearted* 10 km venue still shows above a plain 2.5 km
   one, that's the (deliberate, tested) favourite weighting — say if you'd rather
   "Nearest first" ignore hearts entirely.
-- [~] **Split versioning: app vs config vs data** `[M]` (claimed
-  2026-07-23-0000, wt: faves-wave7-split-versioning) — owner idea: "Should
-  have a different version for the app vs the data it holds vs the
+- ✅ **Split versioning: app vs config vs data** `[M]` — **shipped 2026-07-23**
+  (claimed 2026-07-22-1209, wt: faves-wave7-split-versioning; ADR 0015). Owner
+  idea: "Should have a different version for the app vs the data it holds vs the
   configuration so that it can trigger a refresh based of any of them changing
-  but only download the part(s) that change." Today one `VERSION` in `sw.js`
-  invalidates the whole precache; a split would let a data-only change refresh
-  just `site/data/*`. Touches the SW cache strategy (ADR-worthy when built).
+  but only download the part(s) that change." `sw.js` now has two version
+  constants — `SHELL_VERSION` (html/css/js/icons/webmanifest) and `DATA_VERSION`
+  (index.json + restaurant JSON) — each naming its own cache. Bumping one
+  rebuilds only that cache on install; the other survives, so a data-only menu
+  edit refetches just `site/data/*` and no longer re-downloads the shell.
+  **"Config" axis maps to shell** (`site.webmanifest`); `index.json` is data —
+  no third cache warranted (reasoned in ADR 0015). Upgrade from the pre-split
+  single cache builds-new-before-deleting-old so offline never breaks. Lockstep
+  rule updated everywhere (CLAUDE.md/README/CONTRIBUTING/ARCHITECTURE);
+  `validate.py` warns when data is dirty but `sw.js` isn't; static-shape test
+  guards the split. Runtime upgrade behaviour needs a device pass (steps in
+  ADR 0015).
 
 ## Theme 3 — UX & design pass
 
