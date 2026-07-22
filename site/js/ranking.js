@@ -90,14 +90,23 @@ export function isAvailableNow(r, { now, origin = null, farKm = FAR_KM } = {}) {
 }
 
 /**
- * Rank venues for the home list. Sort order:
- *   reachable → availability tier → favourite → nearest → curated order.
- * `origin` ({lat,lng}) is optional; without it only open-status + favourites
- * rank and nothing is demoted for distance. `favouriteIds` is a Set of venue
- * ids the viewer has hearted (the venue itself or any dish it holds — the
- * caller flattens dish favourites to their venue id); omit or pass null to
- * ignore favourites. Venues with coordinates gain a `distanceKm` field when
- * origin is known, for the card to display. The input array is not mutated.
+ * Rank venues for the home list. The primary key depends on whether the viewer
+ * asked for "Nearest first":
+ *   • no origin (default order): reachable → availability → distance → curated.
+ *     We can't measure distance, so float the places you can order from *now*.
+ *   • origin known ("Nearest first" is ON): reachable → distance → availability
+ *     → curated. The toggle promises nearest-first, so distance leads; a place
+ *     being open is still shown (its badge) and filterable ("Open now"), but it
+ *     no longer floats a farther-but-open venue above a nearer one. (Fixes the
+ *     owner's report that a 10 km venue outranked a 2.5 km one under "Nearest
+ *     first" — the cause was availability outranking distance, not a text sort.)
+ * `origin` ({lat,lng}) is optional; without it nothing is demoted for distance.
+ * `favouriteIds` is a Set of venue ids the viewer has hearted (the venue itself
+ * or any dish it holds — the caller flattens dish favourites to their venue id);
+ * omit or pass null to ignore favourites. A favourite still counts as
+ * `favBoostKm` nearer (weighted into the distance key), so hearts keep their
+ * pull even in "Nearest first". Venues with coordinates gain a `distanceKm`
+ * field when origin is known, for the card. The input array is not mutated.
  */
 export function rankVenues(
   restaurants,
@@ -131,16 +140,22 @@ export function rankVenues(
       favTie: isFav ? 0 : 1,
     };
   });
-  keyed.sort(
-    (a, b) =>
+  // Shared leading keys, then distance vs availability swap by mode (see the
+  // doc comment). `cmp` compares the boosted distance *numerically* — never
+  // the formatted "10 km" string, which would sort lexicographically (10 < 2.5).
+  keyed.sort((a, b) => {
+    const lead =
       a.pinned - b.pinned || // the recipes collection is pinned to the very top
       a.stub - b.stub || // orderable venues above menu-less "coming soon" stubs
-      a.far - b.far || // reachable (within farKm) before too-far
-      a.tier - b.tier || // availability, within the orderable group
-      cmp(a.effective, b.effective) || // favourite-boosted distance
-      a.favTie - b.favTie || // separate favourites on an exact tie
-      a.i - b.i // curated order
-  );
+      a.far - b.far; // reachable (within farKm) before too-far
+    if (lead) return lead;
+    const byDistance = cmp(a.effective, b.effective); // favourite-boosted distance
+    const byAvailability = a.tier - b.tier; // open now floats up
+    const tail = a.favTie - b.favTie || a.i - b.i; // favourite tiebreak → curated
+    return origin
+      ? byDistance || byAvailability || tail // "Nearest first": distance leads
+      : byAvailability || byDistance || tail; // default: availability leads
+  });
   // With a known location, hand the card the nearest branch's distance and
   // hours (so its "📍 1.2 km" and open/closed badge describe the same branch).
   // Without one, the record is unchanged — its primary-branch hours stand.

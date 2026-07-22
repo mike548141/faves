@@ -141,6 +141,42 @@ test("weighted: a bigger favBoostKm can push a favourite above a nearer plain ve
   );
 });
 
+test("Near me: nearest sorts first NUMERICALLY (2.5 km before 10 km, not text order)", () => {
+  // Regression for the owner's report. Under a lexicographic compare of the
+  // formatted labels, "10 km" < "2.5 km" (‘1’ < ‘2’) would float the 10 km
+  // venue up. Both open (same tier) so distance alone decides — nearest wins.
+  const near = { id: "near-2_5", ...at(2.5) };
+  const far = { id: "far-10", ...at(10) };
+  assert.deepEqual(
+    rankVenues([far, near], { now: MON_NOON, origin: CBD }).map((r) => r.id),
+    ["near-2_5", "far-10"]
+  );
+});
+
+test("Near me: a nearer CLOSED venue outranks a farther OPEN one ('Nearest first' = distance leads)", () => {
+  // The exact reported case: with "Nearest first" on, distance is the primary
+  // key, so a 2.5 km closed venue sits above a 10 km open one (availability is
+  // still shown as a badge and has its own "Open now" filter). Fails under the
+  // old availability-before-distance order.
+  const closedNear2 = { id: "closed-2_5", lat: at(2.5).lat, lng: at(2.5).lng, hours: week("18:00", "22:00") };
+  const openFar10 = { id: "open-10", lat: at(10).lat, lng: at(10).lng, hours: week("09:00", "22:00") };
+  assert.deepEqual(
+    rankVenues([openFar10, closedNear2], { now: MON_NOON, origin: CBD }).map((r) => r.id),
+    ["closed-2_5", "open-10"]
+  );
+});
+
+test("Default order (no location) still floats open above closed regardless of distance", () => {
+  // Without an origin we can't measure distance, so availability leads — a
+  // closed venue must not jump an open one just because it's listed first.
+  const openV = { id: "open", hours: week("09:00", "22:00") };
+  const closedV = { id: "closed", hours: week("18:00", "22:00") };
+  assert.deepEqual(
+    rankVenues([closedV, openV], { now: MON_NOON }).map((r) => r.id),
+    ["open", "closed"]
+  );
+});
+
 test("farKm param overrides the default reachability gate", () => {
   const near = { id: "near", ...at(2) };
   const mid = { id: "mid", ...at(40) };

@@ -24,6 +24,13 @@ content freshness separately from this file.
   badge all use the branch nearest you; the menu screen lists every
   branch, nearest first, each with its own directions link and hours.
 
+### Fixed
+- **"Nearest first" now really puts the nearest first** — it was floating
+  open (and favourited) venues above closer ones, so a 10 km place could
+  sit above a 2.5 km one. With "Nearest first" on, distance now leads;
+  whether a place is open still shows as a badge and has its own "Open
+  now" filter. (The distances were always compared as numbers, not text.)
+
 ### Changed
 - **Cook at Home sits top-right** on wider layouts — on the two-column
   grid the recipes card now takes the top-right cell so the first
