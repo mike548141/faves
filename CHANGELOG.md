@@ -9,10 +9,21 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Drive time to a venue** — tapping a restaurant's address now opens
+  your maps app with **driving directions** from where you are (not just
+  a pin), so it shows the real, live drive time. In "Near me" mode each
+  card also carries a rough "~N min drive" hint at a glance (an
+  approximate straight-line estimate — the maps app has the real figure).
 - **Opening hours for 15 more venues** — every restaurant now shows
   live open/closed status. Hours researched online (venue sites where
   they exist, aggregators otherwise); confirmation folds into the
   owner's general menu/details verification pass.
+
+### Changed
+- **Cook at Home sits top-right** on wider layouts — on the two-column
+  grid the recipes card now takes the top-right cell so the first
+  restaurant gets the prime top-left slot; on phones it stays anchored
+  at the top as before.
 
 ## [1.0.0] — 2026-07-12 · launch
 
