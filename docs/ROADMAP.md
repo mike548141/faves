@@ -312,8 +312,12 @@ home-area inference no worse than the live site already allows.
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
 UI toggle first pass (2026-07-09, `reo.js` — chrome only; safety text stays
-English, a pre-launch reo **wording review** still owed — [~] claimed
-2026-07-22-1210, wt: faves-wave5-reo-review). Detail →
+English). The pre-launch reo **wording review ran** (2026-07-22,
+[`docs/reviews/2026-07-22-1148-reo-wording-review.md`](reviews/2026-07-22-1148-reo-wording-review.md)):
+all 68 strings reviewed — macrons clean, 59 kept, 0 wording changes, 9 flagged,
+plus a `lang="mi"` per-part a11y fix. ⚠ **honest caveat:** an AI pass, not a
+fluent-speaker sign-off — a native review of the 9 flagged strings remains the
+owner option before public launch. Detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 ---
