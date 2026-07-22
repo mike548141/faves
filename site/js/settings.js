@@ -12,7 +12,7 @@
 // localStorage; sanitised + clamped on read so a hand-edited or corrupt
 // value can't break ranking. Pure/DOM-free and unit-tested.
 
-import { safeStorage } from "./store.js";
+import { profileScopedStorage } from "./profiles.js";
 import { FAR_KM, FAV_BOOST_KM } from "./ranking.js";
 
 const KEY = "faves.settings.v1";
@@ -138,4 +138,7 @@ export function createSettings(storage) {
   };
 }
 
-export const settings = createSettings(safeStorage());
+// Per-profile: dietary/allergen prefs are safety-critical and differ per
+// person, so the whole settings store is namespaced by the active profile (see
+// ADR 0012 for why the reo language rides along per-profile too).
+export const settings = createSettings(profileScopedStorage());

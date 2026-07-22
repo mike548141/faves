@@ -12,6 +12,7 @@ import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
+import { profiles, PROFILES_KEY } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
 import { initBackToTop } from "./to-top.js";
@@ -797,6 +798,19 @@ initBackToTop();
 // as the venue wrote it; generated chrome carries data-i18n and is translated
 // after render() below. Safety text (tags, caveats) stays English (reo.js).
 initReo();
+
+// This screen reads the active profile's dietary/allergen prefs once, at render
+// time (there's no switcher here — you switch on the home screen). If another
+// tab switches profile while this menu is open, its chips/warnings would be
+// stale — someone else's allergy filter. Reload so prefs re-apply fresh; only
+// fire when the *active* profile actually changed (a plain settings edit
+// re-reads without a reload elsewhere).
+const activeProfileAtLoad = profiles.activeId();
+window.addEventListener("storage", (e) => {
+  if (e.key !== PROFILES_KEY) return;
+  profiles.reload();
+  if (profiles.activeId() !== activeProfileAtLoad) location.reload();
+});
 
 const id = new URLSearchParams(location.search).get("id");
 const errorEl = document.getElementById("menu-error");

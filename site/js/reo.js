@@ -66,6 +66,17 @@ const MI = {
   "pick.empty": "Kāore he wāhi e tau ana — whakawhānuitia ō tātari, ka panoni anō.", // draft
   // Generic
   "generic.close": "Katia",
+  "generic.cancel": "Whakakore",
+  // Profiles (device-local "who's using Faves?" switcher) — draft; names are
+  // user content and are never translated. The privacy note stays English.
+  "profile.title": "Ko wai kei te whakamahi i a Faves?", // draft
+  "profile.choose": "Tīpakohia ko wai kei te whakamahi i a Faves", // draft
+  "profile.browsingAs": "Kei te tirotiro hei", // draft
+  "profile.add": "Tāpirihia tētahi", // draft
+  "profile.rename": "Whakaingoa anō", // draft
+  "profile.delete": "Mukua", // draft
+  "profile.save": "Tiaki", // draft
+  "profile.firstName": "Ingoa tuatahi", // draft
   // Empty / status prose (draft)
   "result.empty": "Kāore he wāhi e tau ana ki ēnā tātari. Whakawhānuitia.", // draft
   "tz.note": "Kei te wā o Aotearoa ngā wā tuwhera/kati.", // draft

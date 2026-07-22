@@ -228,13 +228,28 @@ UI must never present absence of an allergen tag as "allergen-free".
   first, each with its own directions link, phone and hours; a one-branch array
   renders identically to a flat single-location venue.
 
-### Client-side personal layer (order tally, favourites)
+### Client-side personal layer (order tally, favourites, profiles)
 
 **Device-local** state kept in `localStorage`, never in the repo and never
 sent anywhere. All of it sits on `site/js/store.js` — a `safeStorage()`
 that transparently falls back to an in-memory shim when storage is blocked
 (Safari private mode), so features degrade to session-only rather than
-crashing. Each feature is split model (DOM-free, unit-tested) / UI:
+crashing. Each feature is split model (DOM-free, unit-tested) / UI.
+
+**Profiles** (`profiles.js`, ADR 0012) let several people share one phone,
+each with their own hearts. A device-level registry `faves.profiles.v1`
+(`{v, activeId, profiles:[{id,name}]}`) names them; per-profile stores keep
+their KEY constant but read through `profileScopedStorage()`, which rewrites
+the key to `faves.p.<activeId>.<base>` (`scopeKey`). So a switch + `reload()`
+re-points the whole layer with no consumer rewrite. **Per-profile:** favourites
+and *all* of settings (dietary/allergen prefs — safety-critical; ranking dials;
+reo language). **Shared/device:** the order tally (one order for the table) and
+the ephemeral Near-me origin. `migrate()` folds pre-profiles data into a default
+profile on upgrade (copies, doesn't move, so a briefly-cached old asset still
+works; idempotent). The switcher lives in the ⚙ Settings dialog; the menu/recipe
+screens `location.reload()` on a cross-tab profile change so a stale allergen
+filter can't linger. No accounts, no sync — cross-device is a separate app
+(Theme 6). The feature stores:
 
 - **Order tally** (`faves.order.v1`): `cart.js` — pure grouping/total maths
   (`groupByVenue`, `orderTotal`) + a thin injectable store; `cart-ui.js`
@@ -249,11 +264,16 @@ crashing. Each feature is split model (DOM-free, unit-tested) / UI:
   alone; the deep-link href is derived from the shared `slug`).
   `favourites-ui.js` is the `♥` toggle; the home "Favourites" view reuses
   the search panel's grouped renderer (`results-view.js`).
-- **Settings** (`faves.settings.v1`): `settings.js` — the viewer's two
-  ranking distances (`favBoostKm`, `farKm`), clamped/sanitised on read so a
-  bad value can't break the sort; `settings-ui.js` is the ⚙ dialog.
+- **Settings** (`faves.settings.v1`): `settings.js` — dietary/allergen prefs
+  (`diet`), the two ranking distances (`favBoostKm`, `farKm`) and the reo
+  language, clamped/sanitised on read so a bad value can't break the sort;
+  `settings-ui.js` is the ⚙ dialog (also home to the profile switcher).
+- **Profiles** (`faves.profiles.v1`): `profiles.js` — the registry + the
+  profile-scoped storage wrapper the two stores above read through. See the
+  profiles paragraph and ADR 0012.
 
-A `storage` event keeps other tabs in step. Recipes (Cook at Home) can be
+A `storage` event keeps other tabs in step (favourites/settings keys are now
+namespaced by the active profile; a registry change re-points them). Recipes (Cook at Home) can be
 *favourited* but carry no order stepper — that collection is for cooking,
 not an order to read down the phone. This layer is the reusable seam for
 later local-only features and the bridge to the health app (roadmap Themes 5–6).

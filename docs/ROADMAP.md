@@ -216,18 +216,19 @@ out (no official API). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   Cloudflare Pages deploy (Phase 7).** Dish-level ratings stay curated (Google
   rates places, not dishes).
 
-- [~] **Multiple people's favourites** `[M]` **⚑ (account tension)** (claimed
-  2026-07-22-1120, wt: faves-wave3-local-profiles — the sanctioned
-  device-local-profiles half only; cross-device sync stays out of scope) — owner
-  asked (2026-07-08) whether several people could each keep their own
-  hearts. On *one shared device*: yes, cheaply — local **profiles** (a
-  "who's this?" name picker, each a separate `localStorage` bucket), no
-  accounts. Across *different devices* the same person's hearts syncing:
-  that needs an account + backend, which breaks the no-accounts /
-  no-backend non-goals — out of scope for Faves. The honest split: local
-  profiles here; anything cross-device belongs to a *separate signed-in
-  app* (the same seam as the health app, Theme 6, which can own identity
-  and sync). Constraint-free win now: device-local profiles.
+- ✅ **Multiple people's favourites — device-local profiles** `[M]` (shipped
+  2026-07-22, wt: faves-wave3-local-profiles; ADR 0012) — several people share
+  one phone, each with their own hearts. A "who's using Faves?" switcher in
+  Settings (add/rename/delete, first names only); favourites + all of settings
+  (dietary/allergen prefs, ranking dials, reo language) are per-profile via a
+  registry + profile-scoped storage wrapper; the order tally + Near-me origin
+  stay device-shared. Existing data migrates into the default profile. Switching
+  visibly re-applies the person's allergen filter (menu/recipe reload on a
+  cross-tab switch) so no one browses under someone else's safety settings.
+  **Cross-device sync stays out of scope** — the same person's hearts syncing
+  across *different* devices needs an account + backend, which breaks the
+  no-accounts / no-backend non-goals. That belongs to a *separate signed-in app*
+  (the same seam as the health app, Theme 6, which can own identity and sync).
 
 ## Theme 6 — North star: the health tie-in
 
