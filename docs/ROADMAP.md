@@ -61,7 +61,7 @@ the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   **✗** on constraints. Pairs with the availability ranking (only rank
   open/reachable candidates along the way).
 
-- **Drive time from me to a venue** `[M]` — owner ask (2026-07-08). A live
+- [~] **Drive time from me to a venue** `[M]` (claimed 2026-07-22-1023, wt: faves-wave1-small-closers) — owner ask (2026-07-08). A live
   in-app drive time needs a routing API (Google/Mapbox Directions) — an
   external, keyed, usually-paid call → breaks offline / no-external /
   no-dependency. Two honest options: (a) **hand off to the maps app**,
@@ -90,7 +90,8 @@ the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 >
 > **Still open (small):** self-hosted per-platform **order-online logos**
-> (offline / no-hotlink); the Cook-at-Home **top-right grid position** idea.
+> (offline / no-hotlink); [~] the Cook-at-Home **top-right grid position** idea
+> (claimed 2026-07-22-1023, wt: faves-wave1-small-closers).
 
 ## Theme 4 — Content growth (ongoing, in parallel)
 
