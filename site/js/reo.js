@@ -27,6 +27,13 @@ import { settings, LANGS } from "./settings.js";
 // Māori chrome strings, keyed. Add a key here + a data-i18n on the element (or
 // a t() call) to extend coverage. Entries flagged "draft" especially want the
 // reviewer's eye.
+//
+// SAFETY BOUNDARY (do not cross): never add an allergen, dietary, or other
+// safety-load-bearing string to this table. Those stay English on purpose (a
+// misread could hurt someone) and fall through to English automatically because
+// they carry no key here. This includes the dietary/allergen tag chips and the
+// individual filter chip labels; only neutral chrome (headings, buttons, the
+// landmark/aria names) belongs here.
 const MI = {
   // Home header
   "app.sub": "Ā mātou kai tino pai o Pōneke — ngā tahua kai, kotahi te wāhi.", // draft
@@ -116,9 +123,6 @@ const MI = {
   "recipe.detail": "Ngā huānga me te tukanga", // draft
 };
 
-// documentElement lang value per language, for screen-reader pronunciation.
-const HTML_LANG = { en: "en-NZ", mi: "mi" };
-
 let current = "en";
 
 // Captured English originals, so switching back to English is lossless even
@@ -126,6 +130,8 @@ let current = "en";
 const capText = new WeakMap();
 const capAria = new WeakMap();
 const capPh = new WeakMap();
+// Captured original `lang` (usually none) so reverting to English is lossless.
+const capLang = new WeakMap();
 
 const mi = (key) => (current === "mi" && key in MI ? MI[key] : null);
 
@@ -136,6 +142,25 @@ export function t(key, english) {
 
 export function getLang() {
   return current;
+}
+
+// Language of Parts (WCAG 2.2 SC 3.1.2). The document root stays `en-NZ`
+// (English is the source of truth and every venue/menu/recipe string, all
+// safety text, and the interpolated strings are English); we mark ONLY the
+// chrome we actually render in te reo with lang="mi". Flipping the whole
+// document to "mi" — the old behaviour — made a screen reader pronounce all
+// that untranslated English as Māori, which on a menu screen is most of the
+// page. An element counts as te reo when any of its i18n keys resolved to a
+// Māori string this pass.
+function markLang(el, isMi) {
+  if (!capLang.has(el)) capLang.set(el, el.getAttribute("lang"));
+  if (isMi) {
+    el.setAttribute("lang", "mi");
+  } else {
+    const orig = capLang.get(el);
+    if (orig == null) el.removeAttribute("lang");
+    else el.setAttribute("lang", orig);
+  }
 }
 
 /** Translate all tagged chrome under `root` (default: the whole document). */
@@ -152,6 +177,15 @@ export function translate(root = document) {
     if (!capPh.has(el)) capPh.set(el, el.getAttribute("placeholder") || "");
     el.setAttribute("placeholder", mi(el.dataset.i18nPh) ?? capPh.get(el));
   }
+  for (const el of root.querySelectorAll(
+    "[data-i18n],[data-i18n-aria],[data-i18n-ph]",
+  )) {
+    const isMi =
+      mi(el.dataset.i18n) != null ||
+      mi(el.dataset.i18nAria) != null ||
+      mi(el.dataset.i18nPh) != null;
+    markLang(el, isMi);
+  }
 }
 
 function readLang() {
@@ -166,13 +200,14 @@ function readLang() {
  */
 export function initReo() {
   current = readLang();
-  document.documentElement.lang = HTML_LANG[current];
+  // Root stays en-NZ regardless of the UI language; te reo is marked per part
+  // by translate() (see markLang). Defensive re-assert in case something moved it.
+  document.documentElement.lang = "en-NZ";
   translate(document);
   settings.subscribe(() => {
     const l = readLang();
     if (l === current) return;
     current = l;
-    document.documentElement.lang = HTML_LANG[current];
     translate(document);
   });
 }
