@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { haversineKm, formatDistance } from "../site/js/distance.js";
+import { haversineKm, formatDistance, estimateDriveMinutes, formatDriveTime } from "../site/js/distance.js";
 
 // Reference points around Wellington (from the real venue data).
 const CBD = { lat: -41.2865, lng: 174.7762 }; // ~Post Office Square
@@ -42,4 +42,27 @@ test("formatDistance: one decimal under 10 km, whole km beyond", () => {
 test("formatDistance: empty string for null/NaN", () => {
   assert.equal(formatDistance(null), "");
   assert.equal(formatDistance(NaN), "");
+});
+
+test("estimateDriveMinutes: rough straight-line estimate (winding × urban speed)", () => {
+  // 1.2 km × 1.3 / 30 km/h × 60 ≈ 3.1 → 3 min.
+  assert.equal(estimateDriveMinutes(1.2), 3);
+  // 13 km cross-town → 34 min in the ballpark.
+  assert.ok(estimateDriveMinutes(13) >= 30 && estimateDriveMinutes(13) <= 40);
+});
+
+test("estimateDriveMinutes: floor of 1 min, never zero for a real distance", () => {
+  assert.equal(estimateDriveMinutes(0), 1);
+  assert.equal(estimateDriveMinutes(0.05), 1);
+});
+
+test("estimateDriveMinutes: null for null/NaN/negative", () => {
+  assert.equal(estimateDriveMinutes(null), null);
+  assert.equal(estimateDriveMinutes(NaN), null);
+  assert.equal(estimateDriveMinutes(-1), null);
+});
+
+test("formatDriveTime: '~N min drive', empty for no distance", () => {
+  assert.equal(formatDriveTime(1.2), "~3 min drive");
+  assert.equal(formatDriveTime(null), "");
 });

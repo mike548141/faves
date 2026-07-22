@@ -4,7 +4,7 @@
 
 import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
-import { formatDistance } from "./distance.js";
+import { formatDistance, formatDriveTime } from "./distance.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
 import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
@@ -98,13 +98,20 @@ function card(r, now) {
     ]);
   } else {
     // In "Near me" mode a venue carries distanceKm; show it first, as the
-    // most decision-relevant fact once you've asked "what's close".
+    // most decision-relevant fact once you've asked "what's close", then a
+    // rough "~ min drive" hint. The hint is a straight-line estimate (ADR
+    // 0010) — the maps app gives the real drive time when you tap the address.
     const dist =
       r.distanceKm != null
         ? el("span", { className: "card-distance", textContent: `📍 ${formatDistance(r.distanceKm)}` })
         : null;
+    const drive =
+      r.distanceKm != null
+        ? el("span", { className: "card-drive", textContent: formatDriveTime(r.distanceKm) })
+        : null;
     meta = el("p", { className: "card-meta" }, [
       dist,
+      drive,
       el("span", { className: "card-area", textContent: r.area || "" }),
       el("span", { textContent: servicesText(r.services) }),
     ]);

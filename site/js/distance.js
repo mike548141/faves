@@ -27,3 +27,24 @@ export function formatDistance(km) {
   if (km < 10) return `${km.toFixed(1)} km`;
   return `${Math.round(km)} km`;
 }
+
+// A deliberately crude drive-time hint from the straight-line distance we
+// already hold — no routing API (that's keyed/external → breaks offline). We
+// pad for roads not being straight, then divide by a conservative through-town
+// speed (lights, give-ways). No traffic model. Always shown with a leading "~"
+// and never as a substitute for the maps-app handoff, which gives the real,
+// live figure. See ADR 0010.
+const ROAD_WINDING = 1.3; // road-km per straight-line-km, typical for a city
+const URBAN_KMH = 30; // conservative door-to-door average
+
+/** Rough drive time in whole minutes (min 1), or null for a bad distance. */
+export function estimateDriveMinutes(km) {
+  if (km == null || Number.isNaN(km) || km < 0) return null;
+  return Math.max(1, Math.round(((km * ROAD_WINDING) / URBAN_KMH) * 60));
+}
+
+/** "~4 min drive" hint, or "" when there's no usable distance. */
+export function formatDriveTime(km) {
+  const min = estimateDriveMinutes(km);
+  return min == null ? "" : `~${min} min drive`;
+}
