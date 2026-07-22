@@ -110,7 +110,8 @@ moves them to `ROADMAP-DONE.md`):
   ⚠️ **Owner note:** if a *hearted* 10 km venue still shows above a plain 2.5 km
   one, that's the (deliberate, tested) favourite weighting — say if you'd rather
   "Nearest first" ignore hearts entirely.
-- [ ] **Split versioning: app vs config vs data** `[M]` — owner idea: "Should
+- [~] **Split versioning: app vs config vs data** `[M]` (claimed
+  2026-07-23-0000, wt: faves-wave7-split-versioning) — owner idea: "Should
   have a different version for the app vs the data it holds vs the
   configuration so that it can trigger a refresh based of any of them changing
   but only download the part(s) that change." Today one `VERSION` in `sw.js`
