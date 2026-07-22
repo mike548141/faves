@@ -95,11 +95,13 @@ function contactCard(r) {
     );
   }
 
-  // Pickup address — hand off to the device's own maps app (see geo.js).
+  // Pickup address — hand off to the maps app for *driving directions* from
+  // the viewer's location, so it shows the real drive time (see geo.js).
   if (r.address) {
     const href = mapsUrl(r);
-    // Only http(s) links open a browser tab; a geo:/maps: scheme launches
-    // an app in place, where target/rel are meaningless.
+    // All handoffs are http(s) universal links now (they open the native maps
+    // app on mobile, a browser on desktop), so target/rel apply. Kept as a
+    // guard in case a non-http scheme returns here again.
     const web = href.startsWith("http");
     rows.push(
       el("a", { className: "contact-row", href, ...(web ? { rel: "noopener", target: "_blank" } : {}) }, [

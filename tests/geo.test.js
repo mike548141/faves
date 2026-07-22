@@ -31,28 +31,34 @@ test("detectPlatform: empty navigator → other, never throws", () => {
   assert.equal(detectPlatform({}), "other");
 });
 
-test("apple + coords → maps.apple.com pin at the exact lat,lng", () => {
-  const url = mapsUrlFor(VENUE, "apple");
-  assert.match(url, /^https:\/\/maps\.apple\.com\/\?ll=-41\.2931,174\.77551&q=/);
-  assert.match(url, /q=KK%20Malaysian$/);
+test("apple + coords → Apple Maps driving directions to the exact lat,lng", () => {
+  // daddr = destination, dirflg=d = drive; no saddr so it routes from the
+  // viewer's current location. The maps app then shows the real drive time.
+  assert.equal(mapsUrlFor(VENUE, "apple"), "https://maps.apple.com/?daddr=-41.2931,174.77551&dirflg=d");
 });
 
-test("android + coords → geo: URI handing off to the default maps app", () => {
-  const url = mapsUrlFor(VENUE, "android");
-  assert.equal(url, "geo:-41.2931,174.77551?q=-41.2931,174.77551(KK%20Malaysian)");
+test("android + coords → Google Maps driving directions to the coords", () => {
+  assert.equal(
+    mapsUrlFor(VENUE, "android"),
+    "https://www.google.com/maps/dir/?api=1&destination=-41.2931,174.77551&travelmode=driving"
+  );
 });
 
-test("other + coords → Google Maps web with coords", () => {
-  assert.equal(mapsUrlFor(VENUE, "other"), "https://www.google.com/maps/search/?api=1&query=-41.2931,174.77551");
+test("other + coords → Google Maps driving directions (desktop)", () => {
+  assert.equal(
+    mapsUrlFor(VENUE, "other"),
+    "https://www.google.com/maps/dir/?api=1&destination=-41.2931,174.77551&travelmode=driving"
+  );
 });
 
-test("no coordinates → search by address on every platform", () => {
-  assert.match(mapsUrlFor(NO_COORDS, "apple"), /^https:\/\/maps\.apple\.com\/\?q=1%20Nowhere/);
-  assert.match(mapsUrlFor(NO_COORDS, "android"), /^geo:0,0\?q=1%20Nowhere/);
-  assert.match(mapsUrlFor(NO_COORDS, "other"), /query=1%20Nowhere/);
+test("no coordinates → directions to the address text on every platform", () => {
+  assert.match(mapsUrlFor(NO_COORDS, "apple"), /^https:\/\/maps\.apple\.com\/\?daddr=1%20Nowhere.*&dirflg=d$/);
+  assert.match(mapsUrlFor(NO_COORDS, "android"), /^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&destination=1%20Nowhere/);
+  assert.match(mapsUrlFor(NO_COORDS, "other"), /destination=1%20Nowhere/);
 });
 
-test("non-http (geo:) links are distinguishable so the UI can skip target/rel", () => {
-  assert.ok(!mapsUrlFor(VENUE, "android").startsWith("http"));
-  assert.ok(mapsUrlFor(VENUE, "apple").startsWith("http"));
+test("every handoff is an http(s) link (the UI adds target/rel to those)", () => {
+  assert.ok(mapsUrlFor(VENUE, "apple").startsWith("https"));
+  assert.ok(mapsUrlFor(VENUE, "android").startsWith("https"));
+  assert.ok(mapsUrlFor(VENUE, "other").startsWith("https"));
 });

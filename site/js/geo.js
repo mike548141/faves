@@ -1,8 +1,18 @@
-// Native maps handoff. Tapping a venue's address should open the phone's
-// *own* maps app — Apple Maps on iOS/macOS, the default maps app on
-// Android — not force everyone through one vendor's website. We use exact
-// coordinates when the venue has them (see lat/lng in the schema) and fall
-// back to the postal address otherwise.
+// Native maps handoff. Tapping a venue's address opens the phone's maps app
+// with *driving directions* to the venue from the viewer's current location —
+// so the maps app shows the real, live drive time (a live in-app routed time
+// needs a keyed external directions API, which breaks offline/zero-dep; see
+// ADR 0010). We use exact coordinates when the venue has them (see lat/lng in
+// the schema) and fall back to the postal address otherwise.
+//
+// Directions form per platform:
+//   apple   → maps.apple.com ?daddr=…&dirflg=d  (Apple Maps; dirflg=d = drive)
+//   android → google.com/maps/dir/ ?api=1&destination=…&travelmode=driving
+//   other   → same Google Maps directions link (opens on desktop)
+// Omitting the origin lets each maps app default to "current location". This
+// supersedes the earlier pin-drop handoff (ADR 0005): on Android that meant
+// giving up the vendor-neutral geo: chooser, but geo: has no directions mode,
+// and drive time is the thing owners asked for (ROADMAP Theme 2).
 //
 // The logic is split so it can be unit-tested without a browser:
 // detectPlatform() takes an injectable navigator; mapsUrlFor() is pure.
@@ -25,9 +35,15 @@ export function detectPlatform(nav) {
 
 const hasCoords = (r) => typeof r.lat === "number" && typeof r.lng === "number";
 
+// Google Maps' universal directions link; used for Android and desktop. The
+// destination is coords when we have them (precise) or address text otherwise.
+const googleDir = (dest) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=driving`;
+
 /**
- * Build a maps URL for a venue on a given platform ("apple"|"android"|
- * "other"). Pure — no globals — so it's directly testable.
+ * Build a driving-directions maps URL for a venue on a given platform
+ * ("apple"|"android"|"other"), from the viewer's current location (origin
+ * omitted). Pure — no globals — so it's directly testable.
  */
 export function mapsUrlFor(r, platform) {
   const name = r.name || "";
@@ -35,23 +51,16 @@ export function mapsUrlFor(r, platform) {
   if (hasCoords(r)) {
     const ll = `${r.lat},${r.lng}`;
     if (platform === "apple") {
-      return `https://maps.apple.com/?ll=${ll}&q=${encodeURIComponent(name)}`;
+      // dirflg=d = driving; no saddr → Apple Maps routes from current location.
+      return `https://maps.apple.com/?daddr=${ll}&dirflg=d`;
     }
-    if (platform === "android") {
-      // geo: hands off to the device's default maps app; the (Name) labels
-      // the dropped pin.
-      return `geo:${ll}?q=${ll}(${encodeURIComponent(name)})`;
-    }
-    return `https://www.google.com/maps/search/?api=1&query=${ll}`;
+    return googleDir(ll);
   }
-  // No coordinates: search by address text.
+  // No coordinates: route to the address text instead.
   if (platform === "apple") {
-    return `https://maps.apple.com/?q=${encodeURIComponent(label)}`;
+    return `https://maps.apple.com/?daddr=${encodeURIComponent(label)}&dirflg=d`;
   }
-  if (platform === "android") {
-    return `geo:0,0?q=${encodeURIComponent(label)}`;
-  }
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(label)}`;
+  return googleDir(encodeURIComponent(label));
 }
 
 /** Convenience: detect the running platform and build the URL. */
