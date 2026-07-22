@@ -42,90 +42,45 @@ its tunable distance dials; schema coordinates, native-maps handoff (ADR 0005),
 and the "📍 Near me" distance-sorted list. A real tile-map view was ruled out on
 the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-**Now all shipped** (recent items retained here for context; a future harvest
-moves them to `ROADMAP-DONE.md`):
+**Now all shipped** — three route/reachability items landed 2026-07-22/23;
+verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 - ✅ **Pick along a route** `[L][constraint]` — **shipped 2026-07-23** (ADR
-  0014), both recommended parts. **(a) Offline least-detour sort** (`site/js/
-  route.js`): rank venues by added distance `dist(o,v)+dist(v,d)−dist(o,d)`
-  (pure haversine, clamped ≥0 — the ROADMAP's preferred cost, honest at the
-  behind-origin / past-destination edges perpendicular distance mishandles).
-  Multi-location venues use their **best branch for the trip** (least detour, not
-  nearest to origin). Detour **leads** the sort, availability is the secondary
-  key (headline-metric-leads, like "Nearest first"); favourites are tiebreak only
-  (no off-route boost); recipes pinned, stubs/coordless sink. Cards show "↩ +1.2
-  km detour" / "On your way" + "~N min added", flagged straight-line. **(b)
-  Routed maps handoff** (`geo.routeMapsUrlFor`): a per-card "🧭 Route via maps"
-  hands origin→venue→dest to the maps app — **Google honours an intermediate
-  waypoint** (real three-point road route); **Apple Maps' URL scheme has no
-  waypoint param**, so it honestly routes to the venue. **Destination input:** a
-  suburb (its venues' **centroid**) or a specific place, from data we already
-  hold — **no geocoder, no stored address** (free-text and a persisted "Home"
-  preset both rejected, ADR 0014). UI: a list-toggle beside "Near me" + a
-  dismissible destination `<select>`; the two share one origin as mutually
-  exclusive sort modes. **Live routed corridor stays ✗** (routing API =
-  external/keyed/paid → breaks offline/zero-dep; deferred with the no-backend
-  items). The "Pick for us" shuffle is unchanged (still the Near-me pool). New
-  JS precached; `node --test` +23 route cases.
-
-- ✅ **Drive time from me to a venue** `[M]` — **shipped 2026-07-22**. Both
-  recommended parts: (a) the address-row maps handoff now requests *driving
-  directions* from the viewer's location (Apple `daddr=…&dirflg=d`; Android/
-  desktop Google Maps `dir/?…&travelmode=driving`), so the maps app shows the
-  real, live drive time (`site/js/geo.js`, `site/js/menu.js`); (b) a rough
-  "~N min drive" hint on Near-me home cards from the haversine distance
-  (`estimateDriveMinutes`/`formatDriveTime` in `site/js/distance.js`, rendered
-  muted + "~"). A live in-app routed time stays **✗** on the offline/keyed-API
-  constraint. Rationale + rejected alternatives → ADR 0010. Android dropped the
-  vendor-neutral `geo:` pin (it has no directions mode).
+  0014): offline least-detour sort (`site/js/route.js`) + routed maps handoff
+  (`geo.routeMapsUrlFor`); suburb-centroid or specific-place destination, no
+  geocoder, no stored address. Live routed corridor stays ✗ (keyed/paid API).
+  Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+- ✅ **Drive time from me to a venue** `[M]` — **shipped 2026-07-22** (ADR
+  0010): driving-directions maps handoff + a "~N min drive" haversine hint on
+  Near-me cards. Live in-app routed time stays ✗. Detail →
+  [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - ✅ **Restaurants with multiple locations** `[M][schema]` — **shipped
-  2026-07-22** (shape (a), ADR 0011). One record per venue with an optional
-  `locations: [{label?, address, lat, lng, phone, hours}]` array sharing the
-  name/menu/cuisine; single-location records unchanged. `site/js/locations.js`
-  reconciles both shapes and resolves the **nearest** branch, so "Near me"
-  distance, the drive-time hint, the card's open/closed badge and the maps
-  handoff all use it (the **primary** branch when location is unknown — not
-  "any branch open", which would fight the distance shown). The menu screen
-  lists every branch, nearest first, each with its own directions link, phone
-  and hours (`site/js/menu.js`); `data.js` normalises the primary branch to the
-  top level so existing consumers keep working; `validate.py` validates the
-  branches. Kaffee Eis + Gong Cha converted to their one verified branch each —
-  **second branches deferred** (need real addresses + a dev-time geocode; a
-  content session appends them, no code change). `ba4fdea`, `eb23bbf`,
-  `8739e7a`.
+  2026-07-22** (ADR 0011, `site/js/locations.js`): optional per-venue
+  `locations[]`, nearest-branch resolution across Near-me/drive-time/open-badge/
+  maps-handoff. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+  **Still open:** Kaffee Eis + Gong Cha's **second branches** — need real
+  addresses + a dev-time geocode; a content session appends them, no code change.
 
-## Owner-reported — 2026-07-22 (raw notes, stored verbatim)
+**Parked idea** (from ADR 0014 consequences): a **"surprise me on the way"**
+variant of the Pick-for-us shuffle that draws from the along-route pool rather
+than the Near-me pool — parked, unclaimed, `[S/M]`.
+
+## Owner-reported — 2026-07-22
+
+Both resolved; verbatim raw-note records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 - ✅ **Bug: "Nearest first" sorts 10 km above 2.5 km** — **fixed 2026-07-22**
-  (`566aa20`). Owner report: "Selected 'Nearest first' and restaurants 10km are
-  sorted higher on the list than restaurants 2.5km away. I suspect it is sorting
-  as text rather than as a number." **Root cause was NOT a text sort** — every
-  distance compare was already numeric. The sort-key *order* put availability
-  (and the favourite boost) ahead of distance, so a farther-but-open (or
-  hearted) venue floated above a nearer one, contradicting the "Nearest first"
-  label. Fix: when "Nearest first" is on (origin known), distance leads;
-  availability + favourite tiebreak follow. Default order (no location) is
-  unchanged (open still floats up). Open/closed still shows as a badge + the
-  "Open now" filter; favourites keep their `favBoostKm` pull.
-  ⚠️ **Owner note:** if a *hearted* 10 km venue still shows above a plain 2.5 km
-  one, that's the (deliberate, tested) favourite weighting — say if you'd rather
-  "Nearest first" ignore hearts entirely.
+  (`566aa20`). Root cause was not a text sort: the sort-key order put
+  availability + the favourite boost ahead of distance; the fix makes distance
+  lead when "Nearest first" is on. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+  ⚠️ **Owner question (open):** if a *hearted* 10 km venue still shows above a
+  plain 2.5 km one, that's the (deliberate, tested) favourite weighting — say if
+  you'd rather "Nearest first" ignore hearts entirely.
 - ✅ **Split versioning: app vs config vs data** `[M]` — **shipped 2026-07-23**
-  (claimed 2026-07-22-1209, wt: faves-wave7-split-versioning; ADR 0015). Owner
-  idea: "Should have a different version for the app vs the data it holds vs the
-  configuration so that it can trigger a refresh based of any of them changing
-  but only download the part(s) that change." `sw.js` now has two version
-  constants — `SHELL_VERSION` (html/css/js/icons/webmanifest) and `DATA_VERSION`
-  (index.json + restaurant JSON) — each naming its own cache. Bumping one
-  rebuilds only that cache on install; the other survives, so a data-only menu
-  edit refetches just `site/data/*` and no longer re-downloads the shell.
-  **"Config" axis maps to shell** (`site.webmanifest`); `index.json` is data —
-  no third cache warranted (reasoned in ADR 0015). Upgrade from the pre-split
-  single cache builds-new-before-deleting-old so offline never breaks. Lockstep
-  rule updated everywhere (CLAUDE.md/README/CONTRIBUTING/ARCHITECTURE);
-  `validate.py` warns when data is dirty but `sw.js` isn't; static-shape test
-  guards the split. Runtime upgrade behaviour needs a device pass (steps in
-  ADR 0015).
+  (ADR 0015): `sw.js` split into `SHELL_VERSION` + `DATA_VERSION`, each its own
+  cache, so a data-only menu edit refetches just `site/data/*` and no longer
+  re-downloads the shell. Runtime upgrade behaviour needs a device pass (steps
+  in ADR 0015). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 ## Theme 3 — UX & design pass
 
@@ -137,12 +92,8 @@ moves them to `ROADMAP-DONE.md`):
 >
 > **Still open (small):** self-hosted per-platform **order-online logos**
 > (offline / no-hotlink). ✅ **Cook-at-Home top-right grid position — shipped
-> 2026-07-22:** pure-CSS grid placement puts the recipes card in the top-right
-> cell on the multi-column layout (≥34rem), leaving the prime top-left slot to
-> the first restaurant; ranking still pins it first in the DOM, so on the
-> single-column mobile layout it stays anchored at the top (unchanged). Negative
-> column lines keep it top-right if a third column is ever added.
-> `.card-grid .card-recipes` in `site/css/app.css`.
+> 2026-07-22** (`.card-grid .card-recipes` in `site/css/app.css`): detail →
+> [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 ## Theme 4 — Content growth (ongoing, in parallel)
 
@@ -329,12 +280,11 @@ home-area inference no worse than the live site already allows.
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
 UI toggle first pass (2026-07-09, `reo.js` — chrome only; safety text stays
-English). The pre-launch reo **wording review ran** (2026-07-22,
-[`docs/reviews/2026-07-22-1148-reo-wording-review.md`](reviews/2026-07-22-1148-reo-wording-review.md)):
-all 68 strings reviewed — macrons clean, 59 kept, 0 wording changes, 9 flagged,
-plus a `lang="mi"` per-part a11y fix. ⚠ **honest caveat:** an AI pass, not a
-fluent-speaker sign-off — a native review of the 9 flagged strings remains the
-owner option before public launch. Detail →
+English); and the pre-launch reo **wording review** (✅ ran 2026-07-22 — an AI
+pass over all 68 strings). ⚠ **honest caveat:** the AI pass is **not** a
+fluent-speaker sign-off — a native review of the 9 flagged strings stays the
+**owner option** before public launch
+([review](reviews/2026-07-22-1148-reo-wording-review.md)). Detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 ---
