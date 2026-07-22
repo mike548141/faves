@@ -50,3 +50,7 @@ deliberation those compact docs omit.
 - [0011](0011-multi-location-venues.md) — venues with several branches as
   one record + an optional `locations` array (shared menu), resolved by
   the nearest branch for distance / status / maps; not separate records
+- [0012](0012-device-local-profiles.md) — device-local profiles (per-person
+  hearts on a shared phone): a registry + profile-scoped storage wrapper,
+  scoping favourites + settings by whole store; migration copies old data into
+  the default profile; cross-device sync stays out of scope (Theme 6)

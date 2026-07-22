@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Profiles for a shared phone** — several people can each keep their
+  own favourites and food preferences on one device. A "who's using
+  Faves?" switcher in Settings lets you add someone (first name only),
+  rename, or delete a profile; switching re-applies that person's hearts
+  and — importantly — their own dietary/allergen filter, so nobody
+  browses under someone else's allergy settings. Everything stays on the
+  device, nothing is sent anywhere, and no one else can see it. Your
+  existing favourites and settings become the first profile automatically.
+  (No accounts, no cross-device sync — that would be a separate app.)
 - **Drive time to a venue** — tapping a restaurant's address now opens
   your maps app with **driving directions** from where you are (not just
   a pin), so it shows the real, live drive time. In "Near me" mode each
