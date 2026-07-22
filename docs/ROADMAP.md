@@ -216,7 +216,9 @@ out (no official API). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   Cloudflare Pages deploy (Phase 7).** Dish-level ratings stay curated (Google
   rates places, not dishes).
 
-- **Multiple people's favourites** `[M]` **⚑ (account tension)** — owner
+- [~] **Multiple people's favourites** `[M]` **⚑ (account tension)** (claimed
+  2026-07-22-1120, wt: faves-wave3-local-profiles — the sanctioned
+  device-local-profiles half only; cross-device sync stays out of scope) — owner
   asked (2026-07-08) whether several people could each keep their own
   hearts. On *one shared device*: yes, cheaply — local **profiles** (a
   "who's this?" name picker, each a separate `localStorage` bucket), no
