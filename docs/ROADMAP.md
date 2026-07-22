@@ -44,7 +44,10 @@ the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 **Still open:**
 
-- **Pick along a route** `[L][constraint]` — owner idea (2026-07-08): pick a
+- [~] **Pick along a route** `[L][constraint]` (claimed 2026-07-22-1235, wt:
+  faves-wave6-along-route — building the recorded recommendation: (a) offline
+  least-detour sort + (b) maps-app routed handoff; live routed corridor stays
+  ✗) — owner idea (2026-07-08): pick a
   place *between where I am and a destination I name* (e.g. grab dinner on
   the drive home). The honest constraint read: a true "near the route"
   needs a **routing/directions API** (Google/Mapbox) to get the polyline —
