@@ -3,6 +3,7 @@
 
 import { openStatus } from "./hours.js";
 import { isCheapEats } from "./price.js";
+import { venueHours } from "./locations.js";
 
 /** Unique, sorted areas and cuisines present in the data. */
 export function deriveFacets(restaurants) {
@@ -47,7 +48,10 @@ export function applyFilters(restaurants, state, now = null) {
       return false;
     }
     if (state.openNow && now) {
-      const st = openStatus(r.hours, now).state;
+      // For a multi-location venue this reads the branch that drives its card:
+      // the nearest one when we know the viewer's location (state.origin), else
+      // the primary — so "Open now" and the card badge always agree.
+      const st = openStatus(venueHours(r, state.origin ?? null), now).state;
       if (st !== "open" && st !== "closing-soon") return false;
     }
     // "Cheap eats" — only the $ band (see price.isCheapEats). A venue we can't

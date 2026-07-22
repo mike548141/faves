@@ -217,3 +217,41 @@ test("isAvailableNow: a stub is never available (nothing to order)", () => {
   const openStub = { id: "s", status: "stub", hours: week("09:00", "22:00") };
   assert.equal(isAvailableNow(openStub, { now: MON_NOON }), false);
 });
+
+// --- Multi-location venues (locations[] branches, ADR 0011) ---
+// A two-branch chain: a near branch open at noon, a far branch closed at noon.
+const chain = {
+  id: "chain",
+  locations: [
+    { label: "near", lat: -41.29, lng: 174.78, hours: week("09:00", "22:00") },
+    { label: "far", lat: -45.0312, lng: 168.6626, hours: week("18:00", "22:00") },
+  ],
+};
+
+test("availabilityTier: a multi-location venue uses the nearest branch's hours", () => {
+  // No origin → primary (near, open) → tier 0.
+  assert.equal(availabilityTier(chain, MON_NOON), 0);
+  // Origin by the near branch → its open hours → tier 0.
+  assert.equal(availabilityTier(chain, MON_NOON, CBD), 0);
+  // Origin down in Queenstown → the far branch (closed at noon) → tier 3.
+  assert.equal(availabilityTier(chain, MON_NOON, { lat: -45.03, lng: 168.66 }), 3);
+});
+
+test("rankVenues: distance + card hours come from the nearest branch", () => {
+  const [out] = rankVenues([chain], { now: MON_NOON, origin: CBD });
+  // Distance is to the near branch (~a few km), not the Queenstown one.
+  assert.ok(out.distanceKm < 5);
+  // The card is handed the near branch's (open) hours.
+  assert.deepEqual(out.hours, week("09:00", "22:00"));
+});
+
+test("rankVenues: a nearby-open branch floats the chain above a closed single venue", () => {
+  const order = rankVenues([closedNear, chain], { now: MON_NOON, origin: CBD }).map((r) => r.id);
+  assert.deepEqual(order, ["chain", "closed-near"]);
+});
+
+test("isAvailableNow: a multi-location venue is available when its nearest branch is open", () => {
+  assert.equal(isAvailableNow(chain, { now: MON_NOON, origin: CBD }), true);
+  // Nearest branch is the far one (closed at noon) → not available.
+  assert.equal(isAvailableNow(chain, { now: MON_NOON, origin: { lat: -45.03, lng: 168.66 } }), false);
+});
