@@ -61,16 +61,16 @@ the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   **✗** on constraints. Pairs with the availability ranking (only rank
   open/reachable candidates along the way).
 
-- [~] **Drive time from me to a venue** `[M]` (claimed 2026-07-22-1023, wt: faves-wave1-small-closers) — owner ask (2026-07-08). A live
-  in-app drive time needs a routing API (Google/Mapbox Directions) — an
-  external, keyed, usually-paid call → breaks offline / no-external /
-  no-dependency. Two honest options: (a) **hand off to the maps app**,
-  which already shows real-time drive time — one tweak to the maps link to
-  request *directions* rather than a pin (we have coords); (b) a **rough
-  in-app estimate** from the haversine distance we already compute (÷ an
-  assumed urban speed) — free and offline, but crude (straight-line, no
-  traffic), so label it "~". Recommend (a) for accuracy, optionally (b) as
-  an at-a-glance hint. A live routed time in-app is **✗** on constraints.
+- ✅ **Drive time from me to a venue** `[M]` — **shipped 2026-07-22**. Both
+  recommended parts: (a) the address-row maps handoff now requests *driving
+  directions* from the viewer's location (Apple `daddr=…&dirflg=d`; Android/
+  desktop Google Maps `dir/?…&travelmode=driving`), so the maps app shows the
+  real, live drive time (`site/js/geo.js`, `site/js/menu.js`); (b) a rough
+  "~N min drive" hint on Near-me home cards from the haversine distance
+  (`estimateDriveMinutes`/`formatDriveTime` in `site/js/distance.js`, rendered
+  muted + "~"). A live in-app routed time stays **✗** on the offline/keyed-API
+  constraint. Rationale + rejected alternatives → ADR 0010. Android dropped the
+  vendor-neutral `geo:` pin (it has no directions mode).
 - **Restaurants with multiple locations** `[M][schema]` — owner ask; real
   now (Kaffee Eis, Gong Cha). Two shapes: (a) one record with a
   `locations: [{address, lat, lng, phone, hours}]` array (shared
@@ -90,8 +90,13 @@ the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 >
 > **Still open (small):** self-hosted per-platform **order-online logos**
-> (offline / no-hotlink); [~] the Cook-at-Home **top-right grid position** idea
-> (claimed 2026-07-22-1023, wt: faves-wave1-small-closers).
+> (offline / no-hotlink). ✅ **Cook-at-Home top-right grid position — shipped
+> 2026-07-22:** pure-CSS grid placement puts the recipes card in the top-right
+> cell on the multi-column layout (≥34rem), leaving the prime top-left slot to
+> the first restaurant; ranking still pins it first in the DOM, so on the
+> single-column mobile layout it stays anchored at the top (unchanged). Negative
+> column lines keep it top-right if a third column is ever added.
+> `.card-grid .card-recipes` in `site/css/app.css`.
 
 ## Theme 4 — Content growth (ongoing, in parallel)
 

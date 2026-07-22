@@ -558,6 +558,20 @@ body.faves-view .pick-fab {
   .card-grid {
     grid-template-columns: 1fr 1fr;
   }
+  /* Cook at Home is a standing option, not "the closest venue", so on the
+     multi-column grid it sits in the top-RIGHT cell and the first actual
+     restaurant takes the prime top-left slot (ROADMAP Theme 3). Ranking still
+     pins the recipes card first in the DOM — that's what anchors it to the top
+     on the single-column mobile layout, deliberately unchanged here — so this
+     is pure visual placement: the explicit row1/last-column cell is reserved,
+     and grid auto-flow lays the remaining cards into the other cells starting
+     top-left. Negative column lines target the last column, so it stays
+     top-right even if a wider breakpoint adds a third column later. Reversible:
+     delete this block to restore top-left. */
+  .card-grid .card-recipes {
+    grid-row: 1;
+    grid-column: -2 / -1;
+  }
 }
 
 /* ---------- Cards ---------- */
@@ -649,6 +663,15 @@ body.faves-view .pick-fab {
   font-weight: 700;
 }
 .card-distance::after {
+  content: "·";
+  margin-inline: 0.4em;
+  color: var(--line);
+}
+/* Rough drive-time hint (Near me) sits between distance and area; it takes the
+   same trailing "·" separator the other meta parts use. It stays in the muted
+   meta colour, not the accent — it's an approximate "~" estimate (ADR 0010),
+   so it must not read as confidently as the measured distance. */
+.card-drive::after {
   content: "·";
   margin-inline: 0.4em;
   color: var(--line);
