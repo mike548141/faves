@@ -68,6 +68,37 @@ export function mapsUrl(r) {
   return mapsUrlFor(r, detectPlatform());
 }
 
+/**
+ * "Route via maps" for Pick-along-a-route (ADR 0014): directions from the
+ * viewer's current location, THROUGH a venue, to a named destination — so the
+ * maps app shows the real road route for "grab dinner on the way home".
+ *
+ * Waypoint support differs by platform (checked, not assumed):
+ *   • Google Maps' directions URL (`/maps/dir/?api=1`) honours an intermediate
+ *     `waypoints=` — so origin (current, omitted) → venue (waypoint) → dest is
+ *     a real three-point route. Used on Android and desktop.
+ *   • Apple Maps' URL scheme exposes only `saddr`/`daddr` — NO waypoint
+ *     parameter — so we honestly can't express the stop. On Apple we fall back
+ *     to routing to the venue (origin→venue), same as the plain handoff; the
+ *     destination is dropped rather than faked.
+ * `dest` is {lat,lng} (or null → plain venue directions). Pure — no globals.
+ */
+export function routeMapsUrlFor(place, dest, platform) {
+  const validDest = dest && typeof dest.lat === "number" && typeof dest.lng === "number";
+  // No destination, or a platform that can't express a stop → plain directions.
+  if (!validDest || platform === "apple") return mapsUrlFor(place, platform);
+  const via = hasCoords(place)
+    ? `${place.lat},${place.lng}`
+    : encodeURIComponent(place.address || place.name || "");
+  const to = `${dest.lat},${dest.lng}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${to}&waypoints=${via}&travelmode=driving`;
+}
+
+/** Convenience: detect the platform and build the route-via URL. */
+export function routeMapsUrl(place, dest) {
+  return routeMapsUrlFor(place, dest, detectPlatform());
+}
+
 // The viewer's last-known location ({lat,lng}) from the home screen's "Near me",
 // kept for this browsing session only (sessionStorage) so the menu screen can
 // order a multi-location venue's branches nearest-first and target the nearest

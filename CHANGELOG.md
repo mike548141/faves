@@ -9,6 +9,16 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Pick along a route** — heading somewhere and want dinner on the way?
+  Tap **Along a route** (next to Near me), choose where you're heading —
+  a suburb or one of the places on the list — and Faves re-sorts by how
+  little each venue takes you out of your way ("↩ +1.2 km detour", or
+  "On your way"). Each card gets a **🧭 Route via maps** button that
+  opens your maps app routed *through* that venue to your destination
+  (on Android/desktop it's a real three-stop route; Apple Maps routes to
+  the venue). The detour figure is a straight-line estimate — the maps
+  handoff gives the true road route. Works fully offline: no maps
+  service, no address typed or stored.
 - **Rate your favourites** — you can now give any venue or dish your own
   personal ★ rating (1–3) on its menu. Your ratings stay on your device,
   per person (they follow your profile, like your hearts), and are never

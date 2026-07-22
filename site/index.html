@@ -173,7 +173,21 @@
           <button type="button" id="near-me" class="near-me list-toggle" aria-pressed="false" hidden>
             <span aria-hidden="true">📍</span> <span class="near-me-label" data-i18n="toggle.nearMe">Near me</span>
           </button>
+          <!-- "Along a route": pick a place between here and a destination you
+               name (least-detour sort). JS + geolocation only. -->
+          <button type="button" id="along-route" class="list-toggle" aria-pressed="false" hidden>
+            <span aria-hidden="true">🛣️</span> <span data-i18n="toggle.alongRoute">Along a route</span>
+          </button>
         </div>
+      </div>
+      <!-- Destination picker for "Along a route" (app.js unhides it once the
+           mode is armed). One obvious step: choose where you're heading. -->
+      <div id="route-bar" class="route-bar browse-only" hidden>
+        <div class="select-field route-dest-field">
+          <label class="sr-only" for="route-dest" data-i18n="route.destLabel">Heading to</label>
+          <select id="route-dest" data-active="all"></select>
+        </div>
+        <button type="button" id="route-clear" class="route-clear" data-i18n="route.clear">Done</button>
       </div>
       <p id="geo-status" class="geo-status browse-only" role="status" aria-live="polite" hidden></p>
       <p id="tz-note" class="tz-note browse-only" data-i18n="tz.note" hidden>Open/closed times are New Zealand time.</p>

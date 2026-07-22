@@ -231,6 +231,34 @@ main {
   margin-bottom: var(--space-3);
 }
 
+/* "Along a route" destination picker — appears under the toggles once the
+   mode is armed. The select stretches; a "Done" button dismisses it. */
+.route-bar {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+.route-dest-field {
+  flex: 1;
+  min-width: 0;
+}
+.route-clear {
+  min-height: 44px;
+  padding: 0.5em 1em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.route-clear:active {
+  transform: scale(0.97);
+}
+
 /* "Faves" wordmark doubles as a home button. */
 .app-home-link {
   color: inherit;
@@ -681,6 +709,52 @@ body.faves-view .pick-fab {
   content: "·";
   margin-inline: 0.4em;
   color: var(--line);
+}
+/* "Along a route": the detour headline takes the distance slot (same accent +
+   trailing separator). It's a straight-line estimate (route.js) — the "Route
+   via maps" action gives the real road route. */
+.card-detour {
+  color: var(--accent);
+  font-weight: 700;
+}
+.card-detour::after {
+  content: "·";
+  margin-inline: 0.4em;
+  color: var(--line);
+}
+/* "Route via maps" action, shown only on route-mode cards. A sibling of the
+   card link (a link-in-a-link is invalid), floating bottom-left and z-stacked
+   above; the card reserves bottom padding for it so it never covers the chips. */
+.card:has(.card-route) .card-link {
+  padding-bottom: 3.4rem;
+}
+.card-route {
+  position: absolute;
+  left: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  min-height: 44px;
+  padding: 0.3em 0.8em;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--accent);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+@media (hover: hover) {
+  .card-route:hover {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+.card-route:active {
+  transform: scale(0.97);
 }
 .chip-row {
   display: flex;

@@ -59,3 +59,8 @@ deliberation those compact docs omit.
   per-profile personal ratings; public/crowd ratings stay rejected (three
   non-goals), the online Google-rating edge function is a separate owner-gated
   item; direction ⚑ awaits owner ratification
+- [0014](0014-pick-along-a-route.md) — pick along a route: an offline
+  least-detour sort (added-distance haversine cost, best-branch resolution,
+  detour leads / availability secondary) with suburb-or-place destinations (no
+  geocoder, no stored address), plus a routed maps handoff (Google waypoint;
+  Apple has none → venue-as-destination); live routed corridor stays rejected

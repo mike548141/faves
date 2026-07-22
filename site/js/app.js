@@ -4,9 +4,11 @@
 
 import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
-import { formatDistance, formatDriveTime } from "./distance.js";
+import { formatDistance, formatDriveTime, estimateDriveMinutes } from "./distance.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
-import { rememberOrigin } from "./geo.js";
+import { rankByDetour, bestBranchForRoute, areaCentroids } from "./route.js";
+import { branchCoords, branchAsPlace } from "./locations.js";
+import { rememberOrigin, routeMapsUrl } from "./geo.js";
 import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
@@ -24,7 +26,7 @@ import { initShareApp } from "./share-app.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initBackToTop } from "./to-top.js";
 import { priceBand } from "./price.js";
-import { initReo } from "./reo.js";
+import { initReo, t } from "./reo.js";
 import { el } from "./dom.js";
 import { wireSearchClear } from "./search-clear.js";
 
@@ -87,9 +89,19 @@ function hoursBadge(r, now) {
   return el("p", { className: "card-hours" }, [badge]);
 }
 
-function card(r, now) {
+// "+1.2 km detour" (or a warm "On your way" when a venue sits essentially on
+// the line — a sub-100 m added distance is noise, not a detour worth a figure).
+function detourText(km) {
+  if (km < 0.1) return t("route.onWay", "On your way");
+  return `+${formatDistance(km)} ${t("route.detour", "detour")}`;
+}
+
+function card(r, now, routeCtx = null) {
   const isRecipes = r.kind === "recipes";
   const name = el("h3", { className: "card-name", textContent: r.name });
+  // Route mode: the venue carries a detourKm (least added distance to your
+  // trip); it takes over the distance slot as the decision-relevant fact.
+  const onRoute = routeCtx && r.detourKm != null;
 
   let meta;
   if (isRecipes) {
@@ -97,6 +109,22 @@ function card(r, now) {
     meta = el("p", { className: "card-meta" }, [
       el("span", { className: "card-area", textContent: "Cook at home" }),
       el("span", { textContent: n ? `${n} recipe${n === 1 ? "" : "s"}` : "Recipes coming soon" }),
+    ]);
+  } else if (onRoute) {
+    // Detour is a STRAIGHT-LINE estimate (route.js), never road distance — shown
+    // with the same "~" the drive-hint uses so it reads as approximate. The
+    // "Route via maps" action (below) gives the real road route through here.
+    const detour = el("span", { className: "card-detour", textContent: `↩ ${detourText(r.detourKm)}` });
+    const min = r.detourKm >= 0.1 ? estimateDriveMinutes(r.detourKm) : null;
+    const added =
+      min != null
+        ? el("span", { className: "card-drive", textContent: `~${min} min ${t("route.added", "added")}` })
+        : null;
+    meta = el("p", { className: "card-meta" }, [
+      detour,
+      added,
+      el("span", { className: "card-area", textContent: r.area || "" }),
+      el("span", { textContent: servicesText(r.services) }),
     ]);
   } else {
     // In "Near me" mode a venue carries distanceKm; show it first, as the
@@ -158,8 +186,32 @@ function card(r, now) {
     );
     heart.classList.add("card-heart");
     li.append(link, heart);
+    // Route mode: a "Route via maps" action per card hands origin→venue→
+    // destination to the maps app for the REAL road route (Google honours the
+    // waypoint; Apple has no waypoint param so it routes to the venue — geo.js).
+    const via = onRoute ? routeVia(r, routeCtx) : null;
+    if (via) li.append(via);
   }
   return li;
+}
+
+// A "Route via maps" link for a card in route mode: directions through this
+// venue's best-detour branch to the chosen destination. A sibling of the card
+// link (a link-in-a-link is invalid), so it z-stacks and stays tappable.
+function routeVia(r, { origin, dest }) {
+  const best = bestBranchForRoute(r, origin, dest);
+  if (!branchCoords(best.branch)) return null; // nothing to route through
+  const href = routeMapsUrl(branchAsPlace(r, best.branch), dest);
+  return el(
+    "a",
+    {
+      className: "card-route",
+      href,
+      ...(href.startsWith("http") ? { rel: "noopener", target: "_blank" } : {}),
+      "aria-label": `Route via ${r.name} — opens the maps app`,
+    },
+    [el("span", { "aria-hidden": "true", textContent: "🧭 " }), t("route.via", "Route via maps")]
+  );
 }
 
 function fillSelect(select, values, allLabel, i18nKey) {
@@ -183,8 +235,10 @@ function init(restaurants) {
   fillSelect(areaSel, areas, "All areas", "filter.allAreas");
   fillSelect(cuisineSel, cuisines, "All cuisines", "filter.allCuisines");
 
-  // origin holds the user's {lat, lng} once "Near me" is on; null otherwise.
-  const state = { ...DEFAULT_FILTERS, origin: null };
+  // origin holds the user's {lat, lng} once "Near me" (or "Along a route") is
+  // on; null otherwise. dest holds the {lat, lng, label} destination once a
+  // route is chosen; origin + dest together switch the sort to least-detour.
+  const state = { ...DEFAULT_FILTERS, origin: null, dest: null };
 
   // Venues you've hearted, or that hold a dish you've hearted — a favourite
   // dish lifts its whole venue. Flattened to venue ids for the ranker.
@@ -193,18 +247,31 @@ function init(restaurants) {
   function render() {
     const now = nzNow(); // one clock read per render: filter, rank and cards
     let shown = applyFilters(restaurants, state, now);
-    // Default order floats open/favourite/nearby venues up, sinks
-    // closed/faraway ones; distance refines it once "Near me" gives an origin.
-    // The favourite pull + reachable radius are the viewer's own dials.
     const { favBoostKm, farKm } = settings.get();
-    shown = rankVenues(shown, {
-      now,
-      origin: state.origin,
-      favouriteIds: favouriteVenueIds(),
-      favBoostKm,
-      farKm,
-    });
-    listEl.replaceChildren(...shown.map((r) => card(r, now)));
+    // "Along a route" (origin + a destination): rank by least detour, and hand
+    // each card the origin/dest so it can offer a real routed maps handoff.
+    const onRoute = !!(state.origin && state.dest);
+    if (onRoute) {
+      shown = rankByDetour(shown, {
+        now,
+        origin: state.origin,
+        dest: state.dest,
+        favouriteIds: favouriteVenueIds(),
+      });
+    } else {
+      // Default order floats open/favourite/nearby venues up, sinks
+      // closed/faraway ones; distance refines it once "Near me" gives an origin.
+      // The favourite pull + reachable radius are the viewer's own dials.
+      shown = rankVenues(shown, {
+        now,
+        origin: state.origin,
+        favouriteIds: favouriteVenueIds(),
+        favBoostKm,
+        farKm,
+      });
+    }
+    const routeCtx = onRoute ? { origin: state.origin, dest: state.dest } : null;
+    listEl.replaceChildren(...shown.map((r) => card(r, now, routeCtx)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
     const total = restaurants.length;
@@ -233,7 +300,7 @@ function init(restaurants) {
     render();
   });
 
-  wireNearMe(state, render);
+  wireLocation(state, render, restaurants);
 
   // Only a viewer off NZ time needs telling the badges are NZ time.
   if (!viewerOnNzTime()) {
@@ -576,48 +643,74 @@ function wireCheapEats(state, render) {
   wireListToggle("cheap-eats", "cheap", state, render);
 }
 
-// "Near me": sort the list by distance from the device's location. Purely
-// additive — geolocation is feature-detected and the button stays hidden
-// (and the plain list stays) where it's unavailable or blocked.
-function wireNearMe(state, render) {
-  const btn = document.getElementById("near-me");
+// Location modes — "Near me" (distance sort) and "Along a route" (least-detour
+// sort). Both need the device location, so they share one origin; the two
+// buttons are mutually exclusive sort modes (like search vs favourites).
+// Purely additive — geolocation is feature-detected and both controls stay
+// hidden (plain list stays) where it's unavailable or blocked. `state.origin`
+// is the viewer's {lat,lng}; `state.dest` is the chosen destination
+// {lat,lng,label}; `state.routeOpen` is the "choosing a destination" arming
+// state (bar visible, sort still Near-me until a destination lands).
+function wireLocation(state, render, restaurants) {
+  const nearBtn = document.getElementById("near-me");
+  const routeBtn = document.getElementById("along-route");
   const status = document.getElementById("geo-status");
-  if (!btn || !("geolocation" in navigator)) return;
-  btn.hidden = false;
+  const routeBar = document.getElementById("route-bar");
+  const destSel = document.getElementById("route-dest");
+  const clearBtn = document.getElementById("route-clear");
+  if (!nearBtn || !("geolocation" in navigator)) return;
+  nearBtn.hidden = false;
+  if (routeBtn) routeBtn.hidden = false;
+
+  // Destination options come only from data we already hold — a suburb (its
+  // venues' centroid) or a specific place — never free-text (that needs a
+  // geocoder = online API). See ADR 0014.
+  const centroids = new Map(areaCentroids(restaurants).map((a) => [a.area, a]));
+  const byId = new Map(restaurants.map((r) => [r.id, r]));
+  if (destSel) fillDest(destSel, restaurants);
 
   const setStatus = (msg) => {
     status.textContent = msg || "";
     status.hidden = !msg;
   };
-  const setPressed = (on) => {
-    btn.setAttribute("aria-pressed", String(on));
-    btn.querySelector(".near-me-label").textContent = on ? "Nearest first" : "Near me";
-  };
 
-  btn.addEventListener("click", () => {
-    if (state.origin) {
-      // Toggle off → back to the curated order.
-      state.origin = null;
-      rememberOrigin(null); // the menu screen forgets it too
-      setPressed(false);
+  function syncUI() {
+    const routing = !!(state.origin && state.dest);
+    const nearOnly = !!state.origin && !state.dest && !state.routeOpen;
+    nearBtn.setAttribute("aria-pressed", String(nearOnly));
+    nearBtn.querySelector(".near-me-label").textContent = nearOnly ? "Nearest first" : "Near me";
+    if (routeBtn) routeBtn.setAttribute("aria-pressed", String(!!state.routeOpen));
+    if (routeBar) routeBar.hidden = !state.routeOpen;
+    if (routing) {
+      setStatus(`Sorted by detour on the way to ${state.dest.label} — straight-line estimate.`);
+    } else if (state.routeOpen) {
+      setStatus("Choose where you’re heading.");
+    } else if (state.origin) {
+      setStatus("Sorted by distance from you.");
+    } else {
       setStatus("");
-      render();
-      return;
     }
-    btn.disabled = true;
+  }
+
+  // Get the device location (reusing what we already have), then continue.
+  function withOrigin(after) {
+    if (state.origin) return after();
+    nearBtn.disabled = true;
+    if (routeBtn) routeBtn.disabled = true;
     setStatus("Finding your location…");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        btn.disabled = false;
+        nearBtn.disabled = false;
+        if (routeBtn) routeBtn.disabled = false;
         state.origin = { lat: coords.latitude, lng: coords.longitude };
         rememberOrigin(state.origin); // let the menu screen order branches nearest-first
-        setPressed(true);
-        setStatus("Sorted by distance from you.");
-        render();
+        after();
       },
       (err) => {
-        btn.disabled = false;
-        setPressed(false);
+        nearBtn.disabled = false;
+        if (routeBtn) routeBtn.disabled = false;
+        state.routeOpen = false; // couldn't arm a route without a location
+        syncUI();
         // Denied is the common, non-error case; be matter-of-fact.
         setStatus(
           err.code === err.PERMISSION_DENIED
@@ -627,7 +720,109 @@ function wireNearMe(state, render) {
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
     );
+  }
+
+  function clearLocation() {
+    state.origin = null;
+    state.dest = null;
+    state.routeOpen = false;
+    if (destSel) destSel.value = "";
+    rememberOrigin(null); // the menu screen forgets it too
+    syncUI();
+    render();
+  }
+
+  nearBtn.addEventListener("click", () => {
+    // Currently plain Near me → turn location off entirely.
+    if (state.origin && !state.dest && !state.routeOpen) return clearLocation();
+    // Otherwise switch to (plain) Near me: drop any route, reuse/get origin.
+    state.dest = null;
+    state.routeOpen = false;
+    if (destSel) destSel.value = "";
+    withOrigin(() => {
+      syncUI();
+      render();
+    });
   });
+
+  if (routeBtn) {
+    routeBtn.addEventListener("click", () => {
+      if (state.routeOpen) {
+        // Turn the route off; fall back to plain Near me (origin persists).
+        state.routeOpen = false;
+        state.dest = null;
+        if (destSel) destSel.value = "";
+        syncUI();
+        render();
+        return;
+      }
+      // Arm the route: need a location, then reveal the destination picker.
+      withOrigin(() => {
+        state.routeOpen = true;
+        syncUI();
+        render();
+        if (destSel) destSel.focus();
+      });
+    });
+  }
+
+  if (destSel) {
+    destSel.addEventListener("change", () => {
+      state.dest = resolveDest(destSel.value, centroids, byId);
+      syncUI();
+      render();
+    });
+  }
+  // An explicit way out of the destination bar (mirrors the route toggle off).
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      state.routeOpen = false;
+      state.dest = null;
+      if (destSel) destSel.value = "";
+      syncUI();
+      render();
+    });
+  }
+}
+
+// Populate the destination <select>: a placeholder, then suburbs (centroids)
+// and specific places, grouped. Values are tagged "area:<name>" / "venue:<id>"
+// so the change handler knows which map to resolve against.
+function fillDest(destSel, restaurants) {
+  const ph = el("option", { value: "", textContent: "Where are you heading?" });
+  ph.dataset.i18n = "route.destPlaceholder";
+  destSel.append(ph);
+  const areas = areaCentroids(restaurants);
+  if (areas.length) {
+    const og = el("optgroup", { label: "Suburbs" });
+    for (const a of areas) {
+      og.append(el("option", { value: `area:${a.area}`, textContent: a.area }));
+    }
+    destSel.append(og);
+  }
+  const places = restaurants.filter(
+    (r) => r.kind !== "recipes" && typeof r.lat === "number" && typeof r.lng === "number"
+  );
+  if (places.length) {
+    const og = el("optgroup", { label: "Places" });
+    for (const v of places) {
+      og.append(el("option", { value: `venue:${v.id}`, textContent: v.name }));
+    }
+    destSel.append(og);
+  }
+}
+
+// Resolve a destination select value to {lat,lng,label}, or null (placeholder).
+function resolveDest(val, centroids, byId) {
+  if (val && val.startsWith("area:")) {
+    const a = centroids.get(val.slice(5));
+    return a ? { lat: a.lat, lng: a.lng, label: a.area } : null;
+  }
+  if (val && val.startsWith("venue:")) {
+    const v = byId.get(val.slice(6));
+    return v && typeof v.lat === "number" ? { lat: v.lat, lng: v.lng, label: v.name } : null;
+  }
+  return null;
 }
 
 loadRestaurants()
