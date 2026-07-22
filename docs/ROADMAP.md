@@ -195,7 +195,10 @@ out (no official API). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   and a health-claim risk. Realistic path: compute it only where we own
   the recipe (Cook-at-Home) or the venue supplies it. Don't fake
   restaurant nutrition. Feeds Theme 6.
-- **Ratings / feedback** `[M]` **⚑** — public crowd ratings need a
+- [~] **Ratings / feedback** `[M]` **⚑** (claimed 2026-07-22-1145, wt:
+  faves-wave4-local-ratings — building the recorded recommendation (a)+(b):
+  (b) in full, (a) as schema+render only, no invented rating data; owner
+  ratification of the direction still owed) — public crowd ratings need a
   backend + moderation + accounts, breaking three non-goals. Two honest
   options that don't: (a) **curated household rating** — extend `picks`
   into a 1–3 scale in the data (still ours, still static); (b)
