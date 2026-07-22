@@ -79,6 +79,13 @@ reversible in an afternoon.
   ],
   "services": ["dine-in", "takeaway"],
   "hours": null,                     // null, or a full week (see below)
+  "locations": [                     // OPTIONAL: for a venue with several branches
+    { "label": "Courtenay Place",    //   sharing this name/menu (see "Multi-location"
+      "address": "…", "lat": -41.29, //   below + ADR 0011). When present, the branches
+      "lng": 174.78, "phone": "…",   //   carry address/lat/lng/phone/hours — those five
+      "hours": { /* week */ } }       //   fields must then be ABSENT at the top level.
+  ],
+
   "image": null,                     // optional self-hosted card photo, e.g. "img/kk/hero.jpg"
   "alt": null,                       // required when image is set (a11y)
   "vibe": ["cheap-and-cheerful"],    // free-form chips shown on cards
@@ -167,13 +174,17 @@ UI must never present absence of an allergen tag as "allergen-free".
   hours engine (`site/js/hours.js`) computes a live open/closed status
   from this in **Pacific/Auckland** time (not the viewer's clock), and a
   grouped weekly display; see ADR 0006. That status also drives the home
-  list's **default order** (`site/js/ranking.js`, sort key: reachable →
-  availability → favourite-boosted distance → favourite tiebreak → curated):
-  favourites lift within a tier via a *weighted* metric (a favourite counts
-  as `favBoostKm` nearer, not an outright win), and a known location sinks
-  anything past a reachable radius (`farKm`). Both distances are
-  viewer-tunable (`settings.js`, device-local); "Pick for us" shuffles only
-  the available set.
+  list ordering (`site/js/ranking.js`), whose **primary key depends on mode**:
+  the **default order** (no location) is reachable → availability →
+  favourite-boosted distance → favourite tiebreak → curated, floating the
+  places you can order from *now* up; but with **"Nearest first"** on (a known
+  origin) distance leads — reachable → favourite-boosted distance →
+  availability → tiebreak → curated — so the toggle honours its label rather
+  than floating a farther-but-open venue above a nearer one. Favourites lift
+  via a *weighted* metric (a favourite counts as `favBoostKm` nearer, not an
+  outright win), and a known location sinks anything past a reachable radius
+  (`farKm`). Both distances are viewer-tunable (`settings.js`, device-local);
+  "Pick for us" shuffles only the available set.
 - `image` (venue card photo, or a menu item's dish photo) is an optional
   **self-hosted** path — no hotlinking (offline / no-external-request
   rule); store under `site/img/`. Photos are excluded from the transfer
@@ -200,6 +211,22 @@ UI must never present absence of an allergen tag as "allergen-free".
   address with a dev-time tool (OpenStreetMap Nominatim) — never invent
   them; a wrong pin is worse than no pin (an absent pair just searches by
   text). `validate.py` warns when a venue has none.
+- `locations` (**multi-location venues**, ADR 0011) is an optional array of
+  branches that share this record's name/menu/cuisine, each `{ label?,
+  address, lat, lng, phone, hours }` — same field rules as the top-level
+  equivalents (`label` an optional non-empty string). When present it is the
+  source of truth: the per-branch fields (`address`/`lat`/`lng`/`phone`/
+  `hours`) must **not** also sit at the top level, and `area`/`city` stay
+  shared at the top. A single-location venue omits `locations` entirely and
+  keeps those fields at the top level — fully backward compatible. Resolution
+  (`site/js/locations.js`): the loader (`data.js`) projects the first (primary)
+  branch to the top level so every consumer keeps working; "Near me" distance,
+  the drive-time hint, the card's open/closed status and the maps handoff then
+  use the **nearest** branch when the viewer's location is known, and the
+  **primary** branch when it isn't (never "any branch open" — that would
+  contradict the distance shown). The menu screen lists every branch, nearest
+  first, each with its own directions link, phone and hours; a one-branch array
+  renders identically to a flat single-location venue.
 
 ### Client-side personal layer (order tally, favourites)
 
