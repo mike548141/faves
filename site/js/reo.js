@@ -45,6 +45,16 @@ const MI = {
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",
   "toggle.nearMe": "E tata ana",
+  "toggle.alongRoute": "I te ara", // draft — "on the way / along the route"
+  // "Along a route" destination picker + card labels (neutral chrome; the
+  // detour figure itself is an English-interpolated string, unswapped)
+  "route.destLabel": "Kei te ahu ki", // draft — "heading to"
+  "route.destPlaceholder": "Kei te ahu koe ki hea?", // draft — "where are you heading?"
+  "route.clear": "Kua oti", // draft — "done"
+  "route.via": "Ara mā te mapi", // draft — "route via the map"
+  "route.detour": "peka", // draft — "+1.2 km peka" (a turn-off / detour)
+  "route.onWay": "Kei tō ara", // draft — "on your way"
+  "route.added": "tāpiri", // draft — "~2 min tāpiri" (added)
   // Service segmented control
   "service.all": "Ngā wāhi katoa",
   "service.takeaway": "Mau atu",
