@@ -40,6 +40,11 @@ content freshness separately from this file.
   branch, nearest first, each with its own directions link and hours.
 
 ### Fixed
+- **Te reo mode no longer mispronounces English for screen-reader users** —
+  switching the app to Te Reo Māori used to mark the whole page as Māori, so a
+  screen reader read the (deliberately English) menu, venue, and allergen text
+  with Māori pronunciation. Now only the chrome actually shown in te reo is
+  marked as Māori; everything else stays English, as it reads.
 - **"Nearest first" now really puts the nearest first** — it was floating
   open (and favourited) venues above closer ones, so a 10 km place could
   sit above a 2.5 km one. With "Nearest first" on, distance now leads;
