@@ -10,7 +10,7 @@
 // The deep-link href is derived at render time from the shared slug, so a
 // favourited dish always anchors to the exact row the menu screen builds.
 
-import { safeStorage } from "./store.js";
+import { profileScopedStorage } from "./profiles.js";
 import { slug } from "./slug.js";
 
 const KEY = "faves.favourites.v1";
@@ -139,4 +139,6 @@ export function createFavourites(storage) {
   };
 }
 
-export const favourites = createFavourites(safeStorage());
+// Per-profile: hearts belong to whoever is browsing. profileScopedStorage
+// namespaces the key by the active profile, so a switch + reload() re-points it.
+export const favourites = createFavourites(profileScopedStorage());
