@@ -42,27 +42,31 @@ its tunable distance dials; schema coordinates, native-maps handoff (ADR 0005),
 and the "📍 Near me" distance-sorted list. A real tile-map view was ruled out on
 the offline/no-CDN constraint. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-**Still open:**
+**Now all shipped** (recent items retained here for context; a future harvest
+moves them to `ROADMAP-DONE.md`):
 
-- [~] **Pick along a route** `[L][constraint]` (claimed 2026-07-22-1235, wt:
-  faves-wave6-along-route — building the recorded recommendation: (a) offline
-  least-detour sort + (b) maps-app routed handoff; live routed corridor stays
-  ✗) — owner idea (2026-07-08): pick a
-  place *between where I am and a destination I name* (e.g. grab dinner on
-  the drive home). The honest constraint read: a true "near the route"
-  needs a **routing/directions API** (Google/Mapbox) to get the polyline —
-  external, keyed, usually paid → breaks offline / no-dependency, same wall
-  as live drive-time (Theme 5). Zero-dep approximations we *can* do with the
-  coords we already hold: (a) rank venues by how little they **detour** the
-  straight line origal→destination (perpendicular distance to the segment,
-  or `dist(origin,v)+dist(v,dest) − dist(origin,dest)` as an added-distance
-  cost) — pure haversine maths, offline, no API; crude vs real roads but
-  useful; (b) hand the two endpoints to the **maps app** for a real routed
-  search (the geo.js handoff pattern). The destination input could reuse the
-  geocoder (dev-time) or accept a picked venue. Recommend (a) as an offline
-  "least-detour" sort mode + (b) for accuracy — a live routed corridor is
-  **✗** on constraints. Pairs with the availability ranking (only rank
-  open/reachable candidates along the way).
+- ✅ **Pick along a route** `[L][constraint]` — **shipped 2026-07-23** (ADR
+  0014), both recommended parts. **(a) Offline least-detour sort** (`site/js/
+  route.js`): rank venues by added distance `dist(o,v)+dist(v,d)−dist(o,d)`
+  (pure haversine, clamped ≥0 — the ROADMAP's preferred cost, honest at the
+  behind-origin / past-destination edges perpendicular distance mishandles).
+  Multi-location venues use their **best branch for the trip** (least detour, not
+  nearest to origin). Detour **leads** the sort, availability is the secondary
+  key (headline-metric-leads, like "Nearest first"); favourites are tiebreak only
+  (no off-route boost); recipes pinned, stubs/coordless sink. Cards show "↩ +1.2
+  km detour" / "On your way" + "~N min added", flagged straight-line. **(b)
+  Routed maps handoff** (`geo.routeMapsUrlFor`): a per-card "🧭 Route via maps"
+  hands origin→venue→dest to the maps app — **Google honours an intermediate
+  waypoint** (real three-point road route); **Apple Maps' URL scheme has no
+  waypoint param**, so it honestly routes to the venue. **Destination input:** a
+  suburb (its venues' **centroid**) or a specific place, from data we already
+  hold — **no geocoder, no stored address** (free-text and a persisted "Home"
+  preset both rejected, ADR 0014). UI: a list-toggle beside "Near me" + a
+  dismissible destination `<select>`; the two share one origin as mutually
+  exclusive sort modes. **Live routed corridor stays ✗** (routing API =
+  external/keyed/paid → breaks offline/zero-dep; deferred with the no-backend
+  items). The "Pick for us" shuffle is unchanged (still the Near-me pool). New
+  JS precached; `node --test` +23 route cases.
 
 - ✅ **Drive time from me to a venue** `[M]` — **shipped 2026-07-22**. Both
   recommended parts: (a) the address-row maps handoff now requests *driving
