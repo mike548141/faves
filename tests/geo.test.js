@@ -5,10 +5,12 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { detectPlatform, mapsUrlFor } from "../site/js/geo.js";
+import { detectPlatform, mapsUrlFor, routeMapsUrlFor } from "../site/js/geo.js";
 
 const VENUE = { name: "KK Malaysian", address: "54 Ghuznee St, Wellington", lat: -41.2931, lng: 174.77551 };
 const NO_COORDS = { name: "Somewhere", address: "1 Nowhere St, Wellington" };
+const NO_ADDRESS = { name: "Coordsonly", lat: -41.2931, lng: 174.77551 };
+const ADDR_ENC = encodeURIComponent(VENUE.address);
 
 test("detectPlatform: iPhone → apple", () => {
   assert.equal(detectPlatform({ userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)" }), "apple");
@@ -31,34 +33,69 @@ test("detectPlatform: empty navigator → other, never throws", () => {
   assert.equal(detectPlatform({}), "other");
 });
 
-test("apple + coords → Apple Maps driving directions to the exact lat,lng", () => {
-  // daddr = destination, dirflg=d = drive; no saddr so it routes from the
-  // viewer's current location. The maps app then shows the real drive time.
-  assert.equal(mapsUrlFor(VENUE, "apple"), "https://maps.apple.com/?daddr=-41.2931,174.77551&dirflg=d");
+// Owner ruling 2026-07-23 (ADR 0016): the address tap shows the venue on a map
+// (a pin), targeting the STREET ADDRESS string — not our stored lat/lng, which
+// can sit ~100 m off (R & S Satay lands on Garrett St). Maps geocodes the
+// address exactly, so even a venue WITH coords is pinned by its address.
+test("apple → Apple Maps pin at the street address (not the coords)", () => {
+  assert.equal(mapsUrlFor(VENUE, "apple"), `https://maps.apple.com/?q=${ADDR_ENC}`);
 });
 
-test("android + coords → Google Maps driving directions to the coords", () => {
+test("android → Google Maps search pin at the street address", () => {
   assert.equal(
     mapsUrlFor(VENUE, "android"),
-    "https://www.google.com/maps/dir/?api=1&destination=-41.2931,174.77551&travelmode=driving"
+    `https://www.google.com/maps/search/?api=1&query=${ADDR_ENC}`
   );
 });
 
-test("other + coords → Google Maps driving directions (desktop)", () => {
+test("other → Google Maps search pin at the street address (desktop)", () => {
   assert.equal(
     mapsUrlFor(VENUE, "other"),
-    "https://www.google.com/maps/dir/?api=1&destination=-41.2931,174.77551&travelmode=driving"
+    `https://www.google.com/maps/search/?api=1&query=${ADDR_ENC}`
   );
 });
 
-test("no coordinates → directions to the address text on every platform", () => {
-  assert.match(mapsUrlFor(NO_COORDS, "apple"), /^https:\/\/maps\.apple\.com\/\?daddr=1%20Nowhere.*&dirflg=d$/);
-  assert.match(mapsUrlFor(NO_COORDS, "android"), /^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&destination=1%20Nowhere/);
-  assert.match(mapsUrlFor(NO_COORDS, "other"), /destination=1%20Nowhere/);
+test("no address (belt-and-braces) → pin falls back to the coords", () => {
+  // validate.py requires an address, so this only guards a malformed record.
+  assert.equal(mapsUrlFor(NO_ADDRESS, "apple"), "https://maps.apple.com/?q=-41.2931,174.77551");
+  assert.equal(
+    mapsUrlFor(NO_ADDRESS, "android"),
+    "https://www.google.com/maps/search/?api=1&query=-41.2931,174.77551"
+  );
+});
+
+test("address pin still works when a record has no coords at all", () => {
+  const enc = encodeURIComponent(NO_COORDS.address);
+  assert.equal(mapsUrlFor(NO_COORDS, "apple"), `https://maps.apple.com/?q=${enc}`);
+  assert.equal(mapsUrlFor(NO_COORDS, "other"), `https://www.google.com/maps/search/?api=1&query=${enc}`);
 });
 
 test("every handoff is an http(s) link (the UI adds target/rel to those)", () => {
   assert.ok(mapsUrlFor(VENUE, "apple").startsWith("https"));
   assert.ok(mapsUrlFor(VENUE, "android").startsWith("https"));
   assert.ok(mapsUrlFor(VENUE, "other").startsWith("https"));
+});
+
+// --- Route via maps (ADR 0014) — stays ROUTED; venue leg now by address ---
+const DEST = { lat: -41.32, lng: 174.8 }; // a suburb centroid / place: coords only
+
+test("route via (google): real 3-point route, venue waypoint by street address", () => {
+  // origin (current, omitted) → venue (waypoint = address) → destination (coords).
+  assert.equal(
+    routeMapsUrlFor(VENUE, DEST, "android"),
+    `https://www.google.com/maps/dir/?api=1&destination=-41.32,174.8&waypoints=${ADDR_ENC}&travelmode=driving`
+  );
+  assert.equal(routeMapsUrlFor(VENUE, DEST, "other"), routeMapsUrlFor(VENUE, DEST, "android"));
+});
+
+test("route via (apple): no waypoint param → drive to the venue address, dest dropped", () => {
+  // Still directions (the route feature stays routed), not a pin.
+  assert.equal(routeMapsUrlFor(VENUE, DEST, "apple"), `https://maps.apple.com/?daddr=${ADDR_ENC}&dirflg=d`);
+});
+
+test("route via: no destination → plain directions to the venue address", () => {
+  assert.equal(
+    routeMapsUrlFor(VENUE, null, "android"),
+    `https://www.google.com/maps/dir/?api=1&destination=${ADDR_ENC}&travelmode=driving`
+  );
 });

@@ -1,21 +1,32 @@
 // Native maps handoff. Tapping a venue's address opens the phone's maps app
-// with *driving directions* to the venue from the viewer's current location —
-// so the maps app shows the real, live drive time (a live in-app routed time
-// needs a keyed external directions API, which breaks offline/zero-dep; see
-// ADR 0010). We use exact coordinates when the venue has them (see lat/lng in
-// the schema) and fall back to the postal address otherwise.
+// showing the venue *on a map* — a pin at the place, so you can see where it is
+// (and start directions yourself from there). Owner ruling 2026-07-23 backed out
+// the drive-time-directions-on-tap of ADR 0010: a pin is what the address tap
+// should do (ADR 0016).
 //
-// Directions form per platform:
-//   apple   → maps.apple.com ?daddr=…&dirflg=d  (Apple Maps; dirflg=d = drive)
-//   android → google.com/maps/dir/ ?api=1&destination=…&travelmode=driving
-//   other   → same Google Maps directions link (opens on desktop)
-// Omitting the origin lets each maps app default to "current location". This
-// supersedes the earlier pin-drop handoff (ADR 0005): on Android that meant
-// giving up the vendor-neutral geo: chooser, but geo: has no directions mode,
-// and drive time is the thing owners asked for (ROADMAP Theme 2).
+// Crucially the pin targets the **street address string**, not our stored
+// lat/lng. Dev-time geocoded coordinates can sit ~100 m off — proven: R & S
+// Satay's stored coords (-41.29379, 174.7751) land on Garrett St, one street
+// over from its real 148 Cuba St — so a coord-targeted link opens on the wrong
+// street. Maps geocodes the address string exactly, so we hand it the address
+// and fall back to coords only if a record somehow has none (validate.py
+// requires an address, so that path is belt-and-braces). Coords stay for
+// in-app distance maths (ranking, detour) only.
+//
+// Pin form per platform (schemes reasoned about, not assumed):
+//   apple → maps.apple.com/?q=<query>  — Apple Maps treats a q value as a
+//           search: an address string geocodes to a pin; a "lat,lng" q is
+//           parsed as coordinates and pinned.
+//   google/other → google.com/maps/search/?api=1&query=<query>  — the
+//           documented Google Maps "search" URL; a full address (or "lat,lng")
+//           resolves to a single pinned place.
+//
+// The along-a-route "🧭 Route via maps" handoff (routeMapsUrlFor) is a separate,
+// explicitly-routed feature (ADR 0014) and KEEPS its routed form — it just
+// targets the venue leg by address too, same wrong-street reasoning.
 //
 // The logic is split so it can be unit-tested without a browser:
-// detectPlatform() takes an injectable navigator; mapsUrlFor() is pure.
+// detectPlatform() takes an injectable navigator; the URL builders are pure.
 
 /** "apple" | "android" | "other" from a navigator-like object. */
 export function detectPlatform(nav) {
@@ -35,32 +46,31 @@ export function detectPlatform(nav) {
 
 const hasCoords = (r) => typeof r.lat === "number" && typeof r.lng === "number";
 
-// Google Maps' universal directions link; used for Android and desktop. The
-// destination is coords when we have them (precise) or address text otherwise.
+// What Maps should resolve for a place: prefer the street address (geocoded
+// exactly — our stored coords can be ~100 m off; see the header), fall back to
+// raw "lat,lng" only when there's no address, then to the name. Addresses/names
+// are URL-encoded; a bare "lat,lng" keeps its literal comma so Maps parses it as
+// coordinates. Shared by the pin handoff and the route-via waypoint.
+function placeTarget(place) {
+  if (place.address) return encodeURIComponent(place.address);
+  if (hasCoords(place)) return `${place.lat},${place.lng}`;
+  return encodeURIComponent(place.name || "");
+}
+
+// Google Maps' universal directions link; used by the route handoff for the
+// venue leg (and its no-destination fallback) on Android and desktop.
 const googleDir = (dest) =>
   `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=driving`;
 
 /**
- * Build a driving-directions maps URL for a venue on a given platform
- * ("apple"|"android"|"other"), from the viewer's current location (origin
- * omitted). Pure — no globals — so it's directly testable.
+ * Build a "show this place on the map" (pin) URL for a venue on a given platform
+ * ("apple"|"android"|"other"), targeting its street address so Maps geocodes the
+ * exact spot. Pure — no globals — so it's directly testable.
  */
 export function mapsUrlFor(r, platform) {
-  const name = r.name || "";
-  const label = r.address || name;
-  if (hasCoords(r)) {
-    const ll = `${r.lat},${r.lng}`;
-    if (platform === "apple") {
-      // dirflg=d = driving; no saddr → Apple Maps routes from current location.
-      return `https://maps.apple.com/?daddr=${ll}&dirflg=d`;
-    }
-    return googleDir(ll);
-  }
-  // No coordinates: route to the address text instead.
-  if (platform === "apple") {
-    return `https://maps.apple.com/?daddr=${encodeURIComponent(label)}&dirflg=d`;
-  }
-  return googleDir(encodeURIComponent(label));
+  const q = placeTarget(r);
+  if (platform === "apple") return `https://maps.apple.com/?q=${q}`;
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
 }
 
 /** Convenience: detect the running platform and build the URL. */
@@ -73,23 +83,30 @@ export function mapsUrl(r) {
  * viewer's current location, THROUGH a venue, to a named destination — so the
  * maps app shows the real road route for "grab dinner on the way home".
  *
+ * The venue leg targets the street address (Maps geocodes it exactly — same
+ * wrong-street reasoning as the pin handoff, ADR 0016); the destination stays
+ * coords (a suburb centroid has no address). Google's directions params accept
+ * addresses in `destination`/`waypoints` alike, so an encoded address waypoint
+ * is valid.
+ *
  * Waypoint support differs by platform (checked, not assumed):
  *   • Google Maps' directions URL (`/maps/dir/?api=1`) honours an intermediate
  *     `waypoints=` — so origin (current, omitted) → venue (waypoint) → dest is
  *     a real three-point route. Used on Android and desktop.
  *   • Apple Maps' URL scheme exposes only `saddr`/`daddr` — NO waypoint
- *     parameter — so we honestly can't express the stop. On Apple we fall back
- *     to routing to the venue (origin→venue), same as the plain handoff; the
- *     destination is dropped rather than faked.
+ *     parameter — so we honestly can't express the stop. On Apple we route to
+ *     the venue (origin→venue, `daddr` at its address, `dirflg=d` = drive) and
+ *     drop the destination rather than fake it. This is still directions — the
+ *     route feature stays routed even where the pin handoff is now a pin.
  * `dest` is {lat,lng} (or null → plain venue directions). Pure — no globals.
  */
 export function routeMapsUrlFor(place, dest, platform) {
   const validDest = dest && typeof dest.lat === "number" && typeof dest.lng === "number";
-  // No destination, or a platform that can't express a stop → plain directions.
-  if (!validDest || platform === "apple") return mapsUrlFor(place, platform);
-  const via = hasCoords(place)
-    ? `${place.lat},${place.lng}`
-    : encodeURIComponent(place.address || place.name || "");
+  const via = placeTarget(place);
+  // Apple has no waypoint param → route origin→venue (destination dropped).
+  if (platform === "apple") return `https://maps.apple.com/?daddr=${via}&dirflg=d`;
+  // No destination → plain directions to the venue.
+  if (!validDest) return googleDir(via);
   const to = `${dest.lat},${dest.lng}`;
   return `https://www.google.com/maps/dir/?api=1&destination=${to}&waypoints=${via}&travelmode=driving`;
 }

@@ -94,10 +94,10 @@ function callRow(phone) {
   ]);
 }
 
-// Pickup address — hand off to the maps app for *driving directions* from the
-// viewer's location, so it shows the real drive time (see geo.js). `place` is a
-// {name,address,lat,lng} — for a multi-location venue it's the chosen branch, so
-// the directions target that branch, not the primary one.
+// Pickup address — hand off to the maps app to show the venue *on a map* (a pin
+// at its street address; see geo.js / ADR 0016). `place` is a {name,address,lat,
+// lng} — for a multi-location venue it's the chosen branch, so the pin targets
+// that branch's address, not the primary one.
 function addressRow(place) {
   const href = mapsUrl(place);
   // All handoffs are http(s) universal links now (they open the native maps
