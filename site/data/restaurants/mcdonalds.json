@@ -43,6 +43,78 @@
   "vibe": [],
   "picks": [],
   "verified": null,
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Burgers",
+      "items": [
+        { "name": "Big Mac", "price": null },
+        { "name": "Quarter Pounder", "price": null },
+        { "name": "Double Quarter Pounder", "price": null },
+        { "name": "Cheeseburger", "price": null },
+        { "name": "Double Cheeseburger", "price": null },
+        { "name": "Hamburger", "price": null },
+        { "name": "Big Arch", "price": null }
+      ]
+    },
+    {
+      "section": "Chicken & Fish",
+      "items": [
+        { "name": "McChicken", "price": null },
+        { "name": "McCrispy", "price": null },
+        { "name": "Double McCrispy", "price": null },
+        { "name": "McCrispy Bacon Deluxe", "price": null },
+        { "name": "Chicken McNuggets (6 pack)", "price": null },
+        { "name": "Chicken McNuggets (10 pack)", "price": null },
+        { "name": "Chicken McNuggets (20 pack)", "price": null },
+        { "name": "Filet-O-Fish", "price": null }
+      ]
+    },
+    {
+      "section": "Sides",
+      "items": [
+        { "name": "Fries (Small)", "price": null },
+        { "name": "Fries (Medium)", "price": null },
+        { "name": "Fries (Large)", "price": null },
+        { "name": "Hash Brown", "price": null }
+      ]
+    },
+    {
+      "section": "Breakfast",
+      "items": [
+        { "name": "Bacon & Egg McMuffin", "price": null },
+        { "name": "Sausage & Egg McMuffin", "price": null },
+        { "name": "Sausage McMuffin", "price": null },
+        { "name": "Chicken McMuffin", "price": null },
+        { "name": "Massive McMuffin", "price": null },
+        { "name": "Hotcakes", "price": null },
+        { "name": "Big Brekkie Burger", "price": null }
+      ]
+    },
+    {
+      "section": "McCafé",
+      "items": [
+        { "name": "Flat White", "price": null },
+        { "name": "Latte", "price": null },
+        { "name": "Cappuccino", "price": null },
+        { "name": "Mocha", "price": null },
+        { "name": "Long Black", "price": null },
+        { "name": "Hot Chocolate", "price": null },
+        { "name": "Iced Latte", "price": null },
+        { "name": "Iced Mocha", "price": null },
+        { "name": "Iced Chocolate", "price": null }
+      ]
+    },
+    {
+      "section": "Desserts & Shakes",
+      "items": [
+        { "name": "Hot Apple Pie", "price": null },
+        { "name": "Soft Serve Cone", "price": null },
+        { "name": "Hot Fudge Sundae", "price": null },
+        { "name": "McFlurry", "price": null },
+        { "name": "Thickshake", "price": null },
+        { "name": "Frozen Coke", "price": null }
+      ]
+    }
+  ]
 }
