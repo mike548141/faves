@@ -2282,9 +2282,7 @@ body.faves-view .to-top {
   }
   .menu-twocol > .menu-aside {
     grid-area: aside;
-    position: sticky;
-    top: var(--space-3);
-    align-self: start; /* don't stretch to row height, or sticky can't work */
+    align-self: start; /* don't stretch to row height; scrolls at the same rate as the menu column */
   }
   /* First info card sits flush with the top of the menu column beside it. */
   .menu-twocol > .menu-aside > :first-child {

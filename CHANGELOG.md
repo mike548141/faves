@@ -32,6 +32,10 @@ content freshness separately from this file.
   app, so this is how you override it. (ADR 0018)
 
 ### Fixed
+- **The desktop menu's info column now scrolls with the page** instead of
+  sticking in place — a long branch list (e.g. McDonald's) was getting its
+  bottom cut off as the menu scrolled past it. Trade-off: the contact card no
+  longer stays pinned for short single-location asides either.
 - **Searching for a dish now jumps straight to it.** Picking a dish from the
   app-wide search took you to the right menu but left you at the top — you had
   to reload to land on the dish. It now smooth-scrolls to the dish on arrival
