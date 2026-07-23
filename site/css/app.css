@@ -1786,6 +1786,23 @@ body.faves-view .to-top {
 .overflow-item:active {
   background: var(--surface-2);
 }
+/* When Favourites is the active view its row is accent-filled with light
+   (accent-ink) text. The generic hover/active above recolours only the
+   background to a pale tint, stranding that light text on a near-white surface —
+   unreadable, in both themes. Keep the accent fill on hover/press so the label
+   stays legible; a 10% shift toward the theme foreground is the hover cue
+   (--ink flips per theme, so this deepens in light mode and lightens in dark,
+   staying readable against accent-ink either way). */
+@media (hover: hover) {
+  .overflow-item.fav-toggle[aria-pressed="true"]:hover {
+    background: color-mix(in srgb, var(--accent) 90%, var(--ink));
+    color: var(--accent-ink);
+  }
+}
+.overflow-item.fav-toggle[aria-pressed="true"]:active {
+  background: color-mix(in srgb, var(--accent) 90%, var(--ink));
+  color: var(--accent-ink);
+}
 .overflow-item-icon {
   width: 1.4em;
   font-size: 1.1rem;
