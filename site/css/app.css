@@ -2153,7 +2153,10 @@ body.faves-view .to-top {
   margin-top: var(--space-3);
   padding: var(--space-3);
   border: 1px solid var(--line);
-  border-radius: var(--radius-chip);
+  /* A card radius (14px), not --radius-chip (999px): these are content panels,
+     and a full-pill radius curves the corners so far in that the text/buttons
+     crowd the edges. Matches the overflow menu and dialog cards. */
+  border-radius: var(--radius);
   background: var(--surface-2);
 }
 .profile-name-input {
