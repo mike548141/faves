@@ -27,11 +27,18 @@ content freshness separately from this file.
 - **Searching for a dish now jumps straight to it.** Picking a dish from the
   app-wide search took you to the right menu but left you at the top — you had
   to reload to land on the dish. It now scrolls to the dish on arrival.
+- **"Favourites" in the ⋯ menu stays readable on hover.** When the Favourites
+  view was open, hovering or tapping its menu row washed the text out to
+  near-invisible; it now keeps its contrast (both light and dark mode).
+- **Settings profile panels no longer crowd their edges.** The add/rename and
+  delete-confirm boxes used a full-pill corner radius that squeezed the text
+  and buttons against the sides; they now use the standard card radius.
 
 ### Changed
-- **Bigger "back to top" button.** The floating back-to-top control was
-  under-sized against the roomy tablet/desktop layout; it's now larger and
-  scales up past mobile.
+- **Bigger, better-placed "back to top" button.** The floating back-to-top
+  control was under-sized against the roomy tablet/desktop layout; it's now
+  larger, and on a wide screen it sits beside the list/menu instead of off in
+  the far corner where it was easy to miss.
 - **Tapping an address opens the map at the right place again.** Tapping a
   venue's address now drops a **pin** on the map at its street address (rather
   than starting driving directions), and it points at the exact spot — some
