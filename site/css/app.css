@@ -1356,7 +1356,12 @@ body:not(.menu-page) {
    Hidden via the [hidden] attribute (global guard) until scrolled down. */
 .to-top {
   position: fixed;
-  right: var(--space-3);
+  /* Hug the content column's right edge, not the viewport's. The column is
+     `.wrap` = min(100%, 60rem) centred, so its right edge sits (50vw − 30rem)
+     from the viewport right; tuck the button one --space-3 inside that. On
+     narrow screens the term goes ≤ 0 and max() pins it at the viewport gutter.
+     Keeps it in the reader's eye line beside the list/menu on a wide laptop. */
+  right: max(var(--space-3), calc(50vw - 30rem + var(--space-3)));
   bottom: calc(env(safe-area-inset-bottom) + var(--space-3));
   z-index: 12;
   display: inline-flex;

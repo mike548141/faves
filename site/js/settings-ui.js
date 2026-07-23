@@ -367,11 +367,6 @@ export function initSettingsUI() {
       })(),
       lang.group,
 
-      // --- Maps app (address-tap handoff) ---
-      el("h3", { className: "settings-group-title", textContent: "Maps app" }),
-      el("p", { className: "settings-note", textContent: "Which app opens when you tap a venue’s address." }),
-      maps.group,
-
       // --- Food preferences ---
       el("h3", { className: "settings-group-title", textContent: "Food preferences" }),
       el("p", { className: "settings-sub", textContent: "Your dietary needs" }),
@@ -384,6 +379,11 @@ export function initSettingsUI() {
       el("p", { className: "settings-note", textContent: "These shape the home order when “Near me” is on." }),
       fav.row,
       far.row,
+
+      // --- Maps app (address-tap handoff) --- after Distance, per owner pref.
+      el("h3", { className: "settings-group-title", textContent: "Maps app" }),
+      el("p", { className: "settings-note", textContent: "Which app opens when you tap a venue’s address." }),
+      maps.group,
 
       el("div", { className: "settings-actions" }, [resetBtn]),
     ]),
