@@ -15,6 +15,13 @@ content freshness separately from this file.
   dish/venue name, clear of the ♥. (ADR 0019)
 
 ### Added
+- **The app ⋯ menu is now on restaurant pages too** (Favourites, Share, About),
+  not just the home screen — one tap from any menu. It scrolls away with the
+  page like on home.
+- **Multi-location venues show just your nearest branches.** A big chain (e.g.
+  McDonald's) no longer floods the page with every address — it shows the two
+  nearest (within your distance preference), with a "Show all branches" tap for
+  the rest.
 - **McDonald's added** as a multi-branch listing (Courtenay Place, Lambton
   Quay, Bunny Street, Johnsonville, Porirua) using the multi-location feature —
   real addresses and phones, and a menu of the enduring items. Prices show as

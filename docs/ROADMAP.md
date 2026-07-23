@@ -122,9 +122,19 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   but earns no distance pull, so a nearer plain venue always outranks a farther
   hearted one (regression test: hearted 10 km vs plain 2.5 km → 2.5 km wins).
   Default no-location order unchanged (a heart still floats via the favTie
-  tiebreak). ⚠️ Side effect: the `favBoostKm` settings dial is now inert for
-  ordering — queued follow-on: **repurpose or retire the favBoostKm dial** `[S]`.
-  (Closes the ⚠️ open question under the sort-bug record below.)
+  tiebreak). ⚠️ Side effect: the `favBoostKm` settings dial went inert for
+  ordering — **now repurposed 2026-07-23**: it's the **branch-proximity cutoff**
+  for multi-location venues (show the 2 nearest branches within this distance;
+  `locations.branchesToShow`). One dial, honest new job; the "favourites count
+  as this much nearer" label may want a rename to match its dual meaning `[S]`.
+- [ ] **Settings on the restaurant page** `[M]` — the ⋯ app menu was added to the
+  menu page 2026-07-23 (Favourites/Share/About), but **Settings was deliberately
+  left off**: it changes safety-critical allergen/dietary prefs that `menu.js`
+  reads *once at render*, so exposing it there without live-updating the warnings
+  risks a stale allergen highlight (a safety miss). To include it, wire `menu.js`
+  to re-apply on a settings change (re-evaluate `dish-flagged` per dish + the
+  dietary dim) and reload the per-profile stores on a profile switch. Then add
+  `settings-btn` back to restaurant.html's ⋯.
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
 - [ ] **Ratings UX — redesign (attempt 3)** `[M][design]` ⚑ — **two control
