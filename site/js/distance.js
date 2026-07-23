@@ -43,8 +43,44 @@ export function estimateDriveMinutes(km) {
   return Math.max(1, Math.round(((km * ROAD_WINDING) / URBAN_KMH) * 60));
 }
 
+// A companion walk-time hint (owner steer 2026-07-23: "I'm 100m walk away" —
+// show travel time by the mode that fits the distance, not always drive). Unlike
+// the drive estimate we add NO road-winding padding: the owner asked for a
+// straight-line "~" figure, and over short walking distances a footpath rarely
+// detours far from the crow-line. 5 km/h is the standard adult walking-pace
+// planning figure (≈83 m/min). Same leading-"~" honesty; no elevation model.
+const WALK_KMH = 5;
+
+// Under this straight-line distance we suggest walking, at/above it driving.
+// 2 km ≈ a 24-minute walk at 5 km/h — about as far as most people will walk to
+// a takeaway before a drive becomes the realistic mode; beyond it "walk" would
+// read as a joke. Named so it's tunable. Straight-line (we hold no route length).
+const WALK_MAX_KM = 2;
+
+/** Rough walk time in whole minutes (min 1), or null for a bad distance. */
+export function estimateWalkMinutes(km) {
+  if (km == null || Number.isNaN(km) || km < 0) return null;
+  return Math.max(1, Math.round((km / WALK_KMH) * 60));
+}
+
+// One formatter for both modes so the "~N min <mode>" wording never diverges.
+const formatTravel = (min, mode) => (min == null ? "" : `~${min} min ${mode}`);
+
 /** "~4 min drive" hint, or "" when there's no usable distance. */
 export function formatDriveTime(km) {
-  const min = estimateDriveMinutes(km);
-  return min == null ? "" : `~${min} min drive`;
+  return formatTravel(estimateDriveMinutes(km), "drive");
+}
+
+/**
+ * Mode-aware travel hint from a straight-line distance: walk under WALK_MAX_KM,
+ * drive at/above it. Returns { mode, minutes, text } (e.g. "~15 min walk"), or
+ * null for a bad distance. A deliberately crude "~" approximation — never a
+ * routed/live figure (no routing API: that's keyed + external, breaking the
+ * offline / zero-dependency invariant — see ADR 0021, consistent with 0010/0001).
+ */
+export function travelHint(km) {
+  if (km == null || Number.isNaN(km) || km < 0) return null;
+  const mode = km < WALK_MAX_KM ? "walk" : "drive";
+  const minutes = mode === "walk" ? estimateWalkMinutes(km) : estimateDriveMinutes(km);
+  return { mode, minutes, text: formatTravel(minutes, mode) };
 }

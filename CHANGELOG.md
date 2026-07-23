@@ -15,6 +15,11 @@ content freshness separately from this file.
   dish/venue name, clear of the ♥. (ADR 0019)
 
 ### Added
+- **A travel-time hint next to the pickup address** on a menu page: "~15 min
+  walk" when you're close, "~8 min drive" when you're further out — it picks the
+  mode by distance (crossover at 2 km). A rough in-app "~" estimate off your
+  Near-me location, no maps/routing call; only shows once Near-me knows where you
+  are. (ADR 0021)
 - **The app ⋯ menu is now on restaurant pages too** (Favourites, Share, About),
   not just the home screen — one tap from any menu. It scrolls away with the
   page like on home.

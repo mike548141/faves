@@ -5,7 +5,7 @@
 import { loadRestaurant } from "./data.js";
 import { mapsUrl, recallOrigin } from "./geo.js";
 import { orderedBranches, isMultiLocation, branchAsPlace, branchesToShow } from "./locations.js";
-import { formatDistance } from "./distance.js";
+import { formatDistance, travelHint } from "./distance.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
@@ -101,18 +101,31 @@ function callRow(phone) {
 // at its street address; see geo.js / ADR 0016). `place` is a {name,address,lat,
 // lng} — for a multi-location venue it's the chosen branch, so the pin targets
 // that branch's address, not the primary one.
-function addressRow(place) {
+//
+// `km` is the straight-line distance to *this* branch when the viewer's location
+// was captured this session (finite ⟺ Near-me gave us an origin AND the branch
+// has coords). When present we tuck a mode-aware travel hint under the address —
+// "~15 min walk" close by, "~8 min drive" further out (owner steer 2026-07-23;
+// travelHint / ADR 0021). Deliberately subtle and "~"-prefixed: an in-app
+// approximation, not the live maps figure. No hint without a captured origin —
+// never a bogus number.
+function addressRow(place, km) {
   const href = mapsUrl(place, settings.get().mapsApp);
   // All handoffs are http(s) universal links now (they open the native maps
   // app on mobile, a browser on desktop), so target/rel apply. Kept as a
   // guard in case a non-http scheme returns here again.
   const web = href.startsWith("http");
+  const hint = Number.isFinite(km) ? travelHint(km) : null;
+  const text = el("span", { className: "contact-text" }, [
+    el("span", { className: "contact-label", "data-i18n": "menu.pickup", textContent: "Pickup" }),
+    el("span", { className: "contact-value", textContent: place.address }),
+  ]);
+  if (hint) {
+    text.append(el("span", { className: "contact-travel", textContent: hint.text }));
+  }
   return el("a", { className: "contact-row", href, ...(web ? { rel: "noopener", target: "_blank" } : {}) }, [
     el("span", { className: "contact-ico", textContent: "📍", "aria-hidden": "true" }),
-    el("span", { className: "contact-text" }, [
-      el("span", { className: "contact-label", "data-i18n": "menu.pickup", textContent: "Pickup" }),
-      el("span", { className: "contact-value", textContent: place.address }),
-    ]),
+    text,
   ]);
 }
 
@@ -158,7 +171,7 @@ function hoursRow(hours, now) {
 function branchRows(r, b, now) {
   const rows = [];
   if (b.phone) rows.push(callRow(b.phone));
-  if (b.address) rows.push(addressRow(branchAsPlace(r, b)));
+  if (b.address) rows.push(addressRow(branchAsPlace(r, b), b.distanceKm));
   if (b.hours) rows.push(hoursRow(b.hours, now));
   return rows;
 }
@@ -189,7 +202,11 @@ function branchBlock(r, b, now) {
 function contactCard(r) {
   const now = nzNow();
   if (!isMultiLocation(r)) {
-    return el("div", { className: "contact-card" }, branchRows(r, orderedBranches(r)[0], now));
+    // Pass the origin so the single branch carries its distanceKm — that's what
+    // lets addressRow show the mode-aware travel hint (ADR 0021). Ordering is a
+    // no-op with one branch; without an origin distanceKm stays Infinity → no
+    // hint, which is exactly what we want when Near-me hasn't captured a location.
+    return el("div", { className: "contact-card" }, branchRows(r, orderedBranches(r, recallOrigin())[0], now));
   }
   const branches = orderedBranches(r, recallOrigin());
   // A many-branch chain floods the card with far-away addresses. Show at most

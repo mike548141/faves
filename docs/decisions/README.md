@@ -96,3 +96,9 @@ deliberation those compact docs omit.
   integrity**: never silently drop an unresolved ref, never claim "removed"
   without an online recheck (stale-cache vs deleted are indistinguishable
   locally). Proposed; build deferred + coordinated with ADR 0017 / Theme 10.
+- [0021](0021-mode-aware-travel-hint.md) — **mode-aware travel hint** on the menu
+  screen: walk under a 2 km crossover, drive at/above (5 km/h straight-line walk,
+  no road-winding pad; reuses the drive estimate). Shown under the pickup address
+  for the resolved nearest branch, only with a captured Near-me origin — no
+  routing API (offline/zero-dep, consistent with ADR 0010/0001). Collect-dialog
+  placement deferred.
