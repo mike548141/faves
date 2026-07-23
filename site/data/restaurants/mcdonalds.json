@@ -1,0 +1,33 @@
+{
+  "id": "mcdonalds",
+  "name": "McDonald's",
+  "cuisine": [
+    "Fast food",
+    "Burgers"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "website": "https://mcdonalds.co.nz/",
+  "ordering": [],
+  "locations": [
+    {
+      "label": "Courtenay Place",
+      "address": "200 Courtenay Place, Te Aro, Wellington 6011",
+      "phone": "+64 4 385 8646"
+    },
+    {
+      "label": "Lambton Quay",
+      "address": "276 Lambton Quay, Wellington Central, Wellington 6011",
+      "phone": "+64 4 472 1808"
+    }
+  ],
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}
