@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Changed
+- **Tapping an address opens the map at the right place again.** Tapping a
+  venue's address now drops a **pin** on the map at its street address (rather
+  than starting driving directions), and it points at the exact spot — some
+  venues were landing a street over. Start directions from the pin if you want
+  them; the "~N min drive" glance on the Near-me list is unchanged.
+- **"Nearest first" is now strictly nearest.** When you sort by distance, the
+  closest place is always on top — a hearted favourite still shows its ♥ but no
+  longer jumps ahead of somewhere nearer. (Favourites still float up in the
+  default list, where there's no distance to sort by.)
 - **Menu edits no longer re-download the whole app.** The offline cache
   is now split in two — the app itself and the menu data have separate
   versions — so when a menu changes your phone fetches just the updated

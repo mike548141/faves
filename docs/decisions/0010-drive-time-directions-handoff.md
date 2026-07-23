@@ -1,6 +1,6 @@
 # 0010 — Drive time via directions handoff + a rough in-app hint
 
-**Status**: accepted
+**Status**: part (a) superseded by 0016; part (b) stands
 **Date**: 2026-07-22
 
 ## Context
