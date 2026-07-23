@@ -78,13 +78,12 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   this session); (c) **allergen/dietary tags** from a reliable source
   (deliberately omitted for now — "not stated" ≠ free-of, safety floor); (d)
   revisit prices if a per-store source appears.
-- [~] **Branches list scrolls with the menu** `[S]` — _claimed 2026-07-23-1053 UTC · queue-run orchestration (wt: faves-queue-1053)._ owner, 2026-07-23: on
-  desktop the aside is `position: sticky`, so a long branch list (McDonald's)
-  gets its bottom cut off while the menu scrolls past it. Wants them to **scroll
-  at the same rate**. Fix drafted + reverted (owner chose to queue): drop
-  `position: sticky` + `top` from `.menu-twocol > .menu-aside` (keep
-  `align-self: start`), CSS-only, bump SHELL. (Trade-off: the contact card then
-  scrolls away for short single-location asides too — acceptable per owner.)
+- ✅ **Branches list scrolls with the menu** `[S]` — **shipped 2026-07-23**
+  (queue-run, `0917249`): dropped `position: sticky` + `top` from
+  `.menu-twocol > .menu-aside` (kept `align-self: start`), CSS-only, SHELL bumped.
+  The aside now scrolls with the menu column so a long branch list (McDonald's)
+  isn't cut off. Trade-off owner-accepted: the contact card also scrolls away for
+  short single-location asides. ⏳ Owner to eyeball the scroll on a real phone.
 
 - ✅ **Choose your maps app** `[S]` — **shipped 2026-07-23** (ADR 0018). The web
   can't read the OS default-maps-app, so Settings → "Maps app" lets the viewer
@@ -107,19 +106,17 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   provider choice), a **CSP `connect-src`** allowance, the geocode module, the
   search-bar intent detection, and re-wiring `route.js` off the dropdown. Build
   order + security notes to live in that ADR.
-- **[~] Travel time next to the address / hours (mode-aware)** `[M]` — _claimed 2026-07-23-1053 UTC · queue-run orchestration (wt: faves-queue-1053)._ owner steer
-  2026-07-23, raw: *"keep the feature idea in the roadmap, refine that idea that
-  I want the travel time (not necessarily drive e.g. I'm 100m walk away) shown in
-  Faves next to the address/opening hours or maybe in the collect window/dialog"*.
-  Refined honestly: a **mode-aware in-app estimate** — walk when you're close,
-  drive when you're far (the crossover distance is a design call) — surfaced on
-  the **menu screen near the address/hours row** and/or in the **collect
-  dialog**, not only on the Near-me home card as today. Builds on the existing
-  haversine distance + `estimateDriveMinutes()` (ADR 0010 part b); add a walk
-  estimate (a slower km/h, no road-winding padding) and pick the mode by
-  distance. Stays a `~` approximation — **no routing API** (that's the
-  offline/zero-dep wall, unchanged). Needs the viewer's location, so it only
-  shows when Near-me has captured an origin this session (`recallOrigin`).
+- ✅ **Travel time next to the address / hours (mode-aware)** `[M]` — **shipped
+  2026-07-23** (queue-run, `7dc6a42`, **ADR 0021**). A `~` walk/drive hint under
+  the pickup address on the menu screen, for the nearest branch the page already
+  resolves: **walk under 2 km** (5 km/h, no road-winding padding), **drive at/
+  above** (`estimateWalkMinutes` / `travelHint` in `distance.js`). Only shows
+  when Near-me has captured an origin this session (`recallOrigin`); no origin →
+  no hint. No routing API (offline/zero-dep wall intact). **Collect-dialog
+  placement deferred** as a noted follow-on in ADR 0021. ⏳ Owner to eyeball
+  on-screen placement/feel at 390 px. Owner steer 2026-07-23, raw: *"keep the
+  feature idea… I want the travel time (not necessarily drive e.g. I'm 100m walk
+  away) shown next to the address/opening hours or maybe in the collect window"*.
 
 **Parked idea** (from ADR 0014 consequences): a **"surprise me on the way"**
 variant of the Pick-for-us shuffle that draws from the along-route pool rather
@@ -138,17 +135,26 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   for multi-location venues (show the 2 nearest branches within this distance;
   `locations.branchesToShow`). One dial, honest new job; the "favourites count
   as this much nearer" label may want a rename to match its dual meaning `[S]`.
-  _[~] claimed 2026-07-23-1053 UTC · queue-run orchestration (wt: faves-queue-1053)._
-- [~] **Settings on the restaurant page** `[M]` — _claimed 2026-07-23-1053 UTC · queue-run orchestration (wt: faves-queue-1053)._ **owner explicitly wants it
-  there** (2026-07-23; it's on home, missing on the menu page). The ⋯ app menu
-  shipped to the menu page with Favourites/Share/About, but **Settings was
-  deliberately left off**: it changes safety-critical allergen/dietary prefs that
-  `menu.js` reads *once at render*, so exposing it there without live-updating the
-  warnings risks a stale allergen highlight (a safety miss). To include it, wire
-  `menu.js` to re-apply on a settings change (re-evaluate `dish-flagged` per dish
-  + the dietary dim) and reload the per-profile stores on a profile switch. Then
-  add `settings-btn` back to restaurant.html's ⋯ (markup + `initSettingsUI()` in
-  `initChrome`). This safety-reactivity wiring is the whole task.
+  ✅ **Renamed 2026-07-23** (queue-run, `e65632a`): the dial's user-facing label
+  is now "Show branches within" with a hint explaining the two-nearest-branches
+  cutoff; storage key `favBoostKm` deliberately unchanged (renaming it would reset
+  everyone's stored setting); stale code comments in `settings.js`/`locations.js`
+  corrected to match.
+- ✅ **Settings on the restaurant page** `[M]` — **shipped 2026-07-23**
+  (queue-run, `399604e`). The safety-reactivity wiring was the task, and it's
+  done: extracted the two per-dish safety predicates into a shared, unit-tested
+  `site/js/dietary.js` (`dishFlagged` + `dishSatisfiesDiet`) that BOTH the initial
+  render and the live re-apply call, so they can't diverge; `menu.js`
+  `wireLiveSafety()` re-renders on `settings.subscribe` (any pref change) and on a
+  profile switch (reloads favourites/ratings/settings), mirroring the home page's
+  proven mechanism; `settings-btn` added to restaurant.html's ⋯ (markup identical
+  to home) + `initSettingsUI()` in `initChrome`. **Adversarially safety-reviewed**
+  (see reviews/). 🚩 **Owner MUST confirm on a real device** (fresh browser /
+  `--user-data-dir`; the SW hides changes otherwise): flip an allergen pref on a
+  menu → warnings light up live without reload; switch profile → safety treatment
+  + hearts/ratings re-apply. Known by-design trade-off: a settings/profile change
+  re-renders the whole menu, so an in-progress **search query + scroll position
+  reset** — flagged for owner acceptance.
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
 - [ ] **Ratings UX — redesign (attempt 3)** `[M][design]` ⚑ — **two control
