@@ -4,7 +4,7 @@
 
 import { loadRestaurant } from "./data.js";
 import { mapsUrl, recallOrigin } from "./geo.js";
-import { orderedBranches, isMultiLocation, branchAsPlace } from "./locations.js";
+import { orderedBranches, isMultiLocation, branchAsPlace, branchesToShow } from "./locations.js";
 import { formatDistance } from "./distance.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { slug } from "./slug.js";
@@ -189,10 +189,31 @@ function contactCard(r) {
     return el("div", { className: "contact-card" }, branchRows(r, orderedBranches(r)[0], now));
   }
   const branches = orderedBranches(r, recallOrigin());
-  return el("div", { className: "contact-card contact-card-multi" }, [
-    el("h2", { className: "contact-branches-head", "data-i18n": "menu.branches", textContent: "All branches" }),
-    ...branches.map((b) => branchBlock(r, b, now)),
+  // A many-branch chain floods the card with far-away addresses. Show at most
+  // the 2 nearest within the viewer's proximity dial (favBoostKm); the rest tuck
+  // behind a "show all" (locations.branchesToShow). Heading stays neutral
+  // ("Branches") since it may now be a subset.
+  const { shown, rest } = branchesToShow(branches, settings.get().favBoostKm);
+  const card = el("div", { className: "contact-card contact-card-multi" }, [
+    el("h2", { className: "contact-branches-head", "data-i18n": "menu.branches", textContent: "Branches" }),
+    ...shown.map((b) => branchBlock(r, b, now)),
   ]);
+  if (rest.length) {
+    const restWrap = el("div", { className: "contact-branches-rest", hidden: true },
+      rest.map((b) => branchBlock(r, b, now)));
+    const toggle = el("button", { type: "button", className: "contact-branches-more" });
+    const collapsedLabel = `Show all ${branches.length} branches`;
+    toggle.textContent = collapsedLabel;
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.addEventListener("click", () => {
+      const open = restWrap.hidden;
+      restWrap.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "Show fewer branches" : collapsedLabel;
+    });
+    card.append(restWrap, toggle);
+  }
+  return card;
 }
 
 function orderCard(r) {

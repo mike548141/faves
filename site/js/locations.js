@@ -88,6 +88,28 @@ export function orderedBranches(r, origin = null) {
   return branches;
 }
 
+/**
+ * Which branches to surface on the contact card, and which to tuck behind a
+ * "show all". A many-branch chain (e.g. McDonald's) otherwise floods the page
+ * with far-away addresses. Rule (owner, 2026-07-23): at most the **2 nearest**,
+ * and only within `thresholdKm` — the viewer's "favourites count as this much
+ * nearer" dial (default 10 km), repurposed here as the branch-proximity cutoff.
+ *
+ * `branches` must already be nearest-first (orderedBranches). When we know real
+ * distances (origin set + at least one located branch), the 2nd is dropped
+ * beyond the threshold — but the single nearest is always kept so the card is
+ * never empty. With no distances (no location, or coordless branches) we can't
+ * rank, so the first two in data order show. Returns { shown, rest }. Pure.
+ */
+export function branchesToShow(branches, thresholdKm) {
+  const haveDistances = branches.some((b) => Number.isFinite(b.distanceKm));
+  const shown = haveDistances
+    ? branches.filter((b, i) => i === 0 || b.distanceKm <= thresholdKm).slice(0, 2)
+    : branches.slice(0, 2);
+  const shownSet = new Set(shown);
+  return { shown, rest: branches.filter((b) => !shownSet.has(b)) };
+}
+
 /** True when a venue has more than one branch (drives the per-branch UI). */
 export function isMultiLocation(r) {
   return Array.isArray(r.locations) && r.locations.length > 1;

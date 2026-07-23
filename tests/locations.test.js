@@ -14,6 +14,7 @@ import {
   orderedBranches,
   isMultiLocation,
   branchAsPlace,
+  branchesToShow,
 } from "../site/js/locations.js";
 
 const week = (o, c) =>
@@ -145,6 +146,42 @@ test("orderedBranches does not mutate the record's branches", () => {
   const snap = JSON.stringify(chain);
   orderedBranches(chain, CBD);
   assert.equal(JSON.stringify(chain), snap);
+});
+
+// --- branchesToShow: cap at the 2 nearest within the proximity dial ---------
+const b = (label, distanceKm) => ({ label, distanceKm });
+
+test("branchesToShow: two nearest within threshold shown, the rest tucked away", () => {
+  const branches = [b("a", 1), b("b", 3), b("c", 8), b("d", 12), b("e", 20)];
+  const { shown, rest } = branchesToShow(branches, 10);
+  assert.deepEqual(shown.map((x) => x.label), ["a", "b"]);
+  assert.deepEqual(rest.map((x) => x.label), ["c", "d", "e"]);
+});
+
+test("branchesToShow: 2nd beyond threshold is dropped, nearest always kept", () => {
+  const branches = [b("a", 6), b("b", 40), b("c", 55)];
+  const { shown, rest } = branchesToShow(branches, 10);
+  assert.deepEqual(shown.map((x) => x.label), ["a"]); // b is >10km, so only the nearest
+  assert.deepEqual(rest.map((x) => x.label), ["b", "c"]);
+});
+
+test("branchesToShow: nearest kept even when it is itself beyond threshold (never empty)", () => {
+  const branches = [b("a", 25), b("b", 40)];
+  const { shown } = branchesToShow(branches, 10);
+  assert.deepEqual(shown.map((x) => x.label), ["a"]);
+});
+
+test("branchesToShow: no distances (coordless / no location) → first two in data order", () => {
+  const branches = [b("a", Infinity), b("b", Infinity), b("c", Infinity), b("d", Infinity)];
+  const { shown, rest } = branchesToShow(branches, 10);
+  assert.deepEqual(shown.map((x) => x.label), ["a", "b"]);
+  assert.deepEqual(rest.map((x) => x.label), ["c", "d"]);
+});
+
+test("branchesToShow: two or fewer branches → all shown, nothing tucked", () => {
+  const { shown, rest } = branchesToShow([b("a", 2), b("b", 3)], 10);
+  assert.deepEqual(shown.map((x) => x.label), ["a", "b"]);
+  assert.equal(rest.length, 0);
 });
 
 test("isMultiLocation: true only for 2+ branches", () => {
