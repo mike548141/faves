@@ -70,3 +70,9 @@ deliberation those compact docs omit.
   coords sit ~100 m off, proven on R & S Satay), not driving directions;
   supersedes ADR 0010 part (a), keeps its "~N min" hint (b); address-targeting
   adopted for the route handoff's venue leg too
+- [0017](0017-cross-device-sync-encrypted-blob-bearer-code.md) — cross-device
+  sync of hearts/settings: v1 shareable-link seed (no infra), v2 continual sync
+  via a Cloudflare Worker + KV holding **one E2E-encrypted blob per user**, keyed
+  by a machine-generated **bearer sync-code** (QR or word-code), no accounts,
+  debounced writes; softens the no-backend non-goal (backend permitted, accounts
+  not), supersedes ADR 0012's "sync out of scope / needs a signed-in app" stance

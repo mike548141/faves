@@ -12,13 +12,17 @@ v1 scope.
 `[constraint]` sits in tension with a hard constraint or non-goal —
 resolution noted inline; **⚑** a decision only the owner can make.
 
-**On "no backend" (owner steer, 2026-07-09).** The stance softened from
-*never* to *not yet*: a lightweight backend (e.g. a Cloudflare Worker)
-is an acceptable **future** direction — live group-order rooms, feedback
-intake — but adopting one is a deliberate step that needs its own ADR
-first ([ADR 0009] records the steer). Until that ADR exists, items
-blocked on "breaks the no-backend non-goal" stay blocked; they are
-deferred, not refused.
+**On "no backend" (owner steer, 2026-07-09; updated 2026-07-23).** The
+stance softened from *never* to *not yet*: a lightweight backend (e.g. a
+Cloudflare Worker) is an acceptable **future** direction — live
+group-order rooms, feedback intake — but adopting one is a deliberate
+step that needs its own ADR first ([ADR 0009] records the steer).
+**Now gated open for sync:** [ADR 0017] adopts a Cloudflare Worker + KV
+for cross-device sync and formally softens the non-goal — a *serverless
+backend is permitted*; *accounts are deliberately not adopted* (a bearer
+sync-code carries it); off-device data *must* be end-to-end encrypted.
+Other backend-gated items (live rooms, feedback intake, the Google-rating
+edge proxy) revisit against that precedent — each still its own ADR.
 
 ---
 
@@ -250,10 +254,12 @@ out (no official API). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   stay device-shared. Existing data migrates into the default profile. Switching
   visibly re-applies the person's allergen filter (menu/recipe reload on a
   cross-tab switch) so no one browses under someone else's safety settings.
-  **Cross-device sync stays out of scope** — the same person's hearts syncing
-  across *different* devices needs an account + backend, which breaks the
-  no-accounts / no-backend non-goals. That belongs to a *separate signed-in app*
-  (the same seam as the health app, Theme 6, which can own identity and sync).
+  ~~**Cross-device sync stays out of scope**~~ — **superseded 2026-07-23 by
+  [ADR 0017] / Theme 9 below.** The original stance (sync needs an account +
+  backend → belongs to a separate signed-in app) was half wrong: continual sync
+  is reachable *without* accounts, via a bearer sync-code + an E2E-encrypted
+  Worker+KV blob. The health app (Theme 6) stays its own project for
+  personal/health data; it simply no longer owns "identity/sync" as its reason.
 
 ## Theme 6 — North star: the health tie-in
 
@@ -324,6 +330,51 @@ Verified clean 2026-07-12 (tree + full history): no secrets (the one
 token line reads from Keychain; "share tokens" are client-side codec),
 Apache 2.0 licence present, only `mike@cxi.nz` in commit metadata,
 home-area inference no worse than the live site already allows.
+
+## Theme 9 — Cross-device preference sync (owner-approved 2026-07-23)
+
+The same person's hearts, ratings, and settings, kept together across
+their own devices. Full deliberation → [ADR 0017]; this is the sequenced
+build view. Ethos updated with the owner: a **serverless backend is now
+permitted**; **accounts are not** (a bearer sync-code carries it);
+**off-device data must be E2E-encrypted** — no way for Cloudflare *or*
+the owner to read it.
+
+- **v1 — shareable-link seed** `[S]` — reuse the `share-codec.js` +
+  `favourites.merge()` machinery (already built for group-order / shortlist
+  links) to encode hearts+settings into a link/QR you open on a second
+  device to seed it. **No infra, offline, ship-ready.** Manual one-shot
+  transfer, not sync — the honest ceiling for a pure static site, and the
+  foundation v2 builds on. **Agreed to ship as "cross-device" v1.**
+- **v2 — continual sync (Cloudflare Worker + KV)** `[M][constraint]` ⚑ —
+  a tiny Worker holds **one E2E-encrypted blob per user** in Workers KV.
+  Design (all in ADR 0017):
+  - **Continual bidirectional**, not a one-off migrate: each device keeps
+    its offline-first local copy, pushes a **debounced** write (batch a
+    flurry of changes into one write on a **5–30 s** idle/blur window —
+    never per-tap; writes are the one scarce KV resource), pulls + **merges
+    client-side** on open/foreground. KV blob = shared mirror, not source
+    of record.
+  - **Bearer sync-code, no accounts**: a machine-generated high-entropy
+    code (~44+ bits, friendly word-codes), exchanged **by QR *or*
+    word-code**. Holder of the code = access; no email/password/PII.
+  - **E2E-encrypted** (`crypto.subtle`, key from the code): server stores
+    only ciphertext, so merge (union hearts, last-write-wins settings,
+    read-merge-write on push) is all client-side.
+  - **Cost ≈ $0** on Cloudflare's free tier (blobs are KB; the debounce
+    keeps writes far under the 1k/day cap); **$5/mo** soft floor only if it
+    ever outgrows free. Opt-in, disposable (lose the code → mint a new one,
+    re-seed), degrades to local-only offline.
+  - Honest limit: **on-device at-rest encryption is the platform's job**
+    (OS full-disk encryption) — a web app can't meaningfully encrypt its
+    own `localStorage` against someone holding the unlocked device without
+    prompting for the code every open. We won't overclaim it.
+  - ⚑ v2 is the first standing backend — building it is the owner's go.
+- **May subsume queued items** — revisit when v2 is scoped: per-device
+  profiles (ADR 0012) gain a cross-device dimension; the "separate
+  signed-in app owns sync" assumption (Theme 6) is retired; the shareable
+  shortlist links overlap v1's codec. Audit before building so nothing's
+  built twice.
 
 ## Also parked (small)
 
