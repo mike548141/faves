@@ -858,9 +858,13 @@ function scrollToHash() {
   }
   if (!target) return;
   // Wait out render()'s own rAF (which measures --toolbar-h) so the target's
-  // scroll-margin-top is correct when we land.
+  // scroll-margin-top is correct when we land. Smooth-scroll so you see the dish
+  // travel into view (orients you within the menu); instant under reduced motion.
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   requestAnimationFrame(() =>
-    requestAnimationFrame(() => target.scrollIntoView({ block: "start", behavior: "instant" }))
+    requestAnimationFrame(() =>
+      target.scrollIntoView({ block: "start", behavior: reduce ? "instant" : "smooth" })
+    )
   );
 }
 
