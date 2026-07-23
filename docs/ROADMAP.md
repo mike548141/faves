@@ -117,14 +117,20 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   (Closes the ⚠️ open question under the sort-bug record below.)
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
-- ✅ **Ratings UX rework** `[M][design]` — **shipped 2026-07-23** (ADR 0019,
-  supersedes ADR 0013's scale + control shape). Owner reviewed the live 1–3
-  three-button control: read ambiguously, took too much room, and sat
-  confusingly beside the ♥. Reworked to a **1–5 star tap/drag slider**
-  (`role="slider"`, full keyboard, ~140px one-target), moved to its own line
-  **under the dish/venue name**, clear of the heart. `validate.py` curated range
-  1..3 → 1..5; old stored marks stay valid (no migration); curated field still
-  dormant. Browser-verified at 390px. The (a)+(b)-not-public shape stands.
+- [ ] **Ratings UX — redesign (attempt 3)** `[M][design]` ⚑ — **two control
+  designs rejected on owner review; a third is parked here by owner request.**
+  History: (1) the original **1–3 three-button** control (ADR 0013) read
+  ambiguously and crowded the ♥; (2) its replacement, a **1–5 star tap/drag
+  slider** (ADR 0019, **currently live** — moved under the name, clear of the ♥,
+  `role="slider"` + full keyboard, browser-verified 390px), the owner **also**
+  rejected on review (2026-07-23). Three v3 paradigms were floated — plain
+  tap-only 5 stars · emoji reaction faces · number pills 1–5 — and the owner
+  **parked the choice** rather than have a third guess built now. The 1–5 slider
+  **stays live** meanwhile (no revert requested). The underlying model is sound
+  and unchanged (1–5, per-profile, curated-vs-personal split; ADR 0013/0019) —
+  this is a **control/visual** redesign only. Next: agree the direction with the
+  owner, then supersede ADR 0019. What's shipped so far → `ROADMAP-DONE.md` is
+  premature; keep the trail in ADR 0013 → 0019.
 - ✅ **Directions handoff — backed out to a pin** — **applied 2026-07-23**
   (`9dad5f8`, ADR 0016, wt: faves-wave8-rulings-apply). Owner, raw: "I don't
   think this meets what I wanted for the feature. We need to review it and may
