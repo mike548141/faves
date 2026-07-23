@@ -87,7 +87,10 @@ test("rankVenues: favourites do NOT override availability (closed fav stays low)
   assert.deepEqual(order, ["open", "closed-fav"]); // open you can order from wins
 });
 
-test("rankVenues (origin): a favourite outranks a nearer non-favourite when both open", () => {
+test("rankVenues (origin): 'Nearest first' is pure distance — a heart earns no pull", () => {
+  // Owner ruling 2026-07-23: a hearted farther venue no longer outranks a nearer
+  // plain one. fav-far ≈ 4 km, near ≈ 0 km → the nearer plain one leads despite
+  // the heart (which keeps its ♥ badge, just no ranking pull).
   const near = { id: "near", lat: -41.287, lng: 174.776, hours: week("09:00", "22:00") };
   const favFar = { id: "fav-far", lat: -41.32, lng: 174.80, hours: week("09:00", "22:00") };
   const order = rankVenues([near, favFar], {
@@ -95,14 +98,40 @@ test("rankVenues (origin): a favourite outranks a nearer non-favourite when both
     origin: CBD,
     favouriteIds: new Set(["fav-far"]),
   }).map((r) => r.id);
-  // fav-far ≈ 4 km; boosted by the default 10 km → −6, beats near at ~0 km.
-  assert.deepEqual(order, ["fav-far", "near"]);
+  assert.deepEqual(order, ["near", "fav-far"]);
+});
+
+test("Nearest first: a hearted 10 km venue sits BELOW a plain 2.5 km one (owner ruling)", () => {
+  // The ruling's regression: hearts get no distance pull in Nearest-first, so
+  // pure distance decides — the 2.5 km plain venue wins over the 10 km heart.
+  const favFar = { id: "fav-10", ...at(10) };
+  const near = { id: "plain-2_5", ...at(2.5) };
+  const order = rankVenues([favFar, near], {
+    now: MON_NOON,
+    origin: CBD,
+    favouriteIds: new Set(["fav-10"]),
+  }).map((r) => r.id);
+  assert.deepEqual(order, ["plain-2_5", "fav-10"]);
+});
+
+test("Nearest first: availability stays the tiebreak once distance ties", () => {
+  // Two venues the same distance out: the open one leads the closed one (a heart
+  // does not enter here — no pull in this mode). Same lat/lng, different hours.
+  const spot = at(3);
+  const closed = { id: "closed-3", lat: spot.lat, lng: spot.lng, hours: week("18:00", "22:00") };
+  const open = { id: "open-3", lat: spot.lat, lng: spot.lng, hours: week("09:00", "22:00") };
+  const order = rankVenues([closed, open], {
+    now: MON_NOON,
+    origin: CBD,
+    favouriteIds: new Set(["closed-3"]),
+  }).map((r) => r.id);
+  assert.deepEqual(order, ["open-3", "closed-3"]);
 });
 
 // A venue at ~`km` straight-line north of CBD (1° lat ≈ 111.19 km).
 const at = (km) => ({ lat: CBD.lat + km / 111.19, lng: CBD.lng, hours: week("09:00", "22:00") });
 
-test("weighted: a favourite 30 km away sits BELOW a non-favourite 2 km away", () => {
+test("Nearest first: a favourite 30 km away sits BELOW a non-favourite 2 km away", () => {
   const favFar = { id: "fav-30", ...at(30) };
   const near = { id: "plain-2", ...at(2) };
   const order = rankVenues([favFar, near], {
@@ -110,11 +139,11 @@ test("weighted: a favourite 30 km away sits BELOW a non-favourite 2 km away", ()
     origin: CBD,
     favouriteIds: new Set(["fav-30"]),
   }).map((r) => r.id);
-  // 30 − 10 boost = 20 effective, still worse than 2 → the near plain one wins.
+  // Pure distance: 2 km < 30 km → the near plain one wins (heart earns no pull).
   assert.deepEqual(order, ["plain-2", "fav-30"]);
 });
 
-test("weighted: between two favourites, the nearer one ranks higher", () => {
+test("Nearest first: between two favourites, the nearer one ranks higher", () => {
   const favNear = { id: "fav-2", ...at(2) };
   const favFar = { id: "fav-30", ...at(30) };
   const order = rankVenues([favFar, favNear], {
@@ -125,19 +154,19 @@ test("weighted: between two favourites, the nearer one ranks higher", () => {
   assert.deepEqual(order, ["fav-2", "fav-30"]);
 });
 
-test("weighted: a bigger favBoostKm can push a favourite above a nearer plain venue", () => {
+test("Nearest first: favBoostKm no longer reorders — a heart never jumps a nearer plain venue", () => {
+  // Post-ruling: whatever the favBoostKm dial is set to, a hearted 8 km venue
+  // stays below a plain 2 km one (the boost is neutralised in this mode).
   const fav8 = { id: "fav-8", ...at(8) };
   const plain2 = { id: "plain-2", ...at(2) };
   const opts = { now: MON_NOON, origin: CBD, favouriteIds: new Set(["fav-8"]) };
-  // boost 0 → distance rules → plain-2 first
   assert.deepEqual(
     rankVenues([fav8, plain2], { ...opts, favBoostKm: 0 }).map((r) => r.id),
     ["plain-2", "fav-8"]
   );
-  // boost 10 → fav-8 counts as −2 → it leads
   assert.deepEqual(
     rankVenues([fav8, plain2], { ...opts, favBoostKm: 10 }).map((r) => r.id),
-    ["fav-8", "plain-2"]
+    ["plain-2", "fav-8"]
   );
 });
 
