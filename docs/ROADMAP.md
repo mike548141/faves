@@ -65,6 +65,32 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 variant of the Pick-for-us shuffle that draws from the along-route pool rather
 than the Near-me pool — parked, unclaimed, `[S/M]`.
 
+## Owner rulings — 2026-07-23 (session Q&A, raw where quoted)
+
+- [ ] **"Nearest first" goes pure distance** — owner ruled 2026-07-23: hearts
+  keep their ♥ badge but get **no ranking pull** in Nearest-first mode (the
+  `favBoostKm` pull applies only outside it). To apply. (Closes the ⚠️ open
+  question under the sort-bug record below.)
+- ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
+  shipped. No change.
+- [ ] **Ratings UX rework** `[M][design]` ⚑ — owner, raw: "I don't love the UX
+  of the ratings, we need to work on this more." Direction not backed out, not
+  ratified — the (a)+(b)-not-public shape stands *provisionally*; the UX
+  (three-star tap row on venue header + every dish row) needs a design session
+  with the owner before further ratings work. ADR 0013 stands until superseded.
+- [ ] **Directions handoff under review** ⚑ — owner, raw: "I don't think this
+  meets what I wanted for the feature. We need to review it and may back out
+  the change. Also when I tapped on 'R & S Satay Noodle House' which is shown
+  at the pickup address '148 Cuba St' the maps open on '1 Garrett St'."
+  Diagnosis: the directions URL targets stored lat/lng; R & S's coords
+  (-41.29379, 174.7751) sit ~100 m off on Garrett St, so navigation goes to
+  the wrong street. Fix regardless of feature shape: target the **street
+  address** (Maps geocodes it exactly); coords stay for in-app distance maths
+  only. Feature shape (pin vs directions vs both) = owner call, being taken.
+- [ ] **Coordinate audit** `[S]` — follow-on: dev-time geocoded coords are
+  suspect fleet-wide (R & S proven ~100 m off). Sweep all venue coords against
+  their street addresses; affects distance sort + detour maths accuracy.
+
 ## Owner-reported — 2026-07-22
 
 Both resolved; verbatim raw-note records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
@@ -73,9 +99,8 @@ Both resolved; verbatim raw-note records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md
   (`566aa20`). Root cause was not a text sort: the sort-key order put
   availability + the favourite boost ahead of distance; the fix makes distance
   lead when "Nearest first" is on. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-  ⚠️ **Owner question (open):** if a *hearted* 10 km venue still shows above a
-  plain 2.5 km one, that's the (deliberate, tested) favourite weighting — say if
-  you'd rather "Nearest first" ignore hearts entirely.
+  ⚠️ Hearts-in-Nearest-first question: **ruled 2026-07-23, see Owner rulings
+  above** (pure distance).
 - ✅ **Split versioning: app vs config vs data** `[M]` — **shipped 2026-07-23**
   (ADR 0015): `sw.js` split into `SHELL_VERSION` + `DATA_VERSION`, each its own
   cache, so a data-only menu edit refetches just `site/data/*` and no longer
