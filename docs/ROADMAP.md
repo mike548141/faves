@@ -101,11 +101,16 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   invariant (ADR 0001) — the exact wall ADR 0014 cited. **Owner has ratified
   crossing it** for destination entry (online-only; rest of site stays offline).
   Chosen: **Nominatim/OSM** (no key, attribution + usage-policy compliance),
-  behind graceful offline degradation. **Deferred to a focused next session** —
-  it's a new external **trust surface**: needs its own ADR (relax the invariant +
-  provider choice), a **CSP `connect-src`** allowance, the geocode module, the
-  search-bar intent detection, and re-wiring `route.js` off the dropdown. Build
-  order + security notes to live in that ADR.
+  behind graceful offline degradation. 🎯 **Owner GO 2026-07-24 — build it as a
+  dedicated next session** (not folded into a queue run; it's a new external
+  **trust surface**). That session's build order: (1) write the ADR — relax the
+  offline/zero-dep invariant *for destination entry only* + confirm Nominatim/OSM
+  as provider (attribution + usage-policy); (2) add the **CSP `connect-src`**
+  allowance (and confirm the SW/offline degradation path); (3) the geocode module
+  (debounced, cached, graceful-offline); (4) search-bar intent detection (dish/
+  venue vs place); (5) re-wire `route.js` off the ADR-0014 dropdown. The ADR is
+  written and confirmed *before* any network code lands — trust surface = the
+  informed-confirmation floor still applies to wiring the actual request.
 - ✅ **Travel time next to the address / hours (mode-aware)** `[M]` — **shipped
   2026-07-23** (queue-run, `7dc6a42`, **ADR 0021**). A `~` walk/drive hint under
   the pickup address on the menu screen, for the nearest branch the page already
@@ -154,7 +159,11 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   menu → warnings light up live without reload; switch profile → safety treatment
   + hearts/ratings re-apply. Known by-design trade-off: a settings/profile change
   re-renders the whole menu, so an in-progress **search query + scroll position
-  reset** — flagged for owner acceptance.
+  reset** — flagged for owner acceptance. 🎯 **Owner ruling 2026-07-24 — queue a
+  dedicated browser-tooling session** to script this device check (headless Chrome
+  with a fresh `--user-data-dir` to bust the SW), rather than a manual phone test.
+  Until that passes, treat the live allergen re-highlight as **proven-by-tests,
+  not yet device-confirmed**. [~] unclaimed — the verification session.
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
 - [ ] **Ratings UX — redesign (attempt 3)** `[M][design]` ⚑ — **two control
@@ -168,8 +177,10 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   **parked the choice** rather than have a third guess built now. The 1–5 slider
   **stays live** meanwhile (no revert requested). The underlying model is sound
   and unchanged (1–5, per-profile, curated-vs-personal split; ADR 0013/0019) —
-  this is a **control/visual** redesign only. Next: agree the direction with the
-  owner, then supersede ADR 0019. What's shipped so far → `ROADMAP-DONE.md` is
+  this is a **control/visual** redesign only. 🎯 **Owner ruling 2026-07-24 —
+  redesign later, not now.** The slider stays live; no paradigm chosen; revisit
+  when it next bothers him. Do not build a v3 until then. Next (when reopened):
+  agree the direction with the owner, then supersede ADR 0019. What's shipped so far → `ROADMAP-DONE.md` is
   premature; keep the trail in ADR 0013 → 0019.
 - ✅ **Directions handoff — backed out to a pin** — **applied 2026-07-23**
   (`9dad5f8`, ADR 0016, wt: faves-wave8-rulings-apply). Owner, raw: "I don't
@@ -403,6 +414,15 @@ stays the owner's explicit call. Order matters:
    first names in feature examples and acceptance notes (ROADMAP Themes
    1/1b, SESSIONS). Same first-names-only level, but publishing extends
    the approval from the site to the workshop notes — confirm or trim.
+   🎯 **Owner ruling 2026-07-24 — do a full family-texture review before public**
+   (a decided pre-public gate, not a piecemeal fix). Sweep **docs + site data +
+   tests** for family first names and decide the whole set together. Concrete
+   instance that triggered this: leakscan (owner's local term list, invisible to
+   CI) flags a child's first name used as a **test fixture** in
+   `tests/profiles.test.js` (pre-existing, from `5dfda33` 2026-07-22) and the
+   "Churton" suburb across restaurant data (a real place name — likely fine). The
+   owner-approved recipe attributions (2026-07-06) stay. `[~]` unclaimed — the
+   review runs as part of the go-public sequence, before the visibility flip.
 
 Verified clean 2026-07-12 (tree + full history): no secrets (the one
 token line reads from Keychain; "share tokens" are client-side codec),
