@@ -64,15 +64,15 @@ def check_image(rid, obj, where):
 
 def check_rating(rid, obj, where):
     """Optional curated household rating on `obj` (a venue or a menu item): our
-    own static 1..3 mark, distinct from the device-local personal ratings (which
-    never touch the repo). When present it must be an integer 1..3 — a bool or a
+    own static 1..5 mark, distinct from the device-local personal ratings (which
+    never touch the repo). When present it must be an integer 1..5 — a bool or a
     float is rejected. Absent = not rated (the field ships dormant until the
-    owner supplies real values)."""
+    owner supplies real values). Scale widened from 1..3 to 1..5 in ADR 0019."""
     r = obj.get("rating")
     if r is None:
         return
-    if isinstance(r, bool) or not isinstance(r, int) or not (1 <= r <= 3):
-        err(rid, f"{where}: rating must be an integer 1..3 or absent, got {r!r}")
+    if isinstance(r, bool) or not isinstance(r, int) or not (1 <= r <= 5):
+        err(rid, f"{where}: rating must be an integer 1..5 or absent, got {r!r}")
 
 
 def check_coords(rid, obj, where):

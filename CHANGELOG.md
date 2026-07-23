@@ -8,6 +8,12 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **Ratings are now 1–5 stars on a tap-or-drag slider.** The old 1–3 three-star
+  control read ambiguously and crowded the row. Rate by tapping a star or
+  dragging across the scale (or arrow keys); the rating now sits under the
+  dish/venue name, clear of the ♥. (ADR 0019)
+
 ### Added
 - **Choose which maps app opens on an address.** Settings → **Maps app** lets
   you pick Apple Maps, Google Maps, Waze, or "Match my device" (the default,

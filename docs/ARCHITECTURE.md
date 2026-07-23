@@ -93,7 +93,7 @@ reversible in an afternoon.
   "priceBand": null,                 // optional curated "$"|"$$"|"$$$" — overrides the
   "pricePerPerson": null,            // median (price.js) when it misleads; figure optional
   "verified": null,                  // ISO date the menu was last checked, e.g. "2026-07-10"
-  "rating": null,                    // optional curated household rating, integer 1..3 (ours,
+  "rating": null,                    // optional curated household rating, integer 1..5 (ours,
                                      //   static). Distinct from device-local personal ratings.
   "status": "stub",                  // stub | menu-complete | verified
   "menu": [
@@ -108,7 +108,7 @@ reversible in an afternoon.
           "tags": ["spicy-1"],       // see tag vocabulary
           "image": null,             // optional self-hosted dish photo (lazy-loaded)
           "alt": null,               // required when image is set
-          "rating": null,            // optional curated household rating, integer 1..3 (ours)
+          "rating": null,            // optional curated household rating, integer 1..5 (ours)
           "goesWith": ["Roti"]       // optional pairings: dish names, or "id#Dish" cross-record
         }
       ]
@@ -207,10 +207,10 @@ UI must never present absence of an allergen tag as "allergen-free".
   Name"`. Every reference must resolve to a real dish (validated), the
   same discipline as `picks`. It's our curation — no backend, no crowd ratings.
 - `rating` (venue top-level and/or menu item) is an optional **curated
-  household rating** — our own static integer `1..3` (validated; a bool/float/
+  household rating** — our own static integer `1..5` (validated; a bool/float/
   out-of-range is rejected). Absent = not rated; the field ships **dormant**
   (no data yet — owner supplies real values). It renders where picks render (a
-  "Our rating ★★☆" pill) and on the venue header, styled distinctly from the
+  "Our rating ★★★★☆" pill) and on the venue header, styled distinctly from the
   device-local **personal ratings** (`site/js/ratings.js`, per-profile
   `localStorage`) so ours-verified never reads as the viewer's-own-unverified.
   **Public / crowd ratings stay rejected** (backend + moderation + accounts
@@ -282,10 +282,11 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   alone; the deep-link href is derived from the shared `slug`).
   `favourites-ui.js` is the `♥` toggle; the home "Favourites" view reuses
   the search panel's grouped renderer (`results-view.js`).
-- **Ratings** (`faves.ratings.v1`): `ratings.js` — the viewer's own 1–3 marks
-  on venues + dishes, a flat `{ key: 1..3 }` map keyed like favourites,
-  clamped/sanitised on read. `ratings-ui.js` is the keyboard-operable ☆☆☆
-  control (personal, `--personal` violet) plus the static curated "Our rating"
+- **Ratings** (`faves.ratings.v1`): `ratings.js` — the viewer's own 1–5 marks
+  on venues + dishes, a flat `{ key: 1..5 }` map keyed like favourites,
+  clamped/sanitised on read. `ratings-ui.js` is the keyboard-operable ★★★☆☆
+  slider control (tap/drag/arrows; personal, `--personal` violet) plus the
+  static curated "Our rating"
   badge (`--accent`); rendered on the menu header + dish rows. Per-profile (a
   rating is personal); no averaging, no sharing, no public ratings (ADR 0013).
 - **Settings** (`faves.settings.v1`): `settings.js` — dietary/allergen prefs

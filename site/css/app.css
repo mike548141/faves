@@ -1194,19 +1194,65 @@ body:not(.menu-page) {
   justify-content: flex-end;
   gap: var(--space-1);
 }
+/* Your personal rating, on its own line just under the dish name (menu.js) —
+   an identity mark on the dish, kept clear of the heart/Add cluster so the two
+   don't read as one control. Left-aligned; the slider's own 44px height carries
+   the tap target, so only a hair of vertical breathing room is needed here. */
+.dish-rating {
+  margin-top: var(--space-1);
+}
 
 /* ---------- Ratings ---------- */
-/* Personal rating: an interactive ☆☆☆ the viewer taps to set their OWN 1–3
-   mark. Deliberately styled apart from our curation — cool --personal accent,
-   no text label (it's a control, not a badge) — so it never reads as a verified
-   household rating. Distinctness is carried by colour AND interactivity AND the
-   absence of the "Our rating" pill, never colour alone. */
+/* Personal rating: an interactive ★★★☆☆ slider the viewer taps or drags to set
+   their OWN 1–5 mark (ADR 0019). Deliberately styled apart from our curation —
+   cool --personal accent, no text label (it's a control, not a badge) — so it
+   never reads as a verified household rating. Distinctness is carried by colour
+   AND interactivity AND the absence of the "Our rating" pill, never colour
+   alone. */
 .rating {
   display: inline-flex;
   align-items: center;
-  gap: 0.1em;
+  gap: 0.15em;
 }
-.rating-star,
+/* The star track IS the slider: one 44px-tall target you tap or drag to set
+   1–5 (ADR 0019). touch-action:none so a horizontal drag rates the dish rather
+   than scrolling the page; user-select off so a drag never selects the glyphs. */
+.rating-slider {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.1em;
+  border-radius: var(--radius-chip);
+  color: var(--ink-soft);
+  cursor: pointer;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.rating-slider:focus-visible {
+  outline: 2px solid var(--personal);
+  outline-offset: 2px;
+}
+.rating-star {
+  display: inline-flex;
+  padding: 0 0.12em;
+  font-size: 1.4rem;
+  line-height: 1;
+  transition: transform 0.14s ease, color 0.14s ease;
+}
+.rating-star.is-on {
+  color: var(--personal);
+}
+/* A light "expand" cue when the control is engaged (hover or keyboard focus) —
+   the compact idle grows a touch so aiming a tap/drag is easier. */
+@media (hover: hover) {
+  .rating-slider:hover .rating-star {
+    transform: scale(1.08);
+  }
+}
+.rating-slider:focus-visible .rating-star {
+  transform: scale(1.08);
+}
 .rating-clear {
   flex: none;
   display: inline-flex;
@@ -1219,32 +1265,22 @@ body:not(.menu-page) {
   border-radius: var(--radius-chip);
   background: transparent;
   color: var(--ink-soft);
+  font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
   transition: transform 0.14s ease, color 0.14s ease, background 0.14s ease;
 }
-.rating-star {
-  font-size: 1.5rem;
-}
-.rating-star[aria-pressed="true"] {
-  color: var(--personal);
-}
-.rating-clear {
-  font-size: 1.1rem;
-}
 @media (hover: hover) {
-  .rating-star:hover,
   .rating-clear:hover {
     background: color-mix(in srgb, var(--personal) 14%, transparent);
     color: var(--personal);
   }
 }
-.rating-star:active,
 .rating-clear:active {
   transform: scale(0.88);
 }
 
-/* Curated household rating: a static, read-only "Our rating ★★☆" pill rendered
+/* Curated household rating: a static, read-only "Our rating ★★★★☆" pill rendered
    from the repo data. Warm brand --accent + a text label + pill chrome mark it
    as OURS and verified — the opposite language to the bare personal control. */
 .rating-curated {
@@ -1281,6 +1317,10 @@ body:not(.menu-page) {
   .rating-star,
   .rating-clear {
     transition: none;
+  }
+  .rating-slider:hover .rating-star,
+  .rating-slider:focus-visible .rating-star {
+    transform: none;
   }
 }
 

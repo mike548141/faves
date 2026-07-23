@@ -1,27 +1,29 @@
 // Personal ratings — the third device-local personal feature (after the order
-// tally and favourites). A rating is a 1–3 score the *viewer* gives a venue or
+// tally and favourites). A rating is a 1–5 score the *viewer* gives a venue or
 // a dish, stored in localStorage only: per-profile, never in the repo, never
 // sent anywhere. NO averaging across profiles, NO sharing, NO public/crowd
 // ratings — those need a backend + moderation + accounts and break three
-// non-goals (STRATEGY). See ADR 0013. This is the local-only half only.
+// non-goals (STRATEGY). See ADR 0013, and ADR 0019 for the move to a 1–5 star
+// scale + slider control. This is the local-only half only.
 //
-// The 1–3 scale deliberately matches the curated household scale (the optional
-// static `rating` in the data), so personal and curated marks share one
-// vocabulary — but they stay visually and structurally distinct: this is the
-// user's own, *unverified* mark (ratings-ui.js styles it apart), the same
-// principle as the recorded personal-tags design note.
+// The 1–5 scale matches the curated household scale (the optional static
+// `rating` in the data), so personal and curated marks share one vocabulary —
+// but they stay visually and structurally distinct: this is the user's own,
+// *unverified* mark (ratings-ui.js styles it apart), the same principle as the
+// recorded personal-tags design note.
 //
 // Identity mirrors favourites (favourites.js): a venue by id, a dish by
 // venueId + name — so the same `{ type, venueId, name }` entry shape works for
-// hearts and ratings alike. Stored as a flat `{ key: 1..3 }` map, sanitised on
+// hearts and ratings alike. Stored as a flat `{ key: 1..5 }` map, sanitised on
 // read so a hand-edited or corrupt value can't smuggle in an out-of-range mark.
+// Old 1..3 values stay valid (they're within 1..5), so nothing migrates.
 
 import { profileScopedStorage } from "./profiles.js";
 
 const KEY = "faves.ratings.v1";
 
 export const MIN = 1;
-export const MAX = 3;
+export const MAX = 5;
 
 /** Stable identity of a rated thing — identical shape to favourites' favKey. */
 export const ratingKey = (e) =>
@@ -74,13 +76,13 @@ export function createRatings(storage) {
   }
 
   return {
-    /** The 1..3 score for `entry`, or 0 when unrated. */
+    /** The 1..5 score for `entry`, or 0 when unrated. */
     get: (entry) => map[ratingKey(entry)] || 0,
     has: (entry) => !!map[ratingKey(entry)],
     count: () => Object.keys(map).length,
 
     /**
-     * Set a 1..3 rating for `entry`; a value that clamps to 0 clears it.
+     * Set a 1..5 rating for `entry`; a value that clamps to 0 clears it.
      * Returns the stored score (0 = now cleared). Idempotent — re-setting the
      * same value is a no-op (no commit, no subscriber churn), so a stray
      * re-tap of the current star never fires a spurious change.

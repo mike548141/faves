@@ -36,9 +36,11 @@ test("ratingKey: venue vs dish identity (mirrors favKey)", () => {
 test("clampRating: rounds, clamps to [MIN, MAX], and 0-clears the rest", () => {
   assert.equal(clampRating(1), 1);
   assert.equal(clampRating(3), 3);
+  assert.equal(clampRating(4), 4); // 1..5 scale (ADR 0019)
+  assert.equal(clampRating(5), 5);
   assert.equal(clampRating(2.4), 2); // rounds to nearest step
   assert.equal(clampRating(2.6), 3);
-  assert.equal(clampRating(9), MAX); // over-range clamps down
+  assert.equal(clampRating(9), MAX); // over-range clamps down (MAX is now 5)
   assert.equal(clampRating(0), 0); // below MIN → unset
   assert.equal(clampRating(-5), 0);
   assert.equal(clampRating("lots"), 0); // non-numeric → unset
@@ -106,7 +108,7 @@ test("sanitises a corrupt or out-of-range stored payload on read", () => {
     fakeStorage('{"v:a":9,"d:a X":0,"d:a Y":2,"d:a Z":"x"}')
   );
   assert.equal(r.count(), 2);
-  assert.equal(r.get({ type: "venue", venueId: "a" }), MAX); // 9 clamped to 3
+  assert.equal(r.get({ type: "venue", venueId: "a" }), MAX); // 9 clamped to MAX (5)
   assert.equal(r.get({ type: "dish", venueId: "a", name: "Y" }), 2);
   assert.equal(r.has({ type: "dish", venueId: "a", name: "X" }), false); // 0 dropped
 });

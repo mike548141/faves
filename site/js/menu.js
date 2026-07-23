@@ -421,6 +421,16 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
   const head = el("div", { className: "dish-head" }, [nameEl, aside]);
   // Note: li.append() below stringifies null, so only push real nodes.
   const children = [head];
+  // Your personal rating sits directly under the name — it's an identity mark on
+  // the dish, so it reads clearest there and stays clear of the heart/Add action
+  // cluster below (side by side the two were mistaken for one control). dishEntry
+  // is shared with the actions row.
+  const dishEntry = r
+    ? { type: "dish", venueId: r.id, venueName: r.name, name: item.name, isRecipe: isRecipes }
+    : null;
+  if (dishEntry) {
+    children.push(el("div", { className: "dish-rating" }, [ratingControl(dishEntry, item.name)]));
+  }
   const photo = dishPhoto(item);
   if (photo) children.push(photo);
   if (item.desc) {
@@ -441,9 +451,7 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
   // restaurant dishes only — Cook at Home is for cooking, not an order to
   // read down the phone.
   if (r) {
-    const dishEntry = { type: "dish", venueId: r.id, venueName: r.name, name: item.name, isRecipe: isRecipes };
     const actions = el("div", { className: "dish-actions" }, [
-      ratingControl(dishEntry, item.name),
       heartButton(dishEntry, item.name),
     ]);
     if (!isRecipes) {
