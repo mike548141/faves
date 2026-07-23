@@ -65,6 +65,9 @@ deliberation those compact docs omit.
   detour leads / availability secondary) with suburb-or-place destinations (no
   geocoder, no stored address), plus a routed maps handoff (Google waypoint;
   Apple has none → venue-as-destination); live routed corridor stays rejected
+- [0015](0015-split-precache-versioning.md) — split precache versioning: a shell
+  cache vs a data cache with independent version constants, so a menu-data edit
+  no longer re-downloads the whole app shell (and vice versa)
 - [0016](0016-address-tap-pin-at-street-address.md) — the address tap opens a
   map *pin* at the venue's **street address** (Maps geocodes it exactly — stored
   coords sit ~100 m off, proven on R & S Satay), not driving directions;
