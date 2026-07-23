@@ -406,7 +406,8 @@ stays the owner's explicit call. Order matters:
 
 Verified clean 2026-07-12 (tree + full history): no secrets (the one
 token line reads from Keychain; "share tokens" are client-side codec),
-Apache 2.0 licence present, only `mike@cxi.nz` in commit metadata,
+Apache 2.0 licence present, only the owner's own `cxi.nz` work address in
+commit metadata,
 home-area inference no worse than the live site already allows.
 
 ## Theme 9 — Cross-device preference sync (owner-approved 2026-07-23)
