@@ -67,13 +67,24 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [ ] **McDonald's — finish the flesh-out** `[M][content]` — added 2026-07-23 as
   a 5-branch listing with the enduring menu (items only; **prices "varies"** —
   not published per-store, so null, no fabrication). Remaining, all content (no
-  code): (a) **dev-time geocode the 5 branches** so it shows in Near-me (same
-  backlog as the branches above); (b) **self-hosted product photos** — **owner
-  accepted the copyright/IP risk on the public site, 2026-07-23** (informed
-  decision on record); needs the actual image files (the official site is a JS
-  app — assets weren't scrapeable this session); (c) **allergen/dietary tags**
-  from a reliable source (deliberately omitted for now — "not stated" ≠
-  free-of, safety floor); (d) revisit prices if a per-store source appears.
+  code): (a) **dev-time geocode the 5 branches** so it shows in Near-me **and so
+  the contact card shows the 2 *nearest* branches** — today, with no coords, the
+  branch cap falls back to the first two in data order (Courtenay Pl + Lambton
+  Quay show even when Johnsonville/Porirua are closer to the viewer). The sort
+  logic already exists (`orderedBranches` → `branchesToShow`); it just needs the
+  coords. (b) **self-hosted product photos** — **owner accepted the copyright/IP
+  risk on the public site, 2026-07-23** (informed decision on record); needs the
+  actual image files (the official site is a JS app — assets weren't scrapeable
+  this session); (c) **allergen/dietary tags** from a reliable source
+  (deliberately omitted for now — "not stated" ≠ free-of, safety floor); (d)
+  revisit prices if a per-store source appears.
+- [ ] **Branches list scrolls with the menu** `[S]` — owner, 2026-07-23: on
+  desktop the aside is `position: sticky`, so a long branch list (McDonald's)
+  gets its bottom cut off while the menu scrolls past it. Wants them to **scroll
+  at the same rate**. Fix drafted + reverted (owner chose to queue): drop
+  `position: sticky` + `top` from `.menu-twocol > .menu-aside` (keep
+  `align-self: start`), CSS-only, bump SHELL. (Trade-off: the contact card then
+  scrolls away for short single-location asides too — acceptable per owner.)
 
 - ✅ **Choose your maps app** `[S]` — **shipped 2026-07-23** (ADR 0018). The web
   can't read the OS default-maps-app, so Settings → "Maps app" lets the viewer
@@ -127,14 +138,16 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   for multi-location venues (show the 2 nearest branches within this distance;
   `locations.branchesToShow`). One dial, honest new job; the "favourites count
   as this much nearer" label may want a rename to match its dual meaning `[S]`.
-- [ ] **Settings on the restaurant page** `[M]` — the ⋯ app menu was added to the
-  menu page 2026-07-23 (Favourites/Share/About), but **Settings was deliberately
-  left off**: it changes safety-critical allergen/dietary prefs that `menu.js`
-  reads *once at render*, so exposing it there without live-updating the warnings
-  risks a stale allergen highlight (a safety miss). To include it, wire `menu.js`
-  to re-apply on a settings change (re-evaluate `dish-flagged` per dish + the
-  dietary dim) and reload the per-profile stores on a profile switch. Then add
-  `settings-btn` back to restaurant.html's ⋯.
+- [ ] **Settings on the restaurant page** `[M]` — **owner explicitly wants it
+  there** (2026-07-23; it's on home, missing on the menu page). The ⋯ app menu
+  shipped to the menu page with Favourites/Share/About, but **Settings was
+  deliberately left off**: it changes safety-critical allergen/dietary prefs that
+  `menu.js` reads *once at render*, so exposing it there without live-updating the
+  warnings risks a stale allergen highlight (a safety miss). To include it, wire
+  `menu.js` to re-apply on a settings change (re-evaluate `dish-flagged` per dish
+  + the dietary dim) and reload the per-profile stores on a profile switch. Then
+  add `settings-btn` back to restaurant.html's ⋯ (markup + `initSettingsUI()` in
+  `initChrome`). This safety-reactivity wiring is the whole task.
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
 - [ ] **Ratings UX — redesign (attempt 3)** `[M][design]` ⚑ — **two control
