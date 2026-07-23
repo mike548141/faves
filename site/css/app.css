@@ -1322,17 +1322,26 @@ body:not(.menu-page) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border: 1px solid var(--line);
   border-radius: 50%;
   background: var(--surface);
   color: var(--ink);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 1;
   box-shadow: var(--shadow-lift);
   cursor: pointer;
   transition: transform 0.12s ease, color 0.16s ease, border-color 0.16s ease;
+}
+/* The roomy tablet/desktop layout dwarfs a mobile-sized circle, so scale it up
+   past the mobile breakpoint to sit in proportion with the rest of the UI. */
+@media (min-width: 34rem) {
+  .to-top {
+    width: 60px;
+    height: 60px;
+    font-size: 1.85rem;
+  }
 }
 @media (hover: hover) {
   .to-top:hover {

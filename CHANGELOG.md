@@ -8,7 +8,15 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **Searching for a dish now jumps straight to it.** Picking a dish from the
+  app-wide search took you to the right menu but left you at the top — you had
+  to reload to land on the dish. It now scrolls to the dish on arrival.
+
 ### Changed
+- **Bigger "back to top" button.** The floating back-to-top control was
+  under-sized against the roomy tablet/desktop layout; it's now larger and
+  scales up past mobile.
 - **Tapping an address opens the map at the right place again.** Tapping a
   venue's address now drops a **pin** on the map at its street address (rather
   than starting driving directions), and it points at the exact spot — some

@@ -837,6 +837,25 @@ function fail() {
   root.setAttribute("aria-busy", "false");
 }
 
+// Jump to the dish named in location.hash once its row is in the DOM. The id
+// is decoded because slugs are ASCII but the hash may arrive percent-encoded.
+function scrollToHash() {
+  const raw = location.hash.slice(1);
+  if (!raw) return;
+  let target;
+  try {
+    target = document.getElementById(decodeURIComponent(raw));
+  } catch {
+    target = document.getElementById(raw); // malformed % escape — use as-is
+  }
+  if (!target) return;
+  // Wait out render()'s own rAF (which measures --toolbar-h) so the target's
+  // scroll-margin-top is correct when we land.
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => target.scrollIntoView({ block: "start", behavior: "instant" }))
+  );
+}
+
 if (!id) {
   fail();
 } else {
@@ -846,6 +865,13 @@ if (!id) {
       // The chrome renders in English with data-i18n keys; this applies the
       // stored language to it (later switches re-translate the whole page).
       translate(root);
+      // A #dish- deep-link (e.g. from the app-wide search) arrives before the
+      // menu exists — the browser's native fragment scroll fires at parse time,
+      // finds no target, and gives up. Now that the dish rows are in the DOM,
+      // jump to it ourselves. Two rAFs so --toolbar-h (set in the first) is
+      // applied before scroll-margin-top is honoured. Instant, to land exactly
+      // like a hard reload of the same URL.
+      scrollToHash();
     })
     .catch((err) => {
       console.error("Faves menu:", err);
