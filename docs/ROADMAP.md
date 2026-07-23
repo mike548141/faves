@@ -65,8 +65,27 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   **Still open:** Kaffee Eis + Gong Cha's **second branches** — need real
   addresses + a dev-time geocode; a content session appends them, no code change.
 
+- ✅ **Choose your maps app** `[S]` — **shipped 2026-07-23** (ADR 0018). The web
+  can't read the OS default-maps-app, so Settings → "Maps app" lets the viewer
+  pick Apple / Google / Waze / "Match my device" (default = platform detection).
+  `geo.resolveMapsTarget` + a Waze provider; per-profile like other settings.
+
 **Open:**
 
+- [ ] **"Along a route" → free-text destination + unified search bar**
+  `[L][constraint][owner-ratified 2026-07-23]` — owner: the suburb/place
+  **dropdown** (ADR 0014) is too limiting; wants to **type any address/area**,
+  and to **fold it into the restaurants-page search bar** (type a dish/restaurant
+  → results; type a place → "on the way to there"). Free text → coordinates needs
+  a **geocoder = an external request**, which relaxes the offline/zero-dependency
+  invariant (ADR 0001) — the exact wall ADR 0014 cited. **Owner has ratified
+  crossing it** for destination entry (online-only; rest of site stays offline).
+  Chosen: **Nominatim/OSM** (no key, attribution + usage-policy compliance),
+  behind graceful offline degradation. **Deferred to a focused next session** —
+  it's a new external **trust surface**: needs its own ADR (relax the invariant +
+  provider choice), a **CSP `connect-src`** allowance, the geocode module, the
+  search-bar intent detection, and re-wiring `route.js` off the dropdown. Build
+  order + security notes to live in that ADR.
 - **Travel time next to the address / hours (mode-aware)** `[M]` — owner steer
   2026-07-23, raw: *"keep the feature idea in the roadmap, refine that idea that
   I want the travel time (not necessarily drive e.g. I'm 100m walk away) shown in
@@ -98,11 +117,14 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   (Closes the ⚠️ open question under the sort-bug record below.)
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
-- [ ] **Ratings UX rework** `[M][design]` ⚑ — owner, raw: "I don't love the UX
-  of the ratings, we need to work on this more." Direction not backed out, not
-  ratified — the (a)+(b)-not-public shape stands *provisionally*; the UX
-  (three-star tap row on venue header + every dish row) needs a design session
-  with the owner before further ratings work. ADR 0013 stands until superseded.
+- ✅ **Ratings UX rework** `[M][design]` — **shipped 2026-07-23** (ADR 0019,
+  supersedes ADR 0013's scale + control shape). Owner reviewed the live 1–3
+  three-button control: read ambiguously, took too much room, and sat
+  confusingly beside the ♥. Reworked to a **1–5 star tap/drag slider**
+  (`role="slider"`, full keyboard, ~140px one-target), moved to its own line
+  **under the dish/venue name**, clear of the heart. `validate.py` curated range
+  1..3 → 1..5; old stored marks stay valid (no migration); curated field still
+  dormant. Browser-verified at 390px. The (a)+(b)-not-public shape stands.
 - ✅ **Directions handoff — backed out to a pin** — **applied 2026-07-23**
   (`9dad5f8`, ADR 0016, wt: faves-wave8-rulings-apply). Owner, raw: "I don't
   think this meets what I wanted for the feature. We need to review it and may
