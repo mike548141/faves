@@ -327,8 +327,8 @@ export function initSettingsUI() {
 
   const fav = field({
     id: "set-fav-boost",
-    label: "Favourites count as this much nearer",
-    hint: "A gentle pull toward your favourites — higher means they win from further away.",
+    label: "Show branches within",
+    hint: "For a multi-branch venue (e.g. McDonald's), the two nearest branches inside this distance show on the contact card — the rest tuck under “Show all branches”.",
     min: BOUNDS.favBoostKm[0],
     max: 30,
     step: 1,
@@ -376,7 +376,7 @@ export function initSettingsUI() {
 
       // --- Distance ---
       el("h3", { className: "settings-group-title", textContent: "Distance" }),
-      el("p", { className: "settings-note", textContent: "These shape the home order when “Near me” is on." }),
+      el("p", { className: "settings-note", textContent: "How far you'll go, and how nearby branches show up." }),
       fav.row,
       far.row,
 

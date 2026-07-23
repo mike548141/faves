@@ -31,6 +31,15 @@ content freshness separately from this file.
   which keeps today's behaviour). The web can't read your phone's default maps
   app, so this is how you override it. (ADR 0018)
 
+### Changed
+- **Settings → Distance dial relabelled: "Show branches within".** The dial
+  used to be described as a favourites ranking boost, but that ranking use
+  went inert once home ordering became pure distance — it's since been
+  repurposed as the cutoff for how close a chain's branches (e.g.
+  McDonald's) must be to show on the contact card. The label and help text
+  now describe what it actually does; the stored setting is unchanged, so
+  no one's saved value resets.
+
 ### Fixed
 - **The desktop menu's info column now scrolls with the page** instead of
   sticking in place — a long branch list (e.g. McDonald's) was getting its

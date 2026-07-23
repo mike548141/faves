@@ -1,14 +1,19 @@
-// User preferences for the home-screen ranking — device-local, like the
-// order tally and favourites. Two distance dials the owner asked to expose:
+// User preferences for the home-screen ranking and menu-page branch display —
+// device-local, like the order tally and favourites. Two distance dials the
+// owner asked to expose:
 //
-//  - favBoostKm: how much nearer a favourite is *treated* as being, so a
-//    favourite gets pull without simply always beating distance. A
-//    favourite 30 km away (boost 10 → "effective" 20 km) can still sit below
-//    a non-favourite 2 km away, while a favourite 8 km away (→ −2) beats it.
+//  - favBoostKm: originally a home-ranking "treat a favourite as this much
+//    nearer" pull; that ranking use went inert once ordering became pure
+//    distance (see ranking.js — owner ruling 2026-07-23). Repurposed as the
+//    branch-proximity cutoff for multi-location venues: on a chain's menu
+//    page, show the 2 nearest branches within this distance (locations.js
+//    branchesToShow). The storage key keeps its old name so existing
+//    viewers' saved values aren't reset by a label change.
 //  - farKm: beyond this straight-line distance a venue is "another town" and
 //    sinks below everything reachable (and the shuffle skips it).
 //
-// Both only bite once we know your location ("Near me"). Stored in
+// farKm only bites once we know your location ("Near me"); favBoostKm bites
+// on any multi-location venue's menu page regardless. Stored in
 // localStorage; sanitised + clamped on read so a hand-edited or corrupt
 // value can't break ranking. Pure/DOM-free and unit-tested.
 
