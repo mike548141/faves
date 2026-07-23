@@ -355,9 +355,16 @@ the owner to read it.
     never per-tap; writes are the one scarce KV resource), pulls + **merges
     client-side** on open/foreground. KV blob = shared mirror, not source
     of record.
-  - **Bearer sync-code, no accounts**: a machine-generated high-entropy
-    code (~44+ bits, friendly word-codes), exchanged **by QR *or*
-    word-code**. Holder of the code = access; no email/password/PII.
+  - **Claim is pluggable over the one E2E store** (addendum, ADR 0017):
+    **passkey + WebAuthn PRF** is the headline path — the passkey is the
+    claim *and* PRF derives the E2E key on-device (server never sees it),
+    platform-synced via **iCloud Keychain** / Google Password Manager, so it
+    rides the user's existing Apple/Google with **no OAuth app, no Apple
+    Developer fee, no email/PII**. Verified Q1 2026: Safari 18+/Chrome/Android
+    ✅, Firefox ✗. The **bearer sync-code** (machine-generated ~44-bit word-code,
+    QR *or* words) stays the **universal fallback** for Firefox / non-passkey /
+    "just give me a code". OIDC "Sign in with Google/Apple" rejected — it
+    claims but supplies no E2E key. No traditional accounts either way.
   - **E2E-encrypted** (`crypto.subtle`, key from the code): server stores
     only ciphertext, so merge (union hearts, last-write-wins settings,
     read-merge-write on push) is all client-side.

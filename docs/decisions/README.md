@@ -72,7 +72,11 @@ deliberation those compact docs omit.
   adopted for the route handoff's venue leg too
 - [0017](0017-cross-device-sync-encrypted-blob-bearer-code.md) — cross-device
   sync of hearts/settings: v1 shareable-link seed (no infra), v2 continual sync
-  via a Cloudflare Worker + KV holding **one E2E-encrypted blob per user**, keyed
-  by a machine-generated **bearer sync-code** (QR or word-code), no accounts,
+  via a Cloudflare Worker + KV holding **one E2E-encrypted blob per user**,
   debounced writes; softens the no-backend non-goal (backend permitted, accounts
-  not), supersedes ADR 0012's "sync out of scope / needs a signed-in app" stance
+  not), supersedes ADR 0012's "sync out of scope / needs a signed-in app" stance.
+  **Addendum:** claim is pluggable over the one E2E store — **passkey + WebAuthn
+  PRF** preferred (rides iCloud Keychain / Google passkey sync, no OAuth app, no
+  dev-program fee, no PII, PRF supplies the E2E key), **bearer sync-code** (QR or
+  word-code) the universal fallback; OIDC "Sign in with" rejected (leaves the
+  E2E key unsolved)

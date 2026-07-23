@@ -129,3 +129,46 @@ The design rules, each load-bearing:
   the other backend-gated ROADMAP items (live group-order rooms, feedback
   intake, the Google-ratings edge proxy) revisit against a real precedent
   — each still its own decision.
+
+## Addendum — 2026-07-23: claim mechanism (passkey + PRF preferred, code as fallback)
+
+Owner follow-up: *would using the user's existing Google/Apple account
+remove the need for the word-code/QR?* Refines the Decision above without
+reversing it — the E2E store, no-OIDC-accounts, and bearer-code all stand;
+this specifies **how a user claims their blob**, which is now **pluggable
+over the one E2E store**.
+
+The insight: the sync-code did **two** jobs — *claim* ("which blob is
+mine") and *encryption key* (the E2E secret). A conventional **OIDC "Sign
+in with Google/Apple"** replaces only *claim*; it authenticates but hands
+over **no encryption secret**, so under our no-decrypt requirement it would
+force either a server that can read the data (❌ breaks the requirement) or
+a user passphrase (re-introduces a secret). OIDC therefore does **not**
+remove the need for a user-held secret — **rejected** for this use.
+
+**Passkey + WebAuthn PRF extension** does both jobs and is preferred:
+- *Identity*: the passkey is the claim — sign in on device 2, matched.
+- *E2E key*: the PRF extension derives a stable secret **on-device that the
+  server never sees** — true E2E, no password, no code.
+- *Cross-device*: the platform syncs the passkey — **iCloud Keychain**
+  (Apple), Google Password Manager (Android/Chrome). This *is* "use their
+  existing Apple/Google", at the credential layer.
+- Cheaper/cleaner than OIDC: **no OAuth app registration** (your domain is
+  the relying party), **no Apple Developer Program fee**, **no email/global
+  identity collected** (domain-scoped, opaque) — so the "no accounts /
+  nothing personal" posture stays largely intact.
+
+Verified current (Q1 2026): Safari 18+ derives PRF from iCloud Keychain
+passkeys; Chrome/Edge/Android solid; **Firefox** is the gap. For the
+owner's all-Apple household it works today.
+
+**Resulting build shape:** implement the **E2E blob store + client-side
+merge claim-agnostic first**, then layer claim paths on the same store —
+**passkey + PRF as the headline path**, **bearer sync-code as the universal
+fallback** (Firefox, non-passkey devices, "just give me a code"). So the
+answer to "account or code?" is *both, over one store*.
+
+Honest caveat: passkey + PRF is a full WebAuthn ceremony (more code) and
+needs platform passkey sync enabled — so the sync-code stays the *fastest*
+thing to ship and the passkey path is the *nicest*, landing once verified
+on the owner's real devices.
