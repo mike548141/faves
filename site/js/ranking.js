@@ -7,24 +7,27 @@
 //     or opening within the hour beats one that's shut for the night.
 //  2. Favourites (from the device-local heart store). A place you've
 //     hearted — or one holding a dish you've hearted — is one you actually
-//     want. Rather than always beating distance, a favourite is treated as
-//     `favBoostKm` nearer than it is: a favourite 8 km away (→ −2) outranks
-//     a non-favourite 2 km away, but a favourite 30 km away (→ 20) sits
-//     below one 2 km away. It never overrides availability: a closed
-//     favourite you can't order from still sits below anywhere open.
-//  3. Distance (only when we know where you are, i.e. "Near me"). A
-//     favourite in another town is great when you're there and useless the
-//     rest of the time, so beyond a "reachable tonight" radius (`farKm`,
-//     measured on ACTUAL distance — the boost is preference, not reach) it
-//     sinks below everything nearby.
+//     want. In the DEFAULT (no-location) list a favourite floats above its
+//     equal-availability peers (a tiebreak), but never overrides availability:
+//     a closed favourite you can't order from still sits below anywhere open.
+//     In "Near me" a favourite gets NO distance pull — see (3).
+//  3. Distance (only when we know where you are, i.e. "Near me" / "Nearest
+//     first"). Owner ruling 2026-07-23: this mode is PURE distance — a heart
+//     keeps its ♥ badge but earns no ranking pull, so a nearer plain venue
+//     always outranks a farther hearted one. Beyond a "reachable tonight"
+//     radius (`farKm`) a venue sinks below everything nearby regardless.
+//     (The `favBoostKm` dial no longer changes this ordering; it's retained
+//     pending a decision on whether to repurpose or retire it.)
 //
 //  4. A usable menu. A "menu coming soon" stub can be found by name but not
 //     ordered from, so it sinks below everything orderable; among stubs,
 //     proximity (not open-status) is the only useful signal.
 //
 // Sort order is lexicographic: pinned (the Cook-at-Home recipes collection
-// always anchors the top) → orderable-before-stub → reachable → availability
-// → effective distance (favourite-boosted) → favourite-tiebreak → curated.
+// always anchors the top) → orderable-before-stub → reachable → then the two
+// middle keys swap by mode: default (no location) leads on availability then a
+// favourite tiebreak; "Nearest first" (origin known) leads on pure distance
+// then availability. Curated order breaks any final tie.
 // Pure (no DOM/network) so it's unit-tested; favourites arrive as a plain Set
 // of venue ids and the two distances as params, so this stays store-agnostic.
 // The viewer can tune both distances (settings.js).
@@ -98,18 +101,22 @@ export function isAvailableNow(r, { now, origin = null, farKm = FAR_KM } = {}) {
  *   • no origin (default order): reachable → availability → distance → curated.
  *     We can't measure distance, so float the places you can order from *now*.
  *   • origin known ("Nearest first" is ON): reachable → distance → availability
- *     → curated. The toggle promises nearest-first, so distance leads; a place
- *     being open is still shown (its badge) and filterable ("Open now"), but it
- *     no longer floats a farther-but-open venue above a nearer one. (Fixes the
- *     owner's report that a 10 km venue outranked a 2.5 km one under "Nearest
- *     first" — the cause was availability outranking distance, not a text sort.)
+ *     → curated. The toggle promises nearest-first, so PURE distance leads; a
+ *     place being open is still shown (its badge) and filterable ("Open now"),
+ *     but it no longer floats a farther-but-open venue above a nearer one.
+ *     Owner ruling 2026-07-23: a favourite earns NO distance pull here (it keeps
+ *     its ♥ badge only), so a nearer plain venue always beats a farther hearted
+ *     one. (Also fixes the earlier report that a 10 km venue outranked a 2.5 km
+ *     one — that cause was availability outranking distance, not a text sort.)
  * `origin` ({lat,lng}) is optional; without it nothing is demoted for distance.
  * `favouriteIds` is a Set of venue ids the viewer has hearted (the venue itself
  * or any dish it holds — the caller flattens dish favourites to their venue id);
- * omit or pass null to ignore favourites. A favourite still counts as
- * `favBoostKm` nearer (weighted into the distance key), so hearts keep their
- * pull even in "Nearest first". Venues with coordinates gain a `distanceKm`
- * field when origin is known, for the card. The input array is not mutated.
+ * omit or pass null to ignore favourites. In the default (no-location) order a
+ * favourite floats above equal-availability peers (favTie); `favBoostKm` is a
+ * legacy Near-me distance boost the ruling above neutralised — it no longer
+ * reorders anything (kept for API/settings compatibility). Venues with
+ * coordinates gain a `distanceKm` field when origin is known, for the card. The
+ * input array is not mutated.
  */
 export function rankVenues(
   restaurants,
@@ -144,20 +151,30 @@ export function rankVenues(
     };
   });
   // Shared leading keys, then distance vs availability swap by mode (see the
-  // doc comment). `cmp` compares the boosted distance *numerically* — never
-  // the formatted "10 km" string, which would sort lexicographically (10 < 2.5).
+  // doc comment). `cmp` compares distance *numerically* — never the formatted
+  // "10 km" string, which would sort lexicographically (10 < 2.5).
   keyed.sort((a, b) => {
     const lead =
       a.pinned - b.pinned || // the recipes collection is pinned to the very top
       a.stub - b.stub || // orderable venues above menu-less "coming soon" stubs
       a.far - b.far; // reachable (within farKm) before too-far
     if (lead) return lead;
-    const byDistance = cmp(a.effective, b.effective); // favourite-boosted distance
     const byAvailability = a.tier - b.tier; // open now floats up
-    const tail = a.favTie - b.favTie || a.i - b.i; // favourite tiebreak → curated
-    return origin
-      ? byDistance || byAvailability || tail // "Nearest first": distance leads
-      : byAvailability || byDistance || tail; // default: availability leads
+    if (origin) {
+      // "Nearest first" = pure distance (owner ruling 2026-07-23). A hearted
+      // venue keeps its ♥ badge but earns NO ranking pull here: raw distance
+      // leads (not the favourite-boosted `effective`), with availability the
+      // tiebreak, then curated. So a hearted place 10 km away sits below a plain
+      // one 2.5 km away — the toggle honours its "nearest first" promise.
+      return cmp(a.dist, b.dist) || byAvailability || a.i - b.i;
+    }
+    // Default (no location): availability leads. With no distance to measure, a
+    // favourite floats above equal-availability peers via the favTie tiebreak
+    // (the favBoostKm distance boost has nothing to act on here). `effective`
+    // is Infinity for every venue in this mode, so it never reorders.
+    const byEffective = cmp(a.effective, b.effective);
+    const tail = a.favTie - b.favTie || a.i - b.i; // favourite float → curated
+    return byAvailability || byEffective || tail;
   });
   // With a known location, hand the card the nearest branch's distance and
   // hours (so its "📍 1.2 km" and open/closed badge describe the same branch).

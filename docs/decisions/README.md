@@ -47,6 +47,7 @@ deliberation those compact docs omit.
 - [0010](0010-drive-time-directions-handoff.md) — the address maps
   handoff requests driving directions from the viewer's location (real
   live drive time), plus a rough straight-line "~N min" card hint
+  (**part (a) superseded by 0016**; the "~N min" hint (b) stands)
 - [0011](0011-multi-location-venues.md) — venues with several branches as
   one record + an optional `locations` array (shared menu), resolved by
   the nearest branch for distance / status / maps; not separate records
@@ -64,3 +65,8 @@ deliberation those compact docs omit.
   detour leads / availability secondary) with suburb-or-place destinations (no
   geocoder, no stored address), plus a routed maps handoff (Google waypoint;
   Apple has none → venue-as-destination); live routed corridor stays rejected
+- [0016](0016-address-tap-pin-at-street-address.md) — the address tap opens a
+  map *pin* at the venue's **street address** (Maps geocodes it exactly — stored
+  coords sit ~100 m off, proven on R & S Satay), not driving directions;
+  supersedes ADR 0010 part (a), keeps its "~N min" hint (b); address-targeting
+  adopted for the route handoff's venue leg too

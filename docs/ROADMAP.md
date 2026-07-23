@@ -61,16 +61,37 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   **Still open:** Kaffee Eis + Gong Cha's **second branches** — need real
   addresses + a dev-time geocode; a content session appends them, no code change.
 
+**Open:**
+
+- **Travel time next to the address / hours (mode-aware)** `[M]` — owner steer
+  2026-07-23, raw: *"keep the feature idea in the roadmap, refine that idea that
+  I want the travel time (not necessarily drive e.g. I'm 100m walk away) shown in
+  Faves next to the address/opening hours or maybe in the collect window/dialog"*.
+  Refined honestly: a **mode-aware in-app estimate** — walk when you're close,
+  drive when you're far (the crossover distance is a design call) — surfaced on
+  the **menu screen near the address/hours row** and/or in the **collect
+  dialog**, not only on the Near-me home card as today. Builds on the existing
+  haversine distance + `estimateDriveMinutes()` (ADR 0010 part b); add a walk
+  estimate (a slower km/h, no road-winding padding) and pick the mode by
+  distance. Stays a `~` approximation — **no routing API** (that's the
+  offline/zero-dep wall, unchanged). Needs the viewer's location, so it only
+  shows when Near-me has captured an origin this session (`recallOrigin`).
+
 **Parked idea** (from ADR 0014 consequences): a **"surprise me on the way"**
 variant of the Pick-for-us shuffle that draws from the along-route pool rather
 than the Near-me pool — parked, unclaimed, `[S/M]`.
 
 ## Owner rulings — 2026-07-23 (session Q&A, raw where quoted)
 
-- [~] **"Nearest first" goes pure distance** (claimed 2026-07-22-1250, wt: faves-wave8-rulings-apply) — owner ruled 2026-07-23: hearts
-  keep their ♥ badge but get **no ranking pull** in Nearest-first mode (the
-  `favBoostKm` pull applies only outside it). To apply. (Closes the ⚠️ open
-  question under the sort-bug record below.)
+- ✅ **"Nearest first" goes pure distance** — **applied 2026-07-23** (`9a4ed78`,
+  wt: faves-wave8-rulings-apply). `ranking.js` origin branch now leads on raw
+  distance → availability tiebreak → curated; a hearted venue keeps its ♥ badge
+  but earns no distance pull, so a nearer plain venue always outranks a farther
+  hearted one (regression test: hearted 10 km vs plain 2.5 km → 2.5 km wins).
+  Default no-location order unchanged (a heart still floats via the favTie
+  tiebreak). ⚠️ Side effect: the `favBoostKm` settings dial is now inert for
+  ordering — queued follow-on: **repurpose or retire the favBoostKm dial** `[S]`.
+  (Closes the ⚠️ open question under the sort-bug record below.)
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
 - [ ] **Ratings UX rework** `[M][design]` ⚑ — owner, raw: "I don't love the UX
@@ -78,15 +99,19 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   ratified — the (a)+(b)-not-public shape stands *provisionally*; the UX
   (three-star tap row on venue header + every dish row) needs a design session
   with the owner before further ratings work. ADR 0013 stands until superseded.
-- [~] **Directions handoff — ruled: back out to pin** (claimed 2026-07-22-1250, wt: faves-wave8-rulings-apply) — owner, raw: "I don't think this
-  meets what I wanted for the feature. We need to review it and may back out
-  the change. Also when I tapped on 'R & S Satay Noodle House' which is shown
-  at the pickup address '148 Cuba St' the maps open on '1 Garrett St'."
-  Diagnosis: the directions URL targets stored lat/lng; R & S's coords
-  (-41.29379, 174.7751) sit ~100 m off on Garrett St, so navigation goes to
-  the wrong street. Fix regardless of feature shape: target the **street
-  address** (Maps geocodes it exactly); coords stay for in-app distance maths
-  only. Feature shape (pin vs directions vs both) = owner call, being taken.
+- ✅ **Directions handoff — backed out to a pin** — **applied 2026-07-23**
+  (`9dad5f8`, ADR 0016, wt: faves-wave8-rulings-apply). Owner, raw: "I don't
+  think this meets what I wanted for the feature. We need to review it and may
+  back out the change. Also when I tapped on 'R & S Satay Noodle House' which is
+  shown at the pickup address '148 Cuba St' the maps open on '1 Garrett St'."
+  Applied: the address tap now opens a map **pin** (not directions), targeting
+  the **street address string** — `apple maps.apple.com/?q=<addr>`, `google
+  maps/search/?api=1&query=<addr>` — so Maps geocodes 148 Cuba St exactly. Coords
+  are a belt-and-braces fallback only (they stay the source for in-app distance
+  maths). The along-route "🧭 Route via maps" handoff keeps its routed form but
+  its venue leg targets the address too. ADR 0010 part (a) superseded; its "~N
+  min drive" hint (b) stands. The underlying coord imprecision is still open —
+  see the **Coordinate audit** `[S]` below.
 - [ ] **Coordinate audit** `[S]` — follow-on: dev-time geocoded coords are
   suspect fleet-wide (R & S proven ~100 m off). Sweep all venue coords against
   their street addresses; affects distance sort + detour maths accuracy.
@@ -99,8 +124,8 @@ Both resolved; verbatim raw-note records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md
   (`566aa20`). Root cause was not a text sort: the sort-key order put
   availability + the favourite boost ahead of distance; the fix makes distance
   lead when "Nearest first" is on. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-  ⚠️ Hearts-in-Nearest-first question: **ruled 2026-07-23, see Owner rulings
-  above** (pure distance).
+  ⚠️ Hearts-in-Nearest-first question: **ruled + applied 2026-07-23** (pure
+  distance, `9a4ed78`) — see Owner rulings above.
 - ✅ **Split versioning: app vs config vs data** `[M]` — **shipped 2026-07-23**
   (ADR 0015): `sw.js` split into `SHELL_VERSION` + `DATA_VERSION`, each its own
   cache, so a data-only menu edit refetches just `site/data/*` and no longer
