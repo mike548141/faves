@@ -362,6 +362,11 @@ permitted**; **accounts are not** (a bearer sync-code carries it);
 **off-device data must be E2E-encrypted** — no way for Cloudflare *or*
 the owner to read it.
 
+**Through-line (owner, 2026-07-23):** the backend shifts Faves from
+**device-centric to user-centric** — a person's data belongs to *them* and
+follows them across devices (Theme 9) and, with consent, to people they
+choose (Theme 10), rather than being trapped in one browser's storage.
+
 - **v1 — shareable-link seed** `[S]` — reuse the `share-codec.js` +
   `favourites.merge()` machinery (already built for group-order / shortlist
   links) to encode hearts+settings into a link/QR you open on a second
@@ -430,8 +435,10 @@ favourites so the orderer can pick her usual when ordering for the family.
   zero-account floor.
 - **Opt-in, per-scope** (owner steer 2026-07-23): the sharer chooses *what*
   they expose — **separate toggles for favourites / dietary needs /
-  allergens**, not all-or-nothing. Read-only for the recipient; one-way
-  (mutual = two grants); revoke must be easy and obvious.
+  allergens**, not all-or-nothing. **Default shared scope = favourites**
+  (owner-decided 2026-07-23); dietary + allergens are opt-in additions, off
+  by default. Read-only for the recipient; one-way (mutual = two grants);
+  revoke must be easy and obvious.
 - **Crypto step-up — E2E sharing is key-sharing.** The server can't "grant
   access" (it can't decrypt). Each user needs a **keypair**; the sharer wraps
   a copy of their data-key to the recipient's public key (envelope
@@ -444,11 +451,15 @@ favourites so the orderer can pick her usual when ordering for the family.
   **safety** failure, not cosmetic. Frame as **"informational — confirm with
   the person,"** never authoritative; inherit the app's existing allergen
   safety framing. Given real household allergies, non-negotiable.
-- ⚑ **Two owner calls before building:**
-  1. Should Faves share allergen/dietary data across people **at all**, or
-     does that belong to the separate private health app (Theme 6)? Same
-     "personal data leaves the safe zone" split that carved out Theme 6.
-  2. Default scope granularity (favourites-only vs including dietary/allergens).
+- ✅ **Owner calls — resolved 2026-07-23** (both, so this is direction-set,
+  not open):
+  1. **Share health-adjacent data across people? Yes** — but **only on
+     explicit opt-in consent** from the sharer, per scope. So dietary/allergen
+     sharing lives in Faves (not deferred to the Theme 6 health app), gated on
+     consent + the load-bearing safety framing above.
+  2. **Default scope = favourites** (dietary + allergens opt-in, off by
+     default) — see the scope bullet.
+  Still needs its own ADR when built (crypto model, consent UX, revocation).
 
 ## Also parked (small)
 
