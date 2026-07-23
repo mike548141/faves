@@ -17,7 +17,8 @@ content freshness separately from this file.
 ### Added
 - **McDonald's added** as a multi-branch listing (Courtenay Place, Lambton
   Quay, Bunny Street, Johnsonville, Porirua) using the multi-location feature —
-  real addresses and phones, with the menu still to come.
+  real addresses and phones, and a menu of the enduring items. Prices show as
+  "varies" (they differ by store); photos and per-store detail still to come.
 - **Choose which maps app opens on an address.** Settings → **Maps app** lets
   you pick Apple Maps, Google Maps, Waze, or "Match my device" (the default,
   which keeps today's behaviour). The web can't read your phone's default maps
@@ -26,7 +27,8 @@ content freshness separately from this file.
 ### Fixed
 - **Searching for a dish now jumps straight to it.** Picking a dish from the
   app-wide search took you to the right menu but left you at the top — you had
-  to reload to land on the dish. It now scrolls to the dish on arrival.
+  to reload to land on the dish. It now smooth-scrolls to the dish on arrival
+  (instant if you prefer reduced motion).
 - **"Favourites" in the ⋯ menu stays readable on hover.** When the Favourites
   view was open, hovering or tapping its menu row washed the text out to
   near-invisible; it now keeps its contrast (both light and dark mode).
