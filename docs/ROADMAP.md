@@ -404,6 +404,51 @@ the owner to read it.
   signed-in app owns sync" assumption (Theme 6) is retired; the shareable
   shortlist links overlap v1's codec. Audit before building so nothing's
   built twice.
+- **Terminology (addendum 2, ADR 0017):** once passkey sync ships, **don't
+  say "no accounts"** — a passkey reads as an account to users. State what
+  we *don't* collect (no email/password/identity/tracking; E2E so only you
+  can read it). Lockstep: revisit the About line (`about-ui.js`) in the same
+  change that ships passkey sync — it's true today (no passkey yet).
+
+## Theme 10 — Cross-person sharing (ongoing, revocable) — owner-gated
+
+Considered 2026-07-23, **not yet decided**. Distinct from Theme 9 (a
+person's *own* devices) and from the one-shot group-order links (ADR 0009,
+a snapshot). Builds on Theme 9's E2E store; **needs its own ADR when built.**
+
+The capability: person A grants person B **ongoing, read-only, revocable**
+access to a **scoped slice** of their personal layer — e.g. Ruth shares her
+favourites so the orderer can pick her usual when ordering for the family.
+
+- **Scenario 1 (send picks to the family order) does *not* need this** —
+  owner agreed 2026-07-23: ADR 0009's link already does the async "send my
+  picks" job; live simultaneous *rooms* are a separate later polish, not a
+  reason to build sharing. Don't build the backend for Scenario 1.
+- **Why the backend earns its keep here (Scenario 2):** a v1 shareable-link
+  of favourites is a **snapshot that goes stale**; "ongoing/live" forces the
+  backend + a **pull** model. Additive — ADR 0009's link stays the
+  zero-account floor.
+- **Opt-in, per-scope** (owner steer 2026-07-23): the sharer chooses *what*
+  they expose — **separate toggles for favourites / dietary needs /
+  allergens**, not all-or-nothing. Read-only for the recipient; one-way
+  (mutual = two grants); revoke must be easy and obvious.
+- **Crypto step-up — E2E sharing is key-sharing.** The server can't "grant
+  access" (it can't decrypt). Each user needs a **keypair**; the sharer wraps
+  a copy of their data-key to the recipient's public key (envelope
+  encryption). **Revocation is forward-only** — the recipient may have cached
+  what they already saw; state that limit to users. → **Lean Theme 9 the
+  right way: give each user a keypair from the start**, even though self-sync
+  only needs the symmetric secret, so sharing is a smaller later step.
+- ⚑ **Allergen-safety framing is load-bearing.** Shared dietary/allergen
+  data is health-adjacent; ordering off a **stale or wrong** shared list is a
+  **safety** failure, not cosmetic. Frame as **"informational — confirm with
+  the person,"** never authoritative; inherit the app's existing allergen
+  safety framing. Given real household allergies, non-negotiable.
+- ⚑ **Two owner calls before building:**
+  1. Should Faves share allergen/dietary data across people **at all**, or
+     does that belong to the separate private health app (Theme 6)? Same
+     "personal data leaves the safe zone" split that carved out Theme 6.
+  2. Default scope granularity (favourites-only vs including dietary/allergens).
 
 ## Also parked (small)
 

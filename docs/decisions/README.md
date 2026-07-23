@@ -79,4 +79,7 @@ deliberation those compact docs omit.
   PRF** preferred (rides iCloud Keychain / Google passkey sync, no OAuth app, no
   dev-program fee, no PII, PRF supplies the E2E key), **bearer sync-code** (QR or
   word-code) the universal fallback; OIDC "Sign in with" rejected (leaves the
-  E2E key unsolved)
+  E2E key unsolved). **Addendum 2:** once passkeys ship, drop the "no accounts"
+  claim — a passkey is a credential, not an account; state what's not collected
+  (no email/password/identity/tracking; E2E). Cross-person sharing → ROADMAP
+  Theme 10, its own ADR

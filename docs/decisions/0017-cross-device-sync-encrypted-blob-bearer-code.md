@@ -172,3 +172,27 @@ Honest caveat: passkey + PRF is a full WebAuthn ceremony (more code) and
 needs platform passkey sync enabled — so the sync-code stays the *fastest*
 thing to ship and the passkey path is the *nicest*, landing once verified
 on the owner's real devices.
+
+## Addendum 2 — 2026-07-23: terminology — "no accounts" is misleading once passkeys exist
+
+Owner (2026-07-23): people will read a passkey as an account. Correct — and
+the Decision + first addendum lean on *"keeps the 'no accounts' promise
+literally true,"* which is itself misleading UX language. An honesty fix,
+not a design change:
+
+- A passkey is a **credential, not an account**: no email, no password, no
+  server-side profile, no PII, and — under E2E — nothing we can read. But
+  a bald "no accounts" invites the wrong mental model the moment there's a
+  sign-in-and-sync flow that *looks* like an account.
+- **Principle**: once passkey sync ships, don't claim "no accounts". State
+  what we **don't collect and can't do** — no email, no password, no
+  identity, no tracking; your data is end-to-end encrypted so only you can
+  read it — and say plainly the passkey is a device credential, not an
+  account. Don't rely on users knowing the difference.
+- Candidate copy (finalise at build time): *"No email, no password, no
+  profile — we never learn who you are. Optional sync across your devices
+  is end-to-end encrypted, so even we can't read it."*
+- **Lockstep follow-up**: the shipped About line ("No accounts, no tracking,
+  no third-party scripts", `site/js/about-ui.js`) is true *today* (no
+  passkey yet) — leave it now, but revisit it in the **same change that
+  ships passkey sync**.
