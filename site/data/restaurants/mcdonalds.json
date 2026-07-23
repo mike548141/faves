@@ -23,6 +23,21 @@
       "label": "Lambton Quay",
       "address": "276 Lambton Quay, Wellington Central, Wellington 6011",
       "phone": "+64 4 472 1808"
+    },
+    {
+      "label": "Bunny Street",
+      "address": "9 Bunny Street, Pipitea, Wellington 6011",
+      "phone": "+64 4 473 5490"
+    },
+    {
+      "label": "Johnsonville",
+      "address": "2 Johnsonville Road, Johnsonville, Wellington 6037",
+      "phone": "+64 4 461 7138"
+    },
+    {
+      "label": "Porirua",
+      "address": "2 Titahi Bay Road, Porirua 5022",
+      "phone": "+64 4 237 4157"
     }
   ],
   "vibe": [],

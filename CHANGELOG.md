@@ -15,9 +15,9 @@ content freshness separately from this file.
   dish/venue name, clear of the ♥. (ADR 0019)
 
 ### Added
-- **McDonald's added** as a two-branch listing (Courtenay Place + Lambton
-  Quay) using the multi-location feature — real addresses and phones, with the
-  menu still to come.
+- **McDonald's added** as a multi-branch listing (Courtenay Place, Lambton
+  Quay, Bunny Street, Johnsonville, Porirua) using the multi-location feature —
+  real addresses and phones, with the menu still to come.
 - **Choose which maps app opens on an address.** Settings → **Maps app** lets
   you pick Apple Maps, Google Maps, Waze, or "Match my device" (the default,
   which keeps today's behaviour). The web can't read your phone's default maps
