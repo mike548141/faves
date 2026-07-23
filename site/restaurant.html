@@ -23,7 +23,51 @@
     <link rel="stylesheet" href="css/app.css" />
   </head>
   <body class="menu-page">
-    <p class="skip"><a href="index.html" data-i18n="nav.allRestaurants">← All restaurants</a></p>
+    <!-- Slim top bar: back-link (left) + the app ⋯ menu (right), so the app
+         chrome (Settings / Share / About / Favourites) is one tap away here too,
+         not only on the home screen. It scrolls away with the page (not sticky),
+         matching home. JS wires it (menu.js initChrome); overflow-ui unhides. -->
+    <div class="menu-topbar wrap">
+      <p class="skip"><a href="index.html" data-i18n="nav.allRestaurants">← All restaurants</a></p>
+      <div class="overflow" hidden>
+        <button
+          type="button"
+          id="overflow-btn"
+          class="overflow-btn"
+          aria-label="More"
+          data-i18n-aria="nav.more"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="overflow-menu"
+        >
+          <span aria-hidden="true">⋯</span>
+        </button>
+        <div id="overflow-menu" class="overflow-menu" role="menu" aria-label="More" data-i18n-aria="nav.more" hidden>
+          <p class="overflow-caption">
+            <span data-i18n="profile.browsingAs">Browsing as</span>
+            <span class="profile-caption-name"></span>
+          </p>
+          <!-- The favourites *view* lives on home, so here it's a link there
+               (opened via #faves) rather than the in-page toggle home uses. -->
+          <a id="favourites-link" class="overflow-item" role="menuitem" href="index.html#faves">
+            <span class="overflow-item-icon" aria-hidden="true">♥</span>
+            <span data-i18n="nav.favourites">Favourites</span>
+          </a>
+          <!-- Settings is intentionally NOT here: it changes safety-critical
+               allergen/dietary prefs that this screen reads once at render
+               (menu.js), so it stays on the home screen until the menu can
+               live-update those warnings. -->
+          <button type="button" id="share-app-btn" class="overflow-item" role="menuitem" hidden>
+            <span class="overflow-item-icon" aria-hidden="true">⤴</span>
+            <span data-i18n="nav.shareApp">Share this app</span>
+          </button>
+          <button type="button" id="about-btn" class="overflow-item" role="menuitem" hidden>
+            <span class="overflow-item-icon" aria-hidden="true">ⓘ</span>
+            <span data-i18n="nav.about">About</span>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <main id="menu-root" class="wrap" aria-busy="true">
       <p id="menu-loading" class="menu-status" data-i18n="menu.loading">Loading menu…</p>

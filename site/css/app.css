@@ -2299,6 +2299,21 @@ body.faves-view .to-top {
 /* Back-to-list control on the menu/recipe pages. A proper bordered pill
    (not a faint text link) so it reads as a control and is easy to hit —
    it was easy to miss on desktop. */
+/* Menu-page top bar: back-link (left) + the ⋯ app menu (right). Not sticky — it
+   scrolls away with the page, matching the home header. Both align to the same
+   --space-3 top offset (the skip's own top padding). */
+.menu-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-right: var(--space-3);
+}
+.menu-topbar .skip {
+  padding-bottom: 0;
+}
+.menu-topbar .overflow {
+  margin-top: var(--space-3);
+}
 .skip {
   padding: var(--space-3) var(--space-3) 0;
 }

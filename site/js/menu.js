@@ -19,6 +19,9 @@ import { disclosure } from "./disclosure.js";
 import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
 import { wireSearchClear } from "./search-clear.js";
+import { initAboutUI } from "./about-ui.js";
+import { initShareApp } from "./share-app.js";
+import { initOverflowMenu } from "./overflow-ui.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -855,6 +858,26 @@ window.addEventListener("storage", (e) => {
   profiles.reload();
   if (profiles.activeId() !== activeProfileAtLoad) location.reload();
 });
+
+// The header ⋯ menu (Favourites link / Share / About). Static markup in
+// restaurant.html; wire the same shared modules the home screen uses and fill
+// the "browsing as" caption. Independent of the menu load, so the chrome works
+// even if the restaurant fails to fetch. Settings is deliberately absent here
+// (it changes allergen/dietary prefs this screen reads once at render).
+function initChrome() {
+  initAboutUI();
+  initShareApp();
+  initOverflowMenu();
+  const nameEl = document.querySelector(".profile-caption-name");
+  if (nameEl) {
+    const setName = () => { nameEl.textContent = profiles.active().name; };
+    setName();
+    profiles.subscribe(setName);
+  }
+  const topbar = document.querySelector(".menu-topbar");
+  if (topbar) translate(topbar);
+}
+initChrome();
 
 const id = new URLSearchParams(location.search).get("id");
 const errorEl = document.getElementById("menu-error");

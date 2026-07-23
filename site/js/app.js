@@ -596,6 +596,10 @@ function wireFavourites() {
     if (e.key === profiles.scopedKey("faves.favourites.v1")) favourites.reload();
   });
   updateCount();
+
+  // Arriving from another page's ⋯ menu (restaurant.html's "Favourites" links to
+  // index.html#faves, since the favourites view lives here). Open it on load.
+  if (location.hash === "#faves") open(true);
 }
 
 // Device-local profiles: reflect who's active in the ⋯ menu caption, and keep
