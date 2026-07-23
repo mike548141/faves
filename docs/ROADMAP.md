@@ -67,7 +67,7 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
 
 ## Owner rulings — 2026-07-23 (session Q&A, raw where quoted)
 
-- [ ] **"Nearest first" goes pure distance** — owner ruled 2026-07-23: hearts
+- [~] **"Nearest first" goes pure distance** (claimed 2026-07-22-1250, wt: faves-wave8-rulings-apply) — owner ruled 2026-07-23: hearts
   keep their ♥ badge but get **no ranking pull** in Nearest-first mode (the
   `favBoostKm` pull applies only outside it). To apply. (Closes the ⚠️ open
   question under the sort-bug record below.)
@@ -78,7 +78,7 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   ratified — the (a)+(b)-not-public shape stands *provisionally*; the UX
   (three-star tap row on venue header + every dish row) needs a design session
   with the owner before further ratings work. ADR 0013 stands until superseded.
-- [ ] **Directions handoff under review** ⚑ — owner, raw: "I don't think this
+- [~] **Directions handoff — ruled: back out to pin** (claimed 2026-07-22-1250, wt: faves-wave8-rulings-apply) — owner, raw: "I don't think this
   meets what I wanted for the feature. We need to review it and may back out
   the change. Also when I tapped on 'R & S Satay Noodle House' which is shown
   at the pickup address '148 Cuba St' the maps open on '1 Garrett St'."
