@@ -8,6 +8,17 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **Switching who's using Faves now updates a still-loading menu correctly.**
+  Previously, switching profile while a menu page was mid-load could leave the
+  first paint showing the previous person's allergen highlights (the header
+  already named the new person). The re-point of allergen/dietary prefs now
+  happens the instant the switch is tapped, so the menu always renders the
+  active person's safety settings.
+- **Recipe pages now react to an allergen/dietary change made in another tab.**
+  A recipe's ⚠ allergen tags used to ignore a preference change made elsewhere
+  until reload; they now re-apply live, matching the menu and home screens.
+
 ### Changed
 - **Ratings are now 1–5 stars on a tap-or-drag slider.** The old 1–3 three-star
   control read ambiguously and crowded the row. Rate by tapping a star or

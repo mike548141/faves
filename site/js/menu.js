@@ -13,7 +13,7 @@ import { heartButton } from "./favourites-ui.js";
 import { ratingControl, curatedRating } from "./ratings-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
-import { profiles, PROFILES_KEY } from "./profiles.js";
+import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { favourites } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
@@ -868,17 +868,46 @@ window.addEventListener("storage", (e) => {
   if (profiles.activeId() !== activeProfileAtLoad) location.reload();
 });
 
+// The loaded restaurant, held at module scope so the SAFETY re-apply below can
+// re-render the exact menu on screen. null until the first render, so a settings
+// change or profile switch that lands *during* load re-points the stores now but
+// defers painting to the first render (which then reads them fresh).
+let current = null;
+
+// SAFETY-CRITICAL re-apply. Re-runs the SAME render(current) the first paint
+// uses — re-reading settings.get().diet and rebuilding every dish through the
+// shared dietary.js predicates, so the initial and reactive paths cannot
+// diverge. No-op until a menu has actually rendered.
+function reapply() {
+  if (!current) return;
+  render(current);
+  translate(root); // re-apply the stored UI language to the freshly built menu
+}
+
 // The header ⋯ menu (Favourites link / Settings / Share / About). Static markup
 // in restaurant.html; wire the same shared modules the home screen uses and fill
 // the "browsing as" caption. Independent of the menu load, so the chrome works
-// even if the restaurant fails to fetch. Settings is now here too (owner wants
-// it): safe because the menu re-applies allergen/dietary prefs live on a change
-// (wireLiveSafety, below) rather than reading them once at render.
+// even if the restaurant fails to fetch — which is *why* the Settings dialog and
+// its profile switcher become interactive here BEFORE loadRestaurant resolves.
+// That makes the store-reload wiring safety-critical to register EARLY, in the
+// same synchronous pass as initSettingsUI(): a profile switch mid-load must
+// re-point settings/favourites/ratings immediately, or the first render would
+// bake in the previous person's allergen filter (stale = unsafe).
 function initChrome() {
   initAboutUI();
   initShareApp();
   initOverflowMenu();
   initSettingsUI();
+
+  // Any settings change (allergen/dietary prefs included) → re-apply live.
+  settings.subscribe(reapply);
+  // Profile switch (in-dialog, any time — even while still "Loading…") →
+  // re-point every per-profile store NOW; settings.reload() (last, by contract)
+  // fires `reapply`, so the caption flip and the allergen re-apply come from the
+  // one event, atomically. Before the first render `reapply` no-ops, but the
+  // stores are already refreshed so that first render is the new person's.
+  profiles.subscribe(() => reloadProfileStores({ favourites, ratings, settings }));
+
   const nameEl = document.querySelector(".profile-caption-name");
   if (nameEl) {
     const setName = () => { nameEl.textContent = profiles.active().name; };
@@ -923,40 +952,15 @@ function scrollToHash() {
   );
 }
 
-// SAFETY-CRITICAL live re-apply. Settings is reachable on this screen now, and it
-// edits the allergen/dietary prefs the menu bakes into each dish — the ⚠
-// dish-flagged warning and the dietary dim. If those didn't update on a change, a
-// dish could keep a stale (or missing) allergen highlight: a safety failure, not
-// a cosmetic one. So we re-run the SAME render(r) the first paint used — it
-// re-reads settings.get().diet and rebuilds every dish through the shared
-// dietary.js predicates, so the initial and reactive paths cannot diverge. This
-// mirrors the home screen, which likewise re-renders on settings.subscribe.
-//
-//   • Allergen/dietary (or any) prefs change → settings.subscribe re-renders.
-//   • Profile switch (the in-dialog "who's using Faves?") → re-point the
-//     per-profile stores first (favourites/ratings/settings), so the rebuilt
-//     hearts, ratings and prefs are the new person's; settings.reload() then
-//     fires the same re-render. Nobody browses under someone else's safety
-//     settings. (A cross-*tab* switch is still handled by the location.reload
-//     above — the safest option — so this covers the same-tab case it can't see.)
-function wireLiveSafety(r) {
-  const reapply = () => {
-    render(r);
-    translate(root); // re-apply the stored UI language to the freshly built menu
-  };
-  settings.subscribe(reapply);
-  profiles.subscribe(() => {
-    favourites.reload();
-    ratings.reload();
-    settings.reload(); // re-reads the new profile's prefs → fires `reapply`
-  });
-}
-
 if (!id) {
   fail();
 } else {
   loadRestaurant(id)
     .then((r) => {
+      // Record the menu on screen so the early safety subscribers (initChrome)
+      // can re-apply against it. Set BEFORE render so any change racing in during
+      // this same microtask still repaints the right restaurant.
+      current = r;
       render(r);
       // The chrome renders in English with data-i18n keys; this applies the
       // stored language to it (later switches re-translate the whole page).
@@ -968,9 +972,6 @@ if (!id) {
       // applied before scroll-margin-top is honoured. Instant, to land exactly
       // like a hard reload of the same URL.
       scrollToHash();
-      // Now that a menu is on screen, keep its allergen/dietary treatment live
-      // against Settings changes and profile switches (safety-critical).
-      wireLiveSafety(r);
     })
     .catch((err) => {
       console.error("Faves menu:", err);

@@ -142,6 +142,17 @@ function render(collection, item) {
   root.setAttribute("aria-busy", "false");
 }
 
+// The recipe on screen, held so a live settings change can repaint it with the
+// SAME render() the first paint used (its ⚠ allergen tags are recomputed from
+// fresh prefs — no separate, drift-prone update path). null until first render.
+let current = null;
+
+// Re-apply on any settings change — re-reads settings.get().diet.avoid and
+// rebuilds the tags. No-op until the recipe has rendered.
+function reRender() {
+  if (current) render(current.collection, current.item);
+}
+
 async function main() {
   const params = new URLSearchParams(location.search);
   const id = params.get("id");
@@ -151,6 +162,7 @@ async function main() {
     const collection = await loadRestaurant(id);
     const item = findDish(collection, dishSlug);
     if (!item) return fail();
+    current = { collection, item };
     render(collection, item);
   } catch (err) {
     console.error("Recipe load failed:", err);
@@ -161,14 +173,27 @@ async function main() {
 initOrderUI(); // the running order stays reachable from the recipe screen too
 initReo(); // sets <html lang>; the back link is set to the collection name by render()
 
-// Recipe allergen prefs are read once at render (settings.get().diet.avoid). If
-// another tab switches profile, reload so this page re-applies the right
-// person's prefs rather than showing a stale allergen filter.
+// Keep the ⚠ allergen tags live against an allergen/dietary change made in
+// ANOTHER tab (home/menu Settings) — the recipe screen has no Settings dialog of
+// its own, so an in-tab settings.set won't fire here, but a cross-tab write to
+// this profile's settings key must still re-apply. settings.subscribe drives the
+// repaint; the storage listener re-reads on the cross-tab write. (Matches how the
+// menu/home screens react — previously this page only handled a profile switch.)
+settings.subscribe(reRender);
+
 const activeProfileAtLoad = profiles.activeId();
 window.addEventListener("storage", (e) => {
-  if (e.key !== PROFILES_KEY) return;
-  profiles.reload();
-  if (profiles.activeId() !== activeProfileAtLoad) location.reload();
+  // A cross-tab profile switch: reload the registry; if the active person
+  // changed, a full reload re-points favourites + allergen prefs atomically —
+  // the safest reset for a page with no in-tab switcher.
+  if (e.key === PROFILES_KEY) {
+    profiles.reload();
+    if (profiles.activeId() !== activeProfileAtLoad) location.reload();
+    return;
+  }
+  // A cross-tab allergen/dietary (or any settings) change to THIS profile:
+  // re-read so settings.subscribe → reRender repaints the tags, never lagging.
+  if (e.key === profiles.scopedKey("faves.settings.v1")) settings.reload();
 });
 
 main();

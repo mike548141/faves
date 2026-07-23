@@ -235,6 +235,22 @@ const deviceStorage = safeStorage();
 export const profiles = createProfiles(deviceStorage);
 
 /**
+ * Reload every per-profile store after a profile switch. ORDER IS LOAD-BEARING:
+ * the "silent" stores (favourites, ratings) reload FIRST; `settings` reloads
+ * LAST, because on the menu/recipe screens it's `settings.reload()`'s
+ * subscription that drives the safety re-render — and that re-render must read
+ * favourites and ratings already re-pointed at the new profile, or it would
+ * rebuild hearts/marks from the previous person's data. Pure + injectable: the
+ * screens pass the real singletons, tests pass fakes, so it carries no import
+ * cycle. `ratings` is optional (the recipe screen has no rating control).
+ */
+export function reloadProfileStores({ favourites, ratings, settings }) {
+  favourites?.reload();
+  ratings?.reload();
+  settings.reload(); // MUST be last — its subscribers repaint the menu
+}
+
+/**
  * A storage view that namespaces keys for whoever is *currently* active — so a
  * per-profile store (favourites, settings) keeps its own KEY constant and
  * simply reloads to follow a profile switch. Backed by the shared device

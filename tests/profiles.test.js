@@ -12,6 +12,7 @@ import {
   sanitiseRegistry,
   migrate,
   createProfiles,
+  reloadProfileStores,
 } from "../site/js/profiles.js";
 
 function fakeStorage(initial = {}) {
@@ -259,4 +260,26 @@ test("reload re-reads the registry (cross-tab switch) and notifies", () => {
   p.reload();
   assert.equal(p.activeId(), id);
   assert.equal(notified, true);
+});
+
+// --- reloadProfileStores: the profile-switch safety contract ---------
+// The menu screen re-points every per-profile store on a switch. ORDER is
+// load-bearing: settings.reload() drives the safety re-render via its
+// subscription, so it must run LAST — after favourites/ratings are already the
+// new person's — or the rebuilt menu shows the previous profile's data. This is
+// exactly the race the adversarial review caught (first render baking in a stale
+// allergen filter), so the ordering is pinned here.
+test("reloadProfileStores reloads favourites & ratings BEFORE settings (settings drives the repaint)", () => {
+  const calls = [];
+  const store = (name) => ({ reload: () => calls.push(name) });
+  reloadProfileStores({ favourites: store("favourites"), ratings: store("ratings"), settings: store("settings") });
+  assert.deepEqual(calls, ["favourites", "ratings", "settings"]);
+  assert.equal(calls.at(-1), "settings", "settings must reload last — its subscribers repaint the menu");
+});
+
+test("reloadProfileStores tolerates a missing ratings store (the recipe screen has none)", () => {
+  const calls = [];
+  const store = (name) => ({ reload: () => calls.push(name) });
+  reloadProfileStores({ favourites: store("favourites"), settings: store("settings") });
+  assert.deepEqual(calls, ["favourites", "settings"]);
 });
