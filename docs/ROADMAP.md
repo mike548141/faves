@@ -147,6 +147,16 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
 - [ ] **Coordinate audit** `[S]` — follow-on: dev-time geocoded coords are
   suspect fleet-wide (R & S proven ~100 m off). Sweep all venue coords against
   their street addresses; affects distance sort + detour maths accuracy.
+- [ ] **Favourite/rating reference integrity** `[M][design]` — **ADR 0020**
+  (proposed). A favourited/rated/shared dish or venue may be missing when the app
+  opens — either **removed** from the data, or the local data is **stale** (a
+  second device / a shared recipient hasn't refreshed). Today both silently 404
+  to a generic error. Decided invariants: **never silently drop** an unresolved
+  ref (mark it, offer refresh/remove); **never claim "removed"** without an
+  online recheck (stale-vs-deleted is indistinguishable locally — an honesty
+  floor point); honest menu-page not-found screen. **Build deferred +
+  coordinated** with ADR 0017 (sync makes stale refs routine) and **Theme 10**
+  (sharing) so the merge/refresh UX is built once.
 
 ## Owner-reported — 2026-07-22
 

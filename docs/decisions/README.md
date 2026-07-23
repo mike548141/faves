@@ -83,3 +83,13 @@ deliberation those compact docs omit.
   claim — a passkey is a credential, not an account; state what's not collected
   (no email/password/identity/tracking; E2E). Cross-person sharing → ROADMAP
   Theme 10, its own ADR
+- [0018](0018-maps-app-preference.md) — maps app is a user preference (Apple /
+  Google / Waze / "match my device"), not just platform detection; the web
+  can't read the OS default. `geo.resolveMapsTarget` + a Waze provider.
+- [0019](0019-ratings-five-star-slider.md) — ratings move to a **1–5** star
+  tap/drag slider placed under the name (supersedes ADR 0013's 1–3 three-button
+  scale + control shape). *(Owner later reopened the control design — ROADMAP.)*
+- [0020](0020-favourite-reference-integrity.md) — favourite/rating **reference
+  integrity**: never silently drop an unresolved ref, never claim "removed"
+  without an online recheck (stale-cache vs deleted are indistinguishable
+  locally). Proposed; build deferred + coordinated with ADR 0017 / Theme 10.
