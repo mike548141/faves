@@ -14,6 +14,9 @@ import { ratingControl, curatedRating } from "./ratings-ui.js";
 import { priceBand } from "./price.js";
 import { settings } from "./settings.js";
 import { profiles, PROFILES_KEY } from "./profiles.js";
+import { favourites } from "./favourites.js";
+import { ratings } from "./ratings.js";
+import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
 import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
 import { initBackToTop } from "./to-top.js";
@@ -22,6 +25,7 @@ import { wireSearchClear } from "./search-clear.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { initOverflowMenu } from "./overflow-ui.js";
+import { initSettingsUI } from "./settings-ui.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -77,14 +81,8 @@ function tagChip(t, avoid = EMPTY_SET) {
 const tagOrder = (tags) =>
   [...tags].sort((a, b) => Number(isAllergen(b)) - Number(isAllergen(a)));
 
-// --- Dietary filter model -------------------------------------------
-// A filter is satisfied if the dish carries a qualifying tag.
-const DIET_FILTERS = [
-  { key: "v", label: "Vegetarian", satisfies: ["v", "vg", "v-option"] },
-  { key: "vg", label: "Vegan", satisfies: ["vg"] },
-  { key: "gf", label: "Gluten free", satisfies: ["gf", "gf-option"] },
-  { key: "df", label: "Dairy free", satisfies: ["df"] },
-];
+// The dietary filter model + the flag/dim predicates live in dietary.js (DOM-free
+// and unit-tested), so the initial render and the live re-apply share one path.
 
 // Phone — the primary way to order. Big and first.
 function callRow(phone) {
@@ -509,8 +507,10 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
     children.push(actions);
   }
   // A dish carrying an allergen the viewer flagged gets a warning accent so it
-  // stands out while scanning — surfacing our tag, never asserting safety.
-  const hasFlagged = (item.tags || []).some((t) => avoid.has(t));
+  // stands out while scanning — surfacing our tag, never asserting safety. Same
+  // predicate the live re-apply uses (dietary.js), so a settings change can't
+  // leave a stale highlight behind.
+  const hasFlagged = dishFlagged(item.tags, avoid);
   const cls =
     (isRecipes ? "dish recipe" : "dish") + (hasFlagged ? " dish-flagged" : "");
   const li = el("li", { className: cls, id: `dish-${slug(item.name)}` });
@@ -688,15 +688,6 @@ function render(r) {
   main.append(noResults);
 
   // --- View logic: search hides, dietary dims -----------------------
-  const dishSatisfiesDiet = (dish) => {
-    if (!activeDiet.size) return true;
-    const tags = dish.dataset.tags.split(" ");
-    return [...activeDiet].every((key) => {
-      const f = DIET_FILTERS.find((x) => x.key === key);
-      return f.satisfies.some((t) => tags.includes(t));
-    });
-  };
-
   function applyView() {
     const q = search.value.trim().toLowerCase();
     searchClear.hidden = search.value.length === 0;
@@ -706,7 +697,8 @@ function render(r) {
       for (const dish of sec.querySelectorAll(".dish")) {
         const matchesSearch =
           !q || dish.dataset.name.includes(q) || dish.dataset.desc.includes(q);
-        const matchesDiet = dishSatisfiesDiet(dish);
+        // Same predicate as the initial render (dietary.js) — one code path.
+        const matchesDiet = dishSatisfiesDiet(dish.dataset.tags.split(" "), activeDiet);
         dish.hidden = !matchesSearch;
         dish.classList.toggle("dimmed", matchesSearch && !matchesDiet);
         if (matchesSearch) visibleInSection++;
@@ -876,15 +868,17 @@ window.addEventListener("storage", (e) => {
   if (profiles.activeId() !== activeProfileAtLoad) location.reload();
 });
 
-// The header ⋯ menu (Favourites link / Share / About). Static markup in
-// restaurant.html; wire the same shared modules the home screen uses and fill
+// The header ⋯ menu (Favourites link / Settings / Share / About). Static markup
+// in restaurant.html; wire the same shared modules the home screen uses and fill
 // the "browsing as" caption. Independent of the menu load, so the chrome works
-// even if the restaurant fails to fetch. Settings is deliberately absent here
-// (it changes allergen/dietary prefs this screen reads once at render).
+// even if the restaurant fails to fetch. Settings is now here too (owner wants
+// it): safe because the menu re-applies allergen/dietary prefs live on a change
+// (wireLiveSafety, below) rather than reading them once at render.
 function initChrome() {
   initAboutUI();
   initShareApp();
   initOverflowMenu();
+  initSettingsUI();
   const nameEl = document.querySelector(".profile-caption-name");
   if (nameEl) {
     const setName = () => { nameEl.textContent = profiles.active().name; };
@@ -929,6 +923,35 @@ function scrollToHash() {
   );
 }
 
+// SAFETY-CRITICAL live re-apply. Settings is reachable on this screen now, and it
+// edits the allergen/dietary prefs the menu bakes into each dish — the ⚠
+// dish-flagged warning and the dietary dim. If those didn't update on a change, a
+// dish could keep a stale (or missing) allergen highlight: a safety failure, not
+// a cosmetic one. So we re-run the SAME render(r) the first paint used — it
+// re-reads settings.get().diet and rebuilds every dish through the shared
+// dietary.js predicates, so the initial and reactive paths cannot diverge. This
+// mirrors the home screen, which likewise re-renders on settings.subscribe.
+//
+//   • Allergen/dietary (or any) prefs change → settings.subscribe re-renders.
+//   • Profile switch (the in-dialog "who's using Faves?") → re-point the
+//     per-profile stores first (favourites/ratings/settings), so the rebuilt
+//     hearts, ratings and prefs are the new person's; settings.reload() then
+//     fires the same re-render. Nobody browses under someone else's safety
+//     settings. (A cross-*tab* switch is still handled by the location.reload
+//     above — the safest option — so this covers the same-tab case it can't see.)
+function wireLiveSafety(r) {
+  const reapply = () => {
+    render(r);
+    translate(root); // re-apply the stored UI language to the freshly built menu
+  };
+  settings.subscribe(reapply);
+  profiles.subscribe(() => {
+    favourites.reload();
+    ratings.reload();
+    settings.reload(); // re-reads the new profile's prefs → fires `reapply`
+  });
+}
+
 if (!id) {
   fail();
 } else {
@@ -945,6 +968,9 @@ if (!id) {
       // applied before scroll-margin-top is honoured. Instant, to land exactly
       // like a hard reload of the same URL.
       scrollToHash();
+      // Now that a menu is on screen, keep its allergen/dietary treatment live
+      // against Settings changes and profile switches (safety-critical).
+      wireLiveSafety(r);
     })
     .catch((err) => {
       console.error("Faves menu:", err);

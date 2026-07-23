@@ -15,6 +15,11 @@ content freshness separately from this file.
   dish/venue name, clear of the ♥. (ADR 0019)
 
 ### Added
+- **Settings is now reachable from a menu page too** (the ⋯ menu), not just the
+  home screen. Changing your allergen/dietary preferences — or switching who's
+  using Faves — now updates the open menu **live**: the ⚠ allergen highlights and
+  the dietary dimming re-apply immediately, so a menu never shows another
+  person's (or a stale) safety settings.
 - **A travel-time hint next to the pickup address** on a menu page: "~15 min
   walk" when you're close, "~8 min drive" when you're further out — it picks the
   mode by distance (crossover at 2 km). A rough in-app "~" estimate off your

@@ -53,10 +53,19 @@
             <span class="overflow-item-icon" aria-hidden="true">♥</span>
             <span data-i18n="nav.favourites">Favourites</span>
           </a>
-          <!-- Settings is intentionally NOT here: it changes safety-critical
-               allergen/dietary prefs that this screen reads once at render
-               (menu.js), so it stays on the home screen until the menu can
-               live-update those warnings. -->
+          <!-- Settings (owner wants it here). Safe because menu.js now re-applies
+               the allergen/dietary treatment live on a change (wireLiveSafety) —
+               same markup as index.html so both ⋯ menus read identically. -->
+          <button
+            type="button"
+            id="settings-btn"
+            class="overflow-item"
+            role="menuitem"
+            hidden
+          >
+            <span class="overflow-item-icon" aria-hidden="true">⚙</span>
+            <span data-i18n="nav.settings">Settings</span>
+          </button>
           <button type="button" id="share-app-btn" class="overflow-item" role="menuitem" hidden>
             <span class="overflow-item-icon" aria-hidden="true">⤴</span>
             <span data-i18n="nav.shareApp">Share this app</span>
