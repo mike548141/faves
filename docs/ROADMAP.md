@@ -78,7 +78,7 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   this session); (c) **allergen/dietary tags** from a reliable source
   (deliberately omitted for now — "not stated" ≠ free-of, safety floor); (d)
   revisit prices if a per-store source appears.
-- [ ] **Branches list scrolls with the menu** `[S]` — owner, 2026-07-23: on
+- [~] **Branches list scrolls with the menu** `[S]` — _claimed 2026-07-23-1053 UTC · queue-run orchestration (wt: faves-queue-1053)._ owner, 2026-07-23: on
   desktop the aside is `position: sticky`, so a long branch list (McDonald's)
   gets its bottom cut off while the menu scrolls past it. Wants them to **scroll
   at the same rate**. Fix drafted + reverted (owner chose to queue): drop
@@ -107,7 +107,7 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   provider choice), a **CSP `connect-src`** allowance, the geocode module, the
   search-bar intent detection, and re-wiring `route.js` off the dropdown. Build
   order + security notes to live in that ADR.
-- **Travel time next to the address / hours (mode-aware)** `[M]` — owner steer
+- **[~] Travel time next to the address / hours (mode-aware)** `[M]` — _claimed 2026-07-23-1053 UTC · queue-run orchestration (wt: faves-queue-1053)._ owner steer
   2026-07-23, raw: *"keep the feature idea in the roadmap, refine that idea that
   I want the travel time (not necessarily drive e.g. I'm 100m walk away) shown in
   Faves next to the address/opening hours or maybe in the collect window/dialog"*.
@@ -138,7 +138,8 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   for multi-location venues (show the 2 nearest branches within this distance;
   `locations.branchesToShow`). One dial, honest new job; the "favourites count
   as this much nearer" label may want a rename to match its dual meaning `[S]`.
-- [ ] **Settings on the restaurant page** `[M]` — **owner explicitly wants it
+  _[~] claimed 2026-07-23-1053 UTC · queue-run orchestration (wt: faves-queue-1053)._
+- [~] **Settings on the restaurant page** `[M]` — _claimed 2026-07-23-1053 UTC · queue-run orchestration (wt: faves-queue-1053)._ **owner explicitly wants it
   there** (2026-07-23; it's on home, missing on the menu page). The ⋯ app menu
   shipped to the menu page with Favourites/Share/About, but **Settings was
   deliberately left off**: it changes safety-critical allergen/dietary prefs that
