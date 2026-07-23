@@ -65,6 +65,15 @@ test("lang: defaults to English, keeps a known language, rejects an unknown one"
   assert.equal(s.get().lang, "en");
 });
 
+test("mapsApp: defaults to auto, keeps a known provider, rejects an unknown one", () => {
+  const s = createSettings(fakeStorage());
+  assert.equal(s.get().mapsApp, "auto");
+  s.set({ mapsApp: "waze" });
+  assert.equal(s.get().mapsApp, "waze");
+  s.set({ mapsApp: "bingmaps" }); // not in MAPS_APPS
+  assert.equal(s.get().mapsApp, "auto");
+});
+
 test("diet: defaults to empty preference lists", () => {
   const s = createSettings(fakeStorage());
   assert.deepEqual(s.get().diet, { dietary: [], avoid: [] });

@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { detectPlatform, mapsUrlFor, routeMapsUrlFor } from "../site/js/geo.js";
+import { detectPlatform, mapsUrlFor, routeMapsUrlFor, resolveMapsTarget } from "../site/js/geo.js";
 
 const VENUE = { name: "KK Malaysian", address: "54 Ghuznee St, Wellington", lat: -41.2931, lng: 174.77551 };
 const NO_COORDS = { name: "Somewhere", address: "1 Nowhere St, Wellington" };
@@ -70,10 +70,36 @@ test("address pin still works when a record has no coords at all", () => {
   assert.equal(mapsUrlFor(NO_COORDS, "other"), `https://www.google.com/maps/search/?api=1&query=${enc}`);
 });
 
+test("waze → Waze universal-link pin at the street address", () => {
+  assert.equal(mapsUrlFor(VENUE, "waze"), `https://waze.com/ul?q=${ADDR_ENC}`);
+});
+
 test("every handoff is an http(s) link (the UI adds target/rel to those)", () => {
   assert.ok(mapsUrlFor(VENUE, "apple").startsWith("https"));
   assert.ok(mapsUrlFor(VENUE, "android").startsWith("https"));
   assert.ok(mapsUrlFor(VENUE, "other").startsWith("https"));
+  assert.ok(mapsUrlFor(VENUE, "waze").startsWith("https"));
+});
+
+// --- Maps-app preference (Settings) → provider target ---
+// The web can't read the OS default-maps-app, so the viewer's choice decides;
+// "auto" (and any junk) follows the device platform.
+test("resolveMapsTarget: explicit choice wins on every platform", () => {
+  const iphone = { userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)" };
+  assert.equal(resolveMapsTarget("google", iphone), "google"); // Google even on iPhone
+  assert.equal(resolveMapsTarget("waze", iphone), "waze");
+  assert.equal(resolveMapsTarget("apple", { userAgent: "Mozilla/5.0 (Linux; Android 14)" }), "apple");
+});
+
+test("resolveMapsTarget: 'auto' follows the device (apple hardware → apple, else google)", () => {
+  assert.equal(resolveMapsTarget("auto", { userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)" }), "apple");
+  assert.equal(resolveMapsTarget("auto", { userAgent: "Mozilla/5.0 (Linux; Android 14; Pixel 8)" }), "google");
+  assert.equal(resolveMapsTarget("auto", { userAgent: "Mozilla/5.0 (Windows NT 10.0)" }), "google");
+});
+
+test("resolveMapsTarget: missing/garbage pref → device default, never throws", () => {
+  assert.equal(resolveMapsTarget(undefined, { userAgent: "Mozilla/5.0 (iPhone)" }), "apple");
+  assert.equal(resolveMapsTarget("nonsense", { userAgent: "Mozilla/5.0 (Windows NT 10.0)" }), "google");
 });
 
 // --- Route via maps (ADR 0014) — stays ROUTED; venue leg now by address ---
@@ -91,6 +117,10 @@ test("route via (google): real 3-point route, venue waypoint by street address",
 test("route via (apple): no waypoint param → drive to the venue address, dest dropped", () => {
   // Still directions (the route feature stays routed), not a pin.
   assert.equal(routeMapsUrlFor(VENUE, DEST, "apple"), `https://maps.apple.com/?daddr=${ADDR_ENC}&dirflg=d`);
+});
+
+test("route via (waze): single destination, navigate=yes, dest dropped like apple", () => {
+  assert.equal(routeMapsUrlFor(VENUE, DEST, "waze"), `https://waze.com/ul?q=${ADDR_ENC}&navigate=yes`);
 });
 
 test("route via: no destination → plain directions to the venue address", () => {

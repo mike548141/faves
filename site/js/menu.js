@@ -99,7 +99,7 @@ function callRow(phone) {
 // lng} — for a multi-location venue it's the chosen branch, so the pin targets
 // that branch's address, not the primary one.
 function addressRow(place) {
-  const href = mapsUrl(place);
+  const href = mapsUrl(place, settings.get().mapsApp);
   // All handoffs are http(s) universal links now (they open the native maps
   // app on mobile, a browser on desktop), so target/rel apply. Kept as a
   // guard in case a non-http scheme returns here again.

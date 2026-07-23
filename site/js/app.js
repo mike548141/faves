@@ -201,7 +201,7 @@ function card(r, now, routeCtx = null) {
 function routeVia(r, { origin, dest }) {
   const best = bestBranchForRoute(r, origin, dest);
   if (!branchCoords(best.branch)) return null; // nothing to route through
-  const href = routeMapsUrl(branchAsPlace(r, best.branch), dest);
+  const href = routeMapsUrl(branchAsPlace(r, best.branch), dest, settings.get().mapsApp);
   return el(
     "a",
     {

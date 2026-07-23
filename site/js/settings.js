@@ -46,11 +46,24 @@ const ALLERGEN_KEYS = new Set(ALLERGEN_PREFS.map((p) => p.key));
 // dependency on the presentation layer and the value is sanitised on read.
 export const LANGS = ["en", "mi"];
 
+// Which maps app opens when you tap a venue's address (geo.js). "auto" follows
+// the device (Apple Maps on Apple hardware, Google elsewhere); the rest force a
+// provider on every platform. The web can't read the OS default-maps-app
+// preference, so this is how a viewer overrides the device guess.
+export const MAPS_APPS = [
+  { key: "auto", label: "Match my device" },
+  { key: "apple", label: "Apple Maps" },
+  { key: "google", label: "Google Maps" },
+  { key: "waze", label: "Waze" },
+];
+const MAPS_APP_KEYS = new Set(MAPS_APPS.map((m) => m.key));
+
 export const DEFAULTS = {
   favBoostKm: FAV_BOOST_KM,
   farKm: FAR_KM,
   diet: { dietary: [], avoid: [] },
   lang: "en",
+  mapsApp: "auto",
 };
 
 // [min, max] accepted for each; values outside are clamped in, non-numbers
@@ -91,6 +104,7 @@ function sanitise(obj) {
     farKm: clampField(obj?.farKm, "farKm"),
     diet: sanitiseDiet(obj?.diet),
     lang: LANGS.includes(obj?.lang) ? obj.lang : DEFAULTS.lang,
+    mapsApp: MAPS_APP_KEYS.has(obj?.mapsApp) ? obj.mapsApp : DEFAULTS.mapsApp,
   };
 }
 

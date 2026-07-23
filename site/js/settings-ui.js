@@ -9,7 +9,7 @@
 // Everything writes straight to the store; the home list re-ranks live via
 // app.js's own subscription, and each menu reads the preferences on load.
 
-import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS } from "./settings.js";
+import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS } from "./settings.js";
 import { profiles } from "./profiles.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
@@ -46,6 +46,22 @@ function langControl() {
     select.append(el("option", { value: lang, textContent: label }));
   }
   select.addEventListener("change", () => settings.set({ lang: select.value }));
+  const group = el("div", { className: "lang-select" }, [select]);
+  return { group, select };
+}
+
+// Which maps app opens on an address tap. A compact <select> (same control as
+// the language picker) — "one of four", scales by adding an <option>, and stays
+// tight in the dialog. Default "Match my device" follows the platform; the rest
+// force a provider (the web can't read the OS default, so we let the viewer say).
+// Writes settings.mapsApp; geo.js reads it when building the handoff URL.
+function mapsControl() {
+  const select = el("select", { className: "lang-select-input" });
+  select.setAttribute("aria-label", "Which maps app opens on an address");
+  for (const { key, label } of MAPS_APPS) {
+    select.append(el("option", { value: key, textContent: label }));
+  }
+  select.addEventListener("change", () => settings.set({ mapsApp: select.value }));
   const group = el("div", { className: "lang-select" }, [select]);
   return { group, select };
 }
@@ -279,6 +295,7 @@ export function initSettingsUI() {
 
   const profileUi = profileSection();
   const lang = langControl();
+  const maps = mapsControl();
   const dietary = prefChips(DIETARY_PREFS, "dietary");
   const avoid = prefChips(ALLERGEN_PREFS, "avoid");
   const dietaryCollapse = collapsible(dietary.group, DIETARY_PREFS.length);
@@ -350,6 +367,11 @@ export function initSettingsUI() {
       })(),
       lang.group,
 
+      // --- Maps app (address-tap handoff) ---
+      el("h3", { className: "settings-group-title", textContent: "Maps app" }),
+      el("p", { className: "settings-note", textContent: "Which app opens when you tap a venue’s address." }),
+      maps.group,
+
       // --- Food preferences ---
       el("h3", { className: "settings-group-title", textContent: "Food preferences" }),
       el("p", { className: "settings-sub", textContent: "Your dietary needs" }),
@@ -372,6 +394,7 @@ export function initSettingsUI() {
   function sync() {
     const s = settings.get();
     lang.select.value = s.lang;
+    maps.select.value = s.mapsApp;
     const dietarySet = new Set(s.diet.dietary);
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
     const avoidSet = new Set(s.diet.avoid);

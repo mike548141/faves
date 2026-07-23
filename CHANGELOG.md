@@ -8,6 +8,12 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Choose which maps app opens on an address.** Settings → **Maps app** lets
+  you pick Apple Maps, Google Maps, Waze, or "Match my device" (the default,
+  which keeps today's behaviour). The web can't read your phone's default maps
+  app, so this is how you override it. (ADR 0018)
+
 ### Fixed
 - **Searching for a dish now jumps straight to it.** Picking a dish from the
   app-wide search took you to the right menu but left you at the top — you had

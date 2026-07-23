@@ -13,13 +13,23 @@
 // requires an address, so that path is belt-and-braces). Coords stay for
 // in-app distance maths (ranking, detour) only.
 //
-// Pin form per platform (schemes reasoned about, not assumed):
+// Which maps provider we hand off to follows the viewer's own choice
+// (Settings → "Maps app"): the web can't read the OS's default-maps-app
+// preference (browsers hide installed apps as a fingerprinting surface), so we
+// ask once and remember. The default, "auto", follows the device — Apple Maps
+// on Apple hardware, Google elsewhere (resolveMapsTarget). An explicit Apple /
+// Google / Waze choice wins on every platform.
+//
+// Pin form per provider (schemes reasoned about, not assumed):
 //   apple → maps.apple.com/?q=<query>  — Apple Maps treats a q value as a
 //           search: an address string geocodes to a pin; a "lat,lng" q is
 //           parsed as coordinates and pinned.
-//   google/other → google.com/maps/search/?api=1&query=<query>  — the
-//           documented Google Maps "search" URL; a full address (or "lat,lng")
-//           resolves to a single pinned place.
+//   google → google.com/maps/search/?api=1&query=<query>  — the documented
+//           Google Maps "search" URL; a full address (or "lat,lng") resolves to
+//           a single pinned place. Also the target for android/desktop under
+//           "auto".
+//   waze  → waze.com/ul?q=<query>  — Waze's universal link treats q as a search
+//           (address geocodes to a pin); add &navigate=yes to start driving.
 //
 // The along-a-route "🧭 Route via maps" handoff (routeMapsUrlFor) is a separate,
 // explicitly-routed feature (ADR 0014) and KEEPS its routed form — it just
@@ -44,6 +54,17 @@ export function detectPlatform(nav) {
   return "other";
 }
 
+/**
+ * Resolve a user's "Maps app" preference to a concrete provider target
+ * ("apple" | "google" | "waze"). An explicit choice wins on every platform;
+ * "auto" (or anything unknown) follows the device — Apple on Apple hardware,
+ * Google on Android/desktop. Pure — `nav` is injectable for tests.
+ */
+export function resolveMapsTarget(pref, nav) {
+  if (pref === "apple" || pref === "google" || pref === "waze") return pref;
+  return detectPlatform(nav) === "apple" ? "apple" : "google";
+}
+
 const hasCoords = (r) => typeof r.lat === "number" && typeof r.lng === "number";
 
 // What Maps should resolve for a place: prefer the street address (geocoded
@@ -63,19 +84,22 @@ const googleDir = (dest) =>
   `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=driving`;
 
 /**
- * Build a "show this place on the map" (pin) URL for a venue on a given platform
- * ("apple"|"android"|"other"), targeting its street address so Maps geocodes the
- * exact spot. Pure — no globals — so it's directly testable.
+ * Build a "show this place on the map" (pin) URL for a venue on a given target
+ * provider, targeting its street address so Maps geocodes the exact spot.
+ * `target` is a provider ("apple"|"google"|"waze"); the platform strings
+ * "android"/"other" are accepted as aliases for Google. Pure — no globals — so
+ * it's directly testable.
  */
-export function mapsUrlFor(r, platform) {
+export function mapsUrlFor(r, target) {
   const q = placeTarget(r);
-  if (platform === "apple") return `https://maps.apple.com/?q=${q}`;
-  return `https://www.google.com/maps/search/?api=1&query=${q}`;
+  if (target === "apple") return `https://maps.apple.com/?q=${q}`;
+  if (target === "waze") return `https://waze.com/ul?q=${q}`;
+  return `https://www.google.com/maps/search/?api=1&query=${q}`; // google/android/other
 }
 
-/** Convenience: detect the running platform and build the URL. */
-export function mapsUrl(r) {
-  return mapsUrlFor(r, detectPlatform());
+/** Convenience: resolve the viewer's pref (→ device when "auto") and build. */
+export function mapsUrl(r, pref) {
+  return mapsUrlFor(r, resolveMapsTarget(pref));
 }
 
 /**
@@ -98,22 +122,27 @@ export function mapsUrl(r) {
  *     the venue (origin→venue, `daddr` at its address, `dirflg=d` = drive) and
  *     drop the destination rather than fake it. This is still directions — the
  *     route feature stays routed even where the pin handoff is now a pin.
- * `dest` is {lat,lng} (or null → plain venue directions). Pure — no globals.
+ *   • Waze's universal link takes a single `q` destination (+`navigate=yes`) and
+ *     likewise has no waypoint param — so Waze mirrors Apple: navigate to the
+ *     venue, destination dropped.
+ * `target` is a provider ("apple"|"google"|"waze"; "android"/"other" alias
+ * Google). `dest` is {lat,lng} (or null → plain venue directions). Pure.
  */
-export function routeMapsUrlFor(place, dest, platform) {
+export function routeMapsUrlFor(place, dest, target) {
   const validDest = dest && typeof dest.lat === "number" && typeof dest.lng === "number";
   const via = placeTarget(place);
-  // Apple has no waypoint param → route origin→venue (destination dropped).
-  if (platform === "apple") return `https://maps.apple.com/?daddr=${via}&dirflg=d`;
+  // Apple/Waze have no waypoint param → route origin→venue (destination dropped).
+  if (target === "apple") return `https://maps.apple.com/?daddr=${via}&dirflg=d`;
+  if (target === "waze") return `https://waze.com/ul?q=${via}&navigate=yes`;
   // No destination → plain directions to the venue.
   if (!validDest) return googleDir(via);
   const to = `${dest.lat},${dest.lng}`;
   return `https://www.google.com/maps/dir/?api=1&destination=${to}&waypoints=${via}&travelmode=driving`;
 }
 
-/** Convenience: detect the platform and build the route-via URL. */
-export function routeMapsUrl(place, dest) {
-  return routeMapsUrlFor(place, dest, detectPlatform());
+/** Convenience: resolve the viewer's pref (→ device when "auto") and build. */
+export function routeMapsUrl(place, dest, pref) {
+  return routeMapsUrlFor(place, dest, resolveMapsTarget(pref));
 }
 
 // The viewer's last-known location ({lat,lng}) from the home screen's "Near me",
