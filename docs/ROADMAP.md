@@ -159,7 +159,13 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   menu → warnings light up live without reload; switch profile → safety treatment
   + hearts/ratings re-apply. Known by-design trade-off: a settings/profile change
   re-renders the whole menu, so an in-progress **search query + scroll position
-  reset** — flagged for owner acceptance. 🎯 **Owner ruling 2026-07-24 — queue a
+  reset** (and the ad-hoc dietary-chip toggle). 🎯 **Owner ruling 2026-07-25 —
+  queue a refinement** `[M]`: a later session preserves in-session UI state
+  (search query, scroll position, dietary-chip toggle) across the safety
+  re-render. **Hard constraint:** the allergen/dietary re-apply MUST keep sharing
+  the first-paint code path — preserving UI state must not fork the render, or it
+  reintroduces exactly this session's stale-highlight race. `[~]` unclaimed.
+  🎯 **Owner ruling 2026-07-24 — queue a
   dedicated browser-tooling session** to script this device check (headless Chrome
   with a fresh `--user-data-dir` to bust the SW), rather than a manual phone test.
   Until that passes, treat the live allergen re-highlight as **proven-by-tests,
@@ -391,9 +397,13 @@ CycloneDX at `/.well-known/sbom.json`, `gen_sbom.py --check` CI gate) and the
 
 - **`security.txt` + provenance metadata** `[S]` — a `/.well-known/
   security.txt` (contact + policy) is cheap good-citizenship for a public
-  site. Build provenance/attestation (SLSA-style) is **N/A today** —
-  Cloudflare Pages serves static files with no build to attest; revisit
-  only if a real pipeline ever appears.
+  site. 🎯 **Owner ruling 2026-07-25 — contact points at the repo's GitHub
+  security advisories** (not an email). **Sequenced with go-public (Theme 8):**
+  the advisories URL only resolves once the repo is public, so don't ship it to
+  the already-live site pointing at a 404 — build it *as* the repo flips public.
+  Build provenance/attestation (SLSA-style) is **N/A today** — Cloudflare Pages
+  serves static files with no build to attest; revisit only if a real pipeline
+  ever appears.
 
 ## Theme 8 — Making the repo public (parked; owner-gated)
 
