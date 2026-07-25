@@ -3,5 +3,6 @@
     "datescan",
     "wrapscan",
     "spellscan"
-  ]
+  ],
+  "licence": "Apache-2.0"
 }
