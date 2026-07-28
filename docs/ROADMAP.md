@@ -431,9 +431,13 @@ stays the owner's explicit call. Order matters:
    CI) flags a child's first name used as a **test fixture** in
    `tests/profiles.test.js` (pre-existing, from `5dfda33` 2026-07-22) and the
    "Churton" suburb across restaurant data (a real place name — likely fine). The
-   owner-approved recipe attributions (2026-07-06) stay. `[~]` **claimed
-   2026-07-28 (Fable review session)** — inventory + recommendation in progress;
-   the decision and the visibility flip stay owner-only.
+   owner-approved recipe attributions (2026-07-06) stay. **Review ran
+   2026-07-28** (Fable session) — full inventory + recommendations in
+   [reviews/2026-07-28-1138-family-texture-review.md](reviews/2026-07-28-1138-family-texture-review.md).
+   ⏳ Owner rulings pending (four checkboxes in the record: non-family recipe
+   attributions, test-fixture rename, live doc examples, history stance);
+   the fixes after ruling are one small Opus session. The visibility flip
+   stays owner-only.
 
 Verified clean 2026-07-12 (tree + full history): no secrets (the one
 token line reads from Keychain; "share tokens" are client-side codec),
