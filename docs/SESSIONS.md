@@ -823,3 +823,16 @@ Commits: sw split + docs + test + validate guard (ADR 0015); records close.
   Docs-only; gates run anyway (validate ✅ 28 files, no-deps ✅, SBOM ✅).
   **⚑ Still flagged, still not done:** atelier pin `4f637b0` is now ~21+
   commits stale — the drift audit + pin bump remains queued.
+  🛑 **New finding — the `floor` CI workflow has been red since 2026-07-25**
+  and it is *not* this change: five consecutive failures starting at
+  `aabb762` ("call atelier's scanner floor instead of copying it"). Cause is
+  structural, not a content defect — **leakscan is enforced on the CI plane
+  but CI has no local term list**, so it cannot guarantee cover and blocks
+  (today's message: "cover not guaranteed — the ci plane does not pass
+  `--require-terms`"; the 2026-07-28 run failed the same way with the older
+  wording, "no local term list found ... 86 finding(s)"). The same commit
+  passes leakscan *locally*, where the owner's term list is present, so the
+  content is clean either way. **Not fixed here** — deciding how CI gets
+  cover (ship a term list, downgrade the CI plane to advisory, or take
+  atelier's newer answer) belongs with the queued drift audit, and the
+  `CI` workflow itself is green (`30433814355`).
