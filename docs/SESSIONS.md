@@ -799,3 +799,27 @@ Commits: sw split + docs + test + validate guard (ADR 0015); records close.
   work incl. a secretscan fragment-match fix) — queue a drift audit + pin
   bump for an Opus session; out of scope for a billed review. Verify: floor
   hook green on both commits; pushed CI result cited at close.
+
+- **2026-07-29 (roadmap: recipes as personal content — Theme 11)**: Owner
+  steer captured — Cook at Home should stop publishing *all* 24 curated
+  recipes to everyone; recipes should also live in the private personal layer
+  and be shared like favourites/ratings/dietary/allergens (Themes 9/10),
+  while still publishing *some* publicly. New **Theme 11** in `ROADMAP.md`
+  with the four asks split by dependency: **11a** per-recipe hide `[S]` (no
+  backend, no schema, severable — ships alone); **11b** own-recipe CRUD
+  `[L][schema][design]` (local-first, never enters the repo, export/import
+  from day one); **11c** per-item sharing `[M]`; **11d** family shared set
+  `[L]` ⚑; **11e** which of the 24 stay public ⚑. **The load-bearing
+  finding:** this is Faves' first *user-authored content* — everything in the
+  personal layer today is small state pointing at repo data, so recipe bodies
+  hit storage, the ADR 0017 sync blob, the Theme 10 grant model and the
+  editor UI at once. Two grant-model gaps stated plainly rather than assumed
+  covered: sharing recipes needs **per-item** grants (Theme 10 is per-scope),
+  and a family set is **multi-writer** (Theme 10 is read-only one-way).
+  Cross-refs added both ways. 🚩 **11e is coupled to the pending
+  family-texture rulings** (Theme 8): moving the non-family attributions
+  ("Shane's Ribs", "Jesse's ...") private is a *third* option beside
+  keep/rename — flagged in both places so they aren't ruled independently.
+  Docs-only; gates run anyway (validate ✅ 28 files, no-deps ✅, SBOM ✅).
+  **⚑ Still flagged, still not done:** atelier pin `4f637b0` is now ~21+
+  commits stale — the drift audit + pin bump remains queued.
