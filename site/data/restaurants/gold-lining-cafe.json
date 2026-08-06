@@ -52,7 +52,915 @@
   },
   "vibe": [],
   "picks": [],
-  "verified": null,
-  "status": "stub",
-  "menu": []
+  "priceBand": "$$",
+  "verified": "2026-08-07",
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "All Day Brunch (7.30am–2.30pm)",
+      "items": [
+        {
+          "name": "Eggs on Toast",
+          "desc": "Eggs your way on butter toasted ciabatta, house-made tomato relish. Creamy scrambled eggs +$1; GF seeded toast +$1.",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Eggs Benedict",
+          "desc": "Poached eggs, potato rosti, wilted baby spinach, paprika mustard hollandaise, with your choice of bacon, smoked salmon, halloumi (V) or mushroom (V).",
+          "price": 23.0,
+          "tags": [
+            "gf",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Salmon and Avo Bagel",
+          "desc": "Zesty creme fraiche, cold smoked salmon, sliced avocado, poached egg, pickled onions and lemon wedge.",
+          "price": 23.0,
+          "tags": [
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chilli Scrambled Eggs",
+          "desc": "Creamy scrambled eggs, house-made chilli oil, ricotta cheese, dukkah, toasted ciabatta. GF on request +$1.",
+          "price": 19.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "spicy-1",
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Winter Porridge",
+          "desc": "Mixed spiced creamy oats, apple cinnamon compote, brown butter and honey glazed almond, Pic's peanut butter, Greek yoghurt.",
+          "price": 19.0,
+          "tags": [
+            "v",
+            "contains-nuts",
+            "contains-peanuts",
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Avo on Toast",
+          "desc": "Smashed avo on toasted multigrain bread, vegan feta, salsa verde, pickled red onions, cucumber, everything bagel seasoning, toasted seeds. GF on request +$1.",
+          "price": 22.0,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "gf-option",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Gold Lining Nourish Bowl",
+          "desc": "Hot maple roasted kumara, quinoa, mixed greens, avocado, cucumber, pickled carrot, alfalfa, sumac, harissa garlic herb dressing, with your choice of grilled chicken, halloumi (V) or falafel (VG).",
+          "price": 25.0,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Cheese & Spinach Omelette",
+          "desc": "3 eggs filled with melty cheese, creamed spinach, crispy onions, mixed greens salad. Add bacon +$7.",
+          "price": 21.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fried Chicken Chop",
+          "desc": "Crispy fried whole chicken thigh, Japanese-style potato salad, grilled tomato.",
+          "price": 24.0,
+          "tags": []
+        },
+        {
+          "name": "Curly Fries",
+          "desc": "With aioli or tomato sauce.",
+          "price": 13.0,
+          "tags": [
+            "vg",
+            "v",
+            "df"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Brunch Add-Ons",
+      "items": [
+        {
+          "name": "Eggs Your Way — One",
+          "price": 4.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Eggs Your Way — Two",
+          "price": 8.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Potato Rosti",
+          "price": 6.0,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Portobello Mushroom",
+          "price": 6.0,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Avocado",
+          "price": 6.0,
+          "tags": [
+            "vg",
+            "v",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Herb Roasted Tomato",
+          "price": 6.0,
+          "tags": [
+            "vg",
+            "v",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Hashbrowns",
+          "price": 6.0,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Halloumi",
+          "price": 8.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Bacon",
+          "price": 8.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Grilled Chicken",
+          "price": 8.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Cold-Smoked Salmon",
+          "price": 9.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Soup of the Day",
+      "items": [
+        {
+          "name": "Seafood Chowder",
+          "desc": "With your choice of bread: butter toasted ciabatta or multigrain (GF toast +$2). Marked GF-NF.",
+          "price": 18.0,
+          "tags": [
+            "gf-option",
+            "contains-shellfish",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cabinet — Savoury",
+      "items": [
+        {
+          "name": "Corn Fritter Stack",
+          "desc": "Marked GF and vegetarian.",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Mixed Vegetable Cheese Frittata",
+          "desc": "With green salad. Marked GF.",
+          "price": 12.5,
+          "tags": [
+            "v",
+            "gf",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Ham & Brie Panini",
+          "price": 13.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Beef Pastrami Pita Pocket",
+          "price": 12.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegan Truffle Filo",
+          "desc": "Mushroom and spinach filo with salad. Marked vegan.",
+          "price": 12.0,
+          "tags": [
+            "vg",
+            "v",
+            "df"
+          ]
+        },
+        {
+          "name": "Sausage Roll",
+          "desc": "With tomato sauce.",
+          "price": 12.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Salmon & Zucchini Quiche",
+          "desc": "With green salad.",
+          "price": 14.0,
+          "tags": [
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fried Chicken Focaccia",
+          "price": 15.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Bacon Turkish",
+          "price": 14.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Halloumi & Mushroom Turkish",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Falafel Wrap",
+          "price": null,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Mexican Chicken Wrap",
+          "price": 14.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Breakfast Wrap",
+          "price": 13.5,
+          "tags": [
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Croissant",
+          "price": 14.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Ham & Cheese Croissant",
+          "price": 13.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cabinet — Bakery",
+      "items": [
+        {
+          "name": "Almond Croissant",
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-nuts",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Apricot Plum Danish",
+          "price": 7.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cinnamon Roll",
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "K-Style Creamy Garlic Brioche",
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Blueberry Sweet Muffin",
+          "price": 5.8,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Raspberry Vegan Muffin",
+          "price": 5.8,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetarian Savoury Muffin",
+          "price": 5.8,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetarian Savoury Brioche",
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cheese Scone",
+          "price": 5.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Keto Choco Loaf",
+          "desc": "Marked GF.",
+          "price": 6.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Garlic & Potato Focaccia",
+          "desc": "Marked GF.",
+          "price": 6.5,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Lemon Loaf",
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Banana & Walnut Loaf",
+          "price": 6.0,
+          "tags": [
+            "v",
+            "contains-nuts",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cabinet — Sweets & Slices",
+      "items": [
+        {
+          "name": "Basque Cheesecake",
+          "desc": "Marked GF.",
+          "price": 8.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tiramisu",
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Milk Pudding",
+          "desc": "Berry compote and coconut almond crumble.",
+          "price": 8.5,
+          "tags": [
+            "v",
+            "contains-nuts",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Raspberry Crumble Slice",
+          "price": 6.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Citrus Slice",
+          "price": 6.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Ginger Slice",
+          "price": 6.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Lolly Cake",
+          "price": 5.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Custard Slice",
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cookie Caramel Slice",
+          "price": 5.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Carrot Cake",
+          "desc": "Marked GF.",
+          "price": 7.5,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Choco Fudge Brownie",
+          "desc": "Marked GF.",
+          "price": 6.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Caramel Slice",
+          "desc": "Marked GF.",
+          "price": 6.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Salted Caramel Cookie",
+          "desc": "Marked GF.",
+          "price": 5.5,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Double Choc Cookie",
+          "desc": "Marked GF.",
+          "price": null,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cabinet — Raw Vegan",
+      "items": [
+        {
+          "name": "PB Slice",
+          "price": 7.0,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Boysenberry Cup",
+          "price": 8.0,
+          "tags": [
+            "vg",
+            "v",
+            "df"
+          ]
+        },
+        {
+          "name": "Snicker Cup",
+          "price": 8.0,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Mint Choco Slice",
+          "price": 7.0,
+          "tags": [
+            "vg",
+            "v",
+            "df"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Black Coffee",
+      "items": [
+        {
+          "name": "Short Black",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Long Black",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Americano",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Macchiato",
+          "price": 5.2,
+          "tags": []
+        },
+        {
+          "name": "Piccolo",
+          "price": 5.2,
+          "tags": []
+        },
+        {
+          "name": "Con Panna",
+          "price": 5.7,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "White Coffee",
+      "items": [
+        {
+          "name": "Flat White",
+          "price": 5.9,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Flat White - Large",
+          "price": 6.8,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Latte",
+          "price": 5.9,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Latte - Large",
+          "price": 6.8,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cappuccino",
+          "price": 5.9,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cappuccino - Large",
+          "price": 6.8,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mocha",
+          "price": 5.9,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mocha - Large",
+          "price": 6.8,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chai Latte",
+          "price": 5.7,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chai Latte - Large",
+          "price": 6.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hot Chocolate",
+          "price": 5.7,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hot Chocolate - Large",
+          "price": 6.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Drink Specialties",
+      "items": [
+        {
+          "name": "Chia Sisters Lemon Honey Ginger & Turmeric",
+          "price": 6.0,
+          "tags": [
+            "vg",
+            "v",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Hakanoa Golden Latte with Oat Milk",
+          "desc": "Ginger, turmeric and pumpkin pie spice.",
+          "price": 6.2,
+          "tags": [
+            "v",
+            "df"
+          ]
+        },
+        {
+          "name": "Hakanoa Golden Latte with Oat Milk - Large",
+          "desc": "Ginger, turmeric and pumpkin pie spice.",
+          "price": 6.8,
+          "tags": [
+            "v",
+            "df"
+          ]
+        },
+        {
+          "name": "Matcha Latte with Oat Milk",
+          "price": 6.2,
+          "tags": [
+            "v",
+            "df"
+          ]
+        },
+        {
+          "name": "Matcha Latte with Oat Milk - Large",
+          "price": 6.8,
+          "tags": [
+            "v",
+            "df"
+          ]
+        },
+        {
+          "name": "Noble & Sunday Tea",
+          "desc": "English breakfast, Earl Grey, jade sencha, peppermint, lime & camomile, strawberry plum, or orange sky.",
+          "price": 5.8,
+          "tags": [
+            "vg",
+            "v",
+            "gf",
+            "df"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Iced Drinks",
+      "items": [
+        {
+          "name": "Iced Latte",
+          "desc": "With maple, vanilla, caramel or hazelnut.",
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Iced Americano",
+          "price": 5.8,
+          "tags": [
+            "vg",
+            "v",
+            "df"
+          ]
+        },
+        {
+          "name": "Iced Mocha",
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Iced Chocolate",
+          "price": 6.8,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Matcha",
+      "items": [
+        {
+          "name": "Iced Matcha Latte",
+          "price": 7.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Iced Mango Matcha Latte",
+          "price": 7.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Iced Strawberry Matcha Latte",
+          "price": 7.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Iced White Choco Matcha Latte",
+          "price": 7.5,
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Extras",
+      "items": [
+        {
+          "name": "Decaf, Honey or Syrups",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Coconut, Soy, Oat or Almond Milk",
+          "price": 1.0,
+          "tags": [
+            "df"
+          ]
+        }
+      ]
+    }
+  ]
 }
