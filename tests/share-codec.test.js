@@ -49,8 +49,8 @@ test("round-trips an order to a flat, cart-shaped item list", () => {
 });
 
 test("carries an optional sender label", () => {
-  const decoded = decodeShare(encodeShare({ groups, label: "Ruth" }));
-  assert.equal(decoded.label, "Ruth");
+  const decoded = decodeShare(encodeShare({ groups, label: "Alex" }));
+  assert.equal(decoded.label, "Alex");
 });
 
 test("no label -> empty string, not undefined", () => {
@@ -157,10 +157,10 @@ test("readShareToken pulls the token from a hash or a whole URL", () => {
 });
 
 test("end-to-end: encode -> URL -> read token -> decode", () => {
-  const token = encodeShare({ groups, label: "Booth" });
+  const token = encodeShare({ groups, label: "Sam" });
   const url = buildShareUrl(token, "https://faves.example/");
   const back = decodeShare(readShareToken(url));
-  assert.equal(back.label, "Booth");
+  assert.equal(back.label, "Sam");
   assert.equal(back.items.length, 3);
 });
 
@@ -173,9 +173,9 @@ const shortlistGroups = [
 ];
 
 test("round-trips a shortlist to flat favourites entries", () => {
-  const decoded = decodeShare(encodeShortlist({ label: "Ruth", groups: shortlistGroups }));
+  const decoded = decodeShare(encodeShortlist({ label: "Alex", groups: shortlistGroups }));
   assert.equal(decoded.type, "shortlist");
-  assert.equal(decoded.label, "Ruth");
+  assert.equal(decoded.label, "Alex");
   // venue heart + 2 dishes for KK, then 1 recipe dish for Cook at Home
   assert.equal(decoded.items.length, 4);
   assert.deepEqual(decoded.items[0], { type: "venue", venueId: "kk", venueName: "KK Malaysian", isRecipe: false, sub: "Tawa · Malaysian" });

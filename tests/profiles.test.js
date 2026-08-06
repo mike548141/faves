@@ -44,7 +44,7 @@ test("two profiles get disjoint keys for the same base", () => {
 // --- sanitiseName -----------------------------------------------------
 
 test("sanitiseName trims, collapses whitespace, caps length", () => {
-  assert.equal(sanitiseName("  Booth  "), "Booth");
+  assert.equal(sanitiseName("  Sam  "), "Sam");
   assert.equal(sanitiseName("Anne   Marie"), "Anne Marie");
   assert.equal(sanitiseName("x".repeat(50)).length, 24);
   assert.equal(sanitiseName("   "), "");
@@ -117,7 +117,7 @@ test("migrate is idempotent — a second run never resurrects or clobbers", () =
 test("migrate does not overwrite an existing registry or active choice", () => {
   const s = fakeStorage();
   const p = createProfiles(s);
-  const id = p.create("Ruth"); // now two profiles, Ruth active
+  const id = p.create("Alex"); // now two profiles, Alex active
   assert.equal(migrate(s).activeId, id); // migrate is a no-op over a live registry
   assert.equal(sanitiseRegistry(JSON.parse(s.getItem(PROFILES_KEY))).activeId, id);
 });
@@ -143,7 +143,7 @@ test("a fresh store exposes one active default profile", () => {
 test("create adds a profile, switches to it, and persists", () => {
   const s = fakeStorage();
   const p = createProfiles(s);
-  const id = p.create("Booth");
+  const id = p.create("Sam");
   assert.ok(id);
   assert.equal(p.list().length, 2);
   assert.equal(p.activeId(), id); // creating switches to the new person
@@ -159,15 +159,15 @@ test("create rejects an empty name", () => {
 
 test("rename changes a profile's name; unknown id or empty name is rejected", () => {
   const p = createProfiles(fakeStorage());
-  assert.equal(p.rename("default", "Sloane"), true);
-  assert.equal(p.active().name, "Sloane");
+  assert.equal(p.rename("default", "Jo"), true);
+  assert.equal(p.active().name, "Jo");
   assert.equal(p.rename("nope", "X"), false);
   assert.equal(p.rename("default", "  "), false);
 });
 
 test("setActive switches profiles and rejects an unknown id", () => {
   const p = createProfiles(fakeStorage());
-  const id = p.create("Ruth");
+  const id = p.create("Alex");
   assert.equal(p.setActive("default"), true);
   assert.equal(p.activeId(), "default");
   assert.equal(p.setActive("ghost"), false);
@@ -177,7 +177,7 @@ test("setActive switches profiles and rejects an unknown id", () => {
 
 test("scopedKey tracks the active profile", () => {
   const p = createProfiles(fakeStorage());
-  const id = p.create("Ruth");
+  const id = p.create("Alex");
   assert.equal(p.scopedKey("faves.favourites.v1"), scopeKey(id, "faves.favourites.v1"));
   p.setActive("default");
   assert.equal(p.scopedKey("faves.favourites.v1"), "faves.p.default.favourites.v1");
@@ -188,9 +188,9 @@ test("scopedKey tracks the active profile", () => {
 test("remove deletes a profile and purges its per-profile data", () => {
   const s = fakeStorage();
   const p = createProfiles(s);
-  const id = p.create("Booth");
-  // Booth is active; write some of Booth's data under the namespaced keys.
-  for (const base of SCOPED_BASE_KEYS) s.setItem(scopeKey(id, base), '["boothdata"]');
+  const id = p.create("Sam");
+  // Sam is active; write some of Sam's data under the namespaced keys.
+  for (const base of SCOPED_BASE_KEYS) s.setItem(scopeKey(id, base), '["samdata"]');
   p.setActive("default");
   assert.equal(p.remove(id), true);
   assert.equal(p.list().length, 1);
@@ -199,7 +199,7 @@ test("remove deletes a profile and purges its per-profile data", () => {
 
 test("removing the active profile hands active to the first remaining", () => {
   const p = createProfiles(fakeStorage());
-  const id = p.create("Booth"); // Booth active
+  const id = p.create("Sam"); // Sam active
   assert.equal(p.remove(id), true);
   assert.equal(p.activeId(), "default");
 });
@@ -212,7 +212,7 @@ test("the last profile can never be deleted", () => {
 
 test("remove rejects an unknown id", () => {
   const p = createProfiles(fakeStorage());
-  p.create("Ruth");
+  p.create("Alex");
   assert.equal(p.remove("ghost"), false);
   assert.equal(p.list().length, 2);
 });
@@ -225,12 +225,12 @@ test("two profiles keep disjoint favourites under the same base key", () => {
   const base = "faves.favourites.v1";
   // Default profile hearts one thing.
   s.setItem(p.scopedKey(base), '["default-fav"]');
-  const id = p.create("Ruth"); // switches active to Ruth
-  s.setItem(p.scopedKey(base), '["ruth-fav"]');
+  const id = p.create("Alex"); // switches active to Alex
+  s.setItem(p.scopedKey(base), '["alex-fav"]');
   p.setActive("default");
   assert.equal(s.getItem(p.scopedKey(base)), '["default-fav"]');
   p.setActive(id);
-  assert.equal(s.getItem(p.scopedKey(base)), '["ruth-fav"]');
+  assert.equal(s.getItem(p.scopedKey(base)), '["alex-fav"]');
 });
 
 // --- subscribe --------------------------------------------------------
@@ -239,22 +239,22 @@ test("subscribe fires on change; unsubscribe stops it", () => {
   const p = createProfiles(fakeStorage());
   let calls = 0;
   const off = p.subscribe(() => calls++);
-  p.create("Ruth");
+  p.create("Alex");
   assert.equal(calls, 1);
   p.setActive("default");
   assert.equal(calls, 2);
   off();
-  p.create("Booth");
+  p.create("Sam");
   assert.equal(calls, 2);
 });
 
 test("reload re-reads the registry (cross-tab switch) and notifies", () => {
   const s = fakeStorage();
   const p = createProfiles(s);
-  const id = p.create("Ruth");
+  const id = p.create("Alex");
   p.setActive("default");
-  // Another tab switches to Ruth by writing the registry directly.
-  s.setItem(PROFILES_KEY, JSON.stringify({ v: 1, activeId: id, profiles: [{ id: "default", name: "Me" }, { id, name: "Ruth" }] }));
+  // Another tab switches to Alex by writing the registry directly.
+  s.setItem(PROFILES_KEY, JSON.stringify({ v: 1, activeId: id, profiles: [{ id: "default", name: "Me" }, { id, name: "Alex" }] }));
   let notified = false;
   p.subscribe(() => (notified = true));
   p.reload();

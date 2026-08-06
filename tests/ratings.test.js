@@ -150,14 +150,14 @@ test("per-profile: two profiles keep disjoint ratings; a switch re-points", () =
   const r = createRatings(view);
 
   r.set(dish, 3); // default profile rates it 3
-  switchTo("p-ruth");
-  r.reload(); // re-point at Ruth's (empty) store
-  assert.equal(r.get(dish), 0); // Ruth hasn't rated it
-  r.set(dish, 1); // Ruth rates it 1
+  switchTo("p-alex");
+  r.reload(); // re-point at Alex's (empty) store
+  assert.equal(r.get(dish), 0); // Alex hasn't rated it
+  r.set(dish, 1); // Alex rates it 1
 
   // Both marks coexist under distinct namespaced keys.
   assert.equal(device.get(scopeKey("default", "faves.ratings.v1")), '{"d:kk-malaysian Mee Goreng":3}');
-  assert.equal(device.get(scopeKey("p-ruth", "faves.ratings.v1")), '{"d:kk-malaysian Mee Goreng":1}');
+  assert.equal(device.get(scopeKey("p-alex", "faves.ratings.v1")), '{"d:kk-malaysian Mee Goreng":1}');
 
   switchTo("default");
   r.reload();
