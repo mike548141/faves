@@ -196,11 +196,18 @@ free plan withholds from private repos.
 
 ### Upstream, still open — not blockers this repo can close
 
-- **atelier P4** — the CI plane calls leakscan without `--require-terms`, so
-  the `floor` workflow has been red since 2026-07-25 on *"cover not
-  guaranteed"*. Structural, not a content defect: the same tree scans clean
-  locally where the term list is present. Post-flip every push is publication,
-  so **the floor must be green before the flip** — and the fix is atelier's.
+- **atelier P4** — the CI plane calls leakscan without `--require-terms`. The
+  `floor` workflow had been **red since 2026-07-25**; it went **green at
+  `8ba6218`** as a side effect of gate 1, exactly as `rpi` 0009's floor failure
+  resolved itself. The mechanism is worth being precise about, because it is
+  not a fix: CI has no term list, so it only ever ran the structural rules, and
+  it was blocking on the ~86 structural findings in the venue data. The
+  `.leakscanignore` took those to zero, so there is now nothing for it to block
+  on. **The gap itself is untouched** — CI still prints *"cover not guaranteed
+  — the ci plane does not pass `--require-terms`"* and still cannot catch a
+  term-list-only leak. Post-flip every push is publication, so a CI plane that
+  can only see structural patterns is a real residual, and the fix stays
+  atelier's.
 - **atelier P5** — the platform-settings checklist. Gate 8 above is this
   repo's instance of it; the generic checklist is still owed upstream.
 - **atelier P6** — the estate-internal-context ADR, drafted 2026-08-05, ruling

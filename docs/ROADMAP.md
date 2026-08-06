@@ -541,11 +541,21 @@ two owner actions owed first. What that pass closed:
 1. **Rotate the GitHub PAT and confirm the AWS / Google / TrueNAS
    credential roots are hardened.** The records name them as *queued*
    for hardening; publishing that while it is still true is a live
-   disclosure, not a historical one. This is the one item that can turn
-   a safe flip unsafe.
-2. **Floor CI green** — red since 2026-07-25; the fix is atelier P4.
+   disclosure, not a historical one. **This is now the only thing
+   standing between the repo and a flip**, and it is estate-side work.
+2. ✅ **Floor CI green at `8ba6218`** — first time since 2026-07-25,
+   resolved as a side effect of the leakscan disposition (CI was
+   blocking on the venue-data structural findings; the ignore took them
+   to zero). ⚠️ **Not a fix of atelier P4**: CI still carries no term
+   list and still reports "cover not guaranteed", so it cannot catch a
+   term-list-only leak. Real cover stays the local `--require-terms`
+   run. Post-flip, every push is publication — so this residual is worth
+   closing upstream.
 3. **atelier P5 / P6** still open upstream (the generic settings
-   checklist; the estate-internal-context ruling).
+   checklist; the estate-internal-context ruling). Neither blocks: P5's
+   substance is discharged for this repo by ADR 0022 gate 8, and P6's
+   ruling would bind the records convention going forward rather than
+   gate this flip.
 
 ## Theme 9 — Cross-device preference sync (owner-approved 2026-07-23)
 

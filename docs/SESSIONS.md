@@ -920,10 +920,18 @@ Commits: sw split + docs + test + validate guard (ADR 0015); records close.
   files are untracked and were never committed. Noted, not fixed: spellscan
   skips fenced code blocks, so it missed an `artifact` in README's layout
   diagram (found by eye).
-  🛑 **Two things still block the flip, both outside this repo**: the PAT
+  🎉 **The floor CI went green at `8ba6218`** — first time since 2026-07-25,
+  and not something this session set out to fix. Same shape as rpi 0009's
+  side-effect resolution: CI carries no term list, so it only ever ran the
+  structural rules, and it was blocking on the ~86 structural findings in the
+  venue data; the `.leakscanignore` took those to zero, leaving nothing to
+  block on. ⚠️ **Not a fix of atelier P4** — CI still prints "cover not
+  guaranteed" and still cannot catch a term-list-only leak, which is a real
+  residual once every push is publication.
+  🛑 **One thing now blocks the flip**, and it is estate-side: the PAT
   rotation + credential-root hardening (the records name AWS/Google/TrueNAS
-  as *queued*, and publishing that while true is a live disclosure), and
-  **floor CI green** (red since 2026-07-25, atelier P4 owns the fix).
+  as *queued*, and publishing that while it is still true is a live
+  disclosure rather than a historical one).
   Verified: leakscan/secretscan/publishscan/licenscan/datescan/wrapscan/
   spellscan/linkscan/reviewscan/harvestscan/pointerscan clean; node --test
   301 pass; validate 28 files; no-deps; SBOM check; floor hook green on

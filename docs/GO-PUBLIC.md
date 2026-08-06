@@ -26,13 +26,16 @@ half-way.
       while it is still true is a live disclosure. Rotating makes the line
       historical, which is the whole basis of the "publish the records as-is"
       ruling.
-- [ ] **2. Get the `floor` workflow green.** Red since 2026-07-25 on *"cover
-      not guaranteed — the ci plane does not pass `--require-terms`"*. The fix
-      is upstream (atelier P4). Post-flip every push is publication, so a red
-      floor at flip time is not acceptable debt.
+- [x] **2. Get the `floor` workflow green.** ✅ **Done at `8ba6218`
+      (2026-08-06)** — green for the first time since 2026-07-25, as a side
+      effect of the leakscan disposition: CI was blocking on the ~86 structural
+      findings in the venue data, and the `.leakscanignore` took those to zero.
+      **Not a fix of atelier P4** — CI still has no term list and still prints
+      *"cover not guaranteed"*, so it cannot catch a term-list-only leak. Keep
+      the local `--require-terms` run in step 3 as the real cover.
 
       ```sh
-      gh run list --workflow=floor --limit 3
+      gh run list --workflow=floor --limit 3   # expect: success
       ```
 - [ ] **3. Re-run the gates on the exact tree that will flip** — evidence goes
       stale, and ADR 0022's numbers were taken on `0243e9c`.
