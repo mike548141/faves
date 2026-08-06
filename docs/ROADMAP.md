@@ -447,6 +447,40 @@ Apache 2.0 licence present, only the owner's own `cxi.nz` work address in
 commit metadata,
 home-area inference no worse than the live site already allows.
 
+**Re-assessed 2026-08-06** (pin bumped to `atelier@33a540a`). The estate
+now has a proven flip procedure: `rpi` went public 2026-07-29 through a
+six-gate publish-safety ADR (rpi `docs/decisions/0009` — leakscan 0,
+secretscan 0, full-history blob scan, licence, reconnaissance sweep,
+docs-read-as-public), with the evidence produced by an agent and the flip
+ruled by the owner. faves follows that template. What the re-assessment
+adds to the list above:
+
+- **Two upstream atelier items gate the flip.** P5 — the publish-safety
+  checklist covers repo *content* but nothing covers GitHub *settings*
+  (wiki, actions policy, fork-PR approval, rulesets); atelier's ROADMAP
+  marks it owed *before the ros/faves flip*. P6 — the
+  estate-internal-context ADR (drafted 2026-08-05, ruling owed) binds
+  every repo heading public; faves records name private siblings, so the
+  ruling lands here too.
+- **Leakscan needs a disposition pass, not a cleanup.** Full-tree
+  leakscan at HEAD: 104 findings. The bulk are the product — restaurant
+  street addresses and phone numbers in `site/data/` and their echoes in
+  docs/records — business data the site exists to publish, not personal
+  data. Per GUARDS (narrow, noisy, reasoned) they want a scoped,
+  reasoned allowance, not deletion. The remainder — the owner's-term-list
+  hits (home suburb) and family-name fixtures — are exactly the
+  2026-07-28 review's pending rulings. Gate 1 of the publish-safety ADR
+  can only cite "leakscan 0" after both.
+- **Floor CI must be green before the flip.** Red since 2026-07-25
+  (leakscan lacks cover in CI — no term list on the runner). The owning
+  fix is atelier P4 (the ci plane calls leakscan without
+  `--require-terms`), still open upstream. Post-flip every push is
+  publication, so a red floor at flip time is not acceptable debt.
+- **The flip artefact is a faves publish-safety ADR** modelled on rpi
+  0009: six gates, evidence not assurance, full-history blob scan
+  included, re-verified on the exact tree that flips. The visibility
+  change itself stays an owner-only floor action.
+
 ## Theme 9 — Cross-device preference sync (owner-approved 2026-07-23)
 
 The same person's hearts, ratings, and settings, kept together across
