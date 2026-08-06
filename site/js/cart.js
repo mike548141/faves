@@ -3,8 +3,8 @@
 // STRATEGY non-goal): no transaction, no account, no backend, no external
 // request. As people call out what they want, it tallies and groups so one
 // person can read the list down the phone, tick it off at pickup, and
-// sanity-check the total. Runtime naming ("Booth", "Ruth") could live here
-// later; it never leaves the device and nothing personal enters the repo.
+// sanity-check the total. Per-person labels on the tally could live here
+// later; they'd never leave the device, and no such name enters the repo.
 //
 // The maths (grouping, totals, counts) is pure and unit-tested; the store
 // is a thin localStorage wrapper over it, with a memory fallback so a

@@ -133,8 +133,8 @@ export function rankByDetour(
 
 /**
  * Representative coordinate for each suburb: the mean of that suburb's venues'
- * coordinates. A coarse but honest, zero-dependency destination ("on the way
- * home to Churton Park") that needs no geocoder and stores no personal address.
+ * coordinates. A coarse but honest, zero-dependency destination — "toward the
+ * suburb", not a street — that needs no geocoder and stores no personal address.
  * Returns [{ area, lat, lng, n }] sorted by name; areas with no located venue
  * are skipped (we can't place them). Recipes are excluded (no location). Pure.
  */
