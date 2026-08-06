@@ -106,12 +106,48 @@ go-forward texture.
 
 ## 🎯 Owner decisions needed
 
-- [ ] Ruling on Shane + Jesse attributions (keep / rename) — rec 2.
-- [ ] Approve the test-fixture rename — rec 1.
-- [ ] Keep-or-neutralise call on the live doc examples + cart.js /
+- [x] Ruling on Shane + Jesse attributions (keep / rename) — rec 2.
+- [x] Approve the test-fixture rename — rec 1.
+- [x] Keep-or-neutralise call on the live doc examples + cart.js /
       route.js comments — recs 4–5.
-- [ ] Confirm the history stance: publish with names in history, no rewrite.
+- [x] Confirm the history stance: publish with names in history, no rewrite.
 
 Once ruled, the fixes are a single small Opus session; then this gate closes
 and the go-public sequence continues at Theme 8 step 1 (PAT refresh) and
 step 2 (branch protection) before any visibility flip.
+
+## Rulings (owner, 2026-08-06) — and how they were applied
+
+All four ruled in one sitting, walked through question by question:
+
+1. **Shane + Jesse — keep, with their OK.** The attribution stays on the
+   basis that both are happy with a first name on a public site; that OK
+   is the owner's to hold and is not a repo artefact. Tree unchanged
+   (site data and the two mirroring test fixtures keep the names).
+2. **Test-fixture rename — approved and applied** (`ea4ccde`, Opus
+   session). Ruth→Alex, Booth→Sam, the flagged fixture name→Jo, derived
+   strings included. `tests/` now carries no family names; the leakscan
+   trigger is gone.
+3. **Live texture — neutralise all live docs, applied.** cart.js:6 and
+   route.js:137 reworded (`5830081`, + SHELL_VERSION bump); the
+   CHANGELOG share-flow examples and the ROADMAP Theme-10 example moved
+   to neutral names. Closed records (ROADMAP-DONE, SESSIONS-ARCHIVE)
+   keep their texture, as recommended. **One deviation from the ruling
+   as stated:** rec 5 assumed the suburb word could stay in the
+   route.js comment — it cannot: the suburb is on the owner's leakscan
+   term list and term-list hits are non-exemptible by allow-marker
+   (atelier D1, owner-ruled 2026-08-04), so the comment now keeps the
+   concept ("toward the suburb, not a street") without naming the
+   place. Product content (venue data, index.html fallbacks) is
+   untouched. Three adjacent "drive home"-framing comments
+   (route.js:1–2, geo.js:108, app.css:269) name no person or place and
+   were left alone.
+4. **History stance confirmed: publish with names in history, no
+   rewrite.** Same stance as the rpi flip (its ADR 0009): edits above
+   are go-forward texture; history keeps what it has.
+
+**This gate is closed.** Follow-on found while applying: the suburb is
+simultaneously product content and a leakscan term, and leakscan judges
+changed lines — so the existing venue-data/index.html lines are
+grandfathered until the next edit touches one, which will then block
+with no marker hatch. Queued in Theme 8's leakscan-disposition item.
