@@ -186,7 +186,8 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   this is a **control/visual** redesign only. 🎯 **Owner ruling 2026-07-24 —
   redesign later, not now.** The slider stays live; no paradigm chosen; revisit
   when it next bothers him. Do not build a v3 until then. Next (when reopened):
-  agree the direction with the owner, then supersede ADR 0019. What's shipped so far → `ROADMAP-DONE.md` is
+  agree the direction with the owner, then supersede ADR 0019. What's shipped
+  so far → `ROADMAP-DONE.md` is
   premature; keep the trail in ADR 0013 → 0019.
 - ✅ **Directions handoff — backed out to a pin** — **applied 2026-07-23**
   (`9dad5f8`, ADR 0016, wt: faves-wave8-rulings-apply). Owner, raw: "I don't
@@ -334,7 +335,7 @@ out (no official API). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   caches it at the edge, and shows it inline with "powered by Google"
   attribution; **offline or on failure it degrades to a "See reviews"
   link-out** to the venue's Maps listing. This is the *first* external service
-  in an otherwise zero-third-party app — the shipped `site/` artifact stays
+  in an otherwise zero-third-party app — the shipped `site/` artefact stays
   zero-dep (the fetch is runtime + optional), but the deployed *system* gains
   one billed online dependency. **Write an ADR when built; sequenced after the
   Cloudflare Pages deploy (Phase 7).** Dish-level ratings stay curated (Google
@@ -365,7 +366,7 @@ architecture:
 - Faves is public, account-free, and forbids personal/health data in the
   repo. An eating diary + exercise log is inherently personal, private
   and persistent — the opposite shape. Mixing them would drag exactly the
-  data this repo bans into a public artifact.
+  data this repo bans into a public artefact.
 - Clean seam: Faves *publishes* structured dish data (portions, tags,
   nutrition where known); a downstream personal app *logs* what was eaten
   against it. **The order tally (Theme 1) is the natural bridge** — an
@@ -380,7 +381,7 @@ costs nothing now.
 
 ## Theme 7 — Provenance & supply-chain: the verifiable zero-dependency claim
 
-Faves' defining property is that the shipped artifact has **no
+Faves' defining property is that the shipped artefact has **no
 third-party components** (ADR [0001](decisions/0001-zero-build-vanilla.md)):
 no npm packages, no CDN, no framework. This theme makes that claim
 *checkable* rather than merely stated. Note the honest framing: for a
@@ -719,7 +720,7 @@ By value-per-effort and dependency order:
 
 **Parallel, any time (Theme 7):** the zero-dependency CI guard is a cheap
 pre-launch win; SBOM publishing can land alongside the Phase 7 deploy so
-the live site ships with a provenance artifact from day one.
+the live site ships with a provenance artefact from day one.
 
 **Owner calls — resolved 2026-07-08:**
 1. Order tally: **in** (shipped); STRATEGY non-goal clarification landed.

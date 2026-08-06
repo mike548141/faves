@@ -91,7 +91,7 @@ te reo UI usage. All strings carry correct macrons unless noted (none were wrong
 | `fav.allPlaces` | All places | Ngā wāhi katoa | ✅ |
 | `fav.share` | Share these | Tuaritia ēnei | ✅ |
 | `pick.button` | Pick for us | Whiriwhiria mā mātou | ✅ *Whiriwhiria* = select; *mā mātou* = for us (excl.). |
-| `pick.eyebrow` | Tonight it's… | I tēnei pō, ko… | ✅ |
+| `pick.eyebrow` | Tonight it's… | I tēnei pō, ko… | ✅ | <!-- datescan:allow: a verbatim UI string under review, not a dated claim -->
 | `pick.usual` | ♥ one of your usuals | ♥ tētahi o ō makau | ✅ (subject to the *makau* brand call). |
 | `pick.go` | That's the one | Koia tēnā | ✅ idiomatic. |
 | `pick.again` | Go again | Anō | ✅ |

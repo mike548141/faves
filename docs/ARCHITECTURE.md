@@ -121,7 +121,7 @@ reversible in an afternoon.
 
 The one non-venue record type. A single collection,
 `data/restaurants/cook-at-home.json`, holds home recipes so "cook
-tonight" sits in the same list (and the "pick for us" shuffle) as the
+tonight" sits in the same list (and the "pick for us" shuffle) as the <!-- datescan:allow: product vocabulary — "open tonight" is the question this app answers, not a dated claim -->
 takeaways. It reuses the restaurant shape with a `kind` discriminator:
 
 - `kind`: `"venue"` (default when absent) or `"recipes"`.
@@ -133,7 +133,8 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
   - `time`: string, e.g. `"40 min"`.
   - `ingredients`: list of strings.
   - `steps`: list of strings (the method, rendered as an ordered list).
-- `section` groups recipes (e.g. "Weeknight dinners"); `picks`, `tags`, `desc`, search and dietary chips all work unchanged.
+- `section` groups recipes (e.g. "Weeknight dinners"); `picks`, `tags`,
+  `desc`, search and dietary chips all work unchanged.
 
 Rendering: the menu screen shows ingredients + method in a collapsed
 `<details>` per recipe; the home card is an accent-tinted pin with a recipe
@@ -261,7 +262,8 @@ their KEY constant but read through `profileScopedStorage()`, which rewrites
 the key to `faves.p.<activeId>.<base>` (`scopeKey`). So a switch + `reload()`
 re-points the whole layer with no consumer rewrite. **Per-profile:** favourites,
 personal ratings, and *all* of settings (dietary/allergen prefs — safety-critical;
-ranking dials; reo language). **Shared/device:** the order tally (one order for the table) and
+ranking dials; reo language). **Shared/device:** the order tally (one order
+for the table) and
 the ephemeral Near-me origin. `migrate()` folds pre-profiles data into a default
 profile on upgrade (copies, doesn't move, so a briefly-cached old asset still
 works; idempotent). The switcher lives in the ⚙ Settings dialog; the menu/recipe
@@ -298,7 +300,8 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   profiles paragraph and ADR 0012.
 
 A `storage` event keeps other tabs in step (favourites/settings keys are now
-namespaced by the active profile; a registry change re-points them). Recipes (Cook at Home) can be
+namespaced by the active profile; a registry change re-points them). Recipes
+(Cook at Home) can be
 *favourited* but carry no order stepper — that collection is for cooking,
 not an order to read down the phone. This layer is the reusable seam for
 later local-only features and the bridge to the health app (roadmap Themes 5–6).

@@ -477,7 +477,7 @@ or a dish. This is the public-facing front door to the existing `intake/`
 pipeline (drop material in → transcribe to schema).
 
 The honest shape within the constraints (no backend, no accounts, no
-external requests in the artifact):
+external requests in the artefact):
 
 - **`mailto:` links** `[S]` — *recommended.* A "Suggest a place" and a
   per-venue "Something changed? Tell us" link that opens the user's mail

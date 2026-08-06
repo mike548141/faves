@@ -238,7 +238,7 @@ between first commit and today.
   header), worked out from that venue's own listed prices — no external
   source. It's a ballpark ("estimated from the menu", and our prices are
   already flagged as needing an in-store refresh), handy for "cheap eats or
-  a treat tonight?".
+  a treat tonight?". <!-- datescan:allow: product vocabulary — the diner's own question, not a dated claim -->
 - Two more places in the pizza department: **Hell Pizza Newlands** and
   **Pizza Hut Johnsonville**. Menus still to capture (they show as "Menu
   coming soon"), but they carry address, phone, hours and coordinates, so
@@ -255,12 +255,12 @@ between first commit and today.
   beats a place 2 km away but a favourite 30 km away doesn't (a *closed*
   favourite still stays below anywhere open — it lifts, it doesn't
   override). With "Near me" on, distance refines the rest and a venue too
-  far to reach tonight (a favourite in another town) sinks below everything
+  far to reach tonight (a favourite in another town) sinks below everything <!-- datescan:allow: product vocabulary — "too far to reach tonight" is a named setting, not a dated claim -->
   nearby. "Pick for us" draws from the available set too, so the dice won't
   land on somewhere closed or unreachable.
 - Distance settings (⚙ on the home screen): tune how much nearer a
   favourite counts (default 10 km) and how far is "too far to reach
-  tonight" (default 50 km), with live sliders. Saved on the device; they
+  tonight" (default 50 km), with live sliders. Saved on the device; they <!-- datescan:allow: product vocabulary — quotes the "too far to reach tonight" setting name, not a dated claim -->
   reshape the order the moment you change them.
 - Hearted favourites: tap **♡** on any dish (restaurant menus *and* Cook at
   Home) or on a whole venue to save it. A **Favourites** toggle beside the

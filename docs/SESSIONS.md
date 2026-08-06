@@ -462,7 +462,7 @@ shell (ignoreSearch deep links), capped image cache, offline-after-first-visit.
 **Config axis call:** mapped to shell — `site.webmanifest` changes in lockstep
 with the shell it describes; `index.json` is *data* (it lists which restaurants
 exist). No third cache; the seam generalises to N if a real runtime-config
-artifact ever appears. Reasoned in ADR 0015.
+artefact ever appears. Reasoned in ADR 0015.
 
 **Lockstep rule rewritten** in CLAUDE.md, README, CONTRIBUTING, ARCHITECTURE:
 data-only change under `site/data/` → bump `DATA_VERSION`; any other `site/`

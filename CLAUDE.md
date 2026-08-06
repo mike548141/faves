@@ -70,7 +70,7 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
 
 - **Zero build step.** `site/` is served as-is. No bundlers, no
   frameworks, no npm dependencies, no CDN dependencies in the shipped
-  artifact. Vanilla HTML + CSS + ES-module JavaScript only — what's in
+  artefact. Vanilla HTML + CSS + ES-module JavaScript only — what's in
   `site/` is the whole product. Node may exist on the machine for dev
   tooling (Lighthouse, JS tests), but it is never a build or runtime
   dependency: the site must run with nothing but a static file server.

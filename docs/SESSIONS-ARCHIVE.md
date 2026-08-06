@@ -683,7 +683,7 @@ tail isn't enough; do not load it whole into context.
   node --test 133 throughout; validate + check_no_deps + gen_sbom --check
   clean. Commits on `main`, not pushed (no deploy yet — Phase 7).
 
-  Remaining queue unchanged from yesterday: te reo *order-sheet/favourites
+  Remaining queue unchanged from 2026-07-08: te reo *order-sheet/favourites
   chrome* wants string interpolation in the engine first; the reo wording
   review, *Shareable shortlist links*, *Pick along a route*, *Personal tag
   overrides*, *multi-location schema*, and the owner-blocked items all still

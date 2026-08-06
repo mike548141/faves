@@ -24,7 +24,7 @@ gets a free preview URL.
   integration (deploy is a manual `aws s3 sync`), HTTPS and custom domain
   need CloudFront in front, and a bare S3 website endpoint is HTTP-only
   (so it can't host a PWA) and serves no HTTP/2. Only worth it if there
-  were a reason to keep the artifact in AWS; there isn't.
+  were a reason to keep the artefact in AWS; there isn't.
 - **A path prefix (`myspot.nz/lets-eat`):** a Pages project maps to a
   whole hostname and serves at its root. A path would force either a
   repo restructure under a `lets-eat/` folder (breaks the zero-build

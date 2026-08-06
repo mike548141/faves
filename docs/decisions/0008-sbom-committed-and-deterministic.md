@@ -4,7 +4,7 @@
 
 ## Context
 
-Faves' defining property is a shipped artifact with **no third-party
+Faves' defining property is a shipped artefact with **no third-party
 components** (ADR 0001). Theme 7 of the roadmap makes that claim
 *checkable* rather than merely stated by publishing a Software Bill of
 Materials. For a zero-dependency site an SBOM is **not** vulnerability
@@ -39,7 +39,7 @@ step, offline-safe, reproducible.
 
 - **Generate at deploy time**: cleaner in principle, but there is no build
   step to hook (ADR 0004) and it would mean the live site's provenance
-  artifact isn't reviewable in the repo. Committing it keeps it diffable.
+  artefact isn't reviewable in the repo. Committing it keeps it diffable.
 - **Per-file inventory with hashes** (list every shipped `site/` file as a
   CycloneDX `file` component): would churn the SBOM on *every* content
   edit — a new menu price would rewrite it — drowning the signal (a
@@ -52,7 +52,7 @@ step, offline-safe, reproducible.
 
 ## Consequences
 
-The live site ships a machine-readable provenance artifact from day one
+The live site ships a machine-readable provenance artefact from day one
 (pairs with the Theme 7 `security.txt`, still pending an owner role-inbox
 address). The SBOM only changes when the dependency posture changes, so it
 stays quiet until it matters. `gen_sbom.py --check` must be run (and the

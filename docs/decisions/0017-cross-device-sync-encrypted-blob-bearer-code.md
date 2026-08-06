@@ -110,7 +110,7 @@ The design rules, each load-bearing:
 - **Public promises mostly hold.** "No accounts" and "no tracking" stay
   literally true; "no third-party scripts" stays true — the Worker is a
   same-origin backend endpoint, not a script in the page, and the shipped
-  `site/` artifact stays zero-dependency (sync is runtime + optional, and
+  `site/` artefact stays zero-dependency (sync is runtime + optional, and
   degrades to local-only when offline or when the user never opts in).
 - **On-device at-rest encryption is largely the platform's job — honest
   limit.** Off-device E2E fully meets the "no one but the user can read

@@ -52,7 +52,7 @@ never fetched by the app, so it can't collide with a real request.
 ### The "configuration" axis — mapped to shell, no third cache
 
 The owner named three axes: app, data, configuration. Honest mapping: **there is
-no configuration artifact distinct from the shell.** The only config-shaped file
+no configuration artefact distinct from the shell.** The only config-shaped file
 shipped is `site.webmanifest` (PWA name/icons/colours) — it changes on app
 releases, in lockstep with the shell it describes, and is meaningless without it.
 It stays in the shell cache. `data/index.json` reads like "configuration" (it
@@ -60,7 +60,7 @@ lists which restaurants exist) but it is **data**: it's the manifest of the menu
 set, changes whenever a restaurant is added/removed, and drives the data
 precache — so it lives in the data cache, versioned by `DATA_VERSION`. Inventing
 a third cache to match the wording would be three caches for two real change
-sources. If a genuine runtime-config artifact ever appears (e.g. feature flags, a
+sources. If a genuine runtime-config artefact ever appears (e.g. feature flags, a
 settings JSON fetched at runtime distinct from both shell and menu data), add a
 `CONFIG_VERSION`/`faves-config-*` cache then — the `ensureCache` seam already
 generalises to N caches.
@@ -102,7 +102,7 @@ Values start at `2026-07-23.74` for both constants (successors to the old
 ## Rejected
 
 - **A third `CONFIG_VERSION` cache** to literally match the owner's three axes.
-  No config artifact exists that is distinct from the shell; `site.webmanifest`
+  No config artefact exists that is distinct from the shell; `site.webmanifest`
   is shell, `index.json` is data. Three caches for two change sources is
   machinery for a wording match. Documented as the seam to add *if* a real
   runtime-config file ever appears.
