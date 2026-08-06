@@ -488,6 +488,21 @@ adds to the list above:
   included, re-verified on the exact tree that flips. The visibility
   change itself stays an owner-only floor action.
 
+🎯 **Pre-flip decision pair, raised 2026-08-06 — owner's, not yet ruled,
+void once public.** (1) Publish full history, or start a **fresh public
+root** at the flip (new parentless root commit of the flip tree; full
+lineage kept in a private archive; a local-only `git replace --graft`
+keeps `log`/`blame` whole on the owner's machine while GitHub history
+starts at the root). Taking it legitimately reopens the 2026-08-06
+history ruling — truncation is a different shape from the scrub-rewrite
+the review argued against, and the rewrite-breakage arguments (doctrine
+pin, SBOM) don't apply; the costs are unresolvable doc SHAs for public
+readers and losing the public build narrative. (2) Either way: what do
+the **records files** publish? Most workshop texture ships at HEAD
+regardless of history (SESSIONS/-ARCHIVE addresses and coordinates, the
+PAT line) — truncation without the records call buys little. Decide as
+a pair, before the flip; interacts with atelier P6.
+
 ## Theme 9 — Cross-device preference sync (owner-approved 2026-07-23)
 
 The same person's hearts, ratings, and settings, kept together across
