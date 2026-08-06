@@ -8,6 +8,14 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **A security policy and a public-facing README.** `SECURITY.md` says how to
+  report a vulnerability (privately, through GitHub security advisories) and
+  is specific about what is and isn't in scope for a site with no backend, no
+  accounts and no third-party code. The README now opens by explaining what
+  Faves is to someone who has never seen it, and carries licence, contributing
+  and security sections. Groundwork for making the source repository public.
+
 ### Fixed
 - **Switching who's using Faves now updates a still-loading menu correctly.**
   Previously, switching profile while a menu page was mid-load could leave the

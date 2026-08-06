@@ -4,8 +4,8 @@
 The whole hosting setup (Pages project, build config, custom domain)
 lives in tools/deploy.json and is reconciled by this script against the
 Cloudflare REST API. Idempotent: run it as often as you like; it creates
-what's missing and leaves the rest alone. Same spirit as tiki over the
-MikroTik API — declare desired state, apply, repeat.
+what's missing and leaves the rest alone — declare desired state, apply,
+repeat.
 
     export CLOUDFLARE_API_TOKEN=...        # scoped token, see docs/DEPLOY.md
     python3 tools/deploy.py plan           # show desired vs actual, change nothing

@@ -412,14 +412,17 @@ Assessed 2026-07-12: publishable, but sequenced. Flipping visibility is a
 floor action (one-way door — forks/copies survive any later unpublish) and
 stays the owner's explicit call. Order matters:
 
-1. **GitHub PAT refresh first** (already queued estate-side). The session
+1. **GitHub PAT refresh first** (already queued estate-side; still owed —
+   see the 2026-08-06 close-out below). The session
    log (`docs/SESSIONS.md`, 2026-07-12 deploy entry) records the current
    PAT as classic + broad and lists unhardened credential roots
    (AWS/Google/TrueNAS); git history preserves that line forever, so the
    fix is making it *historical* — refresh the credential, don't redact
    the log.
-2. **Branch protection before visibility** — a push to `main` is a deploy;
-   public means drive-by PRs/issues. Require review, restrict push.
+2. ~~**Branch protection before visibility**~~ — ⚠️ **superseded 2026-08-06
+   by ADR 0022 gate 8: not achievable as written.** GitHub refuses branch
+   protection on a private free-plan repo. The requirement stands, the
+   *sequencing* doesn't: flip and harden in one sitting (GO-PUBLIC.md).
 3. **Owner confirms the docs' family texture.** The 2026-07-06 approval
    covered recipe attributions in site data; the docs also use family
    first names in feature examples and acceptance notes (ROADMAP Themes
@@ -489,20 +492,60 @@ adds to the list above:
   included, re-verified on the exact tree that flips. The visibility
   change itself stays an owner-only floor action.
 
-🎯 **Pre-flip decision pair, raised 2026-08-06 — owner's, not yet ruled,
-void once public.** (1) Publish full history, or start a **fresh public
-root** at the flip (new parentless root commit of the flip tree; full
-lineage kept in a private archive; a local-only `git replace --graft`
-keeps `log`/`blame` whole on the owner's machine while GitHub history
-starts at the root). Taking it legitimately reopens the 2026-08-06
-history ruling — truncation is a different shape from the scrub-rewrite
-the review argued against, and the rewrite-breakage arguments (doctrine
-pin, SBOM) don't apply; the costs are unresolvable doc SHAs for public
-readers and losing the public build narrative. (2) Either way: what do
-the **records files** publish? Most workshop texture ships at HEAD
-regardless of history (SESSIONS/-ARCHIVE addresses and coordinates, the
-PAT line) — truncation without the records call buys little. Decide as
-a pair, before the flip; interacts with atelier P6.
+✅ **Pre-flip decision pair — RULED 2026-08-06.** (1) **Full history**, no
+fresh public root: the fresh-root option was costed (stranded doc SHAs,
+lost build narrative, and it buys little because the texture ships at
+HEAD anyway) and declined, reaffirming the family-texture ruling. (2)
+**Records publish as-is**, with the PAT made historical by rotation
+rather than redacted — under full history redaction achieves nothing,
+since the text stays reachable in every clone.
+
+✅ **Publish-safety review done 2026-08-06** →
+[ADR 0022](decisions/0022-publish-safety-review.md), with the flip
+sequence in [GO-PUBLIC.md](GO-PUBLIC.md). Verdict **safe to publish**,
+two owner actions owed first. What that pass closed:
+
+- **Leakscan disposition done: 101 → 0.** Every finding was restaurant
+  business data — the product. Four reasoned `.leakscanignore` globs
+  (`site/data/*` + three venue-mirroring test files, 32 files) and 18
+  per-line markers on prose that quotes an address as a worked example.
+  The **suburb trap is settled**: `"Churton Park"` is out of the
+  machine-local term list (a public suburb name and product content;
+  the street-level terms that actually pinpoint the house stay).
+- **Advisory scanner debt cleared — this was a hidden flip blocker.**
+  The floor *tightens* on a public repo (atelier P3): advisory checks
+  lose their hatch. So the 21 datescan/wrapscan/spellscan findings
+  declared advisory with a 2026-09-15 review-by would have gone red at
+  the flip, which is *before* that date. All 21 fixed;
+  `.atelier-floor.json` is down to the licence declaration and all
+  twelve checks are enforced and green.
+- **Platform-settings audit (this repo's instance of atelier P5).** 🚩
+  **The roadmap's step 2 above — "branch protection before visibility"
+  — is not achievable as written.** GitHub refuses branch protection,
+  fork-PR approval and secret scanning on a *private free-plan* repo.
+  Hardening can only happen after the flip, so flip and harden in **one
+  sitting** (GO-PUBLIC.md steps 4–8). Going public is also a net gain:
+  it turns on secret scanning + push protection, withheld while private.
+- **Reads-as-public pass** — README opens with what the project is to a
+  stranger and gained licence/contributing/security sections;
+  `SECURITY.md` written; one reconnaissance hit (a `tools/deploy.py`
+  docstring naming a private sibling tool and the estate's network
+  vendor) removed.
+- **Full-history evidence**: 979 blobs across 236 commits — secretscan
+  clean; leakscan's only non-venue findings are the owner's own work
+  email (34) and household first names in superseded test fixtures (see
+  ADR 0022's residual risks, accepted with the fact in hand).
+
+🎯 **Still owed before the flip — owner's:**
+
+1. **Rotate the GitHub PAT and confirm the AWS / Google / TrueNAS
+   credential roots are hardened.** The records name them as *queued*
+   for hardening; publishing that while it is still true is a live
+   disclosure, not a historical one. This is the one item that can turn
+   a safe flip unsafe.
+2. **Floor CI green** — red since 2026-07-25; the fix is atelier P4.
+3. **atelier P5 / P6** still open upstream (the generic settings
+   checklist; the estate-internal-context ruling).
 
 ## Theme 9 — Cross-device preference sync (owner-approved 2026-07-23)
 

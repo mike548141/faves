@@ -102,3 +102,10 @@ deliberation those compact docs omit.
   for the resolved nearest branch, only with a captured Near-me origin — no
   routing API (offline/zero-dep, consistent with ADR 0010/0001). Collect-dialog
   placement deferred.
+- [0022](0022-publish-safety-review.md) — **publish-safety review**: the
+  evidence that this repo is safe to make public, on `rpi` ADR 0009's six-gate
+  template plus two gates this repo needed (the floor tightening on a public
+  repo; the platform-settings audit). leakscan 101 → 0 by reasoned allowance —
+  the findings are restaurant business data, which is the product. Full history
+  and the records publish as-is (owner-ruled; fresh-root costed and declined).
+  The flip stays owner-only — steps in [GO-PUBLIC.md](../GO-PUBLIC.md).
