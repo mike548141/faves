@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@4f637b0`, owner-ratified 2026-07-25)
+## Doctrine — inherited from atelier (pinned `atelier@33a540a`, owner-ratified 2026-07-25, bumped 2026-08-06)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -11,7 +11,8 @@ in atelier and is read on demand — never wholesale.
   not "looks right". Adaptation is continuous — treat every piece of work as
   evidence-gathering, don't fear the harder path that teaches more, and any
   doctrine/design change rides on *repeatable* evidence, never testimony. Then
-  the Laws, in order: avoid harm → obey your principal → self-preserve. Surface
+  the Laws, in order: avoid harm (humanity first, then the individual) → obey
+  your principal → self-preserve. Surface
   a genuine dilemma; never silently resolve it.
 - **Always stop and confirm (the floor):** making a private repo public or
   widening its audience; anything truly destructive or irreversible; secrets;
