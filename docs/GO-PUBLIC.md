@@ -71,16 +71,43 @@ half-way.
       drive-by PRs. A ruleset is the modern form; classic branch protection
       also works.
 
+      Send it as JSON — the nested arrays don't survive `gh api -F` form
+      encoding:
+
       ```sh
-      gh api -X POST repos/mike548141/faves/rulesets \
-        -f name='protect-main' -f target='branch' -f enforcement='active' \
-        -F 'conditions[ref_name][include][]=~DEFAULT_BRANCH' \
-        -F 'rules[][type]=deletion' -F 'rules[][type]=non_fast_forward'
+      gh api -X POST repos/mike548141/faves/rulesets --input - <<'JSON'
+      {
+        "name": "protect-main",
+        "target": "branch",
+        "enforcement": "active",
+        "bypass_actors": [
+          {"actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always"}
+        ],
+        "conditions": {"ref_name": {"include": ["~DEFAULT_BRANCH"], "exclude": []}},
+        "rules": [
+          {"type": "deletion"},
+          {"type": "non_fast_forward"},
+          {"type": "required_status_checks",
+           "parameters": {
+             "strict_required_status_checks_policy": false,
+             "required_status_checks": [
+               {"context": "CI"},
+               {"context": "floor"}
+             ]}}
+        ]
+      }
+      JSON
       ```
 
-      Then, in the UI or by extending the ruleset: require a pull request,
-      require the `CI` and `floor` checks to pass, and keep the owner's own
-      bypass so solo work is not blocked.
+      `actor_id: 5` is the repository-admin role — that bypass is what keeps
+      solo pushes working, since a push to `main` is how this site deploys.
+      Drop the `bypass_actors` block if you'd rather force yourself through
+      PRs, and add a `pull_request` rule at the same time if so. Check the
+      status-check contexts match the job names actually reported:
+
+      ```sh
+      gh api repos/mike548141/faves/commits/main/check-runs --jq '.check_runs[].name'
+      ```
 - [ ] **7. Require approval for fork-PR workflows** — otherwise a stranger's
       PR runs Actions on your account's minutes.
 
