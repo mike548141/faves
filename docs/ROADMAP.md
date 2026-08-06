@@ -434,12 +434,13 @@ stays the owner's explicit call. Order matters:
    owner-approved recipe attributions (2026-07-06) stay. **Review ran
    2026-07-28** (Fable session) — full inventory + recommendations in
    [reviews/2026-07-28-1138-family-texture-review.md](reviews/2026-07-28-1138-family-texture-review.md).
-   ⏳ Owner rulings pending (four checkboxes in the record: non-family recipe
-   attributions, test-fixture rename, live doc examples, history stance);
-   the fixes after ruling are one small Opus session. The visibility flip
-   stays owner-only. 🚩 **Rule this together with Theme 11e** (2026-07-29):
-   moving the non-family-attributed recipes into the private layer is a third
-   option alongside keep/rename.
+   ✅ **Ruled 2026-08-06, all four, and applied same day** (rulings + the
+   one deviation stamped into the review record): Shane/Jesse kept with
+   their OK (owner holds it; the 11e move-private option was offered and
+   not taken), test fixtures renamed neutral (`ea4ccde`), all live docs
+   neutralised (`5830081` + doc edits; SHELL_VERSION bumped), history
+   published as-is, no rewrite. **This gate is closed.** The visibility
+   flip stays owner-only.
 
 Verified clean 2026-07-12 (tree + full history): no secrets (the one
 token line reads from Keychain; "share tokens" are client-side codec),
@@ -463,14 +464,20 @@ adds to the list above:
   every repo heading public; faves records name private siblings, so the
   ruling lands here too.
 - **Leakscan needs a disposition pass, not a cleanup.** Full-tree
-  leakscan at HEAD: 104 findings. The bulk are the product — restaurant
-  street addresses and phone numbers in `site/data/` and their echoes in
+  leakscan: 104 findings at the 2026-08-06 morning HEAD, 101 after the
+  family-texture fixes. The bulk are the product — restaurant street
+  addresses and phone numbers in `site/data/` and their echoes in
   docs/records — business data the site exists to publish, not personal
   data. Per GUARDS (narrow, noisy, reasoned) they want a scoped,
-  reasoned allowance, not deletion. The remainder — the owner's-term-list
-  hits (home suburb) and family-name fixtures — are exactly the
-  2026-07-28 review's pending rulings. Gate 1 of the publish-safety ADR
-  can only cite "leakscan 0" after both.
+  reasoned allowance, not deletion. Gate 1 of the publish-safety ADR can
+  only cite "leakscan 0" after that pass. 🚩 The pass must also settle
+  the **suburb trap** found applying the rulings: the home suburb is
+  product content (three venues, `site/index.html` fallbacks) *and* a
+  term-list entry, and term hits are marker-non-exemptible (atelier D1)
+  — the existing lines are grandfathered because leakscan judges changed
+  lines, so the next edit touching one blocks with no hatch. Fix is a
+  scoped carve-out (path-scoped ignore for venue data, or narrowing the
+  term list), and it is an owner call either way.
 - **Floor CI must be green before the flip.** Red since 2026-07-25
   (leakscan lacks cover in CI — no term list on the runner). The owning
   fix is atelier P4 (the ci plane calls leakscan without
@@ -550,8 +557,8 @@ person's *own* devices) and from the one-shot group-order links (ADR 0009,
 a snapshot). Builds on Theme 9's E2E store; **needs its own ADR when built.**
 
 The capability: person A grants person B **ongoing, read-only, revocable**
-access to a **scoped slice** of their personal layer — e.g. Ruth shares her
-favourites so the orderer can pick her usual when ordering for the family.
+access to a **scoped slice** of their personal layer — e.g. Alex shares their
+favourites so the orderer can pick their usual when ordering for the family.
 
 - **Scenario 1 (send picks to the family order) does *not* need this** —
   owner agreed 2026-07-23: ADR 0009's link already does the async "send my

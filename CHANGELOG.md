@@ -171,7 +171,7 @@ between first commit and today.
   one place, each can build their own picks on their own phone, then tap
   **Send to the orderer** on the order sheet. It hands the order to the OS
   share sheet (AirDrop, Messages) — or a copied link — and opening it on the
-  host's phone asks "Add Ruth's 6 items?" before merging them into the running
+  host's phone asks "Add Alex's 6 items?" before merging them into the running
   order, grouped by venue. Nothing is sent to a server: the picks ride inside
   the link's `#fragment`, which browsers never transmit. A garbled link just
   says "that link didn't work — ask them to resend". No pairing, no install,
@@ -184,7 +184,7 @@ between first commit and today.
 - **Share your favourites**: the Favourites view gains a **Share these** button
   that sends your whole shortlist — places and dishes — the same way an order
   goes out (AirDrop, Messages, a copied link, or a QR to scan). Whoever opens it
-  gets "Add Ruth's 5 favourites?" and can save the ones they like into their own
+  gets "Add Alex's 5 favourites?" and can save the ones they like into their own
   favourites; recipe favourites keep linking to the recipe, not a dead end. Same
   no-server, fragment-only design as order sharing.
 - **Te reo Māori UI toggle**: a language switch in Settings (English / Te Reo
