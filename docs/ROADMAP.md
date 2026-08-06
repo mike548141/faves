@@ -192,10 +192,10 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   (`9dad5f8`, ADR 0016, wt: faves-wave8-rulings-apply). Owner, raw: "I don't
   think this meets what I wanted for the feature. We need to review it and may
   back out the change. Also when I tapped on 'R & S Satay Noodle House' which is
-  shown at the pickup address '148 Cuba St' the maps open on '1 Garrett St'."
+  shown at the pickup address '148 Cuba St' the maps open on '1 Garrett St'." <!-- leakscan:allow: venue business address in a quoted bug report — same product class as site/data (ADR 0022 gate 1) -->
   Applied: the address tap now opens a map **pin** (not directions), targeting
   the **street address string** — `apple maps.apple.com/?q=<addr>`, `google
-  maps/search/?api=1&query=<addr>` — so Maps geocodes 148 Cuba St exactly. Coords
+  maps/search/?api=1&query=<addr>` — so Maps geocodes 148 Cuba St exactly. Coords <!-- leakscan:allow: venue business address as the worked example — same product class as site/data (ADR 0022 gate 1) -->
   are a belt-and-braces fallback only (they stay the source for in-app distance
   maths). The along-route "🧭 Route via maps" handoff keeps its routed form but
   its venue leg targets the address too. ADR 0010 part (a) superseded; its "~N

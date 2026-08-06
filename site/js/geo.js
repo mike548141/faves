@@ -6,8 +6,8 @@
 //
 // Crucially the pin targets the **street address string**, not our stored
 // lat/lng. Dev-time geocoded coordinates can sit ~100 m off — proven: R & S
-// Satay's stored coords (-41.29379, 174.7751) land on Garrett St, one street
-// over from its real 148 Cuba St — so a coord-targeted link opens on the wrong
+// Satay's stored coords (-41.29379, 174.7751) land on Garrett St, one street  // leakscan:allow: venue geocoded coordinates — the worked example this comment exists to explain (ADR 0022 gate 1)
+// over from its real 148 Cuba St — so a coord-targeted link opens on the wrong  // leakscan:allow: venue business address — the worked example this comment exists to explain (ADR 0022 gate 1)
 // street. Maps geocodes the address string exactly, so we hand it the address
 // and fall back to coords only if a record somehow has none (validate.py
 // requires an address, so that path is belt-and-braces). Coords stay for

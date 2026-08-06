@@ -161,7 +161,7 @@ rotation added 2026-07-18.
   Pizza Pomodoro (own FAQ beats stale aggregators), Marigold (Facebook
   post corroborates), Thai Tara Express (own site vs aggregator split —
   own site used). Low: Wellington Kebab Grill (own site says "TBC";
-  aggregator + Uber Eats pattern used — phone check 04 478 4780 would
+  aggregator + Uber Eats pattern used — phone check 04 478 4780 would <!-- leakscan:allow: venue business phone quoted in a session record — same product class as site/data (ADR 0022 gate 1) -->
   settle it). Also cross-checked Spices Indian against spicesindian.co.nz
   (owner-flagged): hours, phone, Easy Eats link all match; no change.
   Verified: validate.py, check_no_deps.py, node --test all pass; SW
@@ -525,7 +525,7 @@ Commits: sw split + docs + test + validate guard (ADR 0015); records close.
   a; part b's "~N min" hint stands): tapping a venue's address now opens a map
   pin targeting the **street address string** — `apple maps.apple.com/?q=<addr>`,
   `google maps/search/?api=1&query=<addr>` — so Maps geocodes the exact spot.
-  Root cause of the owner's "148 Cuba St opens on Garrett St" report: the old
+  Root cause of the owner's "148 Cuba St opens on Garrett St" report: the old <!-- leakscan:allow: venue business address as the worked example — same product class as site/data (ADR 0022 gate 1) -->
   handoff targeted stored lat/lng, and R & S Satay's dev-time coords sit ~100 m
   off. Coords are now a belt-and-braces fallback only. The along-route "🧭 Route
   via maps" handoff keeps its routed form but its venue leg targets the address

@@ -13,9 +13,9 @@ review (2026-07-23) that behaviour was rejected on two grounds:
    where this place is" — a pin on a map — not "start navigating there". Raw
    verbatim: *"I don't think this meets what I wanted for the feature."*
 2. **Proven wrong-street bug.** Tapping R & S Satay Noodle House — listed at
-   *148 Cuba St* — opened maps on *1 Garrett St*, one street over. Cause: the
+   *148 Cuba St* — opened maps on *1 Garrett St*, one street over. Cause: the <!-- leakscan:allow: venue business address as the worked example — same product class as site/data (ADR 0022 gate 1) -->
    handoff targeted stored coordinates, and R & S's dev-time geocoded coords
-   (`-41.29379, 174.7751`) sit ~100 m off, on Garrett St. Any coord-targeted
+   (`-41.29379, 174.7751`) sit ~100 m off, on Garrett St. Any coord-targeted <!-- leakscan:allow: venue geocoded coordinates as the worked example — same product class as site/data (ADR 0022 gate 1) -->
    maps link inherits that error fleet-wide (see the ROADMAP "Coordinate audit"
    follow-on). A maps app given a **street-address string** geocodes it exactly.
 

@@ -1,0 +1,32 @@
+# leakscan path allowances for this repo — root-relative globs, each with a
+# stated reason (the scanner rejects an unreasoned glob).
+#
+# WHY THIS FILE EXISTS AT ALL, given GUARDS says allowances must be narrow:
+# faves is a restaurant guide. Its product IS venue street addresses, phone
+# numbers and coordinates — the very shapes leakscan's structural rules hunt.
+# Every one of the ~70 findings these globs cover is a business contact detail
+# a restaurant publishes on its own front door and its own website. Deleting
+# them would delete the site. Per-line markers were rejected: ~70 markers
+# across generated-shaped JSON is noise that hides the next real finding, and
+# they would have to be re-added on every menu edit.
+#
+# THE LINE THIS DRAWS: business contact data for a *venue* is allowed here.
+# Personal data — anyone's home address, anyone's phone, health, contact
+# details — is not, anywhere, and is still caught: these globs cover only the
+# venue-data paths, never docs, never the app shell, never site/js. If a
+# person's detail is ever pasted into a restaurant record it will not be
+# caught by a scanner, so it stays a review responsibility (see ADR 0022,
+# gate 5). Keep these globs as tight as they are — widening one to `site/**`
+# would drop cover on the whole app.
+
+# The menu/venue corpus: 28 restaurant records plus the index. Pure product
+# data, machine-validated against the schema in docs/ARCHITECTURE.md.
+site/data/*  # restaurant business contact data — addresses, phones and coordinates ARE the product (ADR 0022 gate 1)
+
+# Test fixtures mirror real venue records on purpose: geo/address handling has
+# had real bugs that synthetic data did not reproduce (see site/js/geo.js — a
+# stored coordinate sat ~100 m off its street address). Same class of content
+# as site/data/, so the same allowance.
+tests/locations.test.js  # venue fixtures mirroring site/data records — same business-contact class (ADR 0022 gate 1)
+tests/geo.test.js  # venue address/coordinate fixtures for geocoding-drift regressions (ADR 0022 gate 1)
+tests/share-codec.test.js  # venue phone fixtures in share-payload round-trip cases (ADR 0022 gate 1)

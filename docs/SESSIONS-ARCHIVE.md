@@ -138,7 +138,7 @@ tail isn't enough; do not load it whole into context.
   goesWith links clear the stack). Added **11 Wellington venues as stubs**
   via 3 parallel research agents → verified facts, geocoded (Nominatim),
   everything unconfirmed left null. Corrections found: "Chilly Pot" is the
-  nickname for **Babaili Malatang** (45 Dixon St, not 41/47); "Goldling" is
+  nickname for **Babaili Malatang** (45 Dixon St, not 41/47); "Goldling" is <!-- leakscan:allow: venue business address quoted in a session record — same product class as site/data (ADR 0022 gate 1) -->
   **Gold Lining** (BNZ building); "Rock Yard" is **Rock Yard Vietnamese
   Restaurant**. Froyo: **none verifiable** in central Wgtn (Frogurt closed,
   KiwiYo not here, Kaffee Eis is gelato). Multi-location (Gong Cha,
@@ -376,10 +376,10 @@ tail isn't enough; do not load it whole into context.
   `pizza-hut-johnsonville.json`, both ids appended to `index.json`, matching
   "Menu coming soon" fallback `<li>`s in `index.html`. Facts web-researched
   (address/phone/hours) and coordinates geocoded dev-time via Nominatim:
-  Hell = 225 Newlands Road (-41.22360, 174.82280), phone +64 4 478 6007,
+  Hell = 225 Newlands Road (-41.22360, 174.82280), phone +64 4 478 6007, <!-- leakscan:allow: venue business address/phone/coords quoted in a session record — same product class as site/data (ADR 0022 gate 1) -->
   per-day hours (Mon/Tue/Wed evening-only, Thu–Sun from 11:30); Pizza Hut =
-  88 Johnsonville Road (-41.22500, 174.80730), phone +64 4 478 8927
-  (sources conflicted — one gave 04 478 9999; verify), 11:00–23:00 Sun–Thu,
+  88 Johnsonville Road (-41.22500, 174.80730), phone +64 4 478 8927 <!-- leakscan:allow: venue business address/phone/coords quoted in a session record — same product class as site/data (ADR 0022 gate 1) -->
+  (sources conflicted — one gave 04 478 9999; verify), 11:00–23:00 Sun–Thu, <!-- leakscan:allow: venue business phone quoted in a session record — same product class as site/data (ADR 0022 gate 1) -->
   Fri/Sat late (null close per ADR 0006). Both `cuisine:["Pizza"]`,
   `services:["takeaway"]`, `verified:null` (needs in-store confirmation like
   the other stubs). Cards aren't links (stubs), so no menu page / ordering
