@@ -1,8 +1,17 @@
 {
-  "advisory": [
-    "datescan",
-    "wrapscan",
-    "spellscan"
-  ],
+  "advisory": {
+    "datescan": {
+      "why": "adopting the check; 3 standing findings in docs to clear",
+      "review-by": "2026-09-15"
+    },
+    "wrapscan": {
+      "why": "adopting the check; 4 over-length doc lines to rewrap",
+      "review-by": "2026-09-15"
+    },
+    "spellscan": {
+      "why": "adopting the check; 14 US-spelling findings in docs to clear",
+      "review-by": "2026-09-15"
+    }
+  },
   "licence": "Apache-2.0"
 }
