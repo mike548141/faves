@@ -388,8 +388,8 @@
           ]
         },
         {
-          "name": "Chicken Croissant",
-          "price": 14.0,
+          "name": "Chicken & Brie Croissant",
+          "price": 14.5,
           "tags": [
             "contains-gluten",
             "contains-dairy"
@@ -641,7 +641,7 @@
         {
           "name": "Double Choc Cookie",
           "desc": "Marked GF.",
-          "price": null,
+          "price": 5.5,
           "tags": [
             "v",
             "gf"
@@ -688,6 +688,18 @@
             "vg",
             "v",
             "df"
+          ]
+        },
+        {
+          "name": "Bliss Balls",
+          "desc": "Jar-label ingredients: cashew, almonds, matcha, apricot, dates, chocolate, chia, coconut, sunflower.",
+          "price": null,
+          "tags": [
+            "vg",
+            "v",
+            "gf",
+            "df",
+            "contains-nuts"
           ]
         }
       ]
@@ -959,6 +971,26 @@
           "tags": [
             "df"
           ]
+        }
+      ]
+    },
+    {
+      "section": "Merchandise",
+      "items": [
+        {
+          "name": "Huskee Keep Cup 6oz",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Huskee Keep Cup 8oz",
+          "price": 20.0,
+          "tags": []
+        },
+        {
+          "name": "Huskee Keep Cup 12oz",
+          "price": 25.0,
+          "tags": []
         }
       ]
     }
