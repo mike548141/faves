@@ -1,0 +1,64 @@
+{
+  "id": "subway",
+  "name": "Subway",
+  "cuisine": [
+    "Sandwiches",
+    "Fast food"
+  ],
+  "area": "Johnsonville",
+  "city": "Wellington",
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "website": "https://www.subway.com/en-nz",
+  "ordering": [],
+  "locations": [
+    {
+      "label": "Johnsonville",
+      "address": "24 Johnsonville Road, Johnsonville, Wellington 6037",
+      "lat": -41.22273,
+      "lng": 174.80708,
+      "phone": null,
+      "hours": null
+    },
+    {
+      "label": "Tawa",
+      "address": "195 Main Road, Tawa, Wellington 5028",
+      "lat": -41.16929,
+      "lng": 174.82476,
+      "phone": null,
+      "hours": null
+    },
+    {
+      "label": "Karori",
+      "address": "234 Karori Road, Karori, Wellington 6012",
+      "lat": -41.2842,
+      "lng": 174.73872,
+      "phone": null,
+      "hours": null
+    },
+    {
+      "label": "Courtenay Place",
+      "address": "23 Courtenay Place, Te Aro, Wellington 6011",
+      "lat": -41.29398,
+      "lng": 174.78238,
+      "phone": null,
+      "hours": null
+    },
+    {
+      "label": "Mulgrave Street",
+      "address": "18 Mulgrave Street, Thorndon, Wellington 6011",
+      "phone": null,
+      "hours": null
+    }
+  ],
+  "vibe": [
+    "quick-lunch"
+  ],
+  "picks": [],
+  "priceBand": null,
+  "verified": null,
+  "status": "stub",
+  "menu": []
+}

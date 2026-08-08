@@ -9,6 +9,13 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Three more places: Sushi Bi, TJ Katsu and Subway.** Sushi Bi (37 pieces
+  and platters, three CBD stores) and TJ Katsu (23 dishes, seven branches
+  including the airport) both arrive with full menus taken from each venue's
+  own site; Subway lands as a "menu coming soon" card with five branches —
+  Johnsonville, Tawa, Karori, Courtenay Place and Mulgrave Street. Subway's
+  hours and phone numbers are left blank on purpose: every source for them is
+  a third-party directory, and they contradict each other.
 - **Download your data.** Settings → "Your data" saves everything you've put
   into Faves — every profile's favourites, ratings and preferences, plus the
   shared order tally — as one dated JSON file you can keep. It covers everyone

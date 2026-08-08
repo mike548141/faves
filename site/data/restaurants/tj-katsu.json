@@ -1,0 +1,555 @@
+{
+  "id": "tj-katsu",
+  "name": "TJ Katsu",
+  "cuisine": [
+    "Japanese",
+    "Sushi"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "services": [
+    "takeaway",
+    "dine-in"
+  ],
+  "website": "https://tjkatsu.co.nz/",
+  "ordering": [],
+  "locations": [
+    {
+      "label": "97 Courtenay Place",
+      "address": "97 Courtenay Place, Te Aro, Wellington 6011",
+      "lat": -41.29295,
+      "lng": 174.77915,
+      "phone": "+64 4 385 8868",
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "19:30"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "19:30"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "19:30"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "19:30"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "19:30"
+          ]
+        ],
+        "sat": [
+          [
+            "09:30",
+            "19:30"
+          ]
+        ],
+        "sun": []
+      }
+    },
+    {
+      "label": "88 Manners Street",
+      "address": "88 Manners Street, Te Aro, Wellington 6011",
+      "lat": -41.29104,
+      "lng": 174.77645,
+      "phone": null,
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "19:00"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "19:00"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "19:00"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "19:00"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "19:00"
+          ]
+        ],
+        "sat": [
+          [
+            "09:30",
+            "19:00"
+          ]
+        ],
+        "sun": [
+          [
+            "09:30",
+            "18:30"
+          ]
+        ]
+      }
+    },
+    {
+      "label": "11 Courtenay Place",
+      "address": "11 Courtenay Place, Te Aro, Wellington 6011",
+      "lat": -41.29416,
+      "lng": 174.78289,
+      "phone": null,
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "18:30"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "18:30"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "18:30"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "18:30"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "18:30"
+          ]
+        ],
+        "sat": [
+          [
+            "09:30",
+            "18:30"
+          ]
+        ],
+        "sun": []
+      }
+    },
+    {
+      "label": "142 Featherston Street",
+      "address": "142 Featherston Street, Wellington Central, Wellington 6011",
+      "lat": -41.28312,
+      "lng": 174.77694,
+      "phone": null,
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "17:00"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "17:00"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "17:00"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "17:00"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "17:00"
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      }
+    },
+    {
+      "label": "114 Lambton Quay",
+      "address": "114 Lambton Quay, Wellington Central, Wellington 6011",
+      "lat": -41.28025,
+      "lng": 174.77569,
+      "phone": null,
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "16:00"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "16:00"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "16:00"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "16:00"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "16:00"
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      }
+    },
+    {
+      "label": "109 Willis Street",
+      "address": "109 Willis Street, Te Aro, Wellington 6011",
+      "lat": -41.28942,
+      "lng": 174.77469,
+      "phone": null,
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "15:30"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "15:30"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "15:30"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "15:30"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "15:30"
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      }
+    },
+    {
+      "label": "Wellington Airport",
+      "address": "Level 1, Main Terminal Building, Stewart Duff Drive, Rongotai, Wellington 6022",
+      "phone": null,
+      "hours": {
+        "mon": [
+          [
+            "05:00",
+            "19:30"
+          ]
+        ],
+        "tue": [
+          [
+            "05:00",
+            "19:30"
+          ]
+        ],
+        "wed": [
+          [
+            "05:00",
+            "19:30"
+          ]
+        ],
+        "thu": [
+          [
+            "05:00",
+            "19:30"
+          ]
+        ],
+        "fri": [
+          [
+            "05:00",
+            "20:00"
+          ]
+        ],
+        "sat": [
+          [
+            "05:00",
+            "19:00"
+          ]
+        ],
+        "sun": [
+          [
+            "05:00",
+            "20:00"
+          ]
+        ]
+      }
+    }
+  ],
+  "vibe": [
+    "quick-lunch"
+  ],
+  "picks": [],
+  "priceBand": null,
+  "verified": null,
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Entrees",
+      "items": [
+        {
+          "name": "Edamame",
+          "desc": "Steamed green soy beans.",
+          "price": 6.9,
+          "tags": [
+            "v",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Seaweed Salad",
+          "desc": "Japanese style seaweed salad.",
+          "price": 6.9,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Spring Rolls",
+          "desc": "Crispy vegetable rolls.",
+          "price": 8.9,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Gyoza",
+          "desc": "Japanese style crispy vegetable dumplings.",
+          "price": 10.9,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Breaded Prawns",
+          "desc": "Crispy prawns with sweet chilli sauce.",
+          "price": 10.9,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Takoyaki",
+          "desc": "Ball-shaped Japanese octopus pancake — Japan's best-known street food.",
+          "price": 10.9,
+          "tags": [
+            "contains-shellfish"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Main dishes",
+      "items": [
+        {
+          "name": "Katsu",
+          "desc": "TJ's signature dish. Japanese style crispy chicken served with salad, rice and miso soup.",
+          "price": 18.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Katsu + Curry",
+          "desc": "Japanese style crispy chicken served with Japanese curry, rice and miso soup.",
+          "price": 19.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Katsu + Teriyaki Noodle",
+          "desc": "Japanese crispy chicken with teriyaki noodles, salad and miso soup.",
+          "price": 19.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Chicken Noodle",
+          "desc": "Pan-fried chicken with teriyaki noodles, salad and miso soup.",
+          "price": 19.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Beef Noodle",
+          "desc": "Pan-fried beef with teriyaki noodles, salad and miso soup.",
+          "price": 19.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Tofu Noodle",
+          "desc": "Pan-fried tofu with teriyaki noodles, salad and miso soup.",
+          "price": 18.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Chicken-don",
+          "desc": "Pan-fried teriyaki chicken on rice with salad and miso soup.",
+          "price": 18.9,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Beef-don",
+          "desc": "Pan-fried teriyaki beef on rice with salad and miso soup.",
+          "price": 18.9,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Spicy Chicken-don",
+          "desc": "Pan-fried spicy chicken on rice with salad and miso soup.",
+          "price": 18.9,
+          "tags": [
+            "spicy-1",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Tofu-don",
+          "desc": "Pan-fried teriyaki tofu on rice with salad and miso soup.",
+          "price": 17.9,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Salmon-don",
+          "desc": "Pan-fried teriyaki salmon on rice with miso soup.",
+          "price": 19.9,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Sashimi-don",
+          "desc": "Fresh salmon with avocado and salad on rice, served with miso soup.",
+          "price": 19.9,
+          "tags": [
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Bento",
+      "items": [
+        {
+          "name": "Teriyaki Tofu Bento",
+          "desc": "Pan-fried teriyaki tofu with tempura, sushi, salad, rice and miso soup.",
+          "price": 23.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Chicken Bento",
+          "desc": "Pan-fried teriyaki chicken with teriyaki beef, sushi, salad, rice and miso soup.",
+          "price": 25.9,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Fresh Salmon Bento",
+          "desc": "Sliced fresh salmon with tempura, sushi, salad, rice and miso soup.",
+          "price": 25.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Teriyaki Eel Bento",
+          "desc": "Roasted teriyaki eel with teriyaki beef, sushi, salad, rice and miso soup.",
+          "price": 25.9,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Combination Bento",
+          "desc": "Japanese style crispy chicken with teriyaki chicken, tempura, sushi, rice and miso soup.",
+          "price": 29.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        }
+      ]
+    }
+  ]
+}

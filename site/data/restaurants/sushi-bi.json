@@ -1,0 +1,455 @@
+{
+  "id": "sushi-bi",
+  "name": "Sushi Bi",
+  "cuisine": [
+    "Sushi",
+    "Japanese"
+  ],
+  "area": "Wellington Central",
+  "city": "Wellington",
+  "services": [
+    "takeaway"
+  ],
+  "website": "https://sushibi.co.nz/",
+  "ordering": [
+    {
+      "platform": "Sushi Bi online",
+      "url": "https://sushibi.co.nz/collections/all"
+    }
+  ],
+  "locations": [
+    {
+      "label": "Woodward Street",
+      "address": "4 Woodward Street, Wellington Central, Wellington 6011",
+      "lat": -41.28202,
+      "lng": 174.77571,
+      "phone": "+64 4 499 8578",
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      }
+    },
+    {
+      "label": "Willis Street",
+      "address": "99 Willis Street, Te Aro, Wellington 6011",
+      "lat": -41.28889,
+      "lng": 174.77502,
+      "phone": "+64 4 471 1007",
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      }
+    },
+    {
+      "label": "Railway Station",
+      "address": "2 Bunny Street, Pipitea, Wellington 6011",
+      "lat": -41.27927,
+      "lng": 174.78019,
+      "phone": "+64 4 471 1005",
+      "hours": {
+        "mon": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "tue": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "wed": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "thu": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "fri": [
+          [
+            "09:30",
+            "18:00"
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      }
+    }
+  ],
+  "vibe": [
+    "grab-and-go",
+    "cheap-and-cheerful"
+  ],
+  "picks": [],
+  "priceBand": "$",
+  "pricePerPerson": 12,
+  "verified": null,
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Maki",
+      "items": [
+        {
+          "name": "Teriyaki Salmon Maki",
+          "desc": null,
+          "price": 1.8,
+          "tags": []
+        },
+        {
+          "name": "Crispy Chicken Maki",
+          "desc": "Crispy chicken with carrot and lettuce.",
+          "price": 1.8,
+          "tags": []
+        },
+        {
+          "name": "Avocado + Mixed Vegetables Maki",
+          "desc": null,
+          "price": 1.8,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Tuna Cream Cheese Maki",
+          "desc": "Tuna and cream cheese.",
+          "price": 1.8,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Teriyaki Chicken + Cream Cheese Maki",
+          "desc": null,
+          "price": 1.8,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Teriyaki Chicken + Avocado Maki",
+          "desc": null,
+          "price": 1.8,
+          "tags": []
+        },
+        {
+          "name": "Seaweed Salad + Vegetables Maki",
+          "desc": "Seaweed salad with mixed vegetables.",
+          "price": 1.8,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Salmon + Cream Cheese Maki",
+          "desc": null,
+          "price": 2.2,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Salmon + Avocado Maki",
+          "desc": null,
+          "price": 2.2,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Kakiage Maki",
+          "desc": "Tempura vegetable fritter with mixed vegetables.",
+          "price": 1.8,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Crispy Prawn + Cream Cheese Maki",
+          "desc": null,
+          "price": 1.8,
+          "tags": [
+            "contains-shellfish",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Uramaki & rolls",
+      "items": [
+        {
+          "name": "Teriyaki Chicken Uramaki",
+          "desc": null,
+          "price": 1.8,
+          "tags": []
+        },
+        {
+          "name": "Salmon Avocado Uramaki",
+          "desc": "Salmon and avocado.",
+          "price": 2.2,
+          "tags": []
+        },
+        {
+          "name": "Spicy Chicken Uramaki",
+          "desc": "Crispy chicken uramaki topped with Sushi Bi spicy mayo.",
+          "price": 2.5,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Salmon + Seaweed + Avocado Dragon Roll",
+          "desc": null,
+          "price": 2.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Nigiri",
+      "items": [
+        {
+          "name": "Avocado Nigiri",
+          "desc": "Gisborne organic avocado on rice.",
+          "price": 2.4,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Fresh Salmon Nigiri",
+          "desc": null,
+          "price": 2.4,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Aburi Salmon Nigiri",
+          "desc": "Seared salmon with Sushi Bi's house teriyaki sauce.",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Smoked Eel Nigiri",
+          "desc": "Smoked eel dressed with Sushi Bi's house teriyaki sauce.",
+          "price": 2.4,
+          "tags": []
+        },
+        {
+          "name": "Prawn Nigiri",
+          "desc": null,
+          "price": 2.4,
+          "tags": [
+            "gf",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Crispy Prawn Nigiri",
+          "desc": "Tiger prawn coated with Japanese panko.",
+          "price": 2.4,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Aburi Prawn Nigiri",
+          "desc": "Seared prawn with Sushi Bi's house teriyaki sauce.",
+          "price": 2.5,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Aburi Scallop",
+          "desc": "Seared whole scallop with Sushi Bi's house teriyaki sauce and Japanese mayo.",
+          "price": 2.5,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Crab Leg Kanikama Nigiri",
+          "desc": "Crab leg surimi.",
+          "price": 2.4,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Inari & rice paper rolls",
+      "items": [
+        {
+          "name": "Inari",
+          "desc": "Bean curd pocket filled with sushi rice.",
+          "price": 2.4,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Gluten Free Inari",
+          "desc": "Gluten free bean curd pocket filled with sushi rice.",
+          "price": 2.4,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Inari Boat with Kanikama and Tobiko",
+          "desc": "Tofu pocket filled with sushi rice, crab legs and fish roe.",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Rice Paper Roll Mixed Vegetables",
+          "desc": "Rice paper roll with mixed vegetables and avocado.",
+          "price": 2.4,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Summer Roll with Salmon",
+          "desc": "Rice paper roll with seasoned vegetables and fresh salmon.",
+          "price": 2.4,
+          "tags": [
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Hot food",
+      "items": [
+        {
+          "name": "Takoyaki",
+          "desc": "Hand made octopus balls — Willis Street store only.",
+          "price": 1.5,
+          "tags": [
+            "contains-shellfish"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Platters",
+      "items": [
+        {
+          "name": "Sushi Platter 1",
+          "desc": "4 salmon nigiri, 20 assorted cocktail maki, 10 assorted maki.",
+          "price": 78.0,
+          "tags": []
+        },
+        {
+          "name": "Sushi Platter 2 (cocktail sushi)",
+          "desc": "Cocktail-sized sushi; choose from salmon, teriyaki chicken and more.",
+          "price": 84.0,
+          "tags": []
+        },
+        {
+          "name": "Sushi Platter 3",
+          "desc": "3 crispy prawn, 4 prawn maki with avocado topping, 11 nigiri of your choice, 3 prawn nigiri.",
+          "price": 90.0,
+          "tags": []
+        },
+        {
+          "name": "Sushi Platter 4",
+          "desc": "17 assorted maki and 15 assorted nigiri, both of your choice.",
+          "price": 70.0,
+          "tags": []
+        },
+        {
+          "name": "Sushi Platter 5 (brown rice uramaki)",
+          "desc": "42 assorted brown rice maki.",
+          "price": 83.0,
+          "tags": []
+        },
+        {
+          "name": "Sushi Platter 6",
+          "desc": "9 cocktail prawn, 9 cocktail salmon, 13 assorted maki, 3 salmon nigiri.",
+          "price": 89.0,
+          "tags": []
+        },
+        {
+          "name": "Sushi Platter 9",
+          "desc": "2 inari boats, 2 avocado nigiri, 22 assorted maki, 2 inari, 8 pieces of prawn.",
+          "price": 85.0,
+          "tags": []
+        }
+      ]
+    }
+  ]
+}
