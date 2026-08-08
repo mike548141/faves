@@ -8,7 +8,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const src = readFileSync(
@@ -50,6 +50,23 @@ test("index.json is data, not shell — the split's whole point", () => {
     "data/index.json must not be in the SHELL list (it's data)"
   );
   assert.match(src, /const DATA_INDEX = "data\/index\.json";/);
+});
+
+// Regression guard, added 2026-08-08. `js/dietary.js` shipped 2026-07-23 and
+// was never added to SHELL, so it was fetched from the network on demand — and
+// cacheFirst() has NO offline fallback on a miss, which meant a menu screen
+// simply failed in flight mode. "Offline capable" is a hard constraint, so the
+// list is now checked against the directory instead of maintained by memory.
+test("every shipped module is precached — no module may be missing from SHELL", () => {
+  const shellBlock = src.slice(
+    src.indexOf("const SHELL = ["),
+    src.indexOf("];", src.indexOf("const SHELL = ["))
+  );
+  const jsDir = fileURLToPath(new URL("../site/js/", import.meta.url));
+  const missing = readdirSync(jsDir)
+    .filter((f) => f.endsWith(".js"))
+    .filter((f) => !shellBlock.includes(`"js/${f}"`));
+  assert.deepEqual(missing, [], `not precached (offline would break): ${missing.join(", ")}`);
 });
 
 test("activate keeps exactly the three current caches", () => {

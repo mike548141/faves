@@ -17,6 +17,11 @@ content freshness separately from this file.
   and security sections. Groundwork for making the source repository public.
 
 ### Fixed
+- **Menus work offline again.** One of the menu screen's modules was never
+  added to the offline precache list when it shipped, so opening a menu in
+  flight mode could fail outright. Every shipped module is now precached, and
+  a test checks the list against the source directory so one can't be missed
+  again.
 - **Switching who's using Faves now updates a still-loading menu correctly.**
   Previously, switching profile while a menu page was mid-load could leave the
   first paint showing the previous person's allergen highlights (the header
