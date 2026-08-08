@@ -1984,6 +1984,23 @@ body.faves-view .to-top {
   cursor: pointer;
 }
 
+/* "Your data" (settings dialog) — download everything the user has put in.
+   Reuses the settings note + button styles; only the spacing is new, since
+   the heading is no longer a direct child of .settings-inner and so misses
+   the :first-of-type reset below. */
+.data-section {
+  margin: var(--space-5) 0 var(--space-2);
+}
+.data-section .settings-group-title {
+  margin-top: 0;
+}
+.settings-data-status {
+  margin: var(--space-2) 0 0;
+}
+.settings-data-status:empty {
+  display: none; /* no reserved gap before the first download */
+}
+
 /* Food preferences section of the settings dialog. */
 .settings-group-title {
   margin: var(--space-5) 0 var(--space-2);

@@ -10,7 +10,13 @@
 // app.js's own subscription, and each menu reads the preferences on load.
 
 import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS } from "./settings.js";
-import { profiles } from "./profiles.js";
+import { profiles, deviceStorage } from "./profiles.js";
+import {
+  collectPersonalData,
+  personalDataFilename,
+  personalDataJson,
+  summarisePersonalData,
+} from "./personal-data.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
@@ -288,6 +294,63 @@ function profileSection() {
   return { section, refresh };
 }
 
+// --- Your data (export) -----------------------------------------------
+// Sits directly under the profile switcher because the export covers EVERY
+// profile listed there, not just the active one — the roster is the thing
+// being backed up, so it belongs next to it.
+
+/** Hand `text` to the browser as a downloaded file. Object URLs leak until
+ *  revoked, so revoke on the next tick — after the click has been handled. */
+function downloadText(filename, text, type = "application/json") {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = el("a", { href: url, download: filename });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+function dataSection() {
+  const heading = el("h3", { className: "settings-group-title", textContent: "Your data" });
+  const note = el("p", {
+    className: "settings-note",
+    textContent:
+      "Everything you’ve added — favourites, ratings, settings, everyone’s profiles and the order tally — " +
+      "lives in this browser only. Save a copy you can keep.",
+  });
+  const btn = el("button", {
+    type: "button",
+    className: "settings-reset",
+    textContent: "Download my data",
+  });
+  // Polite, not assertive: the result is a confirmation, not an interruption.
+  const status = el("p", { className: "settings-note settings-data-status", role: "status", "aria-live": "polite" });
+
+  btn.addEventListener("click", () => {
+    try {
+      const exportedAt = new Date().toISOString();
+      const data = collectPersonalData(deviceStorage, { exportedAt });
+      const s = summarisePersonalData(data);
+      const name = personalDataFilename(exportedAt);
+      downloadText(name, personalDataJson(data));
+      const bits = [
+        `${s.profiles} ${s.profiles === 1 ? "person" : "people"}`,
+        `${s.favourites} ${s.favourites === 1 ? "favourite" : "favourites"}`,
+        `${s.ratings} ${s.ratings === 1 ? "rating" : "ratings"}`,
+      ];
+      if (s.orderItems) bits.push(`${s.orderItems} order ${s.orderItems === 1 ? "item" : "items"}`);
+      status.textContent = `Saved ${name} — ${bits.join(", ")}.`;
+    } catch {
+      // Storage blocked, or the browser refused the download (some in-app
+      // browsers do). Say so plainly rather than leaving a dead button.
+      status.textContent =
+        "Couldn’t save the file. Your browser may be blocking downloads — try opening Faves in Safari or Chrome.";
+    }
+  });
+
+  return el("section", { className: "data-section" }, [heading, note, btn, status]);
+}
+
 export function initSettingsUI() {
   const btn = document.getElementById("settings-btn");
   if (!btn || document.querySelector(".settings-sheet")) return;
@@ -358,6 +421,9 @@ export function initSettingsUI() {
 
       // --- Who's using Faves? (device-local profiles) ---
       profileUi.section,
+
+      // --- Your data (export everything, every profile) ---
+      dataSection(),
 
       // --- Language / Te Reo ---
       (() => {

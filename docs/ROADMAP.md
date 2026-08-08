@@ -779,7 +779,21 @@ already names export/import as day-one scope), the **hidden-recipe set** (11a),
 and **personal tag overrides** (Theme 5). Build the collector so a new store is
 one line, not a rewrite.
 
-- **12a — Export** `[S]` — a "Download my data" action that serialises the whole
+- ✅ **12a — Export** `[S]` — **shipped 2026-08-08** (owner GO same day).
+  `site/js/personal-data.js` (pure, 20 unit tests) + a "Your data" section in
+  Settings, directly under the profile switcher. Every design call below was
+  built as recorded. Browser-verified end-to-end over CDP, not just unit
+  tested: seeded two profiles, clicked the real button, and checked the file
+  that landed on disk — both people's data present, the non-active one
+  included, and the seeded Near-me coordinates absent from the bytes.
+  🔎 **The exclusion had a hole the tests caught**: the catch-all sweep for
+  unknown `faves.*` keys would have re-collected `faves.origin.v1` the moment
+  it appeared in localStorage, silently defeating the "never export your
+  location" promise. The excluded keys now seed the sweep's skip-set.
+  ⏳ Owner to eyeball placement/wording at 390 px; iOS in-app browsers can
+  refuse a download, which the UI reports rather than failing silently.
+  Original spec, as built:
+- ~~**12a — Export** `[S]`~~ — a "Download my data" action that serialises the whole
   personal layer to one versioned JSON file via `Blob` + `<a download>`
   (`faves-data-YYYY-MM-DD.json`). Vanilla, offline, zero-dep. Design calls
   already made, to save the build session re-deciding them:
@@ -801,7 +815,15 @@ one line, not a rewrite.
   different id — ask, don't guess), and an import carrying **allergen/dietary
   prefs** is safety data, so it inherits Theme 10's framing — never silently
   overwrite someone's allergen settings.
-- **12c — Lean the sync themes on it** `[S]` — the collector 12a needs
+- ✅ **12c — Lean the sync themes on it** `[S]` — **done 2026-08-08 with 12a.**
+  `collectPersonalData(storage, { exportedAt })` is the shared seam, built one
+  step more general than export needed: it reads the raw device storage rather
+  than the live per-profile singletons, so it sees *every* profile. ADR 0017's
+  sync push encrypts its output; Theme 10's grant takes a subset of it.
+  **No `apply` counterpart was written** — deliberately. Its semantics *are*
+  12b's open design calls, so a speculative applier would have silently
+  answered them. Original note:
+- ~~**12c — Lean the sync themes on it** `[S]`~~ — the collector 12a needs
   (*gather the whole personal layer into one serialisable object; apply one
   back*) is **exactly** what ADR 0017's sync blob push/pull needs, and what
   Theme 10's share grant needs a scoped subset of. Build it once as a
@@ -809,17 +831,17 @@ one line, not a rewrite.
   serialisers. This is the cheap "lean the right way" move — do it in 12a even
   though 12a alone doesn't need the seam.
 
-**Placement** `[design]` — owner said "menu **or** settings". Recommend
-**Settings**, in a "Your data" section next to the profile switcher (where the
-data being exported is already visible and mentally located), rather than the
-⋯ overflow which is navigation/share actions. Cheap to move if it reads wrong.
+**Placement** — owner said "menu **or** settings"; ✅ **ruled Settings
+2026-08-08** and built there, in a "Your data" section directly under the
+profile switcher (the export covers every profile in that list, so it belongs
+beside it). Cheap to move if it reads wrong on a real phone.
 
 **Constraints check:** no backend, no accounts, no dependency, works offline,
 no personal data enters the repo (the file is the *user's*, written to their
 own device). ✅ Clear on all of them — which is why 12a is `[S]` and
 unblocked, and can ship any time.
 
-**Sequence:** 12a alone is worth shipping now. 12b when there's enough in the
+**Sequence:** ✅ 12a + 12c shipped 2026-08-08. 12b when there's enough in the
 personal layer to be worth restoring — realistically alongside **11b** (user
 recipes are the first data a person would genuinely mourn) or **Theme 9 v1**.
 

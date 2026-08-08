@@ -228,7 +228,11 @@ export function createProfiles(storage) {
 
 // One device-level storage instance backs both the registry and the scoped
 // wrappers (a single private-mode probe, one in-memory shim if blocked).
-const deviceStorage = safeStorage();
+// Exported because data export (personal-data.js) has to read EVERY profile's
+// keys, not just the active one's — `profileScopedStorage()` would hide the
+// rest. Reach for the scoped wrapper for anything per-profile; this is the
+// deliberate exception, not the default.
+export const deviceStorage = safeStorage();
 
 // The shared singleton. Constructing it runs migration once at module load,
 // before favourites.js / settings.js build their stores over the scoped wrapper.

@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Download your data.** Settings → "Your data" saves everything you've put
+  into Faves — every profile's favourites, ratings and preferences, plus the
+  shared order tally — as one dated JSON file you can keep. It covers everyone
+  on the device, not just whoever is active, and it works offline. Your last
+  "Near me" location is deliberately left out, and the file says so.
+- **The full current menu for Takeaway @ Churton**, transcribed from the
+  printed menu and replacing prices that dated from 2019. 184 items, now
+  including the shop's own order numbers so you can read an order down the
+  phone by number.
 - **A security policy and a public-facing README.** `SECURITY.md` says how to
   report a vulnerability (privately, through GitHub security advisories) and
   is specific about what is and isn't in scope for a site with no backend, no

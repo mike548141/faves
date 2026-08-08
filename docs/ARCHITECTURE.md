@@ -299,6 +299,17 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   profile-scoped storage wrapper the two stores above read through. See the
   profiles paragraph and ADR 0012.
 
+- **Export** (no key of its own): `personal-data.js` — `collectPersonalData`
+  gathers the whole layer above into one versioned, serialisable object,
+  reading the *device* storage directly so it sees **every** profile, not just
+  the active one. Settings → "Your data" writes it out as a dated JSON file
+  (`Blob` + `<a download>`). The Near-me origin is excluded by name, and the
+  excluded keys also seed the skip-set of the sweep that catches unknown
+  `faves.*` stores — otherwise the sweep would re-collect it. There is
+  deliberately **no** `apply`/import counterpart yet: its semantics are the
+  open design calls of roadmap Theme 12b. This is the same collect seam ADR
+  0017's sync blob and Theme 10's share grant are meant to reuse.
+
 A `storage` event keeps other tabs in step (favourites/settings keys are now
 namespaced by the active profile; a registry change re-points them). Recipes
 (Cook at Home) can be
