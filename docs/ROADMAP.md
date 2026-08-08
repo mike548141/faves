@@ -259,6 +259,42 @@ Both resolved; verbatim raw-note records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md
   `image`/`alt`, SW-cached, no layout shift); now purely a sourcing task (drop
   owner photos into `intake/`). Render detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
+### Per-venue content follow-ups
+
+Small, known gaps left behind by a transcription session — each one needs a
+fact nobody had at the time, not a decision. **The rule these all obey: a
+missing price stays `null` and renders "varies"; nothing is inferred from a
+neighbouring card or a delivery app.** Clear one by bringing back the fact.
+
+- [ ] **Gold Lining — two unread prices** `[S][content]`. From the 2026-08-07
+      cabinet photos: the **Falafel Wrap** (label sat behind the cabinet
+      frame) and the **Bliss Balls** (no price card in shot). Both `null`
+      today. One photo of each label clears it.
+- [ ] **Gold Lining — the juice fridge** `[S][content]`. Not itemised at all:
+      no legible prices and only one brand partly readable. Needs a shelf
+      photo before anything can be recorded.
+- [ ] **Gold Lining — bliss-ball label: flavours or ingredients?**
+      `[S][content]`. The jar reads "cashew, almonds, matcha, apricot, dates,
+      chocolate, chia, coconut, sunflower"; owner unsure which it is. Stored
+      as ingredients on one item, because that reading holds either way —
+      cashew and almond are present on both, so `contains-nuts` is correct
+      regardless. If they are nine flavours, this splits into nine items and
+      nothing already written has to be undone.
+- [ ] **Gold Lining — brunch window vs opening hours** `[S][content]`. The
+      printed card says brunch 7.30am–2.30pm; the record holds 07:30–15:30
+      weekdays. Left as a *service* window on the assumption the cabinet
+      carries on after brunch stops — worth one glance in-store to confirm
+      closing hasn't moved.
+- [ ] **`picks` are empty on most venues** `[S][content]` — including the two
+      newly menu-complete ones (Gold Lining, Takeaway @ Churton). `picks`
+      drives the "our picks" surface and `validate.py` warns on each empty
+      one, so the warnings are the worklist. Owner-supplied only: these are
+      *our* favourites, not a guess from the menu.
+- [ ] **16 venues are still `stub`** `[M][content]` — they render as "menu
+      coming soon" cards and never as empty menus, so this is a backlog, not
+      a defect. Same `intake/` pipeline; 12 are menu-complete as of
+      2026-08-08.
+
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
 Owner idea (2026-07-08): Cook-at-Home (and menus) are flat lists of
