@@ -14,6 +14,12 @@ content freshness separately from this file.
   shared order tally — as one dated JSON file you can keep. It covers everyone
   on the device, not just whoever is active, and it works offline. Your last
   "Near me" location is deliberately left out, and the file says so.
+- **Gold Lining's full menu** (the cafe in the BNZ building), transcribed from
+  the printed brunch and drink cards plus the cabinet, bakery and slice
+  displays: 106 items across brunch, add-ons, soup of the day, four cabinet
+  sections, the full coffee and iced-drink list, and Huskee keep cups. Two
+  items show as "varies" rather than a made-up price — the Falafel Wrap and
+  the Bliss Balls, whose price cards weren't readable in the cabinet.
 - **The full current menu for Takeaway @ Churton**, transcribed from the
   printed menu and replacing prices that dated from 2019. 184 items, now
   including the shop's own order numbers so you can read an order down the
