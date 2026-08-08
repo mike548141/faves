@@ -381,7 +381,9 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
 - **Settings** (`faves.settings.v1`): `settings.js` — dietary/allergen prefs
   (`diet`), the two ranking distances (`favBoostKm`, `farKm`) and the reo
   language, clamped/sanitised on read so a bad value can't break the sort;
-  `settings-ui.js` is the ⚙ dialog (also home to the profile switcher).
+  `settings-ui.js` is the ⚙ dialog — an index of topic rows drilling into
+  single-topic panels, each row subtitled with its current value, plus the
+  profile switcher (ADR 0025). A new topic is one `TOPICS` entry + its panel.
 - **Profiles** (`faves.profiles.v1`): `profiles.js` — the registry + the
   profile-scoped storage wrapper the two stores above read through. See the
   profiles paragraph and ADR 0012.

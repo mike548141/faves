@@ -23,6 +23,19 @@ content freshness separately from this file.
   near-certain. As ever, no tag still means *not stated* — never "free of it".
   (ADR 0024)
 
+### Changed
+- **Settings is now a short list you drill into, instead of one long scroll.**
+  Six topics — Food preferences, Distance, Maps app, Language, Who's using
+  Faves?, Your data — each one a row that opens its own screen, and each row
+  showing what it's currently set to ("Gluten free · 3 allergens flagged",
+  "Hide places past 25 km"). On a phone the whole list now fits without
+  scrolling; before, the allergen chips, both distance dials and the reset sat
+  below the fold with nothing to say they were there, and only one of the eight
+  allergens showed until you tapped "Show all". All eight are visible at once
+  now. Whoever is browsing stays switchable in one tap at the top of the list.
+  "Reset to defaults" moved in beside "Download my data" and asks before it
+  clears anything, naming the person and saying what it leaves alone.
+
 ### Added
 - **Faves now remembers when.** Every price, dish, menu and venue can carry its
   own dates, so the data can answer questions it simply couldn't before: what a

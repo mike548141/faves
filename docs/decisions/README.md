@@ -109,3 +109,11 @@ deliberation those compact docs omit.
   the findings are restaurant business data, which is the product. Full history
   and the records publish as-is (owner-ruled; fresh-root costed and declined).
   The flip stays owner-only — steps in [GO-PUBLIC.md](../GO-PUBLIC.md).
+- [0025](0025-settings-index-and-panels.md) — **Settings is an index of rows
+  that drill into panels**, not one long scroll. 1578 px and 31 controls at
+  390 px had put the allergen chips, both distance dials and the reset below
+  the fold; each row now carries its current value as its subtitle, so the
+  state is legible before you open anything, and the index fits one screen
+  (552 px). Accordions, tabs and scattering-to-where-they-bite all rejected.
+  So was Escape-steps-back: measured, Chrome's close-watcher force-closed it
+  two times in six.

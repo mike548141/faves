@@ -843,6 +843,11 @@ one line, not a rewrite.
   location" promise. The excluded keys now seed the sweep's skip-set.
   ⏳ Owner to eyeball placement/wording at 390 px; iOS in-app browsers can
   refuse a download, which the UI reports rather than failing silently.
+  ↪ **Placement superseded 2026-08-08** by the Settings redesign
+  ([ADR 0025](decisions/0025-settings-index-and-panels.md)):
+  "Your data" is now one of six index rows rather than a section under the
+  profile switcher, and "Reset to defaults" moved in beside it behind an inline
+  confirm. The owner's 390 px look is still owed and now covers both.
   Original spec, as built:
 - ~~**12a — Export** `[S]`~~ — a "Download my data" action that serialises the whole
   personal layer to one versioned JSON file via `Blob` + `<a download>`

@@ -1949,8 +1949,13 @@ body.faves-view .to-top {
 }
 .settings-title {
   font-size: var(--step-name);
+  /* Absorbs the spare width between the ‹ back button and the ✕ so the caption
+     sits left-aligned whether or not the back button is showing. */
+  flex: 1;
+  min-width: 0;
 }
-.settings-close {
+.settings-close,
+.settings-back {
   width: 44px;
   height: 44px;
   border: 0;
@@ -1960,8 +1965,17 @@ body.faves-view .to-top {
   font-size: 1.1rem;
   cursor: pointer;
 }
-.settings-close:hover {
+.settings-close:hover,
+.settings-back:hover {
   background: var(--surface-2);
+}
+/* The ‹ chevron is a thin glyph at body size — scale it up so the back
+   affordance reads at a glance, and pull it left so the title doesn't drift
+   inward relative to the index's own left edge. */
+.settings-back {
+  margin-left: calc(var(--space-2) * -1);
+  font-size: 1.8rem;
+  line-height: 1;
 }
 .settings-note {
   color: var(--ink-soft);
@@ -1996,10 +2010,6 @@ body.faves-view .to-top {
   font-size: var(--step-sub);
   margin-top: var(--space-1);
 }
-.settings-actions {
-  display: flex;
-  justify-content: flex-end;
-}
 .settings-reset {
   min-height: 46px;
   padding: 0.5em 1.2em;
@@ -2012,16 +2022,13 @@ body.faves-view .to-top {
   cursor: pointer;
 }
 
-/* "Your data" (settings dialog) — download everything the user has put in.
-   Reuses the settings note + button styles; only the spacing is new, since
-   the heading is no longer a direct child of .settings-inner and so misses
-   the :first-of-type reset below. */
-.data-section {
-  margin: var(--space-5) 0 var(--space-2);
+/* A hint sits tight under its heading, so a button following one needs its own
+   air — otherwise "Reset to defaults" reads as part of the sentence above it. */
+.settings-hint + .settings-reset {
+  margin-top: var(--space-3);
 }
-.data-section .settings-group-title {
-  margin-top: 0;
-}
+
+/* "Your data" panel — the outcome line under Download / Reset. */
 .settings-data-status {
   margin: var(--space-2) 0 0;
 }
@@ -2029,16 +2036,8 @@ body.faves-view .to-top {
   display: none; /* no reserved gap before the first download */
 }
 
-/* Food preferences section of the settings dialog. */
-.settings-group-title {
-  margin: var(--space-5) 0 var(--space-2);
-  font-size: 1.15rem; /* between the dialog title and the body-sized field labels */
-  font-weight: 700;
-}
-.settings-group-title:first-of-type {
-  margin-top: 0;
-}
-/* Field labels ("Your dietary needs", "Allergens to flag"): full-contrast and
+/* Sub-headings inside a panel ("Your dietary needs", "Allergens to flag",
+   "Start over"): full-contrast and
    body-sized so they read as real headings, a clear step below the bold
    section titles above them. */
 .settings-sub {
@@ -2136,45 +2135,96 @@ body.faves-view .to-top {
   color: var(--surface);
 }
 
-/* Collapsible chip group: clamp to one 44px row until "Show all" is tapped, so
-   a long allergen list doesn't dominate the dialog. .fits (set by JS when the
-   chips don't overflow) drops the clamp and fade entirely. */
-.chips-collapsible {
-  position: relative;
+/* Settings index: one row per topic, each carrying its current value as a
+   subtitle (ADR 0025). The value is inside the <button>, so a screen reader
+   announces "Food preferences, 3 allergens flagged" — the state is legible
+   without opening anything, which is the whole point of the drill-down. */
+.settings-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
 }
-.chips-collapsible.is-collapsed:not(.fits) .pref-chips {
-  /* One 44px chip row + half the row-gap, so the clip lands in the gap below
-     row 1 (not through a chip's rounded bottom) yet keeps row 2 hidden. The
-     clip is clean (row 2 is fully hidden, no half-chip peek), so no fade
-     overlay is needed — an earlier gradient here bled over the bottom of the
-     row-1 chips and muddied a selected chip's fill. The "Show all N" toggle is
-     the affordance that there's more. */
-  max-height: calc(44px + var(--space-1) / 2);
-  overflow: hidden;
+.settings-rows > li {
+  border-bottom: 1px solid var(--line);
 }
-.chips-toggle {
-  margin-top: var(--space-1);
-  display: inline-flex;
+.settings-row {
+  display: flex;
   align-items: center;
-  min-height: 44px; /* interactive-target floor (CLAUDE.md) — padding alone gave ~29px */
-  padding: 0.35em 0;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 56px; /* comfortably past the 44px floor for a full-width row */
+  padding: var(--space-2) 0;
   border: 0;
   background: none;
-  color: var(--accent);
-  font-size: var(--step-sub);
-  font-weight: 600;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
 }
-.chips-toggle:hover {
-  text-decoration: underline;
+.settings-row:hover {
+  background: var(--surface-2);
+}
+.settings-row-text {
+  flex: 1;
+  min-width: 0;
+}
+.settings-row-title {
+  display: block;
+  font-weight: 600;
+}
+.settings-row-value {
+  display: block;
+  margin-top: 0.15em;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  /* One line: a long roster (four or five first names) must not reflow the
+     row height and turn a tidy index back into a wall. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.settings-row-chevron {
+  flex: none;
+  color: var(--ink-soft);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+/* The profile switcher above the rows — present only when there's someone to
+   switch to, so a single-profile device sees a clean list. */
+.settings-switcher {
+  margin-bottom: var(--space-3);
+}
+.settings-switcher[hidden] {
+  display: none;
 }
 
-/* Device-local profiles section (settings dialog): the "who's using Faves?"
-   switcher. Native radios drive the switch, styled as chips; one inline form
-   does Add/Rename; Delete confirms inline. All targets ≥44px. */
-.profile-section {
-  margin-bottom: var(--space-2);
+/* A drilled-in topic. The slide is a directional cue that you went one level
+   in, not decoration — reduced-motion users get the same content, instantly. */
+.settings-panel {
+  animation: settings-panel-in 180ms ease-out;
 }
+@keyframes settings-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .settings-panel {
+    animation: none;
+  }
+}
+/* The <h2> doubles as the focus target on drill-in, so it keeps a visible ring:
+   :focus-visible only matches when the last interaction was a keypress, which is
+   exactly the user who needs to see where focus landed. Touch and mouse get no
+   ring. */
+
+/* Device-local profiles (settings dialog): the "who's using Faves?" switcher.
+   Native radios drive the switch, styled as chips; one inline form does
+   Add/Rename; Delete confirms inline. All targets ≥44px. The switcher itself
+   moves between the index and the People panel, so it carries no positional
+   styling of its own — only its two slots do. */
 .profile-list {
   display: flex;
   flex-wrap: wrap;
