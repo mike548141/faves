@@ -33,6 +33,12 @@ TAGS = {
 }
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# The time dimension (ADR 0023) allows reduced precision — "2019" and "2019-05"
+# are as valid as "2019-05-21". A menu scan dated only by its year must be
+# recordable as such rather than rounded up to an invented day.
+PART_DATE_RE = re.compile(r"^\d{4}(-\d{2}(-\d{2})?)?$")
+LIFECYCLE_EVENTS = {"closed-temporarily", "reopened", "closed-permanently"}
+SEASONS = {"summer", "autumn", "winter", "spring"}
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
@@ -91,6 +97,181 @@ def check_coords(rid, obj, where):
     if (lat is None) != (lng is None):
         err(rid, f"{where}: lat and lng must be set together")
     return lat is not None and lng is not None
+
+
+def is_part_date(v):
+    return isinstance(v, str) and bool(PART_DATE_RE.match(v))
+
+
+def start_of(d):
+    """Widen a partial date to the first day it can mean, for ordering."""
+    return d if len(d) == 10 else (f"{d}-01-01" if len(d) == 4 else f"{d}-01")
+
+
+def check_temporal(rid, obj, field, where, scalar_check=None):
+    """A field carrying the time dimension (ADR 0023): either the plain value,
+    or a dated series [{value, from?, recorded?, note?}] oldest first. Returns
+    the list of values so the caller can type-check each the way it always did —
+    dating a field must never weaken the checks on what it holds.
+
+    `from` is world time (when it became true out there), `recorded` is record
+    time (when we read it). An entry needs at least one of them once a series
+    has more than one entry, or nothing can order it."""
+    val = obj.get(field)
+    if not isinstance(val, list):
+        return [val] if field in obj else []
+
+    values = []
+    prev_key = None
+    for i, e in enumerate(val):
+        at = f"{where}: {field}[{i}]"
+        if not isinstance(e, dict) or "value" not in e:
+            err(rid, f"{at} must be an object with a 'value'")
+            continue
+        values.append(e["value"])
+        for k in ("from", "recorded"):
+            if k in e and e[k] is not None and not is_part_date(e[k]):
+                err(rid, f"{at}: {k} must be an ISO date (YYYY[-MM[-DD]]), got {e[k]!r}")
+        if "note" in e and e["note"] is not None and not isinstance(e["note"], str):
+            err(rid, f"{at}: note must be a string")
+        for k in e:
+            if k not in ("value", "from", "recorded", "note"):
+                err(rid, f"{at}: unknown key {k!r}")
+        # Ordering: a series the reader has to re-sort is a series that will be
+        # read wrong by hand. Undated entries may only lead.
+        key = e.get("from") or e.get("recorded")
+        if key is None:
+            if len(val) > 1 and i > 0:
+                err(rid, f"{at}: needs a 'from' or 'recorded' — only the first entry may be undated")
+        elif is_part_date(key):
+            if prev_key is not None and start_of(key) < start_of(prev_key):
+                err(rid, f"{at}: entries must be oldest first ({key} follows {prev_key})")
+            prev_key = key
+    if len(val) == 1 and not (val[0].get("from") or val[0].get("recorded")):
+        warn(rid, f"{where}: {field} is a one-entry series with no date — a plain value says the same thing")
+    return values
+
+
+def check_available(rid, obj, where):
+    """Optional availability window on a menu section or dish (ADR 0023):
+    {from?, to?, offBy?, season?, note?}. `from`/`to` are world time (the days it
+    was first/last on the menu); `offBy` is record time (the day we confirmed it
+    was gone, for the usual case where the real removal date is unknowable);
+    `season` recurs every year."""
+    a = obj.get("available")
+    if a is None:
+        return
+    if not isinstance(a, dict):
+        err(rid, f"{where}: available must be an object or absent")
+        return
+    for k in ("from", "to", "offBy"):
+        if k in a and a[k] is not None and not is_part_date(a[k]):
+            err(rid, f"{where}: available.{k} must be an ISO date (YYYY[-MM[-DD]]), got {a[k]!r}")
+    if "season" in a and a["season"] is not None and a["season"] not in SEASONS:
+        err(rid, f"{where}: available.season must be one of {sorted(SEASONS)}, got {a['season']!r}")
+    if "note" in a and a["note"] is not None and not isinstance(a["note"], str):
+        err(rid, f"{where}: available.note must be a string")
+    for k in a:
+        if k not in ("from", "to", "offBy", "season", "note"):
+            err(rid, f"{where}: available has unknown key {k!r}")
+    if is_part_date(a.get("from")) and is_part_date(a.get("to")) and start_of(a["to"]) < start_of(a["from"]):
+        err(rid, f"{where}: available.to {a['to']} is before available.from {a['from']}")
+    if not any(k in a for k in ("from", "to", "offBy", "season")):
+        err(rid, f"{where}: available must state at least one of from/to/offBy/season")
+
+
+def check_revisions(rid, obj, where):
+    """Optional dated log of what changed about a dish — the muffin that went
+    vegan (ADR 0023). `date` is world time (when it changed), `recorded` is
+    record time (when we learned); at least one, because an undated change
+    answers none of the questions the log exists for."""
+    revs = obj.get("revisions")
+    if revs is None:
+        return
+    if not isinstance(revs, list):
+        err(rid, f"{where}: revisions must be a list or absent")
+        return
+    for i, rv in enumerate(revs):
+        at = f"{where}: revisions[{i}]"
+        if not isinstance(rv, dict):
+            err(rid, f"{at} must be an object")
+            continue
+        if not (isinstance(rv.get("change"), str) and rv["change"].strip()):
+            err(rid, f"{at}: change must be a non-empty string")
+        for k in ("date", "recorded"):
+            if k in rv and rv[k] is not None and not is_part_date(rv[k]):
+                err(rid, f"{at}: {k} must be an ISO date (YYYY[-MM[-DD]]), got {rv[k]!r}")
+        if not (is_part_date(rv.get("date")) or is_part_date(rv.get("recorded"))):
+            err(rid, f"{at}: needs a 'date' (when it changed) or 'recorded' (when we learned)")
+        for k in rv:
+            if k not in ("date", "recorded", "change"):
+                err(rid, f"{at}: unknown key {k!r}")
+
+
+def check_lifecycle(rid, data):
+    """The venue's dated lifecycle (ADR 0023). `added` is record time and is
+    REQUIRED — every venue entered Faves on a knowable day, and git knows it.
+    `opened` is world time and is optional: absent means we never established
+    it, which is honest, where a guess would not be. States are transitions
+    with dates; there is deliberately no `closed: true` flag to go stale."""
+    lc = data.get("lifecycle")
+    if lc is None:
+        err(rid, "lifecycle is required — at minimum {\"added\": \"<ISO date>\"} (ADR 0023)")
+        return
+    if not isinstance(lc, dict):
+        err(rid, "lifecycle must be an object")
+        return
+    if not is_part_date(lc.get("added")):
+        err(rid, f"lifecycle.added must be an ISO date (when it entered Faves), got {lc.get('added')!r}")
+    if "opened" in lc and lc["opened"] is not None and not is_part_date(lc["opened"]):
+        err(rid, f"lifecycle.opened must be an ISO date or absent, got {lc['opened']!r}")
+    if is_part_date(lc.get("opened")) and is_part_date(lc.get("added")) and start_of(lc["added"]) < start_of(lc["opened"]):
+        warn(rid, f"lifecycle: added {lc['added']} precedes opened {lc['opened']} — one of them is wrong")
+    for k in lc:
+        if k not in ("opened", "added", "events"):
+            err(rid, f"lifecycle has unknown key {k!r}")
+
+    events = lc.get("events")
+    if events is None:
+        return
+    if not isinstance(events, list):
+        err(rid, "lifecycle.events must be a list or absent")
+        return
+    prev = None
+    state = "trading"
+    for i, e in enumerate(events):
+        at = f"lifecycle.events[{i}]"
+        if not isinstance(e, dict):
+            err(rid, f"{at} must be an object")
+            continue
+        if e.get("type") not in LIFECYCLE_EVENTS:
+            err(rid, f"{at}: type must be one of {sorted(LIFECYCLE_EVENTS)}, got {e.get('type')!r}")
+        if not is_part_date(e.get("date")):
+            err(rid, f"{at}: date must be an ISO date, got {e.get('date')!r}")
+        elif prev is not None and start_of(e["date"]) < start_of(prev):
+            err(rid, f"{at}: events must be oldest first ({e['date']} follows {prev})")
+        else:
+            prev = e.get("date", prev)
+        if "until" in e:
+            if e["until"] is not None and not is_part_date(e["until"]):
+                err(rid, f"{at}: until must be an ISO date or absent, got {e['until']!r}")
+            if e.get("type") != "closed-temporarily":
+                err(rid, f"{at}: only a closed-temporarily event may carry 'until'")
+        if "note" in e and e["note"] is not None and not isinstance(e["note"], str):
+            err(rid, f"{at}: note must be a string")
+        for k in e:
+            if k not in ("type", "date", "until", "note"):
+                err(rid, f"{at}: unknown key {k!r}")
+        # Transitions must make sense in sequence, or the fold that resolves
+        # them silently reports the wrong state.
+        t = e.get("type")
+        if t == "reopened" and state == "trading":
+            err(rid, f"{at}: 'reopened' but the venue was not closed")
+        if t == "closed-temporarily" and state != "trading":
+            err(rid, f"{at}: 'closed-temporarily' but the venue was already {state}")
+        if state == "closed-permanently":
+            err(rid, f"{at}: nothing can follow 'closed-permanently'")
+        state = "trading" if t == "reopened" else (t if t in LIFECYCLE_EVENTS else state)
 
 
 def check_hours(rid, hours, where):
@@ -281,6 +462,20 @@ def check_restaurant(path):
     # Optional curated household rating for the venue (see site/js/ratings.js).
     check_rating(rid, data, "card")
 
+    # The venue's dated lifecycle, and the contact fields that change over time.
+    check_lifecycle(rid, data)
+    for field in ("address", "phone"):
+        for v in check_temporal(rid, data, field, "card"):
+            if v is not None and not isinstance(v, str):
+                err(rid, f"{field} must be a string or null, got {v!r}")
+    for i, branch in enumerate(data.get("locations") or []):
+        if not isinstance(branch, dict):
+            continue
+        for field in ("address", "phone"):
+            for v in check_temporal(rid, branch, field, f"locations[{i}]"):
+                if v is not None and not isinstance(v, str):
+                    err(rid, f"locations[{i}]: {field} must be a string or null, got {v!r}")
+
     # menu + collect item names for picks check
     item_names = set()
     pairings = []  # (dish_name, ref) — validated after all names are known
@@ -294,17 +489,24 @@ def check_restaurant(path):
             continue
         if not isinstance(section.get("section"), str):
             err(rid, "menu section missing 'section' name")
+        # A whole section may be seasonal — the winter menu (ADR 0023).
+        check_available(rid, section, f"section {section.get('section')!r}")
         for item in section.get("items", []):
             name = item.get("name")
             if not isinstance(name, str) or not name.strip():
                 err(rid, "menu item missing a name")
             else:
                 item_names.add(name)
-            price = item.get("price")
-            if price is not None and not isinstance(price, (int, float)):
-                err(rid, f"price for {name!r} must be a number or null (not a string)")
-            if isinstance(price, bool):
-                err(rid, f"price for {name!r} must not be a boolean")
+            # price may be a plain number/null, or a dated series (ADR 0023).
+            # Every value in the series is type-checked exactly as a flat price
+            # always was: gaining a time dimension must not weaken the schema.
+            for price in check_temporal(rid, item, "price", f"item {name!r}"):
+                if price is not None and not isinstance(price, (int, float)):
+                    err(rid, f"price for {name!r} must be a number or null (not a string)")
+                if isinstance(price, bool):
+                    err(rid, f"price for {name!r} must not be a boolean")
+            check_available(rid, item, f"item {name!r}")
+            check_revisions(rid, item, f"item {name!r}")
             # code: optional venue order-number (a string, kept out of name).
             code = item.get("code")
             if code is not None and not (isinstance(code, str) and code.strip()):

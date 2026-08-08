@@ -111,6 +111,11 @@ const MI = {
   "menu.pickup": "Tiki atu", // draft
   "menu.hours": "Ngā hāora",
   "menu.hoursNz": "Ngā hāora · wā o Aotearoa", // draft
+  // Lifecycle closures (temporal.js). "kati" = closed/shut, "pūmau" =
+  // permanent/fixed, both per maoridictionary.co.nz.
+  "closure.temporary": "Kua kati mō te wā", // draft
+  "closure.permanent": "Kua kati pūmau", // draft
+  "closure.back": "hoki mai", // draft
   "menu.orderOnline": "Ōta ā-ipurangi", // draft
   "menu.picksHead": "He wā tuatahi nōu? Whakamātauria…", // draft
   "menu.picksAria": "Ā mātou kōwhiringa", // draft

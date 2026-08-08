@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@33a540a`, owner-ratified 2026-07-25, bumped 2026-08-06)
+## Doctrine — inherited from atelier (pinned `atelier@5ef28ae`, owner-ratified 2026-07-25, bumped 2026-08-08)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -42,7 +42,7 @@ in atelier and is read on demand — never wholesale.
   (`RECORD.md`) — and when that close pushes, the all-clear cites the pushed CI
   result (or flags it pending), never just a green local scan.
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
-  session start run `git -C "../atelier" log --oneline 4f637b0..HEAD`; any
+  session start run `git -C "../atelier" log --oneline 5ef28ae..HEAD`; any
   output means the house doctrine moved — read it, then bump the pin above
   deliberately.
 - **Estate resources — point up, don't re-derive:** providers & account plans,

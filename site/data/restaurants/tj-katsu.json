@@ -336,6 +336,9 @@
   "picks": [],
   "priceBand": null,
   "verified": null,
+  "lifecycle": {
+    "added": "2026-08-08"
+  },
   "status": "menu-complete",
   "menu": [
     {

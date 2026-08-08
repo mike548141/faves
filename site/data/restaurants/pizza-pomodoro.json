@@ -54,6 +54,9 @@
   "vibe": [],
   "picks": [],
   "verified": null,
+  "lifecycle": {
+    "added": "2026-07-08"
+  },
   "status": "stub",
   "menu": []
 }

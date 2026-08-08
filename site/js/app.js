@@ -10,6 +10,8 @@ import { rankByDetour, bestBranchForRoute, areaCentroids } from "./route.js";
 import { branchCoords, branchAsPlace } from "./locations.js";
 import { rememberOrigin, routeMapsUrl } from "./geo.js";
 import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
+import { closureBadge } from "./closure-ui.js";
+import { todayNZ } from "./temporal.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
 import { initOrderUI } from "./cart-ui.js";
@@ -80,7 +82,12 @@ function priceChip(r) {
 }
 
 // Live open/closed badge from the venue's hours (null hours → no badge).
-function hoursBadge(r, now) {
+// A lifecycle closure (refit, gone for good) outranks the weekly hours: showing
+// "Open · until 9pm" for a shuttered venue would send someone across town.
+function hoursBadge(r, now, showHours = true) {
+  const closure = closureBadge(r, todayNZ());
+  if (closure) return el("p", { className: "card-hours" }, [closure]);
+  if (!showHours) return null;
   const st = openStatus(r.hours, now);
   if (st.state === "unknown") return null;
   const text = st.detail ? `${st.label} · ${st.detail}` : st.label;
@@ -149,8 +156,13 @@ function card(r, now, routeCtx = null) {
 
   const chips = el("div", { className: "chip-row" });
   if (r.status === "stub") {
-    const label = isRecipes ? "Recipes coming soon" : "Menu coming soon";
-    chips.append(el("span", { className: "chip chip-status", textContent: label }));
+    // ...unless it has closed for good: "Menu coming soon" for a venue that
+    // will never serve again is worse than saying nothing. The closure badge
+    // below carries the real news.
+    if (r.closure?.state !== "closed-permanently") {
+      const label = isRecipes ? "Recipes coming soon" : "Menu coming soon";
+      chips.append(el("span", { className: "chip chip-status", textContent: label }));
+    }
   } else if (isRecipes) {
     chips.append(el("span", { className: "chip chip-recipes", textContent: "🏠 Recipes" }));
   } else {
@@ -161,14 +173,18 @@ function card(r, now, routeCtx = null) {
     }
   }
 
-  // A venue (not a stub, not recipes) gets a live open/closed badge.
-  const badge = !isRecipes && r.status !== "stub" ? hoursBadge(r, now) : null;
+  // A venue (not a stub, not recipes) gets a live open/closed badge — but a
+  // CLOSURE shows on a stub too, since that is the one thing worth knowing
+  // about a place whose menu we never captured.
+  const badge = !isRecipes ? hoursBadge(r, now, r.status !== "stub") : null;
 
   const li = el("li", { className: isRecipes ? "card card-recipes" : "card" });
   li.dataset.status = r.status;
 
   if (r.status === "stub") {
-    li.append(el("div", { className: "card-body" }, [cardPhoto(r), name, meta, chips]));
+    // `badge` is null for a trading stub (el() skips nulls), so this only ever
+    // adds anything when the place is closed — see hoursBadge's third argument.
+    li.append(el("div", { className: "card-body" }, [cardPhoto(r), name, meta, badge, chips]));
   } else {
     const link = el("a", { className: "card-link", href: `restaurant.html?id=${r.id}` }, [
       cardPhoto(r),

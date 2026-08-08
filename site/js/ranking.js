@@ -34,6 +34,7 @@
 
 import { openStatus } from "./hours.js";
 import { nearestBranch, venueDistanceKm, venueHours } from "./locations.js";
+import { isTrading } from "./temporal.js";
 
 // Product defaults, also the source of truth for settings.js DEFAULTS.
 // FAR_KM: straight-line km beyond which a venue is "another town" — 50 km
@@ -77,6 +78,9 @@ export function tierFromHours(hours, now) {
  */
 export function availabilityTier(r, now, origin = null) {
   if (r.kind === "recipes") return 0; // always an option
+  // A venue shut for a refit (or for good) is closed whatever its posted hours
+  // say — the lifecycle outranks the weekly timetable (temporal.js, ADR 0023).
+  if (!isTrading(r)) return 3;
   return tierFromHours(venueHours(r, origin), now);
 }
 

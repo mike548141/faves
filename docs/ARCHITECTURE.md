@@ -37,6 +37,7 @@ deviating from the architecture.
 | Hosting | **Cloudflare Pages** (`lets-eat.myspot.nz`) | Decided 2026-07-07 (ADR 0004); AWS S3 + CloudFront is the host-agnostic fallback. See "Hosting" below. |
 | Rendering | **Client-side from JSON** | Two tiny HTML shells + fetch. Precached data makes it instant; no SSG needed at this scale. |
 | Repo | Private; site public | Curation and picks are ours; the URL is shareable with guests. |
+| Time | **Dated in the data, resolved before the UI** | Prices, menus and venues change; git dates our *edits*, never the world. Optional dated primitives + one pure resolver (`temporal.js`) run in `data.js`, so the app stays time-blind and the dinner-choosing UX is untouched. Decided 2026-08-08 (ADR 0023); atelier PRINCIPLES §9. |
 
 ## Hosting
 
@@ -72,7 +73,17 @@ reversible in an afternoon.
   "address": "Ghuznee St, Wellington",
   "lat": -41.29310,                  // optional decimal degrees (WGS84); both or neither
   "lng": 174.77551,                  // feeds the native-maps handoff + (later) distance sort
-  "phone": "+64 4 ...",              // tel: link for ordering
+  "phone": "+64 4 ...",              // tel: link for ordering. address/phone may
+                                     //   also be a dated series — see "Time" below
+  "lifecycle": {                     // REQUIRED. The venue's dated life (ADR 0023)
+    "opened": null,                  //   world time: business started; absent = unknown
+    "added": "2026-07-06",           //   record time: entered Faves (required)
+    "events": [                      //   0..n dated transitions, oldest first
+      { "type": "closed-temporarily", "date": "2026-06-01",
+        "until": "2026-09-01", "note": "kitchen refit" },
+      { "type": "reopened", "date": "2026-09-03" }
+    ]
+  },
   "website": null,                   // or URL (the venue's own site)
   "ordering": [                      // 0..n online-order links (link out, never build)
     { "platform": "Uber Eats", "url": "https://..." }
@@ -99,12 +110,16 @@ reversible in an afternoon.
   "menu": [
     {
       "section": "Noodles",
+      "available": null,             // optional window/season for a WHOLE section
       "items": [
         {
           "name": "Char kway teow",
           "code": null,              // optional: the venue's own order number ("14"), if it takes orders by number
           "desc": "Flat rice noodles wok-fried with egg, bean sprouts and soy.",
-          "price": 18.5,             // NZD; null if market/varies
+          "price": 18.5,             // NZD; null if market/varies. May instead be a
+                                     //   dated series — see "Time" below
+          "available": null,         // optional: on the menu only in this window/season
+          "revisions": [],           // optional: dated log of what changed about the dish
           "tags": ["spicy-1"],       // see tag vocabulary
           "image": null,             // optional self-hosted dish photo (lazy-loaded)
           "alt": null,               // required when image is set
@@ -143,6 +158,78 @@ name also links to a focused page `recipe.html?id=<collection>&dish=<slug>`
 (`site/js/recipe.js`) — the whole recipe + pairings, deep-linkable, SW-served
 via `ignoreSearch` like `restaurant.html`, and the one sanctioned extra page
 type (recorded per the docs-as-code rule; no others planned).
+
+### Time — every fact can say when (ADR 0023)
+
+Doctrine: atelier `PRINCIPLES.md` §9. Data carries the time dimension its
+domain implies. All four primitives below are **optional and additive** — a
+record with no dates in it is still valid and resolves to itself — except
+`lifecycle.added`, which every venue must have.
+
+**Two clocks, never collapsed into one.**
+
+| | Fields | Means |
+|---|---|---|
+| **World time** | `from` · `to` · `date` · `opened` | when it was true out there |
+| **Record time** | `recorded` · `offBy` · `added` · `verified` | when we read or wrote it |
+
+They diverge here as a rule, not an exception: we learn a price by reading a
+printed menu, long after the shop changed it. So an entry takes effect on its
+`from` when we know it, and otherwise on its `recorded` — the day we saw it, by
+which it was demonstrably already true.
+
+Dates are ISO 8601 and **may be reduced precision**: `"2019"`, `"2019-05"` and
+`"2019-05-21"` are all valid. A menu scan dated only by its year is recorded as
+`"2019"`; comparisons widen a partial date to its full interval, so it never
+reads as 1 January by accident. Rounding an unknown day up to a precise one
+would be inventing evidence.
+
+1. **Temporal value** — `price`, `address` and `phone` (top level and per
+   branch) are either the plain value, or a dated series written **oldest
+   first**:
+   ```jsonc
+   "price": [
+     { "value": 10.5, "recorded": "2019", "note": "2019 menu scan" },
+     { "value": 17.5, "recorded": "2026-08-08" }
+   ]
+   ```
+   A plain value means "true now; we never established since when" — which is
+   honest for most of this data, and cheap: the venue's `verified` date already
+   supplies the record time. **Only a price that actually moved needs the
+   series form.** A future-dated `from` is a scheduled change: the current day
+   keeps its own price and `pending()` returns the announced one ("coffee is $6
+   from Wednesday" — ROADMAP Theme 13).
+2. **Lifecycle** — dated transitions (`closed-temporarily` · `reopened` ·
+   `closed-permanently`), never a `closed: true` flag: a flag loses *when*,
+   cannot express a reopening, and rewrites history as it flips. A temporary
+   closure whose `until` has passed with no `reopened` event is reported
+   `overdue` rather than silently assumed back.
+3. **Availability** — `{from?, to?, offBy?, season?, note?}` on a section or a
+   dish. `from`/`to` are world time and `to` is the **last day it was on the
+   menu, inclusive**. `offBy` is record time — the day we confirmed it was gone,
+   for the usual case where the real removal date is unknowable. `season` is
+   `summer`/`autumn`/`winter`/`spring` in **NZ months** and recurs every year,
+   so a winter menu is one fact rather than a row per year.
+4. **Revisions** — `[{date?, recorded?, change}]` on a dish: the dated log of
+   what changed about it (the muffin that went vegan). Needs at least one of
+   the two dates. Data only at present; nothing renders it yet.
+
+**A dish is never deleted when it leaves the menu** — it keeps its record and
+gains `available.offBy` (or `to`). A hard delete destroys every date attached to
+it, including that it ever existed.
+
+**Resolution — why the UI never changed.** `site/js/temporal.js` is a pure
+resolver; `data.js` runs `resolveRecord()` on every record as it loads, so the
+rest of the app receives the same shape it always did: `item.price` is a number,
+out-of-season and retired dishes are already gone, `picks` never dangles. Only
+two things are added to the resolved record — `closure` (the folded lifecycle)
+and, where real history exists, `priceSeries`/`priceNext` for the future trend
+view. Time lives in the data and in that one module.
+
+The single exception where time reaches the screen is a **closure**
+(`closure-ui.js`): a badge on the card, a banner on the menu header, and
+`ranking.js` treats a closed venue as unavailable whatever its posted hours
+say. A stale price costs a dollar; a closed venue costs a wasted trip.
 
 ### Tag vocabulary (closed set — extend here, not ad hoc)
 

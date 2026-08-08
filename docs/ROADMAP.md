@@ -896,6 +896,54 @@ unblocked, and can ship any time.
 personal layer to be worth restoring — realistically alongside **11b** (user
 recipes are the first data a person would genuinely mourn) or **Theme 9 v1**.
 
+## Theme 13 — What the time dimension unlocks (owner-raised 2026-08-08)
+
+The data model landed 2026-08-08 (ADR 0023): prices, menus, dishes and venues
+all carry dates now, and `temporal.js` resolves them to "today" before the UI
+sees anything. These are the features that model exists to make possible. None
+of them is built; all of them are now cheap, because the hard part — having the
+data at all — is done and cannot be retrofitted later.
+
+**a. Upcoming price changes** — *owner's own example: "coffee will be $6 from
+Wednesday".* Already a working data fact: an entry with a future `from` resolves
+correctly today (you still pay today's price) and `pending()` returns the
+announced one. Nothing renders it. The open design calls are the owner's:
+- Where it shows — a quiet "→ $6 from Wed" beside the price, or only on the
+  dish page? The dinner-choosing UX must not turn into a pricing dashboard.
+- Does the order tally warn when a pending change lands before you'd collect?
+- Who supplies the dates — a shop's posted notice is the honest source; we
+  should not extrapolate a rise we were not told about.
+
+**b. Price trends over time** — *the owner's stated future want.* `priceSeries`
+already rides on every resolved dish that has history. Churton is the proof
+case: 174 dishes with a 2019 and a 2026 price — a median rise of **50%** (mean
+54%, range 16–120%) across those seven years. Possible shapes, cheapest first:
+a per-dish "was $10.50 in 2019" line · a sparkline on
+the dish page · a venue-level "prices up ~50% since 2019" · a cross-venue view
+of what has risen fastest. **Honesty constraint, non-negotiable:** two readings
+seven years apart is not a trend line — it is two points. Anything drawn from
+them must not imply we watched the intervening years, and a `recorded`-dated
+entry ("we read it then") must never render as a `from`-dated one ("it changed
+then").
+
+**c. Menu seasons in the UI** — the model supports recurring NZ seasons on any
+section or dish, so a winter menu is one fact that returns every year. Nothing
+surfaces it yet: a "summer menu" badge, or a "back in winter" note on an
+out-of-season favourite, would both read well. Needs real seasonal data first —
+no venue in the corpus has any.
+
+**d. Dish revisions on the page** — the `revisions` log (the muffin that went
+vegan) is recorded but never rendered. A "changed 1 Aug: now vegan" note on a
+dish is genuinely useful to a returning diner, and doubly so when the change is
+an *allergen* one. Deliberately not shipped with the model: it is new UI, and
+the owner's brief was that choosing dinner should look exactly as it did.
+
+**e. Venue history** — `lifecycle` holds `opened` (world) and `added` (record).
+`added` is populated for all 31 venues from git; **`opened` is empty everywhere**
+because we have never established it for any venue. Filling it is content work
+(the owner or a venue's own site), not a build. It would unlock "in Faves since
+July 2026" and "trading since 1998" lines, and an honest "new to Faves" badge.
+
 ## Also parked (small)
 
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);

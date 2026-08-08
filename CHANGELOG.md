@@ -24,6 +24,24 @@ content freshness separately from this file.
   (ADR 0024)
 
 ### Added
+- **Faves now remembers when.** Every price, dish, menu and venue can carry its
+  own dates, so the data can answer questions it simply couldn't before: what a
+  dish used to cost, when a place joined Faves, whether it's shut for a refit or
+  gone for good, and which dishes are only on the summer menu. **Choosing dinner
+  looks exactly as it did** — the app resolves everything to "today" before it
+  draws a single pixel, so you see tonight's menu at tonight's prices and
+  nothing else. The one visible addition: a venue that's temporarily or
+  permanently closed now says so on its card and at the top of its menu, and
+  drops out of "Pick for us" — a stale price costs a dollar, but a closed venue
+  costs a trip across town.
+- **Takeaway @ Churton's 2019 prices, recovered.** The record was refreshed from
+  the current printed menu earlier today, which meant seven years of prices were
+  about to be lost. They were recovered from the repo's own history: 174 dishes
+  now carry both their 2019 and their 2026 price (Wonton Soup $10.50 → $17.50 —
+  a median rise of 50% across the menu). Five dishes the refresh removed are
+  back in the record too, marked as no longer on the menu rather than deleted.
+  Nothing about this shows on screen yet; it's the groundwork for showing how
+  prices have moved.
 - **Three more places: Sushi Bi, TJ Katsu and Subway.** Sushi Bi (37 pieces
   and platters, three CBD stores) and TJ Katsu (23 dishes, seven branches
   including the airport) both arrive with full menus taken from each venue's

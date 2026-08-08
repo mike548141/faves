@@ -31,6 +31,9 @@
   ],
   "picks": [],
   "verified": null,
+  "lifecycle": {
+    "added": "2026-07-06"
+  },
   "status": "menu-complete",
   "menu": [
     {

@@ -54,6 +54,9 @@
   "picks": [],
   "priceBand": "$$",
   "verified": "2026-08-07",
+  "lifecycle": {
+    "added": "2026-07-08"
+  },
   "status": "menu-complete",
   "menu": [
     {

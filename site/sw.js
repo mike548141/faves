@@ -11,8 +11,8 @@
 //   - Change both? bump both.
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
-const SHELL_VERSION = "2026-07-23.98";
-const DATA_VERSION = "2026-07-23.82";
+const SHELL_VERSION = "2026-07-23.99";
+const DATA_VERSION = "2026-07-23.83";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
 const DATA_CACHE = `faves-data-${DATA_VERSION}`;
@@ -38,6 +38,7 @@ const SHELL = [
   "js/app.js",
   "js/cart.js",
   "js/cart-ui.js",
+  "js/closure-ui.js",
   "js/data.js",
   "js/dialog.js",
   "js/dietary.js",
@@ -75,6 +76,7 @@ const SHELL = [
   "js/slug.js",
   "js/store.js",
   "js/sw-register.js",
+  "js/temporal.js",
   "js/to-top.js",
   "js/toast.js",
   "site.webmanifest",

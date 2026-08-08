@@ -7,6 +7,8 @@ import { mapsUrl, recallOrigin } from "./geo.js";
 import { orderedBranches, isMultiLocation, branchAsPlace, branchesToShow } from "./locations.js";
 import { formatDistance, travelHint } from "./distance.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
+import { closureBadge } from "./closure-ui.js";
+import { todayNZ } from "./temporal.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
@@ -293,6 +295,19 @@ function renderHeader(r) {
   }
 
   const bits = [titleRow, el("p", { className: "menu-sub", textContent: meta })];
+
+  // A closure gets a banner, not a disclosure. The "needs a refresh" caveat
+  // above can hide behind an ⓘ because a stale price costs a dollar; a closed
+  // venue costs a wasted trip, so it states itself and carries the venue's own
+  // note ("kitchen refit") when we have one.
+  const closure = closureBadge(r, todayNZ());
+  if (closure) {
+    const banner = el("p", { className: "menu-closure" }, [closure]);
+    if (r.closure?.note) {
+      banner.append(el("span", { className: "menu-closure-note", textContent: r.closure.note }));
+    }
+    bits.push(banner);
+  }
 
   // Venue marks: our optional curated household rating (static, from the data;
   // absent today — the feature ships dormant) sits beside the viewer's own
@@ -773,7 +788,12 @@ function compactContactBar(r) {
   const inner = el("div", { className: "contact-bar-inner" });
 
   // Open-now status, mirroring the full card's badge (dot + "Open · until 9pm").
-  if (r.hours) {
+  // A lifecycle closure replaces it — the same precedence the card applies.
+  const closure = closureBadge(r, todayNZ());
+  if (closure) {
+    closure.classList.add("contact-bar-status");
+    inner.append(closure);
+  } else if (r.hours) {
     const st = openStatus(r.hours, nzNow());
     if (st.state !== "unknown") {
       const badge = el("span", {

@@ -26,3 +26,9 @@ intake/**
 # Claude Code config is local tooling, not part of the shipped product —
 # each machine/user manages its own; keep it out of this public repo.
 .claude/
+
+# Python bytecode from the tools/ scripts — generated on import, never
+# part of the product. (Two .pyc files reached the tree before this line
+# existed; untracked 2026-08-08.)
+__pycache__/
+*.pyc

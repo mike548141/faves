@@ -842,6 +842,34 @@ body.faves-view .pick-fab {
 .hours-badge[data-state="closed"] {
   color: var(--ink-soft);
 }
+/* Lifecycle closures (temporal.js) reuse the hours badge so the eye reads one
+   vocabulary. A refit is amber like "closing soon" — it comes back; gone for
+   good is the warn colour, because it never does. */
+.hours-badge[data-state="closed-temporarily"] {
+  color: var(--amber);
+}
+.hours-badge[data-state="closed-permanently"] {
+  color: var(--warn);
+}
+
+/* Menu-header closure banner — stated, never behind a disclosure. */
+.menu-closure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  background: var(--warn-bg);
+}
+.menu-closure .hours-badge {
+  color: var(--warn-ink);
+}
+.menu-closure-note {
+  font-size: 0.85rem;
+  color: var(--warn-ink);
+}
 .card-hours {
   margin-top: var(--space-2);
 }
