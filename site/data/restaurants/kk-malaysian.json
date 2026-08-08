@@ -102,15 +102,15 @@
       "section": "Noodles",
       "items": [
         { "name": "Chicken Mee Goreng", "desc": "Stir fried egg noodles flavoured with Malaysian spices.", "price": 25.0, "tags": [] },
-        { "name": "Seafood Mee Goreng", "desc": "Stir fried egg noodles flavoured with Malaysian spices.", "price": 25.0, "tags": [] },
-        { "name": "Sin Chew Mee Hoon", "desc": "Stir fried rice noodles with chicken, shrimp, cabbage, carrots, tomatoes, onion, and eggs.", "price": 25.0, "tags": [] },
-        { "name": "Char Kuey Teow", "desc": "Thick flat rice noodles stir fried with chicken, shrimps, fishcakes, and eggs.", "price": 25.0, "tags": [] }
+        { "name": "Seafood Mee Goreng", "desc": "Stir fried egg noodles flavoured with Malaysian spices.", "price": 25.0, "tags": ["contains-shellfish"] },
+        { "name": "Sin Chew Mee Hoon", "desc": "Stir fried rice noodles with chicken, shrimp, cabbage, carrots, tomatoes, onion, and eggs.", "price": 25.0, "tags": ["contains-shellfish"] },
+        { "name": "Char Kuey Teow", "desc": "Thick flat rice noodles stir fried with chicken, shrimps, fishcakes, and eggs.", "price": 25.0, "tags": ["contains-shellfish"] }
       ]
     },
     {
       "section": "Rice",
       "items": [
-        { "name": "Nasi Goreng", "desc": "Malaysian style fried rice with combination of shrimps, chicken, mixed vegetables, and eggs.", "price": 25.0, "tags": [] },
+        { "name": "Nasi Goreng", "desc": "Malaysian style fried rice with combination of shrimps, chicken, mixed vegetables, and eggs.", "price": 25.0, "tags": ["contains-shellfish"] },
         { "name": "Hainanese Chicken Rice", "desc": "Tasty rice served with cucumbers and specially blended chilli sauce.", "price": 26.0, "tags": [] },
         { "name": "Nasi Lemak", "desc": "Aromatic coconut rice served with rendang, peanuts, egg, cucumber, and sambal on the side. Chicken or beef options available.", "price": 26.0, "tags": ["contains-peanuts"] },
         { "name": "Beef Rendang", "desc": "Beef in spiced dry curry blended with desiccated coconut. Served with steamed rice.", "price": 26.0, "tags": [] },
@@ -132,8 +132,8 @@
     {
       "section": "Laksa",
       "items": [
-        { "name": "Curry Laksa", "desc": "Egg noodles with chicken pieces, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.", "price": 25.0, "tags": [] },
-        { "name": "Seafood Laksa", "desc": "Egg noodles with prawns, mussels, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.", "price": 26.0, "tags": [] },
+        { "name": "Curry Laksa", "desc": "Egg noodles with chicken pieces, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.", "price": 25.0, "tags": ["contains-shellfish"] },
+        { "name": "Seafood Laksa", "desc": "Egg noodles with prawns, mussels, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.", "price": 26.0, "tags": ["contains-shellfish"] },
         { "name": "Vegetarian Laksa", "desc": "Egg noodles with an assortment of vegetables and egg in creamy laksa soup.", "price": 24.5, "tags": ["v"] }
       ]
     },

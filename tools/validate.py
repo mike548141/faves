@@ -411,6 +411,25 @@ def check_version_bump():
         )
 
 
+def check_allergen_tags():
+    """Warn about allergen tags a new menu should have picked up (ADR 0024).
+
+    A warning, not an error: the tiers and the vocabulary are a judgement the
+    ADR records, and a venue's own correction must always be able to win. But
+    the gap this closes was created by hand-tagging record by record, so a
+    transcription that reintroduces it should say so on the way past.
+    """
+    try:
+        sys.path.insert(0, str(Path(__file__).parent))
+        from tag_allergens import audit
+    except ImportError:  # tool removed or renamed — not worth failing validation
+        return
+    for path in sorted((DATA / "restaurants").glob("*.json")):
+        record = json.loads(path.read_text())
+        for item, tag, tier, why in audit(record):
+            warn(record.get("id", path.stem), f"{item['name']}: missing {tag} ({tier} — {why}) — run tools/tag_allergens.py")
+
+
 def main():
     if not RESTAURANTS.is_dir():
         print(f"error: {RESTAURANTS} not found", file=sys.stderr)
@@ -450,6 +469,7 @@ def main():
         check_restaurant(path)
 
     check_version_bump()
+    check_allergen_tags()
 
     for w in warnings:
         print(f"warning: {w}")

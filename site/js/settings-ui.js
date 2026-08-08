@@ -3,7 +3,7 @@
 //   • Food preferences — your dietary needs and the allergens to flag. These
 //     apply on every menu: dietary needs pre-select the menu's dietary chips,
 //     flagged allergens make matching ⚠ warnings shout. Safety framing is
-//     load-bearing: we surface what venues told us, never assert safety.
+//     load-bearing: we surface what the data records, never assert safety.
 //   • Distance — the two ranking dials (settings.js): how much nearer a
 //     favourite counts, and how far is "too far tonight".
 // Everything writes straight to the store; the home list re-ranks live via
@@ -376,8 +376,10 @@ export function initSettingsUI() {
       const frag = document.createDocumentFragment();
       frag.append(
         el("strong", { textContent: "Always confirm for allergies. " }),
-        "We only show what venues told us — no tag means not stated, not that a " +
-          "dish is free of it. This highlights and filters; it isn't a guarantee."
+        "Tags are what the venue stated, plus a few we add where the dish name " +
+          "makes it near-certain (satay is peanut, an unnamed seafood mix is " +
+          "shellfish). No tag still means not stated, never that a dish is free " +
+          "of it. This highlights and filters; it isn't a guarantee."
       );
       return frag;
     })(),

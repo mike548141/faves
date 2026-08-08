@@ -37,15 +37,15 @@
       "items": [
         { "name": "Pull-Apart Garlic Loaf", "desc": "Garlic butter.", "price": 14.0, "tags": ["v"] },
         { "name": "Korean-Fried Cauliflower", "desc": "Korean BBQ sauce, pickles.", "price": 20.0, "tags": ["v", "gf-option"] },
-        { "name": "Salt & Pepper Squid", "desc": "Garlic aioli, fresh lemon.", "price": 22.5, "tags": [] },
+        { "name": "Salt & Pepper Squid", "desc": "Garlic aioli, fresh lemon.", "price": 22.5, "tags": ["contains-shellfish"] },
         { "name": "Sticky Pork Belly Bites", "desc": "Gochujang BBQ glaze, chilli, sesame seeds.", "price": 24.0, "tags": [] },
         { "name": "Loaded Fries", "desc": "BBQ brisket, cheesy sauce, chipotle mayo, pickles, green onion.", "price": 25.5, "tags": [] },
-        { "name": "Garlic Chilli Prawns", "desc": "Blistered cherry tomatoes, green onion, chilli aioli on roti.", "price": 26.0, "tags": [] },
+        { "name": "Garlic Chilli Prawns", "desc": "Blistered cherry tomatoes, green onion, chilli aioli on roti.", "price": 26.0, "tags": ["contains-shellfish"] },
         { "name": "Glazed Pork & Wagyu Brisket Meatballs", "desc": "Smoky herb butter jus, mustard cream, cheddar dust.", "price": 24.5, "tags": [] },
         { "name": "Buttermilk Fried Chicken", "desc": "Honey sriracha, ranch, garden pickles.", "price": 24.5, "tags": [] },
         { "name": "Onion Rings", "desc": "Chipotle mayo.", "price": 14.5, "tags": ["v"] },
         { "name": "Fries", "desc": "Confit garlic aioli.", "price": 13.0, "tags": ["v"] },
-        { "name": "Tools Down Platter", "desc": "Sticky pork belly bites, buttermilk fried chicken, Korean fried cauliflower, salt & pepper squid, pork & wagyu brisket meatballs, grilled focaccia.", "price": 69.0, "tags": [] }
+        { "name": "Tools Down Platter", "desc": "Sticky pork belly bites, buttermilk fried chicken, Korean fried cauliflower, salt & pepper squid, pork & wagyu brisket meatballs, grilled focaccia.", "price": 69.0, "tags": ["contains-shellfish"] }
       ]
     },
     {

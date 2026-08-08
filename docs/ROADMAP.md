@@ -332,6 +332,21 @@ device-local dietary/allergen preferences with load-bearing safety framing, and
 hearted favourites (`favourites.js` + shared `store.js`). Popular/busy times ruled
 out (no official API). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
+✅ **Allergen tag sweep — done 2026-08-08 ([ADR 0024](decisions/0024-derived-allergen-tags.md)),
+owner-requested.** Two gaps closed at once: satay carried a peanut tag only at
+the venues whose menus printed the words "peanut sauce" (so R & S Satay Noodle
+House warned on nothing), and shellfish tagging was inconsistent inside single
+records. **100 tags across 8 venues** — 64 read straight off the menu (the
+STATED tier, incl. **oyster sauce**), 36 derived from an enumerated rule set
+(satay → peanut, unnamed "seafood" → shellfish, laksa → shellfish). The
+disclosure copy was changed in the same commit so the app stops claiming every
+tag is venue-stated. `tools/tag_allergens.py` is re-runnable and now warns from
+`validate.py`, because the gap was created by hand-tagging record by record.
+⚑ **Deliberately deferred** (ADR 0024's rejected alternative): a `may-contain`
+tier that shows a reader *which* tier a tag came from. Right in principle, but
+it touches the vocabulary, the render and the avoid-matching — all
+safety-critical. Revisit if per-dish provenance is ever wanted.
+
 **Still open:**
 
 - **Personal tag overrides (local)** `[M]` — owner idea (2026-07-08): let a

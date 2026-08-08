@@ -12,8 +12,11 @@
 // stale or missing allergen highlight is a safety failure, not a cosmetic bug.
 //
 // Load-bearing safety framing (as everywhere these tags surface): this SURFACES
-// what venues told us, it never asserts safety — "no tag = not stated", never
-// "free of it". A highlight/filter, not a guarantee.
+// what the data records, it never asserts safety — "no tag = not stated", never
+// "free of it". A highlight/filter, not a guarantee. Most tags are what the
+// venue stated; a small enumerated set is derived from the dish name where the
+// allergen is near-certain (satay → peanut, unnamed seafood → shellfish) — see
+// ADR 0024 and tools/tag_allergens.py. The UI copy says so.
 
 // A dietary filter is satisfied when the dish carries a qualifying tag. Kept
 // here (not menu.js) so the menu render and these predicates read one list.

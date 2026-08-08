@@ -141,14 +141,14 @@
           "name": "Shrimp Fried Rice",
           "desc": null,
           "price": 20.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "10"
         },
         {
           "name": "Prawn Fried Rice",
           "desc": null,
           "price": 22.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "11"
         }
       ]
@@ -197,14 +197,14 @@
           "name": "Shrimp Curry on Rice",
           "desc": null,
           "price": 21.5,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "17"
         },
         {
           "name": "Prawn Curry on Rice",
           "desc": null,
           "price": 22.5,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "18"
         }
       ]
@@ -286,14 +286,14 @@
           "name": "Shrimp Egg Fu Young",
           "desc": null,
           "price": 22.5,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "28"
         },
         {
           "name": "Prawn Egg Fu Young",
           "desc": null,
           "price": 23.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "29"
         }
       ]
@@ -349,14 +349,14 @@
           "name": "Shrimp Chow Mein",
           "desc": null,
           "price": 20.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "36"
         },
         {
           "name": "Prawn Chow Mein",
           "desc": null,
           "price": 22.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "37"
         }
       ]
@@ -412,14 +412,14 @@
           "name": "Shrimp Chop Suey",
           "desc": null,
           "price": 20.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "44"
         },
         {
           "name": "Prawn Chop Suey",
           "desc": null,
           "price": 22.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "45"
         }
       ]
@@ -513,14 +513,14 @@
           "name": "Shrimp Black Bean on Rice",
           "desc": null,
           "price": 21.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "56"
         },
         {
           "name": "Prawn Black Bean on Rice",
           "desc": null,
           "price": 23.9,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "57"
         }
       ]
@@ -532,42 +532,42 @@
           "name": "Chicken Satay on Rice",
           "desc": null,
           "price": 20.9,
-          "tags": [],
+          "tags": ["contains-peanuts"],
           "code": "58"
         },
         {
           "name": "Pork Satay on Rice",
           "desc": null,
           "price": 20.9,
-          "tags": [],
+          "tags": ["contains-peanuts"],
           "code": "59"
         },
         {
           "name": "Steak Satay on Rice",
           "desc": null,
           "price": 20.9,
-          "tags": [],
+          "tags": ["contains-peanuts"],
           "code": "60"
         },
         {
           "name": "Combination Satay on Rice",
           "desc": null,
           "price": 21.9,
-          "tags": [],
+          "tags": ["contains-peanuts"],
           "code": "61"
         },
         {
           "name": "Shrimp Satay on Rice",
           "desc": null,
           "price": 21.9,
-          "tags": [],
+          "tags": ["contains-shellfish", "contains-peanuts"],
           "code": "62"
         },
         {
           "name": "Prawn Satay on Rice",
           "desc": null,
           "price": 23.9,
-          "tags": [],
+          "tags": ["contains-shellfish", "contains-peanuts"],
           "code": "63"
         }
       ]
@@ -616,7 +616,8 @@
           "desc": null,
           "price": 24.5,
           "tags": [
-            "contains-nuts"
+            "contains-nuts",
+            "contains-shellfish"
           ],
           "code": "68"
         },
@@ -625,7 +626,8 @@
           "desc": null,
           "price": 24.9,
           "tags": [
-            "contains-nuts"
+            "contains-nuts",
+            "contains-shellfish"
           ],
           "code": "69"
         }
@@ -696,7 +698,7 @@
           "name": "Combination Seafood",
           "desc": "Choose from fried rice, chow mein or egg fu young.",
           "price": 26.0,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "77"
         },
         {
@@ -710,7 +712,7 @@
           "name": "Curry Laksa",
           "desc": null,
           "price": 20.5,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "101"
         },
         {
@@ -736,7 +738,7 @@
           "name": "Extra Seafood",
           "desc": null,
           "price": 5.2,
-          "tags": [],
+          "tags": ["contains-shellfish"],
           "code": "80"
         },
         {
@@ -866,13 +868,13 @@
           "name": "Prawn Cutlet",
           "desc": null,
           "price": 3.0,
-          "tags": []
+          "tags": ["contains-shellfish"]
         },
         {
           "name": "Crab Stick",
           "desc": null,
           "price": 3.5,
-          "tags": []
+          "tags": ["contains-shellfish"]
         },
         {
           "name": "Fish Cake",
@@ -1353,7 +1355,7 @@
           "name": "Family Pack 1",
           "desc": "3 fish, 3 hotdogs, 3 crab sticks, 2 chips.",
           "price": 42.5,
-          "tags": []
+          "tags": ["contains-shellfish"]
         },
         {
           "name": "Family Pack 2",
@@ -1365,7 +1367,7 @@
           "name": "Family Pack 3",
           "desc": "4 fish, 2 hotdogs, 2 crab sticks, 2 sausages, 2 potato fritters, 2 chips.",
           "price": 52.5,
-          "tags": []
+          "tags": ["contains-shellfish"]
         },
         {
           "name": "Fish Dinner",
@@ -1393,7 +1395,7 @@
           "name": "Fish Burger Pack",
           "desc": "Fish burger (standard), 1 crab stick, chips.",
           "price": 13.0,
-          "tags": []
+          "tags": ["contains-shellfish"]
         },
         {
           "name": "Pack 4",

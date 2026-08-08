@@ -59,7 +59,7 @@
         { "name": "Corn Fritters", "desc": "Corn fritters served with tomato kasundi, asparagus, whipped avocado and feta with a grilled lemon dressing.", "price": 27.0, "tags": ["v", "gf"] },
         { "name": "Cheeseburger", "desc": "Onion, pickles, chopped lettuce, served in a seeded bun with thick cut fries. No gluten added bun +$2.5. Dairy free available.", "price": 28.0, "tags": ["gf-option"] },
         { "name": "Pork Loin", "desc": "Roasted pork loin served with gnocchi, ratatouille, frisée lettuce and mustard gravy.", "price": 33.0, "tags": [] },
-        { "name": "Scallop Risotto", "desc": "Seared scallops on pea and fennel risotto, served with snow pea shoots and toasted hazelnuts.", "price": 35.0, "tags": ["gf", "contains-nuts"] },
+        { "name": "Scallop Risotto", "desc": "Seared scallops on pea and fennel risotto, served with snow pea shoots and toasted hazelnuts.", "price": 35.0, "tags": ["gf", "contains-nuts", "contains-shellfish"] },
         { "name": "Summer Salad", "desc": "Summer vegetables with egg noodles, toasted sesame, crispy shallots, coriander and a ginger scallion dressing. Add chicken, halloumi, prawns or beef +$7.", "price": 23.0, "tags": ["df", "gf-option", "v-option"] }
       ]
     },
@@ -71,7 +71,7 @@
         { "name": "Hot Honey Pepperoni", "desc": "Spicy pepperoni, mozzarella, Napoli sauce with a drizzle of hot honey and chilli flakes.", "price": 24.5, "tags": ["gf-option"] },
         { "name": "Meatlovers", "desc": "Pulled pork, chorizo, pepperoni, mozzarella and Napoli sauce.", "price": 26.5, "tags": ["gf-option"] },
         { "name": "Double Smoked Ham + Mushroom", "desc": "Double smoked roasted ham, field mushrooms, Taleggio cheese and Napoli sauce.", "price": 24.0, "tags": ["gf-option"] },
-        { "name": "Prawns, Roast Capsicum + Rocket", "desc": "Rocket, prawns, roasted capsicum, Napoli sauce with a drizzle of watercress and coriander hot sauce.", "price": 26.5, "tags": ["gf-option"] }
+        { "name": "Prawns, Roast Capsicum + Rocket", "desc": "Rocket, prawns, roasted capsicum, Napoli sauce with a drizzle of watercress and coriander hot sauce.", "price": 26.5, "tags": ["gf-option", "contains-shellfish"] }
       ]
     },
     {

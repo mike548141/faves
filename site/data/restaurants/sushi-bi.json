@@ -342,7 +342,7 @@
           "name": "Crab Leg Kanikama Nigiri",
           "desc": "Crab leg surimi.",
           "price": 2.4,
-          "tags": []
+          "tags": ["contains-shellfish"]
         }
       ]
     },
@@ -370,7 +370,7 @@
           "name": "Inari Boat with Kanikama and Tobiko",
           "desc": "Tofu pocket filled with sushi rice, crab legs and fish roe.",
           "price": 2.5,
-          "tags": []
+          "tags": ["contains-shellfish"]
         },
         {
           "name": "Rice Paper Roll Mixed Vegetables",
@@ -423,7 +423,7 @@
           "name": "Sushi Platter 3",
           "desc": "3 crispy prawn, 4 prawn maki with avocado topping, 11 nigiri of your choice, 3 prawn nigiri.",
           "price": 90.0,
-          "tags": []
+          "tags": ["contains-shellfish"]
         },
         {
           "name": "Sushi Platter 4",
@@ -441,13 +441,13 @@
           "name": "Sushi Platter 6",
           "desc": "9 cocktail prawn, 9 cocktail salmon, 13 assorted maki, 3 salmon nigiri.",
           "price": 89.0,
-          "tags": []
+          "tags": ["contains-shellfish"]
         },
         {
           "name": "Sushi Platter 9",
           "desc": "2 inari boats, 2 avocado nigiri, 22 assorted maki, 2 inari, 8 pieces of prawn.",
           "price": 85.0,
-          "tags": []
+          "tags": ["contains-shellfish"]
         }
       ]
     }

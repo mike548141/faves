@@ -77,14 +77,14 @@
       "items": [
         { "name": "Roti with satay sauce", "desc": "Roti served with satay peanut sauce.", "price": 5, "tags": ["contains-peanuts"] },
         { "name": "Spring rolls", "desc": "Deep fried crispy spring rolls filled with chopped vegetables and glass noodles. Served with sweet & sour sauce.", "price": 6.5, "tags": [] },
-        { "name": "Prawn spring rolls", "desc": "Deep fried whole prawn wrapped with rice paper. Served with sweet & sour sauce.", "price": 6.5, "tags": [] },
+        { "name": "Prawn spring rolls", "desc": "Deep fried whole prawn wrapped with rice paper. Served with sweet & sour sauce.", "price": 6.5, "tags": ["contains-shellfish"] },
         { "name": "Curry puffs", "desc": "Deep fried puff pastry stuffed with kumara filling. Served with sweet & sour sauce.", "price": 6.5, "tags": [] },
-        { "name": "Deep fried wontons", "desc": "Wonton wrappers filled with mince chicken and prawns. Served with sweet & sour sauce.", "price": 6.5, "tags": [] },
+        { "name": "Deep fried wontons", "desc": "Wonton wrappers filled with mince chicken and prawns. Served with sweet & sour sauce.", "price": 6.5, "tags": ["contains-shellfish"] },
         { "name": "Money bag", "desc": "Deep fried minced chicken and vegetable wrapped in rice paper. Served with sweet & sour sauce.", "price": 6.5, "tags": [] },
         { "name": "Satay chicken kebabs", "desc": "4 grilled chicken skewers marinated with curry powder. Served with satay peanut sauce.", "price": 6.5, "tags": ["contains-peanuts"] },
         { "name": "Spicy mince chicken", "desc": "Deep fried spicy minced chicken balls. Served with Thai sweet chilli sauce.", "price": 8, "tags": [] },
         { "name": "Fish cake", "desc": "Red cod blended with Thai herbs and red curry paste. Served with sweet & sour sauce.", "price": 10, "tags": [] },
-        { "name": "Dim sums", "desc": "A mixture of prawn and pork wrapped with wonton wrapper. Served with sweet black soy sauce.", "price": 10, "tags": [] },
+        { "name": "Dim sums", "desc": "A mixture of prawn and pork wrapped with wonton wrapper. Served with sweet black soy sauce.", "price": 10, "tags": ["contains-shellfish"] },
         { "name": "Angel wing", "desc": "2 chicken wings stuffed with carrots, cabbage, onion and glass noodles. Served with sweet and sour sauce.", "price": 10, "tags": [] }
       ]
     },
@@ -112,7 +112,7 @@
       "section": "Fried noodle",
       "items": [
         { "name": "Pad thai", "desc": "Stir fried rice noodles with a selection of meat, egg, tamarind sauce and bean sprouts. Served with peanuts and lemon.", "price": 14.5, "tags": ["contains-peanuts"] },
-        { "name": "Pad see ewe", "desc": "Stir fried large flat noodles with a selection of meat, egg, mixed seasonal vegetables, oyster sauce, soy sauce and sugar.", "price": 14.5, "tags": [] },
+        { "name": "Pad see ewe", "desc": "Stir fried large flat noodles with a selection of meat, egg, mixed seasonal vegetables, oyster sauce, soy sauce and sugar.", "price": 14.5, "tags": ["contains-shellfish"] },
         { "name": "Pad kee mao", "desc": "Stir fried large flat noodles with a selection of meat, egg, mixed seasonal vegetables, bamboo shoots and basil.", "price": 14.5, "tags": [] },
         { "name": "Mee goreng", "desc": "Stir fried yellow noodles with a selection of meat, nasi goreng curry powder and mixed vegetables.", "price": 14.5, "tags": [] }
       ]
@@ -122,12 +122,12 @@
       "items": [
         { "name": "Thai chilli stir fry", "desc": "Thai chilli paste stir fried with a selection of meat, Thai basil, garlic, capsicum, long beans and courgette.", "price": 14.5, "tags": [] },
         { "name": "Gar-paow (basil stir fry)", "desc": "Stir fried basil with a selection of meat, long bean, capsicum and courgette.", "price": 14.5, "tags": [] },
-        { "name": "Cashew nut stir fry", "desc": "Stir fried cashew nuts with a selection of meat, pineapple, spring onion, mixed seasonal vegetables, onion, oyster sauce and capsicum.", "price": 14.5, "tags": ["contains-nuts"] },
+        { "name": "Cashew nut stir fry", "desc": "Stir fried cashew nuts with a selection of meat, pineapple, spring onion, mixed seasonal vegetables, onion, oyster sauce and capsicum.", "price": 14.5, "tags": ["contains-nuts", "contains-shellfish"] },
         { "name": "Sweet and sour stir fry", "desc": "Sweet and sour sauce stir fried with a selection of meat, mixed seasonal vegetables, pineapple, tomatoes, onion and mushrooms.", "price": 14.5, "tags": [] },
         { "name": "Satay sauce stir fry", "desc": "Peanut sauce stir fried with a selection of meat, seasonal vegetables, onion, capsicum and pineapple.", "price": 14.5, "tags": ["contains-peanuts"] },
         { "name": "Ginger stir fry", "desc": "Stir fried with a selection of meat, seasonal vegetables, onion, capsicum and ginger.", "price": 14.5, "tags": [] },
         { "name": "Sweet Thai chilli stir fry", "desc": "Sweet Thai chilli sauce stir fried with a selection of meat, mixed seasonal vegetables, pineapple, capsicum and onion.", "price": 14.5, "tags": [] },
-        { "name": "Crispy pork with vegetable stir fry", "desc": "Oyster sauce stir fried with bok choy and mixed seasonal vegetables.", "price": 17.5, "tags": [] }
+        { "name": "Crispy pork with vegetable stir fry", "desc": "Oyster sauce stir fried with bok choy and mixed seasonal vegetables.", "price": 17.5, "tags": ["contains-shellfish"] }
       ]
     },
     {

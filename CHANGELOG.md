@@ -8,6 +8,21 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **Satay dishes now carry a peanut warning, everywhere.** Satay sauce is
+  peanut sauce, but only the venues whose menus happened to print the words
+  "peanut sauce" were flagged — so a peanut-allergic reader browsing R & S
+  Satay Noodle House saw no warning on a single satay dish. All 22 now warn.
+- **A hundred missing shellfish warnings added**, across eight venues. The
+  same menu could flag Battered Mussel and say nothing about Prawn Cutlet.
+  Every prawn, shrimp, squid, scallop, mussel, oyster and crab dish is now
+  flagged — including **oyster sauce**, which is a real and easily missed
+  shellfish exposure in stir-fries and claypot dishes.
+  The allergen note in Settings now says plainly where tags come from: mostly
+  what the venue stated, plus a few we add where the dish name makes it
+  near-certain. As ever, no tag still means *not stated* — never "free of it".
+  (ADR 0024)
+
 ### Added
 - **Three more places: Sushi Bi, TJ Katsu and Subway.** Sushi Bi (37 pieces
   and platters, three CBD stores) and TJ Katsu (23 dishes, seven branches
