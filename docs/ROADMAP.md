@@ -608,6 +608,10 @@ choose (Theme 10), rather than being trapped in one browser's storage.
     own `localStorage` against someone holding the unlocked device without
     prompting for the code every open. We won't overclaim it.
   - ⚑ v2 is the first standing backend — building it is the owner's go.
+- **Reuse Theme 12's collector.** The push/pull blob is the same
+  "gather the personal layer / apply it back" operation as data export; build
+  `personal-data.js` once (Theme 12c) and encrypt its output here, rather than
+  writing a second serialiser that can drift from the first.
 - **May subsume queued items** — revisit when v2 is scoped: per-device
   profiles (ADR 0012) gain a cross-device dimension; the "separate
   signed-in app owns sync" assumption (Theme 6) is retired; the shareable
@@ -699,7 +703,9 @@ from the rest.
   recipes merge into the Cook at Home collection or form their own "My
   recipes" record; a storage ceiling and what happens at it; and
   **export/import from day one** so a user's own cooking is never trapped in
-  one browser.
+  one browser — that half is now **Theme 12**, which can ship ahead of this and
+  should be built so recipes slot into its collector rather than getting their
+  own exporter.
 - **11c — Share recipes: all / a set / individual** `[M][constraint]` —
   extends Theme 10's grant model from **per-scope** ("favourites",
   "allergens") to **per-item** selection. That's a real step up, not a
@@ -741,6 +747,81 @@ from the rest.
 - **Publishing stays a separate act.** A recipe a user authors is theirs;
   nothing here creates a path from a user's device into the repo or the
   public site.
+
+## Theme 12 — Export your data (owner-raised 2026-08-08)
+
+**The ask, raw (owner):** *"save/export all data to a machine readable file.
+That would include custom recipes, ratings, favourites etc. Absolutely anything
+that the user provides."* Surfaced from the overflow **⋯ menu or Settings**.
+
+**Why it earns its place before the sync themes.** Everything a person puts
+into Faves lives in one browser's `localStorage` — a cleared cache, a reset
+phone or a "clear site data" tap wipes it with no warning and no recovery.
+Theme 9 (sync) eventually fixes that, but it needs a backend, an ADR and the
+owner's go. Export needs **none of it**: it works offline, adds no dependency,
+no trust surface and no schema change, and it's the honest answer to *"where
+does my stuff actually live?"* — the same answer we'll want on record when the
+About copy stops saying "no accounts" (Theme 9 addendum 2).
+
+**What "everything the user provides" is today** (the personal layer, verified
+against the code 2026-08-08):
+
+| Store | Key | Scope |
+| --- | --- | --- |
+| Profiles (names + active) | `faves.profiles.v1` | device |
+| Favourites (hearts) | `faves.p.<id>.favourites.v1` | per profile |
+| Ratings (1–5) | `faves.p.<id>.ratings.v1` | per profile |
+| Settings — dietary/allergen prefs, ranking dials, reo language, maps app | `faves.p.<id>.settings.v1` | per profile |
+| Order tally | `faves.order.v1` | device-shared |
+
+Plus, when their themes land: **user recipes** (11b — the big one, and 11b
+already names export/import as day-one scope), the **hidden-recipe set** (11a),
+and **personal tag overrides** (Theme 5). Build the collector so a new store is
+one line, not a rewrite.
+
+- **12a — Export** `[S]` — a "Download my data" action that serialises the whole
+  personal layer to one versioned JSON file via `Blob` + `<a download>`
+  (`faves-data-YYYY-MM-DD.json`). Vanilla, offline, zero-dep. Design calls
+  already made, to save the build session re-deciding them:
+  - **All profiles, not just the active one.** It's a backup, not a view.
+  - **Versioned envelope** (`{ v: 1, exportedAt, profiles: [...], device: {...} }`),
+    not a raw `localStorage` dump — the on-disk shape is a contract we have to
+    keep reading, and the internal keys are not.
+  - **Exclude the Near-me origin** (`faves.origin.v1`). It's ephemeral
+    `sessionStorage`, it's the user's *location*, and nobody wants their
+    coordinates in a file they email themselves. Note the omission in the file.
+  - **Human-legible JSON** (pretty-printed, venue/dish **ids and names**). It's
+    "machine readable" as asked, but a person opening it should recognise their
+    own favourites. Ids alone rot silently when data changes (ADR 0020).
+- **12b — Import** `[M][design]` — the pair. Riskier than export: **merge or
+  replace?** Recommend **merge**, reusing `favourites.merge()` +
+  `share-codec.js` (built for the group-order links), with replace as an
+  explicit destructive choice behind a confirm. Two traps: importing a file
+  from a *different* device means **profile identity collision** (same name,
+  different id — ask, don't guess), and an import carrying **allergen/dietary
+  prefs** is safety data, so it inherits Theme 10's framing — never silently
+  overwrite someone's allergen settings.
+- **12c — Lean the sync themes on it** `[S]` — the collector 12a needs
+  (*gather the whole personal layer into one serialisable object; apply one
+  back*) is **exactly** what ADR 0017's sync blob push/pull needs, and what
+  Theme 10's share grant needs a scoped subset of. Build it once as a
+  `personal-data.js` collect/apply pair rather than three near-identical
+  serialisers. This is the cheap "lean the right way" move — do it in 12a even
+  though 12a alone doesn't need the seam.
+
+**Placement** `[design]` — owner said "menu **or** settings". Recommend
+**Settings**, in a "Your data" section next to the profile switcher (where the
+data being exported is already visible and mentally located), rather than the
+⋯ overflow which is navigation/share actions. Cheap to move if it reads wrong.
+
+**Constraints check:** no backend, no accounts, no dependency, works offline,
+no personal data enters the repo (the file is the *user's*, written to their
+own device). ✅ Clear on all of them — which is why 12a is `[S]` and
+unblocked, and can ship any time.
+
+**Sequence:** 12a alone is worth shipping now. 12b when there's enough in the
+personal layer to be worth restoring — realistically alongside **11b** (user
+recipes are the first data a person would genuinely mourn) or **Theme 9 v1**.
 
 ## Also parked (small)
 
