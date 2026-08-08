@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **The "← All restaurants" back-link on a menu page no longer sits indented
+  past the rest of the page.** Its top bar is already inset by the page wrapper,
+  and the link added the same inset again — so the back-link and the ⋯ button
+  both sat 32 px from the edge while every other element sat at 16 px. Measured
+  at 390 px before and after; both now line up with the page.
 - **Satay dishes now carry a peanut warning, everywhere.** Satay sauce is
   peanut sauce, but only the venues whose menus happened to print the words
   "peanut sauce" were flagged — so a peanut-allergic reader browsing R & S

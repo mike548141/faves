@@ -345,16 +345,20 @@ Two streams, deliberately separated because they land in different places:
   A blank "contact us" form does not. Put the entry point on the dish row's ⓘ /
   overflow and on the venue contact card, plus one general "suggest a place" on
   the home screen.
-- [ ] **Transport: pick the cheapest honest one** `[M]` ⚑ — candidates, cheapest
-  first. (a) **Compose-and-share**: build the report client-side and hand it to
-  the OS share sheet / clipboard (`navigator.share`, fallback copy) so it arrives
+- [ ] **Transport — ✅ RULED 2026-08-09: compose-and-share** `[M]`. The owner
+  took the recommendation: build the report client-side and hand it to the OS
+  share sheet / clipboard (`navigator.share`, clipboard fallback) so it arrives
   as a message. **Zero infra, offline-capable, no trust surface, no accounts** —
-  and for a family-and-friends audience the message *is* the channel. (b)
-  **Pre-filled GitHub issue** — free and auditable, but needs the repo public
-  (Theme 8) *and* a GitHub account, which most of the intended users don't have.
-  (c) **Cloudflare Pages Function + spam guard** — the real front door, now
-  permissible under [ADR 0017]'s softened stance, but it's a standing backend and
-  its own ADR. Recommend **(a) now, (c) when the audience is strangers**.
+  and for a family-and-friends audience the message *is* the channel. The other
+  two are **not rejected, just not first**: a **pre-filled GitHub issue** needs
+  the repo public (Theme 8) *and* a GitHub account most intended users don't
+  have; a **Cloudflare Pages Function + spam guard** is the real front door for
+  strangers, now permissible under [ADR 0017]'s softened stance, but it's a
+  standing backend and needs its own ADR. Revisit (c) when the audience stops
+  being people who can already message the owner. **Build note:**
+  `navigator.share` needs a user gesture and isn't everywhere (no Firefox
+  desktop), so clipboard-plus-visible-confirmation is a first-class path, not an
+  afterthought — and the report has to stay on screen if both fail.
 - [ ] **Safety rule, non-negotiable** — an allergen correction is **a suggestion
   to the owner, never a live edit**. Nothing a reporter submits may change what
   the app flags; corrections land in the repo through a human. The reverse
@@ -1048,7 +1052,7 @@ wrong.
   configuration, which means a **versioned codec bump** and a receive-side path
   for links minted before it. Audit these together before building 14a, not after.
 
-## Theme 15 — UI consistency & the Settings navigation rethink (owner-raised 2026-08-09)
+## Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)
 
 **a. Settings: alternatives to drill-in** `[M][design]` ⚑ — **owner, raw:**
 *"With the new Settings UI I am considering alternative options to a sub-menu
@@ -1094,6 +1098,109 @@ Scope: every user-facing string, **including the te reo table in
 `site/js/reo.js`** — the English and te reo strings are one table and move in
 lockstep, so a rename that skips `reo.js` silently desyncs the translation. Code
 identifiers stay as they are; this is copy, not a refactor.
+
+**c. Home screen: one place for filters** `[M][design]` — **owner, raw:**
+*"I am considering moving the bottom section of the main page that filters
+Everywhere vs takeaway vs dine-in, location/suburb, and cuisine to sit with the
+other filters like Open now, cheap eats etc."*
+
+The split is real and hard to justify to a first-timer. Today's home screen
+filters live in **two places**: the sticky bottom `.filter-bar` (service
+segmented control + Area + Cuisine selects) and the in-flow `.list-toggles`
+row above the results (Open now · Cheap eats · Near me · Along a route). Same
+job, two locations, and nothing on screen explains the division.
+
+Three things the merge has to answer — the third is the one that will decide it:
+
+- **Mixed control types.** The toggles are `aria-pressed` buttons; Area and
+  Cuisine are `<select>`s. Dropping a dropdown into a chip row looks like a
+  mistake unless they converge — either the selects become chip-style menus, or
+  the chips move into the bar. Nine controls at 390 px is also, precisely, the
+  wall [ADR 0025] hit in Settings; a wrapping chip row handles it, a fixed bar
+  does not.
+- **`--bar-h` is load-bearing.** The bottom bar's height is referenced in six
+  places — `main`'s bottom padding, the "Pick for us" FAB, back-to-top, the
+  order bar. Removing the bar isn't a delete; it's re-anchoring everything that
+  sits above it. **Points in the owner's favour:** at the narrowest widths
+  `--bar-h` is **7.6rem** (the bar wraps to two rows), so it's eating a real
+  slice of a 390 px screen for three controls.
+- 🚩 **Thumb reach is what the bottom bar buys, and the merge spends it.** The
+  bar is reachable at any scroll depth; `.list-toggles` sits above the results
+  and scrolls away, so post-merge you'd scroll back to the top to change
+  cuisine. That's the whole trade. Two ways to keep it: make the merged group
+  **sticky** under the search field, or keep a slim bottom bar that collapses to
+  a single **"Filters (2)"** button opening a sheet — thumb-reachable, one
+  control, and it scales as filters keep being added (the same lesson ADR 0025
+  learnt about growth). Recommend deciding *this* first; the visual merge is
+  easy once it's settled.
+
+Low-risk otherwise: the selects are JS-populated so the no-JS fallback is
+unaffected; watch the landmark change (`<nav aria-label="Filter restaurants">`
+disappears) and keep the filters adjacent to the `role="status"` result count,
+which is a genuine a11y gain — change a filter, hear the new count.
+
+## Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)
+
+**The report, raw (owner):** *"the ability to force a full refresh of data
+(restaurants, menus, codebase etc). I am finding the PWA on my phone is not
+checking for new versions on open. I have to kill the PWA app (unload from
+memory) and then it refreshes on next load. We should also fix the auto-refresh
+for PWA."*
+
+🔎 **Diagnosed 2026-08-09 — the symptom is exact and the cause is in our code,
+not the platform.** [`sw-register.js`](../site/js/sw-register.js) is nine lines:
+it calls `navigator.serviceWorker.register()` on `load` and **nothing else** —
+no `registration.update()`, no `updatefound` handling, no reload path. A browser
+only re-fetches `sw.js` on a **navigation** (plus a ~24 h background check), and
+a standalone PWA resumed from memory performs no navigation. So "kill it and
+relaunch" is the *only* thing that currently triggers an update check. That is
+precisely what the owner is doing.
+
+There is a **second** half, easy to miss: even once the new worker installs,
+`sw.js` calls `skipWaiting()` + `clients.claim()`, so it takes control
+immediately — but the page already on screen keeps the HTML, CSS and modules it
+loaded. **Nothing reloads it.** So "check for updates" and "show the new
+version" are two separate fixes, and doing only the first changes nothing
+visible.
+
+- [ ] **16a — Check on resume** `[S]` — call `registration.update()` when the
+  page becomes visible (`visibilitychange`) and on `focus`, **throttled** (say,
+  at most once every few minutes) so a phone flicking between apps doesn't
+  hammer the origin. This is the whole fix for "it never notices", and it's a
+  handful of lines in `sw-register.js`.
+- [ ] **16b — Tell the user, then reload** `[M][design]` — on `updatefound` →
+  the installing worker reaching `installed`, surface it. **Design call:**
+  auto-reload vs a quiet "New menus available — tap to refresh" notice.
+  Recommend the **notice**: an auto-reload can yank the page out from under
+  someone mid-order. The order tally and favourites live in `localStorage` and
+  survive, but the search query, scroll position and the dietary-chip toggle do
+  not — the same in-session state the Settings re-render already loses (see the
+  2026-07-25 refinement ruling). Reload on the user's tap, or silently on the
+  next cold start.
+- [ ] **16c — "Force a full refresh"** `[S][design]` — the owner's explicit ask,
+  and the escape hatch for when 16a/16b still leave something stale. Clears the
+  shell + data caches, re-registers the worker and reloads. Two rules it must
+  obey: **refuse (or warn hard) when offline** — clearing the caches with no
+  network strands the app with nothing to serve, which is the one way this
+  feature can make things worse than doing nothing; and **never touch the
+  personal layer** — hearts, ratings, settings, profiles and the order tally are
+  the user's, not cache. Home: Settings → "Your data" is the honest place (it
+  already holds export + reset behind [ADR 0025]'s index), with the wording
+  making clear it refreshes *menus*, not *your stuff*.
+- [ ] **16d — Version skew, named so it isn't discovered the hard way** `[S]` —
+  `skipWaiting()` means a new worker serves new assets to an **old** page, so a
+  module the old page lazily imports can arrive from a newer build. It has not
+  bitten us (the app imports eagerly at load), but 16a makes updates land far
+  more often, which raises the odds. Decide deliberately: keep `skipWaiting()`
+  and accept it, or hold the new worker in `waiting` until the user takes 16b's
+  refresh. Worth an ADR line either way, since it interacts with [ADR 0015]'s
+  split caches.
+
+**Test honestly:** the service worker hides its own changes, so this needs a real
+device or a headless run with a fresh browser profile — a hard-reload does not
+bust it. The acceptance case is the owner's own:
+leave the PWA backgrounded, push a data change, foreground it — the new menu
+should appear without killing the app.
 
 ## Also parked (small)
 

@@ -2399,10 +2399,13 @@ body.faves-view .to-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding-right: var(--space-3);
 }
+/* The topbar is itself a .wrap, which already insets it by --space-3 — so the
+   generic .skip padding (for recipe.html, where it sits outside a wrap) would
+   double the inset and push the back-link in past every other element on the
+   page. Zero it here; keep only the top padding for vertical rhythm. */
 .menu-topbar .skip {
-  padding-bottom: 0;
+  padding: var(--space-3) 0 0;
 }
 .menu-topbar .overflow {
   margin-top: var(--space-3);
