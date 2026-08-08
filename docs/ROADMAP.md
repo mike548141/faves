@@ -323,6 +323,47 @@ honest candidates within the constraints: **GitHub Issues** (pre-filled
 function** (R2 photo uploads, adds serverless + a spam guard); third-party forms
 stay ✗-by-default. Full pre-decision analysis → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
+### Reactivated 2026-08-09 (owner) — "tell us what's wrong or missing"
+
+**The ask, raw (owner):** *"feedback feature to add/improve features in the app
+or the menus e.g. dish X is missing an allergen or update a price."* The
+**park reason has lapsed** — "deploy first" was the 2026-07-08 gate, and the site
+went live 2026-07-12. This is now open work, not a parked idea.
+
+Two streams, deliberately separated because they land in different places:
+
+- **Data corrections** — "this price is wrong", "this dish is missing an
+  allergen", "they've stopped doing this". Destination: the `intake/` pipeline
+  and a content session.
+- **App feedback** — a bug or a feature idea about Faves itself. Destination:
+  the roadmap / an issue.
+
+- [ ] **4c-i — Report from where the problem is** `[M][design]` — the design
+  call that makes or breaks this: a report raised **from the dish or venue
+  itself** arrives with the venue id, dish name and the value we're currently
+  showing already attached, so the owner can act on it without a conversation.
+  A blank "contact us" form does not. Put the entry point on the dish row's ⓘ /
+  overflow and on the venue contact card, plus one general "suggest a place" on
+  the home screen.
+- [ ] **Transport: pick the cheapest honest one** `[M]` ⚑ — candidates, cheapest
+  first. (a) **Compose-and-share**: build the report client-side and hand it to
+  the OS share sheet / clipboard (`navigator.share`, fallback copy) so it arrives
+  as a message. **Zero infra, offline-capable, no trust surface, no accounts** —
+  and for a family-and-friends audience the message *is* the channel. (b)
+  **Pre-filled GitHub issue** — free and auditable, but needs the repo public
+  (Theme 8) *and* a GitHub account, which most of the intended users don't have.
+  (c) **Cloudflare Pages Function + spam guard** — the real front door, now
+  permissible under [ADR 0017]'s softened stance, but it's a standing backend and
+  its own ADR. Recommend **(a) now, (c) when the audience is strangers**.
+- [ ] **Safety rule, non-negotiable** — an allergen correction is **a suggestion
+  to the owner, never a live edit**. Nothing a reporter submits may change what
+  the app flags; corrections land in the repo through a human. The reverse
+  failure — someone "correcting away" a peanut tag — is a safety failure, not a
+  data-quality one. Inherit the existing allergen framing verbatim.
+- [ ] **Offline behaviour** — the whole app works in flight mode, so the report
+  form must too: compose offline, queue or hand to the share sheet, never lose
+  what was typed to a failed fetch.
+
 ## Theme 5 — Richer dish data
 
 ✅ **Shipped 2026-07-08 → 09** — price-per-person + cheap-eats filter (`price.js`,
@@ -948,6 +989,111 @@ the owner's brief was that choosing dinner should look exactly as it did.
 because we have never established it for any venue. Filling it is content work
 (the owner or a venue's own site), not a build. It would unlock "in Faves since
 July 2026" and "trading since 1998" lines, and an honest "new to Faves" badge.
+
+## Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)
+
+**The two asks, raw (owner):** *"the ability to customise a dish e.g. no tomato
+in a big breakfast"* and *"re-interpret menus to align add-ons to a dish, making
+it easy to specify add-ons… 'Thick Cut Fries' at Sprig + Fern Tawa has 'Add gravy
+$3.' within its description, I want that to be an add-on you specify… similarly
+their brunch sides are add-ons to all the brunch dishes — I should be able to
+select 'Eggs on Toast' and add-on Halloumi and add that dish to the order."*
+
+They are one feature with two halves: **what the menu offers** (structured
+add-ons, priced) and **what you ask for** (customisation, usually a removal and
+usually free). Both end in the same place — an order line that says what you'll
+actually say at the counter.
+
+**The prose is already there, it's just unstructured.** Verified in
+`sprig-and-fern-tawa.json` 2026-08-09: `"Served with aioli. Add gravy $3."`,
+`"Add chicken, halloumi, prawns or beef +$7."`, `"No gluten added bun +$2.5."`,
+`"Gluten free toast +$2."` — plus a whole **brunch sides section** (Halloumi
+$7 and friends) that is really an add-on group for every brunch dish, not a set
+of things you'd order alone. The information is captured; only the *shape* is
+wrong.
+
+- [ ] **14a — Structured add-ons** `[L][schema][content]` — optional `addOns` on
+  a dish (`{ name, price, tags }`) plus a **reusable group** defined once per
+  section or venue that dishes reference, so "brunch sides" attaches to eight
+  brunch dishes without being written eight times. Design calls: single-select vs
+  multi-select per group (the Garden Salad's "chicken, halloumi, prawns **or**
+  beef" is a pick-one; brunch sides are pick-many); whether an add-on may itself
+  be an existing menu item by id (the brunch sides *are* menu items) or is always
+  a standalone record. Record in `ARCHITECTURE.md` + enforce in `validate.py`
+  when it lands.
+- [ ] **14b — The content sweep** `[M][content]` — retro-fitting the corpus is
+  the bulk of the work, not the code. Pattern-match `Add …$` / `+$` in every
+  `desc` and convert; keep the prose only where it isn't an orderable choice.
+  Model it on `tools/tag_allergens.py` (ADR 0024): a re-runnable script plus a
+  `validate.py` warning, because a hand sweep across 31 venues is exactly how
+  the allergen inconsistency got created in the first place.
+- [ ] **14c — Customise / omit** `[M][design]` — "no tomato" is a *removal*, and
+  we have no ingredient lists for restaurant dishes (only Cook-at-Home recipes
+  carry ingredients), so there is nothing structured to remove **from**. Two
+  honest options: a **free-text note per order line** (works everywhere, ships
+  now, and is what you'd say out loud anyway) or **curated removable components**
+  per dish (structured and safe, but it's the whole ingredient-transcription
+  problem for 31 venues). Recommend the note now; components only if a venue's
+  data ever justifies it.
+- [ ] **14d — Safety: an add-on carries its own tags** `[M]` 🚩 — **the
+  load-bearing point.** Adding halloumi to a dairy-free dish makes it not
+  dairy-free; a satay add-on makes a dish contain peanuts. So `dietary.js`'s
+  `dishFlagged` / `dishSatisfiesDiet` must evaluate **dish + selected add-ons**,
+  not the dish alone, and the order line must show the resulting warning — a
+  dish that was safe when you tapped it can stop being safe when you configure
+  it. This is not optional polish on 14a; it ships with it.
+- [ ] **14e — Order-tally knock-ons** `[M]` — a dish added twice with different
+  add-ons is **two lines, not a quantity of 2**; the subtotal maths takes add-on
+  prices; and the group-order share codec (ADR 0009) has to carry the
+  configuration, which means a **versioned codec bump** and a receive-side path
+  for links minted before it. Audit these together before building 14a, not after.
+
+## Theme 15 — UI consistency & the Settings navigation rethink (owner-raised 2026-08-09)
+
+**a. Settings: alternatives to drill-in** `[M][design]` ⚑ — **owner, raw:**
+*"With the new Settings UI I am considering alternative options to a sub-menu
+design but I like the grouping/headings you have used. Perhaps accordion or
+collapsing sections to make it easier."* The grouping stays either way; this is
+about the *navigation*, not the taxonomy.
+
+🚩 **Read [ADR 0025](decisions/0025-settings-index-and-panels.md) before
+proposing anything** — "accordion sections in one sheet" is its **first rejected
+alternative**, on measured grounds: several open sections rebuild the same
+1578 px wall, and expanding one shifts everything below it, so the scroll-jump
+lands hardest on the 390 px screen the redesign existed to fix. Reopening it is
+the owner's call, but a rebuild must answer that, and if built it **supersedes
+ADR 0025** (never edit an accepted one).
+
+The shape most likely to satisfy both: keep the index exactly as it is —
+including each row's **current-value subtitle**, which is what makes one screen
+answer *"what have I set?"* — but have a row **expand in place with only one open
+at a time**, auto-collapsing the others. That kills the wall and bounds the
+scroll-jump while dropping the drill-in gesture. 🎯 **Owner call first:** the
+drill-in only landed 2026-08-08 and its 390 px real-phone look is **still owed**
+(it's the same pending eyeball as Theme 12a). Judge the current build on the
+phone before commissioning a replacement for it.
+
+**b. One noun for one thing — a wording consistency sweep** `[S]` — **owner,
+raw:** *"check the consistency of wording across the app. For example in Settings
+→ Distance it says 'Show branches within' vs 'Hide places further than'. I would
+prefer to replace branches with places."* Confirmed at
+[settings-ui.js:428](../site/js/settings-ui.js#L428) and
+[:436](../site/js/settings-ui.js#L436). The app currently uses *venue*, *place*,
+*restaurant*, *branch* and *spot* across its copy with no settled rule.
+
+🚩 **One trap the sweep must resolve, not paper over:** those two dials mean
+genuinely different things. "Hide places further than" filters **venues** by
+reachability; "Show branches within" controls how many **branches of one
+multi-branch venue** show on its contact card (the repurposed `favBoostKm` dial —
+see the 2026-07-23 ruling above). Renaming both to "places" would make them read
+as two settings for the same job. So the deliverable is a **term decision first**
+(which noun the user sees for a venue, and what we call one of its locations),
+then the sweep — not a find-and-replace.
+
+Scope: every user-facing string, **including the te reo table in
+`site/js/reo.js`** — the English and te reo strings are one table and move in
+lockstep, so a rename that skips `reo.js` silently desyncs the translation. Code
+identifiers stay as they are; this is copy, not a refactor.
 
 ## Also parked (small)
 
