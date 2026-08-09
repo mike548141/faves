@@ -13,10 +13,14 @@
 //
 // Load-bearing safety framing (as everywhere these tags surface): this SURFACES
 // what the data records, it never asserts safety — "no tag = not stated", never
-// "free of it". A highlight/filter, not a guarantee. Most tags are what the
-// venue stated; a small enumerated set is derived from the dish name where the
-// allergen is near-certain (satay → peanut, unnamed seafood → shellfish) — see
-// ADR 0024 and tools/tag_allergens.py. The UI copy says so.
+// "free of it". A highlight/filter, not a guarantee.
+//
+// Most `contains-*` tags are now INFERRED from the dish rather than stated by
+// the venue (owner ruling, ADR 0025; swept by tools/tag_allergens.py) — menus
+// rarely mention wheat or dairy, so waiting for them left the filter useless.
+// The one-way rule: inference only ever adds a `contains-*`, NEVER `gf`/`df`/
+// `v`/`vg`. Inferring presence is fail-safe; inferring absence would assert
+// safety from a guess. The Settings copy tells the reader this.
 
 // A dietary filter is satisfied when the dish carries a qualifying tag. Kept
 // here (not menu.js) so the menu render and these predicates read one list.

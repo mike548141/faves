@@ -70,7 +70,8 @@
             "v",
             "gf-option",
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -79,7 +80,8 @@
           "price": 23.0,
           "tags": [
             "gf",
-            "contains-egg"
+            "contains-egg",
+            "contains-dairy"
           ]
         },
         {
@@ -135,7 +137,8 @@
           "desc": "Hot maple roasted kumara, quinoa, mixed greens, avocado, cucumber, pickled carrot, alfalfa, sumac, harissa garlic herb dressing, with your choice of grilled chicken, halloumi (V) or falafel (VG).",
           "price": 25.0,
           "tags": [
-            "gf"
+            "gf",
+            "contains-dairy"
           ]
         },
         {
@@ -274,7 +277,8 @@
           "tags": [
             "gf-option",
             "contains-shellfish",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         }
       ]
@@ -324,7 +328,8 @@
           "tags": [
             "vg",
             "v",
-            "df"
+            "df",
+            "contains-gluten"
           ]
         },
         {
@@ -566,28 +571,32 @@
           "name": "Raspberry Crumble Slice",
           "price": 6.5,
           "tags": [
-            "v"
+            "v",
+            "contains-gluten"
           ]
         },
         {
           "name": "Citrus Slice",
           "price": 6.5,
           "tags": [
-            "v"
+            "v",
+            "contains-gluten"
           ]
         },
         {
           "name": "Ginger Slice",
           "price": 6.5,
           "tags": [
-            "v"
+            "v",
+            "contains-gluten"
           ]
         },
         {
           "name": "Lolly Cake",
           "price": 5.5,
           "tags": [
-            "v"
+            "v",
+            "contains-gluten"
           ]
         },
         {
@@ -595,14 +604,17 @@
           "price": 6.5,
           "tags": [
             "v",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
           ]
         },
         {
           "name": "Cookie Caramel Slice",
           "price": 5.5,
           "tags": [
-            "v"
+            "v",
+            "contains-gluten"
           ]
         },
         {
@@ -662,7 +674,8 @@
             "vg",
             "v",
             "df",
-            "contains-peanuts"
+            "contains-peanuts",
+            "contains-gluten"
           ]
         },
         {
@@ -690,7 +703,8 @@
           "tags": [
             "vg",
             "v",
-            "df"
+            "df",
+            "contains-gluten"
           ]
         },
         {
@@ -728,7 +742,7 @@
         {
           "name": "Macchiato",
           "price": 5.2,
-          "tags": []
+          "tags": ["contains-dairy"]
         },
         {
           "name": "Piccolo",
@@ -899,7 +913,8 @@
           "desc": "With maple, vanilla, caramel or hazelnut.",
           "price": 7.0,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-nuts"
           ]
         },
         {
@@ -934,28 +949,32 @@
           "name": "Iced Matcha Latte",
           "price": 7.5,
           "tags": [
-            "v"
+            "v",
+            "contains-dairy"
           ]
         },
         {
           "name": "Iced Mango Matcha Latte",
           "price": 7.5,
           "tags": [
-            "v"
+            "v",
+            "contains-dairy"
           ]
         },
         {
           "name": "Iced Strawberry Matcha Latte",
           "price": 7.5,
           "tags": [
-            "v"
+            "v",
+            "contains-dairy"
           ]
         },
         {
           "name": "Iced White Choco Matcha Latte",
           "price": 7.5,
           "tags": [
-            "v"
+            "v",
+            "contains-dairy"
           ]
         }
       ]
@@ -972,7 +991,9 @@
           "name": "Coconut, Soy, Oat or Almond Milk",
           "price": 1.0,
           "tags": [
-            "df"
+            "df",
+            "contains-nuts",
+            "contains-soy"
           ]
         }
       ]

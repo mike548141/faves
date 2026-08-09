@@ -19,6 +19,21 @@ content freshness separately from this file.
 - **Chocolate Self-Saucing Pudding is a single mixture again** — it had been
   written up doubled (serves 12, 70 minutes). Now serves 6 and bakes for 35, in
   a 1.5–2 L dish. It still doubles well for a crowd.
+- **Allergen warnings now cover the whole menu, not just what venues bothered
+  to write down.** Menus almost never mention wheat, dairy, egg or soy, so the
+  allergen filter was close to useless for anyone avoiding them — 45 gluten
+  tags across a thousand dishes. Faves now works the allergen out from the dish
+  itself wherever that's near-certain: a schnitzel means wheat, a latte means
+  dairy, satay means peanuts, tempura means both wheat and egg. **542 warnings
+  added.** We flag generously on purpose, and the note in Settings says plainly
+  that most tags are now ours rather than the venue's. Two things haven't
+  changed: no tag still means *not stated* — never "free of it" — and Faves
+  will never mark a dish gluten free or dairy free by guesswork, only the
+  reverse. (ADR 0025)
+- **Clearer section headings on Takeaway @ Churton's menu.** "Curry on Steamed
+  Rice with Vegetables" is now simply "Curry on Rice", "Black Bean Sauce with
+  Vegetable on Rice" is "Black Bean Dishes", and so on — with what you actually
+  get moved into each dish's description, so nothing is lost.
 
 ### Fixed
 - **The "← All restaurants" back-link on a menu page no longer sits indented

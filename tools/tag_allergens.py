@@ -1,27 +1,34 @@
 #!/usr/bin/env python3
-"""Sweep venue data for allergen tags that should be there and aren't.
+"""Tag allergens the menu implies but doesn't spell out.
 
-Why this exists as a *tool* rather than a one-off edit: the gap it closes was
-created by hand-tagging venue by venue over many sessions, which is exactly how
-"Battered Mussel is tagged but Prawn Cutlet isn't" happens. Re-run it after any
-menu transcription and it reports what a human missed.
+Owner ruling 2026-08-09 (ADR 0025, superseding 0024): where a menu-writer
+hasn't bothered to state an allergen and we can be highly confident, INFER IT.
+A dish containing satay contains peanuts, whether or not the menu says so.
 
-Two tiers, and the difference matters (ADR 0024):
+THE ONE-WAY RULE. Inference may only ever add a `contains-*` tag. It must never
+add `gf`, `df`, `v` or `vg`, and never remove a tag. Inferring presence is
+fail-safe — the worst case is someone avoids a dish they could have eaten.
+Inferring absence would be asserting safety from a guess, which is the failure
+this whole feature exists to prevent. "No tag = not stated" still holds.
 
-  STATED   the menu itself names the ingredient — "Prawn Cutlet", "…with Oyster
-           Sauce". Tagging is *reading the menu*, not guessing, and needs no
-           licence beyond the existing rule.
+Two tiers, kept apart so the count is auditable (ADR 0025):
 
-  DERIVED  the menu names a dish whose defining ingredient it doesn't spell
-           out — "Satay" (peanut), an unspecified "seafood" mix, "laksa"
-           (belacan/dried shrimp). Enumerated below, never open-ended, because
-           each one is a judgement the owner ratified rather than a fact a
-           venue supplied.
+  STATED   the menu names the allergen or an unambiguous form of it —
+           "Prawn Cutlet", "…with Oyster Sauce", "Almond Croissant".
+  DERIVED  the menu names a dish whose defining ingredient it doesn't print —
+           satay (peanut), tempura (wheat + egg), a laksa (belacan).
 
-Never removes a tag and never touches anything else in the record.
+Three guards keep it honest:
+  • EXCLUDE patterns per rule — "rice noodles" are not wheat, "peanut butter"
+    is not dairy, a "doughnut" is not a tree nut.
+  • CONTRADICTED_BY — a dish the data already calls gf/df/vegan is not
+    silently overridden by an inference. Curation beats a pattern.
+  • Paid add-ons are not ingredients — "add prawns +$7" doesn't make a garden
+    salad shellfish.
 
-    python3 tools/tag_allergens.py            # report only
-    python3 tools/tag_allergens.py --apply    # write the tags
+    python3 tools/tag_allergens.py               # report (default)
+    python3 tools/tag_allergens.py --tier DERIVED  # just the inferences
+    python3 tools/tag_allergens.py --apply       # write them
 """
 
 import argparse
@@ -31,40 +38,122 @@ import re
 
 DATA = pathlib.Path("site/data/restaurants")
 
-# --- STATED: the menu names a crustacean or mollusc ------------------------
-# "oyster" covers oyster *sauce*, which is oyster extract — a real and widely
-# missed shellfish exposure. Checked against the data for oyster-mushroom style
-# false positives; there are none.
-SHELLFISH_STATED = re.compile(
-    r"\b(prawns?|shrimps?|squid|calamari|scallops?|mussels?|oysters?|paua|crab|"
-    r"kanikama|surimi|lobster|crayfish|clams?)\b",
-    re.I,
-)
+# An existing tag that makes an inference untrustworthy. Curated/venue-stated
+# dietary facts outrank a pattern match: a dish marked gluten free is not given
+# contains-gluten because its name happens to contain "bun". `gf-option` is
+# deliberately absent — the default preparation still contains gluten.
+CONTRADICTED_BY = {
+    "contains-gluten": {"gf"},
+    "contains-dairy": {"vg", "df"},
+    "contains-egg": {"vg"},
+    "contains-shellfish": {"v", "vg"},
+}
 
-# --- DERIVED: enumerated dish conventions (ADR 0024) -----------------------
-SATAY = re.compile(r"\bsatay\b", re.I)
-SEAFOOD = re.compile(r"\bseafood\b", re.I)
-LAKSA = re.compile(r"\blaksa\b", re.I)
+# (tag, tier, basis, pattern, exclude)
+# `exclude` is checked against the same text; a hit vetoes the rule for that
+# item. Every entry below is a claim about food that someone can check.
+RULES = [
+    # --- peanuts ------------------------------------------------------
+    ("contains-peanuts", "STATED", "names peanut", r"\bpeanuts?\b", None),
+    ("contains-peanuts", "DERIVED", "satay sauce is peanut sauce", r"\bsatays?\b", None),
+    ("contains-peanuts", "DERIVED", "pad thai is finished with crushed peanuts", r"\bpad\s?thai\b", None),
+    ("contains-peanuts", "DERIVED", "gado gado is dressed in peanut sauce", r"\bgado", None),
+    ("contains-peanuts", "DERIVED", "massaman is a peanut curry", r"\bmassaman\b", None),
+    ("contains-peanuts", "DERIVED", "kung pao is made with peanuts", r"\b(kung\s?pao|gong\s?bao)\b", None),
 
-# A dish the venue itself calls vegetarian or vegan can't be carrying belacan or
-# a seafood mix — its own tag is the better evidence, so the derived rules that
-# rest on an unstated ingredient stand down. (Satay is unaffected: peanut sauce
-# is entirely compatible with a vegetarian dish, and "Vegetarian Satay" is
-# exactly the dish someone would wrongly assume is safe.)
-VEG = {"v", "vg"}
+    # --- tree nuts ----------------------------------------------------
+    # NEVER match a bare "nut": doughnut, butternut, nutmeg. Coconut is not a
+    # tree nut for NZ allergen labelling and is deliberately not matched.
+    ("contains-nuts", "STATED", "names a tree nut",
+     r"\b(almonds?|cashews?|walnuts?|pecans?|pistachios?|hazelnuts?|macadamias?|"
+     r"pine\s?nuts?|brazil\s?nuts?|chestnuts?)\b", None),
+    ("contains-nuts", "DERIVED", "pesto is made with pine nuts", r"\bpesto\b", None),
+    ("contains-nuts", "DERIVED", "praline/marzipan/nougat are nut confections",
+     r"\b(praline|marzipan|nougat|frangipane|baklava)\b", None),
+    ("contains-nuts", "DERIVED", "Nutella is a hazelnut spread", r"\bnutella\b", None),
 
-# A paid optional extra — "Add chicken, halloumi, prawns or beef +$7", "Surf +
-# turf: add prawns +$7". The dish as served contains none of it, so tagging it
-# would warn a shellfish-allergic reader off a plain garden salad. Both signals
-# are required (an "add" AND a "+$" price) so a description that merely uses the
-# word "added" still counts as an ingredient.
+    # --- shellfish ----------------------------------------------------
+    ("contains-shellfish", "STATED", "names a crustacean or mollusc",
+     r"\b(prawns?|shrimps?|squid|calamari|scallops?|mussels?|oysters?|paua|crabs?|"
+     r"kanikama|surimi|lobster|crayfish|clams?)\b", None),
+    ("contains-shellfish", "DERIVED", "an unnamed seafood mix reliably includes prawn or squid", r"\bseafood\b", None),
+    ("contains-shellfish", "DERIVED", "laksa paste contains belacan (dried shrimp)", r"\blaksa\b", None),
+    ("contains-shellfish", "DERIVED", "XO sauce is made with dried scallop and shrimp", r"\bXO sauce\b", None),
+
+    # --- gluten -------------------------------------------------------
+    ("contains-gluten", "STATED", "names a wheat product",
+     r"\b(bread|breaded|flour|wheat|barley|rye|semolina|couscous|pastry|pasta|"
+     r"spaghetti|lasagne|lasagna|ravioli|fettuccine|penne|croissant|bagel|pita|"
+     r"naan|rotis?|paratha|chapati|brioche|crumpet|pretzel|filo|panko|breadcrumb)\b", None),
+    ("contains-gluten", "DERIVED", "battered/crumbed coatings are wheat flour",
+     r"\b(battered|crumbed|schnitzel|katsu|tempura)\b", None),
+    ("contains-gluten", "DERIVED", "a wheat-flour wrapper",
+     r"\b(dumplings?|wontons?|gyoza|samosas?|spring\s?rolls?|dim\s?sims?|pork\s?buns?)\b",
+     r"\brice\s?paper\b"),
+    # "pie spice" is a spice blend, and a fish/crab/rice cake is not a bakery
+    # cake — both found by dry-run against the real corpus.
+    ("contains-gluten", "DERIVED", "a wheat bakery item",
+     r"\b(buns?|burgers?|sandwich|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
+     r"brownies?|muffins?|scones?|doughnuts?|donuts?|pizzas?|pancakes?|waffles?|"
+     r"crackers?|tarts?|slices?|danish|éclair|eclair)\b",
+     r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),
+    ("contains-gluten", "DERIVED", "a wheat noodle",
+     r"\b(udon|ramen|egg\s?noodles?|chow\s?mein|lo\s?mein|hokkien|mee\s?goreng|"
+     r"bami\s?goreng|chow\s?fun)\b", None),
+    ("contains-gluten", "DERIVED", "soy sauce is brewed with wheat",
+     r"\b(soy\s?sauce|soya\s?sauce|teriyaki|hoisin)\b", None),
+    ("contains-gluten", "DERIVED", "beer is a barley product", r"\b(beer|lager|ale|stout|pilsner)\b", None),
+
+    # --- dairy --------------------------------------------------------
+    # "butter" must not fire on peanut/nut butter; "cream" must not fire on
+    # coconut cream, which is the base of most laksa and Thai curry here.
+    # "creamy" is deliberately NOT matched. In the cuisines on this list it
+    # means coconut cream at least as often as dairy — it was tagging every
+    # Malaysian laksa and curry. Losing a few real hits ("Creamy Mushrooms") is
+    # the right trade: an inference should under-reach, not mis-fire.
+    ("contains-dairy", "STATED", "names a dairy product",
+     r"\b(cheese|cheesy|butter|buttermilk|creams?|milks?|milkshakes?|yoghurt|yogurt|"
+     r"mozzarella|parmesan|feta|halloumi|paneer|camembert|brie|mascarpone|ricotta|ghee)\b",
+     NON_DAIRY := r"\b(peanut|nut|almond|cashew|coconut|soya?|oat|rice)\s?(butter|milk|cream)\b"),
+    ("contains-dairy", "DERIVED", "an espresso milk drink",
+     r"\b(latte|cappuccino|mocha|flat\s?white|macchiato)\b", NON_DAIRY),
+    ("contains-dairy", "DERIVED", "the sauce is cream- or butter-based",
+     r"\b(alfredo|carbonara|butter\s?chicken|korma|tikka\s?masala|ganache|"
+     r"cheesecake|tiramisu|panna\s?cotta)\b", None),
+
+    # --- egg ----------------------------------------------------------
+    # \begg\b never matches "eggplant".
+    ("contains-egg", "STATED", "names egg", r"\beggs?\b", None),
+    ("contains-egg", "DERIVED", "an egg emulsion",
+     r"\b(mayonnaise|mayo|aioli|hollandaise|meringue|custard|pavlova)\b", None),
+    ("contains-egg", "DERIVED", "egg is in the batter or base",
+     r"\b(omelettes?|frittata|quiche|carbonara|tempura|tiramisu)\b", None),
+
+    # --- soy ----------------------------------------------------------
+    ("contains-soy", "STATED", "names soy",
+     r"\b(soy|soya|tofu|edamame|miso|tempeh)\b", None),
+    ("contains-soy", "DERIVED", "the sauce is soy-based",
+     r"\b(teriyaki|hoisin|oyster\s?sauce|black\s?bean\s?sauce|satays?)\b", None),
+
+    # --- sesame -------------------------------------------------------
+    ("contains-sesame", "STATED", "names sesame", r"\b(sesame|tahini)\b", None),
+    ("contains-sesame", "DERIVED", "hummus is made with tahini", r"\b(hummus|houmous|halva)\b", None),
+]
+
+COMPILED = [
+    (tag, tier, why, re.compile(pat, re.I), re.compile(exc, re.I) if exc else None)
+    for tag, tier, why, pat, exc in RULES
+]
+
+# A paid optional extra — "Add chicken, halloumi, prawns or beef +$7". The dish
+# as served contains none of it. Both signals required (an "add" AND a "+$"),
+# so a description that merely says "added" still counts as an ingredient.
 ADD_ON = re.compile(r"\badd(?:s|ed|ing)?\b", re.I)
 ADD_ON_PRICE = re.compile(r"\+\s*\$")
 
 
 def ingredient_text(item):
-    """The dish's name + the parts of its description that describe what you
-    actually get — optional paid extras stripped out."""
+    """Name + the parts of the description describing what you actually get."""
     kept = [item["name"]]
     for clause in re.split(r"[.;]", item.get("desc") or ""):
         if ADD_ON.search(clause) and ADD_ON_PRICE.search(clause):
@@ -73,55 +162,62 @@ def ingredient_text(item):
     return " ".join(kept)
 
 
-def audit(record):
+def audit(record, tier=None):
     """Yield (item, tag, tier, why) for every tag this record is missing."""
     for section in record.get("menu", []):
         for item in section["items"]:
             text = ingredient_text(item)
             tags = set(item.get("tags", []))
-            veg = bool(tags & VEG)
-
-            if "contains-shellfish" not in tags:
-                hit = SHELLFISH_STATED.search(text)
+            for tag, rule_tier, why, pattern, exclude in COMPILED:
+                if tag in tags:
+                    continue
+                if tier and rule_tier != tier:
+                    continue
+                if tags & CONTRADICTED_BY.get(tag, set()):
+                    continue  # curation outranks a pattern
+                if exclude and exclude.search(text):
+                    continue
+                hit = pattern.search(text)
                 if hit:
-                    yield item, "contains-shellfish", "STATED", f"names {hit.group(0).lower()}"
-                elif not veg and SEAFOOD.search(text):
-                    yield item, "contains-shellfish", "DERIVED", "unspecified seafood mix"
-                elif not veg and LAKSA.search(text):
-                    yield item, "contains-shellfish", "DERIVED", "laksa paste (belacan)"
-
-            if "contains-peanuts" not in tags and SATAY.search(text):
-                yield item, "contains-peanuts", "DERIVED", "satay sauce is peanut sauce"
+                    tags.add(tag)  # one tag per item, whichever rule fires first
+                    yield item, tag, rule_tier, f"{why} ({hit.group(0).lower()})"
 
 
-# The data files are hand-maintained in two different styles — one item per line
-# in some records, fully expanded in others — so a json.dumps() round-trip would
-# reformat whole files and bury 100 tag additions in a 3,400-line diff. Patch the
-# tags arrays in the raw text instead, and leave every other byte alone.
+# The data files are hand-maintained in two styles — one item per line in some
+# records, fully expanded in others — so a json.dumps() round-trip would
+# reformat whole files and bury the change. Patch the tags arrays in the raw
+# text instead, and leave every other byte alone.
 TAGS_ARRAY = re.compile(r'"tags"\s*:\s*\[[^\]]*\]')
+
+
+class Unpatchable(Exception):
+    """This record's tags can't be patched positionally — skip it, don't guess."""
 
 
 def patch_tags(raw, items, additions):
     """Rewrite only the tags arrays that gained a tag, preserving each one's
-    existing layout. `additions` maps an item's index to the tags to append."""
+    existing layout.
+
+    Refuses to patch a record whose items don't each carry a literal `tags`
+    array — mcdonalds.json omits the key entirely, and a positional patch
+    against a partial list would write tags onto the wrong dishes. Refusing is
+    the only safe answer; the caller reports it and moves on rather than
+    aborting the whole run half-written.
+    """
     spans = list(TAGS_ARRAY.finditer(raw))
     if len(spans) != len(items):
-        raise SystemExit(
-            f"refusing to patch: found {len(spans)} tags arrays for {len(items)} items"
-        )
+        raise Unpatchable(f"{len(spans)} tags arrays for {len(items)} items")
     out, last = [], 0
     for idx, span in enumerate(spans):
         if idx not in additions:
             continue
         tags = list(items[idx].get("tags", [])) + additions[idx]
-        body = ", ".join(json.dumps(t) for t in tags)
         if "\n" in span.group(0):
-            # Expanded style: match the indent of the line the array opens on.
             indent = " " * (span.start() - raw.rfind("\n", 0, span.start()) - 1)
             inner = f",\n{indent}  ".join(json.dumps(t) for t in tags)
             replacement = f'"tags": [\n{indent}  {inner}\n{indent}]'
         else:
-            replacement = f'"tags": [{body}]'
+            replacement = '"tags": [' + ", ".join(json.dumps(t) for t in tags) + "]"
         out.append(raw[last:span.start()])
         out.append(replacement)
         last = span.end()
@@ -132,29 +228,49 @@ def patch_tags(raw, items, additions):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write the tags (default: report only)")
+    ap.add_argument("--tier", choices=["STATED", "DERIVED"], help="only this tier")
+    ap.add_argument("--quiet", action="store_true", help="counts only")
     args = ap.parse_args()
 
-    total = 0
+    total = {"STATED": 0, "DERIVED": 0}
+    by_tag = {}
+    skipped = []
     for path in sorted(DATA.glob("*.json")):
         raw = path.read_text()
         record = json.loads(raw)
         items = [it for sec in record.get("menu", []) for it in sec["items"]]
         index = {id(it): i for i, it in enumerate(items)}
 
-        findings = list(audit(record))
+        findings = list(audit(record, args.tier))
         if not findings:
             continue
-        print(f"\n## {record['id']} ({len(findings)})")
+        if not args.quiet:
+            print(f"\n## {record['id']} ({len(findings)})")
         additions = {}
         for item, tag, tier, why in findings:
-            print(f"  {tier:<7} {tag:<19} {item['name']}  — {why}")
+            if not args.quiet:
+                print(f"  {tier:<7} {tag:<19} {item['name'][:42]:<42} — {why}")
             additions.setdefault(index[id(item)], []).append(tag)
-        total += len(findings)
+            total[tier] += 1
+            by_tag[tag] = by_tag.get(tag, 0) + 1
         if args.apply:
-            path.write_text(patch_tags(raw, items, additions))
+            try:
+                path.write_text(patch_tags(raw, items, additions))
+            except Unpatchable as exc:
+                # Don't count what we didn't write — the summary line is the
+                # only thing most runs are read for.
+                skipped.append(f"{record['id']}: {exc} — {len(findings)} tag(s) NOT applied")
+                for _, tag, tier, _ in findings:
+                    total[tier] -= 1
+                    by_tag[tag] -= 1
 
     verb = "applied" if args.apply else "missing (dry run)"
-    print(f"\n{total} tag(s) {verb}.")
+    print(f"\n{sum(total.values())} tag(s) {verb} — {total['STATED']} STATED, {total['DERIVED']} DERIVED")
+    for tag, n in sorted(by_tag.items(), key=lambda kv: -kv[1]):
+        print(f"  {tag:<22} {n}")
+    # Never silent: a record we couldn't write is reported, not swallowed.
+    for s in skipped:
+        print(f"  SKIPPED (not written) — {s}")
     return 0
 
 

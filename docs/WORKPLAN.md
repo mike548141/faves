@@ -28,11 +28,16 @@ creation; details marked `null`/`stub` are unverified.
       Churton and Spices Indian have no reliable online menu — need
       owner photos.*
 - [x] Tag dishes: dietary, allergens (nuts/peanuts especially), heat.
-      Only tag what the menu states or the restaurant confirms —
-      remember "no tag = not stated", never guess allergens. *Tagged
-      strictly from printed markers + peanut/nut mentions in item
-      descriptions. Shellfish and heat NOT auto-derived from dish
-      names — pending owner/menu confirmation.*
+      **Superseded 2026-08-09 by [ADR 0025](decisions/0025-infer-allergens-by-default.md)**:
+      this said "only tag what the menu states … never guess allergens".
+      The owner ruled the opposite — where a menu-writer hasn't stated an
+      allergen and we can be highly confident, **infer it**. A dish with
+      satay contains peanuts whether or not the menu says so. The rule
+      that survives: inference may only ever ADD a `contains-*` tag,
+      never `gf`/`df`/`v`/`vg` — inferring presence is fail-safe,
+      inferring absence would assert safety from a guess. "No tag = not
+      stated" still holds. Run `tools/tag_allergens.py` after any menu
+      transcription; `validate.py` warns if it's owed.
 - [ ] Fill `picks` for each restaurant (ask the repo owner).
 - [~] Set `verified` date and `status` (`menu-complete` → `verified`).
       *5 set to `menu-complete` (verified 2026-07-06); 2 remain `stub`

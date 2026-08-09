@@ -1,6 +1,6 @@
 # 0024 — Allergen tags may be derived from the dish name, in an enumerated set
 
-**Status**: accepted
+**Status**: superseded by [0025](0025-infer-allergens-by-default.md) (2026-08-09)
 **Date**: 2026-08-08
 
 ## Context

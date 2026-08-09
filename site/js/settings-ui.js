@@ -409,10 +409,11 @@ export function initSettingsUI() {
       const frag = document.createDocumentFragment();
       frag.append(
         el("strong", { textContent: "Always confirm for allergies. " }),
-        "Tags are what the venue stated, plus a few we add where the dish name " +
-          "makes it near-certain (satay is peanut, an unnamed seafood mix is " +
-          "shellfish). No tag still means not stated, never that a dish is free " +
-          "of it. This highlights and filters; it isn't a guarantee."
+        "Some tags come from the venue. Most we work out from the dish itself " +
+          "where it's near-certain — satay means peanuts, a schnitzel means " +
+          "wheat — because menus rarely say. We flag generously on purpose. " +
+          "No tag still means not stated, never that a dish is free of it. " +
+          "This highlights and filters; it isn't a guarantee."
       );
       return frag;
     })(),

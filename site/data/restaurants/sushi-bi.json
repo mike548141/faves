@@ -162,7 +162,7 @@
           "name": "Teriyaki Salmon Maki",
           "desc": null,
           "price": 1.8,
-          "tags": []
+          "tags": ["contains-gluten", "contains-soy"]
         },
         {
           "name": "Crispy Chicken Maki",
@@ -192,14 +192,16 @@
           "desc": null,
           "price": 1.8,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
           ]
         },
         {
           "name": "Teriyaki Chicken + Avocado Maki",
           "desc": null,
           "price": 1.8,
-          "tags": []
+          "tags": ["contains-gluten", "contains-soy"]
         },
         {
           "name": "Seaweed Salad + Vegetables Maki",
@@ -230,7 +232,9 @@
           "desc": "Tempura vegetable fritter with mixed vegetables.",
           "price": 1.8,
           "tags": [
-            "v"
+            "v",
+            "contains-gluten",
+            "contains-egg"
           ]
         },
         {
@@ -251,7 +255,7 @@
           "name": "Teriyaki Chicken Uramaki",
           "desc": null,
           "price": 1.8,
-          "tags": []
+          "tags": ["contains-gluten", "contains-soy"]
         },
         {
           "name": "Salmon Avocado Uramaki",
@@ -264,7 +268,8 @@
           "desc": "Crispy chicken uramaki topped with Sushi Bi spicy mayo.",
           "price": 2.5,
           "tags": [
-            "spicy-1"
+            "spicy-1",
+            "contains-egg"
           ]
         },
         {
@@ -299,13 +304,13 @@
           "name": "Aburi Salmon Nigiri",
           "desc": "Seared salmon with Sushi Bi's house teriyaki sauce.",
           "price": 2.5,
-          "tags": []
+          "tags": ["contains-gluten", "contains-soy"]
         },
         {
           "name": "Smoked Eel Nigiri",
           "desc": "Smoked eel dressed with Sushi Bi's house teriyaki sauce.",
           "price": 2.4,
-          "tags": []
+          "tags": ["contains-gluten", "contains-soy"]
         },
         {
           "name": "Prawn Nigiri",
@@ -330,7 +335,9 @@
           "desc": "Seared prawn with Sushi Bi's house teriyaki sauce.",
           "price": 2.5,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-soy"
           ]
         },
         {
@@ -338,7 +345,10 @@
           "desc": "Seared whole scallop with Sushi Bi's house teriyaki sauce and Japanese mayo.",
           "price": 2.5,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
           ]
         },
         {
@@ -373,7 +383,7 @@
           "name": "Inari Boat with Kanikama and Tobiko",
           "desc": "Tofu pocket filled with sushi rice, crab legs and fish roe.",
           "price": 2.5,
-          "tags": ["contains-shellfish"]
+          "tags": ["contains-shellfish", "contains-soy"]
         },
         {
           "name": "Rice Paper Roll Mixed Vegetables",
@@ -420,7 +430,7 @@
           "name": "Sushi Platter 2 (cocktail sushi)",
           "desc": "Cocktail-sized sushi; choose from salmon, teriyaki chicken and more.",
           "price": 84.0,
-          "tags": []
+          "tags": ["contains-gluten", "contains-soy"]
         },
         {
           "name": "Sushi Platter 3",

@@ -42,7 +42,7 @@
     {
       "section": "Entrée",
       "items": [
-        { "name": "Vegetable Samosa", "desc": null, "price": 7.0, "tags": ["v"] },
+        { "name": "Vegetable Samosa", "desc": null, "price": 7.0, "tags": ["v", "contains-gluten"] },
         { "name": "Mixed Vegetable Pakora", "desc": null, "price": 7.0, "tags": ["v"] },
         { "name": "Onion Bhaji", "desc": null, "price": 7.0, "tags": ["v"] },
         { "name": "Seekh Kabab", "desc": "Half $13.00 / full $21.00.", "price": 21.0, "tags": [] },
@@ -52,15 +52,15 @@
         { "name": "Tandoori Prawn", "desc": null, "price": 23.0, "tags": ["contains-shellfish"] },
         { "name": "Roasted Poppadom", "desc": "Each.", "price": 1.2, "tags": ["v"] },
         { "name": "Spicy Aloos", "desc": null, "price": 7.0, "tags": ["v"] },
-        { "name": "Paneer Tikka", "desc": null, "price": 16.0, "tags": ["v"] }
+        { "name": "Paneer Tikka", "desc": null, "price": 16.0, "tags": ["v", "contains-dairy"] }
       ]
     },
     {
       "section": "Chicken",
       "items": [
-        { "name": "Butter Chicken", "desc": "Barbecued boneless chicken cooked with a rich tomato and butter gravy.", "price": 19.0, "tags": [] },
-        { "name": "Chicken Tikka Masala", "desc": "Pieces of roasted boneless chicken marinated in spices and cooked in onion and tomato gravy.", "price": 19.0, "tags": [] },
-        { "name": "Chicken Korma", "desc": "Boneless chicken pieces cooked with a cashew nut gravy and cream.", "price": 19.0, "tags": ["contains-nuts"] },
+        { "name": "Butter Chicken", "desc": "Barbecued boneless chicken cooked with a rich tomato and butter gravy.", "price": 19.0, "tags": ["contains-dairy"] },
+        { "name": "Chicken Tikka Masala", "desc": "Pieces of roasted boneless chicken marinated in spices and cooked in onion and tomato gravy.", "price": 19.0, "tags": ["contains-dairy"] },
+        { "name": "Chicken Korma", "desc": "Boneless chicken pieces cooked with a cashew nut gravy and cream.", "price": 19.0, "tags": ["contains-nuts", "contains-dairy"] },
         { "name": "Mango Chicken", "desc": "Boneless chicken pieces cooked with mango pulp and a thick gravy.", "price": 19.0, "tags": [] },
         { "name": "Chicken Saag", "desc": "Chicken pieces cooked with spinach and ground spices.", "price": 19.0, "tags": [] },
         { "name": "Chicken Madras", "desc": "A spicy South Indian style chicken prepared with coconut cream and grated coconut.", "price": 19.0, "tags": [] },
@@ -75,7 +75,7 @@
       "items": [
         { "name": "Lamb Rogan Josh", "desc": "Boneless juicy lamb pieces cooked on low heat in traditional Kashmiri style.", "price": 20.0, "tags": [] },
         { "name": "Lamb Masala", "desc": "Lamb pieces cooked with spices and capsicum.", "price": 20.0, "tags": [] },
-        { "name": "Lamb Korma", "desc": "Tender lamb cooked with spices in a cashew nut sauce.", "price": 20.0, "tags": ["contains-nuts"] },
+        { "name": "Lamb Korma", "desc": "Tender lamb cooked with spices in a cashew nut sauce.", "price": 20.0, "tags": ["contains-nuts", "contains-dairy"] },
         { "name": "Lamb Madras", "desc": "Lamb chunks simmered in coconut milk and spices, tempered with fresh curry leaves and mustard seeds.", "price": 20.0, "tags": [] },
         { "name": "Lamb Saag", "desc": "Boneless lamb pieces cooked with spinach and spices.", "price": 20.0, "tags": [] },
         { "name": "Lamb Vindaloo", "desc": "The famous dish from Goa, made with tender lamb cooked in hot ground vindaloo paste.", "price": 20.0, "tags": [] },
@@ -97,16 +97,16 @@
     {
       "section": "Vegetarian",
       "items": [
-        { "name": "Saag Paneer", "desc": "Fresh homemade cottage cheese, spiced and cooked in spinach gravy.", "price": 17.0, "tags": ["v"] },
+        { "name": "Saag Paneer", "desc": "Fresh homemade cottage cheese, spiced and cooked in spinach gravy.", "price": 17.0, "tags": ["v", "contains-dairy"] },
         { "name": "Shabnam Curry", "desc": "Mushroom and green peas cooked with onion and cashew gravy.", "price": 16.0, "tags": ["v", "contains-nuts"] },
-        { "name": "Paneer Tikka Masala", "desc": "Pieces of cottage cheese marinated in spices and herbs, cooked with garlic, onion and tomato gravy.", "price": 17.0, "tags": ["v"] },
-        { "name": "Navrattan Korma", "desc": "Fresh assorted vegetables and dry fruits cooked in a creamy gravy.", "price": 17.0, "tags": ["v"] },
-        { "name": "Broccoli and Mushroom Korma", "desc": "Freshly chopped broccoli and mushroom cooked in cashew nut gravy.", "price": 16.0, "tags": ["v", "contains-nuts"] },
+        { "name": "Paneer Tikka Masala", "desc": "Pieces of cottage cheese marinated in spices and herbs, cooked with garlic, onion and tomato gravy.", "price": 17.0, "tags": ["v", "contains-dairy"] },
+        { "name": "Navrattan Korma", "desc": "Fresh assorted vegetables and dry fruits cooked in a creamy gravy.", "price": 17.0, "tags": ["v", "contains-dairy"] },
+        { "name": "Broccoli and Mushroom Korma", "desc": "Freshly chopped broccoli and mushroom cooked in cashew nut gravy.", "price": 16.0, "tags": ["v", "contains-nuts", "contains-dairy"] },
         { "name": "Dal Makhani", "desc": "Black lentils and kidney beans cooked in spices with a creamy gravy.", "price": 16.0, "tags": ["v"] },
-        { "name": "Malai Kofta", "desc": "Homemade cottage cheese, nuts, potato and spices, deep fried and served in a creamy gravy.", "price": 16.0, "tags": ["v", "contains-nuts"] },
+        { "name": "Malai Kofta", "desc": "Homemade cottage cheese, nuts, potato and spices, deep fried and served in a creamy gravy.", "price": 16.0, "tags": ["v", "contains-nuts", "contains-dairy"] },
         { "name": "Dal Fry", "desc": "Yellow lentils cooked with spices and cumin seeds.", "price": 16.0, "tags": ["v"] },
         { "name": "Aloo Gobhi", "desc": "Potato and cauliflower cooked in onion gravy with spices.", "price": 16.0, "tags": ["v"] },
-        { "name": "Matter Paneer", "desc": "Cottage cheese and garden peas cooked in onion gravy.", "price": 17.0, "tags": ["v"] },
+        { "name": "Matter Paneer", "desc": "Cottage cheese and garden peas cooked in onion gravy.", "price": 17.0, "tags": ["v", "contains-dairy"] },
         { "name": "Channa Masala", "desc": "Chickpeas cooked in a thick onion and tomato gravy.", "price": 16.0, "tags": ["v"] },
         { "name": "Mixed Vegetable Curry", "desc": "Fresh assorted vegetables cooked in onion and tomato gravy.", "price": 16.0, "tags": ["v"] }
       ]
@@ -123,43 +123,43 @@
     {
       "section": "Bombay Indo-Chinese",
       "items": [
-        { "name": "Chicken Fried Rice / Schezuan", "desc": "Rice sautéed with chicken, eggs, capsicum, soy sauce and vinegar.", "price": 18.0, "tags": [] },
-        { "name": "Chicken Noodles / Schezuan", "desc": "Egg noodles sautéed with chicken, capsicum, soy sauce and vinegar, finished with pepper.", "price": 17.0, "tags": [] },
-        { "name": "Vegetable Fried Rice / Schezuan", "desc": "Rice sautéed with onion, garlic, capsicum, carrots, soy sauce and vinegar.", "price": 15.0, "tags": ["v"] },
-        { "name": "Vegetable Noodles / Schezuan", "desc": "Noodles sautéed with garlic, carrot, cabbage, capsicum and soy sauce.", "price": 15.0, "tags": ["v"] },
-        { "name": "Chilli Chicken (dry / gravy)", "desc": "Boneless chicken deep fried and sautéed with onion, garlic, capsicum, soy sauce and vinegar.", "price": 23.0, "tags": [] },
-        { "name": "Egg Noodles / Schezuan / Egg Fried Rice", "desc": "Scrambled eggs sautéed with noodles or rice, garlic, ginger, onions, soy sauce, vinegar and coriander.", "price": 16.0, "tags": [] },
-        { "name": "Prawn Fried Rice / Schezuan", "desc": "Prawns sautéed with rice, garlic, ginger, soy sauce, vinegar and spring onions.", "price": 23.0, "tags": ["contains-shellfish"] },
-        { "name": "Prawn Noodles / Schezuan", "desc": "Noodles sautéed with prawns, chillies, soy sauce and vinegar.", "price": 23.0, "tags": ["contains-shellfish"] },
-        { "name": "Paneer Chilli (dry / gravy)", "desc": "Marinated cottage cheese deep fried and cooked with capsicum and soy sauce.", "price": 20.0, "tags": ["v"] }
+        { "name": "Chicken Fried Rice / Schezuan", "desc": "Rice sautéed with chicken, eggs, capsicum, soy sauce and vinegar.", "price": 18.0, "tags": ["contains-gluten", "contains-egg", "contains-soy"] },
+        { "name": "Chicken Noodles / Schezuan", "desc": "Egg noodles sautéed with chicken, capsicum, soy sauce and vinegar, finished with pepper.", "price": 17.0, "tags": ["contains-gluten", "contains-egg", "contains-soy"] },
+        { "name": "Vegetable Fried Rice / Schezuan", "desc": "Rice sautéed with onion, garlic, capsicum, carrots, soy sauce and vinegar.", "price": 15.0, "tags": ["v", "contains-gluten", "contains-soy"] },
+        { "name": "Vegetable Noodles / Schezuan", "desc": "Noodles sautéed with garlic, carrot, cabbage, capsicum and soy sauce.", "price": 15.0, "tags": ["v", "contains-gluten", "contains-soy"] },
+        { "name": "Chilli Chicken (dry / gravy)", "desc": "Boneless chicken deep fried and sautéed with onion, garlic, capsicum, soy sauce and vinegar.", "price": 23.0, "tags": ["contains-gluten", "contains-soy"] },
+        { "name": "Egg Noodles / Schezuan / Egg Fried Rice", "desc": "Scrambled eggs sautéed with noodles or rice, garlic, ginger, onions, soy sauce, vinegar and coriander.", "price": 16.0, "tags": ["contains-gluten", "contains-egg", "contains-soy"] },
+        { "name": "Prawn Fried Rice / Schezuan", "desc": "Prawns sautéed with rice, garlic, ginger, soy sauce, vinegar and spring onions.", "price": 23.0, "tags": ["contains-shellfish", "contains-gluten", "contains-soy"] },
+        { "name": "Prawn Noodles / Schezuan", "desc": "Noodles sautéed with prawns, chillies, soy sauce and vinegar.", "price": 23.0, "tags": ["contains-shellfish", "contains-gluten", "contains-soy"] },
+        { "name": "Paneer Chilli (dry / gravy)", "desc": "Marinated cottage cheese deep fried and cooked with capsicum and soy sauce.", "price": 20.0, "tags": ["v", "contains-gluten", "contains-dairy", "contains-soy"] }
       ]
     },
     {
       "section": "Specials",
       "items": [
-        { "name": "Combo", "desc": "Half curry, half rice, plain naan and a cold drink can (without drink $12.00). Butter Chicken or Lamb Rogan Josh. Naan upgrade to other breads +$1.00, stuffed naan +$2.00.", "price": 14.0, "tags": [] },
+        { "name": "Combo", "desc": "Half curry, half rice, plain naan and a cold drink can (without drink $12.00). Butter Chicken or Lamb Rogan Josh. Naan upgrade to other breads +$1.00, stuffed naan +$2.00.", "price": 14.0, "tags": ["contains-gluten", "contains-dairy"] },
         { "name": "Goat Curry", "desc": null, "price": 23.0, "tags": [] },
-        { "name": "Butter Chicken Samosa", "desc": "Two for $10.00.", "price": null, "tags": [] }
+        { "name": "Butter Chicken Samosa", "desc": "Two for $10.00.", "price": null, "tags": ["contains-gluten", "contains-dairy"] }
       ]
     },
     {
       "section": "Tandoori Breads",
       "items": [
-        { "name": "Plain Roti", "desc": "Wholemeal flour bread baked in the tandoor.", "price": 3.5, "tags": ["v"] },
-        { "name": "Butter Roti", "desc": "Wholemeal flour bread with butter.", "price": 4.0, "tags": ["v"] },
-        { "name": "Garlic Roti", "desc": "Wholemeal flour bread with garlic.", "price": 4.0, "tags": ["v"] },
-        { "name": "Plain Naan", "desc": "Bread made of refined flour baked in the tandoor.", "price": 3.5, "tags": ["v"] },
-        { "name": "Butter Naan", "desc": "Refined flour bread with butter.", "price": 4.0, "tags": ["v"] },
-        { "name": "Garlic Naan", "desc": "Bread baked in the tandoor with garlic.", "price": 4.0, "tags": ["v"] },
-        { "name": "Plain Parantha", "desc": "Flaky wholemeal bread touched with butter.", "price": 4.0, "tags": ["v"] },
-        { "name": "Onion Kulcha", "desc": "Naan stuffed with onion.", "price": 5.5, "tags": ["v"] },
-        { "name": "Potato Kulcha", "desc": "Naan stuffed with potato.", "price": 5.5, "tags": ["v"] },
-        { "name": "Vegetable Paratha", "desc": "Naan baked in the tandoor with fresh chopped vegetables.", "price": 5.5, "tags": ["v"] },
-        { "name": "Keema Naan", "desc": "Naan stuffed with medium spiced lamb mince.", "price": 5.5, "tags": [] },
-        { "name": "Cheese Naan", "desc": "Naan stuffed with cheese, finished with butter.", "price": 5.5, "tags": ["v"] },
-        { "name": "Cheese and Garlic Naan", "desc": "Naan stuffed with cheese and garlic, finished with butter.", "price": 5.5, "tags": ["v"] },
-        { "name": "Peshawari Naan", "desc": "Naan stuffed with chopped dry fruits and nuts.", "price": 5.5, "tags": ["v", "contains-nuts"] },
-        { "name": "Chicken Naan", "desc": "Naan stuffed with chopped roasted chicken.", "price": 5.5, "tags": [] }
+        { "name": "Plain Roti", "desc": "Wholemeal flour bread baked in the tandoor.", "price": 3.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Butter Roti", "desc": "Wholemeal flour bread with butter.", "price": 4.0, "tags": ["v", "contains-gluten", "contains-dairy"] },
+        { "name": "Garlic Roti", "desc": "Wholemeal flour bread with garlic.", "price": 4.0, "tags": ["v", "contains-gluten"] },
+        { "name": "Plain Naan", "desc": "Bread made of refined flour baked in the tandoor.", "price": 3.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Butter Naan", "desc": "Refined flour bread with butter.", "price": 4.0, "tags": ["v", "contains-gluten", "contains-dairy"] },
+        { "name": "Garlic Naan", "desc": "Bread baked in the tandoor with garlic.", "price": 4.0, "tags": ["v", "contains-gluten"] },
+        { "name": "Plain Parantha", "desc": "Flaky wholemeal bread touched with butter.", "price": 4.0, "tags": ["v", "contains-gluten", "contains-dairy"] },
+        { "name": "Onion Kulcha", "desc": "Naan stuffed with onion.", "price": 5.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Potato Kulcha", "desc": "Naan stuffed with potato.", "price": 5.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Vegetable Paratha", "desc": "Naan baked in the tandoor with fresh chopped vegetables.", "price": 5.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Keema Naan", "desc": "Naan stuffed with medium spiced lamb mince.", "price": 5.5, "tags": ["contains-gluten"] },
+        { "name": "Cheese Naan", "desc": "Naan stuffed with cheese, finished with butter.", "price": 5.5, "tags": ["v", "contains-gluten", "contains-dairy"] },
+        { "name": "Cheese and Garlic Naan", "desc": "Naan stuffed with cheese and garlic, finished with butter.", "price": 5.5, "tags": ["v", "contains-gluten", "contains-dairy"] },
+        { "name": "Peshawari Naan", "desc": "Naan stuffed with chopped dry fruits and nuts.", "price": 5.5, "tags": ["v", "contains-nuts", "contains-gluten"] },
+        { "name": "Chicken Naan", "desc": "Naan stuffed with chopped roasted chicken.", "price": 5.5, "tags": ["contains-gluten"] }
       ]
     },
     {
@@ -186,14 +186,14 @@
       "items": [
         { "name": "1.5L Coke, Fanta, Sprite, L&P or Diet Coke", "desc": null, "price": 4.5, "tags": [] },
         { "name": "Can drinks", "desc": null, "price": 2.5, "tags": [] },
-        { "name": "Bundaberg Ginger Beer", "desc": null, "price": 3.5, "tags": [] },
+        { "name": "Bundaberg Ginger Beer", "desc": null, "price": 3.5, "tags": ["contains-gluten"] },
         { "name": "Maaza Mango Drink", "desc": null, "price": 5.5, "tags": [] }
       ]
     },
     {
       "section": "Desserts",
       "items": [
-        { "name": "Mango Kulfi", "desc": "Indian ice cream.", "price": 5.5, "tags": ["v"] }
+        { "name": "Mango Kulfi", "desc": "Indian ice cream.", "price": 5.5, "tags": ["v", "contains-dairy"] }
       ]
     }
   ]

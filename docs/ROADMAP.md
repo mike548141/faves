@@ -387,10 +387,42 @@ STATED tier, incl. **oyster sauce**), 36 derived from an enumerated rule set
 disclosure copy was changed in the same commit so the app stops claiming every
 tag is venue-stated. `tools/tag_allergens.py` is re-runnable and now warns from
 `validate.py`, because the gap was created by hand-tagging record by record.
-⚑ **Deliberately deferred** (ADR 0024's rejected alternative): a `may-contain`
-tier that shows a reader *which* tier a tag came from. Right in principle, but
-it touches the vocabulary, the render and the avoid-matching — all
-safety-critical. Revisit if per-dish provenance is ever wanted.
+✅ **Inference became the default — 2026-08-09
+([ADR 0025](decisions/0025-infer-allergens-by-default.md), superseding 0024).**
+🎯 **Owner ruling**, verbatim: *"it is preferable that we infer information like
+allergens where the menu writer hasn't bothered to define it and we have a high
+confidence that we are correct."* That inverts 0024's narrow exception — the
+burden now falls on *not* tagging. **542 tags applied** (251 STATED, 291
+DERIVED) across gluten, dairy, egg, soy, nuts and sesame; before this the corpus
+had 45 gluten tags across 1,062 dishes, so the filter was near-useless for
+anyone avoiding them. **The hard limit**: inference only ever *adds* a
+`contains-*`, never `gf`/`df`/`v`/`vg` — inferring presence is fail-safe,
+inferring absence asserts safety from a guess. Three guards, each earned from a
+real dry-run false positive: per-rule exclusions ("rice noodles" aren't wheat,
+"oat milk" isn't dairy, "pumpkin pie spice" isn't a pie), curation outranking a
+pattern (a `gf` dish never gains `contains-gluten`), and paid add-ons not
+counting as ingredients.
+⚑ **Now the strongest queued follow-up here** — a `may-contain` tier that shows
+a reader *which* tier a tag came from. Deferred at 36 derived tags (ADR 0024);
+at 291 it is more attractive, and it's the right answer if generous flagging
+ever reads as wallpaper. Still touches the vocabulary, the render and the
+avoid-matching — all safety-critical — so it needs its own session. `[M]`,
+unclaimed.
+
+✅ **Menu prose tidy-up — Takeaway @ Churton, 2026-08-09** (owner steer: *"where
+the menu writer has not used the best prose we should tidy that up… without
+losing the definition"*). Six section headings shortened — "Curry on Steamed
+Rice with Vegetables" → **"Curry on Rice"**, "Black Bean Sauce with Vegetable on
+Rice" → **"Black Bean Dishes"**, "Chow Mein (noodles)" → **"Chow Mein"** — with
+the detail moved into **41 dish descriptions** that had none, so nothing is
+lost. Dish *names* were deliberately left alone: `cart.js` keys an order line by
+name and the order sheet shows it without its section, so "Chicken Curry on
+Rice" has to stand on its own. **Left alone on purpose**: "Sweet and Sour Sauce"
+(item 128, Orange Beef, sits in it and isn't a sweet-and-sour dish, so a blanket
+description would be false) and R & S's Malaysian headings ("Kua Teaw Dishes",
+"Chew Kua Tew") — those are dish terms, and rewriting them risks mangling the
+language rather than tidying prose. 🎯 **Owner call**: R & S's spelling looks
+like *char kway teow*; worth confirming against the shop before touching. `[S]`
 
 **Still open:**
 

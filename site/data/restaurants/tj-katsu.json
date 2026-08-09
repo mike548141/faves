@@ -393,7 +393,8 @@
           "desc": "Ball-shaped Japanese octopus pancake — Japan's best-known street food.",
           "price": 10.9,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-gluten"
           ]
         }
       ]
@@ -460,7 +461,8 @@
           "desc": "Pan-fried teriyaki chicken on rice with salad and miso soup.",
           "price": 18.9,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-gluten"
           ]
         },
         {
@@ -468,7 +470,8 @@
           "desc": "Pan-fried teriyaki beef on rice with salad and miso soup.",
           "price": 18.9,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-gluten"
           ]
         },
         {
@@ -485,7 +488,8 @@
           "desc": "Pan-fried teriyaki tofu on rice with salad and miso soup.",
           "price": 17.9,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-gluten"
           ]
         },
         {
@@ -493,7 +497,8 @@
           "desc": "Pan-fried teriyaki salmon on rice with miso soup.",
           "price": 19.9,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-gluten"
           ]
         },
         {
@@ -515,7 +520,8 @@
           "price": 23.9,
           "tags": [
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-egg"
           ]
         },
         {
@@ -523,7 +529,8 @@
           "desc": "Pan-fried teriyaki chicken with teriyaki beef, sushi, salad, rice and miso soup.",
           "price": 25.9,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-gluten"
           ]
         },
         {
@@ -532,7 +539,8 @@
           "price": 25.9,
           "tags": [
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-egg"
           ]
         },
         {
@@ -540,7 +548,8 @@
           "desc": "Roasted teriyaki eel with teriyaki beef, sushi, salad, rice and miso soup.",
           "price": 25.9,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-gluten"
           ]
         },
         {
@@ -549,7 +558,8 @@
           "price": 29.9,
           "tags": [
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-egg"
           ]
         }
       ]
