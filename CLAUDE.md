@@ -107,11 +107,20 @@ python3 tools/validate.py     # data validates against the schema
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 node --test                   # JS unit tests (pure logic); no npm install needed
+node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 ```
 
 Exercise the change in a real browser at mobile width. JSON data must
 validate against the schema in `docs/ARCHITECTURE.md` — malformed menu
 data is the most likely regression.
+
+`device_check.mjs` drives a real browser: it serves `site/`, launches
+Chrome headless on a throwaway profile (a fresh `--user-data-dir` is the
+only reliable way past a stale service worker) and works the real Settings
+UI on a menu page — flag an allergen, switch profile — asserting the
+warnings, hearts and ratings re-apply live with no reload. It is dev
+tooling only; nothing it needs ships in `site/`. Run it after touching
+`menu.js`, `dietary.js`, `settings*.js` or `profiles.js`.
 
 ## Working conventions
 

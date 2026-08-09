@@ -28,7 +28,19 @@ dependency, only to measure:
 ```sh
 npx lighthouse http://localhost:8080/index.html \
   --form-factor=mobile --screenEmulation.mobile   # quality gate
+
+node tools/device_check.mjs                       # live-safety browser check
 ```
+
+`device_check.mjs` is the scripted stand-in for a manual phone test of the
+safety-critical live re-apply: it serves `site/`, launches Chrome headless
+against a throwaway profile (a fresh `--user-data-dir` is the only reliable
+way past a stale service worker), then drives the real Settings UI on a
+restaurant menu — flag an allergen, switch profile — and asserts the
+warnings, hearts and ratings re-apply with no reload. Exit 0 = pass, 1 = an
+assertion failed, 2 = the harness could not run. Needs Chrome, no install.
+Run it after touching `menu.js`, `dietary.js`, `settings*.js` or
+`profiles.js`; `--help` lists the options.
 
 ## What makes a good change
 
