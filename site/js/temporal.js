@@ -119,6 +119,87 @@ export function verificationText(record, dateText) {
   return v.method ? `${v.label}, ${dateText}` : `Verified ${dateText}`;
 }
 
+// ————————————————— Does this menu still need a refresh? (ADR 0036) ———————————
+// Owner's ruling, 2026-08-09: a reading counts as a check when it came from the
+// shop itself — "not third parties like delivereasy, uber etc". So the method
+// decides trust, and the date decides whether that trust has aged out.
+//
+// The trusted four are first-party by construction: someone stood in the shop,
+// held the shop's own printed card, read the shop's own site, or rang and was
+// told. The two excluded ones are somebody else's transcription of the shop —
+// and on a delivery app the prices are commonly marked up, which is a *biased*
+// error, not a random one (ARCHITECTURE, "Derivation").
+export const TRUSTED_VERIFY_METHODS = ["in-store", "paper-menu", "official-site", "phone"];
+
+// HOUSE DEFAULT, NOT AN OWNER NUMBER. The owner ruled which methods count; he
+// did not set an age. 12 months is the agent's call and is meant to be retuned
+// here, on this one line, without touching any other code.
+//
+// Why 12: NZ hospitality repricing runs roughly annually, so a year is the
+// interval after which a menu is genuinely likely to have moved. And why not 6:
+// with 31 records the corpus is refreshed in occasional bursts, so a six-month
+// limit would re-flag nearly all of it within two refresh cycles — recreating
+// the "caveat on everything" state that made the caveat unreadable and that
+// ADR 0036 exists to end. A limit that always fires carries no information.
+export const VERIFY_MAX_AGE_MONTHS = 12;
+
+const pad2 = (n) => String(n).padStart(2, "0");
+
+/** `iso` (YYYY-MM-DD) shifted back n whole months, clamping to a real day
+ *  (31 Mar − 1 month → 28/29 Feb). Calendar arithmetic on strings, so no Date
+ *  object and no timezone can slide the answer by a day. */
+function minusMonths(iso, n) {
+  const [y, m, d] = iso.split("-").map(Number);
+  const total = y * 12 + (m - 1) - n;
+  const ny = Math.floor(total / 12);
+  const nm = (total % 12) + 1;
+  const lastDay = nm === 2 && isLeap(ny) ? 29 : DAYS_IN_MONTH[nm - 1];
+  return `${ny}-${pad2(nm)}-${pad2(Math.min(d, lastDay))}`;
+}
+
+/**
+ * Should the menu screen show its "needs a refresh" caveat, and why?
+ * Pure — `asOf` is passed in, never read from a clock here.
+ *
+ * Returns `{ show, reason, method, date }`. The four reasons stay distinct
+ * because they are four different things to tell a reader, and collapsing them
+ * is exactly the §9 "unknown is not none" failure this replaces — one null was
+ * standing for both "never read" and "read from a source we don't trust":
+ *
+ *   • "never"          no reading at all           → caveat
+ *   • "unknown-method" a date, but no method       → caveat (see below)
+ *   • "untrusted"      read, but not from the shop → caveat
+ *   • "stale"          shop-sourced, but too old   → caveat
+ *   • reason null      shop-sourced and recent     → no caveat
+ *
+ * AN UNKNOWN METHOD CAVEATS. Trust here is a positive claim — "this came from
+ * the shop" — and a record that never recorded how it was read cannot support
+ * it. Reading absence as trust would let the weakest records (the ones from
+ * before we tracked provenance) render as the strongest. It is still not the
+ * same state as "never read", which is why it keeps its own reason: the record
+ * *was* read, we just cannot say from where. No such record exists today —
+ * validate.py warns on the shape — so this is the safe default for one that
+ * appears, not a class of thing we are papering over.
+ */
+export function refreshCaveat(record, asOf = todayNZ()) {
+  const v = verification(record);
+  if (!v) return { show: true, reason: "never", method: null, date: null };
+  if (!v.method) return { show: true, reason: "unknown-method", method: null, date: v.date };
+  if (!TRUSTED_VERIFY_METHODS.includes(v.method)) {
+    return { show: true, reason: "untrusted", method: v.method, date: v.date };
+  }
+  // A partial date widens to its EARLIEST day: "read sometime in 2025" cannot
+  // claim the freshness of 2025-12-31. Exactly at the limit is still fresh —
+  // the caveat is for a reading older *than* the limit.
+  const stale = startOf(v.date) < minusMonths(asOf, VERIFY_MAX_AGE_MONTHS);
+  return {
+    show: stale,
+    reason: stale ? "stale" : null,
+    method: v.method,
+    date: v.date,
+  };
+}
+
 /**
  * Today in Pacific/Auckland as "YYYY-MM-DD". The venue's clock, not the
  * viewer's — same call as hours.js makes, for the same reason: a guest

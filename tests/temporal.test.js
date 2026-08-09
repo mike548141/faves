@@ -19,8 +19,11 @@ import {
   isGone,
   todayNZ,
   VERIFY_METHODS,
+  TRUSTED_VERIFY_METHODS,
+  VERIFY_MAX_AGE_MONTHS,
   verification,
   verificationText,
+  refreshCaveat,
 } from "../site/js/temporal.js";
 
 // ---------- partial dates ----------
@@ -437,4 +440,101 @@ test("resolveRecord: priceSeries carries the venue's derivation onto each readin
   const item = resolveRecord(r, "2026-08-08").menu[0].items[0];
   assert.equal(item.price, 17.5, "the screen still sees a plain number");
   assert.deepEqual(item.priceSeries.map((e) => e.method), ["paper-menu", "paper-menu"]);
+});
+
+// ---------- the refresh caveat: read the method, not the date (ADR 0036) ----------
+
+test("refreshCaveat: never read is its own reason, not just 'unverified'", () => {
+  assert.deepEqual(refreshCaveat({ verified: null }, "2026-08-09"), {
+    show: true,
+    reason: "never",
+    method: null,
+    date: null,
+  });
+  assert.equal(refreshCaveat({}, "2026-08-09").reason, "never");
+  assert.equal(refreshCaveat(null, "2026-08-09").reason, "never");
+});
+
+test("refreshCaveat: the owner's split — the shop's own word counts, a middleman's does not", () => {
+  // Read today, by each of the six methods in turn.
+  const on = (m) => refreshCaveat({ verified: "2026-08-09", verifiedBy: m }, "2026-08-09");
+  for (const m of ["in-store", "paper-menu", "official-site", "phone"]) {
+    assert.equal(on(m).show, false, `${m} is a check`);
+    assert.equal(on(m).reason, null);
+  }
+  for (const m of ["delivery-app", "third-party"]) {
+    assert.equal(on(m).show, true, `${m} is not a check`);
+    assert.equal(on(m).reason, "untrusted");
+    assert.equal(on(m).method, m, "the UI needs to name the source it distrusts");
+  }
+  // Every method in the closed set is classified: none falls through unruled.
+  for (const m of VERIFY_METHODS) {
+    assert.equal(
+      TRUSTED_VERIFY_METHODS.includes(m),
+      !on(m).show,
+      `${m} must be on exactly one side of the ruling`
+    );
+  }
+});
+
+test("refreshCaveat: an untrusted reading stays untrusted however fresh or old", () => {
+  const fresh = refreshCaveat({ verified: "2026-08-09", verifiedBy: "delivery-app" }, "2026-08-09");
+  const old = refreshCaveat({ verified: "2019-01-01", verifiedBy: "delivery-app" }, "2026-08-09");
+  assert.equal(fresh.reason, "untrusted");
+  assert.equal(old.reason, "untrusted", "the method is decided before the age, and it is enough");
+});
+
+test("refreshCaveat: a date with no method caveats, and says so distinctly", () => {
+  const c = refreshCaveat({ verified: "2026-08-09" }, "2026-08-09");
+  assert.equal(c.show, true, "absence of a method is not evidence of a trusted one");
+  assert.equal(c.reason, "unknown-method");
+  assert.equal(c.date, "2026-08-09", "we still know WHEN — 'unknown' is not 'none'");
+  // A method off the closed set is the same state: we cannot read it.
+  assert.equal(refreshCaveat({ verified: "2026-08-09", verifiedBy: "vibes" }, "2026-08-09").reason,
+    "unknown-method");
+});
+
+test("refreshCaveat: the age limit is 12 months and the boundary day is still fresh", () => {
+  assert.equal(VERIFY_MAX_AGE_MONTHS, 12, "a retune is a deliberate act — ADR 0036");
+  const at = (d) => refreshCaveat({ verified: d, verifiedBy: "in-store" }, "2026-08-09");
+  assert.equal(at("2025-08-10").show, false, "just inside a year");
+  assert.equal(at("2025-08-09").show, false, "exactly 12 months is not longer ago than 12 months");
+  assert.equal(at("2025-08-08").show, true, "one day past the limit");
+  assert.equal(at("2025-08-08").reason, "stale");
+  assert.equal(at("2025-08-08").method, "in-store", "still a trusted source, just an old one");
+});
+
+test("refreshCaveat: month arithmetic clamps rather than rolling over a short month", () => {
+  // 2027-02-29 does not exist; 12 months back from 2027-02-28 is 2026-02-28.
+  assert.equal(refreshCaveat({ verified: "2026-02-28", verifiedBy: "phone" }, "2027-02-28").show,
+    false);
+  assert.equal(refreshCaveat({ verified: "2026-02-27", verifiedBy: "phone" }, "2027-02-28").show,
+    true);
+  // Crossing a year boundary backwards.
+  assert.equal(refreshCaveat({ verified: "2025-12-31", verifiedBy: "phone" }, "2026-08-09").show,
+    false);
+});
+
+test("refreshCaveat: a partial date claims only its earliest day", () => {
+  // "read sometime in 2025" must not borrow the freshness of 31 Dec 2025.
+  assert.equal(refreshCaveat({ verified: "2025", verifiedBy: "paper-menu" }, "2026-08-09").reason,
+    "stale");
+  assert.equal(refreshCaveat({ verified: "2026", verifiedBy: "paper-menu" }, "2026-08-09").show,
+    false, "2026-01-01 is inside the year");
+});
+
+test("refreshCaveat: a future-dated reading is not stale", () => {
+  assert.equal(refreshCaveat({ verified: "2026-09-01", verifiedBy: "in-store" }, "2026-08-09").show,
+    false);
+});
+
+test("refreshCaveat: the corpus's own records land where the ruling says", () => {
+  // The four dated records as they ship, read on the day this policy landed.
+  const asOf = "2026-08-09";
+  assert.equal(refreshCaveat({ verified: "2026-08-07", verifiedBy: "in-store" }, asOf).show, false);
+  assert.equal(refreshCaveat({ verified: "2026-08-08", verifiedBy: "paper-menu" }, asOf).show, false);
+  assert.equal(refreshCaveat({ verified: "2026-08-08", verifiedBy: "official-site" }, asOf).show,
+    false, "TJ Katsu and Sushi Bi — the shop's own site, read two days ago");
+  // …and every other record, which has never been read at all.
+  assert.equal(refreshCaveat({ verified: null }, asOf).show, true);
 });
