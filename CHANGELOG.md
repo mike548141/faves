@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A security contact at `/.well-known/security.txt`** — the standard place a
+  researcher looks before reporting a problem. It points at GitHub security
+  advisories, which is why it waited for the repo to go public: while the repo
+  was private that URL returned a 404, and a dead contact is worse than none.
 - **About now shows which version you're on** — the app and the menu data
   separately, since they update independently. The numbers are read from what
   your device has actually stored offline, not from what the code claims, so a

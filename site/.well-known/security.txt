@@ -1,0 +1,6 @@
+# Faves — https://lets-eat.myspot.nz
+# Static, offline-first PWA. No backend, no accounts, no third-party code.
+Contact: https://github.com/mike548141/faves/security/advisories/new
+Policy: https://github.com/mike548141/faves/blob/main/SECURITY.md
+Preferred-Languages: en
+Expires: 2027-08-09T00:00:00.000Z
