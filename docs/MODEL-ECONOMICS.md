@@ -6,31 +6,47 @@ sessions token-efficient. Adopted from the `ros`/`tiki` repo's policy
 public API list prices — re-check them if this is more than a few months
 old.
 
-## The two billing pools
+## Billing states — corrected 2026-08-09
 
-| Pool | Models | Marginal cost of a token |
-|---|---|---|
-| Plan-included | Opus 4.8 (and Sonnet/Haiku) | Zero dollars, but draws down plan usage limits |
-| Usage-billed | Fable 5 | Real money: $10/M input, $50/M output (thinking bills as output and is always on) |
+The 2026-07-08 version of this file claimed a two-pool split with "Fable =
+usage-billed, real money". **That was falsified in July 2026** when the
+provider moved Fable into the operator's plan; the correction is atelier
+decision `2026-07-23-0001` and the reworked `atelier docs/method/ECONOMICS.md`,
+which this section now follows rather than restates in full:
 
-Reference prices (per M tokens, in/out): Fable 5 $10/$50 · Opus 4.8
-$5/$25 · Sonnet 5 $3/$15 · Haiku 4.5 $1/$5. Cache reads ≈ 0.1× input
-price; cache writes ≈ 1.25× (5-minute TTL).
+- **Billing state belongs to the marginal token, not the model.** Three
+  states — plan-included · plan-included-capped · usage-billed. As of
+  2026-07, Fable is **plan-included under a capped share** and draws the
+  shared allowance faster than other models (premium draw); past the cap
+  its next token becomes usage-billed. Read the state off the *current
+  plan* (entitlements live in the estate root), never off habit or this
+  file.
+- **The cap is a stop-or-pay boundary, never a down-tier trigger.**
+  Quality never decays because the tank is low: stop/delay the work, or
+  the owner chooses to pay. (Owner ruling, quoted in the atelier
+  decision.)
 
-## Who does what
+Reference API list prices (per M tokens, in/out — for sizing, not billing
+state): Fable 5 $10/$50 · Opus 4.8 $5/$25 · Sonnet 5 $3/$15 · Haiku 4.5
+$1/$5. Cache reads ≈ 0.1× input; cache writes ≈ 1.25×.
 
-- **Opus 4.8 (plan)** — the workhorse. Building screens, menu-data
-  transcription, the service worker, tests, docs, exploration, long
-  agentic sessions — anything mechanical or high-volume. This is a small
-  static site: almost all of the work lives here. Burning plan quota on
-  iteration is fine; burning Fable dollars on it is not.
-- **Fable 5 (usage-billed)** — the reviewer and hard-problem solver:
-  pre-launch code/doc review, accessibility and performance sign-off,
-  and debugging Opus is stuck on. **Keep Fable sessions short and
-  pre-scoped** — hand it the diff / specific files, not the repo. Ask for
-  findings, not rewrites; apply the fixes back on Opus. A scoped review
-  (~100k in, ~20k out) is ≈ $2; an unscoped repo-walk costs several times
-  that for no extra insight.
+## Who does what — risk assigns the seats; billing only prices them
+
+- **The orchestrator is the owner's choice per session** (often Fable; his
+  call, 2026-08-09), and it may build with **any** model — the rule is to
+  use the model that is *capable of* and *matched to the risk of* the work,
+  per atelier ECONOMICS/AUTONOMY, not a fixed mapping.
+- **Building** — screens, menu transcription, the service worker, tests,
+  docs, exploration, long agentic sessions — belongs on the cheapest-
+  drawing tier that genuinely does it (usually Opus here; Sonnet/Haiku are
+  the third seat for fan-out reads and routine well-floored items).
+- **Review and hard problems** belong to the capable tier, whatever its
+  current billing state. **Keep reviews short and pre-scoped** — hand over
+  the diff / specific files, not the repo; ask for findings, not rewrites;
+  apply fixes back on the building model.
+- **Hand-ups are noisy.** A model past its depth states what exceeded it
+  and routes up (workhorse → capable tier → owner). Silent stalls and
+  quietly degraded attempts are the forbidden failure mode.
 - **`/code-review ultra`** is a billed, multi-agent cloud review — treat
   it like a Fable session: run it on a focused branch/diff before launch,
   not speculatively.

@@ -1153,6 +1153,19 @@ because we have never established it for any venue. Filling it is content work
 (the owner or a venue's own site), not a build. It would unlock "in Faves since
 July 2026" and "trading since 1998" lines, and an honest "new to Faves" badge.
 
+- [ ] **f. `verified` must carry its derivation** `[M][schema]` — queued
+  2026-08-09 by upstream doctrine (atelier PRINCIPLES §9, Mike ruled the
+  retrofit binding 2026-08-09; faves' bare nullable `verified` flag is the
+  prompting case named in the ruling). A stored conclusion carries *when it
+  was established and by what method* — a date alone cannot distinguish an
+  owner-confirmed price from a scraper's guess, and staleness only becomes
+  computable when each value knows its age and acquisition method. Shape:
+  `verified` grows date + method (owner-in-store / official-site /
+  paper-menu / phone …), `validate.py` enforces, ADR records the vocabulary.
+  **No backfill** — dates we no longer have stay honestly absent; the clock
+  starts when the field lands. Rides naturally with the next schema touch
+  (Theme 14a) or stands alone.
+
 ## Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)
 
 **The two asks, raw (owner):** *"the ability to customise a dish e.g. no tomato
