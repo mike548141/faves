@@ -702,6 +702,26 @@ dependency.
   collisions; none touched. Verified live in headless Chrome: the order
   sheet and share sheet titles render with `text-transform: none`, and
   `.order-block-head` keeps its own uppercase label styling untouched.
+- ~~**"Your data" panel is outgrowing its sheet**~~ ✅ **fixed 2026-08-09**
+  (wt: faves-yourdata) — measured first (390 px, real Chrome via
+  `device_check.mjs`'s CDP harness): **1009 px, 15 children**, not the
+  roadmap's ~980 px estimate — grown further since ADR 0030 flagged it at
+  778 px. Split by data model, not the roadmap's file/cache-shaped "Your
+  data" / "Storage & refresh": export, import and transfer stay together
+  under "Your data" (all three move the personal data blob, none
+  destructive without its own confirm); refresh (app cache) and reset
+  (preferences) move to a new "Refresh & reset" row — they share no data
+  model, but both are destructive-with-confirm housekeeping distinct from
+  backup/restore/transfer. Measured after: **607 px** and **449 px**, both
+  well under the ~790 px the sheet shows. New row summaries name only their
+  own panel's actions ("Save a copy, bring it back, or hand it to another
+  device"; "Refresh the offline copy, or reset your preferences") — neither
+  needs an "and the rest". Every confirm guard (import review, replace,
+  reset, refresh) verified working post-move: 13/13 functional checks and
+  the existing `device_check.mjs` safety-reapply suite (15/15) both pass in
+  headless Chrome; 483 unit tests unaffected (no pure logic changed). New
+  reo key `settings.refreshResetTitle` left `// draft` for the Phase 7
+  review. Full reasoning, including the rejected splits, in ADR 0033.
 
 ## Theme 13 — What the time dimension unlocks
 

@@ -182,3 +182,9 @@ deliberation those compact docs omit.
   read when there is no controller or it predates the protocol, so it is
   never worse than before. Narrowing the cache-name heuristic was rejected:
   it is still a guess, only a narrower one.
+- [0033](0033-your-data-splits-from-refresh-and-reset.md) — **"Your data"
+  splits into two rows**: the panel ADR 0030 flagged as tallest in Settings
+  (1009 px, five actions in one summary) splits by data model, not the
+  roadmap's file/cache-shaped cut — "Your data" keeps export/import/transfer
+  (the personal data blob), "Refresh & reset" takes the app-cache refresh and
+  the preferences reset (neither touches that blob). 607 px and 449 px after.

@@ -125,6 +125,14 @@ const MI = {
   "data.chooseFile": "Tīpakohia he kōnae", // draft — "choose a file"
   "data.transferTitle": "Whakawhitia ki tētahi atu pūrere", // draft
   "data.transferButton": "Hangaia he hono whakawhiti", // draft — "make a transfer link"
+  // Row title for the panel Theme 15 split "Your data" into: refresh the
+  // app's cached menus/code, or reset this profile's preferences. Paired
+  // with "settings.langTitle"/"settings.unitsTitle" above, not "data.*" —
+  // it's an index-row title, not part of the personal-data-blob group.
+  // whakahou = renew/refresh/update (per maoridictionary.co.nz, used already
+  // for "update.refresh" above); tautuhi = to set/specify, the same root as
+  // "Ngā Tautuhinga" (Settings) — "tautuhi anō" reads as "set again", reset.
+  "settings.refreshResetTitle": "Whakahou, Tautuhi anō", // draft
   // Menu screen chrome (dish names, descriptions and section names are
   // venue content and are never translated; safety text stays English — see
   // the header note)

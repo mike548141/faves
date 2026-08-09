@@ -21,8 +21,13 @@
 //     temperatures in a recipe. Display only: the dials still store kilometres.
 //   • Maps app / Language / Units — one <select> each.
 //   • People — the device-local profile roster (add / rename / delete).
-//   • Your data — export everything, force a full refresh of the stored menus
-//     and app code, and reset this profile's preferences.
+//   • Your data — export everything, import a backup, or transfer one person
+//     to another device. All three move the personal data blob itself.
+//   • Refresh & reset — force a full refresh of the stored menus and app
+//     code, or reset this profile's preferences. Split from "Your data"
+//     (Theme 15): its one-line summary had grown to naming five actions
+//     across two things that don't share a data model — see the panel
+//     builders below for why they're paired with each other instead.
 // The profile *switcher* itself stays on the index (and moves into the People
 // panel while that's open) because switching is one tap and it's the context
 // every other setting sits inside — nobody should browse under someone else's
@@ -296,16 +301,22 @@ function peopleSection() {
 
 // --- Your data ---------------------------------------------------------
 // Export everything (every profile, not just the active one), import it back,
-// transfer one person to another device, the full refresh (Theme 16c — cached
-// menus and app code only, never the personal layer), plus the reset.
-// Reset lives here rather than on the index because the index is now short
-// enough that a bare "Reset" button would sit one stray tap from wiping the
-// allergen flags — and because "what's stored, and how do I get rid of it" is
-// one topic. It confirms inline, same pattern as deleting a person.
+// or transfer one person to another device. All three move the *personal data
+// blob itself* — out, back in, or across to another device — which is one
+// topic under ADR 0025 even though it's three actions: none of them is
+// reachable without the same "here's what's in it, choose how to apply it"
+// review (personal-data.js), so grouping them reads as one coherent story
+// (backup → restore → transfer) rather than a junk drawer.
 //
-// Order is deliberate: out, back in, across, then destroy. The import and
-// transfer halves live in personal-io-ui.js (they share one applier with the
-// receive path on every screen); this panel only places them.
+// Refresh (the app's cached menus/code) and Reset (this profile's
+// preferences) used to live in this panel too, on the theory that "what's
+// stored, and how do I get rid of it" was one topic. Splitting them out
+// (Theme 15) turned up the real seam: those two never touch the personal
+// data blob this panel is about — see refreshResetSection() below.
+//
+// Order is deliberate: out, back in, across. The import and transfer halves
+// live in personal-io-ui.js (they share one applier with the receive path on
+// every screen); this panel only places them.
 function dataSection() {
   const note = el("p", {
     className: "settings-note",
@@ -344,47 +355,45 @@ function dataSection() {
     }
   });
 
-  // Reset — scoped to the *active profile's* preferences (settings.reset()), so
-  // say exactly that; it leaves favourites, ratings and everyone else alone.
-  const resetHead = el("p", { className: "settings-sub", textContent: "Start over" });
-  const resetNote = el("p", {
-    className: "settings-hint",
-    textContent:
-      "Puts food preferences, distance, units, language and maps app back to their defaults for the person browsing. " +
-      "Favourites, ratings and other people’s settings are untouched.",
-  });
-  const resetBtn = el("button", { type: "button", className: "settings-reset", textContent: "Reset to defaults" });
-  const resetConfirmText = el("p", { className: "profile-confirm-text" });
-  const resetGo = el("button", { type: "button", className: "profile-btn profile-btn-danger", textContent: "Reset" });
-  const resetCancel = el("button", { type: "button", className: "profile-btn", textContent: "Cancel", "data-i18n": "generic.cancel" });
-  const resetConfirm = el("div", { className: "profile-confirm", role: "group", hidden: true }, [
-    resetConfirmText, el("div", { className: "profile-form-actions" }, [resetGo, resetCancel]),
+  const imports = importControls();
+  const transfer = transferControls();
+
+  const panel = el("div", { className: "settings-panel" }, [
+    note, btn, status,
+    imports.node,
+    transfer.node,
   ]);
-  resetConfirm.setAttribute("aria-label", "Confirm reset");
-  const resetStatus = el("p", { className: "settings-note settings-data-status", role: "status", "aria-live": "polite" });
+  return {
+    panel,
+    close: () => {
+      // An abandoned import review must not still be sitting there, one tap
+      // from applying, when the panel is reopened later.
+      imports.close();
+    },
+  };
+}
 
-  resetBtn.addEventListener("click", () => {
-    resetConfirmText.textContent =
-      `Reset ${profiles.active().name}’s preferences to defaults? Any dietary needs and flagged allergens will be cleared.`;
-    resetConfirm.hidden = false;
-    resetGo.focus();
-  });
-  resetCancel.addEventListener("click", () => {
-    resetConfirm.hidden = true;
-    resetBtn.focus();
-  });
-  resetGo.addEventListener("click", () => {
-    settings.reset();
-    resetConfirm.hidden = true;
-    resetStatus.textContent = "Settings reset to defaults.";
-    resetBtn.focus();
+// --- Refresh & reset -----------------------------------------------------
+// Two "clear it out and start clean" actions that don't belong under "Your
+// data" (Theme 15 split it out): neither touches the personal data blob that
+// panel is about.
+//   • Refresh — the escape hatch for a phone stuck on a stale copy (Theme
+//     16c). Clears the *app's* cached menus and code and re-downloads them;
+//     touches none of what the person has saved.
+//   • Reset — scoped to the *active profile's* preferences (settings.reset());
+//     it leaves favourites, ratings and everyone else alone.
+// They're grouped with each other, not because they share a data model (they
+// don't), but because both are destructive-with-confirm housekeeping on
+// locally stored state, and the index is short enough now that a bare button
+// for either would sit one stray tap from wiping something — same reasoning
+// that put Reset behind a confirm in the first place. Both confirm inline,
+// same pattern as deleting a person.
+function refreshResetSection() {
+  const intro = el("p", {
+    className: "settings-note",
+    textContent: "What Faves has stored on this device to work offline, and to remember your preferences.",
   });
 
-  // Refresh — the escape hatch for a phone stuck on a stale copy (Theme 16c).
-  // It sits in "Your data" because that is where someone goes asking "what is
-  // stored on my phone, and how do I get rid of it" — so the wording has to
-  // draw the line the panel's other two actions don't: this clears the *app's*
-  // stored copy of the menus and code, and touches none of their stuff.
   const refreshHead = el("p", { className: "settings-sub", textContent: "Refresh menus and app" });
   const refreshNote = el("p", {
     className: "settings-hint",
@@ -442,13 +451,42 @@ function dataSection() {
     refreshBtn.focus();
   });
 
-  const imports = importControls();
-  const transfer = transferControls();
+  const resetHead = el("p", { className: "settings-sub", textContent: "Start over" });
+  const resetNote = el("p", {
+    className: "settings-hint",
+    textContent:
+      "Puts food preferences, distance, units, language and maps app back to their defaults for the person browsing. " +
+      "Favourites, ratings and other people’s settings are untouched.",
+  });
+  const resetBtn = el("button", { type: "button", className: "settings-reset", textContent: "Reset to defaults" });
+  const resetConfirmText = el("p", { className: "profile-confirm-text" });
+  const resetGo = el("button", { type: "button", className: "profile-btn profile-btn-danger", textContent: "Reset" });
+  const resetCancel = el("button", { type: "button", className: "profile-btn", textContent: "Cancel", "data-i18n": "generic.cancel" });
+  const resetConfirm = el("div", { className: "profile-confirm", role: "group", hidden: true }, [
+    resetConfirmText, el("div", { className: "profile-form-actions" }, [resetGo, resetCancel]),
+  ]);
+  resetConfirm.setAttribute("aria-label", "Confirm reset");
+  const resetStatus = el("p", { className: "settings-note settings-data-status", role: "status", "aria-live": "polite" });
+
+  resetBtn.addEventListener("click", () => {
+    resetConfirmText.textContent =
+      `Reset ${profiles.active().name}’s preferences to defaults? Any dietary needs and flagged allergens will be cleared.`;
+    resetConfirm.hidden = false;
+    resetGo.focus();
+  });
+  resetCancel.addEventListener("click", () => {
+    resetConfirm.hidden = true;
+    resetBtn.focus();
+  });
+  resetGo.addEventListener("click", () => {
+    settings.reset();
+    resetConfirm.hidden = true;
+    resetStatus.textContent = "Settings reset to defaults.";
+    resetBtn.focus();
+  });
 
   const panel = el("div", { className: "settings-panel" }, [
-    note, btn, status,
-    imports.node,
-    transfer.node,
+    intro,
     refreshHead, refreshNote, refreshBtn, refreshConfirm, refreshStatus,
     resetHead, resetNote, resetBtn, resetConfirm, resetStatus,
   ]);
@@ -457,9 +495,6 @@ function dataSection() {
     close: () => {
       resetConfirm.hidden = true;
       refreshConfirm.hidden = true;
-      // An abandoned import review must not still be sitting there, one tap
-      // from applying, when the panel is reopened later.
-      imports.close();
     },
   };
 }
@@ -471,6 +506,7 @@ export function initSettingsUI() {
 
   const people = peopleSection();
   const data = dataSection();
+  const storage = refreshResetSection();
   const lang = selectControl({
     ariaLabel: "Language",
     // A language is always named in its own tongue, whatever the UI language is.
@@ -581,7 +617,8 @@ export function initSettingsUI() {
     { key: "maps", title: "Maps app", i18n: null, panel: mapsPanel, summary: (s) => MAPS_APPS.find((m) => m.key === s.mapsApp)?.label ?? "" },
     { key: "lang", title: "Language", i18n: "settings.langTitle", panel: langPanel, summary: (s) => (s.lang === "mi" ? "Te Reo Māori" : "English") },
     { key: "people", title: "Who’s using Faves?", i18n: "profile.title", panel: people.panel, summary: peopleSummary },
-    { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save, restore, transfer, refresh or start over" },
+    { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save a copy, bring it back, or hand it to another device" },
+    { key: "refreshReset", title: "Refresh & reset", i18n: "settings.refreshResetTitle", panel: storage.panel, summary: () => "Refresh the offline copy, or reset your preferences" },
   ];
 
   const rows = el("ul", { className: "settings-rows" });
@@ -669,6 +706,7 @@ export function initSettingsUI() {
     switcherSlot.append(people.list);
     people.hidePanels(false);
     data.close();
+    storage.close();
     index.hidden = false;
     renderTitle();
     back.hidden = true;
