@@ -1631,12 +1631,19 @@ where an imperial reader sees `430°F`.
     `/.well-known/security.txt` on its own line **fails** as
     `known/security.txt`. So the trigger is the leading-slash-plus-dot form,
     not dot-directories in general. Ours are honest URL references to files
-    that exist — this is atelier's `pathscan` to fix. 🎯 **Owner call needed**
-    before anything is written upstream — see the note in `SESSIONS.md` for
-    2026-08-09; the new CONCURRENCY rule invites queueing it in atelier's
-    roadmap, and the standing correction to this repo says faves does not
-    write there. Left alone, no allow-markers added: masking these would
-    hide the exact signal a future real `.well-known` typo needs to surface.
+    that exist — this is atelier's `pathscan` to fix. ✅ **RULED and queued
+    upstream 2026-08-09.** The owner resolved the tension in favour of the
+    CONCURRENCY rule: **a child repo may queue a *finding* in the target
+    repo's own roadmap — queue, never deliver.** The standing correction
+    (faves lives within the doctrine and does not create it) still holds and
+    is not weakened: a finding is not doctrine, and no fix, test or marker
+    was written upstream. Filed as **atelier `ROADMAP.md` Track E, item E8**
+    (`atelier@88a54a3`), with the minimal repro. Track E's own premise is
+    verbatim this defect — *"every false positive on a correct line trains
+    someone to allow-marker it, and that is how a scanner's output stops
+    being read"*. Left flagging here, no allow-markers added: masking these
+    would hide the exact signal a future real `.well-known` typo needs to
+    surface, and would keep the count dishonest while the fix is pending.
   - ✅ **10 were ours and genuinely loose — fixed 2026-08-09.** Prose
     shorthand that omitted the real path (`data/index.json` → <!-- pathscan:allow: the pre-fix shorthand this bullet documents, not a live reference -->
     `site/data/index.json` in `ARCHITECTURE.md`, `WORKPLAN.md`, ADR 0015's
