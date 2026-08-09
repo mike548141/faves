@@ -96,7 +96,11 @@ function cleanKeys(arr, allowed) {
   return out;
 }
 
-function sanitiseDiet(d) {
+/** Exported because import (personal-data.js) has to *compare* two diet
+ *  objects before it may touch either — an incoming file's allergen prefs are
+ *  safety data and never overwrite silently, so the comparison has to run on
+ *  the same cleaned, canonically-ordered shape the store persists. */
+export function sanitiseDiet(d) {
   return {
     dietary: cleanKeys(d?.dietary, DIETARY_KEYS),
     avoid: cleanKeys(d?.avoid, ALLERGEN_KEYS),
