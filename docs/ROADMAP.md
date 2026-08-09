@@ -1173,8 +1173,8 @@ Three things the merge has to answer — the third is the one that will decide i
   Cuisine are `<select>`s. Dropping a dropdown into a chip row looks like a
   mistake unless they converge — either the selects become chip-style menus, or
   the chips move into the bar. Nine controls at 390 px is also, precisely, the
-  wall [ADR 0025] hit in Settings; a wrapping chip row handles it, a fixed bar
-  does not.
+  wall the Settings redesign (`0025-settings-index-and-panels`) hit; a wrapping
+  chip row handles it, a fixed bar does not.
 - **`--bar-h` is load-bearing.** The bottom bar's height is referenced in six
   places — `main`'s bottom padding, the "Pick for us" FAB, back-to-top, the
   order bar. Removing the bar isn't a delete; it's re-anchoring everything that
@@ -1187,7 +1187,8 @@ Three things the merge has to answer — the third is the one that will decide i
   cuisine. That's the whole trade. Two ways to keep it: make the merged group
   **sticky** under the search field, or keep a slim bottom bar that collapses to
   a single **"Filters (2)"** button opening a sheet — thumb-reachable, one
-  control, and it scales as filters keep being added (the same lesson ADR 0025
+  control, and it scales as filters keep being added (the same lesson the Settings
+  redesign
   learnt about growth). Recommend deciding *this* first; the visual merge is
   easy once it's settled.
 
@@ -1242,7 +1243,8 @@ visible.
   feature can make things worse than doing nothing; and **never touch the
   personal layer** — hearts, ratings, settings, profiles and the order tally are
   the user's, not cache. Home: Settings → "Your data" is the honest place (it
-  already holds export + reset behind [ADR 0025]'s index), with the wording
+  already holds export + reset behind the Settings index,
+  `0025-settings-index-and-panels`), with the wording
   making clear it refreshes *menus*, not *your stuff*.
 - ✅ **16e — About shows the installed versions** — **shipped 2026-08-09**
   (`site/js/versions.js`, 9 tests): an "App" and a "Menus & prices" stamp read

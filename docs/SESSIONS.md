@@ -1631,3 +1631,13 @@ three things worth fixing, all now in:
    identify a data shape rather than freshness.
 3. Nothing else was outstanding: items 1–5 map to 17a/17b/17c/17d+17e, the
    pudding and the About versions shipped and were browser-verified.
+
+🚩 **Found while rebasing onto the allergen-inference session: two ADRs are
+numbered 0025.** `0025-settings-index-and-panels.md` (2026-08-08) and
+`0025-infer-allergens-by-default.md` (2026-08-09) both exist, and
+`docs/decisions/README.md` indexes only the first. A bare "ADR 0025" in prose no
+longer identifies a record. **Not fixed here** — renumbering another session's
+accepted ADR, and rewriting its inbound references, is that session's call and
+it may still be live; this session stayed in its lane and only disambiguated its
+*own* bare references in ROADMAP (Themes 15c and 16c now name the file). 🎯 The
+renumber and the index entry are owed by whoever owns that record.
