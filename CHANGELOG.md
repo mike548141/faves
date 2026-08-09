@@ -40,6 +40,15 @@ content freshness separately from this file.
   get moved into each dish's description, so nothing is lost.
 
 ### Fixed
+- **Changing a setting on a menu no longer wipes what you were doing.** Flipping
+  an allergen preference, or switching to another person, rebuilds the whole
+  menu on purpose — that is how the ⚠ warnings re-apply without ever going
+  stale — but it used to take your search, your dietary chips and your place on
+  the page with it. All three now come back: the search box keeps its text and
+  its results, chips you tapped stay tapped, and you land where you were rather
+  than at the top. A dietary preference you actually changed still wins over a
+  chip you'd toggled by hand, which is the point of changing it. The safety
+  re-apply itself is untouched.
 - **The "← All restaurants" back-link on a menu page no longer sits indented
   past the rest of the page.** Its top bar is already inset by the page wrapper,
   and the link added the same inset again — so the back-link and the ⋯ button
