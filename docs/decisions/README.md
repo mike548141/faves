@@ -171,3 +171,14 @@ deliberation those compact docs omit.
   phones); a confidence score rejected (undefendable numbers). No backfill —
   the two dated records carry methods `SESSIONS.md` evidences, and
   `validate.py` warns rather than errors on the rest.
+- [0032](0032-ask-the-controller-for-its-version.md) — **ask the controlling
+  worker for its version, don't infer it from cache names** (Theme 16f).
+  Since [0027](0027-pwa-update-flow.md) dropped `skipWaiting()`, the newest
+  cache can belong to a worker that is *waiting*, not serving — so About's
+  stamp reported a version the page was not running. The page now asks the
+  controller over a `MessageChannel` and it answers with its own constants;
+  a waiting worker is asked the same way and reported as a **separate**
+  fact, never merged into the headline. Falls back to the old cache-name
+  read when there is no controller or it predates the protocol, so it is
+  never worse than before. Narrowing the cache-name heuristic was rejected:
+  it is still a guess, only a narrower one.

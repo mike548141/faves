@@ -1410,14 +1410,21 @@ visible.
   build-new-then-delete-old activate order are untouched; `clients.claim()`
   stays, for the first-ever install. Two static tests pin the absence of
   `skipWaiting()` from install, because the temptation to put it back is real.
-- [~] **16f — About's version stamp can now run ahead of the page** `[S]`
-  (claimed 2026-08-09-0800, wt: faves-16f-stamp) —
-  follow-on named in ADR 0027's consequences: under a *waiting* worker, 16e's
-  About stamp reports the newest **cached** version while the page may still be
-  running the previous one — a gap that under `skipWaiting()` closed in
-  seconds and can now last until the user takes the refresh. The honest fix is
-  to report the *controlling* worker's caches and mention a waiting one
-  separately ("update ready"). Small, self-contained, unclaimed.
+- ✅ **16f — About's version stamp can now run ahead of the page** `[S]` —
+  **shipped 2026-08-09** ([ADR 0032](decisions/0032-ask-the-controller-for-its-version.md),
+  `site/js/versions.js`, 13 new tests): About now asks the *controlling*
+  worker directly for its own `SHELL_VERSION`/`DATA_VERSION` (a MessageChannel
+  round-trip to a new `GET_VERSIONS` handler in `sw.js`) instead of inferring
+  from cache names — the inference could show the newest **cached** version
+  while the page was still running the previous one. A waiting worker's
+  version is now reported separately ("an update is ready"), never merged
+  into the headline number. Falls back to the old cache-name guess only for a
+  controller that predates this protocol (mid-upgrade) or has none yet
+  (first load). **Device-verified: none of the four SW-dependent states**
+  (no controller yet, controller only, controller + waiting, a non-replying
+  controller) **were reachable headlessly this session** — pinned by 13 unit
+  tests against fake `ServiceWorker`-shaped objects instead; owed a real
+  device pass, same as 16a–16d.
 
 **Test honestly:** the service worker hides its own changes, so this needs a real
 device or a headless run with a fresh browser profile — a hard-reload does not

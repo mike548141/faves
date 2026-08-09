@@ -13,7 +13,7 @@
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
 import { translate } from "./reo.js";
-import { installedVersions } from "./versions.js";
+import { currentVersions } from "./versions.js";
 
 function group(title, ...paras) {
   return el("section", { className: "about-group" }, [
@@ -24,23 +24,54 @@ function group(title, ...paras) {
 
 // The app ships as two independently versioned halves (ADR 0015), and the
 // question people actually ask — "have I got the new menus?" — can only be
-// answered by the *device*, so the values are read from the installed caches
-// (versions.js) rather than baked in here. Async: built with placeholders, then
-// filled once CacheStorage answers.
+// answered by the *device*. ROADMAP 16f / ADR 0032: reads currentVersions(),
+// which asks the *controlling* worker directly rather than inferring from
+// cache names, so this can no longer show a version newer than what the page
+// is actually running (the gap 16e left, per ADR 0027's consequences). Async:
+// built with placeholders, then filled once the worker (or the cache-name
+// fallback) answers.
 function versionGroup() {
   const shellValue = el("dd", { className: "about-version-value", textContent: "…" });
   const dataValue = el("dd", { className: "about-version-value", textContent: "…" });
   const note = el("p", { className: "about-text about-version-note", textContent:
-    "What this device has stored for offline use." });
+    "What this page is currently running." });
+  // Hidden until a waiting worker is confirmed — most sessions never see this,
+  // and an empty aria-live region is the standard way to keep it silent until
+  // it has something true to announce.
+  const waitingNote = el("p", {
+    className: "about-text about-version-waiting",
+    role: "status",
+    "aria-live": "polite",
+    hidden: true,
+  });
 
-  installedVersions().then(({ shell, data }) => {
+  currentVersions().then(({ shell, data, controlling, waiting }) => {
     // No caches yet = a first visit, or a browser with no offline storage.
     // Say so plainly instead of showing a blank or an invented number.
     shellValue.textContent = shell || "not stored yet";
     dataValue.textContent = data || "not stored yet";
+
     if (!shell && !data) {
       note.textContent =
         "The offline copy hasn’t been stored on this device yet.";
+    } else if (!controlling) {
+      // True and distinct from "not stored": something is cached, but no
+      // worker has taken over serving this page yet (first load, still
+      // installing) — showing the numbers without this caveat would claim a
+      // version the page isn't actually running.
+      note.textContent =
+        "Stored on this device, but not yet serving this page.";
+    }
+    // else: shown as-is — this is the controller's own reported version, so
+    // the default "What this page is currently running." note already holds.
+
+    if (waiting) {
+      waitingNote.hidden = false;
+      waitingNote.textContent =
+        waiting.shell || waiting.data
+          ? `An update is ready — App ${waiting.shell ?? "…"}, ` +
+            `Menus ${waiting.data ?? "…"}. Refresh from the notice to switch.`
+          : "An update is ready. Refresh from the notice to switch.";
     }
   });
 
@@ -53,6 +84,7 @@ function versionGroup() {
       dataValue,
     ]),
     note,
+    waitingNote,
   ]);
 }
 

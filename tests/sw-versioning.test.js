@@ -99,3 +99,16 @@ test("activate keeps exactly the three current caches", () => {
     /const keep = new Set\(\[SHELL_CACHE, DATA_CACHE, IMG_CACHE\]\);/
   );
 });
+
+// ROADMAP 16f, ADR 0032. About's version stamp asks the worker directly for
+// its own constants rather than inferring from cache names — the inference
+// can't tell a controlling worker's cache from a waiting worker's freshly
+// built one. This pins the worker's half of that contract: it must answer
+// with its *own* SHELL_VERSION/DATA_VERSION, not a hardcoded or derived value
+// that could drift from the caches it actually built.
+test("GET_VERSIONS answers with this worker's own version constants", () => {
+  assert.match(src, /event\.data\.type === "GET_VERSIONS"/);
+  assert.match(src, /type:\s*"VERSIONS"/);
+  assert.match(src, /shell:\s*SHELL_VERSION/);
+  assert.match(src, /data:\s*DATA_VERSION/);
+});
