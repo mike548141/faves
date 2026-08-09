@@ -38,9 +38,10 @@ by succeeding.
 
 ### 2. The API token (minted, not hand-made)
 
-The deploy token is an **account-owned child token** minted in code from
-the estate's parent minting token (owner's decision, 2026-07-11), scoped
-to exactly:
+The deploy token is an **account-owned child token**, minted in code from
+the estate's parent minting token rather than hand-made in the dashboard
+(owner's decision, 2026-07-11). It is scoped to exactly what a deploy
+needs, and nothing else:
 
 | Scope | Permission |
 | --- | --- |
@@ -48,16 +49,23 @@ to exactly:
 | Zone · DNS (`myspot.nz` only) | Edit |
 | Zone · Zone (`myspot.nz` only) | Read |
 
-Both tokens live in the macOS **login keychain** (`cloudflare-token-mint`
-= parent, `cloudflare-faves-deploy` = this repo's child) — never in the
-repo, a dotfile, or a transcript. Source it per-shell:
+Both tokens live in the macOS **login keychain** — never in this repo, a
+dotfile, or a transcript. Their item names, and the mint/roll procedure,
+are estate-level facts: they live in the operator's private estate-root
+repo, which this runbook points to rather than restating (the
+"point up, don't re-derive" rule in `CLAUDE.md`). Source the token into
+the shell from the keychain, then:
 
 ```sh
-export CLOUDFLARE_API_TOKEN=$(security find-generic-password -s cloudflare-faves-deploy -w)
+export CLOUDFLARE_API_TOKEN=...   # sourced from the keychain, never pasted
+python3 tools/deploy.py plan
 ```
 
-To roll: delete the child in the dashboard (or via the parent token's
-API) and mint a fresh one; the parent can enumerate every child it made.
+The account id is resolved automatically — a repo-scoped token sees one
+account. Only if a token sees several does it need stating, and then via
+`CLOUDFLARE_ACCOUNT_ID` in the environment, never in `deploy.json`: an
+account id authorises nothing, but it names a live account and this repo
+publishes.
 
 ### 3. Provision
 

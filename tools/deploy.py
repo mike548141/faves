@@ -83,7 +83,18 @@ def load_config():
 
 
 def resolve_account_id(cfg):
-    """Use the configured id, else auto-pick if the token sees exactly one."""
+    """Env first, then any configured id, else auto-pick if the token sees one.
+
+    An account id is an identifier, not a credential — it authorises nothing
+    and appears in every dashboard and API URL. But it still names a live
+    account, and this repo publishes, so it travels by the same channel as the
+    token rather than sitting in tracked config (owner ruling, 2026-08-09).
+    Nothing needs setting in the normal case: a repo-scoped token sees exactly
+    one account, so the auto-pick below resolves it.
+    """
+    env = os.environ.get("CLOUDFLARE_ACCOUNT_ID")
+    if env:
+        return env
     if cfg.get("account_id"):
         return cfg["account_id"]
     accounts = cf("GET", "/accounts?per_page=50") or []
@@ -97,7 +108,8 @@ def resolve_account_id(cfg):
         return accounts[0]["id"]
     names = ", ".join(f"{a['name']} ({a['id']})" for a in accounts)
     sys.exit(
-        "This token can see multiple accounts; set account_id in deploy.json.\n"
+        "This token can see multiple accounts; set the account id explicitly:\n"
+        "    export CLOUDFLARE_ACCOUNT_ID=...\n"
         f"  Visible: {names}"
     )
 
