@@ -1272,7 +1272,8 @@ drill-in only landed 2026-08-08 and its 390 px real-phone look is **still owed**
 (it's the same pending eyeball as Theme 12a). Judge the current build on the
 phone before commissioning a replacement for it.
 
-**b. One noun for one thing — a wording consistency sweep** `[S]` — **owner,
+**b. One noun for one thing — a wording consistency sweep** `[S]` —
+[~] **CLAIMED 2026-08-09 09:12 UTC** (wt: `faves-one-noun`) — **owner,
 raw:** *"check the consistency of wording across the app. For example in Settings
 → Distance it says 'Show branches within' vs 'Hide places further than'. I would
 prefer to replace branches with places."* Confirmed at
@@ -1495,7 +1496,8 @@ problem. Sequence the content with the build or the feature ships blank.
   Keep the owner's balance: the steps read well now, so inline amounts should
   read as prose, not as a table bolted into a sentence. Worth a light visual
   treatment so an amount is scannable without shouting.
-- [ ] **17d — Cook mode** `[M]` — **the research pass's strongest finding, and
+- [~] **17d — Cook mode** `[M]` — **CLAIMED 2026-08-09 09:12 UTC**
+  (wt: `faves-cook-mode`) — **the research pass's strongest finding, and
   it beats everything above on value-per-effort.** Every current recipe app has
   converged on the same thing: a full-screen, one-step-at-a-time view with a
   step counter, large text, and — the part that matters — **`navigator.wakeLock`
@@ -1594,8 +1596,10 @@ where an imperial reader sees `430°F`.
 
 ✅ **A negative dish price validated clean — fixed 2026-08-09.** Detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [ ] **`pathscan` is decorative here — 25 standing findings** `[S][docs]` —
-  found 2026-08-09. It runs warn-only in our floor and has accumulated 25
+- [~] **`pathscan` is decorative here — 25 standing findings** `[S][docs]` —
+  **CLAIMED 2026-08-09 09:12 UTC** (wt: `faves-pathscan`), for the two
+  classes that are ours; the upstream class stays blocked on the owner call
+  below. found 2026-08-09. It runs warn-only in our floor and has accumulated 25
   findings, which means nobody reads it, which means a *real* stale path
   now hides in the noise. That is the whole cost: a guard with standing
   false positives is a guard switched off. Triaged into three classes:
