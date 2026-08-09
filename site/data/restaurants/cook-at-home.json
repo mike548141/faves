@@ -463,30 +463,30 @@
         },
         {
           "name": "Chocolate Self-Saucing Pudding",
-          "desc": "A Clements family dessert since the early 1980s — adapted from the Edmonds cookbook to a double mixture.",
-          "serves": 12,
-          "time": "~1 hr 10 min",
+          "desc": "A Clements family dessert since the early 1980s — adapted from the Edmonds cookbook. Doubles well for a crowd.",
+          "serves": 6,
+          "time": "~35 min",
           "ingredients": [
-            "1½ cups (375 ml) white sugar",
-            "200g butter, softened",
-            "2 eggs",
-            "2 tsp (10 ml) vanilla essence",
-            "2½ cups (625 ml) white flour",
-            "4 tsp (20 ml) baking powder",
-            "2 tbsp (30 ml) cocoa",
+            "¾ cup (190 ml) white sugar",
+            "100g butter, softened",
+            "1 egg",
+            "1 tsp (5 ml) vanilla essence",
+            "1¼ cups (310 ml) white flour",
+            "2 tsp (10 ml) baking powder",
+            "1 tbsp (15 ml) cocoa",
             "Water or milk, as required for a thick batter",
-            "Sauce: 1 cup (250 ml) brown sugar",
-            "Sauce: ½ cup (125 ml) cocoa",
-            "Sauce: 2 tbsp (30 ml) cornflour",
-            "Sauce: 4 cups (1 L) boiling water"
+            "Sauce: ½ cup (125 ml) brown sugar",
+            "Sauce: ¼ cup (60 ml) cocoa",
+            "Sauce: 1 tbsp (15 ml) cornflour",
+            "Sauce: 2 cups (500 ml) boiling water"
           ],
           "steps": [
-            "Preheat the oven to 180°C and line a 3–4L ovenproof dish with baking paper, or grease it.",
-            "Beat together the white sugar, softened butter, eggs and vanilla.",
+            "Preheat the oven to 180°C and line a 1.5–2L ovenproof dish with baking paper, or grease it.",
+            "Beat together the white sugar, softened butter, egg and vanilla.",
             "Sift the flour, baking powder and cocoa together, then fold into the beaten mixture, adding water or milk as needed for a thick cake batter.",
             "Spoon the mixture into the dish.",
             "Sprinkle over the brown sugar, cocoa and cornflour, then gently pour the boiling water over the back of a spoon to make the sauce.",
-            "Bake at 180°C for 70 minutes, or until cooked through (try covering two-thirds of the dish with a lid)."
+            "Bake at 180°C for 35 minutes, or until cooked through (try covering two-thirds of the dish with a lid)."
           ],
           "tags": ["v"]
         },

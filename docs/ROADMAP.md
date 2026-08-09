@@ -1202,6 +1202,143 @@ bust it. The acceptance case is the owner's own:
 leave the PWA backgrounded, push a data change, foreground it — the new menu
 should appear without killing the app.
 
+## Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)
+
+Cook at Home renders a recipe well — ingredients, then a numbered method. That
+is a recipe you can *read*. This theme is about a recipe you can *cook from*,
+with wet hands, at the bench, mid-step. The owner raised four items; a research
+pass over what current recipe apps do (sources at the end) adds a fifth group,
+and moved one of them to the top.
+
+🚩 **The data is the blocker, not the code.** Verified 2026-08-09 across the 24
+recipes: **`serves` is set on 3** (Liège Waffles, the pudding, Tiramisu) and
+**`time` on 8**. Every item below renders nothing until those fields exist, and
+they can only come from the owner — the same shape as the empty `picks`
+problem. Sequence the content with the build or the feature ships blank.
+
+- [ ] **17a — Serves, and scaling it** `[M][schema][design]` — the owner's items
+  1 and 4. `serves` already exists in the schema and renders where a price
+  would; the ask is to make it **load-bearing**: show it clearly, then let the
+  reader pick ½ / 1× / 2× (or type a number) and rescale the ingredients.
+  - **Quantities have to become data.** Today an ingredient is a **string**
+    (`"1½ cups (375 ml) white sugar"`). Scaling means parsing it, or splitting
+    it into `{ qty, unit, item, note }`. Recommend **structured, with the
+    original string kept** — parsing NZ home-recipe prose (`"2 tbsp"`, `"200g"`,
+    `"a handful"`, `"Sauce: ½ cup"`) at render time will be wrong often enough
+    to be worse than useless, and a wrong quantity in a recipe is a ruined
+    dinner.
+  - **Rounding is the whole UX.** ⅓ of 1½ cups is not a number anyone wants to
+    read. Scaled amounts need friendly fractions and sensible unit hops
+    (`0.5 tbsp` → `1½ tsp`), and eggs need honest handling — half an egg is a
+    real problem, so say so rather than printing "1½ eggs".
+  - 🚩 **Do not auto-scale cooking times.** The owner asked for it and it is the
+    one part to refuse as specified: bake and cook times **do not scale
+    linearly** — a double mixture in a deeper dish takes longer, but not twice
+    as long, and for anything meat-based an under-scaled time is a **food-safety
+    failure**, not a disappointing dinner. Ship a *hint* instead ("a deeper dish
+    will take longer — test with a skewer"), and let a recipe carry an
+    explicitly authored time for a given scale where the owner knows it.
+- [ ] **17b — Step timings and a tap-to-start timer** `[M][design]` — the
+  owner's item 2. Per-step time where it is useful, and beside any step with a
+  duration, a **Start timer** that counts down and sounds an alarm.
+  - **Where the duration comes from:** authored per step (`{ text, minutes }`)
+    beats parsing the prose, but parsing is what makes it work on the 24 recipes
+    that already exist. Recommend **parse to suggest, author to confirm** — the
+    parser proposes, the data records it, and the UI only ever shows an
+    authored value.
+  - 🚩 **The alarm is the hard part, and it is a platform limit, not a design
+    choice.** A timer started by a tap can play sound reliably **while the page
+    is in the foreground** (the tap unlocks audio). Once the phone locks or the
+    app is backgrounded, iOS gives no dependable way for a web app to make a
+    noise — Web Push needs a home-screen install, permission, and a network the
+    kitchen may not have. So: pair the timer with **17d's wake lock** so the
+    screen stays on and the alarm actually fires, and be honest in the UI rather
+    than promising a background alarm we cannot deliver.
+  - **A real kitchen runs three timers at once.** Design for multiple concurrent
+    labelled timers ("rest the dough", "simmer") from the start; a single global
+    timer will be rebuilt within a week of use.
+- [ ] **17c — Quantities inside the step** `[M][design]` — the owner's item 3,
+  and the best-judged of the five: *"add the sugar, eggs, and butter"* should
+  not send the reader back up the page. Once 17a has structured quantities this
+  is cheap: reference an ingredient from a step by id and render the amount
+  inline — **"add the ¾ cup sugar, 1 egg and 100 g butter"** — and it stays
+  correct when the recipe is scaled, which a hand-written amount would not.
+  Keep the owner's balance: the steps read well now, so inline amounts should
+  read as prose, not as a table bolted into a sentence. Worth a light visual
+  treatment so an amount is scannable without shouting.
+- [ ] **17d — Cook mode** `[M]` — **the research pass's strongest finding, and
+  it beats everything above on value-per-effort.** Every current recipe app has
+  converged on the same thing: a full-screen, one-step-at-a-time view with a
+  step counter, large text, and — the part that matters — **`navigator.wakeLock`
+  so the screen never sleeps mid-recipe**. That is a plain Web API (Safari iOS
+  16.4+), zero-dependency, works offline, and fixes the single most annoying
+  thing about cooking from a phone. It is also the natural host for 17b's
+  timers. If only one item in this theme is built, build this one.
+- [ ] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
+  ordered by how well they fit a zero-dependency offline app:
+  - **Tick off ingredients and steps as you go** — a checklist with state that
+    survives a phone call. Cheap, and every app tested has it.
+  - **Ingredient-first search** — "what can I make with mince and a lemon?".
+    Faves already has a search index; recipes just aren't in it by ingredient.
+  - **Shopping list from a recipe** — and note it is the same machinery as the
+    order tally (`cart.js`), which already gathers, groups and totals. Build it
+    as the tally's cook-at-home twin rather than a second list.
+  - **Read the steps aloud** (`speechSynthesis`) — built into the browser, no
+    dependency, and genuinely useful with your hands in a bowl. Voice
+    *recognition* is the opposite: unreliable in a noisy kitchen and, on most
+    platforms, a network round-trip. Recommend speech out, not in.
+  - **Personal notes on a recipe** ("used half the sugar, better") — profile-
+    scoped, and it slots straight into Theme 11's personal layer and Theme 12's
+    export.
+  - **Substitutions** ("no buttermilk → milk + lemon") — high value, but it is
+    content the owner has to write, and a wrong substitution ruins a dinner.
+    Curated only; never generated.
+  - **Oven temperature conversion** (°C/°F) — falls out of Theme 18 for free.
+
+**Sources (research pass, 2026-08-09):** [Cook Mode step-by-step view][s1] ·
+[Cook Mode and screen wake lock][s2] · [Best recipe apps tested][s3] ·
+[ScaleRecipe — scaling, TTS, checklists][s4] ·
+[Recipe Keeper — hands-free, unit conversion][s5] ·
+[SuperCook — cook by ingredient][s6]
+
+[s1]: https://www.drizzlelemons.com/blog/cook-mode-step-by-step-recipe-view
+[s2]: https://bootstrapped.ventures/cook-mode/
+[s3]: https://preplo.app/best-recipe-app-2026
+[s4]: https://www.scale-recipe.com/
+[s5]: https://apps.apple.com/us/app/recipe-keeper/id974683711
+[s6]: https://apps.apple.com/us/app/supercook-recipe-by-ingredient/id1477747816
+
+## Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)
+
+**The ask, raw (owner):** *"In the settings let people choose between imperial
+and metric measures for wherever they are used in the app e.g. miles vs
+kilometers, litres, grams."*
+
+A per-profile Settings preference, sitting beside the existing dials, applied at
+**render** time — never stored converted, so the data keeps one true unit and
+the display adapts. Three surfaces use units today: **distance** (the two
+Distance dials, Near-me, the drive/walk hint), **recipe quantities** (17a), and
+**oven temperatures** (°C).
+
+- [ ] **18a — Distance** `[S]` — the cleanest half. Distances are already
+  numbers in kilometres, so this is a formatter plus a label swap, and the
+  Settings dials switch to miles with sensible steps rather than converted
+  decimals.
+- [ ] **18b — Recipe quantities** `[M]` — blocked on **17a**: strings cannot be
+  converted, only structured quantities can. Note the trap that makes this
+  harder than it looks — **a US cup (240 ml) is not a NZ/metric cup (250 ml)**,
+  and US tablespoons differ too, so "imperial" needs to mean a specific system
+  and say which. Baking is also the one place where **weight beats volume**;
+  offering grams for flour and sugar is arguably a bigger win than offering
+  cups.
+- [ ] **18c — Oven temperatures** `[S]` — °C ↔ °F, and gas marks if the owner
+  wants them. Rounding to the nearest sensible dial setting, not `356.0 °F`.
+
+**Default stays metric** — the app is New Zealand-first and the data is metric.
+This is a display preference for visitors, not a change of source of truth.
+Lockstep with **Theme 15b**'s wording sweep: both change user-facing unit copy,
+and `reo.js` holds the strings.
+
 ## Also parked (small)
 
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);

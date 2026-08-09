@@ -13,11 +13,46 @@
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
 import { translate } from "./reo.js";
+import { installedVersions } from "./versions.js";
 
 function group(title, ...paras) {
   return el("section", { className: "about-group" }, [
     el("h3", { className: "about-group-title", textContent: title }),
     ...paras.map((text) => el("p", { className: "about-text", textContent: text })),
+  ]);
+}
+
+// The app ships as two independently versioned halves (ADR 0015), and the
+// question people actually ask — "have I got the new menus?" — can only be
+// answered by the *device*, so the values are read from the installed caches
+// (versions.js) rather than baked in here. Async: built with placeholders, then
+// filled once CacheStorage answers.
+function versionGroup() {
+  const shellValue = el("dd", { className: "about-version-value", textContent: "…" });
+  const dataValue = el("dd", { className: "about-version-value", textContent: "…" });
+  const note = el("p", { className: "about-text about-version-note", textContent:
+    "What this device has stored for offline use." });
+
+  installedVersions().then(({ shell, data }) => {
+    // No caches yet = a first visit, or a browser with no offline storage.
+    // Say so plainly instead of showing a blank or an invented number.
+    shellValue.textContent = shell || "not stored yet";
+    dataValue.textContent = data || "not stored yet";
+    if (!shell && !data) {
+      note.textContent =
+        "The offline copy hasn’t been stored on this device yet.";
+    }
+  });
+
+  return el("section", { className: "about-group" }, [
+    el("h3", { className: "about-group-title", textContent: "Version" }),
+    el("dl", { className: "about-versions" }, [
+      el("dt", { className: "about-version-key", textContent: "App" }),
+      shellValue,
+      el("dt", { className: "about-version-key", textContent: "Menus & prices" }),
+      dataValue,
+    ]),
+    note,
   ]);
 }
 
@@ -48,6 +83,8 @@ function buildDialog() {
         "Once you’ve visited, Faves keeps working in flight mode — menus and " +
           "all. Add it to your home screen for a full-screen, app-like launch."
       ),
+
+      versionGroup(),
 
       el("p", { className: "about-made" }, [
         el("span", { "data-i18n": "footer.made", textContent: "Made by" }),

@@ -8,6 +8,18 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **About now shows which version you're on** — the app and the menu data
+  separately, since they update independently. The numbers are read from what
+  your device has actually stored offline, not from what the code claims, so a
+  phone running a stale copy shows the stale stamp — which is the useful answer
+  when you're wondering whether you've got the new menus.
+
+### Changed
+- **Chocolate Self-Saucing Pudding is a single mixture again** — it had been
+  written up doubled (serves 12, 70 minutes). Now serves 6 and bakes for 35, in
+  a 1.5–2 L dish. It still doubles well for a crowd.
+
 ### Fixed
 - **The "← All restaurants" back-link on a menu page no longer sits indented
   past the rest of the page.** Its top bar is already inset by the page wrapper,
