@@ -1645,6 +1645,29 @@ where an imperial reader sees `430°F`.
   Verification: `tools/validate.py`, `check_no_deps.py`,
   `check_visibility.py`, `gen_sbom.py --check`, `node --test` (505/505) and
   atelier's `linkscan.py` all still pass.
+- [ ] **`plainscan` arrived with 1177 findings and no decided scope**
+  `[M][docs]` ⚑ — found 2026-08-09 bumping the pin to `atelier@5c16a59`.
+  Atelier withdrew its long-standing claim that write-time discipline is the
+  *only* control over communication prose, and shipped `plainscan` to enforce
+  the machine-decidable half. Our floor picked it up through the shared
+  registry, warn-only. Day-one count here: **1177** — P1 undefined reference
+  ×28, P2 unexpanded acronym ×126, P3 long sentence ×549, P4 buried aside
+  ×474. **This is not yet the decorative-guard failure `pathscan` had** — it
+  is one day old and nothing has been swept. It becomes that failure if it
+  sits.
+  🚩 **The scope question is the whole item, and it is not obviously ours to
+  answer.** The three heaviest files are `SESSIONS.md` (341),
+  `SESSIONS-ARCHIVE.md` (176) and `ROADMAP.md` (190) — and the two session
+  logs are **append-only records**. Sweeping them means rewriting history to
+  please a scanner, which the house forbids on the same grounds that stopped
+  the `pathscan` sweep touching them. So the plausible scopes are: (a) the
+  live current-truth docs only (`ARCHITECTURE`, `DESIGN`, `STRATEGY`,
+  `CLAUDE.md`, `README`, the ADRs) and records exempted by an ignore rule;
+  (b) everything, accepting history gets marked not edited; or (c) leave it
+  advisory and treat the count as a write-time nudge. 🎯 **Owner call**, and
+  worth pairing with the P3 word limit — atelier's own docstring says the
+  35-word cap is a **house call, not a published standard**, and "the one
+  number in this file the principal should rule on".
 - [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
   doctrine block is the sanctioned *stamped copy* shape (it names atelier,
