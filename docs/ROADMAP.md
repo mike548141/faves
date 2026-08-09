@@ -335,10 +335,14 @@ neighbouring card or a delivery app.** Clear one by bringing back the fact.
       drives the "our picks" surface and `validate.py` warns on each empty
       one, so the warnings are the worklist. Owner-supplied only: these are
       *our* favourites, not a guess from the menu.
-- [ ] **16 venues are still `stub`** `[M][content]` — they render as "menu
+- [ ] **17 venues are still `stub`** `[M][content]` — they render as "menu
       coming soon" cards and never as empty menus, so this is a backlog, not
-      a defect. Same `intake/` pipeline; 12 are menu-complete as of
-      2026-08-08.
+      a defect. Same `intake/` pipeline. **Re-counted 2026-08-09 from the
+      data**, correcting "16 … 12 menu-complete": it is **17 stub and 14
+      menu-complete across 31 records**. Of those 14, only **two** carry a
+      `verified` date (Gold Lining, Takeaway @ Churton) — which is the
+      concrete cost behind Theme 13g below: the "needs a refresh" caveat
+      currently fires on 29 of 31 records, so it tells the reader nothing.
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -1600,9 +1604,10 @@ where an imperial reader sees `430°F`.
 ✅ **A negative dish price validated clean — fixed 2026-08-09.** Detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [~] **`pathscan` is decorative here — 25 standing findings** `[S][docs]` —
-  **CLAIMED 2026-08-09 09:12 UTC** (wt: `faves-pathscan`), for the two
-  classes that are ours; the upstream class stays blocked on the owner call
-  below. found 2026-08-09. It runs warn-only in our floor and has accumulated
+  **our two classes done 2026-08-09** (wt: `faves-pathscan`): 34 findings
+  down to 14, and every one of the 14 is the upstream defect. The item stays
+  open only for that class, which is blocked on the owner call below.
+  Found 2026-08-09. It runs warn-only in our floor and has accumulated
   standing findings, which means nobody reads it, which means a *real* stale
   path now hides in the noise. That is the whole cost: a guard with standing
   false positives is a guard switched off. Triaged into three classes; **the
