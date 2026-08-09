@@ -188,6 +188,17 @@ const MI = {
   "recipe.ingredients": "Ngā huānga", // draft
   "recipe.method": "Te tukanga", // draft
   "recipe.detail": "Ngā huānga me te tukanga", // draft
+  // Cook mode — one step at a time, screen held awake (ROADMAP 17d, ADR 0034).
+  // The step counter carries NO key: "Step 3 of 9" is interpolated, and this
+  // engine swaps whole strings only. Per maoridictionary.co.nz: aratau = mode ·
+  // tunu = to cook/bake · whai ake = next/following · oti = finished ·
+  // mataara = awake/alert · mata = screen/face.
+  "cook.start": "Aratau tunu", // draft — "cooking mode"
+  "cook.close": "Katia te aratau tunu", // draft — "close cook mode"
+  "cook.next": "Whai ake", // draft — "next"
+  "cook.prev": "Hoki", // draft — "back"
+  "cook.done": "Kua oti", // draft — "it is finished"
+  "cook.awake": "Ka noho mataara te mata", // draft — "the screen stays awake"
 };
 
 let current = "en";

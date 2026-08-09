@@ -13,6 +13,7 @@ import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
 import { profiles, PROFILES_KEY } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
+import { cookButton } from "./cook-ui.js";
 import { el } from "./dom.js";
 
 const root = document.getElementById("recipe-root");
@@ -104,6 +105,12 @@ function render(collection, item) {
     for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid));
     parts.push(tags);
   }
+
+  // Cook mode sits above the recipe, not below it: someone who opened this page
+  // to cook from should not have to scroll past the method to find it. Absent on
+  // the one recipe with no steps (cook-ui returns null) — nothing to step through.
+  const cook = cookButton(item);
+  if (cook) parts.push(el("div", { className: "cook-start-row" }, [cook]));
 
   if (item.ingredients?.length) {
     parts.push(el("h2", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }));
