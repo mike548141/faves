@@ -3,6 +3,16 @@
 **Status**: accepted • **Date**: 2026-08-06 • **Outcome**: evidence produced;
 the visibility flip remains the owner's to make
 
+> 🎉 **Flipped 2026-08-09**, on the owner's explicit instruction, at `a207a15`.
+> Gates re-run clean on that exact tree; steps 5–8 hardened in the same sitting;
+> `security.txt` live. Both owed owner actions were resolved first — the PAT
+> prerequisite discharged by evidence and the credential-root half decoupled
+> ([ADR 0026](0026-pat-prerequisite-discharged.md)), and the residual risks
+> below owned knowingly, with the full-history ruling reaffirmed after the
+> owner stated a *don't-expose-unless-necessary* principle that could have
+> reopened it. That principle was ruled to be about **design** — what the
+> product writes into the repo — not about republishing history.
+
 ## Context
 
 `faves` is the third of three repos heading for public visibility, after `rpi`

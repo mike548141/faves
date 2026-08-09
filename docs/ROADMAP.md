@@ -534,7 +534,16 @@ CycloneDX at `/.well-known/sbom.json`, `gen_sbom.py --check` CI gate) and the
   serves static files with no build to attest; revisit only if a real pipeline
   ever appears.
 
-## Theme 8 — Making the repo public (parked; owner-gated)
+## Theme 8 — Making the repo public ✅ DONE 2026-08-09
+
+🎉 **The repo is public**: <https://github.com/mike548141/faves>. Flipped at
+`a207a15` on the owner's explicit instruction, hardened in the same sitting
+(secret scanning + push protection, a `protect-main` ruleset, fork-PR approval
+for all external contributors, Actions narrowed to selected), and
+`/.well-known/security.txt` shipped and serving. Full runbook outcome and the
+two commands that were wrong when run: [GO-PUBLIC.md](GO-PUBLIC.md).
+
+The history below is kept as the record of how it was sequenced.
 
 Assessed 2026-07-12: publishable, but sequenced. Flipping visibility is a
 floor action (one-way door — forks/copies survive any later unpublish) and
