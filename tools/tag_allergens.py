@@ -153,12 +153,20 @@ ADD_ON_PRICE = re.compile(r"\+\s*\$")
 
 
 def ingredient_text(item):
-    """Name + the parts of the description describing what you actually get."""
+    """Name + the parts of the description describing what you actually get.
+
+    A Cook at Home recipe also carries an `ingredients` list, and that is the
+    best allergen evidence anywhere in the corpus — it is not inference at all,
+    it literally says "2 eggs" and "200g butter". Without it a chocolate
+    self-saucing pudding reads as allergen-free, because nothing in its *name*
+    implies flour, butter or egg.
+    """
     kept = [item["name"]]
     for clause in re.split(r"[.;]", item.get("desc") or ""):
         if ADD_ON.search(clause) and ADD_ON_PRICE.search(clause):
             continue
         kept.append(clause)
+    kept.extend(item.get("ingredients") or [])
     return " ".join(kept)
 
 

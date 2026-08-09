@@ -56,7 +56,7 @@
             "Add the peanuts and sprouts, heat through, then transfer to a serving dish.",
             "Sprinkle with coriander, drizzle with sweet chilli sauce and serve with lime wedges."
           ],
-          "tags": ["contains-peanuts", "contains-shellfish"]
+          "tags": ["contains-peanuts", "contains-shellfish", "contains-egg"]
         },
         {
           "name": "Famous Brade Green Chicken Curry",
@@ -106,7 +106,7 @@
             "A few minutes before serving, add green beans or chopped bok choy.",
             "Serve with rice."
           ],
-          "tags": ["spicy-1"]
+          "tags": ["spicy-1", "contains-dairy"]
         },
         {
           "name": "Shane's Ribs",
@@ -152,7 +152,7 @@
             "Put the shanks in an oven dish and pour the mixture over.",
             "Bake at 180°C for 2 hours."
           ],
-          "tags": [],
+          "tags": ["contains-gluten"],
           "goesWith": ["Creamy Mushrooms"]
         },
         {
@@ -188,7 +188,7 @@
             "Heat the wine, spring onion, garlic and butter in a pot.",
             "Add the rinsed and scrubbed mussels and cook covered for 5 minutes, until the shells open."
           ],
-          "tags": ["contains-shellfish"],
+          "tags": ["contains-shellfish", "contains-dairy"],
           "goesWith": ["Turkish Flatbread"]
         },
         {
@@ -242,7 +242,7 @@
             "Cook each hotcake for a minute or so until bubbles form and pop, then flip and cook through until golden on both sides.",
             "Serve with lashings of maple syrup and butter or cream."
           ],
-          "tags": ["v"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         }
       ]
     },
@@ -264,7 +264,7 @@
             "Ginger icing: 9 teaspoons ginger"
           ],
           "steps": [],
-          "tags": ["v"]
+          "tags": ["v", "contains-gluten", "contains-dairy"]
         },
         {
           "name": "B's Dope-As Brownie",
@@ -285,7 +285,7 @@
             "Best cooked in a cast-iron dish, or doubled in a baking pan.",
             "Bake at 170°C for about 22 minutes."
           ],
-          "tags": ["v", "contains-gluten"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         },
         {
           "name": "Chocolate Chewy Cookies",
@@ -305,7 +305,7 @@
             "Mix into a dough and roll into balls.",
             "Bake for 15 minutes at 170°C."
           ],
-          "tags": ["v", "contains-gluten"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         },
         {
           "name": "Gingerbread Cookies",
@@ -332,7 +332,7 @@
             "Chill in the fridge for 5–10 minutes.",
             "Bake on the pizza setting for 8 minutes at 180°C."
           ],
-          "tags": ["v", "contains-gluten"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         },
         {
           "name": "Liège Waffles",
@@ -357,7 +357,7 @@
             "Divide the dough into 12 portions, shape into balls and roll in pearled sugar. Wrap individually (they can be frozen at this point).",
             "Heat the waffle iron, press the dough on and cook until golden and crisp."
           ],
-          "tags": ["v", "contains-gluten"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         },
         {
           "name": "Orange Yoghurt Cake",
@@ -380,7 +380,7 @@
             "Fold a third of the egg whites into the batter to lighten it, then fold in the rest very lightly.",
             "Bake at 160°C for about 1 hour."
           ],
-          "tags": ["v", "contains-gluten", "contains-dairy"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         },
         {
           "name": "Queen Cakes",
@@ -399,7 +399,7 @@
             "Put the mixture into greased patty tins (makes 21).",
             "Bake for 10–12 minutes at 200°C."
           ],
-          "tags": ["v", "contains-gluten"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         },
         {
           "name": "Upside-Down Plum Cake",
@@ -430,7 +430,7 @@
             "Pour the batter over the plum wedges and bake for about 60 minutes, until a skewer comes out clean.",
             "Cool in the pan on a wire rack for 30 minutes, then invert onto a plate to serve."
           ],
-          "tags": ["v", "contains-gluten"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         }
       ]
     },
@@ -459,7 +459,7 @@
             "For the sauce, place all the sauce ingredients in a pot, bring to the boil stirring, and boil for 5 minutes.",
             "Cover the pudding with the hot sauce."
           ],
-          "tags": ["v"]
+          "tags": ["v", "contains-gluten", "contains-dairy"]
         },
         {
           "name": "Chocolate Self-Saucing Pudding",
@@ -488,7 +488,7 @@
             "Sprinkle over the brown sugar, cocoa and cornflour, then gently pour the boiling water over the back of a spoon to make the sauce.",
             "Bake at 180°C for 35 minutes, or until cooked through (try covering two-thirds of the dish with a lid)."
           ],
-          "tags": ["v"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         },
         {
           "name": "Tiramisu",
@@ -515,7 +515,7 @@
             "Spread over half the mascarpone mixture, repeat with a second layer of biscuits and mascarpone, and dust with cocoa.",
             "Chill for at least 3 hours, ideally overnight. Don't let the biscuits get too soggy when dipping."
           ],
-          "tags": ["v", "contains-dairy", "contains-egg"]
+          "tags": ["v", "contains-dairy", "contains-egg", "contains-gluten"]
         },
         {
           "name": "Pumpkin Pie",
@@ -541,7 +541,7 @@
             "Reduce the heat to 175°C (350°F) and bake a further 30–40 minutes, until the filling is firm.",
             "Cool and serve with whipped cream."
           ],
-          "tags": ["v", "contains-gluten"]
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
         },
         {
           "name": "Caramel Banana",
@@ -579,7 +579,7 @@
             "Turn the heat up high, add the cream and bring to the boil.",
             "Wait until the cream has thickened. Nice with parmesan stirred through."
           ],
-          "tags": ["v"]
+          "tags": ["v", "contains-dairy"]
         },
         {
           "name": "Turkish Flatbread",
@@ -601,7 +601,7 @@
             "Bake for about 12 minutes, brush/spray again, then bake a further 5–8 minutes until golden.",
             "Wrap the hot bread tightly in a tea towel to keep a soft crust, then serve in chunks or split and stuffed."
           ],
-          "tags": ["vg", "df"]
+          "tags": ["vg", "df", "contains-gluten", "contains-sesame"]
         }
       ]
     }
