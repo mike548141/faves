@@ -161,3 +161,9 @@ deliberation those compact docs omit.
   profile only**, measured: the QR ceiling is reached at ~4 favourites, so the
   link is the path and the QR a bonus. Called transfer, never sync.
   **Proposed — owner to ratify.**
+- [0031](0031-your-data-splits-from-refresh-and-reset.md) — **"Your data"
+  splits into two rows**: the panel ADR 0030 flagged as tallest in Settings
+  (1009 px, five actions in one summary) splits by data model, not the
+  roadmap's file/cache-shaped cut — "Your data" keeps export/import/transfer
+  (the personal data blob), "Refresh & reset" takes the app-cache refresh and
+  the preferences reset (neither touches that blob). 607 px and 449 px after.

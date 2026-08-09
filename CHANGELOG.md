@@ -16,12 +16,12 @@ content freshness separately from this file.
   it; tap Not now and it waits — you'll get it next time you open Faves fresh.
   It will never reload the page under you mid-order. Previously the only way to
   pick up new menus was to force-quit the app and open it again.
-- **Settings → Your data → "Refresh menus and app"** — the escape hatch for
-  when something still looks stale. It throws away the offline copy of the
-  menus and app code and downloads the lot again. Your favourites, ratings,
-  settings, profiles and order tally aren't touched, and it won't run when
-  you're offline (clearing the copy with no connection would leave you with no
-  menus at all).
+- **Settings → Refresh & reset → "Refresh menus and app"** — the escape
+  hatch for when something still looks stale. It throws away the offline copy
+  of the menus and app code and downloads the lot again. Your favourites,
+  ratings, settings, profiles and order tally aren't touched, and it won't
+  run when you're offline (clearing the copy with no connection would leave
+  you with no menus at all).
 - **Miles and °F, if that's what you read in** — a new Units setting switches
   every distance on screen between kilometres and miles, and swaps the oven
   temperatures in the Cook at Home recipes between °C and °F. Metric stays the
@@ -88,6 +88,12 @@ content freshness separately from this file.
   keeps `.order-head` for the order, share, receive and transfer sheets.
 
 ### Changed
+- **Settings → "Your data" is now two rows.** Its one-line summary had grown
+  to naming five actions (export, import, transfer, refresh, reset) as each
+  landed. Export/import/transfer — moving your saved picks in, out or across
+  devices — stay under "Your data"; the app-cache refresh and the preferences
+  reset move to a new "Refresh & reset" row. Both panels open, confirm and
+  work exactly as before; nothing moved lost its confirmation step. (ADR 0031)
 - **Chocolate Self-Saucing Pudding is a single mixture again** — it had been
   written up doubled (serves 12, 70 minutes). Now serves 6 and bakes for 35, in
   a 1.5–2 L dish. It still doubles well for a crowd.
