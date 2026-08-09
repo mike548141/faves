@@ -151,3 +151,13 @@ deliberation those compact docs omit.
   stops rejected: it can serve a 170°C bake at 350°F. Storing converted values,
   guessing from the browser locale, and a whole-of-app "locale" switch (prices
   stay NZD) all rejected too.
+- [0030](0030-personal-data-import-and-transfer.md) — **importing your data, and
+  transferring it to another device** (Theme 12b + Theme 9 v1). One applier
+  behind both doors: merge by default, replace behind a named confirm, your own
+  rating wins a conflict. Two things it refuses to guess — a profile match needs
+  id *and* name to agree (every device's first profile is `default`, so a
+  friend's export collides by construction), and differing allergen prefs are
+  shown in full and chosen, never resolved. Transfer carries the **active
+  profile only**, measured: the QR ceiling is reached at ~4 favourites, so the
+  link is the path and the QR a bonus. Called transfer, never sync.
+  **Proposed — owner to ratify.**

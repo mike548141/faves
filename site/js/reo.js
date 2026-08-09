@@ -112,6 +112,19 @@ const MI = {
   "update.refreshing": "E whakahou ana…", // draft
   "update.later": "Ā muri ake", // draft
   "settings.unitsTitle": "Ngā Waeine", // draft — "the units of measurement"
+  // "Your data" — save a copy, bring one back, hand one to your other device
+  // (draft). Only the neutral chrome is swapped: the import review itself
+  // stays English, because most of it is interpolated counts and the rest is
+  // allergen wording, which the safety boundary above keeps English.
+  // kōnae = file · raraunga = data · pūrere = device/appliance ·
+  // kawe = carry/convey · whakawhiti = transfer/cross over — all per
+  // maoridictionary.co.nz.
+  "data.title": "Ō raraunga", // draft — "your data"
+  "data.download": "Tikina ō raraunga", // draft — "fetch your data"
+  "data.importTitle": "Kawea mai anō he raraunga", // draft — "bring data back in"
+  "data.chooseFile": "Tīpakohia he kōnae", // draft — "choose a file"
+  "data.transferTitle": "Whakawhitia ki tētahi atu pūrere", // draft
+  "data.transferButton": "Hangaia he hono whakawhiti", // draft — "make a transfer link"
   // Menu screen chrome (dish names, descriptions and section names are
   // venue content and are never translated; safety text stays English — see
   // the header note)
