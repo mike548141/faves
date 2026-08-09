@@ -335,7 +335,8 @@
   ],
   "picks": [],
   "priceBand": null,
-  "verified": null,
+  "verified": "2026-08-08",
+  "verifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-08"
   },
