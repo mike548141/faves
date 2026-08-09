@@ -218,6 +218,32 @@ would be inventing evidence.
 gains `available.offBy` (or `to`). A hard delete destroys every date attached to
 it, including that it ever existed.
 
+#### Refreshing a menu — append, never overwrite
+
+**This is the rule the whole time dimension depends on.** A refresh is a dated
+*reading* of the menu, not a replacement of what we knew. When you transcribe a
+new menu for a venue that already has one:
+
+1. **A price that changed** → make it a series (or add an entry to the existing
+   one): keep the old value, add the new with `recorded` set to the day you read
+   the new menu. Do **not** replace the number.
+2. **A price that didn't change** → leave it as it is. There is no history to
+   record, and the venue's `verified` date already says when we last looked.
+3. **A dish that has gone** → add `available.offBy` (the day you confirmed it
+   was gone). Do **not** delete it.
+4. **A dish that was renamed** → carry its price history onto the new name.
+   Treating a rename as "one dish dropped, one added" is a false claim about the
+   world, and silently loses the history.
+5. **Correction vs change** — if you are fixing something we recorded *wrong*
+   (a typo, a price we never knew), that is **not** a price change: overwrite it
+   and add no entry. Recording a correction as a series fabricates a price rise.
+   The test: *did the shop change it, or did we?*
+6. Bump `verified` to the day you read the menu, and `DATA_VERSION` in `sw.js`.
+
+Done this way every refresh adds a free, honest reading to the corpus. Done the
+old way it destroys one — which is exactly what happened to Takeaway @ Churton's
+2019 prices, recoverable only because git held them (ADR 0023).
+
 **Resolution — why the UI never changed.** `site/js/temporal.js` is a pure
 resolver; `data.js` runs `resolveRecord()` on every record as it loads, so the
 rest of the app receives the same shape it always did: `item.price` is a number,

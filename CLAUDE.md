@@ -154,6 +154,13 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
     `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
     in `site/data/index.json` + a fallback `<li>`; then `validate.py`.
+  - **Refreshing a menu = append, never overwrite.** A changed price gains a
+    dated entry beside the old one; a departed dish gains `available.offBy`
+    rather than being deleted; a renamed dish carries its history over. But a
+    *correction* (we recorded it wrong) overwrites and adds nothing — the test
+    is *did the shop change it, or did we?* Full rules: ARCHITECTURE.md
+    "Refreshing a menu". This is how the price history accrues at zero cost;
+    a refresh done the old way silently destroys it (ADR 0023).
 
 There is no `man` page: faves ships a website, not a CLI. The `tools/`
 scripts are the only command surface — keep their `--help`/argparse and

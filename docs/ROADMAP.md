@@ -950,31 +950,56 @@ recipes are the first data a person would genuinely mourn) or **Theme 9 v1**.
 
 The data model landed 2026-08-08 (ADR 0023): prices, menus, dishes and venues
 all carry dates now, and `temporal.js` resolves them to "today" before the UI
-sees anything. These are the features that model exists to make possible. None
-of them is built; all of them are now cheap, because the hard part — having the
-data at all — is done and cannot be retrofitted later.
+sees anything.
 
-**a. Upcoming price changes** — *owner's own example: "coffee will be $6 from
-Wednesday".* Already a working data fact: an entry with a future `from` resolves
-correctly today (you still pay today's price) and `pending()` returns the
-announced one. Nothing renders it. The open design calls are the owner's:
+**Owner's framing, 2026-08-09 (read this before building any of it).** Capturing
+price history is **not a core function of this app** — Faves exists to answer
+*what do I eat tonight*. The history is **valuable data gathered as a by-product** <!-- datescan:allow: product vocabulary — "eat tonight" is the question this app answers, not a dated claim -->
+of work we do anyway: every menu refresh is already a dated reading. It accrues
+at zero extra cost, and it is the one thing that **cannot** be added later —
+hence the model now, the features whenever they earn their place.
+
+The eventual use splits in two, and they are different products with different
+bars:
+
+| | Surface | Bar it must clear |
+|---|---|---|
+| **A** | A **dedicated section** — the research/analysis basis (trends, comparisons, what's risen fastest) | Opt-in, off the main path. Free to be denser, because nobody lands there by accident |
+| **B** | **Inline in the primary flow**, where it helps the eat-tonight decision — the owner's example: *coffee is $6 from tomorrow* | Must earn its pixels against the core job. If it doesn't change what you order, it doesn't belong on the card | <!-- datescan:allow: owner's verbatim example of the feature ("$6 from tomorrow") — quoted product vocabulary, not a dated claim -->
+
+
+⚑ **Owner's call, deliberately deferred: when there is enough data to be worth
+using, and which surface goes first.** Baseline at adoption (2026-08-08):
+**1 venue of 31** has more than one price reading (Churton, 174 dishes), and
+only **2 of 31** carry a `verified` date at all. So: not yet, by a distance.
+
+**What makes it accrue — the one operational rule.** A menu refresh must
+**append** a price reading, never overwrite. This is not hypothetical: the
+Churton refresh discarded seven years of prices in a single commit, and they
+were only recoverable because git happened to hold them. Recorded in
+`ARCHITECTURE.md` ("Refreshing a menu") and `CLAUDE.md`. Every refresh done that
+way adds a reading to the corpus for free; every one done the old way silently
+destroys one.
+
+**a. Upcoming price changes (surface B)** — *owner's example: "coffee will be $6
+from Wednesday".* Already a working data fact: an entry with a future `from`
+resolves correctly (the current day keeps its price) and `pending()` returns the
+announced one. Nothing renders it. Open design calls, the owner's:
 - Where it shows — a quiet "→ $6 from Wed" beside the price, or only on the
   dish page? The dinner-choosing UX must not turn into a pricing dashboard.
 - Does the order tally warn when a pending change lands before you'd collect?
 - Who supplies the dates — a shop's posted notice is the honest source; we
-  should not extrapolate a rise we were not told about.
+  never extrapolate a rise we were not told about.
 
-**b. Price trends over time** — *the owner's stated future want.* `priceSeries`
-already rides on every resolved dish that has history. Churton is the proof
-case: 174 dishes with a 2019 and a 2026 price — a median rise of **50%** (mean
-54%, range 16–120%) across those seven years. Possible shapes, cheapest first:
-a per-dish "was $10.50 in 2019" line · a sparkline on
-the dish page · a venue-level "prices up ~50% since 2019" · a cross-venue view
-of what has risen fastest. **Honesty constraint, non-negotiable:** two readings
-seven years apart is not a trend line — it is two points. Anything drawn from
-them must not imply we watched the intervening years, and a `recorded`-dated
-entry ("we read it then") must never render as a `from`-dated one ("it changed
-then").
+**b. Price trends (surface A)** — `priceSeries` already rides on every resolved
+dish that has history. Churton is the proof case: 174 dishes with a 2019 and a
+2026 price, median rise **50%** (mean 54%, range 16–120%). Possible shapes,
+cheapest first: a per-dish "was $10.50 in 2019" line · a sparkline on the dish
+page · a venue-level "prices up ~50% since 2019" · a cross-venue view of what
+has risen fastest. **Honesty constraint, non-negotiable:** two readings seven
+years apart is not a trend line — it is two points. Nothing drawn from them may
+imply we watched the intervening years, and a `recorded`-dated entry ("we read
+it then") must never render as a `from`-dated one ("it changed then").
 
 **c. Menu seasons in the UI** — the model supports recurring NZ seasons on any
 section or dish, so a winter menu is one fact that returns every year. Nothing
