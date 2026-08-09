@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@6887118`, owner-ratified 2026-07-25, bumped 2026-08-09)
+## Doctrine — inherited from atelier (pinned `atelier@5c16a59`, owner-ratified 2026-07-25, bumped 2026-08-09)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -42,9 +42,15 @@ in atelier and is read on demand — never wholesale.
   (`RECORD.md`) — and when that close pushes, the all-clear cites the pushed CI
   result (or flags it pending), never just a green local scan.
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
-  session start run `git -C "../atelier" log --oneline 5ef28ae..HEAD`; any
-  output means the house doctrine moved — read it, then bump the pin above
-  deliberately.
+  session start run `git -C "../atelier" log --oneline <pin>..HEAD` using the
+  **pin SHA in the heading above** — never a separately-written baseline. Any
+  output means the house doctrine moved — read it, then bump the pin
+  deliberately. (Until 2026-08-09 this line hard-coded `5ef28ae`, a baseline
+  that was never bumped with the pin: it had fallen 31 commits behind, so the
+  check reported 40 commits of which 31 were already read and inside the pin.
+  A drift check that always fires is a drift check nobody reads — the same
+  failure `pathscan` and `plainscan` show here. Deriving the baseline from the
+  pin makes the two incapable of diverging.)
 - **Estate resources — point up, don't re-derive:** providers & account plans,
   financial constraints & plan entitlements, licences, credentials, shared
   estate tooling, and the estate inventory live in the operator's **private
