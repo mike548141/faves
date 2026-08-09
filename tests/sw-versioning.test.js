@@ -69,6 +69,30 @@ test("every shipped module is precached — no module may be missing from SHELL"
   assert.deepEqual(missing, [], `not precached (offline would break): ${missing.join(", ")}`);
 });
 
+// ADR 0027. The worker used to call skipWaiting() at the end of install, so a
+// new worker served new assets to a page still running the old HTML and
+// modules. It now holds in `waiting` until the page asks — which is the whole
+// mechanism behind the "newer version is ready" notice, and easy to undo by
+// accident when someone next wonders why an update "doesn't apply immediately".
+test("install does not skipWaiting — the new worker waits to be asked", () => {
+  const installBlock = src
+    .slice(
+      src.indexOf('self.addEventListener("install"'),
+      src.indexOf('self.addEventListener("message"')
+    )
+    .replace(/^\s*\/\/.*$/gm, ""); // the comment explains the absence; the code must show it
+  assert.ok(installBlock.length > 0, "install and message handlers must both exist");
+  assert.ok(
+    !installBlock.includes("skipWaiting"),
+    "install must not call skipWaiting (ADR 0027) — it strands old pages on new assets"
+  );
+});
+
+test("SKIP_WAITING is the one way out of waiting", () => {
+  assert.match(src, /event\.data\.type === "SKIP_WAITING"/);
+  assert.match(src, /self\.skipWaiting\(\)/);
+});
+
 test("activate keeps exactly the three current caches", () => {
   assert.match(
     src,

@@ -11,7 +11,7 @@
 //   - Change both? bump both.
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
-const SHELL_VERSION = "2026-08-09.4";
+const SHELL_VERSION = "2026-08-09.5";
 const DATA_VERSION = "2026-08-09.3";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
@@ -76,6 +76,7 @@ const SHELL = [
   "js/slug.js",
   "js/store.js",
   "js/sw-register.js",
+  "js/sw-update.js",
   "js/temporal.js",
   "js/to-top.js",
   "js/toast.js",
@@ -142,14 +143,34 @@ self.addEventListener("install", (event) => {
         const ids = await (await cache.match(DATA_INDEX)).json();
         await cache.addAll(ids.map((id) => `data/restaurants/${id}.json`));
       });
-      await self.skipWaiting();
+      // NO unconditional skipWaiting (ADR 0027). A new worker that takes over
+      // immediately serves new assets to a page still running the old HTML and
+      // modules — a version skew we can't see and can't test. Instead it holds
+      // in `waiting`: the page offers a "newer version is ready" notice, the
+      // tap posts SKIP_WAITING below, and the reload lands on the new worker
+      // together. Ignore the notice and the phone still gets the new version on
+      // the next cold start, when the last client closes — exactly the
+      // kill-and-relaunch behaviour that already worked, never worse.
     })()
   );
+});
+
+// The one way out of `waiting`: the page asking, on the user's tap
+// (js/sw-register.js). Anything else is ignored — this is a message port any
+// same-origin script can reach.
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
+      // Activation now arrives one of two ways (ADR 0027): the page asked
+      // (SKIP_WAITING), or every client closed and the waiting worker took over
+      // on its own. Cleanup is identical either way, and clients.claim() below
+      // still matters for the first-ever install, where claiming is what gives
+      // the very first visit its offline copy without a reload.
+      //
       // Keep the current shell, data and image caches; delete everything else —
       // old shell/data versions and the pre-split single `faves-<VERSION>`
       // cache. The new caches were fully built during install (old caches were
