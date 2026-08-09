@@ -53,6 +53,7 @@ const SHELL = [
   "js/locations.js",
   "js/menu.js",
   "js/personal-data.js",
+  "js/personal-io-ui.js",
   "js/picker.js",
   "js/price.js",
   "js/profiles.js",

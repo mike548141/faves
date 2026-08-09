@@ -28,6 +28,7 @@ import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
+import { initTransferReceive } from "./personal-io-ui.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -868,6 +869,7 @@ function initContactBar(bar, cardEl) {
 // The order FAB rides along on every screen so a running order is always
 // reachable — even on a stub page or if this menu fails to load.
 initOrderUI();
+initTransferReceive(); // a transfer link can land on any screen (Theme 9 v1)
 initBackToTop();
 // Apply the stored UI language to the static chrome (the back link) and set
 // <html lang>. Menu content — dish names, descriptions, section names — stays

@@ -7,6 +7,7 @@
 import { loadRestaurant } from "./data.js";
 import { slug } from "./slug.js";
 import { initOrderUI } from "./cart-ui.js";
+import { initTransferReceive } from "./personal-io-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
 import { profiles, PROFILES_KEY } from "./profiles.js";
@@ -171,6 +172,7 @@ async function main() {
 }
 
 initOrderUI(); // the running order stays reachable from the recipe screen too
+initTransferReceive(); // a transfer link can land on any screen (Theme 9 v1)
 initReo(); // sets <html lang>; the back link is set to the collection name by render()
 
 // Keep the ⚠ allergen tags live against an allergen/dietary change made in

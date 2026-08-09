@@ -36,6 +36,7 @@ import {
   personalDataJson,
   summarisePersonalData,
 } from "./personal-data.js";
+import { importControls, transferControls } from "./personal-io-ui.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
@@ -289,11 +290,16 @@ function peopleSection() {
 }
 
 // --- Your data ---------------------------------------------------------
-// Export everything (every profile, not just the active one), plus the reset.
+// Export everything (every profile, not just the active one), import it back,
+// transfer one person to another device, plus the reset.
 // Reset lives here rather than on the index because the index is now short
 // enough that a bare "Reset" button would sit one stray tap from wiping the
 // allergen flags — and because "what's stored, and how do I get rid of it" is
 // one topic. It confirms inline, same pattern as deleting a person.
+//
+// Order is deliberate: out, back in, across, then destroy. The import and
+// transfer halves live in personal-io-ui.js (they share one applier with the
+// receive path on every screen); this panel only places them.
 function dataSection() {
   const note = el("p", {
     className: "settings-note",
@@ -306,6 +312,7 @@ function dataSection() {
     className: "settings-reset",
     textContent: "Download my data",
   });
+  btn.dataset.i18n = "data.download";
   // Polite, not assertive: the result is a confirmation, not an interruption.
   const status = el("p", { className: "settings-note settings-data-status", role: "status", "aria-live": "polite" });
 
@@ -367,11 +374,24 @@ function dataSection() {
     resetBtn.focus();
   });
 
+  const imports = importControls();
+  const transfer = transferControls();
+
   const panel = el("div", { className: "settings-panel" }, [
     note, btn, status,
+    imports.node,
+    transfer.node,
     resetHead, resetNote, resetBtn, resetConfirm, resetStatus,
   ]);
-  return { panel, close: () => { resetConfirm.hidden = true; } };
+  return {
+    panel,
+    close: () => {
+      resetConfirm.hidden = true;
+      // An abandoned import review must not still be sitting there, one tap
+      // from applying, when the panel is reopened later.
+      imports.close();
+    },
+  };
 }
 
 export function initSettingsUI() {
@@ -469,7 +489,7 @@ export function initSettingsUI() {
     { key: "maps", title: "Maps app", i18n: null, panel: mapsPanel, summary: (s) => MAPS_APPS.find((m) => m.key === s.mapsApp)?.label ?? "" },
     { key: "lang", title: "Language", i18n: "settings.langTitle", panel: langPanel, summary: (s) => (s.lang === "mi" ? "Te Reo Māori" : "English") },
     { key: "people", title: "Who’s using Faves?", i18n: "profile.title", panel: people.panel, summary: peopleSummary },
-    { key: "data", title: "Your data", i18n: null, panel: data.panel, summary: () => "Download a copy, or start over" },
+    { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save, restore, transfer or start over" },
   ];
 
   const rows = el("ul", { className: "settings-rows" });

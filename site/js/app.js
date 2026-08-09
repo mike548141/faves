@@ -26,6 +26,7 @@ import { initSettingsUI } from "./settings-ui.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { initOverflowMenu } from "./overflow-ui.js";
+import { initTransferReceive } from "./personal-io-ui.js";
 import { initBackToTop } from "./to-top.js";
 import { priceBand } from "./price.js";
 import { initReo, t } from "./reo.js";
@@ -353,6 +354,10 @@ function init(restaurants) {
     return available.length ? available : filtered;
   }, (r) => favouriteVenueIds().has(r.id));
   initOrderUI();
+  // A `#xfer=` link may have landed here (Theme 9 v1). Wired on every screen,
+  // like the group-order receive, because a link from Messages lands wherever
+  // the sender's URL pointed.
+  initTransferReceive();
   // After all static chrome, the filled selects and the JS-built dialogs are
   // in the DOM, apply the stored UI language across the lot in one pass (and
   // re-apply live whenever it's toggled in Settings).
