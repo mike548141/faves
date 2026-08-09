@@ -1190,13 +1190,6 @@ consequences; the fix, if he wants one, is data, not a special case.
 
 - **g. The "needs a refresh" caveat should read the method, not the
   date** `[S][ux][content]` — raised 2026-08-09 by 13f, deliberately not
-  **RULED by the owner 2026-08-09; CLAIMED 2026-08-09 10:21 UTC**
-  (wt: `faves-refresh-policy`). The ruling: a reading counts as a check when
-  it came from the shop itself — **in store, a paper menu, the shop's own
-  named website, or by phone** — and **not** from a third-party listing or a
-  delivery app (*"not third parties like delivereasy, uber etc"*). An **age
-  limit applies as well**: a trusted reading that has gone stale re-earns the
-  caveat.
   fixed there. The menu screen shows its ⓘ "menu items and prices need a
   refresh" caveat when `verified` is null. Now that a reading states its
   method, the bare presence of a date is the weaker signal — a
