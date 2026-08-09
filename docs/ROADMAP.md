@@ -64,17 +64,18 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   maps-handoff. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   **Still open:** Kaffee Eis + Gong Cha's **second branches** — need real
   addresses + a dev-time geocode; a content session appends them, no code change.
-- [~] **McDonald's — finish the flesh-out** `[M][content]` (part (a)
-  geocode only claimed 2026-08-09-0153, wt: faves-coord-audit; b/c/d
-  stay open) — added 2026-07-23 as
+- [~] **McDonald's — finish the flesh-out** `[M][content]` (part (a) ✅ done
+  2026-08-09; b/c/d stay open) — added 2026-07-23 as
   a 5-branch listing with the enduring menu (items only; **prices "varies"** —
   not published per-store, so null, no fabrication). Remaining, all content (no
-  code): (a) **dev-time geocode the 5 branches** so it shows in Near-me **and so
-  the contact card shows the 2 *nearest* branches** — today, with no coords, the
-  branch cap falls back to the first two in data order (Courtenay Pl + Lambton
-  Quay show even when Johnsonville/Porirua are closer to the viewer). The sort
-  logic already exists (`orderedBranches` → `branchesToShow`); it just needs the
-  coords. (b) **self-hosted product photos** — **owner accepted the copyright/IP
+  code): (a) ✅ **dev-time geocode the branches** — **done 2026-08-09**
+  (wt: faves-coord-audit), so it now shows in Near-me **and the contact card
+  shows the 2 *nearest* branches** rather than the first two in data order.
+  4 of 5 filled at house-number level; **Courtenay Place stays null** — "200
+  Courtenay Place" resolves only to the road centreline and no POI exists, and
+  a guessed pin is worse than none. Detail →
+  [`reviews/2026-08-09-0207-coordinate-audit.md`](reviews/2026-08-09-0207-coordinate-audit.md).
+  (b) **self-hosted product photos** — **owner accepted the copyright/IP
   risk on the public site, 2026-07-23** (informed decision on record); needs the
   actual image files (the official site is a JS app — assets weren't scrapeable
   this session); (c) **allergen/dietary tags** from a reliable source
@@ -236,10 +237,17 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   its venue leg targets the address too. ADR 0010 part (a) superseded; its "~N
   min drive" hint (b) stands. The underlying coord imprecision is still open —
   see the **Coordinate audit** `[S]` below.
-- [~] **Coordinate audit** `[S]` (claimed 2026-08-09-0153,
-  wt: faves-coord-audit) — follow-on: dev-time geocoded coords are
-  suspect fleet-wide (R & S proven ~100 m off). Sweep all venue coords against
-  their street addresses; affects distance sort + detour maths accuracy.
+- ✅ **Coordinate audit** `[S]` — **done 2026-08-09** (wt: faves-coord-audit,
+  `tools/audit_coords.py`). All 46 coordinate slots re-geocoded against their
+  own street addresses. **The premise was wrong:** R & S's pin is 1 m from
+  148 Cuba St and has never been edited — the "1 Garrett St" bug was the maps  <!-- leakscan:allow: venue business addresses already in site/data and in the quoted bug report — same product class (ADR 0022 gate 1) -->
+  app reverse-geocoding the point we handed it, which is what ADR 0016 already
+  fixed by handing over the address string instead. Fleet-wide: **36 of 39
+  stored pins within 30 m** (33 within 2 m), nothing past 100 m, **0
+  corrections needed**. 2 rows carry a note (satay-kingdom-cafe, an in-mall
+  address with no geocodable door; groundup-cafe at 33 m), 1 is unverifiable
+  by this method (khandallah-trading-company, a street-corner address). Detail
+  → [`reviews/2026-08-09-0207-coordinate-audit.md`](reviews/2026-08-09-0207-coordinate-audit.md).
 - [ ] **Favourite/rating reference integrity** `[M][design]` — **ADR 0020**
   (proposed). A favourited/rated/shared dish or venue may be missing when the app
   opens — either **removed** from the data, or the local data is **stale** (a
