@@ -68,6 +68,7 @@ const MI = {
   "nav.settings": "Ngā Tautuhinga",
   "nav.about": "Mō tēnei", // draft
   "nav.shareApp": "Tuaritia tēnei taupānga", // draft
+  "nav.report": "Tukua mai he kōrero", // draft — "send us word"
   "nav.allRestaurants": "← Ngā wharekai katoa",
   "nav.back": "← Hoki",
   // Favourites view
@@ -138,6 +139,28 @@ const MI = {
   "menu.noMatch": "Kāore he kai e tau ana.",
   "menu.stub": "Kei te haere mai te tahua kai katoa.",
   "menu.stubCall": "Kei te haere mai te tahua kai katoa — waea atu ki te ōta i te wā nei.", // draft
+  // "Tell us what's wrong or missing" (report-ui.js). Neutral chrome only: the
+  // allergen report type, the safety note and every status line carry NO key
+  // here, so they stay English per the safety boundary above. "hē" (macron) is
+  // the verb/noun "to be wrong / error"; bare "he" is the indefinite article and
+  // makes the phrase nonsense — do not strip it.
+  "report.title": "Kua hē tētahi mea i konei?", // draft — "has something gone wrong here?"
+  "report.titleApp": "Tukua mai he kōrero", // draft
+  "report.what": "He aha te hē?", // draft — "what is the error?"
+  "report.note": "Ētahi atu kōrero (ki tō hiahia)", // draft — "any other word (if you wish)"
+  "report.share": "Tuaritia", // draft — "share it"
+  "report.copy": "Tāruatia", // draft — "copy it"
+  "report.preview": "Ko tēnei ka tukuna", // draft — "this is what gets sent"
+  "report.contactLabel": "Kua hē tētahi mea?", // draft
+  "report.contactValue": "Tukua mai he kōrero", // draft
+  "report.type.price": "Kei te hē te utu", // draft — "the price is wrong"
+  "report.type.gone": "Kua mutu tēnei kai", // draft — "this dish has ended"
+  "report.type.dishOther": "Tētahi atu mea mō tēnei kai", // draft
+  "report.type.venueOther": "Kua tawhito ētahi kōrero", // draft — "some information is out of date"
+  "report.type.suggest": "Tāpirihia he wāhi", // draft — "add a place"
+  // draft — "hapa" is Te Aka's "error/mistake", but its first gloss is the
+  // loanword "supper"; on a food app that collision wants the reviewer's eye.
+  "report.type.app": "He hapa, he whakaaro rānei mō te taupānga",
   // Recipe screens (Cook at Home)
   "recipe.loading": "E uta ana te tohutao…", // draft
   "recipe.stub": "Kei te haere mai ngā tohutao.", // draft

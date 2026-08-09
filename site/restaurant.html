@@ -70,6 +70,12 @@
             <span class="overflow-item-icon" aria-hidden="true">⤴</span>
             <span data-i18n="nav.shareApp">Share this app</span>
           </button>
+          <!-- Same item as index.html so both ⋯ menus read identically; the
+               dish/venue-specific reports live on the page itself (ADR 0028). -->
+          <button type="button" id="report-btn" class="overflow-item" role="menuitem" hidden>
+            <span class="overflow-item-icon" aria-hidden="true">⚑</span>
+            <span data-i18n="nav.report">Suggest or report</span>
+          </button>
           <button type="button" id="about-btn" class="overflow-item" role="menuitem" hidden>
             <span class="overflow-item-icon" aria-hidden="true">ⓘ</span>
             <span data-i18n="nav.about">About</span>

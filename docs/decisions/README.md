@@ -133,6 +133,15 @@ deliberation those compact docs omit.
   rejected (it costs the search query, scroll position and dietary chips —
   yanking a page mid-order); ignore the notice and the next cold start still
   lands it, as kill-and-relaunch always did.
+- [0028](0028-report-compose-and-share.md) — **"tell us what's wrong or missing"**:
+  a report is raised from the dish row, the venue contact card or the ⋯ menu, so it
+  arrives carrying the venue id, the dish, the value on screen, the `verified` date
+  and the device's own version stamps. Transport is **owner-ruled compose-and-share**
+  — `navigator.share` and clipboard-copy as two first-class buttons, the composed
+  text left on screen if both miss, no recipient baked in, no infra, works offline.
+  A pre-filled GitHub issue and a Pages Function are **not rejected, just not
+  first**. Non-negotiable: a report is a suggestion to the owner, **never a live
+  edit** — tested across every report type.
 - [0029](0029-unit-display-preference.md) — **metric or imperial is a
   render-time display choice**, never a stored one: the dials keep storing
   kilometres and the recipes keep saying °C, and only the words change.

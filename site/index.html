@@ -88,6 +88,20 @@
               <span class="overflow-item-icon" aria-hidden="true">⤴</span>
               <span data-i18n="nav.shareApp">Share this app</span>
             </button>
+            <!-- The general front door for "tell us what's wrong or missing":
+                 suggest a place we're missing, or report a bug/idea about the
+                 app. Dish- and venue-specific reports are raised from the menu
+                 screen itself, where the context is (ADR 0028). -->
+            <button
+              type="button"
+              id="report-btn"
+              class="overflow-item"
+              role="menuitem"
+              hidden
+            >
+              <span class="overflow-item-icon" aria-hidden="true">⚑</span>
+              <span data-i18n="nav.report">Suggest or report</span>
+            </button>
             <button
               type="button"
               id="about-btn"
