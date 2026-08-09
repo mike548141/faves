@@ -125,3 +125,11 @@ deliberation those compact docs omit.
   what it discloses is content-free. Also corrects 0022's reason for rejecting
   redaction — "reachable in every clone" is false here; the real cost is the 44
   stranded doc SHAs. **No pre-flip blocker remains.**
+- [0027](0027-pwa-update-flow.md) — **a waiting worker and a notice, not silent
+  `skipWaiting()`**. The worker used to take control the instant it installed,
+  so an old page was served new assets from caches its own worker had just
+  deleted; nothing reloaded, so an update was invisible anyway. It now holds in
+  `waiting` until the page posts `SKIP_WAITING` on the user's tap. Auto-reload
+  rejected (it costs the search query, scroll position and dietary chips —
+  yanking a page mid-order); ignore the notice and the next cold start still
+  lands it, as kill-and-relaunch always did.

@@ -1242,34 +1242,27 @@ loaded. **Nothing reloads it.** So "check for updates" and "show the new
 version" are two separate fixes, and doing only the first changes nothing
 visible.
 
-- [~] **16a — Check on resume** `[S]` (claimed 2026-08-09-0153,
-  wt: faves-pwa-updates) — call `registration.update()` when the
-  page becomes visible (`visibilitychange`) and on `focus`, **throttled** (say,
-  at most once every few minutes) so a phone flicking between apps doesn't
-  hammer the origin. This is the whole fix for "it never notices", and it's a
-  handful of lines in `sw-register.js`.
-- [~] **16b — Tell the user, then reload** `[M][design]` (claimed
-  2026-08-09-0153, wt: faves-pwa-updates) — on `updatefound` →
-  the installing worker reaching `installed`, surface it. **Design call:**
-  auto-reload vs a quiet "New menus available — tap to refresh" notice.
-  Recommend the **notice**: an auto-reload can yank the page out from under
-  someone mid-order. The order tally and favourites live in `localStorage` and
-  survive, but the search query, scroll position and the dietary-chip toggle do
-  not — the same in-session state the Settings re-render already loses (see the
-  2026-07-25 refinement ruling). Reload on the user's tap, or silently on the
-  next cold start.
-- [~] **16c — "Force a full refresh"** `[S][design]` (claimed
-  2026-08-09-0153, wt: faves-pwa-updates) — the owner's explicit ask,
-  and the escape hatch for when 16a/16b still leave something stale. Clears the
-  shell + data caches, re-registers the worker and reloads. Two rules it must
-  obey: **refuse (or warn hard) when offline** — clearing the caches with no
-  network strands the app with nothing to serve, which is the one way this
-  feature can make things worse than doing nothing; and **never touch the
-  personal layer** — hearts, ratings, settings, profiles and the order tally are
-  the user's, not cache. Home: Settings → "Your data" is the honest place (it
-  already holds export + reset behind the Settings index,
-  `0025-settings-index-and-panels`), with the wording
-  making clear it refreshes *menus*, not *your stuff*.
+- ✅ **16a — Check on resume** — **shipped 2026-08-09** (`site/js/sw-update.js`
+  + `sw-register.js`, 10 tests): `registration.update()` on `visibilitychange`
+  (becoming visible) and `focus`, throttled to once every five minutes through
+  one shared gate, so fifty app-switches in a minute cost one request. The
+  throttle, the resume test and the reload guard are a pure module so
+  `node --test` can execute them.
+- ✅ **16b — Tell the user, then reload** — **shipped 2026-08-09**
+  (`site/js/update-notice.js`): a dismissible banner, "A newer version of Faves
+  is ready", with Refresh and Not now. Refresh activates the waiting worker and
+  reloads; Not now leaves it for the next cold start. **The notice won**, as
+  recommended — no auto-reload, since the search query, scroll position and
+  dietary chips don't survive one. English + te reo strings both in `reo.js`
+  (drafts, flagged for the reo review).
+- ✅ **16c — "Force a full refresh"** — **shipped 2026-08-09**
+  (`site/js/cache-refresh.js` + Settings → Your data, 8 tests): clears the shell
+  and data caches, unregisters the worker, reloads — the fresh load re-registers
+  and rebuilds from the network. Both rules held: **offline is a refusal**, not
+  a warning, re-checked at the confirm as well as the first tap; and the
+  personal layer is untouched — a test asserts the module never so much as names
+  `localStorage`. Photos survive too (capped runtime cache, not what goes
+  stale). Wording says plainly it refreshes menus and app code, not your stuff.
 - ✅ **16e — About shows the installed versions** — **shipped 2026-08-09**
   (`site/js/versions.js`, 9 tests): an "App" and a "Menus & prices" stamp read
   from the service worker's cache names, so it reports what the device has
@@ -1282,21 +1275,27 @@ visible.
   Say the word if they should show anyway (they would help when debugging a
   weird device). The genuinely missing piece isn't another number: it's
   **"is this the latest?"**, which needs 16a's update check to answer.
-- [~] **16d — Version skew, named so it isn't discovered the hard way**
-  `[S]` (claimed 2026-08-09-0153, wt: faves-pwa-updates) —
-  `skipWaiting()` means a new worker serves new assets to an **old** page, so a
-  module the old page lazily imports can arrive from a newer build. It has not
-  bitten us (the app imports eagerly at load), but 16a makes updates land far
-  more often, which raises the odds. Decide deliberately: keep `skipWaiting()`
-  and accept it, or hold the new worker in `waiting` until the user takes 16b's
-  refresh. Worth an ADR line either way, since it interacts with [ADR 0015]'s
-  split caches.
+- ✅ **16d — Version skew, named so it isn't discovered the hard way** —
+  **decided and shipped 2026-08-09**
+  ([ADR 0027](decisions/0027-pwa-update-flow.md)): the unconditional
+  `skipWaiting()` is **gone**. A new worker holds in `waiting` until the page
+  posts `{type:"SKIP_WAITING"}` on 16b's tap, so an old page is never served
+  new assets from caches its own worker has just swept. Ignore the notice and
+  the worker activates at the next cold start — the kill-and-relaunch behaviour
+  that already worked, never worse.
+  [ADR 0015](decisions/0015-split-precache-versioning.md)'s split caches and its
+  build-new-then-delete-old activate order are untouched; `clients.claim()`
+  stays, for the first-ever install. Two static tests pin the absence of
+  `skipWaiting()` from install, because the temptation to put it back is real.
 
 **Test honestly:** the service worker hides its own changes, so this needs a real
 device or a headless run with a fresh browser profile — a hard-reload does not
 bust it. The acceptance case is the owner's own:
 leave the PWA backgrounded, push a data change, foreground it — the new menu
-should appear without killing the app.
+should appear without killing the app. **16a–16d ship with unit tests only:**
+the resume check firing, the notice appearing, the tap activating the waiting
+worker and the refresh rebuilding the caches are all unreachable from
+`node --test`, and are owed a device pass before this theme is called done.
 
 ## Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)
 

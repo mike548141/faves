@@ -9,6 +9,19 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Faves now notices new versions by itself.** The app checks for an update
+  whenever you come back to it (at most once every few minutes, so it isn't
+  chewing through your data), and when there's a newer version it says so with
+  a small "A newer version of Faves is ready" banner. Tap Refresh and you're on
+  it; tap Not now and it waits — you'll get it next time you open Faves fresh.
+  It will never reload the page under you mid-order. Previously the only way to
+  pick up new menus was to force-quit the app and open it again.
+- **Settings → Your data → "Refresh menus and app"** — the escape hatch for
+  when something still looks stale. It throws away the offline copy of the
+  menus and app code and downloads the lot again. Your favourites, ratings,
+  settings, profiles and order tally aren't touched, and it won't run when
+  you're offline (clearing the copy with no connection would leave you with no
+  menus at all).
 - **A security contact at `/.well-known/security.txt`** — the standard place a
   researcher looks before reporting a problem. It points at GitHub security
   advisories, which is why it waited for the repo to go public: while the repo

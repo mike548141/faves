@@ -452,6 +452,17 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
   `SHELL_VERSION`; both → both.
 - Photos: cache-on-demand with a size-capped runtime cache
   (`faves-img-v1`, version-free so it survives every bump).
+- **Update flow** (ADR 0027): `sw-register.js` calls `registration.update()`
+  when the page becomes visible or regains focus, throttled to once every
+  five minutes — a resumed standalone PWA performs no navigation, so nothing
+  else would ever check. A new worker **holds in `waiting`**; a notice
+  offers it, and the tap posts `{type:"SKIP_WAITING"}` and reloads on
+  `controllerchange`. No unconditional `skipWaiting()`: that served new
+  assets to a page still running old modules. Ignore the notice and the
+  worker activates on the next cold start. Settings → Your data → **Refresh
+  menus and app** is the escape hatch: clears the shell + data caches,
+  unregisters the worker, reloads — refuses when offline, never touches
+  `localStorage`.
 
 ## Constraints
 
