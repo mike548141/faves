@@ -79,5 +79,3 @@ closed; the sequence resumes at step 3.
   check must be repeated on the owning account.
 - ADR 0022's residual risks (household first names in superseded test fixtures,
   the owner's work email in history) are untouched and remain accepted.
-</content>
-</invoke>

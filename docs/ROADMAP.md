@@ -1205,6 +1205,21 @@ wrong.
 
 ## Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)
 
+- [ ] **`.order-head` is defined twice in `app.css`** `[S]` — as the order/share
+  sheet's header bar *and* as the menu screen's small uppercase "Order online"
+  label; the later rule wins, so the **order sheet and share sheet titles render
+  uppercase** on the menu screen. Found 2026-08-09 building the report sheet
+  (which dodged it with its own `.report-head` — see ADR 0028 consequences);
+  the underlying collision is unfixed and owns whoever next touches
+  `cart-ui.js`/`share-ui.js`.
+- [ ] **"Your data" panel is outgrowing its sheet** `[S][design]` — after
+  2026-08-09 it stacks export + import + transfer + refresh + reset in one
+  ADR-0025 panel (~980 px at 390 px; the sheet scrolls, so nothing is
+  unreachable, but the row's one-line summary now names five actions). Likely
+  fix: split into two index rows ("Your data" / "Storage & refresh") — cheap,
+  and consistent with ADR 0025's one-topic-per-panel shape. Fold into 15a if
+  that lands first.
+
 **a. Settings: alternatives to drill-in** `[M][design]` ⚑ — **owner, raw:**
 *"With the new Settings UI I am considering alternative options to a sub-menu
 design but I like the grouping/headings you have used. Perhaps accordion or
@@ -1538,7 +1553,13 @@ pass over all 68 strings). ⚠ **honest caveat:** the AI pass is **not** a
 fluent-speaker sign-off — a native review of the 9 flagged strings stays the
 **owner option** before public launch
 ([review](reviews/2026-07-22-1148-reo-wording-review.md)). Detail →
-[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md). **2026-08-09 additions to that review
+queue:** ~25 new `// draft` strings landed with the update notice, units,
+report and import/transfer features (all flagged in `reo.js`); the dictionary
+check flagged two existing choices worth a fluent speaker's eye — **`tahua
+kai`** for "menu" in 7 pre-existing strings (Te Aka suggests `rārangi kai`;
+`tahua` leans "fund/budget") and **`hapa`** for "error" (first gloss is the
+loanword "supper" — unfortunate on a food app, though context resolves it).
 
 ---
 
