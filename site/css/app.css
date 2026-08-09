@@ -3448,6 +3448,14 @@ body.faves-view .to-top {
 .about-version-note {
   font-size: 0.85rem;
 }
+/* "An update is ready" (ROADMAP 16f, ADR 0031) — reuses the accent colour the
+   update notice button uses, so the two reads as the same signal; both are
+   token-driven so contrast holds in dark mode without a separate rule. */
+.about-version-waiting {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+}
 .about-made {
   margin-top: var(--space-4);
   padding-top: var(--space-3);

@@ -11,7 +11,7 @@
 //   - Change both? bump both.
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
-const SHELL_VERSION = "2026-08-09.9";
+const SHELL_VERSION = "2026-08-09.10";
 const DATA_VERSION = "2026-08-09.5";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
@@ -162,11 +162,29 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// The one way out of `waiting`: the page asking, on the user's tap
-// (js/sw-register.js). Anything else is ignored — this is a message port any
-// same-origin script can reach.
+// Two message types come in on this one port (any same-origin script can
+// reach it, so both are keyed on `type` and anything else is ignored):
+//   - SKIP_WAITING: the page's tap (js/sw-register.js) — the one way out of
+//     `waiting`.
+//   - GET_VERSIONS: About's version stamp (ROADMAP 16f, ADR 0031) asking
+//     *this worker* what it's actually running, rather than inferring from
+//     cache names — during a waiting-worker window the newest cache is the
+//     update that hasn't taken over yet, not what's serving the page. Only
+//     the worker itself knows which version that is, so it answers with its
+//     own constants down the reply port. A worker in `waiting` answers this
+//     too (its message listener is live the moment its script runs, well
+//     before it controls anything) — that's what lets About report a waiting
+//     update's exact version, not just "something is ready".
 self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
+  if (!event.data) return;
+  if (event.data.type === "SKIP_WAITING") self.skipWaiting();
+  if (event.data.type === "GET_VERSIONS") {
+    event.ports?.[0]?.postMessage({
+      type: "VERSIONS",
+      shell: SHELL_VERSION,
+      data: DATA_VERSION,
+    });
+  }
 });
 
 self.addEventListener("activate", (event) => {
