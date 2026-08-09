@@ -1,13 +1,14 @@
-// Unit tests for the distance maths (site/js/distance.js) — the haversine
-// and formatter behind the home screen's distance ranking. Pure maths — no
-// DOM, no geolocation — so it's testable directly. Ordering/sinking logic
-// now lives in ranking.js (tests/ranking.test.js). Run: `node --test`.
+// Unit tests for the distance maths (site/js/distance.js) — the haversine and
+// the travel-time hints behind the home screen's distance ranking. Pure maths
+// — no DOM, no geolocation — so it's testable directly. Ordering/sinking logic
+// lives in ranking.js (tests/ranking.test.js); the human-readable formatter
+// moved to units.js when metric/imperial arrived (tests/units.test.js).
+// Run: `node --test`.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   haversineKm,
-  formatDistance,
   estimateDriveMinutes,
   formatDriveTime,
   estimateWalkMinutes,
@@ -33,22 +34,6 @@ test("haversineKm: symmetric and roughly right (CBD→Tawa ~13 km)", () => {
 test("haversineKm: one degree of latitude ≈ 111 km", () => {
   const d = haversineKm({ lat: 0, lng: 0 }, { lat: 1, lng: 0 });
   assert.ok(Math.abs(d - 111.19) < 0.5, `got ${d.toFixed(2)}`);
-});
-
-test("formatDistance: metres under 1 km (nearest 50 m, floor 50)", () => {
-  assert.equal(formatDistance(0.45), "450 m");
-  assert.equal(formatDistance(0.12), "100 m");
-  assert.equal(formatDistance(0.01), "50 m"); // never "0 m"
-});
-
-test("formatDistance: one decimal under 10 km, whole km beyond", () => {
-  assert.equal(formatDistance(1.23), "1.2 km");
-  assert.equal(formatDistance(13.6), "14 km");
-});
-
-test("formatDistance: empty string for null/NaN", () => {
-  assert.equal(formatDistance(null), "");
-  assert.equal(formatDistance(NaN), "");
 });
 
 test("estimateDriveMinutes: rough straight-line estimate (winding × urban speed)", () => {

@@ -12,6 +12,9 @@
 //  - farKm: beyond this straight-line distance a venue is "another town" and
 //    sinks below everything reachable (and the shuffle skips it).
 //
+// Also here: the food preferences, the UI language, the maps app, and the
+// metric/imperial display choice (units.js).
+//
 // farKm only bites once we know your location ("Near me"); favBoostKm bites
 // on any multi-location venue's menu page regardless. Stored in
 // localStorage; sanitised + clamped on read so a hand-edited or corrupt
@@ -19,6 +22,7 @@
 
 import { profileScopedStorage } from "./profiles.js";
 import { FAR_KM, FAV_BOOST_KM } from "./ranking.js";
+import { UNITS, DEFAULT_UNITS } from "./units.js";
 
 const KEY = "faves.settings.v1";
 
@@ -63,12 +67,19 @@ export const MAPS_APPS = [
 ];
 const MAPS_APP_KEYS = new Set(MAPS_APPS.map((m) => m.key));
 
+// Metric or imperial, for distances and oven temperatures (units.js, ADR
+// 0029). A DISPLAY preference only — favBoostKm/farKm below stay kilometres
+// and the recipe data stays °C whatever this says, so nothing stored can ever
+// drift with it.
+export { UNITS } from "./units.js";
+
 export const DEFAULTS = {
   favBoostKm: FAV_BOOST_KM,
   farKm: FAR_KM,
   diet: { dietary: [], avoid: [] },
   lang: "en",
   mapsApp: "auto",
+  units: DEFAULT_UNITS,
 };
 
 // [min, max] accepted for each; values outside are clamped in, non-numbers
@@ -110,6 +121,7 @@ function sanitise(obj) {
     diet: sanitiseDiet(obj?.diet),
     lang: LANGS.includes(obj?.lang) ? obj.lang : DEFAULTS.lang,
     mapsApp: MAPS_APP_KEYS.has(obj?.mapsApp) ? obj.mapsApp : DEFAULTS.mapsApp,
+    units: UNITS.includes(obj?.units) ? obj.units : DEFAULTS.units,
   };
 }
 

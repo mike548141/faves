@@ -103,6 +103,7 @@ const MI = {
   // Settings dialog
   "settings.title": "Ngā Tautuhinga",
   "settings.langTitle": "Te Reo",
+  "settings.unitsTitle": "Ngā Waeine", // draft — "the units of measurement"
   // Menu screen chrome (dish names, descriptions and section names are
   // venue content and are never translated; safety text stays English — see
   // the header note)

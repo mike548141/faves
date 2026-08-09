@@ -4,7 +4,8 @@
 
 import { loadRestaurants } from "./data.js";
 import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
-import { formatDistance, formatDriveTime, estimateDriveMinutes } from "./distance.js";
+import { formatDriveTime, estimateDriveMinutes } from "./distance.js";
+import { formatDistance } from "./units.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
 import { rankByDetour, bestBranchForRoute, areaCentroids } from "./route.js";
 import { branchCoords, branchAsPlace } from "./locations.js";
@@ -98,13 +99,16 @@ function hoursBadge(r, now, showHours = true) {
 
 // "+1.2 km detour" (or a warm "On your way" when a venue sits essentially on
 // the line — a sub-100 m added distance is noise, not a detour worth a figure).
-function detourText(km) {
+// The 100 m "noise" threshold stays metric on purpose: it's a judgement about
+// when a figure is worth printing, not a figure anyone reads (ADR 0029).
+function detourText(km, units) {
   if (km < 0.1) return t("route.onWay", "On your way");
-  return `+${formatDistance(km)} ${t("route.detour", "detour")}`;
+  return `+${formatDistance(km, units)} ${t("route.detour", "detour")}`;
 }
 
 function card(r, now, routeCtx = null) {
   const isRecipes = r.kind === "recipes";
+  const units = settings.get().units;
   const name = el("h3", { className: "card-name", textContent: r.name });
   // Route mode: the venue carries a detourKm (least added distance to your
   // trip); it takes over the distance slot as the decision-relevant fact.
@@ -121,7 +125,7 @@ function card(r, now, routeCtx = null) {
     // Detour is a STRAIGHT-LINE estimate (route.js), never road distance — shown
     // with the same "~" the drive-hint uses so it reads as approximate. The
     // "Route via maps" action (below) gives the real road route through here.
-    const detour = el("span", { className: "card-detour", textContent: `↩ ${detourText(r.detourKm)}` });
+    const detour = el("span", { className: "card-detour", textContent: `↩ ${detourText(r.detourKm, units)}` });
     const min = r.detourKm >= 0.1 ? estimateDriveMinutes(r.detourKm) : null;
     const added =
       min != null
@@ -140,7 +144,7 @@ function card(r, now, routeCtx = null) {
     // 0010) — the maps app gives the real drive time when you tap the address.
     const dist =
       r.distanceKm != null
-        ? el("span", { className: "card-distance", textContent: `📍 ${formatDistance(r.distanceKm)}` })
+        ? el("span", { className: "card-distance", textContent: `📍 ${formatDistance(r.distanceKm, units)}` })
         : null;
     const drive =
       r.distanceKm != null

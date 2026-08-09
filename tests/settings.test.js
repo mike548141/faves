@@ -74,6 +74,25 @@ test("mapsApp: defaults to auto, keeps a known provider, rejects an unknown one"
   assert.equal(s.get().mapsApp, "auto");
 });
 
+test("units: defaults to metric, keeps imperial, rejects anything else", () => {
+  const storage = fakeStorage();
+  const s = createSettings(storage);
+  assert.equal(s.get().units, "metric"); // New Zealand first
+  s.set({ units: "imperial" });
+  assert.equal(s.get().units, "imperial");
+  assert.equal(createSettings(storage).get().units, "imperial"); // persists
+  s.set({ units: "furlongs" });
+  assert.equal(s.get().units, "metric");
+});
+
+test("units: a display choice never touches the stored distances", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ favBoostKm: 12, farKm: 40 });
+  s.set({ units: "imperial" });
+  assert.equal(s.get().favBoostKm, 12); // still kilometres, unconverted
+  assert.equal(s.get().farKm, 40);
+});
+
 test("diet: defaults to empty preference lists", () => {
   const s = createSettings(fakeStorage());
   assert.deepEqual(s.get().diet, { dietary: [], avoid: [] });

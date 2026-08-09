@@ -5,7 +5,8 @@
 import { loadRestaurant } from "./data.js";
 import { mapsUrl, recallOrigin } from "./geo.js";
 import { orderedBranches, isMultiLocation, branchAsPlace, branchesToShow } from "./locations.js";
-import { formatDistance, travelHint } from "./distance.js";
+import { travelHint } from "./distance.js";
+import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
 import { todayNZ } from "./temporal.js";
@@ -185,7 +186,7 @@ function branchBlock(r, b, now) {
   const head = el("h3", { className: "branch-head" }, [
     el("span", { className: "branch-name", textContent: heading }),
     b.distanceKm != null && b.distanceKm !== Infinity
-      ? el("span", { className: "branch-distance", textContent: `📍 ${formatDistance(b.distanceKm)}` })
+      ? el("span", { className: "branch-distance", textContent: `📍 ${formatDistance(b.distanceKm, settings.get().units)}` })
       : null,
   ]);
   return el("section", { className: "contact-branch", "aria-label": `${r.name} — ${heading}` }, [
@@ -548,8 +549,14 @@ function renderRecipeDetail(item) {
     body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }), ul);
   }
   if (item.steps?.length) {
+    // Oven temperatures live inside the step text, so an imperial reader gets
+    // the °C swapped for °F as the step is built (units.js, ADR 0029). The
+    // stored recipe is untouched; a settings change re-runs this whole render.
+    const units = settings.get().units;
     const ol = el("ol", { className: "method" });
-    for (const step of item.steps) ol.append(el("li", { textContent: step }));
+    for (const step of item.steps) {
+      ol.append(el("li", { textContent: convertTemperatures(step, units) }));
+    }
     body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" }), ol);
   }
   return el("details", { className: "recipe-detail" }, [
