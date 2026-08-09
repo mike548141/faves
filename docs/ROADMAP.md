@@ -1578,6 +1578,32 @@ where an imperial reader sees `430°F`.
 
 ## Also parked (small)
 
+- [ ] **`pathscan` is decorative here — 25 standing findings** `[S][docs]` —
+  found 2026-08-09. It runs warn-only in our floor and has accumulated 25
+  findings, which means nobody reads it, which means a *real* stale path
+  now hides in the noise. That is the whole cost: a guard with standing
+  false positives is a guard switched off. Triaged into three classes:
+  - **~8 are an upstream scanner defect, not ours.** A root-anchored path
+    whose first segment starts with a dot is mangled: `/.well-known/x`
+    is extracted as `known/x`, losing `.well-` and the leading slash, so
+    it reports missing while the file plainly exists. Minimal repro in a
+    clean throwaway repo: `site/.well-known/sbom.json` and
+    `site/.well-known/security.txt` both **pass**; `/.well-known/security.txt`
+    on its own line **fails** as `known/security.txt`. So the trigger is
+    the leading-slash-plus-dot form, not dot-directories in general.
+    Ours are honest URL references to files that exist — this is atelier's
+    `pathscan` to fix. 🎯 **Owner call needed** before anything is written
+    upstream — see the note in `SESSIONS.md` for 2026-08-09; the new
+    CONCURRENCY rule invites queueing it in atelier's roadmap, and the
+    standing correction to this repo says faves does not write there.
+  - **~14 are ours and genuinely loose** — prose shorthand like
+    `data/index.json` for the real `site/data/index.json`, and ADR-number
+    shorthand like `docs/decisions/0009`. Fix by writing the real path.
+  - **~3 are correct as written** — cross-repo atelier paths and a
+    historical worktree path inside a session log, which is accurate *as
+    history*. These want `pathscan:allow` markers with reasons.
+  Do the middle class, mark the last, leave the first to upstream — then
+  the scanner is worth reading again.
 - [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
   doctrine block is the sanctioned *stamped copy* shape (it names atelier,
