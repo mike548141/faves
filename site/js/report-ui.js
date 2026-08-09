@@ -176,12 +176,12 @@ export function openReportDialog({ scope, venue = null, dish = null, url = pageU
 
   const dialog = el("dialog", { className: "report-sheet", "aria-labelledby": titleId }, [
     el("div", { className: "order-inner" }, [
-      el("div", { className: "order-head" }, [
+      el("div", { className: "report-head" }, [
         el("h2", {
           id: titleId,
           className: "order-title",
           "data-i18n": scope === "app" ? "report.titleApp" : "report.title",
-          textContent: scope === "app" ? "Suggest or report" : "Is something wrong here?",
+          textContent: scope === "app" ? "Suggest or report" : "Something wrong here?",
         }),
         closeBtn,
       ]),

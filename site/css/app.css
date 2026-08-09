@@ -3421,8 +3421,24 @@ body.faves-view .to-top {
   outline-offset: -3px;
 }
 
+/* The sheet's own header bar. NOT .order-head, which the menu screen also uses
+   for its small uppercase "Order online" label — the two rules collide and the
+   later one wins, which uppercased this title and shrank its letter-spacing. */
+.report-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+/* align-content:start matters: .order-body is a flex item with a bounded height
+   (.order-inner caps at 85vh), so a grid inside it hands `auto` rows a share of
+   the leftover space — and takes it back when content overflows, squashing the
+   textareas to a single line. Start-aligned rows size to content and the body
+   scrolls, which is what a sheet should do. */
 .report-body {
   display: grid;
+  align-content: start;
   gap: var(--space-3);
 }
 .report-context {
@@ -3472,6 +3488,9 @@ body.faves-view .to-top {
 .report-note,
 .report-text {
   width: 100%;
+  /* An explicit floor as well as align-content above: a textarea's min-content
+     height is about one line, so `rows` alone is not a guarantee inside a grid. */
+  min-height: 5.5rem;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -3520,6 +3539,7 @@ body.faves-view .to-top {
 }
 .report-text {
   margin-top: var(--space-1);
+  min-height: 14rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: var(--step-sub);
 }
