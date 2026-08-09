@@ -1157,7 +1157,8 @@ because we have never established it for any venue. Filling it is content work
 (the owner or a venue's own site), not a build. It would unlock "in Faves since
 July 2026" and "trading since 1998" lines, and an honest "new to Faves" badge.
 
-- [ ] **f. `verified` must carry its derivation** `[M][schema]` — queued
+- [~] **f. `verified` must carry its derivation** `[M][schema]`
+  (claimed 2026-08-09-0800, wt: faves-verified-derivation) — queued
   2026-08-09 by upstream doctrine (atelier PRINCIPLES §9, Mike ruled the
   retrofit binding 2026-08-09; faves' bare nullable `verified` flag is the
   prompting case named in the ruling). A stored conclusion carries *when it
@@ -1230,7 +1231,8 @@ wrong.
 
 ## Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)
 
-- [ ] **`.order-head` is defined twice in `app.css`** `[S]` — as the order/share
+- [~] **`.order-head` is defined twice in `app.css`** `[S]`
+  (claimed 2026-08-09-0800, wt: faves-orderhead) — as the order/share
   sheet's header bar *and* as the menu screen's small uppercase "Order online"
   label; the later rule wins, so the **order sheet and share sheet titles render
   uppercase** on the menu screen. Found 2026-08-09 building the report sheet
@@ -1400,7 +1402,8 @@ visible.
   build-new-then-delete-old activate order are untouched; `clients.claim()`
   stays, for the first-ever install. Two static tests pin the absence of
   `skipWaiting()` from install, because the temptation to put it back is real.
-- [ ] **16f — About's version stamp can now run ahead of the page** `[S]` —
+- [~] **16f — About's version stamp can now run ahead of the page** `[S]`
+  (claimed 2026-08-09-0800, wt: faves-16f-stamp) —
   follow-on named in ADR 0027's consequences: under a *waiting* worker, 16e's
   About stamp reports the newest **cached** version while the page may still be
   running the previous one — a gap that under `skipWaiting()` closed in
