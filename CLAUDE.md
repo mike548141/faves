@@ -127,10 +127,12 @@ tooling only; nothing it needs ships in `site/`. Run it after touching
 Adopted from the `ros`/`tiki` repos (2026-07-08), adapted to a
 build-less static site. See `CONTRIBUTING.md` for the fuller version.
 
-- **Model & token economics:** `docs/MODEL-ECONOMICS.md` — which model
-  does what (Opus builds, Fable reviews — scoped and short), session
-  hygiene, and the read-path budget. Consult it before choosing a model
-  or starting a billed review (`/code-review ultra`, Fable).
+- **Model & token economics:** doctrine (billing states, seat
+  assignment, hand-ups, session hygiene) is atelier
+  `docs/method/ECONOMICS.md` at the pin above; entitlement numbers live
+  in the estate root. `docs/MODEL-ECONOMICS.md` holds only this repo's
+  measurements and applications. Consult both before choosing a model
+  or starting a billed review (`/code-review ultra`).
 - **Commit as you work.** Small, focused commits — one concern each —
   landed continuously, not one end-of-session dump. Commit/push
   autonomy is the doctrine floor above (grant history: atelier
