@@ -85,6 +85,40 @@ export function clampScroll(y, max) {
   return Math.min(y, max);
 }
 
+// --- Scroll memory ---------------------------------------------------
+// Opening a modal <dialog> scrolls the document to the top (measured in Chrome
+// 151 on this markup), so by the time a Settings change fires the re-render,
+// window.scrollY reads 0 and no longer says where the viewer was. The browser
+// normally puts that back when the dialog closes — but the re-render destroys
+// the element it anchored to, so after a re-render it does not, and the viewer
+// lands at the top of the menu. That is the exact annoyance this work exists to
+// fix, so we keep our own record of the last scroll offset the *page* had, and
+// ignore anything that happens while a dialog is up.
+let pageScrollY = 0;
+let tracking = false;
+
+const modalOpen = () => {
+  try {
+    return !!document.querySelector("dialog[open]");
+  } catch {
+    return false;
+  }
+};
+
+/** Start remembering the page's scroll offset. Idempotent; call at screen boot. */
+export function initScrollMemory() {
+  if (tracking) return;
+  tracking = true;
+  pageScrollY = window.scrollY || 0;
+  addEventListener(
+    "scroll",
+    () => {
+      if (!modalOpen()) pageScrollY = window.scrollY || 0;
+    },
+    { passive: true }
+  );
+}
+
 /**
  * Read the small, session-only UI state off the screen that is about to be
  * re-rendered. Every field is optional — a stub menu (no search, no chips) or
@@ -95,7 +129,9 @@ export function clampScroll(y, max) {
 export function captureUiState(scope) {
   const state = { query: "", chips: [], scrollY: 0 };
   try {
-    state.scrollY = window.scrollY || 0;
+    // With a dialog up, the live scrollY is the dialog's doing, not the
+    // viewer's — trust the remembered offset instead.
+    state.scrollY = tracking && modalOpen() ? pageScrollY : window.scrollY || 0;
     if (!scope) return state;
     const search = scope.querySelector(".menu-search");
     if (search) state.query = search.value || "";
@@ -167,14 +203,16 @@ export function restoreUiState(scope, state) {
 /**
  * Put the window back where it was. Always instant: this is a restoration, not
  * a journey — an animated scroll here would be motion the viewer never asked
- * for (prefers-reduced-motion) and would race the next paint.
+ * for (prefers-reduced-motion) and would race the next paint. `behavior:
+ * "instant"` is load-bearing, not a default: app.css sets `html {
+ * scroll-behavior: smooth }`, which the two-argument scrollTo() would obey.
  */
 export function restoreScroll(y) {
   if (!Number.isFinite(y) || y <= 0) return;
   const go = () => {
     const doc = document.documentElement;
     const max = Math.max(0, doc.scrollHeight - window.innerHeight);
-    window.scrollTo(0, clampScroll(y, max));
+    window.scrollTo({ top: clampScroll(y, max), left: 0, behavior: "instant" });
   };
   try {
     go();

@@ -12,7 +12,7 @@ import { settings } from "./settings.js";
 import { profiles, PROFILES_KEY } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { el } from "./dom.js";
-import { captureUiState, restoreUiState } from "./ui-state.js";
+import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
 
 const root = document.getElementById("recipe-root");
 const EMPTY_SET = new Set();
@@ -181,6 +181,7 @@ async function main() {
 }
 
 initOrderUI(); // the running order stays reachable from the recipe screen too
+initScrollMemory(); // keep your place in the method if the tags repaint (ui-state.js)
 initReo(); // sets <html lang>; the back link is set to the collection name by render()
 
 // Keep the ⚠ allergen tags live against an allergen/dietary change made in

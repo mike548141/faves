@@ -28,7 +28,7 @@ import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
-import { captureUiState, restoreUiState } from "./ui-state.js";
+import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -874,6 +874,10 @@ function initContactBar(bar, cardEl) {
 // reachable — even on a stub page or if this menu fails to load.
 initOrderUI();
 initBackToTop();
+// Remember where the page is scrolled to *before* the Settings dialog opens —
+// opening it scrolls the document to the top, so reapply() would otherwise
+// capture 0 and drop the viewer back at the top of the menu (ui-state.js).
+initScrollMemory();
 // Apply the stored UI language to the static chrome (the back link) and set
 // <html lang>. Menu content — dish names, descriptions, section names — stays
 // as the venue wrote it; generated chrome carries data-i18n and is translated
