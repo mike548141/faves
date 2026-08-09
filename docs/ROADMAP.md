@@ -1496,15 +1496,25 @@ problem. Sequence the content with the build or the feature ships blank.
   Keep the owner's balance: the steps read well now, so inline amounts should
   read as prose, not as a table bolted into a sentence. Worth a light visual
   treatment so an amount is scannable without shouting.
-- [~] **17d — Cook mode** `[M]` — **CLAIMED 2026-08-09 09:12 UTC**
-  (wt: `faves-cook-mode`) — **the research pass's strongest finding, and
-  it beats everything above on value-per-effort.** Every current recipe app has
-  converged on the same thing: a full-screen, one-step-at-a-time view with a
-  step counter, large text, and — the part that matters — **`navigator.wakeLock`
-  so the screen never sleeps mid-recipe**. That is a plain Web API (Safari iOS
-  16.4+), zero-dependency, works offline, and fixes the single most annoying
-  thing about cooking from a phone. It is also the natural host for 17b's
-  timers. If only one item in this theme is built, build this one.
+- ✅ **17d — Cook mode** `[M]` — **shipped 2026-08-09** (ADR 0034,
+  `cook.js` + `cook-ui.js`). A modal full-screen `<dialog>` over the recipe: one
+  step at a time, a "Step 3 of 9" counter, 56 px Back/Next plus arrow keys, and
+  `navigator.wakeLock` holding the screen awake. The lock keeps a `wanted` flag
+  and re-acquires on every `visibilitychange` — the OS releases it when the page
+  hides and never gives it back — and degrades to silence where unsupported
+  (iOS < 16.4) or refused. Ingredients open in place without moving the step
+  index, which is the cheap half of 17c's problem. Entry points: the recipe page
+  and the Cook at Home list, on the 23 of 24 recipes that have steps.
+  **Deliberately left for their own items:** scaling (17a), timers (17b — cook
+  mode is now the host the roadmap said they needed), inline quantities (17c),
+  checklists/TTS (17e). **Not verified:** that the screen genuinely stays awake
+  on a real iPhone — the lifecycle is proved against a fake and in headless
+  Chrome, the platform behaviour needs a device.
+  - 🚩 **Still worth doing, found while building:** cook mode has no real-browser
+    regression guard of its own. `device_check.mjs` is scoped to the allergen
+    re-apply, and the 28-assertion Chrome run that caught two wake-lock leaks was
+    a throwaway script. Either widen that tool's remit or give cook mode a
+    sibling — the leaks it found were invisible to `node --test`.
 - [ ] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
   ordered by how well they fit a zero-dependency offline app:
   - **Tick off ingredients and steps as you go** — a checklist with state that

@@ -161,6 +161,17 @@ name also links to a focused page `recipe.html?id=<collection>&dish=<slug>`
 via `ignoreSearch` like `restaurant.html`, and the one sanctioned extra page
 type (recorded per the docs-as-code rule; no others planned).
 
+**Cook mode** (ADR 0034) sits on top of that rendering, not beside it: a modal
+full-screen `<dialog>` built by `site/js/cook-ui.js` over whatever page you are
+on, offered from both the recipe page and the list's expanded detail wherever
+`steps` is non-empty. One step at a time, a "Step _n_ of _m_" counter, saturating
+Back/Next (no wrap) with arrow-key equivalents, and an ingredients panel that
+toggles without moving the step index. `site/js/cook.js` holds the step machine
+and a `navigator.wakeLock` lifecycle — request on open, re-acquire on every
+`visibilitychange` (the OS releases the lock when the page hides and never
+restores it), release on close — all dependency-injected and unit-tested.
+Unsupported (iOS &lt; 16.4) and refused both degrade to silence.
+
 ### Time — every fact can say when (ADR 0023)
 
 Doctrine: atelier `PRINCIPLES.md` §9. Data carries the time dimension its

@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Cook mode.** Open a recipe, tap **Cook mode**, and the method takes over the
+  whole screen one step at a time — big type you can read from across the bench,
+  a "Step 3 of 9" counter, and Back/Next buttons sized for floury thumbs (arrow
+  keys work too). **Your screen stays on while it's open**, so a glance at step 5
+  no longer starts with drying your hands, and the phone goes back to normal the
+  moment you close it. Ingredients are one tap away inside cook mode and put you
+  back on the step you were on. On phones too old for the screen-awake feature
+  (iOS before 16.4) everything else works exactly the same, quietly.
 - **A menu now says *how* we checked it, not just when.** The date under a
   restaurant's name reads "Read in store, 7 Aug 2026" or "Read from a paper
   menu, 8 Aug 2026" — because someone standing at the counter and a listing
