@@ -16,6 +16,7 @@
 //   2. Lifecycle        dated transitions, never a `closed: true` flag
 //   3. Availability     a window and/or a recurring season on a section or dish
 //   4. Revisions        a dated log of what changed about a dish (data only)
+//   5. Derivation       how a reading was obtained, beside when (ADR 0031)
 //
 // Pure: every function takes `asOf` (an ISO date string) rather than reading a
 // clock, so it is fully unit-testable. `todayNZ()` is the only impure part.
@@ -61,6 +62,63 @@ export const SEASONS = Object.keys(SEASON_MONTHS);
 // *when*, cannot express a reopening, and rewrites history as it flips.
 export const LIFECYCLE_EVENTS = ["closed-temporarily", "reopened", "closed-permanently"];
 
+// ————————————————————————— Derivation: how we know ——————————————————————————
+// A stored conclusion carries when it was established AND by what method
+// (PRINCIPLES §9; ADR 0031). A date alone cannot tell an in-store reading from
+// a scraped directory listing, and the two are not equally likely to be wrong —
+// which is what makes staleness computable rather than felt.
+//
+// Each value names a SOURCE CLASS, never a person. Ordered strongest first, but
+// the order is documentation, not a score: we do not rank our own evidence
+// numerically, because a number we cannot defend is a claim stronger than the
+// evidence behind it.
+export const VERIFY_METHODS = [
+  "in-store",
+  "paper-menu",
+  "official-site",
+  "phone",
+  "delivery-app",
+  "third-party",
+];
+
+// How each method reads on the menu screen — what we did, in plain words, so
+// the viewer can weigh it themselves.
+const METHOD_PHRASE = {
+  "in-store": "Read in store",
+  "paper-menu": "Read from a paper menu",
+  "official-site": "Read from the venue’s own site",
+  phone: "Confirmed by phone",
+  "delivery-app": "Read from a delivery app",
+  "third-party": "Read from a third-party listing",
+};
+
+/**
+ * How this venue's menu was last established. Three states stay distinct on
+ * purpose — §9's "unknown is not none", where a single null would read as "no":
+ *   • no reading at all      → `null`
+ *   • a date, method absent  → `{ date, method: null }` (pre-ADR-0031 records;
+ *                              never backfilled — validate.py warns instead)
+ *   • a date and a method    → the full derivation
+ */
+export function verification(record) {
+  const date = record?.verified;
+  if (!isDate(date)) return null;
+  const by = record?.verifiedBy;
+  const method = VERIFY_METHODS.includes(by) ? by : null;
+  return { date, method, label: method ? METHOD_PHRASE[method] : "Verified" };
+}
+
+/**
+ * The menu screen's provenance line, e.g. "Read in store, 7 Aug 2026". Takes
+ * the already-formatted date so this stays pure and locale-free. Returns null
+ * when there is no reading to describe.
+ */
+export function verificationText(record, dateText) {
+  const v = verification(record);
+  if (!v) return null;
+  return v.method ? `${v.label}, ${dateText}` : `Verified ${dateText}`;
+}
+
 /**
  * Today in Pacific/Auckland as "YYYY-MM-DD". The venue's clock, not the
  * viewer's — same call as hours.js makes, for the same reason: a guest
@@ -102,21 +160,25 @@ const effective = (e) => e.from ?? e.recorded;
  * including `null`, which for a price means "market/varies" — becomes one
  * entry. Undated entries ("since before we recorded") sort first.
  *
- * `defaultRecorded` supplies the record time for entries that carry none —
- * callers pass the venue's `verified` date, which is precisely "when we last
- * checked this menu". That is why an unchanged price can stay a bare scalar and
- * still be dated: the venue already carries its record time.
+ * `defaultRecorded` / `defaultMethod` supply the record time and the derivation
+ * for entries that carry none — callers pass the venue's `verified` and
+ * `verifiedBy`, which are precisely "when we last read this menu, and how".
+ * That is why an unchanged price can stay a bare scalar and still be both dated
+ * and derived: the venue already carries them. An entry only states its own
+ * `method` when that reading came from somewhere else (ADR 0031).
  */
-export function series(field, defaultRecorded = null) {
+export function series(field, defaultRecorded = null, defaultMethod = null) {
   if (field === undefined) return [];
   const raw = Array.isArray(field) ? field : [{ value: field }];
   const fallback = isDate(defaultRecorded) ? defaultRecorded : null;
+  const byFallback = VERIFY_METHODS.includes(defaultMethod) ? defaultMethod : null;
   const out = raw
     .filter((e) => e && typeof e === "object" && "value" in e)
     .map((e) => ({
       value: e.value,
       from: isDate(e.from) ? e.from : null,
       recorded: isDate(e.recorded) ? e.recorded : fallback,
+      method: VERIFY_METHODS.includes(e.method) ? e.method : byFallback,
       note: typeof e.note === "string" ? e.note : null,
     }));
   out.sort((a, b) => {
@@ -263,10 +325,13 @@ export function isRetired(obj, asOf) {
  *   priceSeries  the full dated series — present only when there IS history
  *   priceNext    the next scheduled change {value, from, note} — or absent
  */
-function resolveItem(item, asOf, defaultRecorded) {
+function resolveItem(item, asOf, defaultRecorded, defaultMethod) {
   const out = { ...item };
   if ("price" in item) out.price = resolveValue(item.price, asOf, defaultRecorded);
-  if (isDated(item.price)) out.priceSeries = series(item.price, defaultRecorded);
+  // Only `priceSeries` carries the derivation: it is the history a trend view
+  // would draw, and a reading's method is exactly what stops two points seven
+  // years apart being drawn as though we had watched the years between.
+  if (isDated(item.price)) out.priceSeries = series(item.price, defaultRecorded, defaultMethod);
   const next = pending(item.price, asOf);
   if (next) out.priceNext = next;
   return out;
@@ -287,8 +352,10 @@ export function resolveRecord(record, asOf = todayNZ()) {
   if (!record || typeof record !== "object") return record;
   const out = { ...record };
   // The venue's `verified` date is the record time for every undated fact in
-  // its menu: "this is what the menu said when we last checked it".
+  // its menu, and `verifiedBy` its derivation: "this is what the menu said when
+  // we last read it, and this is how we read it" (ADR 0031).
   const recorded = record.verified;
+  const recordedBy = record.verifiedBy;
 
   // Fields that may carry a dated series, at the top level and per branch.
   for (const f of ["address", "phone"]) {
@@ -311,7 +378,7 @@ export function resolveRecord(record, asOf = todayNZ()) {
         ...s,
         items: (s.items || [])
           .filter((i) => isAvailable(i, asOf))
-          .map((i) => resolveItem(i, asOf, recorded)),
+          .map((i) => resolveItem(i, asOf, recorded, recordedBy)),
       }))
       // A section whose dishes are all out of season is an empty heading; a
       // section that genuinely ships no items is a data error validate.py
