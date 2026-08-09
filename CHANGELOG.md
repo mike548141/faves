@@ -9,6 +9,19 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Tell us what's wrong or missing.** Spotted a price that's moved, a dish
+  that's gone, or an allergen we haven't tagged? There's now a small ⚑ on every
+  dish and at the foot of each venue's contact card, plus "Suggest or report" in
+  the ⋯ menu for a place we're missing or a bug in the app. Because you raise it
+  from the dish itself, the message writes itself — it already names the venue,
+  the dish, the price we're showing you and when we last checked the menu — so
+  nothing has to be explained twice. Add a note if you like, then send it
+  straight from the share sheet or copy it into a message. It all works in
+  flight mode, and if your phone won't do either the message stays on screen for
+  you to copy. **A report is a suggestion, never a change**: nothing you send
+  edits a menu, a price or an allergen tag — a person checks it first. Send it
+  to whoever shared Faves with you; Faves has no address book of its own.
+  (ADR 0028)
 - **A security contact at `/.well-known/security.txt`** — the standard place a
   researcher looks before reporting a problem. It points at GitHub security
   advisories, which is why it waited for the repo to go public: while the repo
