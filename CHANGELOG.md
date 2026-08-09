@@ -93,7 +93,7 @@ content freshness separately from this file.
   landed. Export/import/transfer — moving your saved picks in, out or across
   devices — stay under "Your data"; the app-cache refresh and the preferences
   reset move to a new "Refresh & reset" row. Both panels open, confirm and
-  work exactly as before; nothing moved lost its confirmation step. (ADR 0031)
+  work exactly as before; nothing moved lost its confirmation step. (ADR 0033)
 - **Chocolate Self-Saucing Pudding is a single mixture again** — it had been
   written up doubled (serves 12, 70 minutes). Now serves 6 and bakes for 35, in
   a 1.5–2 L dish. It still doubles well for a crowd.

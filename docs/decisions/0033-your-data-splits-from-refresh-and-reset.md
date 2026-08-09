@@ -1,4 +1,4 @@
-# 0031 — "Your data" splits into two rows: the data blob, and refresh/reset
+# 0033 — "Your data" splits into two rows: the data blob, and refresh/reset
 
 **Status**: accepted • **Date**: 2026-08-09
 

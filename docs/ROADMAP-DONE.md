@@ -721,4 +721,4 @@ dependency.
   the existing `device_check.mjs` safety-reapply suite (15/15) both pass in
   headless Chrome; 483 unit tests unaffected (no pure logic changed). New
   reo key `settings.refreshResetTitle` left `// draft` for the Phase 7
-  review. Full reasoning, including the rejected splits, in ADR 0031.
+  review. Full reasoning, including the rejected splits, in ADR 0033.
