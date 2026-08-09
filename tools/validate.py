@@ -547,6 +547,14 @@ def check_restaurant(path):
                     err(rid, f"price for {name!r} must be a number or null (not a string)")
                 if isinstance(price, bool):
                     err(rid, f"price for {name!r} must not be a boolean")
+                # Sign, not just type. `pricePerPerson` above has always been
+                # sign-checked and this one never was, so a negative price
+                # validated clean and would render as "-$5.00". The bound is
+                # >= 0, not > 0: a genuinely free item is a real thing a menu
+                # can say, and refusing to express it would push it to null,
+                # which already means "no price recorded" — a different fact.
+                elif isinstance(price, (int, float)) and price < 0:
+                    err(rid, f"price for {name!r} must not be negative, got {price!r}")
             check_available(rid, item, f"item {name!r}")
             check_revisions(rid, item, f"item {name!r}")
             # code: optional venue order-number (a string, kept out of name).

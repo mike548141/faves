@@ -21,6 +21,12 @@ jobs:
           python-version: "3.12"
       - name: Validate restaurant JSON against the schema
         run: python3 tools/validate.py
+      # A validator's failure mode is silence — a check that never fires looks
+      # exactly like data that is always clean. This breaks a real record in
+      # 14 specific ways and asserts the gate notices. It found a real hole on
+      # its first run: a negative price validated clean.
+      - name: Prove the data gate actually catches things
+        run: python3 tools/test_validate.py
 
   guard:
     name: zero dependencies

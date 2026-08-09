@@ -1598,23 +1598,8 @@ where an imperial reader sees `430°F`.
 
 ## Also parked (small)
 
-- [~] **A negative dish price validates clean** `[S][schema]`
-  (claimed 2026-08-09-0835) — found 2026-08-09 by mutation-testing
-  `validate.py` in a scratch copy: 8 deliberate corruptions of a real
-  record, 7 caught, this one silently passed. `price` is type-checked
-  (number, not bool, not string, series values checked identically under
-  ADR 0023) but never **sign**-checked, while `pricePerPerson` ten lines
-  earlier explicitly requires `> 0`. One rule in the file guards its sign
-  and its neighbour does not. Fix: reject a negative price. The bound is
-  `>= 0`, **not** `> 0` — a genuinely free item is expressible and no
-  current data uses it (checked: no zero and no negative prices across
-  all 31 records; the lowest real price is $0.90). Deferred past the
-  13f merge only because that agent is editing the same file.
-  **Wider lesson worth keeping:** faves has 483 JS tests and *zero*
-  Python tests, so every `tools/*.py` gate is itself unexercised. The
-  mutation harness above is the cheap way to test a gate — corrupt a
-  real record, assert a non-zero exit — and it found a real hole on its
-  first run.
+✅ **A negative dish price validated clean — fixed 2026-08-09.** Detail →
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [ ] **`pathscan` is decorative here — 25 standing findings** `[S][docs]` —
   found 2026-08-09. It runs warn-only in our floor and has accumulated 25
   findings, which means nobody reads it, which means a *real* stale path
