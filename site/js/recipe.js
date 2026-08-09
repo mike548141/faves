@@ -12,6 +12,7 @@ import { settings } from "./settings.js";
 import { profiles, PROFILES_KEY } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { el } from "./dom.js";
+import { captureUiState, restoreUiState } from "./ui-state.js";
 
 const root = document.getElementById("recipe-root");
 const EMPTY_SET = new Set();
@@ -149,8 +150,17 @@ let current = null;
 
 // Re-apply on any settings change — re-reads settings.get().diet.avoid and
 // rebuilds the tags. No-op until the recipe has rendered.
+//
+// Same bracket as the menu (ui-state.js): capture before, restore after, render
+// untouched in between. This page has no search or dietary chips, so in
+// practice only the scroll position is in play — worth it because a recipe is
+// read scrolled down at the method, and the photo re-decoding after
+// replaceChildren can drop you back to the top mid-cook.
 function reRender() {
-  if (current) render(current.collection, current.item);
+  if (!current) return;
+  const ui = captureUiState(root);
+  render(current.collection, current.item);
+  restoreUiState(root, ui);
 }
 
 async function main() {
