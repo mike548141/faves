@@ -3,7 +3,7 @@
 The doctrine lives up, not here. Billing states, seat assignment (risk
 assigns the seats; billing only prices them), the hand-up ladder,
 sub-agent economics and session hygiene are atelier
-`docs/method/ECONOMICS.md`, read at the pin in `CLAUDE.md`; entitlement
+`docs/method/ECONOMICS.md`, read at the pin in `CLAUDE.md`; entitlement <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
 numbers (the plan, its cap share, prices) are person-local in the estate
 root. Never trust a restatement of any of that in this file: the
 2026-07-08 version restated the billing model, drifted 17 days behind a

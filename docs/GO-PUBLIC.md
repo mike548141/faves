@@ -153,7 +153,7 @@ half-way.
         -F enabled=true -f allowed_actions='selected'
       ```
 
-      Note: the `floor` workflow calls `mike548141/atelier/.github/workflows/floor.yml@main`,
+      Note: the `floor` workflow calls `mike548141/atelier/.github/workflows/floor.yml@main`, <!-- pathscan:allow: GitHub Actions reusable-workflow slug (owner/repo/path@ref), not a local filesystem path -->
       so allow that repo when narrowing. ⚠️ **That takes a second call** — the
       one above only sets the *mode*; without this the allowlist is empty and
       the floor workflow cannot resolve its reusable workflow:
