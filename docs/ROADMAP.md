@@ -169,7 +169,8 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   dedicated browser-tooling session** to script this device check (headless Chrome
   with a fresh `--user-data-dir` to bust the SW), rather than a manual phone test.
   Until that passes, treat the live allergen re-highlight as **proven-by-tests,
-  not yet device-confirmed**. [~] unclaimed — the verification session.
+  not yet device-confirmed**. [~] claimed 2026-08-09-0153,
+  wt: faves-device-check — the verification session.
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
 - [ ] **Ratings UX — redesign (attempt 3)** `[M][design]` ⚑ — **two control
@@ -202,7 +203,8 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   its venue leg targets the address too. ADR 0010 part (a) superseded; its "~N
   min drive" hint (b) stands. The underlying coord imprecision is still open —
   see the **Coordinate audit** `[S]` below.
-- [ ] **Coordinate audit** `[S]` — follow-on: dev-time geocoded coords are
+- [~] **Coordinate audit** `[S]` (claimed 2026-08-09-0153,
+  wt: faves-coord-audit) — follow-on: dev-time geocoded coords are
   suspect fleet-wide (R & S proven ~100 m off). Sweep all venue coords against
   their street addresses; affects distance sort + detour maths accuracy.
 - [ ] **Favourite/rating reference integrity** `[M][design]` — **ADR 0020**
@@ -1238,12 +1240,14 @@ loaded. **Nothing reloads it.** So "check for updates" and "show the new
 version" are two separate fixes, and doing only the first changes nothing
 visible.
 
-- [ ] **16a — Check on resume** `[S]` — call `registration.update()` when the
+- [~] **16a — Check on resume** `[S]` (claimed 2026-08-09-0153,
+  wt: faves-pwa-updates) — call `registration.update()` when the
   page becomes visible (`visibilitychange`) and on `focus`, **throttled** (say,
   at most once every few minutes) so a phone flicking between apps doesn't
   hammer the origin. This is the whole fix for "it never notices", and it's a
   handful of lines in `sw-register.js`.
-- [ ] **16b — Tell the user, then reload** `[M][design]` — on `updatefound` →
+- [~] **16b — Tell the user, then reload** `[M][design]` (claimed
+  2026-08-09-0153, wt: faves-pwa-updates) — on `updatefound` →
   the installing worker reaching `installed`, surface it. **Design call:**
   auto-reload vs a quiet "New menus available — tap to refresh" notice.
   Recommend the **notice**: an auto-reload can yank the page out from under
@@ -1252,7 +1256,8 @@ visible.
   not — the same in-session state the Settings re-render already loses (see the
   2026-07-25 refinement ruling). Reload on the user's tap, or silently on the
   next cold start.
-- [ ] **16c — "Force a full refresh"** `[S][design]` — the owner's explicit ask,
+- [~] **16c — "Force a full refresh"** `[S][design]` (claimed
+  2026-08-09-0153, wt: faves-pwa-updates) — the owner's explicit ask,
   and the escape hatch for when 16a/16b still leave something stale. Clears the
   shell + data caches, re-registers the worker and reloads. Two rules it must
   obey: **refuse (or warn hard) when offline** — clearing the caches with no
@@ -1275,7 +1280,8 @@ visible.
   Say the word if they should show anyway (they would help when debugging a
   weird device). The genuinely missing piece isn't another number: it's
   **"is this the latest?"**, which needs 16a's update check to answer.
-- [ ] **16d — Version skew, named so it isn't discovered the hard way** `[S]` —
+- [~] **16d — Version skew, named so it isn't discovered the hard way**
+  `[S]` (claimed 2026-08-09-0153, wt: faves-pwa-updates) —
   `skipWaiting()` means a new worker serves new assets to an **old** page, so a
   module the old page lazily imports can arrive from a newer build. It has not
   bitten us (the app imports eagerly at load), but 16a makes updates land far
