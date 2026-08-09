@@ -212,3 +212,15 @@ deliberation those compact docs omit.
   deliberately left alone. `reo.js` moved in lockstep (`nav.allRestaurants`
   re-uses `fav.allPlaces`'s reviewed Māori); a pre-existing `service.all`
   collision flagged for the Phase 7 reo review, not guessed at.
+- [0036](0036-refresh-caveat-reads-the-method.md) — **the "needs a refresh"
+  caveat reads the method, then ages it** (Theme 13g; builds on 0031). Owner's
+  ruling: a reading counts as a check when it came from the shop itself —
+  `in-store`/`paper-menu`/`official-site`/`phone` trusted, `delivery-app` and
+  `third-party` *always* caveat ("not third parties like delivereasy, uber
+  etc"). Plus a **12-month** age limit, flagged in the code as a house default
+  rather than an owner number and retunable on one line. Four distinct reasons
+  (`never` · `unknown-method` · `untrusted` · `stale`) so one null stops
+  standing for two different things; an unknown method caveats, because trust
+  is a positive claim. TJ Katsu and Sushi Bi gain the honest dates the session
+  log evidences, no longer withheld to keep a caveat on. A confidence scale, a
+  per-method limit, and ageing the untrusted methods all rejected.

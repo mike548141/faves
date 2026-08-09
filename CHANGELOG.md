@@ -8,6 +8,18 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **The "needs a refresh" warning now means something.** It used to appear on
+  almost every place, because it fired whenever nobody had recorded a check —
+  so it was easy to stop seeing. Now it asks *who told us*: if the prices came
+  from the place itself (someone in the shop, its printed menu, its own site, or
+  a phone call) and we read them within the last year, there's no warning. If
+  they came from a delivery app or someone else's listing, the warning stays and
+  now says so — "These prices came from a delivery app, not the place itself" —
+  because delivery prices are often marked up. And a check that's aged out says
+  that instead. TJ Katsu and Sushi Bi now carry the dates we actually read them
+  on. (ADR 0036)
+
 ### Added
 - **Cook mode.** Open a recipe, tap **Cook mode**, and the method takes over the
   whole screen one step at a time — big type you can read from across the bench,
