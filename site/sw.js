@@ -36,6 +36,7 @@ const SHELL = [
   "css/app.css",
   "js/about-ui.js",
   "js/app.js",
+  "js/cache-refresh.js",
   "js/cart.js",
   "js/cart-ui.js",
   "js/closure-ui.js",

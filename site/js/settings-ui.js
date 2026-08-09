@@ -19,7 +19,8 @@
 //     how far is "too far tonight".
 //   • Maps app / Language — one <select> each.
 //   • People — the device-local profile roster (add / rename / delete).
-//   • Your data — export everything, and reset this profile's preferences.
+//   • Your data — export everything, force a full refresh of the stored menus
+//     and app code, and reset this profile's preferences.
 // The profile *switcher* itself stays on the index (and moves into the People
 // panel while that's open) because switching is one tap and it's the context
 // every other setting sits inside — nobody should browse under someone else's
@@ -36,6 +37,7 @@ import {
   personalDataJson,
   summarisePersonalData,
 } from "./personal-data.js";
+import { forceRefresh } from "./cache-refresh.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
@@ -289,7 +291,9 @@ function peopleSection() {
 }
 
 // --- Your data ---------------------------------------------------------
-// Export everything (every profile, not just the active one), plus the reset.
+// Export everything (every profile, not just the active one), the full refresh
+// (Theme 16c — cached menus and app code only, never the personal layer), plus
+// the reset.
 // Reset lives here rather than on the index because the index is now short
 // enough that a bare "Reset" button would sit one stray tap from wiping the
 // allergen flags — and because "what's stored, and how do I get rid of it" is
@@ -367,11 +371,80 @@ function dataSection() {
     resetBtn.focus();
   });
 
+  // Refresh — the escape hatch for a phone stuck on a stale copy (Theme 16c).
+  // It sits in "Your data" because that is where someone goes asking "what is
+  // stored on my phone, and how do I get rid of it" — so the wording has to
+  // draw the line the panel's other two actions don't: this clears the *app's*
+  // stored copy of the menus and code, and touches none of their stuff.
+  const refreshHead = el("p", { className: "settings-sub", textContent: "Refresh menus and app" });
+  const refreshNote = el("p", {
+    className: "settings-hint",
+    textContent:
+      "Throws away the offline copy of the menus and the app code, downloads the lot again, and reloads. " +
+      "Your favourites, ratings, settings, profiles and order tally aren’t touched — this only refreshes " +
+      "what Faves has stored to work offline. Needs a connection.",
+  });
+  const refreshBtn = el("button", { type: "button", className: "settings-reset", textContent: "Refresh now" });
+  const refreshConfirmText = el("p", { className: "profile-confirm-text" });
+  const refreshGo = el("button", { type: "button", className: "profile-btn profile-btn-primary", textContent: "Refresh" });
+  const refreshCancel = el("button", { type: "button", className: "profile-btn", textContent: "Cancel", "data-i18n": "generic.cancel" });
+  const refreshConfirm = el("div", { className: "profile-confirm", role: "group", hidden: true }, [
+    refreshConfirmText, el("div", { className: "profile-form-actions" }, [refreshGo, refreshCancel]),
+  ]);
+  refreshConfirm.setAttribute("aria-label", "Confirm refresh");
+  const refreshStatus = el("p", { className: "settings-note settings-data-status", role: "status", "aria-live": "polite" });
+
+  // Offline is a refusal, not a warning: clearing the caches with no network
+  // leaves the app with nothing to serve at all.
+  const offlineMessage =
+    "You’re offline, so Faves can’t download a fresh copy — and clearing what’s stored now would leave " +
+    "you with no menus at all. Try again once you’re back on Wi-Fi or data.";
+  const offline = () => globalThis.navigator?.onLine === false;
+
+  refreshBtn.addEventListener("click", () => {
+    if (offline()) {
+      refreshStatus.textContent = offlineMessage;
+      return;
+    }
+    refreshStatus.textContent = "";
+    refreshConfirmText.textContent =
+      "Download the menus and app code again? It uses a few hundred kilobytes and reloads the page. " +
+      "Nothing you’ve saved is affected.";
+    refreshConfirm.hidden = false;
+    refreshGo.focus();
+  });
+  refreshCancel.addEventListener("click", () => {
+    refreshConfirm.hidden = true;
+    refreshBtn.focus();
+  });
+  refreshGo.addEventListener("click", async () => {
+    refreshConfirm.hidden = true;
+    refreshGo.disabled = true;
+    refreshStatus.textContent = "Refreshing…";
+    // Re-checked here, not just on the first tap: the connection can drop
+    // between opening the confirm and confirming it.
+    const res = await forceRefresh();
+    refreshGo.disabled = false;
+    if (res.ok) return; // the reload takes it from here
+    refreshStatus.textContent =
+      res.reason === "offline"
+        ? offlineMessage
+        : "Couldn’t refresh — your browser wouldn’t clear the stored copy. Everything you’ve saved is still here.";
+    refreshBtn.focus();
+  });
+
   const panel = el("div", { className: "settings-panel" }, [
     note, btn, status,
+    refreshHead, refreshNote, refreshBtn, refreshConfirm, refreshStatus,
     resetHead, resetNote, resetBtn, resetConfirm, resetStatus,
   ]);
-  return { panel, close: () => { resetConfirm.hidden = true; } };
+  return {
+    panel,
+    close: () => {
+      resetConfirm.hidden = true;
+      refreshConfirm.hidden = true;
+    },
+  };
 }
 
 export function initSettingsUI() {
@@ -469,7 +542,7 @@ export function initSettingsUI() {
     { key: "maps", title: "Maps app", i18n: null, panel: mapsPanel, summary: (s) => MAPS_APPS.find((m) => m.key === s.mapsApp)?.label ?? "" },
     { key: "lang", title: "Language", i18n: "settings.langTitle", panel: langPanel, summary: (s) => (s.lang === "mi" ? "Te Reo Māori" : "English") },
     { key: "people", title: "Who’s using Faves?", i18n: "profile.title", panel: people.panel, summary: peopleSummary },
-    { key: "data", title: "Your data", i18n: null, panel: data.panel, summary: () => "Download a copy, or start over" },
+    { key: "data", title: "Your data", i18n: null, panel: data.panel, summary: () => "Download a copy, refresh, or start over" },
   ];
 
   const rows = el("ul", { className: "settings-rows" });
