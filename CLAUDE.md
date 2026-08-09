@@ -53,10 +53,12 @@ in atelier and is read on demand — never wholesale.
   publication-bound: reference the root by local-path convention only, never
   by name — a public repo naming the estate's credential/inventory root is
   reconnaissance.
-- **This repo's visibility:** PRIVATE for now — a push is not publication. But
-  this is a **public-site project** headed for release, so treat content as
-  publication-bound (no personal data beyond the owner-approved recipe exception
-  below), and *making the repo public* is a floor action. Verify:
+- **This repo's visibility:** **PUBLIC** since 2026-08-09 (`a207a15`,
+  Theme 8). A push *is* publication — to the world, immediately and
+  irreversibly; git history is public too, so a secret committed and then
+  removed is still disclosed and must be **rotated**, never just deleted.
+  Content is publication-bound: no personal data beyond the owner-approved
+  recipe exception below. Verify:
   `gh repo view mike548141/faves --json visibility`.
 
 Read `docs/STRATEGY.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, then
