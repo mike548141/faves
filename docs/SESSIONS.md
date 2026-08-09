@@ -2134,9 +2134,9 @@ please a scanner, which is exactly what this session refused to let the
 
 **Agent reports were checked, and one did not survive the check.** The
 `pathscan` agent "fixed" two path references inside **accepted ADR 0015**
-by rewriting `data/index.json` to `site/data/index.json`. That table
+by rewriting `data/index.json` to `site/data/index.json`. That table <!-- pathscan:allow: quotes the runtime cache URL under discussion, not a repo path — that is the whole point of the finding -->
 describes **cache contents** — runtime URLs — and `sw.js:100` caches
-`data/index.json`; there is no such URL as `site/data/index.json`. The
+`data/index.json`; there is no such URL as `site/data/index.json`. The <!-- pathscan:allow: quotes the runtime cache URL under discussion, not a repo path — that is the whole point of the finding -->
 edit silenced the scanner by making an accepted decision assert something
 false, which is precisely the failure the fix existed to prevent.
 Reverted and marked with the reason instead. The other eight class-2

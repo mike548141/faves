@@ -1,0 +1,46 @@
+# plainscan scope for this repo — root-relative globs, one per line.
+# NOTE ON FORMAT: plainscan takes a whole non-comment line as the glob, so a
+# reason cannot sit inline after a '#'. Reasons live in the comment block above
+# each entry instead.
+#
+# THE RULING THIS IMPLEMENTS (owner, 2026-08-09): "live docs only, exempt the
+# records". plainscan arrived from atelier on 2026-08-09 with 1177 findings
+# here. The three heaviest files were the two append-only session logs and the
+# roadmap, and a scanner with standing findings is a scanner nobody reads — the
+# failure this repo has now hit three times (pathscan, the atelier drift
+# baseline, and this). So the scope is drawn where the prose can actually be
+# fixed.
+#
+# THE LINE: a record is written once and never rewritten. Editing one to please
+# a scanner is rewriting history, which the house forbids on the same grounds
+# that stopped the 2026-08-09 pathscan sweep touching these same files. A live
+# doc is current-truth, rewritable at any time, and is exactly what the gate is
+# for. Records are exempt; live docs are checked.
+#
+# STILL CHECKED, deliberately: ROADMAP.md (196 findings) is live current-truth,
+# not a record — it is rewritten constantly and it is the file a new session
+# reads first. Same for ARCHITECTURE, DESIGN, STRATEGY, WORKPLAN, DEPLOY,
+# GO-PUBLIC, MODEL-ECONOMICS, CLAUDE.md and README.
+#
+# 🎯 ONE SUB-QUESTION LEFT FOR THE OWNER, not decided here: accepted ADRs under
+# docs/decisions/ carry ~180 findings and "never edit an accepted one" means
+# they can never be fixed — so they will stand forever and re-create the noise
+# problem. Exempting the directory would also stop checking NEW ADRs, which is
+# a genuine fail-open. Left checked for now; flagged in ROADMAP.md.
+
+# Append-only session history. Written once, at the time, and true as of then.
+docs/SESSIONS.md
+docs/SESSIONS-ARCHIVE.md
+
+# Harvested closed-cycle write-ups — the archive half of the roadmap. Items
+# land here when they are finished and are not revisited.
+docs/ROADMAP-DONE.md
+
+# Dated review records. A review states what was found on the day it ran;
+# re-wording one later would misrepresent what the reviewer actually wrote.
+docs/reviews
+
+# Release history. A shipped release note is not rewritten after the fact — the
+# same append-only class as the session logs, and it is the public record of
+# what changed when.
+CHANGELOG.md
