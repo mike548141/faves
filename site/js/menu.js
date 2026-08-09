@@ -9,7 +9,7 @@ import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
-import { todayNZ } from "./temporal.js";
+import { todayNZ, verificationText } from "./temporal.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
@@ -353,12 +353,16 @@ function renderHeader(r) {
   // a right-hand info column (see renderAside / the .menu-twocol grid), so the
   // header now carries only the title block.
 
+  // When we last read this menu, and how — "Read from a paper menu, 8 Aug
+  // 2026" rather than a bare date. The method is what tells a reader whether
+  // to trust the prices: someone standing at the counter and a stale directory
+  // listing produce the same date and are not the same evidence (ADR 0031).
   if (r.verified) {
     const d = new Date(r.verified);
     const nice = isNaN(d)
       ? r.verified
       : d.toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" });
-    bits.push(el("p", { className: "menu-verified", textContent: `Verified ${nice}` }));
+    bits.push(el("p", { className: "menu-verified", textContent: verificationText(r, nice) }));
   }
 
   return el("header", { className: "menu-header" }, bits);

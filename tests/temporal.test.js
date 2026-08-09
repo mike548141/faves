@@ -18,6 +18,9 @@ import {
   isTrading,
   isGone,
   todayNZ,
+  VERIFY_METHODS,
+  verification,
+  verificationText,
 } from "../site/js/temporal.js";
 
 // ---------- partial dates ----------
@@ -37,7 +40,9 @@ test("startOf/endOf widen a partial date to its real interval", () => {
 // ---------- temporal values ----------
 
 test("series: a plain value becomes one undated entry", () => {
-  assert.deepEqual(series(17.5), [{ value: 17.5, from: null, recorded: null, note: null }]);
+  assert.deepEqual(series(17.5), [
+    { value: 17.5, from: null, recorded: null, method: null, note: null },
+  ]);
 });
 
 test("series: null is a value (market price), not an absence", () => {
@@ -341,4 +346,95 @@ test("todayNZ: returns an ISO date in the venue's timezone", () => {
   assert.equal(todayNZ(new Date("2026-01-01T09:00:00Z")), "2026-01-01");
   // 22:00 UTC on 31 Dec is the 1st in NZ but still the 31st in UTC.
   assert.equal(todayNZ(new Date("2025-12-31T22:00:00Z")), "2026-01-01");
+});
+
+// ---------- derivation: how we know (ADR 0031) ----------
+
+test("verification: no reading at all is null, not an empty derivation", () => {
+  assert.equal(verification({ verified: null }), null);
+  assert.equal(verification({}), null);
+  assert.equal(verification(null), null);
+  // A garbage date is not a reading either — it must not render as one.
+  assert.equal(verification({ verified: "soon" }), null);
+});
+
+test("verification: a date with no method stays distinct from a full derivation", () => {
+  // §9's "unknown is not none": three states, all separately readable.
+  const legacy = verification({ verified: "2026-08-07" });
+  assert.deepEqual(legacy, { date: "2026-08-07", method: null, label: "Verified" });
+  const full = verification({ verified: "2026-08-07", verifiedBy: "in-store" });
+  assert.equal(full.method, "in-store");
+  assert.equal(full.label, "Read in store");
+});
+
+test("verification: an unknown method is dropped, never echoed to the screen", () => {
+  const v = verification({ verified: "2026-08-07", verifiedBy: "vibes" });
+  assert.equal(v.method, null, "an off-vocabulary method must not become a claim");
+  assert.equal(v.label, "Verified");
+});
+
+test("verification: every method in the closed set has a phrase", () => {
+  for (const m of VERIFY_METHODS) {
+    const v = verification({ verified: "2026-08-07", verifiedBy: m });
+    assert.equal(v.method, m);
+    assert.equal(typeof v.label, "string");
+    assert.ok(v.label.length > 0, `${m} has no phrase`);
+  }
+});
+
+test("verificationText: reads as a sentence, and says nothing when we know nothing", () => {
+  assert.equal(
+    verificationText({ verified: "2026-08-07", verifiedBy: "in-store" }, "7 Aug 2026"),
+    "Read in store, 7 Aug 2026"
+  );
+  assert.equal(
+    verificationText({ verified: "2026-08-08", verifiedBy: "paper-menu" }, "8 Aug 2026"),
+    "Read from a paper menu, 8 Aug 2026"
+  );
+  // Pre-ADR-0031 records keep the wording they always had.
+  assert.equal(verificationText({ verified: "2026-08-08" }, "8 Aug 2026"), "Verified 8 Aug 2026");
+  assert.equal(verificationText({ verified: null }, "8 Aug 2026"), null);
+});
+
+test("series: an entry inherits the venue's method and can override it", () => {
+  const s = series(
+    [
+      { value: 10.5, recorded: "2019", method: "paper-menu" },
+      { value: 17.5, recorded: "2026-08-08" },
+    ],
+    "2026-08-08",
+    "in-store"
+  );
+  assert.equal(s[0].method, "paper-menu", "an entry's own reading wins");
+  assert.equal(s[1].method, "in-store", "an undated-method entry inherits the venue's");
+});
+
+test("series: an unknown method falls back rather than propagating", () => {
+  assert.equal(series([{ value: 5, method: "hearsay" }], null, "in-store")[0].method, "in-store");
+  assert.equal(series([{ value: 5 }], null, "hearsay")[0].method, null);
+  assert.equal(series([{ value: 5 }])[0].method, null);
+});
+
+test("resolveRecord: priceSeries carries the venue's derivation onto each reading", () => {
+  const r = {
+    verified: "2026-08-08",
+    verifiedBy: "paper-menu",
+    menu: [
+      {
+        section: "S",
+        items: [
+          {
+            name: "Wonton Soup",
+            price: [
+              { value: 10.5, recorded: "2019" },
+              { value: 17.5, recorded: "2026-08-08" },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const item = resolveRecord(r, "2026-08-08").menu[0].items[0];
+  assert.equal(item.price, 17.5, "the screen still sees a plain number");
+  assert.deepEqual(item.priceSeries.map((e) => e.method), ["paper-menu", "paper-menu"]);
 });

@@ -103,7 +103,9 @@ reversible in an afternoon.
   "picks": ["Char kway teow"],       // "our picks" — dish names, must exist in menu
   "priceBand": null,                 // optional curated "$"|"$$"|"$$$" — overrides the
   "pricePerPerson": null,            // median (price.js) when it misleads; figure optional
-  "verified": null,                  // ISO date the menu was last checked, e.g. "2026-07-10"
+  "verified": null,                  // ISO date the menu was last read, e.g. "2026-07-10"
+  "verifiedBy": null,                // HOW it was read — closed set, see "Derivation" below.
+                                     //   Required alongside `verified` on any NEW reading.
   "rating": null,                    // optional curated household rating, integer 1..5 (ours,
                                      //   static). Distinct from device-local personal ratings.
   "status": "stub",                  // stub | menu-complete | verified
@@ -190,9 +192,12 @@ would be inventing evidence.
    ```jsonc
    "price": [
      { "value": 10.5, "recorded": "2019", "note": "2019 menu scan" },
-     { "value": 17.5, "recorded": "2026-08-08" }
+     { "value": 17.5, "recorded": "2026-08-08", "method": "in-store" }
    ]
    ```
+   An entry may carry its own `method` (same closed set as `verifiedBy`);
+   omit it and the entry inherits the venue's. Only state it when *that*
+   reading came from somewhere other than the venue's last reading.
    A plain value means "true now; we never established since when" — which is
    honest for most of this data, and cheap: the venue's `verified` date already
    supplies the record time. **Only a price that actually moved needs the
@@ -213,6 +218,42 @@ would be inventing evidence.
 4. **Revisions** — `[{date?, recorded?, change}]` on a dish: the dated log of
    what changed about it (the muffin that went vegan). Needs at least one of
    the two dates. Data only at present; nothing renders it yet.
+5. **Derivation** — `verifiedBy` beside `verified`: *how* the menu was read,
+   not only when. See the next subsection.
+
+#### Derivation — how we know, not only when (ADR 0031)
+
+§9 again: *"a stored result carries how it came to be true, not only when"*.
+A date alone cannot separate someone standing at the counter from a stale
+directory listing, and those two are not equally likely to be wrong — so
+`verified` (record time, **full** `YYYY-MM-DD` precision: a reading happens
+on a day we know) gains **`verifiedBy`**, a closed set of **source classes**.
+Never a person — the no-personal-data rule binds the schema too.
+
+| `verifiedBy` | What it means | Why it can be wrong |
+|---|---|---|
+| `in-store` | Someone stood in the venue and read the board, card or cabinet (or photographed it there). | Least — first-party and current at the reading. Transcription only. |
+| `paper-menu` | A physical or scanned menu document read away from the venue: takeaway card, PDF, photo of a menu. | As old as the document. A 2019 scan and a freshly printed card share this method and differ only by their date. |
+| `official-site` | The venue's own website or its own online-ordering storefront. | Sites go stale silently and rarely carry a date; the venue's own claim, not a checked one. |
+| `phone` | Someone rang the venue and was told. | First-party and current, but spoken, unrecorded, and usually covers only a few items. |
+| `delivery-app` | A third-party ordering platform (Uber Eats, Delivereasy…). | Not the venue's own statement, and prices there are commonly marked up — a *biased* error, not a random one. |
+| `third-party` | Any other second-hand listing: directory, aggregator, review site, article. | Weakest. This is where a scraper's guess lands, and the reason the field exists. |
+
+**Three states stay distinguishable** — §9's "unknown is not none":
+
+- no `verified` → we have never read this menu.
+- `verified` with no `verifiedBy` → we read it then; how was never recorded.
+  Pre-ADR-0031 only. `validate.py` **warns**, never errors: no backfill.
+- `verified` + `verifiedBy` → the full derivation. Required on any new reading.
+
+`status: "verified"` is a claim that this menu is current, so it **errors**
+without both halves. Everything else is a warning, and `verifiedBy` without
+`verified` is an error (a method with no date establishes nothing).
+
+Rendering is deliberately small: the menu header's date line reads
+"Read from a paper menu, 8 Aug 2026". The "needs a refresh" caveat still <!-- datescan:allow: quoted UI copy — the date as the menu screen prints it, not a dated claim -->
+keys off the bare absence of `verified` — see ROADMAP Theme 13g for why
+that is now the weaker half.
 
 **A dish is never deleted when it leaves the menu** — it keeps its record and
 gains `available.offBy` (or `to`). A hard delete destroys every date attached to
@@ -238,7 +279,9 @@ new menu for a venue that already has one:
    (a typo, a price we never knew), that is **not** a price change: overwrite it
    and add no entry. Recording a correction as a series fabricates a price rise.
    The test: *did the shop change it, or did we?*
-6. Bump `verified` to the day you read the menu, and `DATA_VERSION` in `sw.js`.
+6. Bump `verified` to the day you read the menu **and set `verifiedBy` to how
+   you read it** (a refresh from a delivery app is not a refresh from the
+   counter, and the record has to say which). Bump `DATA_VERSION` in `sw.js`.
 
 Done this way every refresh adds a free, honest reading to the corpus. Done the
 old way it destroys one — which is exactly what happened to Takeaway @ Churton's

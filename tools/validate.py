@@ -38,6 +38,13 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 # recordable as such rather than rounded up to an invented day.
 PART_DATE_RE = re.compile(r"^\d{4}(-\d{2}(-\d{2})?)?$")
 LIFECYCLE_EVENTS = {"closed-temporarily", "reopened", "closed-permanently"}
+# How a reading was obtained (ADR 0031, PRINCIPLES §9). Closed set, kept in
+# step with VERIFY_METHODS in site/js/temporal.js. Each value names a SOURCE
+# CLASS, never a person — the no-personal-data rule binds the schema too.
+VERIFY_METHODS = {
+    "in-store", "paper-menu", "official-site",
+    "phone", "delivery-app", "third-party",
+}
 SEASONS = {"summer", "autumn", "winter", "spring"}
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
@@ -134,8 +141,12 @@ def check_temporal(rid, obj, field, where, scalar_check=None):
                 err(rid, f"{at}: {k} must be an ISO date (YYYY[-MM[-DD]]), got {e[k]!r}")
         if "note" in e and e["note"] is not None and not isinstance(e["note"], str):
             err(rid, f"{at}: note must be a string")
+        # A reading that came from somewhere other than the venue's own
+        # `verifiedBy` states its own method; otherwise it inherits (ADR 0031).
+        if "method" in e and e["method"] is not None and e["method"] not in VERIFY_METHODS:
+            err(rid, f"{at}: method {e['method']!r} not in {sorted(VERIFY_METHODS)}")
         for k in e:
-            if k not in ("value", "from", "recorded", "note"):
+            if k not in ("value", "from", "recorded", "note", "method"):
                 err(rid, f"{at}: unknown key {k!r}")
         # Ordering: a series the reader has to re-sort is a series that will be
         # read wrong by hand. Undated entries may only lead.
@@ -272,6 +283,39 @@ def check_lifecycle(rid, data):
         if state == "closed-permanently":
             err(rid, f"{at}: nothing can follow 'closed-permanently'")
         state = "trading" if t == "reopened" else (t if t in LIFECYCLE_EVENTS else state)
+
+
+def check_verification(rid, data, status):
+    """The record's derivation: WHEN this menu was last read and BY WHAT METHOD
+    (ADR 0031; PRINCIPLES §9 — "a stored result carries how it came to be true,
+    not only when"). Three states are kept distinguishable on purpose, because
+    §9's "unknown is not none" says a single null that means both "never read"
+    and "read, method never recorded" is a lie the next reader cannot detect.
+
+    `verified` stays FULL date precision, unlike the partial dates allowed
+    elsewhere: a reading happens on a day we know we did it. It is the menu
+    *document* that may be dated loosely ("the 2019 scan"), and that date
+    belongs on the price-series entry, not here."""
+    verified = data.get("verified")
+    by = data.get("verifiedBy")
+    has_date = isinstance(verified, str) and bool(DATE_RE.match(verified))
+
+    if verified is not None and not has_date:
+        err(rid, f"verified must be null or an ISO date (YYYY-MM-DD), got {verified!r}")
+    if by is not None and by not in VERIFY_METHODS:
+        err(rid, f"verifiedBy {by!r} not in {sorted(VERIFY_METHODS)}")
+    # A method with no date establishes nothing — §9 wants both halves or neither.
+    if by is not None and verified is None:
+        err(rid, "verifiedBy is set but verified is null — a method with no date is not a derivation")
+    # No backfill (ADR 0031): a reading whose method we never recorded stays
+    # honestly method-less. Warned, never errored — inventing the method would
+    # be worse than the gap, and a warning keeps the gap loud for new records.
+    if has_date and by is None:
+        warn(rid, f"verified {verified} carries no verifiedBy — state how the menu was read ({sorted(VERIFY_METHODS)})")
+    # `status: "verified"` is a claim that this menu is current. A claim with no
+    # derivation is exactly what §9 forbids: unfalsifiable and un-ageable.
+    if status == "verified" and not (has_date and by is not None):
+        err(rid, "status is 'verified' but there is no dated derivation — set verified AND verifiedBy")
 
 
 def check_hours(rid, hours, where):
@@ -443,10 +487,8 @@ def check_restaurant(path):
     if status not in STATUSES:
         err(rid, f"status {status!r} not in {sorted(STATUSES)}")
 
-    # verified: null or ISO date
-    verified = data.get("verified")
-    if verified is not None and not (isinstance(verified, str) and DATE_RE.match(verified)):
-        err(rid, f"verified must be null or an ISO date (YYYY-MM-DD), got {verified!r}")
+    # verified + verifiedBy: when this menu was read, and how (ADR 0031).
+    check_verification(rid, data, status)
 
     # Curated price override (see site/js/price.js). Both optional; when set
     # they win over the median derived from the menu prices.
