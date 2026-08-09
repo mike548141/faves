@@ -390,7 +390,7 @@ function caveatDisclosure(id) {
   return disclosure({
     noteId: `menu-caveat-${id}`,
     label: "Why this menu needs a refresh",
-    text: "⚠ Menu items and prices need a refresh — confirm with the venue when you order.",
+    text: "⚠ Menu items and prices need a refresh — confirm with the place when you order.",
   });
 }
 

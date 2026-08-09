@@ -92,8 +92,8 @@ export function orderedBranches(r, origin = null) {
  * Which branches to surface on the contact card, and which to tuck behind a
  * "show all". A many-branch chain (e.g. McDonald's) otherwise floods the page
  * with far-away addresses. Rule (owner, 2026-07-23): at most the **2 nearest**,
- * and only within `thresholdKm` — the viewer's "Show branches within" distance
- * dial (favBoostKm in settings; originally a home-ranking favourite boost,
+ * and only within `thresholdKm` — the viewer's "Show a place’s branches within"
+ * distance dial (favBoostKm in settings; originally a home-ranking favourite boost,
  * repurposed here as the branch-proximity cutoff — see settings.js).
  *
  * `branches` must already be nearest-first (orderedBranches). When we know real

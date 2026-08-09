@@ -15,8 +15,8 @@
 //     every menu: dietary needs pre-select the menu's dietary chips, flagged
 //     allergens make matching ⚠ warnings shout. Safety framing is load-bearing:
 //     we surface what the data records, never assert safety.
-//   • Distance — the two dials (settings.js): the branch-proximity cutoff, and
-//     how far is "too far tonight".
+//   • Distance — the two dials (settings.js): how far is "too far tonight",
+//     then the branch-proximity cutoff within one place.
 //   • Units — metric or imperial, for every distance on screen and the oven
 //     temperatures in a recipe. Display only: the dials still store kilometres.
 //   • Maps app / Language / Units — one <select> each.
@@ -540,7 +540,7 @@ export function initSettingsUI() {
       const frag = document.createDocumentFragment();
       frag.append(
         el("strong", { textContent: "Always confirm for allergies. " }),
-        "Some tags come from the venue. Most we work out from the dish itself " +
+        "Some tags come from the place. Most we work out from the dish itself " +
           "where it's near-certain — satay means peanuts, a schnitzel means " +
           "wheat — because menus rarely say. We flag generously on purpose. " +
           "No tag still means not stated, never that a dish is free of it. " +
@@ -558,17 +558,22 @@ export function initSettingsUI() {
   // Both dials STORE kilometres whatever the reader's units; in imperial they
   // run on a round mile grid instead (units.js / ADR 0029). sync() re-specs
   // min/max/step on every settings change, so these are just the starting grid.
-  const fav = field({
-    id: "set-fav-boost",
-    label: "Show branches within",
-    hint: "For a multi-branch venue (e.g. McDonald's), the two nearest branches inside this distance show on the contact card — the rest tuck under “Show all branches”.",
-    ...dialSpec("favBoostKm", "metric"),
-  });
+  //
+  // These two sit side by side and do genuinely different jobs, so each label
+  // names its own subject (ADR 0035): `far` filters WHICH PLACES you see,
+  // `fav` picks WHICH BRANCHES OF ONE PLACE its contact card shows. Without
+  // "a place's" in the second label the pair reads as two dials for one job.
   const far = field({
     id: "set-far",
     label: "Hide places further than",
-    hint: "Beyond this, a venue is treated as too far to reach tonight.",
+    hint: "Beyond this, a place is treated as too far to reach tonight and drops off your list.",
     ...dialSpec("farKm", "metric"),
+  });
+  const fav = field({
+    id: "set-fav-boost",
+    label: "Show a place’s branches within",
+    hint: "When one place has several branches (McDonald’s, say), the two nearest inside this distance show on its contact card — the rest tuck under “Show all branches”.",
+    ...dialSpec("favBoostKm", "metric"),
   });
 
   // Point the slider at the active unit grid and write its readout. The value
@@ -591,20 +596,20 @@ export function initSettingsUI() {
     avoid.group,
   ]);
   const distancePanel = el("div", { className: "settings-panel" }, [
-    el("p", { className: "settings-note", textContent: "How far you'll go, and how nearby branches show up." }),
-    fav.row,
+    el("p", { className: "settings-note", textContent: "How far you’ll go, and how many branches of one place you see." }),
     far.row,
+    fav.row,
   ]);
   const unitsPanel = el("div", { className: "settings-panel" }, [
     el("p", { className: "settings-note", textContent: "How distances and oven temperatures are shown. Menu prices stay in New Zealand dollars." }),
     units.group,
   ]);
   const mapsPanel = el("div", { className: "settings-panel" }, [
-    el("p", { className: "settings-note", textContent: "Which app opens when you tap a venue’s address." }),
+    el("p", { className: "settings-note", textContent: "Which app opens when you tap a place’s address." }),
     maps.group,
   ]);
   const langPanel = el("div", { className: "settings-panel" }, [
-    el("p", { className: "settings-note", textContent: "The language of the app’s buttons and labels. Menus stay as the venues wrote them." }),
+    el("p", { className: "settings-note", textContent: "The language of the app’s buttons and labels. Menus stay as each place wrote them." }),
     lang.group,
   ]);
 

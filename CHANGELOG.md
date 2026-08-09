@@ -99,6 +99,15 @@ content freshness separately from this file.
   keeps `.order-head` for the order, share, receive and transfer sheets.
 
 ### Changed
+- **One word for one thing: everywhere you eat is a "place".** The app used to
+  call the same thing a place, a venue, a restaurant or a spot depending on
+  which screen you were on — it's a **place** now, throughout. One of a
+  place's locations is still a **branch**, because that really is a different
+  thing, and Settings → Distance now says so out loud: "Hide places further
+  than" (which places you see at all) sits above "Show a place's branches
+  within" (how many McDonald's show on one contact card). They used to read
+  like two dials for the same job. The te reo Māori labels moved in step.
+  (ADR 0035)
 - **Settings → "Your data" is now two rows.** Its one-line summary had grown
   to naming five actions (export, import, transfer, refresh, reset) as each
   landed. Export/import/transfer — moving your saved picks in, out or across

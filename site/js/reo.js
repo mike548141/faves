@@ -56,6 +56,11 @@ const MI = {
   "route.onWay": "Kei tō ara", // draft — "on your way"
   "route.added": "tāpiri", // draft — "~2 min tāpiri" (added)
   // Service segmented control
+  // 🚩 For the reo reviewer (ADR 0035): in English this is "Everywhere" — any
+  // service, dine-in or takeaway — but in te reo it reads identically to the
+  // "All places" of "fav.allPlaces"/"nav.allRestaurants", which are a different
+  // job (leave a panel). Left as-is rather than guessed at; a te reo speaker
+  // should decide whether this wants "ngā momo katoa" (all kinds) or similar.
   "service.all": "Ngā wāhi katoa",
   "service.takeaway": "Mau atu",
   "service.dineIn": "Kai ā-whare",
@@ -69,7 +74,12 @@ const MI = {
   "nav.about": "Mō tēnei", // draft
   "nav.shareApp": "Tuaritia tēnei taupānga", // draft
   "nav.report": "Tukua mai he kōrero", // draft — "send us word"
-  "nav.allRestaurants": "← Ngā wharekai katoa",
+  // English is now "← All places" (ADR 0035: one noun, "place", for a venue as
+  // the reader sees it). "wharekai" is specifically a restaurant/eating-house,
+  // so it desynced the moment the English stopped saying "restaurants"; this
+  // re-uses the already-reviewed "Ngā wāhi katoa" of "fav.allPlaces" below —
+  // same English, same Māori — rather than drafting a fresh string.
+  "nav.allRestaurants": "← Ngā wāhi katoa",
   "nav.back": "← Hoki",
   // Favourites view
   "fav.title": "Ngā Makau",

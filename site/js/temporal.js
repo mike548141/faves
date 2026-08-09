@@ -86,7 +86,7 @@ export const VERIFY_METHODS = [
 const METHOD_PHRASE = {
   "in-store": "Read in store",
   "paper-menu": "Read from a paper menu",
-  "official-site": "Read from the venue’s own site",
+  "official-site": "Read from the place’s own site",
   phone: "Confirmed by phone",
   "delivery-app": "Read from a delivery app",
   "third-party": "Read from a third-party listing",

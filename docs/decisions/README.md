@@ -188,3 +188,16 @@ deliberation those compact docs omit.
   roadmap's file/cache-shaped cut — "Your data" keeps export/import/transfer
   (the personal data blob), "Refresh & reset" takes the app-cache refresh and
   the preferences reset (neither touches that blob). 607 px and 449 px after.
+- [0035](0035-one-noun-place-and-branch.md) — **one noun for one thing: a
+  *place*, and a *branch* of one** (Theme 15b). Five nouns (place, venue,
+  restaurant, spot, branch) collapse to two: **place** = a venue as the reader
+  sees it (owner's steer, already the commonest word, and the only one that
+  isn't false for Cook at Home); **branch** = one location of a place. The
+  Settings → Distance pair is fixed by naming each dial's subject — "Hide
+  places further than" vs "Show **a place's** branches within" — not by
+  renaming both to "places", which would have made two different jobs read as
+  one. *Location* rejected for a branch (collides with the reader's own
+  location); the idiom "in one place" and the SEO meta descriptions
+  deliberately left alone. `reo.js` moved in lockstep (`nav.allRestaurants`
+  re-uses `fav.allPlaces`'s reviewed Māori); a pre-existing `service.all`
+  collision flagged for the Phase 7 reo review, not guessed at.
