@@ -1233,7 +1233,8 @@ wrong.
 
 ✅ **`.order-head` collision — fixed 2026-08-09.** Detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [ ] **"Your data" panel is outgrowing its sheet** `[S][design]` — after
+- [~] **"Your data" panel is outgrowing its sheet** `[S][design]`
+  (claimed 2026-08-09-0820, wt: faves-yourdata) — after
   2026-08-09 it stacks export + import + transfer + refresh + reset in one
   ADR-0025 panel (~980 px at 390 px; the sheet scrolls, so nothing is
   unreachable, but the row's one-line summary now names five actions). Likely
