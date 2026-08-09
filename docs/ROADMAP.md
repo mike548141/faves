@@ -151,15 +151,20 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   (queue-run, `399604e`). The safety-reactivity wiring was the task, and it's
   done: extracted the two per-dish safety predicates into a shared, unit-tested
   `site/js/dietary.js` (`dishFlagged` + `dishSatisfiesDiet`) that BOTH the initial
-  render and the live re-apply call, so they can't diverge; `menu.js`
-  `wireLiveSafety()` re-renders on `settings.subscribe` (any pref change) and on a
+  render and the live re-apply call, so they can't diverge; `menu.js`'s `reapply`
+  re-renders on `settings.subscribe` (any pref change) and on a
   profile switch (reloads favourites/ratings/settings), mirroring the home page's
   proven mechanism; `settings-btn` added to restaurant.html's ⋯ (markup identical
   to home) + `initSettingsUI()` in `initChrome`. **Adversarially safety-reviewed**
-  (see reviews/). 🚩 **Owner MUST confirm on a real device** (fresh browser /
-  `--user-data-dir`; the SW hides changes otherwise): flip an allergen pref on a
-  menu → warnings light up live without reload; switch profile → safety treatment
-  + hearts/ratings re-apply. Known by-design trade-off: a settings/profile change
+  (see reviews/). ✅ **Device-confirmed 2026-08-09** — scripted, not by hand:
+  `tools/device_check.mjs` drives the real Settings UI in headless Chrome on a
+  throwaway `--user-data-dir` at 390 px. Flipping the Peanuts allergen lights up
+  all 10 tagged dishes on R & S Satay Noodle House live; adding a profile clears
+  them and swaps the hearts/ratings; switching back restores both — 15
+  assertions, `navigations since load = 0` throughout. 🚩 A **real-phone
+  eyeball stays the owner's option**, never a blocker: headless Chrome proves the
+  wiring, not how iOS Safari paints it. Known by-design trade-off: a
+  settings/profile change
   re-renders the whole menu, so an in-progress **search query + scroll position
   reset** (and the ad-hoc dietary-chip toggle). 🎯 **Owner ruling 2026-07-25 —
   queue a refinement** `[M]`: a later session preserves in-session UI state
@@ -167,12 +172,17 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   re-render. **Hard constraint:** the allergen/dietary re-apply MUST keep sharing
   the first-paint code path — preserving UI state must not fork the render, or it
   reintroduces exactly this session's stale-highlight race. `[~]` unclaimed.
-  🎯 **Owner ruling 2026-07-24 — queue a
-  dedicated browser-tooling session** to script this device check (headless Chrome
-  with a fresh `--user-data-dir` to bust the SW), rather than a manual phone test.
-  Until that passes, treat the live allergen re-highlight as **proven-by-tests,
-  not yet device-confirmed**. [~] claimed 2026-08-09-0153,
-  wt: faves-device-check — the verification session.
+  ✅ **Owner ruling 2026-07-24 — dedicated browser-tooling session: done
+  2026-08-09** (wt: faves-device-check). `node tools/device_check.mjs` is the
+  scripted, re-runnable device check the ruling asked for — a local static
+  server, headless Chrome on a fresh `--user-data-dir` (the only reliable way
+  past a stale SW), real mouse input through the real Settings UI, exit 0/1/2.
+  Zero npm: it speaks the DevTools Protocol over Node's own WebSocket, and
+  nothing it needs ships in `site/`. It has teeth — with
+  `settings.subscribe(reapply)` removed from `menu.js` as a negative control,
+  exactly the two allergen assertions fail. The live allergen re-highlight is
+  therefore no longer "proven-by-tests only"; it is **device-confirmed**. Listed
+  in the verify blocks in `CLAUDE.md` and `CONTRIBUTING.md`.
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
 - [ ] **Ratings UX — redesign (attempt 3)** `[M][design]` ⚑ — **two control
