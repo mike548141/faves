@@ -3363,3 +3363,77 @@ body.faves-view .to-top {
     transition: opacity 0.18s ease;
   }
 }
+
+/* "A newer version is ready" notice (update-notice.js, ADR 0027). Sits where
+   the toast sits, but it is a surface with actions rather than a message: no
+   timeout, no pointer-events: none, and it reads as a card so the two buttons
+   are obviously tappable. Both are 44 px+ per the mobile target rule. */
+.update-notice {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3));
+  transform: translateX(-50%);
+  z-index: 21; /* above the toast: a toast must never cover a decision */
+  width: min(92vw, 30rem);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-lift);
+  animation: update-notice-in 0.18s ease-out;
+}
+.update-notice-text {
+  flex: 1 1 11rem;
+  margin: 0;
+  font-size: var(--step-sub);
+}
+.update-notice-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+.update-notice-btn,
+.update-notice-dismiss {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-chip);
+  font: inherit;
+  font-size: var(--step-sub);
+  font-weight: 600;
+  cursor: pointer;
+}
+.update-notice-btn {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.update-notice-btn[disabled] {
+  opacity: 0.6;
+  cursor: default;
+}
+.update-notice-dismiss {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink);
+}
+@keyframes update-notice-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .update-notice {
+    animation: none;
+  }
+}

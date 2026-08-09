@@ -80,6 +80,7 @@ const SHELL = [
   "js/temporal.js",
   "js/to-top.js",
   "js/toast.js",
+  "js/update-notice.js",
   "js/versions.js",
   "site.webmanifest",
   "favicon.ico",
