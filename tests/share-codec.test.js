@@ -9,6 +9,10 @@ import {
   decodeShare,
   buildShareUrl,
   readShareToken,
+  encodeTransfer,
+  decodeTransfer,
+  buildTransferUrl,
+  readTransferToken,
   CODEC_VERSION,
 } from "../site/js/share-codec.js";
 
@@ -210,4 +214,93 @@ test("an all-empty shortlist decodes to null (a dud)", () => {
 test("order and shortlist tokens decode to their own type", () => {
   assert.equal(decodeShare(encodeShare({ groups })).type, "order");
   assert.equal(decodeShare(encodeShortlist({ groups: shortlistGroups })).type, "shortlist");
+});
+
+// --- personal transfer (Theme 9 v1, ADR 0027) -----------------------------
+// One person's own hearts + ratings + settings, handed to their second device.
+// It rides the same base64url wire under its own tag and its own fragment
+// parameter — the two must never be readable as each other.
+
+const xferGroups = [
+  {
+    venueId: "kk",
+    venueName: "KK Malaysian",
+    isRecipe: false,
+    sub: "Newtown · Malaysian",
+    venueFav: true,
+    dishes: ["Roti Canai"],
+  },
+  {
+    venueId: "cook-at-home",
+    venueName: "Cook at Home",
+    isRecipe: true,
+    sub: "",
+    venueFav: false,
+    dishes: ["Booth’s Ginger Crunch"],
+  },
+];
+
+const xferPayload = {
+  profile: { id: "p2abc", name: "Michael" },
+  groups: xferGroups,
+  ratings: { "v:kk": 5, "d:kk Roti Canai": 4 },
+  settings: { farKm: 15, lang: "mi", diet: { dietary: ["gf"], avoid: ["contains-nuts"] } },
+};
+
+test("a transfer round-trips hearts, ratings, settings and who it came from", () => {
+  const out = decodeTransfer(encodeTransfer(xferPayload));
+  assert.deepEqual(out.profile, { id: "p2abc", name: "Michael" });
+  assert.deepEqual(
+    out.favourites.map((f) => `${f.type}:${f.name ?? f.venueId}`),
+    ["venue:kk", "dish:Roti Canai", "dish:Booth’s Ginger Crunch"]
+  );
+  // The recipe flag survives, so a received recipe heart deep-links correctly.
+  assert.equal(out.favourites[2].isRecipe, true);
+  assert.deepEqual(out.ratings, { "v:kk": 5, "d:kk Roti Canai": 4 });
+  assert.deepEqual(out.settings, xferPayload.settings);
+});
+
+test("macrons survive the wire", () => {
+  const out = decodeTransfer(
+    encodeTransfer({ ...xferPayload, profile: { id: "p1", name: "Māui" } })
+  );
+  assert.equal(out.profile.name, "Māui");
+});
+
+test("a transfer token is not a share token, and vice versa", () => {
+  assert.equal(decodeShare(encodeTransfer(xferPayload)), null);
+  assert.equal(decodeTransfer(encodeShortlist({ groups: shortlistGroups })), null);
+});
+
+test("rubbish and empty transfers fail soft to null", () => {
+  for (const bad of [null, "", "!!!!", "e30", btoa("{}"), undefined]) {
+    assert.equal(decodeTransfer(bad), null);
+  }
+  // Nothing worth applying is a dud, not an empty success.
+  assert.equal(decodeTransfer(encodeTransfer({ profile: { id: "p", name: "Nobody" } })), null);
+});
+
+test("a crafted transfer can't smuggle a bad rating or a giant string through", () => {
+  const token = encodeTransfer({
+    ...xferPayload,
+    ratings: { "v:kk": 99, "d:kk x": 0, "d:kk y": "abc", ["z".repeat(300)]: 3 },
+  });
+  const out = decodeTransfer(token);
+  assert.equal(out.ratings["v:kk"], 5); // clamped to the 1–5 scale
+  assert.equal("d:kk x" in out.ratings, false);
+  assert.equal("d:kk y" in out.ratings, false);
+  assert.equal(Object.keys(out.ratings).find((k) => k.startsWith("z")).length, 120);
+});
+
+test("settings that aren't an object are dropped rather than trusted", () => {
+  const out = decodeTransfer(encodeTransfer({ ...xferPayload, settings: ["nope"] }));
+  assert.equal(out.settings, null);
+});
+
+test("transfer has its own fragment parameter, so the order receiver never sees it", () => {
+  const url = buildTransferUrl("TOKEN", "https://faves.example.nz/index.html#old");
+  assert.equal(url, "https://faves.example.nz/index.html#xfer=TOKEN");
+  assert.equal(readTransferToken(url), "TOKEN");
+  assert.equal(readShareToken(url), null);
+  assert.equal(readTransferToken(buildShareUrl("TOKEN", "https://faves.example.nz/")), null);
 });

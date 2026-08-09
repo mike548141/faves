@@ -21,6 +21,13 @@ export const CODEC_VERSION = 1;
 const TYPE_OF_TAG = { o: "order", s: "shortlist" };
 const TAG_OF_TYPE = { order: "o", shortlist: "s" };
 
+// The personal transfer (Theme 9 v1, ADR 0027) rides the same base64url wire and
+// the same group packing, but under its OWN fragment parameter and its own tag —
+// so a transfer link can never be read as a shortlist to merge into favourites,
+// and cart-ui.js's `#share=` handler never sees it.
+const XFER_PARAM = "xfer";
+const XFER_TAG = "x";
+
 // Sanity ceilings. The payload is attacker-authorable (anyone can craft a
 // link), so every string is clipped and every number clamped before it can
 // reach storage or the DOM.
@@ -118,11 +125,16 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
  * favourite links to recipe.html rather than a 404 on restaurant.html.
  */
 export function encodeShortlist({ label = "", groups = [] }) {
-  const payload = { v: CODEC_VERSION, t: TAG_OF_TYPE.shortlist };
+  const payload = { v: CODEC_VERSION, t: TAG_OF_TYPE.shortlist, g: packGroups(groups) };
   const l = cleanLabel(label);
   if (l) payload.l = l;
+  return toB64url(JSON.stringify(payload));
+}
 
-  payload.g = groups.map((g) => ({
+// Venue-grouped favourites on the wire. Shared by the shortlist share and the
+// personal transfer so the two can never drift into two shapes for one thing.
+function packGroups(groups) {
+  return (groups || []).map((g) => ({
     v: clip(g.venueId, MAX_NAME),
     n: clip(g.venueName, MAX_NAME),
     r: g.isRecipe ? 1 : 0,
@@ -130,8 +142,6 @@ export function encodeShortlist({ label = "", groups = [] }) {
     f: g.venueFav ? 1 : 0,
     d: (g.dishes || []).map((name) => clip(name, MAX_NAME)),
   }));
-
-  return toB64url(JSON.stringify(payload));
 }
 
 // ---- decode ---------------------------------------------------------------
@@ -221,20 +231,107 @@ function decodeShortlistItems(groups) {
   return items;
 }
 
+// ---- personal transfer (Theme 9 v1) ---------------------------------------
+
+/**
+ * Encode one person's hearts, ratings and settings for a hand-off to their own
+ * second device. Deliberately ONE profile (see ADR 0027): the whole-device
+ * backup is the file export's job, and a URL fragment is a small pipe.
+ *
+ * `groups` is groupForShare()-shaped, exactly as a shortlist; `ratings` is the
+ * flat `{ key: 1..5 }` map and `settings` the profile's settings object. The
+ * profile's id and name ride along so the receiving device can tell "my own
+ * other phone" from "someone else called Sam" (ADR 0027's collision rule).
+ */
+export function encodeTransfer({ profile = {}, groups = [], ratings = {}, settings = null } = {}) {
+  const payload = {
+    v: CODEC_VERSION,
+    t: XFER_TAG,
+    p: { i: clip(profile.id ?? "", 64), n: cleanLabel(profile.name ?? "") },
+    g: packGroups(groups),
+  };
+  const r = {};
+  if (ratings && typeof ratings === "object") {
+    for (const [k, val] of Object.entries(ratings)) {
+      const score = Math.round(Number(val));
+      if (!k || !Number.isFinite(score) || score <= 0) continue;
+      r[clip(k, MAX_NAME)] = Math.min(score, 5);
+    }
+  }
+  if (Object.keys(r).length) payload.r = r;
+  if (settings && typeof settings === "object") payload.s = settings;
+  return toB64url(JSON.stringify(payload));
+}
+
+/**
+ * Decode a transfer token to `{ profile, favourites, ratings, settings }` —
+ * the *parts*, not a personal-data envelope: assembling that is
+ * `envelopeFromTransfer` in personal-data.js, so this codec keeps no knowledge
+ * of the personal layer. Returns null for anything unreadable, and for a
+ * payload carrying nothing worth applying.
+ */
+export function decodeTransfer(token) {
+  if (typeof token !== "string" || !token) return null;
+  let p;
+  try {
+    p = JSON.parse(fromB64url(token));
+  } catch {
+    return null;
+  }
+  if (!p || typeof p !== "object") return null;
+  if (p.v !== CODEC_VERSION || p.t !== XFER_TAG) return null;
+
+  const favourites = decodeShortlistItems(Array.isArray(p.g) ? p.g : []);
+  const ratings = {};
+  if (p.r && typeof p.r === "object" && !Array.isArray(p.r)) {
+    for (const [k, val] of Object.entries(p.r)) {
+      const score = Math.round(Number(val));
+      if (!k || !Number.isFinite(score) || score <= 0) continue;
+      ratings[clip(k, MAX_NAME)] = Math.min(score, 5);
+    }
+  }
+  const settings = p.s && typeof p.s === "object" && !Array.isArray(p.s) ? p.s : null;
+  if (!favourites.length && !Object.keys(ratings).length && !settings) return null;
+
+  return {
+    profile: { id: clip(p.p?.i ?? "", 64), name: cleanLabel(p.p?.n ?? "") },
+    favourites,
+    ratings,
+    settings,
+  };
+}
+
 // ---- URL glue -------------------------------------------------------------
+
+function withFragment(param, token, baseUrl) {
+  const base = String(baseUrl).split("#")[0];
+  return `${base}#${param}=${token}`;
+}
+
+function tokenFrom(param, hashOrUrl) {
+  const s = String(hashOrUrl ?? "");
+  const hash = s.includes("#") ? s.slice(s.indexOf("#") + 1) : s;
+  const m = new RegExp(`(?:^|&)${param}=([^&]+)`).exec(hash);
+  return m ? m[1] : null;
+}
 
 /** Build a shareable URL: the given base with a `#share=<token>` fragment.
  *  Any existing fragment on the base is dropped. */
 export function buildShareUrl(token, baseUrl) {
-  const base = String(baseUrl).split("#")[0];
-  return `${base}#${PARAM}=${token}`;
+  return withFragment(PARAM, token, baseUrl);
 }
 
 /** Pull the share token out of a location hash or full URL, or null if none.
  *  Accepts `#share=xyz`, `share=xyz`, or a whole URL containing either. */
 export function readShareToken(hashOrUrl) {
-  const s = String(hashOrUrl ?? "");
-  const hash = s.includes("#") ? s.slice(s.indexOf("#") + 1) : s;
-  const m = new RegExp(`(?:^|&)${PARAM}=([^&]+)`).exec(hash);
-  return m ? m[1] : null;
+  return tokenFrom(PARAM, hashOrUrl);
+}
+
+/** Transfer's own fragment parameter — `#xfer=<token>`. */
+export function buildTransferUrl(token, baseUrl) {
+  return withFragment(XFER_PARAM, token, baseUrl);
+}
+
+export function readTransferToken(hashOrUrl) {
+  return tokenFrom(XFER_PARAM, hashOrUrl);
 }
