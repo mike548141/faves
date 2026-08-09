@@ -188,6 +188,17 @@ deliberation those compact docs omit.
   roadmap's file/cache-shaped cut — "Your data" keeps export/import/transfer
   (the personal data blob), "Refresh & reset" takes the app-cache refresh and
   the preferences reset (neither touches that blob). 607 px and 449 px after.
+- [0034](0034-cook-mode-overlay-and-wake-lock.md) — **cook mode is a modal
+  `<dialog>` over the recipe, and the wake lock is a lifecycle, not a call**.
+  The native dialog supplies the focus trap, the inert background, Escape and
+  focus restoration; a dedicated page (loses your scroll position) and an
+  in-place mode (hand-rolls all of that) both rejected. `navigator.wakeLock`
+  keeps a `wanted` flag and re-acquires on every `visibilitychange`, because the
+  OS releases the lock when the page hides and never restores it. Unsupported
+  (iOS < 16.4) and refused both degrade to silence. Two leaks found by driving a
+  real headless Chrome — a sentinel dropped rather than released on hide, and a
+  request landing after close — are fixed and tested. Steps saturate at both
+  ends; wrapping rejected. Resuming a part-cooked recipe deliberately not stored.
 - [0035](0035-one-noun-place-and-branch.md) — **one noun for one thing: a
   *place*, and a *branch* of one** (Theme 15b). Five nouns (place, venue,
   restaurant, spot, branch) collapse to two: **place** = a venue as the reader

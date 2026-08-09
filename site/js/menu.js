@@ -32,6 +32,7 @@ import { initOverflowMenu } from "./overflow-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
 import { initTransferReceive } from "./personal-io-ui.js";
+import { cookButton } from "./cook-ui.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -579,6 +580,10 @@ function renderRecipeDetail(item) {
     }
     body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" }), ol);
   }
+  // Cook mode is reachable from the list too, not only from the recipe's own
+  // page — this is where people are browsing when they decide to start cooking.
+  const cook = cookButton(item);
+  if (cook) body.push(el("div", { className: "cook-start-row" }, [cook]));
   return el("details", { className: "recipe-detail" }, [
     el("summary", { className: "recipe-summary", "data-i18n": "recipe.detail", textContent: "Ingredients & method" }),
     el("div", { className: "recipe-body" }, body),
