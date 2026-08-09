@@ -9,6 +9,13 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **McDonald's now shows up in "what's close"** — four of its five branches
+  (Lambton Quay, Bunny Street, Johnsonville, Porirua) gained coordinates, so
+  they sort by distance like every other venue and the contact card lists the
+  two branches **nearest you** instead of the first two we happened to type in.
+  Courtenay Place still has no pin: the map data doesn't hold that street
+  number, and we'd rather show no pin than a guessed one, so it opens by
+  address search as before.
 - **A security contact at `/.well-known/security.txt`** — the standard place a
   researcher looks before reporting a problem. It points at GitHub security
   advisories, which is why it waited for the repo to go public: while the repo
