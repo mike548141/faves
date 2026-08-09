@@ -9,6 +9,13 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Miles and °F, if that's what you read in** — a new Units setting switches
+  every distance on screen between kilometres and miles, and swaps the oven
+  temperatures in the Cook at Home recipes between °C and °F. Metric stays the
+  default. It's a display choice only: nothing you've saved is converted, so
+  switching back and forth can't drift your settings, and it's per person, so
+  one phone can suit two readers. Recipe quantities (cups, grams, litres) are
+  still to come.
 - **A security contact at `/.well-known/security.txt`** — the standard place a
   researcher looks before reporting a problem. It points at GitHub security
   advisories, which is why it waited for the repo to go public: while the repo

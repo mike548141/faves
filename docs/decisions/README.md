@@ -125,3 +125,12 @@ deliberation those compact docs omit.
   what it discloses is content-free. Also corrects 0022's reason for rejecting
   redaction — "reachable in every clone" is false here; the real cost is the 44
   stranded doc SHAs. **No pre-flip blocker remains.**
+- [0029](0029-unit-display-preference.md) — **metric or imperial is a
+  render-time display choice**, never a stored one: the dials keep storing
+  kilometres and the recipes keep saying °C, and only the words change.
+  Imperial short distances read in yards (mirroring the metric 50 m ladder),
+  the dials run on a round mile grid, and oven temperatures are swapped in the
+  step text — one number, nearest 5°F, computed every time. Nearest-25°F dial
+  stops rejected: it can serve a 170°C bake at 350°F. Storing converted values,
+  guessing from the browser locale, and a whole-of-app "locale" switch (prices
+  stay NZD) all rejected too.

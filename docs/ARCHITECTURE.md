@@ -405,8 +405,11 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   badge (`--accent`); rendered on the menu header + dish rows. Per-profile (a
   rating is personal); no averaging, no sharing, no public ratings (ADR 0013).
 - **Settings** (`faves.settings.v1`): `settings.js` — dietary/allergen prefs
-  (`diet`), the two ranking distances (`favBoostKm`, `farKm`) and the reo
-  language, clamped/sanitised on read so a bad value can't break the sort;
+  (`diet`), the two ranking distances (`favBoostKm`, `farKm`), the reo
+  language, the maps app, and `units` (metric | imperial), clamped/sanitised on
+  read so a bad value can't break the sort. `units` is a **display** choice
+  only: `units.js` converts km→miles and °C→°F at render, the stored dials stay
+  kilometres and the recipe data stays °C, so nothing stored drifts (ADR 0029);
   `settings-ui.js` is the ⚙ dialog — an index of topic rows drilling into
   single-topic panels, each row subtitled with its current value, plus the
   profile switcher (ADR 0025). A new topic is one `TOPICS` entry + its panel.
