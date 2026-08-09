@@ -18,8 +18,8 @@ content freshness separately from this file.
   back on the step you were on. On phones too old for the screen-awake feature
   (iOS before 16.4) everything else works exactly the same, quietly.
 - **A menu now says *how* we checked it, not just when.** The date under a
-  restaurant's name reads "Read in store, 7 Aug 2026" or "Read from a paper
-  menu, 8 Aug 2026" — because someone standing at the counter and a listing
+  restaurant's name reads "Read in store, 7 Aug 2026" or "Read from a paper <!-- datescan:allow: quotes the string the app renders to a reader; the UI's human date format is a product choice, not a dating slip -->
+  menu, 8 Aug 2026" — because someone standing at the counter and a listing <!-- datescan:allow: quotes the string the app renders to a reader; the UI's human date format is a product choice, not a dating slip -->
   copied off a website are not the same evidence, and they used to look
   identical. Six sources are recognised: in store, a paper menu, the venue's
   own site, a phone call, a delivery app, or a third-party listing.
@@ -189,7 +189,7 @@ content freshness separately from this file.
   dish used to cost, when a place joined Faves, whether it's shut for a refit or
   gone for good, and which dishes are only on the summer menu. **Choosing dinner
   looks exactly as it did** — the app resolves everything to "today" before it
-  draws a single pixel, so you see tonight's menu at tonight's prices and
+  draws a single pixel, so you see tonight's menu at tonight's prices and <!-- datescan:allow: product vocabulary — "tonight's menu" is the question this app answers, not a dated claim -->
   nothing else. The one visible addition: a venue that's temporarily or
   permanently closed now says so on its card and at the top of its menu, and
   drops out of "Pick for us" — a stale price costs a dollar, but a closed venue
