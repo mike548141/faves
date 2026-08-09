@@ -1157,19 +1157,32 @@ because we have never established it for any venue. Filling it is content work
 (the owner or a venue's own site), not a build. It would unlock "in Faves since
 July 2026" and "trading since 1998" lines, and an honest "new to Faves" badge.
 
-- [~] **f. `verified` must carry its derivation** `[M][schema]`
-  (claimed 2026-08-09-0800, wt: faves-verified-derivation) — queued
-  2026-08-09 by upstream doctrine (atelier PRINCIPLES §9, Mike ruled the
-  retrofit binding 2026-08-09; faves' bare nullable `verified` flag is the
-  prompting case named in the ruling). A stored conclusion carries *when it
-  was established and by what method* — a date alone cannot distinguish an
-  owner-confirmed price from a scraper's guess, and staleness only becomes
-  computable when each value knows its age and acquisition method. Shape:
-  `verified` grows date + method (owner-in-store / official-site /
-  paper-menu / phone …), `validate.py` enforces, ADR records the vocabulary.
-  **No backfill** — dates we no longer have stay honestly absent; the clock
-  starts when the field lands. Rides naturally with the next schema touch
-  (Theme 14a) or stands alone.
+✅ **f. `verified` carries its derivation** — shipped 2026-08-09
+(ADR [0031](decisions/0031-verified-carries-its-derivation.md)): a sibling
+**`verifiedBy`** naming one of six source classes, at **record** granularity
+with an optional per-reading `method` override on a price-series entry.
+Per-price as the primary level, an object-valued `verified` and a confidence
+score all rejected — reasoning in the ADR. No backfill; applied to the two
+records whose provenance `SESSIONS.md` evidences. Design record →
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+
+- [ ] **g. The "needs a refresh" caveat should read the method, not the
+  date** `[S][ux][content]` — raised 2026-08-09 by 13f, deliberately not
+  fixed there. The menu screen shows its ⓘ "menu items and prices need a
+  refresh" caveat when `verified` is null. Now that a reading states its
+  method, the bare presence of a date is the weaker signal — a
+  `third-party` or `delivery-app` reading should arguably still caveat,
+  and a freshly dated `in-store` one should not. The concrete cost as
+  things stand: **TJ Katsu and Sushi Bi sit at `verified: null`** although
+  `SESSIONS.md` (2026-08-08) records exactly when and how both were read
+  (`official-site`), *partly because* setting a date would silently switch
+  off a caveat that is right — TJ Katsu's source site is visibly stale
+  (©2017, its own nav 404s). That is §9's "unknown is not none" still live
+  in this corpus: one null standing for "never read" and "read from a
+  source we don't fully trust". The fix is a stated policy on which methods
+  count as a check (and whether age enters it), then the two records gain
+  honest dates. **Owner call, not a build call** — a threshold picked by an
+  agent would change live UI on judgement rather than evidence.
 
 ## Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)
 

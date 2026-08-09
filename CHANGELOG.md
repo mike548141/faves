@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A menu now says *how* we checked it, not just when.** The date under a
+  restaurant's name reads "Read in store, 7 Aug 2026" or "Read from a paper
+  menu, 8 Aug 2026" — because someone standing at the counter and a listing
+  copied off a website are not the same evidence, and they used to look
+  identical. Six sources are recognised: in store, a paper menu, the venue's
+  own site, a phone call, a delivery app, or a third-party listing.
 - **Faves now notices new versions by itself.** The app checks for an update
   whenever you come back to it (at most once every few minutes, so it isn't
   chewing through your data), and when there's a newer version it says so with

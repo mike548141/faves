@@ -161,3 +161,13 @@ deliberation those compact docs omit.
   profile only**, measured: the QR ceiling is reached at ~4 favourites, so the
   link is the path and the QR a bonus. Called transfer, never sync.
   **Proposed — owner to ratify.**
+- [0031](0031-verified-carries-its-derivation.md) — **`verified` carries its
+  derivation**: a sibling `verifiedBy` naming one of six **source classes**
+  (`in-store` · `paper-menu` · `official-site` · `phone` · `delivery-app` ·
+  `third-party`), at **record** level, with a per-reading `method` override
+  already available on a price-series entry. Per-price rejected (acquisition
+  is a session act, and the finer case already has a home); `verified` as an
+  object rejected (four live consumers read it as a string, on installed
+  phones); a confidence score rejected (undefendable numbers). No backfill —
+  the two dated records carry methods `SESSIONS.md` evidences, and
+  `validate.py` warns rather than errors on the rest.
