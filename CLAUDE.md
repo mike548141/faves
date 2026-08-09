@@ -108,6 +108,7 @@ python3 tools/serve.py        # laptop + phone (same Wi-Fi); prints both URLs
 python3 tools/validate.py     # data validates against the schema
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
+python3 tools/check_visibility.py # the visibility bullet above is still true
 node --test                   # JS unit tests (pure logic); no npm install needed
 node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 ```

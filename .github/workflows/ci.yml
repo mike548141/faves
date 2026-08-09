@@ -39,6 +39,14 @@ jobs:
       # future third-party entry shows up as a diff.
       - name: Assert the committed SBOM is current
         run: python3 tools/gen_sbom.py --check
+      # CLAUDE.md's visibility bullet decides whether a push is recoverable or
+      # is irreversible publication — it read PRIVATE for three days after the
+      # repo went public and nothing noticed. The runner already holds the
+      # truth in the event payload, so this costs no token and no API call.
+      - name: Assert the stated repo visibility is still true
+        run: >-
+          python3 tools/check_visibility.py
+          --actual ${{ github.event.repository.private && 'private' || 'public' }}
 
   test:
     name: JS unit tests
