@@ -117,3 +117,11 @@ deliberation those compact docs omit.
   (552 px). Accordions, tabs and scattering-to-where-they-bite all rejected.
   So was Escape-steps-back: measured, Chrome's close-watcher force-closed it
   two times in six.
+- [0026](0026-pat-prerequisite-discharged.md) — **the PAT prerequisite is
+  discharged and credential-root hardening is decoupled**, amending
+  [0022](0022-publish-safety-review.md)'s consequences. No classic tokens exist
+  on the account, so the archived *classic + broad* line is already historical —
+  nothing to rotate. The AWS/Google/TrueNAS half moves to the estate roadmap:
+  what it discloses is content-free. Also corrects 0022's reason for rejecting
+  redaction — "reachable in every clone" is false here; the real cost is the 44
+  stranded doc SHAs. **No pre-flip blocker remains.**

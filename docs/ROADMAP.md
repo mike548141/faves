@@ -540,13 +540,15 @@ Assessed 2026-07-12: publishable, but sequenced. Flipping visibility is a
 floor action (one-way door — forks/copies survive any later unpublish) and
 stays the owner's explicit call. Order matters:
 
-1. **GitHub PAT refresh first** (already queued estate-side; still owed —
-   see the 2026-08-06 close-out below). The session
-   log (`docs/SESSIONS.md`, 2026-07-12 deploy entry) records the current
+1. ✅ ~~**GitHub PAT refresh first**~~ — **discharged 2026-08-09
+   ([ADR 0026](decisions/0026-pat-prerequisite-discharged.md))**. The session
+   log (`docs/SESSIONS.md`, 2026-07-12 deploy entry) records the then-current
    PAT as classic + broad and lists unhardened credential roots
    (AWS/Google/TrueNAS); git history preserves that line forever, so the
-   fix is making it *historical* — refresh the credential, don't redact
-   the log.
+   fix was making it *historical* rather than redacting the log. It already
+   is: the account now carries **no classic tokens at all**. The
+   AWS/Google/TrueNAS half is **decoupled** to the estate roadmap — it
+   discloses nothing actionable and no longer gates this repo.
 2. ~~**Branch protection before visibility**~~ — ⚠️ **superseded 2026-08-06
    by ADR 0022 gate 8: not achievable as written.** GitHub refuses branch
    protection on a private free-plan repo. The requirement stands, the
@@ -624,9 +626,14 @@ adds to the list above:
 fresh public root: the fresh-root option was costed (stranded doc SHAs,
 lost build narrative, and it buys little because the texture ships at
 HEAD anyway) and declined, reaffirming the family-texture ruling. (2)
-**Records publish as-is**, with the PAT made historical by rotation
-rather than redacted — under full history redaction achieves nothing,
-since the text stays reachable in every clone.
+**Records publish as-is**, with the PAT line made historical rather than
+redacted. ⚠️ **Reasoning corrected 2026-08-09
+([ADR 0026](decisions/0026-pat-prerequisite-discharged.md))**: the original
+argument — redaction achieves nothing "since the text stays reachable in
+every clone" — is **false for this repo** (private since 2026-07-06, zero
+forks, the only cloners the owner's own machines). The conclusion still
+holds, on cost: a rewrite strands the **44 commit SHAs** cited across the
+ADRs, session logs and reviews.
 
 ✅ **Publish-safety review done 2026-08-06** →
 [ADR 0022](decisions/0022-publish-safety-review.md), with the flip
@@ -666,11 +673,12 @@ two owner actions owed first. What that pass closed:
 
 🎯 **Still owed before the flip — owner's:**
 
-1. **Rotate the GitHub PAT and confirm the AWS / Google / TrueNAS
-   credential roots are hardened.** The records name them as *queued*
-   for hardening; publishing that while it is still true is a live
-   disclosure, not a historical one. **This is now the only thing
-   standing between the repo and a flip**, and it is estate-side work.
+1. ✅ ~~**Rotate the GitHub PAT and confirm the AWS / Google / TrueNAS
+   credential roots are hardened.**~~ — **closed 2026-08-09
+   ([ADR 0026](decisions/0026-pat-prerequisite-discharged.md))**. No classic
+   tokens exist on the account, so the line is already historical; the
+   credential-root half is decoupled to the estate roadmap. 🎉 **No pre-flip
+   blocker remains** — the sequence resumes at GO-PUBLIC step 3.
 2. ✅ **Floor CI green at `8ba6218`** — first time since 2026-07-25,
    resolved as a side effect of the leakscan disposition (CI was
    blocking on the venue-data structural findings; the ignore took them

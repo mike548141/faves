@@ -18,14 +18,23 @@ half-way.
 
 ## Before the day
 
-- [ ] **1. Rotate the GitHub PAT** (classic + broad, per
-      `SESSIONS-ARCHIVE.md`), and confirm the AWS / Google / TrueNAS credential
-      roots are hardened. Estate-side work, tracked in the estate-root repo.
-      **This is the one blocker that can make an otherwise-safe flip unsafe** —
-      the records name those roots as not-yet-hardened, and publishing that
-      while it is still true is a live disclosure. Rotating makes the line
-      historical, which is the whole basis of the "publish the records as-is"
-      ruling.
+- [x] **1. The GitHub PAT prerequisite.** ✅ **Discharged 2026-08-09** — see
+      [ADR 0026](decisions/0026-pat-prerequisite-discharged.md). There are **no
+      classic personal access tokens** on the account
+      (`github.com/settings/tokens` → *"No personal access token created"*), so
+      the `SESSIONS-ARCHIVE.md` line describing one as *classic + broad* is
+      already historical. That is the condition the "publish the records as-is"
+      ruling needed. Nothing to rotate.
+
+      The AWS / Google / TrueNAS credential-root hardening that used to be
+      bundled here is **decoupled** (owner ruling, 2026-08-09) and moves to the
+      estate roadmap as ordinary work. What the record discloses there is
+      content-free — three providers named, no identifiers, endpoints or
+      weaknesses — so it does not gate this repo.
+
+      ⚠️ **One check worth repeating:** the token screenshots came from a
+      browser profile labelled *Work*. If that is a different GitHub account
+      from `mike548141`, redo this on the account that owns the repo.
 - [x] **2. Get the `floor` workflow green.** ✅ **Done at `8ba6218`
       (2026-08-06)** — green for the first time since 2026-07-25, as a side
       effect of the leakscan disposition: CI was blocking on the ~86 structural
