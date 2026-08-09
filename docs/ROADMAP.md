@@ -166,7 +166,8 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   (search query, scroll position, dietary-chip toggle) across the safety
   re-render. **Hard constraint:** the allergen/dietary re-apply MUST keep sharing
   the first-paint code path — preserving UI state must not fork the render, or it
-  reintroduces exactly this session's stale-highlight race. `[~]` unclaimed.
+  reintroduces exactly this session's stale-highlight race. `[~]` claimed
+  2026-08-09-0202, wt: faves-ui-state.
   🎯 **Owner ruling 2026-07-24 — queue a
   dedicated browser-tooling session** to script this device check (headless Chrome
   with a fresh `--user-data-dir` to bust the SW), rather than a manual phone test.
@@ -342,14 +343,16 @@ Two streams, deliberately separated because they land in different places:
 - **App feedback** — a bug or a feature idea about Faves itself. Destination:
   the roadmap / an issue.
 
-- [ ] **4c-i — Report from where the problem is** `[M][design]` — the design
+- [~] **4c-i — Report from where the problem is** `[M][design]` (claimed
+  2026-08-09-0202, wt: faves-report) — the design
   call that makes or breaks this: a report raised **from the dish or venue
   itself** arrives with the venue id, dish name and the value we're currently
   showing already attached, so the owner can act on it without a conversation.
   A blank "contact us" form does not. Put the entry point on the dish row's ⓘ /
   overflow and on the venue contact card, plus one general "suggest a place" on
   the home screen.
-- [ ] **Transport — ✅ RULED 2026-08-09: compose-and-share** `[M]`. The owner
+- [~] **Transport — ✅ RULED 2026-08-09: compose-and-share** `[M]` (claimed
+  2026-08-09-0202, wt: faves-report). The owner
   took the recommendation: build the report client-side and hand it to the OS
   share sheet / clipboard (`navigator.share`, clipboard fallback) so it arrives
   as a message. **Zero infra, offline-capable, no trust surface, no accounts** —
@@ -363,12 +366,14 @@ Two streams, deliberately separated because they land in different places:
   `navigator.share` needs a user gesture and isn't everywhere (no Firefox
   desktop), so clipboard-plus-visible-confirmation is a first-class path, not an
   afterthought — and the report has to stay on screen if both fail.
-- [ ] **Safety rule, non-negotiable** — an allergen correction is **a suggestion
+- [~] **Safety rule, non-negotiable** (claimed with 4c-i, wt: faves-report) —
+  an allergen correction is **a suggestion
   to the owner, never a live edit**. Nothing a reporter submits may change what
   the app flags; corrections land in the repo through a human. The reverse
   failure — someone "correcting away" a peanut tag — is a safety failure, not a
   data-quality one. Inherit the existing allergen framing verbatim.
-- [ ] **Offline behaviour** — the whole app works in flight mode, so the report
+- [~] **Offline behaviour** (claimed with 4c-i, wt: faves-report) — the whole
+  app works in flight mode, so the report
   form must too: compose offline, queue or hand to the share sheet, never lose
   what was typed to a failed fetch.
 
@@ -720,7 +725,8 @@ the owner to read it.
 follows them across devices (Theme 9) and, with consent, to people they
 choose (Theme 10), rather than being trapped in one browser's storage.
 
-- **v1 — shareable-link seed** `[S]` — reuse the `share-codec.js` +
+- **v1 — shareable-link seed** `[S]` `[~]` (claimed 2026-08-09-0202,
+  wt: faves-personal-io) — reuse the `share-codec.js` +
   `favourites.merge()` machinery (already built for group-order / shortlist
   links) to encode hearts+settings into a link/QR you open on a second
   device to seed it. **No infra, offline, ship-ready.** Manual one-shot
@@ -961,7 +967,8 @@ one line, not a rewrite.
   - **Human-legible JSON** (pretty-printed, venue/dish **ids and names**). It's
     "machine readable" as asked, but a person opening it should recognise their
     own favourites. Ids alone rot silently when data changes (ADR 0020).
-- **12b — Import** `[M][design]` — the pair. Riskier than export: **merge or
+- **12b — Import** `[M][design]` `[~]` (claimed 2026-08-09-0202,
+  wt: faves-personal-io) — the pair. Riskier than export: **merge or
   replace?** Recommend **merge**, reusing `favourites.merge()` +
   `share-codec.js` (built for the group-order links), with replace as an
   explicit destructive choice behind a confirm. Two traps: importing a file
@@ -1418,7 +1425,8 @@ the display adapts. Three surfaces use units today: **distance** (the two
 Distance dials, Near-me, the drive/walk hint), **recipe quantities** (17a), and
 **oven temperatures** (°C).
 
-- [ ] **18a — Distance** `[S]` — the cleanest half. Distances are already
+- [~] **18a — Distance** `[S]` (claimed 2026-08-09-0202, wt: faves-units) —
+  the cleanest half. Distances are already
   numbers in kilometres, so this is a formatter plus a label swap, and the
   Settings dials switch to miles with sensible steps rather than converted
   decimals.
@@ -1429,7 +1437,8 @@ Distance dials, Near-me, the drive/walk hint), **recipe quantities** (17a), and
   and say which. Baking is also the one place where **weight beats volume**;
   offering grams for flour and sugar is arguably a bigger win than offering
   cups.
-- [ ] **18c — Oven temperatures** `[S]` — °C ↔ °F, and gas marks if the owner
+- [~] **18c — Oven temperatures** `[S]` (claimed 2026-08-09-0202,
+  wt: faves-units) — °C ↔ °F, and gas marks if the owner
   wants them. Rounding to the nearest sensible dial setting, not `356.0 °F`.
 
 **Default stays metric** — the app is New Zealand-first and the data is metric.
