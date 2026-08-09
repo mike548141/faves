@@ -107,13 +107,27 @@ next cold start, instead of immediately.
   person was doing again) where it previously took a kill-and-relaunch. Better,
   but it is not zero — the notice's copy is doing real work and wants a look on
   a device.
-- **`site/js/versions.js` is unaffected** — it reads cache *names*, which the
-  split and its constants still produce unchanged. During the waiting window a
-  device legitimately holds two shell caches; `versions.js` already picks the
-  newer, which is the answer About should give.
+- **`site/js/versions.js` keeps working, but its answer drifts in one window —
+  worth an owner call.** It reads cache *names*, which are unchanged, and it
+  already handles two shell caches coexisting by picking the newer. What has
+  changed is how long that window lasts. Under `skipWaiting()` the newer cache
+  was the serving one within seconds, so "newest cached" and "what you're
+  running" were the same fact. A waiting worker can now hold for hours: the
+  device has stored `….5` while the page is still being served `….4`, and About
+  reports the stored one. That is the module's stated contract ("what this
+  device has cached") but no longer the question its own header says people are
+  asking ("what their phone is actually serving"). Not fixed here — 16e is
+  shipped and this is a judgement call about which number helps more. The honest
+  fix, if wanted, is to report the *controlling* worker's caches and say
+  separately that a newer one is waiting.
 - **Force-refresh (Theme 16c) is the escape hatch** when this flow still leaves
   something stale, and is deliberately narrower than it looks: shell and data
   caches only, never `localStorage`, and a refusal when offline.
+- **The upgrade onto this version shows no notice, by construction.** A phone on
+  the previous worker is running the previous `sw-register.js`, which has no
+  notice code — so the first time this flow ships, it lands the old way (next
+  cold start). Everything after that upgrade gets the notice. Nothing to do
+  about it; just don't read the silence as a broken build.
 - **Device verification is owed.** None of the runtime behaviour here —
   the resume check firing, the notice appearing, the tap activating — is
   reachable from `node --test`. It goes to the device-check harness.
