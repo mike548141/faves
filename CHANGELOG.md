@@ -78,6 +78,11 @@ content freshness separately from this file.
   your device has actually stored offline, not from what the code claims, so a
   phone running a stale copy shows the stale stamp — which is the useful answer
   when you're wondering whether you've got the new menus.
+- **About's version stamp now matches what's actually on screen.** It used to
+  be able to show a newer version than the page you were looking at, in the
+  gap between a background update arriving and you tapping Refresh. Now it
+  asks the running app directly, and adds a separate "an update is ready"
+  line when one is waiting for your tap.
 
 ### Changed
 - **Chocolate Self-Saucing Pudding is a single mixture again** — it had been
