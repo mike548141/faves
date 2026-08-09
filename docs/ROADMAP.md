@@ -1273,28 +1273,20 @@ drill-in only landed 2026-08-08 and its 390 px real-phone look is **still owed**
 (it's the same pending eyeball as Theme 12a). Judge the current build on the
 phone before commissioning a replacement for it.
 
-**b. One noun for one thing — a wording consistency sweep** `[S]` —
-[~] **CLAIMED 2026-08-09 09:12 UTC** (wt: `faves-one-noun`) — **owner,
-raw:** *"check the consistency of wording across the app. For example in Settings
-→ Distance it says 'Show branches within' vs 'Hide places further than'. I would
-prefer to replace branches with places."* Confirmed at
-[settings-ui.js:428](../site/js/settings-ui.js#L428) and
-[:436](../site/js/settings-ui.js#L436). The app currently uses *venue*, *place*,
-*restaurant*, *branch* and *spot* across its copy with no settled rule.
-
-🚩 **One trap the sweep must resolve, not paper over:** those two dials mean
-genuinely different things. "Hide places further than" filters **venues** by
-reachability; "Show branches within" controls how many **branches of one
-multi-branch venue** show on its contact card (the repurposed `favBoostKm` dial —
-see the 2026-07-23 ruling above). Renaming both to "places" would make them read
-as two settings for the same job. So the deliverable is a **term decision first**
-(which noun the user sees for a venue, and what we call one of its locations),
-then the sweep — not a find-and-replace.
-
-Scope: every user-facing string, **including the te reo table in
-`site/js/reo.js`** — the English and te reo strings are one table and move in
-lockstep, so a rename that skips `reo.js` silently desyncs the translation. Code
-identifiers stay as they are; this is copy, not a refactor.
+✅ **b. One noun for one thing — shipped 2026-08-09**
+([ADR 0035](decisions/0035-one-noun-place-and-branch.md), wt:
+`faves-one-noun`). Two nouns and only two: **place** for a venue as the reader
+sees it (the owner's steer, and the only candidate that isn't false for *Cook at
+Home* — your own kitchen is a place, not a venue), **branch** for one location
+of a place that has several. *venue*, *restaurant* and *spot* retired from
+user-facing copy. The trap was resolved, not papered over: each dial now names
+its own subject — "Hide **places** further than" over "Show **a place's**
+branches within" — so two different jobs stop reading as one. 18 strings across
+11 files; the reo lockstep held (one keyed string moved, and *wharekai* —
+specifically an eating-house — would have desynced the moment the English
+stopped saying "restaurants"). 🎯 **Two judgement calls the owner may want to
+overrule, and one pre-existing flaw found:** detail →
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 **c. Home screen: one place for filters** `[M][design]` — **owner, raw:**
 *"I am considering moving the bottom section of the main page that filters

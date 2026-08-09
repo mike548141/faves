@@ -771,3 +771,72 @@ Resolved items only; the open ones stay in [`ROADMAP.md`](ROADMAP.md).
   483 JS tests and zero Python ones meant every `tools/*.py` gate was
   itself unexercised, and a validator's failure mode is silence — a
   check that never fires looks exactly like data that is always clean.
+
+### One noun for one thing — the wording sweep (Theme 15b, 2026-08-09)
+
+Shipped on `faves-one-noun`, [ADR 0035](decisions/0035-one-noun-place-and-branch.md).
+The decision, the calls made inside it, and what it deliberately left alone.
+
+**The two nouns.** *place* for a venue as the reader sees it; *branch* for one
+location of a place that has several. Chosen over *venue* / *restaurant* /
+*spot*, all now retired from user-facing copy (they survive as code identifiers
+and inside real business names). Two grounds beyond the owner's own steer:
+*place* was already the commonest noun, so fewest strings moved; and it is the
+only candidate that is not false for **Cook at Home** — your own kitchen is a
+place, it is not a venue or a restaurant.
+
+**The trap, and why "replace branches with places" could not be taken
+literally.** The owner's raw words were *"I would prefer to replace branches
+with places"*. Applied to both dials that would have been a regression: they do
+different jobs — `farKm` filters **which places you see at all**, `favBoostKm`
+picks **which branches of one place** its contact card shows. Two labels reading
+"places" would present one job twice. The resolution is that each label names
+its own subject, and the possessive carries it: "Hide **places** further than"
+over "Show **a place's** branches within" — the second says plainly that it
+works *inside* one of the things the first filters. Measured at 390 px in
+headless Chrome on a fresh profile: both labels sit on one line beside their
+readout, `scrollWidth 390 == clientWidth`, no horizontal overflow.
+
+**The reo lockstep held, and it was a real risk not a theoretical one.**
+Exactly one keyed English string changed: `nav.allRestaurants`, "← All
+restaurants" → "← All places". Its Māori was `← Ngā wharekai katoa`, and
+*wharekai* means specifically a restaurant/eating-house — it desynced the
+instant the English stopped saying "restaurants". Resolved by re-using the
+already-reviewed value of `fav.allPlaces` (identical English, identical Māori)
+rather than drafting a fresh string, so no new `// draft` was warranted.
+Verified live: switching Language to Te Reo Māori through the real Settings UI
+renders `← Ngā wāhi katoa` on the menu page, macron intact.
+
+🎯 **Three calls the owner may want to overrule.**
+1. **"Branch" was kept**, not folded into "places" — the roadmap's own trap
+   paragraph says merging them is a regression. This is the line to push back on
+   if one word everywhere is genuinely wanted.
+2. **The two dials were reordered**, `farKm` first. Layout, not copy; done
+   because "which places, then which branches within one" is the order the
+   sentence reads in, and it matches the index-row summary. Two lines to revert.
+3. **Safety-adjacent copy was touched**: the allergen caveat's *"Some tags come
+   from the venue"* → *"…the place"*, despite a code comment saying it stays
+   verbatim. Meaning is identical; "verbatim" was read as *don't paraphrase or
+   shorten*, which this does not.
+
+**Deliberately left alone.** The meta/manifest descriptions still say
+*"Wellington restaurants and takeaways"* — that is a category description for a
+search engine, not the interface's noun, and "places" there is vaguer and worse
+against the SEO ≥ 95 bar. The idiom *"in one place"* survives in the tagline,
+the About lede and "put this data in its place": context disambiguates
+completely, and purging it costs charm plus a fresh te reo draft of `app.sub`
+for no reader gain.
+
+🚩 **A pre-existing te reo collision found, flagged not fixed.** `service.all`
+("Everywhere", the home segmented control) translates to `Ngā wāhi katoa` —
+word-for-word identical to the "All places" keys, which are a different job. Not
+created by this change. Left with a comment in `reo.js` for the reo review
+queue; whether it wants *ngā momo katoa* (all kinds) or something else is a
+speaker's call, not a non-speaker's guess. Separately, `menu.branches`
+("Branches") still has no reo entry and falls through to English, as before —
+the obvious word *peka* is already spoken for by `route.detour`.
+
+**Not verified:** no real phone (headless Chrome at 390 px only, not iOS Safari
+or Chrome Android); Lighthouse not re-run (copy-only, meta untouched, so no
+movement expected — but that is reasoning, not a measurement); te reo
+correctness rests on re-using a reviewed string, not on a speaker's review.
