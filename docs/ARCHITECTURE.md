@@ -137,7 +137,7 @@ reversible in an afternoon.
 ### Cook at Home (recipes) — `kind: "recipes"`
 
 The one non-venue record type. A single collection,
-`data/restaurants/cook-at-home.json`, holds home recipes so "cook
+`site/data/restaurants/cook-at-home.json`, holds home recipes so "cook
 tonight" sits in the same list (and the "pick for us" shuffle) as the <!-- datescan:allow: product vocabulary — "open tonight" is the question this app answers, not a dated claim -->
 takeaways. It reuses the restaurant shape with a `kind` discriminator:
 
@@ -314,7 +314,7 @@ UI must never present absence of an allergen tag as "allergen-free".
 
 ### Rules
 
-- `data/index.json` is the display order (an array of ids).
+- `site/data/index.json` is the display order (an array of ids).
 - Every id in `index.json` has a matching file; every `picks` entry
   matches a menu item `name` exactly.
 - Prices are numbers (NZD) or null — never strings.

@@ -139,7 +139,7 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
 
 - **Model & token economics:** doctrine (billing states, seat
   assignment, hand-ups, session hygiene) is atelier
-  `docs/method/ECONOMICS.md` at the pin above; entitlement numbers live
+  `docs/method/ECONOMICS.md` at the pin above; entitlement numbers live <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
   in the estate root. `docs/MODEL-ECONOMICS.md` holds only this repo's
   measurements and applications. Consult both before choosing a model
   or starting a billed review (`/code-review ultra`).

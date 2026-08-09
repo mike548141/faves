@@ -76,7 +76,7 @@ away. The venue header already carried its rating under the title
   buttons to a `role="slider"` track (pointer + keyboard). `curatedRating`
   renders five glyphs. `menu.js` lifts the dish rating to a `.dish-rating` row
   under the name and drops it from `.dish-actions`.
-- Docs/tests updated: `ARCHITECTURE.md` schema `1..5`, `validate.py` range,
+- Docs and tests updated: `ARCHITECTURE.md` schema `1..5`, `validate.py` range,
   `ratings.test.js` upper-range coverage. `reo.js` "Our rating" label unchanged
   (scale words are interpolated English, per the reo boundary).
 - Reversibility unchanged from ADR 0013 (two JS files + one field check + one CSS

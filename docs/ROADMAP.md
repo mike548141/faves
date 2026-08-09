@@ -658,11 +658,12 @@ home-area inference no worse than the live site already allows.
 
 **Re-assessed 2026-08-06** (pin bumped to `atelier@33a540a`). The estate
 now has a proven flip procedure: `rpi` went public 2026-07-29 through a
-six-gate publish-safety ADR (rpi `docs/decisions/0009` — leakscan 0,
-secretscan 0, full-history blob scan, licence, reconnaissance sweep,
-docs-read-as-public), with the evidence produced by an agent and the flip
-ruled by the owner. faves follows that template. What the re-assessment
-adds to the list above:
+six-gate publish-safety ADR — rpi's own
+`docs/decisions/0009` <!-- pathscan:allow: rpi's own ADR, cross-repo --> —
+leakscan 0, secretscan 0, full-history blob scan, licence, reconnaissance
+sweep, docs-read-as-public — with the evidence produced by an agent and
+the flip ruled by the owner. faves follows that template. What the
+re-assessment adds to the list above:
 
 - **Two upstream atelier items gate the flip.** P5 — the publish-safety
   checklist covers repo *content* but nothing covers GitHub *settings*
@@ -674,8 +675,8 @@ adds to the list above:
 - **Leakscan needs a disposition pass, not a cleanup.** Full-tree
   leakscan: 104 findings at the 2026-08-06 morning HEAD, 101 after the
   family-texture fixes. The bulk are the product — restaurant street
-  addresses and phone numbers in `site/data/` and their echoes in
-  docs/records — business data the site exists to publish, not personal
+  addresses and phone numbers in `site/data/` and their echoes in our
+  records — business data the site exists to publish, not personal
   data. Per GUARDS (narrow, noisy, reasoned) they want a scoped,
   reasoned allowance, not deletion. Gate 1 of the publish-safety ADR can
   only cite "leakscan 0" after that pass. 🚩 The pass must also settle
@@ -898,7 +899,7 @@ favourites so the orderer can pick their usual when ordering for the family.
 ## Theme 11 — Recipes as personal content (owner-raised 2026-07-29) — owner-gated
 
 Today Cook at Home is **24 curated recipes shipped in the repo to
-everyone** (`data/restaurants/cook-at-home.json`, `kind: "recipes"`). The
+everyone** (`site/data/restaurants/cook-at-home.json`, `kind: "recipes"`). The
 owner's steer: keep the feature and keep *publishing* some recipes, but stop
 publishing *all* of them — recipes should also be able to live in the
 **private personal layer** and be shared the way favourites, ratings,
@@ -1599,31 +1600,59 @@ where an imperial reader sees `430°F`.
 - [~] **`pathscan` is decorative here — 25 standing findings** `[S][docs]` —
   **CLAIMED 2026-08-09 09:12 UTC** (wt: `faves-pathscan`), for the two
   classes that are ours; the upstream class stays blocked on the owner call
-  below. found 2026-08-09. It runs warn-only in our floor and has accumulated 25
-  findings, which means nobody reads it, which means a *real* stale path
-  now hides in the noise. That is the whole cost: a guard with standing
-  false positives is a guard switched off. Triaged into three classes:
-  - **~8 are an upstream scanner defect, not ours.** A root-anchored path
-    whose first segment starts with a dot is mangled: `/.well-known/x`
-    is extracted as `known/x`, losing `.well-` and the leading slash, so
-    it reports missing while the file plainly exists. Minimal repro in a
-    clean throwaway repo: `site/.well-known/sbom.json` and
-    `site/.well-known/security.txt` both **pass**; `/.well-known/security.txt`
-    on its own line **fails** as `known/security.txt`. So the trigger is
-    the leading-slash-plus-dot form, not dot-directories in general.
-    Ours are honest URL references to files that exist — this is atelier's
-    `pathscan` to fix. 🎯 **Owner call needed** before anything is written
-    upstream — see the note in `SESSIONS.md` for 2026-08-09; the new
-    CONCURRENCY rule invites queueing it in atelier's roadmap, and the
-    standing correction to this repo says faves does not write there.
-  - **~14 are ours and genuinely loose** — prose shorthand like
-    `data/index.json` for the real `site/data/index.json`, and ADR-number
-    shorthand like `docs/decisions/0009`. Fix by writing the real path.
-  - **~3 are correct as written** — cross-repo atelier paths and a
-    historical worktree path inside a session log, which is accurate *as
-    history*. These want `pathscan:allow` markers with reasons.
-  Do the middle class, mark the last, leave the first to upstream — then
-  the scanner is worth reading again.
+  below. found 2026-08-09. It runs warn-only in our floor and has accumulated
+  standing findings, which means nobody reads it, which means a *real* stale
+  path now hides in the noise. That is the whole cost: a guard with standing
+  false positives is a guard switched off. Triaged into three classes; **the
+  "25" in this item's own title was already stale by fix time — the real
+  count at fix time was 34** (findings accrue between the roadmap note and
+  the fix landing; title left as the original identifier, not corrected).
+  Corrected triage, verified against the live scan:
+  - **16 are an upstream scanner defect, not ours — still open, untouched.**
+    A root-anchored path whose first segment starts with a dot is mangled:
+    `/.well-known/x` is extracted as `known/x`, losing `.well-` and the
+    leading slash, so it reports missing while the file plainly exists.
+    Minimal repro in a clean throwaway repo: `site/.well-known/sbom.json`
+    and `site/.well-known/security.txt` both **pass**;
+    `/.well-known/security.txt` on its own line **fails** as
+    `known/security.txt`. So the trigger is the leading-slash-plus-dot form,
+    not dot-directories in general. Ours are honest URL references to files
+    that exist — this is atelier's `pathscan` to fix. 🎯 **Owner call needed**
+    before anything is written upstream — see the note in `SESSIONS.md` for
+    2026-08-09; the new CONCURRENCY rule invites queueing it in atelier's
+    roadmap, and the standing correction to this repo says faves does not
+    write there. Left alone, no allow-markers added: masking these would
+    hide the exact signal a future real `.well-known` typo needs to surface.
+  - ✅ **10 were ours and genuinely loose — fixed 2026-08-09.** Prose
+    shorthand that omitted the real path (`data/index.json` → <!-- pathscan:allow: the pre-fix shorthand this bullet documents, not a live reference -->
+    `site/data/index.json` in `ARCHITECTURE.md`, `WORKPLAN.md`, ADR 0015's
+    table and prose; `data/restaurants/cook-at-home.json` → <!-- pathscan:allow: the pre-fix shorthand this bullet documents, not a live reference -->
+    `site/data/restaurants/cook-at-home.json` here and in
+    `ARCHITECTURE.md`), one reworded non-path collision each in this file
+    (`docs/records` → "our records", a slash that read as a path but meant <!-- pathscan:allow: the pre-fix wording this bullet documents, not a live reference -->
+    "and") and in ADR 0019 (`Docs/tests` → "Docs and tests", same shape — <!-- pathscan:allow: the pre-fix wording this bullet documents, not a live reference -->
+    the ADR's decision content is unchanged, only the accidental path-shaped
+    slash). No target was invented; every fix pointed at a file confirmed to
+    exist.
+  - ✅ **8 were correct as written — marked 2026-08-09.** Cross-repo atelier
+    paths (`docs/method/ECONOMICS.md` in `CLAUDE.md` and <!-- pathscan:allow: atelier cross-repo path, correct as written -->
+    `MODEL-ECONOMICS.md`, `docs/method/PROPAGATION.md` here), a cross-repo <!-- pathscan:allow: atelier cross-repo path, correct as written -->
+    pointer to the `rpi` repo's own ADR 0009 here, the
+    `mike548141/atelier/.github/workflows/floor.yml` Actions slug in <!-- pathscan:allow: GitHub Actions reusable-workflow slug, not a local path -->
+    `GO-PUBLIC.md`, and three historical references inside the append-only
+    `SESSIONS.md` (an atelier `docs/method/` drift note, a since-removed <!-- pathscan:allow: atelier cross-repo path, correct as written -->
+    `__pycache__` artefact, and the `faves-allergen-inference` worktree) —
+    each got a `pathscan:allow` marker stating why it resolves outside this
+    repo or only at the time it was written; no history was rewritten.
+    Two more findings sat inside this very bullet's own prose, quoting
+    `data/index.json` and `docs/decisions/0009` as *examples* of the loose <!-- pathscan:allow: quoted as an example of the defect, not a live reference -->
+    class above — marked `pathscan:allow: quoted as an example of the
+    defect, not a live reference` rather than rewritten, since rewriting
+    the example would have destroyed it.
+  Re-scan after the fix: 16 findings, all class 1, matching exactly.
+  Verification: `tools/validate.py`, `check_no_deps.py`,
+  `check_visibility.py`, `gen_sbom.py --check`, `node --test` (505/505) and
+  atelier's `linkscan.py` all still pass.
 - [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
   doctrine block is the sanctioned *stamped copy* shape (it names atelier,
@@ -1632,7 +1661,7 @@ where an imperial reader sees `430°F`.
   because the machine-readable `<!-- stamp:begin source=… region=… -->`
   markers are absent. Atelier's own doctrine calls an unwatched convention
   "rung 1 territory, not rung 2". **We cannot fix this from here yet**: the
-  markers pin `source=docs/method/PROPAGATION.md`, a path that exists only in
+  markers pin `source=docs/method/PROPAGATION.md`, a path that exists only in <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
   atelier, so a child running the scanner exits 2 — and the child-side,
   pin-aware `source=` resolution is atelier's open ST3, already queued in its
   own roadmap (D2 residue). Nothing to deliver upstream. When ST3 lands,

@@ -62,7 +62,7 @@ null).
 
 - [x] `site/index.html` + `css/app.css`: design tokens (colour both
       schemes, type scale, spacing), restaurant cards from
-      `data/index.json`, stub cards render "menu coming soon".
+      `site/data/index.json`, stub cards render "menu coming soon".
 - [x] Sticky bottom filter bar: service (takeaway/dine-in/all), area,
       cuisine — instant, combinable, result count announced.
 - [x] Fail-soft: if JS fails, a basic list of restaurants still shows.

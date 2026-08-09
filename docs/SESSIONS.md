@@ -190,7 +190,7 @@ rotation added 2026-07-18.
 
 - **2026-07-12 (Opus: atelier drift swept, pin bumped to d371169)**:
   Session-start hygiene. Pull clean, visibility PRIVATE (verified). Drift
-  b07087c → d371169: six commits, three touching `docs/method/` —
+  b07087c → d371169: six commits, three touching `docs/method/` — <!-- pathscan:allow: atelier cross-repo path, historical — accurate as of this session log entry -->
   COMMUNICATION.md (widened the verdict UX: reach for the fitting icon
   🎉🎯🚩 not a fixed set, plus act-on-device separation and a language-
   accessibility axis), RECORD.md (close-ready signal sharpened to a
@@ -1257,7 +1257,7 @@ Commits: sw split + docs + test + validate guard (ADR 0015); records close.
   `contains-shellfish`) and was applied. Proof the merge lost nothing: resolving
   the merged record at 2026-08-08 reproduces their 184 items with **identical
   price, tags and code on every one**.
-  🚩 **Their commit also carries `tools/__pycache__/tag_allergens.cpython-314.pyc`**
+  🚩 **Their commit also carries `tools/__pycache__/tag_allergens.cpython-314.pyc`** <!-- pathscan:allow: historical — the artefact was present in that commit at the time this was written, since removed -->
   — a build artefact that should not be in the tree. Left alone (not this
   session's commit to rewrite); worth a `.gitignore` line and a `git rm --cached`.
 
@@ -1506,7 +1506,7 @@ the working tree untouched), alongside files they had not touched.
 
 **Resolved on its own, the right way:** by commit time their changes had left
 this tree entirely — they had moved into a locked worktree
-(`.claude/worktrees/faves-allergen-inference`, branched at `a2c0cf0`), where
+(`.claude/worktrees/faves-allergen-inference`, branched at `a2c0cf0`), where <!-- pathscan:allow: historical worktree path — existed when this log entry was written, since removed -->
 the sweep has since grown to 15 files. Nothing was lost, and the surgical
 staging turned out to be belt-and-braces rather than the rescue it looked like.
 🚩 **For that session:** `DATA_VERSION` was bumped to `2026-08-09.1` here for
