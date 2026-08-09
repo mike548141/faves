@@ -2012,3 +2012,17 @@ leakscan + secretscan. Agent reports were checked, not taken: the "only
 two dated records" claim re-derived from the data, the new derivation
 rules mutation-tested, `GET_VERSIONS` asked of a real worker in real
 headless Chrome, and the Settings split read off a real 390 px index.
+
+🎯 **An open tension this session declined to resolve on its own.** The
+newly-pinned CONCURRENCY rule says an auditing session *may* queue a
+cross-repo finding in the target repo's own roadmap — "queue, never
+deliver". The standing correction recorded in this file on 2026-08-09
+says faves lives within the doctrine and does not create it, and that
+correction is why the leakscan term-scoping mechanism was deliberately
+not written into atelier from here. Those two do not obviously agree on
+whether a faves session may write a *finding* (not doctrine) into
+atelier's roadmap. It did not bite this run — `stampscan`'s ST3 gap is
+already queued upstream, so there was nothing to add — but the `pathscan`
+dot-path defect is a live case with nowhere agreed to put it. Surfaced
+for the owner rather than resolved by picking a side, per the apex rule
+on genuine dilemmas.
