@@ -166,7 +166,7 @@ self.addEventListener("install", (event) => {
 // reach it, so both are keyed on `type` and anything else is ignored):
 //   - SKIP_WAITING: the page's tap (js/sw-register.js) — the one way out of
 //     `waiting`.
-//   - GET_VERSIONS: About's version stamp (ROADMAP 16f, ADR 0031) asking
+//   - GET_VERSIONS: About's version stamp (ROADMAP 16f, ADR 0032) asking
 //     *this worker* what it's actually running, rather than inferring from
 //     cache names — during a waiting-worker window the newest cache is the
 //     update that hasn't taken over yet, not what's serving the page. Only

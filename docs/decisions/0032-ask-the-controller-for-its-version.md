@@ -1,4 +1,4 @@
-# 0031 — Ask the controller for its version, don't infer it from cache names
+# 0032 — Ask the controller for its version, don't infer it from cache names
 
 **Status:** accepted
 **Date:** 2026-08-09

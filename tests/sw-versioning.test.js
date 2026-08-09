@@ -100,7 +100,7 @@ test("activate keeps exactly the three current caches", () => {
   );
 });
 
-// ROADMAP 16f, ADR 0031. About's version stamp asks the worker directly for
+// ROADMAP 16f, ADR 0032. About's version stamp asks the worker directly for
 // its own constants rather than inferring from cache names — the inference
 // can't tell a controlling worker's cache from a waiting worker's freshly
 // built one. This pins the worker's half of that contract: it must answer

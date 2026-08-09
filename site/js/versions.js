@@ -1,5 +1,5 @@
 // The two version stamps (ADR 0015) as they are *installed on this device* —
-// and, since ROADMAP 16f (ADR 0031), as they are *actually running the page*.
+// and, since ROADMAP 16f (ADR 0032), as they are *actually running the page*.
 //
 // Two ways to read a version, kept as two functions because they answer two
 // different questions:
@@ -70,7 +70,7 @@ export async function installedVersions(cacheStorage = globalThis.caches) {
   }
 }
 
-// --- Asking the controller directly (ROADMAP 16f, ADR 0031) --------------
+// --- Asking the controller directly (ROADMAP 16f, ADR 0032) --------------
 //
 // caches.keys() answers "what's stored on this device". Under a *waiting*
 // worker (ADR 0027) that is a different question from "what is this page

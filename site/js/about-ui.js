@@ -24,7 +24,7 @@ function group(title, ...paras) {
 
 // The app ships as two independently versioned halves (ADR 0015), and the
 // question people actually ask — "have I got the new menus?" — can only be
-// answered by the *device*. ROADMAP 16f / ADR 0031: reads currentVersions(),
+// answered by the *device*. ROADMAP 16f / ADR 0032: reads currentVersions(),
 // which asks the *controlling* worker directly rather than inferring from
 // cache names, so this can no longer show a version newer than what the page
 // is actually running (the gap 16e left, per ADR 0027's consequences). Async:

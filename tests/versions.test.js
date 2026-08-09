@@ -88,7 +88,7 @@ test("reads the live cache names when CacheStorage answers", async () => {
   });
 });
 
-// --- askController (ROADMAP 16f, ADR 0031) --------------------------------
+// --- askController (ROADMAP 16f, ADR 0032) --------------------------------
 // A fake ServiceWorker-shaped object with a real `postMessage(msg, transfer)`
 // that echoes a reply down the transferred MessagePort — Node's global
 // MessageChannel makes this an honest round-trip, not a mock of one.
@@ -144,7 +144,7 @@ test("askController ignores a reply that isn't a VERSIONS message", async () => 
   assert.equal(await askController(worker, { timeoutMs: 20 }), null);
 });
 
-// --- currentVersions (ROADMAP 16f, ADR 0031) ------------------------------
+// --- currentVersions (ROADMAP 16f, ADR 0032) ------------------------------
 // The About stamp's actual read: the controlling worker's own version, a
 // waiting worker's version reported separately, and every unreachable state
 // degrading to an honest null rather than a throw or a guess.

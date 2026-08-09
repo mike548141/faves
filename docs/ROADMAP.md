@@ -1403,7 +1403,7 @@ visible.
   stays, for the first-ever install. Two static tests pin the absence of
   `skipWaiting()` from install, because the temptation to put it back is real.
 - ✅ **16f — About's version stamp can now run ahead of the page** `[S]` —
-  **shipped 2026-08-09** ([ADR 0031](decisions/0031-ask-the-controller-for-its-version.md),
+  **shipped 2026-08-09** ([ADR 0032](decisions/0032-ask-the-controller-for-its-version.md),
   `site/js/versions.js`, 13 new tests): About now asks the *controlling*
   worker directly for its own `SHELL_VERSION`/`DATA_VERSION` (a MessageChannel
   round-trip to a new `GET_VERSIONS` handler in `sw.js`) instead of inferring
