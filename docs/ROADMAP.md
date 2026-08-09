@@ -1244,6 +1244,18 @@ visible.
   the user's, not cache. Home: Settings → "Your data" is the honest place (it
   already holds export + reset behind [ADR 0025]'s index), with the wording
   making clear it refreshes *menus*, not *your stuff*.
+- ✅ **16e — About shows the installed versions** — **shipped 2026-08-09**
+  (`site/js/versions.js`, 9 tests): an "App" and a "Menus & prices" stamp read
+  from the service worker's cache names, so it reports what the device has
+  actually stored rather than what the source claims. 🎯 **Owner asked for
+  *"all the relevant versions… e.g. code base vs restaurant/menu data etc"* —
+  the two named are shipped; the "etc" is left open deliberately.** An audit
+  found the only other version stamps in the app are **internal storage-schema
+  keys** (`faves.*.v1`, the export envelope's `v`, the share codec's) — they
+  identify a data *shape*, never freshness, and would read as noise to a diner.
+  Say the word if they should show anyway (they would help when debugging a
+  weird device). The genuinely missing piece isn't another number: it's
+  **"is this the latest?"**, which needs 16a's update check to answer.
 - [ ] **16d — Version skew, named so it isn't discovered the hard way** `[S]` —
   `skipWaiting()` means a new worker serves new assets to an **old** page, so a
   module the old page lazily imports can arrive from a newer build. It has not
@@ -1288,13 +1300,15 @@ problem. Sequence the content with the build or the feature ships blank.
     read. Scaled amounts need friendly fractions and sensible unit hops
     (`0.5 tbsp` → `1½ tsp`), and eggs need honest handling — half an egg is a
     real problem, so say so rather than printing "1½ eggs".
-  - 🚩 **Do not auto-scale cooking times.** The owner asked for it and it is the
-    one part to refuse as specified: bake and cook times **do not scale
-    linearly** — a double mixture in a deeper dish takes longer, but not twice
-    as long, and for anything meat-based an under-scaled time is a **food-safety
-    failure**, not a disappointing dinner. Ship a *hint* instead ("a deeper dish
-    will take longer — test with a skewer"), and let a recipe carry an
-    explicitly authored time for a given scale where the owner knows it.
+  - 🚩 **Don't auto-scale cooking times — and the owner already said so.** His
+    ask was *"adjust ingredients and **where we can** the timing for each step"*;
+    this records where the line falls, because "where we can" is narrower than it
+    looks. Bake and cook times **do not scale linearly** — a double mixture in a
+    deeper dish takes longer, but not twice as long, and for anything meat-based
+    an under-scaled time is a **food-safety failure**, not a disappointing
+    dinner. So: ship a *hint* ("a deeper dish will take longer — test with a
+    skewer"), and let a recipe carry an explicitly authored time for a given
+    scale where the owner knows it. Never a computed one.
 - [ ] **17b — Step timings and a tap-to-start timer** `[M][design]` — the
   owner's item 2. Per-step time where it is useful, and beside any step with a
   duration, a **Start timer** that counts down and sounds an alarm.
@@ -1395,6 +1409,13 @@ Distance dials, Near-me, the drive/walk hint), **recipe quantities** (17a), and
 This is a display preference for visitors, not a change of source of truth.
 Lockstep with **Theme 15b**'s wording sweep: both change user-facing unit copy,
 and `reo.js` holds the strings.
+
+🎯 **Open with the owner (2026-08-09):** he phrased this as a settings feature
+to add, and it was **recorded here rather than built**, because its recipe half
+(18b) cannot be done before 17a turns ingredient strings into structured
+quantities. **18a (distance) has no such blocker and can ship any time** — it is
+a formatter and a label swap. If the intent was "build it now", 18a is the piece
+that was deferrable only by this reading, so it goes first.
 
 ## Also parked (small)
 

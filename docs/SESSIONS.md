@@ -1611,3 +1611,23 @@ Gates: `validate.py`, `check_no_deps.py`, `gen_sbom.py --check`, `node --test`
   Verified: only tags changed and none removed (semantic diff vs HEAD, 575
   added); re-run reports 0 outstanding; validate 31 files; node --test 372 pass;
   no-deps; SBOM; floor green; CI green at `a516918`.
+**Addendum to "Recipe themes, the pudding halved, versions on About" (above) —
+a self-audit before close.** The owner asked whether every point from his prompt
+was landed. Re-checking each against the repo rather than from memory turned up
+three things worth fixing, all now in:
+
+1. 🔎 **The record misrepresented him.** Theme 17a said auto-scaling cooking
+   times was "the one part to refuse as specified" — but his ask was *"adjust
+   ingredients and **where we can** the timing"*. He had already hedged it; the
+   entry now records where the line falls rather than framing it as a refusal.
+   Future sessions read this as the record of what was asked, so the fairness of
+   the wording is load-bearing.
+2. **Two open questions existed only in chat.** The metric/imperial ask was
+   *recorded, not built* — now stated as such in Theme 18 with the reason (18b
+   is blocked on 17a's structured quantities; **18a is not blocked and can ship
+   any time**). And the "all the relevant versions… etc" ask is now closed out
+   explicitly as **16e**: the two named stamps shipped, and an audit recorded
+   that the only others in the app are internal storage-schema keys, which
+   identify a data shape rather than freshness.
+3. Nothing else was outstanding: items 1–5 map to 17a/17b/17c/17d+17e, the
+   pudding and the About versions shipped and were browser-verified.
