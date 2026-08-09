@@ -30,7 +30,7 @@ own constant in `sw.js`:
 | Cache | Constant | Contents |
 |-------|----------|----------|
 | `faves-shell-<SHELL_VERSION>` | `SHELL_VERSION` | both HTML shells, `css/app.css`, every `js/*.js`, `site.webmanifest`, `favicon.ico`, icons |
-| `faves-data-<DATA_VERSION>` | `DATA_VERSION` | `data/index.json` + every `data/restaurants/<id>.json` |
+| `faves-data-<DATA_VERSION>` | `DATA_VERSION` | `site/data/index.json` + every `site/data/restaurants/<id>.json` |
 | `faves-img-v1` | *(none)* | runtime photo cache, size-capped — unchanged, deliberately version-free so it survives every bump |
 
 **Only-download-what-changed** is delivered by cache *naming* plus a skip on
@@ -55,7 +55,7 @@ The owner named three axes: app, data, configuration. Honest mapping: **there is
 no configuration artefact distinct from the shell.** The only config-shaped file
 shipped is `site.webmanifest` (PWA name/icons/colours) — it changes on app
 releases, in lockstep with the shell it describes, and is meaningless without it.
-It stays in the shell cache. `data/index.json` reads like "configuration" (it
+It stays in the shell cache. `site/data/index.json` reads like "configuration" (it
 lists which restaurants exist) but it is **data**: it's the manifest of the menu
 set, changes whenever a restaurant is added/removed, and drives the data
 precache — so it lives in the data cache, versioned by `DATA_VERSION`. Inventing
