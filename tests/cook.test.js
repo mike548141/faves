@@ -218,6 +218,35 @@ test("hidden then visible re-acquires — the lock is NOT restored by the OS", a
   assert.equal(fake.live().length, 1);
 });
 
+test("hiding hands the lock back, not just the reference to it", async () => {
+  // Found in headless Chrome, not in a unit test: faking `hidden` without the
+  // platform actually releasing left a sentinel nothing referenced, and close
+  // then released only the *re-acquired* lock. Hiding must release.
+  const fake = fakeWakeLock();
+  let visible = true;
+  const lock = createWakeLock({ wakeLock: fake.api, isVisible: () => visible });
+  await lock.acquire();
+  visible = false; // …and the platform does NOT release on its own here
+  await lock.onVisibilityChange();
+  assert.equal(fake.live().length, 0, "the first lock was handed back");
+  visible = true;
+  await lock.onVisibilityChange();
+  await lock.release();
+  assert.equal(fake.live().length, 0, "no lock survives the close");
+  assert.equal(fake.requests(), 2);
+});
+
+test("closing during an in-flight request doesn't strand the lock", async () => {
+  const fake = fakeWakeLock();
+  const lock = createWakeLock({ wakeLock: fake.api });
+  const opening = lock.acquire();
+  // The user shuts cook mode before the request resolves.
+  await lock.release();
+  assert.deepEqual(await opening, { ok: false, reason: "abandoned" });
+  assert.equal(lock.held(), false);
+  assert.equal(fake.live().length, 0, "the arriving sentinel was released, not kept");
+});
+
 test("a visibilitychange after close never resurrects the lock", async () => {
   const fake = fakeWakeLock();
   const lock = createWakeLock({ wakeLock: fake.api });

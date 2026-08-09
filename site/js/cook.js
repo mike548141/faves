@@ -118,6 +118,25 @@ export function createWakeLock({
     if (sentinel === s) sentinel = null;
   }
 
+  /**
+   * Hand the sentinel back without forgetting that cook mode wants one. Used
+   * both by release() and by hiding the page — the difference is only what
+   * happens to `wanted`.
+   */
+  async function drop() {
+    const s = sentinel;
+    sentinel = null;
+    if (!s) return "idle";
+    try {
+      await s.release?.();
+      return "released";
+    } catch {
+      // Already released, or the page is going away. Our reference is gone
+      // either way, so nothing can double-release it.
+      return "failed";
+    }
+  }
+
   async function acquire() {
     wanted = true;
     if (!supported()) return { ok: false, reason: "unsupported" };
@@ -128,6 +147,13 @@ export function createWakeLock({
     inflight = (async () => {
       try {
         const s = await wakeLock.request("screen");
+        // Cook mode may have closed while the request was in the air. Nothing
+        // holds a reference to this sentinel yet, so if we stored it, release()
+        // has already run and the lock would be stranded held forever.
+        if (!wanted) {
+          await s?.release?.().catch?.(() => {});
+          return { ok: false, reason: "abandoned" };
+        }
         // The OS can drop it at any time (low battery, and on some platforms
         // simply backgrounding). Clearing our reference is what lets the next
         // visibilitychange re-acquire instead of believing it still holds one.
@@ -147,17 +173,8 @@ export function createWakeLock({
 
   async function release() {
     wanted = false;
-    const s = sentinel;
-    sentinel = null;
-    if (!s) return { ok: true, reason: "idle" };
-    try {
-      await s.release?.();
-      return { ok: true, reason: "released" };
-    } catch {
-      // Already gone, or the page is being torn down. Our reference is cleared
-      // either way, so nothing can re-release it.
-      return { ok: false, reason: "failed" };
-    }
+    const reason = await drop();
+    return { ok: reason !== "failed", reason };
   }
 
   /**
@@ -168,8 +185,13 @@ export function createWakeLock({
   async function onVisibilityChange() {
     if (!wanted) return { ok: false, reason: "not-wanted" };
     if (!isVisible()) {
-      // The OS has already taken it; drop our reference so `held()` is honest.
-      sentinel = null;
+      // The platform releases the lock when the page hides — but release it
+      // ourselves too rather than merely forgetting the sentinel. Measured in
+      // headless Chrome: a page that *reports* hidden without the platform
+      // having actually released leaves a lock nothing holds a reference to,
+      // and it is then never given back. `wanted` stays set, so returning to
+      // the recipe re-acquires.
+      await drop();
       return { ok: false, reason: "hidden" };
     }
     if (held()) return { ok: true, reason: "held" };
