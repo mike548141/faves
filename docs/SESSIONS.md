@@ -2026,3 +2026,29 @@ already queued upstream, so there was nothing to add — but the `pathscan`
 dot-path defect is a live case with nowhere agreed to put it. Surfaced
 for the owner rather than resolved by picking a side, per the apex rule
 on genuine dilemmas.
+
+⚠️ **Correction, same session (owner caught it).** This session's write-up
+of the visibility finding claimed the doctrine block "went stale for three
+days". It did not. `main` was at `a207a15` when the repo was flipped —
+2026-08-09T01:10:10Z — and the stale bullet was found the same day at
+about 07:55Z. **Under seven hours, not three days.** The wrong number
+reached `tools/check_visibility.py`'s module docstring and a `ci.yml`
+comment (both corrected here) and two commit messages, which stand as
+written history.
+
+The cause is worth recording because it is not a typo. **No elapsed time
+was ever computed** — the figure was asserted from a feeling of duration,
+against evidence this session had already read: Theme 8 says
+`DONE 2026-08-09`, and the session's own date was 2026-08-09. The
+contradiction was on the page. A model has no sense of elapsed time and
+must not narrate one; a duration is arithmetic on two timestamps or it is
+not stated at all.
+
+The finding itself survives the correction, and the guard's justification
+is now written to match: a seven-hour window is small, and the corpus was
+clean throughout (full-repo `leakscan --require-terms` + `secretscan`).
+The reason to build the check was never the damage done — it was that
+**no mechanism existed**, so nothing would have closed the window at seven
+hours rather than seven weeks. That argument never needed the inflated
+number, which is what made reaching for one careless rather than merely
+wrong.

@@ -6,12 +6,20 @@ that line is load-bearing rather than decorative: it is what tells a session
 whether a push is recoverable or is irreversible world-readable publication,
 and therefore whether a leaked secret can be deleted or must be rotated.
 
-It went stale for three days. The repo flipped public on 2026-08-09 (Theme 8,
-`a207a15`) and the doctrine block still read "PRIVATE for now — a push is not
-publication" while every scanner in the floor passed, because nothing compared
-the claim to reality. CLAUDE.md even names the command to check it by hand
-(`gh repo view … --json visibility`) — no session ran it. A fact that only a
-human remembers to verify is a fact that goes stale, so this is the guard.
+It went stale, and the interesting part is not how long for. The repo flipped
+public on 2026-08-09 with `main` at `a207a15` (Theme 8); the doctrine block
+still read "PRIVATE for now — a push is not publication" when this guard was
+written the same day, about seven hours later. Every scanner in the floor
+passed throughout, because nothing compared the claim to reality — CLAUDE.md
+even names the command to check it by hand (`gh repo view … --json
+visibility`) and no session had run it.
+
+Seven hours is a small window and the corpus survived it, so the guard does
+not rest on the damage done. It rests on there being **no mechanism at all**:
+nothing would have closed that window at seven hours rather than seven weeks,
+and the flip is precisely the moment the fact changes while nobody is looking
+at this line. A fact that only a human remembers to verify is a fact that
+goes stale eventually.
 
     python3 tools/check_visibility.py                 # local: asks gh
     python3 tools/check_visibility.py --actual public # CI: no API call
