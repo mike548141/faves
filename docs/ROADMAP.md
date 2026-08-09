@@ -1454,33 +1454,43 @@ the display adapts. Three surfaces use units today: **distance** (the two
 Distance dials, Near-me, the drive/walk hint), **recipe quantities** (17a), and
 **oven temperatures** (°C).
 
-- [~] **18a — Distance** `[S]` (claimed 2026-08-09-0202, wt: faves-units) —
-  the cleanest half. Distances are already
-  numbers in kilometres, so this is a formatter plus a label swap, and the
-  Settings dials switch to miles with sensible steps rather than converted
-  decimals.
-- [ ] **18b — Recipe quantities** `[M]` — blocked on **17a**: strings cannot be
+- ✅ **18a — Distance** `[S]` — **shipped 2026-08-09** (ADR 0029, `units.js`).
+  Every rendered distance goes through one formatter: the Near-me card, the
+  branch chips on a menu, the route detour figure. Imperial short distances
+  read in yards to the nearest 50, mirroring the metric metres ladder, then
+  `0.6 mi`, then whole miles. The two Distance dials run on a round mile grid
+  (½ mi and 5 mi steps) while still **storing kilometres**, and the walking
+  pace, urban speed and walk/drive crossover all stay metric internally.
+- [ ] **18b — Recipe quantities** `[M]` — **still blocked on 17a** and
+  deliberately out of scope for the 18a/18c build: strings cannot be
   converted, only structured quantities can. Note the trap that makes this
   harder than it looks — **a US cup (240 ml) is not a NZ/metric cup (250 ml)**,
   and US tablespoons differ too, so "imperial" needs to mean a specific system
   and say which. Baking is also the one place where **weight beats volume**;
   offering grams for flour and sugar is arguably a bigger win than offering
   cups.
-- [~] **18c — Oven temperatures** `[S]` (claimed 2026-08-09-0202,
-  wt: faves-units) — °C ↔ °F, and gas marks if the owner
-  wants them. Rounding to the nearest sensible dial setting, not `356.0 °F`.
+- ✅ **18c — Oven temperatures** `[S]` — **shipped 2026-08-09** (ADR 0029).
+  Temperatures live inside free-text method steps, so this is a render-time
+  rewrite of the step text, guarded by the literal ° sign — proven against all
+  459 strings in `cook-at-home.json`: exactly the 14 oven temperatures change,
+  every other string byte-identical. The figure is swapped, not appended
+  (`Bake at 355°F for 2 hours`), and rounded to the nearest 5°F. Gas marks
+  skipped — not trivial, and nothing asked for them.
 
 **Default stays metric** — the app is New Zealand-first and the data is metric.
 This is a display preference for visitors, not a change of source of truth.
 Lockstep with **Theme 15b**'s wording sweep: both change user-facing unit copy,
 and `reo.js` holds the strings.
 
-🎯 **Open with the owner (2026-08-09):** he phrased this as a settings feature
-to add, and it was **recorded here rather than built**, because its recipe half
-(18b) cannot be done before 17a turns ingredient strings into structured
-quantities. **18a (distance) has no such blocker and can ship any time** — it is
-a formatter and a label swap. If the intent was "build it now", 18a is the piece
-that was deferrable only by this reading, so it goes first.
+🎯 **Open with the owner (2026-08-09):** oven temperatures now round to the
+**nearest 5°F**, so 170°C reads 340°F rather than the conversion chart's 350°F.
+Rounding to the nearest 25°F instead would land on the classic US dial stops
+and would reproduce both hand-written brackets in the recipe data exactly — but
+it can serve a 170°C bake 12°F hot, and in baking an overshoot burns while an
+undershoot only takes longer. One constant in `units.js` (`OVEN_STEP_F`) if he
+prefers dial stops. Also his call: the two `(NNN°F)` brackets hand-written into
+`cook-at-home.json` are now redundant, and a metric reader sees `220°C (425°F)`
+where an imperial reader sees `430°F`.
 
 ## Also parked (small)
 

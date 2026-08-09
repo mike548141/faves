@@ -110,6 +110,7 @@ const MI = {
   "update.refresh": "Whakahoutia", // draft
   "update.refreshing": "E whakahou ana…", // draft
   "update.later": "Ā muri ake", // draft
+  "settings.unitsTitle": "Ngā Waeine", // draft — "the units of measurement"
   // Menu screen chrome (dish names, descriptions and section names are
   // venue content and are never translated; safety text stays English — see
   // the header note)

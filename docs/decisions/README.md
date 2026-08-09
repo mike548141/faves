@@ -133,3 +133,12 @@ deliberation those compact docs omit.
   rejected (it costs the search query, scroll position and dietary chips —
   yanking a page mid-order); ignore the notice and the next cold start still
   lands it, as kill-and-relaunch always did.
+- [0029](0029-unit-display-preference.md) — **metric or imperial is a
+  render-time display choice**, never a stored one: the dials keep storing
+  kilometres and the recipes keep saying °C, and only the words change.
+  Imperial short distances read in yards (mirroring the metric 50 m ladder),
+  the dials run on a round mile grid, and oven temperatures are swapped in the
+  step text — one number, nearest 5°F, computed every time. Nearest-25°F dial
+  stops rejected: it can serve a 170°C bake at 350°F. Storing converted values,
+  guessing from the browser locale, and a whole-of-app "locale" switch (prices
+  stay NZD) all rejected too.

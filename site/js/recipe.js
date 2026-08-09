@@ -9,6 +9,7 @@ import { slug } from "./slug.js";
 import { initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
+import { convertTemperatures } from "./units.js";
 import { profiles, PROFILES_KEY } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { el } from "./dom.js";
@@ -111,8 +112,14 @@ function render(collection, item) {
   }
   if (item.steps?.length) {
     parts.push(el("h2", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" }));
+    // Oven temperatures live inside the step text, so an imperial reader gets
+    // the °C swapped for °F as the step is built (units.js, ADR 0029). The
+    // stored recipe is untouched; settings.subscribe below repaints on a flip.
+    const units = settings.get().units;
     const ol = el("ol", { className: "method" });
-    for (const step of item.steps) ol.append(el("li", { textContent: step }));
+    for (const step of item.steps) {
+      ol.append(el("li", { textContent: convertTemperatures(step, units) }));
+    }
     parts.push(ol);
   }
 

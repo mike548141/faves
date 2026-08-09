@@ -17,7 +17,9 @@
 //     we surface what the data records, never assert safety.
 //   • Distance — the two dials (settings.js): the branch-proximity cutoff, and
 //     how far is "too far tonight".
-//   • Maps app / Language — one <select> each.
+//   • Units — metric or imperial, for every distance on screen and the oven
+//     temperatures in a recipe. Display only: the dials still store kilometres.
+//   • Maps app / Language / Units — one <select> each.
 //   • People — the device-local profile roster (add / rename / delete).
 //   • Your data — export everything, force a full refresh of the stored menus
 //     and app code, and reset this profile's preferences.
@@ -29,7 +31,8 @@
 // Everything writes straight to the store; the home list re-ranks live via
 // app.js's own subscription, and each menu reads the preferences on load.
 
-import { settings, BOUNDS, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS } from "./settings.js";
+import { settings, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS } from "./settings.js";
+import { UNIT_OPTIONS, dialSpec, dialValue, dialKm, formatDial } from "./units.js";
 import { profiles, deviceStorage } from "./profiles.js";
 import {
   collectPersonalData,
@@ -341,7 +344,7 @@ function dataSection() {
   const resetNote = el("p", {
     className: "settings-hint",
     textContent:
-      "Puts food preferences, distance, language and maps app back to their defaults for the person browsing. " +
+      "Puts food preferences, distance, units, language and maps app back to their defaults for the person browsing. " +
       "Favourites, ratings and other people’s settings are untouched.",
   });
   const resetBtn = el("button", { type: "button", className: "settings-reset", textContent: "Reset to defaults" });
@@ -460,6 +463,11 @@ export function initSettingsUI() {
     options: [{ key: "en", label: "English" }, { key: "mi", label: "Te Reo Māori" }],
     onChange: (v) => settings.set({ lang: v }),
   });
+  const units = selectControl({
+    ariaLabel: "Units for distances and temperatures",
+    options: UNIT_OPTIONS,
+    onChange: (v) => settings.set({ units: v }),
+  });
   const maps = selectControl({
     ariaLabel: "Which maps app opens on an address",
     // "Match my device" follows the platform; the rest force a provider (the web
@@ -497,22 +505,34 @@ export function initSettingsUI() {
     caveatNote,
   ]);
 
+  // Both dials STORE kilometres whatever the reader's units; in imperial they
+  // run on a round mile grid instead (units.js / ADR 0029). sync() re-specs
+  // min/max/step on every settings change, so these are just the starting grid.
   const fav = field({
     id: "set-fav-boost",
     label: "Show branches within",
     hint: "For a multi-branch venue (e.g. McDonald's), the two nearest branches inside this distance show on the contact card — the rest tuck under “Show all branches”.",
-    min: BOUNDS.favBoostKm[0],
-    max: 30,
-    step: 1,
+    ...dialSpec("favBoostKm", "metric"),
   });
   const far = field({
     id: "set-far",
     label: "Hide places further than",
     hint: "Beyond this, a venue is treated as too far to reach tonight.",
-    min: 5,
-    max: 100,
-    step: 5,
+    ...dialSpec("farKm", "metric"),
   });
+
+  // Point the slider at the active unit grid and write its readout. The value
+  // must be set AFTER min/max/step or the browser clamps it to the old range.
+  // Readout and thumb both come from dialValue(), so they can never disagree —
+  // including for a value chosen on the other unit's grid.
+  function applyDial(f, key, km, units) {
+    const spec = dialSpec(key, units);
+    f.input.min = String(spec.min);
+    f.input.max = String(spec.max);
+    f.input.step = String(spec.step);
+    f.input.value = String(dialValue(km, key, units));
+    f.out.textContent = formatDial(km, key, units);
+  }
 
   const dietPanel = el("div", { className: "settings-panel" }, [
     el("p", { className: "settings-sub", textContent: "Your dietary needs" }),
@@ -524,6 +544,10 @@ export function initSettingsUI() {
     el("p", { className: "settings-note", textContent: "How far you'll go, and how nearby branches show up." }),
     fav.row,
     far.row,
+  ]);
+  const unitsPanel = el("div", { className: "settings-panel" }, [
+    el("p", { className: "settings-note", textContent: "How distances and oven temperatures are shown. Menu prices stay in New Zealand dollars." }),
+    units.group,
   ]);
   const mapsPanel = el("div", { className: "settings-panel" }, [
     el("p", { className: "settings-note", textContent: "Which app opens when you tap a venue’s address." }),
@@ -538,7 +562,8 @@ export function initSettingsUI() {
   // is re-run by sync() on every store change, so a row always reads true.
   const TOPICS = [
     { key: "diet", title: "Food preferences", i18n: null, panel: dietPanel, summary: (s) => dietSummary(s) },
-    { key: "distance", title: "Distance", i18n: null, panel: distancePanel, summary: (s) => `Hide places past ${s.farKm} km` },
+    { key: "distance", title: "Distance", i18n: null, panel: distancePanel, summary: (s) => `Hide places past ${formatDial(s.farKm, "farKm", s.units)}` },
+    { key: "units", title: "Units", i18n: "settings.unitsTitle", panel: unitsPanel, summary: (s) => UNIT_OPTIONS.find((o) => o.key === s.units)?.label ?? "" },
     { key: "maps", title: "Maps app", i18n: null, panel: mapsPanel, summary: (s) => MAPS_APPS.find((m) => m.key === s.mapsApp)?.label ?? "" },
     { key: "lang", title: "Language", i18n: "settings.langTitle", panel: langPanel, summary: (s) => (s.lang === "mi" ? "Te Reo Māori" : "English") },
     { key: "people", title: "Who’s using Faves?", i18n: "profile.title", panel: people.panel, summary: peopleSummary },
@@ -661,14 +686,13 @@ export function initSettingsUI() {
     const s = settings.get();
     lang.select.value = s.lang;
     maps.select.value = s.mapsApp;
+    units.select.value = s.units;
     const dietarySet = new Set(s.diet.dietary);
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
     const avoidSet = new Set(s.diet.avoid);
     for (const { key, chip } of avoid.chips) chip.setAttribute("aria-pressed", String(avoidSet.has(key)));
-    fav.input.value = String(s.favBoostKm);
-    fav.out.textContent = `${s.favBoostKm} km`;
-    far.input.value = String(s.farKm);
-    far.out.textContent = `${s.farKm} km`;
+    applyDial(fav, "favBoostKm", s.favBoostKm, s.units);
+    applyDial(far, "farKm", s.farKm, s.units);
     for (const topic of TOPICS) topic.value.textContent = topic.summary(s);
     // A language switch arrives through this same subscription, and app.js
     // registers us *before* reo.js — so at this instant reo still holds the old
@@ -678,8 +702,14 @@ export function initSettingsUI() {
     syncSwitcher();
   }
 
-  fav.input.addEventListener("input", () => settings.set({ favBoostKm: Number(fav.input.value) }));
-  far.input.addEventListener("input", () => settings.set({ farKm: Number(far.input.value) }));
+  // The slider reads in the viewer's units; dialKm turns that back into the
+  // kilometres we store, so the ranking never sees a mile.
+  fav.input.addEventListener("input", () =>
+    settings.set({ favBoostKm: dialKm(fav.input.value, "favBoostKm", settings.get().units) })
+  );
+  far.input.addEventListener("input", () =>
+    settings.set({ farKm: dialKm(far.input.value, "farKm", settings.get().units) })
+  );
 
   btn.addEventListener("click", () => {
     sync();
