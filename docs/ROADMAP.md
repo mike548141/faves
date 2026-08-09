@@ -64,7 +64,9 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   maps-handoff. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   **Still open:** Kaffee Eis + Gong Cha's **second branches** — need real
   addresses + a dev-time geocode; a content session appends them, no code change.
-- [ ] **McDonald's — finish the flesh-out** `[M][content]` — added 2026-07-23 as
+- [~] **McDonald's — finish the flesh-out** `[M][content]` (part (a)
+  geocode only claimed 2026-08-09-0153, wt: faves-coord-audit; b/c/d
+  stay open) — added 2026-07-23 as
   a 5-branch listing with the enduring menu (items only; **prices "varies"** —
   not published per-store, so null, no fabrication). Remaining, all content (no
   code): (a) **dev-time geocode the 5 branches** so it shows in Near-me **and so
