@@ -9,7 +9,7 @@ import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
-import { todayNZ, verificationText } from "./temporal.js";
+import { todayNZ, verificationText, refreshCaveat } from "./temporal.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
@@ -293,15 +293,18 @@ function renderHeader(r) {
   );
   venueHeart.classList.add("heart-lg");
 
-  // Title + heart. An unverified venue tucks its "needs a refresh" note
+  // Title + heart. A place whose menu still needs a refresh tucks the note
   // behind an ⓘ disclosure next to the name (see caveatDisclosure) rather
-  // than an always-on banner, so the header reads clean.
+  // than an always-on banner, so the header reads clean. Whether it needs one
+  // is refreshCaveat's call, not the bare presence of a date (ADR 0036).
   const titleGroup = el("div", { className: "menu-title-group" }, [
     el("h1", { className: "menu-title", textContent: r.name }),
   ]);
   const titleRow = el("div", { className: "menu-title-row" }, [titleGroup, venueHeart]);
-  if (!r.verified && !isRecipes) {
-    const [caveatBtn, caveatNote] = caveatDisclosure(r.id);
+  // Recipes are ours: there is no shop to have checked with, so no caveat.
+  const caveat = isRecipes ? null : refreshCaveat(r, todayNZ());
+  if (caveat?.show) {
+    const [caveatBtn, caveatNote] = caveatDisclosure(r.id, caveat);
     // Button after the title, note absolutely positioned within the group
     // (its positioning context) so it can appear on hover of its sibling.
     titleGroup.append(caveatBtn, caveatNote);
@@ -387,12 +390,41 @@ function renderAside(r) {
 // `title`, so it works on touch. Returns [button, note] for the caller to
 // place — the note must be a later sibling of the button for the hover
 // reveal to work.
-function caveatDisclosure(id) {
+function caveatDisclosure(id, caveat) {
   return disclosure({
     noteId: `menu-caveat-${id}`,
     label: "Why this menu needs a refresh",
-    text: "⚠ Menu items and prices need a refresh — confirm with the place when you order.",
+    text: caveatText(caveat),
   });
+}
+
+// What an untrusted source is, in the reader's words. Only the two methods the
+// owner excluded appear here — the trusted four never reach this text.
+const UNTRUSTED_SOURCE = {
+  "delivery-app": "a delivery app",
+  "third-party": "a third-party listing",
+};
+
+// One sentence per reason (ADR 0036). The reader is being asked to do the same
+// thing every time — confirm at the counter — so only the *because* changes;
+// three near-identical paragraphs would cost more attention than they repay.
+// English on purpose, like every other caution here (see reo.js's safety note).
+function caveatText(caveat) {
+  const tail = "confirm with the place when you order.";
+  if (caveat.reason === "untrusted") {
+    // Naming the source is the whole point of the change: "we haven't checked"
+    // and "someone else checked, and they mark prices up" are different risks.
+    const src = UNTRUSTED_SOURCE[caveat.method] || "a third-party listing";
+    return `⚠ These prices came from ${src}, not the place itself — ${tail}`;
+  }
+  if (caveat.reason === "stale") {
+    // Deliberately not "over a year": VERIFY_MAX_AGE_MONTHS is meant to be
+    // retuned, and the header prints the actual reading date right below this.
+    return `⚠ It’s been a while since we read this menu — ${tail}`;
+  }
+  // "never" and "unknown-method" — nothing we can stand behind either way, and
+  // the wording the screen has always shown.
+  return `⚠ Menu items and prices need a refresh — ${tail}`;
 }
 
 function renderPicks(r, allItems) {

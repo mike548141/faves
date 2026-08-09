@@ -106,6 +106,9 @@ reversible in an afternoon.
   "verified": null,                  // ISO date the menu was last read, e.g. "2026-07-10"
   "verifiedBy": null,                // HOW it was read — closed set, see "Derivation" below.
                                      //   Required alongside `verified` on any NEW reading.
+                                     //   Together these decide the "needs a refresh"
+                                     //   caveat: first-party method + under 12 months
+                                     //   old = no caveat (ADR 0036).
   "rating": null,                    // optional curated household rating, integer 1..5 (ours,
                                      //   static). Distinct from device-local personal ratings.
   "status": "stub",                  // stub | menu-complete | verified
@@ -262,9 +265,40 @@ without both halves. Everything else is a warning, and `verifiedBy` without
 `verified` is an error (a method with no date establishes nothing).
 
 Rendering is deliberately small: the menu header's date line reads
-"Read from a paper menu, 8 Aug 2026". The "needs a refresh" caveat still <!-- datescan:allow: quoted UI copy — the date as the menu screen prints it, not a dated claim -->
-keys off the bare absence of `verified` — see ROADMAP Theme 13g for why
-that is now the weaker half.
+"Read from a paper menu, 8 Aug 2026". <!-- datescan:allow: quoted UI copy — the date as the menu screen prints it, not a dated claim -->
+
+#### The "needs a refresh" caveat — the method decides, the date ages it (ADR 0036)
+
+`temporal.js` `refreshCaveat(record, asOf)` is the single answer to *does this
+menu still need a refresh?* — pure, and the only thing `menu.js` asks. **A
+reading counts as a check when it came from the shop itself** (owner's ruling,
+2026-08-09), and only until it ages out:
+
+| `verifiedBy` | Counts as a check? |
+|---|---|
+| `in-store` · `paper-menu` · `official-site` · `phone` | ✅ first-party — no caveat while fresh |
+| `delivery-app` · `third-party` | ❌ someone else's transcription — **always** caveats |
+
+**Age limit: `VERIFY_MAX_AGE_MONTHS = 12`** — a house default, not an owner
+number, and a one-line retune in `temporal.js`. NZ hospitality reprices roughly
+annually; a shorter limit would re-flag the whole corpus within two refresh
+cycles and put the caveat back on everything.
+
+Four reasons, kept distinct so the screen can say which (§9, "unknown is not
+none" — one null used to stand for the first two):
+
+| `reason` | When | What the caveat says |
+|---|---|---|
+| `never` | no `verified` | "Menu items and prices need a refresh" |
+| `unknown-method` | `verified`, no readable `verifiedBy` | same wording — absence of a method is not evidence of a trusted one |
+| `untrusted` | `delivery-app` / `third-party` | names the source: "These prices came from a delivery app, not the place itself" |
+| `stale` | trusted method, older than the limit | "It's been a while since we read this menu" |
+
+Exactly *at* the limit is still fresh; a partial `verified` widens to its
+**earliest** day, so "read sometime in 2025" cannot borrow 31 December's
+freshness. Recipes (Cook at Home) never caveat — they are ours, and there is no
+shop to check with. The caveat copy stays English like every other caution here
+(`reo.js`'s safety note).
 
 **A dish is never deleted when it leaves the menu** — it keeps its record and
 gains `available.offBy` (or `to`). A hard delete destroys every date attached to

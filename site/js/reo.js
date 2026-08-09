@@ -16,7 +16,9 @@
 // (Phase 7). Macrons (tohutō) are intentional — do not strip them. Safety
 // text stays English on purpose until reviewed, rather than ship uncertain te
 // reo where a misreading could hurt someone: allergen/dietary tag chips and
-// filter labels, the "menu needs a refresh" caveat, the allergy-preferences
+// filter labels, the "menu needs a refresh" caveat — all three of its wordings
+// now (ADR 0036 added a delivery-app/third-party one and a stale one, and they
+// stay English with the original) — the allergy-preferences
 // framing, the privacy note, and error prose. It all falls through to English
 // automatically. Also still English: strings built by interpolation ("Serves
 // 4", "Verified 3 Jul", open-hours badges, order-sheet counts) — the engine

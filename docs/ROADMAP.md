@@ -1171,7 +1171,24 @@ score all rejected — reasoning in the ADR. No backfill; applied to the two
 records whose provenance `SESSIONS.md` evidences. Design record →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-- [~] **g. The "needs a refresh" caveat should read the method, not the
+✅ **g. The "needs a refresh" caveat reads the method, not the date** — shipped
+2026-08-09 (ADR [0036](decisions/0036-refresh-caveat-reads-the-method.md)).
+Owner ruled the split: a reading counts as a check when it came from the shop
+itself (`in-store` · `paper-menu` · `official-site` · `phone`), and *"not third
+parties like delivereasy, uber etc"*. A **12-month** age limit rides on top —
+a house default, flagged as such in `temporal.js` and retunable on one line.
+`refreshCaveat()` returns four distinct reasons (`never` · `unknown-method` ·
+`untrusted` · `stale`), so one null stops standing for two things, and the
+untrusted wording names its source. TJ Katsu and Sushi Bi now carry the honest
+`2026-08-08` / `official-site` the session log evidences.
+🚩 **Owner call left open:** TJ Katsu's caveat switches *off*, because the
+policy ages *our reading* (2026-08-08) and we have no field for how old the
+*source document* is — its site is ©2017 with a 404ing nav. See the ADR's
+consequences; the fix, if he wants one, is data, not a special case.
+
+<details><summary>The item as raised by 13f, and the owner's ruling on it</summary>
+
+- **g. The "needs a refresh" caveat should read the method, not the
   date** `[S][ux][content]` — raised 2026-08-09 by 13f, deliberately not
   **RULED by the owner 2026-08-09; CLAIMED 2026-08-09 10:21 UTC**
   (wt: `faves-refresh-policy`). The ruling: a reading counts as a check when
@@ -1195,6 +1212,8 @@ records whose provenance `SESSIONS.md` evidences. Design record →
   count as a check (and whether age enters it), then the two records gain
   honest dates. **Owner call, not a build call** — a threshold picked by an
   agent would change live UI on judgement rather than evidence.
+
+</details>
 
 ## Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)
 
