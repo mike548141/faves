@@ -28,6 +28,7 @@ import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
+import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -650,6 +651,10 @@ function render(r) {
   let dietRow = null;
   if (available.length) {
     dietRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Dietary filters", "data-i18n-aria": "menu.diet.aria" });
+    // Stamp the pre-selection this row was built from, so a later capture can
+    // tell an ad-hoc chip toggle apart from the viewer's stored preference
+    // (ui-state.js). By capture time settings.get() has already moved on.
+    dietRow.dataset.preselect = [...preselect].join(" ");
     for (const f of available) {
       const on = preselect.has(f.key);
       if (on) activeDiet.add(f.key);
@@ -869,6 +874,10 @@ function initContactBar(bar, cardEl) {
 // reachable — even on a stub page or if this menu fails to load.
 initOrderUI();
 initBackToTop();
+// Remember where the page is scrolled to *before* the Settings dialog opens —
+// opening it scrolls the document to the top, so reapply() would otherwise
+// capture 0 and drop the viewer back at the top of the menu (ui-state.js).
+initScrollMemory();
 // Apply the stored UI language to the static chrome (the back link) and set
 // <html lang>. Menu content — dish names, descriptions, section names — stays
 // as the venue wrote it; generated chrome carries data-i18n and is translated
@@ -898,10 +907,19 @@ let current = null;
 // uses — re-reading settings.get().diet and rebuilding every dish through the
 // shared dietary.js predicates, so the initial and reactive paths cannot
 // diverge. No-op until a menu has actually rendered.
+//
+// The capture/restore either side of it (owner ruling 2026-07-25) hands the
+// viewer back their search query, dietary-chip toggles and scroll position. It
+// deliberately brackets the re-render rather than touching it: render(current)
+// is byte-for-byte the call it always was, and the restore only replays normal
+// user-facing handlers afterwards. See ui-state.js for why that separation is
+// the whole point.
 function reapply() {
   if (!current) return;
+  const ui = captureUiState(root);
   render(current);
   translate(root); // re-apply the stored UI language to the freshly built menu
+  restoreUiState(root, ui);
 }
 
 // The header ⋯ menu (Favourites link / Settings / Share / About). Static markup

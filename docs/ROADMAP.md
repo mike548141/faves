@@ -171,8 +171,28 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   (search query, scroll position, dietary-chip toggle) across the safety
   re-render. **Hard constraint:** the allergen/dietary re-apply MUST keep sharing
   the first-paint code path — preserving UI state must not fork the render, or it
-  reintroduces exactly this session's stale-highlight race. `[~]` claimed
-  2026-08-09-0202, wt: faves-ui-state.
+  reintroduces exactly this session's stale-highlight race.
+  ✅ **Shipped 2026-08-09** (wt: faves-ui-state). New `site/js/ui-state.js`
+  brackets the re-render instead of touching it: capture before, restore after,
+  and only ever through the handlers a tap would run (set the field + fire its
+  `input` event; `.click()` the chips; scroll last). `render()` is byte-for-byte
+  the call it was, so the constraint holds. Chip state is kept as a *delta* from
+  the pre-selection that painted the row (stamped on `.diet-chips` as
+  `data-preselect`, because by capture time the settings change has already
+  committed) — so a dietary *preference* change still wins while an ad-hoc
+  toggle survives. Every step degrades rather than throws; a bug here can only
+  cost convenience, since the safety render has already completed.
+  🔎 Two browser findings the reasoning would have missed: `showModal()` on the
+  Settings sheet scrolls the document to 0 and the re-render destroys the anchor
+  the browser would have restored from — so scroll is remembered separately,
+  ignoring anything that moves while a dialog is up; and the app's smooth
+  `scroll-behavior` means the restore has to ask for an instant one explicitly,
+  or it animates. Pure logic unit-tested (`tests/ui-state.test.js`); browser-proven
+  at 390 px on a fresh `--user-data-dir` (Chrome 151 headless over CDP) —
+  **23/23** behavioural checks, the same harness scoring **9/23** against the
+  pre-change tree served side by side. The recipe screen was checked and
+  **left alone** — its render swaps the article atomically and no recipe carries
+  an image, so it never lost scroll (measured); a recipe photo would change that.
   ✅ **Owner ruling 2026-07-24 — dedicated browser-tooling session: done
   2026-08-09** (wt: faves-device-check). `node tools/device_check.mjs` is the
   scripted, re-runnable device check the ruling asked for — a local static
