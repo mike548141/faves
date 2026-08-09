@@ -685,3 +685,20 @@ dependency.
   flagged, plus a `lang="mi"` per-part a11y fix. ⚠ **honest caveat:** an AI
   pass, not a fluent-speaker sign-off — a native review of the 9 flagged
   strings remains the owner option before public launch.
+
+## Theme 15 — UI consistency, navigation & layout
+
+- ~~**`.order-head` is defined twice in `app.css`**~~ ✅ **fixed 2026-08-09**
+  (wt: faves-orderhead) — confirmed the collision: the order/share/recv/
+  transfer sheet family's header bar and the menu screen's small uppercase
+  "Order online" label were both `.order-head`, and the later rule won, so
+  sheet titles rendered uppercase and shrunk on the menu screen (found
+  2026-08-09 building the report sheet, which had dodged the collision with
+  its own `.report-head` — ADR 0028). Renamed the menu label to
+  `.order-block-head`; the sheet family keeps `.order-head` unchanged.
+  Checked every other duplicate selector in `app.css` (`.pick-fab`,
+  `.share-link`, `.settings-back`, `.update-notice-dismiss`, `.report-text`)
+  — all are adjacent, additive split rules for the same element, not
+  collisions; none touched. Verified live in headless Chrome: the order
+  sheet and share sheet titles render with `text-transform: none`, and
+  `.order-block-head` keeps its own uppercase label styling untouched.

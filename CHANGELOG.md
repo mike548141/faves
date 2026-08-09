@@ -79,6 +79,14 @@ content freshness separately from this file.
   phone running a stale copy shows the stale stamp — which is the useful answer
   when you're wondering whether you've got the new menus.
 
+### Fixed
+- **The order sheet and share sheet titles no longer render in small caps.**
+  `.order-head` was defined twice in `app.css` — once as the order/share sheet's
+  header bar, once as the menu screen's small uppercase "Order online" label —
+  and the later rule won, so sheet titles picked up the label's uppercase,
+  shrunk styling. The menu label is now `.order-block-head`; the sheet header
+  keeps `.order-head` for the order, share, receive and transfer sheets.
+
 ### Changed
 - **Chocolate Self-Saucing Pudding is a single mixture again** — it had been
   written up doubled (serves 12, 70 minutes). Now serves 6 and bakes for 35, in
