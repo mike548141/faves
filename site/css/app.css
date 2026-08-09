@@ -2320,7 +2320,7 @@ body.faves-view .to-top {
   font-size: var(--step-sub);
 }
 
-/* --- "Your data": import + transfer (ADR 0027) -------------------------
+/* --- "Your data": import + transfer (ADR 0030) -------------------------
    Both blocks sit inside the Settings "Your data" panel and are separated
    from the export above them by a rule, because "save a copy" and "bring a
    copy back" are opposite operations one tap apart. */
@@ -2390,7 +2390,7 @@ body.faves-view .to-top {
 }
 
 /* A question the import can't answer for you. Bordered so it reads as a stop,
-   not a caption — these are the two things ADR 0027 refuses to guess. */
+   not a caption — these are the two things ADR 0030 refuses to guess. */
 .import-q {
   margin: var(--space-3) 0 0;
   padding: var(--space-3);
@@ -2432,6 +2432,13 @@ body.faves-view .to-top {
 .import-radio:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+/* Why "Add" is greyed out — the questions can be a scroll away. */
+.import-blocked {
+  margin-bottom: var(--space-2);
+  color: var(--warn);
+  font-size: var(--step-sub);
+  font-weight: 600;
 }
 
 @media (prefers-reduced-motion: reduce) {

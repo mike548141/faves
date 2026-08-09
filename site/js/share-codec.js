@@ -21,7 +21,7 @@ export const CODEC_VERSION = 1;
 const TYPE_OF_TAG = { o: "order", s: "shortlist" };
 const TAG_OF_TYPE = { order: "o", shortlist: "s" };
 
-// The personal transfer (Theme 9 v1, ADR 0027) rides the same base64url wire and
+// The personal transfer (Theme 9 v1, ADR 0030) rides the same base64url wire and
 // the same group packing, but under its OWN fragment parameter and its own tag —
 // so a transfer link can never be read as a shortlist to merge into favourites,
 // and cart-ui.js's `#share=` handler never sees it.
@@ -235,13 +235,13 @@ function decodeShortlistItems(groups) {
 
 /**
  * Encode one person's hearts, ratings and settings for a hand-off to their own
- * second device. Deliberately ONE profile (see ADR 0027): the whole-device
+ * second device. Deliberately ONE profile (see ADR 0030): the whole-device
  * backup is the file export's job, and a URL fragment is a small pipe.
  *
  * `groups` is groupForShare()-shaped, exactly as a shortlist; `ratings` is the
  * flat `{ key: 1..5 }` map and `settings` the profile's settings object. The
  * profile's id and name ride along so the receiving device can tell "my own
- * other phone" from "someone else called Sam" (ADR 0027's collision rule).
+ * other phone" from "someone else called Sam" (ADR 0030's collision rule).
  */
 export function encodeTransfer({ profile = {}, groups = [], ratings = {}, settings = null } = {}) {
   const payload = {

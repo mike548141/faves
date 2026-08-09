@@ -221,7 +221,7 @@ test("the file is pretty-printed and round-trips", () => {
 });
 
 // =========================================================================
-// APPLY — the import / transfer seam (Theme 12b + 9 v1, ADR 0027)
+// APPLY — the import / transfer seam (Theme 12b + 9 v1, ADR 0030)
 // =========================================================================
 // The load-bearing properties here are the three safety rules: merge never
 // destroys, a name collision is a question rather than a guess, and an
@@ -670,4 +670,15 @@ test("a transfer carrying a colliding name asks the same question a file does", 
   const plan = planImport(device(), env);
   assert.equal(plan.entries[0].collides, true);
   assert.match(plan.blocking.join(" "), /same person/);
+});
+
+test("a re-import that changed nothing says so, rather than claiming an update", () => {
+  const store = device();
+  const data = file();
+  const decisions = { [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "pZ" } };
+  applyPersonalData(store, data, { decisions });
+  const again = applyPersonalData(store, data, { decisions });
+  assert.deepEqual(again.merged, []);
+  assert.deepEqual(again.unchanged, ["Me", "Sam"]);
+  assert.equal(again.settingsUpdated, 0);
 });

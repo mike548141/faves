@@ -1,6 +1,6 @@
 // Getting your own data in and out of Faves: importing a downloaded backup
 // (Theme 12b) and transferring one person's picks to their second device over a
-// link or QR code (Theme 9 v1). Both are recorded in ADR 0027.
+// link or QR code (Theme 9 v1). Both are recorded in ADR 0030.
 //
 // ONE APPLIER, TWO DOORS. A file and a link differ only in how the bytes
 // arrive; the moment they're parsed they are the same envelope and go through
@@ -95,8 +95,13 @@ export function importReview({ data, sourceLine, allowReplace = true, onApplied 
   ]);
   confirm.setAttribute("aria-label", "Confirm replace");
 
+  // Why "Add" is greyed out. A question can easily sit above the fold of the
+  // sheet's own scroll, and a disabled button with no stated reason is the
+  // worst of both — it looks broken rather than careful.
+  const blocked = el("p", { className: "import-blocked", hidden: true });
+
   const actions = el("div", { className: "profile-form-actions" }, [applyBtn, replaceBtn]);
-  const root = el("div", { className: "import-review" }, [summary, entriesBox, actions, confirm, status]);
+  const root = el("div", { className: "import-review" }, [summary, entriesBox, blocked, actions, confirm, status]);
 
   const currentPlan = () => planImport(storage, data, { mode: "merge", decisions });
 
@@ -220,7 +225,12 @@ export function importReview({ data, sourceLine, allowReplace = true, onApplied 
       }
     }
     applyBtn.disabled = plan.blocking.length > 0;
-    applyBtn.title = plan.blocking.length ? plan.blocking[0] : "";
+    blocked.hidden = !applyBtn.disabled;
+    blocked.textContent = applyBtn.disabled
+      ? plan.blocking.length === 1
+        ? `Answer the question above first: ${plan.blocking[0]}`
+        : `${plan.blocking.length} questions above need an answer first.`
+      : "";
   }
 
   function report(result) {
@@ -231,6 +241,9 @@ export function importReview({ data, sourceLine, allowReplace = true, onApplied 
     const bits = [];
     if (result.created.length) bits.push(`added ${result.created.join(", ")}`);
     if (result.merged.length) bits.push(`updated ${result.merged.join(", ")}`);
+    if (!result.merged.length && result.unchanged.length && !result.created.length) {
+      bits.push(`${result.unchanged.join(", ")} already had all of this`);
+    }
     if (result.favouritesAdded) bits.push(`${plural(result.favouritesAdded, "new favourite")}`);
     if (result.ratingsAdded) bits.push(`${plural(result.ratingsAdded, "new rating")}`);
     if (result.dietChanged.length) bits.push(`food preferences changed for ${result.dietChanged.join(", ")}`);
@@ -385,7 +398,7 @@ export function transferControls() {
     // A realistic set of picks runs to thousands of characters, which is fine
     // for a link and far past what a QR code holds (qr.js tops out at 666
     // bytes) — share-ui reports that honestly rather than showing a dead
-    // button. Measured figures are in ADR 0027. Past ~8000 characters some
+    // button. Measured figures are in ADR 0030. Past ~8000 characters some
     // messaging apps start mangling a URL, so say so before they try.
     const long = buildTransferUrl(encodeTransfer(slice), homeUrl()).length > 8000;
     openShareDialog({

@@ -11,15 +11,15 @@
 //   • cross-person share grants (Theme 10) — a *scoped subset* of the same.
 // So this is deliberately built one step more general than export needs.
 //
-// THE APPLY COUNTERPART (Theme 12b, ADR 0027) lives at the bottom of this file:
+// THE APPLY COUNTERPART (Theme 12b, ADR 0030) lives at the bottom of this file:
 // `parsePersonalData` → `planImport` → `applyPersonalData`. It is the one seam
 // both ways in and out of the personal layer use — a file import and a
 // cross-device transfer link (Theme 9 v1) differ only in how the bytes arrive.
-// Three rules it exists to hold, all of them recorded in ADR 0027:
+// Three rules it exists to hold, all of them recorded in ADR 0030:
 //   • merge is the default; replace is destructive and the UI confirms it;
-//   • a profile that collides by name but not by id is a QUESTION, never a
-//     guess — the plan says "this needs a decision" and refuses to apply
-//     without one;
+//   • a profile matching an existing one by name alone, OR by id alone, is a
+//     QUESTION, never a guess — the plan says "this needs a decision" and
+//     refuses to apply without one;
 //   • allergen/dietary preferences are safety data: a difference between the
 //     file and this device is surfaced and chosen, never silently resolved.
 // The plan proposes and the UI asks; nothing in here touches the DOM.
@@ -165,7 +165,7 @@ export function personalDataJson(data) {
 }
 
 // =========================================================================
-// APPLY — reading a personal-layer payload back in (Theme 12b + 9 v1, ADR 0027)
+// APPLY — reading a personal-layer payload back in (Theme 12b + 9 v1, ADR 0030)
 // =========================================================================
 
 /** merge (default) folds the payload into what's here; replace makes this
@@ -541,6 +541,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     persisted,
     created: [],
     merged: [],
+    unchanged: [], // matched, but the payload held nothing this device lacked
     favouritesAdded: 0,
     ratingsAdded: 0,
     settingsUpdated: 0,
@@ -579,8 +580,11 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
 
     const id = entry.targetId;
     const view = profileView(storage, id);
+    let touched = 0;
 
-    report.favouritesAdded += createFavourites(view).merge(p.favourites);
+    const favAdded = createFavourites(view).merge(p.favourites);
+    report.favouritesAdded += favAdded;
+    touched += favAdded;
 
     // Ratings: yours win. A score you gave a dish is a judgement, and a restore
     // is not grounds to overwrite the newer one you're living with.
@@ -593,6 +597,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     }
     if (added) writeKey(storage, scopeKey(id, "faves.ratings.v1"), JSON.stringify(mineRatings));
     report.ratingsAdded += added;
+    touched += added;
 
     if (isObj(p.settings)) {
       const patch = {};
@@ -613,11 +618,20 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
         patch.diet = sanitiseDiet(p.settings.diet); // identical to ours; a no-op write
       }
       if (Object.keys(patch).length) {
-        createSettings(view).set(patch);
-        report.settingsUpdated += 1;
+        const store = createSettings(view);
+        // Compared before and after, not merely "we wrote something": a
+        // re-import of the same file must be able to say nothing changed
+        // rather than claim an update it didn't make.
+        const before = JSON.stringify(store.get());
+        store.set(patch);
+        if (JSON.stringify(store.get()) !== before) {
+          report.settingsUpdated += 1;
+          touched += 1;
+        }
       }
     }
-    report.merged.push(entry.targetName);
+    if (touched) report.merged.push(entry.targetName);
+    else report.unchanged.push(entry.targetName);
   });
 
   if (!registry.profiles.length) registry.profiles.push({ id: mintId(), name: "Me" });

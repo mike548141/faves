@@ -216,7 +216,7 @@ test("order and shortlist tokens decode to their own type", () => {
   assert.equal(decodeShare(encodeShortlist({ groups: shortlistGroups })).type, "shortlist");
 });
 
-// --- personal transfer (Theme 9 v1, ADR 0027) -----------------------------
+// --- personal transfer (Theme 9 v1, ADR 0030) -----------------------------
 // One person's own hearts + ratings + settings, handed to their second device.
 // It rides the same base64url wire under its own tag and its own fragment
 // parameter — the two must never be readable as each other.
