@@ -1659,9 +1659,10 @@ body.faves-view .to-top {
 .fav-share {
   margin-bottom: var(--space-3);
 }
-/* The share + receive sheets reuse .order-sheet's frame. */
+/* The share, receive and report sheets reuse .order-sheet's frame. */
 .share-sheet,
-.recv-sheet {
+.recv-sheet,
+.report-sheet {
   width: 100%;
   max-width: 34rem;
   max-height: 85vh;
@@ -1675,13 +1676,15 @@ body.faves-view .to-top {
 }
 @media (min-width: 34rem) {
   .share-sheet,
-  .recv-sheet {
+  .recv-sheet,
+  .report-sheet {
     margin: auto;
     border-radius: var(--radius);
   }
 }
 .share-sheet::backdrop,
-.recv-sheet::backdrop {
+.recv-sheet::backdrop,
+.report-sheet::backdrop {
   background: rgba(23, 19, 16, 0.45);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -3362,4 +3365,161 @@ body.faves-view .to-top {
     transform: translate(-50%, 0);
     transition: opacity 0.18s ease;
   }
+}
+
+/* ---------- "Tell us what's wrong or missing" (ADR 0028) ---------- */
+/* The ⚑ on a dish row. Deliberately quieter than the ♥ beside it: reporting is
+   a rare, deliberate act, and an eye-catching flag next to an allergen ⚠ would
+   read as another warning. Same 48px box as the heart so the action cluster
+   keeps one rhythm and clears the 44px floor. */
+.dish-report {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  min-height: 48px;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 1.15rem;
+  line-height: 1;
+  opacity: 0.75;
+  cursor: pointer;
+  transition: color 0.16s ease, background 0.16s ease, opacity 0.16s ease;
+}
+@media (hover: hover) {
+  .dish-report:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+    opacity: 1;
+  }
+}
+.dish-report:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* The last row of the contact card. It's a <button> wearing .contact-row, so
+   reset the button chrome and keep the row's own layout. */
+.contact-report {
+  width: 100%;
+  border-left: 0;
+  border-right: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.contact-report:hover {
+  background: var(--surface-2);
+}
+.contact-report:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+.report-body {
+  display: grid;
+  gap: var(--space-3);
+}
+.report-context {
+  margin-top: 0;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* Real radios in a real fieldset (keyboard + grouping for free); the fieldset's
+   own border/padding are the only things worth resetting. */
+.report-types {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.report-legend {
+  padding: 0;
+  margin-bottom: var(--space-1);
+  font-weight: 700;
+}
+.report-type {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.report-type:hover {
+  background: var(--surface-2);
+}
+.report-radio {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent);
+}
+.report-radio:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.report-note-label {
+  display: block;
+  margin-bottom: calc(var(--space-1) * -1);
+  font-weight: 600;
+}
+.report-note,
+.report-text {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: var(--step-body);
+  line-height: 1.4;
+  resize: vertical;
+}
+.report-note:focus-visible,
+.report-text:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 1px;
+}
+/* The safety framing, inherited verbatim from the allergen caveat: a report is
+   a suggestion to the owner, never a live edit. Warn-toned and always visible —
+   not behind an ⓘ — because the copy has to land *before* someone sends an
+   allergen "correction". Icon + colour + text, never colour alone. */
+.report-safety {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--warn);
+  border-radius: var(--radius);
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  font-size: var(--step-sub);
+  line-height: 1.45;
+}
+.report-status {
+  min-height: 1.2em;
+}
+/* The composed report, always on screen behind a disclosure — so it survives a
+   failed share sheet AND a blocked clipboard with nothing typed lost. */
+.report-preview-summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  cursor: pointer;
+}
+.report-preview-summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.report-text {
+  margin-top: var(--space-1);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--step-sub);
 }

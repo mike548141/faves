@@ -25,6 +25,7 @@ import { profiles, PROFILES_KEY } from "./profiles.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
+import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initBackToTop } from "./to-top.js";
 import { priceBand } from "./price.js";
@@ -333,6 +334,7 @@ function init(restaurants) {
   wireProfiles();
   initAboutUI();
   initShareApp();
+  initReportEntry();
   initOverflowMenu();
   initBackToTop();
   // Hearting something, or changing a distance dial, re-ranks the list (also

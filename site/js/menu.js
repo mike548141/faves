@@ -26,6 +26,7 @@ import { el } from "./dom.js";
 import { wireSearchClear } from "./search-clear.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
+import { dishReportButton, venueReportRow, initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
 
@@ -199,6 +200,10 @@ function branchBlock(r, b, now) {
 // branch — nearest first when the home screen has captured the viewer's location
 // this session (recallOrigin), else data order — each with its own directions
 // link, phone and hours.
+// The report row closes the card in both shapes (ADR 0028): the contact block is
+// where someone looks when the phone number, address or hours are wrong, so
+// "something wrong here?" belongs at the end of it rather than somewhere else on
+// the page. It is a suggestion to the owner — never an edit (report-ui.js).
 function contactCard(r) {
   const now = nzNow();
   if (!isMultiLocation(r)) {
@@ -206,7 +211,10 @@ function contactCard(r) {
     // lets addressRow show the mode-aware travel hint (ADR 0021). Ordering is a
     // no-op with one branch; without an origin distanceKm stays Infinity → no
     // hint, which is exactly what we want when Near-me hasn't captured a location.
-    return el("div", { className: "contact-card" }, branchRows(r, orderedBranches(r, recallOrigin())[0], now));
+    return el("div", { className: "contact-card" }, [
+      ...branchRows(r, orderedBranches(r, recallOrigin())[0], now),
+      venueReportRow(r),
+    ]);
   }
   const branches = orderedBranches(r, recallOrigin());
   // A many-branch chain floods the card with far-away addresses. Show at most
@@ -233,6 +241,7 @@ function contactCard(r) {
     });
     card.append(restWrap, toggle);
   }
+  card.append(venueReportRow(r));
   return card;
 }
 
@@ -505,7 +514,12 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
   // restaurant dishes only — Cook at Home is for cooking, not an order to
   // read down the phone.
   if (r) {
+    // ⚑ leftmost, furthest from the primary "Add" — a report is a rare,
+    // deliberate action and must never be a mis-tap of the order stepper. Venue
+    // dishes only: a recipe has no price or venue to correct, and its feedback
+    // route is the ⋯ menu (ADR 0028).
     const actions = el("div", { className: "dish-actions" }, [
+      isRecipes ? null : dishReportButton(r, item),
       heartButton(dishEntry, item.name),
     ]);
     if (!isRecipes) {
@@ -916,6 +930,7 @@ function reapply() {
 function initChrome() {
   initAboutUI();
   initShareApp();
+  initReportEntry();
   initOverflowMenu();
   initSettingsUI();
 

@@ -61,6 +61,8 @@ const SHELL = [
   "js/ratings.js",
   "js/ratings-ui.js",
   "js/recipe.js",
+  "js/report.js",
+  "js/report-ui.js",
   "js/reo.js",
   "js/results-view.js",
   "js/route.js",
