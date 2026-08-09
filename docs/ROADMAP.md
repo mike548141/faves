@@ -1383,6 +1383,13 @@ visible.
   build-new-then-delete-old activate order are untouched; `clients.claim()`
   stays, for the first-ever install. Two static tests pin the absence of
   `skipWaiting()` from install, because the temptation to put it back is real.
+- [ ] **16f — About's version stamp can now run ahead of the page** `[S]` —
+  follow-on named in ADR 0027's consequences: under a *waiting* worker, 16e's
+  About stamp reports the newest **cached** version while the page may still be
+  running the previous one — a gap that under `skipWaiting()` closed in
+  seconds and can now last until the user takes the refresh. The honest fix is
+  to report the *controlling* worker's caches and mention a waiting one
+  separately ("update ready"). Small, self-contained, unclaimed.
 
 **Test honestly:** the service worker hides its own changes, so this needs a real
 device or a headless run with a fresh browser profile — a hard-reload does not
