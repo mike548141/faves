@@ -182,7 +182,9 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   `data-preselect`, because by capture time the settings change has already
   committed) — so a dietary *preference* change still wins while an ad-hoc
   toggle survives. Every step degrades rather than throws; a bug here can only
-  cost convenience, since the safety render has already completed.
+  cost convenience, since the safety render has already completed. **Owner
+  ratified the delta rule 2026-08-09** ("the option where you can see your
+  settings did something").
   🔎 Two browser findings the reasoning would have missed: `showModal()` on the
   Settings sheet scrolls the document to 0 and the re-render destroys the anchor
   the browser would have restored from — so scroll is remembered separately,
@@ -786,7 +788,9 @@ choose (Theme 10), rather than being trapped in one browser's storage.
   copy / share-sheet / QR through the existing share dialog, and a receive flow
   on every screen that goes through the *same* applier the file import uses —
   so the profile-collision and allergen questions are asked identically either
-  way. Called **transfer** throughout, never sync.
+  way. Called **transfer** throughout, never sync. ⏳ **Owner ruling
+  2026-08-09: ADR 0030 stays proposed until he has walked import + transfer on
+  his own phone** — ratification rides on that device pass, not on this record.
   🔎 **The QR is a bonus, not the path.** Measured against `qr.js`'s v20-M
   ceiling (666 bytes): 3 favourites + 2 ratings + settings = a 568-char URL and
   a scannable code, but 5 favourites already overflows, 30 favourites is 3,107
@@ -1554,7 +1558,10 @@ Distance dials, Near-me, the drive/walk hint), **recipe quantities** (17a), and
   459 strings in `cook-at-home.json`: exactly the 14 oven temperatures change,
   every other string byte-identical. The figure is swapped, not appended
   (`Bake at 355°F for 2 hours`), and rounded to the nearest 5°F. Gas marks
-  skipped — not trivial, and nothing asked for them.
+  skipped — not trivial, and nothing asked for them. **Owner ratified the 5°F
+  rounding 2026-08-09** (over nearest-25 US dial stops), and ruled the two
+  hand-written `(NNN°F)` brackets out of `cook-at-home.json` — removed as a
+  correction (we wrote the redundancy, the recipe didn't change).
 
 **Default stays metric** — the app is New Zealand-first and the data is metric.
 This is a display preference for visitors, not a change of source of truth.
