@@ -1583,6 +1583,22 @@ where an imperial reader sees `430°F`.
 
 ## Also parked (small)
 
+- [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
+  found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
+  doctrine block is the sanctioned *stamped copy* shape (it names atelier,
+  carries a pin, and compresses without contradicting), but it is stamped in
+  **prose only** — atelier's `stampscan` finds "no stamped blocks" here,
+  because the machine-readable `<!-- stamp:begin source=… region=… -->`
+  markers are absent. Atelier's own doctrine calls an unwatched convention
+  "rung 1 territory, not rung 2". **We cannot fix this from here yet**: the
+  markers pin `source=docs/method/PROPAGATION.md`, a path that exists only in
+  atelier, so a child running the scanner exits 2 — and the child-side,
+  pin-aware `source=` resolution is atelier's open ST3, already queued in its
+  own roadmap (D2 residue). Nothing to deliver upstream. When ST3 lands,
+  adopt the markers here. Until then the check is by hand: **verified
+  2026-08-09** — the canonical floor region is byte-identical to the pinned
+  version, so our copy has not drifted.
+
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
 UI toggle first pass (2026-07-09, `reo.js` — chrome only; safety text stays
