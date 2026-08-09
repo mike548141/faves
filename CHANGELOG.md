@@ -9,6 +9,26 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **You can bring your data back in.** Settings → Your data now opens a file you
+  downloaded from Faves — on this phone or another one — and shows you what's in
+  it before anything changes: who's in the file, how many favourites and
+  ratings, and when it was saved. Adding is the normal path and never deletes
+  anything; replacing everything is a separate button with its own confirm that
+  names the people it's about to remove. Two things it will not decide for you:
+  if a file has someone with the same name as a person on this device, it asks
+  whether that's the same person rather than guessing, and if their food
+  preferences differ it shows both sets side by side and waits — allergen flags
+  decide which warnings shout on a menu, so nothing changes there unless you say
+  so. (ADR 0030)
+- **Transfer your picks to your other device.** Settings → Your data makes a
+  link — copy it, send it through the share sheet, or scan the QR code — that
+  carries the person browsing (their favourites, ratings and preferences) to
+  your other phone or tablet. Opening it there asks the same questions before
+  merging. It's a one-off copy, not a sync: change something afterwards and the
+  two won't follow each other. Nothing is sent to a server — the picks ride in
+  the part of the link your browser never transmits. Big collections make a long
+  link that's fine to copy but too much for a QR code, and Faves says so rather
+  than showing you a broken one. (ADR 0030)
 - **A security contact at `/.well-known/security.txt`** — the standard place a
   researcher looks before reporting a problem. It points at GitHub security
   advisories, which is why it waited for the repo to go public: while the repo

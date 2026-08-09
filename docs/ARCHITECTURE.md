@@ -414,16 +414,27 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   profile-scoped storage wrapper the two stores above read through. See the
   profiles paragraph and ADR 0012.
 
-- **Export** (no key of its own): `personal-data.js` — `collectPersonalData`
-  gathers the whole layer above into one versioned, serialisable object,
-  reading the *device* storage directly so it sees **every** profile, not just
-  the active one. Settings → "Your data" writes it out as a dated JSON file
-  (`Blob` + `<a download>`). The Near-me origin is excluded by name, and the
-  excluded keys also seed the skip-set of the sweep that catches unknown
-  `faves.*` stores — otherwise the sweep would re-collect it. There is
-  deliberately **no** `apply`/import counterpart yet: its semantics are the
-  open design calls of roadmap Theme 12b. This is the same collect seam ADR
-  0017's sync blob and Theme 10's share grant are meant to reuse.
+- **Export / import / transfer** (no key of its own): `personal-data.js` —
+  `collectPersonalData` gathers the whole layer above into one versioned,
+  serialisable object, reading the *device* storage directly so it sees
+  **every** profile, not just the active one. Settings → "Your data" writes it
+  out as a dated JSON file (`Blob` + `<a download>`). The Near-me origin is
+  excluded by name, and the excluded keys also seed the skip-set of the sweep
+  that catches unknown `faves.*` stores — otherwise the sweep would re-collect
+  it. This is the same collect seam ADR 0017's sync blob and Theme 10's share
+  grant reuse.
+  The way back in is `parsePersonalData` → `planImport` → `applyPersonalData`
+  (ADR 0030): merge by default, replace behind a confirm, and two things it
+  refuses to guess — whether an incoming profile is an existing person (id
+  alone is not proof: every device's first profile is `default`) and how a
+  differing set of allergen/dietary prefs resolves. The plan returns those as
+  `blocking` questions and apply errors rather than proceeding. **Both doors
+  use it**: a file, and a `#xfer=` transfer link (Theme 9 v1) whose decoded
+  parts `envelopeFromTransfer` wraps into the same envelope. `personal-io-ui.js`
+  is the thin half — the file picker, the shared review, and the receive
+  dialog wired on all three screens; `share-codec.js` gained
+  `encodeTransfer`/`decodeTransfer` under their own tag and fragment parameter
+  so a transfer can never be read as a group-order shortlist.
 
 A `storage` event keeps other tabs in step (favourites/settings keys are now
 namespaced by the active profile; a registry change re-points them). Recipes

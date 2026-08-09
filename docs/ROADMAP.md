@@ -725,13 +725,23 @@ the owner to read it.
 follows them across devices (Theme 9) and, with consent, to people they
 choose (Theme 10), rather than being trapped in one browser's storage.
 
-- **v1 — shareable-link seed** `[S]` `[~]` (claimed 2026-08-09-0202,
-  wt: faves-personal-io) — reuse the `share-codec.js` +
-  `favourites.merge()` machinery (already built for group-order / shortlist
-  links) to encode hearts+settings into a link/QR you open on a second
-  device to seed it. **No infra, offline, ship-ready.** Manual one-shot
-  transfer, not sync — the honest ceiling for a pure static site, and the
-  foundation v2 builds on. **Agreed to ship as "cross-device" v1.**
+- ✅ **v1 — shareable-link seed** `[S]` — **shipped 2026-08-09**
+  ([ADR 0030](decisions/0030-personal-data-import-and-transfer.md), proposed —
+  owner to ratify). Settings → Your data → "Make a transfer link": the active
+  profile's hearts + ratings + settings packed into a `#xfer=` fragment, with
+  copy / share-sheet / QR through the existing share dialog, and a receive flow
+  on every screen that goes through the *same* applier the file import uses —
+  so the profile-collision and allergen questions are asked identically either
+  way. Called **transfer** throughout, never sync.
+  🔎 **The QR is a bonus, not the path.** Measured against `qr.js`'s v20-M
+  ceiling (666 bytes): 3 favourites + 2 ratings + settings = a 568-char URL and
+  a scannable code, but 5 favourites already overflows, 30 favourites is 3,107
+  chars and the whole catalogue is 79,583. So the link is the primary hand-off
+  and the QR degrades with an honest message. **Scope call: active profile
+  only** — whole-device backup is the file's job (12b), and carrying every
+  profile multiplies the one dimension that's already binding.
+  ⏳ Owner to eyeball the wording and the 390 px layout; ADR 0030 wants
+  ratifying.
 - **v2 — continual sync (Cloudflare Worker + KV)** `[M][constraint]` ⚑ —
   a tiny Worker holds **one E2E-encrypted blob per user** in Workers KV.
   Design (all in ADR 0017):
@@ -967,15 +977,25 @@ one line, not a rewrite.
   - **Human-legible JSON** (pretty-printed, venue/dish **ids and names**). It's
     "machine readable" as asked, but a person opening it should recognise their
     own favourites. Ids alone rot silently when data changes (ADR 0020).
-- **12b — Import** `[M][design]` `[~]` (claimed 2026-08-09-0202,
-  wt: faves-personal-io) — the pair. Riskier than export: **merge or
-  replace?** Recommend **merge**, reusing `favourites.merge()` +
-  `share-codec.js` (built for the group-order links), with replace as an
-  explicit destructive choice behind a confirm. Two traps: importing a file
-  from a *different* device means **profile identity collision** (same name,
-  different id — ask, don't guess), and an import carrying **allergen/dietary
-  prefs** is safety data, so it inherits Theme 10's framing — never silently
-  overwrite someone's allergen settings.
+- ✅ **12b — Import** `[M][design]` — **shipped 2026-08-09**
+  ([ADR 0030](decisions/0030-personal-data-import-and-transfer.md), proposed —
+  owner to ratify). `parsePersonalData` → `planImport` → `applyPersonalData`
+  in `personal-data.js` (pure, 30 new unit tests), and a file picker + preview
+  in Settings → Your data. Every design call above was built as recorded:
+  merge default reusing `favourites.merge()`, replace behind a confirm that
+  names who it deletes, collisions asked rather than guessed, allergen prefs
+  never moved without a deliberate choice showing both sides in full.
+  🔎 **The collision rule needed widening mid-build.** "Same id = same person"
+  is false here: `profiles.js` mints the first profile on every device as
+  `default`, so a *friend's* export collides with yours by construction and
+  would have silently merged two people's allergen settings. The rule is now
+  "ask unless id **and** name both agree".
+  Browser-verified end-to-end over CDP at 390 px, not just unit tested:
+  exported a real file, imported it back (a no-op, and it says so), imported a
+  doctored from-another-phone copy (both questions raised, Add disabled until
+  answered, allergens combined on request), and replaced the device from it.
+  ⏳ Owner to eyeball placement/wording at 390 px — the panel is now 778 px
+  against ~790 px of sheet, so it fits but has no room left.
 - ✅ **12c — Lean the sync themes on it** `[S]` — **done 2026-08-08 with 12a.**
   `collectPersonalData(storage, { exportedAt })` is the shared seam, built one
   step more general than export needed: it reads the raw device storage rather
