@@ -2757,7 +2757,7 @@ body.faves-view .to-top {
 .order-block {
   margin-top: var(--space-3);
 }
-.order-head {
+.order-block-head {
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -3616,9 +3616,9 @@ body.faves-view .to-top {
   outline-offset: -3px;
 }
 
-/* The sheet's own header bar. NOT .order-head, which the menu screen also uses
-   for its small uppercase "Order online" label — the two rules collide and the
-   later one wins, which uppercased this title and shrank its letter-spacing. */
+/* The sheet's own header bar — same pattern as the order/share/recv-sheet
+   family's .order-head. Named .report-head (not .order-head) because this
+   report sheet has its own dedicated markup; see ADR 0028. */
 .report-head {
   display: flex;
   align-items: center;

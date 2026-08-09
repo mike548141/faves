@@ -269,7 +269,7 @@ function orderCard(r) {
     );
   }
   return el("section", { className: "order-block", "aria-label": "Order online", "data-i18n-aria": "menu.orderOnline" }, [
-    el("h2", { className: "order-head", "data-i18n": "menu.orderOnline", textContent: "Order online" }),
+    el("h2", { className: "order-block-head", "data-i18n": "menu.orderOnline", textContent: "Order online" }),
     btns,
   ]);
 }

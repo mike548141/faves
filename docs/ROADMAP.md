@@ -1231,14 +1231,8 @@ wrong.
 
 ## Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)
 
-- [~] **`.order-head` is defined twice in `app.css`** `[S]`
-  (claimed 2026-08-09-0800, wt: faves-orderhead) — as the order/share
-  sheet's header bar *and* as the menu screen's small uppercase "Order online"
-  label; the later rule wins, so the **order sheet and share sheet titles render
-  uppercase** on the menu screen. Found 2026-08-09 building the report sheet
-  (which dodged it with its own `.report-head` — see ADR 0028 consequences);
-  the underlying collision is unfixed and owns whoever next touches
-  `cart-ui.js`/`share-ui.js`.
+✅ **`.order-head` collision — fixed 2026-08-09.** Detail →
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [ ] **"Your data" panel is outgrowing its sheet** `[S][design]` — after
   2026-08-09 it stacks export + import + transfer + refresh + reset in one
   ADR-0025 panel (~980 px at 390 px; the sheet scrolls, so nothing is
