@@ -1987,7 +1987,7 @@ holds. Queued here.
 mean nobody reads it, so a real stale path would hide in the noise.
 Triaged (queued, not fixed — three worktrees were live in the same docs):
 ~8 are an upstream defect, reproduced in a clean throwaway repo —
-`/.well-known/security.txt` is mangled to `known/security.txt` while
+`/.well-known/security.txt` is mangled to `known/security.txt` while <!-- pathscan:allow: quoted as an example of the defect, not a live reference -->
 `site/.well-known/sbom.json` passes, so the trigger is the
 leading-slash-plus-dot form, not dot-directories at large. ~14 are ours
 and genuinely loose. ~3 are correct as written and want allow-markers.
