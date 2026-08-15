@@ -1623,6 +1623,8 @@ where an imperial reader sees `430°F`.
 ✅ **A negative dish price validated clean — fixed 2026-08-09.** Detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [~] **`pathscan` is decorative here — 25 standing findings** `[S][docs]` —
+  **CLAIMED 2026-08-15 04:40 UTC** (wt: `faves-scanner-close`) — E8 landed
+  upstream (`atelier@ab74014`); closing this out.
   **our two classes done 2026-08-09** (wt: `faves-pathscan`): 34 findings
   down to 14, and every one of the 14 is the upstream defect. The item stays
   open only for that class, which is blocked on the owner call below.
@@ -1686,8 +1688,10 @@ where an imperial reader sees `430°F`.
   Verification: `tools/validate.py`, `check_no_deps.py`,
   `check_visibility.py`, `gen_sbom.py --check`, `node --test` (505/505) and
   atelier's `linkscan.py` all still pass.
-- [ ] **`plainscan` arrived with 1177 findings and no decided scope**
-  `[M][docs]` ⚑ — found 2026-08-09 bumping the pin to `atelier@5c16a59`.
+- [~] **`plainscan` arrived with 1177 findings and no decided scope**
+  `[M][docs]` ⚑ — **CLAIMED 2026-08-15 04:40 UTC** (wt: `faves-scanner-close`)
+  — the scope question was ruled upstream 2026-08-10; reconciling.
+  Found 2026-08-09 bumping the pin to `atelier@5c16a59`.
   Atelier withdrew its long-standing claim that write-time discipline is the
   *only* control over communication prose, and shipped `plainscan` to enforce
   the machine-decidable half. Our floor picked it up through the shared
