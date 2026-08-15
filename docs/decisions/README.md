@@ -224,3 +224,15 @@ deliberation those compact docs omit.
   is a positive claim. TJ Katsu and Sushi Bi gain the honest dates the session
   log evidences, no longer withheld to keep a caveat on. A confidence scale, a
   per-method limit, and ageing the untrusted methods all rejected.
+- [0039](0039-cook-mode-gets-its-own-browser-guard.md) — **cook mode gets its
+  own real-browser guard, gaps declared** (ROADMAP 17d; guards 0034).
+  `tools/cook_check.mjs`, a sibling to `device_check.mjs` rather than a
+  widening of it: the allergen safety verdict stays on its own line and its own
+  exit code, and the shared CDP harness moves to `tools/lib/browser.mjs` so
+  there is only ever one of it. The wake lock is observed by **instrumenting
+  the real API** — headless Chrome 151 grants genuine sentinels — never by
+  faking one, and the three things a headless browser genuinely cannot show are
+  written into the tool's header instead of being papered over with assertions
+  that would pass either way. Proven to bite by three deliberate breaks. Found
+  a real defect on the way: Back at step 1 disables itself while focused and
+  drops focus out of the dialog, killing the arrow keys.
