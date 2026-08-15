@@ -126,7 +126,7 @@
     {
       "section": "Anti Pizza",
       "items": [
-        { "name": "NZ BBQ Pork Ribs", "price": 25, "desc": "Half a kilo of marinated NZ pork ribs with your choice of APA spicy, cola BBQ or smokey BBQ sauce.", "tags": [] },
+        { "name": "NZ BBQ Pork Ribs", "price": 25, "desc": "Half a kilo of marinated NZ pork ribs with your choice of APA spicy, cola BBQ or smokey BBQ sauce.", "tags": ["contains-gluten"] },
         { "name": "Lamb Shank and Mash", "price": 25, "desc": "One lamb shank with rosemary and mint gravy, mash and minted peas.", "tags": [] },
         { "name": "Spirit", "price": 14, "desc": "Oven-baked penne in a garlic cream sauce with free-range chicken, bacon and mushrooms, topped with parmesan.", "tags": ["contains-gluten", "contains-dairy"] },
         { "name": "Chicken Demon", "price": 14, "desc": "Oven-baked penne in a creamy basil sauce with free-range chicken, mushrooms and garlic, with parmesan.", "tags": ["contains-gluten", "contains-dairy"] },

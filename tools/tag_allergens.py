@@ -105,8 +105,15 @@ RULES = [
     # Ginger beer and root beer are soft drinks, not brewed from barley — the
     # word "beer" in a drinks list is not evidence of gluten. Found by the
     # Thai Tara refresh (2026-08-15), whose drinks list carries both.
-    ("contains-gluten", "DERIVED", "beer is a barley product", r"\b(beer|lager|ale|stout|pilsner)\b",
-     r"\b(ginger|root|sarsaparilla)\s?beer\b"),
+    # Style abbreviations carry no "beer"/"ale" to match on — a tap list is
+    # mostly "Interstellar IPA", "Adapt APA" — so they are named directly.
+    # Added with the Southern Cross and Borough tap lists (2026-08-15).
+    ("contains-gluten", "DERIVED", "beer is a barley product",
+     r"\b(beer|lager|ale|stout|pilsner|porter|ipa|apa)\b",
+     # "ginger ale" is a soft drink, and now has to be excluded by name for the
+     # same reason ginger beer already was — widening the rule to catch styled
+     # taps made "ale" reachable from every Schweppes line on a drinks list.
+     r"\b(ginger|root|sarsaparilla)\s?(beer|ale)\b"),
 
     # --- dairy --------------------------------------------------------
     # "butter" must not fire on peanut/nut butter; "cream" must not fire on
