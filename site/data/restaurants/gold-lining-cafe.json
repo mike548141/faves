@@ -379,6 +379,13 @@
           "price": null,
           "tags": [
             "v"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "The price label sat behind the cabinet frame in the photos we have.",
+              "since": "2026-08-07"
+            }
           ]
         },
         {
@@ -718,6 +725,18 @@
             "gf",
             "df",
             "contains-nuts"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "No price card was in shot.",
+              "since": "2026-08-07"
+            },
+            {
+              "what": "ingredients",
+              "note": "The jar lists nine things and it isn't clear whether they are this one item's ingredients or nine separate flavours. Stored as ingredients because cashew and almond are present either way, so the nut warning holds.",
+              "since": "2026-08-07"
+            }
           ]
         }
       ]

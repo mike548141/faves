@@ -518,9 +518,16 @@
         },
         {
           "name": "Garage Project Aro Noir Pinot Gris",
-          "desc": "Listed exactly as printed on the menu; it may be two products run together.",
+          "desc": "Listed exactly as printed on the menu.",
           "price": 13.0,
-          "tags": []
+          "tags": [],
+          "needs": [
+            {
+              "what": "name",
+              "note": "Aro Noir is a stout and a pinot gris is a wine, so this is probably two products run together on the venue's own page — but there is no separator to read.",
+              "since": "2026-08-15"
+            }
+          ]
         },
         {
           "name": "Garage Project Fugazi Session Ale 2.2% / Tiny Hazy IPA 0.5%",
