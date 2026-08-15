@@ -2721,3 +2721,43 @@ broke.
 line once more — this time in full knowledge of what that costs. Verified after:
 `cook_check` **36/36**, `device_check` 19/19, `node --test` 533/533,
 `validate.py` 35 files, `gen_sbom --check` clean.
+
+### Addendum — the last two rulings (wt: press-hall-hours)
+
+**1. The menu-conflict ruling was already applied; the close-out said otherwise.**
+The owner re-stated it because the previous reply listed it as an open item. It
+was not: the data was verified this session and matches the ruling on every
+count — Thai basil and Thai chilli resolve to the card's **$21.50** (the leaflet's
+printed $22.50 discarded), the card's fried-rice numbering is stored, the
+leaflet-only **laksa** is in, and all five duck dishes are kept with no `offBy`.
+Nothing changed. The defect was in the *report*, not the record: an item that
+had been closed in `ROADMAP.md` was still narrated to the owner as a decision
+awaiting him. **Re-read the roadmap before writing a close-out**, rather than the
+memory of what was open when the work started.
+
+**2. Press Hall's hours — ruled: use the food hall's.** Applied as **Mon–Fri
+11:00–15:00**, the house standard it publishes. Two consequences, both recorded:
+
+- **Weekends are stored as closed**, and that is the hall's *silence* rather than
+  a stated closure — it publishes weekday hours only. Closed is the safe
+  direction: a false "closed" hides the branch, a false "open" sends someone into
+  town for nothing.
+- **`detailsVerifiedBy` dropped `official-site` → `third-party`.** These hours
+  are the *building operator's* statement about its premises, not Pandan's about
+  itself. The field is venue-level, so a mixed-provenance record has to read as
+  weakly as its weakest input — the alternative is a note claiming "checked
+  against the place's own site" over a fact the place never stated. Confirmed on
+  screen: the tip now reads *"Menu and prices checked against the place's own
+  site … Phone, address and opening hours taken from a directory listing."*
+
+🚩 **The gap that exposes, raised not patched:** derivation is venue-level while
+provenance has become per-branch. Reading weakest-wins is honest but discards
+true information about the address and phone, which *are* first-party. A
+per-branch `detailsVerified` pair would fix it; deferred, because one record is
+not an evidence base for a schema change — the same restraint ADR 0037 applied
+to ageing the field.
+
+**Verification.** `validate.py` clean (35 files); `node --test` 533 pass;
+`device_check` 22 pass on Pandan with the reworded tip asserted; `cook_check`
+36 pass. `DATA_VERSION` → `2026-08-15.4` (data-only change; `SHELL_VERSION`
+untouched at `.4`).

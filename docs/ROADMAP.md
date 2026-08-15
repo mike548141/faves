@@ -1684,11 +1684,25 @@ Applied; detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   number for that street address, so the stored pin is the street, not the door. Kept
   because the venue is ~15 km out, where the error cannot change a distance
   sort. Worth a house-level fix if OSM ever gains the number.
-- [ ] **Pandan's Press Hall hours** `[XS][data]` — the branch is in (owner ruled
-  2026-08-15 that both locations carry the same menu), but its `hours` are null:
-  Press Hall publishes a house standard of 11am–3pm weekdays *and* says to check
-  with each eatery, which is not a claim about this stall. Left unstated rather
-  than guessed — a wrong "Open now" sends someone into town for nothing.
+✅ **Pandan's Press Hall hours — ruled 2026-08-15**: use the food hall's own
+hours. Applied as **Mon–Fri 11:00–15:00**, the house standard it publishes.
+Two consequences recorded rather than buried:
+- **Weekends are the hall's silence, not a stated closure.** It publishes
+  weekday hours only. They are stored as closed, which is the safe direction —
+  a false "closed" hides the branch, a false "open" sends someone into town.
+- **The venue's `detailsVerifiedBy` dropped to `third-party`.** The address and
+  phone are Pandan's own, but these hours are the *building operator's*
+  statement about its premises, and the venue-level field must read as weakly as
+  its weakest input. The 🚩 below is the real fix.
+
+- [ ] 🚩 **Derivation is venue-level, but provenance is now per-branch**
+  `[S][schema]` — Pandan proves the gap: address and phone first-party from the
+  venue's own site, one branch's hours third-party from its landlord, and one
+  `detailsVerifiedBy` to describe both. The honest read (weakest wins) throws
+  away true information about the stronger facts. A per-branch
+  `detailsVerified`/`detailsVerifiedBy` would fix it; deferred because one record
+  is not an evidence base for a schema change, which is the same restraint
+  ADR 0037 applied to ageing the field.
 - [ ] **Reo: the confidence-note strings** `[S][reo]` — the new "Up to date…"
   copy stays English alongside the caution it shares a popover with. Added to
   the fluent-speaker review queue with the other drafts above.
