@@ -9,7 +9,7 @@ import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
-import { todayNZ, verificationText, refreshCaveat } from "./temporal.js";
+import { todayNZ, verificationText, refreshCaveat, detailsVerification } from "./temporal.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
@@ -293,18 +293,23 @@ function renderHeader(r) {
   );
   venueHeart.classList.add("heart-lg");
 
-  // Title + heart. A place whose menu still needs a refresh tucks the note
-  // behind an ⓘ disclosure next to the name (see caveatDisclosure) rather
-  // than an always-on banner, so the header reads clean. Whether it needs one
-  // is refreshCaveat's call, not the bare presence of a date (ADR 0036).
+  // Title + heart. The ⓘ beside the name answers one question — "can I trust
+  // what I'm reading?" — in whichever direction the evidence points, so it is
+  // present either way and only its TONE changes (ADR 0037): amber when the
+  // menu needs a refresh, blue when it doesn't. Making it appear only on bad
+  // news taught the reader nothing from its absence; an absent icon and an
+  // icon saying "checked in store last week" are not the same fact.
+  // Whether a refresh is needed stays refreshCaveat's call, not the bare
+  // presence of a date (ADR 0036).
   const titleGroup = el("div", { className: "menu-title-group" }, [
     el("h1", { className: "menu-title", textContent: r.name }),
   ]);
   const titleRow = el("div", { className: "menu-title-row" }, [titleGroup, venueHeart]);
-  // Recipes are ours: there is no shop to have checked with, so no caveat.
+  // Recipes are ours: there is no shop to have checked with, so no caveat —
+  // and equally nothing to reassure anyone about. They keep a bare title.
   const caveat = isRecipes ? null : refreshCaveat(r, todayNZ());
-  if (caveat?.show) {
-    const [caveatBtn, caveatNote] = caveatDisclosure(r.id, caveat);
+  if (caveat) {
+    const [caveatBtn, caveatNote] = caveatDisclosure(r.id, caveat, r);
     // Button after the title, note absolutely positioned within the group
     // (its positioning context) so it can appear on hover of its sibling.
     titleGroup.append(caveatBtn, caveatNote);
@@ -362,11 +367,7 @@ function renderHeader(r) {
   // to trust the prices: someone standing at the counter and a stale directory
   // listing produce the same date and are not the same evidence (ADR 0031).
   if (r.verified) {
-    const d = new Date(r.verified);
-    const nice = isNaN(d)
-      ? r.verified
-      : d.toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" });
-    bits.push(el("p", { className: "menu-verified", textContent: verificationText(r, nice) }));
+    bits.push(el("p", { className: "menu-verified", textContent: verificationText(r, niceDate(r.verified)) }));
   }
 
   return el("header", { className: "menu-header" }, bits);
@@ -384,18 +385,96 @@ function renderAside(r) {
   return el("aside", { className: "menu-aside", "aria-label": "Contact and ordering", "data-i18n-aria": "menu.aside.aria" }, cards);
 }
 
-// The "menu needs a refresh" note as an accessible disclosure: a small ⓘ
-// button beside the venue name that reveals the note on tap/click (and on
-// hover for mouse users, via CSS). A button + aria-expanded, not a bare
-// `title`, so it works on touch. Returns [button, note] for the caller to
-// place — the note must be a later sibling of the button for the hover
-// reveal to work.
-function caveatDisclosure(id, caveat) {
-  return disclosure({
+/**
+ * An ISO record date as "15 Aug 2026". Built from the parts rather than
+ * `new Date(iso)`, which parses a bare date as UTC midnight and so renders
+ * the day BEFORE for any viewer west of Greenwich — these are record dates,
+ * the same day everywhere, and must not shift with who is reading.
+ * Falls back to the raw string for anything that isn't a full ISO date.
+ */
+function niceDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+  if (!m) return iso;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return isNaN(d)
+    ? iso
+    : d.toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" });
+}
+
+// The confidence note as an accessible disclosure: a small ⓘ button beside
+// the venue name that reveals the note on tap/click (and on hover for mouse
+// users, via CSS). A button + aria-expanded, not a bare `title`, so it works
+// on touch. Returns [button, note] for the caller to place — the note must be
+// a later sibling of the button for the hover reveal to work.
+//
+// Two tones off one control (ADR 0037). The amber one is a caution and says
+// so; the blue one reports what was checked and when, and is also where the
+// currency is stated — a reader wondering "is this NZD?" is looking at the
+// prices, which is exactly where this sits. (The About dialog carries the
+// same fact for anyone who looks there first.)
+function caveatDisclosure(id, caveat, record) {
+  const warn = caveat.show;
+  const [btn, note] = disclosure({
     noteId: `menu-caveat-${id}`,
-    label: "Why this menu needs a refresh",
-    text: caveatText(caveat),
+    label: warn ? "Why this menu needs a refresh" : "When we last checked this menu",
+    text: warn ? caveatText(caveat) : confidenceNote(caveat, record),
+    // Shape first, colour second — see disclosure.js.
+    glyph: warn ? "⚠" : "ⓘ",
   });
+  if (!warn) {
+    btn.classList.add("is-info");
+    note.classList.add("is-info");
+  }
+  return [btn, note];
+}
+
+// How each method reads as something we DID, in the past tense, for the
+// positive note. `verificationText`'s phrasing ("Read in store") heads the
+// date line lower down; here the sentence needs a verb it can carry.
+const CHECKED_PHRASE = {
+  "in-store": "checked in store",
+  "paper-menu": "read from the shop’s own menu",
+  "official-site": "checked against the place’s own site",
+  phone: "confirmed with the place by phone",
+};
+
+/**
+ * The reassuring half of the ⓘ: what we checked, when, and in what currency.
+ * Built as a node rather than a string so the lead reads as a statement and
+ * the currency line sits apart from it.
+ *
+ * The claims are kept separate on purpose. `verified` dates the MENU. It says
+ * nothing about the phone number or the opening hours, so those are only
+ * mentioned when `detailsVerified` gives them their own date — otherwise the
+ * note stays quiet about them rather than borrowing the menu's credit.
+ */
+function confidenceNote(caveat, record) {
+  const how = CHECKED_PHRASE[caveat.method] || "checked";
+  const when = niceDate(caveat.date);
+  const details = detailsVerification(record);
+
+  let lead = `Menu and prices ${how} on ${when}.`;
+  if (details) {
+    // Same day and same method is the common case — one reading of the shop,
+    // recorded as the two facts it establishes. Say it as one sentence.
+    if (details.date === caveat.date && details.method === caveat.method) {
+      lead = `Menu, prices and the venue’s details — phone, address and opening hours — ${how} on ${when}.`;
+    } else {
+      const dHow = CHECKED_PHRASE[details.method] || "checked";
+      lead =
+        `Menu and prices ${how} on ${when}. ` +
+        `Phone, address and opening hours ${dHow} on ${niceDate(details.date)}.`;
+    }
+  }
+
+  return el("span", {}, [
+    el("strong", { textContent: "✅ Up to date. " }),
+    lead,
+    // Leading space is for the accessibility tree, not the layout: the span is
+    // display:block so the space collapses visually, but without it a screen
+    // reader runs the two sentences together ("…2026.All prices…").
+    el("span", { className: "caveat-currency", textContent: " All prices are in New Zealand dollars (NZD)." }),
+  ]);
 }
 
 // What an untrusted source is, in the reader's words. Only the two methods the

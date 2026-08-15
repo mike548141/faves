@@ -101,9 +101,27 @@ const METHOD_PHRASE = {
  *   • a date and a method    → the full derivation
  */
 export function verification(record) {
-  const date = record?.verified;
+  return reading(record?.verified, record?.verifiedBy);
+}
+
+/**
+ * When the venue's *details* — phone, address, opening hours — were last
+ * checked, and how. A SEPARATE reading from the menu's, because they are
+ * separately true: a takeaway card read in store dates the prices, and says
+ * nothing about whether the hours printed beside them are still kept.
+ *
+ * Same shape and same closed method set as `verification`, and equally
+ * optional — a record with no `detailsVerified` has simply never had its
+ * details checked as a distinct act, which is the honest majority case and
+ * what the UI must then decline to claim (ADR 0037).
+ */
+export function detailsVerification(record) {
+  return reading(record?.detailsVerified, record?.detailsVerifiedBy);
+}
+
+/** The shared shape behind both readings above. */
+function reading(date, by) {
   if (!isDate(date)) return null;
-  const by = record?.verifiedBy;
   const method = VERIFY_METHODS.includes(by) ? by : null;
   return { date, method, label: method ? METHOD_PHRASE[method] : "Verified" };
 }

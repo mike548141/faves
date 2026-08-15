@@ -4,11 +4,16 @@
 // behaviour and the same .caveat-btn / .caveat-note styling. The caller is
 // responsible for giving the [btn, note] pair a position:relative ancestor so
 // the note anchors correctly.
-export function disclosure({ noteId, label, text }) {
+// `glyph` defaults to ⓘ, which is what every caller wanted until the menu
+// header grew a second tone. Colour must never be the only thing separating
+// the two: amber and blue sit 1.06:1 apart in luminance, so anyone reading by
+// brightness — or with a colour vision deficiency — would see one control in
+// two shades. The shape carries the difference; the colour reinforces it.
+export function disclosure({ noteId, label, text, glyph = "ⓘ" }) {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "caveat-btn";
-  btn.textContent = "ⓘ";
+  btn.textContent = glyph;
   btn.setAttribute("aria-label", label);
   btn.setAttribute("aria-expanded", "false");
   btn.setAttribute("aria-controls", noteId);

@@ -480,6 +480,75 @@ async function run(opts) {
     );
     const firstProfile = first.profile;
 
+    // --- 1b. The confidence ⓘ (ADR 0037) ---------------------------------
+    // It is present either way and only its tone changes, so the check is that
+    // the tone MATCHES THE DATA rather than that a particular tone appears —
+    // a blue "up to date" on a stale menu is the failure worth catching, and
+    // it cannot be seen by asserting the button merely exists.
+    const tip = await evalPage(`(() => {
+      const btn = document.querySelector(".menu-title-group .caveat-btn");
+      if (!btn) return null;
+      btn.click();
+      const note = document.getElementById(btn.getAttribute("aria-controls"));
+      return {
+        info: btn.classList.contains("is-info"),
+        noteInfo: note ? note.classList.contains("is-info") : null,
+        open: note ? note.classList.contains("is-open") : null,
+        text: note ? note.textContent : "",
+        expanded: btn.getAttribute("aria-expanded"),
+        glyph: btn.textContent.trim(),
+        label: btn.getAttribute("aria-label"),
+        tapTarget: Math.min(btn.getBoundingClientRect().width, btn.getBoundingClientRect().height),
+      };
+    })()`);
+    // What the data says this venue's tone must be, computed here from the
+    // record rather than from the DOM we are testing.
+    const trusted = ["in-store", "paper-menu", "official-site", "phone"];
+    const vDate = venue.verified;
+    const fresh =
+      typeof vDate === "string" &&
+      trusted.includes(venue.verifiedBy) &&
+      Date.now() - Date.parse(vDate) < 365 * 24 * 3600 * 1000;
+    report.check(
+      "the confidence ⓘ is present beside the venue name",
+      tip !== null && tip.expanded === "true" && tip.open === true,
+      tip ? `aria-expanded=${tip.expanded}, note open=${tip.open}` : "no ⓘ found"
+    );
+    report.check(
+      `the ⓘ tone matches the record (${fresh ? "fresh ⇒ info" : "needs a refresh ⇒ caution"})`,
+      tip !== null && tip.info === fresh && tip.noteInfo === fresh,
+      `verified=${vDate ?? "never"} by ${venue.verifiedBy ?? "—"}; is-info=${tip?.info}`
+    );
+    report.check(
+      "the ⓘ keeps a 44px tap target",
+      tip !== null && tip.tapTarget >= 44,
+      `${tip?.tapTarget}px`
+    );
+    // Colour is never the only signal: the glyph and the accessible name must
+    // differ between the tones too, or a colour-blind reader sees one control.
+    report.check(
+      "the tone is carried by shape and label, not colour alone",
+      tip !== null && tip.glyph === (fresh ? "ⓘ" : "⚠") && /refresh|checked/.test(tip.label || ""),
+      `glyph=${tip?.glyph}, aria-label=“${tip?.label}”`
+    );
+    if (fresh) {
+      report.check(
+        "the up-to-date note states the currency",
+        /New Zealand dollars \(NZD\)/.test(tip.text),
+        tip.text.trim()
+      );
+      // The note may only claim the phone/address/hours were checked when the
+      // record carries their own reading — the whole point of splitting the
+      // field out (ADR 0037).
+      const claimsDetails = /opening hours/.test(tip.text);
+      report.check(
+        "the note claims venue details only when they have their own date",
+        claimsDetails === Boolean(venue.detailsVerified),
+        `detailsVerified=${venue.detailsVerified ?? "absent"}, note mentions hours=${claimsDetails}`
+      );
+    }
+    await evalPage(`document.querySelector(".menu-title-group .caveat-btn").click()`);
+
     // --- 2. Flip an allergen preference, live ----------------------------
     await click("#overflow-btn");
     await click("#settings-btn");

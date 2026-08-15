@@ -317,6 +317,27 @@ def check_verification(rid, data, status):
     if status == "verified" and not (has_date and by is not None):
         err(rid, "status is 'verified' but there is no dated derivation — set verified AND verifiedBy")
 
+    # The venue's DETAILS — phone, address, opening hours — carry their own
+    # reading (ADR 0037), because `verified` above dates the menu and nothing
+    # else. Same shape, same closed method set, and equally optional: absent
+    # means those were never checked as a distinct act, and the menu screen
+    # then declines to claim they were.
+    d_verified = data.get("detailsVerified")
+    d_by = data.get("detailsVerifiedBy")
+    d_has_date = isinstance(d_verified, str) and bool(DATE_RE.match(d_verified))
+
+    if d_verified is not None and not d_has_date:
+        err(rid, f"detailsVerified must be null or an ISO date (YYYY-MM-DD), got {d_verified!r}")
+    if d_by is not None and d_by not in VERIFY_METHODS:
+        err(rid, f"detailsVerifiedBy {d_by!r} not in {sorted(VERIFY_METHODS)}")
+    if d_by is not None and d_verified is None:
+        err(rid, "detailsVerifiedBy is set but detailsVerified is null — a method with no date is not a derivation")
+    # Unlike `verified`, this one is an ERROR without its method. There is no
+    # pre-ADR-0037 corpus to be gentle about: every use of the field is new,
+    # so a method-less one is a gap being created now, not inherited.
+    if d_has_date and d_by is None:
+        err(rid, f"detailsVerified {d_verified} carries no detailsVerifiedBy — state how the details were checked ({sorted(VERIFY_METHODS)})")
+
 
 def check_hours(rid, hours, where):
     """hours on `obj`: null, or a full week keyed mon..sun. Each day is a list of
