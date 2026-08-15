@@ -15,6 +15,16 @@ Format: one file, numbered `NNNN-slug.md`, about half a page. Sections:
 **Consequences**. Never edit an accepted ADR's substance — supersede it
 with a new one.
 
+**Allocate `NNNN` at merge, never in a worktree.** The number is a shared
+counter, and "highest in the directory, plus one" reads a value that a parallel
+session may already have taken. Draft with a placeholder and fix the number when
+you merge to `main`. This is not hypothetical twice over: three parallel agents
+all took `0031` on 2026-07-23, and **0025 is currently used by two unrelated
+accepted records** — `0025-settings-index-and-panels.md` (2026-08-08) and
+`0025-infer-allergens-by-default.md` (2026-08-09), found 2026-08-15. Cite an ADR
+by its **file path**, not by bare number, until that collision is resolved (the
+repair is queued as an owner call in `ROADMAP.md`, "Also parked (small)").
+
 Records 0001–0004 were backfilled 2026-07-08 from decisions already made
 and recorded in `ARCHITECTURE.md`/`STRATEGY.md`; they capture the
 deliberation those compact docs omit.
