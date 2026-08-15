@@ -22,6 +22,7 @@ import { ratings } from "./ratings.js";
 import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
 import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
+import { dishNeeds, priceUnknown } from "./needs.js";
 import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
 import { wireSearchClear } from "./search-clear.js";
@@ -392,6 +393,42 @@ function renderAside(r) {
  * the same day everywhere, and must not shift with who is reading.
  * Falls back to the raw string for anything that isn't a full ISO date.
  */
+// "What we still owe on this dish", as a row of small disclosure chips.
+//
+// Deliberately NOT in the dish-tags row: those chips describe the food, and
+// two of them are allergen warnings. A record-keeping note sitting among them
+// would dilute exactly the chips that must not be diluted, so this gets its
+// own line above them, in its own shape (a "?" — unknown), never the "⚠" the
+// allergen chips and the refresh caveat own.
+//
+// English only, on purpose: reo.js's safety boundary keeps the refresh caveat
+// and the allergen chips in English until a reo review, and this says the same
+// class of thing about the same class of fact — including an `allergens` kind.
+function needsRow(item, venueId) {
+  const rows = dishNeeds(item);
+  if (!rows.length) return null;
+  const row = el("div", { className: "dish-needs" });
+  for (const n of rows) {
+    const parts = [el("strong", { textContent: `${n.label}.` }), " "];
+    if (n.note) parts.push(`${n.note} `);
+    parts.push(n.fix);
+    if (n.since) parts.push(` Noticed ${niceDate(n.since)}.`);
+    const [btn, note] = disclosure({
+      noteId: `dish-needs-${venueId}-${slug(item.name)}-${n.what}`,
+      // Opens with the visible chip text so the accessible name contains the
+      // visible label (WCAG 2.5.3), then says what tapping it gets you.
+      label: `${n.label} — what would fix this`,
+      text: el("span", {}, parts),
+      glyph: "?",
+    });
+    btn.classList.add("needs-btn");
+    btn.append(el("span", { className: "needs-label", textContent: n.label }));
+    note.classList.add("is-needs");
+    row.append(el("span", { className: "needs-slot" }, [btn, note]));
+  }
+  return row;
+}
+
 function niceDate(iso) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
   if (!m) return iso;
@@ -576,8 +613,13 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
       ? el("span", { className: "dish-meta", textContent: recipeMeta })
       : null
     : el("span", {
-        className: "dish-price",
-        textContent: item.price == null ? "—" : money(item.price),
+        // Three states, not two. A dash has always meant "this one varies —
+        // ask" (market fish, P.O.A). A dish we simply failed to read gets a
+        // "?" instead, so the reader can tell the shop's uncertainty from
+        // ours; the row below says which and what would fix it (needs.js).
+        className: priceUnknown(item) ? "dish-price is-unknown" : "dish-price",
+        textContent:
+          item.price != null ? money(item.price) : priceUnknown(item) ? "?" : "—",
       });
 
   // Some venues take orders by number; render that code as a distinct badge
@@ -625,6 +667,11 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
   if (item.desc) {
     children.push(el("p", { className: "dish-desc", textContent: item.desc }));
   }
+  // Above the tags, below the description: it qualifies what we just told you
+  // about this dish, so it reads as a footnote to the description rather than
+  // as another property of the food.
+  const needs = needsRow(item, r?.id ?? "x");
+  if (needs) children.push(needs);
   if (item.tags?.length) {
     const tags = el("div", { className: "dish-tags" });
     for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid));

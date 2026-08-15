@@ -3613,6 +3613,56 @@ body.faves-view .to-top {
   }
 }
 
+/* ---------- "We still owe this dish a fact" ---------- */
+/* A third tone on the same control, and the only one that is a pill with a
+   visible label: the other two sit beside a heading, where context makes them
+   obvious, while this appears mid-menu among dozens of dishes and has to name
+   itself. Shape carries the difference — "?" for unknown, never the "⚠" the
+   allergen chips and the refresh caveat own — and a dashed edge reads as
+   provisional without borrowing the warning colour, which must stay scarce to
+   keep meaning something. Neutral tokens, so dark mode follows for free. */
+.dish-needs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+/* Each chip anchors its own note: disclosure.js positions the note against the
+   nearest positioned ancestor, and the row would put two notes in one place. */
+.needs-slot {
+  position: relative;
+  display: inline-flex;
+}
+.caveat-btn.needs-btn {
+  width: auto;
+  min-height: 44px; /* interactive target floor, same as the diet chips */
+  margin-top: 0;
+  gap: 0.4em;
+  padding: 0.4em 0.9em;
+  font-size: var(--step-sub);
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--surface-2);
+  border: 1px dashed var(--line);
+}
+.caveat-btn.needs-btn:hover,
+.caveat-btn.needs-btn[aria-expanded="true"] {
+  color: var(--ink);
+  background: var(--surface-2);
+  border-style: solid; /* the dashes close up — it reads as "being dealt with" */
+}
+.caveat-note.is-needs {
+  background: var(--surface-2);
+  color: var(--ink);
+  border-color: var(--ink-soft);
+  font-weight: 500; /* a statement, like the blue note; not a caution */
+}
+/* The "?" in the price slot is the same fact in the place the eye lands first,
+   so it must not read as a price. */
+.dish-price.is-unknown {
+  color: var(--ink-soft);
+}
+
 /* ---------- Site footer ---------- */
 /* The privacy story is genuinely strong for this site, so it earns a plain
    statement. Business attribution only — no contact details (personal-data
