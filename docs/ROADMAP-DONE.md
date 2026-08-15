@@ -840,3 +840,42 @@ the obvious word *peka* is already spoken for by `route.detour`.
 or Chrome Android); Lighthouse not re-run (copy-only, meta untouched, so no
 movement expected — but that is reasoning, not a measurement); te reo
 correctness rests on re-using a reviewed string, not on a speaker's review.
+
+## Theme 19 — from the 2026-08-15 Johnsonville intake
+
+**Street numbers, hours, phones and pins for the three new venues** `[S][data]`
+— **done 2026-08-15**, in the session that raised them the same morning.
+
+Round one recorded the three new Johnsonville venues with street-level addresses
+and null coordinates, because the photos' GPS put four different venues inside a
+**25 m** circle — phone error, not separation — and the coordinate audit's rule
+is that a wrong pin is worse than an imprecise one. The blocking input was the
+street number, not the geocoder.
+
+Found online and confirmed: **103** BurgerFuel, **105** Noodle Canteen, **109**
+The Ramen Shop, Johnsonville Road. Each geocoded through `audit_coords.py`'s
+Nominatim client to **house-number level** — the standard the audit set — and
+each landing within **~20 m** of the photo GPS. That agreement is the useful
+part: the address lookup and the photo sort were independent, and they concur.
+
+Hours and phones were taken from the strongest source each venue had, and the
+record says which rather than flattening them: BurgerFuel and The Ramen Shop
+from their **own sites** (`official-site`), Noodle Canteen only from a
+**directory listing** (`third-party`). The Ramen Shop's published phone matches
+the number read off its shopfront sign in the round-one photos — independent
+agreement between a first-party site and a first-party photograph.
+
+This is what drove the `menu.js` change in the same session: the two untrusted
+methods can never head the *menu* half of the confidence note, but they reach
+the *details* half, and without their own phrasing they inherited the bare
+"checked" fallback and read as first-party.
+
+**Thai Tara "Prawns twister"** `[XS][data]` — **done 2026-08-15**. Round one
+left the dish out because its handwritten price sticker was unreadable at native
+resolution (leading digit 3 or 5, both implausible beside its $12.90
+neighbours). The owner overruled that, and was right: the dish now exists with
+`price: null` and the reason in its description. It degrades correctly —
+`menu.js` renders "—" and `cart.js` already sets `hasUnpriced` — so the honest
+gap is visible where the absence was invisible. The general lesson is worth
+keeping: *flagged-not-guessed* should mean the record carries the gap, not that
+the record omits the thing.

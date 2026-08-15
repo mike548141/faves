@@ -1743,32 +1743,47 @@ loanword "supper" — unfortunate on a food app, though context resolves it).
 
 ---
 
-## Theme 17 — from the 2026-08-15 Johnsonville intake
+## Theme 19 — from the 2026-08-15 Johnsonville intake
 
-- [ ] 🎯 **Street numbers for the three new Johnsonville venues** `[S][data]` —
-  **Noodle Canteen**, **The Ramen Shop** and **BurgerFuel** carry street-level
-  addresses ("Johnsonville Road, Johnsonville, Wellington 6037") and **null**
-  `lat`/`lng`. Not an oversight: the photos' GPS put all four venues on that
-  strip inside a **25 m** circle — that is the phone's error, not real
-  separation, so a pin taken from it could land on the neighbouring shop. The
-  coordinate audit's own rule (2026-08-09) is that a wrong pin is worse than an
-  imprecise one, and `audit_coords.py` geocodes *from* an address, so the
-  number is the blocking input. **Owner has been to all three.** Once the
-  numbers land, geocode and the pins follow for free.
-- [ ] **Thai Tara A12 "Prawns twister" price** `[XS][data]` — the handwritten
-  sticker is unreadable at native resolution (leading digit 3 or 5; both
-  implausible beside its $12.90 neighbours), so the dish is **absent** from the
-  record rather than recorded wrong. One glance at the card settles it.
+<!-- Numbered 19, not 17: the 2026-08-15 session first appended this block as
+     "Theme 17" without checking, colliding with Cook mode. Found and renumbered
+     the same day. Check `grep '^## Theme' ROADMAP.md` before adding one. -->
+
+✅ **Done 2026-08-15** — street numbers, hours, phones and house-level pins for
+the three new venues; Thai Tara's *Prawns twister* restored with a null price.
+Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+
+- [ ] 🚩 **Thai Tara: the leaflet and the in-store card disagree** `[S][data]` —
+  the takeaway leaflet collected 2026-08-15 is a **different printing** from the
+  laminated card at the counter, and they conflict in three ways. The card's
+  prices are handwritten stickers over an older print; the leaflet's are printed.
+  Not silently resolved — a reading is not evidence about a *different* reading.
+  1. **Item codes differ.** Card: R2 green curry, R3 nasi goreng, R4 tom yum.
+     Leaflet: R2 nasi goreng, R3 spicy, R4 green curry. Stir-fry codes differ
+     too. The card's codes are stored, being the ones you order by at the counter.
+  2. **Two prices differ.** Thai basil and Thai chilli are **$21.50** on the
+     card's stickers and **$22.50** printed on the leaflet. The card's value is
+     stored; recording both as a dated series would fabricate a same-day price
+     rise, which is exactly the correction-vs-change error ADR 0023 warns about.
+  3. **The leaflet has no duck dishes at all** — no roasted duck on rice, larb
+     duck, duck noodle or roasted duck stir-fry — and adds a **laksa curry
+     noodle soup** the card lacks. The laksa is recorded (it is an addition, and
+     additions are safe); the duck dishes are **kept**, because one leaflet
+     omitting them is not evidence they are off the menu, and `available.offBy`
+     is a dated claim that they are.
 - [ ] **Age `detailsVerified` the way `refreshCaveat` ages `verified`** `[S][js]`
   — today a venue whose details are stale and one whose details were never
   checked both render the same (the note simply omits them). Deliberately not
-  built now: **three records** carry the field, which is no evidence base for
-  choosing a limit, and inventing one would repeat the mistake ADR 0036 had to
-  correct. Revisit once the field has a corpus behind it.
-- [ ] **Hours and phone for the three new venues** `[S][data]` — their boards
-  gave a menu and nothing else, so `hours` is null and the "Open now" filter
-  can't see them. `detailsVerified` is correctly absent (ADR 0037) and stays
-  that way until someone actually checks.
+  built now: too few records carry the field to choose a limit from evidence,
+  and inventing one would repeat the mistake ADR 0036 had to correct.
+- [ ] **Pandan's pin is a street centroid** `[XS][data]` — OSM carries no house
+  number for that street address, so the stored pin is the street, not the door. Kept
+  because the venue is ~15 km out, where the error cannot change a distance
+  sort. Worth a house-level fix if OSM ever gains the number.
+- [ ] **Pandan's second branch** `[S][data]` — the venue's site lists a **Press
+  Hall, Willis Street** branch, but its ordering page serves no menu, so there is
+  nothing to evidence. Only the Lower Hutt store is recorded. Add the branch
+  (ADR 0011) once its menu can be read.
 - [ ] **Reo: the confidence-note strings** `[S][reo]` — the new "Up to date…"
   copy stays English alongside the caution it shares a popover with. Added to
   the fluent-speaker review queue with the other drafts above.
