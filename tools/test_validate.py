@@ -25,6 +25,7 @@ Stdlib only, no build step. Never writes outside a temporary copy.
 import argparse
 import copy
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -45,6 +46,41 @@ def _first_item(d):
 # name -> (mutate, expectation). "error" = must exit non-zero. "warn" = must
 # exit zero but say something; the no-backfill accommodations live here, and
 # they are asserted so a later change cannot silently promote or drop them.
+def check_need_kinds_agree():
+    """The `needs` vocabulary is written down three times — return a complaint
+    if they have drifted, else None.
+
+    `validate.py` decides what data is legal, `site/js/needs.js` decides what
+    the reader actually sees, and `tools/needs.py` decides what the worklist
+    reports. A kind in the validator but not the renderer is the dangerous
+    direction: the data would claim a gap that silently never appears on the
+    page, which is precisely the "decorative guard" failure this repo keeps
+    finding. Parsed rather than imported — needs.js is an ES module and the
+    tooling is stdlib-only Python (ADR 0001).
+    """
+    def quoted_names(path, pattern):
+        """The quoted strings inside the first match of `pattern`."""
+        text = (ROOT / path).read_text(encoding="utf-8")
+        m = re.search(pattern, text, re.S | re.M)
+        return set(re.findall(r'"([a-z]+)"', m.group(1))) if m else set()
+
+    # needs.js is an object literal, so take its top-level keys, not its
+    # bodies — those carry prose full of words that would match anything.
+    js_text = (ROOT / "site/js/needs.js").read_text(encoding="utf-8")
+    js_block = re.search(r"const KINDS = \{(.*?)\n\};", js_text, re.S)
+    js = set(re.findall(r"^  ([a-z]+): \{", js_block.group(1), re.M)) if js_block else set()
+    py = quoted_names("tools/validate.py", r"NEED_KINDS = \((.*?)\)")
+    rep = quoted_names("tools/needs.py", r"^KINDS = \((.*?)\)")
+
+    if not (js and py and rep):
+        return f"could not read one of the lists (js={len(js)}, validate={len(py)}, report={len(rep)})"
+    if js == py == rep:
+        return None
+    return (
+        f"needs.js={sorted(js)} validate.py={sorted(py)} needs.py={sorted(rep)}"
+    )
+
+
 CASES = {
     # --- shape and type ---------------------------------------------------
     "required id removed": (lambda d: d.pop("id", None), "error"),
@@ -72,6 +108,40 @@ CASES = {
     "date with no method still only warns": (
         lambda d: d.update(verifiedBy=None),
         "warn",
+    ),
+    # --- dish-level gaps, `needs` ----------------------------------------
+    "needs kind off the closed set": (
+        lambda d: _first_item(d).update(needs=[{"what": "vibes"}]),
+        "error",
+    ),
+    "needs with an unknown key": (
+        lambda d: _first_item(d).update(needs=[{"what": "price", "why": "x"}]),
+        "error",
+    ),
+    "needs is empty rather than absent": (
+        lambda d: _first_item(d).update(needs=[]),
+        "error",
+    ),
+    "needs since is not a date": (
+        lambda d: _first_item(d).update(needs=[{"what": "price", "since": "last Tuesday"}]),
+        "error",
+    ),
+    "same needs kind claimed twice": (
+        lambda d: _first_item(d).update(needs=[{"what": "name"}, {"what": "name"}]),
+        "error",
+    ),
+    # The one that keeps the worklist honest: a dish that has been priced but
+    # still carries needs.what='price' renders no indicator, so the gap would
+    # sit in the data invisibly and needs.py would keep reporting a done job.
+    "priced dish still claiming an unread price": (
+        lambda d: _first_item(d).update(price=9.5, needs=[{"what": "price"}]),
+        "error",
+    ),
+    "a well-formed needs entry is legal": (
+        lambda d: _first_item(d).update(
+            price=None, needs=[{"what": "price", "note": "label obscured", "since": "2026-08-07"}]
+        ),
+        "clean",
     ),
 }
 
@@ -135,6 +205,13 @@ def main() -> int:
                     print(f"       | {line}")
             if not ok:
                 failures.append(name)
+
+    drift = check_need_kinds_agree()
+    if drift:
+        print(f"  ❌ {'needs vocabulary agrees across files':38} {drift}")
+        failures.append("needs vocabulary drift")
+    else:
+        print(f"  ✅ {'needs vocabulary agrees across files':38} in step")
 
     if failures:
         print(

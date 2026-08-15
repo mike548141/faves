@@ -219,6 +219,62 @@ def check_revisions(rid, obj, where):
                 err(rid, f"{at}: unknown key {k!r}")
 
 
+# Closed set, mirroring site/js/needs.js KINDS. Kept in step by
+# test_validate.py, which fails if the two drift: a kind the renderer doesn't
+# know is silently dropped on the page, so the data would claim a gap the
+# reader never sees.
+NEED_KINDS = ("price", "ingredients", "allergens", "name", "availability")
+
+
+def check_needs(rid, obj, where):
+    """Optional per-dish record of what we know we DON'T know about it.
+
+    Distinguishes "the shop prices this on application" from "we failed to read
+    it" — `price: null` had been carrying both. Also the worklist: `needs.py`
+    derives it, so ROADMAP.md never has to name a dish again.
+
+    `what` is a closed set; `note` says why it is open; `since` is record time
+    (the day we noticed), never world time — nothing happened in the world.
+    """
+    needs = obj.get("needs")
+    if needs is None:
+        return
+    if not isinstance(needs, list):
+        err(rid, f"{where}: needs must be a list or absent")
+        return
+    if not needs:
+        err(rid, f"{where}: needs must not be empty — omit it instead")
+        return
+    seen = set()
+    for i, n in enumerate(needs):
+        at = f"{where}: needs[{i}]"
+        if not isinstance(n, dict):
+            err(rid, f"{at} must be an object")
+            continue
+        what = n.get("what")
+        if what not in NEED_KINDS:
+            err(rid, f"{at}: what must be one of {', '.join(NEED_KINDS)}, got {what!r}")
+        elif what in seen:
+            err(rid, f"{at}: duplicate what {what!r} — one entry per kind")
+        else:
+            seen.add(what)
+        if "note" in n and n["note"] is not None:
+            if not (isinstance(n["note"], str) and n["note"].strip()):
+                err(rid, f"{at}: note must be a non-empty string or absent")
+        if "since" in n and n["since"] is not None and not is_part_date(n["since"]):
+            err(rid, f"{at}: since must be an ISO date (YYYY[-MM[-DD]]), got {n['since']!r}")
+        for k in n:
+            if k not in ("what", "note", "since"):
+                err(rid, f"{at}: unknown key {k!r}")
+    # A priced dish claiming its price is unread is a leftover: the renderer
+    # shows the price and hides the "?", so the gap would sit in the data
+    # forever, invisible, and needs.py would keep reporting a job that's done.
+    if obj.get("price") is not None and any(
+        isinstance(n, dict) and n.get("what") == "price" for n in needs
+    ):
+        err(rid, f"{where}: has a price but still claims needs.what='price' — drop the entry")
+
+
 def check_lifecycle(rid, data):
     """The venue's dated lifecycle (ADR 0023). `added` is record time and is
     REQUIRED — every venue entered Faves on a knowable day, and git knows it.
@@ -578,6 +634,7 @@ def check_restaurant(path):
                     err(rid, f"price for {name!r} must not be negative, got {price!r}")
             check_available(rid, item, f"item {name!r}")
             check_revisions(rid, item, f"item {name!r}")
+            check_needs(rid, item, f"item {name!r}")
             # code: optional venue order-number (a string, kept out of name).
             code = item.get("code")
             if code is not None and not (isinstance(code, str) and code.strip()):
