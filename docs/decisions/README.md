@@ -251,6 +251,23 @@ deliberation those compact docs omit.
   is a positive claim. TJ Katsu and Sushi Bi gain the honest dates the session
   log evidences, no longer withheld to keep a caveat on. A confidence scale, a
   per-method limit, and ageing the untrusted methods all rejected.
+- [0037](0037-confidence-reads-both-ways.md) — **the confidence note reads
+  both ways, and details carry their own date.** The ⓘ used to appear only on
+  bad news, so its absence was ambiguous — "we checked last week" and "no
+  comment" rendered identically. Now always present, tone only: ⚠ amber
+  caution, ⓘ blue "checked in store". `verified` dates the **menu** and nothing
+  else ([0031](0031-verified-carries-its-derivation.md)), so details got their
+  own dated reading (`detailsVerified` + `detailsVerifiedBy`) rather than
+  letting the note claim something nobody checked. The two tones sit 1.06:1
+  apart in luminance, so **the glyph and the accessible name carry the
+  difference**, never colour alone.
+- [0038](0038-intake-provenance-from-the-file.md) — **intake provenance comes
+  off the file, never off the import.** [0031](0031-verified-carries-its-derivation.md)
+  said every reading carries *how* it was obtained but not where that answer
+  comes from, so in practice the transcriber asserted it. A file's mtime is not
+  the reading date (copying or syncing a photo rewrites it, silently claiming a
+  fresher check than the evidence supports) and folder names are a guess. The
+  method is now evidenced from the file itself.
 - [0039](0039-cook-mode-gets-its-own-browser-guard.md) — **cook mode gets its
   own real-browser guard, gaps declared** (ROADMAP 17d; guards 0034).
   `tools/cook_check.mjs`, a sibling to `device_check.mjs` rather than a
