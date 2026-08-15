@@ -14,7 +14,7 @@
     "takeaway"
   ],
   "phone": "+64 4 477 6809",
-  "website": null,
+  "website": "https://thaitara.co.nz",
   "ordering": [
     { "platform": "Uber Eats", "url": "https://www.ubereats.com/nz/store/thai-tara-express/D5Cf4DgDQdqOHFpsb2_QCA" },
     { "platform": "DoorDash", "url": "https://www.doordash.com/store/thai-tara-express-wellington-23417449/" }
@@ -29,37 +29,61 @@
     "tue": [
       [
         "11:30",
-        "21:30"
+        "14:00"
+      ],
+      [
+        "16:30",
+        "21:00"
       ]
     ],
     "wed": [
       [
         "11:30",
-        "21:30"
+        "14:00"
+      ],
+      [
+        "16:30",
+        "21:00"
       ]
     ],
     "thu": [
       [
         "11:30",
-        "21:30"
+        "14:00"
+      ],
+      [
+        "16:30",
+        "21:00"
       ]
     ],
     "fri": [
       [
         "11:30",
-        "21:30"
+        "14:00"
+      ],
+      [
+        "16:30",
+        "21:00"
       ]
     ],
     "sat": [
       [
         "11:30",
-        "21:30"
+        "14:00"
+      ],
+      [
+        "16:30",
+        "21:00"
       ]
     ],
     "sun": [
       [
         "11:30",
-        "21:30"
+        "14:00"
+      ],
+      [
+        "16:30",
+        "21:00"
       ]
     ]
   },
@@ -69,102 +93,294 @@
     "Beef massamun curry",
     "Roasted duck curry"
   ],
-  "verified": null,
+  "verified": "2026-08-15",
+  "verifiedBy": "in-store",
+  "detailsVerified": "2026-08-15",
+  "detailsVerifiedBy": "in-store",
   "lifecycle": {
     "added": "2026-07-06"
   },
   "status": "menu-complete",
   "menu": [
     {
-      "section": "Entrée",
+      "section": "Appetisers",
       "items": [
-        { "name": "Roti with satay sauce", "desc": "Roti served with satay peanut sauce.", "price": 5, "tags": ["contains-peanuts", "contains-gluten", "contains-soy"] },
-        { "name": "Spring rolls", "desc": "Deep fried crispy spring rolls filled with chopped vegetables and glass noodles. Served with sweet & sour sauce.", "price": 6.5, "tags": ["contains-gluten"] },
-        { "name": "Prawn spring rolls", "desc": "Deep fried whole prawn wrapped with rice paper. Served with sweet & sour sauce.", "price": 6.5, "tags": ["contains-shellfish"] },
-        { "name": "Curry puffs", "desc": "Deep fried puff pastry stuffed with kumara filling. Served with sweet & sour sauce.", "price": 6.5, "tags": ["contains-gluten"] },
-        { "name": "Deep fried wontons", "desc": "Wonton wrappers filled with mince chicken and prawns. Served with sweet & sour sauce.", "price": 6.5, "tags": ["contains-shellfish", "contains-gluten"] },
-        { "name": "Money bag", "desc": "Deep fried minced chicken and vegetable wrapped in rice paper. Served with sweet & sour sauce.", "price": 6.5, "tags": [] },
-        { "name": "Satay chicken kebabs", "desc": "4 grilled chicken skewers marinated with curry powder. Served with satay peanut sauce.", "price": 6.5, "tags": ["contains-peanuts", "contains-soy"] },
-        { "name": "Spicy mince chicken", "desc": "Deep fried spicy minced chicken balls. Served with Thai sweet chilli sauce.", "price": 8, "tags": [] },
-        { "name": "Fish cake", "desc": "Red cod blended with Thai herbs and red curry paste. Served with sweet & sour sauce.", "price": 10, "tags": [] },
-        { "name": "Dim sums", "desc": "A mixture of prawn and pork wrapped with wonton wrapper. Served with sweet black soy sauce.", "price": 10, "tags": ["contains-shellfish", "contains-gluten", "contains-soy"] },
-        { "name": "Angel wing", "desc": "2 chicken wings stuffed with carrots, cabbage, onion and glass noodles. Served with sweet and sour sauce.", "price": 10, "tags": [] }
-      ]
-    },
-    {
-      "section": "On rice",
-      "items": [
-        { "name": "Grilled chicken on rice", "desc": "Sliced boneless grilled chicken thigh served with steamed vegetables and satay sauce.", "price": 14.5, "tags": ["contains-peanuts", "contains-soy"] },
-        { "name": "BBQ pork on rice", "desc": "Sliced BBQ pork topped with Thai style peanut butter sauce. Served with steamed vegetables and Thai sweet chilli sauce.", "price": 14.5, "tags": ["contains-peanuts"] },
-        { "name": "Roasted duck on rice", "desc": "Sliced boneless roasted duck topped with Thai style peanut butter sauce. Served with steamed vegetables and sweet black soy sauce.", "price": 14.5, "tags": ["contains-peanuts", "contains-gluten", "contains-soy"] },
-        { "name": "Crispy pork on rice", "desc": "Chopped crispy pork topped with Thai style peanut butter sauce. Served with steamed vegetables and sweet black soy sauce.", "price": 14.5, "tags": ["contains-peanuts", "contains-gluten", "contains-soy"] }
+        { "name": "Roti with satay sauce", "code": "A1", "desc": "Roti bread served with satay peanut sauce.", "price": [
+            { "value": 5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 7.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-peanuts", "contains-gluten", "contains-soy"] },
+        { "name": "French fries", "code": "A2", "desc": "Deep-fried potatoes mixed with salt and served with tomato sauce.", "price": 8, "tags": ["v"] },
+        { "name": "Spring rolls", "code": "A3", "desc": "Crispy homemade spring rolls with vegetables and glass noodles. Served with sweet and sour sauce.", "price": [
+            { "value": 6.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 10.9, "recorded": "2026-08-15" }
+          ], "tags": ["contains-gluten"] },
+        { "name": "Deep fried wontons", "code": "A4", "desc": "Crispy wrappers filled with chicken and prawns. Served with sweet and sour sauce.", "price": [
+            { "value": 6.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 10.9, "recorded": "2026-08-15" }
+          ], "tags": ["contains-shellfish", "contains-gluten"] },
+        { "name": "Curry puffs", "code": "A5", "desc": "Deep-fried puff pastry filled with spiced kūmara and served with sweet and sour sauce.", "price": [
+            { "value": 6.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 10.9, "recorded": "2026-08-15" }
+          ], "tags": ["contains-gluten"] },
+        { "name": "Prawns tempura", "code": "A6", "desc": "Thai style deep-fried prawns served with sweet and sour sauce.", "price": 10.9, "tags": ["contains-shellfish", "contains-gluten", "contains-egg"] },
+        { "name": "Money bags", "code": "A7", "desc": "Crispy parcels filled with minced chicken and vegetables. Served with sweet and sour sauce.", "price": [
+            { "value": 6.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 10.9, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Money bag” to “Money bags”." }
+          ], "tags": [] },
+        { "name": "Squid rings", "code": "A8", "desc": "Deep-fried squid rings served with sweet and sour sauce.", "price": 10.9, "tags": ["contains-shellfish"] },
+        { "name": "Satay chicken kebabs", "code": "A9", "desc": "Grilled marinated chicken skewers served with satay peanut sauce.", "price": [
+            { "value": 6.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 12.9, "recorded": "2026-08-15" }
+          ], "tags": ["contains-peanuts", "contains-soy"] },
+        { "name": "Fish cake", "code": "A10", "desc": "Red cod blended with fragrant Thai herbs and red curry paste. Served with sweet and sour sauce.", "price": [
+            { "value": 10, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 12.9, "recorded": "2026-08-15" }
+          ], "tags": [] },
+        { "name": "Crispy pork snack", "code": "A11", "desc": "Sliced crispy pork belly served with sweet dark soy sauce.", "price": 12.9, "tags": ["contains-soy", "contains-gluten"] },
+        { "name": "Spicy squid tentacles", "code": "A13", "desc": "Deep-fried squid tentacles served with sweet chilli sauce.", "price": 12.9, "tags": ["spicy-1", "contains-shellfish"] },
+        { "name": "Mix appetiser for 1", "code": "A14", "desc": "A mixture of spring roll, curry puff, deep fried wonton, money bag, prawn tempura and fish cake. Served with sweet and sour sauce.", "price": 14.5, "tags": ["contains-shellfish", "contains-gluten", "contains-egg"] },
+        { "name": "Prawn spring rolls", "desc": "Deep fried whole prawn wrapped with rice paper. Served with sweet & sour sauce.", "price": 6.5, "available": { "offBy": "2026-08-15" }, "tags": ["contains-shellfish"] },
+        { "name": "Spicy mince chicken", "desc": "Deep fried spicy minced chicken balls. Served with Thai sweet chilli sauce.", "price": 8, "available": { "offBy": "2026-08-15" }, "tags": [] },
+        { "name": "Dim sums", "desc": "A mixture of prawn and pork wrapped with wonton wrapper. Served with sweet black soy sauce.", "price": 10, "available": { "offBy": "2026-08-15" }, "tags": ["contains-shellfish", "contains-gluten", "contains-soy"] },
+        { "name": "Angel wing", "desc": "2 chicken wings stuffed with carrots, cabbage, onion and glass noodles. Served with sweet and sour sauce.", "price": 10, "available": { "offBy": "2026-08-15" }, "tags": [] }
       ]
     },
     {
       "section": "Fried rice",
       "items": [
-        { "name": "Fried rice", "desc": "Fried rice with a selection of meat, mixed seasonal vegetables, egg and spring onions. Topped with cashew nuts.", "price": 14.5, "tags": ["contains-nuts", "contains-egg"] },
-        { "name": "Green curry fried rice", "desc": "Fried rice with a selection of meat, green curry paste, mixed seasonal vegetables, coconut cream and Thai basil.", "price": 15, "tags": [] },
-        { "name": "Nasi goreng", "desc": "Fried rice with a selection of meat, egg, nasi goreng curry powder and spring onions.", "price": 15, "tags": ["contains-egg"] },
-        { "name": "Pineapple fried rice", "desc": "Fried rice with curry powder, egg and raisins. Topped with cashew nuts.", "price": 15, "tags": ["contains-nuts", "contains-egg"] },
-        { "name": "Tom yum fried rice", "desc": "Hot and spicy fried rice with a selection of meat, lemongrass, galangal, kaffir lime leaves and lemon juice.", "price": 15, "tags": [] },
-        { "name": "Spicy fried rice", "desc": "Hot and spicy fried rice with a selection of meat, seasonal vegetables, sliced bamboo and Thai basil.", "price": 15, "tags": [] }
+        { "name": "Fried rice", "code": "R1", "desc": "Fried rice with a choice of meat, mixed with seasonal vegetables and egg.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-egg"] },
+        { "name": "Green curry fried rice", "code": "R2", "desc": "Fried rice with a choice of meat, green curry paste, mixed seasonal vegetables, coconut cream and Thai basil.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": [] },
+        { "name": "Nasi goreng", "code": "R3", "desc": "Fried rice with a choice of meat, egg and nasi goreng curry powder.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-egg"] },
+        { "name": "Tom yum fried rice", "code": "R4", "desc": "Hot and spicy fried rice with a choice of meat, lemongrass, galangal and kaffir lime leaves.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["spicy-2"] },
+        { "name": "Spicy fried rice", "code": "R5", "desc": "Hot and spicy fried rice with a choice of meat, seasonal vegetables, sliced bamboo and Thai basil.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["spicy-2"] },
+        { "name": "Pineapple fried rice", "desc": "Fried rice with curry powder, egg and raisins. Topped with cashew nuts.", "price": 15, "available": { "offBy": "2026-08-15" }, "tags": ["contains-nuts", "contains-egg"] }
       ]
     },
     {
-      "section": "Fried noodle",
+      "section": "Fried noodles",
       "items": [
-        { "name": "Pad thai", "desc": "Stir fried rice noodles with a selection of meat, egg, tamarind sauce and bean sprouts. Served with peanuts and lemon.", "price": 14.5, "tags": ["contains-peanuts", "contains-egg"] },
-        { "name": "Pad see ewe", "desc": "Stir fried large flat noodles with a selection of meat, egg, mixed seasonal vegetables, oyster sauce, soy sauce and sugar.", "price": 14.5, "tags": ["contains-shellfish", "contains-gluten", "contains-egg", "contains-soy"] },
-        { "name": "Pad kee mao", "desc": "Stir fried large flat noodles with a selection of meat, egg, mixed seasonal vegetables, bamboo shoots and basil.", "price": 14.5, "tags": ["contains-egg"] },
-        { "name": "Mee goreng", "desc": "Stir fried yellow noodles with a selection of meat, nasi goreng curry powder and mixed vegetables.", "price": 14.5, "tags": ["contains-gluten"] }
+        { "name": "Pad thai", "code": "N1", "desc": "Stir-fried rice noodles with a choice of meat, egg, tamarind, garlic chive and bean sprouts. Served with peanuts and lemon on side.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-peanuts", "contains-egg"] },
+        { "name": "Pad see ewe", "code": "N2", "desc": "Stir-fried large flat noodles with a choice of meat, egg, mixed seasonal vegetables, oyster sauce, soy sauce and sugar.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-shellfish", "contains-gluten", "contains-egg", "contains-soy"] },
+        { "name": "Pad kee mao", "code": "N3", "desc": "Stir-fried large flat noodles with a choice of meat, egg, mixed seasonal vegetables, bamboo shoots and basil.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-egg"] },
+        { "name": "Mee goreng", "code": "N4", "desc": "Stir-fried yellow noodles with a choice of meat, nasi goreng curry powder and mixed seasonal vegetables. Goes great with our BBQ pork.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-gluten"] }
       ]
     },
     {
-      "section": "Stir fry on rice",
+      "section": "Thai curry",
       "items": [
-        { "name": "Thai chilli stir fry", "desc": "Thai chilli paste stir fried with a selection of meat, Thai basil, garlic, capsicum, long beans and courgette.", "price": 14.5, "tags": [] },
-        { "name": "Gar-paow (basil stir fry)", "desc": "Stir fried basil with a selection of meat, long bean, capsicum and courgette.", "price": 14.5, "tags": [] },
-        { "name": "Cashew nut stir fry", "desc": "Stir fried cashew nuts with a selection of meat, pineapple, spring onion, mixed seasonal vegetables, onion, oyster sauce and capsicum.", "price": 14.5, "tags": ["contains-nuts", "contains-shellfish", "contains-soy"] },
-        { "name": "Sweet and sour stir fry", "desc": "Sweet and sour sauce stir fried with a selection of meat, mixed seasonal vegetables, pineapple, tomatoes, onion and mushrooms.", "price": 14.5, "tags": [] },
-        { "name": "Satay sauce stir fry", "desc": "Peanut sauce stir fried with a selection of meat, seasonal vegetables, onion, capsicum and pineapple.", "price": 14.5, "tags": ["contains-peanuts", "contains-soy"] },
-        { "name": "Ginger stir fry", "desc": "Stir fried with a selection of meat, seasonal vegetables, onion, capsicum and ginger.", "price": 14.5, "tags": [] },
-        { "name": "Sweet Thai chilli stir fry", "desc": "Sweet Thai chilli sauce stir fried with a selection of meat, mixed seasonal vegetables, pineapple, capsicum and onion.", "price": 14.5, "tags": [] },
-        { "name": "Crispy pork with vegetable stir fry", "desc": "Oyster sauce stir fried with bok choy and mixed seasonal vegetables.", "price": 17.5, "tags": ["contains-shellfish", "contains-soy"] }
+        { "name": "Green curry", "code": "C1", "desc": "Green curry paste with coconut cream, seasonal vegetables, Thai herbs and a choice of meat. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": [] },
+        { "name": "Red curry", "code": "C2", "desc": "Red curry paste with coconut cream, seasonal vegetables, Thai herbs and a choice of meat. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": [] },
+        { "name": "Yellow curry", "code": "C3", "desc": "Yellow curry paste with a choice of meat, coconut cream, potatoes and fried onion. Topped with crispy fried shallots. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": [] },
+        { "name": "Panang curry", "code": "C4", "desc": "Panang curry paste with coconut cream, Thai herb, sliced thinned kaffir lime leaves, capsicum, long bean, carrot, zucchini and a choice of meat. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": [] },
+        { "name": "Beef massamun curry", "code": "C5", "desc": "Slow-cooked beef with massamun curry paste, Thai herbs, coconut cream, potatoes and onion. Topped with crispy shallots and cashew nuts. Served with rice.", "price": [
+            { "value": 16, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 28.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-nuts", "contains-peanuts"] },
+        { "name": "Roasted duck curry", "code": "C6", "desc": "Roasted duck with red curry paste, coconut cream, Thai herbs, mixed seasonal vegetables, grapes, tomatoes and pineapple. Served with rice.", "price": [
+            { "value": 16, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 28.5, "recorded": "2026-08-15" }
+          ], "tags": [] },
+        { "name": "Choo chee salmon", "desc": "2 pieces of grilled salmon on stir fried mixed vegetables. Topped with Thai special choo chee curry sauce.", "price": 17.5, "available": { "offBy": "2026-08-15" }, "tags": [] }
       ]
     },
     {
-      "section": "Thai salad on rice",
+      "section": "Special hot dish",
       "items": [
-        { "name": "Thai grilled salad", "desc": "A tangy Thai style spicy salad with a selection of meat, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs.", "price": 16, "tags": [] }
+        { "name": "Sizzling cashew nuts", "code": "H1", "desc": "Stir-fried cashew nuts with a choice of meat, pineapple, spring onions, mixed seasonal vegetables, onion, oyster sauce and capsicum. Served with rice.", "price": 28.5, "tags": ["contains-nuts", "contains-shellfish", "contains-soy"] },
+        { "name": "Sizzling black pepper", "code": "H2", "desc": "Black pepper stir-fried with a choice of meat and seasonal vegetables, onion, oyster sauce and capsicum. Served with rice.", "price": 28.5, "tags": ["contains-shellfish", "contains-soy"] },
+        { "name": "Sizzling house special", "code": "H3", "desc": "Stir-fried with our special sauce, a choice of meat, onion, mixed seasonal vegetables, kaffir lime leaves and Thai chilli paste. Served with rice.", "price": 28.5, "tags": ["spicy-2"] },
+        { "name": "Hot pot tom yum soup", "code": "H4", "desc": "Thai-style hot and spicy soup with herbs, mushrooms, tomatoes, shallots and a choice of meat. Topped with creamy milk. Served with rice.", "price": 28.5, "tags": ["contains-dairy", "spicy-2"] }
       ]
     },
     {
-      "section": "Curry with rice",
+      "section": "Thai salad",
       "items": [
-        { "name": "Green curry", "desc": "Green curry paste with coconut cream, seasonal vegetables, Thai herbs and a selection of meat.", "price": 14.5, "tags": [] },
-        { "name": "Red curry", "desc": "Red curry paste with coconut cream, seasonal vegetables, Thai herbs and a selection of meat.", "price": 14.5, "tags": [] },
-        { "name": "Yellow curry", "desc": "Yellow curry paste with coconut cream, potatoes, fried onion and a selection of meat.", "price": 14.5, "tags": [] },
-        { "name": "Panang curry", "desc": "Panang curry paste with coconut cream, Thai herbs, sliced kaffir lime leaves, capsicum and a selection of meat.", "price": 14.5, "tags": [] },
-        { "name": "Roasted duck curry", "desc": "Roasted duck with red curry paste, coconut cream, Thai herbs, seasonal vegetables, grapes, tomatoes and pineapple.", "price": 16, "tags": [] },
-        { "name": "Beef massamun curry", "desc": "Slow cooked beef with massaman curry paste, Thai herbs, coconut cream, potatoes and onion.", "price": 16, "tags": ["contains-peanuts"] },
-        { "name": "Choo chee salmon", "desc": "2 pieces of grilled salmon on stir fried mixed vegetables. Topped with Thai special choo chee curry sauce.", "price": 17.5, "tags": [] }
+        { "name": "Grilled beef salad", "code": "TS1", "desc": "A tangy Thai-style spicy salad with lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.", "price": 21.5, "tags": ["spicy-2"] },
+        { "name": "Larb kai salad", "code": "TS2", "desc": "A tangy Thai-style spicy salad with minced chicken, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.", "price": 21.5, "tags": ["spicy-2"] },
+        { "name": "Larb duck salad", "code": "TS3", "desc": "A tangy Thai-style spicy salad with roasted duck, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.", "price": 26, "tags": ["spicy-2"] },
+        { "name": "Larb crispy pork", "code": "TS4", "desc": "A tangy Thai-style spicy salad with crispy pork belly, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.", "price": 28.5, "tags": ["spicy-2"] },
+        { "name": "Thai grilled salad", "desc": "A tangy Thai style spicy salad with a selection of meat, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs.", "price": 16, "available": { "offBy": "2026-08-15" }, "tags": [] }
       ]
     },
     {
-      "section": "Soup with rice",
+      "section": "On rice",
       "items": [
-        { "name": "Tom kha", "desc": "Thai coconut milk soup with herbs, mushrooms, tomatoes, carrots, cauliflower, cabbage and a selection of meat.", "price": 15, "tags": [] },
-        { "name": "Tom yum soup", "desc": "Thai style hot and spicy soup with herbs, mushrooms, tomatoes, shallots and a selection of meat. Topped with creamy milk.", "price": 15, "tags": ["contains-dairy"] }
+        { "name": "BBQ pork on rice", "code": "OR1", "desc": "Sliced BBQ pork topped with Thai-style peanut butter sauce. Served with mixed steamed vegetables and Thai sweet soy sauce.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 24, "recorded": "2026-08-15" }
+          ], "tags": ["contains-peanuts", "contains-soy", "contains-gluten"] },
+        { "name": "Roasted duck on rice", "code": "OR2", "desc": "Sliced boneless roasted duck topped with Thai-style peanut butter sauce. Served with mixed steamed vegetables and sweet soy sauce.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 24, "recorded": "2026-08-15" }
+          ], "tags": ["contains-peanuts", "contains-gluten", "contains-soy"] },
+        { "name": "Crispy pork on rice", "code": "OR3", "desc": "Chopped crispy pork belly topped with Thai-style peanut butter sauce. Served with mixed steamed vegetables and sweet soy sauce.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 24, "recorded": "2026-08-15" }
+          ], "tags": ["contains-peanuts", "contains-gluten", "contains-soy"] },
+        { "name": "Grilled chicken on rice", "desc": "Sliced boneless grilled chicken thigh served with steamed vegetables and satay sauce.", "price": 14.5, "available": { "offBy": "2026-08-15" }, "tags": ["contains-peanuts", "contains-soy"] }
       ]
     },
     {
       "section": "Noodle soup",
       "items": [
-        { "name": "Beef noodle soup", "desc": "Slow cooked and rare beef in beef stock broth with rice noodle, bean sprouts, bok choy, spring onion and coriander.", "price": 15, "tags": [] },
-        { "name": "Wonton soup with BBQ pork", "desc": "Steamed wonton and BBQ pork in chicken stock broth with rice noodle, bean sprouts, bok choy, spring onion and coriander.", "price": 15, "tags": ["contains-gluten"] },
-        { "name": "Tom yum noodle soup", "desc": "Rice noodle in Thai style hot and spicy tom yum soup with a selection of meat, lemongrass, galangal, kaffir lime leaves and lemon juice.", "price": 15, "tags": [] },
-        { "name": "Duck noodle soup", "desc": "Roast duck in duck stock broth with rice noodle, bean sprouts, bok choy, spring onion and coriander.", "price": 15, "tags": [] }
+        { "name": "Beef noodle soup", "code": "S1", "desc": "Slow-cooked and rare beef in beef stock broth with rice noodles, bean sprouts, bok choy, spring onion and coriander.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["gf"] },
+        { "name": "Tom yum noodle soup", "code": "S2", "desc": "Rice noodles in Thai style hot and spicy tom yum soup with a selection of meat, lemongrass, galanga, kaffir lime leaves and lemon juice.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["gf", "spicy-2"] },
+        { "name": "Wonton soup with BBQ pork", "code": "S3", "desc": "Steam wontons and BBQ pork in chicken stock broth with bean sprouts, bok choy, spring onion and coriander.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["contains-gluten"] },
+        { "name": "Duck noodle", "code": "S4", "desc": "Roasted duck in duck stock broth with rice noodles, bean sprouts, bok choy, spring, onion and coriander.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 26.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Duck noodle soup” to “Duck noodle”." }
+          ], "tags": [] }
+      ]
+    },
+    {
+      "section": "Thai soup",
+      "items": [
+        { "name": "Tom kha soup", "code": "SP1", "desc": "Thai coconut milk soup with herbs, tomatoes, carrots, mushrooms, cauliflower, cabbage and a choice of meat.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Tom kha” to “Tom kha soup”." }
+          ], "tags": [] },
+        { "name": "Tom yum soup", "code": "SP2", "desc": "Thai-style hot and spicy tom yum soup with a choice of meat, lemongrass, galanga, coriander, onion and kaffir lime leaves.", "price": [
+            { "value": 15, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "tags": ["spicy-2"] }
+      ]
+    },
+    {
+      "section": "Stir fry",
+      "items": [
+        { "name": "Thai chilli", "code": "F1", "desc": "Thai chilli paste stir-fried with a selection of meat, Thai basil, garlic, capsicum, condensed milk, long beans and courgette. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Thai chilli stir fry” to “Thai chilli”." }
+          ], "tags": ["contains-dairy", "spicy-2"] },
+        { "name": "Thai basil", "code": "F2", "desc": "Stir-fried basil with a selection of meat, long bean, carrot, bamboo shoot and capsicum. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Gar-paow (basil stir fry)” to “Thai basil”." }
+          ], "tags": [] },
+        { "name": "The cashew nut", "code": "F3", "desc": "Stir-fried cashew nuts with a selection of meat, pineapple, mixed seasonal vegetables, onion, oyster sauce and capsicum. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Cashew nut stir fry” to “The cashew nut”." }
+          ], "tags": ["contains-nuts", "contains-shellfish", "contains-soy"] },
+        { "name": "Sweet and sour", "code": "F4", "desc": "Sweet and sour sauce stir-fried with a selection of meat, mixed seasonal vegetables, pineapple, tomatoes, onion and mushrooms. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Sweet and sour stir fry” to “Sweet and sour”." }
+          ], "tags": [] },
+        { "name": "Satay sauce", "code": "F5", "desc": "Peanut sauce stir-fried with a selection of meat, seasonal vegetables, onion, capsicum and pineapple. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Satay sauce stir fry” to “Satay sauce”." }
+          ], "tags": ["contains-peanuts", "contains-soy"] },
+        { "name": "Ginger and vegetable", "code": "F6", "desc": "Fresh ginger stir-fried with a selection of meat and seasonal vegetables. Served with rice.", "price": [
+            { "value": 14.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 21.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Ginger stir fry” to “Ginger and vegetable”." }
+          ], "tags": [] },
+        { "name": "Crispy pork stir-fry vegetable", "code": "F7", "desc": "Oyster sauce stir-fried with bok choy and mixed seasonal vegetables. Topped with crispy pork. Served with rice.", "price": [
+            { "value": 17.5, "recorded": "2026-07-06", "method": "paper-menu" },
+            { "value": 28.5, "recorded": "2026-08-15" }
+          ], "revisions": [
+            { "recorded": "2026-08-15", "change": "Menu renamed it from “Crispy pork with vegetable stir fry” to “Crispy pork stir-fry vegetable”." }
+          ], "tags": ["contains-shellfish", "contains-soy"] },
+        { "name": "Roasted duck stir-fry vegetable", "code": "F8", "desc": "Oyster sauce stir-fried with bok choy and mixed seasonal vegetables. Topped with roasted duck. Served with rice.", "price": 28.5, "tags": ["contains-shellfish", "contains-soy"] },
+        { "name": "Sweet Thai chilli stir fry", "desc": "Sweet Thai chilli sauce stir fried with a selection of meat, mixed seasonal vegetables, pineapple, capsicum and onion.", "price": 14.5, "available": { "offBy": "2026-08-15" }, "tags": [] }
+      ]
+    },
+    {
+      "section": "Meat choices",
+      "items": [
+        { "name": "Chicken, pork, beef or vegetable with tofu", "desc": "The standard choice of meat — no charge.", "price": 0, "tags": ["contains-soy"] },
+        { "name": "Upgrade to combination, duck, crispy pork, BBQ pork, prawn or seafood", "desc": null, "price": 4, "tags": ["contains-shellfish"] },
+        { "name": "Extra chicken, pork, beef or vegetable with tofu", "desc": null, "price": 4, "tags": ["contains-soy"] },
+        { "name": "Extra combination, crispy pork, BBQ pork, prawn or seafood", "desc": null, "price": 6.5, "tags": ["contains-shellfish"] }
+      ]
+    },
+    {
+      "section": "Side dish",
+      "items": [
+        { "name": "Jasmine rice", "desc": null, "price": 3, "tags": ["v", "vg", "gf"] },
+        { "name": "Coconut rice", "desc": null, "price": 3.5, "tags": ["v", "vg", "gf"] },
+        { "name": "Steam noodle", "desc": null, "price": 3.5, "tags": ["v", "vg"] },
+        { "name": "Steam veges", "desc": null, "price": 3.5, "tags": ["v", "vg"] }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "items": [
+        { "name": "Thai iced coffee", "desc": "Homemade.", "price": 7, "tags": ["v", "contains-dairy"] },
+        { "name": "Thai lemon iced tea", "desc": "Homemade.", "price": 7, "tags": ["v", "vg"] },
+        { "name": "Thai iced milk tea", "desc": "Homemade.", "price": 7, "tags": ["v", "contains-dairy"] },
+        { "name": "Apple juice", "desc": null, "price": 5.5, "tags": ["v", "vg"] },
+        { "name": "Orange juice", "desc": null, "price": 5.5, "tags": ["v", "vg"] },
+        { "name": "Pineapple juice", "desc": null, "price": 5.5, "tags": ["v", "vg"] },
+        { "name": "Coconut drink", "desc": null, "price": 5.5, "tags": ["v", "vg"] },
+        { "name": "Pot of jasmine tea", "desc": null, "price": 5, "tags": ["v", "vg"] },
+        { "name": "Pot of green tea", "desc": null, "price": 5, "tags": ["v", "vg"] },
+        { "name": "Coke, Coke No Sugar, Sprite or Fanta", "desc": null, "price": 4, "tags": ["v", "vg"] },
+        { "name": "Lemon lime bitters", "desc": null, "price": 4.5, "tags": ["v", "vg"] },
+        { "name": "Ginger beer", "desc": null, "price": 4.5, "tags": ["v", "vg"] }
       ]
     }
   ]

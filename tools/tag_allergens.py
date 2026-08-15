@@ -102,7 +102,11 @@ RULES = [
      r"bami\s?goreng|chow\s?fun)\b", None),
     ("contains-gluten", "DERIVED", "soy sauce is brewed with wheat",
      r"\b(soy\s?sauce|soya\s?sauce|teriyaki|hoisin)\b", None),
-    ("contains-gluten", "DERIVED", "beer is a barley product", r"\b(beer|lager|ale|stout|pilsner)\b", None),
+    # Ginger beer and root beer are soft drinks, not brewed from barley — the
+    # word "beer" in a drinks list is not evidence of gluten. Found by the
+    # Thai Tara refresh (2026-08-15), whose drinks list carries both.
+    ("contains-gluten", "DERIVED", "beer is a barley product", r"\b(beer|lager|ale|stout|pilsner)\b",
+     r"\b(ginger|root|sarsaparilla)\s?beer\b"),
 
     # --- dairy --------------------------------------------------------
     # "butter" must not fire on peanut/nut butter; "cream" must not fire on

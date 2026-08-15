@@ -110,6 +110,20 @@ function buildDialog() {
           "ever fetches is its own pages."
       ),
 
+      // Currency is stated once, plainly, in the place someone goes when they
+      // want to know something ABOUT the site rather than about a venue. It is
+      // deliberately not appended to every price — 1,200 dishes each carrying
+      // "NZD" would cost every reader legibility to answer a question almost
+      // none of them are asking. The per-venue ⓘ carries the same sentence for
+      // whoever is asking it while looking at the prices themselves (ADR 0037).
+      group(
+        "Prices",
+        "All prices on this site are in New Zealand dollars (NZD), exactly as " +
+          "the venue’s own menu shows them. Each menu page says when we last " +
+          "read that menu, and how.",
+        "Prices change without notice. Confirm with the place when you order."
+      ),
+
       group(
         "Works offline",
         "Once you’ve visited, Faves keeps working in flight mode — menus and " +
