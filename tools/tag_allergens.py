@@ -118,7 +118,11 @@ RULES = [
     ("contains-dairy", "STATED", "names a dairy product",
      r"\b(cheese|cheesy|butter|buttermilk|creams?|milks?|milkshakes?|yoghurt|yogurt|"
      r"mozzarella|parmesan|feta|halloumi|paneer|camembert|brie|mascarpone|ricotta|ghee)\b",
-     NON_DAIRY := r"\b(peanut|nut|almond|cashew|coconut|soya?|oat|rice)\s?(butter|milk|cream)\b"),
+     # Plant "yoghurt" is as common on a brunch menu as plant milk, and the
+     # bare word is what the dairy rule matches — Southern Cross's House
+     # Granola is served with coconut yoghurt and is not a dairy dish.
+     NON_DAIRY := r"\b(peanut|nut|almond|cashew|coconut|soya?|oat|rice)\s?"
+     r"(butter|milk|cream|yoghurt|yogurt)\b"),
     ("contains-dairy", "DERIVED", "an espresso milk drink",
      r"\b(latte|cappuccino|mocha|flat\s?white|macchiato)\b", NON_DAIRY),
     ("contains-dairy", "DERIVED", "the sauce is cream- or butter-based",
