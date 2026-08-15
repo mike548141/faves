@@ -12,6 +12,7 @@
   "lat": -41.22509,
   "lng": 174.80705,
   "services": [
+    "dine-in",
     "takeaway"
   ],
   "phone": "+64 4 478 4780",
@@ -23,53 +24,240 @@
   "hours": {
     "mon": [
       [
-        "10:30",
+        "11:00",
         "21:00"
       ]
     ],
     "tue": [
       [
-        "10:30",
+        "11:00",
         "21:00"
       ]
     ],
     "wed": [
       [
-        "10:30",
+        "11:00",
         "21:00"
       ]
     ],
     "thu": [
       [
-        "10:30",
-        "21:00"
+        "11:00",
+        "22:00"
       ]
     ],
     "fri": [
       [
-        "10:30",
-        "21:30"
+        "11:00",
+        "22:00"
       ]
     ],
     "sat": [
       [
-        "10:30",
-        "21:30"
+        "11:00",
+        "22:00"
       ]
     ],
     "sun": [
       [
-        "10:30",
+        "11:00",
         "21:00"
       ]
     ]
   },
-  "vibe": [],
-  "picks": [],
-  "verified": null,
+  "vibe": [
+    "cheap-and-cheerful"
+  ],
+  "picks": [
+    "Chicken kebab",
+    "Mixed iskender",
+    "Chicken shawarmama box"
+  ],
+  "verified": "2026-08-15",
+  "verifiedBy": "in-store",
   "lifecycle": {
     "added": "2026-07-06"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Kebabs",
+      "items": [
+        { "name": "Chicken kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["contains-sesame"] },
+        { "name": "Lamb kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["contains-sesame"] },
+        { "name": "Mixed kebab", "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["contains-sesame"] },
+        { "name": "Falafel kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["v", "contains-sesame"] },
+        { "name": "Muciver kebab", "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["v", "contains-sesame"] },
+        { "name": "Mix vege kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["v", "contains-sesame"] },
+        { "name": "Halloumi kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Gluten free kebab", "desc": "On a gluten free wrap, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["gf", "contains-sesame"] },
+        { "name": "Lamb shish kebab", "desc": "Grilled lamb skewer, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 19.9, "tags": ["contains-sesame"] },
+        { "name": "Chicken shish kebab", "desc": "Grilled chicken skewer, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 19.9, "tags": ["contains-sesame"] },
+        { "name": "Mixed shish kebab", "desc": "Grilled lamb and chicken skewers, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 19.9, "tags": ["contains-sesame"] }
+      ]
+    },
+    {
+      "section": "Mixed kebabs",
+      "items": [
+        { "name": "Chicken & falafel kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] },
+        { "name": "Lamb & falafel kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] },
+        { "name": "Mixed & falafel kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] },
+        { "name": "Chicken & muciver kebab", "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] },
+        { "name": "Lamb & muciver kebab", "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] },
+        { "name": "Mixed & muciver kebab", "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] },
+        { "name": "Chicken & halloumi kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 19.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Lamb & halloumi kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 19.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Mixed & halloumi kebab", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 19.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Chicken gyrus", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] },
+        { "name": "Lamb gyrus", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] },
+        { "name": "Mix gyrus", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 18.5, "tags": ["contains-sesame"] }
+      ]
+    },
+    {
+      "section": "Iskender",
+      "items": [
+        { "name": "Chicken iskender", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 19.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Lamb iskender", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 19.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Mixed iskender", "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 19.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Falafel iskender", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 19.5, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Muciver iskender", "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 19.5, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Mix vege iskender", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 19.5, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Halloumi iskender", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 19.5, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Lamb shish iskender", "desc": "Grilled lamb skewer, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 23.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Chicken shish iskender", "desc": "Grilled chicken skewer, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 23.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Mixed shish iskender", "desc": "Grilled lamb and chicken skewers, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 23.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Mixed grill iskender", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.", "price": 26.5, "tags": ["contains-dairy", "contains-sesame"] }
+      ]
+    },
+    {
+      "section": "Salad",
+      "items": [
+        { "name": "Chicken salad", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 18.9, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Lamb salad", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 18.9, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Mixed salad", "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 18.9, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Falafel salad", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 18.9, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Muciver salad", "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 18.9, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Mix vege salad", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 18.9, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Halloumi salad", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 18.9, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Lamb shish salad", "desc": "Grilled lamb skewer, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 21.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Chicken shish salad", "desc": "Grilled chicken skewer, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 21.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Mixed shish salad", "desc": "Grilled lamb and chicken skewers, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 21.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Mixed grill salad", "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.", "price": 25.5, "tags": ["contains-dairy", "contains-sesame"] }
+      ]
+    },
+    {
+      "section": "Shawarmama box",
+      "items": [
+        { "name": "Chicken shawarmama box", "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.", "price": 22.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Lamb shawarmama box", "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.", "price": 22.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Mixed shawarmama box", "desc": "Chicken and lamb, with lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.", "price": 22.5, "tags": ["contains-dairy", "contains-sesame"] },
+        { "name": "Falafel shawarmama box", "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.", "price": 22.5, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Muciver shawarmama box", "desc": "Zucchini fritter, with lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.", "price": 22.5, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Mix vege shawarmama box", "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.", "price": 22.5, "tags": ["v", "contains-dairy", "contains-sesame"] },
+        { "name": "Halloumi shawarmama box", "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.", "price": 22.5, "tags": ["v", "contains-dairy", "contains-sesame"] }
+      ]
+    },
+    {
+      "section": "Greek pitas",
+      "items": [
+        { "name": "Chicken Greek pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 15.5, "tags": ["contains-sesame", "contains-gluten"] },
+        { "name": "Lamb Greek pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 15.5, "tags": ["contains-sesame", "contains-gluten"] },
+        { "name": "Mixed Greek pita", "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 15.5, "tags": ["contains-sesame", "contains-gluten"] },
+        { "name": "Falafel Greek pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 15.5, "tags": ["v", "contains-sesame", "contains-gluten"] },
+        { "name": "Muciver Greek pita", "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 15.5, "tags": ["v", "contains-sesame", "contains-gluten"] },
+        { "name": "Mix vege Greek pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 15.5, "tags": ["v", "contains-sesame", "contains-gluten"] },
+        { "name": "Halloumi Greek pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 15.5, "tags": ["v", "contains-dairy", "contains-sesame", "contains-gluten"] }
+      ]
+    },
+    {
+      "section": "Turkish pita",
+      "items": [
+        { "name": "Chicken Turkish pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["contains-sesame", "contains-gluten"] },
+        { "name": "Lamb Turkish pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["contains-sesame", "contains-gluten"] },
+        { "name": "Mixed Turkish pita", "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["contains-sesame", "contains-gluten"] },
+        { "name": "Falafel Turkish pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["v", "contains-sesame", "contains-gluten"] },
+        { "name": "Muciver Turkish pita", "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["v", "contains-sesame", "contains-gluten"] },
+        { "name": "Mix vege Turkish pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["v", "contains-sesame", "contains-gluten"] },
+        { "name": "Halloumi Turkish pita", "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.", "price": 16.5, "tags": ["v", "contains-dairy", "contains-sesame", "contains-gluten"] }
+      ]
+    },
+    {
+      "section": "Meat on chips",
+      "items": [
+        { "name": "Chicken on chips", "desc": "Comes with cheese and sauce only.", "price": 18.5, "tags": ["contains-dairy"] },
+        { "name": "Lamb on chips", "desc": "Comes with cheese and sauce only.", "price": 18.5, "tags": ["contains-dairy"] },
+        { "name": "Mixed on chips", "desc": "Chicken and lamb. Comes with cheese and sauce only.", "price": 18.5, "tags": ["contains-dairy"] },
+        { "name": "Falafel on chips", "desc": "Comes with cheese and sauce only.", "price": 18.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Muciver on chips", "desc": "Zucchini fritter. Comes with cheese and sauce only.", "price": 18.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Mix vege on chips", "desc": "Comes with cheese and sauce only.", "price": 18.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Halloumi on chips", "desc": "Comes with cheese and sauce only.", "price": 18.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Add salad", "desc": "Added to meat on chips.", "price": 3.5, "tags": ["v"] },
+        { "name": "Add rice", "desc": "Added to meat on chips.", "price": 3.5, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Meat on rice",
+      "items": [
+        { "name": "Chicken on rice", "desc": null, "price": 18.5, "tags": [] },
+        { "name": "Lamb on rice", "desc": null, "price": 18.5, "tags": [] },
+        { "name": "Mixed on rice", "desc": "Chicken and lamb.", "price": 18.5, "tags": [] },
+        { "name": "Falafel on rice", "desc": null, "price": 18.5, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Burgers",
+      "items": [
+        { "name": "Chicken burger", "desc": null, "price": 13.5, "tags": ["contains-gluten"] },
+        { "name": "Lamb burger", "desc": null, "price": 13.5, "tags": ["contains-gluten"] },
+        { "name": "Mixed burger", "desc": "Chicken and lamb.", "price": 13.5, "tags": ["contains-gluten"] },
+        { "name": "Falafel burger", "desc": null, "price": 13.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Muciver burger", "desc": "Zucchini fritter.", "price": 13.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Mix vege burger", "desc": null, "price": 13.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Halloumi burger", "desc": null, "price": 13.5, "tags": ["v", "contains-dairy", "contains-gluten"] }
+      ]
+    },
+    {
+      "section": "Combos",
+      "items": [
+        { "name": "Kebab combo #1", "desc": "Your choice of kebab, chips and a 330ml Coca-Cola drink.", "price": 22.5, "tags": ["contains-sesame"] },
+        { "name": "Kebab combo #2", "desc": "Your choice of kebab, chips and a 600ml Coca-Cola drink.", "price": 24.5, "tags": ["contains-sesame"] },
+        { "name": "Combo upgrade", "desc": "Added to a kebab, mixed kebab, iskender or salad.", "price": 6, "tags": [] }
+      ]
+    },
+    {
+      "section": "Sides",
+      "items": [
+        { "name": "Fries", "desc": null, "price": 6.5, "tags": ["v"] },
+        { "name": "Garlic bread", "desc": null, "price": 6.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Loaded chips", "desc": null, "price": 12.5, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Sweets",
+      "items": [
+        { "name": "Baklava", "desc": null, "price": 6.5, "tags": ["v", "contains-nuts"] },
+        { "name": "Tiramisu", "desc": null, "price": 8.5, "tags": ["v", "contains-dairy", "contains-egg"] },
+        { "name": "Black forest", "desc": null, "price": 8.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Turkish delight", "desc": null, "price": 5, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "items": [
+        { "name": "Ayran", "desc": "Yoghurt drink.", "price": 4, "tags": ["v", "contains-dairy"] },
+        { "name": "Apple tea", "desc": null, "price": 4, "tags": ["v"] },
+        { "name": "Turkish coffee", "desc": null, "price": 5, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Extras",
+      "items": [
+        { "name": "Extra meat", "desc": null, "price": 6, "tags": [] },
+        { "name": "Extra falafel", "desc": "1 piece.", "price": 3, "tags": ["v"] },
+        { "name": "Extra mucver", "desc": "Zucchini fritter, 1 piece.", "price": 3, "tags": ["v"] },
+        { "name": "Extra halloumi", "desc": "1 piece.", "price": 3, "tags": ["v", "contains-dairy"] },
+        { "name": "Extra cheese", "desc": null, "price": 1.5, "tags": ["v", "contains-dairy"] }
+      ]
+    }
+  ]
 }
