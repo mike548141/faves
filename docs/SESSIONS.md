@@ -2482,3 +2482,41 @@ learned but never written down is a rule the next session cannot follow.
 `pathscan` **clean**, whole-repo `secretscan`/`leakscan`/`linkscan`/`datescan`/
 `wrapscan`/`spellscan`/`licenscan` all clean. CI green on every push. Live
 `sw.js` matches `main` (`2026-08-15.2`), so the deploy is confirmed, not assumed.
+
+### Addendum, same session — three owner rulings taken live
+
+**ADR 0025's duplicate: both stay.** Renumbering an accepted record would break
+24 inbound references plus any external link on a public repo — dearer than the
+oddity. Each file gained a header note; `0025` is now permanently ambiguous and
+ADRs are cited **by file path, never by bare number**.
+🔎 **The root cause was the index, not the number.** The allergen record had
+never been added to the index in `decisions/README.md` — the one place a
+duplicate number is visible — so nothing *could* have caught it. That entry now
+exists, and the README carries the rule it earned: **add the index entry in the
+same commit as the record.** An unindexed ADR is invisible to the next person
+allocating a number.
+
+**`plainscan`: accepted ADRs exempted.** They held the largest single block of
+findings, and "never edit an accepted one" means not one could ever be fixed —
+the same definition atelier used to exempt records, and the same way `pathscan`
+went decorative here. The cost is stated rather than hidden: **new ADRs are no
+longer checked at commit time.** Accepted because the reply plane has no scoping
+and scans every reply an agent writes, including the prose that becomes a new
+ADR — the check moves to where the fix is possible.
+
+🔎 **The obvious glob was the wrong one, and the wrong one looked better.**
+`docs/decisions` exempts the whole directory *including* `README.md` — but that
+is the live index, rewritten whenever a record lands, so its prose **can** be
+fixed and the ruling's own reasoning does not cover it. Correct glob:
+`docs/decisions/0*.md`. Measured: **266 findings with the loose glob, 302 with
+the correct one.** The number that flattered the work was the wrong number.
+
+**The 35-word sentence cap: left alone, nothing swept.** Atelier's own docstring
+calls it "a house call, not a published standard". Rewriting live docs against
+an unratified threshold risks flattening meaning for no reader gain. P3/P4 stay
+advisory.
+
+**Where `plainscan` landed: 1177 on 2026-08-09 → 302 on 2026-08-15**, and
+every one of the 302 sits in live, rewritable prose. None is in the
+unfixable class. That is the difference between a scanner that can still be
+read and one that cannot.
