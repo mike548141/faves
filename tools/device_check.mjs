@@ -23,7 +23,8 @@
 // dev tooling, like tools/serve.py, and touches no shipped artefact. Node is a
 // measuring instrument here, never a build or runtime dependency (ADR 0001), so
 // it speaks the Chrome DevTools Protocol over the platform's own WebSocket — no
-// npm packages, no puppeteer, nothing to install.
+// npm packages, no puppeteer, nothing to install. That machinery now lives in
+// tools/lib/browser.mjs, shared with tools/cook_check.mjs.
 //
 // THE FRESH PROFILE IS LOAD-BEARING. The service worker will happily serve the
 // previous run's assets, and a hard reload does not bust it — so every run gets
@@ -31,13 +32,19 @@
 // localStorage, no cache) and deletes it afterwards. That is the same trick the
 // owner would use by hand; automating it is most of the value here.
 
-import { spawn } from "node:child_process";
-import { createServer } from "node:http";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
-import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { extname, join, normalize, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  Cdp,
+  Report,
+  createDriver,
+  launchChrome,
+  startServer,
+  stopChrome,
+  until,
+} from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -50,10 +57,6 @@ const SEED_RATING = 4;
 // Neutral display names — this repo is publication-bound, so the fixture never
 // carries a real person's name (CLAUDE.md, no personal data).
 const GUEST_NAME = "Guest";
-
-const CHROME =
-  process.env.FAVES_CHROME ||
-  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 
 const HELP = `Faves device check — verify the live allergen re-highlight in a real browser.
 
@@ -97,198 +100,6 @@ function parseArgs(argv) {
   return opts;
 }
 
-// --- A static server for site/ -----------------------------------------
-// Same shape as tools/serve.py (no-store, correct module MIME types) but
-// in-process, so the harness owns its lifetime and can pick a free port.
-
-const MIME = {
-  ".html": "text/html; charset=utf-8",
-  ".js": "text/javascript",
-  ".mjs": "text/javascript",
-  ".css": "text/css; charset=utf-8",
-  ".json": "application/json",
-  ".webmanifest": "application/manifest+json",
-  ".svg": "image/svg+xml",
-  ".png": "image/png",
-  ".jpg": "image/jpeg",
-  ".webp": "image/webp",
-  ".ico": "image/x-icon",
-  ".woff2": "font/woff2",
-  ".txt": "text/plain; charset=utf-8",
-};
-
-function startServer(port) {
-  const server = createServer(async (req, res) => {
-    const path = decodeURIComponent(new URL(req.url, "http://x").pathname);
-    let file = normalize(join(SITE, path));
-    if (!file.startsWith(SITE)) {
-      res.writeHead(403).end("forbidden");
-      return;
-    }
-    if (path.endsWith("/")) file = join(file, "index.html");
-    try {
-      const body = await readFile(file);
-      res.writeHead(200, {
-        "Content-Type": MIME[extname(file)] || "application/octet-stream",
-        // No caching, so a run always measures the working tree.
-        "Cache-Control": "no-store, must-revalidate",
-      });
-      res.end(body);
-    } catch {
-      res.writeHead(404, { "Content-Type": "text/plain" }).end("not found");
-    }
-  });
-  return new Promise((res, rej) => {
-    server.once("error", rej);
-    server.listen(port, "127.0.0.1", () => res({ server, port: server.address().port }));
-  });
-}
-
-// --- Chrome DevTools Protocol over a raw WebSocket ----------------------
-// Node 24 ships a global WebSocket, which is the whole client: one socket to the
-// browser, flat sessions (`sessionId`) for the page target.
-
-class Cdp {
-  #ws;
-  #next = 1;
-  #pending = new Map();
-  #handlers = new Map();
-
-  constructor(ws) {
-    this.#ws = ws;
-    ws.addEventListener("message", (ev) => this.#receive(String(ev.data)));
-    ws.addEventListener("close", () => {
-      for (const { reject } of this.#pending.values()) {
-        reject(new Error("devtools connection closed"));
-      }
-      this.#pending.clear();
-    });
-  }
-
-  static async connect(url) {
-    const ws = new WebSocket(url);
-    await new Promise((res, rej) => {
-      ws.addEventListener("open", res, { once: true });
-      ws.addEventListener("error", () => rej(new Error(`cannot reach devtools at ${url}`)), {
-        once: true,
-      });
-    });
-    return new Cdp(ws);
-  }
-
-  #receive(raw) {
-    const msg = JSON.parse(raw);
-    if (msg.id != null) {
-      const entry = this.#pending.get(msg.id);
-      if (!entry) return;
-      this.#pending.delete(msg.id);
-      clearTimeout(entry.timer);
-      if (msg.error) entry.reject(new Error(`${entry.method}: ${msg.error.message}`));
-      else entry.resolve(msg.result);
-      return;
-    }
-    for (const fn of this.#handlers.get(msg.method) ?? []) fn(msg.params, msg.sessionId);
-  }
-
-  send(method, params = {}, sessionId) {
-    const id = this.#next++;
-    const payload = { id, method, params };
-    if (sessionId) payload.sessionId = sessionId;
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
-        this.#pending.delete(id);
-        reject(new Error(`${method} timed out after 30s`));
-      }, 30_000);
-      this.#pending.set(id, { resolve, reject, timer, method });
-      this.#ws.send(JSON.stringify(payload));
-    });
-  }
-
-  on(method, fn) {
-    if (!this.#handlers.has(method)) this.#handlers.set(method, []);
-    this.#handlers.get(method).push(fn);
-  }
-
-  close() {
-    try {
-      this.#ws.close();
-    } catch {
-      /* already gone — nothing to close */
-    }
-  }
-}
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-/** Poll `fn` until it returns truthy, or give up. Returns the truthy value. */
-async function until(fn, { label, timeout = 15_000, step = 100 }) {
-  const deadline = Date.now() + timeout;
-  let last;
-  for (;;) {
-    last = await fn();
-    if (last) return last;
-    if (Date.now() > deadline) throw new Error(`timed out waiting for ${label}`);
-    await sleep(step);
-  }
-}
-
-// --- Chrome ------------------------------------------------------------
-
-async function launchChrome({ profileDir, headed }) {
-  if (!existsSync(CHROME)) {
-    throw new Error(`Google Chrome not found at ${CHROME} (set FAVES_CHROME)`);
-  }
-  const args = [
-    // Port 0 → Chrome picks a free one and writes it to DevToolsActivePort, so
-    // two runs (or a stray browser) can never collide on a fixed port.
-    "--remote-debugging-port=0",
-    `--user-data-dir=${profileDir}`,
-    "--no-first-run",
-    "--no-default-browser-check",
-    "--disable-extensions",
-    "--disable-background-networking",
-    "--disable-component-update",
-    "--window-size=390,844",
-    "about:blank",
-  ];
-  if (!headed) args.unshift("--headless=new", "--disable-gpu");
-  const proc = spawn(CHROME, args, { stdio: ["ignore", "ignore", "pipe"] });
-  let stderr = "";
-  proc.stderr.on("data", (d) => {
-    stderr += d;
-  });
-  proc.on("exit", (code) => {
-    if (code !== 0 && code !== null) {
-      process.stderr.write(`chrome exited (${code})\n${stderr.slice(-2000)}\n`);
-    }
-  });
-
-  const portFile = join(profileDir, "DevToolsActivePort");
-  const contents = await until(
-    async () => {
-      try {
-        const text = await readFile(portFile, "utf8");
-        return text.includes("\n") ? text : null;
-      } catch {
-        return null;
-      }
-    },
-    { label: "Chrome's DevToolsActivePort", timeout: 20_000 }
-  );
-  const [port, path] = contents.trim().split("\n");
-  return { proc, wsUrl: `ws://127.0.0.1:${port}${path}` };
-}
-
-async function stopChrome(proc) {
-  if (!proc || proc.exitCode != null) return;
-  proc.kill("SIGTERM");
-  const gone = await Promise.race([
-    new Promise((r) => proc.once("exit", () => r(true))),
-    sleep(3000).then(() => false),
-  ]);
-  if (!gone) proc.kill("SIGKILL");
-}
-
 // --- The page under test ------------------------------------------------
 
 /** Everything one assertion needs, read off the live DOM in a single hop. */
@@ -327,29 +138,6 @@ function seedExpr(venueId, venueName, dishName) {
 
 // --- Runner -------------------------------------------------------------
 
-class Report {
-  #rows = [];
-  #verbose;
-  constructor(verbose) {
-    this.#verbose = verbose;
-  }
-  step(msg) {
-    if (this.#verbose) console.log(`   · ${msg}`);
-  }
-  check(name, ok, detail = "") {
-    this.#rows.push({ name, ok });
-    const mark = ok ? "PASS" : "FAIL";
-    console.log(`${mark}  ${name}${detail ? `\n        ${detail}` : ""}`);
-    return ok;
-  }
-  get failed() {
-    return this.#rows.filter((r) => !r.ok).length;
-  }
-  get passed() {
-    return this.#rows.filter((r) => r.ok).length;
-  }
-}
-
 const same = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
 
 async function run(opts) {
@@ -365,7 +153,7 @@ async function run(opts) {
     throw new Error(`${opts.id} has no ${ALLERGEN.key} dish — pick another --id`);
   }
 
-  const { server, port } = await startServer(opts.port);
+  const { server, port } = await startServer(opts.port, SITE);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-device-check-"));
   let chrome = null;
   let cdp = null;
@@ -408,47 +196,7 @@ async function run(opts) {
       sessionId
     );
 
-    const evalPage = async (expression) => {
-      const r = await cdp.send(
-        "Runtime.evaluate",
-        { expression, returnByValue: true, awaitPromise: true },
-        sessionId
-      );
-      if (r.exceptionDetails) {
-        const e = r.exceptionDetails;
-        throw new Error(`page eval failed: ${e.exception?.description || e.text}`);
-      }
-      return r.result.value;
-    };
-
-    // Two frames, so a render triggered by the click has painted before we look.
-    const settle = () =>
-      evalPage("new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))");
-
-    const click = async (selector, text = null) => {
-      const box = await evalPage(`(() => {
-        const els = [...document.querySelectorAll(${JSON.stringify(selector)})];
-        const want = ${JSON.stringify(text)};
-        const el = want == null ? els[0] : els.find((e) => e.textContent.includes(want));
-        if (!el) return null;
-        el.scrollIntoView({ block: "center", inline: "center" });
-        const r = el.getBoundingClientRect();
-        return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height };
-      })()`);
-      const what = `${selector}${text ? ` containing "${text}"` : ""}`;
-      if (!box) throw new Error(`no element matching ${what}`);
-      if (box.w < 1 || box.h < 1) throw new Error(`${what} has no clickable box`);
-      const base = { x: box.x, y: box.y, button: "left", clickCount: 1 };
-      await cdp.send("Input.dispatchMouseEvent", { ...base, type: "mouseMoved" }, sessionId);
-      await cdp.send(
-        "Input.dispatchMouseEvent",
-        { ...base, type: "mousePressed", buttons: 1 },
-        sessionId
-      );
-      await cdp.send("Input.dispatchMouseEvent", { ...base, type: "mouseReleased" }, sessionId);
-      report.step(`clicked ${what}`);
-      await settle();
-    };
+    const { evalPage, settle, click } = createDriver(cdp, sessionId, (m) => report.step(m));
 
     const snap = () => evalPage(snapshotExpr(seedDish.name));
 

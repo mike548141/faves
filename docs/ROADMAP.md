@@ -1539,12 +1539,26 @@ problem. Sequence the content with the build or the feature ships blank.
   checklists/TTS (17e). **Not verified:** that the screen genuinely stays awake
   on a real iPhone — the lifecycle is proved against a fake and in headless
   Chrome, the platform behaviour needs a device.
-  - [~] 🚩 **Still worth doing, found while building:** cook mode has no
-    real-browser regression guard of its own. `device_check.mjs` is scoped to
-    the allergen re-apply, and the 28-assertion Chrome run that caught two
-    wake-lock leaks was a throwaway script. Either widen that tool's remit or
-    give cook mode a sibling — the leaks it found were invisible to
-    `node --test`. **CLAIMED 2026-08-15 05:05 UTC** (wt: `faves-cook-guard`).
+  - ✅ **The real-browser regression guard — done 2026-08-15** (ADR 0039,
+    `tools/cook_check.mjs`, **35 assertions**). Answered as a **sibling**, not a
+    widening: the allergen safety verdict keeps its own line and its own exit
+    code, and the CDP harness moved to `tools/lib/browser.mjs` so there is only
+    one of it (`device_check.mjs` unchanged at 19/19). The wake lock is watched
+    by **instrumenting the real API** — headless Chrome 151 grants genuine
+    sentinels — and the guard was **proven to bite** by three deliberate breaks
+    in `cook.js`, each reverted. Three gaps are declared rather than faked, in
+    the tool's own header: that the screen truly stays on (needs a phone), leak
+    (a)'s original form (this Chrome always releases on hide first, so removing
+    that release is invisible here), and release on document teardown.
+    - 🚩 **Found by the guard, not fixed — a design call for the owner.**
+      Tapping **Back** until step 1 disables the Back button while it holds
+      focus; Chrome then drops focus to `<body>`, outside the dialog, and the
+      arrow keys, Home and End stop working until something inside is focused
+      again. ADR 0034 promises "focus stays on Back/Next so repeated taps keep
+      working" — at the lower boundary it does not. Where focus should go
+      instead (the stage? Next?) is the decision; ADR 0034 rejected moving
+      focus to the step on every change, so this is not a one-liner. Marked
+      `#!###` in `cook_check.mjs`.
 - [ ] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
   ordered by how well they fit a zero-dependency offline app:
   - **Tick off ingredients and steps as you go** — a checklist with state that

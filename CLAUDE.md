@@ -119,6 +119,7 @@ python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/check_visibility.py # the visibility bullet above is still true
 node --test                   # JS unit tests (pure logic); no npm install needed
 node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
+node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)
 ```
 
 Exercise the change in a real browser at mobile width. JSON data must
@@ -132,6 +133,16 @@ UI on a menu page — flag an allergen, switch profile — asserting the
 warnings, hearts and ratings re-apply live with no reload. It is dev
 tooling only; nothing it needs ships in `site/`. Run it after touching
 `menu.js`, `dietary.js`, `settings*.js` or `profiles.js`.
+
+`cook_check.mjs` is its sibling for cook mode (ADR 0039), on the same
+harness (`tools/lib/browser.mjs`): it opens a real recipe, steps through
+it, works every exit path, and watches the **real** `navigator.wakeLock`
+— instrumented before page scripts run, so a leaked lock is counted, not
+inferred. It exists because 19 unit tests against a fake wake lock still
+let two leaks ship (ADR 0034). Its header names the three things a
+headless browser cannot show; read that before trusting a green run. Run
+it after touching `cook.js`, `cook-ui.js`, or the recipe/list screens
+that offer cook mode.
 
 ## Working conventions
 
