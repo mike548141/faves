@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@5c16a59`, owner-ratified 2026-07-25, bumped 2026-08-09)
+## Doctrine — inherited from atelier (pinned `atelier@bde4928`, owner-ratified 2026-07-25, bumped 2026-08-15)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -49,8 +49,9 @@ in atelier and is read on demand — never wholesale.
   that was never bumped with the pin: it had fallen 31 commits behind, so the
   check reported 40 commits of which 31 were already read and inside the pin.
   A drift check that always fires is a drift check nobody reads — the same
-  failure `pathscan` and `plainscan` show here. Deriving the baseline from the
-  pin makes the two incapable of diverging.)
+  failure `pathscan` showed here until 2026-08-15 (now clean) and `plainscan`
+  still shows. Deriving the baseline from the pin makes the two incapable of
+  diverging.)
 - **Estate resources — point up, don't re-derive:** providers & account plans,
   financial constraints & plan entitlements, licences, credentials, shared
   estate tooling, and the estate inventory live in the operator's **private

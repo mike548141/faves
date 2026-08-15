@@ -7,10 +7,18 @@ checked against the hard constraints (zero-build, offline, static, no
 backend, no accounts, no personal data in the repo). Nothing here changes
 v1 scope.
 
-**Legend.** Effort **S/M/L**. Tags: `[schema]` needs a data-model change
-(record in `ARCHITECTURE.md` when built); `[design]` needs a design call;
-`[constraint]` sits in tension with a hard constraint or non-goal —
-resolution noted inline; **⚑** a decision only the owner can make.
+**Legend.** Effort **XS/S/M/L**. Checkbox: `- [ ]` open · `- [~]` claimed by a
+live session (the claim names the date and worktree — leave it alone, even if
+told to take it) · `- [x]` / ✅ done, and done items are harvested to
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md) leaving a one-line pointer.
+Tags: `[schema]` needs a data-model change (record in `ARCHITECTURE.md` when
+built); `[design]` needs a design call; `[constraint]` sits in tension with a
+hard constraint or non-goal — resolution noted inline; `[content]`/`[data]`
+needs facts we don't have yet, usually from the owner or an in-store visit;
+`[docs]`, `[js]`, `[css]`, `[reo]`, `[ux]` name the surface that changes.
+Marks: **⚑** a decision only the owner can make · **🎯** the specific ask now
+sitting with the owner · **🚩** be aware of this · **🔎** a finding ·
+**⏳** waiting on someone.
 
 **On "no backend" (owner steer, 2026-07-09; updated 2026-07-23).** The
 stance softened from *never* to *not yet*: a lightweight backend (e.g. a
@@ -335,14 +343,19 @@ neighbouring card or a delivery app.** Clear one by bringing back the fact.
       drives the "our picks" surface and `validate.py` warns on each empty
       one, so the warnings are the worklist. Owner-supplied only: these are
       *our* favourites, not a guess from the menu.
-- [ ] **17 venues are still `stub`** `[M][content]` — they render as "menu
+- [ ] **16 venues are still `stub`** `[M][content]` — they render as "menu
       coming soon" cards and never as empty menus, so this is a backlog, not
-      a defect. Same `intake/` pipeline. **Re-counted 2026-08-09 from the
-      data**, correcting "16 … 12 menu-complete": it is **17 stub and 14
-      menu-complete across 31 records**. Of those 14, only **two** carry a
-      `verified` date (Gold Lining, Takeaway @ Churton) — which is the
-      concrete cost behind Theme 13g below: the "needs a refresh" caveat
-      currently fires on 29 of 31 records, so it tells the reader nothing.
+      a defect. Same `intake/` pipeline. **Re-counted 2026-08-15 from the
+      data**: **16 stub and 18 menu-complete across 34 records**, of which
+      **9** carry a `verified` date. 🚩 **This item's count has now been
+      wrong twice** — "16 … 12" was corrected to "17 … 14" on 2026-08-09,
+      and six days of intake made that wrong too. A hand-copied tally in
+      prose goes stale the moment data lands, which is exactly the trap the
+      `pathscan` title fell into. **Do not re-type the numbers next time —
+      derive them**, and treat any figure here as of its stated date only.
+      The old note that this was "the concrete cost behind Theme 13g" no
+      longer applies: 13g shipped, and the caveat now reads the method and
+      its age rather than firing on everything undated (ADR 0036).
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -1550,7 +1563,10 @@ problem. Sequence the content with the build or the feature ships blank.
   - **Substitutions** ("no buttermilk → milk + lemon") — high value, but it is
     content the owner has to write, and a wrong substitution ruins a dinner.
     Curated only; never generated.
-  - **Oven temperature conversion** (°C/°F) — falls out of Theme 18 for free.
+  - ✅ **Oven temperature conversion** (°C/°F) — **shipped 2026-08-09** as
+    18c (ADR 0029), proven against all 459 strings in the recipe data. It did
+    fall out of Theme 18 for free, exactly as predicted. Struck from this
+    bundle 2026-08-15; nothing left to do here.
 
 **Sources (research pass, 2026-08-09):** [Cook Mode step-by-step view][s1] ·
 [Cook Mode and screen wake lock][s2] · [Best recipe apps tested][s3] ·
@@ -1618,136 +1634,7 @@ prefers dial stops. Also his call: the two `(NNN°F)` brackets hand-written into
 `cook-at-home.json` are now redundant, and a metric reader sees `220°C (425°F)`
 where an imperial reader sees `430°F`.
 
-## Also parked (small)
-
-✅ **A negative dish price validated clean — fixed 2026-08-09.** Detail →
-[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [~] **`pathscan` is decorative here — 25 standing findings** `[S][docs]` —
-  **CLAIMED 2026-08-15 04:40 UTC** (wt: `faves-scanner-close`) — E8 landed
-  upstream (`atelier@ab74014`); closing this out.
-  **our two classes done 2026-08-09** (wt: `faves-pathscan`): 34 findings
-  down to 14, and every one of the 14 is the upstream defect. The item stays
-  open only for that class, which is blocked on the owner call below.
-  Found 2026-08-09. It runs warn-only in our floor and has accumulated
-  standing findings, which means nobody reads it, which means a *real* stale
-  path now hides in the noise. That is the whole cost: a guard with standing
-  false positives is a guard switched off. Triaged into three classes; **the
-  "25" in this item's own title was already stale by fix time — the real
-  count at fix time was 34** (findings accrue between the roadmap note and
-  the fix landing; title left as the original identifier, not corrected).
-  Corrected triage, verified against the live scan:
-  - **16 are an upstream scanner defect, not ours — still open, untouched.**
-    A root-anchored path whose first segment starts with a dot is mangled:
-    `/.well-known/x` is extracted as `known/x`, losing `.well-` and the
-    leading slash, so it reports missing while the file plainly exists.
-    Minimal repro in a clean throwaway repo: `site/.well-known/sbom.json`
-    and `site/.well-known/security.txt` both **pass**;
-    `/.well-known/security.txt` on its own line **fails** as
-    `known/security.txt`. So the trigger is the leading-slash-plus-dot form,
-    not dot-directories in general. Ours are honest URL references to files
-    that exist — this is atelier's `pathscan` to fix. ✅ **RULED and queued
-    upstream 2026-08-09.** The owner resolved the tension in favour of the
-    CONCURRENCY rule: **a child repo may queue a *finding* in the target
-    repo's own roadmap — queue, never deliver.** The standing correction
-    (faves lives within the doctrine and does not create it) still holds and
-    is not weakened: a finding is not doctrine, and no fix, test or marker
-    was written upstream. Filed as **atelier `ROADMAP.md` Track E, item E8**
-    (`atelier@88a54a3`), with the minimal repro. Track E's own premise is
-    verbatim this defect — *"every false positive on a correct line trains
-    someone to allow-marker it, and that is how a scanner's output stops
-    being read"*. Left flagging here, no allow-markers added: masking these
-    would hide the exact signal a future real `.well-known` typo needs to
-    surface, and would keep the count dishonest while the fix is pending.
-  - ✅ **10 were ours and genuinely loose — fixed 2026-08-09.** Prose
-    shorthand that omitted the real path (`data/index.json` → <!-- pathscan:allow: the pre-fix shorthand this bullet documents, not a live reference -->
-    `site/data/index.json` in `ARCHITECTURE.md`, `WORKPLAN.md`, ADR 0015's
-    table and prose; `data/restaurants/cook-at-home.json` → <!-- pathscan:allow: the pre-fix shorthand this bullet documents, not a live reference -->
-    `site/data/restaurants/cook-at-home.json` here and in
-    `ARCHITECTURE.md`), one reworded non-path collision each in this file
-    (`docs/records` → "our records", a slash that read as a path but meant <!-- pathscan:allow: the pre-fix wording this bullet documents, not a live reference -->
-    "and") and in ADR 0019 (`Docs/tests` → "Docs and tests", same shape — <!-- pathscan:allow: the pre-fix wording this bullet documents, not a live reference -->
-    the ADR's decision content is unchanged, only the accidental path-shaped
-    slash). No target was invented; every fix pointed at a file confirmed to
-    exist.
-  - ✅ **8 were correct as written — marked 2026-08-09.** Cross-repo atelier
-    paths (`docs/method/ECONOMICS.md` in `CLAUDE.md` and <!-- pathscan:allow: atelier cross-repo path, correct as written -->
-    `MODEL-ECONOMICS.md`, `docs/method/PROPAGATION.md` here), a cross-repo <!-- pathscan:allow: atelier cross-repo path, correct as written -->
-    pointer to the `rpi` repo's own ADR 0009 here, the
-    `mike548141/atelier/.github/workflows/floor.yml` Actions slug in <!-- pathscan:allow: GitHub Actions reusable-workflow slug, not a local path -->
-    `GO-PUBLIC.md`, and three historical references inside the append-only
-    `SESSIONS.md` (an atelier `docs/method/` drift note, a since-removed <!-- pathscan:allow: atelier cross-repo path, correct as written -->
-    `__pycache__` artefact, and the `faves-allergen-inference` worktree) —
-    each got a `pathscan:allow` marker stating why it resolves outside this
-    repo or only at the time it was written; no history was rewritten.
-    Two more findings sat inside this very bullet's own prose, quoting
-    `data/index.json` and `docs/decisions/0009` as *examples* of the loose <!-- pathscan:allow: quoted as an example of the defect, not a live reference -->
-    class above — marked `pathscan:allow: quoted as an example of the
-    defect, not a live reference` rather than rewritten, since rewriting
-    the example would have destroyed it.
-  Re-scan after the fix: 16 findings, all class 1, matching exactly.
-  Verification: `tools/validate.py`, `check_no_deps.py`,
-  `check_visibility.py`, `gen_sbom.py --check`, `node --test` (505/505) and
-  atelier's `linkscan.py` all still pass.
-- [~] **`plainscan` arrived with 1177 findings and no decided scope**
-  `[M][docs]` ⚑ — **CLAIMED 2026-08-15 04:40 UTC** (wt: `faves-scanner-close`)
-  — the scope question was ruled upstream 2026-08-10; reconciling.
-  Found 2026-08-09 bumping the pin to `atelier@5c16a59`.
-  Atelier withdrew its long-standing claim that write-time discipline is the
-  *only* control over communication prose, and shipped `plainscan` to enforce
-  the machine-decidable half. Our floor picked it up through the shared
-  registry, warn-only. Day-one count here: **1177** — P1 undefined reference
-  ×28, P2 unexpanded acronym ×126, P3 long sentence ×549, P4 buried aside
-  ×474. **This is not yet the decorative-guard failure `pathscan` had** — it
-  is one day old and nothing has been swept. It becomes that failure if it
-  sits.
-  🚩 **The scope question is the whole item, and it is not obviously ours to
-  answer.** The three heaviest files are `SESSIONS.md` (341),
-  `SESSIONS-ARCHIVE.md` (176) and `ROADMAP.md` (190) — and the two session
-  logs are **append-only records**. Sweeping them means rewriting history to
-  please a scanner, which the house forbids on the same grounds that stopped
-  the `pathscan` sweep touching them. So the plausible scopes are: (a) the
-  live current-truth docs only (`ARCHITECTURE`, `DESIGN`, `STRATEGY`,
-  `CLAUDE.md`, `README`, the ADRs) and records exempted by an ignore rule;
-  (b) everything, accepting history gets marked not edited; or (c) leave it
-  advisory and treat the count as a write-time nudge. 🎯 **Owner call**, and
-  worth pairing with the P3 word limit — atelier's own docstring says the
-  35-word cap is a **house call, not a published standard**, and "the one
-  number in this file the principal should rule on".
-- [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
-  found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
-  doctrine block is the sanctioned *stamped copy* shape (it names atelier,
-  carries a pin, and compresses without contradicting), but it is stamped in
-  **prose only** — atelier's `stampscan` finds "no stamped blocks" here,
-  because the machine-readable `<!-- stamp:begin source=… region=… -->`
-  markers are absent. Atelier's own doctrine calls an unwatched convention
-  "rung 1 territory, not rung 2". **We cannot fix this from here yet**: the
-  markers pin `source=docs/method/PROPAGATION.md`, a path that exists only in <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
-  atelier, so a child running the scanner exits 2 — and the child-side,
-  pin-aware `source=` resolution is atelier's open ST3, already queued in its
-  own roadmap (D2 residue). Nothing to deliver upstream. When ST3 lands,
-  adopt the markers here. Until then the check is by hand: **verified
-  2026-08-09** — the canonical floor region is byte-identical to the pinned
-  version, so our copy has not drifted.
-
-✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
-**shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
-UI toggle first pass (2026-07-09, `reo.js` — chrome only; safety text stays
-English); and the pre-launch reo **wording review** (✅ ran 2026-07-22 — an AI
-pass over all 68 strings). ⚠ **honest caveat:** the AI pass is **not** a
-fluent-speaker sign-off — a native review of the 9 flagged strings stays the
-**owner option** before public launch
-([review](reviews/2026-07-22-1148-reo-wording-review.md)). Detail →
-[`ROADMAP-DONE.md`](ROADMAP-DONE.md). **2026-08-09 additions to that review
-queue:** ~25 new `// draft` strings landed with the update notice, units,
-report and import/transfer features (all flagged in `reo.js`); the dictionary
-check flagged two existing choices worth a fluent speaker's eye — **`tahua
-kai`** for "menu" in 7 pre-existing strings (Te Aka suggests `rārangi kai`;
-`tahua` leans "fund/budget") and **`hapa`** for "error" (first gloss is the
-loanword "supper" — unfortunate on a food app, though context resolves it).
-
----
-
-## Theme 17 — from the 2026-08-15 Johnsonville intake
+## Theme 19 — from the 2026-08-15 Johnsonville intake
 
 - [ ] 🎯 **Street numbers for the three new Johnsonville venues** `[S][data]` —
   **Noodle Canteen**, **The Ramen Shop** and **BurgerFuel** carry street-level
@@ -1779,28 +1666,150 @@ loanword "supper" — unfortunate on a food app, though context resolves it).
 
 ---
 
+## Also parked (small)
+
+- [ ] 🎯 **Two accepted ADRs both numbered 0025** `[S][docs]` — found
+  2026-08-15. `0025-settings-index-and-panels.md` (dated 2026-08-08) and
+  `0025-infer-allergens-by-default.md` (dated 2026-08-09) are both **accepted**
+  and unrelated; every other decision 0001–0038 is unique. The later one should
+  have been 0026. Two consequences that are already live: a citation of "ADR
+  0025" is ambiguous (**24 inbound references** across the docs, and both files
+  are cited by number in `ARCHITECTURE.md`, `WORKPLAN.md` and four other ADRs),
+  and the next session allocating a number by "highest + 1" cannot see that a
+  number was consumed twice. This is the allocate-at-merge collision the
+  concurrency notes already describe, landing on ADRs instead of worktrees.
+  **Not fixed unilaterally, because both options cost something:**
+  - **(a) Renumber the allergen one to 0039** (next free) and rewrite the 24
+    references. Cleanest end state. But "never edit an accepted ADR" is a house
+    rule, and while renumbering changes no *decision*, it does rewrite an
+    accepted record's identity — and any external link to the old filename
+    breaks, on a repo that is public.
+  - **(b) Leave both, add a disambiguating note** to each file's header and to
+    `decisions/README.md`, and let 0026+ carry on. Costs nothing, breaks
+    nothing, but leaves a permanent wart that every future reader must decode.
+  **Recommendation: (b).** The repo is public and the numbers are already cited
+  in six other files; the wart is cheaper than the churn, and honesty about a
+  filing collision is not the same as tolerating a wrong decision. Whichever is
+  chosen, `decisions/README.md` should gain the rule that made this possible —
+  **allocate the ADR number at merge, never in a parallel worktree.**
+
+✅ **A negative dish price validated clean — fixed 2026-08-09.** Detail →
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+✅ **`pathscan` is decorative here — closed 2026-08-15.** Ran from 25 standing
+warn-only findings to a **clean scan**. Our two classes were fixed 2026-08-09;
+the third was an upstream defect, queued as atelier Track E item E8 under the
+queue-never-deliver rule and fixed upstream in `atelier@ab74014`. Re-verified
+here today: 16 findings → 0. 🔎 **Our stated root cause was wrong** — we named
+the dot-directory, upstream found the hyphen — and the write-up carries why a
+repro built from a single failing shape confirms the shape, not the cause.
+Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+- [ ] **`plainscan`: the scope is ruled, two sub-calls remain** `[S][docs]` ⚑ —
+  arrived 2026-08-09 with **1177** findings and no decided scope; **620 today**
+  in the gated scope. The scope question that was the whole item is **answered
+  twice over**: the owner ruled it here on 2026-08-09 ("live docs only, exempt
+  the records", implemented in `.plainscanignore`), and atelier ruled the same
+  way upstream on 2026-08-10 (`atelier@e390382`, `COMMUNICATION.md`: "each plane
+  is scoped to its reader"). The two rulings agree without having seen each
+  other, which is the strongest evidence the line is in the right place — and
+  ours is the wider net, also exempting `docs/reviews/` and `CHANGELOG.md`,
+  which upstream's built-in record globs do not cover. Both apply; keep both.
+  Current split, measured 2026-08-15: P1 undefined reference ×20, P2 unexpanded
+  acronym ×95, P3 long sentence ×298, P4 buried aside ×207.
+  **What is left is two narrower calls, not the scope:**
+  - 🎯 **The accepted-ADR exemption.** `docs/decisions/` carries ~314 of the
+    620. The house rule is **never edit an accepted ADR — supersede it**, so
+    those findings can *never* be fixed, which is precisely the definition
+    upstream used to exempt records ("a warning there has no possible fix and
+    is pure noise"). **Recommendation: exempt the directory.** An accepted ADR
+    is a record in every sense that matters — written once, dated, never
+    rewritten. The counter-argument is real and should be stated: exempting the
+    directory also stops checking *new* ADRs, which is a fail-open. But the
+    reply plane already gates the prose an agent writes at the moment it writes
+    it, so a new ADR is checked where the fix is actually possible.
+  - 🎯 **The P3 word limit.** 298 of the 620 are one rule — the 35-word
+    sentence cap — and atelier's own docstring calls it "a house call, not a
+    published standard" and "the one number in this file the principal should
+    rule on". Nothing should be swept against a number nobody has ratified.
+    **Recommendation: leave the number alone and do nothing on P3/P4 yet.**
+    Sweeping 505 P3+P4 findings is a mass prose rewrite of the live docs with
+    real risk of flattening meaning, and it would be done to satisfy an
+    unratified threshold.
+  🔎 **What was delivered without needing either call:** P2 is the one class
+  that is mechanically fixable with no judgement, because `plainscan` ships a
+  designed escape — a term defined in `docs/GLOSSARY.md` counts as expanded
+  everywhere. That file did not exist here. Written 2026-08-15; it earns its
+  place independently of the scanner, since this repo is public and a stranger
+  meets "PWA", "CDN" and "SBOM" cold in `ARCHITECTURE.md`.
+- [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
+  found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
+  doctrine block is the sanctioned *stamped copy* shape (it names atelier,
+  carries a pin, and compresses without contradicting), but it is stamped in
+  **prose only** — atelier's `stampscan` finds "no stamped blocks" here,
+  because the machine-readable `<!-- stamp:begin source=… region=… -->`
+  markers are absent. Atelier's own doctrine calls an unwatched convention
+  "rung 1 territory, not rung 2". **We cannot fix this from here yet**: the
+  markers pin `source=docs/method/PROPAGATION.md`, a path that exists only in <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
+  atelier, so a child running the scanner exits 2 — and the child-side,
+  pin-aware `source=` resolution is atelier's open ST3, already queued in its
+  own roadmap (D2 residue). Nothing to deliver upstream. When ST3 lands,
+  adopt the markers here. Until then the check is by hand: **re-verified
+  2026-08-15** at the `atelier@bde4928` bump — `git diff 5c16a59..bde4928` over
+  the four canonical floor files (`00-APEX`, `CONCURRENCY`, `RECORD`,
+  `ECONOMICS`) returns empty, so the source of our inlined copy did not move
+  and the copy has not drifted. (First verified 2026-08-09.)
+
+✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
+**shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
+UI toggle first pass (2026-07-09, `reo.js` — chrome only; safety text stays
+English); and the pre-launch reo **wording review** (✅ ran 2026-07-22 — an AI
+pass over all 68 strings). ⚠ **honest caveat:** the AI pass is **not** a
+fluent-speaker sign-off — a native review of the 9 flagged strings stays the
+**owner option** before public launch
+([review](reviews/2026-07-22-1148-reo-wording-review.md)). Detail →
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md). **2026-08-09 additions to that review
+queue:** ~25 new `// draft` strings landed with the update notice, units,
+report and import/transfer features (all flagged in `reo.js`); the dictionary
+check flagged two existing choices worth a fluent speaker's eye — **`tahua
+kai`** for "menu" in 7 pre-existing strings (Te Aka suggests `rārangi kai`;
+`tahua` leans "fund/budget") and **`hapa`** for "error" (first gloss is the
+loanword "supper" — unfortunate on a food app, though context resolves it).
+
+---
+
 ## Recommended sequence
 
-By value-per-effort and dependency order:
+⚠️ **The sequence below is the one set on 2026-07-08, and steps 1–4 plus the
+first two of step 6 have all since shipped.** It is kept because it records
+*why* the order was chosen, not because it describes what to do next — read
+cold it implies nothing has landed. Reviewed 2026-08-15.
 
-1. **Coordinates + native-maps handoff** (S) — tiny, daily payoff,
-   unblocks maps.
-2. **Order tally** (M) — the flagship; turns *decided* into *ordered &
-   reconciled*.
-3. **Design pass** — sticky search, right-hand info panel, cart polish (M).
-4. **Distance-sorted "what's close"** (M) — needs coords from step 1.
-5. **Content growth + dish photos** — ongoing, in parallel throughout.
-6. **Extended allergens** (S) → **curated/local ratings** (M) →
-   **nutrition where owned** (L).
-7. **Health app** — a separate project once the above have matured.
+| # | The 2026-07-08 plan | Where it stands |
+|---|---|---|
+| 1 | Coordinates + native-maps handoff (S) | ✅ shipped — Theme 2 |
+| 2 | Order tally (M) — the flagship | ✅ shipped 2026-07-08 — Theme 1 |
+| 3 | Design pass (M) | ✅ shipped — Theme 3 |
+| 4 | Distance-sorted "what's close" (M) | ✅ shipped — Theme 2 |
+| 5 | Content growth + dish photos | 🔄 ongoing, in parallel — Theme 4 |
+| 6 | Extended allergens (S) → curated/local ratings (M) → nutrition where owned (L) | ✅ first two shipped (Theme 5); **nutrition not started** |
+| 7 | Health app — a separate project | ⏳ not started — Theme 6, still the north star |
 
-**Parallel, any time (Theme 7):** the zero-dependency CI guard is a cheap
-pre-launch win; SBOM publishing can land alongside the Phase 7 deploy so
-the live site ships with a provenance artefact from day one.
+**Parallel, any time (Theme 7):** ✅ both delivered — the zero-dependency CI
+guard and the published SBOM shipped with the Phase 7 deploy, so the live site
+has carried a provenance artefact since day one.
 
-**Owner calls — resolved 2026-07-08:**
+**What actually sequences the open work now** is the theme list above, not this
+table. The live roadmap is Themes 1–19; the flagship open work is Theme 14
+(add-ons), Theme 15 (UI consistency) and Theme 17 (cook mode), each with its
+own internal ordering stated in the theme.
+
+**Owner calls — resolved 2026-07-08** (kept as the record of what was decided
+then; two have since moved):
 1. Order tally: **in** (shipped); STRATEGY non-goal clarification landed.
 2. Ratings: **show the live number when online (edge-function proxy),
-   link-out when offline; dish ratings curated** — see Theme 5.
+   link-out when offline; dish ratings curated** — see Theme 5. *Ratings
+   shipped; the UX is on attempt 3 and owner-gated.*
 3. Feedback intake: **no email; parked** — deploy first (Theme 4c).
+   ⚠️ **Reversed 2026-08-09** — Theme 4c was reactivated by the owner
+   ("tell us what's wrong or missing"). This line is superseded.
 4. SBOM: **CycloneDX JSON at `/.well-known/sbom.json`** — see Theme 7.
+   ✅ Shipped and serving.

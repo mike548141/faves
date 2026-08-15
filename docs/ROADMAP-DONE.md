@@ -840,3 +840,58 @@ the obvious word *peka* is already spoken for by `route.detour`.
 or Chrome Android); Lighthouse not re-run (copy-only, meta untouched, so no
 movement expected — but that is reasoning, not a measurement); te reo
 correctness rests on re-using a reviewed string, not on a speaker's review.
+
+## Also parked (small) — `pathscan` goes from decorative back to green
+
+✅ **Closed 2026-08-15.** The item ran from 2026-08-09 (25 standing warn-only
+findings, i.e. a guard nobody reads) to a clean scan today. Three classes were
+triaged; two were ours and closed on 2026-08-09, the third was upstream's and
+closed by upstream on 2026-08-10.
+
+**The two classes that were ours (fixed 2026-08-09, wt `faves-pathscan`).**
+34 findings at fix time — the "25" in the original item title was already stale
+when the work started, and was deliberately left as the item's identifier rather
+than corrected.
+
+- **10 were genuinely loose.** Prose shorthand that omitted the real path
+  (`data/index.json` → `site/data/index.json` in `ARCHITECTURE.md`, <!-- pathscan:allow: the pre-fix shorthand this bullet documents, not a live reference -->
+  `WORKPLAN.md` and ADR 0015; `data/restaurants/cook-at-home.json` → <!-- pathscan:allow: the pre-fix shorthand this bullet documents, not a live reference -->
+  `site/data/restaurants/cook-at-home.json`), plus two non-path collisions
+  reworded (`docs/records` → "our records"; `Docs/tests` → "Docs and tests" <!-- pathscan:allow: the pre-fix wording this bullet documents, not a live reference --> <!-- pathscan:allow: the pre-fix wording this bullet documents, not a live reference -->
+  in ADR 0019 — decision content untouched, only the accidental slash). No
+  target was invented; every fix pointed at a file confirmed to exist.
+- **8 were correct as written** and got `pathscan:allow` markers stating why
+  they resolve outside this repo: cross-repo atelier paths, a pointer to the
+  `rpi` repo's ADR 0009, the reusable-workflow Actions slug in `GO-PUBLIC.md`,
+  and three historical references inside the append-only `SESSIONS.md`. No
+  history was rewritten — a marker annotates a line, it does not restate it.
+
+**The class that was upstream's — and the diagnosis we got wrong.**
+16 findings were a real defect in atelier's `pathscan`, correctly identified as
+*not ours to fix*. Per the owner's 2026-08-09 ruling (**a child repo may queue a
+finding in the target repo's own roadmap — queue, never deliver**) it was filed
+as atelier Track E item E8 (`atelier@88a54a3`) with a minimal repro, and left
+flagging here rather than allow-markered, so the count stayed honest while the
+fix was pending.
+
+🔎 **Our stated root cause was wrong, and the correction is the useful half.**
+We reported the trigger as *"the leading-slash-plus-dot form"* — a root-anchored
+path whose first segment starts with a dot. The repro supported that honestly,
+because `/.well-known/security.txt` was the only failing shape we had. Upstream's
+fix (`atelier@ab74014`) found the actual trigger is **a hyphen anywhere before
+the token's last `/`** — `/docs/some-dir/x.md` truncates to `dir/x.md` with no <!-- pathscan:allow: quoted as an example of the defect, not a live reference -->
+dot involved. `_PATH_TOKEN`'s lookbehind excluded `\w`, `.`, `/`, `*` and `?`
+but not `-`, while the token class accepted `-`. `.well-known` merely happened
+to contain a hyphen. **The lesson worth carrying:** a repro built from one
+failing shape confirms the shape, not the cause — we generalised from a sample
+of one, and named the one feature of that sample that caught the eye. When the
+next cross-repo defect is queued, the repro should try to *vary* each suspected
+feature independently before the diagnosis is written down.
+
+**Verified 2026-08-15, not asserted.** The upstream fix was re-tested here in a
+clean throwaway repo against all three shapes (`site/.well-known/sbom.json`,
+`/.well-known/security.txt`, `/docs/some-dir/x.md`): all pass. In this tree the
+16 findings went to **0**. The two that remained were this repo's own prose
+quoting the mangled string `known/security.txt` as an example — the same class <!-- pathscan:allow: quoted as an example of the defect, not a live reference -->
+already marked in 2026-08-09, and marked the same way rather than rewritten,
+because rewriting the example would destroy it.
