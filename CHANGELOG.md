@@ -37,7 +37,7 @@ content freshness separately from this file.
   almost every place, because it fired whenever nobody had recorded a check —
   so it was easy to stop seeing. Now it asks *who told us*: if the prices came
   from the place itself (someone in the shop, its printed menu, its own site, or
-  a phone call) and we read them within the last year, there's no warning. If
+  a phone call) and we read them within the last year, there's no warning. If <!-- datescan:allow: a rolling window (VERIFY_MAX_AGE_MONTHS = 12), not a dated claim — the caveat is computed against the reader's own now -->
   they came from a delivery app or someone else's listing, the warning stays and
   now says so — "These prices came from a delivery app, not the place itself" —
   because delivery prices are often marked up. And a check that's aged out says
