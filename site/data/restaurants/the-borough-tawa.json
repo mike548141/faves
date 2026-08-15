@@ -25,6 +25,8 @@
   },
   "vibe": ["garden bar", "live sport", "dog friendly", "family friendly", "quiz night"],
   "picks": [],
+  "priceBand": "$$",
+  "pricePerPerson": 24,
   "verified": "2026-08-15",
   "verifiedBy": "official-site",
   "detailsVerified": "2026-08-15",
@@ -353,9 +355,431 @@
       ]
     },
     {
-      "section": "Iced Coffee",
+      "section": "Beer & Cider — on tap",
       "items": [
-        { "name": "Iced Americano", "desc": null, "price": 6.0, "tags": ["v"] },
+        { "name": "Heineken", "desc": "5%.", "price": 15.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Heineken Silver Low Carb",
+          "desc": "4%.",
+          "price": 15.0,
+          "tags": ["contains-gluten"]
+        },
+        { "name": "Tiger", "desc": "5%.", "price": 15.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Murphy's Irish Stout",
+          "desc": "4%.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Export Ultra Low Carb Lager",
+          "desc": "4.2%. Larger pour $22.00; the menu doesn't label the size.",
+          "price": 11.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tuatara Hazy Pale Ale",
+          "desc": "5.5%. Larger pour $28.00; the menu doesn't label the size.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tuatara Adapt APA",
+          "desc": "5%. Larger pour $28.00; the menu doesn't label the size.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tuatara Interstellar IPA",
+          "desc": "6%. Larger pour $28.00; the menu doesn't label the size.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's Wayfarer Pilsner",
+          "desc": "4.9%. Larger pour $22.00; the menu doesn't label the size.",
+          "price": 11.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's Original Ale",
+          "desc": "4%. Larger pour $22.00; the menu doesn't label the size.",
+          "price": 11.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's West Coast Hazy IPA",
+          "desc": "5.5%. Larger pour $24.00; the menu doesn't label the size.",
+          "price": 12.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's Golden Lager",
+          "desc": "2.5%. Larger pour $22.00; the menu doesn't label the size.",
+          "price": 11.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's Crushed Apple Cider",
+          "desc": "4.5%. Larger pour $24.00; the menu doesn't label the size.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Monteith's Hazy Lemonade",
+          "desc": "4.2%. Larger pour $24.00; the menu doesn't label the size.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Guest Tap",
+          "desc": "Strength varies. Larger pour $28.00; the menu doesn't label the size.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Beer & Cider — bottles & cans",
+      "items": [
+        { "name": "Heineken", "desc": "5%.", "price": 11.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Heineken Silver Low Carb",
+          "desc": "4%.",
+          "price": 11.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tiger Crystal Ultra Low Carb",
+          "desc": "4.2%.",
+          "price": 11.0,
+          "tags": ["contains-gluten"]
+        },
+        { "name": "Sol", "desc": "4.2%.", "price": 11.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Behemoth Something Hoppy IPA",
+          "desc": "5.9%.",
+          "price": 12.0,
+          "tags": ["contains-gluten"]
+        },
+        { "name": "Orchard Thieves Berry", "desc": "4%.", "price": 11.0, "tags": [] },
+        {
+          "name": "Odd Company",
+          "desc": "Ask staff for today's flavours.",
+          "price": 11.0,
+          "tags": []
+        },
+        {
+          "name": "Bottle & Can Bucket",
+          "desc": "Any four bottles or cans.",
+          "price": 38.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Beer — low and no",
+      "items": [
+        { "name": "Heineken 0.0", "desc": null, "price": 10.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Garage Project Tiny Hazy IPA",
+          "desc": "0.5%.",
+          "price": 12.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Choice Bros Hold Me Closer Session Hazy",
+          "desc": "2.2%.",
+          "price": 12.0,
+          "tags": ["contains-gluten"]
+        }
+      ]
+    },
+    {
+      "section": "Cocktails",
+      "items": [
+        {
+          "name": "El Diablo",
+          "desc": "Tequila, Chambord, ginger beer, lime juice.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Lynchburg Lemonade",
+          "desc": "Jack Daniel's bourbon, triple sec, lemon juice, lemonade.",
+          "price": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Garden Martini",
+          "desc": "Bombay Sapphire gin, elderflower, apple juice, cucumber.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Bitter Sweet Symphony",
+          "desc": "De Bortoli prosecco, lime juice, triple sec, cranberry juice, watermelon purée.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Strawberry Night",
+          "desc": "Absolut vanilla vodka, wild strawberry, passionfruit purée, lemon juice.",
+          "price": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Piña Colada",
+          "desc": "Bacardi Blanca, Malibu, lime juice, pineapple juice, coconut cream.",
+          "price": 20.0,
+          "tags": []
+        },
+        {
+          "name": "Hugo Spritz",
+          "desc": "St-Germain elderflower liqueur, De Bortoli prosecco, fresh mint, lime and soda water.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "Mimosa",
+          "desc": "De Bortoli prosecco, fresh orange.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Peach Bellini",
+          "desc": "De Bortoli prosecco, peach purée.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Espresso Martini",
+          "desc": "Absolut vanilla vodka, Kahlúa, fresh espresso, sugar syrup.",
+          "price": 20.0,
+          "tags": []
+        },
+        {
+          "name": "Bloody Mary",
+          "desc": "Vodka, tomato juice, lemon juice, Worcestershire sauce, Tabasco, cracked black pepper, celery salt.",
+          "price": 16.0,
+          "tags": ["spicy-1"]
+        }
+      ]
+    },
+    {
+      "section": "Wine — champagne & sparkling",
+      "items": [
+        {
+          "name": "Moët & Chandon Impérial Brut",
+          "desc": "France. Bottle only.",
+          "price": 110.0,
+          "tags": []
+        },
+        {
+          "name": "Moët & Chandon Impérial Rosé",
+          "desc": "France. Bottle only.",
+          "price": 135.0,
+          "tags": []
+        },
+        {
+          "name": "De Bortoli KV Prosecco",
+          "desc": "Australia. $50.00 bottle.",
+          "price": 11.0,
+          "tags": []
+        },
+        {
+          "name": "Mionetto Prestige Prosecco",
+          "desc": "Veneto, Italy. 200ml bottle.",
+          "price": 16.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — white",
+      "items": [
+        {
+          "name": "Fleur de Lis Sauvignon Blanc",
+          "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
+          "price": 11.0,
+          "tags": []
+        },
+        {
+          "name": "Ngā Waka Sauvignon Blanc",
+          "desc": "Martinborough. $23.00 large glass; $65.00 bottle.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Divinity Cross Pinot Gris",
+          "desc": "Gisborne. $18.00 large glass; $50.00 bottle.",
+          "price": 11.0,
+          "tags": []
+        },
+        {
+          "name": "Devil's Staircase Pinot Gris",
+          "desc": "Central Otago. $23.00 large glass; $65.00 bottle.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Growers Mark Chardonnay",
+          "desc": "Gisborne. $21.00 large glass; $60.00 bottle.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Three Paddles Chardonnay",
+          "desc": "Martinborough. $23.00 large glass; $65.00 bottle.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Lake Chalice The Falcon Riesling",
+          "desc": "Marlborough. $21.00 large glass; $60.00 bottle.",
+          "price": 13.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — rosé",
+      "items": [
+        {
+          "name": "Bijou Terre de Providence Rosé",
+          "desc": "Pays d'Oc, France. $21.00 large glass; $60.00 bottle.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Monarch Rosé",
+          "desc": "Gisborne. $18.00 large glass; $50.00 bottle.",
+          "price": 11.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — red",
+      "items": [
+        {
+          "name": "Rebel Merlot",
+          "desc": "Hawke's Bay. $18.00 large glass; $50.00 bottle.",
+          "price": 11.0,
+          "tags": []
+        },
+        {
+          "name": "Fire Eagle Pinot Noir",
+          "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
+          "price": 11.0,
+          "tags": []
+        },
+        {
+          "name": "The Bluff Pinot Noir",
+          "desc": "Central Otago. $23.00 large glass; $65.00 bottle.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Brookfields Cabernet Sauvignon",
+          "desc": "Hawke's Bay. $21.00 large glass; $60.00 bottle.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Trinity Hill Syrah",
+          "desc": "Hawke's Bay. $23.00 large glass; $65.00 bottle.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — alcohol free",
+      "items": [
+        {
+          "name": "Marlborough Sun 0% Sauvignon Blanc",
+          "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
+          "price": 11.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Non-alcoholic",
+      "items": [
+        {
+          "name": "Coca-Cola / Coke Zero Sugar",
+          "desc": null,
+          "price": 6.5,
+          "tags": ["v", "vg"]
+        },
+        { "name": "Schweppes Soda Water", "desc": null, "price": 3.5, "tags": ["v", "vg"] },
+        {
+          "name": "Schweppes",
+          "desc": "Dry lemonade, lemon lime & bitters, tonic water, or ginger ale.",
+          "price": 6.5,
+          "tags": ["v"]
+        },
+        {
+          "name": "Red Bull / Red Bull Sugarfree",
+          "desc": null,
+          "price": 7.0,
+          "tags": ["v"]
+        },
+        {
+          "name": "Red Bull Coconut Edition Sugarfree",
+          "desc": null,
+          "price": 7.0,
+          "tags": ["v"]
+        },
+        {
+          "name": "Voyage Water",
+          "desc": "Sparkling or still.",
+          "price": 10.0,
+          "tags": ["v", "vg"]
+        },
+        {
+          "name": "Juice",
+          "desc": "Apple, pineapple, orange, cranberry or tomato.",
+          "price": 7.0,
+          "tags": ["v", "vg"]
+        }
+      ]
+    },
+    {
+      "section": "Coffee & tea",
+      "items": [
+        { "name": "Short Black", "desc": null, "price": 5.0, "tags": ["v", "vg"] },
+        { "name": "Long Black", "desc": null, "price": 5.0, "tags": ["v", "vg"] },
+        { "name": "Americano", "desc": null, "price": 5.0, "tags": ["v", "vg"] },
+        { "name": "Flat White", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
+        { "name": "Latte", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
+        { "name": "Cappuccino", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
+        { "name": "Chai Latte", "desc": null, "price": 5.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Mochaccino", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
+        {
+          "name": "Short Macchiato",
+          "desc": null,
+          "price": 5.0,
+          "tags": ["v", "contains-dairy"]
+        },
+        {
+          "name": "Long Macchiato",
+          "desc": null,
+          "price": 5.5,
+          "tags": ["v", "contains-dairy"]
+        },
+        { "name": "Matcha Latte", "desc": null, "price": 5.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Hot Chocolate", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
+        { "name": "Lemon, Honey & Ginger", "desc": null, "price": 5.0, "tags": ["v"] },
+        {
+          "name": "Tea",
+          "desc": "English breakfast, Earl Grey, peppermint, chamomile, green jasmine or berrylicious.",
+          "price": 5.0,
+          "tags": ["v", "vg"]
+        },
+        { "name": "Iced Americano", "desc": null, "price": 6.0, "tags": ["v", "vg"] },
         { "name": "Iced Latte", "desc": null, "price": 6.5, "tags": ["v", "contains-dairy"] },
         { "name": "Iced Matcha Latte", "desc": null, "price": 7.0, "tags": ["v", "contains-dairy"] },
         {

@@ -25,6 +25,8 @@
   },
   "vibe": ["garden bar", "beer garden", "family friendly", "Wellington icon"],
   "picks": [],
+  "priceBand": "$$",
+  "pricePerPerson": 23,
   "verified": "2026-08-15",
   "verifiedBy": "official-site",
   "detailsVerified": "2026-08-15",
@@ -374,6 +376,541 @@
           "desc": "Cheese sauce, mozzarella, gravy. Served with a kids' sundae.",
           "price": 15.5,
           "tags": ["v-option", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Beer & Cider — on tap",
+      "items": [
+        {
+          "name": "Heineken",
+          "desc": null,
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Heineken Silver Low Carb",
+          "desc": null,
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tiger Crystal Ultra Low Carb",
+          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Export 33",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tui",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Murphy's Irish Stout",
+          "desc": null,
+          "price": 14.5,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tuatara Regenerate Pilsner",
+          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tuatara Hazy Pale Ale",
+          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tuatara Adapt APA",
+          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tuatara Interstellar IPA",
+          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Tuatara Hazy IPA",
+          "desc": "Also $28.00 and $56.00; the menu doesn't label the larger sizes.",
+          "price": 14.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's Golden Light Lager",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's Golden Light Lager 2.5%",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's West Coastin' Hazy IPA",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's Pilsner",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Monteith's Crushed Apple Cider",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Monteith's Hazy Lemonade",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Monteith's Alcoholic Ginger Beer",
+          "desc": "Also $20.00 and $40.00; the menu doesn't label the larger sizes.",
+          "price": 10.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Beer & Cider — bottles & cans",
+      "items": [
+        { "name": "Heineken", "desc": null, "price": 11.5, "tags": ["contains-gluten"] },
+        { "name": "Heineken 0.0%", "desc": null, "price": 11.0, "tags": ["contains-gluten"] },
+        { "name": "Sol", "desc": null, "price": 11.5, "tags": ["contains-gluten"] },
+        {
+          "name": "Perrotdog Bitterbitch IPA",
+          "desc": null,
+          "price": 13.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Kereru Aura Gluten Free Ale",
+          "desc": null,
+          "price": 13.0,
+          "tags": ["gf"]
+        },
+        {
+          "name": "Garage Project White Mischief Sour",
+          "desc": null,
+          "price": 12.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Garage Project Aro Noir Pinot Gris",
+          "desc": "Listed exactly as printed on the menu; it may be two products run together.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Garage Project Fugazi Session Ale 2.2% / Tiny Hazy IPA 0.5%",
+          "desc": null,
+          "price": 11.0,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Orchard Thieves Cider",
+          "desc": "Berry, or peach & passionfruit.",
+          "price": 12.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Cocktails — Cross Creations",
+      "items": [
+        {
+          "name": "Pineapple Lump",
+          "desc": "El Jimador Blanco tequila, pineapple, lime.",
+          "price": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Sherbert Fizz",
+          "desc": "Finlandia vodka, triple sec, lemon, raspberry.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Berries & Cream",
+          "desc": "Finlandia vanilla vodka, Baileys, strawberry.",
+          "price": 18.0,
+          "tags": ["contains-dairy"]
+        },
+        {
+          "name": "Sour Feijoa",
+          "desc": "Flor de Caña Extra Seco 4 rum, feijoa, kiwifruit, lime, mint, soda.",
+          "price": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Jet Plane Sour",
+          "desc": "City of London gin, passionfruit, lemon, sugar, bitters.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "Peach Rings Margarita",
+          "desc": "El Jimador Reposado tequila, Aperol, peach, lime.",
+          "price": 18.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Cocktails — Cross Classics",
+      "items": [
+        {
+          "name": "Aperol Spritz",
+          "desc": "Aperol, prosecco, soda.",
+          "price": 16.0,
+          "tags": []
+        },
+        {
+          "name": "Rosebud",
+          "desc": "Absolut Vanilla vodka, cranberry, pineapple, lemon, passionfruit.",
+          "price": 16.0,
+          "tags": []
+        },
+        {
+          "name": "Espresso Martini",
+          "desc": "Finlandia vodka, coffee liqueur, cold brew.",
+          "price": 16.0,
+          "tags": []
+        },
+        {
+          "name": "Bloody Mary",
+          "desc": "Finlandia vodka, tomato juice, lemon, Worcestershire, hot sauce, cracked pepper, celery salt.",
+          "price": 16.0,
+          "tags": ["spicy-1"]
+        }
+      ]
+    },
+    {
+      "section": "Cocktails — on tap",
+      "items": [
+        {
+          "name": "The Green One",
+          "desc": "Midori, City of London gin, apple, green apple, lime.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "The Red One",
+          "desc": "El Jimador Reposado tequila, cranberry, lemon, blood orange, soda.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "The Yellow One",
+          "desc": "Finlandia vodka, bitters, ginger beer, lime, passionfruit, falernum syrup.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Mocktails",
+      "items": [
+        {
+          "name": "Cross Iced Tea",
+          "desc": "Peach tea, lemon, soda.",
+          "price": 12.0,
+          "tags": ["v"]
+        },
+        {
+          "name": "Southern Spritz",
+          "desc": "Blood orange, lemon, soda.",
+          "price": 12.0,
+          "tags": ["v"]
+        },
+        {
+          "name": "Moana-jito",
+          "desc": "Butterfly pea flower, mint, lime, soda.",
+          "price": 12.0,
+          "tags": ["v"]
+        }
+      ]
+    },
+    {
+      "section": "Wine — champagne & sparkling",
+      "items": [
+        {
+          "name": "Moët & Chandon Impérial Brut",
+          "desc": "France. Bottle only.",
+          "price": 110.0,
+          "tags": []
+        },
+        {
+          "name": "Moët & Chandon Impérial Rosé",
+          "desc": "France. Bottle only.",
+          "price": 135.0,
+          "tags": []
+        },
+        {
+          "name": "Cloudy Bay Pelorus Brut",
+          "desc": "Marlborough. Flute $17.00; bottle $75.00.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "Cloudy Bay Pelorus Rosé",
+          "desc": "New Zealand. Bottle only.",
+          "price": 80.0,
+          "tags": []
+        },
+        {
+          "name": "De Bortoli NV Prosecco",
+          "desc": "Australia. Flute $10.00; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — sauvignon blanc",
+      "items": [
+        {
+          "name": "Northrow Sauvignon Blanc",
+          "desc": "Marlborough. Regular $10.00; large $17.50; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Delegat Sauvignon Blanc",
+          "desc": "Awatere Valley. Regular $13.00; large $19.00; bottle $55.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Dog Point Sauvignon Blanc",
+          "desc": "Marlborough. Regular $17.00; large $25.00; bottle $73.00.",
+          "price": 17.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — pinot gris & riesling",
+      "items": [
+        {
+          "name": "Northrow Pinot Gris",
+          "desc": "Marlborough. Regular $10.00; large $17.50; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Poritus Stone Paddock Pinot Gris",
+          "desc": "Hawke's Bay. Regular $13.00; large $19.00; bottle $55.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Jules Taylor Pinot Gris",
+          "desc": "Marlborough. Regular $16.00; large $23.00; bottle $67.00.",
+          "price": 16.0,
+          "tags": []
+        },
+        {
+          "name": "Spy Valley Riesling",
+          "desc": "Marlborough. Regular $15.00; large $21.00; bottle $61.00.",
+          "price": 15.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — chardonnay",
+      "items": [
+        {
+          "name": "Northrow Chardonnay",
+          "desc": "Gisborne. Regular $10.00; large $17.50; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Spy Valley Chardonnay",
+          "desc": "Marlborough. Regular $15.00; large $21.00; bottle $61.00.",
+          "price": 15.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — rosé",
+      "items": [
+        {
+          "name": "Northrow Rosé",
+          "desc": "Hawke's Bay. Regular $10.00; large $17.50; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Trinity Hill Rosé",
+          "desc": "Hawke's Bay. Regular $15.00; large $19.00; bottle $55.00.",
+          "price": 15.0,
+          "tags": []
+        },
+        {
+          "name": "Château Routas Rosé",
+          "desc": "Provence, France. Regular $16.00; large $23.00; bottle $67.00.",
+          "price": 16.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — pinot noir",
+      "items": [
+        {
+          "name": "Northrow Pinot Noir",
+          "desc": "Marlborough. Regular $10.00; large $17.50; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Aces & Arrows Pinot Noir",
+          "desc": "Central Otago. Regular $16.00; large $23.00; bottle $67.00.",
+          "price": 16.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — other reds",
+      "items": [
+        {
+          "name": "TW Merlot",
+          "desc": "Gisborne. Regular $13.00; large $19.00; bottle $55.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Barossa Valley Estate Shiraz",
+          "desc": "Australia. Regular $13.00; large $19.00; bottle $55.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Trinity Hill Syrah",
+          "desc": "Hawke's Bay. Regular $16.00; large $23.00; bottle $67.00.",
+          "price": 16.0,
+          "tags": []
+        },
+        {
+          "name": "Craggy Range Te Kahu Blend",
+          "desc": "Hawke's Bay. Regular $19.00; large $28.00; bottle $82.00.",
+          "price": 19.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Soft drinks & juice",
+      "items": [
+        {
+          "name": "Coke / Coca-Cola Zero Sugar",
+          "desc": null,
+          "price": 6.5,
+          "tags": ["v", "vg"]
+        },
+        { "name": "Sprite / Sprite Zero", "desc": null, "price": 6.5, "tags": ["v", "vg"] },
+        { "name": "L&P / Fanta", "desc": null, "price": 6.5, "tags": ["v", "vg"] },
+        { "name": "Lemon, Lime & Bitters", "desc": null, "price": 6.5, "tags": ["v"] },
+        {
+          "name": "Schweppes Tonic Water / Ginger Beer",
+          "desc": null,
+          "price": 6.5,
+          "tags": ["v", "vg"]
+        },
+        { "name": "Schweppes Ginger Ale", "desc": null, "price": 4.5, "tags": ["v", "vg"] },
+        {
+          "name": "Red Bull",
+          "desc": "Energy drink, sugarfree, or coconut edition sugarfree.",
+          "price": 6.5,
+          "tags": ["v"]
+        },
+        {
+          "name": "Voyage Water",
+          "desc": "Still or sparkling. 500ml $7.00; 1L $11.50.",
+          "price": 7.0,
+          "tags": ["v", "vg"]
+        },
+        {
+          "name": "Keri Juice",
+          "desc": "Apple, pineapple, orange, cranberry or tomato.",
+          "price": 6.5,
+          "tags": ["v", "vg"]
+        }
+      ]
+    },
+    {
+      "section": "Coffee & tea",
+      "items": [
+        { "name": "Black coffee", "desc": null, "price": 5.0, "tags": ["v", "vg"] },
+        { "name": "White coffee", "desc": null, "price": 5.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Hot Chocolate", "desc": null, "price": 6.0, "tags": ["v", "contains-dairy"] },
+        { "name": "Matcha Latte", "desc": null, "price": 6.0, "tags": ["v", "contains-dairy"] },
+        {
+          "name": "Tea",
+          "desc": "English breakfast, green, Earl Grey, peppermint, chamomile, berrylicious, or lemon, honey & ginger.",
+          "price": 6.0,
+          "tags": ["v", "vg"]
+        },
+        {
+          "name": "Extra shot / decaf",
+          "desc": "Add to any coffee.",
+          "price": 0.5,
+          "tags": ["v", "vg"]
+        },
+        {
+          "name": "Soy, coconut or oat milk",
+          "desc": "Add to any coffee.",
+          "price": 0.5,
+          "tags": ["v", "vg", "df", "contains-soy"]
+        },
+        {
+          "name": "Takeaway or large",
+          "desc": "Add to any coffee.",
+          "price": 0.5,
+          "tags": ["v", "vg"]
+        }
+      ]
+    },
+    {
+      "section": "Milkshakes & smoothies",
+      "items": [
+        {
+          "name": "Milkshake",
+          "desc": "Chocolate, strawberry, vanilla or Oreo.",
+          "price": 13.0,
+          "tags": ["v", "contains-dairy"]
+        },
+        {
+          "name": "Homegrown Smoothie",
+          "desc": "Berry or feijoa.",
+          "price": 8.0,
+          "tags": ["v"]
         }
       ]
     }
