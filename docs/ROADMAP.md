@@ -1710,63 +1710,44 @@ here today: 16 findings → 0. 🔎 **Our stated root cause was wrong** — we n
 the dot-directory, upstream found the hyphen — and the write-up carries why a
 repro built from a single failing shape confirms the shape, not the cause.
 Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [ ] **`plainscan`: the scope is ruled, two sub-calls remain** `[S][docs]` ⚑ —
-  arrived 2026-08-09 with **1177** findings and no decided scope; **620 today**
-  in the gated scope. The scope question that was the whole item is **answered
-  twice over**: the owner ruled it here on 2026-08-09 ("live docs only, exempt
-  the records", implemented in `.plainscanignore`), and atelier ruled the same
-  way upstream on 2026-08-10 (`atelier@e390382`, `COMMUNICATION.md`: "each plane
-  is scoped to its reader"). The two rulings agree without having seen each
-  other, which is the strongest evidence the line is in the right place — and
-  ours is the wider net, also exempting `docs/reviews/` and `CHANGELOG.md`,
-  which upstream's built-in record globs do not cover. Both apply; keep both.
-  Current split, measured 2026-08-15: P1 undefined reference ×20, P2 unexpanded
-  acronym ×95, P3 long sentence ×298, P4 buried aside ×207.
-  **What is left is two narrower calls, not the scope:**
-  - 🎯 **The accepted-ADR exemption.** `docs/decisions/` carries ~314 of the
-    620. The house rule is **never edit an accepted ADR — supersede it**, so
-    those findings can *never* be fixed, which is precisely the definition
-    upstream used to exempt records ("a warning there has no possible fix and
-    is pure noise"). **Recommendation: exempt the directory.** An accepted ADR
-    is a record in every sense that matters — written once, dated, never
-    rewritten. The counter-argument is real and should be stated: exempting the
-    directory also stops checking *new* ADRs, which is a fail-open. But the
-    reply plane already gates the prose an agent writes at the moment it writes
-    it, so a new ADR is checked where the fix is actually possible.
-  - 🎯 **The P3 word limit.** 298 of the 620 are one rule — the 35-word
-    sentence cap — and atelier's own docstring calls it "a house call, not a
-    published standard" and "the one number in this file the principal should
-    rule on". Nothing should be swept against a number nobody has ratified.
-    **Recommendation: leave the number alone and do nothing on P3/P4 yet.**
-    Sweeping 505 P3+P4 findings is a mass prose rewrite of the live docs with
-    real risk of flattening meaning, and it would be done to satisfy an
-    unratified threshold.
-  ✅ **What was delivered without needing either call (2026-08-15).** P2 is the
-  one class fixable with no judgement, because `plainscan` ships a designed
-  escape: a term defined in `docs/GLOSSARY.md` counts as expanded everywhere.
-  That file did not exist here. Written and measured — **P2 96 → 13, total
-  620 → 543**. It earns its place independently of the scanner: this repo is
-  public, and a stranger meets "PWA", "CDN" and "SBOM" cold in
-  `ARCHITECTURE.md`. Each term is defined in the sense it carries *here*, from
-  grepping actual usage — `KV` is Cloudflare Workers KV (ADR 0017), `BP` is
-  Lighthouse's Best Practices score, `CA` is the certificate-authority bundle
-  that breaks `deploy.py`, not any of the other things those letters mean.
-  🔎 **Two findings from building it, both worth keeping.**
-  - **A glossary cannot fix P1, and it was worth reading the source to learn
-    that.** `_load_glossary`'s set feeds *only* the P2 acronym check; P1's
-    `_refid_defined_in` looks for a definition **inside the same document**
-    being scanned. So `S3`, `WGS84`, `D1` and `R2` still trip P1 wherever they
-    appear without a local definition, glossary or not. The 20 P1 findings are
-    not a backlog the glossary was ever going to clear.
-  - **`D1` is a trap.** It sits beside `S3`, `R2` and `WGS84` and reads like
-    the fourth member of a cloud-storage set, so "Cloudflare D1" is the
-    obvious gloss. Every in-repo occurrence is `atelier D1` — a citation into
-    atelier's own doctrine numbering. No "Cloudflare D1" reference exists
-    anywhere in this repo. The entry says so rather than guessing.
-  The 13 P2 findings left are deliberate: `TJ`, `KK`, `KC`, `KTC` are
-  short forms of venue names (TJ Katsu, KK Malaysian, KC Cafe, Khandallah
-  Trading Co), and `NNNN` is a placeholder. None is a term a glossary should
-  define, so they stay flagged rather than be papered over.
+✅ **`plainscan` — scope and both sub-calls ruled, 2026-08-15.** Arrived
+2026-08-09 with **1177** findings and no decided scope; **302 today**. The scope
+question was answered twice over and independently: the owner ruled it here on
+2026-08-09 ("live docs only, exempt the records"), and atelier ruled the same
+way upstream on 2026-08-10 (`atelier@e390382`). Ours is the wider net, also
+exempting `docs/reviews/` and `CHANGELOG.md`; both apply, both kept.
+- ✅ **Accepted ADRs exempted (owner ruled 2026-08-15).** They carried the
+  largest single block of findings, and "never edit an accepted one" means not
+  one could ever be fixed — the exact definition upstream used to exempt
+  records, and the exact way `pathscan` went decorative here. **The cost is
+  stated, not hidden:** new ADRs are no longer checked at commit time, which is
+  a real fail-open. Accepted because the **reply plane is untouched and has no
+  scoping** — every reply an agent writes is scanned, including the prose that
+  becomes a new ADR. The check moves to where the fix is possible.
+  🔎 **The obvious glob was the wrong one.** `docs/decisions` exempts the whole
+  directory including `README.md` — but that file is the live *index*, rewritten
+  every time a record lands, so its prose *can* be fixed and the ruling's
+  reasoning does not cover it. The glob is `docs/decisions/0*.md`: the numbered
+  records only. Measured difference: 266 with the loose glob, **302** with the
+  correct one. The looser number would have looked better and been wrong.
+- ✅ **The P3 word limit: left alone, nothing swept (owner ruled 2026-08-15).**
+  The 35-word sentence cap is the single largest rule, and atelier's own
+  docstring calls it "a house call, not a published standard" and "the one
+  number in this file the principal should rule on". Sweeping the P3+P4
+  findings would be a mass rewrite of the live docs against a threshold nobody
+  has ratified, with real risk of flattening meaning for no reader gain. The
+  docs are dense because the subject is. **P3/P4 stay advisory.**
+- ✅ **`docs/GLOSSARY.md` written 2026-08-15** — `plainscan`'s designed escape
+  for P2, which this repo had never used. **P2 96 → 8**, no prose rewritten. It
+  earns its place independently of the scanner: the repo is public and a
+  stranger meets "PWA", "CDN" and "SBOM" cold in `ARCHITECTURE.md`. Two findings
+  kept: a glossary **cannot** fix P1 (`_load_glossary` feeds only the acronym
+  check; P1 needs a definition inside the same document), and **`D1` is a trap**
+  — it sits beside `S3`, `R2` and `WGS84` and reads like Cloudflare D1, but
+  every occurrence is `atelier D1`, a doctrine citation.
+The residue is **302 advisory findings, all in live rewritable prose**, none of
+them the unfixable class. That is a scanner whose output can still be read.
+
 - [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
   doctrine block is the sanctioned *stamped copy* shape (it names atelier,

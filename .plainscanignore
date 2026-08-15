@@ -22,11 +22,18 @@
 # reads first. Same for ARCHITECTURE, DESIGN, STRATEGY, WORKPLAN, DEPLOY,
 # GO-PUBLIC, MODEL-ECONOMICS, CLAUDE.md and README.
 #
-# 🎯 ONE SUB-QUESTION LEFT FOR THE OWNER, not decided here: accepted ADRs under
-# docs/decisions/ carry ~180 findings and "never edit an accepted one" means
-# they can never be fixed — so they will stand forever and re-create the noise
-# problem. Exempting the directory would also stop checking NEW ADRs, which is
-# a genuine fail-open. Left checked for now; flagged in ROADMAP.md.
+# THE ADR SUB-QUESTION, RULED 2026-08-15 (owner): exempt docs/decisions/.
+# Accepted ADRs carried ~314 of the 543 findings, and "never edit an accepted
+# one" means not one of them could ever be fixed — the exact definition atelier
+# used upstream to exempt records ("a warning there has no possible fix and is
+# pure noise"), and the exact way pathscan went decorative here. An accepted ADR
+# IS a record: written once, dated, never rewritten.
+#
+# THE COST, STATED NOT HIDDEN: this also stops checking NEW ADRs at commit time,
+# which is a real fail-open. It is accepted because the REPLY plane is untouched
+# and has no scoping — every reply an agent writes to the principal is scanned,
+# including the prose that becomes a new ADR. The check moves to where the fix
+# is actually possible, rather than firing where it is forbidden.
 
 # Append-only session history. Written once, at the time, and true as of then.
 docs/SESSIONS.md
@@ -44,3 +51,11 @@ docs/reviews
 # same append-only class as the session logs, and it is the public record of
 # what changed when.
 CHANGELOG.md
+
+# Accepted decision records. Ruled 2026-08-15 (see the block above): an accepted
+# ADR is written once and never rewritten, so a finding here has no possible fix.
+# NOTE THE GLOB SHAPE: the numbered records only. docs/decisions/README.md is
+# deliberately NOT exempt — it is the live index, rewritten every time a record
+# lands, so its prose can be fixed and the ruling's own reasoning does not cover
+# it. Exempting the whole directory was the obvious move and the wrong one.
+docs/decisions/0*.md
