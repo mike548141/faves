@@ -2590,3 +2590,35 @@ reverted (`git diff site/` is empty).
 🎯 **For the owner:** the focus defect above; and `docs/decisions/README.md`
 was already missing its index entries for **0037** and **0038** before
 this session — 0039's is appended, the hole is not this session's to fill.
+
+### Addendum 2 — the close-out, and one rule proving itself the same day
+
+**A finding queued upstream, not fixed here.** The close-of-session whole-repo
+sweep reported `leakscan: 101 findings — commit blocked`, which was alarming and
+wrong. Every one sat inside a *sibling session's* worktree at
+`.claude/worktrees/`, gitignored but a full second checkout of this repo, where
+our root-relative `.leakscanignore` globs cannot reach. This tree is clean.
+Same root cause as the inflated `plainscan` count earlier: **the scanners walk
+gitignored nested worktrees.** Filed as atelier Track E item **E9**
+(`atelier@72cf216`) under queue-never-deliver — a finding only, no fix written
+upstream. Recorded here too, because until E9 lands the sweep must be given
+explicit paths and never a bare `.`.
+
+🔎 **The ADR-index rule proved itself within the hour.** The rule written this
+morning — *add the index entry in the same commit as the record* — was drafted
+from the 0025 collision. Checking the tree afterwards found **0037 and 0038 were
+both unindexed**, having landed earlier the same day. So the failure was not
+historic; it was live and ongoing. Both indexed. A rule that catches something
+the day it is written is a rule that was owed.
+
+**Pin advanced again**, `bde4928` → `72cf216`, which is this session's own E9
+filing and carries no doctrine change. Left alone, the next session's drift
+check would fire on a commit we wrote ourselves — the decorative-guard failure
+this repo has now hit four times. Drift at this pin is **0 commits, verified**.
+
+**Put-away.** Both of this session's worktrees merged and removed. The third
+session's `pandan-branches` worktree is live and locked — left strictly alone.
+No `CHANGELOG` entry is owed: everything this session touched is docs and dev
+tooling, and `site/` was never modified. Final sweep clean across `secretscan`,
+`leakscan`, `linkscan`, `datescan`, `wrapscan`, `spellscan`, `licenscan`,
+`pathscan` and `reviewscan`. CI green on every push.
