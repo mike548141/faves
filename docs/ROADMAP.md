@@ -1734,12 +1734,32 @@ Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
     Sweeping 505 P3+P4 findings is a mass prose rewrite of the live docs with
     real risk of flattening meaning, and it would be done to satisfy an
     unratified threshold.
-  🔎 **What was delivered without needing either call:** P2 is the one class
-  that is mechanically fixable with no judgement, because `plainscan` ships a
-  designed escape — a term defined in `docs/GLOSSARY.md` counts as expanded
-  everywhere. That file did not exist here. Written 2026-08-15; it earns its
-  place independently of the scanner, since this repo is public and a stranger
-  meets "PWA", "CDN" and "SBOM" cold in `ARCHITECTURE.md`.
+  ✅ **What was delivered without needing either call (2026-08-15).** P2 is the
+  one class fixable with no judgement, because `plainscan` ships a designed
+  escape: a term defined in `docs/GLOSSARY.md` counts as expanded everywhere.
+  That file did not exist here. Written and measured — **P2 96 → 13, total
+  620 → 543**. It earns its place independently of the scanner: this repo is
+  public, and a stranger meets "PWA", "CDN" and "SBOM" cold in
+  `ARCHITECTURE.md`. Each term is defined in the sense it carries *here*, from
+  grepping actual usage — `KV` is Cloudflare Workers KV (ADR 0017), `BP` is
+  Lighthouse's Best Practices score, `CA` is the certificate-authority bundle
+  that breaks `deploy.py`, not any of the other things those letters mean.
+  🔎 **Two findings from building it, both worth keeping.**
+  - **A glossary cannot fix P1, and it was worth reading the source to learn
+    that.** `_load_glossary`'s set feeds *only* the P2 acronym check; P1's
+    `_refid_defined_in` looks for a definition **inside the same document**
+    being scanned. So `S3`, `WGS84`, `D1` and `R2` still trip P1 wherever they
+    appear without a local definition, glossary or not. The 20 P1 findings are
+    not a backlog the glossary was ever going to clear.
+  - **`D1` is a trap.** It sits beside `S3`, `R2` and `WGS84` and reads like
+    the fourth member of a cloud-storage set, so "Cloudflare D1" is the
+    obvious gloss. Every in-repo occurrence is `atelier D1` — a citation into
+    atelier's own doctrine numbering. No "Cloudflare D1" reference exists
+    anywhere in this repo. The entry says so rather than guessing.
+  The 13 P2 findings left are deliberate: `TJ`, `KK`, `KC`, `KTC` are
+  short forms of venue names (TJ Katsu, KK Malaysian, KC Cafe, Khandallah
+  Trading Co), and `NNNN` is a placeholder. None is a term a glossary should
+  define, so they stay flagged rather than be papered over.
 - [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
   doctrine block is the sanctioned *stamped copy* shape (it names atelier,
