@@ -8,7 +8,27 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Three new Johnsonville places** — **Noodle Canteen**, **The Ramen Shop** and
+  **BurgerFuel** — and **Wellington Kebab Grill** goes from "menu coming soon" to
+  its full board: 75 items across kebabs, iskender, shawarmama boxes and the rest.
+  All read in the shops on 15 Aug 2026. <!-- datescan:allow: quoted content date — the day the menus were read, as the site prints it -->
+- **You can now see, at a glance, whether to trust what you're reading.** The
+  little icon beside a restaurant's name used to appear only when something was
+  wrong. Now it's always there and tells you which way it went: a blue ⓘ for
+  "menu and prices checked in store on 15 Aug 2026", an amber ⚠ when the menu <!-- datescan:allow: quoted UI copy — the date as the menu screen prints it -->
+  needs a refresh and why. Where we've also checked the phone number, address and
+  opening hours, it says so — and where we haven't, it stays quiet about them
+  rather than implying otherwise. (ADR 0037)
+- **Prices are stated as New Zealand dollars.** In the same icon, and under
+  **Prices** in About. Not tacked onto every price — just somewhere obvious if
+  you ever wonder.
+
 ### Changed
+- **Thai Tara Express has repriced, and you can see both prices.** Its new menu
+  card is dearer across the board (pad thai $14.50 → $21.50), and it now closes
+  between lunch and dinner. Nine dishes have gone and several were renamed; none
+  of the old records were thrown away, so the price history is intact.
 - **The "needs a refresh" warning now means something.** It used to appear on
   almost every place, because it fired whenever nobody had recorded a check —
   so it was easy to stop seeing. Now it asks *who told us*: if the prices came

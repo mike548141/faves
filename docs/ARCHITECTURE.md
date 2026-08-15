@@ -103,12 +103,21 @@ reversible in an afternoon.
   "picks": ["Char kway teow"],       // "our picks" — dish names, must exist in menu
   "priceBand": null,                 // optional curated "$"|"$$"|"$$$" — overrides the
   "pricePerPerson": null,            // median (price.js) when it misleads; figure optional
-  "verified": null,                  // ISO date the menu was last read, e.g. "2026-07-10"
+  "verified": null,                  // ISO date the MENU was last read, e.g. "2026-07-10"
   "verifiedBy": null,                // HOW it was read — closed set, see "Derivation" below.
                                      //   Required alongside `verified` on any NEW reading.
                                      //   Together these decide the "needs a refresh"
                                      //   caveat: first-party method + under 12 months
                                      //   old = no caveat (ADR 0036).
+  "detailsVerified": null,           // ISO date the venue's DETAILS — phone, address,
+  "detailsVerifiedBy": null,         //   opening hours — were last checked, and how.
+                                     //   Same closed method set. Optional and usually
+                                     //   absent: `verified` above dates the menu and
+                                     //   says nothing about the hours printed beside
+                                     //   it, so the menu screen only claims these were
+                                     //   checked when this pair says so (ADR 0037).
+                                     //   Unlike `verified`, a date here without a
+                                     //   method is an ERROR — no legacy corpus.
   "rating": null,                    // optional curated household rating, integer 1..5 (ours,
                                      //   static). Distinct from device-local personal ratings.
   "status": "stub",                  // stub | menu-complete | verified
@@ -267,6 +276,30 @@ without both halves. Everything else is a warning, and `verifiedBy` without
 Rendering is deliberately small: the menu header's date line reads
 "Read from a paper menu, 8 Aug 2026". <!-- datescan:allow: quoted UI copy — the date as the menu screen prints it, not a dated claim -->
 
+**Where a reading comes from (ADR 0038).** Off the source file's own embedded
+metadata, never off the import: EXIF `DateTimeOriginal` supplies `verified`
+(the file's mtime never does — copying a photo rewrites it, which would claim
+a *fresher* check than the evidence supports), GPS is evidence for `in-store`
+rather than an assertion of it, and a PDF trailer's `/CreationDate` bounds a
+`paper-menu` document's age. `tools/intake_exif.py` reports all of it, stdlib
+only. It **suggests** a method and never writes one — the same card is
+`in-store` at the counter and `paper-menu` on a kitchen table, and only a
+human looking at the image can tell. GPS sorts loose files to a shopping
+strip; it does not pin a shopfront (four Johnsonville venues fell inside one
+25 m error circle), so coordinates still come from the geocoded address.
+
+#### Details are a second reading, not the same one (ADR 0037)
+
+`verified` dates the **menu**. `detailsVerified`/`detailsVerifiedBy` date the
+**venue's details** — phone, address, opening hours — because they are
+separately true and rot separately: a card photographed at the counter dates
+the prices on it, and the hours printed alongside may be a year old. Same
+shape, same closed method set, same full-date precision.
+
+Absent means those were never checked as a distinct act — the honest majority
+case, and the menu screen then declines to mention them at all rather than
+letting the menu's date cover them.
+
 #### The "needs a refresh" caveat — the method decides, the date ages it (ADR 0036)
 
 `temporal.js` `refreshCaveat(record, asOf)` is the single answer to *does this
@@ -299,6 +332,16 @@ Exactly *at* the limit is still fresh; a partial `verified` widens to its
 freshness. Recipes (Cook at Home) never caveat — they are ours, and there is no
 shop to check with. The caveat copy stays English like every other caution here
 (`reo.js`'s safety note).
+
+**Both answers are shown, from one control (ADR 0037).** The ⓘ beside the venue
+name is always present and only its *tone* changes: ⚠ amber for the caution
+above, ⓘ blue for "menu and prices checked in store on 15 Aug 2026" — because <!-- datescan:allow: quoted UI copy — the date as the menu screen prints it, not a dated claim -->
+showing it only on bad news made its absence ambiguous, and "we checked" and
+"no comment" are not the same fact. `--info` and `--warn` sit 1.06:1 apart in
+luminance, so the **glyph and the accessible name** carry the distinction and
+colour only reinforces it; `--info` is deliberately not `--ok`, which already
+means "open right now". The blue note is also where the **currency** is stated
+(the About dialog carries the same fact) — never appended to individual prices.
 
 **A dish is never deleted when it leaves the menu** — it keeps its record and
 gains `available.offBy` (or `to`). A hard delete destroys every date attached to

@@ -1743,6 +1743,38 @@ loanword "supper" — unfortunate on a food app, though context resolves it).
 
 ---
 
+## Theme 17 — from the 2026-08-15 Johnsonville intake
+
+- [ ] 🎯 **Street numbers for the three new Johnsonville venues** `[S][data]` —
+  **Noodle Canteen**, **The Ramen Shop** and **BurgerFuel** carry street-level
+  addresses ("Johnsonville Road, Johnsonville, Wellington 6037") and **null**
+  `lat`/`lng`. Not an oversight: the photos' GPS put all four venues on that
+  strip inside a **25 m** circle — that is the phone's error, not real
+  separation, so a pin taken from it could land on the neighbouring shop. The
+  coordinate audit's own rule (2026-08-09) is that a wrong pin is worse than an
+  imprecise one, and `audit_coords.py` geocodes *from* an address, so the
+  number is the blocking input. **Owner has been to all three.** Once the
+  numbers land, geocode and the pins follow for free.
+- [ ] **Thai Tara A12 "Prawns twister" price** `[XS][data]` — the handwritten
+  sticker is unreadable at native resolution (leading digit 3 or 5; both
+  implausible beside its $12.90 neighbours), so the dish is **absent** from the
+  record rather than recorded wrong. One glance at the card settles it.
+- [ ] **Age `detailsVerified` the way `refreshCaveat` ages `verified`** `[S][js]`
+  — today a venue whose details are stale and one whose details were never
+  checked both render the same (the note simply omits them). Deliberately not
+  built now: **three records** carry the field, which is no evidence base for
+  choosing a limit, and inventing one would repeat the mistake ADR 0036 had to
+  correct. Revisit once the field has a corpus behind it.
+- [ ] **Hours and phone for the three new venues** `[S][data]` — their boards
+  gave a menu and nothing else, so `hours` is null and the "Open now" filter
+  can't see them. `detailsVerified` is correctly absent (ADR 0037) and stays
+  that way until someone actually checks.
+- [ ] **Reo: the confidence-note strings** `[S][reo]` — the new "Up to date…"
+  copy stays English alongside the caution it shares a popover with. Added to
+  the fluent-speaker review queue with the other drafts above.
+
+---
+
 ## Recommended sequence
 
 By value-per-effort and dependency order:
