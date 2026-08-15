@@ -139,6 +139,7 @@
             { "value": 12.9, "recorded": "2026-08-15" }
           ], "tags": [] },
         { "name": "Crispy pork snack", "code": "A11", "desc": "Sliced crispy pork belly served with sweet dark soy sauce.", "price": 12.9, "tags": ["contains-soy", "contains-gluten"] },
+        { "name": "Prawns twister", "code": "A12", "desc": "Deep-fried succulent seasoned prawn. Served with sweet chilli sauce. Price not recorded — the menu's handwritten price sticker was unreadable, so ask when you order.", "price": null, "tags": ["contains-shellfish"] },
         { "name": "Spicy squid tentacles", "code": "A13", "desc": "Deep-fried squid tentacles served with sweet chilli sauce.", "price": 12.9, "tags": ["spicy-1", "contains-shellfish"] },
         { "name": "Mix appetiser for 1", "code": "A14", "desc": "A mixture of spring roll, curry puff, deep fried wonton, money bag, prawn tempura and fish cake. Served with sweet and sour sauce.", "price": 14.5, "tags": ["contains-shellfish", "contains-gluten", "contains-egg"] },
         { "name": "Prawn spring rolls", "desc": "Deep fried whole prawn wrapped with rice paper. Served with sweet & sour sauce.", "price": 6.5, "available": { "offBy": "2026-08-15" }, "tags": ["contains-shellfish"] },
@@ -281,7 +282,10 @@
             { "value": 26.5, "recorded": "2026-08-15" }
           ], "revisions": [
             { "recorded": "2026-08-15", "change": "Menu renamed it from “Duck noodle soup” to “Duck noodle”." }
-          ], "tags": [] }
+          ], "tags": [] },
+        { "name": "Laksa curry noodle soup", "desc": "Asian style rice noodles with laksa sauce, coconut cream, bean sprouts, dry shallot, onions, Vietnamese mint and a choice of meat.", "price": [
+            { "value": 21.5, "recorded": "2026-08-15", "method": "paper-menu", "note": "From the takeaway leaflet collected 2026-08-15; not on the in-store card." }
+          ], "tags": ["contains-shellfish"] }
       ]
     },
     {

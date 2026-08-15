@@ -8,17 +8,28 @@
   ],
   "area": "Johnsonville",
   "city": "Wellington",
-  "address": "Johnsonville Road, Johnsonville, Wellington 6037",
-  "lat": null,
-  "lng": null,
+  "address": "105 Johnsonville Road, Johnsonville, Wellington 6037",
+  "lat": -41.22504,
+  "lng": 174.8075,
   "services": [
     "dine-in",
     "takeaway"
   ],
-  "phone": null,
+  "phone": "+64 4 461 6308",
   "website": "https://www.noodlecanteen.co.nz",
-  "ordering": [],
-  "hours": null,
+  "ordering": [
+    { "platform": "Uber Eats", "url": "https://www.ubereats.com/nz/store/noodle-canteen-johnsonville/c3MgZDfJSguC24mvEvZEwQ" },
+    { "platform": "DoorDash", "url": "https://www.doordash.com/store/noodle-canteen-wellington-23363693/" }
+  ],
+  "hours": {
+    "mon": [["11:00", "13:00"], ["16:00", "21:30"]],
+    "tue": [["11:00", "13:00"], ["16:00", "21:30"]],
+    "wed": [["11:00", "21:30"]],
+    "thu": [["11:00", "22:00"]],
+    "fri": [["11:00", "22:00"]],
+    "sat": [["11:00", "22:00"]],
+    "sun": [["11:00", "21:30"]]
+  },
   "vibe": [
     "cheap-and-cheerful",
     "quick"
@@ -30,6 +41,8 @@
   ],
   "verified": "2026-08-15",
   "verifiedBy": "in-store",
+  "detailsVerified": "2026-08-15",
+  "detailsVerifiedBy": "third-party",
   "lifecycle": {
     "added": "2026-08-15"
   },
