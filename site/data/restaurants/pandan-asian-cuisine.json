@@ -1,0 +1,188 @@
+{
+  "id": "pandan-asian-cuisine",
+  "name": "Pandan Asian Cuisine",
+  "cuisine": [
+    "Malaysian",
+    "Indian",
+    "Asian"
+  ],
+  "area": "Melling",
+  "city": "Lower Hutt",
+  "address": "5 Melling Road, Lower Hutt 5010",
+  "lat": -41.20357,
+  "lng": 174.91093,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 566 7619",
+  "website": "https://www.pandanasiancuisine.nz",
+  "ordering": [
+    { "platform": "Order direct", "url": "https://order.sipocloudpos.com/7028952" }
+  ],
+  "hours": {
+    "mon": [],
+    "tue": [["11:30", "14:30"], ["16:30", "21:30"]],
+    "wed": [["11:30", "14:30"], ["16:30", "21:30"]],
+    "thu": [["11:30", "14:30"], ["16:30", "21:30"]],
+    "fri": [["11:30", "14:30"], ["16:30", "21:30"]],
+    "sat": [["11:30", "14:30"], ["17:00", "21:30"]],
+    "sun": [["11:30", "14:30"], ["17:00", "21:00"]]
+  },
+  "vibe": [],
+  "picks": [
+    "Beef rendang",
+    "Curry laksa",
+    "Roti chanai (2 pieces) with peanut sauce"
+  ],
+  "verified": "2026-08-15",
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-08-15",
+  "detailsVerifiedBy": "official-site",
+  "lifecycle": {
+    "added": "2026-08-15"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Entrée",
+      "items": [
+        { "name": "Satay beef", "desc": "6 pieces. Marinated in traditional Malay mild spices, skewered and grilled, served with the popular peanut sauce.", "price": 17, "tags": ["contains-peanuts", "contains-soy"] },
+        { "name": "Pan fried prawns", "desc": "Pan flamed prawns with capsicum and vegetables finished in a multi-flavoured sauce.", "price": 17, "tags": ["contains-shellfish"] },
+        { "name": "Garlic chilli prawns", "desc": "Pan flamed prawns with toasted garlic finished in a spicy traditional Malay sauce.", "price": 17, "tags": ["contains-shellfish", "spicy-2"] },
+        { "name": "Garlic chilli squid", "desc": "Pan flamed squid with toasted garlic finished in a spicy traditional Malay sauce.", "price": 17, "tags": ["contains-shellfish", "spicy-2"] },
+        { "name": "Curry puff samosa", "desc": "Popular Malaysian samosa — cooked diced kūmara and potato pursed in homemade pastry.", "price": 12.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Spring roll", "desc": "Authentic vegetable spring rolls served with sweet chilli sauce.", "price": 12, "tags": ["v", "contains-gluten"] },
+        { "name": "Murtabak", "desc": "Roti pursed with diced potato, onion, egg and your choice of filling. Served with curry sauce.", "price": 12, "tags": ["contains-egg", "contains-gluten"] }
+      ]
+    },
+    {
+      "section": "Malaysian dishes",
+      "items": [
+        { "name": "Chicken rendang", "desc": "Various spices combined and cooked with ground spices, finished in a semi-dry gravy. A very popular traditional Malay dish.", "price": 25, "tags": [] },
+        { "name": "Klang chicken curry", "desc": "A South Indian style dish founded in a small town called Klang, which became popular throughout Malaysia over time.", "price": 24, "tags": [] },
+        { "name": "Chicken sambal", "desc": "A traditional Malay and Indonesian dish where chilli and exotic spices are cooked into a fiery hot gravy.", "price": 25, "tags": ["spicy-3"] },
+        { "name": "Bayam chicken curry", "desc": "Grilled chicken cooked in a mildly spiced rich spinach gravy.", "price": 24, "tags": ["spicy-1"] },
+        { "name": "Ayam paprik", "desc": "Stir fried chicken with fresh vegetables and homemade sauce.", "price": 24, "tags": [] },
+        { "name": "Beef rendang", "desc": "Various spices combined and cooked with ground spices, finished in a semi-dry gravy. A very popular traditional Malay dish.", "price": 25, "tags": [] },
+        { "name": "Beef sambal", "desc": "A traditional Malay and Indonesian dish where chilli and exotic spices are cooked into a fiery hot gravy.", "price": 25, "tags": ["spicy-3"] },
+        { "name": "Lamb rendang", "desc": "Various spices combined and cooked with ground spices, finished in a semi-dry gravy.", "price": 27, "tags": [] },
+        { "name": "Lamb sambal", "desc": "A traditional Malay and Indonesian dish where chilli and exotic spices are cooked into a fiery hot gravy.", "price": 27, "tags": ["spicy-3"] },
+        { "name": "K.L. lamb curry", "desc": "Village style curry, where various ground spices are combined and slow cooked.", "price": 26, "tags": [] },
+        { "name": "Goat peratal", "desc": "Tender meat cooked with various ground spices, slow cooked semi-dry.", "price": 26, "tags": [] },
+        { "name": "Goat curry", "desc": "Tender meat cooked with various ground spices, slow cooked in gravy.", "price": 26, "tags": [] },
+        { "name": "Bayam fish curry", "desc": "Grilled fish cooked in a mildly spiced rich spinach gravy.", "price": 27, "tags": ["spicy-1"] },
+        { "name": "Fish lemak", "desc": "Marinated seafood cooked true to its originality from villages throughout Malaysia.", "price": 27, "tags": ["contains-shellfish"] },
+        { "name": "Prawn lemak", "desc": "Marinated seafood cooked true to its originality from villages throughout Malaysia.", "price": 27, "tags": ["contains-shellfish"] },
+        { "name": "Vegetable sambal", "desc": "A traditional Malay and Indonesian dish where chilli and exotic spices are cooked into a fiery hot gravy.", "price": 24, "tags": ["v", "spicy-3"] }
+      ]
+    },
+    {
+      "section": "Indian dishes",
+      "items": [
+        { "name": "Chicken varuval", "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.", "price": 24, "tags": [] },
+        { "name": "Lamb jalfrezi", "desc": "A flavourful mix of lamb, vibrant bell peppers and aromatic spices, simmered in the house jalfrezi sauce.", "price": 26, "tags": [] },
+        { "name": "Butter chicken", "desc": "Chicken pieces marinated overnight, grilled and cooked with rich butter. House speciality.", "price": 24, "tags": ["contains-dairy"] },
+        { "name": "Mango chicken", "desc": "Chicken pieces marinated overnight, grilled and cooked with mango sauce. House speciality.", "price": 24, "tags": [] },
+        { "name": "Chicken tikka masala", "desc": "Marinated and grilled chicken cooked with capsicum, finished in a multi-flavoured gravy.", "price": 24, "tags": ["contains-dairy"] },
+        { "name": "Lamb tikka masala", "desc": "Marinated and grilled lamb cooked with capsicum, finished in a multi-flavoured gravy.", "price": 26, "tags": ["contains-dairy"] },
+        { "name": "Chicken korma", "desc": "Chicken cooked in a rich cashew sauce.", "price": 24, "tags": ["contains-nuts", "contains-dairy"] },
+        { "name": "Lamb korma", "desc": "Lamb cooked in a rich cashew sauce.", "price": 26, "tags": ["contains-nuts", "contains-dairy"] },
+        { "name": "Beef varuval", "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.", "price": 24, "tags": [] },
+        { "name": "Beef vindaloo", "desc": "Beef cooked in a fiery hot chilli based gravy.", "price": 24, "tags": ["spicy-3"] },
+        { "name": "Chicken jalfrezi", "desc": "Marinated chicken cooked with seasonal vegetables, finished in a semi-dry gravy.", "price": 24, "tags": [] },
+        { "name": "Lamb varuval", "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.", "price": 26, "tags": [] }
+      ]
+    },
+    {
+      "section": "Biryani",
+      "items": [
+        { "name": "Prawn biryani", "desc": "Prawn cooked with fruits and cashew nuts together with rice and exotic spices.", "price": 27, "tags": ["contains-shellfish", "contains-nuts"] },
+        { "name": "Chicken biryani", "desc": "Chicken cooked with fruits and cashew nuts together with rice and exotic spices.", "price": 25, "tags": ["contains-nuts"] },
+        { "name": "Vegetable biryani", "desc": "Vegetables cooked with fruits and cashew nuts together with rice and exotic spices.", "price": 23, "tags": ["v", "contains-nuts"] },
+        { "name": "Lamb biryani", "desc": "Lamb cooked with fruits and cashew nuts together with rice and exotic spices.", "price": 27, "tags": ["contains-nuts"] },
+        { "name": "Egg biryani", "desc": "Egg cooked with fruits and cashew nuts together with rice and exotic spices.", "price": 23, "tags": ["v", "contains-egg", "contains-nuts"] }
+      ]
+    },
+    {
+      "section": "Roti chanai",
+      "items": [
+        { "name": "Roti chanai (2 pieces) with peanut sauce", "desc": null, "price": 13.5, "tags": ["v", "contains-peanuts", "contains-gluten"] },
+        { "name": "Roti chanai (2 pieces) with curry sauce", "desc": null, "price": 12, "tags": ["v", "contains-gluten"] },
+        { "name": "Plain roti chanai", "desc": null, "price": 4.5, "tags": ["v", "contains-gluten"] },
+        { "name": "Garlic chanai", "desc": null, "price": 5.5, "tags": ["v"] },
+        { "name": "Butter chanai", "desc": null, "price": 6, "tags": ["v", "contains-dairy"] },
+        { "name": "Egg, onion and chilli chanai", "desc": null, "price": 6, "tags": ["v", "contains-egg", "spicy-1"] },
+        { "name": "Garlic, cheese and onion chanai", "desc": null, "price": 7.5, "tags": ["v", "contains-dairy"] }
+      ]
+    },
+    {
+      "section": "Asian delicacies",
+      "items": [
+        { "name": "Sweet and sour fish", "desc": "Crispy fish fillet tossed in a tangy sweet and sour sauce with peppers, onion and pineapple.", "price": 27, "tags": [] },
+        { "name": "Sweet and sour chicken", "desc": null, "price": 25, "tags": [] },
+        { "name": "Dry chilli chicken", "desc": "A popular Malaysian dish, cooked with dry chilli and crispy chicken pieces lightly tossed in a spicy chilli sambal.", "price": 25, "tags": ["spicy-3"] },
+        { "name": "Ginger soy chicken", "desc": "Chicken marinated in soy sauce and ginger paste, cooked with fresh vegetables.", "price": 25, "tags": ["contains-soy", "contains-gluten"] },
+        { "name": "Gado-gado", "desc": "Stir fried mixed seasonal vegetables and bean curd, topped with peanut sauce.", "price": 24, "tags": ["v", "contains-peanuts", "contains-soy"] },
+        { "name": "Curry laksa", "desc": "Noodles, seafood and chicken prepared in a medium spicy laksa sauce.", "price": 23, "tags": ["spicy-2", "contains-shellfish"] }
+      ]
+    },
+    {
+      "section": "Vegetarian dishes",
+      "items": [
+        { "name": "Tofu rendang", "desc": "Various spices combined and cooked with ground spices, finished in a semi-dry gravy.", "price": 24, "tags": ["v", "contains-soy"] },
+        { "name": "Dhal spinach curry", "desc": "South Indian style dish cooked with toor dhal, spinach and fresh vegetables, finished with coconut milk.", "price": 23, "tags": ["v"] },
+        { "name": "Vegetable tofu lemak", "desc": "Seasonal vegetables cooked true to their originality from villages throughout Malaysia.", "price": 23, "tags": ["v", "contains-soy"] },
+        { "name": "Bayam tofu curry", "desc": "A combination of tofu prepared in a spinach gravy.", "price": 23, "tags": ["v", "contains-soy"] },
+        { "name": "Stir fried tofu", "desc": "Pan flamed tofu and vegetables cooked in a special mild sauce.", "price": 23, "tags": ["v", "contains-soy"] }
+      ]
+    },
+    {
+      "section": "Off the wok",
+      "items": [
+        { "name": "Nasi goreng", "desc": "Malaysian style stir fried rice cooked with vegetables, chicken and seafood.", "price": 23, "tags": ["contains-shellfish"] },
+        { "name": "Char kuay teow goreng", "desc": "Flaky rice noodles stir fried in a homemade sauce with chicken and seafood.", "price": 23, "tags": ["contains-shellfish"] },
+        { "name": "Mamak mee goreng", "desc": "A combination of chicken and seafood stir fried in a special sauce with tofu. Popular in East Malaysia.", "price": 23, "tags": ["contains-soy", "contains-shellfish", "contains-gluten"] },
+        { "name": "Hokkien noodles", "desc": "A combination of fresh noodles, seafood and chicken stir fried and finished in a thick dark sauce.", "price": 23, "tags": ["contains-shellfish", "contains-gluten"] },
+        { "name": "Kung foo char", "desc": "Flaky rice noodles, seafood and chicken stir fried and finished in a thick white sauce.", "price": 27, "tags": ["contains-shellfish"] },
+        { "name": "Mee hoon goreng", "desc": "Vermicelli rice noodles, seafood, chicken and vegetables stir fried in a multi-flavoured sauce.", "price": 23, "tags": ["contains-shellfish"] }
+      ]
+    },
+    {
+      "section": "Sides",
+      "items": [
+        { "name": "Mixed vegetable", "desc": null, "price": 12, "tags": ["v"] },
+        { "name": "Stir fry bok choy", "desc": null, "price": 12, "tags": ["v"] },
+        { "name": "Raita", "desc": null, "price": 6, "tags": ["v", "contains-dairy"] },
+        { "name": "Papadum", "desc": null, "price": 4, "tags": ["v"] },
+        { "name": "Plain rice", "desc": null, "price": 3.5, "tags": ["v", "vg", "gf"] },
+        { "name": "Coconut rice", "desc": null, "price": 5.5, "tags": ["v", "vg", "gf"] },
+        { "name": "Peanut sauce", "desc": null, "price": 6, "tags": ["v", "contains-peanuts"] },
+        { "name": "Anchovy sambal", "desc": null, "price": 8, "tags": ["spicy-3"] }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "items": [
+        { "name": "Chocolate milkshake", "desc": null, "price": 6.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Lime milkshake", "desc": null, "price": 6.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Strawberry milkshake", "desc": null, "price": 6.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Mango lassi", "desc": null, "price": 6.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Milo ice", "desc": null, "price": 7.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Masala tea", "desc": null, "price": 5.5, "tags": ["v"] },
+        { "name": "Teh tarik", "desc": null, "price": 6.5, "tags": ["v", "contains-dairy"] },
+        { "name": "Cranberry juice", "desc": null, "price": 5.5, "tags": ["v", "vg"] },
+        { "name": "Grape juice", "desc": null, "price": 5.5, "tags": ["v", "vg"] },
+        { "name": "Orange juice", "desc": null, "price": 5.5, "tags": ["v", "vg"] },
+        { "name": "Pineapple juice", "desc": null, "price": 5.5, "tags": ["v", "vg"] },
+        { "name": "Bundaberg", "desc": null, "price": 6.5, "tags": ["v", "vg"] },
+        { "name": "Fanta", "desc": null, "price": 5, "tags": ["v", "vg"] },
+        { "name": "Sprite", "desc": null, "price": 5, "tags": ["v", "vg"] },
+        { "name": "Diet Coke", "desc": null, "price": 5, "tags": ["v", "vg"] },
+        { "name": "Coke No Sugar", "desc": null, "price": 5, "tags": ["v", "vg"] },
+        { "name": "Coke Zero", "desc": null, "price": 5, "tags": ["v", "vg"] },
+        { "name": "Raspberry", "desc": null, "price": 5, "tags": ["v", "vg"] }
+      ]
+    }
+  ]
+}

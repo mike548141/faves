@@ -7,17 +7,27 @@
   ],
   "area": "Johnsonville",
   "city": "Wellington",
-  "address": "Johnsonville Road, Johnsonville, Wellington 6037",
-  "lat": null,
-  "lng": null,
+  "address": "109 Johnsonville Road, Johnsonville, Wellington 6037",
+  "lat": -41.22515,
+  "lng": 174.80748,
   "services": [
     "dine-in",
     "takeaway"
   ],
   "phone": "+64 4 213 9076",
   "website": "https://theramenshop.co.nz",
-  "ordering": [],
-  "hours": null,
+  "ordering": [
+    { "platform": "DoorDash", "url": "https://www.doordash.com/en-NZ/store/the-ramen-shop-wellington-26094347/" }
+  ],
+  "hours": {
+    "mon": [["11:30", "21:00"]],
+    "tue": [["11:30", "21:00"]],
+    "wed": [["11:30", "21:00"]],
+    "thu": [["11:30", "21:00"]],
+    "fri": [["11:30", "21:00"]],
+    "sat": [["11:30", "21:00"]],
+    "sun": [["11:30", "21:00"]]
+  },
   "vibe": [
     "counter-order"
   ],
@@ -29,7 +39,7 @@
   "verified": "2026-08-15",
   "verifiedBy": "in-store",
   "detailsVerified": "2026-08-15",
-  "detailsVerifiedBy": "in-store",
+  "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-15"
   },

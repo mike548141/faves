@@ -6,17 +6,25 @@
   ],
   "area": "Johnsonville",
   "city": "Wellington",
-  "address": "Johnsonville Road, Johnsonville, Wellington 6037",
-  "lat": null,
-  "lng": null,
+  "address": "103 Johnsonville Road, Johnsonville, Wellington 6037",
+  "lat": -41.22499,
+  "lng": 174.8075,
   "services": [
     "dine-in",
     "takeaway"
   ],
-  "phone": null,
-  "website": "https://www.burgerfuel.com",
+  "phone": "+64 4 477 4008",
+  "website": "https://www.burgerfuel.com/nz/locations/johnsonville",
   "ordering": [],
-  "hours": null,
+  "hours": {
+    "mon": [["10:00", "22:00"]],
+    "tue": [["10:00", "22:00"]],
+    "wed": [["10:00", "22:00"]],
+    "thu": [["10:00", "22:00"]],
+    "fri": [["10:00", "23:00"]],
+    "sat": [["10:00", "23:00"]],
+    "sun": [["10:00", "22:00"]]
+  },
   "vibe": [
     "burgers-done-properly"
   ],
@@ -27,6 +35,8 @@
   ],
   "verified": "2026-08-15",
   "verifiedBy": "in-store",
+  "detailsVerified": "2026-08-15",
+  "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-15"
   },

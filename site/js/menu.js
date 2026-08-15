@@ -436,6 +436,13 @@ const CHECKED_PHRASE = {
   "paper-menu": "read from the shop’s own menu",
   "official-site": "checked against the place’s own site",
   phone: "confirmed with the place by phone",
+  // The two untrusted methods can never head the MENU half of this note —
+  // refreshCaveat sends those to the amber tone. They reach it only via
+  // `detailsVerified`, where a directory listing is often all there is for a
+  // phone number, so they say plainly what they are rather than inheriting
+  // the bare "checked" fallback and sounding first-party.
+  "delivery-app": "taken from a delivery app",
+  "third-party": "taken from a directory listing",
 };
 
 /**
