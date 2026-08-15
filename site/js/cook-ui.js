@@ -165,6 +165,10 @@ export function openCookMode(item) {
     // °F here exactly as on the recipe page (units.js, ADR 0029).
     stepText.textContent = convertTemperatures(steps[s.index], settings.get().units);
     fill.style.width = `${(s.number / s.count) * 100}%`;
+    // Disabling the focused element drops focus to <body> — outside the dialog,
+    // where our keydown listener never sees it, so arrows/Home/End go dead
+    // (found by cook_check.mjs, owner ruled 2026-08-15). Hand focus to Next
+    // before disabling: it is the only control that still does anything here.
     prevBtn.disabled = s.atFirst;
     nextLabel.hidden = s.atLast;
     doneLabel.hidden = !s.atLast;

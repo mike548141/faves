@@ -8,27 +8,41 @@
   ],
   "area": "Melling",
   "city": "Lower Hutt",
-  "address": "5 Melling Road, Lower Hutt 5010",
-  "lat": -41.20357,
-  "lng": 174.91093,
   "services": [
     "dine-in",
     "takeaway"
   ],
-  "phone": "+64 4 566 7619",
   "website": "https://www.pandanasiancuisine.nz",
   "ordering": [
-    { "platform": "Order direct", "url": "https://order.sipocloudpos.com/7028952" }
+    { "platform": "Order direct — Melling", "url": "https://order.sipocloudpos.com/7028952" },
+    { "platform": "Order direct — Press Hall", "url": "https://order.sipocloudpos.com/5434814" }
   ],
-  "hours": {
-    "mon": [],
-    "tue": [["11:30", "14:30"], ["16:30", "21:30"]],
-    "wed": [["11:30", "14:30"], ["16:30", "21:30"]],
-    "thu": [["11:30", "14:30"], ["16:30", "21:30"]],
-    "fri": [["11:30", "14:30"], ["16:30", "21:30"]],
-    "sat": [["11:30", "14:30"], ["17:00", "21:30"]],
-    "sun": [["11:30", "14:30"], ["17:00", "21:00"]]
-  },
+  "locations": [
+    {
+      "label": "Melling",
+      "address": "5 Melling Road, Lower Hutt 5010",
+      "lat": -41.20357,
+      "lng": 174.91093,
+      "phone": "+64 4 566 7619",
+      "hours": {
+        "mon": [],
+        "tue": [["11:30", "14:30"], ["16:30", "21:30"]],
+        "wed": [["11:30", "14:30"], ["16:30", "21:30"]],
+        "thu": [["11:30", "14:30"], ["16:30", "21:30"]],
+        "fri": [["11:30", "14:30"], ["16:30", "21:30"]],
+        "sat": [["11:30", "14:30"], ["17:00", "21:30"]],
+        "sun": [["11:30", "14:30"], ["17:00", "21:00"]]
+      }
+    },
+    {
+      "label": "Press Hall",
+      "address": "80 Willis Street, Te Aro, Wellington 6011",
+      "lat": -41.28806,
+      "lng": 174.77474,
+      "phone": null,
+      "hours": null
+    }
+  ],
   "vibe": [],
   "picks": [
     "Beef rendang",

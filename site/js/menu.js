@@ -941,6 +941,9 @@ function render(r) {
 function compactContactBar(r) {
   const inner = el("div", { className: "contact-bar-inner" });
 
+  // Reads `r.hours` / `r.phone` and that is correct even for a multi-location
+  // venue: `data.js` projects the primary branch up to the top level before
+  // anything here sees the record, precisely so these consumers stay simple.
   // Open-now status, mirroring the full card's badge (dot + "Open · until 9pm").
   // A lifecycle closure replaces it — the same precedence the card applies.
   const closure = closureBadge(r, todayNZ());

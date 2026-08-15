@@ -211,9 +211,14 @@ async function run(opts) {
     const navsAfterLoad = navigations;
 
     const first = await snap();
+    // One tagged dish is enough for the real assertion below ("every tagged
+    // dish lights up"), and the zero case already hard-errors before the
+    // browser starts. It used to demand five, which turned a healthy venue with
+    // four into a red FAIL that meant nothing — and a red result that means
+    // nothing is how a check stops being read.
     report.check(
       "menu renders with allergen-tagged dishes",
-      first.dishes > 0 && first.allergen.length >= 5,
+      first.dishes > 0 && first.allergen.length >= 1,
       `${first.dishes} dishes, ${first.allergen.length} tagged ${ALLERGEN.key}`
     );
     report.check(
@@ -296,6 +301,23 @@ async function run(opts) {
       );
     }
     await evalPage(`document.querySelector(".menu-title-group .caveat-btn").click()`);
+
+    // --- 1c. A multi-location venue shows every branch ----------------------
+    // Not a test of hours/phone: `data.js` projects the primary branch up to
+    // the top level, so those are covered by the single-site path already. What
+    // is genuinely branch-only is the aside listing ALL branches — a venue with
+    // two addresses that renders one is the failure worth catching.
+    const branchCount = venue.locations?.length ?? 1;
+    if (branchCount > 1) {
+      const shown = await evalPage(
+        `document.querySelectorAll(".menu-aside .contact-row[href^='http'], .menu-aside .contact-row[href^='geo']").length`
+      );
+      report.check(
+        "every branch of a multi-location venue is listed",
+        shown >= branchCount,
+        `${branchCount} branches in the record, ${shown} address row(s) rendered`
+      );
+    }
 
     // --- 2. Flip an allergen preference, live ----------------------------
     await click("#overflow-btn");

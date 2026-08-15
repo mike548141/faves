@@ -2521,6 +2521,8 @@ every one of the 302 sits in live, rewritable prose. None is in the
 unfixable class. That is the difference between a scanner that can still be
 read and one that cannot.
 
+---
+
 ## 2026-08-15 — A real-browser guard for cook mode (faves-cook-guard) — Opus 5
 
 Closed the 🚩 on ROADMAP 17d: cook mode had no durable browser check of
@@ -2622,3 +2624,62 @@ No `CHANGELOG` entry is owed: everything this session touched is docs and dev
 tooling, and `site/` was never modified. Final sweep clean across `secretscan`,
 `leakscan`, `linkscan`, `datescan`, `wrapscan`, `spellscan`, `licenscan`,
 `pathscan` and `reviewscan`. CI green on every push.
+
+---
+
+## 2026-08-15 — Two owner rulings, and a bug I diagnosed wrong (wt: pandan-branches) — Opus 5
+
+**1. The menu-conflict rule, ruled and recorded.** For any two menus of the same
+venue that disagree: **the dine-in card wins on contradictions** (prices, dish
+numbers); **dishes are additive** — anything on either menu is in. Both halves
+already matched what the previous round had recorded, so nothing in the data
+changed; the value is that the *rule* now exists for the next conflict. Detail
+and the reasoning behind each half → `ROADMAP-DONE.md`.
+
+**2. Pandan is now a two-branch venue (ADR 0011).** Owner supplied the second
+address and ruled the menu is the same at both. Melling keeps its phone and
+hours; the Press Hall branch geocoded to house level — OSM names the
+node "Press Hall Eatery", which is a strong confirmation. Its `hours` stay null:
+the food hall publishes a house standard *and* says to check with each eatery,
+which is not a claim about this stall, and a wrong "Open now" sends someone into
+town for nothing.
+
+**3. 🐛 The part worth reading: I diagnosed a bug that did not exist.** Reading
+`app.js` and `menu.js` in isolation, I saw the card badge and the pinned contact
+bar reading `r.hours` / `r.phone`, noted that a multi-location record carries
+neither at the top level, and concluded both would render empty for every
+multi-location venue. I wrote the "fix", wrote a `device_check` assertion for it,
+and the assertion **passed against the deliberately reintroduced bug**.
+
+That is the tell. `data.js` `normaliseVenue()` projects the primary branch up to
+the top level before any consumer sees the record — *exactly* so those reads stay
+simple — and says so in its own comment. I had not read the loader.
+
+What that cost and what was kept:
+- The `menu.js` change was reverted in full: it was a no-op refactor dressed as a
+  fix, and its comment asserted a defect that isn't there. A comment claiming a
+  bug that does not exist is worse than no comment.
+- The `app.js` change was **kept**, with an honest comment. It is not a bug fix
+  but it is a real narrowing: `venueHours(r, origin)` follows the **nearest**
+  branch, which is what the "Open now" filter has always used and what the card's
+  own distance and maps handoff already show. Before it, a venue whose branches
+  keep different hours could show "Closed" on a card the filter had just matched
+  as open — the filter's comment claimed the two agreed, and now they do.
+- The decorative assertion was **deleted** and replaced with one that has teeth:
+  *every branch of a multi-location venue is listed*. Proved by breaking the
+  renderer (`shown.length = 1`) and watching it fail, then restoring.
+
+The general lesson, and the reason this is in the log rather than quietly fixed:
+**verify a fix by breaking it.** The first assertion passed both with and without
+the change, which meant it was measuring nothing — the same failure class as the
+decorative scanners already in the notes, arriving from the opposite direction.
+
+**4. Also fixed a red result that meant nothing.** `device_check` demanded ≥5
+allergen-tagged dishes and reported a hard FAIL on a healthy venue with four.
+Relaxed to ≥1 — the real assertion downstream is "every tagged dish lights up",
+which holds for any count, and the zero case already hard-errors before the
+browser starts. A red that means nothing is how a check stops being read.
+
+**Verification.** `validate.py` clean (35 files); `node --test` 533 pass;
+`device_check` **22 / 19 / 21 pass, 0 fail** across Pandan, the default venue and
+Thai Tara — the branch assertion exercised in both directions.

@@ -9,8 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
-- **Pandan Asian Cuisine** (Melling, Lower Hutt) — 90 dishes across Malaysian,
-  Indian and Asian menus, read from the restaurant's own online ordering.
+- **Pandan Asian Cuisine** — 90 dishes across Malaysian, Indian and Asian menus,
+  read from the restaurant's own online ordering. **Both branches** are listed —
+  Melling in Lower Hutt and Press Hall on Willis Street — sharing the one menu,
+  so whichever is nearer is the one you get directions to.
 - **The three new Johnsonville places now have addresses, hours and phone
   numbers**, so they show up in "Open now" and sort properly by distance.
 - **Three new Johnsonville places** — **Noodle Canteen**, **The Ramen Shop** and

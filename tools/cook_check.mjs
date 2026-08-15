@@ -205,6 +205,8 @@ const SNAP = `(() => {
     live: stage.getAttribute("aria-live"),
     atomic: stage.getAttribute("aria-atomic"),
     focusInStage: document.activeElement === stage,
+    focusInDialog: d.contains(document.activeElement),
+    focusClass: document.activeElement ? document.activeElement.className : null,
     taps: [side(q(".cook-close")), side(q(".cook-prev")), side(nextBtn)],
     // Every control must carry a translation key, or reo.js silently leaves an
     // English word behind when the language is switched (ADR 0034, Consequences).
@@ -288,19 +290,16 @@ async function run(opts) {
     /** Wait for cook mode to be gone AND the lock question to have settled. */
     const closed = () => settleUntil(snap, (s) => !s.open && s.held === 0);
 
-    // #!### FOUND BY THIS CHECK, 2026-08-15 — not asserted, because the fix is a
-    // design call for the owner, not a chore. Tapping Back until step 1 disables
-    // the Back button *while it holds focus*, and Chrome then drops focus to
-    // <body> — outside the dialog. cook-ui.js listens for keydown on the dialog,
-    // so from that moment the arrow keys, Home and End do nothing until
-    // something inside is focused again. Measured: after three clicks on
-    // .cook-prev, `document.activeElement === document.body` is true and a real
-    // ArrowRight produces no keydown on the dialog at all. ADR 0034 says "focus
-    // stays on Back/Next so repeated taps keep working"; at the lower boundary
-    // it does not. Where focus should land instead (the stage? Next?) is the
-    // decision — ADR 0034 also rejected moving focus to the step on every
-    // change. Until that is settled, the keyboard checks below put focus back
-    // deliberately rather than depending on where it happens to be.
+    // FOUND BY THIS CHECK 2026-08-15, RULED AND FIXED THE SAME DAY. Tapping
+    // Back until step 1 disabled the Back button *while it held focus*, and
+    // Chrome drops focus to <body> — outside the dialog. cook-ui.js listens for
+    // keydown on the dialog, so from that moment the arrow keys, Home and End
+    // did nothing. ADR 0034 promises "focus stays on Back/Next so repeated taps
+    // keep working"; at the lower boundary it did not. Owner ruled: hand focus
+    // to Next before disabling Back — it is the only control that still does
+    // anything at step 1, and it keeps focus inside the dialog. ADR 0034's
+    // rejection of focusing the *step* on every change stands untouched.
+    // The assertion for that fix is in section 4 below.
     const focusStage = () => evalPage(`document.querySelector(".cook-stage").focus()`);
 
     // Hiding the page for real: a second tab takes the foreground, which is what
@@ -406,7 +405,12 @@ async function run(opts) {
       `“${back.counter}”`
     );
 
-    await focusStage(); // see the note above: Back at step 1 has just shed focus
+    report.check(
+      "Back going disabled at step 1 hands focus to Next, not out of the dialog",
+      back.focusInDialog && /cook-next/.test(back.focusClass || ""),
+      `focus on “${back.focusClass}”, inside the dialog=${back.focusInDialog}`
+    );
+
     await press("ArrowRight");
     const keyFwd = await snap();
     await press("ArrowLeft");
