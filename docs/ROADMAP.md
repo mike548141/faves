@@ -1539,11 +1539,12 @@ problem. Sequence the content with the build or the feature ships blank.
   checklists/TTS (17e). **Not verified:** that the screen genuinely stays awake
   on a real iPhone — the lifecycle is proved against a fake and in headless
   Chrome, the platform behaviour needs a device.
-  - 🚩 **Still worth doing, found while building:** cook mode has no real-browser
-    regression guard of its own. `device_check.mjs` is scoped to the allergen
-    re-apply, and the 28-assertion Chrome run that caught two wake-lock leaks was
-    a throwaway script. Either widen that tool's remit or give cook mode a
-    sibling — the leaks it found were invisible to `node --test`.
+  - [~] 🚩 **Still worth doing, found while building:** cook mode has no
+    real-browser regression guard of its own. `device_check.mjs` is scoped to
+    the allergen re-apply, and the 28-assertion Chrome run that caught two
+    wake-lock leaks was a throwaway script. Either widen that tool's remit or
+    give cook mode a sibling — the leaks it found were invisible to
+    `node --test`. **CLAIMED 2026-08-15 05:05 UTC** (wt: `faves-cook-guard`).
 - [ ] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
   ordered by how well they fit a zero-dependency offline app:
   - **Tick off ingredients and steps as you go** — a checklist with state that
