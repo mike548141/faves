@@ -251,3 +251,39 @@ deliberation those compact docs omit.
   is a positive claim. TJ Katsu and Sushi Bi gain the honest dates the session
   log evidences, no longer withheld to keep a caveat on. A confidence scale, a
   per-method limit, and ageing the untrusted methods all rejected.
+- [0037](0037-confidence-reads-both-ways.md) — **the confidence note reads both
+  ways, and details carry their own date** (builds on 0031, 0036). The ⓘ beside
+  a venue name used to appear only on bad news, so its absence was ambiguous —
+  "we checked last week" and "no comment" rendered identically. Now always
+  present, tone only: ⚠ amber caution, ⓘ blue "checked in store on …". Colour is
+  never the signal (the two sit **1.06:1** apart in luminance), so the glyph and
+  the accessible name carry it. `verified` dates the MENU and nothing else, so
+  the new optional `detailsVerified`/`detailsVerifiedBy` pair dates the venue's
+  phone/address/hours separately — absent means never checked, and the note then
+  stays quiet about them rather than borrowing the menu's credit. A date here
+  without a method is an **error**, unlike `verified`: there is no legacy corpus
+  to be gentle with. The currency is stated here and in About, never on 1,200
+  individual prices.
+- [0038](0038-intake-provenance-from-the-file.md) — **intake provenance comes
+  off the file, never off the import** (builds on 0031). `verified` from EXIF
+  `DateTimeOriginal`, never the file's mtime — copying a photo rewrites mtime
+  and would claim a *fresher* check than the evidence supports. GPS is evidence
+  *for* `in-store` rather than an assertion of it; a PDF trailer bounds a
+  `paper-menu` document's age. `tools/intake_exif.py` reports it, stdlib only.
+  Two limits stated as carefully as the capability: the tool **suggests** a
+  method and never writes one (the same card is `in-store` at the counter and
+  `paper-menu` on a kitchen table), and **GPS sorts but does not pin** — four
+  Johnsonville venues fell inside one 25 m error circle, so coordinates still
+  come from the geocoded address. Content outranks both.
+- [0039](0039-cook-mode-gets-its-own-browser-guard.md) — **cook mode gets its
+  own real-browser guard, gaps declared** (ROADMAP 17d; guards 0034).
+  `tools/cook_check.mjs`, a sibling to `device_check.mjs` rather than a
+  widening of it: the allergen safety verdict stays on its own line and its own
+  exit code, and the shared CDP harness moves to `tools/lib/browser.mjs` so
+  there is only ever one of it. The wake lock is observed by **instrumenting
+  the real API** — headless Chrome 151 grants genuine sentinels — never by
+  faking one, and the three things a headless browser genuinely cannot show are
+  written into the tool's header instead of being papered over with assertions
+  that would pass either way. Proven to bite by three deliberate breaks. Found
+  a real defect on the way: Back at step 1 disables itself while focused and
+  drops focus out of the dialog, killing the arrow keys.

@@ -30,6 +30,7 @@ npx lighthouse http://localhost:8080/index.html \
   --form-factor=mobile --screenEmulation.mobile   # quality gate
 
 node tools/device_check.mjs                       # live-safety browser check
+node tools/cook_check.mjs                         # cook-mode browser check
 ```
 
 `device_check.mjs` is the scripted stand-in for a manual phone test of the
@@ -41,6 +42,16 @@ warnings, hearts and ratings re-apply with no reload. Exit 0 = pass, 1 = an
 assertion failed, 2 = the harness could not run. Needs Chrome, no install.
 Run it after touching `menu.js`, `dietary.js`, `settings*.js` or
 `profiles.js`; `--help` lists the options.
+
+`cook_check.mjs` is the same idea for cook mode (ADR 0039), sharing the
+harness in `tools/lib/browser.mjs`. It opens a real recipe, steps through it,
+takes every exit path, and instruments the **real** `navigator.wakeLock` before
+any page script runs — so a lock left held is counted rather than assumed.
+Cook mode shipped with 19 unit tests against a fake wake lock and still leaked
+twice in a real browser; that is what this is for. Its header lists the three
+things a headless browser genuinely cannot show, which is worth reading before
+you trust a green run. Run it after touching `cook.js`, `cook-ui.js`, or the
+recipe and Cook at Home screens that offer cook mode.
 
 ## What makes a good change
 
