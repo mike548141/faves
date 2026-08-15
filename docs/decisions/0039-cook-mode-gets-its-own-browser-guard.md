@@ -82,29 +82,43 @@ way:
 - **Adding the check to CI.** CI has no Chrome and the site has no build step;
   a browser gate belongs where the browser is. It is in the pre-commit list in
   `CLAUDE.md` beside `device_check.mjs`, run after touching cook mode.
-- **Fixing the focus defect the guard found** (below) as part of this work.
-  Where focus should land is a design call the owner and ADR 0034 own.
+- **Fixing the focus defect the guard found** (below) *silently*, as a chore.
+  Where focus should land was a design call the owner and ADR 0034 own, so it
+  was surfaced rather than patched. The owner ruled the same day and the fix
+  landed — see Consequences.
 
 ## Consequences
 
-- `tools/cook_check.mjs` (**35 assertions**), `tools/lib/browser.mjs`, and a
-  `device_check.mjs` that now imports the harness rather than owning it.
-  Nothing under `site/` changed, so no `SHELL_VERSION` bump.
+- `tools/cook_check.mjs` (**36 assertions**), `tools/lib/browser.mjs`, and a
+  `device_check.mjs` that now imports the harness rather than owning it
+  (19/19 before and after the extraction). The guard itself changed nothing
+  under `site/`; the focus fix it *found* did, and carries its own bump.
 - **Proven to bite**, by three deliberate breaks in `site/js/cook.js`, each
   reverted: forgetting the sentinel instead of releasing it → 5 failures;
   storing a sentinel that arrives after `release()` → exactly the in-flight
   assertion; never re-acquiring on return → exactly the hide/show assertion.
-- **🔎 A real defect found, deliberately not fixed here.** Tapping **Back**
-  until step 1 disables the Back button *while it holds focus*, and Chrome then
-  drops focus to `<body>` — outside the dialog. `cook-ui.js` listens for
-  keydown on the dialog, so from that moment the arrow keys, Home and End do
-  nothing until something inside is focused again. Measured: after three clicks
-  on `.cook-prev`, `document.activeElement === document.body` and a real
-  ArrowRight produces no keydown on the dialog at all. ADR 0034 says "focus
+- **🔎 A real defect found, surfaced not patched — then ruled and fixed the
+  same day (2026-08-15).** Tapping **Back** until step 1 disabled the Back
+  button *while it held focus*, and Chrome then drops focus to `<body>` —
+  outside the dialog. `cook-ui.js` listens for keydown on the dialog, so from
+  that moment the arrow keys, Home and End did nothing. Measured: after three
+  clicks on `.cook-prev`, `document.activeElement === document.body` and a real
+  ArrowRight produced no keydown on the dialog at all. ADR 0034 says "focus
   stays on Back/Next so repeated taps keep working"; at the lower boundary it
-  does not. It is recorded as a `#!###` marker in `cook_check.mjs` beside the
-  keyboard checks, which put focus back deliberately rather than depending on
-  where it happens to be.
+  did not.
+  **Owner ruled: hand focus to Next before disabling Back.** Next is the only
+  control that still does anything at step 1, and it keeps focus inside the
+  dialog. Rejected: focusing the *step* (ADR 0034 already rejected moving focus
+  to the step on every change, and an exception at one boundary is the kind of
+  rule nobody remembers), and never disabling Back (a control that looks live
+  and is not trades one accessibility fault for another). The guard gained the
+  assertion for it — **35 → 36 assertions** — and that assertion was proved to
+  bite by removing the fix line again. `SHELL_VERSION` bumped, since this one
+  *does* change `site/`.
+  **The value here is the pattern, not the bug.** 19 unit tests and a hand
+  pass over cook mode had both missed it; a real browser found it in the first
+  run, because "focus goes to `<body>`" is a platform behaviour a fake cannot
+  have.
 - The driver now scrolls with `behavior: "instant"`. The site sets
   `scroll-behavior: smooth`, so a plain `scrollIntoView` returned before the
   page had moved and every click far down a page landed in empty space — which

@@ -1550,15 +1550,23 @@ problem. Sequence the content with the build or the feature ships blank.
     the tool's own header: that the screen truly stays on (needs a phone), leak
     (a)'s original form (this Chrome always releases on hide first, so removing
     that release is invisible here), and release on document teardown.
-    - 🚩 **Found by the guard, not fixed — a design call for the owner.**
-      Tapping **Back** until step 1 disables the Back button while it holds
+    - ✅ **Found by the guard, ruled and fixed the same day (2026-08-15).**
+      Tapping **Back** until step 1 disabled the Back button while it held
       focus; Chrome then drops focus to `<body>`, outside the dialog, and the
-      arrow keys, Home and End stop working until something inside is focused
-      again. ADR 0034 promises "focus stays on Back/Next so repeated taps keep
-      working" — at the lower boundary it does not. Where focus should go
-      instead (the stage? Next?) is the decision; ADR 0034 rejected moving
-      focus to the step on every change, so this is not a one-liner. Marked
-      `#!###` in `cook_check.mjs`.
+      arrow keys, Home and End stopped working. ADR 0034 promises "focus stays
+      on Back/Next so repeated taps keep working" — at the lower boundary it
+      did not. **Owner ruled: hand focus to Next before disabling Back**, the
+      only control that still does anything at step 1. Focusing the *step* was
+      rejected (ADR 0034 already rejected that on every change, and a one-
+      boundary exception is a rule nobody remembers); so was never disabling
+      Back (a control that looks live and is not trades one accessibility
+      fault for another). Guard **35 → 36 assertions**, the new one proved to
+      bite. `SHELL_VERSION` bumped.
+      🔎 **Worth keeping: 19 unit tests and a hand pass had both missed this.**
+      A real browser found it on the first run, because "focus falls to
+      `<body>`" is platform behaviour that a fake wake lock and a jsdom-shaped
+      test cannot have. That is the argument for the guard existing, made by
+      the guard itself within an hour of being written.
 - [ ] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
   ordered by how well they fit a zero-dependency offline app:
   - **Tick off ingredients and steps as you go** — a checklist with state that

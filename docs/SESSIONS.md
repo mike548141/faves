@@ -2683,3 +2683,41 @@ browser starts. A red that means nothing is how a check stops being read.
 **Verification.** `validate.py` clean (35 files); `node --test` 533 pass;
 `device_check` **22 / 19 / 21 pass, 0 fail** across Pandan, the default venue and
 Thai Tara — the branch assertion exercised in both directions.
+
+### Addendum 3 — an incident, and the rule it earned
+
+**main was broken for roughly ten minutes, by an ordinary mistake nobody made
+carelessly.** Recorded in full because the mechanism is not obvious and will
+recur.
+
+**What happened.** The cook-mode focus fix was applied here, in the shared
+`main` checkout. To prove the new assertion actually bites, the one-line fix was
+then **deliberately removed** and the guard re-run — it failed on exactly the
+right assertion, which was the point. In that window a concurrent session
+(`pandan-branches`) merged to `main` and its commit **swept the uncommitted
+working tree in with it**. What landed was the comment and the assertion, but
+not the line they describe: `main` now asserted a fix whose code was absent, so
+`node tools/cook_check.mjs` failed on `main`. It also shipped a change to
+`site/js/cook-ui.js` with **no `SHELL_VERSION` bump**, so installed phones would
+have kept the old script.
+
+**Nobody did anything unreasonable, and that is the finding.** The other session
+followed the rules — it merged, resolved conflicts by hand, and read the prose.
+Nothing in the doctrine told it that the tree it was committing contained
+someone else's half-finished experiment. The doctrine's existing rule points the
+other way and is about *not absorbing* another session's changes; this is the
+mirror image, where your own deliberate breakage becomes someone else's commit.
+
+🚩 **The rule this earns: never leave the shared `main` checkout in a knowingly
+broken state, not even for a minute.** Proving a guard bites means breaking
+code, and that experiment belongs in a worktree, or between a `git stash` and a
+`git stash pop`, never bare in the tree every other session commits from. The
+worktree discipline this repo already has was in place all session — the
+experiment was the one thing done outside it, and it was the one thing that
+broke.
+
+**Repair, fixed forward not reverted** (`fd998f6`): the fix line restored,
+`SHELL_VERSION` → `2026-08-15.4`, and the assertion re-proved by removing the
+line once more — this time in full knowledge of what that costs. Verified after:
+`cook_check` **36/36**, `device_check` 19/19, `node --test` 533/533,
+`validate.py` 35 files, `gen_sbom --check` clean.
