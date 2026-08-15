@@ -8,7 +8,7 @@ import { formatDriveTime, estimateDriveMinutes } from "./distance.js";
 import { formatDistance } from "./units.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
 import { rankByDetour, bestBranchForRoute, areaCentroids } from "./route.js";
-import { branchCoords, branchAsPlace } from "./locations.js";
+import { branchCoords, branchAsPlace, venueHours } from "./locations.js";
 import { rememberOrigin, routeMapsUrl } from "./geo.js";
 import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
@@ -87,11 +87,19 @@ function priceChip(r) {
 // Live open/closed badge from the venue's hours (null hours → no badge).
 // A lifecycle closure (refit, gone for good) outranks the weekly hours: showing
 // "Open · until 9pm" for a shuttered venue would send someone across town.
-function hoursBadge(r, now, showHours = true) {
+//
+// Reads `venueHours(r, origin)`, not `r.hours`. Both work — `data.js` projects
+// a multi-location venue's PRIMARY branch up to the top level — but they differ
+// once the viewer's location is known: `venueHours` follows the NEAREST branch,
+// which is the one whose distance and maps handoff the card already shows. The
+// "Open now" filter has always used it, and its comment claims the two agree;
+// before this they could disagree for any venue whose branches keep different
+// hours, showing "Closed" on a card the filter had just matched as open.
+function hoursBadge(r, now, showHours = true, origin = null) {
   const closure = closureBadge(r, todayNZ());
   if (closure) return el("p", { className: "card-hours" }, [closure]);
   if (!showHours) return null;
-  const st = openStatus(r.hours, now);
+  const st = openStatus(venueHours(r, origin), now);
   if (st.state === "unknown") return null;
   const text = st.detail ? `${st.label} · ${st.detail}` : st.label;
   const badge = el("span", { className: "hours-badge", textContent: text });
@@ -108,7 +116,7 @@ function detourText(km, units) {
   return `+${formatDistance(km, units)} ${t("route.detour", "detour")}`;
 }
 
-function card(r, now, routeCtx = null) {
+function card(r, now, routeCtx = null, origin = null) {
   const isRecipes = r.kind === "recipes";
   const units = settings.get().units;
   const name = el("h3", { className: "card-name", textContent: r.name });
@@ -182,7 +190,7 @@ function card(r, now, routeCtx = null) {
   // A venue (not a stub, not recipes) gets a live open/closed badge — but a
   // CLOSURE shows on a stub too, since that is the one thing worth knowing
   // about a place whose menu we never captured.
-  const badge = !isRecipes ? hoursBadge(r, now, r.status !== "stub") : null;
+  const badge = !isRecipes ? hoursBadge(r, now, r.status !== "stub", origin) : null;
 
   const li = el("li", { className: isRecipes ? "card card-recipes" : "card" });
   li.dataset.status = r.status;
@@ -293,7 +301,7 @@ function init(restaurants) {
       });
     }
     const routeCtx = onRoute ? { origin: state.origin, dest: state.dest } : null;
-    listEl.replaceChildren(...shown.map((r) => card(r, now, routeCtx)));
+    listEl.replaceChildren(...shown.map((r) => card(r, now, routeCtx, state.origin)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
     const total = restaurants.length;

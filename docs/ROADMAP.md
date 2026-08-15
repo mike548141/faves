@@ -1645,24 +1645,11 @@ where an imperial reader sees `430°F`.
 the three new venues; Thai Tara's *Prawns twister* restored with a null price.
 Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-- [ ] 🚩 **Thai Tara: the leaflet and the in-store card disagree** `[S][data]` —
-  the takeaway leaflet collected 2026-08-15 is a **different printing** from the
-  laminated card at the counter, and they conflict in three ways. The card's
-  prices are handwritten stickers over an older print; the leaflet's are printed.
-  Not silently resolved — a reading is not evidence about a *different* reading.
-  1. **Item codes differ.** Card: R2 green curry, R3 nasi goreng, R4 tom yum.
-     Leaflet: R2 nasi goreng, R3 spicy, R4 green curry. Stir-fry codes differ
-     too. The card's codes are stored, being the ones you order by at the counter.
-  2. **Two prices differ.** Thai basil and Thai chilli are **$21.50** on the
-     card's stickers and **$22.50** printed on the leaflet. The card's value is
-     stored; recording both as a dated series would fabricate a same-day price
-     rise, which is exactly the correction-vs-change error ADR 0023 warns about.
-  3. **The leaflet has no duck dishes at all** — no roasted duck on rice, larb
-     duck, duck noodle or roasted duck stir-fry — and adds a **laksa curry
-     noodle soup** the card lacks. The laksa is recorded (it is an addition, and
-     additions are safe); the duck dishes are **kept**, because one leaflet
-     omitting them is not evidence they are off the menu, and `available.offBy`
-     is a dated claim that they are.
+✅ **Thai Tara's leaflet-vs-card conflict — ruled 2026-08-15.** Owner's rule for
+any two menus that disagree: **the dine-in card wins on contradictions** (prices,
+dish numbers), and **dishes are additive** — anything on either menu is in.
+Applied; detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+
 - [ ] **Age `detailsVerified` the way `refreshCaveat` ages `verified`** `[S][js]`
   — today a venue whose details are stale and one whose details were never
   checked both render the same (the note simply omits them). Deliberately not
@@ -1672,10 +1659,11 @@ Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   number for that street address, so the stored pin is the street, not the door. Kept
   because the venue is ~15 km out, where the error cannot change a distance
   sort. Worth a house-level fix if OSM ever gains the number.
-- [ ] **Pandan's second branch** `[S][data]` — the venue's site lists a **Press
-  Hall, Willis Street** branch, but its ordering page serves no menu, so there is
-  nothing to evidence. Only the Lower Hutt store is recorded. Add the branch
-  (ADR 0011) once its menu can be read.
+- [ ] **Pandan's Press Hall hours** `[XS][data]` — the branch is in (owner ruled
+  2026-08-15 that both locations carry the same menu), but its `hours` are null:
+  Press Hall publishes a house standard of 11am–3pm weekdays *and* says to check
+  with each eatery, which is not a claim about this stall. Left unstated rather
+  than guessed — a wrong "Open now" sends someone into town for nothing.
 - [ ] **Reo: the confidence-note strings** `[S][reo]` — the new "Up to date…"
   copy stays English alongside the caution it shares a popover with. Added to
   the fluent-speaker review queue with the other drafts above.

@@ -934,3 +934,42 @@ clean throwaway repo against all three shapes (`site/.well-known/sbom.json`,
 quoting the mangled string `known/security.txt` as an example — the same class <!-- pathscan:allow: quoted as an example of the defect, not a live reference -->
 already marked in 2026-08-09, and marked the same way rather than rewritten,
 because rewriting the example would destroy it.
+
+**Thai Tara: the leaflet and the in-store card disagree** `[S][data]` — **ruled
+by the owner 2026-08-15**, same day it was raised.
+
+Two menus read the same day disagreed. The laminated card photographed at the
+counter carries handwritten price stickers over an older print; the takeaway
+leaflet collected that afternoon is a newer print run with its prices printed.
+They conflicted three ways: **item numbers permuted** (the fried-rice list runs
+green curry / nasi goreng / tom yum on the card, nasi goreng / spicy / green
+curry on the leaflet, and the stir-fry numbers differ too), **two prices $1
+apart** (Thai basil and Thai chilli, $21.50 on the card against $22.50 printed),
+and **the leaflet carried no duck dishes at all** while adding a laksa curry
+noodle soup the card lacks.
+
+The session deliberately did not resolve it, on the ground that a reading is not
+evidence about a *different* reading. The owner's rule:
+
+> **The dine-in card wins on contradictions** — differing prices, differing dish
+> numbers. **Dishes are additive** — where either menu has something the other
+> lacks, include it.
+
+Both halves were already satisfied by what the session had recorded, which is
+the useful confirmation: the card's prices and codes were stored, the laksa was
+added, and the duck dishes were kept. The reasoning behind each half is worth
+carrying forward, because it generalises past this venue:
+
+- **Additive is safe in one direction only.** One menu listing a dish is
+  evidence the dish exists. One menu *omitting* a dish is not evidence it is
+  gone — and `available.offBy` is a dated claim that it is. Treating the
+  leaflet's missing duck as a removal would have recorded absence of evidence as
+  evidence of absence.
+- **A same-day disagreement is a conflict, not a history.** Writing both prices
+  into a dated series would have rendered as a price rise between two readings
+  hours apart — the correction-versus-change error ADR 0023 exists to prevent.
+  The rule now says which reading wins, so there is one value and no invented
+  event.
+- **The laksa carries no item code.** It appears only on the leaflet, whose
+  numbering the rule discards; the card's S3 is already the wonton soup. A dish
+  with no number is honest, a dish with a borrowed number is not.
