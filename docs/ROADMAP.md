@@ -7,10 +7,13 @@ checked against the hard constraints (zero-build, offline, static, no
 backend, no accounts, no personal data in the repo). Nothing here changes
 v1 scope.
 
-**Legend.** Effort **XS/S/M/L**. Checkbox: `- [ ]` open · `- [~]` claimed by a
-live session (the claim names the date and worktree — leave it alone, even if
-told to take it) · `- [x]` / ✅ done, and done items are harvested to
-[`ROADMAP-DONE.md`](ROADMAP-DONE.md) leaving a one-line pointer.
+**Legend.** Effort **XS/S/M/L**. Checkbox: `- [ ]` open · `- [x]` / ✅ done,
+harvested to [`ROADMAP-DONE.md`](ROADMAP-DONE.md) leaving a one-line pointer ·
+`- [~]` **part-done or claimed**, and the two are told apart by what the item
+says, not by the marker. A **claim** names a date and a worktree
+(`CLAIMED YYYY-MM-DD HH:MM UTC (wt: …)`) — leave that item alone, even if told
+to take it. Everything else marked `[~]` is simply partly delivered, with the
+remaining parts named inline; that one is free to pick up.
 Tags: `[schema]` needs a data-model change (record in `ARCHITECTURE.md` when
 built); `[design]` needs a design call; `[constraint]` sits in tension with a
 hard constraint or non-goal — resolution noted inline; `[content]`/`[data]`
