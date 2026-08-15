@@ -341,18 +341,51 @@ neighbouring card or a delivery app.** Clear one by bringing back the fact.
       weekdays. Left as a *service* window on the assumption the cabinet
       carries on after brunch stops — worth one glance in-store to confirm
       closing hasn't moved.
+- [ ] **1841 — the menu we have is a March 2025 document** `[S][content]`. The
+      only published menu is a PDF on the venue's own site whose embedded
+      `/CreationDate` is **2025-03-27**, and the prices are stored as a dated
+      series carrying that date (ADR 0023). `verified` is the day we *read*
+      it, so `refreshCaveat` treats it as fresh and shows no caveat — which is
+      the known weakness of `paper-menu` (ADR 0031: "as old as the document").
+      One in-store price check clears it. 🚩 The general gap — a freshly-read
+      but staledly-dated document reads as current — is raised under Theme 13
+      rather than patched for one venue.
+- [ ] **Drinks menus not transcribed on the three pubs** `[S][content]`. 1841,
+      The Borough and Southern Cross each publish a separate drinks list
+      (beer, wine, cocktails). The **food** menus are complete; the alcohol
+      lists were deliberately left out, not missed. The Borough's
+      non-alcoholic brunch drinks *are* in, because they sit on its food menu.
+      Southern Cross's is the big one — a full tap, bottle, wine and cocktail
+      list. Decide whether faves wants drinks at all before transcribing:
+      it is a product question, not a backlog item.
+- [ ] **1841 — kids menu not transcribed** `[S][content]`. It is a separate
+      PDF (`Kids-Menu-2023.pdf`) and is dated **2023** by its own filename,
+      two years older than the main menu. Worth a fresh copy rather than a
+      transcription of that.
+- [ ] **The Borough — phone is the one third-party detail** `[S][content]`.
+      Address and hours come from the venue's own site; the number in the
+      record comes from a directory listing, so `detailsVerifiedBy` is
+      the weaker `third-party` for the whole record (the Press Hall
+      precedent, 2026-08-15). The venue publishes only an email. One glance
+      at a receipt or the door clears it — or the per-branch provenance pair
+      that Theme 13 already owes would.
 - [ ] **`picks` are empty on most venues** `[S][content]` — including the two
       newly menu-complete ones (Gold Lining, Takeaway @ Churton). `picks`
       drives the "our picks" surface and `validate.py` warns on each empty
       one, so the warnings are the worklist. Owner-supplied only: these are
       *our* favourites, not a guess from the menu.
-- [ ] **16 venues are still `stub`** `[M][content]` — they render as "menu
+- [ ] **Venues still `stub`** `[M][content]` — they render as "menu
       coming soon" cards and never as empty menus, so this is a backlog, not
-      a defect. Same `intake/` pipeline. **Re-counted 2026-08-15 from the
-      data**: **16 stub and 18 menu-complete across 34 records**, of which
-      **9** carry a `verified` date. 🚩 **This item's count has now been
-      wrong twice** — "16 … 12" was corrected to "17 … 14" on 2026-08-09,
-      and six days of intake made that wrong too. A hand-copied tally in
+      a defect. Same `intake/` pipeline. **Derive the count, don't read it
+      here:**
+      `python3 -c "import json,glob,collections; print(collections.Counter(json.load(open(f))['status'] for f in glob.glob('site/data/restaurants/*.json')))"`
+      — as of 2026-08-15 that returned **16 stub, 22 menu-complete across 38
+      records**, of which **13** carry a `verified` date. 🚩 **This item's
+      count has now been wrong three times** — "16 … 12" was corrected to
+      "17 … 14" on 2026-08-09, re-counted to "16 … 18" earlier on 2026-08-15,
+      and the three pubs added later the same day made that wrong again
+      within hours. The heading no longer carries a number at all, because
+      the heading was the part that kept going stale. A hand-copied tally in
       prose goes stale the moment data lands, which is exactly the trap the
       `pathscan` title fell into. **Do not re-type the numbers next time —
       derive them**, and treat any figure here as of its stated date only.

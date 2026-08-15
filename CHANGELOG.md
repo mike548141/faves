@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Three pubs join the list** — **1841 Bar & Restaurant** in Johnsonville,
+  **The Borough** in Tawa and the **Southern Cross** in Te Aro, with full menus:
+  164 dishes between them, plus hours, phones and directions. The Borough's
+  **Burger Wellington** entry, The Aegean Melt, is in for its run and will drop
+  off the menu by itself once the festival ends on 23 Aug. 1841's prices come
+  from the venue's own menu PDF and are dated **March 2025** in the data — the
+  most recent reading anyone has published, and old enough to be worth checking
+  at the counter.
 - **Pandan Asian Cuisine** — 90 dishes across Malaysian, Indian and Asian menus,
   read from the restaurant's own online ordering. **Both branches** are listed —
   Melling in Lower Hutt and Press Hall on Willis Street — sharing the one menu,
