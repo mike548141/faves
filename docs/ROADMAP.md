@@ -350,14 +350,21 @@ neighbouring card or a delivery app.** Clear one by bringing back the fact.
       One in-store price check clears it. 🚩 The general gap — a freshly-read
       but staledly-dated document reads as current — is raised under Theme 13
       rather than patched for one venue.
-- [ ] **Drinks menus not transcribed on the three pubs** `[S][content]`. 1841,
-      The Borough and Southern Cross each publish a separate drinks list
-      (beer, wine, cocktails). The **food** menus are complete; the alcohol
-      lists were deliberately left out, not missed. The Borough's
-      non-alcoholic brunch drinks *are* in, because they sit on its food menu.
-      Southern Cross's is the big one — a full tap, bottle, wine and cocktail
-      list. Decide whether faves wants drinks at all before transcribing:
-      it is a product question, not a backlog item.
+- [ ] **1841 publishes no drinks list** `[S][content]`. Its site has a food
+      menu PDF and a kids menu PDF; there is no beverage list anywhere, and
+      the daily deals only reference "any tap beer" and "tap beer and wine by
+      the glass" without naming or pricing one. Nothing to transcribe until a
+      photo of the bar list or the tap board exists — `intake/` pipeline.
+- [ ] **Other venues with drinks nobody has captured** `[M][content]`.
+      Now that drinks are in scope, the obvious gap is any venue that sells
+      them and has no drink rows. **Derive the list, don't re-type it:**
+      compare `services`/cuisine against records whose sections carry no
+      Beer/Wine/Coffee heading. Sprig + Fern Tawa is the standout — it is a
+      brewery bar and its record is food-only. ⚠️ **Adding drinks silently
+      breaks `priceBand`** — they are cheaper than mains and drag the median
+      under the `$` ceiling. Curate the band from the food-only median, as
+      the two 2026-08-15 pubs now do. Detail →
+      [`ROADMAP-DONE.md`](ROADMAP-DONE.md), Theme 4.
 - [ ] **1841 — kids menu not transcribed** `[S][content]`. It is a separate
       PDF (`Kids-Menu-2023.pdf`) and is dated **2023** by its own filename,
       two years older than the main menu. Worth a fresh copy rather than a

@@ -459,6 +459,20 @@ Moved here from `ROADMAP.md`'s Theme 3 "Still open (small)" blockquote on
   photos into `intake/` → they light up per venue. Generic stock only as a
   captioned, licensed fallback.
 
+- **Drinks** `[S][content]` ✅ **owner ruled 2026-08-15: add them all.** Asked
+  as a product question (does a "what shall we eat" app want a wine list?);
+  answered yes. Done for The Borough (81 drinks) and Southern Cross (85);
+  1841 publishes no beverage list at all, which stays open under Theme 4.
+  **The trap, for whoever adds the next one:** drinks are mostly cheaper than
+  mains, so they drag `priceBand`'s median down — here from ~$24 to exactly
+  $14.00, under the `$` band's inclusive $15 ceiling, turning two gastropubs
+  into takeaway-priced cards on the home list and in the ranking. Nothing in
+  the diff hints at it. Both venues now carry a curated `priceBand: "$$"` and
+  a `pricePerPerson` from the **food-only** median; `price.js` suppresses the
+  contradictory derived figure itself. Serving sizes were recorded only where
+  the menu labels them — unlabelled tap columns say so rather than inventing
+  a pint or a jug.
+
 ## Theme 4b — Meals vs dishes: recommended pairings
 
 - **(b) Recommended pairings** `[M][schema]` ✅ **done 2026-07-08** (ADR

@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Drinks are on the menu now** — the full lists for **The Borough** (81) and the
+  **Southern Cross** (85): taps, bottles and cans, wine by the glass and the
+  bottle, cocktails, coffee and the soft drinks. Beers carry a gluten warning,
+  and where a tap lists a bigger pour without saying what size it is, the menu
+  says so rather than guessing. **1841 doesn't publish a drinks list at all**, so
+  it has none. Both pubs keep their **$$** price band — left to itself the
+  arithmetic would have called them as cheap as a takeaway, because most drinks
+  cost less than most mains.
 - **Three pubs join the list** — **1841 Bar & Restaurant** in Johnsonville,
   **The Borough** in Tawa and the **Southern Cross** in Te Aro, with full menus:
   164 dishes between them, plus hours, phones and directions. The Borough's
