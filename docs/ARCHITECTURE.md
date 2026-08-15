@@ -134,6 +134,11 @@ reversible in an afternoon.
                                      //   dated series — see "Time" below
           "available": null,         // optional: on the menu only in this window/season
           "revisions": [],           // optional: dated log of what changed about the dish
+          "needs": [                 // optional: what we know we DON'T know about it
+            { "what": "price",       //   closed set — see "What we still owe a dish"
+              "note": "The label sat behind the cabinet frame.",  // optional, why
+              "since": "2026-08-07" }                             // optional, record time
+          ],
           "tags": ["spicy-1"],       // see tag vocabulary
           "image": null,             // optional self-hosted dish photo (lazy-loaded)
           "alt": null,               // required when image is set
@@ -387,6 +392,41 @@ The single exception where time reaches the screen is a **closure**
 (`closure-ui.js`): a badge on the card, a banner on the menu header, and
 `ranking.js` treats a closed venue as unavailable whatever its posted hours
 say. A stale price costs a dollar; a closed venue costs a wasted trip.
+
+#### What we still owe a dish — `needs` (ADR 0041)
+
+A dish may carry `needs`, a list of `{what, note?, since?}` naming the facts we
+know are missing. It does two jobs at once.
+
+**It splits a meaning `price: null` was carrying twice.** A null price meant
+both "the shop prices this on application" (market fish) *and* "we tried to read
+it and couldn't" — indistinguishable to a reader and to the next transcriber.
+With a `needs: price` entry the menu screen shows **`?`**; without one it keeps
+the **`—`** that has always meant *ask*. Same absence, two different admissions.
+
+**It is the worklist.** These gaps used to be typed into `ROADMAP.md` by hand,
+which goes stale the moment someone brings a fact back — the trap the stub count
+fell into three times. `python3 tools/needs.py` derives the list from the data
+instead (`--what`, `--venue`, `--count`, `--json`), so the roadmap points at a
+command rather than naming dishes it cannot keep up with.
+
+`what` is a closed set — `price` · `ingredients` · `allergens` · `name` ·
+`availability` — written down in three places (`site/js/needs.js` holds the
+labels and the *fix* text, `tools/validate.py` decides what is legal,
+`tools/needs.py` reports). `test_validate.py` fails if the three drift: a kind
+the renderer doesn't know is dropped silently, so the data would claim a gap no
+reader ever sees. `since` is record time (the day we noticed), never world time
+— nothing happened out there. A dish that has both a price and a `needs: price`
+is an **error**, not a warning: the indicator would not render, so the stale
+claim would sit in the data invisibly while `needs.py` kept reporting a job
+already done.
+
+Rendering (`needsRow` in `menu.js`): one small `?` pill per gap, sitting between
+the description and the tag row, opening the same disclosure control the venue
+header uses. Deliberately **not** in the tag row — two of those chips are
+allergen warnings, and a record-keeping note among them would dilute exactly the
+chips that must not be diluted. It never borrows the `⚠` glyph for the same
+reason. English only, like the refresh caveat, per `reo.js`'s safety boundary.
 
 ### Tag vocabulary (closed set — extend here, not ad hoc)
 

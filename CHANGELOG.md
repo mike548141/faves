@@ -9,6 +9,13 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A dish now tells you what we haven't been able to check.** Where a price
+  couldn't be read off a label, or a jar's ingredients aren't certain, the dish
+  carries a small **?** you can tap — it says what's missing and what would fix
+  it. And the price itself now distinguishes the two kinds of blank: **?** means
+  *we don't know it*, while **—** keeps meaning *the shop prices it on the day*
+  (market fish and the like). Deliberately kept out of the allergen chips, which
+  stay for warnings about the food itself. (ADR 0041)
 - **Drinks are on the menu now** — the full lists for **The Borough** (81) and the
   **Southern Cross** (85): taps, bottles and cans, wine by the glass and the
   bottle, cocktails, coffee and the soft drinks. Beers carry a gluten warning,

@@ -289,3 +289,11 @@ deliberation those compact docs omit.
   dishes untagged lost because it discards a fact the menu *did* state and
   breaks the filter on exactly the menus that marked themselves up. Leaves a
   raised-not-patched gap: the site still cannot say a kitchen is shared.
+- [0041](0041-a-dish-carries-its-own-open-questions.md) — **a dish carries its
+  own open questions.** Per-dish `needs` replaces hand-typed "go and check this"
+  prose in ROADMAP.md, which went stale the moment a fact came back — the same
+  trap the stub count fell into three times. It also splits a meaning
+  `price: null` was carrying twice: `?` now means "we couldn't read it", `—`
+  keeps meaning "the shop prices it on application". Renders as its own `?` pill
+  and never in the allergen tag row, which must not be diluted; `tools/needs.py`
+  derives the worklist. Closed set written in three files, with a drift guard.

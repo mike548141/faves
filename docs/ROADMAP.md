@@ -319,23 +319,28 @@ Both resolved; verbatim raw-note records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md
 
 Small, known gaps left behind by a transcription session — each one needs a
 fact nobody had at the time, not a decision. **The rule these all obey: a
-missing price stays `null` and renders "varies"; nothing is inferred from a
-neighbouring card or a delivery app.** Clear one by bringing back the fact.
+missing price stays `null`; nothing is inferred from a neighbouring card or a
+delivery app.** Clear one by bringing back the fact.
 
-- [ ] **Gold Lining — two unread prices** `[S][content]`. From the 2026-08-07
-      cabinet photos: the **Falafel Wrap** (label sat behind the cabinet
-      frame) and the **Bliss Balls** (no price card in shot). Both `null`
-      today. One photo of each label clears it.
+> 🎯 **Dish-level gaps are no longer listed here — they live on the dish**
+> ([ADR 0041](decisions/0041-a-dish-carries-its-own-open-questions.md)). A dish
+> carries `needs`, the app shows a **`?` pill** saying what would clear it, and
+> the worklist is derived:
+>
+> ```sh
+> python3 tools/needs.py            # everything outstanding, with the why
+> python3 tools/needs.py --count    # one line per venue
+> python3 tools/needs.py --what price
+> ```
+>
+> This section keeps only what has **no dish to hang on** — a section that was
+> never itemised, or a fact about the whole venue. Naming dishes in prose here
+> is what went stale; don't start again.
+
 - [ ] **Gold Lining — the juice fridge** `[S][content]`. Not itemised at all:
-      no legible prices and only one brand partly readable. Needs a shelf
-      photo before anything can be recorded.
-- [ ] **Gold Lining — bliss-ball label: flavours or ingredients?**
-      `[S][content]`. The jar reads "cashew, almonds, matcha, apricot, dates,
-      chocolate, chia, coconut, sunflower"; owner unsure which it is. Stored
-      as ingredients on one item, because that reading holds either way —
-      cashew and almond are present on both, so `contains-nuts` is correct
-      regardless. If they are nine flavours, this splits into nine items and
-      nothing already written has to be undone.
+      no legible prices and only one brand partly readable, so there is no dish
+      to carry a `needs` entry. Needs a shelf photo before anything can be
+      recorded.
 - [ ] **Gold Lining — brunch window vs opening hours** `[S][content]`. The
       printed card says brunch 7.30am–2.30pm; the record holds 07:30–15:30
       weekdays. Left as a *service* window on the assumption the cabinet
