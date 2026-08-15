@@ -280,3 +280,12 @@ deliberation those compact docs omit.
   that would pass either way. Proven to bite by three deliberate breaks. Found
   a real defect on the way: Back at step 1 disables itself while focused and
   drops focus out of the dialog, killing the arrow keys.
+- [0040](0040-nga-and-ngo-map-onto-the-closed-tag-set.md) — **"no gluten added"
+  and "no gluten optional" map onto the closed tag set** as `gf` and
+  `gf-option`, with the venue's own hedge kept verbatim in the dish
+  description. Three pub menus (1841, The Borough, Southern Cross) print a
+  gluten vocabulary the tag set doesn't have, and it is a group-wide legend
+  rather than a one-venue quirk. Adding an `nga` tag lost on cost; leaving the
+  dishes untagged lost because it discards a fact the menu *did* state and
+  breaks the filter on exactly the menus that marked themselves up. Leaves a
+  raised-not-patched gap: the site still cannot say a kitchen is shared.
