@@ -169,6 +169,7 @@ export function openCookMode(item) {
     // where our keydown listener never sees it, so arrows/Home/End go dead
     // (found by cook_check.mjs, owner ruled 2026-08-15). Hand focus to Next
     // before disabling: it is the only control that still does anything here.
+    if (s.atFirst && document.activeElement === prevBtn) nextBtn.focus();
     prevBtn.disabled = s.atFirst;
     nextLabel.hidden = s.atLast;
     doneLabel.hidden = !s.atLast;
