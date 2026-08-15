@@ -1,0 +1,378 @@
+{
+  "id": "1841-bar-restaurant",
+  "name": "1841 Bar & Restaurant",
+  "cuisine": ["Gastropub"],
+  "area": "Johnsonville",
+  "city": "Wellington",
+  "address": "1 Disraeli Street, Johnsonville, Wellington 6037",
+  "lat": -41.22520,
+  "lng": 174.80769,
+  "phone": "+64 4 477 4057",
+  "lifecycle": {
+    "added": "2026-08-15"
+  },
+  "website": "https://www.1841.co.nz",
+  "ordering": [],
+  "services": ["dine-in", "takeaway"],
+  "hours": {
+    "mon": [["10:00", "22:00"]],
+    "tue": [["10:00", "22:00"]],
+    "wed": [["10:00", "22:00"]],
+    "thu": [["10:00", "22:00"]],
+    "fri": [["10:00", null]],
+    "sat": [["10:00", null]],
+    "sun": [["10:00", "22:00"]]
+  },
+  "vibe": ["live sport", "live music", "family friendly"],
+  "picks": [],
+  "verified": "2026-08-15",
+  "verifiedBy": "paper-menu",
+  "detailsVerified": "2026-08-15",
+  "detailsVerifiedBy": "official-site",
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Starters",
+      "items": [
+        {
+          "name": "Rustic Cut Chips",
+          "desc": "Cooked in beef fat, house-made aioli.",
+          "price": [{ "value": 11.0, "recorded": "2025-03-27" }],
+          "tags": ["df", "contains-egg"]
+        },
+        {
+          "name": "Fries",
+          "desc": "House-made aioli.",
+          "price": [{ "value": 11.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "df", "contains-egg"]
+        },
+        {
+          "name": "Corn Chips",
+          "desc": "House-made salsa.",
+          "price": [{ "value": 13.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "vg", "gf", "df"]
+        },
+        {
+          "name": "Garlic Loaf",
+          "desc": "Lashings of garlic butter.",
+          "price": [{ "value": 14.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Wedges",
+          "desc": "Cheese, bacon, sweet chilli, sour cream.",
+          "price": [{ "value": 19.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-dairy"]
+        },
+        {
+          "name": "Prawn Twisters",
+          "desc": "Half a dozen, house-made chipotle aioli.",
+          "price": [{ "value": 16.0, "recorded": "2025-03-27" }],
+          "tags": ["df", "contains-shellfish", "contains-gluten", "contains-egg"]
+        },
+        {
+          "name": "Cajun Calamari",
+          "desc": "House-made aioli.",
+          "price": [{ "value": 19.0, "recorded": "2025-03-27" }],
+          "tags": ["df", "contains-egg", "contains-shellfish"]
+        },
+        {
+          "name": "Nachos",
+          "desc": "Pulled pork or vegetarian, house-made salsa, chilli beans, cheese, jalapeños, sweet chilli, sour cream. Vegan on request.",
+          "price": [{ "value": 22.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "gf", "contains-dairy"]
+        },
+        {
+          "name": "Local Platter",
+          "desc": "Deep-fried goodness — mini spring rolls, samosas, cheerios, chicken, fish, prawn twisters, fries, wedges, dipping sauces. Serves 4–6.",
+          "price": [{ "value": 38.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten", "contains-shellfish"]
+        },
+        {
+          "name": "West Park Wings",
+          "desc": "Spicy Buffalo wings, house-made blue cheese sauce.",
+          "price": [{ "value": 19.0, "recorded": "2025-03-27" }],
+          "tags": ["gf", "contains-dairy", "spicy-1"]
+        },
+        {
+          "name": "Glenside Chowder",
+          "desc": "Prawns, mussels, fish, squid, garlic toast.",
+          "price": [{ "value": 24.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-shellfish", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Cheerios",
+          "desc": "A kiwi classic, tomato sauce.",
+          "price": [{ "value": 14.0, "recorded": "2025-03-27" }],
+          "tags": ["df", "gf"]
+        },
+        {
+          "name": "Vegetarian Pasta",
+          "desc": "Fettuccine, Napoli sauce, pumpkin, olives, spinach, parmesan.",
+          "price": [{ "value": 24.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Mains (Monday to Sunday, open till late)",
+      "items": [
+        {
+          "name": "Link Road Lasagne",
+          "desc": "Vegetarian lasagne, fresh rocket, house-made Napoli sauce, parmesan.",
+          "price": [{ "value": 27.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Roast Vegetable Salad",
+          "desc": "Rustic roast vegetables, Chef's salad mix, pumpkin seeds, nuts, kumara shavings, balsamic.",
+          "price": [{ "value": 28.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "vg", "gf", "df", "contains-nuts"]
+        },
+        {
+          "name": "The Old Coach Burger",
+          "desc": "Crispy \"Chicken\" plant-based pattie, house-made vegetarian pattie, cheese, salad greens, chipotle aioli, fries.",
+          "price": [{ "value": 29.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
+        },
+        {
+          "name": "The Triple Double Burger",
+          "desc": "Smashed double beef patties, double bacon, double cheese, onion rings, salad greens, pickle, rib sauce, rustic cut chips.",
+          "price": [{ "value": 29.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Fraser Ave Fettuccine",
+          "desc": "Chicken, bacon, mushrooms, parmesan.",
+          "price": [{ "value": 29.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Hawtrey Farm Filo",
+          "desc": "Chicken, spinach & cream cheese filo, baby potatoes, 1841 slaw, house-made tomato relish.",
+          "price": [{ "value": 35.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Burma Breast",
+          "desc": "350g skin on chicken breast oven roasted, grilled to finish, baby potatoes, 1841 slaw, sundried tomato cream.",
+          "price": [{ "value": 36.0, "recorded": "2025-03-27" }],
+          "tags": ["gf", "contains-dairy"]
+        },
+        {
+          "name": "Bangers & Mash",
+          "desc": "Pork sausages, mash, peas, caramelised onions, egg, gravy.",
+          "price": [{ "value": 28.0, "recorded": "2025-03-27" }],
+          "tags": ["gf", "contains-egg", "contains-dairy"]
+        },
+        {
+          "name": "Petherick Pork",
+          "desc": "300g crispy pork belly, mash, 1841 slaw, gravy, apple sauce.",
+          "price": [{ "value": 39.0, "recorded": "2025-03-27" }],
+          "tags": ["gf", "contains-dairy"]
+        },
+        {
+          "name": "Railway Ribs",
+          "desc": "World Famous in J Vegas! 1kg of pork ribs, slow cooked in our own BBQ sauce, rustic cut chips, 1841 slaw, sesame seeds.",
+          "price": [{ "value": 39.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-sesame"]
+        },
+        {
+          "name": "Frank Shank Pie",
+          "desc": "Good old lamb shank taste — without the bones! Slow cooked lamb shank, carrot, beans, kumara, onion, mint sauce, rustic cut chips, 1841 slaw.",
+          "price": [{ "value": 33.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Frankmoore Fish",
+          "desc": "Beer battered fresh fish, rustic cut chips, 1841 slaw.",
+          "price": [{ "value": 28.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Fish of the Day",
+          "desc": "200g fresh fish of the day, baby potatoes, greens, chimichurri. Price on application.",
+          "price": null,
+          "tags": ["gf"]
+        },
+        {
+          "name": "Kaukau Salmon",
+          "desc": "180g portion, mash, water cress, pesto, hollandaise.",
+          "price": [{ "value": 38.0, "recorded": "2025-03-27" }],
+          "tags": ["gf", "contains-egg", "contains-dairy", "contains-nuts"]
+        },
+        {
+          "name": "The Broadmeadow Beef Salad",
+          "desc": "200g seared beef, Chef's salad mix, fried shallots, garlic, chilli and lime dressing, crispy noodles.",
+          "price": [{ "value": 29.0, "recorded": "2025-03-27" }],
+          "tags": ["gf", "spicy-1"]
+        },
+        {
+          "name": "Hop Scotch",
+          "desc": "300g char-grilled scotch fillet, mash, water cress, mushroom gravy, peppercorn butter.",
+          "price": [{ "value": 42.0, "recorded": "2025-03-27" }],
+          "tags": ["gf", "contains-dairy"]
+        },
+        {
+          "name": "The Ironside (200g)",
+          "desc": "Char-grilled prime sirloin, rustic cut chips, 1841 slaw, garlic butter, fried egg. Please note: well done steak takes time.",
+          "price": [{ "value": 32.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-egg", "contains-dairy"]
+        },
+        {
+          "name": "The Ironside (400g)",
+          "desc": "Char-grilled prime sirloin, rustic cut chips, 1841 slaw, garlic butter, fried egg. Please note: well done steak takes time.",
+          "price": [{ "value": 42.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-egg", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Brunch (Monday to Sunday, open till 3pm)",
+      "items": [
+        {
+          "name": "1841 Brekkie",
+          "desc": "Poached eggs, bacon, pork sausage, tomato, hash browns, ciabatta.",
+          "price": [{ "value": 24.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-egg", "contains-gluten"]
+        },
+        {
+          "name": "The Works",
+          "desc": "Double poached eggs, double bacon, double pork sausage, double tomato, mushrooms, chilli beans, rustic cut chips, ciabatta.",
+          "price": [{ "value": 35.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-egg", "contains-gluten"]
+        },
+        {
+          "name": "Veg Brekkie",
+          "desc": "Poached eggs, mushrooms, tomato, hash browns, chilli beans, spinach, ciabatta.",
+          "price": [{ "value": 24.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-egg", "contains-gluten"]
+        },
+        {
+          "name": "Eggs Benedict",
+          "desc": "Poached eggs, bacon, spinach, potato rosti, hollandaise.",
+          "price": [{ "value": 24.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-egg", "contains-dairy"]
+        },
+        {
+          "name": "Caesar",
+          "desc": "The 1841 way. Chicken, bacon, poached egg, croutons, parmesan, house-made aioli.",
+          "price": [{ "value": 26.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-egg", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Steak Sammie",
+          "desc": "Char-grilled sirloin steak, medium-rare, salad greens, caramelised onions, bearnaise, fries.",
+          "price": [{ "value": 28.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten", "contains-egg", "contains-dairy"]
+        },
+        {
+          "name": "Creamy Mushrooms",
+          "desc": "Mushroom medley, garlic toast, parmesan.",
+          "price": [{ "value": 25.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Bubble 'n' Squeak",
+          "desc": "Pan-fried veggies, bacon, poached egg, potato rosti, hollandaise.",
+          "price": [{ "value": 25.0, "recorded": "2025-03-27" }],
+          "tags": ["gf", "contains-egg", "contains-dairy"]
+        },
+        {
+          "name": "Fish",
+          "desc": "Beer battered fresh fish, salad garnish, fries.",
+          "price": [{ "value": 25.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Filo Parcel",
+          "desc": "Chicken, spinach and cream cheese filo, salad garnish, house-made tomato relish.",
+          "price": [{ "value": 26.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "items": [
+        {
+          "name": "Ice Cream Sundae",
+          "desc": "Hokey pokey ice cream, fresh whipped cream, maraschino cherries, wafer. Choose from chocolate, strawberry, caramel or passionfruit topping. Gluten free without the wafer.",
+          "price": [{ "value": 10.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "gf-option", "contains-dairy"]
+        },
+        {
+          "name": "Double Chocolate Brownie",
+          "desc": "Vanilla ice-cream. Served warm.",
+          "price": [{ "value": 13.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "gf", "contains-dairy", "contains-egg"]
+        },
+        {
+          "name": "Apple & Blueberry Pie",
+          "desc": "Vanilla ice cream. Served warm.",
+          "price": [{ "value": 13.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Cheesecake",
+          "desc": "House-made, vanilla ice cream, berry coulis.",
+          "price": [{ "value": 14.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-dairy", "contains-gluten"]
+        },
+        {
+          "name": "Sticky Date Pudding",
+          "desc": "Salted butterscotch sauce, vanilla ice cream. Served warm.",
+          "price": [{ "value": 14.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "contains-dairy", "contains-gluten", "contains-egg"]
+        },
+        {
+          "name": "Chocolate Tart",
+          "desc": "Whittaker's Dark chocolate, raspberry sorbet, Biscoff, berry coulis.",
+          "price": [{ "value": 14.0, "recorded": "2025-03-27" }],
+          "tags": ["v", "df", "contains-gluten"]
+        }
+      ]
+    },
+    {
+      "section": "Extras",
+      "items": [
+        {
+          "name": "Takeaway Container",
+          "desc": null,
+          "price": [{ "value": 1.0, "recorded": "2025-03-27" }],
+          "tags": []
+        },
+        {
+          "name": "Aioli / Garlic Butter / Hollandaise / Fried Egg (1)",
+          "desc": "Each.",
+          "price": [{ "value": 2.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-egg", "contains-dairy"]
+        },
+        {
+          "name": "House-made Salsa / Toast / GF Bread / Extra Sauce",
+          "desc": "Each.",
+          "price": [{ "value": 3.0, "recorded": "2025-03-27" }],
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "1841 Slaw / Garden Salad / Mash / Onions / Tomatoes / Mushrooms",
+          "desc": "Each.",
+          "price": [{ "value": 5.0, "recorded": "2025-03-27" }],
+          "tags": []
+        },
+        {
+          "name": "Pork Sausage (1) / Bacon (2)",
+          "desc": "Brunch add-on, each.",
+          "price": [{ "value": 6.0, "recorded": "2025-03-27" }],
+          "tags": []
+        },
+        {
+          "name": "Mushroom Gravy",
+          "desc": null,
+          "price": [{ "value": 6.0, "recorded": "2025-03-27" }],
+          "tags": []
+        }
+      ]
+    }
+  ]
+}

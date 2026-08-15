@@ -1,0 +1,381 @@
+{
+  "id": "southern-cross",
+  "name": "Southern Cross Garden Bar Restaurant",
+  "cuisine": ["Gastropub"],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "39 Abel Smith Street, Te Aro, Wellington 6011",
+  "lat": -41.29650,
+  "lng": 174.77447,
+  "phone": "+64 4 384 9085",
+  "lifecycle": {
+    "added": "2026-08-15"
+  },
+  "website": "https://stargroup.nz/venues/southerncross",
+  "ordering": [],
+  "services": ["dine-in"],
+  "hours": {
+    "mon": [["11:30", "22:00"]],
+    "tue": [["11:30", "22:00"]],
+    "wed": [["11:30", "22:00"]],
+    "thu": [["11:30", "22:00"]],
+    "fri": [["11:30", null]],
+    "sat": [["10:00", null]],
+    "sun": [["10:00", "22:00"]]
+  },
+  "vibe": ["garden bar", "beer garden", "family friendly", "Wellington icon"],
+  "picks": [],
+  "verified": "2026-08-15",
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-08-15",
+  "detailsVerifiedBy": "official-site",
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Pub Snacks",
+      "items": [
+        {
+          "name": "Pull-Apart Garlic Loaf",
+          "desc": "Garlic butter.",
+          "price": 14.0,
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Korean-Fried Cauliflower",
+          "desc": "Korean BBQ sauce, pickles.",
+          "price": 20.0,
+          "tags": ["v", "gf-option"]
+        },
+        {
+          "name": "Salt & Pepper Squid",
+          "desc": "Garlic aioli, fresh lemon.",
+          "price": 22.5,
+          "tags": ["contains-egg", "contains-shellfish"]
+        },
+        {
+          "name": "Sticky Pork Belly Bites",
+          "desc": "Gochujang BBQ glaze, chilli, sesame seeds.",
+          "price": 24.0,
+          "tags": ["contains-sesame", "spicy-1"]
+        },
+        {
+          "name": "Loaded Fries",
+          "desc": "BBQ brisket, cheesy sauce, chipotle mayo, pickles, green onion.",
+          "price": 25.5,
+          "tags": ["contains-dairy", "contains-egg"]
+        },
+        {
+          "name": "Garlic Chilli Prawns",
+          "desc": "Blistered cherry tomatoes, green onion, chilli aioli on roti.",
+          "price": 26.0,
+          "tags": ["contains-shellfish", "contains-gluten", "contains-egg", "spicy-1"]
+        },
+        {
+          "name": "Glazed Pork & Wagyu Brisket Meatballs",
+          "desc": "Smoky herb butter jus, mustard cream, cheddar dust.",
+          "price": 24.5,
+          "tags": ["contains-dairy"]
+        },
+        {
+          "name": "Buttermilk Fried Chicken",
+          "desc": "Honey sriracha, ranch, garden pickles.",
+          "price": 24.5,
+          "tags": ["contains-dairy", "contains-gluten", "spicy-1"]
+        },
+        {
+          "name": "Onion Rings",
+          "desc": "Chipotle mayo.",
+          "price": 14.5,
+          "tags": ["v", "contains-gluten", "contains-egg"]
+        },
+        {
+          "name": "Fries",
+          "desc": "Confit garlic aioli.",
+          "price": 13.0,
+          "tags": ["v", "contains-egg"]
+        },
+        {
+          "name": "Tools Down Platter",
+          "desc": "Sticky pork belly bites, buttermilk fried chicken, Korean fried cauliflower, salt & pepper squid, pork & wagyu brisket meatballs, grilled focaccia.",
+          "price": 69.0,
+          "tags": ["contains-gluten", "contains-dairy", "contains-sesame", "contains-egg", "contains-shellfish"]
+        }
+      ]
+    },
+    {
+      "section": "Pub Mains",
+      "items": [
+        {
+          "name": "Chicken Schnitty",
+          "desc": "Crumbed chicken breast, green herb slaw, gravy. Choose fries or mash.",
+          "price": 32.5,
+          "tags": ["contains-gluten", "contains-egg"]
+        },
+        {
+          "name": "Fish & Chips",
+          "desc": "Beer-battered daily catch, house fries, green herb slaw, tartare sauce.",
+          "price": 29.5,
+          "tags": ["contains-gluten", "contains-egg"]
+        },
+        {
+          "name": "Potato Gnocchi",
+          "desc": "Leek & peas, Italian tomato sauce, lemon ricotta verde, crispy kale.",
+          "price": 29.5,
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Twice Cooked Pork Belly",
+          "desc": "Potato gratin, winter greens, pear & fig relish, jus. No gluten added.",
+          "price": 38.0,
+          "tags": ["gf", "contains-dairy"]
+        },
+        {
+          "name": "Fettuccine Carbonara",
+          "desc": "Creamy carbonara sauce, chicken, bacon, Grana Padano.",
+          "price": 29.5,
+          "tags": ["gf-option", "contains-gluten", "contains-dairy", "contains-egg"]
+        },
+        {
+          "name": "Classic Caesar",
+          "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow. Add grilled chicken +$8.",
+          "price": 24.0,
+          "tags": ["gf-option", "contains-gluten", "contains-egg", "contains-dairy"]
+        },
+        {
+          "name": "Green Tahini Bowl",
+          "desc": "Roast carrots, lemon ricotta verde, winter leaves, toasted buckwheat, pumpkin seed crunch. Add grilled chicken +$8. No gluten added.",
+          "price": 22.0,
+          "tags": ["v", "gf", "contains-sesame", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Butcher's Cut Steak",
+      "items": [
+        {
+          "name": "Rotating Cut of Premium NZ Beef",
+          "desc": "Fries, café de Paris butter, red wine jus, charred winter greens.",
+          "price": 42.0,
+          "tags": ["gf-option", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Burgers",
+      "items": [
+        {
+          "name": "Cheeseburger",
+          "desc": "150g brisket patty, American cheese, special sauce, ketchup, sweet & spicy pickles, milk bun, fries. No gluten added bun +$2.50 or lettuce bun available.",
+          "price": 27.0,
+          "tags": ["gf-option", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "The Cluckerson",
+          "desc": "Crispy-fried chicken, American cheese, chipotle mayo, ranch, sweet & spicy pickles, lettuce, milk bun, fries.",
+          "price": 29.5,
+          "tags": ["contains-gluten", "contains-dairy", "contains-egg"]
+        },
+        {
+          "name": "The Hallouminati",
+          "desc": "Grilled halloumi, house-made vegan patty, American cheese, special sauce, sweet & spicy pickles, ranch, red onion, milk bun, fries.",
+          "price": 29.5,
+          "tags": ["v", "gf-option", "contains-gluten", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Pizza",
+      "items": [
+        {
+          "name": "Margherita",
+          "desc": "Cherry tomato, mozzarella, basil. No gluten added base +$2.50; dairy free mozzarella available.",
+          "price": 28.0,
+          "tags": ["v", "gf-option", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "BBQ",
+          "desc": "Brisket, pork belly, pepperoni, mozzarella, smoky IPA BBQ sauce.",
+          "price": 32.0,
+          "tags": ["gf-option", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Bianca",
+          "desc": "Mushrooms, white sauce, mozzarella, ricotta, kale, parmesan.",
+          "price": 29.0,
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Chicken & Chorizo",
+          "desc": "Red onion, fire-roasted peppers, jalapeños.",
+          "price": 30.0,
+          "tags": ["gf-option", "contains-gluten", "contains-dairy", "spicy-1"]
+        }
+      ]
+    },
+    {
+      "section": "Sides",
+      "items": [
+        {
+          "name": "Cos Lettuce",
+          "desc": "Pumpkin seed crunch, house dressing. No gluten added.",
+          "price": 12.0,
+          "tags": ["v", "gf"]
+        },
+        {
+          "name": "Charred Winter Greens",
+          "desc": "Garlic butter. No gluten added.",
+          "price": 14.0,
+          "tags": ["v", "gf", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Brunch",
+      "items": [
+        {
+          "name": "Rosti Benedict",
+          "desc": "House-made rosti, poached eggs, hollandaise. Choose bacon, hot-smoked salmon, or spinach & kale. No gluten added.",
+          "price": 27.0,
+          "tags": ["gf", "contains-egg", "contains-dairy"]
+        },
+        {
+          "name": "Eggs Your Way",
+          "desc": "Toasted sourdough.",
+          "price": 14.0,
+          "tags": ["v", "contains-egg", "contains-gluten"]
+        },
+        {
+          "name": "Avocado on Toast",
+          "desc": "Toasted croissant, smashed avocado, poached egg, rocket, parmesan.",
+          "price": 25.0,
+          "tags": ["v", "contains-egg", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Venison Mince Ragu",
+          "desc": "Sourdough, gremolata, poached free range eggs, chives, parmesan snow.",
+          "price": 28.0,
+          "tags": ["contains-egg", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Smoked Salmon",
+          "desc": "Sourdough, dill crème fraîche, red onion, capers, chives, dukkah.",
+          "price": 27.0,
+          "tags": ["contains-gluten", "contains-dairy", "contains-nuts", "contains-sesame"]
+        },
+        {
+          "name": "Mushroom on Toast",
+          "desc": "Creamy mushroom selection, sourdough, chives, poached free range eggs, parmesan.",
+          "price": 27.0,
+          "tags": ["v", "contains-egg", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "House Granola",
+          "desc": "Coconut yoghurt, berry compote, seasonal fruit.",
+          "price": 22.0,
+          "tags": ["v"]
+        },
+        {
+          "name": "Full English Breakfast",
+          "desc": "Bacon, house sausage, Anna potatoes, roasted tomato, mushrooms, Southern beans, eggs your way, sourdough.",
+          "price": 29.0,
+          "tags": ["contains-egg", "contains-gluten"]
+        },
+        {
+          "name": "Corn & Zucchini Fritters",
+          "desc": "Smashed avocado, chilli crisp, tomato salsa.",
+          "price": 26.0,
+          "tags": ["v", "contains-egg", "contains-gluten", "spicy-1"]
+        },
+        {
+          "name": "Crème Brûlée French Toast",
+          "desc": "Macerated berries, roasted white chocolate, maple glaze.",
+          "price": 26.0,
+          "tags": ["v", "contains-egg", "contains-gluten", "contains-dairy"]
+        }
+      ]
+    },
+    {
+      "section": "Brunch Add-Ons",
+      "items": [
+        { "name": "Eggs (2)", "desc": null, "price": 6.0, "tags": ["v", "contains-egg"] },
+        { "name": "Bacon", "desc": null, "price": 6.0, "tags": [] },
+        { "name": "Halloumi", "desc": null, "price": 6.0, "tags": ["v", "contains-dairy"] },
+        { "name": "Sausages (2)", "desc": null, "price": 6.0, "tags": [] },
+        { "name": "Avocado", "desc": null, "price": 6.0, "tags": ["v"] },
+        { "name": "Hollandaise", "desc": null, "price": 3.0, "tags": ["v", "contains-egg", "contains-dairy"] },
+        { "name": "NGA bread", "desc": "No gluten added bread.", "price": 3.0, "tags": ["v", "gf"] },
+        { "name": "House-made rosti", "desc": null, "price": 3.0, "tags": ["v"] }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "items": [
+        {
+          "name": "American Chocolate Brownie Sundae",
+          "desc": "Chocolate peanut butter granola, vanilla ice cream, chocolate sauce.",
+          "price": 16.0,
+          "tags": ["v", "gf-option", "contains-peanuts", "contains-gluten", "contains-dairy", "contains-egg"]
+        },
+        {
+          "name": "Baked Cheesecake Pop",
+          "desc": "Chocolate crackle, raspberry gel, sherbert.",
+          "price": 14.0,
+          "tags": ["v", "contains-dairy", "contains-gluten"]
+        },
+        {
+          "name": "Sticky Date Pudding",
+          "desc": "Butterscotch sauce, vanilla bean ice cream.",
+          "price": 15.0,
+          "tags": ["v", "contains-dairy", "contains-gluten", "contains-egg"]
+        }
+      ]
+    },
+    {
+      "section": "Kids",
+      "items": [
+        {
+          "name": "Mini Beast Burger",
+          "desc": "Beef patty, cheese, ketchup, toasted bun, fries. All kids' meals served with a kids' sundae — 100s & 1000s and chocolate, caramel or strawberry sauce.",
+          "price": 15.5,
+          "tags": ["contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Chook & Chips",
+          "desc": "Crumbed chicken bites, fries, tomato sauce. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Lil' Fish & Flicks",
+          "desc": "Crispy fish bites, fries, tartare sauce. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": ["contains-gluten", "contains-egg"]
+        },
+        {
+          "name": "Meatballs",
+          "desc": "Italian tomato sauce, fettucine, cheese. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": ["contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Grilled Chicken & Mash",
+          "desc": "Gravy, greens. No gluten added. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": ["gf", "contains-dairy"]
+        },
+        {
+          "name": "Fettucine",
+          "desc": "Italian tomato sauce, mozzarella. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": ["v", "contains-gluten", "contains-dairy"]
+        },
+        {
+          "name": "Cheese & Bacon Loaded Fries",
+          "desc": "Cheese sauce, mozzarella, gravy. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": ["v-option", "contains-dairy"]
+        }
+      ]
+    }
+  ]
+}
