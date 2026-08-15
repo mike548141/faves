@@ -1686,33 +1686,22 @@ Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 ## Also parked (small)
 
-- [ ] 🎯 **Two accepted ADRs both numbered 0025** `[S][docs]` — found
-  2026-08-15. `0025-settings-index-and-panels.md` (dated 2026-08-08) and
-  `0025-infer-allergens-by-default.md` (dated 2026-08-09) are both **accepted**
-  and unrelated; every other decision 0001–0038 is unique. The later one should
-  have been 0026. Two consequences that are already live: a citation of "ADR
-  0025" is ambiguous (**24 inbound references** across the docs, and both files
-  are cited by number in `ARCHITECTURE.md`, `WORKPLAN.md` and four other ADRs),
-  and the next session allocating a number by "highest + 1" cannot see that a
-  number was consumed twice. This is the allocate-at-merge collision the
-  concurrency notes already describe, landing on ADRs instead of worktrees.
-  **Not fixed unilaterally, because both options cost something:**
-  - **(a) Renumber the allergen one to 0039** (next free) and rewrite the 24
-    references. Cleanest end state. But "never edit an accepted ADR" is a house
-    rule, and while renumbering changes no *decision*, it does rewrite an
-    accepted record's identity — and any external link to the old filename
-    breaks, on a repo that is public.
-  - **(b) Leave both, add a disambiguating note** to each file's header and to
-    `decisions/README.md`, and let 0026+ carry on. Costs nothing, breaks
-    nothing, but leaves a permanent wart that every future reader must decode.
-  **Recommendation: (b).** The repo is public and the numbers are already cited
-  in six other files; the wart is cheaper than the churn, and honesty about a
-  filing collision is not the same as tolerating a wrong decision. Whichever is
-  chosen, `decisions/README.md` should gain the rule that made this possible —
-  **allocate the ADR number at merge, never in a parallel worktree.**
+✅ **Two accepted ADRs both numbered 0025 — ruled 2026-08-15.**
+`0025-settings-index-and-panels.md` (2026-08-08) and
+`0025-infer-allergens-by-default.md` (2026-08-09) are unrelated decisions
+sharing one number, with 24 inbound references. **Owner ruled: both stay.**
+Renumbering would rewrite an accepted record's identity and break every inbound
+reference plus any external link, on a public repo — dearer than the oddity.
+Delivered: a disambiguating note in each file's header, the rule in
+[`decisions/README.md`](decisions/README.md) that a number is allocated **at
+merge, never in a worktree**, and `0025` recorded as permanently ambiguous —
+**cite an ADR by file path, never by bare number.**
+🔎 **The root cause was not the number, it was the index.** The allergen record
+had **never been added to the index** in `decisions/README.md` — the one place a
+duplicate number is visible. That entry now exists, and the README carries the
+rule that earned it: *add the index entry in the same commit as the record; an
+unindexed ADR is invisible to the next person allocating a number.*
 
-✅ **A negative dish price validated clean — fixed 2026-08-09.** Detail →
-[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 ✅ **`pathscan` is decorative here — closed 2026-08-15.** Ran from 25 standing
 warn-only findings to a **clean scan**. Our two classes were fixed 2026-08-09;
 the third was an upstream defect, queued as atelier Track E item E8 under the

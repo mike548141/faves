@@ -4,6 +4,16 @@
 **Date**: 2026-08-09
 **Supersedes**: [0024](0024-derived-allergen-tags.md)
 
+> ⚠ **The number 0025 was allocated twice.** This record and
+> [`0025-settings-index-and-panels.md`](0025-settings-index-and-panels.md)
+> are unrelated decisions sharing one number, found 2026-08-15. It went
+> unnoticed because this record was never added to the index in
+> [`README.md`](README.md) — the one place the clash would have shown.
+> Owner ruled the same day to leave both in place rather than renumber an
+> accepted record and break 24 inbound references on a public repo.
+> **Cite this one by filename, never as "ADR 0025".** Nothing about the
+> decision below changed; this note is filing metadata.
+
 ## Context
 
 ADR 0024 (2026-08-08) treated inference as a **narrow exception**: three

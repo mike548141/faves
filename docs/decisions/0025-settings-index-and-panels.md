@@ -2,6 +2,14 @@
 
 **Status**: accepted • **Date**: 2026-08-08
 
+> ⚠ **The number 0025 was allocated twice.** This record and
+> [`0025-infer-allergens-by-default.md`](0025-infer-allergens-by-default.md)
+> are unrelated decisions sharing one number, found 2026-08-15. Owner ruled
+> the same day to leave both in place rather than renumber an accepted
+> record and break 24 inbound references on a public repo. **Cite this one
+> by filename, never as "ADR 0025".** Nothing about the decision below
+> changed; this note is filing metadata.
+
 ## Context
 
 The Settings sheet grew a section at a time — distance dials, food preferences,

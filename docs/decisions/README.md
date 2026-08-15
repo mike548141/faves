@@ -21,9 +21,17 @@ session may already have taken. Draft with a placeholder and fix the number when
 you merge to `main`. This is not hypothetical twice over: three parallel agents
 all took `0031` on 2026-07-23, and **0025 is currently used by two unrelated
 accepted records** — `0025-settings-index-and-panels.md` (2026-08-08) and
-`0025-infer-allergens-by-default.md` (2026-08-09), found 2026-08-15. Cite an ADR
-by its **file path**, not by bare number, until that collision is resolved (the
-repair is queued as an owner call in `ROADMAP.md`, "Also parked (small)").
+`0025-infer-allergens-by-default.md` (2026-08-09), found 2026-08-15. **Owner
+ruled 2026-08-15: both stay.** Renumbering would rewrite an accepted record's
+identity and break 24 inbound references plus any external link, on a public
+repo — dearer than the oddity. So `0025` is permanently ambiguous: **cite an ADR
+by its file path, never by bare number.** Numbering carries on from the highest
+in the directory as usual; 0025 is simply used twice.
+
+**Add the index entry in the same commit as the record.** The collision above
+survived because `0025-infer-allergens-by-default.md` was never indexed here,
+and this index is the one place a duplicate number is visible. An unindexed ADR
+is invisible to the next person allocating a number.
 
 Records 0001–0004 were backfilled 2026-07-08 from decisions already made
 and recorded in `ARCHITECTURE.md`/`STRATEGY.md`; they capture the
@@ -127,6 +135,15 @@ deliberation those compact docs omit.
   (552 px). Accordions, tabs and scattering-to-where-they-bite all rejected.
   So was Escape-steps-back: measured, Chrome's close-watcher force-closed it
   two times in six.
+- [0025](0025-infer-allergens-by-default.md) ⚠ *(second record with this
+  number — see the note above)* — **infer allergens by default where
+  confidence is high**, superseding [0024](0024-derived-allergen-tags.md)'s
+  narrow three-rule exception on the owner's 2026-08-09 ruling. Inference is
+  now the preferred behaviour and the burden moves onto *not* tagging: 542 tags
+  applied across the corpus (251 stated, 291 derived), against 45 gluten and 1
+  sesame before. **The one-way rule is the hard limit** — inference may only
+  ever add a `contains-*` tag, never `gf`/`df`/`v`/`vg`, because inferring
+  presence is fail-safe and inferring absence would assert safety from a guess.
 - [0026](0026-pat-prerequisite-discharged.md) — **the PAT prerequisite is
   discharged and credential-root hardening is decoupled**, amending
   [0022](0022-publish-safety-review.md)'s consequences. No classic tokens exist
