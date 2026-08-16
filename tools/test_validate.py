@@ -43,6 +43,32 @@ def _first_item(d):
     return d["menu"][0]["items"][0]
 
 
+def _add_ons(d):
+    """Give the subject one well-formed add-on group, named by its first dish,
+    and return the group. ADR 0048's own worked example, so every case below can
+    break exactly one thing about a shape that is otherwise known-good."""
+    group = {
+        "id": "sauces",
+        "name": "Our delicious sauces",
+        "select": "many",
+        "max": 2,
+        "price": 0,
+        "options": [
+            {"name": "Satay", "tags": ["contains-peanuts", "vg", "gf", "df"]},
+            {"name": "Garlic yogurt", "tags": ["contains-dairy", "v", "gf"]},
+        ],
+    }
+    d["addOnGroups"] = [group]
+    _first_item(d)["addOns"] = ["sauces"]
+    return group
+
+
+def _breaks(fn):
+    """A case that installs the good add-on group, then breaks it: `fn(group,
+    record)`."""
+    return lambda d: fn(_add_ons(d), d)
+
+
 # name -> (mutate, expectation). "error" = must exit non-zero. "warn" = must
 # exit zero but say something; the no-backfill accommodations live here, and
 # they are asserted so a later change cannot silently promote or drop them.
@@ -172,6 +198,96 @@ CASES = {
         ),
         "clean",
     ),
+    # --- add-ons, ADR 0048 -------------------------------------------------
+    "a well-formed add-on group is legal": (_add_ons, "clean"),
+    "an option that states no tags is legal": (
+        _breaks(lambda g, d: g["options"][0].update(tags=[])),
+        "clean",
+    ),
+    # The one the ADR argued hardest for: a forgotten price must not become a
+    # silently free add-on and an under-stated total.
+    "add-on priced at neither level": (_breaks(lambda g, d: g.pop("price")), "error"),
+    # Null must never reach an add-on price — a dish price uses it for two
+    # different unknowns (`—` and `?`), and nothing on this screen tells them apart.
+    "add-on option price written as null": (
+        _breaks(lambda g, d: g["options"][0].update(price=None)),
+        "error",
+    ),
+    "add-on group price written as null": (_breaks(lambda g, d: g.update(price=None)), "error"),
+    "negative add-on price": (_breaks(lambda g, d: g["options"][0].update(price=-2)), "error"),
+    # Referential integrity, both directions. A dangling id renders nothing at
+    # all (groupsFor drops it rather than throwing), so it fails in silence.
+    "dish addOns names an undefined group": (
+        _breaks(lambda g, d: _first_item(d).update(addOns=["gravy"])),
+        "error",
+    ),
+    "section addOns names an undefined group": (
+        _breaks(lambda g, d: d["menu"][0].update(addOns=["gravy"])),
+        "error",
+    ),
+    "an add-on group nobody references": (
+        _breaks(lambda g, d: _first_item(d).pop("addOns")),
+        "warn",
+    ),
+    # Identity: two groups sharing an id make every reference to it ambiguous,
+    # and two options sharing a name make a selection unresolvable.
+    "two add-on groups with the same id": (
+        _breaks(lambda g, d: d["addOnGroups"].append(copy.deepcopy(g))),
+        "error",
+    ),
+    "two options with the same name in one group": (
+        _breaks(lambda g, d: g["options"].append({"name": "Satay", "tags": []})),
+        "error",
+    ),
+    "add-on group id that is not kebab-case": (
+        _breaks(lambda g, d: (g.update(id="Sauces"), _first_item(d).update(addOns=["Sauces"]))),
+        "error",
+    ),
+    "select off the closed set": (_breaks(lambda g, d: g.update(select="several")), "error"),
+    "max on a pick-one group": (_breaks(lambda g, d: g.update(select="one")), "error"),
+    "max above the number of options": (_breaks(lambda g, d: g.update(max=5)), "error"),
+    "add-on option with no tags at all": (
+        _breaks(lambda g, d: g["options"][0].pop("tags")),
+        "error",
+    ),
+    "unknown tag on an add-on option": (
+        _breaks(lambda g, d: g["options"][0].update(tags=["contains-mystery"])),
+        "error",
+    ),
+    # The typo that sells an extra free: a mistyped price key inside a group
+    # that defaults to 0 is not a harmless no-op, it is an under-stated total.
+    "mistyped price key on an add-on option": (
+        _breaks(lambda g, d: g["options"][0].update(prive=2.5)),
+        "error",
+    ),
+    "unknown key on an add-on group": (
+        _breaks(lambda g, d: g.update(maxx=2)),
+        "error",
+    ),
+}
+
+
+# Mutations to a SOURCE file rather than to a record. The gates that hold two
+# hand-maintained tables in step live in the code, so no amount of breaking a
+# menu could ever exercise them — and a drift gate that cannot fire is the
+# decorative guard this repo keeps finding. path -> {name: (mutate_text, expect)}.
+SOURCE_CASES = {
+    "site/js/addons.js": {
+        # CONTRADICTS and tag_allergens.CONTRADICTED_BY are one food fact,
+        # inverted. Give `df` an allergen the Python table doesn't agree with.
+        "CONTRADICTS drifts from CONTRADICTED_BY": (
+            lambda s: s.replace(
+                'df: ["contains-dairy"],', 'df: ["contains-dairy", "contains-egg"],'
+            ),
+            "error",
+        ),
+        # …and prove the parse isn't quietly returning an empty table, which
+        # would make every comparison above it vacuously true.
+        "CONTRADICTS can no longer be found": (
+            lambda s: s.replace("export const CONTRADICTS =", "export const CONTRADICTS_OLD ="),
+            "error",
+        ),
+    },
 }
 
 
@@ -198,10 +314,12 @@ def main() -> int:
         work.mkdir(parents=True)
         shutil.copytree(ROOT / "tools", work / "tools")
         shutil.copytree(ROOT / "site" / "data", work / "site" / "data")
-        # validate.py reads the rename table out of the shipped JS so the two
-        # can't drift (see _load_renames there), so the sandbox needs it too.
+        # validate.py reads two tables out of the shipped JS so they can't drift
+        # from their Python counterparts (see _load_renames and
+        # _load_contradicts there), so the sandbox needs those modules too.
         (work / "site" / "js").mkdir(parents=True, exist_ok=True)
-        shutil.copy(ROOT / "site" / "js" / "renames.js", work / "site" / "js" / "renames.js")
+        for mod in ("renames.js", "addons.js"):
+            shutil.copy(ROOT / "site" / "js" / mod, work / "site" / "js" / mod)
 
         rc, out = run_validate(work)
         if rc != 0:
@@ -239,6 +357,29 @@ def main() -> int:
             if not ok:
                 failures.append(name)
 
+        for rel, cases in SOURCE_CASES.items():
+            target = work / rel
+            pristine = target.read_text(encoding="utf-8")
+            for name, (mutate, expect) in cases.items():
+                broken = mutate(pristine)
+                # A mutation that changed nothing would "pass" for the wrong
+                # reason the day the source it edits is reworded.
+                if broken == pristine:
+                    print(f"  ❌ {name:38} MUTATION MATCHED NOTHING in {rel}")
+                    failures.append(name)
+                    continue
+                target.write_text(broken, encoding="utf-8")
+                rc, out = run_validate(work)
+                target.write_text(pristine, encoding="utf-8")
+
+                ok = rc != 0 if expect == "error" else rc == 0
+                print(f"  {'✅' if ok else '❌'} {name:38} {'caught' if ok else 'PASSED SILENTLY'}")
+                if args.verbose:
+                    for line in out.splitlines():
+                        print(f"       | {line}")
+                if not ok:
+                    failures.append(name)
+
     drift = check_need_kinds_agree()
     if drift:
         print(f"  ❌ {'needs vocabulary agrees across files':38} {drift}")
@@ -255,7 +396,8 @@ def main() -> int:
         )
         return 1
 
-    print(f"\nAll {len(CASES)} mutations behaved as specified.")
+    total = len(CASES) + sum(len(c) for c in SOURCE_CASES.values())
+    print(f"\nAll {total} mutations behaved as specified.")
     return 0
 
 

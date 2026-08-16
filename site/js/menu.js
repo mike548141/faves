@@ -28,6 +28,7 @@ import {
 } from "./place.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
+import { dishAddOns } from "./addons-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { ratingControl, curatedRating } from "./ratings-ui.js";
 import { priceBand } from "./price.js";
@@ -743,7 +744,7 @@ function dishPhoto(item) {
   });
 }
 
-function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
+function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, section = null) {
   const collectionId = r?.id ?? null;
   // The price slot doubles as a recipe meta chip (serves · time).
   const recipeMeta = isRecipes
@@ -894,6 +895,20 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
     .toLowerCase();
   li.dataset.tags = (item.tags || []).join(" ");
   li.append(...children);
+
+  // Add-ons hang off the row rather than sitting in the actions bar: choosing
+  // sauces is a considered act, and the ＋ Add beside it is a one-tap one.
+  // Configuring the dish rewrites BOTH the flagged treatment and dataset.tags,
+  // because applyView() re-reads dataset.tags for the live diet filter — a dish
+  // configured out of "vegan" must dim with the rest of them, not linger
+  // looking like a match (ADR 0048 §3).
+  if (r && !isRecipes) {
+    const picker = dishAddOns(r, section, item, (tags) => {
+      li.dataset.tags = tags.join(" ");
+      li.classList.toggle("dish-flagged", dishFlagged(tags, avoid));
+    });
+    if (picker) li.append(picker.node);
+  }
   return li;
 }
 
@@ -1061,7 +1076,7 @@ function render(r) {
       el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
     );
     const dishes = el("ul", { className: "dish-list" });
-    for (const item of section.items) dishes.append(renderDish(item, isRecipes, r, avoid));
+    for (const item of section.items) dishes.append(renderDish(item, isRecipes, r, avoid, section));
     const sec = el("section", { className: "menu-section", id }, [
       el("h2", { className: "section-title", textContent: section.section }),
       dishes,

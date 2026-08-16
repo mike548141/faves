@@ -105,7 +105,7 @@ export function optionPrice(group, option) {
 }
 
 /** Total surcharge of a selection, added to the dish price by cart.js. */
-export function selectionPrice(record, selection) {
+export function selectionPrice(selection) {
   return (selection || []).reduce((sum, s) => sum + (typeof s.price === "number" ? s.price : 0), 0);
 }
 

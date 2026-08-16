@@ -169,9 +169,9 @@ test("optionPrice: nothing stated anywhere reads as 0, because validate.py forbi
 });
 
 test("selectionPrice: sums the chosen options", () => {
-  assert.equal(selectionPrice(null, [SATAY, HALLOUMI, CHICKEN]), 15);
-  assert.equal(selectionPrice(null, []), 0);
-  assert.equal(selectionPrice(null, null), 0);
+  assert.equal(selectionPrice([SATAY, HALLOUMI, CHICKEN]), 15);
+  assert.equal(selectionPrice([]), 0);
+  assert.equal(selectionPrice(null), 0);
 });
 
 // --- caps -------------------------------------------------------------

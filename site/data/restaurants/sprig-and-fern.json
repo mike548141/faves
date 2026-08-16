@@ -79,27 +79,276 @@
     "added": "2026-07-06"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "brunch-sides",
+      "name": "Brunch Sides",
+      "select": "many",
+      "options": [
+        {
+          "name": "Spinach",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Halloumi",
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Sausages",
+          "price": 8.0,
+          "tags": []
+        },
+        {
+          "name": "Bacon",
+          "price": 8.0,
+          "tags": []
+        },
+        {
+          "name": "Salmon",
+          "price": 9.0,
+          "tags": []
+        },
+        {
+          "name": "Free Range Egg",
+          "price": 4.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tomatoes",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Hollandaise",
+          "price": 2.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Potato Rosti",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Roasted Field Mushrooms",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Toast",
+          "price": 4.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Gluten Free Toast",
+          "price": 6.0,
+          "tags": [
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gravy",
+      "name": "Add gravy",
+      "select": "one",
+      "options": [
+        {
+          "name": "Gravy",
+          "price": 3.0,
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "salad-protein",
+      "name": "Add chicken, halloumi, prawns or beef",
+      "select": "one",
+      "price": 7.0,
+      "options": [
+        {
+          "name": "Chicken",
+          "tags": []
+        },
+        {
+          "name": "Halloumi",
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Prawns",
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Beef",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "nga-bun",
+      "name": "No gluten added bun",
+      "select": "one",
+      "options": [
+        {
+          "name": "No gluten added bun",
+          "price": 2.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "gf-toast",
+      "name": "Gluten free toast",
+      "select": "one",
+      "options": [
+        {
+          "name": "Gluten free toast",
+          "price": 2.0,
+          "tags": [
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "add-salmon",
+      "name": "Add salmon",
+      "select": "one",
+      "options": [
+        {
+          "name": "Salmon",
+          "price": 7.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "affogato-liqueur",
+      "name": "Add Baileys, Kahlua or butterscotch liqueur",
+      "select": "one",
+      "price": 9.0,
+      "options": [
+        {
+          "name": "Baileys",
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Kahlua",
+          "tags": []
+        },
+        {
+          "name": "Butterscotch liqueur",
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "surf-and-turf",
+      "name": "Surf + turf",
+      "select": "one",
+      "options": [
+        {
+          "name": "Prawns",
+          "price": 7.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "steak-sauce",
+      "name": "Choice of garlic butter or mushroom sauce",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Garlic butter",
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mushroom sauce",
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sundae-sauce",
+      "name": "Choice of caramel, strawberry or chocolate sauce",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Caramel sauce",
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Strawberry sauce",
+          "tags": []
+        },
+        {
+          "name": "Chocolate sauce",
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Small Plates",
       "items": [
         {
           "name": "Thick Cut Fries",
-          "desc": "Served with aioli. Add gravy $3.",
+          "desc": "Served with aioli.",
           "price": 10.0,
           "tags": [
             "gf",
             "v",
             "contains-egg"
+          ],
+          "addOns": [
+            "gravy"
           ]
         },
         {
           "name": "Curly Fries",
-          "desc": "Served with aioli. Add gravy $3.",
+          "desc": "Served with aioli.",
           "price": 12.0,
           "tags": [
             "v",
             "contains-egg"
+          ],
+          "addOns": [
+            "gravy"
           ]
         },
         {
@@ -177,10 +426,13 @@
         },
         {
           "name": "Garden Salad",
-          "desc": "Seasonal garden salad with house dressing. Add chicken, halloumi, prawns or beef +$7.",
+          "desc": "Seasonal garden salad with house dressing.",
           "price": 17.0,
           "tags": [
             "vg"
+          ],
+          "addOns": [
+            "salad-protein"
           ]
         }
       ]
@@ -207,11 +459,15 @@
         },
         {
           "name": "Sirloin",
-          "desc": "230g cooked to your liking, served with fries and house salad. Choice of garlic butter or mushroom sauce. Surf + turf: add prawns +$7. Dairy free available.",
+          "desc": "230g cooked to your liking, served with fries and house salad. Dairy free available.",
           "price": 39.5,
           "tags": [
             "gf",
             "contains-dairy"
+          ],
+          "addOns": [
+            "steak-sauce",
+            "surf-and-turf"
           ]
         },
         {
@@ -235,11 +491,14 @@
         },
         {
           "name": "Cheeseburger",
-          "desc": "Onion, pickles, chopped lettuce, served in a seeded bun with thick cut fries. No gluten added bun +$2.5. Dairy free available.",
+          "desc": "Onion, pickles, chopped lettuce, served in a seeded bun with thick cut fries. Dairy free available.",
           "price": 28.0,
           "tags": [
             "gf-option",
             "contains-gluten"
+          ],
+          "addOns": [
+            "nga-bun"
           ]
         },
         {
@@ -260,7 +519,7 @@
         },
         {
           "name": "Summer Salad",
-          "desc": "Summer vegetables with egg noodles, toasted sesame, crispy shallots, coriander and a ginger scallion dressing. Add chicken, halloumi, prawns or beef +$7.",
+          "desc": "Summer vegetables with egg noodles, toasted sesame, crispy shallots, coriander and a ginger scallion dressing.",
           "price": 23.0,
           "tags": [
             "df",
@@ -269,6 +528,9 @@
             "contains-gluten",
             "contains-egg",
             "contains-sesame"
+          ],
+          "addOns": [
+            "salad-protein"
           ]
         }
       ]
@@ -288,12 +550,15 @@
         },
         {
           "name": "Potato, Rosemary + Basil Pesto",
-          "desc": "Shaved baby potatoes, rosemary and basil pesto. Add salmon +$7.",
+          "desc": "Shaved baby potatoes, rosemary and basil pesto.",
           "price": 21.0,
           "tags": [
             "v",
             "gf-option",
             "contains-nuts"
+          ],
+          "addOns": [
+            "add-salmon"
           ]
         },
         {
@@ -336,16 +601,22 @@
     },
     {
       "section": "Brunch",
+      "addOns": [
+        "brunch-sides"
+      ],
       "items": [
         {
           "name": "Eggs on Toast",
-          "desc": "Eggs your way on toasted sourdough. Gluten free toast +$2.",
+          "desc": "Eggs your way on toasted sourdough.",
           "price": 13.0,
           "tags": [
             "v",
             "gf-option",
             "contains-gluten",
             "contains-egg"
+          ],
+          "addOns": [
+            "gf-toast"
           ]
         },
         {
@@ -499,10 +770,13 @@
       "items": [
         {
           "name": "Ice Cream Sundae",
-          "desc": "Choice of caramel, strawberry or chocolate sauce.",
+          "desc": null,
           "price": 13.5,
           "tags": [
             "contains-dairy"
+          ],
+          "addOns": [
+            "sundae-sauce"
           ]
         },
         {
@@ -535,10 +809,13 @@
         },
         {
           "name": "Affogato",
-          "desc": "Vanilla bean ice cream and a shot of freshly brewed espresso. Add Baileys, Kahlua or butterscotch liqueur +$9.",
+          "desc": "Vanilla bean ice cream and a shot of freshly brewed espresso.",
           "price": 12.0,
           "tags": [
             "contains-dairy"
+          ],
+          "addOns": [
+            "affogato-liqueur"
           ]
         }
       ]
@@ -585,10 +862,13 @@
         },
         {
           "name": "Kids Ice Cream Sundae",
-          "desc": "Vanilla ice cream sundae with wafers and your choice of chocolate, strawberry or caramel sauce.",
+          "desc": "Vanilla ice cream sundae with wafers.",
           "price": 5.0,
           "tags": [
             "contains-dairy"
+          ],
+          "addOns": [
+            "sundae-sauce"
           ]
         }
       ]
@@ -629,10 +909,13 @@
         },
         {
           "name": "Cheeseburger",
-          "desc": "No gluten added bun +$2.5. Dairy free available.",
+          "desc": "Dairy free available.",
           "price": 21.0,
           "tags": [
             "gf-option"
+          ],
+          "addOns": [
+            "nga-bun"
           ]
         },
         {
@@ -643,11 +926,14 @@
         },
         {
           "name": "Summer Salad",
-          "desc": "Add chicken, halloumi, prawns or beef +$7.",
+          "desc": null,
           "price": 17.0,
           "tags": [
             "gf-option",
             "v-option"
+          ],
+          "addOns": [
+            "salad-protein"
           ]
         }
       ]

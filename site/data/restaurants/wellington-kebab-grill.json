@@ -88,9 +88,190 @@
     "added": "2026-07-06"
   },
   "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "kebab-style",
+      "name": "Choose your kebab toasted or fresh",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Toasted",
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Fresh",
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sauces",
+      "name": "Our delicious sauces",
+      "select": "many",
+      "max": 3,
+      "price": 0,
+      "options": [
+        {
+          "name": "Garlic yogurt",
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Plain yogurt",
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hot chilli",
+          "tags": [
+            "vg",
+            "gf",
+            "df",
+            "spicy-2"
+          ]
+        },
+        {
+          "name": "Mild chilli",
+          "tags": [
+            "vg",
+            "gf",
+            "df",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Tomato sauce",
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Mayonnaise",
+          "tags": [
+            "v",
+            "gf",
+            "df",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sweet chilli",
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Satay",
+          "tags": [
+            "vg",
+            "gf",
+            "df",
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Tahini",
+          "tags": [
+            "vg",
+            "gf",
+            "df",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Garlic aioli",
+          "tags": [
+            "v",
+            "gf",
+            "df",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Mint sauce",
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "BBQ sauce",
+          "tags": [
+            "df"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "extras",
+      "name": "Extras",
+      "select": "many",
+      "options": [
+        {
+          "name": "Extra meat",
+          "price": 6,
+          "tags": []
+        },
+        {
+          "name": "Extra falafel",
+          "price": 3,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Extra mucver",
+          "price": 3,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Extra halloumi",
+          "price": 3,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Extra cheese",
+          "price": 1.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ],
   "menu": [
     {
       "section": "Kebabs",
+      "addOns": [
+        "kebab-style",
+        "sauces",
+        "extras"
+      ],
       "items": [
         {
           "name": "Chicken kebab",
@@ -190,6 +371,11 @@
     },
     {
       "section": "Mixed kebabs",
+      "addOns": [
+        "kebab-style",
+        "sauces",
+        "extras"
+      ],
       "items": [
         {
           "name": "Chicken & falafel kebab",
@@ -294,6 +480,10 @@
     },
     {
       "section": "Iskender",
+      "addOns": [
+        "sauces",
+        "extras"
+      ],
       "items": [
         {
           "name": "Chicken iskender",
@@ -402,6 +592,10 @@
     },
     {
       "section": "Salad",
+      "addOns": [
+        "sauces",
+        "extras"
+      ],
       "items": [
         {
           "name": "Chicken salad",

@@ -10,6 +10,7 @@ import { encodeShare, decodeShare, buildShareUrl, readShareToken } from "./share
 import { favourites, groupForShare } from "./favourites.js";
 import { openShareDialog } from "./share-ui.js";
 import { el } from "./dom.js";
+import { selectionKey, selectionSummary } from "./addons.js";
 import { displayPrice, formatMoney } from "./place.js";
 
 // A line, subtotal or total always carries the currency it is in — an order
@@ -30,8 +31,18 @@ const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
  */
 export function dishStepper(meta) {
   const wrap = el("div", { className: "stepper" });
+  // The configuration this stepper counts (ADR 0048 §4). "Eggs on toast with
+  // bacon" is a different line from "eggs on toast", so the stepper has to ask
+  // about its own selection or it would show — and change — the wrong count.
+  const sel = () => selectionKey(meta.options);
+  // Spoken labels name the configuration too: two "Add" buttons a thumb apart
+  // that differ only in their sauces are indistinguishable to a screen reader.
+  const said = () => {
+    const s = selectionSummary(meta.options);
+    return s ? `${meta.name} with ${s}` : meta.name;
+  };
   function render() {
-    const q = order.qtyOf(meta.venueId, meta.name);
+    const q = order.qtyOf(meta.venueId, meta.name, sel());
     wrap.dataset.qty = q;
     if (q === 0) {
       const add = el("button", {
@@ -39,16 +50,16 @@ export function dishStepper(meta) {
         className: "stepper-add",
         textContent: "＋ Add",
       });
-      add.setAttribute("aria-label", `Add ${meta.name} to your order`);
+      add.setAttribute("aria-label", `Add ${said()} to your order`);
       add.addEventListener("click", () => order.add(meta));
       wrap.replaceChildren(add);
     } else {
       const dec = el("button", { type: "button", className: "stepper-btn", textContent: "−" });
-      dec.setAttribute("aria-label", `One fewer ${meta.name}`);
-      dec.addEventListener("click", () => order.setQty(meta.venueId, meta.name, q - 1));
+      dec.setAttribute("aria-label", `One fewer ${said()}`);
+      dec.addEventListener("click", () => order.setQty(meta.venueId, meta.name, q - 1, sel()));
       const count = el("span", { className: "stepper-count", textContent: String(q) });
       const inc = el("button", { type: "button", className: "stepper-btn", textContent: "＋" });
-      inc.setAttribute("aria-label", `One more ${meta.name}`);
+      inc.setAttribute("aria-label", `One more ${said()}`);
       inc.addEventListener("click", () => order.add(meta));
       wrap.replaceChildren(dec, count, inc);
     }
@@ -64,12 +75,21 @@ function lineRow(item, collectMode) {
     textContent: item.price == null ? "—" : money(item.price * item.qty),
   });
 
+  // What was asked for, read out the way you would say it at the counter —
+  // "2× Iskender with Mild chilli, Garlic yogurt". Collect mode is someone
+  // standing at the till reading the list aloud, so the configuration has to be
+  // IN the spoken line, not a caption beside it.
+  const config = selectionSummary(item.options);
+  const spoken = config ? `${item.name} with ${config}` : item.name;
+
   if (collectMode) {
     const box = el("input", { type: "checkbox", className: "order-check", checked: item.collected });
-    box.addEventListener("change", () => order.toggleCollected(item.venueId, item.name));
+    box.addEventListener("change", () =>
+      order.toggleCollected(item.venueId, item.name, selectionKey(item.options)),
+    );
     const label = el("label", { className: "order-collect-line" }, [
       box,
-      el("span", { className: "order-line-name", textContent: `${item.qty}× ${item.name}` }),
+      el("span", { className: "order-line-name", textContent: `${item.qty}× ${spoken}` }),
     ]);
     const li = el("li", { className: "order-line" }, [label, price]);
     if (item.collected) li.classList.add("collected");
@@ -78,7 +98,10 @@ function lineRow(item, collectMode) {
 
   return el("li", { className: "order-line" }, [
     dishStepper(item),
-    el("span", { className: "order-line-name", textContent: item.name }),
+    el("span", { className: "order-line-name" }, [
+      item.name,
+      config ? el("span", { className: "order-line-config", textContent: config }) : null,
+    ]),
     price,
   ]);
 }

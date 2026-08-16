@@ -4284,3 +4284,111 @@ body.faves-view .to-top {
 .lang-select + .settings-note {
   margin-top: var(--space-3);
 }
+
+/* ---------- Add-ons (addons-ui.js, ADR 0048) ---------- */
+/* A disclosure on the dish row, not a dialog: choosing sauces is browsing, and
+   a modal over a menu you are still reading gets in the way. Closed by default
+   so a menu of 100 dishes doesn't become a menu of 100 forms. */
+.dish-addons {
+  margin-top: var(--space-2);
+  border-top: 1px dashed var(--line);
+  padding-top: var(--space-2);
+}
+.dish-addons-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: 0.35em 0;
+  color: var(--accent);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  cursor: pointer;
+}
+.addon-group {
+  border: 0;
+  margin: 0 0 var(--space-2);
+  padding: 0;
+}
+.addon-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1);
+  padding: 0;
+  margin-bottom: var(--space-1);
+}
+.addon-group-name {
+  font-weight: 700;
+  font-size: var(--step-sub);
+}
+/* The venue's own rule ("Choose up to 3"), stated where the choice is made —
+   it is data, not decoration, so it is never hidden behind a tooltip. */
+.addon-rule {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.addon-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+/* Each option is a whole 44px row a thumb can hit, label included — a bare
+   checkbox is a 13px target and this list is read one-handed, standing up. */
+.addon-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 44px;
+  padding: 0.25em 0.75em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  font-size: var(--step-sub);
+  cursor: pointer;
+}
+.addon-option:has(.addon-input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+.addon-input {
+  width: 1.1em;
+  height: 1.1em;
+  accent-color: var(--accent);
+}
+.addon-option-price {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.addon-option:has(.addon-input:checked) .addon-option-price {
+  color: inherit;
+}
+/* The composed safety line. Neutral by default because most of what it says is
+   information ("Halloumi contains dairy"), and only --warn when it is the
+   reader's OWN flagged allergen — if every line shouted, none would. */
+.addon-warning {
+  margin: var(--space-1) 0 0;
+  padding: 0.5em 0.75em;
+  border-radius: var(--radius-chip);
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.addon-warning.is-flagged {
+  background: var(--warn-bg);
+  color: var(--warn-ink);
+  font-weight: 700;
+}
+.addon-stepper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-2);
+}
+/* What was asked for, under the dish name on the order sheet. */
+.order-line-config {
+  display: block;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}

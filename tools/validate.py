@@ -11,6 +11,7 @@ build but are printed so gaps (e.g. missing picks) stay visible.
 
 from zoneinfo import ZoneInfo
 import json
+import math
 import re
 import subprocess
 import sys
@@ -47,6 +48,11 @@ VERIFY_METHODS = {
     "phone", "delivery-app", "third-party",
 }
 SEASONS = {"summer", "autumn", "winter", "spring"}
+# How many of a group's options you may take (ADR 0048). Kept in step with
+# site/js/addons.js `selectionAllowed`, which enforces the same two words.
+ADD_ON_SELECT = {"one", "many"}
+ADD_ON_GROUP_KEYS = {"id", "name", "select", "max", "price", "options"}
+ADD_ON_OPTION_KEYS = {"name", "price", "tags"}
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
@@ -69,6 +75,31 @@ def _load_renames():
 
 
 RENAMED = _load_renames()
+
+
+def _load_contradicts():
+    """The dietary-claim contradiction table from site/js/addons.js, read as
+    text — same crude technique as _load_renames above, and right for the same
+    reason: the alternative is a second copy of the table in Python that could
+    disagree with the one the browser actually composes tags with.
+
+    Returns {} when the file or the table cannot be read; the check below turns
+    that into an error rather than a pass, because a table that silently reads
+    empty is a gate that can never fire."""
+    try:
+        src = (ROOT / "site" / "js" / "addons.js").read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    body = re.search(r"CONTRADICTS\s*=\s*\{(.*?)\n\};", src, re.S)
+    if not body:
+        return {}
+    return {
+        key: set(re.findall(r'"([^"]+)"', arr))
+        for key, arr in re.findall(r"(\w+)\s*:\s*\[([^\]]*)\]", body.group(1))
+    }
+
+
+CONTRADICTS = _load_contradicts()
 
 
 # BCP-47, loosely: a 2-3 letter primary subtag plus optional script/region/variant
@@ -355,6 +386,163 @@ def check_needs(rid, obj, where):
         isinstance(n, dict) and n.get("what") == "price" for n in needs
     ):
         err(rid, f"{where}: has a price but still claims needs.what='price' — drop the entry")
+
+
+def check_add_on_price(rid, obj, where):
+    """A price on an add-on group or one of its options (ADR 0048 §2).
+
+    Optional, non-negative, finite, never a bool — and, unlike a dish price,
+    **never null**. A dish price carries three states: a number; a `null`
+    meaning "the shop prices this on application", rendered `—`; and a `null`
+    plus a `needs: price` entry meaning "we failed to read it", rendered `?`
+    (site/js/needs.js `priceUnknown`). An add-on must not inherit that
+    ambiguity — nothing on the add-on screen can tell the three apart — so if we
+    do not know what an extra costs it stays in the prose and is not structured
+    yet."""
+    if "price" not in obj:
+        return
+    p = obj["price"]
+    if p is None:
+        err(
+            rid,
+            f"{where}: price must not be null — a dish price uses null for two "
+            "different unknowns (priced on application, and unread); an add-on "
+            "price says a number or says nothing, and free is 0 (ADR 0048)",
+        )
+        return
+    if isinstance(p, bool) or not isinstance(p, (int, float)):
+        err(rid, f"{where}: price must be a number, got {p!r}")
+    elif not math.isfinite(p):
+        err(rid, f"{where}: price must be a finite number, got {p!r}")
+    elif p < 0:
+        err(rid, f"{where}: price must not be negative, got {p!r}")
+
+
+def check_add_on_groups(rid, data):
+    """`record.addOnGroups`: the venue's priced extras, defined once and named
+    by id from a section or a dish (ADR 0048). Returns {id: group} so the caller
+    can resolve those references once the whole menu has been read.
+
+    The check that carries the weight is **a price must be resolvable**: absent
+    on the option *and* absent on its group is an error, not a zero. The
+    roadmap wanted a missing price to mean free so twelve free sauces need not
+    say so twelve times; the terseness is worth having and the implication is
+    not, because a transcriber who simply forgets a price would then produce a
+    silently free add-on and an under-stated total with nothing to catch it.
+    The group-level default gets the terseness back — `"price": 0` once for the
+    whole sauce board — while leaving every option's cost answerable."""
+    groups = data.get("addOnGroups")
+    if groups is None:
+        return {}
+    if not isinstance(groups, list) or not groups:
+        err(rid, "addOnGroups must be a non-empty list or absent")
+        return {}
+
+    defs = {}
+    for i, g in enumerate(groups):
+        where = f"addOnGroups[{i}]"
+        if not isinstance(g, dict):
+            err(rid, f"{where} must be an object")
+            continue
+        gid = g.get("id")
+        if not (isinstance(gid, str) and ID_RE.match(gid)):
+            err(rid, f"{where}: id must be a non-empty kebab-case string, got {gid!r}")
+        else:
+            where = f"add-on group {gid!r}"
+            if gid in defs:
+                err(rid, f"{where}: duplicate add-on group id — a reference to it is ambiguous")
+            else:
+                defs[gid] = g
+
+        if not (isinstance(g.get("name"), str) and g["name"].strip()):
+            err(rid, f"{where}: name must be a non-empty string (what the venue calls the group)")
+        if g.get("select") not in ADD_ON_SELECT:
+            err(rid, f"{where}: select must be one of {sorted(ADD_ON_SELECT)}, got {g.get('select')!r}")
+        check_add_on_price(rid, g, where)
+
+        options = g.get("options")
+        if not isinstance(options, list) or not options:
+            err(rid, f"{where}: options must be a non-empty list")
+            options = []
+
+        # "Choose up to 3" is a rule the venue set, so it lives in the data — but
+        # only a pick-many group can have one, and a cap above the options is a
+        # cap that can never bind, i.e. a rule nobody wrote.
+        if g.get("max") is not None:
+            m = g["max"]
+            if isinstance(m, bool) or not isinstance(m, int) or m < 1:
+                err(rid, f"{where}: max must be an integer >= 1, got {m!r}")
+            elif g.get("select") != "many":
+                err(rid, f"{where}: max only means anything when select is 'many' — a pick-one group already caps at 1")
+            elif options and m > len(options):
+                err(rid, f"{where}: max {m} exceeds the {len(options)} option(s) in the group")
+
+        seen_names = set()
+        for j, o in enumerate(options):
+            at = f"{where}: options[{j}]"
+            if not isinstance(o, dict):
+                err(rid, f"{at} must be an object")
+                continue
+            oname = o.get("name")
+            if not (isinstance(oname, str) and oname.strip()):
+                err(rid, f"{at}: name must be a non-empty string")
+            else:
+                at = f"{where}: option {oname!r}"
+                if oname in seen_names:
+                    err(rid, f"{at}: duplicate option name in this group")
+                seen_names.add(oname)
+            check_add_on_price(rid, o, at)
+            if "price" not in o and "price" not in g:
+                err(
+                    rid,
+                    f"{at}: no price, and its group sets no default — an add-on "
+                    "price must be resolvable from the data. Free is written as 0 "
+                    "(ADR 0048), never left out",
+                )
+            # tags is REQUIRED and may be empty: an option that states nothing is
+            # a real state the composer must be able to see (it degrades the
+            # dish's dietary claim as "not-stated"), and it must not be
+            # indistinguishable from a transcriber who never got to the field.
+            tags = o.get("tags")
+            if not isinstance(tags, list):
+                err(rid, f"{at}: tags is required and must be a list (empty is allowed — it means 'not stated')")
+            else:
+                for t in tags:
+                    if t not in TAGS:
+                        err(rid, f"{at}: unknown tag {t!r}")
+            # A mistyped key here is not a harmless no-op: `"prive": 2.5` inside
+            # a group defaulting to `price: 0` validates clean and sells the
+            # extra free, which is the exact under-stated total the resolvable-
+            # price rule above exists to prevent. Every other nested object in
+            # this file rejects unknown keys; so does this one.
+            for k in o:
+                if k not in ADD_ON_OPTION_KEYS:
+                    err(rid, f"{at}: unknown key {k!r}")
+
+        for k in g:
+            if k not in ADD_ON_GROUP_KEYS:
+                err(rid, f"{where}: unknown key {k!r}")
+    return defs
+
+
+def collect_add_on_refs(rid, obj, where):
+    """The add-on group ids `obj` names (`section.addOns` or `item.addOns`).
+
+    Shape-checked here and returned as (id, where) pairs; resolved against the
+    record's own definitions by the caller, once they are all known."""
+    ids = obj.get("addOns")
+    if ids is None:
+        return []
+    if not isinstance(ids, list) or not ids:
+        err(rid, f"{where}: addOns must be a non-empty list of add-on group ids, or absent")
+        return []
+    out = []
+    for x in ids:
+        if not (isinstance(x, str) and x.strip()):
+            err(rid, f"{where}: addOns entries must be non-empty group ids, got {x!r}")
+        else:
+            out.append((x, where))
+    return out
 
 
 def check_lifecycle(rid, data):
@@ -743,6 +931,12 @@ def check_restaurant(path):
                 if v is not None and not isinstance(v, str):
                     err(rid, f"locations[{i}]: {field} must be a string or null, got {v!r}")
 
+    # Add-on groups: defined once for the venue, referenced by id from a section
+    # or a dish (ADR 0048). The definitions are checked first; the references
+    # are collected as the menu is read and resolved once it has been.
+    add_on_defs = check_add_on_groups(rid, data)
+    add_on_refs = []
+
     # menu + collect item names for picks check
     item_names = set()
     pairings = []  # (dish_name, ref) — validated after all names are known
@@ -759,6 +953,7 @@ def check_restaurant(path):
         # A whole section may be seasonal — the winter menu (ADR 0023).
         check_available(rid, section, f"section {section.get('section')!r}")
         check_translations(rid, section, f"section {section.get('section')!r}", {"section"})
+        add_on_refs += collect_add_on_refs(rid, section, f"section {section.get('section')!r}")
         for item in section.get("items", []):
             name = item.get("name")
             if not isinstance(name, str) or not name.strip():
@@ -766,6 +961,7 @@ def check_restaurant(path):
             else:
                 item_names.add(name)
             check_translations(rid, item, f"item {name!r}", {"name", "desc"})
+            add_on_refs += collect_add_on_refs(rid, item, f"item {name!r}")
             # price may be a plain number/null, or a dated series (ADR 0023).
             # Every value in the series is type-checked exactly as a flat price
             # always was: gaining a time dimension must not weaken the schema.
@@ -855,6 +1051,21 @@ def check_restaurant(path):
         elif ref not in item_names:
             err(rid, f"goesWith {ref!r} on {dish!r} does not match a dish in this menu")
 
+    # Both directions of the add-on reference, because both are silent failures.
+    # A dangling id renders nothing — groupsFor() drops it rather than throwing,
+    # so the extras the venue actually sells are simply never offered. And a
+    # group nobody names is precached payload no screen can reach (ADR 0047),
+    # downloaded by every phone to sit there unused.
+    referenced = set()
+    for gid, where in add_on_refs:
+        if gid in add_on_defs:
+            referenced.add(gid)
+        else:
+            err(rid, f"{where}: addOns names {gid!r}, which is not defined in addOnGroups")
+    for gid in add_on_defs:
+        if gid not in referenced:
+            warn(rid, f"add-on group {gid!r} is defined but no section or dish names it — nothing can offer it")
+
     return rid
 
 
@@ -910,6 +1121,44 @@ def check_allergen_tags():
             warn(record.get("id", path.stem), f"{item['name']}: missing {tag} ({tier} — {why}) — run tools/tag_allergens.py")
 
 
+def check_contradiction_tables():
+    """`CONTRADICTS` (site/js/addons.js) and `CONTRADICTED_BY`
+    (tools/tag_allergens.py) are the same food fact written both ways round, so
+    invert either and you must get the other.
+
+    They are used for opposite jobs and that is why they were written twice:
+    the Python one stops an inferred allergen overriding curation WITHIN one
+    dish; the JS one explains why a dietary claim died when a DIFFERENT item was
+    added to the plate. Drift between them is a safety bug that nothing else
+    would notice — the two would keep working, and quietly disagree about
+    whether a dish is still vegan."""
+    if not CONTRADICTS:
+        err("addons", "could not read CONTRADICTS out of site/js/addons.js — the "
+                      "drift check between it and tag_allergens.CONTRADICTED_BY cannot run")
+        return
+    try:
+        sys.path.insert(0, str(Path(__file__).parent))
+        from tag_allergens import CONTRADICTED_BY
+    except ImportError:
+        err("addons", "could not import CONTRADICTED_BY from tools/tag_allergens.py — "
+                      "the drift check against site/js/addons.js cannot run")
+        return
+    inverted = {}
+    for diet, allergens in CONTRADICTS.items():
+        for allergen in allergens:
+            inverted.setdefault(allergen, set()).add(diet)
+    for allergen in sorted(set(inverted) | set(CONTRADICTED_BY)):
+        got = inverted.get(allergen, set())
+        want = set(CONTRADICTED_BY.get(allergen, set()))
+        if got != want:
+            err(
+                "addons",
+                f"contradiction tables have drifted for {allergen}: CONTRADICTS in "
+                f"site/js/addons.js inverts to {sorted(got)}, but CONTRADICTED_BY in "
+                f"tools/tag_allergens.py says {sorted(want)} — same food fact, two answers",
+            )
+
+
 def main():
     if not RESTAURANTS.is_dir():
         print(f"error: {RESTAURANTS} not found", file=sys.stderr)
@@ -950,6 +1199,7 @@ def main():
 
     check_version_bump()
     check_allergen_tags()
+    check_contradiction_tables()
 
     for w in warnings:
         print(f"warning: {w}")

@@ -154,10 +154,24 @@ excluded from both stores, always.
   "rating": null,                    // optional curated household rating, integer 1..5 (ours,
                                      //   static). Distinct from device-local personal ratings.
   "status": "stub",                  // stub | menu-complete | verified
+  "addOnGroups": [                   // OPTIONAL: priced extras, defined ONCE per
+    { "id": "sauces",                //   venue and named by id from a section or a
+      "name": "Our sauces",          //   dish (ADR 0048) — see "Add-ons" below
+      "select": "many",              //   "one" | "many"
+      "max": 3,                      //   optional cap, "many" only, <= option count
+      "price": 0,                    //   optional group default for its options
+      "options": [                   //   1..n. tags is REQUIRED on every option and
+        { "name": "Satay",           //   may be [] ("not stated"); a price must
+          "price": 2.5,              //   resolve from the option or its group, and
+          "tags": ["contains-peanuts"] }
+      ] }                            //   is NEVER null — free is written as 0
+  ],
   "menu": [
     {
       "section": "Noodles",
       "available": null,             // optional window/season for a WHOLE section
+      "addOns": [],                  // optional add-on group ids, offered on every
+                                     //   dish in this section (ADR 0048)
       "items": [
         {
           "name": "Char kway teow",
@@ -176,7 +190,9 @@ excluded from both stores, always.
           "image": null,             // optional self-hosted dish photo (lazy-loaded)
           "alt": null,               // required when image is set
           "rating": null,            // optional curated household rating, integer 1..5 (ours)
-          "goesWith": ["Roti"]       // optional pairings: dish names, or "id#Dish" cross-record
+          "goesWith": ["Roti"],      // optional pairings: dish names, or "id#Dish" cross-record
+          "addOns": ["sauces"]       // optional add-on group ids for THIS dish, on
+                                     //   top of any its section names (ADR 0048)
         }
       ]
     }
@@ -484,6 +500,45 @@ reason. English only, like the refresh caveat, per `reo.js`'s safety boundary.
 
 Unknown is distinct from safe: **no tag means "not stated"**, and the
 UI must never present absence of an allergen tag as "allergen-free".
+
+### Add-ons — what the menu offers on top of a dish (ADR 0048)
+
+A venue defines its priced extras once, in `addOnGroups`, and a section
+(`section.addOns`) or a dish (`item.addOns`) names the ids that apply. A
+dish gets its section's groups first, then its own; a group named by both
+is offered once. So "brunch sides" attaches to eight brunch dishes
+without being written eight times, and a sauce board spanning every
+section is written once.
+
+- `id` is kebab-case and unique within the record. `name` is whatever the
+  venue calls the group ("Our delicious sauces"), not a slug.
+- `select` is `"one"` or `"many"`. `max` caps a pick-many group ("choose
+  up to 3"); it is a rule the venue set, so it lives in the data rather
+  than the UI, and it may not exceed the number of options.
+- **A price must be resolvable** — the option's `price`, or its group's as
+  a default. Absent at both levels is an **error**, not a zero: a
+  forgotten price would otherwise become a silently free add-on and an
+  under-stated total. **Free is written as `0`.**
+- **An add-on price is never `null`.** A dish price uses `null` for two
+  different unknowns — "priced on application" (`—`) and "we failed to
+  read it" (`?`, with a `needs` entry). Nothing on the add-on screen tells
+  those apart, so an extra whose price we do not know stays in the prose
+  and is not structured yet.
+- `tags` is **required** on every option, against the same closed
+  vocabulary as a dish. It may be empty, which says "not stated" — a
+  state composition treats differently from a stated clash.
+
+Safety composes in `site/js/addons.js`: allergens **union** (present on
+any part ⇒ present on the whole) and dietary claims **intersect** (the
+whole is vegan only if every part is). Composition can therefore only add
+a `contains-*` or remove a `gf`/`df`/`v`/`vg` — it can never invent a
+safety claim. Its `CONTRADICTS` table is `CONTRADICTED_BY` in
+`tools/tag_allergens.py` inverted, and `validate.py` errors if the two
+ever stop agreeing.
+
+Add-on prices never feed the venue's price band (`site/js/price.js` reads
+dish prices only), and a group no section or dish names is a **warning**:
+precached payload nothing on any screen can reach (ADR 0047).
 
 ### Rules
 
