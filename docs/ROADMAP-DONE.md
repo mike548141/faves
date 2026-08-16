@@ -1143,3 +1143,106 @@ closed sends the next session to redo it.
   fixing them adds tags to existing records, so it is a data change as well as a
   tools change (bump `DATA_VERSION`, expect `validate.py`'s allergen warnings to
   move).
+
+---
+
+## Theme 25 — the dish-id residue (closed 2026-08-16)
+
+Harvested from `ROADMAP.md`. Three of the four items shipped; the fourth was
+answered by measurement and deliberately not built. Original text kept, because
+the value is in seeing what was asked for beside what landed.
+
+- [x] ✅ **A shared shortlist now lands on the dish you meant** (`b92270c`).
+  Original text: *"`share-codec.js` packs shortlist dishes as a bare array of
+  name strings; changing the element type would break every decoder already in
+  the wild, so it decodes through `slug(name)`. A shared shortlist naming a
+  disambiguated row (the Gold Card Cheeseburger) arrives as the bare-slug one.
+  Not a regression — precisely what it did before ids existed — but not fixed
+  either. Order lines were fixed, by appending a positional slot; the same trick
+  needs its own slot shape here."*
+  🔎 **The order-line trick did not transfer, and the reason generalises past
+  this repo.** An order line is a **positional array**, so its id became slot 4.
+  A shortlist group is a **keyed object** `{v,n,r,s,f,d}`, so the equivalent of
+  "append a slot" is a new **key**, not a new position. `d` stays a bare string
+  array byte for byte; the id rides in `k`, an optional array positionally
+  parallel to `d`, `null` where the id says nothing the name doesn't, and the
+  whole key omitted when no dish in the group carries one. Same invariant as the
+  order line's — an old decoder reads `d` and never looks at `k` — reached by a
+  different mechanism. `CODEC_VERSION` did not move.
+  ⚠️ **The alternative you reach for first is unsafe, and was checked rather
+  than assumed:** `decodeShortlistItems` reads each element through
+  `clip(raw ?? "")`, so a mixed-type element arrives at an old decoder as the
+  string `"Cheeseburger,cheeseburger-gold-card"` — **mis-stated, not degraded**.
+  🚩 **The producer had to land in the same commit or the feature was dead code
+  that every test still passed.** `groupForShare` was throwing the id away, and
+  `cart-ui`'s receive dialog would have printed `[object Object]` the moment it
+  stopped. Every `g.dishes` consumer in `site/js/` was checked; `app.js` builds
+  its own separate grouping and needed nothing.
+  **Evidence: a real browser, not a unit test.** A real click on the heart of
+  Sprig & Fern Tawa's $21 Gold Card Cheeseburger, then
+  `groupForShare → encodeShortlist → decodeShare → favKey`, landing on
+  `d:sprig-and-fern-tawa cheeseburger-gold-card` and never the $28 Mains key.
+  Red first: with the producer reverted, both burgers collapse onto one key.
+- [x] ✅ **`temporal.js` no longer deletes a pick written as a `dishId`**
+  (`727cea9`). Original text: *"`temporal.js:524-528` intersects `record.picks`
+  against a `Set` of live dish names, so a pick written as a `dishId` is deleted
+  at that gate and vanishes from the page silently. Harmless today (every pick in
+  the corpus is a name) and primed for whoever first writes one as an id."*
+  Now filtered through `findDish`, the single resolver, reaching an id, a
+  slug-as-id, a name and a `formerId`. The gate still does its real job — a pick
+  whose dish is genuinely out of season is still dropped, in every form, and
+  returns in December. Cost measured rather than assumed: O(dishes) → O(picks ×
+  dishes), which over the real corpus (55 records, 1781 dishes, 33 picks) is
+  **2.90 ms per `resolveRecord` pass**.
+- [x] ✅ **The retired `sprig-and-fern` test fixture — renamed** (`b92270c`), and
+  it was **worse than the item described**. The item said the id was stale and
+  "read as a mistake". In fact `renames.js:38` maps it to `sprig-and-fern-tawa`,
+  so those tests were exercising the venue-rename migration **by accident** —
+  passing for a reason nobody intended. Renamed to `fixture-venue` where the test
+  meant "any old venue id", and deliberately left where a test exercises the
+  migration on purpose (`ratings.test.js`, and one composition test in
+  `dish-id.test.js`).
+- [x] 🔎 **Cross-record `goesWith` refs — ANSWERED 2026-08-16, deliberately not
+  built.** Disposition: closed as *asked and answered*, not as *done*. The open
+  reopen-when condition lives on in `ROADMAP.md` under Theme 25; only the
+  analysis is archived here.
+  Original text: *"the other record is not loaded, so `validate.py`'s `ALL_NAMES`
+  pre-pass matches names and not ids. Widening it is a separate, larger change."*
+  Two findings, and the second says the item was aimed at the wrong thing:
+  1. There are **zero** cross-record `goesWith` refs in the corpus (7 same-record
+     ones, all resolving). The gate has nothing to catch.
+  2. **Widening `ALL_NAMES` would not achieve what the item wants.** The wire
+     format is `id#Display Name`, and `pairingLinks` renders the post-`#` text as
+     the chip's **visible label**. Writing `id#cheeseburger-gold-card` would
+     validate, and would even anchor correctly — and the chip would read
+     "cheeseburger-gold-card" to a human. So the real question is the **wire
+     format** (a ref carrying an id *and* a label), not the validator.
+  Reopen when a cross-record ref actually needs to point at one of the 3 venues
+  that carry duplicate dish names.
+
+## Theme 27 — 27b, say which field matched (shipped 2026-08-16)
+
+- [x] ✅ **Shipped** (`80da634`). Original text: *"the result row already shows
+  'Te Aro · Malaysian'; making the matched part visibly the reason would let the
+  reader judge relevance themselves, which is the honest version of ranking and
+  may make 27a optional. Try this one first."*
+  `search()` returns `matchField` and `matchText`; `resultRow()` gained
+  `nameMatch`/`subMatch` (DOM nodes wrapped in `<mark>`, never `innerHTML`) and a
+  plain-text `note`. `buildIndex()` now stores `address`, `city`, `services` and
+  `phone` per entry so the check is **per field** rather than against the
+  flattened haystack.
+  **Accessibility, stated as the reason and not as a checkbox:** the `<mark>` is
+  a bonus for sighted readers and never the sole carrier — the wrapped word is
+  already inside the announced name, so a screen reader hears identical text
+  either way. The one case that would otherwise be screen-reader-invisible — a
+  match on a hidden field, with nothing on the row to highlight — is exactly the
+  case that gets the `note` as ordinary readable text. Bold as well as
+  background, so nothing depends on colour.
+  🔎 **The item's own measurement had gone stale within the day.** Re-run in a
+  real browser at 390 px: "Bar" reproduced its four cited venues exactly (with
+  "Bar" highlighted in the **name**, while Baylands Brewery and Dirty Little
+  Secret — genuinely `cuisine: Bar` — highlighted in the sub instead), and
+  "Courtenay Place" showed "Matched: address" on five venues while KC Cafe, whose
+  `area` *is* Courtenay Place, highlighted genuinely. But **"Pub" no longer
+  returns 6 places with 5 name-coincidences** — the corpus moved under the
+  measurement. The mechanism handled it correctly regardless.

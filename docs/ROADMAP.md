@@ -476,7 +476,46 @@ delivery app.** Clear one by bringing back the fact.
       Both chains publish per-store hours on their own store-finder pages.
       Capturing them makes ADR 0054 real and lets `branch_check.mjs` exercise
       tier 1 on a venue that has more than one state.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+      🛑 **Attempted 2026-08-16 and BLOCKED — on tooling, not on the data
+      existing.** Nothing was written; both records are untouched. What was
+      established, so the next attempt starts here rather than repeating it:
+      - **McDonald's has a real first-party per-store page** — e.g.
+        `mcdonalds.com/nz/en-nz/location/wellington/lambton-quay/276-278-lambton-quay/640045.html`,
+        address and phone confirmed against our stored branch. It renders a
+        "Store Hours" section and even computes a live "We're closed now"
+        status. **The weekly table never appears in the DOM** — not in a plain
+        fetch, not in headless Chromium or WebKit at 15 s, no `<iframe>`, no
+        JSON-LD, no state blob, nothing in the meta description. It reads as a
+        widget that populates only on a genuine click. The `googleappsv2`
+        geolocation endpoint and `mcdonalds.co.nz` both return
+        `ERR_HTTP2_PROTOCOL_ERROR` to every engine tried.
+      - **Subway NZ appears not to be on a readable first-party platform at
+        all**: `subway.com/en-nz/findastore` is JS-only with no server-rendered
+        results, `subway.co.nz` is dead (TLS mismatch onto a bare edge), and
+        `restaurants.subway.com` serves other regions — a search for
+        "Wellington" returned the one in Somerset.
+      - **Third-party sources were found and deliberately refused.** Several
+        aggregators carry confident-looking hours for both chains. Taking them
+        would put a guess behind ADR 0054's "open" state, and a false "open"
+        sends someone across town — the failure the three-state design exists to
+        avoid. `unknown` remains the honest state.
+      - **Coordinates:** the two branches missing a pin (McDonald's Courtenay
+        Place, Subway Mulgrave Street) both geocode to a **street centroid**
+        only, so both were left empty on the Pandan precedent. Also noted, not
+        acted on: McDonald's Johnsonville's *existing* pin sits 359 m from a
+        fresh geocode — but that geocode is street-level too, so it is not
+        evidence to move it.
+      🎯 **This needs an owner decision, and there are three honest options:**
+      (a) he supplies the hours himself, or authorises someone to read them off
+      the stores' own doors or by phone — the corpus already has an `in-store`
+      and a `phone` provenance tier for exactly this; (b) a session runs with an
+      interactive browser that can click, which is a tooling change, not a
+      content one; or (c) he rules that a named third-party source is acceptable
+      for opening hours specifically, recorded with its own provenance value so
+      the weaker basis is visible on the record rather than laundered into
+      first-party. **Option (c) changes a standing rule and is his call alone.**
+      Claim released — this is not blocked on effort and re-attempting it with
+      the same tools will produce the same result.
 
 - [ ] **`picks` are empty on most venues** `[S][content]` — **44 of 55**
       (measured 2026-08-16). ⚠️ One of the two venues this line named was never
@@ -1540,11 +1579,24 @@ itself should do.
   *appear* but sort below the venues that genuinely carry the property. Cheaper
   and less surprising than narrowing the haystack, which would lose real finds
   ("Charley Noble" is a fair answer to "Noble").
-- [ ] **27b — Say which field matched** `[S][ux]` — the result row already shows
-  "Te Aro · Malaysian"; making the matched part visibly the reason would let the
-  reader judge relevance themselves, which is the honest version of ranking and
-  may make 27a optional. Try this one first.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+✅ **27b — Say which field matched — SHIPPED 2026-08-16** (`80da634`). `search()`
+now returns `matchField` (which field answered the query) and `matchText` (the
+literal substring, correct casing, when that field is one the row displays). A
+visible field gets a `<mark>` in the name or sub; a field the row never shows —
+address, city, phone, service, a dish's description — gets plain text saying so
+("Matched: address"). A hit is never left with no stated reason, and never claims
+a property it did not match. Bold as well as background, so it never depends on
+colour; the wrapped word is already inside the announced name, so a screen reader
+hears identical text either way.
+⚠️ **27a is now probably unnecessary, which was the point of trying 27b first** —
+but that is a judgement to make against the running app, not from here.
+🔎 **This item's own measurement has already gone stale.** Re-running the
+roadmap's four queries in a real browser at 390 px: "Bar" reproduced its four
+cited venues exactly, and "Courtenay Place" its three plus two more — but **"Pub"
+no longer returns 6 places with 5 name-coincidences**, because the corpus has
+moved since that measurement was taken. The mechanism handled it correctly
+regardless. Treat every count in this file as of its stated date.
+
 - **Owner steer, 2026-08-16:** recorded, not scheduled — *"roadmap it, don't fix
   now"*. Nothing here is blocking; it surfaced while measuring something else.
 
@@ -2078,15 +2130,37 @@ Applied; detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 - [ ] **Age `detailsVerified` the way `refreshCaveat` ages `verified`** `[S][js]`
   — today a venue whose details are stale and one whose details were never
-  checked both render the same (the note simply omits them). Deliberately not
-  built now: too few records carry the field to choose a limit from evidence,
-  and inventing one would repeat the mistake ADR 0036 had to correct.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+  checked both render the same (the note simply omits them).
+  🔎 **Measured 2026-08-16, and the stated reason for deferring it was wrong.**
+  Not "too few records": **26 of 55 carry the field (47%)**, which is not thin.
+  The real blocker is that **every one of those 26 dates lands inside a single
+  48-hour window** — this repo's own intake — so there is **zero temporal
+  spread** and **zero records currently in the "checked but stale" state**.
+  Building it today would change nothing on any screen, and there is nothing to
+  test a candidate threshold against. `refreshCaveat`'s own
+  `VERIFY_MAX_AGE_MONTHS = 12` was never derived from the corpus either; ADR 0036
+  states it as a house default from domain reasoning and flags it as the part of
+  that ADR most open to being overruled.
+  🚩 **And a second reason nobody had named:** "details" bundles phone and
+  address (which rarely change) with opening hours (which change seasonally).
+  One decay rate for both is the same "guesses dressed as precision" that ADR
+  0036 rejected, one level down. The per-branch provenance item below is the
+  same fault seen from another angle.
+  🎯 **So this does not resolve by more intake — it resolves by waiting, or by
+  an owner-supplied domain estimate** of how fast a venue's phone, address and
+  hours actually drift, the way he ruled on the method-trust split in ADR 0036.
+  Claim released; nothing built, deliberately.
 - [ ] **Pandan's pin is a street centroid** `[XS][data]` — OSM carries no house
   number for that street address, so the stored pin is the street, not the door. Kept
   because the venue is ~15 km out, where the error cannot change a distance
   sort. Worth a house-level fix if OSM ever gains the number.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+  🔎 **Re-checked 2026-08-16 with `tools/audit_coords.py` (77 live geocodes, 0
+  errors): OSM still has no house number.** The live Nominatim response for the
+  Melling branch's stored address returns `addresstype: road` with no
+  `house_number` key, and geocodes to within a metre of the stored pin — because
+  the stored pin *is* that same street centroid. Left exactly as it was; never
+  invent a coordinate. Claim released: this stays open as a standing re-check,
+  not as work, and the re-check is one `audit_coords.py` run.
 
 ✅ **Pandan's Press Hall hours — ruled 2026-08-15**: use the food hall's own
 hours. Applied as **Mon–Fri 11:00–15:00**, the house standard it publishes.
@@ -2107,10 +2181,22 @@ Two consequences recorded rather than buried:
   `detailsVerified`/`detailsVerifiedBy` would fix it; deferred because one record
   is not an evidence base for a schema change, which is the same restraint
   ADR 0037 applied to ageing the field.
-- [ ] **Reo: the confidence-note strings** `[S][reo]` — the new "Up to date…"
-  copy stays English alongside the caution it shares a popover with. Added to
-  the fluent-speaker review queue with the other drafts above.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+✅ **Reo: the confidence-note strings — drafted and queued 2026-08-16**
+(`c2e07fc`). 🔎 **The finding was bigger than the item.** The "fluent-speaker
+review queue" that ADR 0037 and this file have both pointed at for weeks **did
+not exist anywhere** — not a file, not a convention, not a list. It exists now, as
+[`reo-review-queue.md`](reo-review-queue.md).
+🚩 **And the obvious home for a draft was unsafe.** An `MI` entry marked
+`// draft` is **not inert**: `translate()` renders it the instant a reader flips
+the language toggle. For a nav label that is a fair trade; for the confidence and
+caution copy — which tells a reader how much to trust a price — an unreviewed
+draft that reads slightly wrong can cost someone money or a wasted trip.
+⚠️ **The second attempt was wrong too, and measurement caught it:** an inert
+export at the end of `reo.js`, never imported, cost **+2,171 bytes gzipped
+shipped to every phone** for content nothing renders. ADR 0047's rule meets a JS
+module. The deciding argument is neither of those, though — **a fluent speaker
+reviewing te reo will not open a JavaScript module**, which is how a queue comes
+to be empty and unnoticed at the same time.
 
 ---
 
@@ -2173,31 +2259,38 @@ overcharge, three elements sharing `id="dish-cheeseburger"`, a duplicate
 trip that re-merged the two Cheeseburgers. Measured cost: **+12.6 KB gzipped**,
 16.3% of the data cache. Detail → ADR 0051.
 
-- [ ] **A shared *shortlist* still carries dish names, not ids** `[S][js]` —
-  fell out of the build. `share-codec.js` packs shortlist dishes as a bare array
-  of name strings; changing the element type would break every decoder already
-  in the wild, so it decodes through `slug(name)`. A shared shortlist naming a
-  disambiguated row (the Gold Card Cheeseburger) arrives as the bare-slug one.
-  **Not a regression** — precisely what it did before ids existed — but not
-  fixed either. Order lines *were* fixed, by appending a positional slot; the
-  same trick needs its own slot shape here.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
-- [ ] **`temporal.js` filters `picks` by name before the resolver ever sees
-  them** `[XS][js]` — `temporal.js:524-528` intersects `record.picks` against a
-  `Set` of live dish *names*, so a pick written as a `dishId` is deleted at that
-  gate and vanishes from the page silently. Harmless today (every pick in the
-  corpus is a name) and primed for whoever first writes one as an id. One line:
-  `out.picks = record.picks.filter((p) => findDish(out, p))`.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
-- [ ] **Cross-record `goesWith` refs (`id#Dish`) still resolve by name only**
-  `[S][js]` — the other record is not loaded, so `validate.py`'s `ALL_NAMES`
-  pre-pass matches names and not ids. Widening it is a separate, larger change.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
-- [ ] **`tests/share-codec.test.js` and `tests/personal-data.test.js` use
-  `"sprig-and-fern"` as a synthetic venue id** `[XS][js]` — which is now a
-  *retired* id. They pass (those paths don't migrate), but they read as a
-  mistake to a future session. Rename the fixture.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+✅ **Theme 25's residue is closed — 2026-08-16** (`727cea9`, `b92270c`). Three
+of the four items shipped and the fourth was answered by measurement. Full
+original text and the evidence → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+
+- ✅ **A shared shortlist now lands on the dish you meant.** The wire format
+  gained an optional `k` array, positionally parallel to the existing bare-string
+  `d` — old codes decode byte-identically, old decoders never look at `k`, and
+  `CODEC_VERSION` did not move. 🔎 **The order-line trick did NOT transfer, and
+  the reason generalises:** an order line is a *positional array*, so its id
+  became slot 4; a shortlist group is a *keyed object*, so the equivalent is a
+  new **key**. Same feature, same day, two mechanisms — and the wrong one looked
+  obviously right. Proved end to end with a real click on the $21 Gold Card
+  Cheeseburger, landing on its own key and never the $28 Mains one.
+- ✅ **`temporal.js` no longer deletes a pick written as a `dishId`.** Filtered
+  through `findDish` now. The gate still drops a pick whose dish is genuinely out
+  of season, in every form, and returns it in December.
+- ✅ **The retired `sprig-and-fern` fixture is renamed** — and it was worse than
+  the item said. That id is not merely stale: it resolves *live* through
+  `renames.js`, so those tests were exercising the venue-rename migration by
+  accident. Now `fixture-venue`, except where a test exercises the migration on
+  purpose.
+- 🔎 **Cross-record `goesWith` refs — measured, and deliberately NOT built.**
+  There are **zero** cross-record refs in the corpus (7 same-record ones, all
+  resolving), so the gate has nothing to catch. More decisively, the roadmap's
+  framing was wrong about the fix: widening `ALL_NAMES` would still not let you
+  point at a disambiguated row, because the wire format is `id#Display Name` and
+  `pairingLinks` renders the post-`#` text as the chip's **visible label**.
+  Writing `id#cheeseburger-gold-card` would validate and even anchor correctly,
+  and the chip would read "cheeseburger-gold-card" to the reader. So this is a
+  **wire-format question** (a ref carrying both an id and a label), not an
+  `ALL_NAMES` question. Reopen when a cross-record ref actually needs to reach
+  one of the 3 venues with duplicate dish names.
 
 <!-- Numbered 25, not 22: two other live sessions had already taken 22, 23 and
      24 while this branch was open. The note on Theme 19 says to check
