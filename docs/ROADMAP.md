@@ -4183,14 +4183,38 @@ the same sand.
 > 🎯 **Owner ruling 2026-08-16, relayed from a peer session:** *estimate the
 > per-step and total times, and label them as estimates.* Same ruling for 36c.
 > This **reverses** the position the rest of this item argues for, and it is his
-> call to make. **CLAIMED 2026-08-16 11:40 UTC (wt: faves-recipe-estimates)** —
-> the derivation lands in `data/` (the repo-only research store) first, with its
-> workings, so the numbers are auditable before any of them reach a phone.
-> ⚠️ **One safety line the ruling does not cover, raised rather than assumed:**
-> an *estimated* duration must never drive a **timer**. Stated times drive the
-> timers today (28 of 118 steps); an invented "simmer 20 min" on chicken is a
-> food-safety failure, not a disappointing dinner. Estimates render as text,
-> authored times drive timers, until the owner says otherwise.
+> call to make. ✅ **The derivation is DONE 2026-08-16** — `data/estimates/`
+> (the repo-only research store), all 24 recipes and 118 steps, every number
+> carrying its **working**, guarded by `tools/recipe_estimates.py --check`
+> and recorded as [ADR 0064]. It landed in the record first, not the payload,
+> so the numbers are auditable before any of them reach a phone.
+> ⚠️ **One safety line the ruling does not cover, raised rather than assumed —
+> and now built in:** an *estimated* duration must never drive a **timer**. An
+> invented "simmer 20 min" on chicken is a food-safety failure, not a
+> disappointing dinner. `timerSafe` is true only where `source: "stated"`, and
+> `--check` **exits 1** on any violation with the failure sorted to the top of
+> the output. Proved by breaking it deliberately: setting `timerSafe: true` on
+> Perfectly Pretty Hotcakes' estimated cook step produced
+> `🛑 SAFETY: … an estimated duration may never drive a timer`, exit 1.
+> 🎯 **Still the owner's to rule** — he said "estimate them and label them",
+> not "and never time them". Held conservatively until he says otherwise.
+>
+> 🔎 **The corpus is better than this item said: 32 steps state their time,
+> not 28.** The extra four state it in *words* — "cook the garlic for a
+> minute" (×3) and "marinate for at least an hour". 28 is the **digits-only**
+> count, which is exactly what `cook.js`'s regex can see. Calling those four
+> "estimates" would have mislabelled the data to match a tool's limitation.
+>
+> 🚩 **Two findings that need an owner call, neither resolved here:**
+> - **`serves` and yield are conflated in the payload today.** Liège Waffles'
+>   `serves: 12` is 12 *waffles*; the puddings' `serves: 6` is 6 *people*;
+>   "makes 21" is 21 queen cakes. The record now keeps `yield` separately
+>   rather than silently picking one — which the app shows is his call.
+> - **Five stated `time` values are bake-only** (Orange Yoghurt Cake, Queen
+>   Cakes, Chocolate Self-Saucing, B's Brownie, Chewy Cookies) and exclude
+>   6–15 min of prep, yet the app renders `time` as if it were the total.
+
+[ADR 0064]: decisions/0064-an-estimate-carries-its-working-and-never-a-timer.md
 
 The owner asked for *"an estimate of time required for each step and each recipe
 as a total"*. Measured across the corpus, 2026-08-16:
