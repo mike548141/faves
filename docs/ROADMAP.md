@@ -4476,7 +4476,7 @@ held for. It lives in `cook.js`/`cook-ui.js`/a new `alarm.js`/`sw.js`.
 ⚠️ **This claim originally asserted file-disjointness from the live peers, and
 that sentence was false within the hour.** It read *"none of which 37c/d/e/j/l/m
 (wt: faves-recipe), 37g (wt: faves-ranking) or 37n (wt: faves-allergens)
-touch."* Then [ADR 0070] landed for 37l and pulled **`cook-ui.js`** into its
+touch."* Then 37l's own ADR landed and pulled **`cook-ui.js`** into its
 blast radius — one statement at ~line 116, where the ingredient array becomes a
 call to a new `ingredients.js`. Corrected in place rather than quietly, because
 a claim that states disjointness is precisely what the next session trusts
