@@ -3168,7 +3168,9 @@ asked on this screen.
   used — and at body size rather than the 0.85rem that made it read as a stray
   footnote. `about-ui.js` + `app.css`.
 
-- **23a — find each block its right home** `[M]` 🎯. Work backwards from the
+- **23a — find each block its right home** `[M]` 🎯.
+  **CLAIMED 2026-08-16 14:35 UTC (wt: faves-about)** — with 23c, one job.
+  Work backwards from the
   trigger, per the owner's steer: for every block in About, name the decision
   that created it, then ask where a reader would actually look. Strong
   candidates for moving rather than keeping: the **currency** and **"when we
@@ -3181,7 +3183,9 @@ asked on this screen.
   Faves is, not a FAQ. Watch for the failure mode this repo has hit before: do
   not solve duplication by *adding* a third place.
 
-- **23c — the same outcome answered on two screens** `[S→M]` 🎯. Owner's
+- **23c — the same outcome answered on two screens** `[S→M]` 🎯.
+  **CLAIMED 2026-08-16 14:35 UTC (wt: faves-about)** — with 23a, one job.
+  Owner's
   worked example, 2026-08-16: *"We have this feature in settings but the
   version details sit in the about screen? Makes no sense for UX."* Settings →
   **Refresh & reset** holds the *action* ("Refresh now"); About → **Version**
