@@ -8,6 +8,13 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **The "Call to order" button no longer looks cut off.** Pinned to the top of a
+  long menu it was exactly as tall as the bar holding it, so its rounded bottom
+  sat flush on the edge and blurred into whatever was scrolling past
+  underneath. Measured before and after in a real browser: 3px of clearance
+  became 11.5px.
+
 ### Added
 - **Order a dish the way you actually eat it.** Where a venue offers extras,
   the dish now carries them as real choices instead of a sentence in the

@@ -2046,6 +2046,25 @@ the data and the resolver in step); and `tests/renames.test.js` shows the shape
 of the tests, including the one that matters most — *nothing moves on day one*.
 
 ---
+## Theme 29 — things pinned over the menu (owner-raised 2026-08-16, from a phone)
+
+- ✅ **The "Call to order" button looked cut off** — **fixed 2026-08-16**;
+  3px of clearance under a pinned 44px button became 11.5px, measured in a
+  real browser. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+- [ ] **The back-to-top button covers dish content** `[S][css]` — seen in the
+  same screenshot: the floating ↑ sits over the "French fries" row and hides
+  the right-hand end of its price. A fixed control over a scrolling list will
+  always overlap something, so the fix is not "move it" but give the dish list
+  enough end padding, or let the control get out of the way while the list is
+  moving. **Hiding a price is the part that matters** — a decoration overlapping
+  is cosmetic, an unreadable number is not.
+- [ ] **Audit every fixed/sticky control against the content beneath it**
+  `[S][css]` — the contact bar, the section jump-nav, the order FAB and the
+  back-to-top all float over the menu, and two of the four have now been found
+  wanting by eye rather than by any check. Worth one pass measuring clearance
+  at 390px with the largest supported text size, where the boxes grow but the
+  offsets are guesses.
+
 ## Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)
 
 <!-- Numbered 28: 25/26/27 were taken by parallel sessions. Checked with

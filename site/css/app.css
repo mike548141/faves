@@ -2992,6 +2992,16 @@ body.faves-view .to-top {
   gap: var(--space-2);
   width: min(100% - 2 * var(--space-3), 60rem);
   min-height: var(--contact-bar-h);
+  /* Breathing room above and below the 44px call button. Without it the button
+     is exactly as tall as the bar, so its rounded bottom sits flush on the
+     bar's border and reads as CUT OFF — it visually merges with whatever menu
+     content happens to be scrolling past underneath (owner, 2026-08-16, with a
+     screenshot). This is the same mistake the sticky toolbar below already
+     fixed for the search pill's rounded top; the two comments belong together.
+     menu.js measures THIS element and feeds the height back into
+     --contact-bar-h, so the toolbar offset follows the padding automatically
+     and nothing needs bumping in step. */
+  padding-block: var(--space-2);
   margin: 0 auto;
 }
 .contact-bar-status {
