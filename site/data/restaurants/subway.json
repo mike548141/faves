@@ -59,10 +59,2539 @@
   ],
   "picks": [],
   "priceBand": null,
-  "verified": null,
+  "verified": "2026-08-16",
   "lifecycle": {
     "added": "2026-08-08"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "All Subs",
+      "sectionId": "all-subs",
+      "items": [
+        {
+          "name": "BBQ Southern Style Chicken",
+          "dishId": "bbq-southern-style-chicken",
+          "desc": "Southern-style chicken bites, old English-style processed cheese, spinach, tomato, onion, pickle, smoky bbq sauce, toasted on Italian herbs & cheese bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Bacon Ranch",
+          "dishId": "chicken-bacon-ranch",
+          "desc": "Chicken strips, bacon, processed cheddar cheese, lettuce, tomato, carrot, onion, ranch dressing, toasted on white bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Classic",
+          "dishId": "chicken-classic",
+          "desc": "Old English-style processed cheese, lettuce, tomato, cucumber, onion, garlic aioli, toasted on Italian herbs & cheese bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Strips",
+          "dishId": "chicken-strips",
+          "desc": "Processed cheddar cheese, lettuce, tomato, cucumber, carrot, mayonnaise on wheat bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chipotle Steak Melt",
+          "dishId": "chipotle-steak-melt",
+          "desc": "Diced steak, old English-style processed cheese, spinach, capsicum, onion, pickle, chipotle sauce, toasted on Italian herbs & cheese bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Honey Mustard Leg Ham",
+          "dishId": "honey-mustard-leg-ham",
+          "desc": "Processed cheddar cheese, lettuce, tomato, cucumber, carrot, honey mustard on malted rye bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Italian B.M.T.®",
+          "dishId": "italian-b-m-t",
+          "desc": "Salami, pepperoni, leg ham, mozzarella cheese, lettuce, tomato, onion, capsicum, olive, mayonnaise on Italian herbs & cheese bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Italian Meatball",
+          "dishId": "italian-meatball",
+          "desc": "Beef meatball in marinara sauce, mozzarella cheese, spinach, tomato, onion, olive, garlic aioli, toasted on Italian herbs & cheese bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Philly-Style Three-Cheese Steak",
+          "dishId": "philly-style-three-cheese-steak",
+          "desc": "Diced steak, processed cheddar cheese, old English-style processed cheese, mozzarella cheese, capsicum, onion, jalapeno pepper, garlic aioli, toasted on white bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Pizza Melt",
+          "dishId": "pizza-melt",
+          "desc": "Salami, pepperoni, mozzarella cheese, olive, tomato, capsicum, onion, marinara sauce, toasted on Italian herbs & cheese bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Pork Riblet",
+          "dishId": "pork-riblet",
+          "desc": "Processed cheddar cheese, lettuce, tomato, onion, carrot, smoky bbq sauce on white bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Roast Beef",
+          "dishId": "roast-beef",
+          "desc": "Processed cheddar cheese, lettuce, spinach, tomato, onion, mayonnaise on roasted garlic bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Smashed Falafel",
+          "dishId": "smashed-falafel",
+          "desc": "Processed cheddar cheese, lettuce, spinach, tomato, onion, carrot, garlic aioli on wheat bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Sweet Onion Chicken Teriyaki",
+          "dishId": "sweet-onion-chicken-teriyaki",
+          "desc": "Chicken strips in teriyaki glaze, mozzarella cheese, spinach, tomato, cucumber, onion, capsicum, sweet onion sauce, toasted on white bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Three Pepper Chicken",
+          "dishId": "three-pepper-chicken",
+          "desc": "Old English-style processed cheese, lettuce, tomato, onion, carrot, garlic aioli, toasted on Italian herbs & cheese bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Tuna Mayo",
+          "dishId": "tuna-mayo",
+          "desc": "Tuna in mayonnaise, processed cheddar cheese, lettuce, tomato, onion, pickle on wheat bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Veggie Delite® with Avo",
+          "dishId": "veggie-delite-with-avo",
+          "desc": "Processed cheddar cheese, lettuce, spinach, tomato, cucumber, onion, carrot on malted rye bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Veggie Patty",
+          "dishId": "veggie-patty",
+          "desc": "Mozzarella cheese, lettuce, spinach, tomato, cucumber, onion, carrot, garlic aioli, sweet chilli, toasted on wheat bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Steak Protein",
+          "dishId": "steak-protein",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken & Avo",
+          "dishId": "chicken-avo",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Falafel Delite",
+          "dishId": "falafel-delite",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Hot Honey Chicken",
+          "dishId": "hot-honey-chicken",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Wraps",
+      "sectionId": "wraps",
+      "note": "On a white flour wrap.",
+      "items": [
+        {
+          "name": "BBQ Southern Style Chicken",
+          "dishId": "bbq-southern-style-chicken-wrap",
+          "desc": "Southern-style chicken bites, old English-style processed cheese, spinach, tomato, onion, pickle, smoky bbq sauce.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Bacon Ranch",
+          "dishId": "chicken-bacon-ranch-wrap",
+          "desc": "Chicken strips, bacon, processed cheddar cheese, lettuce, tomato, carrot, onion, ranch dressing.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Classic",
+          "dishId": "chicken-classic-wrap",
+          "desc": "Old English-style processed cheese, lettuce, tomato, cucumber, onion, garlic aioli.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Strips",
+          "dishId": "chicken-strips-wrap",
+          "desc": "Processed cheddar cheese, lettuce, tomato, cucumber, carrot, mayonnaise.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chipotle Steak Melt",
+          "dishId": "chipotle-steak-melt-wrap",
+          "desc": "Diced steak, old English-style processed cheese, spinach, capsicum, onion, pickle, chipotle sauce.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Honey Mustard Leg Ham",
+          "dishId": "honey-mustard-leg-ham-wrap",
+          "desc": "Processed cheddar cheese, lettuce, tomato, cucumber, carrot, honey mustard.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Italian B.M.T.®",
+          "dishId": "italian-b-m-t-wrap",
+          "desc": "Salami, pepperoni, leg ham, mozzarella cheese, lettuce, tomato, onion, capsicum, olive, mayonnaise.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Italian Meatball",
+          "dishId": "italian-meatball-wrap",
+          "desc": "Beef meatball in marinara sauce, mozzarella cheese, spinach, tomato, onion, olive, garlic aioli.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Pizza Melt",
+          "dishId": "pizza-melt-wrap",
+          "desc": "Salami, pepperoni, mozzarella cheese, olive, tomato, capsicum, onion, marinara sauce.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Pork Riblet",
+          "dishId": "pork-riblet-wrap",
+          "desc": "Processed cheddar cheese, lettuce, tomato, onion, carrot, smoky bbq sauce.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Roast Beef",
+          "dishId": "roast-beef-wrap",
+          "desc": "Processed cheddar cheese, lettuce, spinach, tomato, onion, honey mustard.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Smashed Falafel",
+          "dishId": "smashed-falafel-wrap",
+          "desc": "Processed cheddar cheese, lettuce, spinach, tomato, onion, carrot, garlic aioli.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Sweet Onion Chicken Teriyaki",
+          "dishId": "sweet-onion-chicken-teriyaki-wrap",
+          "desc": "Chicken strips in teriyaki glaze, mozzarella cheese, spinach, tomato, cucumber, onion, capsicum, sweet onion sauce.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-sesame",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Three Pepper Chicken",
+          "dishId": "three-pepper-chicken-wrap",
+          "desc": "Old English-style processed cheese, lettuce, tomato, onion, carrot, garlic aioli.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Tuna Mayo",
+          "dishId": "tuna-mayo-wrap",
+          "desc": "Tuna in mayonnaise, processed cheddar cheese, lettuce, tomato, onion, pickle.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Veggie Delite® with Avo",
+          "dishId": "veggie-delite-with-avo-wrap",
+          "desc": "Processed cheddar cheese, lettuce, spinach, tomato, cucumber, onion, carrot.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Veggie Patty",
+          "dishId": "veggie-patty-wrap",
+          "desc": "Mozzarella cheese, lettuce, spinach, tomato, cucumber, onion, carrot, garlic aioli, sweet chilli.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Classic Grilled Wrap",
+          "dishId": "chicken-classic-grilled-wrap-wrap",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Sweet Onion Chicken Teriyaki Grilled Wrap",
+          "dishId": "sweet-onion-chicken-teriyaki-grilled-wrap-wrap",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chipotle Steak Melt Grilled Wrap",
+          "dishId": "chipotle-steak-melt-grilled-wrap-wrap",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Steak Protein",
+          "dishId": "steak-protein-wrap",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken & Avo",
+          "dishId": "chicken-avo-wrap",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Falafel Delite",
+          "dishId": "falafel-delite-wrap",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Hot Honey Chicken",
+          "dishId": "hot-honey-chicken-wrap",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Salads",
+      "sectionId": "salads",
+      "note": "With lettuce, spinach, tomato, cucumber, capsicum, onion, carrot, olive.",
+      "items": [
+        {
+          "name": "BBQ Southern Style Chicken",
+          "dishId": "bbq-southern-style-chicken-salad",
+          "desc": "Southern-style chicken bites, old English-style processed cheese, smoky bbq sauce.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Bacon Ranch",
+          "dishId": "chicken-bacon-ranch-salad",
+          "desc": "Chicken strips, bacon, processed cheddar cheese, ranch dressing.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Classic",
+          "dishId": "chicken-classic-salad",
+          "desc": "Old English-style processed cheese, garlic aioli.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken Strips",
+          "dishId": "chicken-strips-salad",
+          "desc": "Processed cheddar cheese, mayonnaise.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chipotle Steak Melt",
+          "dishId": "chipotle-steak-melt-salad",
+          "desc": "Diced steak, old English-style processed cheese, chipotle sauce.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Honey Mustard Leg Ham",
+          "dishId": "honey-mustard-leg-ham-salad",
+          "desc": "Processed cheddar cheese, honey mustard.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Italian B.M.T.®",
+          "dishId": "italian-b-m-t-salad",
+          "desc": "Salami, pepperoni, leg ham, mozzarella cheese, mayonnaise.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Italian Meatball",
+          "dishId": "italian-meatball-salad",
+          "desc": "Beef meatball in marinara sauce, mozzarella cheese, garlic aioli.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Pizza Melt",
+          "dishId": "pizza-melt-salad",
+          "desc": "Salami, pepperoni, mozzarella cheese, marinara sauce.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Pork Riblet",
+          "dishId": "pork-riblet-salad",
+          "desc": "Processed cheddar cheese, smoky bbq sauce.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Roast Beef",
+          "dishId": "roast-beef-salad",
+          "desc": "Processed cheddar cheese, mayonnaise.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Smashed Falafel",
+          "dishId": "smashed-falafel-salad",
+          "desc": "Mozzarella cheese, garlic aioli.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Sweet Onion Chicken Teriyaki",
+          "dishId": "sweet-onion-chicken-teriyaki-salad",
+          "desc": "Chicken strips in teriyaki glaze, mozzarella cheese, sweet onion sauce.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-sesame",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Three Pepper Chicken",
+          "dishId": "three-pepper-chicken-salad",
+          "desc": "Old English-style processed cheese, garlic aioli.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Tuna Mayo",
+          "dishId": "tuna-mayo-salad",
+          "desc": "Tuna in mayonnaise, processed cheddar cheese.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Veggie Delite® with Avo",
+          "dishId": "veggie-delite-with-avo-salad",
+          "desc": "Processed cheddar cheese.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Veggie Patty",
+          "dishId": "veggie-patty-salad",
+          "desc": "Mozzarella cheese, garlic aioli, sweet chilli.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Steak Protein",
+          "dishId": "steak-protein-salad",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chicken & Avo",
+          "dishId": "chicken-avo-salad",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Falafel Delite",
+          "dishId": "falafel-delite-salad",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Breakfast",
+      "sectionId": "breakfast",
+      "items": [
+        {
+          "name": "BLT with Egg & Cheese",
+          "dishId": "blt-with-egg-cheese",
+          "desc": "Bacon, lettuce, tomato, egg omelette, old English-style cheese, garlic aioli, toasted on white bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Classic Ham & Egg",
+          "dishId": "classic-ham-egg",
+          "desc": "Leg ham, egg omelette, old English-style cheese, mayonnaise, toasted on white bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Steak & Egg Brekkie",
+          "dishId": "steak-egg-brekkie",
+          "desc": "Diced steak, egg omelette, mozzarella cheese, lettuce, tomato, onion, BBQ sauce, toasted on Italian herbs & cheese bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Mexican-Style Brekkie Wrap",
+          "dishId": "mexican-style-brekkie-wrap",
+          "desc": "Leg ham, egg omelette, mozzarella cheese, avocado, tomato, onion, jalapeno pepper, chipotle sauce, toasted on white flour wrap.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Spinach & Egg Wrap",
+          "dishId": "spinach-egg-wrap",
+          "desc": "Egg omelette, mozzarella cheese, spinach, tomato, white flour wrap.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Kids' Pak™",
+      "sectionId": "kids-pak",
+      "note": "On white bread with lettuce, spinach, tomato, cucumber, onion, capsicum.",
+      "items": [
+        {
+          "name": "Leg Ham Mini Sub",
+          "dishId": "leg-ham-mini-sub",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Roast Beef Mini Sub",
+          "dishId": "roast-beef-mini-sub",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Veggie Delite® Mini Sub",
+          "dishId": "veggie-delite-mini-sub",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cookies",
+      "sectionId": "cookies",
+      "items": [
+        {
+          "name": "Chocolate Chip",
+          "dishId": "chocolate-chip",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chocolate Chip M&M",
+          "dishId": "chocolate-chip-m-m",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Double Chocolate Chip",
+          "dishId": "double-chocolate-chip",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Oatmeal Raisin",
+          "dishId": "oatmeal-raisin",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "White Chip Macadamia Nut",
+          "dishId": "white-chip-macadamia-nut",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-nuts"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Toasties",
+      "sectionId": "toasties",
+      "items": [
+        {
+          "name": "Creamy Garlic Cheese Bread",
+          "dishId": "creamy-garlic-cheese-bread",
+          "desc": "Mozzarella cheese, garlic aioli, parmesan oregano topping on white bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Smashed Avo on Toast",
+          "dishId": "smashed-avo-on-toast",
+          "desc": "On white bread.",
+          "price": null,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Creamy Garlic Herb Bread",
+          "dishId": "creamy-garlic-herb-bread",
+          "desc": "Garlic aioli, parmesan oregano topping on white bread.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Ham, Cheese and Tomato Toastie",
+          "dishId": "ham-cheese-and-tomato-toastie",
+          "desc": "Mozzarella cheese, mayonnaise on white bread.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Snacks",
+      "sectionId": "snacks",
+      "items": [
+        {
+          "name": "Hot Honey Chicken Tenders",
+          "dishId": "hot-honey-chicken-tenders",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Not covered by Subway NZ's May 2026 allergen guide (menu addition since that document was published); composition beyond bread/wrap not confirmed.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Meatball Mozza Pot",
+          "dishId": "meatball-mozza-pot",
+          "desc": "Beef meatballs in marinara sauce, mozzarella cheese.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Chipotle Quesadilla",
+          "dishId": "chipotle-quesadilla",
+          "desc": "Mozzarella cheese, chipotle southwest sauce on white flour wrap.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Southern Style Chicken Bites",
+          "dishId": "southern-style-chicken-bites",
+          "desc": "Southern-style chicken bites, sauce optional.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Chips",
+      "sectionId": "chips",
+      "items": [
+        {
+          "name": "Copper Kettle Sea Salt 40g",
+          "dishId": "copper-kettle-sea-salt-40g",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Packaged third-party snack brand not itemised in Subway NZ's May 2026 allergen guide.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Copper Kettle Wood Fired BBQ 40g",
+          "dishId": "copper-kettle-wood-fired-bbq-40g",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Packaged third-party snack brand not itemised in Subway NZ's May 2026 allergen guide.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Doritos Cheese Supreme 45g",
+          "dishId": "doritos-cheese-supreme-45g",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Original Ready Salted 45g",
+          "dishId": "original-ready-salted-45g",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Packaged third-party snack brand not itemised in Subway NZ's May 2026 allergen guide.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Thinly Cut Sour Cream & Onion 35g",
+          "dishId": "thinly-cut-sour-cream-onion-35g",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Packaged third-party snack brand not itemised in Subway NZ's May 2026 allergen guide.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Bluebird Thinly Cut Ready Salted",
+          "dishId": "bluebird-thinly-cut-ready-salted",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Packaged third-party snack brand not itemised in Subway NZ's May 2026 allergen guide.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Bluebird Thinly Sliced Sour Cream & Chives",
+          "dishId": "bluebird-thinly-sliced-sour-cream-chives",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            },
+            {
+              "what": "allergens",
+              "note": "Packaged third-party snack brand not itemised in Subway NZ's May 2026 allergen guide.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Nachos",
+      "sectionId": "nachos",
+      "items": [
+        {
+          "name": "Nachos",
+          "dishId": "nachos",
+          "desc": "Doritos® Cheese Supreme Corn Chips, mozzarella cheese, avocado, jalapeno pepper, Mexican salsa.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Nachos Loaded with Chicken Strips",
+          "dishId": "nachos-loaded-with-chicken-strips",
+          "desc": "Doritos® Cheese Supreme Corn Chips, mozzarella cheese, avocado, jalapeno pepper, Mexican salsa, chicken strips.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Nachos Loaded with Steak",
+          "dishId": "nachos-loaded-with-steak",
+          "desc": "Doritos® Cheese Supreme Corn Chips, mozzarella cheese, avocado, jalapeno pepper, Mexican salsa, diced steak.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "sectionId": "drinks",
+      "items": [
+        {
+          "name": "Coca-Cola 600mL",
+          "dishId": "coca-cola-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Coca-Cola Zero Sugar 600mL",
+          "dishId": "coca-cola-zero-sugar-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Coca-Cola Vanilla 600mL",
+          "dishId": "coca-cola-vanilla-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Coca-Cola Vanilla Zero Sugar 600mL",
+          "dishId": "coca-cola-vanilla-zero-sugar-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Sprite 600mL",
+          "dishId": "sprite-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Sprite Zero Sugar 600mL",
+          "dishId": "sprite-zero-sugar-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Fanta Orange 600mL",
+          "dishId": "fanta-orange-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "L&P 600mL",
+          "dishId": "l-p-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Fanta Raspberry 600ml",
+          "dishId": "fanta-raspberry-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Coca-Cola Raspberry Zero Sugar 600mL",
+          "dishId": "coca-cola-raspberry-zero-sugar-600ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Coca-Cola 420mL",
+          "dishId": "coca-cola-420ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Sprite 420mL",
+          "dishId": "sprite-420ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Fanta Orange 420mL",
+          "dishId": "fanta-orange-420ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Coca-Cola Zero Sugar 420mL",
+          "dishId": "coca-cola-zero-sugar-420ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Schweppes Classic Ginger Beer 330ml",
+          "dishId": "schweppes-classic-ginger-beer-330ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Pump Water 750mL",
+          "dishId": "pump-water-750ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Pumped Lime Water 750mL",
+          "dishId": "pumped-lime-water-750ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Mini Pump 400mL",
+          "dishId": "mini-pump-400ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Fuze Tea Peach 500mL",
+          "dishId": "fuze-tea-peach-500ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Fuze Tea Lemon 500mL",
+          "dishId": "fuze-tea-lemon-500ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Powerade Berry Ice 750mL",
+          "dishId": "powerade-berry-ice-750ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Powerade Mountain Blast 750mL",
+          "dishId": "powerade-mountain-blast-750ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Powerade Zero Mountain Blast 750mL",
+          "dishId": "powerade-zero-mountain-blast-750ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Powerade Blackcurrant 750mL",
+          "dishId": "powerade-blackcurrant-750ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Powerade Grape 750mL",
+          "dishId": "powerade-grape-750ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Powerade Zero Grape 750mL",
+          "dishId": "powerade-zero-grape-750ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Celsius Mango Lemonade 330mL",
+          "dishId": "celsius-mango-lemonade-330ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "V Blue Energy Drink 500mL",
+          "dishId": "v-blue-energy-drink-500ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Celsius Kiwi Strawberry 330mL",
+          "dishId": "celsius-kiwi-strawberry-330ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "V Energy Blue Zero Sugar 500mL",
+          "dishId": "v-energy-blue-zero-sugar-500ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "V Energy Drink 350mL",
+          "dishId": "v-energy-drink-350ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "MOST Apple Orange & Mango 275mL",
+          "dishId": "most-apple-orange-mango-275ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "MOST Sparkling Apple Blackcurrant 275mL",
+          "dishId": "most-sparkling-apple-blackcurrant-275ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Keri Orange Juice 350mL",
+          "dishId": "keri-orange-juice-350ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Kerri Kids Apple Blackcurrant 250mL",
+          "dishId": "kerri-kids-apple-blackcurrant-250ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Keri Apple Juice 350ml",
+          "dishId": "keri-apple-juice-350ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Glaceau Vitamin Water Antioxidant 500mL",
+          "dishId": "glaceau-vitamin-water-antioxidant-500ml",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Barista Bros Iced Choc 500mL",
+          "dishId": "barista-bros-iced-choc-500ml",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Barista Bros Double Espresso Iced Coffee 500ml",
+          "dishId": "barista-bros-double-espresso-iced-coffee-500ml",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Smoothies",
+      "sectionId": "smoothies",
+      "note": "Availability of flavours varies by location.",
+      "items": [
+        {
+          "name": "Blueberry & Mango",
+          "dishId": "blueberry-mango",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Mango",
+          "dishId": "mango",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Mixed Berry Banana",
+          "dishId": "mixed-berry-banana",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Strawberry",
+          "dishId": "strawberry",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        },
+        {
+          "name": "Tropical",
+          "dishId": "tropical",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Subway NZ publishes no prices first-party; pricing varies by store.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "verifiedBy": "official-site"
 }
