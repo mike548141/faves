@@ -18,13 +18,16 @@ would be firing on the *correct* change: a check nobody can keep green is a
 check nobody reads, and this repo has been bitten by that nine times. The
 reverse direction — a shipped recipe with no estimate — stays a hard failure.
 
-THE SAFETY INVARIANT, AND WHY IT IS A HARD FAILURE. Stated durations drive the
-per-step timers (`stepDuration` in site/js/cook.js). An *estimated* duration
-must never drive one: an invented "simmer 20 min" on chicken thighs is a
-food-safety failure, not a disappointing dinner. So every step estimate carries
-`timerSafe`, true only where the duration came from the recipe's own text, and
-`--check` exits 1 the moment those two disagree. A guard nobody has watched fail
-is decoration — the three corruptions this was proved against are listed in
+THE SAFETY INVARIANT, AND WHY IT IS A HARD FAILURE. The owner ruled on
+2026-08-16 (ADR 0066) that *every* step with a duration gets a countdown, and an
+estimated one is labelled as an estimate on the timer face. The food-safety
+objection — an invented "simmer 20 min" on chicken thighs — was put to him
+before the ruling and overruled. So the dangerous state is no longer an estimate
+driving a clock; it is a duration whose provenance is unknown, because the timer
+face has then no way to know whether to mark it. Every step carrying `minutes`
+must carry a `source` of `stated` or `estimated`, and `--check` exits 1 the
+moment one does not, printing that failure above all others. A guard nobody has
+watched fail is decoration — the paths this was proved against are listed in
 `data/estimates/README.md`.
 
 WHAT "STATED" MEANS, MECHANICALLY. The recipe text says it — in digits ("for 35
@@ -130,27 +133,24 @@ def check_step(errs, dish_id, item, index, est):
     if not (est.get("working") or "").strip():
         errs.append((False, f"{where}: no working — a number with no working is not a record"))
 
-    minutes, source, safe = est.get("minutes"), est.get("source"), est.get("timerSafe")
-
-    # THE SAFETY INVARIANT. Checked before anything else about this step, and
-    # phrased so the failure names the food risk rather than the schema.
-    if safe is True and source != "stated":
-        errs.append((
-            True,
-            f"SAFETY: {where} is timerSafe with source {source!r} — an estimated "
-            f"duration may never drive a timer (see this tool's header)",
-        ))
-    if safe is not True and source == "stated":
-        errs.append((False, f"{where}: stated but timerSafe {safe!r}; stated times are the ones that may drive a timer"))
-    if not isinstance(safe, bool):
-        errs.append((False, f"{where}: timerSafe {safe!r} is not a boolean"))
+    minutes, source = est.get("minutes"), est.get("source")
 
     if minutes is None:
         if source is not None:
             errs.append((False, f"{where}: minutes is null so source must be null, not {source!r}"))
         return
+
+    # THE SAFETY INVARIANT. Every duration drives a countdown under ADR 0066, so
+    # `source` is the only thing that tells the timer face whether to mark the
+    # number an estimate. Checked before anything else about the value, and
+    # phrased so the failure names what the cook would see rather than the schema.
     if source not in SOURCES:
-        errs.append((False, f"{where}: source {source!r} is not one of {sorted(SOURCES)}"))
+        errs.append((
+            True,
+            f"SAFETY: {where} has minutes {minutes!r} but source {source!r}, not one of "
+            f"{sorted(SOURCES)} — its countdown would run with no way to mark it an "
+            f"estimate (see this tool's header)",
+        ))
         return
     if not isinstance(minutes, int) or minutes <= 0:
         errs.append((False, f"{where}: minutes {minutes!r} is not a positive whole number"))
@@ -300,7 +300,7 @@ def report(venue_id):
     for label, t in (("serves", serves), ("total time", totals), ("steps", steps)):
         print(f"{label:<12} stated {t['stated']:>3}   estimated {t['estimated']:>3}   none {t['null']:>3}")
     print("\nphases       " + "   ".join(f"{p} {n}" for p, n in phases.items()))
-    print(f"estimated durations on a `cook` step: {risky} — none of them may drive a timer")
+    print(f"estimated durations on a `cook` step: {risky} — each drives a countdown marked as an estimate")
 
     fully, mostly = [], []
     for dish_id, rec in sorted(records.items()):
