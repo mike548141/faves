@@ -81,6 +81,47 @@ def versions_in(text):
     return out
 
 
+def version_key(value):
+    """Sortable key for a `YYYY-MM-DD.N` constant, or None if it isn't one.
+
+    The constants are cache NAMES, but they are also meant to be monotonic, and
+    the two facts are easy to hold separately until it costs you a deploy. See
+    `went_backwards` below for why.
+    """
+    if not value:
+        return None
+    m = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})\.(\d+)", value.strip())
+    if not m:
+        return None
+    y, mo, d, n = m.groups()
+    return (int(y), int(mo), int(d), int(n))
+
+
+def went_backwards(old, new):
+    """True when `new` names an EARLIER version than `old`.
+
+    Going backwards is as broken as not moving, and for the same mechanism —
+    which is why the equality check alone was not enough. A version is a cache
+    name, and the install step only rebuilds a cache that is missing its READY
+    sentinel. So a push that returns SHELL_VERSION to a value already deployed
+    earlier that day finds that cache **present and ready** on a phone that
+    installed it, and serves the OLD files from it. Silently, with CI green:
+    exactly the failure ADR 0015 and this whole check exist to prevent, reached
+    from the other direction.
+
+    Reachable in practice, not theoretically — it is what a rebase produces. A
+    branch cut when main was at .42 and rebased onto a main that has since
+    reached .55 lands carrying .54, and every equality test passes (2026-08-16,
+    with four sessions live; found by reading the numbers rather than the
+    verdict).
+
+    Unparseable values return False: this check owns monotonicity, not format,
+    and a constant that is missing entirely is already caught above.
+    """
+    a, b = version_key(old), version_key(new)
+    return a is not None and b is not None and b < a
+
+
 def read_sw(ref):
     """`sw.js` at a ref, or at the index/worktree when ref is None."""
     if ref is None:
@@ -221,13 +262,22 @@ def main(argv=None):
     for name, touched, label in checks:
         if not touched or new[name] is None:
             continue
+        shown = touched if args.verbose else touched[:5]
+        listing = "\n".join(f"      {p}" for p in shown)
+        more = "" if len(shown) == len(touched) else f"\n      … and {len(touched) - len(shown)} more (-v for all)"
         if old[name] == new[name]:
-            shown = touched if args.verbose else touched[:5]
-            listing = "\n".join(f"      {p}" for p in shown)
-            more = "" if len(shown) == len(touched) else f"\n      … and {len(touched) - len(shown)} more (-v for all)"
             problems.append(
                 f"{name} is still {new[name]!r}, but {len(touched)} {label} file(s) changed:\n"
                 f"{listing}{more}"
+            )
+        elif went_backwards(old[name], new[name]):
+            problems.append(
+                f"{name} goes BACKWARDS, {old[name]!r} → {new[name]!r}, with "
+                f"{len(touched)} {label} file(s) changed:\n{listing}{more}\n"
+                f"      A cache name already deployed is already installed: the worker finds\n"
+                f"      it present and READY and serves the OLD files from it. This is what a\n"
+                f"      rebase produces when main moved on under a branch — pick a value above\n"
+                f"      {old[name]!r}, never the one your branch happened to carry."
             )
 
     if problems:
