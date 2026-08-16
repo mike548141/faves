@@ -14,6 +14,9 @@
 // no usable lines) fails soft to `null`, so the UI can say "this link didn't
 // work — ask them to resend" rather than merging garbage.
 
+import { dishId, migrateDishKeys } from "./dish-id.js";
+import { slug } from "./slug.js";
+
 const PARAM = "share";
 export const CODEC_VERSION = 1;
 
@@ -94,7 +97,7 @@ const priceOrNull = (v) => {
 /**
  * Encode an order into a base64url token for the URL fragment. `groups` is
  * groupByVenue()-shaped: `{ venueId, venueName, phone, items: [{ name, price,
- * qty }] }`. `label` is the optional guest-typed sender name. Returns the token
+ * qty, options?, dishId? }] }`. `label` is the optional guest-typed sender name. Returns the token
  * string (no `#share=` prefix — see buildShareUrl). Shortlists have their own
  * shape — use encodeShortlist; only "order" is accepted here so the two wire
  * shapes never cross (a shortlist-tagged order payload wouldn't decode).
@@ -112,19 +115,29 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
     p: cleanPhone(g.phone),
     // Each line is a positional [name, price, qty] triple to keep it short,
     // with the add-on selection appended as an optional fourth slot (ADR 0048
-    // §4). Deliberately NOT a CODEC_VERSION bump: that field is shared by
-    // orders, shortlists AND personal transfers and is checked with a strict
-    // `!==`, so bumping it would invalidate every outstanding link of all three
-    // kinds for a change two of them don't use. Appending is safe instead
-    // because a decoder that predates add-ons reads line[0..2] and ignores the
-    // rest by construction — and `price` here is the CONFIGURED unit price, so
-    // that older reader still totals correctly. It under-specifies the order
-    // rather than mis-stating it: dropping an add-on can never put something
-    // extra on a plate, which is the only degradation direction that is safe.
+    // §4) and the dish id as an optional fifth (ADR 0051). Deliberately NOT a
+    // CODEC_VERSION bump: that field is shared by orders, shortlists AND
+    // personal transfers and is checked with a strict `!==`, so bumping it
+    // would invalidate every outstanding link of all three kinds for a change
+    // two of them don't use. Appending is safe instead because a decoder that
+    // predates either slot reads line[0..2] and ignores the rest by
+    // construction — and `price` here is the CONFIGURED unit price, so that
+    // older reader still totals correctly. It under-specifies the order rather
+    // than mis-stating it: dropping an add-on can never put something extra on
+    // a plate, which is the only degradation direction that is safe.
     i: (g.items || []).map((it) => {
-      const line = [clip(it.name, MAX_NAME), priceOrNull(it.price), clampQty(it.qty)];
+      const name = clip(it.name, MAX_NAME);
+      const line = [name, priceOrNull(it.price), clampQty(it.qty)];
       const opts = (it.options || []).slice(0, MAX_OPTIONS);
-      if (opts.length) line.push(opts.map((o) => [clip(o.group, MAX_NAME), clip(o.name, MAX_NAME), priceOrNull(o.price)]));
+      // Emitted only where the id says something the name doesn't, so an
+      // ordinary link — every link on the day this shipped — does not grow.
+      // Resolved against the CLIPPED name, so encode and decode agree about
+      // what "the name alone would have meant" even for an over-long one.
+      const id = clip(dishId({ dishId: it.dishId, name: name.trim() }), MAX_NAME);
+      const carryId = !!id && id !== slug(name.trim());
+      if (opts.length || carryId)
+        line.push(opts.length ? opts.map((o) => [clip(o.group, MAX_NAME), clip(o.name, MAX_NAME), priceOrNull(o.price)]) : null);
+      if (carryId) line.push(id);
       return line;
     }),
   }));
@@ -149,6 +162,15 @@ export function encodeShortlist({ label = "", groups = [] }) {
 
 // Venue-grouped favourites on the wire. Shared by the shortlist share and the
 // personal transfer so the two can never drift into two shapes for one thing.
+//
+// `d` stays a bare array of NAME strings, deliberately, even though dishes now
+// have ids (ADR 0051): changing that array's element type is the one change to
+// this wire that an existing decoder cannot ignore, so it would need the
+// CODEC_VERSION bump the whole append-a-slot design exists to avoid. The cost
+// is a known limitation, not a regression: a shared shortlist naming a
+// disambiguated row — Sprig & Fern's Gold Card Cheeseburger — arrives as the
+// bare-slug one, which is precisely what it did before ids existed. Fixing it
+// needs a slot for ids alongside `d`, and that is roadmap work, not a comment.
 function packGroups(groups) {
   return (groups || []).map((g) => ({
     v: clip(g.venueId, MAX_NAME),
@@ -240,6 +262,15 @@ function decodeOrderItems(groups) {
       // exactly the shape it always did, field for field.
       const options = decodeOptions(line[3]);
       if (options.length) item.options = options;
+      // Slot 4, the dish id (ADR 0051). Absent on every link minted before ids
+      // existed, and then the line means `slug(name)` — which is exactly what
+      // it meant then, and what `dishId()` falls through to now. Carried only
+      // when it says something the name doesn't, so an old link and a new one
+      // for the same plain dish decode to identical objects. Clipped and
+      // trimmed like every other string off the wire; it reaches a storage key
+      // and never an href, so no further escaping is owed.
+      const id = clip(line[4] ?? "", MAX_NAME).trim();
+      if (id && id !== slug(name)) item.dishId = id;
       items.push(item);
       if (items.length >= MAX_ITEMS) break outer;
     }
@@ -249,7 +280,9 @@ function decodeOrderItems(groups) {
 
 // Shortlist → flat favourites entries (matching favourites.js: a `venue` entry
 // for a whole-place heart, a `dish` entry per hearted dish). A group with
-// neither a venue heart nor any dish is dropped.
+// neither a venue heart nor any dish is dropped. No `dishId` is set, because
+// the wire carries none (see packGroups) — favKey then resolves the entry to
+// `slug(name)`, the identity a received shortlist has always landed under.
 function decodeShortlistItems(groups) {
   const items = [];
   outer: for (const g of groups) {
@@ -326,13 +359,18 @@ export function decodeTransfer(token) {
   if (p.v !== CODEC_VERSION || p.t !== XFER_TAG) return null;
 
   const favourites = decodeShortlistItems(Array.isArray(p.g) ? p.g : []);
-  const ratings = {};
+  let ratings = {};
   if (p.r && typeof p.r === "object" && !Array.isArray(p.r)) {
     for (const [k, val] of Object.entries(p.r)) {
       const score = Math.round(Number(val));
       if (!k || !Number.isFinite(score) || score <= 0) continue;
       ratings[clip(k, MAX_NAME)] = Math.min(score, 5);
     }
+    // Ratings ride as whole composite key strings, and a build that predates
+    // dish ids exported them with the dish's NAME in them (ADR 0051). Migrated
+    // here so a transfer from an older phone lands on the same marks a newer
+    // one would write, rather than as a parallel set the next read discards.
+    ratings = migrateDishKeys(ratings);
   }
   const settings = p.s && typeof p.s === "object" && !Array.isArray(p.s) ? p.s : null;
   if (!favourites.length && !Object.keys(ratings).length && !settings) return null;

@@ -1,0 +1,73 @@
+{
+  "id": "sprig-and-fern-petone",
+  "name": "Sprig + Fern Petone",
+  "cuisine": [
+    "Gastropub"
+  ],
+  "area": "Petone",
+  "city": "Lower Hutt",
+  "currency": "NZD",
+  "address": "146 Jackson Street, Petone, Lower Hutt 5012",
+  "lat": -41.22425,
+  "lng": 174.87455,
+  "services": [
+    "dine-in"
+  ],
+  "phone": "+64 4 566 0649",
+  "website": "https://sprigandfern.co.nz/pages/petone",
+  "ordering": [],
+  "hours": {
+    "mon": [
+      [
+        "14:00",
+        "22:00"
+      ]
+    ],
+    "tue": [
+      [
+        "12:00",
+        "22:00"
+      ]
+    ],
+    "wed": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "thu": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "fri": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "sat": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "sun": [
+      [
+        "12:00",
+        "22:00"
+      ]
+    ]
+  },
+  "vibe": [
+    "craft beer"
+  ],
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "official-site",
+  "lifecycle": {
+    "added": "2026-08-16"
+  },
+  "status": "stub",
+  "menu": []
+}

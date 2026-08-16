@@ -162,6 +162,7 @@
       "items": [
         {
           "name": "Teriyaki Salmon Maki",
+          "dishId": "teriyaki-salmon-maki",
           "desc": null,
           "price": 1.8,
           "tags": [
@@ -171,12 +172,14 @@
         },
         {
           "name": "Crispy Chicken Maki",
+          "dishId": "crispy-chicken-maki",
           "desc": "Crispy chicken with carrot and lettuce.",
           "price": 1.8,
           "tags": []
         },
         {
           "name": "Avocado + Mixed Vegetables Maki",
+          "dishId": "avocado-mixed-vegetables-maki",
           "desc": null,
           "price": 1.8,
           "tags": [
@@ -186,6 +189,7 @@
         },
         {
           "name": "Tuna Cream Cheese Maki",
+          "dishId": "tuna-cream-cheese-maki",
           "desc": "Tuna and cream cheese.",
           "price": 1.8,
           "tags": [
@@ -194,6 +198,7 @@
         },
         {
           "name": "Teriyaki Chicken + Cream Cheese Maki",
+          "dishId": "teriyaki-chicken-cream-cheese-maki",
           "desc": null,
           "price": 1.8,
           "tags": [
@@ -204,6 +209,7 @@
         },
         {
           "name": "Teriyaki Chicken + Avocado Maki",
+          "dishId": "teriyaki-chicken-avocado-maki",
           "desc": null,
           "price": 1.8,
           "tags": [
@@ -213,6 +219,7 @@
         },
         {
           "name": "Seaweed Salad + Vegetables Maki",
+          "dishId": "seaweed-salad-vegetables-maki",
           "desc": "Seaweed salad with mixed vegetables.",
           "price": 1.8,
           "tags": [
@@ -221,6 +228,7 @@
         },
         {
           "name": "Salmon + Cream Cheese Maki",
+          "dishId": "salmon-cream-cheese-maki",
           "desc": null,
           "price": 2.2,
           "tags": [
@@ -229,6 +237,7 @@
         },
         {
           "name": "Salmon + Avocado Maki",
+          "dishId": "salmon-avocado-maki",
           "desc": null,
           "price": 2.2,
           "tags": [
@@ -237,6 +246,7 @@
         },
         {
           "name": "Kakiage Maki",
+          "dishId": "kakiage-maki",
           "desc": "Tempura vegetable fritter with mixed vegetables.",
           "price": 1.8,
           "tags": [
@@ -247,6 +257,7 @@
         },
         {
           "name": "Crispy Prawn + Cream Cheese Maki",
+          "dishId": "crispy-prawn-cream-cheese-maki",
           "desc": null,
           "price": 1.8,
           "tags": [
@@ -261,6 +272,7 @@
       "items": [
         {
           "name": "Teriyaki Chicken Uramaki",
+          "dishId": "teriyaki-chicken-uramaki",
           "desc": null,
           "price": 1.8,
           "tags": [
@@ -270,12 +282,14 @@
         },
         {
           "name": "Salmon Avocado Uramaki",
+          "dishId": "salmon-avocado-uramaki",
           "desc": "Salmon and avocado.",
           "price": 2.2,
           "tags": []
         },
         {
           "name": "Spicy Chicken Uramaki",
+          "dishId": "spicy-chicken-uramaki",
           "desc": "Crispy chicken uramaki topped with Sushi Bi spicy mayo.",
           "price": 2.5,
           "tags": [
@@ -285,6 +299,7 @@
         },
         {
           "name": "Salmon + Seaweed + Avocado Dragon Roll",
+          "dishId": "salmon-seaweed-avocado-dragon-roll",
           "desc": null,
           "price": 2.5,
           "tags": []
@@ -296,6 +311,7 @@
       "items": [
         {
           "name": "Avocado Nigiri",
+          "dishId": "avocado-nigiri",
           "desc": "Gisborne organic avocado on rice.",
           "price": 2.4,
           "tags": [
@@ -305,6 +321,7 @@
         },
         {
           "name": "Fresh Salmon Nigiri",
+          "dishId": "fresh-salmon-nigiri",
           "desc": null,
           "price": 2.4,
           "tags": [
@@ -313,6 +330,7 @@
         },
         {
           "name": "Aburi Salmon Nigiri",
+          "dishId": "aburi-salmon-nigiri",
           "desc": "Seared salmon with Sushi Bi's house teriyaki sauce.",
           "price": 2.5,
           "tags": [
@@ -322,6 +340,7 @@
         },
         {
           "name": "Smoked Eel Nigiri",
+          "dishId": "smoked-eel-nigiri",
           "desc": "Smoked eel dressed with Sushi Bi's house teriyaki sauce.",
           "price": 2.4,
           "tags": [
@@ -331,6 +350,7 @@
         },
         {
           "name": "Prawn Nigiri",
+          "dishId": "prawn-nigiri",
           "desc": null,
           "price": 2.4,
           "tags": [
@@ -340,6 +360,7 @@
         },
         {
           "name": "Crispy Prawn Nigiri",
+          "dishId": "crispy-prawn-nigiri",
           "desc": "Tiger prawn coated with Japanese panko.",
           "price": 2.4,
           "tags": [
@@ -349,6 +370,7 @@
         },
         {
           "name": "Aburi Prawn Nigiri",
+          "dishId": "aburi-prawn-nigiri",
           "desc": "Seared prawn with Sushi Bi's house teriyaki sauce.",
           "price": 2.5,
           "tags": [
@@ -359,6 +381,7 @@
         },
         {
           "name": "Aburi Scallop",
+          "dishId": "aburi-scallop",
           "desc": "Seared whole scallop with Sushi Bi's house teriyaki sauce and Japanese mayo.",
           "price": 2.5,
           "tags": [
@@ -370,6 +393,7 @@
         },
         {
           "name": "Crab Leg Kanikama Nigiri",
+          "dishId": "crab-leg-kanikama-nigiri",
           "desc": "Crab leg surimi.",
           "price": 2.4,
           "tags": [
@@ -383,6 +407,7 @@
       "items": [
         {
           "name": "Inari",
+          "dishId": "inari",
           "desc": "Bean curd pocket filled with sushi rice.",
           "price": 2.4,
           "tags": [
@@ -391,6 +416,7 @@
         },
         {
           "name": "Gluten Free Inari",
+          "dishId": "gluten-free-inari",
           "desc": "Gluten free bean curd pocket filled with sushi rice.",
           "price": 2.4,
           "tags": [
@@ -400,6 +426,7 @@
         },
         {
           "name": "Inari Boat with Kanikama and Tobiko",
+          "dishId": "inari-boat-with-kanikama-and-tobiko",
           "desc": "Tofu pocket filled with sushi rice, crab legs and fish roe.",
           "price": 2.5,
           "tags": [
@@ -409,6 +436,7 @@
         },
         {
           "name": "Rice Paper Roll Mixed Vegetables",
+          "dishId": "rice-paper-roll-mixed-vegetables",
           "desc": "Rice paper roll with mixed vegetables and avocado.",
           "price": 2.4,
           "tags": [
@@ -418,6 +446,7 @@
         },
         {
           "name": "Summer Roll with Salmon",
+          "dishId": "summer-roll-with-salmon",
           "desc": "Rice paper roll with seasoned vegetables and fresh salmon.",
           "price": 2.4,
           "tags": [
@@ -431,6 +460,7 @@
       "items": [
         {
           "name": "Takoyaki",
+          "dishId": "takoyaki",
           "desc": "Hand made octopus balls — Willis Street store only.",
           "price": 1.5,
           "tags": [
@@ -444,12 +474,14 @@
       "items": [
         {
           "name": "Sushi Platter 1",
+          "dishId": "sushi-platter-1",
           "desc": "4 salmon nigiri, 20 assorted cocktail maki, 10 assorted maki.",
           "price": 78.0,
           "tags": []
         },
         {
           "name": "Sushi Platter 2 (cocktail sushi)",
+          "dishId": "sushi-platter-2-cocktail-sushi",
           "desc": "Cocktail-sized sushi; choose from salmon, teriyaki chicken and more.",
           "price": 84.0,
           "tags": [
@@ -459,6 +491,7 @@
         },
         {
           "name": "Sushi Platter 3",
+          "dishId": "sushi-platter-3",
           "desc": "3 crispy prawn, 4 prawn maki with avocado topping, 11 nigiri of your choice, 3 prawn nigiri.",
           "price": 90.0,
           "tags": [
@@ -467,18 +500,21 @@
         },
         {
           "name": "Sushi Platter 4",
+          "dishId": "sushi-platter-4",
           "desc": "17 assorted maki and 15 assorted nigiri, both of your choice.",
           "price": 70.0,
           "tags": []
         },
         {
           "name": "Sushi Platter 5 (brown rice uramaki)",
+          "dishId": "sushi-platter-5-brown-rice-uramaki",
           "desc": "42 assorted brown rice maki.",
           "price": 83.0,
           "tags": []
         },
         {
           "name": "Sushi Platter 6",
+          "dishId": "sushi-platter-6",
           "desc": "9 cocktail prawn, 9 cocktail salmon, 13 assorted maki, 3 salmon nigiri.",
           "price": 89.0,
           "tags": [
@@ -487,6 +523,7 @@
         },
         {
           "name": "Sushi Platter 9",
+          "dishId": "sushi-platter-9",
           "desc": "2 inari boats, 2 avocado nigiri, 22 assorted maki, 2 inari, 8 pieces of prawn.",
           "price": 85.0,
           "tags": [

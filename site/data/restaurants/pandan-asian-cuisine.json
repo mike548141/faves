@@ -157,6 +157,7 @@
       "items": [
         {
           "name": "Satay beef",
+          "dishId": "satay-beef",
           "desc": "6 pieces. Marinated in traditional Malay mild spices, skewered and grilled, served with the popular peanut sauce.",
           "price": 17,
           "tags": [
@@ -166,6 +167,7 @@
         },
         {
           "name": "Pan fried prawns",
+          "dishId": "pan-fried-prawns",
           "desc": "Pan flamed prawns with capsicum and vegetables finished in a multi-flavoured sauce.",
           "price": 17,
           "tags": [
@@ -174,6 +176,7 @@
         },
         {
           "name": "Garlic chilli prawns",
+          "dishId": "garlic-chilli-prawns",
           "desc": "Pan flamed prawns with toasted garlic finished in a spicy traditional Malay sauce.",
           "price": 17,
           "tags": [
@@ -183,6 +186,7 @@
         },
         {
           "name": "Garlic chilli squid",
+          "dishId": "garlic-chilli-squid",
           "desc": "Pan flamed squid with toasted garlic finished in a spicy traditional Malay sauce.",
           "price": 17,
           "tags": [
@@ -192,6 +196,7 @@
         },
         {
           "name": "Curry puff samosa",
+          "dishId": "curry-puff-samosa",
           "desc": "Popular Malaysian samosa — cooked diced kūmara and potato pursed in homemade pastry.",
           "price": 12.5,
           "tags": [
@@ -201,6 +206,7 @@
         },
         {
           "name": "Spring roll",
+          "dishId": "spring-roll",
           "desc": "Authentic vegetable spring rolls served with sweet chilli sauce.",
           "price": 12,
           "tags": [
@@ -210,6 +216,7 @@
         },
         {
           "name": "Murtabak",
+          "dishId": "murtabak",
           "desc": "Roti pursed with diced potato, onion, egg and your choice of filling. Served with curry sauce.",
           "price": 12,
           "tags": [
@@ -224,18 +231,21 @@
       "items": [
         {
           "name": "Chicken rendang",
+          "dishId": "chicken-rendang",
           "desc": "Various spices combined and cooked with ground spices, finished in a semi-dry gravy. A very popular traditional Malay dish.",
           "price": 25,
           "tags": []
         },
         {
           "name": "Klang chicken curry",
+          "dishId": "klang-chicken-curry",
           "desc": "A South Indian style dish founded in a small town called Klang, which became popular throughout Malaysia over time.",
           "price": 24,
           "tags": []
         },
         {
           "name": "Chicken sambal",
+          "dishId": "chicken-sambal",
           "desc": "A traditional Malay and Indonesian dish where chilli and exotic spices are cooked into a fiery hot gravy.",
           "price": 25,
           "tags": [
@@ -244,6 +254,7 @@
         },
         {
           "name": "Bayam chicken curry",
+          "dishId": "bayam-chicken-curry",
           "desc": "Grilled chicken cooked in a mildly spiced rich spinach gravy.",
           "price": 24,
           "tags": [
@@ -252,18 +263,21 @@
         },
         {
           "name": "Ayam paprik",
+          "dishId": "ayam-paprik",
           "desc": "Stir fried chicken with fresh vegetables and homemade sauce.",
           "price": 24,
           "tags": []
         },
         {
           "name": "Beef rendang",
+          "dishId": "beef-rendang",
           "desc": "Various spices combined and cooked with ground spices, finished in a semi-dry gravy. A very popular traditional Malay dish.",
           "price": 25,
           "tags": []
         },
         {
           "name": "Beef sambal",
+          "dishId": "beef-sambal",
           "desc": "A traditional Malay and Indonesian dish where chilli and exotic spices are cooked into a fiery hot gravy.",
           "price": 25,
           "tags": [
@@ -272,12 +286,14 @@
         },
         {
           "name": "Lamb rendang",
+          "dishId": "lamb-rendang",
           "desc": "Various spices combined and cooked with ground spices, finished in a semi-dry gravy.",
           "price": 27,
           "tags": []
         },
         {
           "name": "Lamb sambal",
+          "dishId": "lamb-sambal",
           "desc": "A traditional Malay and Indonesian dish where chilli and exotic spices are cooked into a fiery hot gravy.",
           "price": 27,
           "tags": [
@@ -286,24 +302,28 @@
         },
         {
           "name": "K.L. lamb curry",
+          "dishId": "k-l-lamb-curry",
           "desc": "Village style curry, where various ground spices are combined and slow cooked.",
           "price": 26,
           "tags": []
         },
         {
           "name": "Goat peratal",
+          "dishId": "goat-peratal",
           "desc": "Tender meat cooked with various ground spices, slow cooked semi-dry.",
           "price": 26,
           "tags": []
         },
         {
           "name": "Goat curry",
+          "dishId": "goat-curry",
           "desc": "Tender meat cooked with various ground spices, slow cooked in gravy.",
           "price": 26,
           "tags": []
         },
         {
           "name": "Bayam fish curry",
+          "dishId": "bayam-fish-curry",
           "desc": "Grilled fish cooked in a mildly spiced rich spinach gravy.",
           "price": 27,
           "tags": [
@@ -312,6 +332,7 @@
         },
         {
           "name": "Fish lemak",
+          "dishId": "fish-lemak",
           "desc": "Marinated seafood cooked true to its originality from villages throughout Malaysia.",
           "price": 27,
           "tags": [
@@ -320,6 +341,7 @@
         },
         {
           "name": "Prawn lemak",
+          "dishId": "prawn-lemak",
           "desc": "Marinated seafood cooked true to its originality from villages throughout Malaysia.",
           "price": 27,
           "tags": [
@@ -328,6 +350,7 @@
         },
         {
           "name": "Vegetable sambal",
+          "dishId": "vegetable-sambal",
           "desc": "A traditional Malay and Indonesian dish where chilli and exotic spices are cooked into a fiery hot gravy.",
           "price": 24,
           "tags": [
@@ -342,18 +365,21 @@
       "items": [
         {
           "name": "Chicken varuval",
+          "dishId": "chicken-varuval",
           "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.",
           "price": 24,
           "tags": []
         },
         {
           "name": "Lamb jalfrezi",
+          "dishId": "lamb-jalfrezi",
           "desc": "A flavourful mix of lamb, vibrant bell peppers and aromatic spices, simmered in the house jalfrezi sauce.",
           "price": 26,
           "tags": []
         },
         {
           "name": "Butter chicken",
+          "dishId": "butter-chicken",
           "desc": "Chicken pieces marinated overnight, grilled and cooked with rich butter. House speciality.",
           "price": 24,
           "tags": [
@@ -362,12 +388,14 @@
         },
         {
           "name": "Mango chicken",
+          "dishId": "mango-chicken",
           "desc": "Chicken pieces marinated overnight, grilled and cooked with mango sauce. House speciality.",
           "price": 24,
           "tags": []
         },
         {
           "name": "Chicken tikka masala",
+          "dishId": "chicken-tikka-masala",
           "desc": "Marinated and grilled chicken cooked with capsicum, finished in a multi-flavoured gravy.",
           "price": 24,
           "tags": [
@@ -376,6 +404,7 @@
         },
         {
           "name": "Lamb tikka masala",
+          "dishId": "lamb-tikka-masala",
           "desc": "Marinated and grilled lamb cooked with capsicum, finished in a multi-flavoured gravy.",
           "price": 26,
           "tags": [
@@ -384,6 +413,7 @@
         },
         {
           "name": "Chicken korma",
+          "dishId": "chicken-korma",
           "desc": "Chicken cooked in a rich cashew sauce.",
           "price": 24,
           "tags": [
@@ -393,6 +423,7 @@
         },
         {
           "name": "Lamb korma",
+          "dishId": "lamb-korma",
           "desc": "Lamb cooked in a rich cashew sauce.",
           "price": 26,
           "tags": [
@@ -402,12 +433,14 @@
         },
         {
           "name": "Beef varuval",
+          "dishId": "beef-varuval",
           "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.",
           "price": 24,
           "tags": []
         },
         {
           "name": "Beef vindaloo",
+          "dishId": "beef-vindaloo",
           "desc": "Beef cooked in a fiery hot chilli based gravy.",
           "price": 24,
           "tags": [
@@ -416,12 +449,14 @@
         },
         {
           "name": "Chicken jalfrezi",
+          "dishId": "chicken-jalfrezi",
           "desc": "Marinated chicken cooked with seasonal vegetables, finished in a semi-dry gravy.",
           "price": 24,
           "tags": []
         },
         {
           "name": "Lamb varuval",
+          "dishId": "lamb-varuval",
           "desc": "A dry style curry with bold spices, stir fried until fragrant and packed with deep roasted flavour.",
           "price": 26,
           "tags": []
@@ -433,6 +468,7 @@
       "items": [
         {
           "name": "Prawn biryani",
+          "dishId": "prawn-biryani",
           "desc": "Prawn cooked with fruits and cashew nuts together with rice and exotic spices.",
           "price": 27,
           "tags": [
@@ -442,6 +478,7 @@
         },
         {
           "name": "Chicken biryani",
+          "dishId": "chicken-biryani",
           "desc": "Chicken cooked with fruits and cashew nuts together with rice and exotic spices.",
           "price": 25,
           "tags": [
@@ -450,6 +487,7 @@
         },
         {
           "name": "Vegetable biryani",
+          "dishId": "vegetable-biryani",
           "desc": "Vegetables cooked with fruits and cashew nuts together with rice and exotic spices.",
           "price": 23,
           "tags": [
@@ -459,6 +497,7 @@
         },
         {
           "name": "Lamb biryani",
+          "dishId": "lamb-biryani",
           "desc": "Lamb cooked with fruits and cashew nuts together with rice and exotic spices.",
           "price": 27,
           "tags": [
@@ -467,6 +506,7 @@
         },
         {
           "name": "Egg biryani",
+          "dishId": "egg-biryani",
           "desc": "Egg cooked with fruits and cashew nuts together with rice and exotic spices.",
           "price": 23,
           "tags": [
@@ -482,6 +522,7 @@
       "items": [
         {
           "name": "Roti chanai (2 pieces) with peanut sauce",
+          "dishId": "roti-chanai-2-pieces-with-peanut-sauce",
           "desc": null,
           "price": 13.5,
           "tags": [
@@ -492,6 +533,7 @@
         },
         {
           "name": "Roti chanai (2 pieces) with curry sauce",
+          "dishId": "roti-chanai-2-pieces-with-curry-sauce",
           "desc": null,
           "price": 12,
           "tags": [
@@ -501,6 +543,7 @@
         },
         {
           "name": "Plain roti chanai",
+          "dishId": "plain-roti-chanai",
           "desc": null,
           "price": 4.5,
           "tags": [
@@ -510,6 +553,7 @@
         },
         {
           "name": "Garlic chanai",
+          "dishId": "garlic-chanai",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -518,6 +562,7 @@
         },
         {
           "name": "Butter chanai",
+          "dishId": "butter-chanai",
           "desc": null,
           "price": 6,
           "tags": [
@@ -527,6 +572,7 @@
         },
         {
           "name": "Egg, onion and chilli chanai",
+          "dishId": "egg-onion-and-chilli-chanai",
           "desc": null,
           "price": 6,
           "tags": [
@@ -537,6 +583,7 @@
         },
         {
           "name": "Garlic, cheese and onion chanai",
+          "dishId": "garlic-cheese-and-onion-chanai",
           "desc": null,
           "price": 7.5,
           "tags": [
@@ -551,18 +598,21 @@
       "items": [
         {
           "name": "Sweet and sour fish",
+          "dishId": "sweet-and-sour-fish",
           "desc": "Crispy fish fillet tossed in a tangy sweet and sour sauce with peppers, onion and pineapple.",
           "price": 27,
           "tags": []
         },
         {
           "name": "Sweet and sour chicken",
+          "dishId": "sweet-and-sour-chicken",
           "desc": null,
           "price": 25,
           "tags": []
         },
         {
           "name": "Dry chilli chicken",
+          "dishId": "dry-chilli-chicken",
           "desc": "A popular Malaysian dish, cooked with dry chilli and crispy chicken pieces lightly tossed in a spicy chilli sambal.",
           "price": 25,
           "tags": [
@@ -571,6 +621,7 @@
         },
         {
           "name": "Ginger soy chicken",
+          "dishId": "ginger-soy-chicken",
           "desc": "Chicken marinated in soy sauce and ginger paste, cooked with fresh vegetables.",
           "price": 25,
           "tags": [
@@ -580,6 +631,7 @@
         },
         {
           "name": "Gado-gado",
+          "dishId": "gado-gado",
           "desc": "Stir fried mixed seasonal vegetables and bean curd, topped with peanut sauce.",
           "price": 24,
           "tags": [
@@ -590,6 +642,7 @@
         },
         {
           "name": "Curry laksa",
+          "dishId": "curry-laksa",
           "desc": "Noodles, seafood and chicken prepared in a medium spicy laksa sauce.",
           "price": 23,
           "tags": [
@@ -604,6 +657,7 @@
       "items": [
         {
           "name": "Tofu rendang",
+          "dishId": "tofu-rendang",
           "desc": "Various spices combined and cooked with ground spices, finished in a semi-dry gravy.",
           "price": 24,
           "tags": [
@@ -613,6 +667,7 @@
         },
         {
           "name": "Dhal spinach curry",
+          "dishId": "dhal-spinach-curry",
           "desc": "South Indian style dish cooked with toor dhal, spinach and fresh vegetables, finished with coconut milk.",
           "price": 23,
           "tags": [
@@ -621,6 +676,7 @@
         },
         {
           "name": "Vegetable tofu lemak",
+          "dishId": "vegetable-tofu-lemak",
           "desc": "Seasonal vegetables cooked true to their originality from villages throughout Malaysia.",
           "price": 23,
           "tags": [
@@ -630,6 +686,7 @@
         },
         {
           "name": "Bayam tofu curry",
+          "dishId": "bayam-tofu-curry",
           "desc": "A combination of tofu prepared in a spinach gravy.",
           "price": 23,
           "tags": [
@@ -639,6 +696,7 @@
         },
         {
           "name": "Stir fried tofu",
+          "dishId": "stir-fried-tofu",
           "desc": "Pan flamed tofu and vegetables cooked in a special mild sauce.",
           "price": 23,
           "tags": [
@@ -653,6 +711,7 @@
       "items": [
         {
           "name": "Nasi goreng",
+          "dishId": "nasi-goreng",
           "desc": "Malaysian style stir fried rice cooked with vegetables, chicken and seafood.",
           "price": 23,
           "tags": [
@@ -661,6 +720,7 @@
         },
         {
           "name": "Char kuay teow goreng",
+          "dishId": "char-kuay-teow-goreng",
           "desc": "Flaky rice noodles stir fried in a homemade sauce with chicken and seafood.",
           "price": 23,
           "tags": [
@@ -669,6 +729,7 @@
         },
         {
           "name": "Mamak mee goreng",
+          "dishId": "mamak-mee-goreng",
           "desc": "A combination of chicken and seafood stir fried in a special sauce with tofu. Popular in East Malaysia.",
           "price": 23,
           "tags": [
@@ -679,6 +740,7 @@
         },
         {
           "name": "Hokkien noodles",
+          "dishId": "hokkien-noodles",
           "desc": "A combination of fresh noodles, seafood and chicken stir fried and finished in a thick dark sauce.",
           "price": 23,
           "tags": [
@@ -688,6 +750,7 @@
         },
         {
           "name": "Kung foo char",
+          "dishId": "kung-foo-char",
           "desc": "Flaky rice noodles, seafood and chicken stir fried and finished in a thick white sauce.",
           "price": 27,
           "tags": [
@@ -696,6 +759,7 @@
         },
         {
           "name": "Mee hoon goreng",
+          "dishId": "mee-hoon-goreng",
           "desc": "Vermicelli rice noodles, seafood, chicken and vegetables stir fried in a multi-flavoured sauce.",
           "price": 23,
           "tags": [
@@ -709,6 +773,7 @@
       "items": [
         {
           "name": "Mixed vegetable",
+          "dishId": "mixed-vegetable",
           "desc": null,
           "price": 12,
           "tags": [
@@ -717,6 +782,7 @@
         },
         {
           "name": "Stir fry bok choy",
+          "dishId": "stir-fry-bok-choy",
           "desc": null,
           "price": 12,
           "tags": [
@@ -725,6 +791,7 @@
         },
         {
           "name": "Raita",
+          "dishId": "raita",
           "desc": null,
           "price": 6,
           "tags": [
@@ -734,6 +801,7 @@
         },
         {
           "name": "Papadum",
+          "dishId": "papadum",
           "desc": null,
           "price": 4,
           "tags": [
@@ -742,6 +810,7 @@
         },
         {
           "name": "Plain rice",
+          "dishId": "plain-rice",
           "desc": null,
           "price": 3.5,
           "tags": [
@@ -752,6 +821,7 @@
         },
         {
           "name": "Coconut rice",
+          "dishId": "coconut-rice",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -762,6 +832,7 @@
         },
         {
           "name": "Peanut sauce",
+          "dishId": "peanut-sauce",
           "desc": null,
           "price": 6,
           "tags": [
@@ -771,6 +842,7 @@
         },
         {
           "name": "Anchovy sambal",
+          "dishId": "anchovy-sambal",
           "desc": null,
           "price": 8,
           "tags": [
@@ -784,6 +856,7 @@
       "items": [
         {
           "name": "Chocolate milkshake",
+          "dishId": "chocolate-milkshake",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -793,6 +866,7 @@
         },
         {
           "name": "Lime milkshake",
+          "dishId": "lime-milkshake",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -802,6 +876,7 @@
         },
         {
           "name": "Strawberry milkshake",
+          "dishId": "strawberry-milkshake",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -811,6 +886,7 @@
         },
         {
           "name": "Mango lassi",
+          "dishId": "mango-lassi",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -820,6 +896,7 @@
         },
         {
           "name": "Milo ice",
+          "dishId": "milo-ice",
           "desc": null,
           "price": 7.5,
           "tags": [
@@ -829,6 +906,7 @@
         },
         {
           "name": "Masala tea",
+          "dishId": "masala-tea",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -837,6 +915,7 @@
         },
         {
           "name": "Teh tarik",
+          "dishId": "teh-tarik",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -846,6 +925,7 @@
         },
         {
           "name": "Cranberry juice",
+          "dishId": "cranberry-juice",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -855,6 +935,7 @@
         },
         {
           "name": "Grape juice",
+          "dishId": "grape-juice",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -864,6 +945,7 @@
         },
         {
           "name": "Orange juice",
+          "dishId": "orange-juice",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -873,6 +955,7 @@
         },
         {
           "name": "Pineapple juice",
+          "dishId": "pineapple-juice",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -882,6 +965,7 @@
         },
         {
           "name": "Bundaberg",
+          "dishId": "bundaberg",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -891,6 +975,7 @@
         },
         {
           "name": "Fanta",
+          "dishId": "fanta",
           "desc": null,
           "price": 5,
           "tags": [
@@ -900,6 +985,7 @@
         },
         {
           "name": "Sprite",
+          "dishId": "sprite",
           "desc": null,
           "price": 5,
           "tags": [
@@ -909,6 +995,7 @@
         },
         {
           "name": "Diet Coke",
+          "dishId": "diet-coke",
           "desc": null,
           "price": 5,
           "tags": [
@@ -918,6 +1005,7 @@
         },
         {
           "name": "Coke No Sugar",
+          "dishId": "coke-no-sugar",
           "desc": null,
           "price": 5,
           "tags": [
@@ -927,6 +1015,7 @@
         },
         {
           "name": "Coke Zero",
+          "dishId": "coke-zero",
           "desc": null,
           "price": 5,
           "tags": [
@@ -936,6 +1025,7 @@
         },
         {
           "name": "Raspberry",
+          "dishId": "raspberry",
           "desc": null,
           "price": 5,
           "tags": [

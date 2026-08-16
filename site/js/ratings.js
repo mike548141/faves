@@ -13,22 +13,26 @@
 // recorded personal-tags design note.
 //
 // Identity mirrors favourites (favourites.js): a venue by id, a dish by
-// venueId + name — so the same `{ type, venueId, name }` entry shape works for
-// hearts and ratings alike. Stored as a flat `{ key: 1..5 }` map, sanitised on
-// read so a hand-edited or corrupt value can't smuggle in an out-of-range mark.
-// Old 1..3 values stay valid (they're within 1..5), so nothing migrates.
+// venueId + dish id (ADR 0051) — so the same `{ type, venueId, name, dishId? }`
+// entry shape works for hearts and ratings alike. Stored as a flat
+// `{ key: 1..5 }` map, sanitised on read so a hand-edited or corrupt value
+// can't smuggle in an out-of-range mark. Old 1..3 SCORES stay valid (they're
+// within 1..5), so no value ever migrates; the KEYS do (see read()).
 
 import { profileScopedStorage } from "./profiles.js";
 import { migrateRatingKeys } from "./renames.js";
+import { dishId, migrateDishKeys } from "./dish-id.js";
 
 const KEY = "faves.ratings.v1";
 
 export const MIN = 1;
 export const MAX = 5;
 
-/** Stable identity of a rated thing — identical shape to favourites' favKey. */
+/** Stable identity of a rated thing — byte-identical to favourites' favKey, and
+ *  deliberately so: one vocabulary for hearts and marks means a change to one
+ *  that forgot the other would show up immediately rather than as drift. */
 export const ratingKey = (e) =>
-  e.type === "venue" ? `v:${e.venueId}` : `d:${e.venueId} ${e.name}`;
+  e.type === "venue" ? `v:${e.venueId}` : `d:${e.venueId} ${dishId(e)}`;
 
 /**
  * Coerce any incoming value to an integer score in [MIN, MAX], or 0 for
@@ -58,8 +62,14 @@ export function createRatings(storage) {
   const subs = new Set();
 
   function read() {
+    // Two key migrations, venue half then dish half (see dish-id.js on the
+    // order). A rating is stored as a KEY STRING holding the dish's name, so
+    // unlike a favourite — stored as an entry object and re-keyed on read — it
+    // genuinely has to be rewritten. Both are non-destructive and idempotent,
+    // so this runs on every read forever with no "have I migrated" flag.
     try {
-      return sanitise(migrateRatingKeys(JSON.parse(storage.getItem(KEY) || "{}")));
+      const raw = JSON.parse(storage.getItem(KEY) || "{}");
+      return sanitise(migrateDishKeys(migrateRatingKeys(raw)));
     } catch {
       return {};
     }

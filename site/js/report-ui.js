@@ -32,7 +32,7 @@
 import { el } from "./dom.js";
 import { wireDialog } from "./dialog.js";
 import { translate } from "./reo.js";
-import { slug } from "./slug.js";
+import { dishId } from "./dish-id.js";
 import { canNativeShare, copyText, tryNativeShare } from "./share-core.js";
 import { installedVersions } from "./versions.js";
 import { composeReport, reportSubject, typesForScope } from "./report.js";
@@ -288,7 +288,10 @@ export function dishReportButton(r, item) {
       scope: "dish",
       venue: venueCtx(r),
       dish: dishCtx(item),
-      url: `${pageUrl()}#dish-${slug(item.name)}`,
+      // The anchor of the row the ⚑ was tapped on. With three "Cheeseburger"
+      // rows at three prices, a report that links to whichever one came first
+      // sends the owner to the wrong dish.
+      url: `${pageUrl()}#dish-${dishId(item)}`,
     });
   });
   return btn;

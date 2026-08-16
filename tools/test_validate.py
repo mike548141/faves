@@ -63,6 +63,20 @@ def _add_ons(d):
     return group
 
 
+def _twin(d, dish_id=None):
+    """A second copy of the subject's first dish, dropped into a later section.
+
+    The shape every dish-identity case turns on, and the corpus's own: Sprig &
+    Fern prints `Cheeseburger` in Mains, in Kids and on the Gold Card at three
+    prices. Two sections rather than one because that is where it actually
+    happens — the venue is not repeating itself, it is selling three things."""
+    twin = copy.deepcopy(_first_item(d))
+    if dish_id is not None:
+        twin["dishId"] = dish_id
+    d["menu"][2]["items"].append(twin)
+    return twin
+
+
 def _breaks(fn):
     """A case that installs the good add-on group, then breaks it: `fn(group,
     record)`."""
@@ -274,6 +288,93 @@ CASES = {
         _breaks(lambda g, d: d["menu"][0].update(addOnsOnly="yes")),
         "error",
     ),
+    # --- dish identity, ADR 0051 ------------------------------------------
+    # `dishId` is REQUIRED (owner ruling, 2026-08-16 — favourites and ratings
+    # must never be lost again). An id derived from `slug(name)` at read time is
+    # not immutable: rename the dish and it moves. So the gate that matters most
+    # is the dullest one — a dish that doesn't say who it is. Both a first row
+    # and a later one, because a loop that only ever reaches item [0] would pass
+    # the first of these and let the whole rest of a menu through unchecked.
+    "a dish with no dishId at all": (
+        lambda d: _first_item(d).pop("dishId", None),
+        "error",
+    ),
+    "a dish deeper in the menu with no dishId": (
+        lambda d: d["menu"][2]["items"][-1].pop("dishId", None),
+        "error",
+    ),
+    "dishId present but null": (lambda d: _first_item(d).update(dishId=None), "error"),
+    # Two dishes resolving to one id share an anchor, a heart, a rating and an
+    # order line, and every one of those fails in silence.
+    "one dish printed twice under one id": (_twin, "error"),
+    "the second copy carries its own dishId": (
+        lambda d: _twin(d, "eggs-on-toast-soup"),
+        "clean",
+    ),
+    "two dishes sharing one explicit dishId": (
+        lambda d: (_first_item(d).update(dishId="eggs"), _twin(d)),
+        "error",
+    ),
+    # A dishId must BE a slug, not merely resolve to one: it is carried verbatim
+    # into `#dish-…` and into stored keys, so `"Gold Card"` builds a broken anchor.
+    "dishId that is not in slug form": (
+        lambda d: _first_item(d).update(dishId="Gold Card"),
+        "error",
+    ),
+    "dishId that is an empty string": (lambda d: _first_item(d).update(dishId=""), "error"),
+    "a well-formed dishId is legal": (
+        lambda d: _first_item(d).update(dishId="eggs-on-toast-classic"),
+        "clean",
+    ),
+    # formerIds keeps an old shared link and an old stored heart resolving. A
+    # former id that is also a LIVE one never arrives — findDish tries live ids
+    # first — so the claim would sit there looking honoured.
+    "dish formerIds claiming a live dish's id": (
+        lambda d: _first_item(d).update(formerIds=["eggs-benedict"]),
+        "error",
+    ),
+    "two dishes claiming the same former id": (
+        lambda d: (
+            _first_item(d).update(formerIds=["morning-eggs"]),
+            d["menu"][0]["items"][1].update(formerIds=["morning-eggs"]),
+        ),
+        "error",
+    ),
+    "dish formerIds entry that is not a slug": (
+        lambda d: _first_item(d).update(formerIds=["Eggs On Toast"]),
+        "error",
+    ),
+    "dish formerIds that is not a list": (
+        lambda d: _first_item(d).update(formerIds="eggs-on-toast"),
+        "error",
+    ),
+    "a retired dish id is legal": (
+        lambda d: _first_item(d).update(dishId="eggs-on-ciabatta", formerIds=["eggs-on-toast"]),
+        "clean",
+    ),
+    # picks are written as names, and a name is not unique within a venue: this
+    # one silently resolved to whichever row came first until ADR 0051.
+    "a pick naming a dish the menu prints twice": (
+        lambda d: (_twin(d, "eggs-on-toast-soup"), d.update(picks=["Eggs on Toast"])),
+        "error",
+    ),
+    "a pick naming a dish by its id": (
+        lambda d: (_twin(d, "eggs-on-toast-soup"), d.update(picks=["eggs-on-toast-soup"])),
+        "clean",
+    ),
+    # goesWith widened to ids, so a pairing can point at a disambiguated row —
+    # without losing the check that it points at something.
+    "goesWith naming a dish by its id": (
+        lambda d: (
+            _twin(d, "eggs-on-toast-soup"),
+            _first_item(d).update(goesWith=["eggs-on-toast-soup"]),
+        ),
+        "clean",
+    ),
+    "goesWith naming a dish that isn't there": (
+        lambda d: _first_item(d).update(goesWith=["Totally Invented Dish 9000"]),
+        "error",
+    ),
 }
 
 
@@ -295,6 +396,19 @@ SOURCE_CASES = {
         # would make every comparison above it vacuously true.
         "CONTRADICTS can no longer be found": (
             lambda s: s.replace("export const CONTRADICTS =", "export const CONTRADICTS_OLD ="),
+            "error",
+        ),
+    },
+    # The ids in the corpus are load-bearing, not decoration — and only a
+    # mutation of the REAL file can show that. Take the Gold Card cheeseburger's
+    # id away and it stops saying who it is; before the field was required it
+    # instead fell back to `slug(name)` and collided with the Mains cheeseburger
+    # ($28 charged for a $21 dish, one anchor, one heart). Requiring it turns the
+    # silent collision into a refusal at the gate, which is why this case now
+    # asserts the id is *missing* rather than that two rows fought over one.
+    "site/data/restaurants/sprig-and-fern-tawa.json": {
+        "an explicit dishId removed from real data": (
+            lambda s: s.replace('          "dishId": "cheeseburger-gold-card",\n', "", 1),
             "error",
         ),
     },

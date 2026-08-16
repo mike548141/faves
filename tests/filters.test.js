@@ -13,6 +13,7 @@ import assert from "node:assert/strict";
 import {
   deriveFacets,
   applyFilters,
+  activeFilters,
   DEFAULT_FILTERS,
   filterHref,
   filtersFromQuery,
@@ -229,4 +230,97 @@ test("a filterHref value always filters to venues that actually carry it", () =>
   const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, ...parsed });
   assert.ok(shown.some((r) => r.id === "kk"));
   assert.ok(shown.every((r) => r.cuisine.includes("Malaysian")));
+});
+
+// --- activeFilters: what the reader is told about a short list ---------------
+//
+// The filter controls live behind a sheet now, so nothing on the browse screen
+// shows their state. Three things do — the "Filters (n)" badge, the chips beside
+// the count, and the count itself — and all three read this one function. These
+// tests hold the properties that make a hidden filter safe.
+
+test("nothing on: no filters to name, and no badge", () => {
+  assert.deepEqual(activeFilters({ ...DEFAULT_FILTERS }), []);
+});
+
+test("every kind of filter is named — none can be on and invisible", () => {
+  const all = activeFilters({
+    service: "takeaway",
+    area: "Johnsonville",
+    cuisine: "Malaysian",
+    openNow: true,
+    cheap: true,
+  });
+  assert.equal(all.length, 5);
+  assert.deepEqual(
+    all.map((f) => f.kind).sort(),
+    ["area", "cheap", "cuisine", "openNow", "service"]
+  );
+  // Every entry can be shown to a person and cleared by its kind.
+  for (const f of all) {
+    assert.equal(typeof f.label, "string");
+    assert.ok(f.label.length > 0);
+  }
+});
+
+test("the two facets a URL can carry come first, so neither is ever the one folded away", () => {
+  // ADR 0050: arriving from a venue's subheading narrows the list without the
+  // reader touching this screen, so its escape must survive the chip row's cap.
+  const kinds = activeFilters({
+    service: "dine-in",
+    area: "Te Aro",
+    cuisine: "Malaysian",
+    openNow: true,
+    cheap: true,
+  }).map((f) => f.kind);
+  assert.deepEqual(kinds.slice(0, 2), ["cuisine", "area"]);
+});
+
+test("a sort mode is not a filter — it reorders, it never shortens (ADR 0014)", () => {
+  const state = { ...DEFAULT_FILTERS, origin: { lat: -41, lng: 174 }, dest: { lat: -41.1, lng: 174.1 } };
+  assert.deepEqual(activeFilters(state), []);
+});
+
+test("service 'all' is the absence of a filter, not a filter set to everything", () => {
+  assert.deepEqual(activeFilters({ ...DEFAULT_FILTERS, service: "all" }), []);
+  assert.deepEqual(
+    activeFilters({ ...DEFAULT_FILTERS, service: "dine-in" }).map((f) => f.label),
+    ["Dine-in"]
+  );
+});
+
+test("the count matches what applyFilters actually did — badge and list agree", () => {
+  // The property that keeps the badge honest: if activeFilters says nothing is
+  // on, the list cannot be short.
+  const facets = deriveFacets(FIXTURE);
+  for (const state of [
+    { ...DEFAULT_FILTERS },
+    { ...DEFAULT_FILTERS, cuisine: facets.cuisines[0] },
+    { ...DEFAULT_FILTERS, service: "takeaway" },
+    { ...DEFAULT_FILTERS, cheap: true },
+  ]) {
+    const shown = applyFilters(FIXTURE, state);
+    const n = activeFilters(state).length;
+    if (n === 0) assert.equal(shown.length, FIXTURE.length, "no filters ⇒ the whole list");
+    else assert.ok(shown.length <= FIXTURE.length);
+  }
+});
+
+test("a te reo key rides along for the filters that have one; facet values don't get invented ones", () => {
+  const byKind = Object.fromEntries(
+    activeFilters({
+      service: "takeaway",
+      area: "Johnsonville",
+      cuisine: "Malaysian",
+      openNow: true,
+      cheap: true,
+    }).map((f) => [f.kind, f])
+  );
+  // Chrome strings are translatable…
+  assert.equal(byKind.service.key, "service.takeaway");
+  assert.equal(byKind.openNow.key, "toggle.openNow");
+  assert.equal(byKind.cheap.key, "toggle.cheapEats");
+  // …place and cuisine names are content, and are shown as the venues wrote them.
+  assert.equal(byKind.area.key, null);
+  assert.equal(byKind.cuisine.key, null);
 });

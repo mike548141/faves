@@ -91,6 +91,7 @@
       "items": [
         {
           "name": "American Muscle",
+          "dishId": "american-muscle",
           "desc": "Grass fed beef, cheddar, pickles, BurgerFuel Mustard. Does not include salad. Single price shown; double $21.00.",
           "price": 15,
           "tags": [
@@ -99,6 +100,7 @@
         },
         {
           "name": "C N Cheese",
+          "dishId": "c-n-cheese",
           "desc": "Grass fed beef, cheddar, truffle mascarpone, parmesan.",
           "price": 16.7,
           "tags": [
@@ -107,6 +109,7 @@
         },
         {
           "name": "Bio Fuel",
+          "dishId": "bio-fuel",
           "desc": "Grass fed beef, egg, grated beetroot with chia.",
           "price": 17.3,
           "tags": [
@@ -115,12 +118,14 @@
         },
         {
           "name": "Ford Freakout",
+          "dishId": "ford-freakout",
           "desc": "Grass fed beef, bacon, avocado.",
           "price": 17,
           "tags": []
         },
         {
           "name": "Peanut Piston",
+          "dishId": "peanut-piston",
           "desc": "Grass fed beef, smashed juicy peanut satay.",
           "price": 16.5,
           "tags": [
@@ -130,6 +135,7 @@
         },
         {
           "name": "Ring Burner",
+          "dishId": "ring-burner",
           "desc": "Beef, bacon, jalapeños, jalapeño sauce, BurgerFuel Chipotle Aioli.",
           "price": 18.9,
           "tags": [
@@ -139,6 +145,7 @@
         },
         {
           "name": "Bacon BBQ Roadster",
+          "dishId": "bacon-bbq-roadster",
           "desc": "Grass fed beef, cheddar, bacon, battered onion rings, BurgerFuel BBQ Sauce.",
           "price": 20.7,
           "tags": [
@@ -148,6 +155,7 @@
         },
         {
           "name": "Bastard",
+          "dishId": "bastard",
           "desc": "Grass fed beef, cheddar, bacon, avocado, pineapple, grated beetroot with chia seeds.",
           "price": 20.9,
           "tags": [
@@ -161,6 +169,7 @@
       "items": [
         {
           "name": "Drift Chick",
+          "dishId": "drift-chick",
           "desc": "BurgerFuel Fried Chicken, pickles, BurgerFuel Mustard and BurgerFuel Aioli. Does not include salad or relish.",
           "price": 17.9,
           "tags": [
@@ -169,6 +178,7 @@
         },
         {
           "name": "Bacon Backfire",
+          "dishId": "bacon-backfire",
           "desc": "Grilled chicken, bacon, brie.",
           "price": 17.9,
           "tags": [
@@ -177,6 +187,7 @@
         },
         {
           "name": "Burnout",
+          "dishId": "burnout",
           "desc": "Grilled chicken, bacon, avocado, BurgerFuel Blue Cheese Sauce, BurgerFuel Mustard. Does not include BurgerFuel Aioli.",
           "price": 17.9,
           "tags": [
@@ -186,6 +197,7 @@
         },
         {
           "name": "T-Bird",
+          "dishId": "t-bird",
           "desc": "BurgerFuel Fried Chicken, jalapeños, relish, BurgerFuel Chipotle Aioli and Nashville seasoning.",
           "price": 18.7,
           "tags": [
@@ -195,6 +207,7 @@
         },
         {
           "name": "Flame Thrower",
+          "dishId": "flame-thrower",
           "desc": "Grilled chicken, jalapeños, jalapeño sauce, avocado, BurgerFuel Chipotle Aioli.",
           "price": 18.3,
           "tags": [
@@ -209,6 +222,7 @@
       "items": [
         {
           "name": "VTEC",
+          "dishId": "vtec",
           "desc": "BurgerFuel Pure Vege patty, vegan cheese, grilled pineapple, avocado, vegan aioli.",
           "price": 17.9,
           "tags": [
@@ -218,6 +232,7 @@
         },
         {
           "name": "V-Rod",
+          "dishId": "v-rod",
           "desc": "BurgerFuel Mushroom patty, beetroot with chia seeds, truffle mascarpone, cheddar, plum sauce. Speak to staff to make it vegan friendly.",
           "price": 17.9,
           "tags": [
@@ -232,6 +247,7 @@
       "items": [
         {
           "name": "Hamburgini",
+          "dishId": "hamburgini",
           "desc": "Grass fed beef, cheddar, pickles. Does not include salad. On a smaller wholemeal bun.",
           "price": 9,
           "tags": [
@@ -241,6 +257,7 @@
         },
         {
           "name": "Chook Royale",
+          "dishId": "chook-royale",
           "desc": "Grilled chicken tenderloins seasoned with sea salt, garlic and rosemary, pineapple. On a smaller wholemeal bun.",
           "price": 11,
           "tags": [
@@ -249,6 +266,7 @@
         },
         {
           "name": "Diablo",
+          "dishId": "diablo",
           "desc": "Double grass fed beef, double cheddar, pickles. Does not include salad. On a smaller wholemeal bun.",
           "price": 14,
           "tags": [
@@ -258,6 +276,7 @@
         },
         {
           "name": "Chick Chevelle",
+          "dishId": "chick-chevelle",
           "desc": "Grilled chicken tenderloins seasoned with sea salt, garlic and rosemary. On a smaller wholemeal bun.",
           "price": 10.5,
           "tags": [
@@ -266,6 +285,7 @@
         },
         {
           "name": "Bambina",
+          "dishId": "bambina",
           "desc": "Grass fed beef. On a smaller wholemeal bun.",
           "price": 10.5,
           "tags": [
@@ -274,6 +294,7 @@
         },
         {
           "name": "V-Rod (lightweight)",
+          "dishId": "v-rod-lightweight",
           "desc": "BurgerFuel Mushroom patty, beetroot with chia seeds, truffle mascarpone, cheddar, plum sauce. Speak to staff to make it vegan friendly.",
           "price": 12.5,
           "tags": [
@@ -288,6 +309,7 @@
       "items": [
         {
           "name": "Parmageddon",
+          "dishId": "parmageddon",
           "desc": "BurgerFuel Fried Chicken, bacon, cheddar, truffle mascarpone and parmesan, relish, salad, BurgerFuel Aioli.",
           "price": 22.5,
           "tags": [
@@ -297,6 +319,7 @@
         },
         {
           "name": "The Studnut",
+          "dishId": "the-studnut",
           "desc": "Beef, avocado, BurgerFuel Blue Cheese Sauce.",
           "price": 16.5,
           "tags": [
@@ -305,6 +328,7 @@
         },
         {
           "name": "Combustion Tofu",
+          "dishId": "combustion-tofu",
           "desc": "Organic tofu, teriyaki sauce, avocado, peanut satay, fresh salad and BurgerFuel Aioli, on a lightweight bun. Speak to staff to make it vegan friendly. Lightweight price shown; large $17.90.",
           "price": 13.9,
           "tags": [
@@ -322,6 +346,7 @@
       "items": [
         {
           "name": "Cheeseburger meal",
+          "dishId": "cheeseburger-meal",
           "desc": "Kids cheeseburger, spud fries and small juice.",
           "price": 13.9,
           "tags": [
@@ -330,6 +355,7 @@
         },
         {
           "name": "Teeny Choppers meal",
+          "dishId": "teeny-choppers-meal",
           "desc": "Small choppers, spud fries and small juice.",
           "price": 13.9,
           "tags": []
@@ -341,6 +367,7 @@
       "items": [
         {
           "name": "Spud fries",
+          "dishId": "spud-fries",
           "desc": "Thick cut potato.",
           "price": 6.9,
           "tags": [
@@ -349,6 +376,7 @@
         },
         {
           "name": "Kūmara fries",
+          "dishId": "k-mara-fries",
           "desc": "Thick cut golden kūmara.",
           "price": 7.9,
           "tags": [
@@ -357,6 +385,7 @@
         },
         {
           "name": "Rodders",
+          "dishId": "rodders",
           "desc": "Crumbed mushroom bites, parmesan cheese, BurgerFuel Aioli. Speak to staff to make it vegan friendly.",
           "price": 10.9,
           "tags": [
@@ -368,6 +397,7 @@
         },
         {
           "name": "Chicken Fenders",
+          "dishId": "chicken-fenders",
           "desc": "Grilled chicken tenderloins seasoned with sea salt, garlic and rosemary, with your choice of BurgerFuel, lemon aioli or chipotle aioli. 4 pieces; 6 pieces $14.00.",
           "price": 11,
           "tags": [
@@ -376,6 +406,7 @@
         },
         {
           "name": "Choppers",
+          "dishId": "choppers",
           "desc": "Southern fried chicken pieces with a drizzle of BurgerFuel Aioli and your choice of BBQ Sauce or sriracha.",
           "price": 13.5,
           "tags": [
@@ -389,6 +420,7 @@
       "items": [
         {
           "name": "Thickshake",
+          "dishId": "thickshake",
           "desc": "Chocolate, caramel, strawberry, banana, lime or espresso. Milk price shown; oat $9.90.",
           "price": 8.9,
           "tags": [
@@ -398,6 +430,7 @@
         },
         {
           "name": "Organic juice",
+          "dishId": "organic-juice",
           "desc": "Apple orange and mango, apple and feijoa, or sparkling apple and blackcurrant.",
           "price": 5.9,
           "tags": [
@@ -407,6 +440,7 @@
         },
         {
           "name": "Classic soda",
+          "dishId": "classic-soda",
           "desc": "Coke, Coke Zero Sugar, Fanta, Sprite, Sprite Zero Sugar, Ginger Beer, Ginger Beer Light or L&P.",
           "price": 5,
           "tags": [
@@ -416,6 +450,7 @@
         },
         {
           "name": "Water",
+          "dishId": "water",
           "desc": "Voyage sparkling or still.",
           "price": 6,
           "tags": [
@@ -430,6 +465,7 @@
       "items": [
         {
           "name": "Gluten friendly bun",
+          "dishId": "gluten-friendly-bun",
           "desc": "Switch the wholemeal bun for a gluten friendly bun. Not a dedicated gluten free kitchen.",
           "price": 2,
           "tags": [
@@ -439,6 +475,7 @@
         },
         {
           "name": "Low Carborator lettuce bun",
+          "dishId": "low-carborator-lettuce-bun",
           "desc": "Free.",
           "price": 0,
           "tags": [

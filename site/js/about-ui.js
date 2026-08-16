@@ -132,11 +132,18 @@ function buildDialog() {
       // Same shape of honesty for the clock. Opening hours are a fact about the
       // place, so they are shown on the place's clock — which is worth stating
       // once now that the places are not all in one timezone.
+      // Rewritten 2026-08-16: the owner couldn't read the old version. It was
+      // one 30-word sentence that stated the rule ("worked out on each place's
+      // own clock") before giving anything to picture, so you had to hold the
+      // abstraction in your head to reach the point. This one leads with the
+      // rule in six words, then spends a sentence on the case that makes it
+      // matter. Same three facts, no jargon, nothing dropped.
       group(
         "Opening hours",
-        "“Open now” is worked out on each place’s own clock, not your phone’s, " +
-          "so a place still reads correctly when you’re looking it up from " +
-          "somewhere else. Where the two differ, the hours say whose time they are."
+        "“Open now” uses the place’s own clock, not your phone’s. So a place " +
+          "in Wellington still reads correctly when you look it up from " +
+          "London. Where the two clocks differ, the hours say which one " +
+          "they’re on."
       ),
 
       group(

@@ -30,7 +30,55 @@ const dish = { type: "dish", venueId: "kk-malaysian", venueName: "KK Malaysian",
 
 test("ratingKey: venue vs dish identity (mirrors favKey)", () => {
   assert.equal(ratingKey(venue), "v:kk-malaysian");
-  assert.equal(ratingKey(dish), "d:kk-malaysian Mee Goreng");
+  assert.equal(ratingKey(dish), "d:kk-malaysian mee-goreng");
+});
+
+// --- dish ids (ADR 0051) --------------------------------------------------
+
+const goldCard = {
+  type: "dish", venueId: "sprig-and-fern-tawa", venueName: "Sprig & Fern",
+  name: "Cheeseburger", dishId: "cheeseburger-gold-card",
+};
+const mainsBurger = { type: "dish", venueId: "sprig-and-fern-tawa", name: "Cheeseburger" };
+
+test("ratingKey uses the id where the data gives one, slug(name) otherwise", () => {
+  assert.equal(ratingKey(goldCard), "d:sprig-and-fern-tawa cheeseburger-gold-card");
+  assert.equal(ratingKey(mainsBurger), "d:sprig-and-fern-tawa cheeseburger");
+});
+
+test("two same-named dishes with different ids rate independently", () => {
+  const r = createRatings(fakeStorage());
+  r.set(mainsBurger, 4);
+  r.set(goldCard, 2);
+  assert.equal(r.get(mainsBurger), 4);
+  assert.equal(r.get(goldCard), 2);
+  assert.equal(r.count(), 2);
+});
+
+test("a stored name-form key is migrated to id form on read", () => {
+  // Unlike a favourite (an entry object, re-keyed every read), a rating IS the
+  // key string — so a mark saved before ids existed has to be rewritten or it
+  // detaches from the dish it belongs to.
+  const r = createRatings(fakeStorage('{"d:kk-malaysian Mee Goreng":3,"v:kk-malaysian":5}'));
+  assert.equal(r.get(dish), 3);
+  assert.equal(r.get(venue), 5);
+  assert.equal(r.count(), 2);
+});
+
+test("the venue half migrates first, then the dish half", () => {
+  // "sprig-and-fern" is a retired venue id (renames.js — the shared record was
+  // split back into one per tavern); the dish name is in its old form too. Both
+  // halves have to move for the mark to be found.
+  const r = createRatings(fakeStorage('{"d:sprig-and-fern Cheeseburger":4}'));
+  assert.equal(r.get(mainsBurger), 4);
+  assert.equal(r.count(), 1);
+});
+
+test("migrating twice is a no-op — the key is already in id form", () => {
+  const storage = fakeStorage();
+  createRatings(storage).set(dish, 3);
+  assert.equal(createRatings(storage).get(dish), 3);
+  assert.equal(createRatings(storage).count(), 1); // no phantom second entry
 });
 
 test("clampRating: rounds, clamps to [MIN, MAX], and 0-clears the rest", () => {
@@ -156,8 +204,8 @@ test("per-profile: two profiles keep disjoint ratings; a switch re-points", () =
   r.set(dish, 1); // Alex rates it 1
 
   // Both marks coexist under distinct namespaced keys.
-  assert.equal(device.get(scopeKey("default", "faves.ratings.v1")), '{"d:kk-malaysian Mee Goreng":3}');
-  assert.equal(device.get(scopeKey("p-alex", "faves.ratings.v1")), '{"d:kk-malaysian Mee Goreng":1}');
+  assert.equal(device.get(scopeKey("default", "faves.ratings.v1")), '{"d:kk-malaysian mee-goreng":3}');
+  assert.equal(device.get(scopeKey("p-alex", "faves.ratings.v1")), '{"d:kk-malaysian mee-goreng":1}');
 
   switchTo("default");
   r.reload();

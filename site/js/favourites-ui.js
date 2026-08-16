@@ -8,8 +8,14 @@ import { el } from "./dom.js";
 
 /**
  * A ♥ / ♡ toggle for one favourite `entry`
- * ({ type, venueId, venueName, name?, isRecipe?, sub? }). `thing` names it
- * for the accessible label ("Add Mee Goreng to favourites"). Self-updating.
+ * ({ type, venueId, venueName, name?, dishId?, isRecipe?, sub? }). `thing`
+ * names it for the accessible label ("Add Mee Goreng to favourites").
+ * Self-updating.
+ *
+ * `dishId` is what a dish entry is stored under; it is optional because an
+ * entry rebuilt from storage doesn't have the menu row to hand, and
+ * favourites.js falls back to the slugged name — which is the same string for
+ * every dish that has no explicit id. Pass it wherever the item IS to hand.
  */
 export function heartButton(entry, thing) {
   const name = thing || entry.name || entry.venueName || "this";

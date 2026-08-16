@@ -1,0 +1,339 @@
+{
+  "id": "baylands-brewery",
+  "name": "Baylands Brewery",
+  "cuisine": [
+    "Bar"
+  ],
+  "area": "Petone",
+  "city": "Lower Hutt",
+  "currency": "NZD",
+  "address": "22 Victoria Street, Petone, Lower Hutt 5012",
+  "lat": -41.22588,
+  "lng": 174.87323,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 566 2337",
+  "website": "https://baylands.beer/",
+  "ordering": [],
+  "hours": null,
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "official-site",
+  "verified": "2026-08-16",
+  "verifiedBy": "paper-menu",
+  "lifecycle": {
+    "added": "2026-08-16"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Snacks",
+      "items": [
+        {
+          "name": "Fries",
+          "dishId": "fries",
+          "desc": "Straight up with aioli. 1 scoop $8.00; 2 scoop $15.00.",
+          "price": 8.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Criss-cross Fries",
+          "dishId": "criss-cross-fries",
+          "desc": "Crispy criss-cross fries with aioli. 1 scoop.",
+          "price": 11.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Hash Stix",
+          "dishId": "hash-stix",
+          "desc": "Hash brown stix. 6 or 12 hash stix & house made aioli. 6 for $7.50; 12 for $15.00.",
+          "price": 7.5,
+          "tags": [
+            "v",
+            "gf",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Beef Loaded Fries",
+          "dishId": "beef-loaded-fries",
+          "desc": "Crispy fries loaded with braised beef, our house smoked cheese sauce & salsa.",
+          "price": 19.5,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Paprika Lemon Fried Chicken",
+          "dishId": "paprika-lemon-fried-chicken",
+          "desc": "Our own blend of paprika & lemon fried chicken pieces.",
+          "price": 18.9,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Fish Bites",
+          "dishId": "fish-bites",
+          "desc": "Crumbed hoki pieces with tartare sauce.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Calamari Strips",
+          "dishId": "calamari-strips",
+          "desc": "Lemon pepper squid with lemon coriander mayo.",
+          "price": 15.5,
+          "tags": [
+            "gf",
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Falafel Bites",
+          "dishId": "falafel-bites",
+          "desc": "Eight pieces of deliciously crunchy falafel served with our own Alabama sauce.",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Arancini",
+          "dishId": "arancini",
+          "desc": "Four mushroom & truffle arancini with garlic aioli & parmesan.",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Keep The Kids Happy",
+      "items": [
+        {
+          "name": "Chicken Nuggets",
+          "dishId": "chicken-nuggets",
+          "desc": "Five chicken nuggets & fries served with tomato ketchup, of course.",
+          "price": 12.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Junior Cheese Burger",
+          "dishId": "junior-cheese-burger",
+          "desc": "Junior smash burger with cheese & ketchup with a side of fries.",
+          "price": 13.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Tacos (two tacos each)",
+      "items": [
+        {
+          "name": "Beef Tacos",
+          "dishId": "beef-tacos",
+          "desc": "Two tortillas with beer braised beef, lettuce, salsa, pickled onion & BBQ sauce. Gluten free on request — corn tortilla.",
+          "price": 15.5,
+          "tags": [
+            "gf-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Fried Chicken Tacos",
+          "dishId": "fried-chicken-tacos",
+          "desc": "Two tortillas with our house made fried chicken, lettuce, salsa, pickled onion & Alabama sauce.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Fish Tacos",
+          "dishId": "fish-tacos",
+          "desc": "Two tortillas with lightly battered market fish pieces, lettuce, salsa, pickled onions & lemon coriander mayo. Gluten free on request — corn tortilla.",
+          "price": 15.5,
+          "tags": [
+            "df",
+            "gf-option",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Vege Tacos",
+          "dishId": "vege-tacos",
+          "desc": "Two tortillas, crispy cauliflower, lettuce, salsa, pickled onion with Alabama sauce. Gluten free on request — corn tortilla.",
+          "price": 15.5,
+          "tags": [
+            "v",
+            "vg",
+            "gf-option",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "WOAP Burger",
+      "items": [
+        {
+          "name": "Heart-a-Stack",
+          "dishId": "heart-a-stack",
+          "desc": "Double fried chicken, with a Belgium waffle, bacon, bourbon bacon jam, cheddar, sweet and spicy pickles, and picklenaise in a Cottage Lane seeded brioche bun, with 4 hash sticks. Beer match — Foul Hooked APA $12.00.",
+          "price": 32.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Burgers (all served with fries)",
+      "items": [
+        {
+          "name": "Mutha Clucka",
+          "dishId": "mutha-clucka",
+          "desc": "Southern fried chicken thigh, cheddar cheese, lettuce, pickles, Carolina & Alabama sauce.",
+          "price": 22.9,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Vegerama",
+          "dishId": "vegerama",
+          "desc": "Vegetable patty, lettuce, chipotle, salsa & Alabama sauce.",
+          "price": 19.9,
+          "tags": [
+            "v",
+            "vg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "The Smashie",
+          "dishId": "the-smashie",
+          "desc": "Smashed beef patty, bacon, cheddar cheese, pickles, Carolina & tomato sauces. Add extra patty & cheese $6.00; add onion rings $2.00. Gluten free on request.",
+          "price": 22.9,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Mains",
+      "items": [
+        {
+          "name": "Vege Stack",
+          "dishId": "vege-stack",
+          "desc": "Cauliflower rosti, courgette & crispy chickpeas with a tzatziki sauce. Vegan on request.",
+          "price": 18.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fish & Chips",
+          "dishId": "fish-chips",
+          "desc": "Two pieces of house battered market fish & chips with seasonal salad, lemon & tartare sauce.",
+          "price": 24.5,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Lamb Filo",
+          "dishId": "lamb-filo",
+          "desc": "Braised lamb & feta filo with potato rosti, winter salad, chickpeas & tzatziki sauce.",
+          "price": 26.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Baylands Platters",
+      "items": [
+        {
+          "name": "Fried Chicken Sliders",
+          "dishId": "fried-chicken-sliders",
+          "desc": "6 brioche sliders with Paprika Lemon fried chicken, lettuce, cheese & pickles. Add fries $15.00.",
+          "price": 35.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cheese Burger Sliders",
+          "dishId": "cheese-burger-sliders",
+          "desc": "6 brioche sliders with beef patty, cheddar cheese & pickles. Add fries $15.00.",
+          "price": 35.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Something Sweet...",
+      "items": [
+        {
+          "name": "Churros with chocolate & caramel sauces",
+          "dishId": "churros-with-chocolate-caramel-sauces",
+          "desc": null,
+          "price": 12.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Strawberry & White chocolate Cheesecake with vanilla bean ice-cream",
+          "dishId": "strawberry-white-chocolate-cheesecake-with-vanilla-bean-ice-cream",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -11,13 +11,21 @@
 //   - Change both? bump both.
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
-const SHELL_VERSION = "2026-08-16.19";
-const DATA_VERSION = "2026-08-16.8";
+const SHELL_VERSION = "2026-08-16.23";
+const DATA_VERSION = "2026-08-16.11";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
 const DATA_CACHE = `faves-data-${DATA_VERSION}`;
 const IMG_CACHE = "faves-img-v1";
-const IMG_LIMIT = 60;
+// Raised 60 → 240 on 2026-08-16, when dish photos went from a schema field
+// nobody had ever set to 41 images on one venue (ADR 0053). At 60 a single
+// browse of McDonald's consumed 41 slots and evicted almost every other
+// venue's photos, so the cache was answering for roughly one venue at a time —
+// which is the opposite of what a cache is for. 240 holds several venues'
+// worth at the ~29 KB an image actually costs (about 7 MB at full), still far
+// inside any browser's storage budget, and eviction is still oldest-first.
+// This is a runtime cache, so it never touches the first-visit transfer budget.
+const IMG_LIMIT = 240;
 
 // A cache is only trusted as fully built once this sentinel lands in it — it's
 // written last, after every asset is in. An install interrupted midway leaves
@@ -48,12 +56,14 @@ const SHELL = [
   "js/addons-ui.js",
   "js/addons.js",
   "js/dietary.js",
+  "js/dish-id.js",
   "js/disclosure.js",
   "js/distance.js",
   "js/dom.js",
   "js/favourites.js",
   "js/favourites-ui.js",
   "js/filters.js",
+  "js/filters-ui.js",
   "js/geo.js",
   "js/fx.js",
   "js/home.js",

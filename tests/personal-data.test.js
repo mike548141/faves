@@ -464,7 +464,9 @@ test("your own rating wins over the file's for the same thing", () => {
   const { store, report } = applied({ 0: { diet: "keep" }, 1: { target: "pZ" } });
   const r = read(store, scopeKey("default", RAT_KEY));
   assert.equal(r["v:gold-lining-cafe"], 2); // ours, not the file's 5
-  assert.equal(r["d:kk-malaysian Roti Canai"], 4); // theirs, we had none
+  // The file's key is in NAME form (it came from a pre-ADR-0051 build); it
+  // lands under the id form this device keys by.
+  assert.equal(r["d:kk-malaysian roti-canai"], 4); // theirs, we had none
   assert.equal(report.ratingsAdded, 1);
 });
 
@@ -602,6 +604,84 @@ test("…but it does restore the tally onto a device with no order running", () 
   const r = applyPersonalData(store, data, { decisions });
   assert.equal(r.orderRestored, true);
   assert.equal(read(store, ORDER_KEY)[0].qty, 4);
+});
+
+// --- dish ids (ADR 0051) --------------------------------------------------
+
+test("an order line's dish id survives the export/import round trip", () => {
+  // Without it, a restored order re-merges Sprig & Fern's $28 Cheeseburger and
+  // its $21 Gold Card one into a single line at the wrong price.
+  const store = device();
+  const data = file({
+    order: [
+      { venueId: "sprig-and-fern", venueName: "Sprig & Fern", name: "Cheeseburger", dishId: "cheeseburger", price: 28, qty: 1 },
+      { venueId: "sprig-and-fern", venueName: "Sprig & Fern", name: "Cheeseburger", dishId: "cheeseburger-gold-card", price: 21, qty: 1 },
+    ],
+  });
+  const decisions = { [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "new" } };
+  applyPersonalData(store, data, { decisions });
+  const lines = read(store, ORDER_KEY);
+  assert.equal(lines.length, 2);
+  assert.deepEqual(lines.map((l) => l.dishId), ["cheeseburger", "cheeseburger-gold-card"]);
+  assert.equal(lines.reduce((s, l) => s + l.price * l.qty, 0), 49);
+});
+
+test("a heart's dish id survives too, and keys the entry", () => {
+  const r = parsePersonalData({
+    v: 1,
+    profiles: [{
+      name: "Me",
+      favourites: [
+        { type: "dish", venueId: "sprig-and-fern", name: "Cheeseburger" },
+        { type: "dish", venueId: "sprig-and-fern", name: "Cheeseburger", dishId: "cheeseburger-gold-card" },
+      ],
+    }],
+  });
+  const favs = r.data.profiles[0].favourites;
+  assert.equal(favs.length, 2); // the id keeps them apart…
+  assert.equal(favs[1].dishId, "cheeseburger-gold-card");
+  assert.equal("dishId" in favs[0], false); // …and adds no field where there is none
+});
+
+test("two id-less hearts whose names slug alike collapse to one", () => {
+  // They were never two hearts in the live store either — favKey slugged them
+  // to the same key. Deduping here just tells the truth about that.
+  const r = parsePersonalData({
+    v: 1,
+    profiles: [{
+      name: "Me",
+      favourites: [
+        { type: "dish", venueId: "kk", name: "Fish & Chips" },
+        { type: "dish", venueId: "kk", name: "Fish + Chips" },
+      ],
+    }],
+  });
+  assert.equal(r.data.profiles[0].favourites.length, 1);
+});
+
+test("an imported rating map is migrated to id-form keys", () => {
+  const r = parsePersonalData({
+    v: 1,
+    profiles: [{ name: "Me", ratings: { "d:kk Roti Canai": 4, "v:kk": 5 } }],
+  });
+  assert.deepEqual(r.data.profiles[0].ratings, { "d:kk roti-canai": 4, "v:kk": 5 });
+});
+
+test("re-importing an older file adds no duplicate rating the next read discards", () => {
+  const store = device();
+  // This device already keys by id; the file still keys by name.
+  store.setItem(
+    scopeKey("default", RAT_KEY),
+    JSON.stringify({ "v:gold-lining-cafe": 2, "d:kk-malaysian roti-canai": 4 })
+  );
+  const data = file();
+  const decisions = { [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "new" } };
+  const report = applyPersonalData(store, data, { decisions });
+  assert.deepEqual(Object.keys(read(store, scopeKey("default", RAT_KEY))).sort(), [
+    "d:kk-malaysian roti-canai",
+    "v:gold-lining-cafe",
+  ]);
+  assert.equal(report.ratingsAdded, 0); // ours already covered it — and says so
 });
 
 // --- unknown stores ------------------------------------------------------

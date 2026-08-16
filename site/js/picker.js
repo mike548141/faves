@@ -69,9 +69,9 @@ function chips(r) {
  * excluding the rest.
  */
 export function initPicker(getCandidates, isFavourite = () => false) {
-  const fab = document.getElementById("pick-btn");
+  const pickBtn = document.getElementById("pick-btn"); // in the bottom bar since the FAB was retired
   const dialog = document.getElementById("picker");
-  if (!fab || !dialog || typeof dialog.showModal !== "function") return;
+  if (!pickBtn || !dialog || typeof dialog.showModal !== "function") return;
 
   const inner = dialog.querySelector(".picker-inner");
   const dice = document.getElementById("picker-dice");
@@ -155,7 +155,7 @@ export function initPicker(getCandidates, isFavourite = () => false) {
     spin();
   }
 
-  fab.addEventListener("click", () => {
+  pickBtn.addEventListener("click", () => {
     dialog.showModal();
     shuffle();
   });
@@ -164,40 +164,15 @@ export function initPicker(getCandidates, isFavourite = () => false) {
   // ✕ + backdrop (a click outside .picker-inner) close; Escape is native.
   wireDialog(dialog, { closeBtn, inner });
 
-  // Tuck the FAB away while scrolling *down* so it stops covering the list you're
-  // reading; bring it back on any upward scroll, or near the top. rAF-throttled
-  // and CSS-animated (transform, not display) so it never fights the view-state
-  // rules that already hide it in search/favourites. Home only — the FAB doesn't
-  // exist on other screens.
-  let lastY = window.scrollY;
-  let ticking = false;
-  addEventListener(
-    "scroll",
-    () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        if (y > lastY + 4 && y > 160) fab.classList.add("is-tucked");
-        else if (y < lastY - 4 || y < 80) fab.classList.remove("is-tucked");
-        lastY = y;
-        ticking = false;
-      });
-    },
-    { passive: true }
-  );
-
-  // Search / favourites hide the FAB via display:none (body.searching /
-  // body.faves-view). While hidden it takes no scroll events, so a tuck set
-  // before entering those views would survive and leave "Pick for us"
-  // translated off-screen on return. Clear it the moment browse comes back.
-  new MutationObserver(() => {
-    const browsing =
-      !document.body.classList.contains("searching") &&
-      !document.body.classList.contains("faves-view");
-    if (browsing && fab.classList.contains("is-tucked")) {
-      fab.classList.remove("is-tucked");
-      lastY = window.scrollY;
-    }
-  }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  // The scroll-tuck that used to live here is gone with the FAB it hid. "Pick
+  // for us" is a control in the bottom bar now, and `main`'s padding-bottom
+  // reserves the bar's band, so it can no longer cover the list — which is what
+  // the tuck existed to undo. Measured before removing it: as a FAB it covered
+  // 48 × 30.3 px of a venue's heart on the landing screen, 63 % of a 48 px
+  // control, and the tuck did not fire until scrollY > 160.
+  //
+  // It also takes a bug class with it: `.is-tucked` was only ever cleared by a
+  // scroll event, so leaving search could restore the FAB still translated
+  // off-screen, and a MutationObserver on body's class had to be added to fix
+  // it. Nothing here should tuck the bar — that would re-open the same hole.
 }

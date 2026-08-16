@@ -140,6 +140,20 @@ def main(argv=None):
     shell, data = classify(paths)
 
     if not shell and not data:
+        # Bare mode reads STAGED changes only, so a clean tree makes it print
+        # "not in scope" — which reads like an all-clear and proves nothing.
+        # That is exactly how a DATA_VERSION collision reached main on
+        # 2026-08-16: two sessions picked the same value, the tree was already
+        # committed, the bare run said "not in scope", and only
+        # `--range origin/main..HEAD` caught it. Twice now. A check that cannot
+        # fail is a check nobody reads, so bare mode says what it did NOT do.
+        if not args.rng:
+            print(
+                "Version lockstep not in scope: nothing under site/ is STAGED.\n"
+                "  This says nothing about work already committed. To check a\n"
+                "  finished branch, run:  check_versions.py --range origin/main..HEAD"
+            )
+            return 0
         print("Version lockstep not in scope: nothing under site/ changed.")
         return 0
 

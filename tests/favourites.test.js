@@ -26,13 +26,54 @@ const recipe = { type: "dish", venueId: "cook-at-home", venueName: "Cook at Home
 
 test("favKey: venue vs dish identity", () => {
   assert.equal(favKey(venue), "v:kk-malaysian");
-  assert.equal(favKey(dish), "d:kk-malaysian Mee Goreng");
+  assert.equal(favKey(dish), "d:kk-malaysian mee-goreng");
 });
 
 test("favHref: venue, restaurant dish, and recipe dish", () => {
   assert.equal(favHref(venue), "restaurant.html?id=kk-malaysian");
   assert.equal(favHref(dish), "restaurant.html?id=kk-malaysian#dish-mee-goreng");
   assert.equal(favHref(recipe), "recipe.html?id=cook-at-home&dish=shane-s-ribs");
+});
+
+// --- dish ids (ADR 0051) --------------------------------------------------
+
+const goldCard = {
+  type: "dish", venueId: "sprig-and-fern", venueName: "Sprig & Fern",
+  name: "Cheeseburger", dishId: "cheeseburger-gold-card",
+};
+const mainsBurger = { ...goldCard, dishId: undefined };
+delete mainsBurger.dishId;
+
+test("favKey keys on the id where the data gives one", () => {
+  assert.equal(favKey(goldCard), "d:sprig-and-fern cheeseburger-gold-card");
+  // …and on slug(name) where it doesn't — the key it always had, which is why
+  // stored hearts need no migration (they are entries, not key strings).
+  assert.equal(favKey(mainsBurger), "d:sprig-and-fern cheeseburger");
+});
+
+test("two same-named dishes with different ids heart independently", () => {
+  const f = createFavourites(fakeStorage());
+  f.toggle(mainsBurger);
+  f.toggle(goldCard);
+  assert.equal(f.count(), 2);
+  assert.equal(f.has(mainsBurger), true);
+  assert.equal(f.has(goldCard), true);
+  f.toggle(goldCard);
+  assert.equal(f.has(mainsBurger), true); // untouched by the other's toggle
+  assert.equal(f.count(), 1);
+});
+
+test("a heart saved before ids existed reads back as itself", () => {
+  // Exactly the JSON a pre-ADR-0051 build wrote: an entry object, no dishId.
+  const stored = '[{"type":"dish","venueId":"kk-malaysian","venueName":"KK Malaysian","name":"Mee Goreng"}]';
+  const f = createFavourites(fakeStorage(stored));
+  assert.equal(f.has(dish), true);
+  assert.equal(f.count(), 1);
+});
+
+test("favHref anchors on the id, so a disambiguated row is reachable", () => {
+  assert.equal(favHref(goldCard), "restaurant.html?id=sprig-and-fern#dish-cheeseburger-gold-card");
+  assert.equal(favHref(mainsBurger), "restaurant.html?id=sprig-and-fern#dish-cheeseburger");
 });
 
 test("toggle adds then removes; has() tracks it", () => {

@@ -345,3 +345,64 @@ deliberation those compact docs omit.
   section may carry `addOnsOnly: true`; the rows stay in the data, and
   `validate.py` refuses the flag unless every row it hides is still reachable
   as an option.
+- [0051](0051-a-dish-has-an-id-and-its-name-is-not-it.md) — **a dish has an id,
+  and its name is not it.** The `name` was doing five jobs at once — URL anchor,
+  `picks` reference, stored heart, stored rating, order line — and four failed
+  silently under a rename. Not hypothetical: `slug(name)` was never unique
+  within a venue (10 slugs, 22 rows, 3 records, every collision at a different
+  price), so three elements shared `id="dish-cheeseburger"`, one heart covered
+  all three rows, and the order tally charged **$56 for a $49 pair**. `dishId`
+  is **required and seeded** rather than defaulted from the name, because the
+  owner ruled identity must be immutable and an id recomputed from a mutable
+  display name is not. Costs +12.6 KB gzipped, taken knowingly.
+- [0052](0052-the-home-filters-collapse-into-one-sheet.md) — **the home
+  screen's filters collapse into one sheet.** Measured before designing: 50.7%
+  of a 390 px screen was chrome before the first result (58.4% arriving via a
+  facet link), only 3 cards fit, and the bottom bar ate 14.5% at every scroll
+  depth forever. The bar becomes one row — `Filters (n)` and `Pick for us` —
+  and everything else moves into a sheet that separates *Narrow to* from
+  *Sort by* (ADR 0014's distinction, never surfaced before). Chrome drops to
+  31.9%, cards 3 → 4. Two live defects went with it: 40 px segmented buttons
+  against a 44 px hard constraint, and a floating "Pick for us" covering 63% of
+  a venue's heart.
+- [0023](0023-time-dimension-in-the-data.md) — **the data carries its time
+  dimension; the UI does not.** Prices, menus and venues change, and git dates
+  our *edits*, never the world. Optional dated primitives in the data plus one
+  pure resolver (`temporal.js`) run in `data.js`, so every screen stays
+  time-blind and the dinner-choosing UX is untouched. This is the rule that
+  makes a menu refresh **append, never overwrite** — done the old way a refresh
+  destroys a free, honest reading, which is what happened to Takeaway @
+  Churton's 2019 prices, recoverable only because git held them.
+- [0042](0042-the-collection-is-not-scoped-to-a-city.md) — **the collection is
+  not scoped to a city.** Title, install name and About stopped naming
+  Wellington, and the data model stopped assuming one place. Its consequences
+  produced `site/js/renames.js`: five records carried a suburb in a national
+  chain's name, the suburb belongs in `locations[].label`, and a venue id that
+  is simply *replaced* breaks every shared link and detaches every stored heart.
+- [0043](0043-a-venue-carries-its-own-clock-and-currency.md) — **a venue
+  carries its own clock and currency.** "Open now" resolves on the venue's own
+  timezone, not the reader's, so a place still reads correctly when looked up
+  from another country; and there is no site-wide currency, because a price
+  belongs to a venue. Adding NZD to GBP produces a figure that is not money, so
+  an order spanning two countries shows one total per currency rather than a
+  plausible-looking sum nobody can pay.
+- [0044](0044-a-menu-can-be-written-in-another-language.md) — **a menu can be
+  written in another language.** A record names the language its own strings are
+  in, and `translations` is an additive sidecar. The canonical `name` stayed a
+  plain string because it was the dish's identity — a claim [0051] has since
+  narrowed to display only.
+- [0045](0045-prices-convert-and-localisation-can-follow-you.md) — **prices
+  convert, and localisation can follow you.** Shipped exchange rates, refreshed
+  weekly by a scheduled workflow that opens an auto-merging PR, so conversion
+  works offline and the app still has no runtime dependency on a network call.
+- [0053](0053-a-photo-of-a-named-product-must-be-that-product.md) — **a photo
+  of a named product must be that product.** `image`/`alt` had been in the
+  schema since early on and no dish had ever set them; McDonald's is the first.
+  The owner ruled openly-licensed photos where they look great, the venue's own
+  otherwise — and applied per dish, that came out at zero open images, losing on
+  **accuracy, not licence**: the public-domain fries carton is Canadian, the
+  public-domain apple pie is the US baked one, and the opaque studio shots read
+  as a bug beside 40 transparent cutouts. A generic burger captioned "Big Mac"
+  is not merely worse-looking, it is a false depiction of a named product, which
+  on a menu app is worse than no photo. Provenance and a removal recipe live in
+  `data/images/`, never served (ADR 0047).

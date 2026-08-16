@@ -81,6 +81,7 @@
       "items": [
         {
           "name": "Rustic Cut Chips",
+          "dishId": "rustic-cut-chips",
           "desc": "Cooked in beef fat, house-made aioli.",
           "price": [
             {
@@ -95,6 +96,7 @@
         },
         {
           "name": "Fries",
+          "dishId": "fries",
           "desc": "House-made aioli.",
           "price": [
             {
@@ -110,6 +112,7 @@
         },
         {
           "name": "Corn Chips",
+          "dishId": "corn-chips",
           "desc": "House-made salsa.",
           "price": [
             {
@@ -126,6 +129,7 @@
         },
         {
           "name": "Garlic Loaf",
+          "dishId": "garlic-loaf",
           "desc": "Lashings of garlic butter.",
           "price": [
             {
@@ -141,6 +145,7 @@
         },
         {
           "name": "Wedges",
+          "dishId": "wedges",
           "desc": "Cheese, bacon, sweet chilli, sour cream.",
           "price": [
             {
@@ -154,6 +159,7 @@
         },
         {
           "name": "Prawn Twisters",
+          "dishId": "prawn-twisters",
           "desc": "Half a dozen, house-made chipotle aioli.",
           "price": [
             {
@@ -170,6 +176,7 @@
         },
         {
           "name": "Cajun Calamari",
+          "dishId": "cajun-calamari",
           "desc": "House-made aioli.",
           "price": [
             {
@@ -185,6 +192,7 @@
         },
         {
           "name": "Nachos",
+          "dishId": "nachos",
           "desc": "Pulled pork or vegetarian, house-made salsa, chilli beans, cheese, jalapeños, sweet chilli, sour cream. Vegan on request.",
           "price": [
             {
@@ -200,6 +208,7 @@
         },
         {
           "name": "Local Platter",
+          "dishId": "local-platter",
           "desc": "Deep-fried goodness — mini spring rolls, samosas, cheerios, chicken, fish, prawn twisters, fries, wedges, dipping sauces. Serves 4–6.",
           "price": [
             {
@@ -214,6 +223,7 @@
         },
         {
           "name": "West Park Wings",
+          "dishId": "west-park-wings",
           "desc": "Spicy Buffalo wings, house-made blue cheese sauce.",
           "price": [
             {
@@ -229,6 +239,7 @@
         },
         {
           "name": "Glenside Chowder",
+          "dishId": "glenside-chowder",
           "desc": "Prawns, mussels, fish, squid, garlic toast.",
           "price": [
             {
@@ -244,6 +255,7 @@
         },
         {
           "name": "Cheerios",
+          "dishId": "cheerios",
           "desc": "A kiwi classic, tomato sauce.",
           "price": [
             {
@@ -258,6 +270,7 @@
         },
         {
           "name": "Vegetarian Pasta",
+          "dishId": "vegetarian-pasta",
           "desc": "Fettuccine, Napoli sauce, pumpkin, olives, spinach, parmesan.",
           "price": [
             {
@@ -278,6 +291,7 @@
       "items": [
         {
           "name": "Link Road Lasagne",
+          "dishId": "link-road-lasagne",
           "desc": "Vegetarian lasagne, fresh rocket, house-made Napoli sauce, parmesan.",
           "price": [
             {
@@ -293,6 +307,7 @@
         },
         {
           "name": "Roast Vegetable Salad",
+          "dishId": "roast-vegetable-salad",
           "desc": "Rustic roast vegetables, Chef's salad mix, pumpkin seeds, nuts, kumara shavings, balsamic.",
           "price": [
             {
@@ -310,6 +325,7 @@
         },
         {
           "name": "The Old Coach Burger",
+          "dishId": "the-old-coach-burger",
           "desc": "Crispy \"Chicken\" plant-based pattie, house-made vegetarian pattie, cheese, salad greens, chipotle aioli, fries.",
           "price": [
             {
@@ -326,6 +342,7 @@
         },
         {
           "name": "The Triple Double Burger",
+          "dishId": "the-triple-double-burger",
           "desc": "Smashed double beef patties, double bacon, double cheese, onion rings, salad greens, pickle, rib sauce, rustic cut chips.",
           "price": [
             {
@@ -340,6 +357,7 @@
         },
         {
           "name": "Fraser Ave Fettuccine",
+          "dishId": "fraser-ave-fettuccine",
           "desc": "Chicken, bacon, mushrooms, parmesan.",
           "price": [
             {
@@ -354,6 +372,7 @@
         },
         {
           "name": "Hawtrey Farm Filo",
+          "dishId": "hawtrey-farm-filo",
           "desc": "Chicken, spinach & cream cheese filo, baby potatoes, 1841 slaw, house-made tomato relish.",
           "price": [
             {
@@ -368,6 +387,7 @@
         },
         {
           "name": "Burma Breast",
+          "dishId": "burma-breast",
           "desc": "350g skin on chicken breast oven roasted, grilled to finish, baby potatoes, 1841 slaw, sundried tomato cream.",
           "price": [
             {
@@ -382,6 +402,7 @@
         },
         {
           "name": "Bangers & Mash",
+          "dishId": "bangers-mash",
           "desc": "Pork sausages, mash, peas, caramelised onions, egg, gravy.",
           "price": [
             {
@@ -397,6 +418,7 @@
         },
         {
           "name": "Petherick Pork",
+          "dishId": "petherick-pork",
           "desc": "300g crispy pork belly, mash, 1841 slaw, gravy, apple sauce.",
           "price": [
             {
@@ -411,6 +433,7 @@
         },
         {
           "name": "Railway Ribs",
+          "dishId": "railway-ribs",
           "desc": "World Famous in J Vegas! 1kg of pork ribs, slow cooked in our own BBQ sauce, rustic cut chips, 1841 slaw, sesame seeds.",
           "price": [
             {
@@ -424,6 +447,7 @@
         },
         {
           "name": "Frank Shank Pie",
+          "dishId": "frank-shank-pie",
           "desc": "Good old lamb shank taste — without the bones! Slow cooked lamb shank, carrot, beans, kumara, onion, mint sauce, rustic cut chips, 1841 slaw.",
           "price": [
             {
@@ -437,6 +461,7 @@
         },
         {
           "name": "Frankmoore Fish",
+          "dishId": "frankmoore-fish",
           "desc": "Beer battered fresh fish, rustic cut chips, 1841 slaw.",
           "price": [
             {
@@ -450,6 +475,7 @@
         },
         {
           "name": "Fish of the Day",
+          "dishId": "fish-of-the-day",
           "desc": "200g fresh fish of the day, baby potatoes, greens, chimichurri. Price on application.",
           "price": null,
           "tags": [
@@ -458,6 +484,7 @@
         },
         {
           "name": "Kaukau Salmon",
+          "dishId": "kaukau-salmon",
           "desc": "180g portion, mash, water cress, pesto, hollandaise.",
           "price": [
             {
@@ -474,6 +501,7 @@
         },
         {
           "name": "The Broadmeadow Beef Salad",
+          "dishId": "the-broadmeadow-beef-salad",
           "desc": "200g seared beef, Chef's salad mix, fried shallots, garlic, chilli and lime dressing, crispy noodles.",
           "price": [
             {
@@ -488,6 +516,7 @@
         },
         {
           "name": "Hop Scotch",
+          "dishId": "hop-scotch",
           "desc": "300g char-grilled scotch fillet, mash, water cress, mushroom gravy, peppercorn butter.",
           "price": [
             {
@@ -502,6 +531,7 @@
         },
         {
           "name": "The Ironside (200g)",
+          "dishId": "the-ironside-200g",
           "desc": "Char-grilled prime sirloin, rustic cut chips, 1841 slaw, garlic butter, fried egg. Please note: well done steak takes time.",
           "price": [
             {
@@ -516,6 +546,7 @@
         },
         {
           "name": "The Ironside (400g)",
+          "dishId": "the-ironside-400g",
           "desc": "Char-grilled prime sirloin, rustic cut chips, 1841 slaw, garlic butter, fried egg. Please note: well done steak takes time.",
           "price": [
             {
@@ -535,6 +566,7 @@
       "items": [
         {
           "name": "1841 Brekkie",
+          "dishId": "1841-brekkie",
           "desc": "Poached eggs, bacon, pork sausage, tomato, hash browns, ciabatta.",
           "price": [
             {
@@ -549,6 +581,7 @@
         },
         {
           "name": "The Works",
+          "dishId": "the-works",
           "desc": "Double poached eggs, double bacon, double pork sausage, double tomato, mushrooms, chilli beans, rustic cut chips, ciabatta.",
           "price": [
             {
@@ -563,6 +596,7 @@
         },
         {
           "name": "Veg Brekkie",
+          "dishId": "veg-brekkie",
           "desc": "Poached eggs, mushrooms, tomato, hash browns, chilli beans, spinach, ciabatta.",
           "price": [
             {
@@ -578,6 +612,7 @@
         },
         {
           "name": "Eggs Benedict",
+          "dishId": "eggs-benedict",
           "desc": "Poached eggs, bacon, spinach, potato rosti, hollandaise.",
           "price": [
             {
@@ -592,6 +627,7 @@
         },
         {
           "name": "Caesar",
+          "dishId": "caesar",
           "desc": "The 1841 way. Chicken, bacon, poached egg, croutons, parmesan, house-made aioli.",
           "price": [
             {
@@ -607,6 +643,7 @@
         },
         {
           "name": "Steak Sammie",
+          "dishId": "steak-sammie",
           "desc": "Char-grilled sirloin steak, medium-rare, salad greens, caramelised onions, bearnaise, fries.",
           "price": [
             {
@@ -622,6 +659,7 @@
         },
         {
           "name": "Creamy Mushrooms",
+          "dishId": "creamy-mushrooms",
           "desc": "Mushroom medley, garlic toast, parmesan.",
           "price": [
             {
@@ -637,6 +675,7 @@
         },
         {
           "name": "Bubble 'n' Squeak",
+          "dishId": "bubble-n-squeak",
           "desc": "Pan-fried veggies, bacon, poached egg, potato rosti, hollandaise.",
           "price": [
             {
@@ -652,6 +691,7 @@
         },
         {
           "name": "Fish",
+          "dishId": "fish",
           "desc": "Beer battered fresh fish, salad garnish, fries.",
           "price": [
             {
@@ -665,6 +705,7 @@
         },
         {
           "name": "Filo Parcel",
+          "dishId": "filo-parcel",
           "desc": "Chicken, spinach and cream cheese filo, salad garnish, house-made tomato relish.",
           "price": [
             {
@@ -684,6 +725,7 @@
       "items": [
         {
           "name": "Ice Cream Sundae",
+          "dishId": "ice-cream-sundae",
           "desc": "Hokey pokey ice cream, fresh whipped cream, maraschino cherries, wafer. Choose from chocolate, strawberry, caramel or passionfruit topping. Gluten free without the wafer.",
           "price": [
             {
@@ -699,6 +741,7 @@
         },
         {
           "name": "Double Chocolate Brownie",
+          "dishId": "double-chocolate-brownie",
           "desc": "Vanilla ice-cream. Served warm.",
           "price": [
             {
@@ -715,6 +758,7 @@
         },
         {
           "name": "Apple & Blueberry Pie",
+          "dishId": "apple-blueberry-pie",
           "desc": "Vanilla ice cream. Served warm.",
           "price": [
             {
@@ -730,6 +774,7 @@
         },
         {
           "name": "Cheesecake",
+          "dishId": "cheesecake",
           "desc": "House-made, vanilla ice cream, berry coulis.",
           "price": [
             {
@@ -745,6 +790,7 @@
         },
         {
           "name": "Sticky Date Pudding",
+          "dishId": "sticky-date-pudding",
           "desc": "Salted butterscotch sauce, vanilla ice cream. Served warm.",
           "price": [
             {
@@ -761,6 +807,7 @@
         },
         {
           "name": "Chocolate Tart",
+          "dishId": "chocolate-tart",
           "desc": "Whittaker's Dark chocolate, raspberry sorbet, Biscoff, berry coulis.",
           "price": [
             {
@@ -781,6 +828,7 @@
       "items": [
         {
           "name": "Takeaway Container",
+          "dishId": "takeaway-container",
           "desc": null,
           "price": [
             {
@@ -792,6 +840,7 @@
         },
         {
           "name": "Aioli / Garlic Butter / Hollandaise / Fried Egg (1)",
+          "dishId": "aioli-garlic-butter-hollandaise-fried-egg-1",
           "desc": "Each.",
           "price": [
             {
@@ -806,6 +855,7 @@
         },
         {
           "name": "House-made Salsa / Toast / GF Bread / Extra Sauce",
+          "dishId": "house-made-salsa-toast-gf-bread-extra-sauce",
           "desc": "Each.",
           "price": [
             {
@@ -819,6 +869,7 @@
         },
         {
           "name": "1841 Slaw / Garden Salad / Mash / Onions / Tomatoes / Mushrooms",
+          "dishId": "1841-slaw-garden-salad-mash-onions-tomatoes-mushrooms",
           "desc": "Each.",
           "price": [
             {
@@ -830,6 +881,7 @@
         },
         {
           "name": "Pork Sausage (1) / Bacon (2)",
+          "dishId": "pork-sausage-1-bacon-2",
           "desc": "Brunch add-on, each.",
           "price": [
             {
@@ -841,6 +893,7 @@
         },
         {
           "name": "Mushroom Gravy",
+          "dishId": "mushroom-gravy",
           "desc": null,
           "price": [
             {

@@ -17,6 +17,7 @@
 // to discount both, and a discounted allergen warning is worse than none.
 
 import { el } from "./dom.js";
+import { dishId } from "./dish-id.js";
 import { dishStepper } from "./cart-ui.js";
 import { settings } from "./settings.js";
 import { dishFlagged } from "./dietary.js";
@@ -66,6 +67,10 @@ export function dishAddOns(record, section, item, onCompose) {
   const currency = record?.currency || "NZD";
   const base = typeof item.price === "number" ? item.price : null;
   const selection = [];
+  // This dish's identity, used for the radio/checkbox group names below and for
+  // the order line the stepper counts. Two dishes of the same name on one page
+  // are two dishes here, which the raw name could not express.
+  const id = dishId(item);
 
   const warn = el("p", { className: "addon-warning", hidden: true });
   warn.setAttribute("role", "status"); // announced when it changes, not on focus
@@ -78,6 +83,7 @@ export function dishAddOns(record, section, item, onCompose) {
       venueName: record.name,
       phone: record.phone,
       name: item.name,
+      dishId: id,
       // The configured unit price: the dish plus what has been added to it.
       // null stays null — an unpriced dish with a paid extra is still a dish we
       // cannot total, and guessing would be worse than the honest "—".
@@ -148,7 +154,11 @@ export function dishAddOns(record, section, item, onCompose) {
       const none = el("input", {
         type: "radio",
         className: "addon-input",
-        name: `addon-${record.id}-${item.name}-${group.id}`,
+        // Keyed on the dish id, not its name: a radio group's name is what
+        // makes two inputs mutually exclusive, so two same-named dishes on one
+        // page shared one group — picking a sauce on the second silently
+        // cleared the first.
+        name: `addon-${record.id}-${id}-${group.id}`,
         value: "",
         checked: true,
       });
@@ -171,7 +181,7 @@ export function dishAddOns(record, section, item, onCompose) {
       const input = el("input", {
         type: single ? "radio" : "checkbox",
         className: "addon-input",
-        name: `addon-${record.id}-${item.name}-${group.id}`,
+        name: `addon-${record.id}-${id}-${group.id}`,
         value: option.name,
       });
       input.addEventListener("change", () => {

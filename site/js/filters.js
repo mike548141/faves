@@ -66,6 +66,53 @@ export const DEFAULT_FILTERS = {
   cheap: false,
 };
 
+// How a service value reads to a person. Same three words the segmented
+// control shows; "all" is the absence of a filter, so it never appears here.
+const SERVICE_LABEL = {
+  takeaway: { label: "Takeaway", key: "service.takeaway" },
+  "dine-in": { label: "Dine-in", key: "service.dineIn" },
+};
+
+/**
+ * Every filter currently narrowing the list, as `{ kind, value, label, key }`.
+ * Pure, and the single source of truth for BOTH the "Filters (n)" badge and the
+ * dismissible chips beside the count — which is the point. The filters now live
+ * behind a sheet, so the only thing standing between a reader and a mystery
+ * short list is this count; if the badge and the chips could be computed
+ * differently they could disagree, and the disagreement would always be
+ * invisible (a filter that is on and named nowhere).
+ *
+ * ORDER IS LOAD-BEARING: cuisine and area come first because those are the two
+ * a URL can carry in from a venue's subheading (ADR 0050), and the reader who
+ * arrived that way pressed nothing on this screen. The chip row shows the first
+ * few and overflows the rest, so putting the arriving facet first guarantees it
+ * is never the one folded away.
+ *
+ * Sort modes ("Near me", "Along a route") are deliberately absent: they reorder
+ * the list, they never shorten it (ADR 0014), so they are not what a short list
+ * needs explaining by. #geo-status says what the sort is doing.
+ */
+export function activeFilters(state) {
+  const out = [];
+  if (state.cuisine && state.cuisine !== "all") {
+    out.push({ kind: "cuisine", value: state.cuisine, label: state.cuisine, key: null });
+  }
+  if (state.area && state.area !== "all") {
+    out.push({ kind: "area", value: state.area, label: state.area, key: null });
+  }
+  const service = SERVICE_LABEL[state.service];
+  if (service) {
+    out.push({ kind: "service", value: state.service, label: service.label, key: service.key });
+  }
+  if (state.openNow) {
+    out.push({ kind: "openNow", value: true, label: "Open now", key: "toggle.openNow" });
+  }
+  if (state.cheap) {
+    out.push({ kind: "cheap", value: true, label: "Cheap eats", key: "toggle.cheapEats" });
+  }
+  return out;
+}
+
 /**
  * Apply combinable filters. Every clause is AND-ed. `clock` (hours.js
  * makeClock) is required only for the openNow clause, which reads it in each

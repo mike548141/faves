@@ -275,6 +275,7 @@
       "items": [
         {
           "name": "Chicken kebab",
+          "dishId": "chicken-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -283,6 +284,7 @@
         },
         {
           "name": "Lamb kebab",
+          "dishId": "lamb-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -291,6 +293,7 @@
         },
         {
           "name": "Mixed kebab",
+          "dishId": "mixed-kebab",
           "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -299,6 +302,7 @@
         },
         {
           "name": "Falafel kebab",
+          "dishId": "falafel-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -308,6 +312,7 @@
         },
         {
           "name": "Muciver kebab",
+          "dishId": "muciver-kebab",
           "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -317,6 +322,7 @@
         },
         {
           "name": "Mix vege kebab",
+          "dishId": "mix-vege-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -326,6 +332,7 @@
         },
         {
           "name": "Halloumi kebab",
+          "dishId": "halloumi-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -336,6 +343,7 @@
         },
         {
           "name": "Gluten free kebab",
+          "dishId": "gluten-free-kebab",
           "desc": "On a gluten free wrap, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -345,6 +353,7 @@
         },
         {
           "name": "Lamb shish kebab",
+          "dishId": "lamb-shish-kebab",
           "desc": "Grilled lamb skewer, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 19.9,
           "tags": [
@@ -353,6 +362,7 @@
         },
         {
           "name": "Chicken shish kebab",
+          "dishId": "chicken-shish-kebab",
           "desc": "Grilled chicken skewer, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 19.9,
           "tags": [
@@ -361,6 +371,7 @@
         },
         {
           "name": "Mixed shish kebab",
+          "dishId": "mixed-shish-kebab",
           "desc": "Grilled lamb and chicken skewers, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 19.9,
           "tags": [
@@ -379,6 +390,7 @@
       "items": [
         {
           "name": "Chicken & falafel kebab",
+          "dishId": "chicken-falafel-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -387,6 +399,7 @@
         },
         {
           "name": "Lamb & falafel kebab",
+          "dishId": "lamb-falafel-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -395,6 +408,7 @@
         },
         {
           "name": "Mixed & falafel kebab",
+          "dishId": "mixed-falafel-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -403,6 +417,7 @@
         },
         {
           "name": "Chicken & muciver kebab",
+          "dishId": "chicken-muciver-kebab",
           "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -411,6 +426,7 @@
         },
         {
           "name": "Lamb & muciver kebab",
+          "dishId": "lamb-muciver-kebab",
           "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -419,6 +435,7 @@
         },
         {
           "name": "Mixed & muciver kebab",
+          "dishId": "mixed-muciver-kebab",
           "desc": "With zucchini fritter, lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -427,6 +444,7 @@
         },
         {
           "name": "Chicken & halloumi kebab",
+          "dishId": "chicken-halloumi-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 19.5,
           "tags": [
@@ -436,6 +454,7 @@
         },
         {
           "name": "Lamb & halloumi kebab",
+          "dishId": "lamb-halloumi-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 19.5,
           "tags": [
@@ -445,6 +464,7 @@
         },
         {
           "name": "Mixed & halloumi kebab",
+          "dishId": "mixed-halloumi-kebab",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 19.5,
           "tags": [
@@ -454,6 +474,7 @@
         },
         {
           "name": "Chicken gyrus",
+          "dishId": "chicken-gyrus",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -462,6 +483,7 @@
         },
         {
           "name": "Lamb gyrus",
+          "dishId": "lamb-gyrus",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -470,6 +492,7 @@
         },
         {
           "name": "Mix gyrus",
+          "dishId": "mix-gyrus",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 18.5,
           "tags": [
@@ -487,6 +510,7 @@
       "items": [
         {
           "name": "Chicken iskender",
+          "dishId": "chicken-iskender",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 19.5,
           "tags": [
@@ -496,6 +520,7 @@
         },
         {
           "name": "Lamb iskender",
+          "dishId": "lamb-iskender",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 19.5,
           "tags": [
@@ -505,6 +530,7 @@
         },
         {
           "name": "Mixed iskender",
+          "dishId": "mixed-iskender",
           "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 19.5,
           "tags": [
@@ -514,6 +540,7 @@
         },
         {
           "name": "Falafel iskender",
+          "dishId": "falafel-iskender",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 19.5,
           "tags": [
@@ -524,6 +551,7 @@
         },
         {
           "name": "Muciver iskender",
+          "dishId": "muciver-iskender",
           "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 19.5,
           "tags": [
@@ -534,6 +562,7 @@
         },
         {
           "name": "Mix vege iskender",
+          "dishId": "mix-vege-iskender",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 19.5,
           "tags": [
@@ -544,6 +573,7 @@
         },
         {
           "name": "Halloumi iskender",
+          "dishId": "halloumi-iskender",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 19.5,
           "tags": [
@@ -554,6 +584,7 @@
         },
         {
           "name": "Lamb shish iskender",
+          "dishId": "lamb-shish-iskender",
           "desc": "Grilled lamb skewer, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 23.5,
           "tags": [
@@ -563,6 +594,7 @@
         },
         {
           "name": "Chicken shish iskender",
+          "dishId": "chicken-shish-iskender",
           "desc": "Grilled chicken skewer, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 23.5,
           "tags": [
@@ -572,6 +604,7 @@
         },
         {
           "name": "Mixed shish iskender",
+          "dishId": "mixed-shish-iskender",
           "desc": "Grilled lamb and chicken skewers, with lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 23.5,
           "tags": [
@@ -581,6 +614,7 @@
         },
         {
           "name": "Mixed grill iskender",
+          "dishId": "mixed-grill-iskender",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik, beetroot and rice.",
           "price": 26.5,
           "tags": [
@@ -599,6 +633,7 @@
       "items": [
         {
           "name": "Chicken salad",
+          "dishId": "chicken-salad",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 18.9,
           "tags": [
@@ -608,6 +643,7 @@
         },
         {
           "name": "Lamb salad",
+          "dishId": "lamb-salad",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 18.9,
           "tags": [
@@ -617,6 +653,7 @@
         },
         {
           "name": "Mixed salad",
+          "dishId": "mixed-salad",
           "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 18.9,
           "tags": [
@@ -626,6 +663,7 @@
         },
         {
           "name": "Falafel salad",
+          "dishId": "falafel-salad",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 18.9,
           "tags": [
@@ -636,6 +674,7 @@
         },
         {
           "name": "Muciver salad",
+          "dishId": "muciver-salad",
           "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 18.9,
           "tags": [
@@ -646,6 +685,7 @@
         },
         {
           "name": "Mix vege salad",
+          "dishId": "mix-vege-salad",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 18.9,
           "tags": [
@@ -656,6 +696,7 @@
         },
         {
           "name": "Halloumi salad",
+          "dishId": "halloumi-salad",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 18.9,
           "tags": [
@@ -666,6 +707,7 @@
         },
         {
           "name": "Lamb shish salad",
+          "dishId": "lamb-shish-salad",
           "desc": "Grilled lamb skewer, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 21.5,
           "tags": [
@@ -675,6 +717,7 @@
         },
         {
           "name": "Chicken shish salad",
+          "dishId": "chicken-shish-salad",
           "desc": "Grilled chicken skewer, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 21.5,
           "tags": [
@@ -684,6 +727,7 @@
         },
         {
           "name": "Mixed shish salad",
+          "dishId": "mixed-shish-salad",
           "desc": "Grilled lamb and chicken skewers, with lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 21.5,
           "tags": [
@@ -693,6 +737,7 @@
         },
         {
           "name": "Mixed grill salad",
+          "dishId": "mixed-grill-salad",
           "desc": "With lettuce, carrots, onions, hummus, tabuli, cacik and beetroot.",
           "price": 25.5,
           "tags": [
@@ -707,6 +752,7 @@
       "items": [
         {
           "name": "Chicken shawarmama box",
+          "dishId": "chicken-shawarmama-box",
           "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.",
           "price": 22.5,
           "tags": [
@@ -716,6 +762,7 @@
         },
         {
           "name": "Lamb shawarmama box",
+          "dishId": "lamb-shawarmama-box",
           "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.",
           "price": 22.5,
           "tags": [
@@ -725,6 +772,7 @@
         },
         {
           "name": "Mixed shawarmama box",
+          "dishId": "mixed-shawarmama-box",
           "desc": "Chicken and lamb, with lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.",
           "price": 22.5,
           "tags": [
@@ -734,6 +782,7 @@
         },
         {
           "name": "Falafel shawarmama box",
+          "dishId": "falafel-shawarmama-box",
           "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.",
           "price": 22.5,
           "tags": [
@@ -744,6 +793,7 @@
         },
         {
           "name": "Muciver shawarmama box",
+          "dishId": "muciver-shawarmama-box",
           "desc": "Zucchini fritter, with lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.",
           "price": 22.5,
           "tags": [
@@ -754,6 +804,7 @@
         },
         {
           "name": "Mix vege shawarmama box",
+          "dishId": "mix-vege-shawarmama-box",
           "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.",
           "price": 22.5,
           "tags": [
@@ -764,6 +815,7 @@
         },
         {
           "name": "Halloumi shawarmama box",
+          "dishId": "halloumi-shawarmama-box",
           "desc": "With lettuce, carrots, onions, red cabbage, spinach, hummus, cacik and sauce.",
           "price": 22.5,
           "tags": [
@@ -779,6 +831,7 @@
       "items": [
         {
           "name": "Chicken Greek pita",
+          "dishId": "chicken-greek-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 15.5,
           "tags": [
@@ -788,6 +841,7 @@
         },
         {
           "name": "Lamb Greek pita",
+          "dishId": "lamb-greek-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 15.5,
           "tags": [
@@ -797,6 +851,7 @@
         },
         {
           "name": "Mixed Greek pita",
+          "dishId": "mixed-greek-pita",
           "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 15.5,
           "tags": [
@@ -806,6 +861,7 @@
         },
         {
           "name": "Falafel Greek pita",
+          "dishId": "falafel-greek-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 15.5,
           "tags": [
@@ -816,6 +872,7 @@
         },
         {
           "name": "Muciver Greek pita",
+          "dishId": "muciver-greek-pita",
           "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 15.5,
           "tags": [
@@ -826,6 +883,7 @@
         },
         {
           "name": "Mix vege Greek pita",
+          "dishId": "mix-vege-greek-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 15.5,
           "tags": [
@@ -836,6 +894,7 @@
         },
         {
           "name": "Halloumi Greek pita",
+          "dishId": "halloumi-greek-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 15.5,
           "tags": [
@@ -852,6 +911,7 @@
       "items": [
         {
           "name": "Chicken Turkish pita",
+          "dishId": "chicken-turkish-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -861,6 +921,7 @@
         },
         {
           "name": "Lamb Turkish pita",
+          "dishId": "lamb-turkish-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -870,6 +931,7 @@
         },
         {
           "name": "Mixed Turkish pita",
+          "dishId": "mixed-turkish-pita",
           "desc": "Chicken and lamb, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -879,6 +941,7 @@
         },
         {
           "name": "Falafel Turkish pita",
+          "dishId": "falafel-turkish-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -889,6 +952,7 @@
         },
         {
           "name": "Muciver Turkish pita",
+          "dishId": "muciver-turkish-pita",
           "desc": "Zucchini fritter, with lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -899,6 +963,7 @@
         },
         {
           "name": "Mix vege Turkish pita",
+          "dishId": "mix-vege-turkish-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -909,6 +974,7 @@
         },
         {
           "name": "Halloumi Turkish pita",
+          "dishId": "halloumi-turkish-pita",
           "desc": "With lettuce, carrots, onions, hummus, tabuli and sauce.",
           "price": 16.5,
           "tags": [
@@ -925,6 +991,7 @@
       "items": [
         {
           "name": "Chicken on chips",
+          "dishId": "chicken-on-chips",
           "desc": "Comes with cheese and sauce only.",
           "price": 18.5,
           "tags": [
@@ -933,6 +1000,7 @@
         },
         {
           "name": "Lamb on chips",
+          "dishId": "lamb-on-chips",
           "desc": "Comes with cheese and sauce only.",
           "price": 18.5,
           "tags": [
@@ -941,6 +1009,7 @@
         },
         {
           "name": "Mixed on chips",
+          "dishId": "mixed-on-chips",
           "desc": "Chicken and lamb. Comes with cheese and sauce only.",
           "price": 18.5,
           "tags": [
@@ -949,6 +1018,7 @@
         },
         {
           "name": "Falafel on chips",
+          "dishId": "falafel-on-chips",
           "desc": "Comes with cheese and sauce only.",
           "price": 18.5,
           "tags": [
@@ -958,6 +1028,7 @@
         },
         {
           "name": "Muciver on chips",
+          "dishId": "muciver-on-chips",
           "desc": "Zucchini fritter. Comes with cheese and sauce only.",
           "price": 18.5,
           "tags": [
@@ -967,6 +1038,7 @@
         },
         {
           "name": "Mix vege on chips",
+          "dishId": "mix-vege-on-chips",
           "desc": "Comes with cheese and sauce only.",
           "price": 18.5,
           "tags": [
@@ -976,6 +1048,7 @@
         },
         {
           "name": "Halloumi on chips",
+          "dishId": "halloumi-on-chips",
           "desc": "Comes with cheese and sauce only.",
           "price": 18.5,
           "tags": [
@@ -985,6 +1058,7 @@
         },
         {
           "name": "Add salad",
+          "dishId": "add-salad",
           "desc": "Added to meat on chips.",
           "price": 3.5,
           "tags": [
@@ -993,6 +1067,7 @@
         },
         {
           "name": "Add rice",
+          "dishId": "add-rice",
           "desc": "Added to meat on chips.",
           "price": 3.5,
           "tags": [
@@ -1006,24 +1081,28 @@
       "items": [
         {
           "name": "Chicken on rice",
+          "dishId": "chicken-on-rice",
           "desc": null,
           "price": 18.5,
           "tags": []
         },
         {
           "name": "Lamb on rice",
+          "dishId": "lamb-on-rice",
           "desc": null,
           "price": 18.5,
           "tags": []
         },
         {
           "name": "Mixed on rice",
+          "dishId": "mixed-on-rice",
           "desc": "Chicken and lamb.",
           "price": 18.5,
           "tags": []
         },
         {
           "name": "Falafel on rice",
+          "dishId": "falafel-on-rice",
           "desc": null,
           "price": 18.5,
           "tags": [
@@ -1037,6 +1116,7 @@
       "items": [
         {
           "name": "Chicken burger",
+          "dishId": "chicken-burger",
           "desc": null,
           "price": 13.5,
           "tags": [
@@ -1045,6 +1125,7 @@
         },
         {
           "name": "Lamb burger",
+          "dishId": "lamb-burger",
           "desc": null,
           "price": 13.5,
           "tags": [
@@ -1053,6 +1134,7 @@
         },
         {
           "name": "Mixed burger",
+          "dishId": "mixed-burger",
           "desc": "Chicken and lamb.",
           "price": 13.5,
           "tags": [
@@ -1061,6 +1143,7 @@
         },
         {
           "name": "Falafel burger",
+          "dishId": "falafel-burger",
           "desc": null,
           "price": 13.5,
           "tags": [
@@ -1070,6 +1153,7 @@
         },
         {
           "name": "Muciver burger",
+          "dishId": "muciver-burger",
           "desc": "Zucchini fritter.",
           "price": 13.5,
           "tags": [
@@ -1079,6 +1163,7 @@
         },
         {
           "name": "Mix vege burger",
+          "dishId": "mix-vege-burger",
           "desc": null,
           "price": 13.5,
           "tags": [
@@ -1088,6 +1173,7 @@
         },
         {
           "name": "Halloumi burger",
+          "dishId": "halloumi-burger",
           "desc": null,
           "price": 13.5,
           "tags": [
@@ -1103,6 +1189,7 @@
       "items": [
         {
           "name": "Kebab combo #1",
+          "dishId": "kebab-combo-1",
           "desc": "Your choice of kebab, chips and a 330ml Coca-Cola drink.",
           "price": 22.5,
           "tags": [
@@ -1111,6 +1198,7 @@
         },
         {
           "name": "Kebab combo #2",
+          "dishId": "kebab-combo-2",
           "desc": "Your choice of kebab, chips and a 600ml Coca-Cola drink.",
           "price": 24.5,
           "tags": [
@@ -1119,6 +1207,7 @@
         },
         {
           "name": "Combo upgrade",
+          "dishId": "combo-upgrade",
           "desc": "Added to a kebab, mixed kebab, iskender or salad.",
           "price": 6,
           "tags": []
@@ -1130,6 +1219,7 @@
       "items": [
         {
           "name": "Fries",
+          "dishId": "fries",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -1138,6 +1228,7 @@
         },
         {
           "name": "Garlic bread",
+          "dishId": "garlic-bread",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -1147,6 +1238,7 @@
         },
         {
           "name": "Loaded chips",
+          "dishId": "loaded-chips",
           "desc": null,
           "price": 12.5,
           "tags": [
@@ -1160,6 +1252,7 @@
       "items": [
         {
           "name": "Baklava",
+          "dishId": "baklava",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -1169,6 +1262,7 @@
         },
         {
           "name": "Tiramisu",
+          "dishId": "tiramisu",
           "desc": null,
           "price": 8.5,
           "tags": [
@@ -1179,6 +1273,7 @@
         },
         {
           "name": "Black forest",
+          "dishId": "black-forest",
           "desc": null,
           "price": 8.5,
           "tags": [
@@ -1188,6 +1283,7 @@
         },
         {
           "name": "Turkish delight",
+          "dishId": "turkish-delight",
           "desc": null,
           "price": 5,
           "tags": [
@@ -1201,6 +1297,7 @@
       "items": [
         {
           "name": "Ayran",
+          "dishId": "ayran",
           "desc": "Yoghurt drink.",
           "price": 4,
           "tags": [
@@ -1210,6 +1307,7 @@
         },
         {
           "name": "Apple tea",
+          "dishId": "apple-tea",
           "desc": null,
           "price": 4,
           "tags": [
@@ -1218,6 +1316,7 @@
         },
         {
           "name": "Turkish coffee",
+          "dishId": "turkish-coffee",
           "desc": null,
           "price": 5,
           "tags": [
@@ -1232,12 +1331,14 @@
       "items": [
         {
           "name": "Extra meat",
+          "dishId": "extra-meat",
           "desc": null,
           "price": 6,
           "tags": []
         },
         {
           "name": "Extra falafel",
+          "dishId": "extra-falafel",
           "desc": "1 piece.",
           "price": 3,
           "tags": [
@@ -1246,6 +1347,7 @@
         },
         {
           "name": "Extra mucver",
+          "dishId": "extra-mucver",
           "desc": "Zucchini fritter, 1 piece.",
           "price": 3,
           "tags": [
@@ -1254,6 +1356,7 @@
         },
         {
           "name": "Extra halloumi",
+          "dishId": "extra-halloumi",
           "desc": "1 piece.",
           "price": 3,
           "tags": [
@@ -1263,6 +1366,7 @@
         },
         {
           "name": "Extra cheese",
+          "dishId": "extra-cheese",
           "desc": null,
           "price": 1.5,
           "tags": [

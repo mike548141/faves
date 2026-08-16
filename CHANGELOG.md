@@ -8,7 +8,64 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Dish photos, on every McDonald's item.** All 41 dishes now carry a
+  photograph — the first use of dish photos anywhere in the app. They are
+  McDonald's own New Zealand product images, so a named, trademarked product is
+  shown as the product and not as a generic burger from a stock library; open
+  alternatives were checked dish by dish and lost on accuracy, not on licence
+  (the record is in `data/images/mcdonalds.json`). Each is a transparent cutout
+  trimmed to the food and re-centred in one frame, so the set is framed
+  identically and takes the card's own colour in light and dark mode. They
+  lazy-load and are cached on demand, never precached: 1.17 MB across 41 images
+  (29 KB each) that costs a first visit nothing.
+- **Four more Sprig + Fern taverns, and they are their own places.** Petone,
+  Berhampore, Thorndon and Little Sprig Seatoun each have their own address,
+  hours, phone and map pin. They are not listed as branches of one venue,
+  because they are not: each is a separate franchise with its own kitchen and
+  its own menu, and showing one tavern's menu — and its allergen tags — against
+  four kitchens that don't cook that food would be a claim about the wrong
+  kitchen. Their menus are read in later; the Tawa menu stays on Tawa.
+- **Three more Petone places** — The Victoria Tavern, Caffiend and Baylands
+  Brewery — findable by name, area and pin. **Baylands has its full food menu**,
+  26 dishes read from the brewery's own PDF, with allergens tagged. The other
+  two have no menu yet, and deliberately so: one venue's site is currently
+  serving a broken security certificate and the other's domain no longer
+  resolves, so there is no source we would trust.
+
 ### Fixed
+- **The order tally could overcharge you, and no longer can.** A place that
+  prints the same dish twice at different prices — Sprig + Fern lists
+  *Cheeseburger* three times, at $28, $21 and $15 — was one dish as far as the
+  tally was concerned. Adding the $21 one to a tally already holding the $28
+  one gave "2 × Cheeseburger" at **$56 instead of $49**. Every dish now carries
+  its own identity, so they are three separate lines at three separate prices.
+- **Hearts, ratings and shared links stop pointing at the wrong dish.** Same
+  cause: hearting the kids' fish and chips hearted all three fish and chips, a
+  link to the Gold Card price could never reach it, and choosing a sauce on one
+  dish silently cleared it on the same-named dish further down the page. A
+  dish's identity is now written down rather than worked out from its name, so
+  a shop renaming a dish no longer quietly detaches every heart and rating on
+  every family phone.
+
+### Changed
+- **The home screen is mostly places again.** Every filter and sort now lives in
+  one sheet behind a single `Filters` button in a slim bottom bar, grouped and
+  labelled for the first time — **Narrow to** (service, area, cuisine, open now,
+  cheap eats) and **Sort by** (near me, along a route), which is a real
+  distinction the old undifferentiated chip row never made. On an iPhone the
+  chrome drops from 50.7 % of the screen to 31.9 %, and from 58.4 % to 34.5 %
+  when you arrive by tapping a cuisine on a menu — 3 cards visible becomes 4,
+  and 2 becomes 4. Nothing was removed: the button carries a count of what's on,
+  and the chips beside the result count still name each one and clear it in a tap.
+- **"Pick for us" moved into the bar.** It used to float over the list, where it
+  covered 63 % of a venue's ♥ on the landing screen — measured, and exactly what
+  the owner had seen. Nothing floats over the cards now.
+
+### Fixed
+- **Three filter buttons were under the minimum tap-target size.** The
+  Everywhere / Takeaway / Dine-in control shipped at 40 px tall at every screen
+  width, against the app's own 44 px floor.
 - **The "Call to order" button no longer looks cut off.** Pinned to the top of a
   long menu it was exactly as tall as the bar holding it, so its rounded bottom
   sat flush on the edge and blurred into whatever was scrolling past

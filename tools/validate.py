@@ -733,6 +733,62 @@ def check_hours(rid, hours, where):
                 err(rid, f"{where}: hours[{day}] close {c} must be after open {o}")
 
 
+def slug(s):
+    """The dish/section slug — a Python mirror of `slug` in site/js/slug.js.
+
+    Written twice on purpose and kept identical by hand: the browser's copy is
+    an ES module and this tooling is stdlib-only Python (ADR 0001). If the two
+    ever disagree the validator blesses an id the app cannot resolve, which is
+    the silent failure the dish-id work exists to end."""
+    return re.sub(r"^-|-$", "", re.sub(r"[^a-z0-9]+", "-", s.lower()))
+
+
+def dish_id(item):
+    """A dish's resolved id: `dishId` where the data gives one, `slug(name)`
+    otherwise — the mirror of `dishId()` in site/js/dish-id.js (ADR 0051).
+
+    The fallback stays even though the field is now REQUIRED in the data (see
+    the gate in check_restaurant), because this resolver runs on a record that
+    has already failed that gate: a dish missing its id must still be findable,
+    or one missing field would suppress every other complaint about the row."""
+    v = item.get("dishId")
+    if isinstance(v, str) and v:
+        return v
+    n = item.get("name")
+    return slug(n) if isinstance(n, str) else ""
+
+
+def _former_ids(item):
+    """A dish's `formerIds` as a list, tolerating the malformed shapes the
+    caller has already errored on — so one bad field can't crash the resolver
+    and hide every other complaint in the record."""
+    v = item.get("formerIds")
+    return [x for x in v if isinstance(x, str)] if isinstance(v, list) else []
+
+
+def find_dish(dishes, ref):
+    """Resolve `ref` against `[(section_name, item)]`, mirroring `findDish()` in
+    site/js/dish-id.js: id, then slug(ref) as an id, then exact name, then a
+    former id. Returns `(tier, matches)` for the FIRST tier that matched.
+
+    The browser takes the first match and moves on, as it always did. Here the
+    whole tier comes back, because ambiguity is exactly what this file is for:
+    a pick that matches two dishes must be refused at the gate rather than
+    silently resolving to whichever row happens to come first."""
+    as_slug = slug(ref)
+    tiers = (
+        ("dishId", lambda i: dish_id(i) == ref),
+        ("slug", lambda i: dish_id(i) == as_slug),
+        ("name", lambda i: i.get("name") == ref),
+        ("formerId", lambda i: ref in _former_ids(i) or as_slug in _former_ids(i)),
+    )
+    for tier, match in tiers:
+        hits = [(s, i) for s, i in dishes if match(i)]
+        if hits:
+            return tier, hits
+    return None, []
+
+
 def check_restaurant(path):
     rid = path.stem
     try:
@@ -972,6 +1028,9 @@ def check_restaurant(path):
     # menu + collect item names for picks check
     item_names = set()
     pairings = []  # (dish_name, ref) — validated after all names are known
+    dishes = []  # (section_name, item) — every dish, in file order, for find_dish
+    dish_ids = {}  # resolved id -> (section_name, dish_name); uniqueness is a gate
+    former_claims = {}  # former dish id -> [(section_name, dish_name)] claiming it
     menu = data.get("menu")
     if not isinstance(menu, list):
         err(rid, "menu must be a list")
@@ -987,12 +1046,14 @@ def check_restaurant(path):
         check_translations(rid, section, f"section {section.get('section')!r}", {"section"})
         add_on_refs += collect_add_on_refs(rid, section, f"section {section.get('section')!r}")
         check_add_ons_only(rid, section, add_on_defs)
+        sec_name = section.get("section")
         for item in section.get("items", []):
             name = item.get("name")
             if not isinstance(name, str) or not name.strip():
                 err(rid, "menu item missing a name")
             else:
                 item_names.add(name)
+            dishes.append((sec_name, item))
             check_translations(rid, item, f"item {name!r}", {"name", "desc"})
             add_on_refs += collect_add_on_refs(rid, item, f"item {name!r}")
             # price may be a plain number/null, or a dated series (ADR 0023).
@@ -1018,6 +1079,80 @@ def check_restaurant(path):
             code = item.get("code")
             if code is not None and not (isinstance(code, str) and code.strip()):
                 err(rid, f"code for {name!r} must be a non-empty string or absent")
+
+            # dishId: the dish's identity, and REQUIRED (owner ruling,
+            # 2026-08-16: "we MUST ENSURE things like ratings and favourites are
+            # never lost in future thus immutable ID's"). ADR 0051 landed it as
+            # optional, defaulting to `slug(name)` — and a default computed from
+            # the display name is not an immutable id, it is the rename bug one
+            # level up: rename the dish and every heart, rating, shared link and
+            # order line pointing at it silently detaches. Storing the id is what
+            # makes it immutable, and it is stored so a transcriber SEES it on
+            # the line under the name they are about to change. Do not relax this
+            # back to optional; seed the field instead (tools/seed_dish_ids.py).
+            #
+            # It must also BE a slug, not merely resolve to one, because an
+            # anchor, a stored heart and an order line all carry it verbatim —
+            # `"Gold Card"` in the data would build `#dish-Gold Card`.
+            did = item.get("dishId")
+            if did is None:
+                # The message names the exact id to write, because a validator
+                # that only says what is wrong makes the reader re-derive the
+                # answer — and re-deriving it by hand is how a wrong one gets in.
+                want = slug(name) if isinstance(name, str) else ""
+                err(
+                    rid,
+                    f'dish {name!r} has no "dishId" — add "dishId": "{want}" '
+                    "(run tools/seed_dish_ids.py)",
+                )
+            elif not (isinstance(did, str) and did.strip()):
+                err(rid, f"dishId for {name!r} must be a non-empty string")
+            elif not ID_RE.match(did):
+                suggestion = slug(did) or (slug(name) if isinstance(name, str) else "")
+                err(
+                    rid,
+                    f"dishId {did!r} on {name!r} is not in slug form (lower-case, "
+                    f"digits, single hyphens) — write {suggestion!r}",
+                )
+
+            # Two dishes resolving to one id is the bug this whole field exists to
+            # fix: one anchor reachable, one heart shared, one price charged twice.
+            # Now that every row states its id, seeding a repeated name produces
+            # the collision here rather than silently downstream — which is the
+            # point: `seed_dish_ids.py` writes what the dish already resolved to,
+            # so a clash it creates is a clash that was already live.
+            resolved = dish_id(item)
+            if resolved:
+                if resolved in dish_ids:
+                    prev_section, prev_name = dish_ids[resolved]
+                    err(
+                        rid,
+                        f"two dishes resolve to the same id {resolved!r} "
+                        f"({prev_section!r} and {sec_name!r}) — give the second an "
+                        'explicit "dishId"',
+                    )
+                else:
+                    dish_ids[resolved] = (sec_name, name)
+
+            # formerIds on a dish: ids it used to answer to, so an old shared link
+            # or a heart stored on a family phone still resolves (ADR 0051). Named
+            # for the venue-level field it mirrors, and validated the same way —
+            # a former id nothing checks is a promise nobody keeps.
+            former_dish = item.get("formerIds")
+            if former_dish is not None:
+                if not isinstance(former_dish, list) or not all(
+                    isinstance(x, str) and x.strip() for x in former_dish
+                ):
+                    err(rid, f"formerIds for {name!r} must be a list of non-empty strings")
+                else:
+                    for old in former_dish:
+                        if not ID_RE.match(old):
+                            err(
+                                rid,
+                                f"formerIds entry {old!r} on {name!r} is not in slug "
+                                f"form — write {slug(old)!r}",
+                            )
+                        former_claims.setdefault(old, []).append((sec_name, name))
             tags = item.get("tags", [])
             if not isinstance(tags, list):
                 err(rid, f"tags for {name!r} must be a list")
@@ -1056,24 +1191,70 @@ def check_restaurant(path):
             elif gw:
                 pairings.extend((name, ref) for ref in gw)
 
+    # A former dish id must not be a live one. findDish tries live ids first, so
+    # the old link would keep reaching the live dish and the claim would sit in
+    # the data looking honoured — and two dishes claiming one former id is the
+    # same failure with no right answer at all.
+    for old, claimants in former_claims.items():
+        if old in dish_ids:
+            live_section, live_name = dish_ids[old]
+            claim_section, claim_name = claimants[0]
+            err(
+                rid,
+                f"formerIds on {claim_name!r} ({claim_section!r}) claims {old!r}, "
+                f"which is the live id of {live_name!r} ({live_section!r}) — the live "
+                "dish wins and the old link never arrives",
+            )
+        if len(claimants) > 1:
+            where = " and ".join(f"{n!r} ({s!r})" for s, n in claimants)
+            err(rid, f"two dishes claim the former id {old!r}: {where} — only one can answer to it")
+
     # status/menu consistency
     if status == "stub" and menu:
         warn(rid, "status is 'stub' but a menu is present")
     if status in ("menu-complete", "verified") and not menu:
         err(rid, f"status is '{status}' but menu is empty")
 
-    # picks must exist in menu exactly
+    # picks must resolve to exactly one dish. They are written as names, and a
+    # name is not unique within a venue — so matching them against a set of names
+    # meant a pick on a duplicated dish resolved to whichever row came first, and
+    # said nothing. Resolution goes through find_dish (ADR 0051) so a pick may
+    # also name a dish id, which is the only way to point at the second row.
     picks = data.get("picks", [])
     if not isinstance(picks, list):
         err(rid, "picks must be a list")
     else:
         for p in picks:
-            if p not in item_names:
+            if not isinstance(p, str):
+                err(rid, f"pick {p!r} must be a string")
+                continue
+            tier, hits = find_dish(dishes, p)
+            # A pick that names a dish id is unambiguous by construction — the
+            # uniqueness gate above already refused two dishes sharing one. Every
+            # other form is a NAME, and a name shared by two rows resolves to
+            # whichever comes first while saying nothing, which is the bug.
+            # Note it stays an error even when resolution succeeded: the first
+            # row does answer, but nobody can tell whether that is the row meant.
+            by_name = [(s, i) for s, i in dishes if i.get("name") == p]
+            if not hits:
                 err(rid, f"pick {p!r} does not match any menu item name")
+            elif tier != "dishId" and len(by_name) > 1:
+                where = ", ".join(repr(s) for s, _ in by_name)
+                ids = ", ".join(repr(dish_id(i)) for _, i in by_name)
+                err(
+                    rid,
+                    f"pick {p!r} matches {len(by_name)} dishes ({where}) — name the "
+                    f"one you mean by its dish id ({ids})",
+                )
     if status in ("menu-complete", "verified") and not picks:
         warn(rid, "no picks set yet")
 
-    # goesWith pairings must resolve — same-record dish name, or "id#Dish".
+    # goesWith pairings must resolve — same-record dish name or id, or "id#Dish".
+    # Same-record refs go through find_dish so a pairing can point at a
+    # disambiguated row by its id; a cross-record ref still resolves by name,
+    # because ALL_NAMES is the pre-pass and the other record's ids are not read
+    # here. Ambiguity is not an error for a pairing: it renders a suggestion,
+    # not a price, so the first match is a harmless answer where a pick's is not.
     for dish, ref in pairings:
         if "#" in ref:
             ref_id, _, ref_name = ref.partition("#")
@@ -1081,7 +1262,7 @@ def check_restaurant(path):
                 err(rid, f"goesWith {ref!r} on {dish!r}: unknown restaurant id {ref_id!r}")
             elif ref_name not in ALL_NAMES[ref_id]:
                 err(rid, f"goesWith {ref!r} on {dish!r}: no dish {ref_name!r} in {ref_id}")
-        elif ref not in item_names:
+        elif not find_dish(dishes, ref)[1]:
             err(rid, f"goesWith {ref!r} on {dish!r} does not match a dish in this menu")
 
     # Both directions of the add-on reference, because both are silent failures.
