@@ -5817,7 +5817,48 @@ The released claim only ever covered the owner's original five.
 > `service` axis, and `service` already means three things) stands unchanged.
 > What these rulings close are the two questions 0077 explicitly left open.
 
-- [~] **37k — a "style of dining" filter** `[M][schema][design]` — **RE-CLAIMED
+> ✅ **37k BUILT AND SHIPPED 2026-08-16** (wt: faves-cook2, `9aa6071`…`62546b4`).
+> Recorded as **ADR 0082**. `site/js/vibes.js` is new — 17 keys in three facets.
+> **The build is done; only the TAGGING is owed, and it is his.**
+> 🔑 **The vocabulary is stated ONCE and `tools/validate.py` READS that file**
+> rather than holding a Python copy — two copies would drift silently. The parse
+> **dies loudly on zero keys**: a regex that quietly matched nothing would make
+> the gate pass every value, which is ADR 0072 exactly.
+> 🔎 **Measured, not guessed — the chip cap is TWO.** Swept in a real browser
+> over all 55 cards at 390 px: one chip wraps 5 cards (+3% list height), **two
+> wraps 29 and never makes a third line**, three wraps **all 55** for **+26%**.
+> Three is the cliff.
+> ✅ **The fourth select FITS** — `filter_row_check` 25/25, narrowest select
+> **134 px against a 104 px floor**. It fits *because* the row has since lost the
+> Sort-by group (ADR 0068) **and** 256 px of segmented control (15z), so 15z's
+> warning was true when written and is no longer binding. Worth knowing before
+> anyone else declines a control on it.
+> 🔎 **One design reading changed by evidence.** The filter matches **any** style
+> value a venue carries, not the first in vocabulary order: `regal-chinese` is
+> both `sit-down` and `banquet`, and picking one made "Banquet" render on the
+> card while being **absent from the dropdown** — a dead end you could see but
+> not select.
+> 🚩 **TWO GUARDS WERE BROKEN BY THIS MIGRATION AND FIXED WITH IT** — both found
+> by going to look, neither by any gate: `test_validate.py`'s sandbox did not
+> copy `vibes.js`, so its baseline failed outright; and `drinks_gap.py`'s
+> `DEFINITE_VIBE = {"craft beer", …}` **silently matched nothing** after the
+> rename and lost 7 worklist hits without failing or warning. The second is the
+> DEGRADED face recorded at the head of this file.
+> ⚠️ `test_validate.py` is now **110 mutations** — CLAUDE.md said 93, then 99,
+> then 104 within one hour as three sessions added to it. Read the tool's output,
+> never the doc.
+> 🎯 **STILL OWED AND HIS ALONE: the tagging.** 20 of 55 venues carry any `vibe`;
+> **35 carry none**. Under CLAUDE.md's standing rule those are filled only as he
+> supplies them — **never inferred** from a menu, a photo or a website's tone.
+> ADR 0077's argument that a style value is unfalsifiable from what we hold is
+> **not refuted** by this build; it is answered by making him the source.
+> 📌 Also queued: the two te reo drafts (`filter.style` → *"Tāera kai"*) are in
+> `reo-review-queue.md` and want a speaker — *tāera* may read as style-of-FOOD,
+> which would name the cuisine filter sitting beside it.
+
+- [ ] **37k — a "style of dining" filter** — ⚠️ **CLAIM RELEASED 2026-08-16
+      23:32 UTC. Build complete; what remains is OWNER DATA ENTRY, not open
+      work.** Former claim (wt: faves-cook2, branch `style-37k`). **RE-CLAIMED
       2026-08-16 23:08 UTC (wt: faves-cook2, branch `style-37k`)** on the four
       rulings above. Files: `site/data/restaurants/*.json` (vibe values only),
       `tools/validate.py`, `site/js/filters.js`, `site/js/app.js`,
