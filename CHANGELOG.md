@@ -18,6 +18,13 @@ content freshness separately from this file.
   silently dropped on that path since those settings were added.
 
 ### Added
+- **"How we know" is now told branch by branch.** Where a venue has several
+  branches, the ⓘ beside its name can say how *that* branch's phone, address
+  and hours were checked, and name it. Pandan is the first: its Melling details
+  come from Pandan's own site, while the Press Hall opening hours are the food
+  hall's. Previously one venue-wide answer had to cover both, so it read as the
+  weaker of the two and Pandan's own address was described as coming from a
+  directory listing.
 - **Three chains now show all their Wellington branches.** Hell Pizza went from
   one location to **14**, BurgerFuel to 4 and Kaffee Eis to 3 — each with its own
   address, phone and opening hours, so the card can offer you the nearest one

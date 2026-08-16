@@ -127,8 +127,11 @@ excluded from both stores, always.
     { "label": "Courtenay Place",    //   sharing this name/menu (see "Multi-location"
       "address": "…", "lat": -41.29, //   below + ADR 0011). When present, the branches
       "lng": 174.78, "phone": "…",   //   carry address/lat/lng/phone/hours — those five
-      "hours": { /* week */ } }       //   fields must then be ABSENT at the top level.
-  ],
+      "hours": { /* week */ },       //   fields must then be ABSENT at the top level.
+      "timezone": null,              //   `timezone`, `detailsVerified` and
+      "detailsVerified": null,       //   `detailsVerifiedBy` are DIFFERENT: legal at
+      "detailsVerifiedBy": null }    //   both levels, branch winning, top level the
+  ],                                 //   default (ADR 0043; per-branch provenance)
 
   "image": null,                     // optional self-hosted card photo, e.g. "img/kk/hero.jpg"
   "alt": null,                       // required when image is set (a11y)
@@ -152,6 +155,9 @@ excluded from both stores, always.
                                      //   checked when this pair says so (ADR 0037).
                                      //   Unlike `verified`, a date here without a
                                      //   method is an ERROR — no legacy corpus.
+                                     //   ALSO valid on a branch, which wins; here it
+                                     //   is then the default for branches that omit
+                                     //   it (per-branch provenance, below).
   "rating": null,                    // optional curated household rating, integer 1..5 (ours,
                                      //   static). Distinct from device-local personal ratings.
   "status": "stub",                  // stub | menu-complete | verified
@@ -387,6 +393,33 @@ shape, same closed method set, same full-date precision.
 Absent means those were never checked as a distinct act — the honest majority
 case, and the menu screen then declines to mention them at all rather than
 letting the menu's date cover them.
+
+#### Details belong to a branch, not to a chain
+
+The pair is valid on a **branch** as well as the venue, and the branch wins —
+the same default-and-override shape as `timezone`, not the
+must-not-be-both rule that governs address / phone / hours. A venue-level value
+is the default for branches that omit it, so every existing record is unchanged.
+
+Because a chain's branches are not checked from one source. Pandan's Melling
+address, phone and hours are all from Pandan's own site; Press Hall's hours are
+its *landlord's* statement about its own building. One venue-level field must
+read as weakly as its weakest input, which throws away the truth about the
+stronger branch — Melling read as `third-party` for the sake of a fact about a
+different address. The pair is taken **whole** from one level or the other: a
+branch date welded to the venue's method would describe a reading nobody did.
+
+`temporal.js` `detailsVerification(record, branch)` resolves it and reports a
+`scope` of `"branch"` or `"venue"`. The menu screen's ⓘ passes the **nearest**
+branch — the same one whose hours already drive the open/closed status — and
+names it when the reading is that branch's own and there is more than one branch
+to tell apart: *"Phone, address and opening hours at Melling checked against the
+place's own site on 15 Aug 2026."* <!-- datescan:allow: quoted on-screen copy — niceDate's reader-facing format, not a stamp -->
+
+
+Ageing this field per *kind* — one decay limit for hours, another for phone and
+address — is a separate owner-ruled change whose numbers do not exist yet. It is
+not built.
 
 #### The "needs a refresh" caveat — the method decides, the date ages it (ADR 0036)
 
