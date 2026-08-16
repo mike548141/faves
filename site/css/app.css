@@ -295,8 +295,8 @@ main {
 }
 
 /* Shared pill toggles, now inside the filter sheet: "Open now" / "Cheap eats"
-   under "Narrow to", "Near me" / "Along a route" under "Sort by". The location
-   pair stays hidden until app.js confirms geolocation is available. */
+   under "Narrow to". The "Sort by" group beside them stays hidden until app.js
+   confirms geolocation is available. */
 .list-toggles {
   display: flex;
   flex-wrap: wrap;
@@ -339,34 +339,6 @@ main {
   color: var(--ink-soft);
   font-size: var(--step-sub);
   margin-bottom: var(--space-3);
-}
-
-/* "Along a route" destination picker — appears under the toggles once the
-   mode is armed. The select stretches; a "Done" button dismisses it. */
-.route-bar {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  margin-bottom: var(--space-3);
-}
-.route-dest-field {
-  flex: 1;
-  min-width: 0;
-}
-.route-clear {
-  min-height: 44px;
-  padding: 0.5em 1em;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-chip);
-  background: var(--surface-2);
-  color: var(--ink-soft);
-  font-size: var(--step-sub);
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.route-clear:active {
-  transform: scale(0.97);
 }
 
 /* "Faves" wordmark doubles as a home button. */
@@ -969,52 +941,6 @@ body.faves-view .filter-bar {
   margin-inline: 0.4em;
   color: var(--line);
 }
-/* "Along a route": the detour headline takes the distance slot (same accent +
-   trailing separator). It's a straight-line estimate (route.js) — the "Route
-   via maps" action gives the real road route. */
-.card-detour {
-  color: var(--accent);
-  font-weight: 700;
-}
-.card-detour::after {
-  content: "·";
-  margin-inline: 0.4em;
-  color: var(--line);
-}
-/* "Route via maps" action, shown only on route-mode cards. A sibling of the
-   card link (a link-in-a-link is invalid), floating bottom-left and z-stacked
-   above; the card reserves bottom padding for it so it never covers the chips. */
-.card:has(.card-route) .card-link {
-  padding-bottom: 3.4rem;
-}
-.card-route {
-  position: absolute;
-  left: var(--space-3);
-  bottom: var(--space-3);
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
-  min-height: 44px;
-  padding: 0.3em 0.8em;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-chip);
-  background: var(--surface);
-  color: var(--accent);
-  font-size: var(--step-sub);
-  font-weight: 700;
-  text-decoration: none;
-  white-space: nowrap;
-}
-@media (hover: hover) {
-  .card-route:hover {
-    background: var(--accent);
-    color: var(--accent-ink);
-  }
-}
-.card-route:active {
-  transform: scale(0.97);
-}
 .chip-row {
   display: flex;
   flex-wrap: wrap;
@@ -1538,8 +1464,7 @@ body.filters-inline .filter-narrow-group {
 }
 /* The rule IS the grouping. Two groups, one line between them — cheaper in
    pixels than two headings (153 px of a 928 px row) and quicker to read than
-   either. `flex-wrap` is here for the destination bar below, which is the only
-   thing allowed to take a second line. */
+   either. */
 /* `0 0 auto` — never shrink. It shrank in the first cut and wrapped INSIDE
    itself, putting "Sort by" on one line and its select on the next: a 97 px row
    that had all the right words in it. When the row is tight the narrow selects
@@ -1609,36 +1534,13 @@ body.filters-inline .list-toggles {
   flex: 0 0 auto;
   flex-wrap: nowrap;
 }
-/* The destination picker is the one control allowed a second line: it exists
-   only while a route is armed, so the row is one line in every resting state.
-   `#filter-controls.routing` is set by app.js's syncUI at the same moment the
-   bar is unhidden — the sort group goes full width and drops below, taking its
-   rule with it, rather than trying to fit a fourth control into a row measured
-   for three. */
-/* The wrap is scoped to `.routing` and that scoping is load-bearing, not tidy.
-   Turned on unconditionally it put the resting row back to 121 px: a wrapping
-   flex line breaks on its items' *basis*, and this row only fits because the
-   selects SHRINK below theirs. Wrap therefore has to be off in every state that
-   is meant to be one line, and the two groups are pinned to 100% here so the
-   break lands where it was designed to and not wherever the widths fall. */
-body.filters-inline #filter-controls.routing {
-  flex-wrap: wrap;
-}
-body.filters-inline #filter-controls.routing .filter-narrow-group {
-  flex: 1 1 100%;
-}
-body.filters-inline #filter-controls.routing .filter-sort-group {
-  flex: 1 1 100%;
-  border-left: 0;
-  padding-left: 0;
-  border-top: 1px solid var(--line);
-  padding-top: var(--space-2);
-}
-body.filters-inline .route-bar {
-  flex: 1 1 auto;
-  min-width: 12rem;
-  margin-bottom: 0;
-}
+/* NOTE for whoever adds a control to this row. `flex-wrap` stays OFF here, and
+   that is load-bearing, not tidy: turned on it put the row back to 121 px,
+   because a wrapping flex line breaks on its items' *basis* and this row only
+   fits because the selects SHRINK below theirs. A fourth control does not fit —
+   the one that used to try laid itself over "All cuisines", "Open now" and
+   "Cheap eats", all three still passing a visibility check and all three
+   untappable. */
 /* Moved here from the sheet's footer by filters-ui.js — the same button, not a
    second one. Trailing, so it reads as the way out of the row rather than
    another filter. */

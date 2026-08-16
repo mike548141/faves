@@ -11,7 +11,7 @@
 // street. Maps geocodes the address string exactly, so we hand it the address
 // and fall back to coords only if a record somehow has none (validate.py
 // requires an address, so that path is belt-and-braces). Coords stay for
-// in-app distance maths (ranking, detour) only.
+// in-app distance maths (the "Nearest first" ranking) only.
 //
 // Which maps provider we hand off to follows the viewer's own choice
 // (Settings → "Maps app"): the web can't read the OS's default-maps-app
@@ -31,9 +31,13 @@
 //   waze  → waze.com/ul?q=<query>  — Waze's universal link treats q as a search
 //           (address geocodes to a pin); add &navigate=yes to start driving.
 //
-// The along-a-route "🧭 Route via maps" handoff (routeMapsUrlFor) is a separate,
-// explicitly-routed feature (ADR 0014) and KEEPS its routed form — it just
-// targets the venue leg by address too, same wrong-street reasoning.
+// routeMapsUrlFor builds a THROUGH-route (origin → venue → destination) rather
+// than a pin. Nothing calls it since the "Along a route" sort was removed whole
+// (owner ruling, 2026-08-16 — suburb centroids were the wrong proxy for "on my
+// way"); it is kept, tested and unwired because the real address-based routing
+// feature that replaces it needs exactly this handoff, and the per-provider
+// waypoint findings below were expensive to establish and are not re-derivable
+// from the docs. Delete it if that feature is ever abandoned outright.
 //
 // The logic is split so it can be unit-tested without a browser:
 // detectPlatform() takes an injectable navigator; the URL builders are pure.
@@ -103,9 +107,9 @@ export function mapsUrl(r, pref) {
 }
 
 /**
- * "Route via maps" for Pick-along-a-route (ADR 0014): directions from the
- * viewer's current location, THROUGH a venue, to a named destination — so the
- * maps app shows the real road route for "grab dinner on the way home".
+ * A through-route: directions from the viewer's current location, THROUGH a
+ * venue, to a named destination — so the maps app shows the real road route for
+ * "grab dinner on the way home". Currently unwired (see the header).
  *
  * The venue leg targets the street address (Maps geocodes it exactly — same
  * wrong-street reasoning as the pin handoff, ADR 0016); the destination stays
@@ -120,8 +124,8 @@ export function mapsUrl(r, pref) {
  *   • Apple Maps' URL scheme exposes only `saddr`/`daddr` — NO waypoint
  *     parameter — so we honestly can't express the stop. On Apple we route to
  *     the venue (origin→venue, `daddr` at its address, `dirflg=d` = drive) and
- *     drop the destination rather than fake it. This is still directions — the
- *     route feature stays routed even where the pin handoff is now a pin.
+ *     drop the destination rather than fake it. This is still directions —
+ *     routed even where the pin handoff is a pin.
  *   • Waze's universal link takes a single `q` destination (+`navigate=yes`) and
  *     likewise has no waypoint param — so Waze mirrors Apple: navigate to the
  *     venue, destination dropped.

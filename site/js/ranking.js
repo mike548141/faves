@@ -54,10 +54,11 @@ const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 const isStub = (r) => r.status === "stub";
 
 // Tier from a resolved hours object (already picked for the right branch).
-// Exported so the along-a-route sort (route.js) tiers on the SAME scale from
-// its own best-detour branch's hours, keeping "prefer open along the way"
-// consistent with the home list.
-export function tierFromHours(hours, now) {
+// Module-local: it was exported so the along-a-route sort could tier on the
+// same scale, and that feature was removed whole (owner ruling, 2026-08-16 —
+// suburb centroids were the wrong proxy for "on my way"). Export it again if a
+// second ranker ever needs this scale; don't duplicate it.
+function tierFromHours(hours, now) {
   const st = openStatus(hours, now).state;
   if (st === "open" || st === "closing-soon") return 0;
   if (st === "opening-soon") return 1;

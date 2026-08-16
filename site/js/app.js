@@ -14,12 +14,11 @@ import {
   filtersFromQuery,
 } from "./filters.js";
 import { initFiltersUI } from "./filters-ui.js";
-import { formatDriveTime, estimateDriveMinutes } from "./distance.js";
+import { formatDriveTime } from "./distance.js";
 import { formatDistance } from "./units.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
-import { rankByDetour, bestBranchForRoute, areaCentroids } from "./route.js";
-import { branchCoords, branchAsPlace, venueHours, nearestBranch } from "./locations.js";
-import { rememberOrigin, routeMapsUrl } from "./geo.js";
+import { venueHours, nearestBranch } from "./locations.js";
+import { rememberOrigin } from "./geo.js";
 import { openStatus, makeClock, viewerOnVenueTime } from "./hours.js";
 import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 import { closureBadge } from "./closure-ui.js";
@@ -145,15 +144,6 @@ function cardArea(r, origin) {
   return branch?.label || r.area || "";
 }
 
-// "+1.2 km detour" (or a warm "On your way" when a venue sits essentially on
-// the line — a sub-100 m added distance is noise, not a detour worth a figure).
-// The 100 m "noise" threshold stays metric on purpose: it's a judgement about
-// when a figure is worth printing, not a figure anyone reads (ADR 0029).
-function detourText(km, units) {
-  if (km < 0.1) return t("route.onWay", "On your way");
-  return `+${formatDistance(km, units)} ${t("route.detour", "detour")}`;
-}
-
 const zonesOf = (restaurants) => new Set(restaurants.map((r) => venueTimezone(r)));
 
 // The sentence under the filter bar explaining whose clock the badges are on,
@@ -169,14 +159,11 @@ function timezoneNote(restaurants) {
     : "Open/closed times are each place’s own local time.";
 }
 
-function card(r, clock, routeCtx = null, origin = null) {
+function card(r, clock, origin = null) {
   const kind = kindOf(r);
   const labels = labelsOf(r);
   const units = settings.get().units;
   const name = el("h3", { className: "card-name", textContent: r.name });
-  // Route mode: the venue carries a detourKm (least added distance to your
-  // trip); it takes over the distance slot as the decision-relevant fact.
-  const onRoute = routeCtx && r.detourKm != null;
 
   // The open/closed badge is built before the meta line because it now sits
   // ON it, beside the suburb. "Dine-in, Takeaway" came off entirely (owner,
@@ -195,22 +182,6 @@ function card(r, clock, routeCtx = null, origin = null) {
       el("span", {
         textContent: n ? `${n} ${labels.itemNoun}${n === 1 ? "" : "s"}` : labels.stubChip,
       }),
-    ]);
-  } else if (onRoute) {
-    // Detour is a STRAIGHT-LINE estimate (route.js), never road distance — shown
-    // with the same "~" the drive-hint uses so it reads as approximate. The
-    // "Route via maps" action (below) gives the real road route through here.
-    const detour = el("span", { className: "card-detour", textContent: `↩ ${detourText(r.detourKm, units)}` });
-    const min = r.detourKm >= 0.1 ? estimateDriveMinutes(r.detourKm) : null;
-    const added =
-      min != null
-        ? el("span", { className: "card-drive", textContent: `~${min} min ${t("route.added", "added")}` })
-        : null;
-    meta = el("p", { className: "card-meta" }, [
-      detour,
-      added,
-      el("span", { className: "card-area", textContent: area }),
-      badge,
     ]);
   } else {
     // In "Near me" mode a venue carries distanceKm; show it first, as the
@@ -292,32 +263,8 @@ function card(r, clock, routeCtx = null, origin = null) {
     );
     heart.classList.add("card-heart");
     li.append(link, heart);
-    // Route mode: a "Route via maps" action per card hands origin→venue→
-    // destination to the maps app for the REAL road route (Google honours the
-    // waypoint; Apple has no waypoint param so it routes to the venue — geo.js).
-    const via = onRoute ? routeVia(r, routeCtx) : null;
-    if (via) li.append(via);
   }
   return li;
-}
-
-// A "Route via maps" link for a card in route mode: directions through this
-// venue's best-detour branch to the chosen destination. A sibling of the card
-// link (a link-in-a-link is invalid), so it z-stacks and stays tappable.
-function routeVia(r, { origin, dest }) {
-  const best = bestBranchForRoute(r, origin, dest);
-  if (!branchCoords(best.branch)) return null; // nothing to route through
-  const href = routeMapsUrl(branchAsPlace(r, best.branch), dest, settings.get().mapsApp);
-  return el(
-    "a",
-    {
-      className: "card-route",
-      href,
-      ...(href.startsWith("http") ? { rel: "noopener", target: "_blank" } : {}),
-      "aria-label": `Route via ${r.name} — opens the maps app`,
-    },
-    [el("span", { "aria-hidden": "true", textContent: "🧭 " }), t("route.via", "Route via maps")]
-  );
 }
 
 function fillSelect(select, values, allLabel, i18nKey) {
@@ -342,15 +289,14 @@ function init(restaurants) {
   fillSelect(areaSel, areas, "All areas", "filter.allAreas");
   fillSelect(cuisineSel, cuisines, "All cuisines", "filter.allCuisines");
 
-  // origin holds the user's {lat, lng} once "Near me" (or "Along a route") is
-  // on; null otherwise. dest holds the {lat, lng, label} destination once a
-  // route is chosen; origin + dest together switch the sort to least-detour.
+  // origin holds the user's {lat, lng} once "Nearest first" is on; null
+  // otherwise.
   // A menu page's subheading links its cuisines and area back here as
   // `?cuisine=…` / `?area=…` (filters.js owns the names, and drops any value
   // the data doesn't have). The controls are set from it too, so the list and
   // the dropdown above it never disagree about why it's short.
   const fromUrl = filtersFromQuery(location.search, { areas, cuisines });
-  const state = { ...DEFAULT_FILTERS, ...fromUrl, origin: null, dest: null };
+  const state = { ...DEFAULT_FILTERS, ...fromUrl, origin: null };
   for (const [sel, value] of [
     [areaSel, state.area],
     [cuisineSel, state.cuisine],
@@ -498,30 +444,17 @@ function init(restaurants) {
     const clock = makeClock();
     let shown = applyFilters(restaurants, state, clock);
     const { favBoostKm, farKm } = settings.get();
-    // "Along a route" (origin + a destination): rank by least detour, and hand
-    // each card the origin/dest so it can offer a real routed maps handoff.
-    const onRoute = !!(state.origin && state.dest);
-    if (onRoute) {
-      shown = rankByDetour(shown, {
-        clock,
-        origin: state.origin,
-        dest: state.dest,
-        favouriteIds: favouriteVenueIds(),
-      });
-    } else {
-      // Default order floats open/favourite/nearby venues up, sinks
-      // closed/faraway ones; distance refines it once "Near me" gives an origin.
-      // The favourite pull + reachable radius are the viewer's own dials.
-      shown = rankVenues(shown, {
-        clock,
-        origin: state.origin,
-        favouriteIds: favouriteVenueIds(),
-        favBoostKm,
-        farKm,
-      });
-    }
-    const routeCtx = onRoute ? { origin: state.origin, dest: state.dest } : null;
-    listEl.replaceChildren(...shown.map((r) => card(r, clock, routeCtx, state.origin)));
+    // Default order floats open/favourite/nearby venues up, sinks
+    // closed/faraway ones; distance refines it once "Near me" gives an origin.
+    // The favourite pull + reachable radius are the viewer's own dials.
+    shown = rankVenues(shown, {
+      clock,
+      origin: state.origin,
+      favouriteIds: favouriteVenueIds(),
+      favBoostKm,
+      farKm,
+    });
+    listEl.replaceChildren(...shown.map((r) => card(r, clock, state.origin)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
     const total = restaurants.length;
@@ -558,7 +491,7 @@ function init(restaurants) {
     render();
   });
 
-  wireLocation(state, render, restaurants);
+  wireLocation(state, render);
 
   // Only a viewer whose device clock differs from the venues' needs telling the
   // badges are venue-local. The note names the zone when the whole list shares
@@ -1070,41 +1003,26 @@ function wireCheapEats(state, render) {
   wireListToggle("cheap-eats", "cheap", state, render);
 }
 
-// Location modes — "Nearest first" (distance sort) and "Along a route"
-// (least-detour sort). Both need the device location, so they share one origin,
-// and they are mutually exclusive sort modes (like search vs favourites).
+// The sort mode. "Nearest first" needs the device location; "Our usual order"
+// is the neutral state and the way back out of it.
 //
-// ONE SELECT SINCE 15z. These were two `aria-pressed` buttons, which is the
-// markup for two independent switches — and this comment has always said the
-// opposite. A `<select>` says one-of-N, which is what they are, and it names
-// the third state ("Our usual order") that used to exist only as "neither
-// pressed". Every behaviour below is unchanged: same permission prompt, same
-// destination bar, same fallbacks when location is refused.
+// ONE SELECT SINCE 15z. "Nearest first" was an `aria-pressed` button, which is
+// the markup for an independent switch — and a sort mode is not one. A
+// `<select>` says one-of-N, which is what this is, and it names the state
+// ("Our usual order") that used to exist only as "not pressed".
 //
 // Purely additive — geolocation is feature-detected and the whole group stays
 // hidden (plain list stays) where it's unavailable. `state.origin` is the
-// viewer's {lat,lng}; `state.dest` is the chosen destination {lat,lng,label};
-// `state.routeOpen` is the "choosing a destination" arming state (bar visible,
-// sort still by distance until a destination lands).
-function wireLocation(state, render, restaurants) {
+// viewer's {lat,lng}.
+function wireLocation(state, render) {
   const sortSel = document.getElementById("filter-sort");
   const sortGroup = document.getElementById("filter-sort-group");
   const status = document.getElementById("geo-status");
-  const routeBar = document.getElementById("route-bar");
-  const destSel = document.getElementById("route-dest");
-  const clearBtn = document.getElementById("route-clear");
   if (!sortSel || !("geolocation" in navigator)) return;
   // app.js owns this, not filters-ui.js: the reason the group can exist is a
   // browser capability, and only this function tests it. A heading over a
   // control nobody can use is worse than no heading.
   if (sortGroup) sortGroup.hidden = false;
-
-  // Destination options come only from data we already hold — a suburb (its
-  // venues' centroid) or a specific place — never free-text (that needs a
-  // geocoder = online API). See ADR 0014.
-  const centroids = new Map(areaCentroids(restaurants).map((a) => [a.area, a]));
-  const byId = new Map(restaurants.map((r) => [r.id, r]));
-  if (destSel) fillDest(destSel, restaurants);
 
   const setStatus = (msg) => {
     status.textContent = msg || "";
@@ -1112,32 +1030,14 @@ function wireLocation(state, render, restaurants) {
   };
 
   // The select is a view of the state, never a second copy of it: every path
-  // that changes origin/dest/routeOpen ends here, so a refused permission or a
-  // cleared route puts the control back by itself rather than being remembered
-  // to. `data-active` drives the accent, with "usual" as this control's neutral.
+  // that changes the origin ends here, so a refused permission puts the control
+  // back by itself rather than being remembered to. `data-active` drives the
+  // accent, with "usual" as this control's neutral.
   function syncUI() {
-    const routing = !!(state.origin && state.dest);
-    const mode = state.routeOpen || state.dest ? "route" : state.origin ? "near" : "usual";
+    const mode = state.origin ? "near" : "usual";
     sortSel.value = mode;
     sortSel.dataset.active = mode;
-    if (routeBar) routeBar.hidden = !state.routeOpen;
-    // The inline row is one line, sized to fit exactly its resting controls.
-    // The destination picker is a fourth control that only exists while a route
-    // is armed, and it does not fit — left to CSS alone it laid itself over
-    // "All cuisines", "Open now" and "Cheap eats". A class, not `:has()`: the
-    // rest of this row's layout is already decided in JS (filters-ui.js owns the
-    // one breakpoint), and a second mechanism deciding the same box is how the
-    // two come to disagree.
-    document.getElementById("filter-controls")?.classList.toggle("routing", !!state.routeOpen);
-    if (routing) {
-      setStatus(`Sorted by detour on the way to ${state.dest.label} — straight-line estimate.`);
-    } else if (state.routeOpen) {
-      setStatus("Choose where you’re heading.");
-    } else if (state.origin) {
-      setStatus("Sorted by distance from you.");
-    } else {
-      setStatus("");
-    }
+    setStatus(state.origin ? "Sorted by distance from you." : "");
   }
 
   // Get the device location (reusing what we already have), then continue.
@@ -1154,7 +1054,6 @@ function wireLocation(state, render, restaurants) {
       },
       (err) => {
         sortSel.disabled = false;
-        state.routeOpen = false; // couldn't arm a route without a location
         // syncUI() puts the select back to "Our usual order" on its own: with
         // no origin the mode reads `usual`. A refused prompt must never leave
         // the control claiming a sort the list is not in.
@@ -1172,91 +1071,21 @@ function wireLocation(state, render, restaurants) {
 
   function clearLocation() {
     state.origin = null;
-    state.dest = null;
-    state.routeOpen = false;
-    if (destSel) destSel.value = "";
     rememberOrigin(null); // the menu screen forgets it too
     syncUI();
     render();
   }
 
-  // One handler for three modes. Choosing "Our usual order" is the way OUT of
-  // location sorting, which the two toggles could only express as "press the
-  // one that is already pressed" — a gesture nothing on screen taught.
+  // Choosing "Our usual order" is the way OUT of location sorting, which a
+  // toggle could only express as "press the one that is already pressed" — a
+  // gesture nothing on screen taught.
   sortSel.addEventListener("change", () => {
-    const mode = sortSel.value;
-    if (mode === "usual") return clearLocation();
-    // Both location modes drop any destination first; "route" then re-arms the
-    // picker. Order matters: withOrigin may go async for the permission prompt,
-    // so the state it will read has to be settled before the call.
-    state.dest = null;
-    state.routeOpen = false;
-    if (destSel) destSel.value = "";
+    if (sortSel.value === "usual") return clearLocation();
     withOrigin(() => {
-      state.routeOpen = mode === "route";
       syncUI();
       render();
-      if (state.routeOpen && destSel) destSel.focus();
     });
   });
-
-  if (destSel) {
-    destSel.addEventListener("change", () => {
-      state.dest = resolveDest(destSel.value, centroids, byId);
-      syncUI();
-      render();
-    });
-  }
-  // An explicit way out of the destination bar (mirrors the route toggle off).
-  if (clearBtn) {
-    clearBtn.addEventListener("click", () => {
-      state.routeOpen = false;
-      state.dest = null;
-      if (destSel) destSel.value = "";
-      syncUI();
-      render();
-    });
-  }
-}
-
-// Populate the destination <select>: a placeholder, then suburbs (centroids)
-// and specific places, grouped. Values are tagged "area:<name>" / "venue:<id>"
-// so the change handler knows which map to resolve against.
-function fillDest(destSel, restaurants) {
-  const ph = el("option", { value: "", textContent: "Where are you heading?" });
-  ph.dataset.i18n = "route.destPlaceholder";
-  destSel.append(ph);
-  const areas = areaCentroids(restaurants);
-  if (areas.length) {
-    const og = el("optgroup", { label: "Suburbs" });
-    for (const a of areas) {
-      og.append(el("option", { value: `area:${a.area}`, textContent: a.area }));
-    }
-    destSel.append(og);
-  }
-  const places = restaurants.filter(
-    (r) => kindOf(r).hasLocation && typeof r.lat === "number" && typeof r.lng === "number"
-  );
-  if (places.length) {
-    const og = el("optgroup", { label: "Places" });
-    for (const v of places) {
-      og.append(el("option", { value: `venue:${v.id}`, textContent: v.name }));
-    }
-    destSel.append(og);
-  }
-}
-
-// Resolve a destination select value to {lat,lng,label}, or null (placeholder).
-function resolveDest(val, centroids, byId) {
-  if (val && val.startsWith("area:")) {
-    const a = centroids.get(val.slice(5));
-    return a ? { lat: a.lat, lng: a.lng, label: a.area } : null;
-  }
-  if (val && val.startsWith("venue:")) {
-    const v = byId.get(val.slice(6));
-    return v && typeof v.lat === "number" ? { lat: v.lat, lng: v.lng, label: v.name } : null;
-  }
-  return null;
 }
 
 loadRestaurants()

@@ -132,8 +132,6 @@ const STATE = `(() => {
         .map((e) => Math.round(e.getBoundingClientRect().width))
     ),
     overflowsX: !!controls && controls.scrollWidth > controls.clientWidth + 1,
-    routing: !!controls?.classList.contains("routing"),
-    routeBarHidden: document.getElementById("route-bar")?.hidden !== false,
     openNowReach: reach("open-now"),
   };
 })()`;
@@ -156,9 +154,9 @@ async function run(opts) {
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
-    // Pre-granted and overridden, so "Along a route" can actually arm without a
-    // permission prompt no headless run can answer. Wellington, so the distance
-    // sort has somewhere to sort from.
+    // Pre-granted and overridden, so "Nearest first" can actually engage without
+    // a permission prompt no headless run can answer. Wellington, so the
+    // distance sort has somewhere to sort from.
     await cdp.send("Browser.grantPermissions", { permissions: ["geolocation"] });
     await cdp.send(
       "Emulation.setGeolocationOverride",
@@ -318,39 +316,31 @@ async function run(opts) {
       `activeElement: ${s.activeId}`
     );
 
-    // --- 15z: arming a route must not lay a control over another one. -------
-    // The destination picker is a fourth control in a row measured for three.
-    // Left to the flex row it rendered ON TOP of "All cuisines", "Open now" and
-    // "Cheap eats" — all three still passed a visibility check, and all three
-    // were untappable. Only elementFromPoint sees that, and only in this state.
+    // --- 15z: choosing a sort must not lay a control over another one. ------
+    // The row is measured for exactly the controls it rests with. A fourth one
+    // (the "Along a route" destination picker, removed 2026-08-16) rendered ON
+    // TOP of "All cuisines", "Open now" and "Cheap eats" — all three still
+    // passed a visibility check, and all three were untappable. Only
+    // elementFromPoint sees that, so the sort modes are still driven here.
     await size(1280);
     await driver.evalPage(`(() => {
       const s = document.getElementById("filter-sort");
-      s.value = "route";
+      s.value = "near";
       s.dispatchEvent(new Event("change", { bubbles: true }));
     })()`);
     await sleep(600); // the geolocation callback is async even when pre-granted
     s = await state();
-    if (s.routeBarHidden) {
-      report.check(
-        "1280px: 'Along a route' arms the destination picker",
-        false,
-        "the route bar stayed hidden — geolocation was not granted, so the "
-          + "overlap assertion below could not be made at all"
-      );
-    } else {
-      report.check(
-        "1280px: arming a route reflows the row rather than overlapping it",
-        s.routing && s.bands >= 2,
-        `routing class: ${s.routing} · bands: ${s.bands} · panel ${s.panelH}px`
-      );
-      report.check(
-        "1280px: …and the controls it displaced are still tappable, not just visible",
-        s.cuisineReach === "reachable" && s.openNowReach === "reachable",
-        `#filter-cuisine: ${s.cuisineReach} · #open-now: ${s.openNowReach}`
-      );
-    }
-    // Back to rest — and the row must be one band again, not stuck wide.
+    report.check(
+      "1280px: 'Nearest first' keeps the row one band, not a stacked panel",
+      s.bands === 1 && !s.overflowsX,
+      `bands: ${s.bands} · panel ${s.panelH}px · overflowX ${s.overflowsX}`
+    );
+    report.check(
+      "1280px: …and every other control is still tappable, not just visible",
+      s.cuisineReach === "reachable" && s.openNowReach === "reachable",
+      `#filter-cuisine: ${s.cuisineReach} · #open-now: ${s.openNowReach}`
+    );
+    // Back to rest — and the row must still be one band, not stuck wide.
     await driver.evalPage(`(() => {
       const s = document.getElementById("filter-sort");
       s.value = "usual";
@@ -359,9 +349,9 @@ async function run(opts) {
     await sleep(300);
     s = await state();
     report.check(
-      "1280px: leaving the route puts the row back to one band",
-      s.bands === 1 && !s.routing && s.routeBarHidden,
-      `bands ${s.bands} · routing ${s.routing} · panel ${s.panelH}px`
+      "1280px: back to 'Our usual order' leaves the row one band",
+      s.bands === 1 && !s.overflowsX,
+      `bands ${s.bands} · panel ${s.panelH}px · overflowX ${s.overflowsX}`
     );
 
     // --- Idempotence. -------------------------------------------------------

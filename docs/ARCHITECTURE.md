@@ -693,12 +693,12 @@ precached payload nothing on any screen can reach (ADR 0047).
   at all. When present, the menu screen's address row hands off to the
   device's native maps app at those exact coordinates (`site/js/geo.js`);
   when absent it falls back to an address search. They also seed the
-  distance-sorted "what's close" list and the **"Along a route" least-detour
-  sort** (`site/js/route.js`, ADR 0014): rank venues by added distance
-  `dist(o,v)+dist(v,d)−dist(o,d)` toward a picked destination (a suburb centroid
-  or another venue — no geocoder, no stored address), best-branch resolved,
-  detour-leads-availability; a per-card "Route via maps" hands origin→venue→dest
-  to the maps app (Google waypoint; Apple → venue). Roadmap Theme 2. Geocode from the
+  distance-sorted "what's close" list ("Nearest first"). **The "Along a route"
+  least-detour sort was removed whole on 2026-08-16** (owner ruling): it ranked
+  by straight-line detour toward a *suburb centroid*, and a centroid is not a
+  route — Khandallah Trading Company came up "on the way" from Churton Park to
+  Courtenay Place. The real feature is a free-text destination address plus
+  actual routing, and is not built. Geocode from the
   address with a dev-time tool (OpenStreetMap Nominatim) — never invent
   them; a wrong pin is worse than no pin (an absent pair just searches by
   text). `validate.py` warns when a venue has none.

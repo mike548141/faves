@@ -61,28 +61,18 @@ const MI = {
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",
-  // These two moved from a pair of pill toggles to two <option>s of the "Sort
-  // by" select in 15z, and kept their keys on purpose: the queue is parked
-  // (owner ruled 2026-08-16, "do not open new [reo] items without asking"), so
-  // re-keying already-drafted strings would have added two entries to it for no
-  // gain. The select's third option, "Our usual order", is the one genuinely
-  // new string and is deliberately NOT drafted here — `sort.usual` falls back
-  // to the captured English, which is the documented partial state, not an
-  // oversight. Keys owed, both English-only for the same reason:
-  // sort.usual, and menu.opensNewWindow (the WCAG G201 new-window warning
-  // menu.js appends to every off-site link, 31d). Both fall back safely —
-  // translate() captures the English on its first pass before mi() can miss.
+  // This moved from a pill toggle to an <option> of the "Sort by" select in
+  // 15z, and kept its key on purpose: the queue is parked (owner ruled
+  // 2026-08-16, "do not open new [reo] items without asking"), so re-keying an
+  // already-drafted string would have added an entry to it for no gain. The
+  // select's other option, "Our usual order", is the one genuinely new string
+  // and is deliberately NOT drafted here — `sort.usual` falls back to the
+  // captured English, which is the documented partial state, not an oversight.
+  // Keys owed, both English-only for the same reason: sort.usual, and
+  // menu.opensNewWindow (the WCAG G201 new-window warning menu.js appends to
+  // every off-site link, 31d). Both fall back safely — translate() captures the
+  // English on its first pass before mi() can miss.
   "toggle.nearMe": "E tata ana",
-  "toggle.alongRoute": "I te ara", // draft — "on the way / along the route"
-  // "Along a route" destination picker + card labels (neutral chrome; the
-  // detour figure itself is an English-interpolated string, unswapped)
-  "route.destLabel": "Kei te ahu ki", // draft — "heading to"
-  "route.destPlaceholder": "Kei te ahu koe ki hea?", // draft — "where are you heading?"
-  "route.clear": "Kua oti", // draft — "done"
-  "route.via": "Ara mā te mapi", // draft — "route via the map"
-  "route.detour": "peka", // draft — "+1.2 km peka" (a turn-off / detour)
-  "route.onWay": "Kei tō ara", // draft — "on your way"
-  "route.added": "tāpiri", // draft — "~2 min tāpiri" (added)
   // Service segmented control
   // 🚩 For the reo reviewer (ADR 0035): in English this is "Everywhere" — any
   // service, dine-in or takeaway — but in te reo it reads identically to the

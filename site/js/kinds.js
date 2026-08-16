@@ -67,7 +67,7 @@ const KINDS = {
   [VENUE]: {
     id: VENUE,
     // —— capabilities ——
-    hasLocation: true, // an address and coordinates: distance, detour, maps, a route destination
+    hasLocation: true, // an address and coordinates: distance, the maps handoff
     hasHours: true, // a weekly timetable: the open/closed badge and the availability tier
     hasPrices: true, // money on the menu: the price band, the price chip, the dish price
     canOrder: true, // a tally you read down the phone: the stepper and add-ons

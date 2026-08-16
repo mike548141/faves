@@ -37,7 +37,7 @@ guest."** People should *enjoy* opening it.
 - Sticky filter bar, **collapsed to one control**: a `Filters (n)` button
   opening a sheet that holds every filter and sort, grouped as **Narrow
   to** (service, area, cuisine, open now, cheap eats) and **Sort by**
-  (near me, along a route). Filters are instant, no apply button — the
+  (near me). Filters are instant, no apply button — the
   sheet's footer button is a dismiss that names the live count. `n` and
   the dismissible chips beside the result count keep an active filter
   visible while its control is hidden. *(Amended 2026-08-16: the bar

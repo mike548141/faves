@@ -90,9 +90,9 @@ const SERVICE_LABEL = {
  * few and overflows the rest, so putting the arriving facet first guarantees it
  * is never the one folded away.
  *
- * Sort modes ("Near me", "Along a route") are deliberately absent: they reorder
- * the list, they never shorten it (ADR 0014), so they are not what a short list
- * needs explaining by. #geo-status says what the sort is doing.
+ * The sort mode ("Nearest first") is deliberately absent: it reorders the list,
+ * it never shortens it, so it is not what a short list needs explaining by.
+ * #geo-status says what the sort is doing.
  */
 export function activeFilters(state) {
   const out = [];

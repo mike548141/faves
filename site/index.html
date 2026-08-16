@@ -740,14 +740,10 @@
           <!-- Sorting needs geolocation, so app.js unhides this group only where
                it exists, rather than leaving a heading over a control nobody can
                use.
-               ONE SELECT, NOT TWO TOGGLES (15z). "Near me" and "Along a route"
-               were `aria-pressed` buttons, which promises they are independent
-               switches — app.js's own comment has always said the opposite
-               ("the two buttons are mutually exclusive sort modes"). A select is
-               what a one-of-N choice is, it is what every reader already expects
-               a "Sort by" control to be, and it costs 160 px where the two
-               toggles cost 238. Nothing was dropped: the same two modes, plus a
-               name for the third state that was previously only "neither". -->
+               A SELECT, NOT A TOGGLE (15z). "Near me" was an `aria-pressed`
+               button, which promises an independent switch — a sort mode is not
+               one. A select is what a one-of-N choice is, and it is what every
+               reader already expects a "Sort by" control to be. -->
           <section id="filter-sort-group" class="filter-group filter-sort-group" aria-labelledby="filter-sort-title" hidden>
             <h3 id="filter-sort-title" class="filter-group-title" data-i18n="filter.sort">Sort by</h3>
             <p class="filter-group-note" data-i18n="filter.sortNote">
@@ -758,8 +754,8 @@
                    by", and inline the <h3> is what stands beside the select. A
                    third copy of the same two words would be noise in both. -->
               <label class="sr-only" for="filter-sort" data-i18n="filter.sort">Sort by</label>
-              <!-- The two mode options keep the reo keys their buttons carried,
-                   so nothing new joins the te reo review queue (owner ruled it
+              <!-- "Nearest first" keeps the reo key its button carried, so
+                   nothing new joins the te reo review queue (owner ruled it
                    parked, 2026-08-16). `sort.usual` is the one genuinely new
                    string and deliberately has no MI entry — reo.js falls back to
                    the captured English, which is the documented partial state. -->
@@ -767,22 +763,8 @@
                 <select id="filter-sort" data-active="usual">
                   <option value="usual" data-i18n="sort.usual">Our usual order</option>
                   <option value="near" data-i18n="toggle.nearMe">Nearest first</option>
-                  <!-- "Along a route": pick a place between here and a
-                       destination you name (least-detour sort). -->
-                  <option value="route" data-i18n="toggle.alongRoute">Along a route</option>
                 </select>
               </div>
-            </div>
-            <!-- Destination picker for "Along a route" (app.js unhides it once
-                 the mode is armed). It lives beside the control that arms it, so
-                 choosing a destination is one continuous step inside the sheet
-                 rather than a control revealing itself behind the sheet. -->
-            <div id="route-bar" class="route-bar" hidden>
-              <div class="select-field route-dest-field">
-                <label class="sr-only" for="route-dest" data-i18n="route.destLabel">Heading to</label>
-                <select id="route-dest" data-active="all"></select>
-              </div>
-              <button type="button" id="route-clear" class="route-clear" data-i18n="route.clear">Done</button>
             </div>
           </section>
           </section>

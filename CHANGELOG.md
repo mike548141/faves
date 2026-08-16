@@ -27,6 +27,14 @@ content freshness separately from this file.
     meantime.
 
 ### Removed
+- **The "Along a route" sort is gone.** It asked you to pick a *suburb* you were
+  heading to, then ordered places by how far off the straight line between you
+  and the middle of that suburb they sat. The middle of a suburb is not a route,
+  so it recommended places that were plainly not on the way — Khandallah Trading
+  Company for a drive from Churton Park to Courtenay Place. Rather than leave a
+  feature that misleads, it has been taken out entirely. The real version — type
+  in the address you're heading to, and see the places near the actual road
+  route there — is still to come. "Nearest first" is unchanged.
 - **The "Clear ticks" button is gone**, from both the recipe page and cook
   mode. Ticks already clear themselves twelve hours after the last one is
   made, so a recipe cooked again next week never started half-ticked without

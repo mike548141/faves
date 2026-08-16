@@ -3,9 +3,9 @@
 
 Coordinates in this repo are dev-time geocodes (ARCHITECTURE.md, "lat/lng"):
 nothing verifies them after the day they were written, and a wrong pin is
-worse than no pin — it silently skews the Near-me distance sort and the
-along-a-route detour maths. This tool re-geocodes every address in the corpus
-and reports how far the stored coordinate sits from the answer.
+worse than no pin — it silently skews the Near-me distance sort and every
+branch-picking decision that reads from it. This tool re-geocodes every address
+in the corpus and reports how far the stored coordinate sits from the answer.
 
 It is a REPORTER, not a gate: it always exits 0. It never writes site data —
 what to do about a drift is a judgement call, made by a human against the
