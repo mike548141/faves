@@ -4329,6 +4329,32 @@ payloads.** It keeps the one namespace that already has three tenants from
 getting a fourth, and Cloudflare Pages serves the same static file either way,
 so the query costs nothing.
 
+🔎 **Three mechanisms checked in the code 2026-08-16 (wt: faves-schema30), which
+turn two of this theme's recommendations from preferences into positions.**
+
+1. **The query is safe to share, and I expected it not to be.** The obvious
+   objection to `?panel=diet` is that the filter sync owns the query string and
+   would stamp on it. It does not: `app.js:325` builds from
+   `new URLSearchParams(location.search)` and only ever `set`s or `delete`s
+   `area` and `cuisine`, then re-appends `location.hash`. **An unknown param
+   survives a filter change untouched.** So the recommendation costs nothing to
+   adopt — verified rather than assumed.
+2. **But it survives too well, and that decides call 2 below.** Nothing ever
+   removes it, so a reader who opens a deep link to Settings → Food preferences,
+   closes Settings, then filters by cuisine, still carries `?panel=diet` — and
+   on reload Settings springs open again with no idea why. **That is the
+   mechanism behind "resolve on arrival, don't track", and the repo already has
+   the pattern:** `cart-ui.js:586` consumes a share token and immediately does
+   `history.replaceState(null, "", location.pathname + location.search)` to
+   strip it. The resolver must strip its own param the same way.
+3. 🔑 **The hash-crowding hazard has already bitten this repo once, and the fix
+   it chose supports the recommendation.** `report-ui.js:67`'s `pageUrl()`
+   deliberately drops the fragment when building a report link, and says why:
+   *"On the home screen the hash may be carrying a shared order or shortlist
+   token — someone else's picks have no business riding along in a report."*
+   A fourth tenant in that namespace is not hypothetical risk; it is the same
+   accident, and last time it was solved by getting **out** of the hash.
+
 ### The other three calls, which are UX not plumbing
 
 1. **Does Back close it?** If opening Settings → Food preferences writes a
@@ -4393,6 +4419,19 @@ so the query costs nothing.
   owner's example is literally impossible for anyone who installed the app.
   🚩 This is the item that decides whether the theme delivers the stated use
   case at all; the rest is plumbing beneath it.
+  ✅ **Re-sized 2026-08-16 (wt: faves-schema30): the hard half is already built
+  and shipped.** `site/js/share-core.js` is a complete two-transport share — the
+  OS sheet via `navigator.share` with a clipboard fallback, a `canShare` probe,
+  and a three-way outcome (`shared` / `unavailable` / failed) so a blocked
+  clipboard is distinguishable from a declined sheet. It already carries the two
+  constraints that make this fiddly: `navigator.share` **needs a user gesture**,
+  so the payload must be composed synchronously before it is reached
+  (`report-ui.js:250` is the worked example), and it does not exist on most
+  desktops. Four callers already use it — report, share, share-app, sync.
+  So 34e is **wiring an existing module to a new payload**, not building a share
+  path. It stays `[S]`, and it stops being the item the theme's viability rests
+  on. What is left is genuinely design: where the "copy a link to this" control
+  lives on a Settings panel without cluttering it.
 
 ### Sizing and sequence
 
