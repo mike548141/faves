@@ -11,6 +11,7 @@
 // locked-down browser (Safari private mode) degrades rather than throws.
 
 import { safeStorage } from "./store.js";
+import { migrateEntries } from "./renames.js";
 
 const KEY = "faves.order.v1";
 
@@ -110,7 +111,7 @@ export function createOrder(storage) {
 
   function read() {
     try {
-      const a = JSON.parse(storage.getItem(KEY) || "[]");
+      const a = migrateEntries(JSON.parse(storage.getItem(KEY) || "[]"));
       return Array.isArray(a) ? a : [];
     } catch {
       return []; // corrupt payload → start clean rather than crash

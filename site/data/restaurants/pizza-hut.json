@@ -1,0 +1,78 @@
+{
+  "id": "pizza-hut",
+  "formerIds": [
+    "pizza-hut-johnsonville"
+  ],
+  "name": "Pizza Hut",
+  "cuisine": [
+    "Pizza"
+  ],
+  "area": "Johnsonville",
+  "city": "Wellington",
+  "locations": [
+    {
+      "label": "Johnsonville",
+      "address": "88 Johnsonville Road, Johnsonville, Wellington 6037",
+      "lat": -41.225,
+      "lng": 174.8073,
+      "phone": "+64 4 478 8927",
+      "hours": {
+        "mon": [
+          [
+            "11:00",
+            "23:00"
+          ]
+        ],
+        "tue": [
+          [
+            "11:00",
+            "23:00"
+          ]
+        ],
+        "wed": [
+          [
+            "11:00",
+            "23:00"
+          ]
+        ],
+        "thu": [
+          [
+            "11:00",
+            "23:00"
+          ]
+        ],
+        "fri": [
+          [
+            "11:00",
+            null
+          ]
+        ],
+        "sat": [
+          [
+            "11:00",
+            null
+          ]
+        ],
+        "sun": [
+          [
+            "11:00",
+            "23:00"
+          ]
+        ]
+      }
+    }
+  ],
+  "services": [
+    "takeaway"
+  ],
+  "website": "https://www.pizzahut.co.nz",
+  "ordering": [],
+  "vibe": [],
+  "picks": [],
+  "verified": null,
+  "lifecycle": {
+    "added": "2026-07-08"
+  },
+  "status": "stub",
+  "menu": []
+}

@@ -1,0 +1,268 @@
+#!/usr/bin/env node
+// Does every screen actually BOOT? Load each page in a real browser, watch the
+// console, and assert the JavaScript rendered the page rather than the no-JS
+// fallback standing in for it.
+//
+// This exists because of a specific escape. On 2026-08-16, `app.js` gained
+// calls to `venueTimezone`/`zoneLabel` without gaining the import. `init()`
+// threw, the home screen fell back to its static `<ul>`, and the site shipped
+// that way — while `node --test` passed 570, `device_check` passed 19 and
+// `cook_check` passed 36. None of them could have caught it:
+//
+//   • the unit tests import modules one at a time, so a module that never
+//     imports what it calls still loads fine on its own;
+//   • device_check and cook_check both drive a MENU page, and menu.js had its
+//     import — nothing anywhere exercised the home screen's boot.
+//
+// The fallback is what made it invisible: the page looked like a working list
+// of places, because that is exactly what the fail-soft `<ul>` is designed to
+// look like. A blank page would have been caught in a second.
+//
+// What a headless run here CANNOT show:
+//   1. That the page looks right — this asserts structure, never layout.
+//   2. Anything about Safari/WebKit; it is Chrome only.
+//   3. Anything about a stale service worker, since it always runs on a fresh
+//      profile — which is the point (see lib/browser.mjs), not an oversight.
+//
+//     node tools/boot_check.mjs           # all screens
+//     node tools/boot_check.mjs -v        # narrate each step
+//
+// Exit 0 = every screen booted clean. 1 = at least one didn't.
+
+import { readFile } from "node:fs/promises";
+import { mkdtemp } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { parseArgs } from "node:util";
+
+import { Cdp, Report, createDriver, launchChrome, startServer, stopChrome, until } from "./lib/browser.mjs";
+
+const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
+const SITE = join(ROOT, "site");
+
+// Each screen names the marker that proves JS, not the fallback, drew it.
+// `ready` is evaluated in the page and must become true; `fallback` is the
+// element the no-JS path leaves visible and JS is expected to hide.
+const SCREENS = [
+  {
+    name: "home",
+    url: () => "/index.html",
+    // Readiness must be something ONLY app.js can produce. The fail-soft <ul>
+    // uses the same `.card-link` class as the rendered cards — waiting on that
+    // is satisfied by the fallback itself, which is precisely the failure this
+    // check exists to catch, wearing the check's own clothes. `#result-count`
+    // is empty in the HTML and only app.js ever fills it.
+    ready: `(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`,
+    checks: [
+      {
+        what: "the list was rendered by JS, not the no-JS fallback",
+        expr: `(() => {
+          const note = document.querySelector(".fallback-note");
+          const visible = note && !note.hidden && getComputedStyle(note).display !== "none";
+          return { fallbackShowing: !!visible, cards: document.querySelectorAll("#restaurant-list > *").length };
+        })()`,
+        assert: (v) => (v.fallbackShowing ? "the no-JS fallback note is still showing" : v.cards > 5 ? null : `only ${v.cards} cards`),
+      },
+      {
+        what: "the filter bar is live (counts rendered)",
+        expr: `document.querySelector("#result-count")?.textContent?.trim() ?? ""`,
+        assert: (v) => (/\d/.test(v) ? null : `no place count rendered (got ${JSON.stringify(v)})`),
+      },
+    ],
+  },
+  {
+    name: "menu",
+    url: (venueId) => `/restaurant.html?id=${encodeURIComponent(venueId)}`,
+    ready: `!!document.querySelector(".menu-title")`,
+    checks: [
+      {
+        what: "the venue's menu rendered with priced dishes",
+        expr: `(() => ({
+          title: document.querySelector(".menu-title")?.textContent ?? "",
+          prices: [...document.querySelectorAll(".dish-price, .item-price, [class*='price']")]
+            .map((e) => e.textContent.trim()).filter((s) => /\\d/.test(s)).length,
+        }))()`,
+        assert: (v) => (v.title && v.prices > 0 ? null : `title=${JSON.stringify(v.title)} priced=${v.prices}`),
+      },
+    ],
+  },
+  {
+    // A link shared before a venue was renamed must still land on the venue,
+    // not on a 404 (renames.js). This is the only check that exercises the
+    // resolve-before-fetch path end to end.
+    name: "menu via a retired id",
+    url: () => `/restaurant.html?id=burgerfuel-johnsonville`,
+    ready: `!!document.querySelector(".menu-title")`,
+    checks: [
+      {
+        what: "an old shared link still opens the venue, under its current name",
+        expr: `document.querySelector(".menu-title")?.textContent?.trim() ?? ""`,
+        assert: (v) => (v === "BurgerFuel" ? null : `menu title reads ${JSON.stringify(v)}`),
+      },
+    ],
+  },
+];
+
+// Settings is a dialog, not a screen, and it is where a merged or renamed panel
+// would silently vanish — so its index is asserted by name.
+const SETTINGS_ROWS = [
+  "Who’s using Faves?",
+  "Food preferences",
+  "Distance & directions",
+  "Language & units",
+  "Your data",
+  "Refresh & reset",
+];
+
+async function bootScreen(cdp, sessionId, driver, report, base, screen, venueId) {
+  const errors = [];
+  const onError = (p) => errors.push(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text);
+  const onConsole = (p) => {
+    if (p.type !== "error") return;
+    errors.push((p.args || []).map((a) => a.value ?? a.description ?? "").join(" "));
+  };
+  cdp.on("Runtime.exceptionThrown", onError);
+  cdp.on("Runtime.consoleAPICalled", onConsole);
+
+  const url = base + screen.url(venueId);
+  await cdp.send("Page.navigate", { url }, sessionId);
+
+  // A screen that never becomes ready is a FAILURE, not a crash. Reporting it
+  // as a row (and carrying on to the next screen) matters more than it sounds:
+  // the console errors collected below are what actually name the cause, and a
+  // thrown timeout would abort the run before they were ever printed.
+  let ready = true;
+  try {
+    await until(() => driver.evalPage(screen.ready), {
+      label: `${screen.name}: page rendered by JS`,
+      timeout: 15_000,
+    });
+  } catch {
+    ready = false;
+  }
+  report.check(
+    `${screen.name}: rendered by its own JavaScript`,
+    ready,
+    ready ? url : `never became ready — ${screen.ready}`
+  );
+
+  // The console is the whole point: a module that throws on import takes the
+  // page down quietly, and the fallback makes the wreck look like a feature.
+  report.check(
+    `${screen.name}: booted with no console errors`,
+    errors.length === 0,
+    errors.length ? errors.join(" | ") : url
+  );
+
+  for (const check of screen.checks) {
+    const value = await driver.evalPage(check.expr).catch((e) => ({ error: String(e) }));
+    const problem = value?.error ?? check.assert(value);
+    report.check(`${screen.name}: ${check.what}`, !problem, problem || JSON.stringify(value));
+  }
+
+  cdp.off?.("Runtime.exceptionThrown", onError);
+  cdp.off?.("Runtime.consoleAPICalled", onConsole);
+  return errors;
+}
+
+async function run(opts) {
+  const report = new Report(opts.verbose);
+  // index.json is a bare array of ids. Cook-at-Home is a recipe collection, not
+  // a venue, so it exercises a different render path — pick a real venue.
+  const index = JSON.parse(await readFile(join(SITE, "data", "index.json"), "utf8"));
+  const venueId = opts.id || index.find((id) => id !== "cook-at-home") || index[0];
+
+  const { server, port } = await startServer(opts.port, SITE);
+  const profileDir = await mkdtemp(join(tmpdir(), "faves-boot-check-"));
+  let chrome = null;
+  let cdp = null;
+
+  try {
+    const base = `http://127.0.0.1:${port}`;
+    console.log("Faves boot check — does every screen actually run its JavaScript?");
+    console.log(`  venue    ${venueId}`);
+    console.log(`  profile  ${profileDir} (fresh — no service worker, no storage)\n`);
+
+    chrome = await launchChrome({ profileDir, headed: opts.headed });
+    cdp = await Cdp.connect(chrome.wsUrl);
+    const { targetId } = await cdp.send("Target.createTarget", { url: "about:blank" });
+    const { sessionId } = await cdp.send("Target.attachToTarget", { targetId, flatten: true });
+    await cdp.send("Page.enable", {}, sessionId);
+    await cdp.send("Runtime.enable", {}, sessionId);
+    await cdp.send(
+      "Emulation.setDeviceMetricsOverride",
+      { width: 390, height: 844, deviceScaleFactor: 1, mobile: false },
+      sessionId
+    );
+    const driver = createDriver(cdp, sessionId, (m) => report.step(m));
+
+    for (const screen of SCREENS) {
+      await bootScreen(cdp, sessionId, driver, report, base, screen, venueId);
+    }
+
+    // Back to the home screen for the Settings index. Wrapped because a home
+    // screen that never booted cannot open a dialog either — one failure, not
+    // an unhandled rejection that buries the diagnosis printed above it.
+    try {
+      await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
+      await until(
+        () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
+        { label: "home: back for the Settings check" }
+      );
+      // Two clicks with a wait between them: the dialog is built on first open
+      // (About and Settings both defer their DOM), so reading the rows in the
+      // same turn as the click reads an empty dialog.
+      await driver.evalPage(`(() => {
+        const more = [...document.querySelectorAll("button")].find((b) => b.getAttribute("aria-label") === "More");
+        if (more) more.click();
+      })()`);
+      await until(() => driver.evalPage(`[...document.querySelectorAll("button")].some((b) => /Settings/.test(b.textContent))`), {
+        label: "settings: the ⋯ menu opened",
+      });
+      await driver.evalPage(`(() => {
+        const b = [...document.querySelectorAll("button")].find((x) => /Settings/.test(x.textContent));
+        if (b) b.click();
+      })()`);
+      await until(() => driver.evalPage(`document.querySelectorAll(".settings-row").length > 0`), {
+        label: "settings: the index rendered",
+      });
+      const rows = await driver.evalPage(`({
+        rows: [...document.querySelectorAll(".settings-row .settings-row-title")].map((e) => e.textContent.trim()),
+      })`);
+      if (rows.error) {
+        report.check("settings: the index opened", false, rows.error);
+      } else {
+        const missing = SETTINGS_ROWS.filter((r) => !rows.rows.includes(r));
+        const extra = rows.rows.filter((r) => !SETTINGS_ROWS.includes(r));
+        report.check(
+          "settings: the index shows exactly the expected groups",
+          missing.length === 0 && extra.length === 0,
+          missing.length || extra.length
+            ? `missing ${JSON.stringify(missing)} · unexpected ${JSON.stringify(extra)}`
+            : rows.rows.join(" · ")
+        );
+      }
+    } catch (e) {
+      report.check("settings: the index opened", false, String(e.message || e));
+    }
+
+    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
+    return report.failed === 0;
+  } finally {
+    if (chrome) await stopChrome(chrome.proc ?? chrome);
+    if (cdp) cdp.close?.();
+    server.close?.();
+  }
+}
+
+const { values } = parseArgs({
+  options: {
+    id: { type: "string" },
+    port: { type: "string", default: "0" },
+    headed: { type: "boolean", default: false },
+    verbose: { type: "boolean", short: "v", default: false },
+  },
+});
+
+process.exit((await run({ ...values, port: Number(values.port) })) ? 0 : 1);

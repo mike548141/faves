@@ -4,6 +4,7 @@
 
 import { resolveRecord, todayIn } from "./temporal.js";
 import { venueHemisphere, venueTimezone } from "./place.js";
+import { canonicalVenueId } from "./renames.js";
 
 const INDEX_URL = "data/index.json";
 const restaurantUrl = (id) => `data/restaurants/${id}.json`;
@@ -70,7 +71,13 @@ export async function loadRestaurants() {
   return results.filter(Boolean);
 }
 
-/** Look up one restaurant by id (used by the menu screen). */
+/**
+ * Look up one restaurant by id (used by the menu screen).
+ *
+ * The id is canonicalised FIRST, before any fetch: a link shared before a venue
+ * was renamed names a file that no longer exists, and a 404 here is a dead link
+ * in somebody's messages, not a missing feature (renames.js).
+ */
 export async function loadRestaurant(id) {
-  return load(await fetchJson(restaurantUrl(id)));
+  return load(await fetchJson(restaurantUrl(canonicalVenueId(id))));
 }

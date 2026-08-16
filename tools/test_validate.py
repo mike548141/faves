@@ -101,6 +101,16 @@ CASES = {
     # Where a venue IS (ADR 0043). Both fields are optional, so the gate's job is
     # to catch a *stated* one that is wrong — a typo'd zone or code would
     # otherwise render a confident wrong clock or an unlabelled price.
+    # formerIds must agree with site/js/renames.js or an old shared link 404s
+    # while the record claims the id is handled (both silent).
+    "formerIds naming an id renames.js doesn't map": (
+        lambda d: d.update(formerIds=["gold-lining-cafe-old"]),
+        "error",
+    ),
+    "formerIds listing the record's own id": (
+        lambda d: d.update(formerIds=[d["id"]]),
+        "error",
+    ),
     "timezone that is not an IANA zone": (
         lambda d: d.update(timezone="Pacific/Wellington"),  # plausible, and not real
         "error",
@@ -184,6 +194,10 @@ def main() -> int:
         work.mkdir(parents=True)
         shutil.copytree(ROOT / "tools", work / "tools")
         shutil.copytree(ROOT / "site" / "data", work / "site" / "data")
+        # validate.py reads the rename table out of the shipped JS so the two
+        # can't drift (see _load_renames there), so the sandbox needs it too.
+        (work / "site" / "js").mkdir(parents=True, exist_ok=True)
+        shutil.copy(ROOT / "site" / "js" / "renames.js", work / "site" / "js" / "renames.js")
 
         rc, out = run_validate(work)
         if rc != 0:

@@ -19,6 +19,7 @@
 // Old 1..3 values stay valid (they're within 1..5), so nothing migrates.
 
 import { profileScopedStorage } from "./profiles.js";
+import { migrateRatingKeys } from "./renames.js";
 
 const KEY = "faves.ratings.v1";
 
@@ -58,7 +59,7 @@ export function createRatings(storage) {
 
   function read() {
     try {
-      return sanitise(JSON.parse(storage.getItem(KEY) || "{}"));
+      return sanitise(migrateRatingKeys(JSON.parse(storage.getItem(KEY) || "{}")));
     } catch {
       return {};
     }

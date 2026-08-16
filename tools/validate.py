@@ -53,6 +53,23 @@ DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 errors = []
 warnings = []
 
+
+def _load_renames():
+    """The rename table from site/js/renames.js, read as text.
+
+    Parsing a JS object literal with a regex is crude, and right here: the table
+    is a frozen list of quoted string pairs by construction, and the alternative
+    is a second copy of it in JSON that could disagree with the one the browser
+    actually uses — which is exactly the drift this check exists to catch."""
+    src = (ROOT / "site" / "js" / "renames.js").read_text(encoding="utf-8")
+    body = re.search(r"RENAMED\s*=\s*Object\.freeze\(\{(.*?)\}\)", src, re.S)
+    if not body:
+        return {}
+    return dict(re.findall(r'"([^"]+)"\s*:\s*"([^"]+)"', body.group(1)))
+
+
+RENAMED = _load_renames()
+
 CURRENCY_RE = re.compile(r"^[A-Z]{3}$")
 
 # Currencies price.js has band thresholds for. Kept in step by hand — a short
@@ -597,6 +614,25 @@ def check_restaurant(path):
                 f"currency {currency!r} has no price-band calibration in site/js/price.js — "
                 "the venue will show no derived price band (a curated `priceBand` still works)",
             )
+
+    # formerIds: ids this record used to have (ADR 0011 branches arriving late,
+    # a name corrected). They are not decoration — site/js/renames.js resolves an
+    # old link BEFORE any fetch, so the two must agree or a shared link 404s
+    # while the record cheerfully claims the id is handled.
+    former = data.get("formerIds")
+    if former is not None:
+        if not isinstance(former, list) or not all(isinstance(x, str) and x.strip() for x in former):
+            err(rid, "formerIds must be a list of non-empty strings")
+        else:
+            for old in former:
+                if old == rid:
+                    err(rid, f"formerIds lists its own current id {old!r}")
+                elif RENAMED.get(old) != rid:
+                    err(
+                        rid,
+                        f"formerIds has {old!r} but site/js/renames.js maps it to "
+                        f"{RENAMED.get(old)!r} — an old link would 404",
+                    )
 
     # image / alt: optional self-hosted card photo; alt required when set.
     check_image(rid, data, "card image")
