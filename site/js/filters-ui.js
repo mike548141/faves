@@ -197,12 +197,13 @@ export function initFiltersUI({ onClearAll } = {}) {
       // the old language. A microtask lands after reo has caught up. Same
       // reasoning, same fix, as settings-ui.js's renderTitle().
       queueMicrotask(() => setEntryLabel(n));
-      // The sort group's visibility is NOT set here. It is one control now, and
-      // whether it can exist at all is a browser-capability question that only
-      // app.js's wireLocation tests — it unhides the group once, on the one
-      // path that proves geolocation is there. Re-deciding it on every render
-      // from the *button* ids this file used to hold is how it would come back
-      // as an empty heading the day those ids change.
+      // There is no sort group left to show or hide (ADR 0068): one ranking,
+      // distance inside it, and the location that feeds it is asked for by
+      // #geo-row up beside the list rather than by a control in this sheet. The
+      // rule that outlived the group is the one worth keeping — whether a
+      // control can exist at all is a browser-capability question, decided once
+      // by app.js on the one path that proves the capability is there, never
+      // re-decided per render from ids this file happens to hold.
     },
   };
 }

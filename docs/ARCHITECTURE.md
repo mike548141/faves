@@ -650,17 +650,38 @@ precached payload nothing on any screen can reach (ADR 0047).
   `timezone`, or the branch's, or `Pacific/Auckland` if neither says
   (ADR 0043) — and a
   grouped weekly display; see ADR 0006. That status also drives the home
-  list ordering (`site/js/ranking.js`), whose **primary key depends on mode**:
-  the **default order** (no location) is reachable → availability →
-  favourite-boosted distance → favourite tiebreak → curated, floating the
-  places you can order from *now* up; but with **"Nearest first"** on (a known
-  origin) distance leads — reachable → favourite-boosted distance →
-  availability → tiebreak → curated — so the toggle honours its label rather
-  than floating a farther-but-open venue above a nearer one. Favourites lift
-  via a *weighted* metric (a favourite counts as `favBoostKm` nearer, not an
-  outright win), and a known location sinks anything past a reachable radius
-  (`farKm`). Both distances are viewer-tunable (`settings.js`, device-local);
-  "Pick for us" shuffles only the available set.
+  list ordering (`site/js/ranking.js`). **There is one ranking and no sort
+  control** (ADR 0068), in this order:
+
+  > pinned → orderable-before-stub → reachable (`farKm`) → **availability** →
+  > **distance band** → **favourite** → exact distance → curated
+
+  Availability leads and distance follows, deliberately: a closed shop 200 m
+  away is not a better answer than an open one at 900 m. The favourite is a
+  **tiebreak at a tiebreak's size** — venues are bucketed into `FAV_TIE_KM`
+  (0.4 km) bands and the heart only speaks *inside* a band, so it can never lift
+  a venue above one meaningfully nearer. It is applied by bucketing, never by
+  subtracting a credit: `FAV_BOOST_KM` (10 km) was a subtracted credit, it
+  cascaded, and it is not this dial — it keeps its 10 km and its unrelated
+  branch-proximity job, which is why `FAV_TIE_KM` is a second constant rather
+  than a re-tuning (ADR 0068 finding 2). A known location still sinks anything
+  past `farKm`; both `favBoostKm` and `farKm` stay viewer-tunable
+  (`settings.js`, device-local). "Pick for us" shuffles only the available set.
+
+  **With no origin every distance is `Infinity`**, so the two distance keys go
+  inert and the order falls back to availability → favourite → curated — which
+  is exactly what this app shipped from 2026-07-08 until the rebuild. That is
+  the location-refused path, and it is a supported state, not a degraded one.
+  🔑 Until 2026-08-17 it was the *only* state that ever ran: `origin` was
+  written in one place, the sort control's own handler, so distance had never
+  once participated in the default order in the project's history.
+
+  The origin arrives from `#geo-ask` on the home screen (`app.js`), which is
+  **primed, never sprung** (ADR 0069): the app reads
+  `navigator.permissions.query({name:"geolocation"})` — which prompts nobody —
+  then uses an existing grant silently, offers a one-tap button where the state
+  is `prompt`, and says so in place where it is `denied`. Nothing in Faves
+  raises a browser permission prompt except a tap on that button.
 - `image` (venue card photo, or a menu item's dish photo) is an optional
   **self-hosted** path — no hotlinking (offline / no-external-request
   rule); store under `site/img/`. Photos are excluded from the transfer
@@ -693,7 +714,7 @@ precached payload nothing on any screen can reach (ADR 0047).
   at all. When present, the menu screen's address row hands off to the
   device's native maps app at those exact coordinates (`site/js/geo.js`);
   when absent it falls back to an address search. They also seed the
-  distance-sorted "what's close" list ("Nearest first"). **The "Along a route"
+  distance term in the one home-list ranking (above). **The "Along a route"
   least-detour sort was removed whole on 2026-08-16** (owner ruling): it ranked
   by straight-line detour toward a *suburb centroid*, and a centroid is not a
   route — Khandallah Trading Company came up "on the way" from Churton Park to

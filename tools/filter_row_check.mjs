@@ -96,6 +96,15 @@ const STATE = `(() => {
     clearWithControls: !!controls?.contains(clear),
     clearPresent: !!clear && !!clear.offsetParent === !!controls?.offsetParent,
     cuisineReach: reach("filter-cuisine"),
+    // #geo-ask (ADR 0069) starts hidden — the harness forces it visible
+    // before reading this, the same way it forces the sheet open above.
+    geoAskReach: reach("geo-ask"),
+    // Whole-document overflow, not #filter-controls' own — a control that
+    // renders past the edge of the page is a horizontal scrollbar the phone
+    // shows and the desktop CSS never anticipated (to_top_check.mjs uses the
+    // same pair for the same reason).
+    docW: document.documentElement.scrollWidth,
+    innerW: innerWidth,
     activeId: document.activeElement?.id || document.activeElement?.tagName || "",
     count: (count?.textContent || "").trim(),
     // --- 15z: the row has to BE a row ------------------------------------
@@ -154,15 +163,6 @@ async function run(opts) {
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
-    // Pre-granted and overridden, so "Nearest first" can actually engage without
-    // a permission prompt no headless run can answer. Wellington, so the
-    // distance sort has somewhere to sort from.
-    await cdp.send("Browser.grantPermissions", { permissions: ["geolocation"] });
-    await cdp.send(
-      "Emulation.setGeolocationOverride",
-      { latitude: -41.2, longitude: 174.8, accuracy: 50 },
-      sessionId
-    );
 
     const size = async (w) => {
       await cdp.send(
@@ -316,43 +316,53 @@ async function run(opts) {
       `activeElement: ${s.activeId}`
     );
 
-    // --- 15z: choosing a sort must not lay a control over another one. ------
+    // --- 15z: the row must still not lay a control over another one. --------
     // The row is measured for exactly the controls it rests with. A fourth one
-    // (the "Along a route" destination picker, removed 2026-08-16) rendered ON
-    // TOP of "All cuisines", "Open now" and "Cheap eats" — all three still
-    // passed a visibility check, and all three were untappable. Only
-    // elementFromPoint sees that, so the sort modes are still driven here.
+    // (the "Along a route" destination picker, removed 2026-08-16, when
+    // distance moved out of a sort mode and into the one home-list ranking —
+    // ADR 0068) rendered ON TOP of "All cuisines", "Open now" and "Cheap
+    // eats" — all three still passed a visibility check, and all three were
+    // untappable. Only elementFromPoint sees that, and nothing else in this
+    // file re-checks it after the breakpoint-crossing above, so it is
+    // re-measured here: one band, no horizontal overflow, and the row's own
+    // controls genuinely reachable rather than merely present.
     await size(1280);
-    await driver.evalPage(`(() => {
-      const s = document.getElementById("filter-sort");
-      s.value = "near";
-      s.dispatchEvent(new Event("change", { bubbles: true }));
-    })()`);
-    await sleep(600); // the geolocation callback is async even when pre-granted
     s = await state();
     report.check(
-      "1280px: 'Nearest first' keeps the row one band, not a stacked panel",
+      "1280px: after crossing back, the row is still one band, not a stacked panel",
       s.bands === 1 && !s.overflowsX,
       `bands: ${s.bands} · panel ${s.panelH}px · overflowX ${s.overflowsX}`
     );
     report.check(
-      "1280px: …and every other control is still tappable, not just visible",
+      "1280px: …and every control in it is still tappable, not just visible",
       s.cuisineReach === "reachable" && s.openNowReach === "reachable",
       `#filter-cuisine: ${s.cuisineReach} · #open-now: ${s.openNowReach}`
     );
-    // Back to rest — and the row must still be one band, not stuck wide.
-    await driver.evalPage(`(() => {
-      const s = document.getElementById("filter-sort");
-      s.value = "usual";
-      s.dispatchEvent(new Event("change", { bubbles: true }));
-    })()`);
-    await sleep(300);
-    s = await state();
-    report.check(
-      "1280px: back to 'Our usual order' leaves the row one band",
-      s.bands === 1 && !s.overflowsX,
-      `bands ${s.bands} · panel ${s.panelH}px · overflowX ${s.overflowsX}`
-    );
+
+    // --- 0069: the location ask must not overlay anything either. -----------
+    // #geo-ask stays `hidden` until app.js has read
+    // navigator.permissions.query, so every check above never sees it. Forced
+    // visible here to ask the same elementFromPoint question the "Along a
+    // route" bug above proved was necessary: a control can pass a visibility
+    // check — non-zero box, on screen — while something else still owns the
+    // pixels a tap would land on. Checked at both widths named in CLAUDE.md's
+    // mobile-first rule, because .geo-row wraps at 390 px (button and status
+    // line stack) in a way it never needs to at 1280 px.
+    await driver.evalPage(`document.getElementById("geo-ask").hidden = false`);
+    for (const w of [390, 1280]) {
+      await size(w);
+      s = await state();
+      report.check(
+        `${w}px: #geo-ask sits on top of the page, not covered by anything above it`,
+        s.geoAskReach === "reachable",
+        `#geo-ask: ${s.geoAskReach}`
+      );
+      report.check(
+        `${w}px: unhiding #geo-ask adds no horizontal scroll to the page`,
+        s.docW <= s.innerW,
+        `document ${s.docW}px wide in a ${s.innerW}px viewport`
+      );
+    }
 
     // --- Idempotence. -------------------------------------------------------
     // A handler that runs twice, or that appends instead of moving, shows up

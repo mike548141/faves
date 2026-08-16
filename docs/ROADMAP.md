@@ -4678,41 +4678,16 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
 
 > ✅ **Shipped 2026-08-16** — 37f — "Along a route" is removed whole. Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [~] **37g — the whole SORT BY section goes, and distance moves into the one
-      ranking** `[M][js][ux]` ⚑ — **DESIGNED, NOT BUILT.**
-      **CLAIMED 2026-08-16 13:43 UTC (wt: faves-ranking)** — the ADR 0068 build.
-      Owner: *"I don't see
-      the need for the nearest first sort by button… remove nearest first
-      removes the need for the sort section of the filters altogether."* The
-      full design, the evidence and the three traps are in **[ADR 0068]**; read
-      it before touching `ranking.js`.
-      🔑 **Headline: his algorithm is built and has never once run.** The
-      default branch of `rankVenues` *is* availability → distance → favourite,
-      but `origin` is written in exactly one place — the sort control's own
-      handler — so the distance term has been `Infinity` for every venue since
-      the project began.
-      🛑 **Two traps that would each have shipped a defect:** the favourite
-      credit is **10 km**, not the *"few hundred metres"* he remembers asking
-      for; and `favBoostKm` **cannot be re-tuned to fix that**, because it was
-      quietly repurposed as the branch-proximity cutoff and now has two jobs and
-      one name — retuning it would break every chain's menu page.
-      ⏳ **Deliberately left for a fresh session:** it introduces the **first
-      unprompted permission prompt in Faves' history**, and a new trust surface
-      begun at the tail of a session is how a half-built one ships — the same
-      call 36d got, for the same reason.
+> ✅ **Shipped 2026-08-17** — 37g — the SORT BY section goes, and distance joins
+> the one ranking. Built to [ADR 0068], its item 4 superseded by [ADR 0069] (the
+> location ask is primed, not sprung). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 > ✅ **Shipped 2026-08-16** — 37h — remove "Transfer to another device". Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 > ✅ **Shipped 2026-08-16** — 37i — Sync lives inside "Your data". Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [~] **37j — "Everywhere" is a place word on a service filter** `[XS][ux]`.
-      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)**. Owner: *"Everywhere does not make sense for a drop down to select dine-in
-      vs takeaway."* He is right and it is one string: `site/index.html`'s
-      `#filter-service` offers **Everywhere / Takeaway / Dine-in** under the
-      label "Service". Its neighbours read "All areas" and "All cuisines", so
-      the parallel form is **"Any service"** — `service.all` in `reo.js` needs
-      its te reo re-glossed with it, since the current draft translates
-      *"everywhere"*.
+> ✅ **Shipped 2026-08-17** — 37j — "Everywhere" → "Any service", and the te reo
+> re-glossed with it. Landed inside 37g. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 - [ ] **37k — a "style of dining" filter** `[M][schema][design]` ⚑ — owner
       idea, 2026-08-16: *"Another useful filter might be style of dining/food

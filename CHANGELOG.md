@@ -27,6 +27,22 @@ content freshness separately from this file.
     meantime.
 
 ### Changed
+- **The home list has one order now, and how far away a place is finally
+  counts.** There used to be a *Sort by* control with two orders in it. There is
+  now one: places you can actually order from right now come first, then the
+  nearest of those, and a heart breaks the tie between two that are much the
+  same distance away. Tap **📍 Near me** above the list to let Faves use your
+  location; without it the list stays in the order it has always been in, and
+  nothing nags you about it.
+  - **A heart is a tiebreak, not a shove.** A favourite lifts a place above
+    another one roughly as close by — not above the shop next door when it is
+    across town. (It used to be worth 10 km on paper, which is why it never got
+    to run.)
+  - **Faves does not ask for your location out of the blue.** Nothing prompts
+    you until you tap the button. If you have already given Faves your location
+    before, it just works with no prompt at all — and if you have blocked it, the
+    app now says so plainly instead of quietly doing nothing forever.
+
 - **Sync now lives inside Settings → *Your data*.** It used to be a row of its
   own, one below it. Saving a copy of your data, bringing one back, and keeping
   your devices in step are three answers to the same question — "how do I not

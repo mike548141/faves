@@ -61,25 +61,33 @@ const MI = {
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",
-  // This moved from a pill toggle to an <option> of the "Sort by" select in
-  // 15z, and kept its key on purpose: the queue is parked (owner ruled
-  // 2026-08-16, "do not open new [reo] items without asking"), so re-keying an
-  // already-drafted string would have added an entry to it for no gain. The
-  // select's other option, "Our usual order", is the one genuinely new string
-  // and is deliberately NOT drafted here — `sort.usual` falls back to the
-  // captured English, which is the documented partial state, not an oversight.
-  // Keys owed, both English-only for the same reason: sort.usual, and
-  // menu.opensNewWindow (the WCAG G201 new-window warning menu.js appends to
-  // every off-site link, 31d). Both fall back safely — translate() captures the
+  // A pill toggle, then an <option> of the "Sort by" select (15z), and since
+  // ADR 0068 the #geo-ask button — one key through all three, on purpose. The
+  // queue is parked (owner ruled 2026-08-16, "do not open new [reo] items
+  // without asking"), so the button reuses the string this app already had
+  // drafted rather than opening an item for a fourth spelling of "near me".
+  // `sort.usual` ("Our usual order") went with the select, so the English-only
+  // debt is SHORTER after that change, not longer: menu.opensNewWindow (the
+  // WCAG G201 new-window warning menu.js appends to every off-site link, 31d)
+  // is now the only key owed. It falls back safely — translate() captures the
   // English on its first pass before mi() can miss.
+  // ⚠ Not translated, and not a reo item: the #geo-status sentences are set
+  // from app.js by textContent, like every other JS-composed status string in
+  // this app. They are English wherever they appear, which is the honest state.
   "toggle.nearMe": "E tata ana",
   // Service segmented control
-  // 🚩 For the reo reviewer (ADR 0035): in English this is "Everywhere" — any
-  // service, dine-in or takeaway — but in te reo it reads identically to the
-  // "All places" of "fav.allPlaces"/"nav.allRestaurants", which are a different
-  // job (leave a panel). Left as-is rather than guessed at; a te reo speaker
-  // should decide whether this wants "ngā momo katoa" (all kinds) or similar.
-  "service.all": "Ngā wāhi katoa",
+  // Re-glossed 2026-08-17 with the English (ROADMAP 37j). It read "Everywhere"
+  // / "Ngā wāhi katoa" — a PLACE word on a control that picks dine-in vs
+  // takeaway, and in te reo it collided outright with the "All places" of
+  // "fav.allPlaces"/"nav.allRestaurants", a different job (leave a panel).
+  // "Any service" takes the parallel form of its two neighbours in the row,
+  // "All areas" and "All cuisines". The te reo follows the same `Ngā … katoa`
+  // frame those two already use, over the noun this file already carries for
+  // this exact sense ("filter.service": "Ratonga") — so it is this file's own
+  // established pattern applied, not a fresh translation guessed at. The reo
+  // queue is parked (owner ruled 2026-08-16); this CLOSES a queued item rather
+  // than opening one, which is why it was in scope.
+  "service.all": "Ngā ratonga katoa",
   "service.takeaway": "Mau atu",
   "service.dineIn": "Kai ā-whare",
   // Filter select defaults

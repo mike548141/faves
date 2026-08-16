@@ -203,11 +203,27 @@
              hidden whenever nothing is on. -->
         <div id="active-filters" class="active-filters" hidden></div>
       </div>
-      <!-- The sort's own explanation ("Sorted by distance from you"). It stays
-           out here rather than in the sheet: a sort mode survives the sheet
-           closing, and this is the sentence that says the list is not in its
-           usual order. Hidden — and 0 px — until a location mode is on. -->
-      <p id="geo-status" class="geo-status browse-only" role="status" aria-live="polite" hidden></p>
+      <!-- The location ask, and what came of it (ADR 0069). Both stay out here
+           rather than in the filter sheet: this is a permission, not a facet,
+           and the answer to it survives the sheet closing.
+           #geo-ask is hidden until app.js has read the browser's permission
+           state and found it can usefully be offered — already-granted needs no
+           button, and blocked gets the status line instead. Tapping it is the
+           ONLY thing in this app that raises a browser prompt; nothing is
+           sprung on load. Both are 0 px until app.js says otherwise. -->
+      <div id="geo-row" class="geo-row browse-only">
+        <!-- Keeps `toggle.nearMe`, the key this app's own "Near me" pill carried
+             before 15z made it a select option. The reo queue is parked (owner
+             ruled 2026-08-16, "do not open new [reo] items without asking"), so
+             a new key here would open an item for a string we already have
+             drafted. `sort.usual` — the one string the retired select added, and
+             one of the two English-only keys reo.js listed as owed — goes with
+             the select, so the owed list is shorter than before this change. -->
+        <button type="button" id="geo-ask" class="list-toggle geo-ask" hidden>
+          <span aria-hidden="true">📍</span> <span data-i18n="toggle.nearMe">Near me</span>
+        </button>
+        <p id="geo-status" class="geo-status" role="status" aria-live="polite" hidden></p>
+      </div>
       <p id="tz-note" class="tz-note browse-only" data-i18n="tz.note" hidden>Open/closed times are New Zealand time.</p>
 
       <p class="fallback-note browse-only">Showing all places. Turn on JavaScript to filter and shuffle.</p>
@@ -708,7 +724,7 @@
               <label class="filter-label" for="filter-service" data-i18n="filter.service">Service</label>
               <div class="select-field">
                 <select id="filter-service" data-active="all">
-                  <option value="all" data-i18n="service.all">Everywhere</option>
+                  <option value="all" data-i18n="service.all">Any service</option>
                   <option value="takeaway" data-i18n="service.takeaway">Takeaway</option>
                   <option value="dine-in" data-i18n="service.dineIn">Dine-in</option>
                 </select>
@@ -737,36 +753,12 @@
               </button>
             </div>
           </section>
-          <!-- Sorting needs geolocation, so app.js unhides this group only where
-               it exists, rather than leaving a heading over a control nobody can
-               use.
-               A SELECT, NOT A TOGGLE (15z). "Near me" was an `aria-pressed`
-               button, which promises an independent switch — a sort mode is not
-               one. A select is what a one-of-N choice is, and it is what every
-               reader already expects a "Sort by" control to be. -->
-          <section id="filter-sort-group" class="filter-group filter-sort-group" aria-labelledby="filter-sort-title" hidden>
-            <h3 id="filter-sort-title" class="filter-group-title" data-i18n="filter.sort">Sort by</h3>
-            <p class="filter-group-note" data-i18n="filter.sortNote">
-              These reorder the list. They never shorten it.
-            </p>
-            <div class="filter-field" id="filter-sort-field">
-              <!-- sr-only always: in the sheet the <h3> above already says "Sort
-                   by", and inline the <h3> is what stands beside the select. A
-                   third copy of the same two words would be noise in both. -->
-              <label class="sr-only" for="filter-sort" data-i18n="filter.sort">Sort by</label>
-              <!-- "Nearest first" keeps the reo key its button carried, so
-                   nothing new joins the te reo review queue (owner ruled it
-                   parked, 2026-08-16). `sort.usual` is the one genuinely new
-                   string and deliberately has no MI entry — reo.js falls back to
-                   the captured English, which is the documented partial state. -->
-              <div class="select-field">
-                <select id="filter-sort" data-active="usual">
-                  <option value="usual" data-i18n="sort.usual">Our usual order</option>
-                  <option value="near" data-i18n="toggle.nearMe">Nearest first</option>
-                </select>
-              </div>
-            </div>
-          </section>
+          <!-- THE SORT BY GROUP IS GONE (ADR 0068). There is one ranking now and
+               distance is inside it, so there is no mode to choose between and
+               nothing for a "Sort by" control to say. The location that feeds
+               that ranking is asked for by #geo-ask, up beside the list, because
+               it is a permission and not a filter — burying a browser prompt
+               behind a sheet is the opposite of asking plainly. -->
           </section>
           <!-- #filters-clear is moved in here beside the controls when they go
                inline (filters-ui.js), so "Clear all" is not a phone-only

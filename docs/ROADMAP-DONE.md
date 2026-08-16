@@ -1516,6 +1516,63 @@ the CSS root font size grows every `rem` box but does **not** move `rem`-based
       which maps providers honour a waypoint parameter and which silently drop
       it, and the real feature will need exactly that.
 
+- ✅ **37g — the SORT BY section goes, and distance joins the one ranking**
+      `[M][js][ux]` — **done 2026-08-17**, built to [ADR 0068] with its item 4
+      superseded by [ADR 0069]. Owner: *"remove nearest first removes the need
+      for the sort section of the filters altogether."* The `<select>`, its
+      group, its heading, its note and four `body.filters-inline` CSS rules are
+      gone; `rankVenues`' two branches are one comparator — pinned → orderable →
+      reachable → **availability → distance band → favourite → exact distance**
+      → curated.
+      🔑 **The headline stays the finding, not the feature: his algorithm was
+      built and had never once run.** `origin` was written in exactly one place,
+      the sort control's own handler, so from 2026-07-08 until this change the
+      distance term was `Infinity` for every venue on every render.
+      🔎 **The no-origin path was proved unchanged rather than argued.** The old
+      `ranking.js` was extracted from `HEAD` and run head-to-head against the new
+      one over **4000 randomised lists** (mixed stubs, recipes, coordless and
+      coordful venues, favourites, every `favBoostKm` and `farKm` value), no
+      origin: **0 mismatches**. That path is what a refused permission gets, so
+      "unchanged" had to be a measurement, not a reading of the diff.
+      🔎 **And the guards were verified by breaking them** — four mutations, each
+      caught by the tests that were supposed to catch it: distance leading
+      availability (3 fail), the favourite tiebreak removed (3), raw distance in
+      place of the bucket (1), the 10 km credit reinstated (3).
+      🚩 **A property of bucketing worth knowing before it surprises someone.**
+      `Math.round(dist / 0.4)` partitions space at **fixed edges** (0.2 km,
+      0.6 km, 1.0 km…); it does not measure the gap *between* two venues. So two
+      venues 20 m apart can straddle an edge — 0.19 km and 0.21 km land in
+      different bands — and the heart on the farther one loses a tie a reader
+      would call a tie. This was found by the agent building it, against a worked
+      example in the brief that was arithmetically wrong. The error is
+      **conservative in the safe direction**: bucketing can only ever
+      *under*-apply the heart, never lift a favourite above something
+      meaningfully nearer, which is the defect ADR 0068 existed to prevent. A
+      tolerance ("within 400 m *of each other*") cannot replace it — proximity is
+      not transitive, so it is not a sort key at all. `tests/ranking.test.js`
+      pins the boundary case as a known property rather than leaving it to be
+      rediscovered.
+      🔑 **What the pure-logic lane could not do, and a session should not assume
+      it did:** 915 unit tests say nothing about whether the button appears, is
+      tappable at 390 px, or overlays anything. That needed a real browser, and
+      the fixed-control precedent (Theme 29) is that a single sample proves
+      nothing about a fixed element's victim.
+
+- ✅ **37j — "Everywhere" is a place word on a service filter** `[XS][ux]` —
+      **done 2026-08-17**, inside 37g's change because both edit `#filters` and
+      `reo.js`. Owner: *"Everywhere does not make sense for a drop down to select
+      dine-in vs takeaway."* Now **"Any service"**, the parallel form of its two
+      neighbours ("All areas", "All cuisines"). The te reo went
+      `Ngā wāhi katoa` → **`Ngā ratonga katoa`** — the same `Ngā … katoa` frame
+      `filter.allAreas`/`filter.allCuisines` already use, over the noun this file
+      already carries for this exact sense (`filter.service`: `Ratonga`).
+      🔑 **Why this was in scope with the reo queue parked** (owner ruled
+      2026-08-16, *"do not open new [reo] items without asking"*): it **closes** a
+      queued item rather than opening one, and it applies the file's own
+      established pattern rather than minting a translation. The old draft was
+      not merely loose — it collided outright with `fav.allPlaces` /
+      `nav.allRestaurants`, which mean "leave this panel", a different job.
+
 - ✅ **37h — remove "Transfer to another device"** `[S][js]` — **done
       2026-08-16**; [ADR 0030]'s transfer half retired with it. Owner: *"Remove
       the 'Transfer to another device' feature all together as we already have

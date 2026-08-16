@@ -18,7 +18,7 @@ import { formatDriveTime } from "./distance.js";
 import { formatDistance } from "./units.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
 import { venueHours, nearestBranch } from "./locations.js";
-import { rememberOrigin } from "./geo.js";
+import { recallOrigin, rememberOrigin } from "./geo.js";
 import { openStatus, makeClock, viewerOnVenueTime } from "./hours.js";
 import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 import { closureBadge } from "./closure-ui.js";
@@ -288,14 +288,24 @@ function init(restaurants) {
   fillSelect(areaSel, areas, "All areas", "filter.allAreas");
   fillSelect(cuisineSel, cuisines, "All cuisines", "filter.allCuisines");
 
-  // origin holds the user's {lat, lng} once "Nearest first" is on; null
-  // otherwise.
   // A menu page's subheading links its cuisines and area back here as
   // `?cuisine=…` / `?area=…` (filters.js owns the names, and drops any value
   // the data doesn't have). The controls are set from it too, so the list and
   // the dropdown above it never disagree about why it's short.
   const fromUrl = filtersFromQuery(location.search, { areas, cuisines });
-  const state = { ...DEFAULT_FILTERS, ...fromUrl, origin: null };
+  // `origin` is the viewer's {lat,lng}, and it is seeded from the location this
+  // browsing session already captured — sessionStorage, same key the menu screen
+  // reads (geo.js).
+  //
+  // 🔎 This line is a fix, not plumbing. Until 2026-08-17 the home screen
+  // started at `null` every single load while `menu.js` went on reading the
+  // remembered origin, so home → a menu page → back left the menu screen
+  // ordering branches by your location and the home list quietly not. It was
+  // invisible while distance did nothing in the default order (ADR 0068); the
+  // moment distance counts, the same navigation silently changes the ranking.
+  // Seeding here also spares the granted-permission path a visible reorder on
+  // every load — the first paint is already in the right order.
+  const state = { ...DEFAULT_FILTERS, ...fromUrl, origin: recallOrigin() };
   for (const [sel, value] of [
     [areaSel, state.area],
     [cuisineSel, state.cuisine],
@@ -998,89 +1008,134 @@ function wireCheapEats(state, render) {
   wireListToggle("cheap-eats", "cheap", state, render);
 }
 
-// The sort mode. "Nearest first" needs the device location; "Our usual order"
-// is the neutral state and the way back out of it.
+// Said in place of the button, never as a modal or a repeat ask. It names the
+// state and where to undo it, and stops — a browser will not let a page reopen
+// its own site settings, so pointing is the most any page can honestly do.
+const BLOCKED_MSG = "Location is blocked for this site — turn it on in your browser's site settings to rank by distance.";
+
+// The location ask (ADR 0069, superseding item 4 of ADR 0068).
 //
-// ONE SELECT SINCE 15z. "Nearest first" was an `aria-pressed` button, which is
-// the markup for an independent switch — and a sort mode is not one. A
-// `<select>` says one-of-N, which is what this is, and it names the state
-// ("Our usual order") that used to exist only as "not pressed".
+// There is no sort mode any more: one ranking, and distance is a term inside it
+// (ADR 0068). So this function's whole job is getting an origin for that term —
+// not choosing between orders. `state.origin` is the viewer's {lat,lng}, and
+// null is a perfectly good answer: with no origin every distance is Infinity and
+// the ranking falls back to availability → favourite → curated, which is the
+// order this app has always actually shipped.
 //
-// Purely additive — geolocation is feature-detected and the whole group stays
-// hidden (plain list stays) where it's unavailable. `state.origin` is the
-// viewer's {lat,lng}.
+// NOTHING IS SPRUNG ON LOAD. ADR 0068 had `getCurrentPosition` firing on first
+// paint, and its own safety-valve — prime it "if the deny rate looks bad in
+// use" — turned out to have a trigger nothing can observe, because the app ships
+// no telemetry of any kind. An unexplained prompt at the moment of least earned
+// trust is the classic route to a PERMANENT block, and a block costs a trip into
+// per-site browser settings to undo where an ungranted permission costs one tap.
+// So: read the browser's mind first (permissions.query never prompts), and only
+// ever prompt because someone asked us to.
 function wireLocation(state, render) {
-  const sortSel = document.getElementById("filter-sort");
-  const sortGroup = document.getElementById("filter-sort-group");
+  const askBtn = document.getElementById("geo-ask");
   const status = document.getElementById("geo-status");
-  if (!sortSel || !("geolocation" in navigator)) return;
-  // app.js owns this, not filters-ui.js: the reason the group can exist is a
-  // browser capability, and only this function tests it. A heading over a
-  // control nobody can use is worse than no heading.
-  if (sortGroup) sortGroup.hidden = false;
+  if (!askBtn || !("geolocation" in navigator)) return;
 
   const setStatus = (msg) => {
     status.textContent = msg || "";
     status.hidden = !msg;
   };
 
-  // The select is a view of the state, never a second copy of it: every path
-  // that changes the origin ends here, so a refused permission puts the control
-  // back by itself rather than being remembered to. `data-active` drives the
-  // accent, with "usual" as this control's neutral.
-  function syncUI() {
-    const mode = state.origin ? "near" : "usual";
-    sortSel.value = mode;
-    sortSel.dataset.active = mode;
-    setStatus(state.origin ? "Sorted by distance from you." : "");
-  }
+  const showAsk = (show) => {
+    askBtn.hidden = !show;
+  };
 
-  // Get the device location (reusing what we already have), then continue.
-  function withOrigin(after) {
-    if (state.origin) return after();
-    sortSel.disabled = true;
-    setStatus("Finding your location…");
+  // Fetch and apply. Raises the browser prompt ONLY when the permission state is
+  // "prompt" — under "granted" the browser answers from the grant it already
+  // holds and the viewer sees nothing, which is the whole point of asking
+  // permissions.query first.
+  function fetchOrigin({ silent }) {
+    askBtn.disabled = true;
+    if (!silent) setStatus("Finding your location…");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        sortSel.disabled = false;
+        askBtn.disabled = false;
         state.origin = { lat: coords.latitude, lng: coords.longitude };
         rememberOrigin(state.origin); // let the menu screen order branches nearest-first
-        after();
+        showAsk(false); // the ask is answered; the button has no second job
+        setStatus("Open places near you come first.");
+        render();
       },
       (err) => {
-        sortSel.disabled = false;
-        // syncUI() puts the select back to "Our usual order" on its own: with
-        // no origin the mode reads `usual`. A refused prompt must never leave
-        // the control claiming a sort the list is not in.
-        syncUI();
-        // Denied is the common, non-error case; be matter-of-fact.
-        setStatus(
-          err.code === err.PERMISSION_DENIED
-            ? "Location off — showing our usual order."
-            : "Couldn't get your location — showing our usual order."
-        );
+        askBtn.disabled = false;
+        if (err.code === err.PERMISSION_DENIED) {
+          // A refusal is not an error and gets no nag (ADR 0068 item 4 stands
+          // for this case). But the button must go: a control that can only
+          // fail is worse than no control, and re-offering it IS the second ask
+          // the ADR forbids.
+          showAsk(false);
+          setStatus(BLOCKED_MSG);
+          return;
+        }
+        // Timeout, no fix, position-unavailable: transient, so the button stays
+        // for a second try. Only a denial is permanent.
+        showAsk(true);
+        setStatus(silent ? "" : "Couldn't get your location — showing our usual order.");
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
     );
   }
 
-  function clearLocation() {
-    state.origin = null;
-    rememberOrigin(null); // the menu screen forgets it too
-    syncUI();
-    render();
+  askBtn.addEventListener("click", () => fetchOrigin({ silent: false }));
+
+  // The three states, read once at load. `permissions.query` is new to this
+  // codebase and is feature-detected: where it is missing (or throws on the
+  // "geolocation" name, which some older engines do) we land on the same branch
+  // as "prompt" — offer the button, prompt nobody. That is the safe direction,
+  // and it is why no path here depends on the API existing.
+  function applyPermissionState(stateName) {
+    if (stateName === "granted") {
+      showAsk(false);
+      fetchOrigin({ silent: true }); // already ours to use — no prompt appears
+      return;
+    }
+    if (stateName === "denied") {
+      // The gap this closes: before ADR 0069 "never asked" and "blocked
+      // forever" presented identically — no origin, no distance, nothing on
+      // screen — so nobody could tell an app that had not asked from one that
+      // could never ask again, the owner on his own phone included.
+      showAsk(false);
+      setStatus(BLOCKED_MSG);
+      // Reached via perm.onchange when someone blocks us in site settings
+      // mid-visit. Keeping the coordinates we already hold would be legal and
+      // dishonest: they just told the browser to stop us using their location,
+      // and a list still silently ranked by it is not what they asked for.
+      if (state.origin) {
+        state.origin = null;
+        rememberOrigin(null); // the menu screen forgets it too
+        render();
+      }
+      return;
+    }
+    // "prompt": offer the button — unless this session already captured a
+    // location, in which case there is nothing left to ask for.
+    showAsk(!state.origin);
   }
 
-  // Choosing "Our usual order" is the way OUT of location sorting, which a
-  // toggle could only express as "press the one that is already pressed" — a
-  // gesture nothing on screen taught.
-  sortSel.addEventListener("change", () => {
-    if (sortSel.value === "usual") return clearLocation();
-    withOrigin(() => {
-      syncUI();
-      render();
-    });
-  });
+  // Seeded from this browsing session's own capture (init, above): we already
+  // have what the button would fetch, so offering it would be asking a question
+  // already answered. Say what the list is doing and leave the button hidden —
+  // but still read the permission below, because a revoke mid-visit has to be
+  // able to take the seeded origin back off us.
+  if (state.origin) setStatus("Open places near you come first.");
+
+  if (!navigator.permissions?.query) return showAsk(!state.origin);
+  navigator.permissions
+    .query({ name: "geolocation" })
+    .then((perm) => {
+      applyPermissionState(perm.state);
+      // Granting or blocking in browser settings mid-visit changes this without
+      // any event of ours firing. Cheap to follow, and it means the button stops
+      // lying the moment the answer changes.
+      perm.onchange = () => applyPermissionState(perm.state);
+    })
+    // Some engines reject on the "geolocation" name rather than resolving.
+    // Same landing as "prompt": offer the button, prompt nobody.
+    .catch(() => showAsk(!state.origin));
 }
 
 loadRestaurants()

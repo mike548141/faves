@@ -1,52 +1,70 @@
-// Default home-screen ordering: float the places you can actually order
-// from *right now* to the top, sink the ones you can't. Two signals, both
-// honest and offline:
+// The home list has ONE ranking, and distance is in it (ADR 0068). There is no
+// mode, no sort control and no second branch: the same comparator runs whether
+// or not we know where the viewer is. Its keys, in order:
 //
-//  1. Open status (always available — from hours + the NZ clock). A place
-//     that's open (right up to closing time — you might be 2 minutes away)
-//     or opening within the hour beats one that's shut for the night.
-//  2. Favourites (from the device-local heart store). A place you've
-//     hearted — or one holding a dish you've hearted — is one you actually
-//     want. In the DEFAULT (no-location) list a favourite floats above its
-//     equal-availability peers (a tiebreak), but never overrides availability:
-//     a closed favourite you can't order from still sits below anywhere open.
-//     In "Near me" a favourite gets NO distance pull — see (3).
-//  3. Distance (only when we know where you are, i.e. "Near me" / "Nearest
-//     first"). Owner ruling 2026-07-23: this mode is PURE distance — a heart
-//     keeps its ♥ badge but earns no ranking pull, so a nearer plain venue
-//     always outranks a farther hearted one. Beyond a "reachable tonight"
-//     radius (`farKm`) a venue sinks below everything nearby regardless.
-//     (The `favBoostKm` dial no longer changes this ordering; it's retained
-//     pending a decision on whether to repurpose or retire it.)
+//   pinned → orderable-before-stub → reachable → availability → distance
+//   bucket → favourite tiebreak → raw distance → curated
 //
-//  4. A usable menu. A "menu coming soon" stub can be found by name but not
-//     ordered from, so it sinks below everything orderable; among stubs,
-//     proximity (not open-status) is the only useful signal.
+// Why that order:
+//  1. Availability leads distance — deliberately the opposite of the retired
+//     "Nearest first" branch. A closed shop 200 m away is not a better answer
+//     than an open one at 900 m; you can't eat at the closed one. Open (right
+//     up to closing — you might be two minutes away) beats opening-within-the-
+//     hour beats unknown beats shut.
+//  2. Distance is bucketed, not raw, so the heart has somewhere to act. Two
+//     venues inside the same FAV_TIE_KM band are "the same sort of distance
+//     away"; the heart separates them. One band further out and distance has
+//     already decided — the heart cannot reach across a band.
+//  3. The heart is a tiebreak, never a credit. The old design subtracted
+//     FAV_BOOST_KM (10 km) from a favourite's distance, which pushed a hearted
+//     venue ahead of *everything* inside the credit — a hearted place across
+//     town outranking the shop next door. Bucketing asks the question that has
+//     an answer ("is this the same sort of distance away?") instead of the one
+//     that doesn't ("how many km is a heart worth?"). ADR 0068 finding 1.
+//  4. Beyond `farKm` a venue is another town: it sinks below everything
+//     reachable whatever its hours or hearts say.
+//  5. A "menu coming soon" stub can be found by name but not ordered from, so
+//     it sinks below everything orderable; among stubs, distance is the only
+//     useful signal (their availability tier is zeroed — see below).
 //
-// Sort order is lexicographic: pinned (the Cook-at-Home recipes collection
-// always anchors the top) → orderable-before-stub → reachable → then the two
-// middle keys swap by mode: default (no location) leads on availability then a
-// favourite tiebreak; "Nearest first" (origin known) leads on pure distance
-// then availability. Curated order breaks any final tie.
+// With no origin every distance is Infinity, so every bucket is Infinity: the
+// buckets and the raw-distance key both tie and the order falls through to
+// availability → favourite → curated. That is the permission-refused path and
+// it must stay exactly today's no-location order.
+//
 // Pure (no DOM/network) so it's unit-tested; favourites arrive as a plain Set
-// of venue ids and the two distances as params, so this stays store-agnostic.
-// The viewer can tune both distances (settings.js).
+// of venue ids and the distances as params, so this stays store-agnostic.
 
 import { openStatus } from "./hours.js";
 import { kindOf } from "./kinds.js";
 import { nearestBranch, venueDistanceKm, venueHours } from "./locations.js";
-import { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
+import { FAR_KM, FAV_BOOST_KM, FAV_TIE_KM } from "./defaults.js";
 import { venueTimezone } from "./place.js";
 import { isTrading } from "./temporal.js";
 
-// The two distance defaults live in `defaults.js` (a leaf) so settings.js can
+// The distance defaults live in `defaults.js` (a leaf) so settings.js can
 // have them without importing this module, which imports place.js, which
 // imports settings.js. Re-exported so every existing importer is unaffected.
-export { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
+export { FAR_KM, FAV_BOOST_KM, FAV_TIE_KM } from "./defaults.js";
 
-// Safe numeric compare (Infinity − Infinity is NaN, which would corrupt a
-// subtraction-based comparator; coordless venues carry Infinity distance).
+// Safe numeric compare for keys that can be Infinity — a coordless venue, or
+// *every* venue when no origin was given. `Math.round(Infinity / FAV_TIE_KM)`
+// is Infinity, so the bucket carries the same values as the raw distance.
+//
+// Measured, not assumed: in the `||` chain below, subtraction would in fact be
+// safe — Infinity − Infinity is NaN, NaN is falsy, so `||` falls through to the
+// next key, which is exactly what a tie should do (and the sort spec coerces a
+// NaN comparator result to +0 anyway). `cmp` is used regardless because that
+// safety is a property of the *chain*, not of the key: the day someone returns
+// one of these keys on its own, or reorders the chain so a distance key lands
+// last, subtraction starts lying and nothing here would fail to say so.
 const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+
+// Which FAV_TIE_KM-wide band a venue falls in. Rounding (not flooring) puts the
+// boundary between two bands at the midpoint, so venues either side of a
+// round number like 400 m aren't split by a hair. Infinity stays Infinity: no
+// distance means no band, and every such venue ties.
+const distanceBucket = (dist) => (dist === Infinity ? Infinity : Math.round(dist / FAV_TIE_KM));
 
 // A "stub" is a venue with no usable menu yet (status "stub"): you can find it
 // by name, but there's nothing to order — so it sinks below everything
@@ -104,31 +122,42 @@ export function isAvailableNow(r, { clock, origin = null, farKm = FAR_KM } = {})
 }
 
 /**
- * Rank venues for the home list. The primary key depends on whether the viewer
- * asked for "Nearest first":
- *   • no origin (default order): reachable → availability → distance → curated.
- *     We can't measure distance, so float the places you can order from *now*.
- *   • origin known ("Nearest first" is ON): reachable → distance → availability
- *     → curated. The toggle promises nearest-first, so PURE distance leads; a
- *     place being open is still shown (its badge) and filterable ("Open now"),
- *     but it no longer floats a farther-but-open venue above a nearer one.
- *     Owner ruling 2026-07-23: a favourite earns NO distance pull here (it keeps
- *     its ♥ badge only), so a nearer plain venue always beats a farther hearted
- *     one. (Also fixes the earlier report that a 10 km venue outranked a 2.5 km
- *     one — that cause was availability outranking distance, not a text sort.)
- * `origin` ({lat,lng}) is optional; without it nothing is demoted for distance.
+ * Rank venues for the home list — one ranking, described at the top of this
+ * module (ADR 0068). Availability leads, distance follows, and a heart only
+ * separates venues already in the same FAV_TIE_KM band.
+ *
+ * `origin` ({lat,lng}) is optional and the only thing that varies: without it
+ * every distance is Infinity, so the distance keys tie for everyone and the
+ * order falls through to availability → favourite → curated. That fallback is
+ * the geolocation-refused path, so it is a behaviour to preserve, not a
+ * degraded mode to apologise for.
+ *
  * `favouriteIds` is a Set of venue ids the viewer has hearted (the venue itself
  * or any dish it holds — the caller flattens dish favourites to their venue id);
- * omit or pass null to ignore favourites. In the default (no-location) order a
- * favourite floats above equal-availability peers (favTie); `favBoostKm` is a
- * legacy Near-me distance boost the ruling above neutralised — it no longer
- * reorders anything (kept for API/settings compatibility). Venues with
- * coordinates gain a `distanceKm` field when origin is known, for the card. The
- * input array is not mutated.
+ * omit or pass null to ignore favourites.
+ *
+ * `favBoostKm` is accepted but **reorders nothing**. It stopped being a
+ * favourites dial in 2026-07 (it is the branch-proximity cutoff now) and the
+ * favourite credit it once fed is gone entirely — the heart is a bucket
+ * tiebreak. It stays in the signature because settings.js still stores it under
+ * that key and app.js passes the whole settings object through.
+ *
+ * Venues with coordinates gain a `distanceKm` field when origin is known, for
+ * the card. The input array is not mutated.
  */
 export function rankVenues(
   restaurants,
-  { clock, origin = null, favouriteIds = null, favBoostKm = FAV_BOOST_KM, farKm = FAR_KM } = {}
+  {
+    clock,
+    origin = null,
+    favouriteIds = null,
+    // Accepted and deliberately unread — see the note above. Destructured
+    // rather than ignored so a caller passing it isn't silently punished by a
+    // future rest-param, and so this line is where anyone hunting the old
+    // favourite credit lands.
+    favBoostKm = FAV_BOOST_KM,
+    farKm = FAR_KM,
+  } = {}
 ) {
   const keyed = restaurants.map((r, i) => {
     const kind = kindOf(r);
@@ -141,13 +170,9 @@ export function rankVenues(
     const hours = nb.branch.hours ?? null;
     const isFav = !!(favouriteIds && favouriteIds.has(r.id));
     const stub = isStub(r) ? 1 : 0;
-    // "Too far" gates on actual distance — a favourite in another town is
-    // still unreachable; the boost only reorders, it doesn't extend reach.
+    // "Too far" gates on actual distance, not the bucket — a favourite in
+    // another town is still unreachable, and no tiebreak can reach past this.
     const far = origin && dist !== Infinity && dist > farKm ? 1 : 0;
-    // Effective distance: a favourite counts as favBoostKm nearer. Coordless
-    // venues stay at Infinity (no coords to boost). favTie separates
-    // favourites when there's no location (all Infinity) or an exact tie.
-    const effective = dist === Infinity ? Infinity : dist - (isFav ? favBoostKm : 0);
     // Availability ranks only *within* the orderable group. For a stub it's
     // meaningless — and worse, "unknown hours" (tier 2) would beat "known
     // closed" (tier 3), so a nearer closed stub sank below a farther unknown
@@ -155,37 +180,25 @@ export function rankVenues(
     const tier =
       stub || !kind.hasHours ? 0 : tierFromHours(hours, clock.at(venueTimezone(r, origin)));
     return {
-      r, i, effective, dist, hours, far, tier, stub,
+      r, i, dist, bucket: distanceBucket(dist), hours, far, tier, stub,
       pinned: kind.pinnedFirst ? 0 : 1, // Cook at Home always anchors the top
       favTie: isFav ? 0 : 1,
     };
   });
-  // Shared leading keys, then distance vs availability swap by mode (see the
-  // doc comment). `cmp` compares distance *numerically* — never the formatted
-  // "10 km" string, which would sort lexicographically (10 < 2.5).
-  keyed.sort((a, b) => {
-    const lead =
+  // One comparator, no mode. Distance is compared *numerically* — never the
+  // formatted "10 km" string, which would sort lexicographically (10 < 2.5) —
+  // and through `cmp`, for the reason given at its definition.
+  keyed.sort(
+    (a, b) =>
       a.pinned - b.pinned || // the recipes collection is pinned to the very top
       a.stub - b.stub || // orderable venues above menu-less "coming soon" stubs
-      a.far - b.far; // reachable (within farKm) before too-far
-    if (lead) return lead;
-    const byAvailability = a.tier - b.tier; // open now floats up
-    if (origin) {
-      // "Nearest first" = pure distance (owner ruling 2026-07-23). A hearted
-      // venue keeps its ♥ badge but earns NO ranking pull here: raw distance
-      // leads (not the favourite-boosted `effective`), with availability the
-      // tiebreak, then curated. So a hearted place 10 km away sits below a plain
-      // one 2.5 km away — the toggle honours its "nearest first" promise.
-      return cmp(a.dist, b.dist) || byAvailability || a.i - b.i;
-    }
-    // Default (no location): availability leads. With no distance to measure, a
-    // favourite floats above equal-availability peers via the favTie tiebreak
-    // (the favBoostKm distance boost has nothing to act on here). `effective`
-    // is Infinity for every venue in this mode, so it never reorders.
-    const byEffective = cmp(a.effective, b.effective);
-    const tail = a.favTie - b.favTie || a.i - b.i; // favourite float → curated
-    return byAvailability || byEffective || tail;
-  });
+      a.far - b.far || // reachable (within farKm) before another town
+      a.tier - b.tier || // open now floats up: you can't eat at the closed one
+      cmp(a.bucket, b.bucket) || // …then how far, in "same sort of distance" bands
+      a.favTie - b.favTie || // …and only inside a band does the heart speak
+      cmp(a.dist, b.dist) || // within a band, the actually-nearer one still leads
+      a.i - b.i // curated order breaks whatever is left
+  );
   // With a known location, hand the card the nearest branch's distance and
   // hours (so its "📍 1.2 km" and open/closed badge describe the same branch).
   // Without one, the record is unchanged — its primary-branch hours stand.

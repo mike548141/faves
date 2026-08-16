@@ -294,9 +294,10 @@ main {
   outline-offset: 3px;
 }
 
-/* Shared pill toggles, now inside the filter sheet: "Open now" / "Cheap eats"
-   under "Narrow to". The "Sort by" group beside them stays hidden until app.js
-   confirms geolocation is available. */
+/* Shared pill toggles, inside the filter sheet's "Narrow to" group: "Open
+   now" / "Cheap eats". The location ask (#geo-ask, ADR 0069) reuses the
+   single-chip `.list-toggle` look but lives in `.geo-row` above the venue
+   list, not in this container — it is a permission, not a filter. */
 .list-toggles {
   display: flex;
   flex-wrap: wrap;
@@ -330,10 +331,27 @@ main {
 .list-toggle:active {
   transform: scale(0.97);
 }
+/* The location ask and its answer (ADR 0069). One row so the button and the
+   sentence explaining it are read together; wraps rather than truncates,
+   because the blocked message is a whole instruction and a clipped instruction
+   is no instruction. `align-items: center` keeps the sentence optically on the
+   button's line at 390 px, where it usually fits beside it. */
+.geo-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+/* The row is 0 px when neither child is showing — an empty flex box with a gap
+   still reserves nothing, but the margin below would. So the margin lives on
+   the children, which are `hidden` until they have something to say. */
+.geo-ask:not([hidden]),
+.geo-status:not([hidden]) {
+  margin-bottom: var(--space-3);
+}
 .geo-status {
   color: var(--ink-soft);
   font-size: var(--step-sub);
-  margin-bottom: var(--space-3);
 }
 .tz-note {
   color: var(--ink-soft);
@@ -1338,9 +1356,12 @@ body:not(.menu-page).bar-compact {
 .filter-group:last-child {
   margin-bottom: 0;
 }
-/* The taxonomy, stated out loud for the first time: "Narrow to" makes the list
-   shorter, "Sort by" only reorders it. Both used to sit in one undifferentiated
-   chip row with nothing on screen saying they did different jobs (ADR 0014). */
+/* Named out loud so it reads as a group rather than a stray heading: "Narrow
+   to" makes the list shorter. It once stood beside a "Sort by" group that
+   only reordered the list, both crammed into one undifferentiated chip row
+   with nothing on screen saying they did different jobs (ADR 0014). The sort
+   group is gone now — one ranking, no mode to choose (ADR 0068) — so this
+   heading style now belongs to "Narrow to" alone. */
 .filter-group-title {
   font-size: var(--step-sub);
   font-weight: 700;
@@ -1432,16 +1453,20 @@ body:not(.menu-page).bar-compact {
    vertical room and no context, so it labels everything; a toolbar has
    horizontal room only, and its controls have to name themselves. So inline:
    every label goes visually-hidden (the select's own value already reads "All
-   areas"), the note goes with them, and the one piece of text that survives is
-   "Sort by" — the word that tells the reader the two groups apart, which is
-   exactly what the owner asked to keep. */
+   areas") and the note goes with them. The row used to keep one label visible
+   regardless — "Sort by" — because it was the only way to tell the narrow
+   group and the sort group apart. With the sort group gone (ADR 0068) there
+   is one group left and nothing left needing that exception, so every label
+   here is hidden the same way. */
 body.filters-inline #filter-controls {
   display: flex;
   align-items: center;
-  /* --space-2, not --space-3. The row's whole budget at the 60rem breakpoint is
-     928 px and its content needs 918 of them; two 16 px gaps between the groups
-     were the difference between one row and two. The rule below the sort group
-     does the separating that the extra gap was there for. */
+  /* --space-2, not --space-3. Measured when this row still held a "Sort by"
+     group: the whole budget at the 60rem breakpoint was 928 px and its content
+     needed 918 of them, so two 16 px gaps between three groups were the
+     difference between one row and two. The sort group and the rule that used
+     to separate it from this one are gone now (ADR 0068) — that only makes
+     the gap safer, so the tighter measurement stands unchanged. */
   gap: var(--space-2);
   /* --space-2, not --space-3: the row is one 44 px control tall, and a 16 px
      ring around it is most of the height it was supposed to lose. */
@@ -1457,24 +1482,11 @@ body.filters-inline .filter-group {
   margin-bottom: 0;
   min-width: 0;
 }
-/* The narrow group takes the slack; the sort group is sized by its content, so
-   a long area name eats into the selects and never into the sort control. */
+/* The narrow group takes the slack; the chips and "Clear all" are sized by
+   their content, so a long area name eats into the selects and never into
+   them. */
 body.filters-inline .filter-narrow-group {
   flex: 1 1 auto;
-}
-/* The rule IS the grouping. Two groups, one line between them — cheaper in
-   pixels than two headings (153 px of a 928 px row) and quicker to read than
-   either. */
-/* `0 0 auto` — never shrink. It shrank in the first cut and wrapped INSIDE
-   itself, putting "Sort by" on one line and its select on the next: a 97 px row
-   that had all the right words in it. When the row is tight the narrow selects
-   are the ones that should give, because their defaults are short enough to
-   survive it and this one's is not. */
-body.filters-inline .filter-sort-group {
-  flex: 0 0 auto;
-  flex-wrap: wrap;
-  border-left: 1px solid var(--line);
-  padding-left: var(--space-3);
 }
 /* Visually hidden, not removed: these still name their controls and their
    landmarks for assistive tech, which is the whole reason they can go. Same
@@ -1494,41 +1506,31 @@ body.filters-inline .filter-label {
   white-space: nowrap;
   border: 0;
 }
-body.filters-inline #filter-sort-title {
-  margin: 0;
-  flex: 0 0 auto;
-  align-self: center;
-}
 body.filters-inline .filter-field {
   margin-bottom: 0;
-  /* Shrinkable, floored, capped. The floor is the measured one: at the 60rem
-     breakpoint the row has 928 px inside its padding for four selects, two
-     chips, a rule, "Sort by" and "Clear all", and the first cut of this gave
-     the selects 107 px each — enough to render "All cuisi…" and "Everywh…".
-     A truncated select is worse than the label it replaced. */
+  /* Shrinkable, floored, capped. The floor is the measured one, from when the
+     60rem breakpoint's 928 px had to hold four selects, two chips, a rule,
+     "Sort by" and "Clear all" — the first cut of this gave the selects 107 px
+     each, enough to render "All cuisi…" and "Everywh…", and a truncated
+     select is worse than the label it replaced. The row now holds three
+     selects, two chips and "Clear all", with no rule and no "Sort by" (ADR
+     0068) — roomier than what these numbers were tuned for, so the old,
+     tighter floor stays safe unmeasured. */
   flex: 1 1 7rem;
   min-width: 6.5rem;
   max-width: 11rem;
 }
 /* Tighter than the sheet's, and only here. The chevron needs clearance, not
-   2em of it, and four selects paying 0.75em each is 48 px of a row that was
-   5 px short of fitting its own words. */
+   2em of it — measured when this row held a fourth, sort select: four
+   selects paying 0.75em each was 48 px of a row that was 5 px short of
+   fitting its own words. The sort select is gone (ADR 0068); the padding it
+   was tuned against stays, and stays safe with one less select paying it. */
 body.filters-inline .select-field select {
   padding-left: 0.65em;
   padding-right: 1.45em;
 }
 body.filters-inline .select-field::after {
   right: 0.6em;
-}
-/* The sort select carries the longest default string in the row ("Our usual
-   order"), and it is the one control whose current value a reader has to be
-   able to read at a glance — a sort they cannot see is a list they cannot
-   explain. So it gets a floor of its own and the narrow selects give up the
-   width, which they can: their defaults are half as long. */
-body.filters-inline #filter-sort-field {
-  flex: 0 1 auto;
-  min-width: 9.25rem;
-  max-width: none;
 }
 body.filters-inline .list-toggles {
   flex: 0 0 auto;
@@ -1537,21 +1539,19 @@ body.filters-inline .list-toggles {
 /* NOTE for whoever adds a control to this row. `flex-wrap` stays OFF here, and
    that is load-bearing, not tidy: turned on it put the row back to 121 px,
    because a wrapping flex line breaks on its items' *basis* and this row only
-   fits because the selects SHRINK below theirs. A fourth control does not fit —
-   the one that used to try laid itself over "All cuisines", "Open now" and
-   "Cheap eats", all three still passing a visibility check and all three
+   fits because the selects SHRINK below theirs. The row holds six controls
+   today — three narrow selects, two chips, "Clear all" — one whole select
+   group lighter than when this rule was written, now that the sort group is
+   gone (ADR 0068). Measure before adding a seventh rather than assuming it
+   fits: the one control that used to overflow this row (the "Along a route"
+   destination picker) laid itself over "All cuisines", "Open now" and "Cheap
+   eats", all three still passing a visibility check and all three
    untappable. */
 /* Moved here from the sheet's footer by filters-ui.js — the same button, not a
    second one. Trailing, so it reads as the way out of the row rather than
    another filter. */
 body.filters-inline #filters-clear {
   flex: 0 0 auto;
-}
-/* "usual" is this select's neutral, where the other three use "all". Without
-   this it would sit permanently accented, advertising a sort nobody chose. */
-#filter-sort[data-active="usual"] {
-  border-color: var(--line);
-  color: var(--ink);
 }
 /* Belt and braces. The sheet is never opened while the controls are inline
    (filters-ui.js's `open` sends the reader to the row instead), but if it ever
