@@ -66,6 +66,12 @@ content freshness separately from this file.
     before, it just works with no prompt at all — and if you have blocked it, the
     app now says so plainly instead of quietly doing nothing forever.
 
+- **The version you're running now sits with the button that updates it.** Which
+  version of the app and menus this device has, and whether an update is ready,
+  used to be in *About* while *Refresh now* was in Settings — so answering one
+  question ("am I up to date, and if not, how do I fix it?") meant two screens.
+  Both are in Settings → *Refresh & reset* now, and About no longer carries a
+  version at all.
 - **Sync now lives inside Settings → *Your data*.** It used to be a row of its
   own, one below it. Saving a copy of your data, bringing one back, and keeping
   your devices in step are three answers to the same question — "how do I not

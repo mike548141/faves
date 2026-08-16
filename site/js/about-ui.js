@@ -9,85 +9,21 @@
 // text lives here. The prose stays English on purpose (reo.js keeps the privacy
 // note and app description English until a reo review); only the chrome labels
 // carry data-i18n.
+//
+// What is NOT here, and why: the version stamps and the "an update is ready"
+// line moved to Settings → Refresh & reset on 2026-08-17 (ROADMAP 23c). They
+// are evidence for an action — "am I up to date, and if not, fix it" — and the
+// action lives there, so splitting the two across two screens made the reader
+// carry the join. Do not bring them back; check Settings first.
 
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
 import { translate } from "./reo.js";
-import { currentVersions } from "./versions.js";
 
 function group(title, ...paras) {
   return el("section", { className: "about-group" }, [
     el("h3", { className: "about-group-title", textContent: title }),
     ...paras.map((text) => el("p", { className: "about-text", textContent: text })),
-  ]);
-}
-
-// The app ships as two independently versioned halves (ADR 0015), and the
-// question people actually ask — "have I got the new menus?" — can only be
-// answered by the *device*. ROADMAP 16f / ADR 0032: reads currentVersions(),
-// which asks the *controlling* worker directly rather than inferring from
-// cache names, so this can no longer show a version newer than what the page
-// is actually running (the gap 16e left, per ADR 0027's consequences). Async:
-// built with placeholders, then filled once the worker (or the cache-name
-// fallback) answers.
-function versionGroup() {
-  const shellValue = el("dd", { className: "about-version-value", textContent: "…" });
-  const dataValue = el("dd", { className: "about-version-value", textContent: "…" });
-  const note = el("p", { className: "about-text about-version-note", textContent:
-    "What this page is currently running." });
-  // Hidden until a waiting worker is confirmed — most sessions never see this,
-  // and an empty aria-live region is the standard way to keep it silent until
-  // it has something true to announce.
-  const waitingNote = el("p", {
-    className: "about-text about-version-waiting",
-    role: "status",
-    "aria-live": "polite",
-    hidden: true,
-  });
-
-  currentVersions().then(({ shell, data, controlling, waiting }) => {
-    // No caches yet = a first visit, or a browser with no offline storage.
-    // Say so plainly instead of showing a blank or an invented number.
-    shellValue.textContent = shell || "not stored yet";
-    dataValue.textContent = data || "not stored yet";
-
-    if (!shell && !data) {
-      note.textContent =
-        "The offline copy hasn’t been stored on this device yet.";
-    } else if (!controlling) {
-      // True and distinct from "not stored": something is cached, but no
-      // worker has taken over serving this page yet (first load, still
-      // installing) — showing the numbers without this caveat would claim a
-      // version the page isn't actually running.
-      note.textContent =
-        "Stored on this device, but not yet serving this page.";
-    }
-    // else: shown as-is — this is the controller's own reported version, so
-    // the default "What this page is currently running." note already holds.
-
-    if (waiting) {
-      waitingNote.hidden = false;
-      waitingNote.textContent =
-        waiting.shell || waiting.data
-          ? `An update is ready — App ${waiting.shell ?? "…"}, ` +
-            `Menus ${waiting.data ?? "…"}. Refresh from the notice to switch.`
-          : "An update is ready. Refresh from the notice to switch.";
-    }
-  });
-
-  // Heading → prose → detail, the same order every other group in this dialog
-  // uses. The note sat *below* the numbers, which read as a stray caption and
-  // broke the one pattern the page has (owner, 2026-08-16).
-  return el("section", { className: "about-group" }, [
-    el("h3", { className: "about-group-title", textContent: "Version" }),
-    note,
-    el("dl", { className: "about-versions" }, [
-      el("dt", { className: "about-version-key", textContent: "App" }),
-      shellValue,
-      el("dt", { className: "about-version-key", textContent: "Menus & prices" }),
-      dataValue,
-    ]),
-    waitingNote,
   ]);
 }
 
@@ -151,8 +87,6 @@ function buildDialog() {
         "Once you’ve visited, Faves keeps working in flight mode — menus and " +
           "all. Add it to your home screen for a full-screen, app-like launch."
       ),
-
-      versionGroup(),
 
       el("p", { className: "about-made" }, [
         el("span", { "data-i18n": "footer.made", textContent: "Made by" }),

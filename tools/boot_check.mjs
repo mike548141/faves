@@ -123,6 +123,12 @@ const SETTINGS_ROWS = [
 // A sub-label here, not a row: sync is a section of that panel now.
 const SETTINGS_DATA_SECTIONS = ["Bring data back in", "Sync across your devices"];
 
+// About's own groups, asserted by name for the same reason Settings' index is:
+// About is a dialog nothing else opens, and it has twice now accumulated a
+// block because some item needed somewhere to put one (ROADMAP Theme 23). A
+// block added here without a decision fails this list.
+const ABOUT_GROUPS = ["Private by design", "Prices", "Opening hours", "Works offline"];
+
 async function bootScreen(cdp, sessionId, driver, report, base, screen, venueId) {
   const errors = [];
   const onError = (p) => errors.push(p.exceptionDetails?.exception?.description || p.exceptionDetails?.text);
@@ -375,8 +381,124 @@ async function run(opts) {
               : dataPanel.subs.join(" · ")
         );
       }
+
+      // Back to the index, then into "Refresh & reset" — where the version
+      // stamps moved on 2026-08-17 (ROADMAP 23c). The assertion that matters
+      // is that they carry a real answer rather than the "…" placeholder they
+      // are built with: the panel is built at boot and only asks the worker
+      // when it opens, so a missing onOpen hook shows up here as two ellipses.
+      await driver.evalPage(`(() => {
+        const b = document.querySelector(".settings-sheet .settings-back");
+        if (b) b.click();
+      })()`);
+      await until(() => driver.evalPage(`!document.querySelector(".settings-rows")?.closest("[hidden]")`), {
+        label: "settings: back at the index",
+      });
+      await driver.evalPage(`(() => {
+        const t = [...document.querySelectorAll(".settings-row .settings-row-title")]
+          .find((e) => e.textContent.trim() === "Refresh & reset");
+        if (t) t.closest(".settings-row").click();
+      })()`);
+      await until(
+        () => driver.evalPage(`!!document.querySelector(".settings-panel:not([hidden]) .settings-versions")`),
+        { label: "settings: the Refresh & reset panel opened" }
+      );
+      // The stamps are filled asynchronously (a MessageChannel round-trip to
+      // the worker, or the cache-name fallback), so wait for the placeholder to
+      // clear rather than reading in the same turn as the click.
+      // `length === 2` is load-bearing: `every` over an empty list is true, so
+      // a selector that matched nothing would satisfy this wait vacuously and
+      // report the placeholder as an answer.
+      await until(
+        () => driver.evalPage(`(() => {
+          const v = [...document.querySelectorAll(".settings-version-value")];
+          return v.length === 2 && v.every((e) => e.textContent.trim() !== "…");
+        })()`),
+        { label: "settings: the version stamps answered" }
+      );
+      const storagePanel = await driver.evalPage(`(() => {
+        // Scoped from the stamps outward, not from ".settings-panel:not([hidden])":
+        // panels nest, so the first unhidden one in the document is not
+        // necessarily the one that was just opened.
+        const panel = document.querySelector(".settings-versions").closest(".settings-panel");
+        return {
+          keys: [...panel.querySelectorAll(".settings-version-key")].map((e) => e.textContent.trim()),
+          values: [...panel.querySelectorAll(".settings-version-value")].map((e) => e.textContent.trim()),
+          note: panel.querySelector(".settings-version-note")?.textContent.trim() ?? "",
+          refreshBtn: [...panel.querySelectorAll("button")].some((b) => /Refresh now/.test(b.textContent)),
+        };
+      })()`);
+      if (storagePanel.error) {
+        report.check("settings: the Refresh & reset panel read", false, storagePanel.error);
+      } else {
+        const answered = storagePanel.values.length === 2 && storagePanel.values.every((v) => v && v !== "…");
+        report.check(
+          "settings: the version evidence sits beside the Refresh action",
+          answered && storagePanel.refreshBtn && storagePanel.keys.join("|") === "App|Menus & prices",
+          !answered
+            ? `version values unanswered: ${JSON.stringify(storagePanel.values)}`
+            : !storagePanel.refreshBtn
+              ? "no Refresh now button in the same panel"
+              : `${storagePanel.keys.join(" · ")} → ${storagePanel.values.join(" · ")} — ${storagePanel.note}`
+        );
+      }
     } catch (e) {
       report.check("settings: the index opened", false, String(e.message || e));
+    }
+
+    // About is the other half of ROADMAP Theme 23: it opens from the same ⋯
+    // menu, and the version stamps must be GONE from it — moving means moving.
+    try {
+      await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
+      await until(
+        () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
+        { label: "home: back for the About check" }
+      );
+      await driver.evalPage(`(() => {
+        const more = [...document.querySelectorAll("button")].find((b) => b.getAttribute("aria-label") === "More");
+        if (more) more.click();
+      })()`);
+      await until(() => driver.evalPage(`!!document.getElementById("about-btn") && !document.getElementById("about-btn").hidden`), {
+        label: "about: the ⋯ menu offered About",
+      });
+      await driver.evalPage(`document.getElementById("about-btn").click()`);
+      await until(() => driver.evalPage(`!!document.querySelector(".about-sheet[open]")`), {
+        label: "about: the dialog opened",
+      });
+      const about = await driver.evalPage(`(() => {
+        const d = document.querySelector(".about-sheet");
+        return {
+          groups: [...d.querySelectorAll(".about-group-title")].map((e) => e.textContent.trim()),
+          lede: (d.querySelector(".about-lede")?.textContent ?? "").trim().length,
+          // Any version stamp at all — the class, or a bare "YYYY-MM-DD.N" in
+          // the prose. Either would mean the block came back by another route.
+          stamps: !!d.querySelector(".settings-versions, .about-versions") ||
+            /\\b\\d{4}-\\d{2}-\\d{2}\\.\\d+\\b/.test(d.textContent),
+          // Native <dialog> focus containment: focus must be inside the sheet.
+          focusInside: d.contains(document.activeElement),
+        };
+      })()`);
+      if (about.error) {
+        report.check("about: the dialog opened", false, about.error);
+      } else {
+        const missing = ABOUT_GROUPS.filter((g) => !about.groups.includes(g));
+        const extra = about.groups.filter((g) => !ABOUT_GROUPS.includes(g));
+        report.check(
+          "about: the dialog shows exactly the expected groups",
+          missing.length === 0 && extra.length === 0 && about.lede > 0,
+          missing.length || extra.length
+            ? `missing ${JSON.stringify(missing)} · unexpected ${JSON.stringify(extra)}`
+            : about.groups.join(" · ")
+        );
+        report.check(
+          "about: no version stamp — the evidence lives in Settings now",
+          !about.stamps,
+          about.stamps ? "About is carrying a version stamp again (ROADMAP 23c moved it)" : "none"
+        );
+        report.check("about: focus is inside the dialog", about.focusInside, String(about.focusInside));
+      }
+    } catch (e) {
+      report.check("about: the dialog opened", false, String(e.message || e));
     }
 
     console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
