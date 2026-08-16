@@ -31,9 +31,9 @@ content freshness separately from this file.
   counts.** There used to be a *Sort by* control with two orders in it. There is
   now one: places you can actually order from right now come first, then the
   nearest of those, and a heart breaks the tie between two that are much the
-  same distance away. Tap **📍 Near me** above the list to let Faves use your
-  location; without it the list stays in the order it has always been in, and
-  nothing nags you about it.
+  same distance away. Tap **📍 Use my location** above the list to let Faves use
+  your location; without it the list stays in the order it has always been in,
+  and nothing nags you about it.
   - **A heart is a tiebreak, not a shove.** A favourite lifts a place above
     another one roughly as close by — not above the shop next door when it is
     across town. (It used to be worth 10 km on paper, which is why it never got

@@ -48,11 +48,14 @@ guest."** People should *enjoy* opening it.
   holds filters only. Sorting was never a filter: it reordered the list
   and never shortened it, which is why it needed a heading of its own and
   why nothing is left behind when it goes.)*
-- **The location ask** sits above the list, not in the sheet: a `📍 Near
-  me` button that is the only thing in Faves able to raise a browser
-  permission prompt (ADR 0069). It is offered where the permission state
-  is `prompt`, absent where it is already `granted`, and replaced by a
-  line saying so where it is `denied`. A permission is not a facet.
+- **The location ask** sits above the list, not in the sheet: a
+  `📍 Use my location` button that is the only thing in Faves able to
+  raise a browser permission prompt (ADR 0069). It is offered where the
+  permission state is `prompt`, absent where it is already `granted`, and
+  replaced by a line saying so where it is `denied`. A permission is not a
+  facet. 🔑 It is labelled by its **action**, not its result ("Near me",
+  which it shipped as for an hour on 2026-08-17) — owner ruling: a reader
+  surprised by a permission prompt taps Block, and Block is sticky.
 - **"Pick for us"** button: shuffles through the filtered set with a
   short playful animation, lands on one, offers "again" and "that's the
   one". This is the party trick — make it delightful. It sits **in the
