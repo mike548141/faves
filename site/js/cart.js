@@ -12,8 +12,28 @@
 
 import { safeStorage } from "./store.js";
 import { migrateEntries } from "./renames.js";
+import { selectionKey } from "./addons.js";
 
 const KEY = "faves.order.v1";
+
+/**
+ * What makes one order line distinct from another (ADR 0048 §4).
+ *
+ * A dish added twice with different add-ons is two lines, not a quantity of 2 —
+ * "eggs on toast with bacon" and "eggs on toast" are different things to make
+ * and different money. `selectionKey` sorts its parts, so the same choices in a
+ * different order stay one line.
+ *
+ * A line with no add-ons keys exactly as it did before add-ons existed, so
+ * everything already in a family's browser reads back as itself.
+ */
+export const lineKey = (i) =>
+  `${i.venueId}\n${i.name}\n${selectionKey(i.options)}`;
+
+// A line's `price` is the CONFIGURED unit price — the dish plus its selected
+// add-ons. Keeping the total in the field every consumer already reads means
+// the totals maths below, the share codec, and the order sheet all needed no
+// arithmetic change. The base price stays derivable (price − selectionPrice).
 
 /** Total number of items (sum of quantities). */
 export const orderCount = (items) => items.reduce((n, i) => n + i.qty, 0);
@@ -79,9 +99,9 @@ export function groupByVenue(items) {
  */
 export function mergeItems(base, incoming) {
   const out = base.map((i) => ({ ...i }));
-  const idxOf = new Map(out.map((i, idx) => [`${i.venueId}\n${i.name}`, idx]));
+  const idxOf = new Map(out.map((i, idx) => [lineKey(i), idx]));
   for (const inc of incoming) {
-    const key = `${inc.venueId}\n${inc.name}`;
+    const key = lineKey(inc);
     const at = idxOf.get(key);
     if (at != null) {
       out[at].qty += inc.qty;
@@ -93,6 +113,7 @@ export function mergeItems(base, incoming) {
         phone: inc.phone || null,
         name: inc.name,
         price: inc.price ?? null,
+        options: inc.options || [],
         qty: inc.qty,
         collected: false,
       });
@@ -129,20 +150,24 @@ export function createOrder(storage) {
     for (const fn of subs) fn(items);
   }
 
-  const find = (venueId, name) =>
-    items.find((i) => i.venueId === venueId && i.name === name);
+  // `sel` is a selectionKey (addons.js) — "" for a dish ordered as it comes,
+  // which is what every line stored before add-ons existed reads back as.
+  const find = (venueId, name, sel = "") =>
+    items.find((i) => lineKey(i) === `${venueId}\n${name}\n${sel}`);
 
   return {
     items: () => items,
     count: () => orderCount(items),
     total: () => orderTotal(items),
     groups: () => groupByVenue(items),
-    qtyOf: (venueId, name) => find(venueId, name)?.qty || 0,
+    qtyOf: (venueId, name, sel = "") => find(venueId, name, sel)?.qty || 0,
 
     /** Add one of a dish (or increment if already listed). `meta` is
-     *  { venueId, venueName, phone?, name, price? }. */
+     *  { venueId, venueName, phone?, name, price?, options? }. `price` is the
+     *  CONFIGURED unit price and `options` the chosen add-ons (ADR 0048). */
     add(meta) {
-      const ex = find(meta.venueId, meta.name);
+      const options = meta.options || [];
+      const ex = find(meta.venueId, meta.name, selectionKey(options));
       if (ex) ex.qty += 1;
       else
         items.push({
@@ -152,6 +177,7 @@ export function createOrder(storage) {
           phone: meta.phone || null,
           name: meta.name,
           price: meta.price ?? null,
+          options,
           qty: 1,
           collected: false,
         });
@@ -159,22 +185,23 @@ export function createOrder(storage) {
     },
 
     /** Set an exact quantity; 0 (or less) removes the line. */
-    setQty(venueId, name, qty) {
-      const ex = find(venueId, name);
+    setQty(venueId, name, qty, sel = "") {
+      const ex = find(venueId, name, sel);
       if (!ex) return;
       if (qty <= 0) items = items.filter((i) => i !== ex);
       else ex.qty = qty;
       commit();
     },
 
-    remove(venueId, name) {
-      items = items.filter((i) => !(i.venueId === venueId && i.name === name));
+    remove(venueId, name, sel = "") {
+      const target = `${venueId}\n${name}\n${sel}`;
+      items = items.filter((i) => lineKey(i) !== target);
       commit();
     },
 
     /** Collect mode: tick an item off as it's handed over. */
-    toggleCollected(venueId, name) {
-      const ex = find(venueId, name);
+    toggleCollected(venueId, name, sel = "") {
+      const ex = find(venueId, name, sel);
       if (ex) {
         ex.collected = !ex.collected;
         commit();

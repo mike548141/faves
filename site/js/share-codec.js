@@ -35,6 +35,7 @@ const MAX_LABEL = 40;
 const MAX_NAME = 120;
 const MAX_QTY = 99;
 const MAX_ITEMS = 200; // guard against a hostile or accidentally huge link
+const MAX_OPTIONS = 20; // add-ons per line — the widest real group is 20 rows
 
 // ---- base64url over UTF-8 -------------------------------------------------
 // btoa/atob are Latin-1 only, but venue names carry macrons (te reo) and other
@@ -109,8 +110,23 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
     v: clip(g.venueId, MAX_NAME),
     n: clip(g.venueName, MAX_NAME),
     p: cleanPhone(g.phone),
-    // Each line is a positional [name, price, qty] triple to keep it short.
-    i: (g.items || []).map((it) => [clip(it.name, MAX_NAME), priceOrNull(it.price), clampQty(it.qty)]),
+    // Each line is a positional [name, price, qty] triple to keep it short,
+    // with the add-on selection appended as an optional fourth slot (ADR 0048
+    // §4). Deliberately NOT a CODEC_VERSION bump: that field is shared by
+    // orders, shortlists AND personal transfers and is checked with a strict
+    // `!==`, so bumping it would invalidate every outstanding link of all three
+    // kinds for a change two of them don't use. Appending is safe instead
+    // because a decoder that predates add-ons reads line[0..2] and ignores the
+    // rest by construction — and `price` here is the CONFIGURED unit price, so
+    // that older reader still totals correctly. It under-specifies the order
+    // rather than mis-stating it: dropping an add-on can never put something
+    // extra on a plate, which is the only degradation direction that is safe.
+    i: (g.items || []).map((it) => {
+      const line = [clip(it.name, MAX_NAME), priceOrNull(it.price), clampQty(it.qty)];
+      const opts = (it.options || []).slice(0, MAX_OPTIONS);
+      if (opts.length) line.push(opts.map((o) => [clip(o.group, MAX_NAME), clip(o.name, MAX_NAME), priceOrNull(o.price)]));
+      return line;
+    }),
   }));
 
   return toB64url(JSON.stringify(payload));
@@ -183,6 +199,29 @@ export function decodeShare(token) {
   return { version: p.v, type, label: cleanLabel(p.l ?? ""), items };
 }
 
+/**
+ * The optional fourth slot: `[[group, name, price], …]`. Absent on every link
+ * minted before add-ons existed, which is exactly why it is optional — an old
+ * link decodes to a line with no selection, which is what it meant.
+ *
+ * Hostile input reaches here (anyone can craft a link), so it is clipped and
+ * clamped like everything else, and a malformed entry is dropped rather than
+ * trusted — an add-on that arrives half-read must not become an untagged
+ * option on someone's plate.
+ */
+function decodeOptions(raw) {
+  if (!Array.isArray(raw)) return [];
+  const out = [];
+  for (const o of raw.slice(0, MAX_OPTIONS)) {
+    if (!Array.isArray(o)) continue;
+    const group = clip(o[0] ?? "", MAX_NAME).trim();
+    const name = clip(o[1] ?? "", MAX_NAME).trim();
+    if (!group || !name) continue;
+    out.push({ group, name, price: priceOrNull(o[2]) });
+  }
+  return out;
+}
+
 function decodeOrderItems(groups) {
   const items = [];
   outer: for (const g of groups) {
@@ -196,7 +235,12 @@ function decodeOrderItems(groups) {
       const name = clip(line[0] ?? "", MAX_NAME).trim();
       const qty = clampQty(line[2]);
       if (!name || qty <= 0) continue;
-      items.push({ venueId, venueName, phone, name, price: priceOrNull(line[1]), qty });
+      const item = { venueId, venueName, phone, name, price: priceOrNull(line[1]), qty };
+      // Only when there is one: a link minted before add-ons existed decodes to
+      // exactly the shape it always did, field for field.
+      const options = decodeOptions(line[3]);
+      if (options.length) item.options = options;
+      items.push(item);
       if (items.length >= MAX_ITEMS) break outer;
     }
   }

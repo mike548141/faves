@@ -223,6 +223,22 @@ function sanitiseRatings(map) {
   return out;
 }
 
+// An imported file is as untrusted as a shared link — same clipping, same
+// drop-rather-than-trust rule for a half-formed option.
+function sanitiseOptions(list) {
+  if (!Array.isArray(list)) return [];
+  const out = [];
+  for (const o of list.slice(0, 20)) {
+    if (!isObj(o)) continue;
+    const group = clip(o.group);
+    const name = clip(o.name);
+    if (!group || !name) continue;
+    const price = Number(o.price);
+    out.push({ group, name, price: Number.isFinite(price) && price >= 0 ? price : null });
+  }
+  return out;
+}
+
 function sanitiseOrderLines(list) {
   if (!Array.isArray(list)) return [];
   const out = [];
@@ -233,7 +249,7 @@ function sanitiseOrderLines(list) {
     const qty = Math.floor(Number(i.qty));
     if (!venueId || !name || !Number.isFinite(qty) || qty <= 0) continue;
     const price = Number(i.price);
-    out.push({
+    const line = {
       venueId,
       venueName: clip(i.venueName),
       phone: i.phone ? clip(i.phone, 32) : null,
@@ -241,7 +257,13 @@ function sanitiseOrderLines(list) {
       price: Number.isFinite(price) && price >= 0 ? price : null,
       qty: Math.min(qty, 99),
       collected: !!i.collected,
-    });
+    };
+    // This whitelist is exhaustive by design, so a field it doesn't name is
+    // silently dropped on export — which for an add-on selection would mean a
+    // restored order quietly losing what someone asked for (ADR 0048).
+    const options = sanitiseOptions(i.options);
+    if (options.length) line.options = options;
+    out.push(line);
     if (out.length >= MAX_ITEMS) break;
   }
   return out;
