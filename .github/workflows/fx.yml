@@ -36,6 +36,28 @@
 #     actually moved, and refuses to write twice in a day. A run that opens no
 #     PR is the normal outcome, not a failure.
 #   • The branch deletes itself on merge (`delete_branch_on_merge` is on).
+#
+# ————————————————— The one thing that still needs a human —————————————————
+#
+# A PR opened by the built-in GITHUB_TOKEN counts as coming from an *external
+# contributor*, and this repo requires approval before workflows run for those
+# (`approval_policy: all_external_contributors`). So with the built-in token the
+# PR opens and arms itself correctly, then waits for someone to click
+# "Approve and run" — which is the waiting-on-a-human outcome this design exists
+# to avoid.
+#
+# Two ways out, and only one of them is good:
+#
+#   ✗ Loosen `approval_policy`. It governs EVERY outside contributor's PR on a
+#     PUBLIC repo, forever, so a stranger's workflow would run unreviewed. Far
+#     too broad a change to buy one convenience.
+#   ✓ Open the PR as a real user instead. Add a repo secret `FX_TOKEN` holding a
+#     fine-grained PAT scoped to THIS repository with `Contents: read & write`
+#     and `Pull requests: read & write`. Nothing external about it, so no
+#     approval gate, and it is narrow and revocable.
+#
+# This workflow prefers `FX_TOKEN` and falls back to GITHUB_TOKEN, so it works
+# either way — perfectly with the secret, and with one approval click without it.
 name: FX rates
 
 on:
@@ -96,7 +118,10 @@ jobs:
       - name: Open a pull request and let it merge itself
         if: steps.diff.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # FX_TOKEN when it exists (no approval gate), GITHUB_TOKEN otherwise
+          # (works, but the run waits for an "Approve and run" click). See the
+          # header for why loosening the approval policy is the wrong answer.
+          GH_TOKEN: ${{ secrets.FX_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           AS_OF=$(python3 -c "import json;print(json.load(open('site/data/fx.json'))['asOf'])")
@@ -127,7 +152,7 @@ jobs:
           \`DATA_VERSION\` is bumped in the same commit so installed phones
           refetch the new rates rather than serving the cached old ones.
 
-          Merges itself once the required checks pass. Nobody is waiting on it." \
+          Merges itself once the required checks pass." \
             || echo "PR already open for $BRANCH — reusing it"
 
           # The point of the whole design: the four required checks run on this
@@ -137,11 +162,16 @@ jobs:
       - name: What happened
         if: always()
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.FX_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
             echo "Opened a PR and queued it for auto-merge:"
             gh pr list --state open --head "fx/refresh-$(python3 -c "import json;print(json.load(open('site/data/fx.json'))['asOf'])")" || true
+            if [ -z "${{ secrets.FX_TOKEN }}" ]; then
+              echo "::warning::Opened with the built-in token, so its checks need an"
+              echo "::warning::'Approve and run' click before auto-merge can fire. Add an"
+              echo "::warning::FX_TOKEN secret to remove that step — see this file's header."
+            fi
           else
             echo "Nothing to do — rates unchanged since the committed snapshot."
           fi

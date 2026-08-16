@@ -148,7 +148,9 @@ node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)
 ```
 
 **The exchange rates refresh themselves weekly** — `.github/workflows/fx.yml`
-opens an auto-merging PR every Sunday (ADR 0045). You can also run
+opens an auto-merging PR every Sunday (ADR 0045). Until an `FX_TOKEN` secret
+exists it needs one "Approve and run" click per refresh; the workflow header
+says why, and why loosening the approval policy is the wrong fix. You can also run
 `python3 tools/fetch_fx.py --bump` by hand and commit it with your work; it is
 safe to run every time, because the tool does nothing if it already fetched
 today or if no rate moved. Either way the rates change in the repo **at most

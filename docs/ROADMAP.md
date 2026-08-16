@@ -1856,61 +1856,49 @@ Two consequences recorded rather than buried:
 
 ---
 
-## Automating the FX refresh — parked 2026-08-16, but WANTED
+## Automating the FX refresh — ✅ shipped 2026-08-16
 
-Faves converts prices from rates it ships (ADR 0045). Those go stale unless
-someone fetches them, so a scheduled GitHub Action was the obvious answer. It was
-built, tested, and **removed the same day**. Recorded here because it looks like
-an obvious win and the next person will reach for it too.
+`.github/workflows/fx.yml` refreshes the rates weekly (Sunday 14:10 UTC, Monday
+~2am NZ) by opening a pull request that **merges itself** once the four required
+checks pass. Proved end to end the same day: PR #3 opened, checks ran,
+auto-merge landed it, branch deleted itself.
 
-**It cannot push to `main`.** Proved, not assumed — a forced run was refused:
+**Why a PR and not a push**, since this took three attempts and the dead ends are
+worth keeping:
 
-> `GH013: Repository rule violations found for refs/heads/main.`
-> `- 4 of 4 required status checks are expected.`
-> `! [remote rejected] HEAD -> main (push declined due to repository rule violations)`
-
-A direct push can never satisfy a required status check, because the check runs
-*on* the push the rule is refusing. The owner's own pushes land because a repo
-admin bypasses the rule; `github-actions[bot]` is not one.
-
-**Both ways round are worse than the problem.**
-
-| Way | Why it was rejected |
+| Attempt | Outcome |
 |---|---|
-| Add a ruleset bypass for GitHub Actions | Weakens a protection on a public repo so a convenience can work. Applies to every workflow, not just this one. |
-| Open a PR and auto-merge it | Owner: each refresh then waits on a human, which defeats the point. |
-| Stage the commit on a branch, poll for its checks, fast-forward `main` | It works, and it is unusual enough that a later reader must reverse-engineer it before trusting it. Owner, 2026-08-16: *"the advice you are giving me sounds like the things that in a later session you will tell me this session was crazy wrong and did something weird / risky that we then undo."* He was right. |
+| Scheduled job pushes straight to `main` | Refused: `GH013 … 4 of 4 required status checks are expected … [remote rejected]`. A direct push can never satisfy a required check — the check runs on the push the rule is refusing. |
+| Add a ruleset bypass for GitHub Actions | Weakens a protection on a public repo to buy a convenience. Rejected. |
+| Stage the commit on a branch, poll for its checks, fast-forward `main` | Works, and is machinery a later reader must reverse-engineer before trusting it. Rejected by the owner, correctly. |
+| **PR + `--auto` merge** | No bypass, no unusual git; a PR is how required checks were designed to be satisfied. **Shipped.** |
 
-**What we do instead.** Whoever is working on Faves runs
-`python3 tools/fetch_fx.py --bump` once a session and commits the result with
-their work (CLAUDE.md's verify block). The tool enforces the owner's ceiling —
-**at most one rate change per day** — by doing nothing if it already fetched
-today or if no rate moved. So the instruction is safe to follow mindlessly,
-which is the only kind that gets followed.
+**Two repo settings were changed to make it work**, both disclosed to the owner:
+`allow_auto_merge` on (weakens nothing — every merge still passes the same four
+checks), and `can_approve_pull_request_reviews` on (needed for Actions to open a
+PR at all).
 
-- [ ] 🎯 **The owner still wants this automated — weekly is the MINIMUM**
-  `[M][ci]` (ruled 2026-08-16). Parked, not declined: the manual per-session
-  refresh above is a stopgap that happens to cover a repo being worked on daily,
-  and it stops covering anything the moment the repo goes quiet — which is
-  exactly when the rates need it and nobody is watching.
+- [ ] 🎯 **One click per refresh remains, until an `FX_TOKEN` secret exists**
+  `[XS][ci][owner]`. A PR opened by the built-in `GITHUB_TOKEN` counts as coming
+  from an *external contributor*, and this repo requires approval before
+  workflows run for those (`approval_policy: all_external_contributors`). So the
+  PR opens and arms itself, then waits for an "Approve and run" click.
 
-  **What a session picking this up needs to solve**, in order: a scheduled job
-  cannot push to `main` (the evidence is above), so it needs either a ruleset
-  bypass or a way to get the commit checked before it lands. Whatever it chooses
-  has to be *obvious on reading* — the version rejected here worked and was
-  rejected for being clever, so cleverness is a cost, not a tiebreak. Two things
-  already built and worth reusing: `tools/fetch_fx.py` already guards itself
-  (nothing if fetched today, nothing if no rate moved, `--bump` for the lockstep
-  rule), and commit `d9a2629` holds a job that runs the four required checks
-  itself before committing — which is what would make a bypass defensible rather
-  than merely convenient.
+  **Do not fix this by loosening `approval_policy`** — it governs every outside
+  contributor's PR on a public repo, forever, so a stranger's workflow would run
+  unreviewed. Far too broad for one convenience.
 
-  A third option nobody has costed yet, and probably the least surprising of the
-  three: **let the schedule open a PR and auto-merge it**. The owner rejected
-  "open a PR" when it meant waiting on him — auto-merge doesn't, and it satisfies
-  the required checks the ordinary way, with no bypass and no unusual git. It
-  needs "Allow auto-merge" enabled on the repo, and it leaves a PR per refresh in
-  the history.
+  The narrow fix is a repo secret **`FX_TOKEN`**: a fine-grained PAT scoped to
+  this repository only, with `Contents: read & write` and
+  `Pull requests: read & write`. The workflow already prefers it and falls back,
+  so adding the secret is the whole change — no code edit. Only the owner can
+  mint it (it is a credential, and a new trust surface).
+
+- [ ] **Turn `can_approve_pull_request_reviews` back off once `FX_TOKEN` lands**
+  `[XS][ci]` — with a PAT the PR is opened by a real user, so Actions no longer
+  needs the permission. It grants nothing today (no rule here requires a review),
+  but it is a latent trap: add a review requirement to the ruleset later and a
+  workflow could approve its own PR.
 
 ---
 

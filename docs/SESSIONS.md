@@ -3652,3 +3652,41 @@ eyeballed.
 delivers the escape he was actually missing while keeping the link honest — but
 if he wants the search route anyway, knowing 6 facets over-match, that is his
 call and it is a small change to make.
+
+### FX automation, delivered on the third attempt — 2026-08-16
+
+The owner picked the option nobody had costed: a scheduled job that opens a PR
+and **auto-merges** it. It shipped, and it was proved end to end rather than
+reasoned about — PR #3 opened, the four checks ran, auto-merge landed it, the
+branch deleted itself.
+
+Getting there cost two false starts, both worth keeping because they look
+attractive from the outside:
+
+- **Push straight to `main`** — refused outright. A direct push can never satisfy
+  a required status check, because the check runs on the push the rule is
+  refusing.
+- **A ruleset bypass, or a staging-branch-and-poll dance** — the first weakens a
+  protection on a public repo to buy a convenience; the second works and is
+  machinery a later reader has to reverse-engineer. The owner stopped both.
+
+A PR needs neither: it is how required checks were designed to be satisfied, and
+`--auto` means nobody waits on it.
+
+**Two things I got wrong on the way, recorded because the reasoning was the
+problem, not the typing.** I predicted a bot-created PR would not trigger
+workflows at all (the GITHUB_TOKEN recursion rule) — it does; they ran. And
+having predicted that, I nearly designed around a constraint that did not exist.
+The actual constraint was different and only visible by running it: the runs
+arrive as `action_required`, because a PR from `github-actions[bot]` counts as an
+*external contributor* and this repo requires approval for those. Both facts came
+from executing the thing, and neither would have come from thinking harder.
+
+**Two repo settings changed, both disclosed:** `allow_auto_merge` on (weakens
+nothing — every merge still passes the same four checks) and
+`can_approve_pull_request_reviews` on (Actions cannot open a PR without it).
+A third setting — `approval_policy` — was deliberately NOT touched: loosening it
+would let any stranger's PR on a public repo run workflows unreviewed, which is
+a permanent, repo-wide cost for one weekly convenience. The narrow fix is an
+`FX_TOKEN` secret the owner mints; the workflow already prefers it and falls back
+without it, so adding the secret is the entire remaining change.
