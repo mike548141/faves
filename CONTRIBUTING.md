@@ -81,6 +81,20 @@ recipe and Cook at Home screens that offer cook mode.
   resting a design on evidence, earns a short ADR under
   [`docs/decisions/`](docs/decisions/). Reversible choices get a code
   comment instead.
+- **Grep `docs/decisions/` before you propose an option — especially the
+  *Rejected* lists.** They are the half nobody reads and the half that
+  answers "has this already been settled?". On 2026-08-16 two sessions in
+  a row proposed a separate route/renderer for the recipes collection;
+  ADR 0003 had rejected it, in those words, five weeks earlier. The trap
+  is that a roadmap theme is a more inviting read than a decision record
+  — newer, narrative, full of measurements, and silent about the older
+  document that already closed the question.
+- **A roadmap harvest moves `[x]` items and nothing else.** Closing a
+  theme means moving *done* items to `ROADMAP-DONE.md` and leaving a
+  pointer. An open `- [ ]` item sitting next to a closed one is the
+  easiest thing in that file to delete by accident — it happened on
+  2026-08-16 to an unfixed WCAG AA failure, which then existed only as
+  prose in a session log. Diff the harvest before committing it.
 
 ## Committing
 

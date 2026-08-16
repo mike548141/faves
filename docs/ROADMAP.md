@@ -1816,6 +1816,42 @@ one line fails two assertions in `tools/filter_row_check.mjs`.
 ⚠️ **Residual, not fixed:** on wide screens `<nav aria-label="Filter places">`
 now holds only "Pick for us" and the order pill, so its label is slightly off.
 
+- [ ] 🚩🎯 **15y — the ⓘ disclosure fails WCAG 2.2 SC 1.4.13 on its hover path**
+  `[S][js][css][a11y]` — found 2026-08-16 while fixing the flicker below it, and
+  **not** fixed in the same pass, because the fix is a design call the owner
+  should make rather than a quiet edit.
+  ⚠️ **Restored 2026-08-16 after being deleted while still open.** `caa588d`
+  harvested the adjacent 15x and took this `- [ ]` item with it; it reached
+  neither `ROADMAP-DONE.md` nor a fix, and survived only as prose in
+  `SESSIONS.md`. **A harvest must move `[x]` items and nothing else** — an open
+  item adjacent to a closed one is the easiest thing in this file to lose, and
+  an unfixed accessibility failure is the worst thing to lose quietly.
+  `disclosure()` (`site/js/disclosure.js`) is shared by the settings allergen
+  caveat and the menu's freshness / "needs a fact" notes. Its **click** path is
+  sound — Escape closes it, an outside click closes it, `aria-expanded` tracks.
+  Its **hover** path is not, and SC 1.4.13 (Level AA — the repo's stated
+  non-negotiable bar) asks for three things:
+  - **Hoverable** ❌ the rule is `.caveat-btn:hover ~ .caveat-note`, keyed on the
+    *button* alone, and `margin-top: var(--space-1)` puts a gap between the two.
+    Move the pointer toward the note to read it and the note disappears. Text you
+    cannot travel to is text a slow reader, a magnifier user or anyone with a
+    tremor cannot finish.
+  - **Dismissible** ❌ `setOpen()` attaches the Escape handler only when the note
+    is *clicked* open, so a hover-revealed note cannot be dismissed without
+    moving the pointer — which matters most for the magnifier user it is covering
+    content for.
+  - **Persistent** ✅ nothing times it out.
+  🎯 **The call for the owner.** The cheap structural fix — close the gap so the
+  button and note form one continuous hover target — changes the note's visible
+  box, i.e. changes a shipped component's look. The zero-visual fix is a
+  transparent bridge (`.caveat-note::before` spanning the gap) plus a hover-path
+  Escape handler in `disclosure.js`: more machinery, no design change. The third
+  option is to drop the hover reveal entirely and make every ⓘ click-only, which
+  is what the settings one now is — one behaviour everywhere, nothing to get
+  wrong, and mouse users lose a nicety they never had on a phone.
+  **Recommend the third**: it is the only one that leaves a single ⓘ behaviour
+  across the whole app, and consistency is the standing Theme 15 goal.
+
 ## Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)
 
 **The report, raw (owner):** *"the ability to force a full refresh of data
