@@ -8,7 +8,7 @@
 #
 # ————————————————————— Why a PR and not a push —————————————————————
 #
-# A scheduled job cannot push to `main`. `protect-main` requires four status
+# A scheduled job cannot push to `main`. `protect-main` requires status
 # checks, and a direct push can never satisfy them — the checks would run on the
 # push the rule is refusing. Proved on 2026-08-16, not assumed:
 #
@@ -37,7 +37,22 @@
 #     PR is the normal outcome, not a failure.
 #   • The branch deletes itself on merge (`delete_branch_on_merge` is on).
 #
-# ————————————————— The one thing that still needs a human —————————————————
+# ——————— The thing that used to need a human, and now does not ———————
+#
+# ✅ RESOLVED 2026-08-17: the owner minted `FX_TOKEN` and it is in this repo's
+# Actions secrets. The weekly refresh is now hands-off. The account below is
+# kept because it explains why the secret exists and what happens when it goes.
+#
+# 🛑 IT EXPIRES 2026-11-15, and the failure then is LOUD, not graceful — read
+# this before trusting the `||` below. An expired token's secret is still a
+# non-empty string, so `secrets.FX_TOKEN || secrets.GITHUB_TOKEN` does NOT fall
+# back: it uses the dead value, `gh` returns 401, and `set -euo pipefail` takes
+# the run red. That is the good outcome — the red run IS the rotation reminder.
+# The estate registry carries the expiry and warns 30 days out.
+# 🚩 One wrinkle that makes that failure read wrong: `gh pr create` below is
+# guarded by `|| echo "PR already open … reusing it"`, so a 401 there prints
+# that reassuring line before the run actually dies on `gh pr merge`. If this
+# workflow fails, look for a 401 before believing the "reusing it" message.
 #
 # A PR opened by the built-in GITHUB_TOKEN counts as coming from an *external
 # contributor*, and this repo requires approval before workflows run for those
@@ -155,8 +170,10 @@ jobs:
           Merges itself once the required checks pass." \
             || echo "PR already open for $BRANCH — reusing it"
 
-          # The point of the whole design: the four required checks run on this
-          # PR the ordinary way, and it lands the moment they pass.
+          # The point of the whole design: the required checks run on this PR
+          # the ordinary way, and it lands the moment they pass. Their number
+          # is deliberately not written here — it went from four to six on
+          # 2026-08-17 and a hard-coded count is a comment that rots silently.
           gh pr merge "$BRANCH" --auto --squash
 
       - name: What happened
