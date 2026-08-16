@@ -575,6 +575,40 @@ deliberation those compact docs omit.
   requires the marker **on the timer face**, not only in the step text: a clock
   that looks the same whether its number was read or guessed is not "clearly
   marked". No UI built here.
+- [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
+  — **a guard is decorative when its output is the same whether or not the thing
+  it guards is broken.** Ten instances across two repos, three of them found on
+  one day by three parallel sessions that did not know about each other. Six
+  faces: a guard that always fires (a drift baseline 31 commits stale); one that
+  can never fire (a revisit trigger the app ships no telemetry to observe); one
+  that answers a different question than it is read as (`check_versions.py` bare
+  says "not in scope" on a clean tree, which reads as a pass — two sessions
+  collided on a version it called clean); one that declines and reports the
+  decline as success (`tag_allergens.py` cannot write 7 of 55 files and exits 0,
+  so a green run looks like a clean sweep — and measurement, unlike the first
+  diagnosis, showed the decline **concentrates on the records the tool exists to
+  protect**); one that runs correctly
+  pointed at the wrong tree (a `cd` drifted a session's verification out of its
+  own worktree — caught only by a discrepancy between two *passing* runs); and a
+  record's "first X in Faves' history" superlative, which is a claim about every
+  other change including ones being written in parallel. Two rules follow: a
+  guard must distinguish *"I checked and it is fine"* from *"I did not check"*,
+  and a verdict is worthless without the identity of what it checked.
+- [0070](0070-an-ingredient-list-may-be-grouped-and-the-group-is-part-of-the-line.md)
+  — **an ingredient list may be grouped, and the component is part of the line's
+  identity.** ROADMAP 37l. Four recipes had already invented grouping by
+  prefixing `"Sauce: "` into the string — Upside-Down Plum Cake on **14 of 14**
+  lines — and `cook.js` was already stripping that prefix as *"a group label, not
+  a thing"*, so the schema was insisting it was text while both ends treated it
+  as structure. Entries become a string **or** a `{component, items[]}` group, so
+  a flat recipe is untouched and no component name has to be invented for the
+  unlabelled half of Ginger Crunch. The hard half was the tick ([ADR 0067](0067-a-tick-is-keyed-on-the-line-not-its-place.md)):
+  the key is `"<component>: <text>"`, because **Sticky Date Pudding lists "60g
+  butter" in the pudding and again in the sauce** — key on the text alone and
+  ticking one ticks the other. That the key then reproduces the old string
+  byte-for-byte, detaching **zero** ticks across all 24 recipes, is a consequence
+  and not the motive: ask what the identity *is* and the compatibility question
+  often stops existing.
 - [0069](0069-the-location-ask-is-primed-not-sprung.md) — **the location ask is
   primed, not sprung.** Supersedes **item 4 only** of
   [0068](0068-the-home-list-ranks-on-one-blend.md). That item said the prompt
