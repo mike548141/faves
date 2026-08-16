@@ -354,8 +354,10 @@ export function importControls() {
 // --- Settings → Your data: transfer to another device --------------------
 
 /** The active profile's slice of the layer, as the codec wants it. Ratings are
- *  read from the raw scoped key because ratings.js exposes lookups, not the map. */
-function activeSlice() {
+ *  read from the raw scoped key because ratings.js exposes lookups, not the map.
+ *  Exported for unit testing (personal-io-ui.test.js) — it is otherwise only
+ *  called from transferControls() below. */
+export function activeSlice() {
   let map = {};
   try {
     map = JSON.parse(deviceStorage.getItem(profiles.scopedKey("faves.ratings.v1")) || "{}");
@@ -366,7 +368,13 @@ function activeSlice() {
     profile: profiles.active(),
     groups: groupForShare(favourites.items()),
     ratings: map && typeof map === "object" ? map : {},
-    settings: settings.get(),
+    // raw(), not get(): get() hard-resolves LOCAL to this device's concrete
+    // language/units (ADR 0045), so a link made on an NZ phone would carry
+    // "en"/"metric" onto the receiver — permanently destroying its own
+    // "follow me wherever I am" preference (DEFAULTS in settings.js) instead
+    // of transferring it. Currency is unaffected either way — get() never
+    // resolves it; place.js resolves it per price (ADR 0029, ADR 0045).
+    settings: settings.raw(),
   };
 }
 

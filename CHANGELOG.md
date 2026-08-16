@@ -8,6 +8,15 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **A transfer link no longer freezes your language and units to wherever you
+  made it.** If you'd left language or units set to follow wherever you are, the
+  link was carrying the *resolved* answer — English and kilometres, if you made
+  it at home — and the receiving device kept that as a fixed choice. It now
+  carries "follow me" as "follow me". Restoring a backup into a profile you
+  already have also brings your **units and currency** across; they had been
+  silently dropped on that path since those settings were added.
+
 ### Added
 - **Three chains now show all their Wellington branches.** Hell Pizza went from
   one location to **14**, BurgerFuel to 4 and Kaffee Eis to 3 — each with its own

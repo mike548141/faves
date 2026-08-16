@@ -35,8 +35,19 @@ import { PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseName, sanitiseRegistry, scopeKe
 import { createFavourites, favKey } from "./favourites.js";
 import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
-import { createSettings, sanitiseDiet } from "./settings.js";
+import { createSettings, sanitiseDiet, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
 import { mergeItems } from "./cart.js";
+
+// Every settings field EXCEPT diet, which is handled just below by its own
+// safety-critical choice logic (keep/incoming/combine) rather than a plain
+// overwrite. Driven from DEFAULTS' own keys rather than a second hand-written
+// list: units (ADR 0029) and currency (ADR 0045) both landed after the old
+// literal list ["favBoostKm", "farKm", "lang", "mapsApp"] was written and
+// were never added to it, so a MERGE import silently dropped them (a NEW
+// profile was unaffected — writeProfileStores writes the whole object — which
+// is why nobody noticed). A field added to DEFAULTS is covered here for free;
+// there is nothing left to remember to update.
+const MERGE_SETTINGS_FIELDS = Object.keys(SETTINGS_DEFAULTS).filter((f) => f !== "diet");
 
 /** Marker + version of the on-disk shape. This is a contract we have to keep
  *  being able to read, which is exactly why the file is not a raw dump of
@@ -644,7 +655,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
 
     if (isObj(p.settings)) {
       const patch = {};
-      for (const f of ["favBoostKm", "farKm", "lang", "mapsApp"]) {
+      for (const f of MERGE_SETTINGS_FIELDS) {
         if (f in p.settings) patch[f] = p.settings[f];
       }
       if (entry.diet) {

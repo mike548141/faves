@@ -269,7 +269,13 @@ function file(overrides = {}) {
         active: true,
         favourites: [{ type: "dish", venueId: "kk-malaysian", venueName: "KK Malaysian", name: "Roti Canai" }],
         ratings: { "v:gold-lining-cafe": 5, "d:kk-malaysian Roti Canai": 4 },
-        settings: { farKm: 15, lang: "mi", diet: { dietary: ["gf"], avoid: ["contains-nuts"] } },
+        settings: {
+          farKm: 15,
+          lang: "mi",
+          units: "imperial",
+          currency: "GBP",
+          diet: { dietary: ["gf"], avoid: ["contains-nuts"] },
+        },
       },
       {
         id: "p-other-device",
@@ -478,6 +484,17 @@ test("“keep” leaves the allergen flags exactly as they were", () => {
   // …while the non-safety preferences do follow the file.
   assert.equal(s.farKm, 15);
   assert.equal(s.lang, "mi");
+});
+
+// units (ADR 0029) and currency (ADR 0045) landed after the merge patch's
+// field whitelist was written, and were never added to it — so a MERGE import
+// silently dropped them while a brand-new-profile import (which writes the
+// whole settings object) carried them fine, hiding the bug.
+test("a merge import restores units and currency too, not just favBoostKm/farKm/lang/mapsApp", () => {
+  const { store } = applied({ 0: { diet: "keep" }, 1: { target: "pZ" } });
+  const s = read(store, scopeKey("default", SET_KEY));
+  assert.equal(s.units, "imperial");
+  assert.equal(s.currency, "GBP");
 });
 
 test("“incoming” takes the file's preferences wholesale", () => {
