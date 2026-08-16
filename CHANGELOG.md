@@ -46,9 +46,13 @@ content freshness separately from this file.
   the code made every row start on a number, so the eye had to step over it to
   reach the dish — and a screen reader read "#1 Wonton Soup" instead of
   "Wonton Soup #1".
-- **The update prompt says what you get.** "A newer version of Faves is ready"
-  → "An update is ready, with the latest menus and prices" — the same phrase
-  About already uses.
+- **The opening-hours badge stops repeating itself.** "Opens soon · opens in
+  14 min" is now just **"Opens in 14 min"**, and "Closing soon · closes in
+  12 min" is **"Closes in 12 min"** — the number is the useful half, and the
+  amber dot already says "soon". Further out, where the two halves genuinely
+  differ, both stay: "Closed · opens Tue 11am".
+- **The update prompt sounds like a food app.** "A newer version of Faves is
+  ready" → **"Get it while it's hot! Update for the latest menus and prices."**
 - **The search hints hold longer, and cross-fade instead of snapping.** They
   changed every 4 seconds, which read as restless — a hint is a whole sentence
   and needs to survive a glance. Now roughly 7 seconds, with the placeholder
