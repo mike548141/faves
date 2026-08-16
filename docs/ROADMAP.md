@@ -3246,12 +3246,32 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
       **after** the deploy has gone out. `every screen boots` was just wired in
       and deliberately chosen as *"the one that is safe to make REQUIRED"* — it
       is not yet required, which is a one-line settings change, not new work.
-      🎯 **Owner's call — it is repo settings and it makes CI stricter for
-      everyone.** Cost: a push with an unbumped version constant, or a screen
+      🛑 **AND A LAYER ABOVE BOTH, which changes what the fix even is.** Raised
+      by faves-ea, verified here directly against the ruleset API rather than
+      inferred: `protect-main` carries
+      `bypass_actors: [{actor_type: RepositoryRole, actor_id: 5, bypass_mode:
+      always}]`. **Admin bypass is unconditional**, so even the four *required*
+      checks cannot block a push from the owner's own machine — which is where
+      most pushes come from. Three sessions saw
+      `Bypassed rule violations for refs/heads/main` on their pushes tonight and
+      read it as noise. **So promoting the two advisory jobs to required buys
+      less than it appears to**, and the honest framing of the ask is two
+      questions, not one.
+      🎯 **Owner's call, and it is genuinely two decisions** — both repo
+      settings, both his:
+      **(a) Promote `service-worker version lockstep` and `every screen boots`
+      to required.** Cost: a push with an unbumped version constant, or a screen
       whose JS throws on load, starts failing instead of warning. That is the
       intent. Do **not** extend it to `cook_check`/`sync_check` — both are
       measurably contention-flaky and a flaky required check trains everyone to
       hit re-run, which is worse than no check.
+      **(b) Decide whether admin bypass should stay `always`.** It is defensible
+      — a solo owner locking himself out of his own default branch is a real
+      cost, and the doctrine floor names lockout-class changes as
+      stop-and-confirm. But while it stands, *every* required check on this repo
+      is advisory for the person who pushes most, and (a) is close to cosmetic
+      without it. `evaluate` mode, or bypass on pull-request only, are the
+      middle options. **This one is his alone and must not be changed for him.**
       🔑 **And a second-order finding worth more than the first, from faves-
       hygiene: this was nearly reported wrong, and the reason generalises.**
       The required list is read **by job name**, and the job displayed as
