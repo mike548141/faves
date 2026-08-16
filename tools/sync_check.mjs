@@ -58,6 +58,22 @@
 // was never reproduced in 2026-08-17's runs, so it is unexplained rather than
 // disproved. Every failure seen here had aria-expanded never move at all.
 //
+// NARROWED 2026-08-17 (second look, no code change): the shipped app has no
+// mechanism that could produce it, so whatever the old trace read, it was not
+// a person's click toggling the menu twice. One activation cannot move
+// aria-expanded twice — overflow-ui.js's setOpen() returns early on
+// `open === isOpen()` — so two cycles need TWO click listeners on the button.
+// There is exactly one binding, and it is reachable exactly once per page:
+// each page loads a single entry module (app.js / menu.js / recipe.js), each
+// calls initOverflowMenu() once, and none of them has a re-init path. In
+// particular the mechanism the old diagnosis named is not one: menu.js's
+// reapply() is a settings SUBSCRIBER that re-renders dishes — it never
+// re-runs initChrome() — and sync-ui.js's render() rebuilds only its own
+// panel, never the header chrome. That leaves the reading itself (a poll
+// spanning the tool's next interaction, which pointerdown-closes the menu via
+// onOutside) as the likelier author of a "second cycle". Still not reproduced,
+// so still not proven — but the product hazard now has nowhere to live.
+//
 // WHY THIS ONE IS SHAPED DIFFERENTLY. Every other check in the family proves
 // something about ONE device. Sync's entire claim is about TWO — that a heart
 // made on a phone shows up on a laptop, and a heart removed on the phone stays

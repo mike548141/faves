@@ -3095,6 +3095,18 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
 >   (9 passes → 16). ⚠️ **Honest residue:** the old trace's third observation —
 >   `aria-expanded` reporting two open/close cycles from one click — never
 >   reproduced. Unexplained, not disproved.
+>   ✅ **Narrowed 2026-08-17 (second look, re-verified green: `OK — 16 passed,
+>   0 failed`).** Still not reproduced, but it now has **nowhere to live in the
+>   shipped app**: one activation cannot move `aria-expanded` twice, because
+>   `overflow-ui.js`'s `setOpen()` returns early on `open === isOpen()`, so two
+>   cycles need **two click listeners** on the button — and there is exactly one
+>   binding, reachable exactly once per page (one entry module each, one
+>   `initOverflowMenu()` call each, no re-init path). The mechanism the original
+>   diagnosis named is specifically ruled out: `menu.js`'s `reapply()` is a
+>   settings *subscriber* that re-renders dishes and never re-runs
+>   `initChrome()`, and `sync-ui.js`'s `render()` rebuilds only its own panel.
+>   🔑 **"Unexplained" and "a hazard" are not the same claim** — an unreproduced
+>   reading with no possible mechanism is a tooling question, not a product one.
 > - 🔎 **A second dead assertion, found while fixing the first.** The landing
 >   check `!!document.querySelector(".sync-body")` would have passed **on the
 >   index screen**: `sync-ui.js` builds that node once at construction and the
