@@ -1,4 +1,4 @@
-# NNNN — A venue has *menus*, plural: the shape is recorded, the build is held
+# 0080 — A venue has *menus*, plural: the shape is recorded, the build is held
 
 **Status:** Accepted. Records a schema shape that is deliberately **not built**.
 Nothing in `site/data/` changes on this record. Supersedes nothing.
