@@ -4465,6 +4465,11 @@ What *is* honest, and is the recommendation:
 
 ### 36d — the timer's alarm ✅ RULED 2026-08-16
 
+**CLAIMED 2026-08-16 13:59 UTC (wt: faves-cook)** — the fresh session it was
+held for. File-disjoint from the three live peers by design: it lives in
+`cook.js`/`cook-ui.js`/a new `alarm.js`/`sw.js`, none of which 37c/d/e/j/l/m
+(wt: faves-recipe), 37g (wt: faves-ranking) or 37n (wt: faves-allergens) touch.
+
 Owner ruled the shape in full, going further than the recommendation:
 
 - **A tone on every timer.** Generated in code (Web Audio `OscillatorNode`) —
@@ -4487,6 +4492,18 @@ Write the ADR when built — first permission prompt, first audio, first
 vibration, three firsts in one feature.
 
 ### 36a/36c — estimates DO drive timers ✅ RULED 2026-08-16
+
+⏳ **NOT taken 2026-08-16 13:59 UTC, and the reason is worth keeping.** The
+faves-cook session wanted this and left it. Getting the estimated minutes into
+the payload rewrites `steps` inside
+`site/data/restaurants/cook-at-home.json` — the *same records*, adjacent keys,
+that the live 37l build is rewriting `ingredients` in, and it lands the same
+[ADR 0067] tick-rehash trap **twice, from two sessions, in one file**. A merge
+conflict is the good outcome there; the bad one is a clean textual merge that
+detaches every tick. 🔑 **File-disjointness is the real unit of parallel
+safety, not item-disjointness** — 36a and 37l are different roadmap items and
+the same edit. Take this once faves-recipe lands, in a session that can hash
+component and step together in one pass.
 
 Put to him because two sessions had independently built the cautious version:
 estimates as text, only stated times driving countdowns, on the reasoning that
@@ -4524,8 +4541,9 @@ to the owner at close and answered:
   renders it as if it were the total. `data/estimates/` already holds a full
   estimated total for each. `[S][ux]`, unblocked — and it lands with the
   serves/yield render above, since both change the same recipe meta line.
-- [ ] 🚩 **Ticks must leave the backup export** `[S][js]` — *"if it isn't
-  restored, it shouldn't be exported."* **Ruled, not yet built**, and the
+- [~] 🚩 **Ticks must leave the backup export** `[S][js]` — *"if it isn't
+  restored, it shouldn't be exported."* **CLAIMED 2026-08-16 13:59 UTC
+  (wt: faves-cook)**. **Ruled, not yet built**, and the
   mechanism matters because the first analysis of it was wrong twice:
 
   🔎 **A tick reaches the backup through the CATCH-ALL, not the key list.**
