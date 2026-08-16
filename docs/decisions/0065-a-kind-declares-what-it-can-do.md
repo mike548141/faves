@@ -96,6 +96,15 @@ the question "should something with no location lead a distance sort?" can be
 put to the owner from the table rather than reverse-engineered from the absence
 of a branch.
 
+**`hasLocation` changes no output today, and that was measured rather than
+assumed.** Flipping it to `true` fails no behaviour test, because the recipes
+record has no coordinates and every consumer already reaches the same answer
+through its own `lat`/`lng` guard — the identity check it replaced in
+`app.js`'s route-destination list was redundant for the same reason. It earns
+its place by being the thing that would bite if a kind ever carried coordinates
+it must not be routed to. The other four capabilities each fail between one and
+three behaviour tests when flipped.
+
 `site/js/kinds.js` joins `sw.js`'s `SHELL` precache list — caught by
 `tests/sw-versioning.test.js`, which exists because `js/dietary.js` shipped
 without it and broke menu screens in flight mode.
