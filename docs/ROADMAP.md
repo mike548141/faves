@@ -1944,6 +1944,120 @@ loanword "supper" — unfortunate on a food app, though context resolves it).
 
 ---
 
+## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
+
+Three items raised while the owner browsed the live site. They are filed
+together because they are **one problem seen from three angles**: Faves has
+grown a personal layer — favourites, ratings, profiles, transfer, sync — and
+each capability arrived with its own button in its own place. The owner's
+framing, verbatim: *"not buttons scattered all over the app"*, and the standing
+bar, *"Faves MUST have the best UX, it must be intuitive (natural, easy), look
+great, fast"*.
+
+**Sequencing matters here and is not obvious.** 22c settles *what the model
+is*; 22b settles *what the screen is*. Doing 22b first means moving the same
+share button twice — so 22c's model call comes first, or at least alongside.
+22a is independent and can go any time.
+
+- **22a — search jumps to a setting or an action** `[M]`. The searchable
+  surface was widened on 2026-08-16 (streets, services, phones, diets, plus a
+  rotating placeholder that advertises them). The half deliberately **not**
+  built is a **third result kind**: typing "map app" or "dark mode" should
+  offer the setting itself, not a restaurant. That needs things the app does
+  not have — a registry of settings with searchable labels and synonyms, a
+  deep-link that opens Settings *at* a panel (`settings-ui.js` owns index and
+  panels, ADR 0025), a result group that is visually a *verb* not a place, and
+  a11y for a list whose rows now do two different things. Worth a session on
+  its own. **Constraint carried forward, and it is a safety one:** no synonym
+  may ever assert that an allergen is *absent* — "nut free" must keep returning
+  nothing. `search.js` states this at the synonym map; the test
+  `no synonym asserts the ABSENCE of an allergen` holds it.
+
+- **22b — the Favourites screen strands you** `[M]` 🎯. Owner, 2026-08-16:
+  *"It feels like it takes over the page without an obvious transition to it or
+  how to get back, and we have repeated ways to navigate back because of it
+  which should not be necessary if it was truly an intuitive UX… functional but
+  disrupts the UX and leaves you feeling a little stranded."* Confirmed from
+  his screenshot: the panel replaces the browse view outright, with **both** a
+  "‹ All places" pill *and* the ⋯ menu offering a way back — two exits is the
+  symptom, not the cure. The share control is a full-width filled slab, the
+  heaviest element on a screen where it is not the point; he judges it *"ugly…
+  and I don't think it is necessary"* (see 22c — the button may not survive the
+  model call).
+  **Research brief, not a chosen design.** Compare at 390 px: a bottom sheet
+  that drags over the list and can be dismissed by dragging back; a right-hand
+  drawer with a spring transition; an inline filtered state of the *same* list
+  (favourites as a filter, not a destination — the cheapest and possibly the
+  most intuitive, since it never leaves the page); and a segmented control
+  above the list. Judge each on: is the transition legible, is there exactly
+  **one** obvious way back, does it survive `prefers-reduced-motion`, does it
+  keep focus order sane, and does it still work with search (the two views are
+  mutually exclusive today — `app.js` `exitFavourites`). Whatever wins must
+  keep the full feature set: per-venue and per-dish hearts, grouping by venue,
+  counts, and the existing deep links.
+
+- **22c — one model for a person's data, not buttons** `[L]` 🎯⚑. Owner,
+  2026-08-16: take a holistic view of **(a)** a person with several devices
+  keeping their data together, and **(b)** a person sharing their data — recipes,
+  favourites — with family or a friend. Both already have deep design work:
+  **Theme 9** (cross-device sync: transfer links shipped, continual E2E sync
+  designed, ADR 0017/0030) and **Theme 10** (sharing with people). What is
+  missing is the layer above them — a single coherent story a user can hold in
+  their head, and **one place in the UI it lives**, instead of a share button on
+  favourites, another in settings, another on a report, another on a recipe.
+  The deliverable of this item is that model and its single surface: what is
+  *mine*, what is *this device's*, what travels with me, what I hand to someone
+  else, and what each of those is called in one consistent vocabulary. Only
+  then does 22b know whether Favourites owns a share control at all.
+  ⚑ Touches the first standing backend, which is the owner's go (Theme 9 v2).
+
+## Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)
+
+Owner, on the About dialog: *"looks like a dumping ground of information. Look
+at why the info is there (e.g. the action/request/research that triggered the
+work to create it) and find a better way… Consider what the right home is for
+all this information, could be the about screen or somewhere else, and what
+prose should be used for a consistent voice throughout Faves."*
+
+**The diagnosis he is pointing at.** About is not a screen anyone designed; it
+is a sediment. Each block was added by the item that needed somewhere to put
+it — privacy by the no-tracking work, the currency line by ADR 0043, the
+"how we read this menu" line by ADR 0036, the version rows by ROADMAP 16f /
+ADR 0032, the update-ready line by the PWA refresh work. Every block was right
+*at the time*; nobody has since asked whether About is where a reader would
+look for it. That is why it reads as a list of answers to questions nobody
+asked on this screen.
+
+- ✅ **Delivered 2026-08-16 — the version caption sat in the wrong place.**
+  The owner's worked example: *"why is the text 'What this page is currently
+  running.' underneath the version numbers rather than under the heading"*. It
+  now sits directly under the **Version** heading, before the numbers —
+  heading → prose → detail, the order every other group in the dialog already
+  used — and at body size rather than the 0.85rem that made it read as a stray
+  footnote. `about-ui.js` + `app.css`.
+
+- **23a — find each block its right home** `[M]` 🎯. Work backwards from the
+  trigger, per the owner's steer: for every block in About, name the decision
+  that created it, then ask where a reader would actually look. Strong
+  candidates for moving rather than keeping: the **currency** and **"when we
+  last read this menu"** lines belong on a menu page, where the question
+  occurs — and partly already appear there (ADR 0037's ⓘ, ADR 0036's caveat),
+  so About may be duplicating them. **Version** and **update-ready** are
+  diagnostics, not "about" — they plausibly belong with Settings, or a small
+  footer. **Privacy** and **works offline** are genuinely about the product and
+  probably stay. What remains should be a short, confident statement of what
+  Faves is, not a FAQ. Watch for the failure mode this repo has hit before: do
+  not solve duplication by *adding* a third place.
+
+- **23b — one voice, written down** `[S→M]` 🎯. There is no tone guide, so the
+  voice drifts between blocks — some prose addresses "you", some describes the
+  system, some is caption-shaped. Write the guide (plain New Zealand English,
+  second person, no jargon, say the limit honestly rather than hedging — the
+  voice the menu caveats already use well), then apply it. This is also where
+  the **te reo** strings live: the rotating search hints landed on 2026-08-16
+  untranslated by design, so `search.hint.*` is owed against the owner's
+  nominated dictionary. Keep the guide short enough that it gets read.
+
 ## Recommended sequence
 
 ⚠️ **The sequence below is the one set on 2026-07-08, and steps 1–4 plus the

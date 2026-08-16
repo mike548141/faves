@@ -8,6 +8,13 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **About → Version reads in the right order.** "What this page is currently
+  running." sat *underneath* the version numbers, where it read as a stray
+  caption; it now sits under the **Version** heading and above them, at body
+  size — heading, then prose, then detail, the order the rest of the dialog
+  already used.
+
 ### Added
 - **Search finds far more than a name.** The one box on the home screen now
   also matches a venue's **address, city, service** (`takeaway`, `dine in`) and

@@ -75,15 +75,18 @@ function versionGroup() {
     }
   });
 
+  // Heading → prose → detail, the same order every other group in this dialog
+  // uses. The note sat *below* the numbers, which read as a stray caption and
+  // broke the one pattern the page has (owner, 2026-08-16).
   return el("section", { className: "about-group" }, [
     el("h3", { className: "about-group-title", textContent: "Version" }),
+    note,
     el("dl", { className: "about-versions" }, [
       el("dt", { className: "about-version-key", textContent: "App" }),
       shellValue,
       el("dt", { className: "about-version-key", textContent: "Menus & prices" }),
       dataValue,
     ]),
-    note,
     waitingNote,
   ]);
 }

@@ -3767,8 +3767,11 @@ body.faves-view .to-top {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
+/* Intro prose for the Version group, not a caption under it — so it reads at
+   the same size as every other group's body text (owner, 2026-08-16). The
+   0.85rem it used to carry was what made it look like a stray footnote. */
 .about-version-note {
-  font-size: 0.85rem;
+  margin-bottom: var(--space-2);
 }
 /* "An update is ready" (ROADMAP 16f, ADR 0031) — reuses the accent colour the
    update notice button uses, so the two reads as the same signal; both are
