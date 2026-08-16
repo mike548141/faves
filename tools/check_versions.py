@@ -110,6 +110,38 @@ def classify(paths):
     return shell, data
 
 
+def precache_gaps():
+    """Every file named in sw.js's SHELL list must exist on disk.
+
+    WHY. On 2026-08-16 a commit added `js/bar-shrink.js` to SHELL while the
+    module itself stayed untracked. The install handler throws on any non-`ok`
+    response — deliberately, so a 404 during a deploy race rejects the install
+    rather than silently caching a broken asset — so the WHOLE install rejected.
+    The deployed site had **no service worker at all**: 0 registrations, 6 of 81
+    shell entries cached, no data cache. Offline mode, installability and every
+    precached menu were gone.
+
+    It shipped past a completely green suite. `node --test`, `boot_check`,
+    `validate.py`, `check_no_deps.py` and this tool's own lockstep check all
+    passed, because not one of them asks whether a name in that list points at
+    a real file. The list is hand-maintained and a phone is the only thing that
+    ever reads it, which is exactly the shape that needs a gate.
+
+    Cheap, total, and it cannot false-positive: the answer is on the filesystem.
+    """
+    text = (ROOT / SW).read_text(encoding="utf-8")
+    block = re.search(r"const SHELL = \[(.*?)\];", text, re.S)
+    if not block:
+        return ["sw.js has no SHELL list — the precache cannot be checked."]
+    site = ROOT / "site"
+    return [
+        f'sw.js precaches "{url}", which does not exist — the install will throw '
+        f"and NO service worker will register."
+        for url in re.findall(r'"([^"]+)"', block.group(1))
+        if url != "./" and not (site / url).exists()
+    ]
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description="Check sw.js version constants were bumped in lockstep with site/ changes.",
@@ -135,6 +167,18 @@ def main(argv=None):
     else:
         base, head = None, None
         before, after = read_sw("HEAD"), (ROOT / SW).read_text(encoding="utf-8")
+
+    # Unconditional, and BEFORE the not-in-scope early return: a phantom
+    # precache entry breaks the deployed site whether or not this particular
+    # change touched site/, and "not in scope" must never be the last word on a
+    # tree whose service worker cannot install.
+    gaps = precache_gaps()
+    if gaps:
+        print(f"✗ precache: {len(gaps)} finding(s).")
+        for g in gaps:
+            print(f"  {g}")
+        print("\n  Commit the missing file, or remove its line from SHELL in site/sw.js.")
+        return 1
 
     paths = changed_paths(base, head)
     shell, data = classify(paths)
