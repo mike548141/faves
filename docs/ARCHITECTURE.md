@@ -759,6 +759,21 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   `encodeTransfer`/`decodeTransfer` under their own tag and fragment parameter
   so a transfer can never be read as a group-order shortlist.
 
+- **Cross-device merge** (no key of its own): `sync-merge.js` — the client half
+  of Theme 9 v2 (ADR 0017), specified by **ADR 0060**. Pure and storage-free:
+  `mergePersonal(base, mine, theirs)` over three `collectPersonalData()`
+  snapshots, where `base` is the state at the last successful sync. It is **not**
+  `applyPersonalData`: that path is additive on purpose (a watched, one-shot
+  import), and applied continually the additive rules make un-hearting
+  impossible. Keeping `base` is what tells a *deletion* from an
+  *addition* — no timestamps, no tombstones, no stored-shape change. Every
+  tie-break is a function of the values alone, **including the array order**,
+  because both devices run the same merge and anything asymmetric never settles.
+  Diet conflicts block and carry a union provisional so a pending question never
+  leaves a device un-warned; the order tally and which-profile-is-active are
+  deliberately not synced. **Nothing imports it yet** — the Worker and KV store
+  are unbuilt and are the owner's go.
+
 A `storage` event keeps other tabs in step (favourites/settings keys are now
 namespaced by the active profile; a registry change re-points them). Recipes
 (Cook at Home) can be

@@ -1045,14 +1045,27 @@ choose (Theme 10), rather than being trapped in one browser's storage.
   ⏳ Owner to eyeball the wording and the 390 px layout; ADR 0030 wants
   ratifying.
 - [~] **v2 — continual sync (Cloudflare Worker + KV)** `[M][constraint]` ⚑ —
-  **CLAIMED 2026-08-16 10:52 UTC (wt: faves-sync-client)** — owner-directed this
-  session ("so my iphone and laptop show the same favourites, ratings etc").
-  **The claim covers the client half only**: the E2E crypto, the sync-code, the
-  merge engine and their tests, which is the claim-agnostic store ADR 0017's
-  build shape says to build first. **The Worker, the KV namespace and any
-  Cloudflare resource are NOT claimed and are not being built** — standing one
-  up is a new trust surface and the ⚑ owner's-go below, neither of which this
-  session has. A peer session may take the backend half; say so here first.
+  **part-done, claim released 2026-08-16.** The **merge engine is built, tested
+  and shipped** (`site/js/sync-merge.js`, 26 tests, **ADR 0060**) — owner-directed
+  this session ("so my iphone and laptop show the same favourites, ratings etc").
+  🔎 **The finding was bigger than the item: both halves of the merge bullet
+  below are wrong against the code.** "Union hearts" makes un-hearting impossible
+  — `favourites.merge()` never removes, by design and by docstring — and
+  "last-write-wins per scalar" is unimplementable because **nothing in the
+  personal layer carries a timestamp**, verified across all five modules. ADR
+  0060 supersedes that bullet with a three-way merge against the last-agreed
+  snapshot, which buys deletion propagation at **no schema change**. Two shipped
+  bugs fell out of the same read and are fixed: a transfer link that destroyed
+  the "follow me" localisation preference, and a merge import that silently
+  dropped `units` and `currency`.
+  **Still open, and none of it claimed:** the **Worker + KV** (a new trust
+  surface and the ⚑ below — the owner's go, not taken); the **E2E crypto** and
+  the **bearer sync-code**; the push/pull/debounce client; the pairing UI; and
+  the base-snapshot store the merge needs. 🚩 **Two gates before any of it
+  ships:** the Reset-propagation wording (owner's ruling, Theme 32 — and ADR
+  0060's last consequence shows that ruling cannot be met as stated, because an
+  E2E blob cannot count devices); and the About-screen "no accounts" line, in
+  lockstep with a passkey path.
   a tiny Worker holds **one E2E-encrypted blob per user** in Workers KV.
   Design (all in ADR 0017):
   - **Continual bidirectional**, not a one-off migrate: each device keeps

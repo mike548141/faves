@@ -470,3 +470,19 @@ deliberation those compact docs omit.
   recommendation** and the reveal is deleted. `device_check.mjs` now hovers the
   ⓘ and asserts nothing appears and nothing moves, because a deletion nothing
   guards is a deletion waiting to be undone.
+- [0060](0060-sync-merges-three-ways-because-the-layer-has-no-clock.md) — **sync
+  merges three ways, because the personal layer has no clock.** Building Theme 9
+  v2's client half found **both halves of ADR 0017's merge bullet wrong against
+  the code**: "union hearts" makes un-hearting impossible (`favourites.merge()`
+  never removes, by design), and "last-write-wins per scalar" is unimplementable
+  because nothing in the layer carries a timestamp. The fix costs no schema
+  change — keep the snapshot the two devices last agreed on and diff both sides
+  against it, so a one-sided absence is a *deletion* when base held it and an
+  *addition* when it did not. **Symmetry ranks above any individual tie-break**:
+  both devices run the same merge, so "prefer theirs" swaps forever and even the
+  array *order* has to be a function of the inputs or the pair burns KV writes
+  indefinitely. Diet stays blocking with a union provisional, so a pending
+  question never leaves a device un-warned. Two shipped bugs fell out on the way
+  — a transfer link that destroyed the "follow me" localisation preference, and
+  a merge import that silently dropped `units` and `currency`. Tombstones,
+  per-entry timestamps and reusing `applyPersonalData` all lost.
