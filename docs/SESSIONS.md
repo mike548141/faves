@@ -6708,3 +6708,43 @@ something, and one of them changed the *shape* of the question.
   anywhere first-party (franchise pricing varies by store), so `null` is the
   correct record rather than a failure. Dish names plus a first-party allergen
   guide is most of what the app is for; the price band already reads as unknown.
+
+### After the rulings — two more venues, and what they taught
+
+Both owner-ruled venues were built in a second worktree (`faves-menus2`,
+branch `menus-14b`) after the first had been closed out.
+
+- **The Victoria Tavern, 138 items**, `verifiedBy: paper-menu` rather than
+  `official-site`, because the certificate we had to bypass is exactly what
+  would have established the server was theirs. `verified` is 2024-10-04, the
+  older of the two source PDFs.
+- **Subway, 141 items, every price `null`**, tagged from its own **NZ Allergen
+  Web Guide (May 2026)** — fetched past an Akamai block that had defeated both
+  `curl` and headless Chromium, then rendered page by page and read visually.
+
+🔑 **Subway's own data settled a design question this session had been deciding
+by judgement all day.** The same filling is sold as a sub, a wrap and a salad,
+and Subway's guide gives the three **different** allergen sets — soy `●` on the
+Sweet Onion Chicken Teriyaki sub but only `*` on the wrap; the Chicken Strips
+salad has no gluten row at all. So they are three products, not one printed
+three times, and **the difference is the bread, which is the gluten**. 44
+explicit `dishId`s, justified by evidence rather than by the [ADR 0051] analogy.
+
+🔎 **And its allergen guide graded present vs trace exactly as Pizza Hut's did**
+(`●` contains, `*` may contain) — the second instance the same day, which is
+the evidence that the owner's data-model ruling above is worth building rather
+than a one-venue curiosity.
+
+🚩 **A false alarm worth recording, because it cost nothing to check and would
+have cost a correction to accept.** The Victoria Tavern's agent reported that
+`detailsVerifiedBy: "third-party"` on the existing stub was "not in the closed
+set". It is — `ARCHITECTURE.md` line 369 defines it, and `validate.py` agrees.
+**A sub-agent's challenge is a hypothesis too.**
+
+🚩 **The two venues also produced an inconsistency, and it is a real question
+rather than a slip.** Subway keeps 141 unpriced rows because the owner ruled it
+should; the Victoria Tavern's agent dropped ~40 unpriced spirits on the corpus
+convention that unpriced lines are simply omitted — a convention it verified
+against two other venues before following. Both defensible, and opposite.
+🎯 Left with the owner: is an unpriced row a record of what the venue sells, or
+noise until someone prices it?

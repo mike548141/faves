@@ -383,9 +383,28 @@ delivery app.** Clear one by bringing back the fact.
 - [~] **Menus still owed on six venues — and where each one lives**
       `[M][content]`. Researched 2026-08-16 and written down here so a fresh
       session can start rather than repeat it.
-      **CLAIMED 2026-08-16 15:05 UTC (wt: faves-menus2)** — Subway and The
-      Victoria Tavern, both under owner rulings taken at the close of the
-      previous worktree (below).
+      ✅ **Subway (141) and The Victoria Tavern (138) DONE 2026-08-16** under
+      the two owner rulings recorded below — **10 of 14, 1,262 dishes.**
+      🔑 **Subway proved the dish-id split from the venue's own data.** The same
+      filling is sold as a sub, a wrap and a salad, and its own allergen guide
+      gives the three **different** allergen sets — soy is `●` on the Sweet
+      Onion Chicken Teriyaki *sub* and only `*` on the *wrap*, and the Chicken
+      Strips *salad* has no gluten row at all. 44 explicit `dishId`s; they are
+      three products, not one printed three times, and the difference is the
+      bread — which is the gluten.
+      🚩 **An inconsistency this pair created, named rather than left:** Subway
+      keeps 141 unpriced rows (owner-ruled), while The Victoria Tavern's agent
+      **dropped ~40 unpriced spirits** on the corpus convention that unpriced
+      lines are omitted (checked against `southern-cross` and
+      `the-borough-tawa`, neither of which carries a null-price row). Both are
+      defensible and they are opposite. 🎯 **Worth one ruling** — is an unpriced
+      row a *record of what the venue sells* or *noise until someone prices it*?
+      The answer changes what every future intake does with a spirits list.
+      The dropped rows are recoverable from the drinks PDF at any time.
+      ⏳ **Remaining 4, all needing a human, not a session:** `caffiend`,
+      `new-chapter-cafe`, `kaffee-eis`, `babaili-malatang` — each publishes a
+      website with **no menu on it**, so only a photo or an in-store visit
+      clears them.
       ✅ **8 of the 14 DONE 2026-08-16 (wt: faves-menus) — 983 dishes.**
       The Catch Sushi Bar 87 · Satay Kingdom 53 · Charley Noble 125 · Regal
       Chinese 264 · Rock Yard Vietnamese 58 · Pizza Pomodoro 83 · Gong Cha 131 ·
