@@ -2726,8 +2726,35 @@ worth keeping:
 checks), and `can_approve_pull_request_reviews` on (needed for Actions to open a
 PR at all).
 
-- [ ] 🎯 **One click per refresh remains, until an `FX_TOKEN` secret exists**
-  `[XS][ci][owner]`. A PR opened by the built-in `GITHUB_TOKEN` counts as coming
+✅ **Done 2026-08-17 — the owner minted `FX_TOKEN` and it is in this repo's
+Actions secrets.** Fine-grained PAT scoped to `mike548141/faves` alone: Metadata
+read, Contents read+write, Pull requests read+write, **no user permissions** —
+the narrowest shape that can do the job. No code change was needed; the workflow
+reads the secret by name. **Registered in the estate root's credential registry**
+with its permissions and expiry read from the console rather than transcribed
+from a comment, so the roll story exists before the roll does.
+🛑 **It expires 2026-11-15, and the failure then is LOUD, not graceful — which
+is the opposite of what the code reads like.** `${{ secrets.FX_TOKEN ||
+secrets.GITHUB_TOKEN }}` looks like a fallback; it is not. **An expired token's
+secret is still a non-empty string, so the `||` never fires** — the dead value
+is used, `gh` returns 401, and `set -euo pipefail` takes the run red. Good
+outcome (the red run *is* the rotation reminder), and it was checked in the
+workflow rather than assumed: the first reading of this was that expiry would
+silently revert to the weekly click, and that reading was wrong. The registry's
+expiry check warns 30 days out as well.
+🚩 **A 401 will read misleadingly on the way past.** `gh pr create` is guarded by
+`|| echo "PR already open … reusing it"`, so an auth failure prints that
+reassuring line before the run actually dies on the following `gh pr merge`. If
+this workflow ever fails, look for a 401 before believing the message.
+⚠️ **Honest limit: the token's auth path is UNPROVEN.** A `workflow_dispatch`
+run on 2026-08-17 went green — which proves the file still parses and runs after
+the header edits — but it reported *"already refreshed today — nothing to do"*,
+and every step that actually uses `GH_TOKEN` is gated on `changed == 'true'`. So
+nothing has yet exercised the credential. **The first real rate movement is the
+proof**, and the item below is sequenced behind it for exactly that reason.
+
+  The account of why it exists, kept because it explains the design: a PR opened
+  by the built-in `GITHUB_TOKEN` counts as coming
   from an *external contributor*, and this repo requires approval before
   workflows run for those (`approval_policy: all_external_contributors`). So the
   PR opens and arms itself, then waits for an "Approve and run" click.
@@ -2742,11 +2769,23 @@ PR at all).
   so adding the secret is the whole change — no code edit. Only the owner can
   mint it (it is a credential, and a new trust surface).
 
-- [ ] **Turn `can_approve_pull_request_reviews` back off once `FX_TOKEN` lands**
-  `[XS][ci]` — with a PAT the PR is opened by a real user, so Actions no longer
-  needs the permission. It grants nothing today (no rule here requires a review),
-  but it is a latent trap: add a review requirement to the ruleset later and a
-  workflow could approve its own PR.
+- [ ] **Turn `can_approve_pull_request_reviews` back off — UNBLOCKED 2026-08-17,
+  but NOT YET SAFE** `[XS][ci]` — with a PAT the PR is opened by a real user, so
+  Actions no longer needs the permission. It grants nothing today (no rule here
+  requires a review), but it is a latent trap: add a review requirement to the
+  ruleset later and a workflow could approve its own PR.
+  🛑 **The precondition, and it is checkable: wait for ONE successful refresh
+  actually opened by `FX_TOKEN`.** `FX_TOKEN` landing is necessary and not
+  sufficient. This permission is what lets the **`GITHUB_TOKEN` fallback path**
+  open a PR at all, so removing it now would take away the safety net *before*
+  anything has demonstrated the net is no longer needed — and the token's auth
+  path is currently unexercised (the dispatch run had no rate movement, and
+  every `GH_TOKEN` step is gated behind `changed == 'true'`). Turning it off
+  first converts a recoverable "the PAT didn't work, click Approve" into a
+  silently skipped weekly refresh.
+  ✅ **So the trigger is: the first Sunday a rate moves, confirm the PR was
+  opened by the owner's account rather than `github-actions[bot]`, then turn it
+  off.** That is one `gh pr list --json author` away and needs no judgement.
 
 ---
 
