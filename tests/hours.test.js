@@ -13,6 +13,11 @@ import {
   openStatus,
   nowIn,
   makeClock,
+  notServedText,
+  resolveServed,
+  segments,
+  servedStatus,
+  servedText,
   viewerOnVenueTime,
 } from "../site/js/hours.js";
 
@@ -201,4 +206,144 @@ test("viewerOnVenueTime is about the VENUE's zone, not New Zealand's", () => {
   const utcish = { getHours: () => 0, getMinutes: () => 30, valueOf: () => t.valueOf() };
   Object.setPrototypeOf(utcish, Date.prototype);
   assert.equal(viewerOnVenueTime("Pacific/Auckland", utcish), false);
+});
+
+// ————————————— When a SECTION is served (Theme 28c) —————————————
+// `served` has the venue-`hours` shape plus one extension: a null open means
+// "from opening". Every function below is pure — fixed `now`, fixed data — for
+// the same reason the rest of this file is: a check that passes at 1pm and
+// fails at 1am gets switched off within a week.
+
+const GOLD_CARD = {
+  mon: [["11:30", "17:30"]],
+  tue: [["11:30", "17:30"]],
+  wed: [["11:30", "17:30"]],
+  thu: [["11:30", "17:30"]],
+  fri: [["11:30", "17:30"]],
+  sat: [["10:00", "17:30"]],
+  sun: [["10:00", "17:30"]],
+};
+// "served till 2pm" — an end, and no start anybody told us.
+const TILL_TWO = daily(null, "14:00");
+const VENUE_TEN = daily("10:00", null); // opens 10am, till late, every day
+const SAT = 6;
+const SUN = 0;
+const TUE = 2;
+
+test("formatDay renders a null open as 'till', never as a made-up range", () => {
+  assert.equal(formatDay([[null, "14:00"]]), "till 2pm");
+  assert.equal(formatDay([["11:30", "17:30"]]), "11:30am–5:30pm");
+  assert.equal(formatDay([[null, null]]), "all day");
+  assert.equal(formatDay([]), "Closed");
+});
+
+test("servedText reads like the venue's own hours table", () => {
+  assert.equal(servedText(GOLD_CARD), "Served Mon–Fri 11:30am–5:30pm, Sat–Sun 10am–5:30pm");
+  assert.equal(servedText(TILL_TWO), "Served every day till 2pm");
+  assert.equal(servedText(null), null);
+});
+
+test("servedText lists the days it IS served, not the days it isn't", () => {
+  const weekdays = { ...GOLD_CARD, sat: [], sun: [] };
+  assert.equal(servedText(weekdays), "Served Mon–Fri 11:30am–5:30pm");
+  const nothing = { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] };
+  assert.equal(servedText(nothing), null, "nothing to say, so say nothing");
+});
+
+test("servedText never leaks a start time derived from the venue's hours", () => {
+  // The line is built from the RAW window; the venue's 10am opening resolves
+  // the reasoning, not the words.
+  assert.ok(!servedText(TILL_TWO).includes("10am"));
+});
+
+test("servedStatus: inside the window is 'served', outside is 'not-served'", () => {
+  assert.equal(servedStatus(GOLD_CARD, at(MON, 13)).state, "served");
+  assert.equal(servedStatus(GOLD_CARD, at(MON, 21)).state, "not-served");
+  assert.equal(servedStatus(GOLD_CARD, at(MON, 11, 29)).state, "not-served");
+  assert.equal(servedStatus(GOLD_CARD, at(MON, 11, 30)).state, "served", "inclusive at open");
+  assert.equal(servedStatus(GOLD_CARD, at(MON, 17, 30)).state, "not-served", "exclusive at close");
+});
+
+test("servedStatus names the next serving, wrapping the week", () => {
+  const later = servedStatus(GOLD_CARD, at(MON, 9));
+  assert.equal(later.today, true);
+  assert.equal(later.next.openMin, 690);
+  assert.equal(later.stated, true);
+  const tomorrow = servedStatus(GOLD_CARD, at(SAT, 21));
+  assert.equal(tomorrow.today, false);
+  assert.equal(tomorrow.next.dow, SUN);
+  assert.equal(tomorrow.next.openMin, 600);
+});
+
+test("servedStatus with no window at all says so, rather than guessing", () => {
+  const nothing = { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] };
+  assert.equal(servedStatus(nothing, at(MON, 13)).state, "unknown");
+  assert.equal(servedStatus(null, at(MON, 13)).state, "unknown");
+  assert.equal(servedStatus(undefined, at(MON, 13)).state, "unknown");
+});
+
+test("a null open resolves to the venue's opening time for that day", () => {
+  assert.deepEqual(resolveServed(TILL_TWO, VENUE_TEN).mon, [["10:00", "14:00"]]);
+  // 9am is before the doors open, so brunch is not on yet…
+  assert.equal(servedStatus(TILL_TWO, at(MON, 9), VENUE_TEN).state, "not-served");
+  // …10:30 is.
+  assert.equal(servedStatus(TILL_TWO, at(MON, 10, 30), VENUE_TEN).state, "served");
+});
+
+test("a null open with NO venue hours falls back to the start of the day", () => {
+  assert.deepEqual(resolveServed(TILL_TWO, null).mon, [["00:00", "14:00"]]);
+  assert.equal(servedStatus(TILL_TWO, at(MON, 9)).state, "served");
+});
+
+test("a derived start time is NEVER rendered — 'from opening' instead", () => {
+  // The 00:00 fallback is a reasoning bound. Printing it as "next served at
+  // 12am" would be a time nobody ever told us.
+  const noHours = servedStatus(TILL_TWO, at(MON, 15));
+  assert.equal(noHours.stated, false);
+  assert.equal(notServedText(noHours), "Not served right now · next served Tue from opening");
+  // Same with real venue hours behind it: 10am is the VENUE's fact, not the
+  // section's, so the section still declines to claim it as a start time.
+  const withHours = servedStatus(TILL_TWO, at(MON, 15), VENUE_TEN);
+  assert.equal(withHours.stated, false);
+  assert.equal(notServedText(withHours), "Not served right now · next served Tue from opening");
+});
+
+test("a STATED start time is named, with the day only when it isn't today", () => {
+  assert.equal(
+    notServedText(servedStatus(GOLD_CARD, at(MON, 9))),
+    "Not served right now · next served at 11:30am"
+  );
+  assert.equal(
+    notServedText(servedStatus(GOLD_CARD, at(MON, 21))),
+    "Not served right now · next served Tue at 11:30am"
+  );
+  assert.equal(
+    notServedText(servedStatus(GOLD_CARD, at(SAT, 21))),
+    "Not served right now · next served Sun at 10am"
+  );
+});
+
+test("notServedText says nothing while the section IS being served", () => {
+  assert.equal(notServedText(servedStatus(GOLD_CARD, at(TUE, 13))), null);
+  assert.equal(notServedText(servedStatus(null, at(TUE, 13))), null);
+  assert.equal(notServedText(null), null);
+});
+
+// The exported week-expansion openStatus and servedStatus now share. Exported
+// rather than copied (ranking.js's tierFromHours comment states the rule); this
+// asserts the shape both callers rely on.
+test("segments expands the week into sorted absolute minutes", () => {
+  const segs = segments({ mon: [["11:00", "14:00"], ["17:00", null]], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [] });
+  assert.equal(segs.length, 2);
+  assert.deepEqual(segs.map((s) => [s.start, s.end, s.openMin, s.closeMin, s.dow]), [
+    [1440 + 660, 1440 + 840, 660, 840, 1],
+    [1440 + 1020, 1440 + 1440, 1020, null, 1],
+  ]);
+});
+
+test("served and the venue's own hours stay separate questions", () => {
+  // The venue is open till late; the section stops at 5:30pm. openStatus must
+  // still say "open" at 9pm — `served` annotates the section, never the venue.
+  assert.equal(openStatus(VENUE_TEN, at(MON, 21)).state, "open");
+  assert.equal(servedStatus(GOLD_CARD, at(MON, 21), VENUE_TEN).state, "not-served");
 });

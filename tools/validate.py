@@ -358,6 +358,89 @@ def check_available(rid, obj, where):
         err(rid, f"{where}: available must state at least one of from/to/offBy/season")
 
 
+def check_served(rid, section, hours, where):
+    """`section.served`: the hours of the day a section is actually served
+    (ROADMAP 28c) — "Mon–Fri 11:30–17:30", the thing `available` cannot say.
+
+    EXACTLY the shape of a venue's `hours`: all seven day keys, each a list of
+    [open, close] "HH:MM" pairs, [] meaning not served that day. Reusing the
+    shape verbatim is the point — site/js/hours.js's week reasoning then applies
+    to a section unchanged, and there is one engine rather than two.
+
+    ONE EXTENSION OVER `hours`: `open` may be null, meaning "from opening".
+    `hours` already allows a null close for "till late"; this is the symmetric
+    case, and it is needed because real menus say *"served till 2pm"* without
+    stating a start. Writing a start time we were never told would be inventing
+    evidence, so `[[null, "14:00"]]` says exactly what the shop said. Both ends
+    null is rejected: it describes no window at all.
+
+    `served` and `available` may COEXIST — they answer different questions ("is
+    this on the menu this month?" vs "is it being served at this hour?")."""
+    served = section.get("served")
+    if served is None:
+        return
+    if not isinstance(served, dict):
+        err(rid, f"{where}: served must be an object keyed mon..sun, or absent")
+        return
+    if set(served) != set(DAYS):
+        err(rid, f"{where}: served must have exactly the 7 day keys {DAYS}, got {sorted(served)}")
+        return
+    any_window = False
+    for day, intervals in served.items():
+        if not isinstance(intervals, list):
+            err(rid, f"{where}: served[{day}] must be a list of intervals ([] = not served that day)")
+            continue
+        for iv in intervals:
+            if not (isinstance(iv, list) and len(iv) == 2):
+                err(rid, f"{where}: served[{day}] interval must be [open, close], got {iv!r}")
+                continue
+            o, c = iv
+            o_ok = o is None or (isinstance(o, str) and TIME_RE.match(o))
+            c_ok = c is None or (isinstance(c, str) and TIME_RE.match(c))
+            if not o_ok:
+                err(rid, f"{where}: served[{day}] open {o!r} must be 'HH:MM' or null (null = from opening)")
+            if not c_ok:
+                err(rid, f"{where}: served[{day}] close {c!r} must be 'HH:MM' or null")
+            if o is None and c is None:
+                err(rid, f"{where}: served[{day}] states neither a start nor an end — that is not a window")
+            if isinstance(o, str) and isinstance(c, str) and TIME_RE.match(o) and TIME_RE.match(c) and c <= o:
+                err(rid, f"{where}: served[{day}] close {c} must be after open {o}")
+            if o_ok and c_ok and not (o is None and c is None):
+                any_window = True
+    if not any_window:
+        err(rid, f"{where}: served has no window on any day — omit the field instead")
+
+    # A section served when the venue is shut is not a schema error — it is a
+    # transcription that needs a human. A WARNING, because the venue's hours and
+    # the section's window are two separate readings and either one may be the
+    # stale one; the validator cannot know which, and silently trimming the
+    # section to fit the hours would destroy what the menu actually said.
+    if not isinstance(hours, dict):
+        return
+    for day in DAYS:
+        windows = served.get(day)
+        open_ivs = hours.get(day)
+        if not isinstance(windows, list) or not windows or not isinstance(open_ivs, list):
+            continue
+        if not open_ivs:
+            warn(rid, f"{where}: served on {day}, but the venue's hours say it is closed that day")
+            continue
+        for iv in windows:
+            if not (isinstance(iv, list) and len(iv) == 2):
+                continue
+            o, c = iv
+            if isinstance(o, str) and TIME_RE.match(o) and all(
+                isinstance(x, list) and len(x) == 2 and isinstance(x[0], str) and o < x[0]
+                for x in open_ivs
+            ):
+                warn(rid, f"{where}: served from {o} on {day}, before the venue opens")
+            if isinstance(c, str) and TIME_RE.match(c) and all(
+                isinstance(x, list) and len(x) == 2 and isinstance(x[1], str) and c > x[1]
+                for x in open_ivs
+            ):
+                warn(rid, f"{where}: served until {c} on {day}, after the venue closes")
+
+
 def check_section_ids(rid, menu):
     """`sectionId`: a section's stored, immutable identity (ADR 0058).
 
@@ -403,10 +486,15 @@ def check_section_ids(rid, menu):
 
 
 def check_section_note(rid, section):
-    """`section.note`: the qualifier a venue prints beside its heading — "served
-    till 2pm", "12 and under" (ADR 0057). Prose, deliberately: the machine-
-    readable weekday+interval window is ROADMAP 28c and does not exist yet, and
-    a note is the honest encoding of "we have the words, not the structure".
+    """`section.note`: the qualifier a venue prints beside its heading — "12 and
+    under", "Gold Card holders only" (ADR 0057). Prose, deliberately: it is
+    where a qualifier lives that has no structure to go into.
+
+    A TIMETABLE IS NO LONGER ONE OF THOSE. `served` (ROADMAP 28c) took the four
+    windows this field used to carry as prose — "served till 2pm", "Mon–Fri
+    11:30–17:30" — because a note nothing reads cannot tell a reader at 9pm that
+    the Gold Card menu is not on. What is left here is the class of qualifier a
+    machine still has nothing to say about: who may order it, not when.
 
     Distinct from `available.note`, which says why a section is on the menu at
     all. The gate below is the one that matters: the point of the field is that
@@ -1176,6 +1264,17 @@ def check_restaurant(path):
         err(rid, "menu must be a list")
         menu = []
     check_section_ids(rid, menu)
+    # The hours a section's serving window is sanity-checked against, and the
+    # ones a null `served` open ("from opening") resolves to in the app: the
+    # venue's own, or — for a venue that keeps its hours per branch, as
+    # sprig-and-fern-tawa does — the primary branch's, which is what
+    # `venueHours` in site/js/locations.js falls back to with no viewer origin.
+    section_hours = data.get("hours")
+    if not isinstance(section_hours, dict):
+        for b in data.get("locations") or []:
+            if isinstance(b, dict) and isinstance(b.get("hours"), dict):
+                section_hours = b["hours"]
+                break
     for section in menu:
         if not isinstance(section, dict):
             err(rid, f"menu section malformed: {section!r}")
@@ -1184,6 +1283,7 @@ def check_restaurant(path):
             err(rid, "menu section missing 'section' name")
         # A whole section may be seasonal — the winter menu (ADR 0023).
         check_available(rid, section, f"section {section.get('section')!r}")
+        check_served(rid, section, section_hours, f"section {section.get('section')!r}")
         check_section_note(rid, section)
         check_translations(rid, section, f"section {section.get('section')!r}", {"section"})
         add_on_refs += collect_add_on_refs(rid, section, f"section {section.get('section')!r}")
@@ -1215,6 +1315,14 @@ def check_restaurant(path):
                 elif isinstance(price, (int, float)) and price < 0:
                     err(rid, f"price for {name!r} must not be negative, got {price!r}")
             check_available(rid, item, f"item {name!r}")
+            # `served` is a SECTION field only, for now. No dish in the corpus
+            # is served on a different timetable from its section, and this repo
+            # distrusts an unexercised field: one added here would ship in every
+            # phone's precache (ADR 0047) with no screen reading it and no check
+            # proving it works. Lift the restriction when a real menu needs it.
+            if "served" in item:
+                err(rid, f"item {name!r}: served is a section field, not a dish field — "
+                         "no menu in the corpus needs a per-dish window yet")
             check_revisions(rid, item, f"item {name!r}")
             check_needs(rid, item, f"item {name!r}")
             # code: optional venue order-number (a string, kept out of name).
@@ -1571,6 +1679,34 @@ def check_contradiction_tables():
             )
 
 
+def check_prose_addons():
+    """Warn where a priced extra is still a SENTENCE, not an `addOnGroups` entry.
+
+    ADR 0048 gave a dish real add-ons; "Add bacon +$7" in a `desc` is the same
+    offer in a form no screen can price, count or check for peanuts. Restricted
+    to `find_addons.py`'s `addon-priced` class — the one class where the text
+    carries an explicit `+$N` (or an "Add …" that leads its clause and names a
+    price) and no group already covers the dish. The other ten classes it
+    reports route to other themes entirely and would be noise here.
+
+    A WARNING, never an error, and for the same reason the tool has no
+    `--apply`: converting one of these is a judgement per row — which group,
+    what `max`, whose allergens — and a hard failure would block every
+    legitimate commit until a person had made every one of those calls.
+    """
+    try:
+        sys.path.insert(0, str(Path(__file__).parent))
+        from find_addons import priced_addon_prose
+    except ImportError:  # tool removed or renamed — not worth failing validation
+        return
+    for path in sorted((DATA / "restaurants").glob("*.json")):
+        record = json.loads(path.read_text(encoding="utf-8"))
+        for dish, clause in priced_addon_prose(record):
+            warn(record.get("id", path.stem),
+                 f"{dish}: a priced extra is still prose — “{clause}” — see "
+                 f"tools/find_addons.py (ADR 0048)")
+
+
 def main():
     if not RESTAURANTS.is_dir():
         print(f"error: {RESTAURANTS} not found", file=sys.stderr)
@@ -1613,6 +1749,7 @@ def main():
     check_allergen_tags()
     check_twin_allergens()
     check_contradiction_tables()
+    check_prose_addons()
 
     for w in warnings:
         print(f"warning: {w}")

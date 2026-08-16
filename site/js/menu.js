@@ -10,10 +10,20 @@ import {
   branchAsPlace,
   branchCard,
   nearestBranch,
+  venueHours,
 } from "./locations.js";
 import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
-import { openStatus, groupWeek, makeClock, nowIn, viewerOnVenueTime } from "./hours.js";
+import {
+  openStatus,
+  groupWeek,
+  makeClock,
+  notServedText,
+  nowIn,
+  servedStatus,
+  servedText,
+  viewerOnVenueTime,
+} from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
 import { fxAsOf } from "./fx.js";
 import { alternates, preferred, venueLanguage } from "./lang.js";
@@ -1369,6 +1379,17 @@ function render(r) {
 
   const menuWrap = el("div", { className: "menu-sections" });
   const sectionEls = [];
+  // When a section is served (Theme 28c). Read ONCE for the whole menu, off the
+  // venue's own clock via the same route every other screen uses — never the
+  // device clock, or a reader overseas is told a Wellington brunch is on at
+  // 3am. The timezone and the hours are resolved from the SAME origin so they
+  // describe one branch: a null `served` open means "from opening", and
+  // opening times and clocks from two different branches would resolve it to a
+  // time neither branch keeps.
+  const servedOrigin = recallOrigin();
+  const servedTz = venueTimezone(r, servedOrigin);
+  const servedHours = venueHours(r, servedOrigin);
+  const servedNow = nowIn(servedTz);
   for (const section of r.menu) {
     // A section whose rows are all offered as add-ons is not shown twice
     // (owner ruling, 2026-08-16). The rows stay in the data — a shared order
@@ -1399,6 +1420,27 @@ function render(r) {
     const notes = [section.note, section.available?.note]
       .filter((n) => typeof n === "string" && n.trim())
       .map((n) => el("p", { className: "section-note", textContent: n.trim() }));
+    // The structured serving window, phrased like the venue's own hours table,
+    // and — when the venue's clock is outside it — a quiet marker saying so and
+    // when it is next on. It ANNOTATES: the section stays, its dishes stay
+    // readable, and `#section-<id>` still resolves at 1am (hours.js, "When a
+    // SECTION is served"). Both are real text in the accessibility tree, not a
+    // colour or a ::before, because "not right now" is the whole message.
+    const servedLine = servedText(section.served);
+    if (servedLine) {
+      notes.unshift(el("p", { className: "section-note section-served", textContent: servedLine }));
+    }
+    const marker = section.served
+      ? notServedText(servedStatus(section.served, servedNow, servedHours))
+      : null;
+    if (marker) {
+      notes.push(
+        el("p", { className: "section-note section-not-served" }, [
+          el("span", { className: "section-not-served-ico", textContent: "🕐", "aria-hidden": "true" }),
+          el("span", { className: "section-not-served-text", textContent: marker }),
+        ])
+      );
+    }
     const sec = el("section", { className: "menu-section", id }, [
       el("h2", { className: "section-title", textContent: section.section }),
       ...notes,

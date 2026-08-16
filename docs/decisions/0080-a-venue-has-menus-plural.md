@@ -237,24 +237,25 @@ predates [ADR 0047](0047-the-app-ships-only-what-it-renders.md), so it is
 inherited debt rather than a breach, and at 574 bytes it is a *principle*
 problem, not a performance one.
 
-⚠️ **But it is a MISSING RENDER, not a dead field, and this record must not be
-read as arguing for deletion.** The faves-cook2 session made the correction and
-it is the right one: the design was specified, ratified into `ARCHITECTURE.md`,
-and the code never caught up. Deleting satisfies ADR 0047 in the cheapest way
-and destroys 38 taggings of real signal across 20 venues that no other field
+⚠️ **It was a MISSING RENDER, not a dead field — and it has been RULED ON and is
+being closed, not deleted.** The correction came from the faves-cook2 session:
+the design was specified, ratified into `ARCHITECTURE.md`, and the code never
+caught up. Deleting would have satisfied ADR 0047 in the cheapest way while
+destroying 38 taggings of real signal across 20 venues that no other field
 carries — `dog friendly`, `byo`, `garden bar`, `live sport`, `Wellington icon`.
-🎯 **Which way it goes is the owner's call, not a doctrine call**, and
-`0077-style-of-dining-is-not-the-cuisine-axis-work.md` deliberately
-records it without resolving it. <!-- linkscan:allow: 0077 landed on main after
-this branch was cut; converted to an inline link when this merges -->
- What this record takes from it is narrower and
-survives either ruling: **a field can pass every gate for months while the
-screen it was added for does not exist**, which is exactly the gap Decision 4's
-admission test is aimed at. If it is rendered rather than removed, note
-`validate.py` has **no vocabulary check on `vibe`** and the corpus already holds
+✅ **Owner ruled 2026-08-16: render the chips, and make `vibe` a closed
+vocabulary with facets** (`style` · `amenity` · …), validated in full rather than
+in part — because closing only one subset would leave the rest free to drift, as
 five strings for one idea (`quick` · `quick-eats` · `quick-lunch` ·
-`grab-and-go` · `counter-order`) — free text becomes visible inconsistency on
-day one.
+`grab-and-go` · `counter-order`) already had.
+
+🔑 **So the worked example is better than a breach: it is a breach found and
+closed inside a day, and the lesson survives the fix.** A field passed every gate
+for months while the screen it was added for did not exist. Nothing in the tree
+could tell the difference between *"specified and pending"* and *"specified and
+abandoned"* — which is exactly the gap Decision 4's admission test closes for the
+shapes in this record. The test is not "does a screen render this today"; it is
+**"name the screen, and say what happens if it never ships."**
 
 **Nothing ships.** `site/data/` is unchanged, no payload grows, and
 [ADR 0047](0047-the-app-ships-only-what-it-renders.md) is

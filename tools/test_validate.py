@@ -43,6 +43,12 @@ def _first_item(d):
     return d["menu"][0]["items"][0]
 
 
+def _first_section(d):
+    """The first menu section — where the section-level cases land. The subject's
+    is "All Day Brunch", which carries a real `served` window."""
+    return d["menu"][0]
+
+
 def _add_ons(d):
     """Give the subject one well-formed add-on group, named by its first dish,
     and return the group. ADR 0048's own worked example, so every case below can
@@ -431,6 +437,65 @@ CASES = {
         lambda d: _first_item(d).update(goesWith=["Totally Invented Dish 9000"]),
         "error",
     ),
+    # --- `served`: the hours a SECTION is on (ROADMAP 28c) ----------------
+    # The subject's first section carries a real one, so each case below breaks
+    # exactly one thing about a shape that is otherwise known-good. The rules
+    # worth policing are the ones a bare type check misses: a partial week (six
+    # day keys reads as a valid dict), an inverted interval, and an interval
+    # that bounds neither end — each of which would render as a confident,
+    # wrong "not served right now" rather than as an obvious break.
+    "served loses a day key": (lambda d: _first_section(d)["served"].pop("sun", None), "error"),
+    "served gains a key that isn't a day": (
+        lambda d: _first_section(d)["served"].update(bank_holiday=[]),
+        "error",
+    ),
+    "served close before open": (
+        lambda d: _first_section(d)["served"].update(mon=[["14:30", "07:30"]]),
+        "error",
+    ),
+    "served time is not HH:MM": (
+        lambda d: _first_section(d)["served"].update(mon=[["7.30am", "14:30"]]),
+        "error",
+    ),
+    "served day is not a list": (
+        lambda d: _first_section(d)["served"].update(mon="07:30-14:30"),
+        "error",
+    ),
+    "served interval is not a pair": (
+        lambda d: _first_section(d)["served"].update(mon=[["07:30", "14:30", "18:00"]]),
+        "error",
+    ),
+    # "from opening" is the one extension over the `hours` shape, and it is the
+    # reason this field exists in a corpus where two menus say "served till 2pm"
+    # and neither states a start.
+    "served with a null open is legal": (
+        lambda d: _first_section(d)["served"].update(mon=[[None, "14:30"]]),
+        "clean",
+    ),
+    "served with neither end bounded": (
+        lambda d: _first_section(d)["served"].update(mon=[[None, None]]),
+        "error",
+    ),
+    "served that is served on no day at all": (
+        lambda d: _first_section(d).update(
+            served={k: [] for k in ("mon", "tue", "wed", "thu", "fri", "sat", "sun")}
+        ),
+        "error",
+    ),
+    # Two different questions — "is it on the menu this month?" and "is it being
+    # served at this hour?" — so they must be able to coexist on one section.
+    "served alongside available": (
+        lambda d: _first_section(d).update(available={"season": "winter"}),
+        "clean",
+    ),
+    # Section-only until a real menu needs otherwise: an unexercised field ships
+    # in every phone's precache with no screen reading it (ADR 0047).
+    "served on a dish": (
+        lambda d: _first_item(d).update(
+            served={k: [] for k in ("mon", "tue", "wed", "thu", "fri", "sat", "sun")}
+        ),
+        "error",
+    ),
 }
 
 
@@ -471,15 +536,23 @@ SOURCE_CASES = {
     # ADR 0057: `section.note` exists because the qualifier LEFT the heading. A
     # split started and not finished — note added, heading not shortened — is
     # the failure mode with no symptom: the data looks migrated, the jump-nav
-    # chip is as long as it ever was, and the reader is told "served till 2pm"
+    # chip is as long as it ever was, and the reader is told "12 and under"
     # twice. Only a mutation of the real record can show the gate fires.
+    #
+    # These two cases used to key on Brunch's "served till 2pm", which became a
+    # structured `served` window on 2026-08-17 (ROADMAP 28c) — and the mutation
+    # then matched nothing, which the harness reports rather than passing. That
+    # is the point of the no-op guard: a case pinned to real data goes stale
+    # exactly when the data moves. Kids' "12 and under" is the note this gate is
+    # now for — a qualifier that is prose because it is NOT a timetable, so it
+    # will not be structured away underneath the case a second time.
     "site/data/restaurants/the-borough-tawa.json": {
         "a section note put back inside its own heading": (
-            lambda s: s.replace('"section": "Brunch",', '"section": "Brunch (served till 2pm)",', 1),
+            lambda s: s.replace('"section": "Kids",', '"section": "Kids (12 and under)",', 1),
             "error",
         ),
         "a section note emptied to a blank string": (
-            lambda s: s.replace('"note": "served till 2pm"', '"note": "   "', 1),
+            lambda s: s.replace('"note": "12 and under"', '"note": "   "', 1),
             "error",
         ),
         # ADR 0058. A duplicate `id` attribute is VALID HTML — the browser does
