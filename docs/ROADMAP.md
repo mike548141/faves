@@ -833,6 +833,62 @@ Two streams, deliberately separated because they land in different places:
 
 ## Theme 5 — Richer dish data
 
+- [ ] ✅ **RULED 2026-08-16 — ADD `contains-fish`, and land it WITH 37n.**
+      Owner's call, asked with the cost stated. The reasoning he took: fish is a
+      major declarable allergen we currently warn about **zero** times, and
+      landing it alongside the 37n consistency sweep means the corpus gets
+      swept once rather than twice. So this is now **blocked on 37n's report
+      existing**, not on a decision.
+      **What it needs:** the tag in `ARCHITECTURE.md`'s closed vocabulary · a
+      rule in `tools/tag_allergens.py` (**fish sauce · anchovy · unagi ·
+      bonito/dashi · Worcestershire sauce** — that last is the one people miss) ·
+      a corpus sweep · and the dishes already found and left untagged for want
+      of it, listed here so nothing is re-derived: **Rock Yard** (fish sauce
+      named in a dozen dishes, its own badge printed literally as "Fish", plus
+      "Yin & Yang Pan-fried Salmon"), **Pizza Pomodoro** (anchovy on Romana and
+      Inferno), **Regal** (spicy fish sauce), **Subway** (tuna — and 🚩 note it
+      must NOT be `contains-shellfish`, which is the wrong-tag trap here).
+      ⚠️ **`vg-option` and `df-option` were NOT ruled on** and stay open below —
+      they are a different, much lower-stakes question and should not ride in
+      on this decision's coat-tails.
+- [ ] ✅ **RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,
+      but keep tagging only PRESENT.** `[M][schema]` Owner's call, and it split
+      the question in two rather than answering it as asked.
+      **The case that raised it:** Pizza Hut publishes its own allergen PDF
+      grading each allergen `P` (present) against `T` (*"stored or used to
+      manufacture other items at the site"*). `T` is near-universal across the
+      whole pizza line for nuts, peanuts, sesame and shellfish. [ADR 0025]'s
+      *"when unsure, tag"* points at tagging it — but this is **not**
+      uncertainty, it is the venue stating two different things, and a warning
+      that fires on every item carries no information (the decorative-guard
+      shape, [ADR 0072]).
+      **His ruling:** the displayed tag stays `P`-only — so nothing about the
+      current screens changes — **and the data model gains the ability to hold
+      the trace tier**, so the venue's own graded statement stops being thrown
+      away at intake. Re-reading 55 menus to recover it later is the expensive
+      alternative this avoids.
+      🚩 **The design question this has to answer first, and it is not a
+      detail: WHERE does the trace tier live?** [ADR 0047] is explicit —
+      `site/data/` is a **precached payload**, so a field added there is
+      downloaded by every phone whether a screen reads it or not, and *"before
+      adding a field to a venue file, name the screen that renders it"*. Under
+      the same ruling no screen renders trace. The two readings:
+      - **`data/` (the repo-only record)** — obeys ADR 0047 as written, costs
+        the phone nothing, and is where "kept forever, not rendered" already
+        lives. ⚠️ But it splits one menu reading across two stores, and every
+        future refresh has to remember to update both.
+      - **`site/data/`, unrendered for now** — keeps one dish's allergen facts
+        in one place, at the cost of precaching a field nothing shows, which is
+        the exact thing ADR 0047 was written to stop.
+      🎯 **Recommend the record (`data/`)**, because ADR 0047 is accepted and
+      the payload cost is paid by every phone on every visit — but flag that it
+      makes the split-store rule load-bearing for safety data for the first
+      time, which is a genuine escalation of what `split_data.py --check` is
+      protecting. **Put this to the owner before building it.**
+      🔎 **It will recur.** Every venue publishing a first-party allergen chart
+      is likely to grade it this way; Subway's own NZ Allergen Web Guide is the
+      next one to check.
+
 - [ ] 🎯 ⚑ **The tag vocabulary has no `contains-fish`, and three sub-agents
       found it independently on one day** `[S][schema]` (2026-08-16). The closed
       set carries `contains-shellfish` and **nothing for finned fish** — one of
