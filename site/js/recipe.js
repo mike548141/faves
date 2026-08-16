@@ -329,7 +329,7 @@ let foldWrite = false;
 // The chosen ingredient scale (17a). Deliberately NOT persisted, and not in
 // `settings`: ADR 0034 refused to persist cook mode's step index on the
 // grounds that "where I am" is a position rather than a fact, and a recipe
-// reopened next week at 3× is the same bug wearing the same feature's clothes.
+// reopened days later at 3× is the same bug wearing the same feature's clothes.
 // It is also per-page rather than per-recipe because a page holds one recipe.
 let scaleKey = DEFAULT_SCALE;
 

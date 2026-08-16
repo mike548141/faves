@@ -607,6 +607,36 @@ deliberation those compact docs omit.
   appearing on one screen rather than two. `boot_check` guards it
   tone-agnostically, and guards About's group list by name so the sediment
   cannot re-form.
+- [0076](0076-a-quantity-is-scaled-only-if-it-can-be-written-back-unchanged.md)
+  — **a quantity is scaled only if the parser can write it back unchanged.**
+  17a asked for ½ / 1× / 2× over free-text ingredient lines, and the roadmap
+  recommended structured data because render-time parsing "will be wrong often
+  enough to be worse than useless". 🔑 **Both options share one defect: neither
+  is a check** — structured data is trusted because a human typed it, a parse
+  because a regex matched, and neither can tell you it got a line wrong. So the
+  parse must *rebuild the author's characters byte for byte at 1×* or the line
+  is left alone at every scale. Found by RUNNING a parser over the corpus, not
+  reading it: 7 lines carry a second number and every one corrupted — `6–8
+  garlic cloves` doubled to `12–8`, and `(or 1 medium red onion)` kept offering
+  one onion beside four shallots. Three statuses, and `blocked` (there IS a
+  quantity and we refused it) is the one that must be visible: a half-scaled
+  recipe looks finished. Measured 204/204 byte-identical at 1×; 20 of 24
+  recipes double clean, 14 halve. Times never scale — under-scaling a meat
+  time is a food-safety failure, not a bad dinner.
+- [0077](0077-style-of-dining-is-not-the-cuisine-axis-work.md) — **"style of
+  dining" is not Theme 30's cuisine-axis work.** Clears 37k's blocking 🚩 and
+  nothing else. They sit at different levels: Theme 30's `service` is metadata
+  about a *vocabulary term* ("`Cafe` is a format word"), style is data about a
+  *venue* — and it cannot reach **33 of 55 venues**, which carry no
+  service-axis cuisine value at all. On the owner's own poles, "silver service"
+  is formality and "quick eats" is speed; the axis captures **format**, which
+  equals neither — `Gastropub`, the corpus's most-used value at 10 venues,
+  implies nothing about either. 🛑 Also: the word `service` is already taken by
+  a live filter key (`all|takeaway|dine-in`) and Theme 30's `channel` is a
+  third meaning — three sessions hit that collision in one day. **Authorises no
+  field, no vocabulary, no data**: two owner questions remain open, including
+  that `priceBand`, the app's only curated judgement field, is filled on **8 of
+  55** — the measurement that predicts this feature never gets populated.
 - [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
   — **a guard is decorative when its output is the same whether or not the thing
   it guards is broken.** Twelve faces, most of them surfaced in one day of parallel

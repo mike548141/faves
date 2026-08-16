@@ -9,6 +9,20 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Cooking for more (or fewer) — scale a recipe.** A recipe page now offers
+  ½× · 1× · 2× · 3× above the ingredients, and the amounts follow: "2 cups
+  milk" becomes "4 cups milk", "1 cup sugar" halves to "½ cup sugar" — in
+  proper fractions a measuring cup actually has, never "0.75". Where a recipe
+  says how many it serves, that follows too. ⚠️ **Some lines will not scale,
+  and they are marked "as written" with a note above the list saying how many.**
+  "Pinch of salt" needs no doubling and is left in peace; but a line like
+  "6–8 garlic cloves" or "2 shallots (or 1 medium red onion)" genuinely cannot
+  be doubled without saying something wrong, so Faves declines rather than
+  guesses. Ticking off ingredients survives a scale change — tick the flour at
+  1×, switch to 2×, it stays ticked. **Cooking times are deliberately never
+  scaled:** a double mixture in a deeper dish takes longer, but not twice as
+  long, and with meat an under-scaled time is a safety problem rather than a
+  disappointing dinner.
 - **Cook-mode timers now ring.** A timer that finishes sounds three short beeps
   and buzzes the phone — no download, no network and nothing to allow, so it
   works in flight mode on the first visit. Timers longer than fifteen minutes,

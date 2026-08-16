@@ -2227,6 +2227,46 @@ recipes: **`serves` is set on 3** (Liège Waffles, the pudding, Tiramisu) and
 they can only come from the owner — the same shape as the empty `picks`
 problem. Sequence the content with the build or the feature ships blank.
 
+> ✅ **17a — THE SCALING HALF SHIPPED 2026-08-16** (wt: faves-cook2, `4f8dfb2` +
+> `fe88d20`). Recorded as **ADR 0076**. `site/js/quantity.js` is new; the
+> recipe page carries a ½ · 1× · 2× · 3× radiogroup above the ingredients.
+> 23 unit tests, `recipe_check` **22 → 29 assertions**, `node --test` 995 pass.
+> 🔑 **The roadmap's recommendation was overridden, with evidence.** It said
+> make quantities structured data because render-time parsing "will be wrong
+> often enough to be worse than useless". Both options share one defect —
+> **neither is a check**: structured data is trusted because a human typed it,
+> a parse because a regex matched, and neither can tell you it got a line
+> wrong. So a line is scaled only if the parser **rebuilds the author's
+> characters byte for byte at 1×**. 204/204 byte-identical.
+> 🔎 **Every refusal in it printed a wrong number first, and none was
+> predicted by reading the file** — they were found by RUNNING a parser over
+> the corpus. `6–8 garlic cloves` doubled to `12–8`; `2 shallots (or 1 medium
+> red onion)` doubled the shallots and left the bracket offering one onion.
+> 🚩 **The design crux, which is not the parsing:** a line that HAS a quantity
+> and is refused makes a **half-scaled recipe** — flour doubled, chocolate not,
+> nothing on screen saying so. Worse than not scaling, because it looks
+> finished. So there are three statuses, not two: `none` (no quantity — 42
+> lines, correct unchanged, silent), `scaled`, and `blocked` (marked in words,
+> not colour alone, and counted in a note). 2× blocks 4 lines; ½× blocks 16.
+> **20 of 24 recipes double clean, 14 halve.**
+> 🎯 **STILL OWED, and it is his:** `serves` is set on **3 of 24**, so "scale
+> to serve 8" cannot ship. But **4 more recipes state a yield in prose** —
+> Hotcakes "Makes 10–15", Queen Cakes "Makes 21" (twice, in `desc` AND
+> `steps[1]`), Turkish Flatbread "Makes 1 large flatbread" — so real coverage
+> is 7 of 24, not 3, and surfacing those needs no new facts.
+> ⚠️ **A trap for whoever does that:** Liège Waffles states 12 in `serves` AND
+> "divide the dough into 12 portions" in `steps[3]`, so a scaled recipe
+> contradicts its own method. Steps are not scaled and should not be.
+> ✅ **18b is NOT blocked on this any more.** It was recorded as waiting on
+> 17a's schema; the seam it needs is the one now built. Its own measurement is
+> on the table too: **cup and spoon units are 55% of all unit-bearing lines**
+> (47 cup/cups, 55 spoons, of 135), a US cup is 240 ml against NZ's 250 ml, and
+> the ONLY in-corpus evidence of which the owner means is a parenthesis —
+> `¾ cup (190 ml)` implies a 253 ml cup. 🎯 18b needs that as **data, not
+> inference**. 36b's `uses:[{ingredient, amount}]` is unaffected and still
+> needs its own schema — and note only **2 steps in the whole corpus** carry a
+> scalable amount, so 36b has almost nothing to bind to today.
+
 - [~] **17a — Serves, and scaling it** `[M][schema][design]` — **CLAIMED
   2026-08-16 22:32 UTC (wt: faves-cook2, branch `cook-recipes-17`)**. Files:
   `site/data/restaurants/cook-at-home.json`, `site/js/ingredients.js`,
@@ -5394,6 +5434,56 @@ The released claim only ever covered the owner's original five.
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 > ✅ **Shipped 2026-08-17** — 37j — "Everywhere" → "Any service", and the te reo
 > re-glossed with it. Landed inside 37g. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+
+> ✅ **37k's BLOCKING 🚩 IS CLEARED 2026-08-16 — and nothing else is.** Recorded
+> as **ADR 0077**. The owner's ruling was *check Theme 30's `service` axis
+> first, enter no data until it's settled*. **Settled: style is NOT that axis.**
+> They sit at different levels — Theme 30's `service` is metadata about a
+> *vocabulary term* ("`Cafe` is a format word"), style is data about a *venue* —
+> and it **cannot reach 33 of 55 venues**, which carry no service-axis cuisine
+> value at all. On his own poles, "silver service" is *formality* and "quick
+> eats" is *speed*; the axis captures **format**, which equals neither:
+> `Gastropub`, the corpus's most-used cuisine value at 10 venues, implies
+> neither. ⇒ **Theme 30 proceeds unblocked; 37k does not wait on it.**
+> 🛑 **A NAMING DEFECT IN SHIPPED CODE, found by three sessions converging from
+> three directions in one day, and it does not depend on 37k proceeding.**
+> `filters.js` already ships `service: 'all'|'takeaway'|'dine-in'` (55/55
+> venues, a `<select>` on the home screen). Theme 30's `channel`
+> (`dine_in`/`takeaway`/`delivery`) is a **price-and-tax** axis — a third
+> meaning of the same words. Whatever Theme 30's axis is called, it cannot be
+> `service`. 🎯 Worth the owner's eye whether or not style is ever built.
+> 🎯 **TWO OWNER QUESTIONS, both open, and 37k must not move until they close:**
+> **(a) His own relayed ruling contradicts the item.** `SESSIONS.md` (`041a6ff`)
+> carries a one-line relay — *"dining style folds into `vibe`"* — no primary
+> quote, no record of what he was asked. 37k is titled a *filter* and says
+> `vibe`'s free text "is neither [filterable nor comparable]". **Folding style
+> into a free-text field yields no filter.** A session picking one quietly would
+> be resolving his ruling for him.
+> **(b) The measurement that predicts this feature never gets populated.**
+> Every other filter derives from checkable evidence — `services` from what the
+> venue states, `openNow` from hours, cheapness from menu medians. "Fine
+> dining" is a judgement no menu photo verifies. The app's ONE curated
+> venue-level judgement field is `priceBand`: **present on 10 of 55, non-null
+> on 8**. A filter over 8 of 55 hides places for no stated reason.
+> 🔎 **The corpus already makes the case for a vocabulary, without anyone
+> arguing it.** Of 38 `vibe` taggings: 9 values are style (14 taggings), 11 are
+> orthogonal amenities a style vocabulary must never swallow (21 taggings —
+> `dog friendly`, `byo`, `quiz night`), 3 duplicate a `cuisine`. **Five strings
+> already say one thing** — `quick` · `quick-eats` · `quick-lunch` ·
+> `grab-and-go` · `counter-order`, across six venues — and no filter can
+> aggregate them. `vibe` has no vocabulary check in `validate.py`; `priceBand`
+> does.
+> 🚩 **A prerequisite nobody had noticed: `vibe` is precached to every phone and
+> NO SCREEN RENDERS IT.** `grep -rn "vibe" site/js site/*.html site/css` → zero
+> hits, while ARCHITECTURE.md describes it as "free-form chips shown on cards".
+> The design shipped; the render never did. So 37k proposes a filter on a field
+> that fails ADR 0047's "name the screen that renders it" gate **today**.
+> Inherited, not introduced (`vibe` predates ADR 0047), and it is 1,050 bytes of
+> 1,087,040 — a principle problem, not a performance one.
+> ⚠️ **And a fourth filter re-opens a constraint 15z paid to close:** the old
+> segmented service control cost "256 px of a 928 px row — the single largest
+> reason the inline row could not be one row". `filter_row_check.mjs` is the
+> guard that would fail.
 
 - [~] **37k — a "style of dining" filter** `[M][schema][design]` ⚑ — **CLAIMED
       2026-08-16 22:32 UTC (wt: faves-cook2)**. Taking only the 🚩 *decision*

@@ -266,7 +266,13 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
 - Each menu item may carry recipe fields, all optional:
   - `serves`: integer (shown where a dish price would be).
   - `time`: string, e.g. `"40 min"`.
-  - `ingredients`: list of strings.
+  - `ingredients`: list whose entries are EITHER a plain string (one ungrouped
+    line) OR a group `{ component, items: [string, …] }` (ADR 0070). Read every
+    consumer through `ingredients.js` — the line's tick KEY is
+    `"<component>: <text>"` for a grouped line and the bare text otherwise, and
+    the component is part of the identity, not decoration. A quantity is parsed
+    out of the string at RENDER time for scaling (ADR 0076); nothing about a
+    quantity is stored.
   - `steps`: list of strings (the method, rendered as an ordered list).
 - `section` groups recipes (e.g. "Weeknight dinners"); `picks`, `tags`,
   `desc`, search and dietary chips all work unchanged.
