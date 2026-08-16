@@ -82,6 +82,29 @@ Three consequences, each of which changes what should be built and in what order
    the app understates for precisely the readers who have no choice about paying
    it. It is not a safety defect — the filtering is right — and it should not be
    dressed as one; it is an accuracy defect with a captive audience.
+   ✅ **This axis is now re-runnable rather than a hand count.**
+   `tools/find_addons.py` carries it as the `diet-substitution-price` class, so
+   the figure above can be re-derived instead of cited — which is what this
+   record asks of every number in it. The tool reports **16 clauses across 6
+   venues, 12 of them on a dish already tagged `*-option`**; my hand count was
+   19 *rows*, and the difference is real rather than an error in either. A
+   clause-level classifier structurally cannot see a substitute sold as **its
+   own row** — `burgerfuel/Gluten friendly bun` $2, `khandallah/No Gluten Added
+   Bread` $3, `the-ramen-shop/Gluten free noodles` $3.
+   🔑 **And that gap is itself the finding: three of the four venues that print
+   *"No gluten added bun +$2.50"* in prose ALSO carry an NGA bread row in their
+   Brunch Add-Ons section.** The same venue models the same substitute both
+   ways — once unpriceable in a sentence, once as a properly priced row. **The
+   conversion target already exists in the corpus**, which makes this the
+   cheapest of the seven axes to close.
+   🚩 **The dairy half is worse off than the gluten half, and only the tool
+   could show it.** All four untagged rows are dairy — `charley-noble`'s three
+   coffees (*"+$0.50 for coconut or oat milk"*) and `burgerfuel/Thickshake`
+   (*"oat $9.90"*). There is **no `df-option` tag in the vocabulary at all**, so
+   unlike the gluten case `dietary.js` has nothing to filter on: a dairy-free
+   reader is not shown a wrong price, they are shown nothing. `gf-option` and
+   `v-option` exist and `df-option` does not, which looks like an oversight
+   rather than a decision.
 
 ## Decision
 
