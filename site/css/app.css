@@ -3444,8 +3444,14 @@ body.faves-view .to-top {
    grid so the description wraps beside it and the action row clears below with
    no change to the row's DOM. */
 .dish-photo-btn {
-  float: inline-end;
-  margin: 0 0 var(--space-2) var(--space-2);
+  /* LEFT of the title and rating (owner, 2026-08-16). It shipped floated right,
+     which read as an afterthought pinned to the margin — and on a row with no
+     description, like most of McDonald's, nothing wrapped beside it, so the row
+     was a tall column of empty space with a picture in the corner. On the left
+     the photo leads the row the way it does on every menu that has photos, and
+     the title, rating and tags stack beside it. */
+  float: inline-start;
+  margin: 0 var(--space-3) var(--space-2) 0;
   padding: 0;
   border: 0;
   border-radius: var(--radius);
@@ -3455,8 +3461,12 @@ body.faves-view .to-top {
 }
 .dish-photo {
   display: block;
-  width: 88px;
-  height: 88px;
+  /* Grows with the window, within bounds the layout can take: never smaller
+     than a tappable 88px, never so large it re-becomes the hero it was on
+     2026-08-16. `vw` rather than a media query so it moves continuously as a
+     desktop window is dragged, which is where the owner noticed it. */
+  width: clamp(88px, 11vw, 136px);
+  height: clamp(88px, 11vw, 136px);
   /* contain, never cover: these are transparent cutouts trimmed to the food
      (ADR 0053), so cropping to fill the square eats the product. */
   object-fit: contain;
