@@ -23,6 +23,14 @@
 // automatically. Also still English: strings built by interpolation ("Serves
 // 4", "Verified 3 Jul", open-hours badges, order-sheet counts) — the engine
 // swaps whole strings only.
+//
+// The fluent-speaker review queue lives in docs/reo-review-queue.md, NOT here.
+// A draft parked in MI below is not inert — translate() renders it the moment
+// someone flips the toggle — so anything the SAFETY BOUNDARY excludes waits in
+// that document instead. It is a document rather than a module for two reasons
+// worth not rediscovering: an unrendered table in this file still ships to
+// every phone (measured at +2,171 B gzipped when it was tried), and a fluent
+// speaker reviewing te reo will not open a JavaScript module.
 
 import { settings, LANGS } from "./settings.js";
 
