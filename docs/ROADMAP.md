@@ -4090,6 +4090,18 @@ the same sand.
 
 ### 36a — what the data says about time, and what it doesn't `[S][data]` 🎯
 
+> 🎯 **Owner ruling 2026-08-16, relayed from a peer session:** *estimate the
+> per-step and total times, and label them as estimates.* Same ruling for 36c.
+> This **reverses** the position the rest of this item argues for, and it is his
+> call to make. **CLAIMED 2026-08-16 11:40 UTC (wt: faves-recipe-estimates)** —
+> the derivation lands in `data/` (the repo-only research store) first, with its
+> workings, so the numbers are auditable before any of them reach a phone.
+> ⚠️ **One safety line the ruling does not cover, raised rather than assumed:**
+> an *estimated* duration must never drive a **timer**. Stated times drive the
+> timers today (28 of 118 steps); an invented "simmer 20 min" on chicken is a
+> food-safety failure, not a disappointing dinner. Estimates render as text,
+> authored times drive timers, until the owner says otherwise.
+
 The owner asked for *"an estimate of time required for each step and each recipe
 as a total"*. Measured across the corpus, 2026-08-16:
 
