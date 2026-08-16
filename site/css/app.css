@@ -4524,63 +4524,114 @@ body.faves-view .to-top {
 /* The per-step countdown. Sits between the stage and the nav, so it never
    moves Back/Next: the stage is the only flexible row, and it absorbs the
    change. Steps that state no duration have no timer, so the row is absent
-   rather than empty — the nav is a fixed anchor either way. */
+   rather than empty — the nav is a fixed anchor either way.
+
+   ONE CARD, NOT A BUTTON WITH TEXT IN IT. The previous layout put the numeral
+   and its state word inside the SAME button and centred the flex pair, which
+   left the numeral off-centre by half the word's width and sat a small label on
+   a big numeral's baseline. Both were unfixable while the word shared the box:
+   the word is gone, and the grid below centres what is left. */
 .cook-timer {
   display: flex;
-  gap: var(--space-2);
-  align-items: stretch;
+  flex-direction: column;
   flex: none;
-}
-.cook-timer-btn {
-  display: flex;
-  flex: 1 1 auto;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.6em;
-  min-height: 56px;
-  padding: 0 var(--space-3);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
-  color: var(--ink);
-  cursor: pointer;
+  /* So the progress track's ends follow the card's corners instead of
+     squaring them off. */
+  overflow: hidden;
 }
-/* Tabular figures so the seconds ticking down don't shuffle the whole label
-   sideways once a second — the same reason clocks everywhere use them. */
+/* Equal FIXED side columns are the whole trick. `justify-content: center` on a
+   row of unequal children centres the row, not the numeral; a 1fr middle
+   flanked by two identical columns centres the numeral itself, and keeps it
+   centred whatever the digits do. */
+.cook-timer-face {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  align-items: center;
+  min-height: 56px;
+}
+/* Tabular figures so the seconds ticking down don't shuffle the numeral
+   sideways once a second — the same reason clocks everywhere use them.
+   `font-feature-settings` is belt-and-braces, not superstition: the
+   font-variant-numeric property is silently a no-op against `-apple-system` on
+   some builds (Mozilla bug 1540143), and it fails by doing nothing rather than
+   by erroring, so nothing here would tell you. */
 .cook-timer-time {
-  font-size: 1.5rem;
+  justify-self: center;
+  font-size: 1.75rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  line-height: 1;
 }
-.cook-timer-state {
-  font-size: var(--step-sub);
-  font-weight: 600;
+.cook-timer-toggle,
+.cook-timer-reset {
+  display: grid;
+  place-items: center;
+  min-width: 56px;
+  min-height: 56px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.cook-timer-toggle {
+  color: var(--ink);
+}
+/* Play and pause, drawn rather than typed — see cook-ui.js for why a glyph is
+   the wrong tool here. One box; the clip-path makes a triangle and the twin
+   gradients make two bars, both in currentColor so they follow the state
+   colours below without a second rule each. */
+.cook-timer-ico {
+  width: 17px;
+  height: 19px;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.cook-timer-ico.is-pause {
+  clip-path: none;
+  background:
+    linear-gradient(currentColor 0 0) 0 0 / 33% 100% no-repeat,
+    linear-gradient(currentColor 0 0) 100% 0 / 33% 100% no-repeat;
+}
+/* Quiet on purpose. Reset is always there — it must never out-shout the
+   countdown or the toggle, so it gets muted ink and no border of its own
+   rather than the bordered box it used to sit in. */
+.cook-timer-reset {
   color: var(--ink-soft);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+/* The glanceable half: remaining as a proportion of the whole. No transition —
+   it steps once a second, and that step IS the information, so there is no
+   decorative sweep for prefers-reduced-motion to strip. */
+.cook-timer-track {
+  height: 3px;
+  background: var(--line);
+}
+.cook-timer-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--accent);
 }
 /* Running: accent the edge, not the fill — a solid accent block would out-shout
    Next, and Next is still the thing you press when the bell goes. */
-.cook-timer.is-running .cook-timer-btn {
+.cook-timer.is-running {
   border-color: var(--accent);
 }
-.cook-timer.is-running .cook-timer-time {
+.cook-timer.is-running .cook-timer-time,
+.cook-timer.is-running .cook-timer-toggle {
   color: var(--accent);
 }
-.cook-timer.is-done .cook-timer-btn {
+.cook-timer.is-done {
   border-color: var(--accent);
   background: var(--accent-soft);
 }
-.cook-timer-reset {
-  flex: 0 0 auto;
-  min-height: 56px;
-  min-width: 44px;
-  padding: 0 var(--space-3);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: transparent;
-  color: var(--ink-soft);
-  font-size: var(--step-sub);
-  font-weight: 600;
-  cursor: pointer;
+/* The bell has gone and the toggle is disabled: dim it so the only live
+   control on the card — Reset — is the one that looks live. */
+.cook-timer.is-done .cook-timer-toggle {
+  opacity: 0.35;
 }
 
 /* Wider screens: hold the step to a comfortable measure and stop the nav

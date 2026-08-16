@@ -156,6 +156,12 @@ export function openCookMode(item, { venueId } = {}) {
   };
 
   const timerTime = el("span", { className: "cook-timer-time" });
+  // `role="timer"` carries an implicit `aria-live: off`, and that is the POINT
+  // rather than an omission: a countdown inside a live region re-announces
+  // itself once a second and makes the whole dialog unusable with a screen
+  // reader on. The verb and the time still reach that reader — through the
+  // button's accessible name below, read on demand instead of shouted.
+  timerTime.setAttribute("role", "timer");
   // Four fixed label spans swapped by `hidden`, never one span whose key gets
   // rewritten — same rule as Next/Done above, and for the same reason: reo.js
   // caches an element's English on first translate(), so re-keying a live
@@ -166,19 +172,47 @@ export function openCookMode(item, { venueId } = {}) {
     resume: el("span", { "data-i18n": "cook.timerResume", textContent: "Resume", hidden: true }),
     done: el("span", { "data-i18n": "cook.timerDone", textContent: "Time\u2019s up", hidden: true }),
   };
-  const timerState = el("span", { className: "cook-timer-state" }, Object.values(timerLabels));
-  const timerBtn = el("button", { type: "button", className: "cook-timer-btn" }, [
-    timerTime,
+  // THE LABELS ARE NOW INVISIBLE, AND STILL LOAD-BEARING. The face shows an
+  // icon rather than a word (owner, 2026-08-16), but the accessible name below
+  // is still built from these spans' text, so it is translated by exactly the
+  // same path as every other string. Deleting them as "unused markup" silently
+  // reverts the timer's accessible name to English.
+  const timerState = el("span", { className: "cook-timer-state sr-only" }, Object.values(timerLabels));
+  // The glyph shows the action a tap PERFORMS, never the state the timer is in
+  // — Apple's own rule for toggle controls, and the answer to "does 'Pause'
+  // mean it IS paused, or that pressing pauses it". Drawn in CSS rather than
+  // typed: U+23F8/U+25B6 carry emoji presentation on some platforms, so a glyph
+  // arrives full-colour on one phone and monochrome on the next.
+  const timerIco = el("span", { className: "cook-timer-ico", "aria-hidden": "true" });
+  const timerBtn = el("button", { type: "button", className: "cook-timer-toggle" }, [
+    timerIco,
     timerState,
   ]);
-  const timerReset = el("button", {
-    type: "button",
-    className: "cook-timer-reset",
-    "data-i18n": "cook.timerReset",
-    textContent: "Reset",
-    hidden: true,
-  });
-  const timerRow = el("div", { className: "cook-timer", hidden: true }, [timerBtn, timerReset]);
+  // Always present, never hidden-until-relevant. Resetting an untouched timer
+  // is a harmless no-op, and the alternative has cost this dialog the same bug
+  // twice: hiding the element that has focus drops focus to <body>, outside the
+  // dialog, where the keydown listener never sees it (ADR 0039). Quiet rather
+  // than absent — muted colour and no border, so it cannot out-shout the
+  // countdown beside it.
+  const timerReset = el(
+    "button",
+    {
+      type: "button",
+      className: "cook-timer-reset",
+      "data-i18n-aria": "cook.timerReset",
+      "aria-label": "Reset timer",
+    },
+    [el("span", { "aria-hidden": "true", textContent: "↺" })]
+  );
+  // Equal fixed side columns are what actually centre the numeral; the bar
+  // underneath is the glanceable half, answering "nearly there?" from across
+  // the kitchen without reading digits.
+  const timerFill = el("div", { className: "cook-timer-fill" });
+  const timerFace = el("div", { className: "cook-timer-face" }, [timerBtn, timerTime, timerReset]);
+  const timerRow = el("div", { className: "cook-timer", hidden: true }, [
+    timerFace,
+    el("div", { className: "cook-timer-track" }, [timerFill]),
+  ]);
 
   // What this step needs, shown by default rather than hidden behind a toggle
   // (owner, 2026-08-16). It lives INSIDE the live region on purpose: stepping
@@ -343,9 +377,9 @@ export function openCookMode(item, { venueId } = {}) {
   }
 
   // The countdown's face. Re-run every second while one is running, and once on
-  // every step change. The button is the whole control — one tap starts it, one
-  // tap pauses it — with Reset appearing only once there is something to reset,
-  // so a step you have not started shows exactly one thing to press.
+  // every step change. Three fixed zones — toggle, numeral, reset — none of
+  // which ever comes or goes, so the layout under the reader's thumb is the
+  // same at 35:00 as it is at 00:00.
   function paintTimer() {
     const t = timerFor(index);
     timerRow.hidden = !t;
@@ -364,17 +398,19 @@ export function openCookMode(item, { venueId } = {}) {
       "aria-label",
       done ? timerLabels.done.textContent : `${timerLabels[which].textContent} \u2014 ${formatDuration(left)}`
     );
+    timerIco.classList.toggle("is-pause", running);
     timerRow.classList.toggle("is-running", running);
     timerRow.classList.toggle("is-done", done);
-    // Hiding the element that currently has focus drops focus to <body> —
-    // OUTSIDE the dialog, where the keydown listener never sees it, so the
-    // arrows, Home and End all go dead. cook_check caught exactly this on the
-    // Back button on 2026-08-15 and caught it again here the moment Reset
-    // learned to hide itself. Hand focus on before hiding, never after.
-    const nowHidden = left === t.total && !running;
-    if (nowHidden && document.activeElement === timerReset) timerBtn.focus();
-    timerReset.hidden = nowHidden;
-    // Same trap on the button itself: it is disabled when the bell has gone.
+    // Remaining as a proportion of the whole. Set as a plain width with no CSS
+    // transition on purpose: it steps once a second, which IS the information,
+    // so there is no decorative sweep for prefers-reduced-motion to strip.
+    timerFill.style.width = `${t.total ? (left / t.total) * 100 : 0}%`;
+    // The one focus rescue still worth keeping: the toggle is disabled once the
+    // bell has gone, and a disabled element holding focus drops it to <body> —
+    // outside the dialog, where the keydown listener never sees it, so the
+    // arrows, Home and End all go dead (ADR 0039; cook_check caught this on the
+    // Back button on 2026-08-15). Reset no longer needs the same rescue because
+    // it no longer hides — the bug class went with the vanishing control.
     if (done && document.activeElement === timerBtn) nextBtn.focus();
   }
 

@@ -298,6 +298,24 @@ const SNAP = `(() => {
       : null,
     timerRunning: q(".cook-timer") ? q(".cook-timer").classList.contains("is-running") : null,
     resetShown: shown(q(".cook-timer-reset")),
+    // The accessible name is now the ONLY place the verb is written down — the
+    // face carries an icon. If this stops saying "Pause"/"Resume"/"Start", a
+    // screen-reader user is left with a shape and a number.
+    timerAria: q(".cook-timer-toggle") ? q(".cook-timer-toggle").getAttribute("aria-label") : null,
+    // MEASURED, not reasoned about. The owner's first complaint was that the
+    // numeral is not centred, and it was true for a reason no stylesheet read
+    // would surface: the old rule centred the flex PAIR [numeral][word]. So the
+    // guard is arithmetic on two real rectangles, not a grep for a CSS
+    // property — a property can be present and still not centre anything.
+    timerOffCentre: (() => {
+      const face = q(".cook-timer-face");
+      const time = q(".cook-timer-time");
+      if (!face || !time) return null;
+      const f = face.getBoundingClientRect();
+      const t = time.getBoundingClientRect();
+      return Math.abs((t.left + t.width / 2) - (f.left + f.width / 2));
+    })(),
+    timerFill: q(".cook-timer-fill") ? parseFloat(q(".cook-timer-fill").style.width) : null,
     // Ticking off (ROADMAP 17e). stageHtml is how the tool asserts that a tick
     // does NOT mutate the live region — the strike-through is CSS, so a tick
     // must leave the stage's markup byte-identical, or a screen reader would
@@ -608,37 +626,75 @@ async function run(opts) {
         "a step that states how long it takes offers a timer, set to that long",
         before.timerShown === true &&
           before.timerTime === formatDuration(stepDuration(steps[idxTimed])) &&
-          before.timerRunning === false &&
-          before.resetShown === false,
-        `“${before.timerTime}” on “${before.counter}”, reset hidden until started`
+          before.timerRunning === false,
+        `“${before.timerTime}” on “${before.counter}”`
+      );
+      // The owner's first complaint, turned into arithmetic. Half a pixel of
+      // slack for sub-pixel layout; anything more means the numeral is being
+      // pushed off centre by something sharing its box again.
+      report.check(
+        "the countdown sits dead centre of its card, not centred-as-a-pair",
+        before.timerOffCentre !== null && before.timerOffCentre <= 0.5,
+        `numeral centre is ${before.timerOffCentre?.toFixed(2)}px off the card's`
+      );
+      // The bug this replaces: Reset used to hide until there was something to
+      // reset, and hiding a focused control drops focus to <body>, outside the
+      // dialog (ADR 0039). Asserting it is present BEFORE the timer has ever
+      // run is the assertion that stops that coming back.
+      report.check(
+        "both timer controls are present before it has ever run — neither appears on state",
+        before.resetShown === true && before.timerAria === `Start timer — ${formatDuration(stepDuration(steps[idxTimed]))}`,
+        `resetShown=${before.resetShown}, name “${before.timerAria}”`
       );
       // One tap runs it, one tap stops it — the owner's whole spec for it.
-      await click(".cook-timer-btn");
+      await click(".cook-timer-toggle");
       // Let a real second elapse before pausing. Without it the timer pauses on
       // the same tick it started, `remaining === total`, and the control is
       // correctly still pristine — which proves nothing about pause/resume.
       await sleep(1200);
       const running = await snap();
       report.check(
-        "one tap starts the countdown, and Reset appears once there is something to reset",
-        running.timerRunning === true && running.resetShown === true,
-        `running=${running.timerRunning}, label “${running.timerLabel}”`
+        "one tap starts the countdown, and the bar has come off full",
+        running.timerRunning === true && running.resetShown === true &&
+          running.timerFill !== null && running.timerFill < 100,
+        `running=${running.timerRunning}, bar at ${running.timerFill}%`
       );
-      await click(".cook-timer-btn");
+      // The face carries an icon now, so the verb lives only in the accessible
+      // name. A screen-reader user with a shape and a number and no verb is the
+      // regression this catches.
+      report.check(
+        "while running, the accessible name says what a tap will DO, not what it is",
+        /^Pause — /.test(running.timerAria || ""),
+        `name “${running.timerAria}”`
+      );
+      await click(".cook-timer-toggle");
       const paused = await snap();
       report.check(
         "a second tap pauses it, keeping the time it had reached",
         paused.timerRunning === false &&
           paused.timerTime !== formatDuration(stepDuration(steps[idxTimed])) &&
-          paused.timerLabel === "Resume",
-        `paused at ${paused.timerTime}, label “${paused.timerLabel}”`
+          paused.timerLabel === "Resume" &&
+          /^Resume — /.test(paused.timerAria || ""),
+        `paused at ${paused.timerTime}, name “${paused.timerAria}”`
       );
       await click(".cook-timer-reset");
       const reset = await snap();
       report.check(
-        "Reset puts it back to the full duration",
-        reset.timerTime === formatDuration(stepDuration(steps[idxTimed])) && reset.timerRunning === false,
-        `back to ${reset.timerTime}`
+        "Reset puts it back to the full duration, bar and all",
+        reset.timerTime === formatDuration(stepDuration(steps[idxTimed])) &&
+          reset.timerRunning === false && reset.timerFill === 100,
+        `back to ${reset.timerTime}, bar at ${reset.timerFill}%`
+      );
+      // Reset on an untouched timer is a no-op, and that is the POINT: it is
+      // what lets the control stay put instead of vanishing. Prove it is
+      // harmless rather than merely assuming it.
+      await click(".cook-timer-reset");
+      const resetTwice = await snap();
+      report.check(
+        "resetting an untouched timer is a harmless no-op, which is why it can stay put",
+        resetTwice.timerTime === formatDuration(stepDuration(steps[idxTimed])) &&
+          resetTwice.timerRunning === false && resetTwice.resetShown === true,
+        `still ${resetTwice.timerTime}, still shown`
       );
     }
 
