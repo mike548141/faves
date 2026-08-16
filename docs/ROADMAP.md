@@ -446,6 +446,7 @@ delivery app.** Clear one by bringing back the fact.
       `NEAR_BRANCH_LIMIT`), so a chain going from 5 to 9 changes how its card
       behaves — worth re-checking `branch_check.mjs` against whichever venue
       grows the most.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 
 - [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
       — **10 of the corpus's 22 branches**, measured 2026-08-16. This is now
@@ -458,6 +459,7 @@ delivery app.** Clear one by bringing back the fact.
       Both chains publish per-store hours on their own store-finder pages.
       Capturing them makes ADR 0054 real and lets `branch_check.mjs` exercise
       tier 1 on a venue that has more than one state.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 
 - [ ] **`picks` are empty on most venues** `[S][content]` — **44 of 55**
       (measured 2026-08-16). ⚠️ One of the two venues this line named was never
@@ -624,6 +626,7 @@ unclaimed.
 - [ ] 🔎 **`tools/tag_allergens.py` has two holes** `[S][tools]`, found
       2026-08-16. Missing patterns rather than design faults, and both surfaced
       the same way — a dish escaping a tag it obviously needed:
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
       - **The dairy rule matches `cheese` but not bare `cheddar`.** A dish that
         names the variety and never the word slips through, so this is very
         likely mis-tagging records **corpus-wide**, not only the one that
@@ -1533,6 +1536,7 @@ itself should do.
   "Te Aro · Malaysian"; making the matched part visibly the reason would let the
   reader judge relevance themselves, which is the honest version of ranking and
   may make 27a optional. Try this one first.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 - **Owner steer, 2026-08-16:** recorded, not scheduled — *"roadmap it, don't fix
   now"*. Nothing here is blocking; it surfaced while measuring something else.
 
@@ -2023,6 +2027,7 @@ Applied; detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   checked both render the same (the note simply omits them). Deliberately not
   built now: too few records carry the field to choose a limit from evidence,
   and inventing one would repeat the mistake ADR 0036 had to correct.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 - [ ] **Pandan's pin is a street centroid** `[XS][data]` — OSM carries no house
   number for that street address, so the stored pin is the street, not the door. Kept
   because the venue is ~15 km out, where the error cannot change a distance
@@ -2030,6 +2035,7 @@ Applied; detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 ✅ **Pandan's Press Hall hours — ruled 2026-08-15**: use the food hall's own
 hours. Applied as **Mon–Fri 11:00–15:00**, the house standard it publishes.
 Two consequences recorded rather than buried:
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 - **Weekends are the hall's silence, not a stated closure.** It publishes
   weekday hours only. They are stored as closed, which is the safe direction —
   a false "closed" hides the branch, a false "open" sends someone into town.
@@ -2049,6 +2055,7 @@ Two consequences recorded rather than buried:
 - [ ] **Reo: the confidence-note strings** `[S][reo]` — the new "Up to date…"
   copy stays English alongside the caution it shares a popover with. Added to
   the fluent-speaker review queue with the other drafts above.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 
 ---
 
@@ -2119,19 +2126,23 @@ trip that re-merged the two Cheeseburgers. Measured cost: **+12.6 KB gzipped**,
   **Not a regression** — precisely what it did before ids existed — but not
   fixed either. Order lines *were* fixed, by appending a positional slot; the
   same trick needs its own slot shape here.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 - [ ] **`temporal.js` filters `picks` by name before the resolver ever sees
   them** `[XS][js]` — `temporal.js:524-528` intersects `record.picks` against a
   `Set` of live dish *names*, so a pick written as a `dishId` is deleted at that
   gate and vanishes from the page silently. Harmless today (every pick in the
   corpus is a name) and primed for whoever first writes one as an id. One line:
   `out.picks = record.picks.filter((p) => findDish(out, p))`.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 - [ ] **Cross-record `goesWith` refs (`id#Dish`) still resolve by name only**
   `[S][js]` — the other record is not loaded, so `validate.py`'s `ALL_NAMES`
   pre-pass matches names and not ids. Widening it is a separate, larger change.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 - [ ] **`tests/share-codec.test.js` and `tests/personal-data.test.js` use
   `"sprig-and-fern"` as a synthetic venue id** `[XS][js]` — which is now a
   *retired* id. They pass (those paths don't migrate), but they read as a
   mistake to a future session. Rename the fixture.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 
 <!-- Numbered 25, not 22: two other live sessions had already taken 22, 23 and
      24 while this branch was open. The note on Theme 19 says to check
@@ -2329,6 +2340,7 @@ contain shellfish.
   filters a section out of the menu entirely when its window closes, and
   `menu.js` never reads `available` at all, so the note explaining *why*
   ("The Borough's entry in Burger Wellington") is never rendered anywhere.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 - [ ] **28e — eligibility is unstated** `[S][design]` — "Gold Card" and "12 and
   under" are rules about *who may order*, recorded only inside a heading
   string. Worth a field only if 28c lands; and note a "show me Gold Card
