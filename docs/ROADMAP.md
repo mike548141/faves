@@ -4436,6 +4436,48 @@ than reading a stored number, so the per-step minutes must actually reach the
 payload — otherwise the estimated steps stay silently untimed while every check
 stays green.
 
+### 36g — four rulings on the cook-mode checklist (owner, 2026-08-16)
+
+The checklist and read-aloud shipped under [ADR 0067]. Four follow-ups were put
+to the owner at close and answered:
+
+- ✅ **The twelve-hour tick expiry stays.** It was the building agent's own
+  number, declared as such; he ratified it. Nothing to do.
+- ✅ **Read-aloud keeps the phone's default voice at `en-NZ` — no picker.**
+  Consistent with the same day's ruling that Settings stays a drill-in rather
+  than growing. Nothing to do.
+- ✅ **Bake-only `time` values → show the estimated TOTAL instead.** Orange
+  Yoghurt Cake, Queen Cakes, Chocolate Self-Saucing, B's Brownie and Chewy
+  Cookies each state a bake time that excludes 6–15 min of prep, and the app
+  renders it as if it were the total. `data/estimates/` already holds a full
+  estimated total for each. `[S][ux]`, unblocked — and it lands with the
+  serves/yield render above, since both change the same recipe meta line.
+- [ ] 🚩 **Ticks must leave the backup export** `[S][js]` — *"if it isn't
+  restored, it shouldn't be exported."* **Ruled, not yet built**, and the
+  mechanism matters because the first analysis of it was wrong twice:
+
+  🔎 **A tick reaches the backup through the CATCH-ALL, not the key list.**
+  `faves.checklist.v1` is deliberately **not** in `SCOPED_BASE_KEYS`, so the
+  named-field path in `collectPersonalData()` never sees it — which is why one
+  report said it was absent. But `personal-data.js` then sweeps *every*
+  remaining `faves.` key into `data.other` verbatim, precisely so that
+  *"everything you put in"* stays true without that file being updated in
+  lockstep with each new store. The sweep picks the ticks up. **Both halves of
+  the contradictory report were true; they described different code paths.**
+
+  So the fix is not "remove it from a list" — it is to add the checklist to the
+  module's **`EXCLUDED`** set, the same mechanism that already keeps location
+  out and, importantly, *declares* the exclusion to the user rather than
+  silently dropping it. Note the comment guarding that set: *"an exclusion that
+  only holds while nobody moves a key is not an exclusion"* — `EXCLUDED` is
+  seeded into `known` before the sweep for exactly this reason, so the fix must
+  go there and not into an ad-hoc skip.
+
+  ⏳ **Deliberately not built at session close**: `personal-data.js` was being
+  actively changed by the sync session the same day, and the export path is the
+  wrong place to make a hurried, unguarded edit. Needs a unit test asserting a
+  tick never appears in `collectPersonalData()`'s output, proved by breaking it.
+
 ### 36e — one place to look, not two `[M][ux]`
 
 A recipe currently renders **twice**, through two code paths: expanded inside
