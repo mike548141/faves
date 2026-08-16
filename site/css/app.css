@@ -1423,6 +1423,9 @@ body:not(.menu-page) {
   align-items: center;
   justify-content: flex-end;
   gap: var(--space-1);
+  /* Below the floated thumbnail, never wrapped around it — the heart, report
+     and stepper are the row's controls and must sit on one predictable line. */
+  clear: both;
 }
 /* Your personal rating, on its own line just under the dish name (menu.js) —
    an identity mark on the dish, kept clear of the heart/Add cluster so the two
@@ -3409,14 +3412,93 @@ body.faves-view .to-top {
   gap: var(--space-1);
   margin-top: var(--space-2);
 }
+/* Dish photo — a thumbnail that floats out of the text's way, and opens
+   full-size on a tap. It shipped full-bleed and turned a menu into a gallery;
+   the row has eight jobs and the picture is one of them. Float rather than a
+   grid so the description wraps beside it and the action row clears below with
+   no change to the row's DOM. */
+.dish-photo-btn {
+  float: inline-end;
+  margin: 0 0 var(--space-2) var(--space-2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--photo-mat);
+  cursor: zoom-in;
+  line-height: 0;
+}
 .dish-photo {
   display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  width: 88px;
+  height: 88px;
+  /* contain, never cover: these are transparent cutouts trimmed to the food
+     (ADR 0053), so cropping to fill the square eats the product. */
+  object-fit: contain;
   border-radius: var(--radius);
-  margin-top: var(--space-2);
-  background: var(--surface-2);
+}
+/* The mat behind a cutout. The products were shot on white and read as
+   photographs on it; on our dark surface a transparent PNG floats in a brown
+   void. So the mat stays light in both themes — it is part of the picture, not
+   part of the page. */
+:root {
+  --photo-mat: #fff;
+}
+.dish-photo-btn:focus-visible {
+  outline: 3px solid var(--focus, var(--accent));
+  outline-offset: 2px;
+}
+
+/* Full-size viewer. Built by menu.js on first open, so a reader who never taps
+   a photo pays nothing for it. */
+.photo-lightbox {
+  width: min(96vw, 720px);
+  max-height: 90dvh;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--photo-mat);
+  overflow: hidden;
+}
+.photo-lightbox::backdrop {
+  background: rgb(0 0 0 / 0.72);
+}
+.photo-full {
+  display: block;
+  width: 100%;
+  max-height: 90dvh;
+  object-fit: contain;
+  cursor: zoom-out;
+}
+.photo-close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 50%;
+  /* Its own dark disc: the mat is white, so the page's ink colour would vanish
+     against it in light mode and shout in dark. */
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+/* The dish photos are transparent cutouts on purpose (ADR 0053) — one image set
+   serves both themes because the subject sits straight on the card's own
+   surface. In dark mode that backfires for a dark subject: the six hot McCafé
+   drinks are all the same near-black closed cup, and measured at 390 px its body
+   scored 1.18:1 against --surface-2 — the silhouette was invisible, only the
+   white rim and the wordmark read. Lifting the tile a quarter of the way toward
+   the muted foreground takes that to 1.93:1 while staying a warm dark panel, not
+   a light box: the fix must not undo ADR 0053 by putting a white rectangle
+   behind forty photos that do not need one. Light mode is untouched — a dark
+   subject on a light card was never the problem. */
+@media (prefers-color-scheme: dark) {
+  .dish-photo {
+    background: color-mix(in srgb, var(--ink-soft) 25%, var(--surface-2));
+  }
 }
 
 /* "Goes well with" pairings — deep-link chips to other dishes. */

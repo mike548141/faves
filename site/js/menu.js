@@ -27,6 +27,7 @@ import {
   zoneLabel,
 } from "./place.js";
 import { slug } from "./slug.js";
+import { wireDialog } from "./dialog.js";
 import { dishId, findDish } from "./dish-id.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { dishAddOns } from "./addons-ui.js";
@@ -844,7 +845,46 @@ function pairingLinks(refs, r) {
   return wrap;
 }
 
+// The full-size viewer, built once on first use and reused. Not in the HTML of
+// either page that renders dishes: a lightbox nobody opens should cost nothing,
+// and building it here keeps restaurant.html and recipe.html from having to
+// carry the same markup twice.
+let lightbox = null;
+function openPhoto(src, alt) {
+  if (!lightbox) {
+    const img = el("img", { className: "photo-full", alt: "" });
+    const close = el("button", {
+      type: "button",
+      className: "photo-close",
+      textContent: "✕",
+      "aria-label": "Close",
+    });
+    lightbox = el("dialog", { className: "photo-lightbox" }, [close, img]);
+    lightbox._img = img;
+    document.body.append(lightbox);
+    wireDialog(lightbox, { closeBtn: close });
+    // The picture is the whole content, so a tap anywhere on it closes too —
+    // the gesture every phone photo viewer already trained the reader to use.
+    img.addEventListener("click", () => lightbox.close());
+  }
+  lightbox._img.src = src;
+  lightbox._img.alt = alt || "";
+  lightbox.showModal();
+}
+
 // Lazy-loaded, layout-stable dish photo (only when the item has one).
+//
+// A THUMBNAIL, not a hero. Shipped 2026-08-16 full-bleed at 4/3 and the owner
+// hit the obvious problem within the hour: one dish filled a phone screen, so a
+// menu became a photo gallery you had to scroll past to read. The row's job is
+// name, description, tags, rating, heart, report and the order stepper — the
+// photo is one of eight things competing for it, and the only one that had been
+// given the whole width. It floats, so the text wraps beside it and the actions
+// clear underneath, and it opens full-size on a tap for the times you do want
+// to look properly.
+//
+// `object-fit: contain`, not `cover`: these are transparent cutouts trimmed to
+// the food (ADR 0053), so cropping to fill a square eats the product.
 function dishPhoto(item) {
   if (!item.image) return null;
   const img = el("img", {
@@ -854,6 +894,12 @@ function dishPhoto(item) {
     loading: "lazy",
     decoding: "async",
   });
+  const button = el("button", {
+    type: "button",
+    className: "dish-photo-btn",
+    "aria-label": `See a bigger photo of ${item.name}`,
+  }, [img]);
+  button.addEventListener("click", () => openPhoto(item.image, item.alt || ""));
   // A photo that fails to load leaves a broken-image icon and the alt text
   // sprawling inside a 269 px empty box — measurably uglier than no photo at
   // all. And this is not the rare case: dish photos are runtime-cached, never
@@ -861,8 +907,10 @@ function dishPhoto(item) {
   // *because* they lazy-load), so the first offline visit to a menu hits it on
   // every row. Removing the element degrades to exactly the layout every menu
   // had before photos existed, which is a good layout.
-  img.addEventListener("error", () => img.remove(), { once: true });
-  return img;
+  // Remove the BUTTON, not just the image: an empty tappable box that opens a
+  // lightbox onto a picture that failed to load is worse than no photo.
+  img.addEventListener("error", () => button.remove(), { once: true });
+  return button;
 }
 
 function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, section = null) {
