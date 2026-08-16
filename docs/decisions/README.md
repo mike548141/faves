@@ -657,6 +657,19 @@ deliberation those compact docs omit.
   directory kept while held, removed once unheld). 🛑 `SIGKILL` still orphans
   both and always will. One more face of [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md),
   whose cure generalises: **make the all-clear carry a denominator.**
+- [0081](0081-a-serving-window-annotates-it-never-filters.md) — **a section's
+  serving window annotates; it never filters.** `served` on a section, in exactly
+  the shape of a venue's `hours`, so `hours.js`'s week reasoning applies
+  unchanged and there is one engine rather than two (`segments()` exported, not
+  copied). One extension: a null `open` means "from opening", because *"served
+  till 2pm"* states no start and writing one would invent evidence. 🔑 **The
+  decision that matters is that it does NOT filter**, unlike `available` — three
+  reasons, and the third settles it: `#section-<id>` is a real anchor
+  ([0058](0058-a-section-has-an-id-and-its-heading-is-not-it.md)), so a filtered
+  section makes a link someone was *sent* work at 1pm and fail at 1am, which is
+  the direct negation of ROADMAP Theme 34. Also corrects 28c: it claimed six
+  sections bury a window in the section *name*; **zero do** — ADR 0057 moved them
+  all, eleven lines above where the same file marks that work done.
 - [0080](0080-a-venue-has-menus-plural.md) — **a venue has *menus*, plural: the
   shape is recorded and the build is deliberately held.** Discharges the owner's
   ruling on ROADMAP 30a — no venue in the corpus has two menus, so building
