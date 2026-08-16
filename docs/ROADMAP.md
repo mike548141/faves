@@ -2946,8 +2946,9 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
 >   refactor breaks one line loudly.
 > Detail in the tool's own header and → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-- [ ] 🚩 **A killed browser check LEAKS ITS CHROME, and the orphans then break
-      every later run** `[S][js]` — the root cause behind the "flakiness" this
+- [~] 🚩 **A killed browser check LEAKS ITS CHROME, and the orphans then break
+      every later run** `[S][js]` **CLAIMED 2026-08-16 22:38 UTC
+      (wt: faves-hygiene)** — the root cause behind the "flakiness" this
       item was first filed under. **Found 2026-08-16, and only after a confident
       wrong answer.**
       🔎 **The mechanism.** `cook_check.mjs` (and by construction every tool on
@@ -3089,8 +3090,8 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
       (`boot_check` alone is seconds and catches the worst class); or leaving
       them manual and making the *list* impossible to skip. ⚑ Owner's call on
       whether CI minutes get spent here.
-      ✅ **RULED 2026-08-16: the FAST SUBSET, per push. `[S][tools]` OPEN AND
-      UNCLAIMED — next session takes it.** Wire **`boot_check.mjs` into
+      ✅ **RULED 2026-08-16: the FAST SUBSET, per push. `[S][tools]`
+      CLAIMED 2026-08-16 22:38 UTC (wt: faves-hygiene).** Wire **`boot_check.mjs` into
       `.github/workflows/ci.yml` on every push**; the other seven stay manual on
       CLAUDE.md's list. The full-CI and nightly options were both put to him with
       their costs and both declined.
@@ -3138,8 +3139,9 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
 >   *file ownership* does not make a shared worktree safe, because `git add -A`
 >   is not file-scoped. That cost 101 lines of misattributed work today.
 
-- [ ] 🚩 **`linkscan` is blind to reference-style links, and it is an ENFORCED
-      floor guard** `[S][docs]` ⏳ **owed upstream to atelier; nothing to fix
+- [~] 🚩 **`linkscan` is blind to reference-style links, and it is an ENFORCED
+      floor guard** `[S][docs]` **CLAIMED 2026-08-16 22:38 UTC
+      (wt: faves-hygiene)** ⏳ **owed upstream to atelier; nothing to fix
       locally.** Found 2026-08-16 when `pathscan` (warn-only) caught a broken ADR
       link in a commit that `linkscan` (enforced) had just passed.
       🔎 **Isolated with a two-line probe, not inferred.** A file containing both
@@ -3239,7 +3241,8 @@ exempting `docs/reviews/` and `CHANGELOG.md`; both apply, both kept.
 The residue is **302 advisory findings, all in live rewritable prose**, none of
 them the unfixable class. That is a scanner whose output can still be read.
 
-- [ ] 🚩 **A passing browser check does not say which tree it ran in** `[S][js]`
+- [~] 🚩 **A passing browser check does not say which tree it ran in** `[S][js]`
+      **CLAIMED 2026-08-16 22:38 UTC (wt: faves-hygiene)**
       — the mechanism [ADR 0072] calls for and does not build. A session's shell
       cwd drifted out of its worktree via one compound command containing a `cd`;
       its edits used absolute paths and were safe, but its **verification** ran
@@ -3268,7 +3271,8 @@ them the unfixable class. That is a scanner whose output can still be read.
       which is contention, not a logic fault. So this needs a decision about
       which subset gates a merge and which run nightly, not just a workflow edit.
 
-- [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
+- [~] **Our inlined floor is a stamped copy nothing watches** `[S][docs]`
+  **CLAIMED 2026-08-16 22:38 UTC (wt: faves-hygiene)** —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
   doctrine block is the sanctioned *stamped copy* shape (it names atelier,
   carries a pin, and compresses without contradicting), but it is stamped in
