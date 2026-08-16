@@ -39,6 +39,7 @@ import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
 import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
 import { dishNeeds, priceUnknown } from "./needs.js";
+import { filterHref } from "./filters.js";
 import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
 import { wireSearchClear } from "./search-clear.js";
@@ -318,6 +319,39 @@ function orderCard(r) {
   ]);
 }
 
+/**
+ * The subheading — "Asian · Malaysian · Noodles — Johnsonville" — as links.
+ * Each facet is a question the reader is already half-asking ("what else is
+ * Malaysian?", "what else is out this way?"), and the answer is a screen we
+ * already ship: the home list filtered to it. So each one goes back there
+ * carrying its own filter rather than sitting on the page as a dead label.
+ *
+ * Returned as nodes-and-strings for `el`, because the separators (" · ", " — ")
+ * are punctuation between the links, not part of any of them — putting them
+ * inside would make them clickable and read them out as part of the link name.
+ */
+function subFacets(r) {
+  const link = (facet, value, purpose) =>
+    el("a", {
+      className: "menu-sub-link",
+      href: filterHref(facet, value),
+      // Link text alone ("Malaysian") doesn't say what following it does; the
+      // label spells out the destination for anyone listing links out of context.
+      "aria-label": purpose,
+      textContent: value,
+    });
+  const parts = [];
+  for (const c of r.cuisine || []) {
+    if (parts.length) parts.push(" · ");
+    parts.push(link("cuisine", c, `${c} — see every ${c} place`));
+  }
+  if (r.area) {
+    if (parts.length) parts.push(" — ");
+    parts.push(link("area", r.area, `${r.area} — see every place in ${r.area}`));
+  }
+  return parts;
+}
+
 function renderHeader(r) {
   const isRecipes = r.kind === "recipes";
   const meta = isRecipes
@@ -359,7 +393,13 @@ function renderHeader(r) {
     titleGroup.append(caveatBtn, caveatNote);
   }
 
-  const bits = [titleRow, el("p", { className: "menu-sub", textContent: meta })];
+  // The recipe collection's subheading is a sentence, not facets — nothing in
+  // it is a filter, so it stays plain text. `meta` (the same line as a string)
+  // still feeds the heart's caption, which is stored, not rendered.
+  const sub = isRecipes
+    ? el("p", { className: "menu-sub", textContent: meta })
+    : el("p", { className: "menu-sub" }, subFacets(r));
+  const bits = [titleRow, sub];
 
   // A closure gets a banner, not a disclosure. The "needs a refresh" caveat
   // above can hide behind an ⓘ because a stale price costs a dollar; a closed

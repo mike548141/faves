@@ -14,6 +14,8 @@ import {
   deriveFacets,
   applyFilters,
   DEFAULT_FILTERS,
+  filterHref,
+  filtersFromQuery,
 } from "../site/js/filters.js";
 
 // The ranker reads the clock per venue, in that venue's own zone (ADR 0043).
@@ -162,4 +164,69 @@ test("cheap: keeps only $ venues; unpriced/thin/recipes drop out", () => {
 test("cheap off (the default) keeps every venue regardless of price", () => {
   const shown = applyFilters(CHEAP_FIXTURE, DEFAULT_FILTERS);
   assert.equal(shown.length, 4);
+});
+
+// Facet links: a menu page's subheading routes back into this list carrying a
+// filter (`index.html?cuisine=Malaysian`). menu.js writes those URLs and app.js
+// reads them, so both ends are tested here against the one pair of helpers.
+const FACETS = { areas: ["Johnsonville", "Te Aro"], cuisines: ["Malaysian", "Thai"] };
+
+test("filterHref points at the home list with the facet as a query param", () => {
+  assert.equal(filterHref("cuisine", "Malaysian"), "index.html?cuisine=Malaysian");
+  assert.equal(filterHref("area", "Te Aro"), "index.html?area=Te%20Aro");
+});
+
+test("filterHref escapes values that would otherwise break the URL", () => {
+  // A cuisine with an ampersand ("Fish & chips") would truncate the query.
+  assert.equal(filterHref("cuisine", "Fish & chips"), "index.html?cuisine=Fish%20%26%20chips");
+});
+
+test("filtersFromQuery reads a known area and cuisine back out", () => {
+  const got = filtersFromQuery("?cuisine=Malaysian&area=Johnsonville", FACETS);
+  assert.deepEqual(got, { area: "Johnsonville", cuisine: "Malaysian" });
+});
+
+test("filtersFromQuery round-trips what filterHref wrote, escaping included", () => {
+  const href = filterHref("area", "Te Aro");
+  const got = filtersFromQuery(href.slice(href.indexOf("?")), FACETS);
+  assert.equal(got.area, "Te Aro");
+});
+
+test("filtersFromQuery drops a value the data doesn't have", () => {
+  // The trap this exists for: a <select> with no matching <option> falls back
+  // to "All cuisines" while the state filters on the unknown value — a control
+  // that says one thing over a list doing another. Unknown must mean "all".
+  assert.deepEqual(filtersFromQuery("?cuisine=Klingon&area=Mars", FACETS), {
+    area: "all",
+    cuisine: "all",
+  });
+});
+
+test("filtersFromQuery is case- and whitespace-exact, not fuzzy", () => {
+  assert.equal(filtersFromQuery("?cuisine=malaysian", FACETS).cuisine, "all");
+});
+
+test("filtersFromQuery: no query, empty query, or foreign params → defaults", () => {
+  for (const q of ["", "?", "?utm_source=x", undefined]) {
+    assert.deepEqual(filtersFromQuery(q, FACETS), { area: "all", cuisine: "all" });
+  }
+});
+
+test("filtersFromQuery survives facets with no areas or cuisines", () => {
+  assert.deepEqual(filtersFromQuery("?area=Johnsonville", {}), {
+    area: "all",
+    cuisine: "all",
+  });
+});
+
+test("a filterHref value always filters to venues that actually carry it", () => {
+  // End to end over the real fixture: link built from a venue's own facet →
+  // parsed → applied → that venue is in the result.
+  const kk = FIXTURE.find((r) => r.id === "kk");
+  const facets = deriveFacets(FIXTURE);
+  const href = filterHref("cuisine", kk.cuisine[0]);
+  const parsed = filtersFromQuery(href.slice(href.indexOf("?")), facets);
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, ...parsed });
+  assert.ok(shown.some((r) => r.id === "kk"));
+  assert.ok(shown.every((r) => r.cuisine.includes("Malaysian")));
 });

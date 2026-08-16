@@ -3,7 +3,12 @@
 // stays on screen untouched.
 
 import { loadRestaurants } from "./data.js";
-import { deriveFacets, applyFilters, DEFAULT_FILTERS } from "./filters.js";
+import {
+  deriveFacets,
+  applyFilters,
+  DEFAULT_FILTERS,
+  filtersFromQuery,
+} from "./filters.js";
 import { formatDriveTime, estimateDriveMinutes } from "./distance.js";
 import { formatDistance } from "./units.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
@@ -321,7 +326,31 @@ function init(restaurants) {
   // origin holds the user's {lat, lng} once "Near me" (or "Along a route") is
   // on; null otherwise. dest holds the {lat, lng, label} destination once a
   // route is chosen; origin + dest together switch the sort to least-detour.
-  const state = { ...DEFAULT_FILTERS, origin: null, dest: null };
+  // A menu page's subheading links its cuisines and area back here as
+  // `?cuisine=…` / `?area=…` (filters.js owns the names, and drops any value
+  // the data doesn't have). The controls are set from it too, so the list and
+  // the dropdown above it never disagree about why it's short.
+  const fromUrl = filtersFromQuery(location.search, { areas, cuisines });
+  const state = { ...DEFAULT_FILTERS, ...fromUrl, origin: null, dest: null };
+  for (const [sel, value] of [[areaSel, state.area], [cuisineSel, state.cuisine]]) {
+    sel.value = value;
+    sel.dataset.active = value;
+  }
+
+  // Keep the URL honest once the reader starts changing those dropdowns: a
+  // stale `?cuisine=Malaysian` left in the bar would come back on reload and
+  // quietly re-filter a list they had since widened. Replace, don't push —
+  // this is the same screen, and Back should return to the menu page they
+  // arrived from, not step through every dropdown they tried.
+  function syncQuery() {
+    const params = new URLSearchParams(location.search);
+    for (const [key, value] of [["area", state.area], ["cuisine", state.cuisine]]) {
+      if (value === "all") params.delete(key);
+      else params.set(key, value);
+    }
+    const q = params.toString();
+    history.replaceState(null, "", location.pathname + (q ? `?${q}` : "") + location.hash);
+  }
 
   // Venues you've hearted, or that hold a dish you've hearted — a favourite
   // dish lifts its whole venue. Flattened to venue ids for the ranker.
@@ -378,11 +407,13 @@ function init(restaurants) {
   areaSel.addEventListener("change", () => {
     state.area = areaSel.value;
     areaSel.dataset.active = areaSel.value;
+    syncQuery();
     render();
   });
   cuisineSel.addEventListener("change", () => {
     state.cuisine = cuisineSel.value;
     cuisineSel.dataset.active = cuisineSel.value;
+    syncQuery();
     render();
   });
 
