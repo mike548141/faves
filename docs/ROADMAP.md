@@ -4471,9 +4471,24 @@ What *is* honest, and is the recommendation:
 ### 36d — the timer's alarm ✅ RULED 2026-08-16
 
 **CLAIMED 2026-08-16 13:59 UTC (wt: faves-cook)** — the fresh session it was
-held for. File-disjoint from the three live peers by design: it lives in
-`cook.js`/`cook-ui.js`/a new `alarm.js`/`sw.js`, none of which 37c/d/e/j/l/m
-(wt: faves-recipe), 37g (wt: faves-ranking) or 37n (wt: faves-allergens) touch.
+held for. It lives in `cook.js`/`cook-ui.js`/a new `alarm.js`/`sw.js`.
+
+⚠️ **This claim originally asserted file-disjointness from the live peers, and
+that sentence was false within the hour.** It read *"none of which 37c/d/e/j/l/m
+(wt: faves-recipe), 37g (wt: faves-ranking) or 37n (wt: faves-allergens)
+touch."* Then [ADR 0070] landed for 37l and pulled **`cook-ui.js`** into its
+blast radius — one statement at ~line 116, where the ingredient array becomes a
+call to a new `ingredients.js`. Corrected in place rather than quietly, because
+a claim that states disjointness is precisely what the next session trusts
+*instead of* re-checking. 🔑 **Disjointness is a measurement with a timestamp,
+not a property of a claim** — the roadmap already says one level up that 36a and
+37l are *"different roadmap items and the same edit"*, and this claim made the
+same mistake about itself while citing it. Two sessions each holding a correct
+map of their own files still had a collision neither could see; what found it
+was a third session noticing they had both answered the same broadcast.
+**Settled with faves-recipe:** `cook.js` is faves-cook's entirely; `cook-ui.js`
+is faves-cook's outright *except* that one statement and its import, which
+faves-recipe lands first so this session rebases onto a settled file.
 
 Owner ruled the shape in full, going further than the recommendation:
 
