@@ -383,8 +383,20 @@ delivery app.** Clear one by bringing back the fact.
 - [~] **Menus still owed on six venues — and where each one lives**
       `[M][content]`. Researched 2026-08-16 and written down here so a fresh
       session can start rather than repeat it.
-      **CLAIMED 2026-08-16 12:14 UTC (wt: faves-menu-18)** — the fetch of the 18
-      first-party-fetchable venues, under the owner ruling below.
+      **CLAIMED 2026-08-16 14:10 UTC (wt: faves-menus)** — the remaining 14,
+      under the owner ruling below.
+      🔎 **The previous claim was released as ORPHANED, on evidence, not
+      impatience.** It read `CLAIMED 2026-08-16 12:14 UTC (wt: faves-menu-18)`.
+      Three independent facts say that session closed rather than paused:
+      `/Users/mike/worktrees/faves-menu-18` does not exist, `git branch -a`
+      carries no `menu-18` ref (local **or** remote), and its work is merged and
+      written up — the `SESSIONS.md` tail is its close record, naming the four
+      it landed and what it left. A claim outlives the session that wrote it,
+      so an orphaned one blocks the queue permanently unless something releases
+      it. 🔑 **The release test, for reuse: no worktree AND no branch AND a
+      close record.** Any one alone proves nothing — a live session between
+      commits has a clean tree, and a worktree can be recreated. Never release
+      a claim on elapsed time.
       ✅ **4 of 18 done 2026-08-16: the Sprig + Fern taverns** — Petone 10,
       Berhampore 19, Thorndon 20, Little Sprig Seatoun 16 = **65 dishes** where
       there were none. Confirmed they are four separate kitchens: four menus
@@ -1674,7 +1686,9 @@ wrong.
   Model it on `tools/tag_allergens.py` (ADR 0024): a re-runnable script plus a
   `validate.py` warning, because a hand sweep across 31 venues is exactly how
   the allergen inconsistency got created in the first place.
-- [ ] **14c — Customise / omit** `[M][design]` — "no tomato" is a *removal*, and
+- [~] **14c — Customise / omit** `[M][design]` — **CLAIMED 2026-08-16 14:10 UTC
+  (wt: faves-menus)**, building the recommended half (the note).
+  "no tomato" is a *removal*, and
   we have no ingredient lists for restaurant dishes (only Cook-at-Home recipes
   carry ingredients), so there is nothing structured to remove **from**. Two
   honest options: a **free-text note per order line** (works everywhere, ships
