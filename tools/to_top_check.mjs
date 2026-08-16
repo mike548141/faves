@@ -122,6 +122,22 @@ async function run(opts) {
     const { sessionId } = await cdp.send("Target.attachToTarget", { targetId, flatten: true });
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
+    // ISOLATION, not a workaround: ADR 0082 gives the home screen a location
+    // dialog that opens ~900 ms after the list renders and, being a real
+    // `showModal()`, makes every control outside it inert and pulls focus. This
+    // check is about the back-to-top button, so an unrelated modal landing mid-run
+    // is a variable to remove, exactly as a stale service worker is. Seeding the
+    // consent flag BEFORE any page script runs is the same answer the reader
+    // gets from the dialog's own "don't ask again" tickbox — a supported state,
+    // not a hack. Without it this check failed with "blocked by DIALOG".
+    await cdp.send(
+      "Page.addScriptToEvaluateOnNewDocument",
+      {
+        source:
+          'try { localStorage.setItem("faves.geo.consent.v1", JSON.stringify({ suppressed: true, declined: true })); } catch {}',
+      },
+      sessionId
+    );
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
 
     // Two screens, because the same button floats over both and the damage

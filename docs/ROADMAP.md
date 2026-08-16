@@ -129,6 +129,24 @@ edge proxy) revisit against that precedent — each still its own ADR.
 
 ## Theme 2 — Location & maps
 
+> ✅ **Shipped 2026-08-17 — the location ask explains itself** ([ADR 0082],
+> superseding the surface half of [ADR 0069] the same day). The owner asked for
+> an explained dialog stating that location never leaves the device, a "don't
+> ask me about this again" tickbox binding **both** the dialog and a follow-up
+> banner, and the **removal of the "Use my location" pill**. The list now loads
+> and sorts as well as it can without location *first*, and the ask follows —
+> his ruling: *"load the full page so they can see everything … then ask for
+> location data sharing so they can see why its needed."*
+> 🔑 **Two findings worth carrying.** A modal opening 900 ms in makes the whole
+> page inert and steals focus — measured, when it broke `to_top_check` and
+> `filter_row_check` — so the dialog now yields to the banner for anyone already
+> scrolling or tapping. And **Settings → Location became load-bearing** rather
+> than a convenience: with the pill gone, without it the tickbox is a trapdoor.
+> Guarded by `tools/geo_check.mjs`, the eighth browser check.
+> ⚑ **Seven English-only te reo keys are owed** (`docs/reo-review-queue.md`);
+> `geo.private` is flagged there as the one that must not be approximately
+> translated, being a privacy claim rather than a label.
+
 ✅ **Shipped 2026-07-08** — availability + favourite ranking (`ranking.js`) and
 its tunable distance dials; schema coordinates, native-maps handoff (ADR 0005),
 and the "📍 Near me" distance-sorted list. A real tile-map view was ruled out on

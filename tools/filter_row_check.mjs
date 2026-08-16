@@ -96,9 +96,9 @@ const STATE = `(() => {
     clearWithControls: !!controls?.contains(clear),
     clearPresent: !!clear && !!clear.offsetParent === !!controls?.offsetParent,
     cuisineReach: reach("filter-cuisine"),
-    // #geo-ask (ADR 0069) starts hidden — the harness forces it visible
+    // #geo-banner (ADR 0082) starts hidden — the harness forces it visible
     // before reading this, the same way it forces the sheet open above.
-    geoAskReach: reach("geo-ask"),
+    geoAskReach: reach("geo-banner-allow"),
     // Whole-document overflow, not #filter-controls' own — a control that
     // renders past the edge of the page is a horizontal scrollbar the phone
     // shows and the desktop CSS never anticipated (to_top_check.mjs uses the
@@ -162,6 +162,22 @@ async function run(opts) {
     const { sessionId } = await cdp.send("Target.attachToTarget", { targetId, flatten: true });
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
+    // ISOLATION, not a workaround: ADR 0082 gives the home screen a location
+    // dialog that opens ~900 ms after the list renders and, being a real
+    // `showModal()`, makes every control outside it inert and pulls focus. This
+    // check is about the filter row, so an unrelated modal landing mid-run
+    // is a variable to remove, exactly as a stale service worker is. Seeding the
+    // consent flag BEFORE any page script runs is the same answer the reader
+    // gets from the dialog's own "don't ask again" tickbox — a supported state,
+    // not a hack. Without it this check failed with "blocked by DIALOG".
+    await cdp.send(
+      "Page.addScriptToEvaluateOnNewDocument",
+      {
+        source:
+          'try { localStorage.setItem("faves.geo.consent.v1", JSON.stringify({ suppressed: true, declined: true })); } catch {}',
+      },
+      sessionId
+    );
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
 
     const size = async (w) => {
@@ -340,25 +356,34 @@ async function run(opts) {
     );
 
     // --- 0069: the location ask must not overlay anything either. -----------
-    // #geo-ask stays `hidden` until app.js has read
+    // #geo-banner stays `hidden` until app.js has read
     // navigator.permissions.query, so every check above never sees it. Forced
     // visible here to ask the same elementFromPoint question the "Along a
     // route" bug above proved was necessary: a control can pass a visibility
     // check — non-zero box, on screen — while something else still owns the
     // pixels a tap would land on. Checked at both widths named in CLAUDE.md's
-    // mobile-first rule, because .geo-row wraps at 390 px (button and status
-    // line stack) in a way it never needs to at 1280 px.
-    await driver.evalPage(`document.getElementById("geo-ask").hidden = false`);
+    // mobile-first rule, because .geo-banner wraps at 390 px (text and actions
+    // stack) in a way it never needs to at 1280 px.
+    //
+    // RETARGETED 2026-08-17: this used to drive `#geo-ask`, the location pill,
+    // which the owner removed in ADR 0082. The pill's disappearance took the
+    // assertion's subject with it and the check CRASHED on a null — worth
+    // noting as the failure mode, because it is the loud one: a check that
+    // silently kept passing against an element that no longer existed would
+    // have been far worse. The question it asks is unchanged and still live —
+    // can something above own the pixels a tap would land on — and the banner
+    // is now the control in that region it applies to.
+    await driver.evalPage(`document.getElementById("geo-banner").hidden = false`);
     for (const w of [390, 1280]) {
       await size(w);
       s = await state();
       report.check(
-        `${w}px: #geo-ask sits on top of the page, not covered by anything above it`,
+        `${w}px: #geo-banner sits on top of the page, not covered by anything above it`,
         s.geoAskReach === "reachable",
-        `#geo-ask: ${s.geoAskReach}`
+        `#geo-banner-allow: ${s.geoAskReach}`
       );
       report.check(
-        `${w}px: unhiding #geo-ask adds no horizontal scroll to the page`,
+        `${w}px: unhiding #geo-banner adds no horizontal scroll to the page`,
         s.docW <= s.innerW,
         `document ${s.docW}px wide in a ${s.innerW}px viewport`
       );

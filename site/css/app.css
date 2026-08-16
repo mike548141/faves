@@ -331,27 +331,157 @@ main {
 .list-toggle:active {
   transform: scale(0.97);
 }
-/* The location ask and its answer (ADR 0069). One row so the button and the
-   sentence explaining it are read together; wraps rather than truncates,
-   because the blocked message is a whole instruction and a clipped instruction
-   is no instruction. `align-items: center` keeps the sentence optically on the
-   button's line at 390 px, where it usually fits beside it. */
+/* What came of the location ask (ADR 0082). The pill that used to sit here is
+   gone — the owner removed it — so this row now carries only the status line.
+   It still wraps rather than truncates, because the blocked message is a whole
+   instruction and a clipped instruction is no instruction. */
 .geo-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
 }
-/* The row is 0 px when neither child is showing — an empty flex box with a gap
+/* The row is 0 px when its child is not showing — an empty flex box with a gap
    still reserves nothing, but the margin below would. So the margin lives on
-   the children, which are `hidden` until they have something to say. */
-.geo-ask:not([hidden]),
+   the child, which is `hidden` until it has something to say. */
 .geo-status:not([hidden]) {
   margin-bottom: var(--space-3);
 }
 .geo-status {
   color: var(--ink-soft);
   font-size: var(--step-sub);
+}
+
+/* ── The location ask: dialog and banner (ADR 0082) ──────────────────────────
+   Shared button look first. These are NOT `.list-toggle`s: a toggle reads as a
+   filter you can flip back off, and neither of these is that — one raises a
+   browser permission prompt that cannot be un-raised. Different job, different
+   look, so nobody learns the wrong affordance. */
+.geo-btn {
+  min-height: 44px;
+  padding: 0.5em 1.1em;
+  border-radius: var(--radius-chip);
+  border: 1px solid transparent;
+  font-size: var(--step-body);
+  font-weight: 600;
+  cursor: pointer;
+}
+.geo-btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.geo-btn-quiet {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink-soft);
+}
+.geo-btn:active {
+  transform: scale(0.98);
+}
+
+/* The banner. Deliberately NOT `position: fixed`: Theme 29 measured a fixed
+   control owning the tap on a dish price at 96 of 547 scroll positions, and a
+   banner asking for a permission is the last thing that should steal a tap.
+   It scrolls away with the page like any other content. */
+.geo-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--info-bg);
+  color: var(--info-ink);
+}
+.geo-banner-text {
+  margin: 0;
+  font-size: var(--step-sub);
+  flex: 1 1 14rem;
+}
+.geo-banner-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+/* The banner's buttons sit on --info-bg, where the quiet button's --line border
+   nearly vanishes. Give it the same ink as the text it sits beside. */
+.geo-banner .geo-btn-quiet {
+  border-color: currentColor;
+  color: inherit;
+}
+
+/* The dialog. Centred rather than bottom-sheeted: the order and filter sheets
+   slide up from the bottom because they are things you DO, repeatedly. This is
+   a question asked once, and centring it says so — it is not part of the
+   browsing furniture. */
+.geo-dialog {
+  border: none;
+  border-radius: var(--radius);
+  padding: 0;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-lift);
+  max-width: min(26rem, calc(100vw - 2 * var(--space-3)));
+  width: 100%;
+}
+.geo-dialog::backdrop {
+  background: rgba(43, 36, 32, 0.45);
+}
+.geo-dialog-inner {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.geo-dialog-title {
+  margin: 0;
+  font-size: var(--step-name);
+}
+.geo-dialog-body {
+  margin: 0;
+  color: var(--ink-soft);
+}
+/* The privacy promise is the reason someone says yes, so it is given its own
+   block rather than being a clause in the paragraph above. Same treatment the
+   menu caveats get: stated plainly, visually separated, not shouted. */
+.geo-dialog-promise {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: var(--step-sub);
+}
+/* 44 px of tappable label, not just the 16 px box — the checkbox is the control
+   that carries a promise, and it must not be the fiddliest thing on screen. */
+.geo-dialog-check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  font-size: var(--step-sub);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.geo-dialog-check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  flex: none;
+}
+/* Primary last on the row, and both full-width when they cannot sit side by
+   side, so neither is a small target at 390 px. */
+.geo-dialog-actions {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  gap: var(--space-2);
+}
+.geo-dialog-actions .geo-btn {
+  flex: 1 1 9rem;
 }
 .tz-note {
   color: var(--ink-soft);

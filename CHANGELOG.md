@@ -21,6 +21,16 @@ content freshness separately from this file.
   sent you to a section has to still work whatever time you open it. Where a
   menu says only *"served till 2pm"* and never states a start, Faves says
   exactly that rather than inventing an opening time it was never told.
+- **Faves now explains why it wants your location, and can be told to stop
+  asking.** The home list loads and sorts as well as it can without it first —
+  then a short message says what location buys (nearest places first, the
+  closest branch of a chain) and states plainly that **your location never
+  leaves your device**: Faves has no accounts and no servers to send it to.
+  You can carry on without sharing it. Tick **"Don't ask me about this again"**
+  and Faves will not raise it again on this device — not the message, not the
+  banner, not ever — and you can still turn location on yourself whenever you
+  like from **Settings → Location**, which also tells you when your *browser* is
+  the thing blocking it and where to undo that.
 - **Cooking for more (or fewer) — scale a recipe.** A recipe page now offers
   ½× · 1× · 2× · 3× above the ingredients, and the amounts follow: "2 cups
   milk" becomes "4 cups milk", "1 cup sugar" halves to "½ cup sugar" — in
