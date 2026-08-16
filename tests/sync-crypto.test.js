@@ -167,3 +167,18 @@ test("the envelope is version byte, then IV, then ciphertext", async () => {
   assert.equal(sealed[0], BLOB_FORMAT);
   assert.ok(sealed.length > 13, "there must be a ciphertext after the header");
 });
+
+// --- the seam between the two halves -------------------------------------
+
+test("the blob id the client derives is one the Worker will accept", async () => {
+  // The client and the Worker agree on the blobId shape in two places that
+  // cannot see each other — `deriveSyncKeys()` here and `BLOB_ID_RE` over in
+  // worker/. Nothing else in either test suite crosses that line, so a change
+  // to either one would ship a client that every request 400s against, and
+  // both suites would stay green. This is the only assertion that fails first.
+  const { isValidBlobId } = await import("../worker/sync-worker.js");
+  for (const code of ["K7F29DMX4QRA", "0000000000000", "ZZZZZZZZZZZZZ"]) {
+    const { blobId } = await deriveSyncKeys(code);
+    assert.ok(isValidBlobId(blobId), `the Worker would reject the id derived from ${code}`);
+  }
+});
