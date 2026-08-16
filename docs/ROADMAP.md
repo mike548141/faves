@@ -5249,6 +5249,45 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
 > text by the new `tools/recipe_check.mjs` (22 assertions, each verified by
 > reintroducing its own bug). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
+### 37n's owner rulings — taken 2026-08-16, all four, before the sweep runs
+
+✅ **`contains-fish` is ADOPTED.** The vocabulary gains it. Three agents in a peer
+session hit the gap independently: fish sauce runs through a dozen Rock Yard
+dishes, that venue prints its own badge as literally "Fish", and anchovy is on
+two Pizza Pomodoro pizzas — all untagged, because inventing a vocabulary entry
+was not an agent's call. The set is closed in **three** places that must move
+together (`docs/ARCHITECTURE.md`'s tag vocabulary, `tools/validate.py`'s `TAGS`,
+`site/js/settings.js`'s `ALLERGEN_PREFS`), plus a settings-screen row, plus the
+corpus sweep. 🛑 **Land it WITH the 37n sweep, not beside it** — the sweep is the
+pass that would apply it, and doing them separately means walking 55 venues
+twice.
+
+✅ **The trace tier: keep the app's tags as they are, and extend the DATA MODEL to
+carry both.** Owner ruling, consistent with one he had already given in a
+parallel session. Pizza Hut's first-party allergen document grades `P` (present)
+against `T` (*"stored or used to manufacture other items at the site"*), and `T`
+is near-universal across its pizza line for nuts, peanuts, sesame and shellfish —
+so collapsing the two tiers would fire four warnings on every pizza, which is a
+warning carrying no information. **What ships is unchanged: only `P` becomes a
+`contains-*` tag.** What changes is that the record can now hold the distinction
+instead of discarding it. 🚩 **ADR 0047 decides where it lives**: a per-tag tier
+on every dish is a field precached to every phone that no screen renders, so the
+trace grade belongs in the repo-only research store `data/`, not in
+`site/data/` — unless and until a screen is designed for it. That is the design
+question the build must answer first.
+
+✅ **`crumbed → contains-egg` SPLITS into two classes.** 30 of 42 disagreed, the
+largest block in the report, and the disagreement is real rather than sloppy: a
+house kitchen egg-washes its schnitzel, a commercial frozen nugget or crumbed
+fish fillet often does not. Two honest classes beat one that is wrong 71% of the
+time. `crumbed → contains-gluten` is untouched and holds at 39 of 45.
+
+⏳ **Still owed, and cheap** — the three the report itself raised: the tier a
+note-derived tag carries (kept as the firing rule's own, so "sesame bun" lands
+STATED); whether *"dairy free cheese available"* should tag or only report
+(currently reports); and whether add-on options belong in the report at all
+(currently yes, and it found one real gap).
+
 - [~] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
       — **TOOLING DELIVERED 2026-08-16, THE DATA SWEEP IS NOT.** The report the
       item asked for exists: `tools/allergen_disagreements.py` groups dishes into
