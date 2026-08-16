@@ -205,17 +205,33 @@ function card(r, clock, routeCtx = null, origin = null) {
     }
   }
 
-  // A venue (not a stub, not recipes) gets a live open/closed badge — but a
-  // CLOSURE shows on a stub too, since that is the one thing worth knowing
-  // about a place whose menu we never captured.
-  const badge = !isRecipes ? hoursBadge(r, clock, r.status !== "stub", origin) : null;
+  // Every venue gets a live open/closed badge, stub or not (owner,
+  // 2026-08-16). A place whose menu we haven't captured is still a place you
+  // might walk to, and "is it open" is the question that decides that. The
+  // stub suppression here was also redundant: `openStatus` already reports
+  // `unknown` when there are no hours, so a stub without them still shows
+  // nothing — this only reveals the 12 of 23 stubs that DO carry hours.
+  const badge = !isRecipes ? hoursBadge(r, clock, true, origin) : null;
 
   const li = el("li", { className: isRecipes ? "card card-recipes" : "card" });
   li.dataset.status = r.status;
 
-  if (r.status === "stub") {
-    // `badge` is null for a trading stub (el() skips nulls), so this only ever
-    // adds anything when the place is closed — see hoursBadge's third argument.
+  // A stub is only a dead end if we hold nothing but its name. Where we have
+  // hours, an address, a phone or a location, its page is worth opening — it
+  // renders the header, contact card and map handoff, then says the menu is
+  // still coming (menu.js). Owner, 2026-08-16: "the user should still be able
+  // to drill into [it] if we have details like opening hours, address etc".
+  const hasDetails = !!(
+    r.hours ||
+    r.address ||
+    r.phone ||
+    r.lat != null ||
+    (r.locations && r.locations.length)
+  );
+
+  if (r.status === "stub" && !hasDetails) {
+    // Nothing behind the name, so nothing to open — a link that leads to a
+    // page saying only "menu coming soon" is worse than no link at all.
     li.append(el("div", { className: "card-body" }, [cardPhoto(r), name, meta, badge, chips]));
   } else {
     const link = el("a", { className: "card-link", href: `restaurant.html?id=${r.id}` }, [

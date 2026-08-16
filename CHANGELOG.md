@@ -8,6 +8,16 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **A place without a menu is no longer a dead end.** All 23 "Menu coming
+  soon" venues now open, because we hold real detail for every one of them —
+  address, map handoff, phone or hours. **15 of them now show whether they're
+  open right now** ("Closed · opens 5pm") on the home screen, which they never
+  did before. A venue we hold nothing but a name for still doesn't link.
+- **The venue page stops saying the same thing twice.** The standing "Read in
+  store, 15 Aug 2026" line is gone — the ⓘ beside the venue name already gives
+  that date, plus what was checked and how.
+
 ### Fixed
 - **The allergen ⓘ in Settings is legible again.** Its halo was a filled block
   the size of the 44 px tap target sitting off-centre beside a small glyph — it

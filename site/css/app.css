@@ -2827,11 +2827,8 @@ body.faves-view .to-top {
   font-weight: 700;
   color: var(--ink-soft);
 }
-.menu-verified {
-  margin-top: var(--space-2);
-  font-size: 0.78rem;
-  color: var(--ink-soft);
-}
+/* `.menu-verified` was removed 2026-08-16 with the "Read in store, 15 Aug
+   2026" line it styled — the ⓘ note above already carried that date. */
 
 /* Our picks */
 .picks {

@@ -10,7 +10,11 @@ import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, makeClock, nowIn, viewerOnVenueTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
 import { alternates, preferred, venueLanguage } from "./lang.js";
-import { todayIn, verificationText, refreshCaveat, detailsVerification } from "./temporal.js";
+// `verificationText` is deliberately NOT imported any more — the header line it
+// fed was removed 2026-08-16 as a duplicate of the ⓘ note. It stays exported
+// and tested in temporal.js because it is the canonical phrasing of "how we
+// know", and the ⓘ would need it back if the date ever left that note.
+import { todayIn, refreshCaveat, detailsVerification } from "./temporal.js";
 import {
   HOME_CURRENCY,
   branchTimezone,
@@ -387,13 +391,13 @@ function renderHeader(r) {
   // a right-hand info column (see renderAside / the .menu-twocol grid), so the
   // header now carries only the title block.
 
-  // When we last read this menu, and how — "Read from a paper menu, 8 Aug
-  // 2026" rather than a bare date. The method is what tells a reader whether
-  // to trust the prices: someone standing at the counter and a stale directory
-  // listing produce the same date and are not the same evidence (ADR 0031).
-  if (r.verified) {
-    bits.push(el("p", { className: "menu-verified", textContent: verificationText(r, niceDate(r.verified)) }));
-  }
+  // The standing "Read in store, 15 Aug 2026" line is GONE (owner,
+  // 2026-08-16). It said the same thing as the ⓘ note directly above it —
+  // which already gives the date *and* what was checked and how — so the page
+  // asked the reader to read one fact twice, in two voices, and the shorter
+  // one carried less. ADR 0031's requirement is that the method is available,
+  // not that it is always on screen; the ⓘ satisfies it and is one tap away.
+  // If the ⓘ ever stops carrying the date, this line has to come back.
 
   return el("header", { className: "menu-header" }, bits);
 }
