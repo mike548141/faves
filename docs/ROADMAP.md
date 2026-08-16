@@ -2496,16 +2496,23 @@ contain shellfish.
   section schema cannot reach it. Consequence today: nothing checks the clock,
   so a Gold Card price shows at 9pm on a Sunday with no indication it is not
   available.
-- [ ] **28d — `available.note` is write-only** `[XS][js]` — `temporal.js`
-  filters a section out of the menu entirely when its window closes, and
-  `menu.js` never reads `available` at all, so the note explaining *why*
-  ("The Borough's entry in Burger Wellington") is never rendered anywhere.
-  **CLAIMED 2026-08-16 09:45 UTC (wt: faves-headings)** — reassigned from
-  `faves-inflight`, which had started it. It is one `el()` call inside the
-  section-heading block that Theme 28f is rewriting whole, and two sessions
-  stacking two subtitles under one `<h2>` is worse than either alone. Recorded
-  as a handover rather than a silent drop, so the item is not orphaned if 28f
-  changes shape.
+- ✅ **28d, 28f, 28g — the section heading, its qualifier and its identity** —
+  **done 2026-08-16** (`82ddb4b`, `b391f1b`, `2f0da85`), ADRs 0057 and 0058.
+  The qualifier came out of eleven headings into a `note`; the anchor stopped
+  being derived from the heading and became a stored `sectionId`. Full write-up,
+  including the owner ruling that went against the recommendation, in
+  [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+- [ ] **28g-tail — seed the last 25 sections and make the field required**
+  `[XS][schema]` — six venue files (`burgerfuel`, `gong-cha`, `hell-pizza`,
+  `kaffee-eis`, `noodle-canteen`, `pizza-hut`) were held open by a parallel
+  session's chain sweep, and sweeping a file someone else has uncommitted is
+  how work disappears. Run `python3 tools/seed_section_ids.py` once they land,
+  then flip `check_section_ids` from "gated if present" to required and add
+  `seed_section_ids.py --check` to the CLAUDE.md verify list. The tool prints
+  `skipped by request (6): …` rather than reporting a full sweep, so the gap
+  is visible until it closes.
+
+
 - [ ] **28e — eligibility is unstated** `[S][design]` — "Gold Card" and "12 and
   under" are rules about *who may order*, recorded only inside a heading
   string. Worth a field only if 28c lands; and note a "show me Gold Card
@@ -3591,6 +3598,7 @@ reason this theme needs a design step rather than a patch.
 | Recipe page | `recipe.html?id=<slug>` | `recipe.js:185` | query, resolved at load |
 | Filters | `index.html?area=…&cuisine=…` | `filters.js:45`, synced `app.js:352` | query, `replaceState`-tracked |
 | Dish anchor | `#dish-<slug>` | `menu.js:1558` | hash, an *element anchor* (+ `formerIds` fallback) |
+| Section anchor | `#section-<sectionId>` | `menu.js:1275` | hash, an *element anchor* — **stored id since ADR 0058**, no longer derived from the heading |
 | Favourites view | `#faves` | `app.js:862` | hash, a *view toggle* |
 | Share / transfer | `#<base64url payload>` | `cart-ui.js:422`, `personal-io-ui.js:436` | hash, an *opaque payload*, consumed then stripped |
 
@@ -3764,3 +3772,91 @@ then; two have since moved):
    ("tell us what's wrong or missing"). This line is superseded.
 4. SBOM: **CycloneDX JSON at `/.well-known/sbom.json`** — see Theme 7.
    ✅ Shipped and serving.
+
+## Theme 35 — the search box as a split-flap board (owner-raised 2026-08-16)
+
+**The ask, raw (owner):** *"An idea in the main page search bar that alternates
+the prompt text like 'Search a place -- Southern Cross' rather than a fade in
+and out I am thinking maybe the text wipes from left to right or vice versa
+character by character… Or an animation like the old airport signs where the
+characters would flip continuously until they showed the letter required — I
+quite like that idea if you can make it look good."* Reference photo supplied:
+a Solari departure board mid-flip.
+
+🎯 **Owner ruled 2026-08-16: roadmap it, finish the section-id build first.** He
+was offered "build it now" and "prototype it, don't ship it" and chose neither —
+this is queued, not shelved, and he can reorder at any time.
+
+### 🔎 The finding that makes this smaller than it looks
+
+**This is a transition swap inside a module that already exists**, not a new
+feature. `site/js/search-hints.js` already rotates the placeholder through
+example hints and already carries the hard parts:
+
+| Already built | Where |
+|---|---|
+| Rotation with an injectable timer, fully unit-tested (247 lines of tests) | `search-hints.js`, `tests/search-hints.test.js` |
+| `prefers-reduced-motion: reduce` pins to the first hint and **never starts a timer** | `search-hints.js` |
+| Stops on focus and while the field has text — it cannot change under someone reading or typing | `search-hints.js` |
+| Accessible name comes from the `<label>`, never the placeholder, so nothing retitles the field mid-interaction (WCAG 2.5.3) | `index.html:126` |
+| The honesty rule: a hint may only advertise something the index can actually find | `search-hints.js` header |
+
+So the work is **replace the 450 ms cross-fade (`.hint-fading` + a
+`::placeholder` opacity transition, `app.css:452`) with a per-character flip**,
+and leave every accessibility guarantee where it is. Sizing on that basis:
+`[M][design]`, not `[L]`.
+
+### 🚩 The one real obstacle, and it decides the shape
+
+**You cannot animate inside a `placeholder` attribute.** It is a string, not a
+DOM tree — there is no per-character element to flip, and `::placeholder` styles
+the whole run. Two ways out:
+
+1. **Rewrite the attribute every frame** — `input.placeholder = frameText`. Zero
+   new DOM, works with the existing module almost unchanged. **Rejected on
+   accessibility:** the placeholder is exposed to assistive tech, and churning
+   it 20×/second is a screen-reader hazard the current design specifically
+   avoids. It also fights the reo language toggle, which sets `placeholder` from
+   `data-i18n-ph` (`reo.js:309`).
+2. **An `aria-hidden="true"` overlay span** positioned over the input, with the
+   real `placeholder` left as one stable string underneath. **Recommended.**
+   Assistive tech and the reo toggle keep reading a calm, translated string;
+   the flap is decoration that never enters the accessibility tree. Hidden the
+   moment the field has focus or text, so it can never sit under a caret.
+
+### What "make it look good" actually requires
+
+- **Flip through a real alphabet, not random glyphs.** A Solari board steps
+  A→B→C→… to the target letter, which is why it looks mechanical rather than
+  glitchy. Uppercase-only is authentic and also sidesteps the descender jitter
+  that makes mixed case look broken mid-flip.
+- **Stagger, don't sync.** Every character starting and stopping together reads
+  as a fade. A small per-character delay (each letter settling a few frames
+  after its neighbour) is the whole effect.
+- **Settle, then stop.** The animation must reach a resting state and cancel its
+  frame loop — a permanent `requestAnimationFrame` on the home screen is a
+  battery cost on the device this app is designed for. Also pause on
+  `document.visibilityState !== "visible"`.
+- **Two candidate texts, and they are different jobs.** The owner's example
+  pairs a prompt (*"Search a place"*) with a venue name (*"Southern Cross"*).
+  The existing hints are capability examples. Whether the board flips between
+  those two kinds, or the venue names come from `index.json`, is a content
+  decision worth making before the animation is tuned.
+
+### Owner decisions this needs before it is built
+
+- 🎯 **Uppercase-only, or preserve the venue's own casing?** Authenticity vs
+  reading "SOUTHERN CROSS" for a place written "Southern Cross" everywhere else
+  in the app.
+- 🎯 **Does the board flip venue names from the collection**, or only the
+  capability hints it shows now? Naming real venues is a nice touch and it makes
+  the placeholder content depend on data the home screen already loads.
+- 🎯 **What does a reduced-motion reader get?** Recommendation: the current
+  behaviour exactly — the first hint, static, no timer. That is already what the
+  module does, so this is a confirmation rather than work.
+
+### Out of scope unless asked
+
+The same treatment on the menu-page search box (`Search this menu…`). One
+animated placeholder is a flourish; two is a tic, and the menu box is used
+mid-task where the home box is used on arrival.

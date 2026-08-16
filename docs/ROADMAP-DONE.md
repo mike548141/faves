@@ -1246,3 +1246,58 @@ the value is in seeing what was asked for beside what landed.
   `area` *is* Courtenay Place, highlighted genuinely. But **"Pub" no longer
   returns 6 places with 5 name-coincidences** — the corpus moved under the
   measurement. The mechanism handled it correctly regardless.
+
+### Theme 28 — 28d, 28f, 28g (resolved 2026-08-16)
+
+- [x] **28d — `available.note` is write-only** `[XS][js]` — ✅ **done
+  2026-08-16** (`82ddb4b`), as part of 28f. `menu.js` now reads `available` off
+  the resolved record — `resolveRecord` was already carrying it, so there was
+  nothing to plumb — and renders the note under the heading. Verified live in
+  headless Chrome at 390 px: The Borough's `Burger Wellington 2026` shows *"The
+  Borough's entry in Wellington On a Plate's Burger Wellington."*
+  Reassigned from `faves-inflight`, which had started it, because it is one
+  `el()` call inside the section-heading block 28f rewrote whole and two
+  sessions stacking two subtitles under one `<h2>` is worse than either alone.
+  🚩 **The verification is deliberately NOT a committed test.** The corpus's
+  only `available.note` has `to: "2026-08-23"`, so an assertion on it goes red
+  on its own within a week and gets switched off — the failure mode
+  `branch_check.mjs`'s header warns about. It was proved with a throwaway
+  script instead. If a second venue ever carries a note with no end date, that
+  is the one to write a real check against.
+
+- [x] **28f — the qualifier comes out of the heading** `[M][design]` — ✅
+  **done 2026-08-16** (`82ddb4b`, `b391f1b`), ADR 0057. Owner, from his phone:
+  *"don't put the time into the section heading because it makes the section
+  heading too big in the top section heading list."* The heading string was
+  doing two jobs that want opposite lengths — it is also the jump-nav chip, and
+  Sprig & Fern's `Gold Card (Mon–Fri 11:30–17:30, weekends 10:00–17:30)` was a
+  **53-character chip, wider than a 390 px screen**. Sections now carry `note`,
+  rendered as a `<p>` under the `<h2>`; the chip and anchor use the name alone.
+  Eleven sections across seven venues moved.
+  - **Owner ruled on the follow-up:** move the qualifiers, leave the glosses.
+    R&S Satay's `(Noodle Soup)`, `(Fried Noodles)`, `(Beef or Chicken)` stay —
+    they translate the dish rather than qualify the section, and as subtext
+    they would read as a serving rule. Takeaway at Churton's `Burgers
+    (Standard)` also stays: "Standard" is what tells it apart from `Gourmet
+    Burgers` three rows below, so as subtext it would say nothing.
+  - **Not `available.note`** — `check_available` refuses a note-only window,
+    and `available` is a *filter* object (`isAvailable`/`isRetired` act on it),
+    so a presentational string there would make a section's visibility look
+    conditional. The two now mean different things and both render.
+  - **Leaves 28c free.** `note` is prose and nothing parses it, which is the
+    honest state of the data: a weekday+interval rule is still inexpressible.
+    When 28c lands it adds a structured field beside this one, no migration.
+
+- [x] **28g — a section's anchor was derived from its heading** `[M][schema]` —
+  🔎 **found by 28f firing it, then owner-ruled and built**, ADR 0058
+  (`2f0da85`). Renaming those eleven headings invalidated every deep link to
+  them in the same commit, because the anchor was `slug(section.section)`. Same
+  fault as ADR 0051 one level up, where the ruling was *"identity must be
+  immutable"*.
+  🎯 **The owner was given three options and took the most expensive one,
+  against the recommendation** — record-the-finding was recommended; he chose
+  the schema change. Do not re-propose deferring it.
+  `sectionId` is now stored, immutable and unique per venue; `validate.py`
+  refuses a duplicate (valid HTML that silently makes the second section
+  unreachable) and a non-slug id; `tools/seed_section_ids.py` seeded 210 of 235
+  sections with nothing moving on the day it ran.
