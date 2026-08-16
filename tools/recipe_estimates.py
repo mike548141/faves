@@ -331,7 +331,7 @@ def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("--check", action="store_true", help="gate: structure, alignment with the recipes, and the timer safety invariant")
+    ap.add_argument("--check", action="store_true", help="gate: structure, alignment with the recipes, and the source every countdown needs")
     ap.add_argument("--report", action="store_true", help="readable summary — counts by source and by phase")
     ap.add_argument("--venue", default="cook-at-home", help="venue id to check against (default: cook-at-home)")
     args = ap.parse_args()

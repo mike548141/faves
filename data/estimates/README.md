@@ -31,23 +31,31 @@ where it came from, and the working that produced it.
 counts use it. A null with a reason beats a number with none: the ruling was
 "estimate them", not "leave no field empty".
 
-## 🛑 The safety rule — an estimated duration must never drive a timer
+## 🛑 The timer rule — every duration times, and an estimate says so
 
-**Only a duration the recipe itself states may run a timer.** Every step
-estimate carries `timerSafe`, and it is `true` only where `source == "stated"`.
-`python3 tools/recipe_estimates.py --check` exits 1 the moment those two
-disagree, and prints that failure above every other one.
+**Owner ruling, 2026-08-16 (ADR 0066):** *"Estimates drive timers too, clearly
+marked — every step gets a countdown; estimated ones are labelled as estimates
+on the timer face."* That supersedes ADR 0064's timer clause in part; the rest
+of 0064 stands. The food-safety argument against it was put to him before he
+decided and overruled — recorded in 0066, and not re-argued here.
 
-The reason is not tidiness. Stated durations drive the per-step timers today
-(`stepDuration` in `site/js/cook.js`). An invented "simmer 20 min" on chicken
-thighs is a **food-safety failure**; an invented "beat for 3 minutes" is a
-slightly heavy cake. The two must not be handled by the same rule, so every step
-also carries a `phase`:
+So every step with a `minutes` value is timer-eligible, and the field that
+matters to a renderer is `source`. **A `minutes` with no `source` is the state
+that is now dangerous**: the countdown would run with no way to tell the cook
+whether the number was read or worked out. `python3
+tools/recipe_estimates.py --check` exits 1 on it and prints it above every other
+failure.
+
+`timerSafe` is gone. Under the ruling it would have been `true` on all 115 steps
+that carry a number, and a field with one value tells a renderer nothing.
+
+Every step still carries a `phase`, which no longer gates anything but still
+says what kind of step is being timed:
 
 - **`prep`** — no heat on the food. Mixing, shaping, and heating an empty oven
-  or an empty pan. 53 steps. An estimate here is harmless.
-- **`cook`** — the food is in the heat. 53 steps. **31 of them carry an
-  estimated duration, and none of those may ever drive a timer.**
+  or an empty pan. 53 steps.
+- **`cook`** — the food is in the heat. 53 steps, 31 of them with an estimated
+  duration.
 - **`wait`** — chilling, rising, resting, marinating, cooling. 12 steps.
 
 ## How the numbers were derived
@@ -138,11 +146,17 @@ file. Exit **1**, caught from the other direction, with the warning beside it:
 > tiramisu: 7 step estimate(s) against 8 recipe step(s) — the recipe changed
 > under the record
 
-**4. The safety invariant breached** — `timerSafe: true` on the curry's
-estimated simmer. Exit **1**:
+**4. The safety invariant breached** — the `source` deleted from the curry's
+estimated 20-minute simmer. Exit **1**:
 
-> 🛑 SAFETY: famous-brade-green-chicken-curry step 5 is timerSafe with source
-> 'estimated' — an estimated duration may never drive a timer
+> 🛑 SAFETY: famous-brade-green-chicken-curry step 5 has minutes 20 but source
+> None, not one of ['estimated', 'stated'] — its countdown would run with no way
+> to mark it an estimate (see this tool's header)
+
+Path 4 previously read `timerSafe: true` on the same step, under ADR 0064's
+rule. The rule changed with the 2026-08-16 ruling (ADR 0066); the break was
+re-run against the invariant that replaced it, rather than left standing as a
+description of a check that no longer exists.
 
 Failures all exit 1 and are told apart by their message; the safety one sorts to
 the top of the output so it cannot be buried in structural noise.
@@ -191,13 +205,33 @@ kill (ADR 0051): reorder one step and every number moves to the wrong sentence.
 
 ROADMAP 36b already plans to turn `steps` into objects carrying per-step
 ingredient quantities. Per-step times should ride that change, as
-`{ minutes, estimated }` on the step object. Then `cook-ui.js` renders:
+`{ minutes, estimated }` on the step object.
 
-- `source: "stated"` → what it does today: the number, and a one-tap timer.
-- `source: "estimated"` → the number as **text only**, marked "(estimate)", with
-  **no timer offered**. `stepDuration()` already returns `null` for these steps,
-  so the timer stays absent by construction rather than by a new condition.
-- `minutes: null` → nothing rendered. Three steps.
+**Then every step with a number gets a countdown** (ADR 0066), and `cook-ui.js`
+renders:
 
-Until then, `phase` and `timerSafe` are the two fields any renderer must read
-before putting a step duration on a screen.
+- `minutes` present, `source: "stated"` → the number and a one-tap timer, as
+  today.
+- `minutes` present, `source: "estimated"` → the number marked "(estimate)" in
+  the step text **and the same one-tap timer**. It is no longer text-only.
+- `minutes: null` → nothing rendered, no timer. Three steps.
+
+🛑 **The timer face must carry the marker itself.** A running countdown that
+looks identical whether its number was read off the recipe or worked out by an
+assistant does not satisfy "clearly marked": the cook watching the clock is not
+reading the paragraph above it. So the estimate marker appears **on the timer**,
+not only in the step text beside it, and it is real text in the DOM — inside or
+labelled onto the element showing the remaining time — so it survives being read
+aloud and is not carried by colour alone.
+
+- stated: `12:00`
+- estimated: `12:00 (estimate)`
+
+`stepDuration()` in `cook.js` reads the recipe text today, so it finds the 32
+stated steps and none of the estimated ones. Making every step timer-eligible
+means the per-step `minutes` has to reach the payload first; the timer must then
+read the shipped number rather than re-parsing the sentence, or the estimated
+steps stay silently untimed with everything looking correct.
+
+`phase` is the remaining field a renderer may want — it says whether the step is
+`prep`, `cook` or `wait` — but nothing gates on it.
