@@ -1233,12 +1233,20 @@ body:not(.menu-page) {
 }
 /* Never an Apply button (DESIGN.md: filters are instant). "Clear all" on the
    left, a dismiss naming the live result on the right. */
+/* The sheet is bottom-anchored (`margin: auto auto 0`), so its footer is the
+   last thing above the hardware. On an iPhone the home indicator sits over the
+   bottom ~34 px, and this footer holds the sheet's only two actions — "Clear
+   all" and "Show N places" — so without the inset the reader is tapping the
+   primary action through the gesture bar. Invisible in headless Chrome, where
+   env(safe-area-inset-bottom) resolves to 0; `.filter-bar` has always handled
+   it, and `.cook-inner` is the other place that gets this right. */
 .filter-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-3);
+  padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
   border-top: 1px solid var(--line);
 }
 .filter-clear {
