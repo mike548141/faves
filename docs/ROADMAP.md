@@ -1327,6 +1327,105 @@ wrong.
   configuration, which means a **versioned codec bump** and a receive-side path
   for links minted before it. Audit these together before building 14a, not after.
 
+- [ ] **14f — Combos: several dishes ordered as one** `[M][schema][design]`
+  (owner-raised 2026-08-16) — *"the concept of Combo's e.g. coffee and scone,
+  where multiple dishes are combined to make a dish to order them together with
+  its own pricing."* Distinct from an add-on: an add-on modifies one dish, a
+  combo **is** a dish assembled from others, at its own price. 🔎 **They already
+  exist in the corpus, flattened.** `wellington-kebab-grill.json` carries a
+  `Combos` section — "Kebab combo #1, $22.50, Your choice of kebab, chips and a
+  330ml Coca-Cola drink" — as three plain dishes whose *composition lives in
+  prose*. So the feature is not "add combos", it is "give the composition a
+  shape". Design calls: does a combo reference member dishes by id (then the
+  order line can itemise, and dietary tags compose — the Theme 14d problem
+  again) or stay a standalone priced item with a description? Does "your choice
+  of kebab" make a combo a **pick-one group over other dishes**, which is
+  structurally the same machinery as 14a's single-select add-on group? If it
+  is, build 14a first and 14f becomes small. Note the third case already in the
+  same file: **"Combo upgrade, $6, Added to a kebab, mixed kebab, iskender or
+  salad"** — that is an *add-on that turns a dish into a combo*, so 14a and 14f
+  meet in one record.
+
+**The worked example, transcribed from the counter board (2026-08-15, in
+store).** The owner photographed Wellington Kebab Grill's "EXTRAS & SAUCES —
+customize your meal" card. Everything **priced** on it is already in the payload <!-- spellscan:allow: verbatim quote of the venue's own printed card, which spells it the US way — correcting it would misquote the shop -->
+
+(the three drinks, all five extras). The one part that is not is the part with
+nowhere to go — which is the whole of this theme:
+
+- **"Choose your kebab toasted or fresh"** — pick-one, free. A 14c
+  customisation with exactly two options, so the "no structured thing to remove
+  from" objection does not apply; it is a choice the venue itself offers.
+- **"Our delicious sauces — choose up to 3"** — multi-select, free, **capped at
+  three**: Garlic yogurt · Plain yogurt · Hot chilli · Mild chilli · Tomato
+  sauce · Mayonnaise · Sweet chilli · Satay · Tahini · Garlic aioli · Mint
+  sauce · BBQ sauce.
+
+Three things this one card settles that the theme had left open:
+- 🚩 **A free add-on is still an add-on.** Every design note above assumed a
+  price (`Add gravy $3`). Twelve sauces at no charge are the commonest kind of
+  add-on there is, so `price` must be optional in the 14a shape — and a missing
+  price must mean **free**, not the `priceUnknown` "we don't know" state the app
+  already uses for unpriced dishes. Those two are opposite claims and must not
+  collide.
+- 🚩 **A cap is part of the group, not the UI.** "Up to 3" is a rule the venue
+  set; it belongs in the data (`max`), or the order sheet will happily produce
+  something the shop will refuse to make.
+- 🚩 **Satay is the 14d case, in the flesh.** Adding satay to a kebab makes it
+  contain peanuts — the single most serious allergen in the app's vocabulary,
+  on a dish that carried no warning when you tapped it. This is the concrete
+  proof that 14d ships *with* 14a and not after it: an add-on layer without
+  allergen composition would let the app show a clean dish that the reader then
+  configures into an anaphylaxis risk, silently. **No add-on UI ships before
+  `dishFlagged`/`dishSatisfiesDiet` evaluate dish + selections.**
+
+⏳ The sauce list is recorded here, not in `site/data/`, deliberately: ADR 0047
+says the payload ships only what a screen renders, and no screen renders add-ons
+yet. It moves into the venue file as part of 14a, in whatever shape 14a settles
+on — this paragraph is the input to that design, not a substitute for it.
+
+## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
+
+<!-- Numbered 26, not 25: a parallel session took 25 (dish ids) while this
+     branch was open, exactly as the note on Theme 19 warns. Checked with
+     `grep '^## Theme' ROADMAP.md` at merge, not at write. -->
+
+**The ask, raw (owner):** *"Saved orders. For example saving an order for Subway
+that I use each time."*
+
+**What it is.** A named, reusable order for one venue — "my Subway" — recalled
+into the tally in one tap instead of rebuilt dish by dish. The app already holds
+every piece: `cart.js` is a local offline order model, `favourites.js` already
+persists per-venue picks, and `share-codec.js` already serialises a whole order
+to a URL fragment for group ordering. A saved order is that codec's payload,
+kept locally under a name, rather than sent to someone.
+
+**Why it is queued behind Theme 14, not beside it.** A saved order has to record
+*what you actually order*, and for Subway that is nothing but add-ons — bread,
+salads, sauces. Saving orders before add-ons exist would save a shape that is
+about to change, then need a migration on a store that lives in people's
+browsers where we cannot see it or fix it. Build 14a first, then save.
+
+🔗 **Depends on Theme 25 (dish ids), and so does 14f.** A saved order and a
+combo both need to *point at a dish* and still find it after a refresh. That is
+the same question Theme 25 asks, arrived at from two directions — settle it once,
+there, before either of these designs commits to a reference shape.
+
+- [ ] **26a — Save and recall** `[M]` — name an order, list saved orders per
+  venue, recall into the tally, delete. Local-first like every other personal
+  store (`store.js`), so it works offline and never leaves the device.
+- [ ] **26b — Carry it across devices** `[S]` — falls out of Theme 12's personal
+  transfer/sync for free if the store is shaped like the others; check that
+  before designing anything bespoke.
+- [ ] **26c — What happens when the menu moves under it** `[M]` 🚩 **the real
+  design problem.** A saved order references dishes and prices that a refresh
+  can change, rename or remove — and `renames.js` already exists precisely
+  because ids move. So recall has to answer honestly: *this dish is $2 dearer
+  than when you saved it*, *this dish is gone*. Silently recalling a stale price
+  into the tally would make the app lie about the total, which is the one thing
+  the price work has been careful never to do. Model it on the refresh caveat
+  (ADR 0036): say what changed, let the reader decide.
+
 ## Theme 15 — UI consistency, navigation & layout (owner-raised 2026-08-09)
 
 ✅ **`.order-head` collision — fixed 2026-08-09.** Detail →
