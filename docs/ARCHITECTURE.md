@@ -656,8 +656,14 @@ precached payload nothing on any screen can reach (ADR 0047).
   the drive-time hint, the card's open/closed status and the maps handoff then
   use the **nearest** branch when the viewer's location is known, and the
   **primary** branch when it isn't (never "any branch open" — that would
-  contradict the distance shown). The menu screen lists every branch, nearest
-  first, each with its own directions link, phone and hours; a one-branch array
+  contradict the distance shown). The menu screen shows **one branch expanded —
+  the nearest that is open — up to four more as one-tap collapsed rows, and any
+  remainder behind "Show all N"** (ADR 0054, `locations.leadBranch` /
+  `branchCard`), each with its own directions link, phone and hours. Openness is
+  three-state (`open`/`closed`/`unknown`): a branch with no `hours` is never
+  given a status chip, and never ranks below one known to be shut. The viewer's
+  branch distance limit (`favBoostKm`) filters both lists, the lead always
+  survives it, and whatever it hid is counted on the card. A one-branch array
   renders identically to a flat single-location venue.
 
 ### Client-side personal layer (order tally, favourites, ratings, profiles)

@@ -4,7 +4,7 @@
 
 import { loadRestaurant } from "./data.js";
 import { mapsUrl, recallOrigin } from "./geo.js";
-import { orderedBranches, isMultiLocation, branchAsPlace, branchesToShow } from "./locations.js";
+import { orderedBranches, isMultiLocation, branchAsPlace, branchCard } from "./locations.js";
 import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, makeClock, nowIn, viewerOnVenueTime } from "./hours.js";
@@ -245,11 +245,67 @@ function branchBlock(r, b, clock) {
   ]);
 }
 
+// A branch's open/closed state as the three-way answer leadBranch needs. The
+// third state is the honest one: no hours on the branch means we cannot say,
+// and saying nothing is not the same as saying "shut".
+function branchOpenStateOf(r, clock) {
+  return (b) => {
+    if (!b.hours) return "unknown";
+    return openStatus(b.hours, clock.at(branchTimezone(r, b))).state;
+  };
+}
+
+// The one-line summary a collapsed branch row shows: its name, how far, and
+// whether it is open — enough to choose between branches without opening any of
+// them. The status chip is omitted, never guessed, when the branch has no hours.
+function branchSummary(r, b, clock) {
+  const bits = [el("span", { className: "branch-name", textContent: b.label || b.address || r.name })];
+  if (b.distanceKm != null && b.distanceKm !== Infinity) {
+    bits.push(el("span", {
+      className: "branch-distance",
+      textContent: `📍 ${formatDistance(b.distanceKm, settings.get().units)}`,
+    }));
+  }
+  if (b.hours) {
+    const st = openStatus(b.hours, clock.at(branchTimezone(r, b)));
+    if (st.state !== "unknown") {
+      const badge = el("span", { className: "hours-badge", textContent: st.label });
+      badge.dataset.state = st.state;
+      bits.push(badge);
+    }
+  }
+  return bits;
+}
+
+let branchPanelSeq = 0;
+
+// A branch as a collapsed, tappable row: the summary above, and its call /
+// address / hours behind one tap. A disclosure button inside a heading — the
+// pattern a screen reader can both navigate by and operate — so "pick a
+// different branch" costs one step rather than the old two.
+function branchRow(r, b, clock) {
+  const id = `branch-panel-${++branchPanelSeq}`;
+  const panel = el("div", { className: "branch-detail", id, hidden: true }, branchRows(r, b, clock));
+  const toggle = el("button", { type: "button", className: "branch-toggle" }, branchSummary(r, b, clock));
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.setAttribute("aria-controls", id);
+  toggle.addEventListener("click", () => {
+    const open = panel.hidden;
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+  return el("section", { className: "contact-branch contact-branch-row" }, [
+    el("h3", { className: "branch-head" }, [toggle]),
+    panel,
+  ]);
+}
+
 // The contact block: for a single-location venue, the familiar call/address/
-// hours rows. For a multi-location venue (locations.js, ADR 0011), one block per
-// branch — nearest first when the home screen has captured the viewer's location
-// this session (recallOrigin), else data order — each with its own directions
-// link, phone and hours.
+// hours rows. For a multi-location venue (locations.js, ADR 0011), the nearest
+// OPEN branch leads expanded, up to four more sit collapsed one tap away, and
+// any remainder waits behind "Show all N" — nearest first when the home screen
+// has captured the viewer's location this session (recallOrigin), else data
+// order. Each branch keeps its own directions link, phone and hours.
 // The report row closes the card in both shapes (ADR 0028): the contact block is
 // where someone looks when the phone number, address or hours are wrong, so
 // "something wrong here?" belongs at the end of it rather than somewhere else on
@@ -267,20 +323,26 @@ function contactCard(r) {
     ]);
   }
   const branches = orderedBranches(r, recallOrigin());
-  // A many-branch chain floods the card with far-away addresses. Show at most
-  // the 2 nearest within the viewer's proximity dial (favBoostKm); the rest tuck
-  // behind a "show all" (locations.branchesToShow). Heading stays neutral
-  // ("Branches") since it may now be a subset.
-  const { shown, rest } = branchesToShow(branches, settings.get().favBoostKm);
+  // A many-branch chain floods the card with far-away addresses. One branch
+  // leads expanded — nearest and open, in that order of preference — and the
+  // next few collapse to one-tap rows; only past those does the second step
+  // appear (locations.branchCard). Heading stays neutral ("Branches") since it
+  // may now be a subset.
+  const { lead, near, rest, beyondDial } = branchCard(
+    branches,
+    settings.get().favBoostKm,
+    branchOpenStateOf(r, clock)
+  );
   const card = el("div", { className: "contact-card contact-card-multi" }, [
     el("h2", { className: "contact-branches-head", "data-i18n": "menu.branches", textContent: "Branches" }),
-    ...shown.map((b) => branchBlock(r, b, clock)),
+    branchBlock(r, lead, clock),
+    ...near.map((b) => branchRow(r, b, clock)),
   ]);
   if (rest.length) {
     const restWrap = el("div", { className: "contact-branches-rest", hidden: true },
-      rest.map((b) => branchBlock(r, b, clock)));
+      rest.map((b) => branchRow(r, b, clock)));
     const toggle = el("button", { type: "button", className: "contact-branches-more" });
-    const collapsedLabel = `Show all ${branches.length} branches`;
+    const collapsedLabel = `Show all ${1 + near.length + rest.length} branches`;
     toggle.textContent = collapsedLabel;
     toggle.setAttribute("aria-expanded", "false");
     toggle.addEventListener("click", () => {
@@ -290,6 +352,26 @@ function contactCard(r) {
       toggle.textContent = open ? "Show fewer branches" : collapsedLabel;
     });
     card.append(restWrap, toggle);
+  }
+  // Never truncate in silence. Branches the distance dial removed are counted
+  // and named, with the setting that did it, so "these are all of them" is only
+  // ever said when it is true.
+  if (beyondDial > 0) {
+    // The route to the dial is the ⚙ button's own click: settings-ui.js builds
+    // the sheet lazily on that button and exports no open() to call instead.
+    // Borrowing it beats duplicating the construction, and beats naming a
+    // setting the reader then has to go and find.
+    const dialBtn = el("button", {
+      type: "button",
+      className: "contact-branches-dial-link",
+      textContent: "branch distance limit",
+    });
+    dialBtn.addEventListener("click", () => document.getElementById("settings-btn")?.click());
+    card.append(el("p", { className: "contact-branches-dial" }, [
+      `${beyondDial} more ${beyondDial === 1 ? "branch is" : "branches are"} further than your `,
+      dialBtn,
+      ".",
+    ]));
   }
   card.append(venueReportRow(r));
   return card;

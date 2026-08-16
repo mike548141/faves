@@ -406,3 +406,12 @@ deliberation those compact docs omit.
   is not merely worse-looking, it is a false depiction of a named product, which
   on a menu app is worse than no photo. Provenance and a removal recipe live in
   `data/images/`, never served (ADR 0047).
+- [0054](0054-the-branch-offered-first-is-the-nearest-open-one.md) — **the
+  branch offered first is the nearest *open* one.** One branch leads expanded,
+  up to four sit collapsed one tap away, and the second step appears only past
+  those — which retires it for four of our five chains. The rule that mattered
+  was not the layout: 10 of 22 branches carry no hours, so openness is a
+  **three-state** `open`/`closed`/`unknown`, and "unknown" outranks
+  "known-closed" rather than being folded into it. A two-state rule would have
+  been incapable of firing on McDonald's, the venue that prompted the change.
+  Amends 0011.

@@ -8,6 +8,19 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **Picking a branch now costs one tap, and the one you're offered is open.**
+  A chain's menu page used to show its two nearest branches fully expanded and
+  hide the rest behind "Show all N". Now a single branch leads — the nearest one
+  that is **open**, not merely the nearest — and up to four more sit beside it
+  as collapsed rows you can open with one tap each. The second step only appears
+  past those, which removes it entirely for McDonald's, Subway, Sushi Bi and
+  Pandan; only TJ Katsu's seven branches still need it. Openness is three-state:
+  **10 of our 22 branches carry no hours at all**, and a branch we know nothing
+  about is never labelled open *or* closed, and never ranks below one we know is
+  shut. Branches your distance limit hides are now counted on the card with a
+  button that opens the setting, instead of vanishing silently (ADR 0054).
+
 ### Added
 - **Dish photos, on every McDonald's item.** All 41 dishes now carry a
   photograph — the first use of dish photos anywhere in the app. They are

@@ -2999,6 +2999,76 @@ body.faves-view .to-top {
   font-variant-numeric: tabular-nums;
 }
 
+/* A collapsed branch — the rows beside the expanded lead. One tap opens its
+   call/address/hours, so choosing a different branch costs one step rather than
+   the old two. The whole row is the target (≥44px); the heading it sits in keeps
+   branch-by-branch navigation working for a screen reader. */
+.contact-branch-row .branch-head {
+  padding: 0;
+}
+.branch-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+/* The chevron is drawn, not written, so no glyph ships in the label a screen
+   reader reads out. It points down collapsed, up expanded. */
+.branch-toggle::after {
+  content: "";
+  margin-inline-start: auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--ink-soft);
+  border-bottom: 2px solid var(--ink-soft);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform 120ms ease;
+}
+.branch-toggle[aria-expanded="true"]::after {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .branch-toggle::after {
+    transition: none;
+  }
+}
+@media (hover: hover) {
+  .branch-toggle:hover {
+    background: var(--surface-2, var(--surface));
+  }
+}
+.branch-toggle .branch-name {
+  font-weight: 600;
+}
+/* The dial that hid some branches, named where its effect is felt. Silent
+   truncation reads as "these are all of them"; this says it is not. */
+.contact-branches-dial {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.contact-branches-dial-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 /* Order online */
 .order-block {
   margin-top: var(--space-3);
