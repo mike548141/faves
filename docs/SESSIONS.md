@@ -5329,10 +5329,10 @@ holds this can replace the Worker or delete ciphertext, and cannot read one
 user's data.
 
 ⚠️ **A claim I made here and then retracted, in the same session.** I recorded
-our `.gitignore` line `tools/.cf-token` as a *trap* inviting a Cloudflare token
+our `.gitignore` line `tools/.cf-token` as a *trap* inviting a Cloudflare token <!-- pathscan:allow: a .gitignore entry — the whole point is that this path must never exist in the tree -->
 into this public tree. **Wrong, and retracted.** Re-reading it, the comment
 directly above reads *"the Cloudflare token lives in the environment, never in
-the repo"*, and the entries (`.env`, `*.token`, `tools/.cf-token`) are a
+the repo"*, and the entries (`.env`, `*.token`, `tools/.cf-token`) are a <!-- pathscan:allow: a .gitignore entry — the whole point is that this path must never exist in the tree -->
 defensive net for exactly that. **Deleting them would make an accidental commit
 more likely, not less.** Left alone deliberately.
 🔎 Worth keeping rather than quietly fixing, because of *how* it nearly went
