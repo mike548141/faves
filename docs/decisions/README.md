@@ -575,6 +575,27 @@ deliberation those compact docs omit.
   requires the marker **on the timer face**, not only in the step text: a clock
   that looks the same whether its number was read or guessed is not "clearly
   marked". No UI built here.
+- [0068](0068-the-home-list-ranks-on-one-blend.md) — **the home list has one
+  ranking, and distance is in it.** Supersedes
+  [0014](0014-pick-along-a-route.md). The owner asked to delete the "Nearest
+  first" sort because *"the restaurants are already sorted by closest first with
+  weighting for being open, close, a favourite"*. Checking that premise is the
+  record: the blend he remembered **is** built — and has never once run, because
+  `origin` is written in exactly one place, the sort control's own handler, so
+  the default order's distance term has been `Infinity` for every venue since
+  the project began. Two traps found on the way: the favourite credit is
+  **10 km**, not the *"few hundred metres"* he remembers asking for (the
+  introducing commit says outright that a favourite at 8 km should beat a plain
+  place at 2 km); and `favBoostKm` cannot be re-tuned to carry it, because it
+  was quietly repurposed as the branch-proximity cutoff and now has two jobs and
+  one name. So: one ranking (availability → distance → a favourite breaking a
+  **near-tie**, bucketed at 0.4 km rather than subtracted, because a credit
+  cascades), no SORT BY control, and location asked for on load with a silent
+  fallback when refused. 🚩 **Design ratified, code deliberately not written** —
+  item 4 is the first unprompted permission prompt in the app's history, and a
+  new trust surface begun at the tail of a session is how a half-built one
+  ships. Also records that there was **no ADR for ranking at all** until this
+  one, which is how a 10 km dial nobody meant survived unchallenged.
 - [0067](0067-a-tick-is-keyed-on-the-line-not-its-place.md) — **a tick is keyed
   on the line's own text, not on where the line sits, and it expires.** ROADMAP
   17e's checklist. A recipe keys on venue + dish id (ADR 0051); a LINE inside it

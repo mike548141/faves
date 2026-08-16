@@ -1455,3 +1455,64 @@ the CSS root font size grows every `rem` box but does **not** move `rem`-based
   Also note both platforms let the user permanently choose "open in browser"
   (Apple documents that iOS *"examines the user's recent choices"*), so **two
   people with identical phones can correctly get different behaviour.**
+
+### Theme 37 — cook mode and the recipe page (owner-raised 2026-08-16)
+
+- ✅ **37a — the Clear ticks button goes** `[XS][js]` — **done 2026-08-16**.
+  Owner: *"Get rid of the
+      clear ticks button, its unnecessary"*. It renders twice — the recipe page
+      (`recipe.js`, in a `tick-clear-row`) and cook mode's tool row
+      (`cook-ui.js`) — from one factory in `checklist-ui.js`. Removed from both,
+      with the store's now-unreferenced `clear()`.
+      🚩 **The consequence, recorded rather than argued:** ticks expire on a
+      12-hour clock (`checklist.js` `STALE_MS`) measured from the *last tick*,
+      so a recipe cooked twice inside that window starts part-ticked with no
+      one-tap reset — you untick line by line. The store's own comment
+      ("a recipe cooked twice must not start half-ticked") named the button as
+      the answer to exactly this. His call, made knowingly; if it bites, the
+      cheaper fix is a shorter clock, not the button back.
+
+- ✅ **37b — the timer's whole presentation is wrong** `[S][css][js][ux]` — **done 2026-08-16**.
+      Owner: *"The whole timer UX is poorly designed… you keep producing poor
+      UX by default."* Three named defects, and **all three have one cause** —
+      the countdown numeral and its state word live inside the *same* button:
+      - *not centred horizontally* — `.cook-timer-btn` centres the flex **pair**
+        `[34:48][Pause]`, which puts the numeral left of centre by half the
+        label's width. It can never look centred while the label shares its box.
+      - *not centred vertically* — `align-items: baseline` sits a
+        `var(--step-sub)` word on a `1.5rem` numeral's baseline.
+      - *"Pause"/"Resume" text should not be required either way* — an explicit
+        steer to an icon, and it also kills the *"does this say what it is, or
+        what it will do"* ambiguity a swapping label always carries.
+      - *the Reset button is ugly* — a transparent bordered box with different
+        fill and weight from the control beside it, hugging the right edge.
+      **Direction taken:** one row, three zones —
+      `[⏸/▶ 56px] [ numeral, flex:1, truly centred ] [↺ 56px]`. Equal-width
+      flankers are what actually centre the numeral. Icons carry pause/reset, so
+      no text to misalign and Reset stops out-shouting its neighbour; the words
+      survive in `aria-label`. A hairline progress bar on the card's bottom edge
+      makes it glanceable from across the kitchen at no extra height.
+      🔑 **It also retires a fragile hack.** Reset is `hidden` today until there
+      is something to reset, and `paintTimer()` carries a focus-rescue for
+      exactly that (`if (nowHidden && document.activeElement === timerReset)`).
+      Always-present controls delete the rescue and the bug class with it — the
+      same rule ADR 0039 drew, and the same one `clearTicksButton`'s own comment
+      cited. Resetting an unstarted timer is a harmless no-op.
+
+- ✅ **37f — "Along a route" is removed whole** `[M][js]` — **done
+      2026-08-16**. Owner: *"I would not say that Khandallah Trading Company is
+      on the route from my current location in Churton Park to Courtenay
+      Place… remove it altogether and leave it until we build the proper along
+      a route i.e. to a specific address."* [ADR 0014] is **superseded** by
+      [ADR 0068]. 🔑 **The lesson is not "the estimate was imprecise".** ADR
+      0014's own *Rejected* section already named the weakness — a suburb
+      centroid is not a road — and judged it an acceptable offline
+      approximation. What it could not foresee is that this approximation does
+      not degrade gracefully: it returns **confident wrong answers**, and a
+      confident wrong answer is worse than none. `areaCentroids` went with it
+      (its only two callers were the destination picker; a roadmap line claiming
+      `picker.js` used centroids did not hold against the tree). `geo.js` keeps
+      `routeMapsUrlFor` with **zero callers** on purpose: its docblock records
+      which maps providers honour a waypoint parameter and which silently drop
+      it, and the real feature will need exactly that.
+

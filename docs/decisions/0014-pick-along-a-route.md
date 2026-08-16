@@ -1,6 +1,21 @@
 # 0014 — Pick along a route: offline least-detour sort + routed maps handoff
 
-**Status:** accepted
+**Status:** superseded by
+[ADR 0068](0068-the-home-list-ranks-on-one-blend.md) — the feature this record
+designed was **removed whole on 2026-08-16**, by the owner, unbuilt-replacement.
+His words: *"I would not say that Khandallah Trading Company is on the route
+from my current location in Churton Park to Courtenay Place."* This record's own
+"Rejected" section already named the weakness — a suburb centroid is not a road
+— and judged it an acceptable offline approximation. In use it was not: the
+approximation does not merely lose precision, it returns confident answers that
+are wrong, and a wrong answer given confidently is worse than no answer. The
+decision here is not reversed on new information about routing APIs; it is
+reversed on evidence about the proxy. **What survives:** `geo.js`'s
+`routeMapsUrlFor` and its per-provider waypoint findings (Google honours
+`waypoints`; Apple and Waze silently drop it) are kept with zero callers,
+because the real address-based feature will need exactly them. Do not re-derive
+them, and do not re-adopt the centroid proxy to make this record true again.
+
 **Date:** 2026-07-23
 
 ## Context

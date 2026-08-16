@@ -4611,54 +4611,20 @@ screen and in cook mode. All five are **presentation**, not model: the timer,
 the checklist and the recipe data are all sound underneath. **CLAIMED
 2026-08-16 12:30 UTC (wt: faves-tidy)**, all five.
 
-- [~] **37a — the Clear ticks button goes** `[XS][js]`. Owner: *"Get rid of the
-      clear ticks button, its unnecessary"*. It renders twice — the recipe page
-      (`recipe.js`, in a `tick-clear-row`) and cook mode's tool row
-      (`cook-ui.js`) — from one factory in `checklist-ui.js`. Removed from both,
-      with the store's now-unreferenced `clear()`.
-      🚩 **The consequence, recorded rather than argued:** ticks expire on a
-      12-hour clock (`checklist.js` `STALE_MS`) measured from the *last tick*,
-      so a recipe cooked twice inside that window starts part-ticked with no
-      one-tap reset — you untick line by line. The store's own comment
-      ("a recipe cooked twice must not start half-ticked") named the button as
-      the answer to exactly this. His call, made knowingly; if it bites, the
-      cheaper fix is a shorter clock, not the button back.
-
-- [ ] **37b — the timer's whole presentation is wrong** `[S][css][js][ux]`.
-      Owner: *"The whole timer UX is poorly designed… you keep producing poor
-      UX by default."* Three named defects, and **all three have one cause** —
-      the countdown numeral and its state word live inside the *same* button:
-      - *not centred horizontally* — `.cook-timer-btn` centres the flex **pair**
-        `[34:48][Pause]`, which puts the numeral left of centre by half the
-        label's width. It can never look centred while the label shares its box.
-      - *not centred vertically* — `align-items: baseline` sits a
-        `var(--step-sub)` word on a `1.5rem` numeral's baseline.
-      - *"Pause"/"Resume" text should not be required either way* — an explicit
-        steer to an icon, and it also kills the *"does this say what it is, or
-        what it will do"* ambiguity a swapping label always carries.
-      - *the Reset button is ugly* — a transparent bordered box with different
-        fill and weight from the control beside it, hugging the right edge.
-      **Direction taken:** one row, three zones —
-      `[⏸/▶ 56px] [ numeral, flex:1, truly centred ] [↺ 56px]`. Equal-width
-      flankers are what actually centre the numeral. Icons carry pause/reset, so
-      no text to misalign and Reset stops out-shouting its neighbour; the words
-      survive in `aria-label`. A hairline progress bar on the card's bottom edge
-      makes it glanceable from across the kitchen at no extra height.
-      🔑 **It also retires a fragile hack.** Reset is `hidden` today until there
-      is something to reset, and `paintTimer()` carries a focus-rescue for
-      exactly that (`if (nowHidden && document.activeElement === timerReset)`).
-      Always-present controls delete the rescue and the bug class with it — the
-      same rule ADR 0039 drew, and the same one `clearTicksButton`'s own comment
-      cited. Resetting an unstarted timer is a harmless no-op.
-
+> ✅ **Shipped 2026-08-16** — 37a — the Clear ticks button goes. Detail →
+> [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+> ✅ **Shipped 2026-08-16** — 37b — the timer's whole presentation is wrong. Detail →
+> [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [ ] **37c — the ingredients section should collapse** `[S][js][css]`. Owner:
       *"I should be able to collapse or hide the ingredients section"*. Once
       everything is in the bowl the list is a wall of struck-through text
       between the reader and the method. Use the house pattern — native
       `<details>/<summary>`, as `addons-ui.js` already does — open by default.
-      ⚑ **Open: should the collapsed state persist, and at what scope?** Not
-      persisting is a control that forgets; persisting per-recipe and
-      persisting globally are different products. Recorded, not silently picked.
+      ✅ **RULED 2026-08-16: remember it for ALL recipes** — one profile-scoped
+      preference, not one per recipe. Collapse once and every recipe opens
+      collapsed until you expand one. 🚩 The cost he accepted: opening an
+      *unfamiliar* recipe then hides the ingredients you have not bought yet.
+      If that bites, the fix is per-recipe state, not abandoning persistence.
 
 - [ ] **37d — two columns for ingredients when there is room** `[S][css]`.
       Owner: *"consider if the ingredients should go into two columns if there
@@ -4682,3 +4648,97 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       🔎 This is squarely inside CLAUDE.md's **Exception 1** — family
       attributions in home recipes are owner-approved. A *source* credit
       (a cookbook, a publication) is not personal data at all.
+
+> ✅ **Shipped 2026-08-16** — 37f — "Along a route" is removed whole. Detail →
+> [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+- [~] **37g — the whole SORT BY section goes, and distance moves into the one
+      ranking** `[M][js][ux]` ⚑ — **DESIGNED, NOT BUILT.** Owner: *"I don't see
+      the need for the nearest first sort by button… remove nearest first
+      removes the need for the sort section of the filters altogether."* The
+      full design, the evidence and the three traps are in **[ADR 0068]**; read
+      it before touching `ranking.js`.
+      🔑 **Headline: his algorithm is built and has never once run.** The
+      default branch of `rankVenues` *is* availability → distance → favourite,
+      but `origin` is written in exactly one place — the sort control's own
+      handler — so the distance term has been `Infinity` for every venue since
+      the project began.
+      🛑 **Two traps that would each have shipped a defect:** the favourite
+      credit is **10 km**, not the *"few hundred metres"* he remembers asking
+      for; and `favBoostKm` **cannot be re-tuned to fix that**, because it was
+      quietly repurposed as the branch-proximity cutoff and now has two jobs and
+      one name — retuning it would break every chain's menu page.
+      ⏳ **Deliberately left for a fresh session:** it introduces the **first
+      unprompted permission prompt in Faves' history**, and a new trust surface
+      begun at the tail of a session is how a half-built one ships — the same
+      call 36d got, for the same reason.
+
+- [ ] **37h — remove "Transfer to another device"** `[S][js]`. Owner: *"Remove
+      the 'Transfer to another device' feature all together as we already have
+      a data backup and restore and a sync feature."*
+      🚩 **Worth recording, not arguing:** transfer is the only one of the three
+      that needs **neither a file nor the backend** — backup/restore needs a
+      file, sync needs the Worker. He has weighed that. If it turns out sync
+      reuses transfer's codec or its receive path, that is a finding to bring
+      back, not a reason to keep the button.
+
+- [ ] **37i — Sync lives inside "Your data"** `[S][js][ux]`. Owner: *"In
+      settings the 'Sync across your devices' settings should be in the 'Your
+      data' section."* Today they are two sibling rows in `settings-ui.js`'s
+      `TOPICS`. 🚩 **The trap:** sync's row updates on the engine's own
+      timetable, via a subscription that currently writes to *that row*. Fold
+      the panel in and the subscription must drive the combined row's summary or
+      be torn down — never left writing to a detached element.
+
+- [ ] **37j — "Everywhere" is a place word on a service filter** `[XS][ux]`.
+      Owner: *"Everywhere does not make sense for a drop down to select dine-in
+      vs takeaway."* He is right and it is one string: `site/index.html`'s
+      `#filter-service` offers **Everywhere / Takeaway / Dine-in** under the
+      label "Service". Its neighbours read "All areas" and "All cuisines", so
+      the parallel form is **"Any service"** — `service.all` in `reo.js` needs
+      its te reo re-glossed with it, since the current draft translates
+      *"everywhere"*.
+
+- [ ] **37k — a "style of dining" filter** `[M][schema][design]` ⚑ — owner
+      idea, 2026-08-16: *"Another useful filter might be style of dining/food
+      e.g. silver service vs quick eats."* Genuinely useful and genuinely
+      under-specified, so it is recorded as an idea rather than a spec.
+      🤔 **What has to be decided first:** this is a *third* axis over the same
+      corpus, and the app already has `priceBand` (money), `cuisine` (food) and
+      `vibe` (free-text atmosphere tags like "craft beer", "dog friendly").
+      **Is style a new field, or is it `vibe` grown up?** A controlled
+      vocabulary — say *quick eats · casual · relaxed · special occasion* — is
+      filterable and comparable; `vibe`'s free text is neither. Deciding that
+      before any data is entered is the whole job, because 55 records tagged
+      against a vocabulary nobody ratified is 55 records to redo.
+      🚩 **And it overlaps Theme 30's cuisine-axis work** (giving each `cuisine`
+      value an `origin`/`dish_form`/`service` axis), which is already designed.
+      Check whether "style" is simply that proposal's `service` axis under
+      another name before opening a second front.
+
+- [ ] **37l — a recipe with components needs grouped ingredients**
+      `[M][schema][js]`. Owner, 2026-08-16: *"Some recipes have multiple
+      components. For example Booth's Ginger Crunch has the base and the icing,
+      look at how we should organise the ingredients to improve this."*
+      🔎 **The corpus is already doing this by hand, and the measurement says
+      so.** Four recipes fake grouping with a `"Component: "` prefix inside the
+      ingredient string itself: **Upside-Down Plum Cake 14 of 14 lines**,
+      Chocolate Self-Saucing Pudding 4 of 12, Sticky Date Pudding 3 of 10,
+      Booth's Ginger Crunch 4 of 9. A convention that four records invented
+      independently is a missing field, not a style choice — and the plum cake,
+      where *every* line carries a prefix, is the proof: the prefix is doing all
+      the structural work and the reader pays for it on every row.
+      **Shape to consider:** `ingredients` becomes either a flat list *or* a
+      list of `{ component, items[] }` groups (the same XOR pattern Theme 30
+      proposes for `menus`/`menu`), so ungrouped recipes are untouched and no
+      migration is forced.
+      🛑 **The trap that must be handled in the SAME change:** a tick is keyed
+      on a hash of the ingredient line's **raw text** ([ADR 0067]). Rewriting
+      `"Sauce: ½ cup brown sugar"` into `{component:"Sauce", text:"½ cup brown
+      sugar"}` changes that text, so **every existing tick on all four recipes
+      silently detaches** — they do not error, they just stop matching. Either
+      hash the component and the line together from the start, or accept the
+      loss knowingly and say so. Do not discover this after the data lands.
+      🔎 Sequence it with **37c/37d** (collapse, two columns): all three are
+      about making a long ingredient list readable, and grouping is the one that
+      makes the other two easier — a two-column list breaks far better on
+      component boundaries than mid-list.
