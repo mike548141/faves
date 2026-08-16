@@ -325,6 +325,7 @@
   "menu": [
     {
       "section": "Small Plates",
+      "sectionId": "small-plates",
       "items": [
         {
           "name": "Thick Cut Fries",
@@ -450,6 +451,7 @@
     },
     {
       "section": "Mains",
+      "sectionId": "mains",
       "items": [
         {
           "name": "Fish and Chips",
@@ -557,6 +559,7 @@
     },
     {
       "section": "Pizza",
+      "sectionId": "pizza",
       "items": [
         {
           "name": "Margherita",
@@ -627,6 +630,7 @@
     },
     {
       "section": "Brunch",
+      "sectionId": "brunch",
       "addOns": [
         "brunch-sides"
       ],
@@ -713,6 +717,7 @@
     },
     {
       "section": "Brunch Sides",
+      "sectionId": "brunch-sides",
       "addOnsOnly": true,
       "items": [
         {
@@ -813,6 +818,7 @@
     },
     {
       "section": "Desserts",
+      "sectionId": "desserts",
       "items": [
         {
           "name": "Ice Cream Sundae",
@@ -873,6 +879,7 @@
     },
     {
       "section": "Kids",
+      "sectionId": "kids",
       "note": "12 and under",
       "items": [
         {
@@ -933,6 +940,7 @@
     },
     {
       "section": "Gold Card",
+      "sectionId": "gold-card",
       "note": "Mon–Fri 11:30–17:30, weekends 10:00–17:30",
       "items": [
         {

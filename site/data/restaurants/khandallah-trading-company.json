@@ -73,6 +73,7 @@
   "menu": [
     {
       "section": "Pub Snacks",
+      "sectionId": "pub-snacks",
       "items": [
         {
           "name": "Pull-Apart Garlic Loaf",
@@ -186,6 +187,7 @@
     },
     {
       "section": "Pub Mains",
+      "sectionId": "pub-mains",
       "items": [
         {
           "name": "Chicken Schnitty",
@@ -264,6 +266,7 @@
     },
     {
       "section": "Butcher's Cut Steak",
+      "sectionId": "butcher-s-cut-steak",
       "items": [
         {
           "name": "Butcher's Cut Steak",
@@ -279,6 +282,7 @@
     },
     {
       "section": "Burgers",
+      "sectionId": "burgers",
       "items": [
         {
           "name": "Cheeseburger",
@@ -318,6 +322,7 @@
     },
     {
       "section": "Sides",
+      "sectionId": "sides",
       "items": [
         {
           "name": "Cos Lettuce",
@@ -344,6 +349,7 @@
     },
     {
       "section": "Desserts",
+      "sectionId": "desserts",
       "items": [
         {
           "name": "American Chocolate Brownie Sundae",
@@ -378,6 +384,7 @@
     },
     {
       "section": "Brunch",
+      "sectionId": "brunch",
       "items": [
         {
           "name": "Rosti Benedict",
@@ -472,6 +479,7 @@
     },
     {
       "section": "Brunch Add Ons",
+      "sectionId": "brunch-add-ons",
       "items": [
         {
           "name": "Eggs (2)",
@@ -541,6 +549,7 @@
     },
     {
       "section": "Kids",
+      "sectionId": "kids",
       "note": "12 and under, served with kids' sundae",
       "items": [
         {
@@ -611,6 +620,7 @@
     },
     {
       "section": "Coffee & Tea",
+      "sectionId": "coffee-tea",
       "items": [
         {
           "name": "Espresso",
@@ -705,6 +715,7 @@
     },
     {
       "section": "Refreshments",
+      "sectionId": "refreshments",
       "items": [
         {
           "name": "Coca-Cola / Coke Zero Sugar",

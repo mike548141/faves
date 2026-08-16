@@ -304,6 +304,49 @@ def check_available(rid, obj, where):
         err(rid, f"{where}: available must state at least one of from/to/offBy/season")
 
 
+def check_section_ids(rid, menu):
+    """`sectionId`: a section's stored, immutable identity (ADR 0058).
+
+    The anchor `#section-<id>` is built from this and never from the heading, so
+    renaming a heading no longer invalidates every link to it — the fault ADR
+    0057's rename fired, and ADR 0051's ruling ("identity must be immutable")
+    one level up the tree.
+
+    Two gates, and uniqueness is the one with teeth: two sections sharing an id
+    means one anchor in the document, and the second section becomes unreachable
+    by link and invisible to the scroll-spy — silently, because a duplicate
+    `id` attribute is valid HTML that `querySelector` simply resolves to the
+    first match.
+
+    Presence is NOT gated here yet. The corpus is mid-seed while a parallel
+    session holds six venue files open, and a required field that 25 sections
+    cannot yet satisfy would turn this gate red on `main` for everyone. It
+    becomes required in the commit that seeds the last file — see
+    `tools/seed_section_ids.py --check`, which is what reports the gap until
+    then."""
+    seen = {}
+    for section in menu:
+        if not isinstance(section, dict):
+            continue
+        sid = section.get("sectionId")
+        if sid is None:
+            continue
+        where = f"section {section.get('section')!r}"
+        if not isinstance(sid, str) or not sid.strip():
+            err(rid, f"{where}: sectionId must be a non-empty string, got {sid!r}")
+            continue
+        if sid != slug(sid):
+            # Not cosmetic: the id goes straight into an `id` attribute and a
+            # URL fragment. A space or a capital there is a link that works in
+            # one browser and not the next.
+            err(rid, f"{where}: sectionId {sid!r} is not a slug — expected {slug(sid)!r}")
+        if sid in seen:
+            err(rid, f"{where}: sectionId {sid!r} is already used by section {seen[sid]!r} "
+                     "— one anchor cannot address two sections")
+        else:
+            seen[sid] = section.get("section")
+
+
 def check_section_note(rid, section):
     """`section.note`: the qualifier a venue prints beside its heading — "served
     till 2pm", "12 and under" (ADR 0057). Prose, deliberately: the machine-
@@ -1058,6 +1101,7 @@ def check_restaurant(path):
     if not isinstance(menu, list):
         err(rid, "menu must be a list")
         menu = []
+    check_section_ids(rid, menu)
     for section in menu:
         if not isinstance(section, dict):
             err(rid, f"menu section malformed: {section!r}")

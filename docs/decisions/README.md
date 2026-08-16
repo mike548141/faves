@@ -447,3 +447,14 @@ deliberation those compact docs omit.
   a weekday+interval rule is inexpressible until ROADMAP 28c. The finding it
   fired: **a section's anchor is derived from its display name**, so any rename
   invalidates links to it — ADR 0051's fault, one level up.
+- [0058](0058-a-section-has-an-id-and-its-heading-is-not-it.md) — **a section
+  has an id, and its heading is not it.** 0057's rename broke every deep link
+  to six sections in the commit that made them; the anchor was
+  `slug(section.section)`, a function of a mutable display name. The owner was
+  given the finding-only path, the alias-table path and the schema change, and
+  **ruled for the schema change against the recommendation** — recorded so it is
+  not re-proposed. `sectionId` is stored, immutable and unique per venue, seeded
+  once by `tools/seed_section_ids.py` so no existing anchor moves. The gate with
+  teeth is **uniqueness**: two sections sharing an id is valid HTML that
+  silently makes the second unreachable. Presence becomes required in the commit
+  that seeds the last of six files a parallel session held open.

@@ -345,6 +345,7 @@
   "menu": [
     {
       "section": "Entrees",
+      "sectionId": "entrees",
       "items": [
         {
           "name": "Edamame",
@@ -409,6 +410,7 @@
     },
     {
       "section": "Main dishes",
+      "sectionId": "main-dishes",
       "items": [
         {
           "name": "Katsu",
@@ -533,6 +535,7 @@
     },
     {
       "section": "Bento",
+      "sectionId": "bento",
       "items": [
         {
           "name": "Teriyaki Tofu Bento",

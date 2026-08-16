@@ -71,6 +71,7 @@
   "menu": [
     {
       "section": "Soup",
+      "sectionId": "soup",
       "items": [
         {
           "name": "Wonton Soup",
@@ -119,6 +120,7 @@
     },
     {
       "section": "Fried Rice",
+      "sectionId": "fried-rice",
       "items": [
         {
           "name": "Chicken Fried Rice",
@@ -234,6 +236,7 @@
     },
     {
       "section": "Curry on Rice",
+      "sectionId": "curry-on-rice",
       "items": [
         {
           "name": "Chicken Curry on Rice",
@@ -336,6 +339,7 @@
     },
     {
       "section": "Steamed Rice",
+      "sectionId": "steamed-rice",
       "items": [
         {
           "name": "Steamed Rice - Small",
@@ -380,6 +384,7 @@
     },
     {
       "section": "Egg Fu Young",
+      "sectionId": "egg-fu-young",
       "items": [
         {
           "name": "Chicken Egg Fu Young",
@@ -508,6 +513,7 @@
     },
     {
       "section": "Chow Mein",
+      "sectionId": "chow-mein",
       "items": [
         {
           "name": "Chicken Chow Mein",
@@ -636,6 +642,7 @@
     },
     {
       "section": "Chop Suey",
+      "sectionId": "chop-suey",
       "items": [
         {
           "name": "Chicken Chop Suey",
@@ -751,6 +758,7 @@
     },
     {
       "section": "Sweet and Sour Sauce",
+      "sectionId": "sweet-and-sour-sauce",
       "items": [
         {
           "name": "Sweet and Sour Pork",
@@ -844,6 +852,7 @@
     },
     {
       "section": "Black Bean Dishes",
+      "sectionId": "black-bean-dishes",
       "items": [
         {
           "name": "Chicken Black Bean on Rice",
@@ -941,6 +950,7 @@
     },
     {
       "section": "Satay Dishes",
+      "sectionId": "satay-dishes",
       "items": [
         {
           "name": "Chicken Satay on Rice",
@@ -1044,6 +1054,7 @@
     },
     {
       "section": "Pineapple & Cashew Dishes",
+      "sectionId": "pineapple-cashew-dishes",
       "items": [
         {
           "name": "Chicken with Pineapple and Cashew Nuts",
@@ -1141,6 +1152,7 @@
     },
     {
       "section": "Hot Dishes",
+      "sectionId": "hot-dishes",
       "items": [
         {
           "name": "Nasi Goreng (Rice)",
@@ -1204,6 +1216,7 @@
     },
     {
       "section": "Special Dishes",
+      "sectionId": "special-dishes",
       "items": [
         {
           "name": "Combination Fried Noodles",
@@ -1299,6 +1312,7 @@
     },
     {
       "section": "Extras",
+      "sectionId": "extras",
       "items": [
         {
           "name": "Extra Meat",
@@ -1360,6 +1374,7 @@
     },
     {
       "section": "Deep Fried",
+      "sectionId": "deep-fried",
       "items": [
         {
           "name": "Fish - Battered",
@@ -2034,6 +2049,7 @@
     },
     {
       "section": "Burgers (Standard)",
+      "sectionId": "burgers-standard",
       "items": [
         {
           "name": "Kids Ham Burger (no salad)",
@@ -2255,6 +2271,7 @@
     },
     {
       "section": "Gourmet Burgers",
+      "sectionId": "gourmet-burgers",
       "items": [
         {
           "name": "Gourmet Beef Burger",
@@ -2484,6 +2501,7 @@
     },
     {
       "section": "Wraps",
+      "sectionId": "wraps",
       "items": [
         {
           "name": "Grilled Chicken & Bacon Wrap",
@@ -2520,6 +2538,7 @@
     },
     {
       "section": "Toasted Sandwiches",
+      "sectionId": "toasted-sandwiches",
       "items": [
         {
           "name": "Single Filling",
@@ -2563,6 +2582,7 @@
     },
     {
       "section": "Family Packs & Deals",
+      "sectionId": "family-packs-deals",
       "items": [
         {
           "name": "Family Pack 1",

@@ -267,6 +267,7 @@
   "menu": [
     {
       "section": "Kebabs",
+      "sectionId": "kebabs",
       "addOns": [
         "kebab-style",
         "sauces",
@@ -382,6 +383,7 @@
     },
     {
       "section": "Mixed kebabs",
+      "sectionId": "mixed-kebabs",
       "addOns": [
         "kebab-style",
         "sauces",
@@ -503,6 +505,7 @@
     },
     {
       "section": "Iskender",
+      "sectionId": "iskender",
       "addOns": [
         "sauces",
         "extras"
@@ -626,6 +629,7 @@
     },
     {
       "section": "Salad",
+      "sectionId": "salad",
       "addOns": [
         "sauces",
         "extras"
@@ -749,6 +753,7 @@
     },
     {
       "section": "Shawarmama box",
+      "sectionId": "shawarmama-box",
       "items": [
         {
           "name": "Chicken shawarmama box",
@@ -828,6 +833,7 @@
     },
     {
       "section": "Greek pitas",
+      "sectionId": "greek-pitas",
       "items": [
         {
           "name": "Chicken Greek pita",
@@ -908,6 +914,7 @@
     },
     {
       "section": "Turkish pita",
+      "sectionId": "turkish-pita",
       "items": [
         {
           "name": "Chicken Turkish pita",
@@ -988,6 +995,7 @@
     },
     {
       "section": "Meat on chips",
+      "sectionId": "meat-on-chips",
       "items": [
         {
           "name": "Chicken on chips",
@@ -1078,6 +1086,7 @@
     },
     {
       "section": "Meat on rice",
+      "sectionId": "meat-on-rice",
       "items": [
         {
           "name": "Chicken on rice",
@@ -1113,6 +1122,7 @@
     },
     {
       "section": "Burgers",
+      "sectionId": "burgers",
       "items": [
         {
           "name": "Chicken burger",
@@ -1186,6 +1196,7 @@
     },
     {
       "section": "Combos",
+      "sectionId": "combos",
       "items": [
         {
           "name": "Kebab combo #1",
@@ -1216,6 +1227,7 @@
     },
     {
       "section": "Sides",
+      "sectionId": "sides",
       "items": [
         {
           "name": "Fries",
@@ -1249,6 +1261,7 @@
     },
     {
       "section": "Sweets",
+      "sectionId": "sweets",
       "items": [
         {
           "name": "Baklava",
@@ -1294,6 +1307,7 @@
     },
     {
       "section": "Drinks",
+      "sectionId": "drinks",
       "items": [
         {
           "name": "Ayran",
@@ -1327,6 +1341,7 @@
     },
     {
       "section": "Extras",
+      "sectionId": "extras",
       "addOnsOnly": true,
       "items": [
         {

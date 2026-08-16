@@ -170,6 +170,13 @@ excluded from both stores, always.
   "menu": [
     {
       "section": "Noodles",
+      "sectionId": "noodles",        // REQUIRED, immutable, unique in the venue.
+                                     //   The anchor `#section-<id>` comes from
+                                     //   THIS, never from the heading, so a
+                                     //   rename no longer breaks every link to
+                                     //   the section (ADR 0058). Seeded once by
+                                     //   tools/seed_section_ids.py; after that,
+                                     //   never rewritten
       "note": null,                  // optional subtext under the heading: the
                                      //   qualifier the venue prints beside it
                                      //   ("served till 2pm"). NEVER inside the

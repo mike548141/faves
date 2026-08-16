@@ -83,6 +83,7 @@
   "menu": [
     {
       "section": "Entrée",
+      "sectionId": "entr-e",
       "items": [
         {
           "name": "Vegetable Samosa",
@@ -181,6 +182,7 @@
     },
     {
       "section": "Chicken",
+      "sectionId": "chicken",
       "items": [
         {
           "name": "Butter Chicken",
@@ -263,6 +265,7 @@
     },
     {
       "section": "Lamb",
+      "sectionId": "lamb",
       "items": [
         {
           "name": "Lamb Rogan Josh",
@@ -327,6 +330,7 @@
     },
     {
       "section": "Seafood",
+      "sectionId": "seafood",
       "items": [
         {
           "name": "Fish Masala",
@@ -382,6 +386,7 @@
     },
     {
       "section": "Vegetarian",
+      "sectionId": "vegetarian",
       "items": [
         {
           "name": "Saag Paneer",
@@ -504,6 +509,7 @@
     },
     {
       "section": "Biryani",
+      "sectionId": "biryani",
       "items": [
         {
           "name": "Vegetable Biryani",
@@ -541,6 +547,7 @@
     },
     {
       "section": "Bombay Indo-Chinese",
+      "sectionId": "bombay-indo-chinese",
       "items": [
         {
           "name": "Chicken Fried Rice / Schezuan",
@@ -645,6 +652,7 @@
     },
     {
       "section": "Specials",
+      "sectionId": "specials",
       "items": [
         {
           "name": "Combo",
@@ -677,6 +685,7 @@
     },
     {
       "section": "Tandoori Breads",
+      "sectionId": "tandoori-breads",
       "items": [
         {
           "name": "Plain Roti",
@@ -836,6 +845,7 @@
     },
     {
       "section": "Salads",
+      "sectionId": "salads",
       "items": [
         {
           "name": "Onion & Tomato Kuchummer",
@@ -850,6 +860,7 @@
     },
     {
       "section": "Accompaniments",
+      "sectionId": "accompaniments",
       "items": [
         {
           "name": "Raita",
@@ -927,6 +938,7 @@
     },
     {
       "section": "Drinks",
+      "sectionId": "drinks",
       "items": [
         {
           "name": "1.5L Coke, Fanta, Sprite, L&P or Diet Coke",
@@ -962,6 +974,7 @@
     },
     {
       "section": "Desserts",
+      "sectionId": "desserts",
       "items": [
         {
           "name": "Mango Kulfi",

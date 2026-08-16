@@ -40,6 +40,12 @@ content freshness separately from this file.
   highlighted where you can see it, and where the match was on something the row
   doesn't show — an address, a phone number, a dish description — the row says
   so: *"Matched: address"*.
+- **A link to a menu section keeps working when the heading is renamed.** The
+  anchor used to be built from the heading text, so renaming "Brunch (served
+  till 2pm)" to "Brunch" silently invalidated every link anyone had shared to
+  it — which is exactly what happened earlier the same day. Each section now
+  carries its own stored id and the heading is free to change without the link
+  following it. 210 of 235 sections seeded; nothing moved on the day it ran.
 - **A section's serving time is subtext, not part of its heading.** "Brunch
   (served till 2pm)" put a 24-character chip in the jump-nav strip you scroll
   with a thumb, and Sprig & Fern's Gold Card heading was **53 characters** —

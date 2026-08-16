@@ -154,6 +154,7 @@
   "menu": [
     {
       "section": "Entrée",
+      "sectionId": "entr-e",
       "items": [
         {
           "name": "Satay beef",
@@ -228,6 +229,7 @@
     },
     {
       "section": "Malaysian dishes",
+      "sectionId": "malaysian-dishes",
       "items": [
         {
           "name": "Chicken rendang",
@@ -362,6 +364,7 @@
     },
     {
       "section": "Indian dishes",
+      "sectionId": "indian-dishes",
       "items": [
         {
           "name": "Chicken varuval",
@@ -465,6 +468,7 @@
     },
     {
       "section": "Biryani",
+      "sectionId": "biryani",
       "items": [
         {
           "name": "Prawn biryani",
@@ -519,6 +523,7 @@
     },
     {
       "section": "Roti chanai",
+      "sectionId": "roti-chanai",
       "items": [
         {
           "name": "Roti chanai (2 pieces) with peanut sauce",
@@ -595,6 +600,7 @@
     },
     {
       "section": "Asian delicacies",
+      "sectionId": "asian-delicacies",
       "items": [
         {
           "name": "Sweet and sour fish",
@@ -654,6 +660,7 @@
     },
     {
       "section": "Vegetarian dishes",
+      "sectionId": "vegetarian-dishes",
       "items": [
         {
           "name": "Tofu rendang",
@@ -708,6 +715,7 @@
     },
     {
       "section": "Off the wok",
+      "sectionId": "off-the-wok",
       "items": [
         {
           "name": "Nasi goreng",
@@ -770,6 +778,7 @@
     },
     {
       "section": "Sides",
+      "sectionId": "sides",
       "items": [
         {
           "name": "Mixed vegetable",
@@ -853,6 +862,7 @@
     },
     {
       "section": "Drinks",
+      "sectionId": "drinks",
       "items": [
         {
           "name": "Chocolate milkshake",

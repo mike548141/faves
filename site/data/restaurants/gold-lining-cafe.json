@@ -63,6 +63,7 @@
   "menu": [
     {
       "section": "All Day Brunch",
+      "sectionId": "all-day-brunch",
       "note": "7.30am–2.30pm",
       "items": [
         {
@@ -185,6 +186,7 @@
     },
     {
       "section": "Brunch Add-Ons",
+      "sectionId": "brunch-add-ons",
       "items": [
         {
           "name": "Eggs Your Way — One",
@@ -293,6 +295,7 @@
     },
     {
       "section": "Soup of the Day",
+      "sectionId": "soup-of-the-day",
       "items": [
         {
           "name": "Seafood Chowder",
@@ -310,6 +313,7 @@
     },
     {
       "section": "Cabinet — Savoury",
+      "sectionId": "cabinet-savoury",
       "items": [
         {
           "name": "Corn Fritter Stack",
@@ -462,6 +466,7 @@
     },
     {
       "section": "Cabinet — Bakery",
+      "sectionId": "cabinet-bakery",
       "items": [
         {
           "name": "Almond Croissant",
@@ -596,6 +601,7 @@
     },
     {
       "section": "Cabinet — Sweets & Slices",
+      "sectionId": "cabinet-sweets-slices",
       "items": [
         {
           "name": "Basque Cheesecake",
@@ -740,6 +746,7 @@
     },
     {
       "section": "Cabinet — Raw Vegan",
+      "sectionId": "cabinet-raw-vegan",
       "items": [
         {
           "name": "PB Slice",
@@ -814,6 +821,7 @@
     },
     {
       "section": "Black Coffee",
+      "sectionId": "black-coffee",
       "items": [
         {
           "name": "Short Black",
@@ -857,6 +865,7 @@
     },
     {
       "section": "White Coffee",
+      "sectionId": "white-coffee",
       "items": [
         {
           "name": "Flat White",
@@ -958,6 +967,7 @@
     },
     {
       "section": "Drink Specialties",
+      "sectionId": "drink-specialties",
       "items": [
         {
           "name": "Chia Sisters Lemon Honey Ginger & Turmeric",
@@ -1024,6 +1034,7 @@
     },
     {
       "section": "Iced Drinks",
+      "sectionId": "iced-drinks",
       "items": [
         {
           "name": "Iced Latte",
@@ -1065,6 +1076,7 @@
     },
     {
       "section": "Matcha",
+      "sectionId": "matcha",
       "items": [
         {
           "name": "Iced Matcha Latte",
@@ -1106,6 +1118,7 @@
     },
     {
       "section": "Extras",
+      "sectionId": "extras",
       "items": [
         {
           "name": "Decaf, Honey or Syrups",
@@ -1127,6 +1140,7 @@
     },
     {
       "section": "Merchandise",
+      "sectionId": "merchandise",
       "items": [
         {
           "name": "Huskee Keep Cup 6oz",

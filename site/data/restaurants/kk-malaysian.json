@@ -96,6 +96,7 @@
   "menu": [
     {
       "section": "Starters",
+      "sectionId": "starters",
       "items": [
         {
           "name": "Chicken Satay",
@@ -151,6 +152,7 @@
     },
     {
       "section": "Noodles",
+      "sectionId": "noodles",
       "items": [
         {
           "name": "Chicken Mee Goreng",
@@ -197,6 +199,7 @@
     },
     {
       "section": "Rice",
+      "sectionId": "rice",
       "items": [
         {
           "name": "Nasi Goreng",
@@ -275,6 +278,7 @@
     },
     {
       "section": "Curry",
+      "sectionId": "curry",
       "items": [
         {
           "name": "Roti Chanai",
@@ -305,6 +309,7 @@
     },
     {
       "section": "Laksa",
+      "sectionId": "laksa",
       "items": [
         {
           "name": "Curry Laksa",
@@ -345,6 +350,7 @@
     },
     {
       "section": "Extras",
+      "sectionId": "extras",
       "items": [
         {
           "name": "Plain Roti",

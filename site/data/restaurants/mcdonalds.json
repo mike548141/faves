@@ -59,6 +59,7 @@
   "menu": [
     {
       "section": "Burgers",
+      "sectionId": "burgers",
       "items": [
         {
           "name": "Big Mac",
@@ -120,6 +121,7 @@
     },
     {
       "section": "Chicken & Fish",
+      "sectionId": "chicken-fish",
       "items": [
         {
           "name": "McChicken",
@@ -189,6 +191,7 @@
     },
     {
       "section": "Sides",
+      "sectionId": "sides",
       "items": [
         {
           "name": "Fries (Small)",
@@ -226,6 +229,7 @@
     },
     {
       "section": "Breakfast",
+      "sectionId": "breakfast",
       "items": [
         {
           "name": "Bacon & Egg McMuffin",
@@ -293,6 +297,7 @@
     },
     {
       "section": "McCafé",
+      "sectionId": "mccaf",
       "items": [
         {
           "name": "Flat White",
@@ -382,6 +387,7 @@
     },
     {
       "section": "Desserts & Shakes",
+      "sectionId": "desserts-shakes",
       "items": [
         {
           "name": "Hot Apple Pie",

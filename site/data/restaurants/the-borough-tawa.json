@@ -82,6 +82,7 @@
   "menu": [
     {
       "section": "Burger Wellington 2026",
+      "sectionId": "burger-wellington-2026",
       "available": {
         "from": "2026-08-03",
         "to": "2026-08-23",
@@ -103,6 +104,7 @@
     },
     {
       "section": "Pub Snacks",
+      "sectionId": "pub-snacks",
       "items": [
         {
           "name": "Garlic Pizza Bread",
@@ -193,6 +195,7 @@
     },
     {
       "section": "Pub Mains",
+      "sectionId": "pub-mains",
       "items": [
         {
           "name": "Chicken Schnitty",
@@ -261,6 +264,7 @@
     },
     {
       "section": "Burgers",
+      "sectionId": "burgers",
       "items": [
         {
           "name": "Cheeseburger",
@@ -300,6 +304,7 @@
     },
     {
       "section": "Pizza",
+      "sectionId": "pizza",
       "items": [
         {
           "name": "Margherita",
@@ -363,6 +368,7 @@
     },
     {
       "section": "Brunch",
+      "sectionId": "brunch",
       "note": "served till 2pm",
       "items": [
         {
@@ -464,6 +470,7 @@
     },
     {
       "section": "Brunch Add-Ons",
+      "sectionId": "brunch-add-ons",
       "items": [
         {
           "name": "Eggs (2)",
@@ -547,6 +554,7 @@
     },
     {
       "section": "Desserts",
+      "sectionId": "desserts",
       "items": [
         {
           "name": "American Chocolate Brownie Sundae",
@@ -588,6 +596,7 @@
     },
     {
       "section": "Kids",
+      "sectionId": "kids",
       "note": "12 and under",
       "items": [
         {
@@ -664,6 +673,7 @@
     },
     {
       "section": "Thickshakes & Smoothies",
+      "sectionId": "thickshakes-smoothies",
       "items": [
         {
           "name": "Thickshake",
@@ -689,6 +699,7 @@
     },
     {
       "section": "Beer & Cider — on tap",
+      "sectionId": "beer-cider-on-tap",
       "items": [
         {
           "name": "Heineken",
@@ -823,6 +834,7 @@
     },
     {
       "section": "Beer & Cider — bottles & cans",
+      "sectionId": "beer-cider-bottles-cans",
       "items": [
         {
           "name": "Heineken",
@@ -894,6 +906,7 @@
     },
     {
       "section": "Beer — low and no",
+      "sectionId": "beer-low-and-no",
       "items": [
         {
           "name": "Heineken 0.0",
@@ -926,6 +939,7 @@
     },
     {
       "section": "Cocktails",
+      "sectionId": "cocktails",
       "items": [
         {
           "name": "El Diablo",
@@ -1010,6 +1024,7 @@
     },
     {
       "section": "Wine — champagne & sparkling",
+      "sectionId": "wine-champagne-sparkling",
       "items": [
         {
           "name": "Moët & Chandon Impérial Brut",
@@ -1043,6 +1058,7 @@
     },
     {
       "section": "Wine — white",
+      "sectionId": "wine-white",
       "items": [
         {
           "name": "Fleur de Lis Sauvignon Blanc",
@@ -1097,6 +1113,7 @@
     },
     {
       "section": "Wine — rosé",
+      "sectionId": "wine-ros",
       "items": [
         {
           "name": "Bijou Terre de Providence Rosé",
@@ -1116,6 +1133,7 @@
     },
     {
       "section": "Wine — red",
+      "sectionId": "wine-red",
       "items": [
         {
           "name": "Rebel Merlot",
@@ -1156,6 +1174,7 @@
     },
     {
       "section": "Wine — alcohol free",
+      "sectionId": "wine-alcohol-free",
       "items": [
         {
           "name": "Marlborough Sun 0% Sauvignon Blanc",
@@ -1168,6 +1187,7 @@
     },
     {
       "section": "Non-alcoholic",
+      "sectionId": "non-alcoholic",
       "items": [
         {
           "name": "Coca-Cola / Coke Zero Sugar",
@@ -1240,6 +1260,7 @@
     },
     {
       "section": "Coffee & tea",
+      "sectionId": "coffee-tea",
       "items": [
         {
           "name": "Short Black",

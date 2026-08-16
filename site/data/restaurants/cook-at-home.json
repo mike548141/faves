@@ -29,6 +29,7 @@
   "menu": [
     {
       "section": "Breakfast",
+      "sectionId": "breakfast",
       "items": [
         {
           "name": "Perfectly Pretty Hotcakes",
@@ -69,6 +70,7 @@
     },
     {
       "section": "Baking & sweets",
+      "sectionId": "baking-sweets",
       "items": [
         {
           "name": "Booth's Ginger Crunch",
@@ -304,6 +306,7 @@
     },
     {
       "section": "Dinners",
+      "sectionId": "dinners",
       "items": [
         {
           "name": "Easy Pad Thai",
@@ -531,6 +534,7 @@
     },
     {
       "section": "Desserts",
+      "sectionId": "desserts",
       "items": [
         {
           "name": "Sticky Date Pudding",
@@ -685,6 +689,7 @@
     },
     {
       "section": "Sides & basics",
+      "sectionId": "sides-basics",
       "items": [
         {
           "name": "Creamy Mushrooms",

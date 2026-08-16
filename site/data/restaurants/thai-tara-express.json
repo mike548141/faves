@@ -111,6 +111,7 @@
   "menu": [
     {
       "section": "Appetisers",
+      "sectionId": "appetisers",
       "items": [
         {
           "name": "Roti with satay sauce",
@@ -303,6 +304,7 @@
     },
     {
       "section": "Fried rice",
+      "sectionId": "fried-rice",
       "items": [
         {
           "name": "Fried rice",
@@ -381,6 +383,7 @@
     },
     {
       "section": "Fried noodles",
+      "sectionId": "fried-noodles",
       "items": [
         {
           "name": "Pad thai",
@@ -450,6 +453,7 @@
     },
     {
       "section": "Thai curry",
+      "sectionId": "thai-curry",
       "items": [
         {
           "name": "Green curry",
@@ -536,6 +540,7 @@
     },
     {
       "section": "Special hot dish",
+      "sectionId": "special-hot-dish",
       "items": [
         {
           "name": "Sizzling cashew nuts",
@@ -585,6 +590,7 @@
     },
     {
       "section": "Thai salad",
+      "sectionId": "thai-salad",
       "items": [
         {
           "name": "Grilled beef salad",
@@ -630,6 +636,7 @@
     },
     {
       "section": "On rice",
+      "sectionId": "on-rice",
       "items": [
         {
           "name": "BBQ pork on rice",
@@ -686,6 +693,7 @@
     },
     {
       "section": "Noodle soup",
+      "sectionId": "noodle-soup",
       "items": [
         {
           "name": "Beef noodle soup",
@@ -772,6 +780,7 @@
     },
     {
       "section": "Thai soup",
+      "sectionId": "thai-soup",
       "items": [
         {
           "name": "Tom kha soup",
@@ -811,6 +820,7 @@
     },
     {
       "section": "Stir fry",
+      "sectionId": "stir-fry",
       "items": [
         {
           "name": "Thai chilli",
@@ -973,6 +983,7 @@
     },
     {
       "section": "Meat choices",
+      "sectionId": "meat-choices",
       "items": [
         {
           "name": "Chicken, pork, beef or vegetable with tofu",
@@ -1014,6 +1025,7 @@
     },
     {
       "section": "Side dish",
+      "sectionId": "side-dish",
       "items": [
         {
           "name": "Jasmine rice",
@@ -1061,6 +1073,7 @@
     },
     {
       "section": "Drinks",
+      "sectionId": "drinks",
       "items": [
         {
           "name": "Thai iced coffee",

@@ -29,6 +29,7 @@
   "menu": [
     {
       "section": "Snacks",
+      "sectionId": "snacks",
       "items": [
         {
           "name": "Fries",
@@ -127,6 +128,7 @@
     },
     {
       "section": "Keep The Kids Happy",
+      "sectionId": "keep-the-kids-happy",
       "items": [
         {
           "name": "Chicken Nuggets",
@@ -151,6 +153,7 @@
     },
     {
       "section": "Tacos",
+      "sectionId": "tacos",
       "note": "two tacos each",
       "items": [
         {
@@ -200,6 +203,7 @@
     },
     {
       "section": "WOAP Burger",
+      "sectionId": "woap-burger",
       "items": [
         {
           "name": "Heart-a-Stack",
@@ -216,6 +220,7 @@
     },
     {
       "section": "Burgers",
+      "sectionId": "burgers",
       "note": "all served with fries",
       "items": [
         {
@@ -254,6 +259,7 @@
     },
     {
       "section": "Mains",
+      "sectionId": "mains",
       "items": [
         {
           "name": "Vege Stack",
@@ -289,6 +295,7 @@
     },
     {
       "section": "Baylands Platters",
+      "sectionId": "baylands-platters",
       "items": [
         {
           "name": "Fried Chicken Sliders",
@@ -314,6 +321,7 @@
     },
     {
       "section": "Something Sweet...",
+      "sectionId": "something-sweet",
       "items": [
         {
           "name": "Churros with chocolate & caramel sauces",

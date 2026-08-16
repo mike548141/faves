@@ -159,6 +159,7 @@
   "menu": [
     {
       "section": "Maki",
+      "sectionId": "maki",
       "items": [
         {
           "name": "Teriyaki Salmon Maki",
@@ -269,6 +270,7 @@
     },
     {
       "section": "Uramaki & rolls",
+      "sectionId": "uramaki-rolls",
       "items": [
         {
           "name": "Teriyaki Chicken Uramaki",
@@ -308,6 +310,7 @@
     },
     {
       "section": "Nigiri",
+      "sectionId": "nigiri",
       "items": [
         {
           "name": "Avocado Nigiri",
@@ -404,6 +407,7 @@
     },
     {
       "section": "Inari & rice paper rolls",
+      "sectionId": "inari-rice-paper-rolls",
       "items": [
         {
           "name": "Inari",
@@ -457,6 +461,7 @@
     },
     {
       "section": "Hot food",
+      "sectionId": "hot-food",
       "items": [
         {
           "name": "Takoyaki",
@@ -471,6 +476,7 @@
     },
     {
       "section": "Platters",
+      "sectionId": "platters",
       "items": [
         {
           "name": "Sushi Platter 1",

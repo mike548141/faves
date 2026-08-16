@@ -81,6 +81,7 @@
   "menu": [
     {
       "section": "Entree",
+      "sectionId": "entree",
       "items": [
         {
           "name": "Chicken Curry on Rice",
@@ -201,6 +202,7 @@
     },
     {
       "section": "BBQ Meat Dishes",
+      "sectionId": "bbq-meat-dishes",
       "items": [
         {
           "name": "Soya Chicken on Rice",
@@ -346,6 +348,7 @@
     },
     {
       "section": "Soup, Starters & Congee",
+      "sectionId": "soup-starters-congee",
       "items": [
         {
           "name": "Chicken Sweet Corn Soup",
@@ -567,6 +570,7 @@
     },
     {
       "section": "Claypot Dishes",
+      "sectionId": "claypot-dishes",
       "items": [
         {
           "name": "Eggplant with Salted Fish & Pork Mince",
@@ -761,6 +765,7 @@
     },
     {
       "section": "Stir Fried Dishes",
+      "sectionId": "stir-fried-dishes",
       "items": [
         {
           "name": "Mapo Tofu (Tofu with Pork Mince)",
@@ -1177,6 +1182,7 @@
     },
     {
       "section": "Steamboat Dishes",
+      "sectionId": "steamboat-dishes",
       "items": [
         {
           "name": "Hot & Spicy Fish Fillet with Pickles",
@@ -1286,6 +1292,7 @@
     },
     {
       "section": "Noodle & Rice",
+      "sectionId": "noodle-rice",
       "items": [
         {
           "name": "Shanghai Style Fried Noodle with BBQ Pork & Bok Choy",
@@ -1533,6 +1540,7 @@
     },
     {
       "section": "Drinks & Desserts",
+      "sectionId": "drinks-desserts",
       "items": [
         {
           "name": "Hong Kong Style Milk Tea",

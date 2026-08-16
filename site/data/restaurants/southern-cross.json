@@ -80,6 +80,7 @@
   "menu": [
     {
       "section": "Pub Snacks",
+      "sectionId": "pub-snacks",
       "items": [
         {
           "name": "Pull-Apart Garlic Loaf",
@@ -202,6 +203,7 @@
     },
     {
       "section": "Pub Mains",
+      "sectionId": "pub-mains",
       "items": [
         {
           "name": "Chicken Schnitty",
@@ -284,6 +286,7 @@
     },
     {
       "section": "Butcher's Cut Steak",
+      "sectionId": "butcher-s-cut-steak",
       "items": [
         {
           "name": "Rotating Cut of Premium NZ Beef",
@@ -299,6 +302,7 @@
     },
     {
       "section": "Burgers",
+      "sectionId": "burgers",
       "items": [
         {
           "name": "Cheeseburger",
@@ -338,6 +342,7 @@
     },
     {
       "section": "Pizza",
+      "sectionId": "pizza",
       "items": [
         {
           "name": "Margherita",
@@ -389,6 +394,7 @@
     },
     {
       "section": "Sides",
+      "sectionId": "sides",
       "items": [
         {
           "name": "Cos Lettuce",
@@ -415,6 +421,7 @@
     },
     {
       "section": "Brunch",
+      "sectionId": "brunch",
       "items": [
         {
           "name": "Rosti Benedict",
@@ -532,6 +539,7 @@
     },
     {
       "section": "Brunch Add-Ons",
+      "sectionId": "brunch-add-ons",
       "items": [
         {
           "name": "Eggs (2)",
@@ -610,6 +618,7 @@
     },
     {
       "section": "Desserts",
+      "sectionId": "desserts",
       "items": [
         {
           "name": "American Chocolate Brownie Sundae",
@@ -652,6 +661,7 @@
     },
     {
       "section": "Kids",
+      "sectionId": "kids",
       "items": [
         {
           "name": "Mini Beast Burger",
@@ -727,6 +737,7 @@
     },
     {
       "section": "Beer & Cider — on tap",
+      "sectionId": "beer-cider-on-tap",
       "items": [
         {
           "name": "Heineken",
@@ -888,6 +899,7 @@
     },
     {
       "section": "Beer & Cider — bottles & cans",
+      "sectionId": "beer-cider-bottles-cans",
       "items": [
         {
           "name": "Heineken",
@@ -977,6 +989,7 @@
     },
     {
       "section": "Cocktails — Cross Creations",
+      "sectionId": "cocktails-cross-creations",
       "items": [
         {
           "name": "Pineapple Lump",
@@ -1026,6 +1039,7 @@
     },
     {
       "section": "Cocktails — Cross Classics",
+      "sectionId": "cocktails-cross-classics",
       "items": [
         {
           "name": "Aperol Spritz",
@@ -1061,6 +1075,7 @@
     },
     {
       "section": "Cocktails — on tap",
+      "sectionId": "cocktails-on-tap",
       "items": [
         {
           "name": "The Green One",
@@ -1087,6 +1102,7 @@
     },
     {
       "section": "Mocktails",
+      "sectionId": "mocktails",
       "items": [
         {
           "name": "Cross Iced Tea",
@@ -1119,6 +1135,7 @@
     },
     {
       "section": "Wine — champagne & sparkling",
+      "sectionId": "wine-champagne-sparkling",
       "items": [
         {
           "name": "Moët & Chandon Impérial Brut",
@@ -1159,6 +1176,7 @@
     },
     {
       "section": "Wine — sauvignon blanc",
+      "sectionId": "wine-sauvignon-blanc",
       "items": [
         {
           "name": "Northrow Sauvignon Blanc",
@@ -1185,6 +1203,7 @@
     },
     {
       "section": "Wine — pinot gris & riesling",
+      "sectionId": "wine-pinot-gris-riesling",
       "items": [
         {
           "name": "Northrow Pinot Gris",
@@ -1218,6 +1237,7 @@
     },
     {
       "section": "Wine — chardonnay",
+      "sectionId": "wine-chardonnay",
       "items": [
         {
           "name": "Northrow Chardonnay",
@@ -1237,6 +1257,7 @@
     },
     {
       "section": "Wine — rosé",
+      "sectionId": "wine-ros",
       "items": [
         {
           "name": "Northrow Rosé",
@@ -1263,6 +1284,7 @@
     },
     {
       "section": "Wine — pinot noir",
+      "sectionId": "wine-pinot-noir",
       "items": [
         {
           "name": "Northrow Pinot Noir",
@@ -1282,6 +1304,7 @@
     },
     {
       "section": "Wine — other reds",
+      "sectionId": "wine-other-reds",
       "items": [
         {
           "name": "TW Merlot",
@@ -1315,6 +1338,7 @@
     },
     {
       "section": "Soft drinks & juice",
+      "sectionId": "soft-drinks-juice",
       "items": [
         {
           "name": "Coke / Coca-Cola Zero Sugar",
@@ -1408,6 +1432,7 @@
     },
     {
       "section": "Coffee & tea",
+      "sectionId": "coffee-tea",
       "items": [
         {
           "name": "Black coffee",
@@ -1495,6 +1520,7 @@
     },
     {
       "section": "Milkshakes & smoothies",
+      "sectionId": "milkshakes-smoothies",
       "items": [
         {
           "name": "Milkshake",

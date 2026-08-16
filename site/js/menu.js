@@ -1272,7 +1272,13 @@ function render(r) {
     // link naming "Extra halloumi" still decodes, and validate.py guarantees
     // every one of them is reachable as an option before the flag is allowed.
     if (section.addOnsOnly) continue;
-    const id = `section-${slug(section.section)}`;
+    // The anchor comes from the section's STORED id, never from its heading
+    // (ADR 0058). ADR 0057 renamed six headings and invalidated every deep link
+    // to them in the same commit; an id computed from a display name is not an
+    // identity. The slug fallback is fail-soft only — it runs for a record that
+    // has already failed validate.py's gate, and exists so one missing field
+    // costs a link rather than the whole page. Same reasoning as `dish_id()`.
+    const id = `section-${section.sectionId || slug(section.section)}`;
     navScroll.append(
       el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
     );

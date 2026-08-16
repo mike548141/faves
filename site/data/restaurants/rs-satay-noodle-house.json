@@ -75,6 +75,7 @@
   "menu": [
     {
       "section": "Kua Teaw Dishes (Noodle Soup)",
+      "sectionId": "kua-teaw-dishes-noodle-soup",
       "items": [
         {
           "name": "Combination Noodle Soup",
@@ -129,6 +130,7 @@
     },
     {
       "section": "Satay Dishes (Beef or Chicken)",
+      "sectionId": "satay-dishes-beef-or-chicken",
       "items": [
         {
           "name": "Combination Satay",
@@ -196,6 +198,7 @@
     },
     {
       "section": "Chew Kua Tew Dishes (Fried Noodles)",
+      "sectionId": "chew-kua-tew-dishes-fried-noodles",
       "items": [
         {
           "name": "Combination Chew Kua Teaw",
@@ -226,6 +229,7 @@
     },
     {
       "section": "Rice Dishes",
+      "sectionId": "rice-dishes",
       "items": [
         {
           "name": "Chicken Rice",
@@ -238,6 +242,7 @@
     },
     {
       "section": "Malaysian Style Dishes",
+      "sectionId": "malaysian-style-dishes",
       "items": [
         {
           "name": "Curry Laksa",
@@ -459,6 +464,7 @@
     },
     {
       "section": "Special Malaysia Style Dishes",
+      "sectionId": "special-malaysia-style-dishes",
       "items": [
         {
           "name": "Spring Onion & Ginger on Steamed Rice",
@@ -632,6 +638,7 @@
     },
     {
       "section": "Extras",
+      "sectionId": "extras",
       "items": [
         {
           "name": "Steamed Rice",

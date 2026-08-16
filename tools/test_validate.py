@@ -426,6 +426,22 @@ SOURCE_CASES = {
             lambda s: s.replace('"note": "served till 2pm"', '"note": "   "', 1),
             "error",
         ),
+        # ADR 0058. A duplicate `id` attribute is VALID HTML — the browser does
+        # not complain, `querySelector` resolves to the first match, and the
+        # second section quietly becomes unreachable by link and invisible to
+        # the scroll-spy. Nothing on the page looks wrong. Only the gate can
+        # say so, which is why it is the one with teeth.
+        "two sections claiming one anchor": (
+            lambda s: s.replace('"sectionId": "brunch",', '"sectionId": "pizza",', 1),
+            "error",
+        ),
+        # An id goes straight into an `id` attribute and a URL fragment, so a
+        # space or a capital is a link that works in one browser and not the
+        # next — a failure that only shows up on somebody else's phone.
+        "a sectionId that is not a slug": (
+            lambda s: s.replace('"sectionId": "brunch",', '"sectionId": "Brunch Time",', 1),
+            "error",
+        ),
     },
 }
 

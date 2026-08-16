@@ -86,6 +86,7 @@
   "menu": [
     {
       "section": "Entrée",
+      "sectionId": "entr-e",
       "items": [
         {
           "name": "Steamed bao buns",
@@ -213,6 +214,7 @@
     },
     {
       "section": "Rice bowl",
+      "sectionId": "rice-bowl",
       "items": [
         {
           "name": "Pork rice bowl",
@@ -287,6 +289,7 @@
     },
     {
       "section": "Ramen",
+      "sectionId": "ramen",
       "items": [
         {
           "name": "Tonkotsu",
@@ -443,6 +446,7 @@
     },
     {
       "section": "Extras",
+      "sectionId": "extras",
       "items": [
         {
           "name": "Pork belly",
@@ -635,6 +639,7 @@
     },
     {
       "section": "Deals",
+      "sectionId": "deals",
       "items": [
         {
           "name": "Two mains & one entrée",
