@@ -7524,3 +7524,110 @@ retry loop hit a conflict, left the rebase mid-flight, and the follow-up check
 printed `HEAD` equal to `origin/main` — because a rebase detaches HEAD *at*
 upstream. It reads exactly like success. `git status | head -1` saying
 "interactive rebase in progress" is the signal; `git rev-parse HEAD` is not.
+
+## 2026-08-16-2332 — 37k reopened by the owner, and two guards broken by the migration that fixed them
+
+Continuation of the block above, same session and worktree. Closed 17a and 37k,
+put five decisions to the owner, and **he reopened 37k in the opposite direction
+to the recommendation.**
+
+### 🎯 He was shown the case against, and ruled to build
+
+The recommendation was to **park** 37k: a style value is a judgement no menu
+photo can verify, and `priceBand` — the app's only comparable curated-judgement
+field — sits filled on **8 of 55 venues**. He took it and ruled to build anyway.
+
+🔑 **The objection is answered by removing its premise, not by disputing the
+number.** The field is not waiting on curation-in-general; it is waiting on
+**him**, which is the footing CLAUDE.md already puts menu content on. That is a
+different and better-evidenced bet than `priceBand` ever was — and it is a
+useful correction to a habit of treating a low fill-rate as proof a field is
+doomed.
+
+🔎 **Twice he answered a narrower question with a broader ruling.** Asked
+whether to validate a *style subset* of `vibe`, he ruled **validate all of it**.
+Asked whether to render the chips or stay data-only, he took the **full render
+including its day-one cost** (five inconsistent "quick" strings becoming
+visible). **Offering the cheap option did not anchor him low** — worth knowing
+before framing the next question as if it would.
+
+### 🚩 The finding of the session: two guards broken BY the migration
+
+Neither was caught by any gate. Both were found by going to look.
+
+- **`tools/test_validate.py`** — its sandbox copies a hard-coded list of JS
+  files, which did not include the new `vibes.js`, so `validate.py`'s loader
+  exited and the whole mutation baseline failed. Loud, at least.
+- **`tools/drinks_gap.py`** — held `DEFINITE_VIBE = {"craft beer", "beer
+  garden", "garden bar"}`. The migration renamed those to kebab-case. It **did
+  not fail. It did not warn. It silently matched nothing**, and its derived
+  worklist quietly lost 7 hits.
+
+🔑 **That second one is a THIRD FACE of ADR 0072's pattern, and with the one
+`faves-hygiene` named the same hour there are now three, with one root:**
+
+| face | the verdict is | exposed by |
+|---|---|---|
+| **decorative** | dishonest — same output either way | probing (break it, watch) |
+| **latent** | honest, and carries zero information: its subject does not exist | reading your own green output |
+| **degraded** | was honest until the data moved under it | going to look |
+
+> 🔑 **NOTHING ASSERTS THAT THE GUARD'S SUBJECT IS STILL REAL.** Decorative: the
+> subject exists but the verdict does not depend on it. Latent: the subject does
+> not exist yet. Degraded: the subject existed and moved. One root, three
+> timings.
+
+🎯 **And the cure is already in the repo, from a third session:** *make the
+all-clear carry a denominator.* `tag_allergens.py` now prints `Swept 55
+record(s), 3059 dish(es)` above its finding count. **That single change catches
+all three** — a decorative guard's denominator would be wrong, a latent one's
+zero, and `drinks_gap`'s would have **shrunk by 7**. "Nothing found" is
+unfalsifiable; "nothing found in 55" is not. This wants a successor ADR to 0072
+and is recorded at the head of `ROADMAP.md` until someone writes it.
+
+### 🔎 Measured rather than assumed
+
+- **The chip cap is two.** Swept in a real browser over all 55 cards at 390 px:
+  one chip wraps 5 cards (+3%), two wraps 29 and **never makes a third line**,
+  three wraps **all 55** for **+26%** list height. Three is a cliff, not a slope.
+- **The fourth filter select fits** — 134 px against a 104 px floor — **because
+  the row has since lost the Sort-by group (ADR 0068) and 256 px of segmented
+  control (15z)**. 15z's warning was true when written and is no longer binding.
+  🔑 A constraint recorded as a hard limit deserves re-measuring before it is
+  used to decline something.
+- **One design reading changed by evidence.** The filter matches *any* style a
+  venue carries, not the first in vocabulary order: `regal-chinese` is both
+  `sit-down` and `banquet`, and picking one rendered "Banquet" on the card while
+  leaving it **absent from the dropdown** — visible but unselectable.
+- **`test_validate.py` went 93 → 99 → 104 → 110 mutations inside one hour** as
+  three sessions added to it, and `CLAUDE.md` was stale at every step. The merge
+  conflict was resolved by **running the tool**, not by picking a side.
+
+### Owner rulings taken this session, in full
+
+1. **37k: build it fully; he supplies the values.**
+2. **Style lives in `vibe`, and ALL of `vibe` is validated** — closed vocabulary
+   with facets (`style` · `amenity` · `character`); the filter reads `style`.
+3. **Render the `vibe` chips on cards**, closing an inherited ADR 0047 breach —
+   `vibe` had been precached to every phone with **zero** references in `site/`.
+   A **built-vs-never-runs** case, not an abandoned field, which is why deleting
+   it would have been the wrong cheap answer.
+4. **Amenity values are kept** — 21 taggings no other field holds.
+5. **`service` → `order-mode`, all three meanings including the shipped
+   filter.** ⚠️ In URLs: without a compatibility shim every shared
+   `?service=takeaway` link **silently returns a different venue set**. Routed,
+   unclaimed.
+6. **The roadmap is SPLIT — one file per item.** Fixes the unsatisfiable claim
+   rule at its root rather than rewording it. 🛑 **OWNER-RULED · UNCLAIMED ·
+   BLOCKED ON QUIESCENCE** — precondition, in checkable terms: *no other session
+   holds a claim in the monolith*. Two sessions declined it on economics rather
+   than do it badly.
+
+### Delivered
+
+`site/js/vibes.js` · 15 venues migrated (23 raw strings → 17 keys, 3 dropped as
+verified cuisine duplicates) · `validate.py` reads the vocabulary from the JS
+rather than copying it, and dies loudly on a zero-key parse · chips on cards ·
+a fourth filter select · ADR **0082**. `node --test` **1051 pass / 0 fail**,
+`validate.py` 55 valid, `test_validate.py` 110 mutations, `boot_check` 24/24,
+`filter_row_check` 25/25, `recipe_check` 29/29.
