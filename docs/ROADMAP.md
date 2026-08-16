@@ -223,57 +223,11 @@ than the Near-me pool — parked, unclaimed, `[S/M]`.
   in the verify blocks in `CLAUDE.md` and `CONTRIBUTING.md`.
 - ✅ **Language stays per-profile** — owner ratified the ADR 0012 scoping as
   shipped. No change.
-- [ ] **Ratings UX — redesign (attempt 3)** `[M][design]` ⚑ — **two control
-  designs rejected on owner review; a third is parked here by owner request.**
-  History: (1) the original **1–3 three-button** control (ADR 0013) read
-  ambiguously and crowded the ♥; (2) its replacement, a **1–5 star tap/drag
-  slider** (ADR 0019, **currently live** — moved under the name, clear of the ♥,
-  `role="slider"` + full keyboard, browser-verified 390px), the owner **also**
-  rejected on review (2026-07-23). Three v3 paradigms were floated — plain
-  tap-only 5 stars · emoji reaction faces · number pills 1–5 — and the owner
-  **parked the choice** rather than have a third guess built now. The 1–5 slider
-  **stays live** meanwhile (no revert requested). The underlying model is sound
-  and unchanged (1–5, per-profile, curated-vs-personal split; ADR 0013/0019) —
-  this is a **control/visual** redesign only. 🎯 **Owner ruling 2026-07-24 —
-  redesign later, not now.** The slider stays live; no paradigm chosen; revisit
-  when it next bothers him. Do not build a v3 until then. Next (when reopened):
-  agree the direction with the owner, then supersede ADR 0019. What's shipped
-  so far → `ROADMAP-DONE.md` is
-  premature; keep the trail in ADR 0013 → 0019.
-- ✅ **Directions handoff — backed out to a pin** — **applied 2026-07-23**
-  (`9dad5f8`, ADR 0016, wt: faves-wave8-rulings-apply). Owner, raw: "I don't
-  think this meets what I wanted for the feature. We need to review it and may
-  back out the change. Also when I tapped on 'R & S Satay Noodle House' which is
-  shown at the pickup address '148 Cuba St' the maps open on '1 Garrett St'." <!-- leakscan:allow: venue business address in a quoted bug report — same product class as site/data (ADR 0022 gate 1) -->
-  Applied: the address tap now opens a map **pin** (not directions), targeting
-  the **street address string** — `apple maps.apple.com/?q=<addr>`, `google
-  maps/search/?api=1&query=<addr>` — so Maps geocodes 148 Cuba St exactly. Coords <!-- leakscan:allow: venue business address as the worked example — same product class as site/data (ADR 0022 gate 1) -->
-  are a belt-and-braces fallback only (they stay the source for in-app distance
-  maths). The along-route "🧭 Route via maps" handoff keeps its routed form but
-  its venue leg targets the address too. ADR 0010 part (a) superseded; its "~N
-  min drive" hint (b) stands. The underlying coord imprecision is still open —
-  see the **Coordinate audit** `[S]` below.
-- ✅ **Coordinate audit** `[S]` — **done 2026-08-09** (wt: faves-coord-audit,
-  `tools/audit_coords.py`). All 46 coordinate slots re-geocoded against their
-  own street addresses. **The premise was wrong:** R & S's pin is 1 m from
-  148 Cuba St and has never been edited — the "1 Garrett St" bug was the maps  <!-- leakscan:allow: venue business addresses already in site/data and in the quoted bug report — same product class (ADR 0022 gate 1) -->
-  app reverse-geocoding the point we handed it, which is what ADR 0016 already
-  fixed by handing over the address string instead. Fleet-wide: **36 of 39
-  stored pins within 30 m** (33 within 2 m), nothing past 100 m, **0
-  corrections needed**. 2 rows carry a note (satay-kingdom-cafe, an in-mall
-  address with no geocodable door; groundup-cafe at 33 m), 1 is unverifiable
-  by this method (khandallah-trading-company, a street-corner address). Detail
-  → [`reviews/2026-08-09-0207-coordinate-audit.md`](reviews/2026-08-09-0207-coordinate-audit.md).
-- [ ] **Favourite/rating reference integrity** `[M][design]` — **ADR 0020**
-  (proposed). A favourited/rated/shared dish or venue may be missing when the app
-  opens — either **removed** from the data, or the local data is **stale** (a
-  second device / a shared recipient hasn't refreshed). Today both silently 404
-  to a generic error. Decided invariants: **never silently drop** an unresolved
-  ref (mark it, offer refresh/remove); **never claim "removed"** without an
-  online recheck (stale-vs-deleted is indistinguishable locally — an honesty
-  floor point); honest menu-page not-found screen. **Build deferred +
-  coordinated** with ADR 0017 (sync makes stale refs routine) and **Theme 10**
-  (sharing) so the merge/refresh UX is built once.
+> ✅ **Ratings UX — settled 2026-08-16.** Owner: *"I've decided to keep the
+> current rating stars."* Attempt 3 is **cancelled, not parked** — ADR 0019's
+> 1–5 slider is the answer, and no superseding ADR is needed. The two rejected
+> designs and why they were rejected → [`ROADMAP-DONE.md`](ROADMAP-DONE.md), so
+> neither is re-proposed.
 
 ## Owner-reported — 2026-07-22
 
@@ -781,10 +735,20 @@ like *char kway teow*; worth confirming against the shop before touching. `[S]`
   from our curation; (a) **curated household rating** as **schema + render only**
   — an optional integer `rating: 1..3` on venues/menu items (`validate.py`
   enforced), rendered where picks render, **no data invented** so it ships
-  dormant. Public crowd ratings **stay rejected** (backend + moderation +
-  accounts break three non-goals). **⚑ still stands:** the owner must ratify the
-  (a)+(b)-not-public direction *and* supply the curated `rating` values before
-  (a) shows anything. The live-Google-rating edge function below is a **separate,
+  dormant. Public crowd ratings *of our own* **stay rejected**
+  (backend + moderation + accounts break three non-goals) — which is NOT the
+  same as displaying someone else's aggregate; see the next item.
+  🛑 **RULED 2026-08-16 — the curated household rating (a) is WITHDRAWN.**
+  Owner, verbatim: *"It was never supposed to be curated ratings. We keep the
+  personal ratings as they are, that is done. What I asked for was using
+  publicly available review/ratings/feedback services/websites like yelp,
+  Google etc that aggregate feedback to give a restaurant a rating."*
+  So **(b) personal ratings are DONE** and need no ratification, and **(a) is
+  withdrawn** — retire the dormant `rating: 1..3` field and its render path
+  rather than leaving a schema field nobody will ever fill. The want was always
+  the item below. ⚠️ This misreading was anchored in the 2026-07-08 owner-calls
+  line "dish ratings curated", now marked superseded there; left unmarked it
+  would have re-proposed itself. The live-Google-rating edge function below is a **separate,
   owner-gated** item (billing) — out of scope for this change.
 - **See public ratings / reviews** `[M]` ⚑ **owner decided 2026-07-08:
   show the number when online, link-out when offline.** The honest read: a
@@ -1175,7 +1139,22 @@ favourites so the orderer can pick their usual when ordering for the family.
   what they already saw; state that limit to users. → **Lean Theme 9 the
   right way: give each user a keypair from the start**, even though self-sync
   only needs the symmetric secret, so sharing is a smaller later step.
-- ⚑ **Allergen-safety framing is load-bearing.** Shared dietary/allergen
+- ✅ **RULED 2026-08-16 — a shared list is LIVE, and staleness is not our
+  problem to solve.** Owner, verbatim: *"It will never stale because the point
+  is that it will stay in sync. We are not going to try and address the issue
+  of someone not updating their own allergens. So if I share my allergen
+  settings with someone then they will get the latest data that I configure in
+  faves and as it changes."*
+  🚩 **This is a bigger ruling than it reads.** It changes Theme 10 from a
+  **one-way snapshot grant** to a **live subscription**, which means sharing
+  cannot ship before **Theme 9 v2's backend** — a snapshot needs no server, a
+  live feed does. It also draws the responsibility line: Faves guarantees the
+  recipient sees *what the sharer currently has configured*, and does **not**
+  attempt to police whether the sharer keeps their own allergens current. So the
+  copy must say whose configuration it is and when it last synced, not "this is
+  safe". Re-scope 10 against 9 v2 before building any of it.
+  ⚑ ~~**Allergen-safety framing is load-bearing.**~~ (Superseded by the ruling
+  above; the reasoning is kept because the *class* of risk is unchanged.) Shared dietary/allergen
   data is health-adjacent; ordering off a **stale or wrong** shared list is a
   **safety** failure, not cosmetic. Frame as **"informational — confirm with
   the person,"** never authoritative; inherit the app's existing allergen
@@ -1239,7 +1218,16 @@ from the rest.
   brings concurrent edits, conflict resolution, and "who may remove whose
   recipe" — none of which the E2E blob design answers today. Do not assume
   Theme 10 covers it.
-- **11e — Which of today's 24 recipes stay public?** ⚑ **Owner call.** The
+- **11e — Which of today's 24 recipes stay public?** ✅ **RULED 2026-08-16 —
+  family-attributed recipes go PRIVATE by default.** Any recipe whose title
+  carries a person's name moves out of `site/data/`; the rest stay public. The
+  owner may override per recipe. 🚩 **Name the affected set before building
+  anything** — on a first read that is at least *Booth's Ginger Crunch*,
+  *B's Dope-As Brownie*, *Shane's Ribs*, *Jesse's Garlic Chicken Thighs* and
+  *Famous Brade Green Chicken Curry*, which includes several of the collection's
+  best. This ruling also settles the pending family-texture question from Theme
+  8's review: first names in titles leave the public site with the recipes.
+  ~~⚑ **Owner call.**~~ The
   steer was "publish some, move some private". 🚩 This intersects the
   **pending family-texture rulings** (Theme 8): the review's open question on
   the `Shane's Ribs` / `Jesse's ...` attributions (first names of people
@@ -1733,7 +1721,13 @@ there, before either of these designs commits to a reference shape.
 ✅ **"Your data" panel split — fixed 2026-08-09.** Detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-**a. Settings: alternatives to drill-in** `[M][design]` ⚑ — **owner, raw:**
+**a. Settings: alternatives to drill-in** ✅ **RULED 2026-08-16 — keep the
+drill-in.** Owner asked the question and answered it: the index-of-rows into
+single-topic panels stays. No accordion, no collapsing sections. Worth keeping
+the reasoning: the sheet never changes size that way, which is the geometry that
+caused the ⓘ flicker (ADR 0059), and every row already shows its current value
+as a subtitle. The text below is the original brief, retained so the alternative
+is not re-proposed. ~~`[M][design]` ⚑~~ — **owner, raw:**
 *"With the new Settings UI I am considering alternative options to a sub-menu
 design but I like the grouping/headings you have used. Perhaps accordion or
 collapsing sections to make it easier."* The grouping stays either way; this is
@@ -2485,7 +2479,9 @@ while the page moves upward, never during a downward read and never at rest.
 Also fixed: the `Faves` wordmark was 81.7 × 31.9 px; now 44.
 
 - [ ] 🚩 **The order pill eats a dietary chip's tap at large text** `[S][css]`
-  ⚑ — **found by measurement 2026-08-16 and deliberately NOT fixed.** At 390 px
+  ✅ **RULED 2026-08-16 (relayed via faves-71, recorded `ed4845f`): leave it,
+  record it** — deliberately deferred, not unnoticed. ⚑ discharged.
+  — **found by measurement 2026-08-16 and deliberately NOT fixed.** At 390 px
   with the browser's *Very large* text setting, the order FAB covers **82.5% of a
   "Gluten free" diet chip and owns its tap** — 0.0 × 8.3 px reachable. This is
   **not** the "pill is untappable" report, which was checked and is false: the
@@ -3916,8 +3912,12 @@ own internal ordering stated in the theme.
 then; two have since moved):
 1. Order tally: **in** (shipped); STRATEGY non-goal clarification landed.
 2. Ratings: **show the live number when online (edge-function proxy),
-   link-out when offline; dish ratings curated** — see Theme 5. *Ratings
-   shipped; the UX is on attempt 3 and owner-gated.*
+   link-out when offline;** ~~dish ratings curated~~ — see Theme 5.
+   ⚠️ **"dish ratings curated" is SUPERSEDED (owner, 2026-08-16):** *"It was
+   never supposed to be curated ratings."* The live aggregate from Google/Yelp —
+   the first half of this same line — is what he asked for. Personal ratings are
+   shipped and **done**, and the control is settled (*"keep the current rating
+   stars"*), which cancels the attempt-3 redesign in Theme 2.
 3. Feedback intake: **no email; parked** — deploy first (Theme 4c).
    ⚠️ **Reversed 2026-08-09** — Theme 4c was reactivated by the owner
    ("tell us what's wrong or missing"). This line is superseded.
@@ -4306,8 +4306,9 @@ ingredient, and:
 beside `serves` as "about $X, serves Y (priced <date>)". No grocery corpus, no
 per-ingredient maths, no invented facts, and it answers the comparison question
 today. Per-ingredient costing stays behind 36b's schema.
-⚑ The full version needs a decision on where grocery prices come from, which is
-a new content source and therefore the owner's alone.
+✅ **RULED 2026-08-16: park `costToMake`.** `currency` stays as the placeholder
+it is. ⚑ discharged — the grocery-source question is not live until he unparks
+this.
 
 ### Sizing
 
