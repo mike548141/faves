@@ -4614,6 +4614,39 @@ to the owner at close and answered:
   wrong place to make a hurried, unguarded edit. Needs a unit test asserting a
   tick never appears in `collectPersonalData()`'s output, proved by breaking it.
 
+  ✅ **BUILT 2026-08-16 (wt: faves-cook) — and the analysis above was wrong a
+  THIRD time, in both directions. Recorded as [ADR 0073].**
+  - 🔎 **"Never restored by import" is false.** `parsePersonalData` keeps the
+    scoped key in `other` — watched directly, `['faves.p.default.checklist.v1',
+    …]` — and `applyPersonalData` writes every `other` entry back. Ticks *were*
+    restored: under the **exporting** device's profile id, which the import may
+    have re-minted, with a twelve-hour expiry that voids them by the next day.
+    The mechanism is *restored uselessly, or onto the wrong person*, not
+    *silently dropped*. The owner's ruling lands either way.
+  - 🔎 **They were also leaving the phone.** `sync.js` calls the same collector
+    and `sync-merge.js` never reads `other`, so ticks were encrypted and shipped
+    between devices in order to be discarded at the far end.
+  - 🛑 **And the fix this item specified would have done nothing.** "Add the
+    checklist to `EXCLUDED`" is right in spirit and inert in fact: `EXCLUDED` is
+    matched with `key in EXCLUDED`, while `profileScopedStorage()` makes the real
+    key `faves.p.<id>.checklist.v1`. The base key matches no stored key, so the
+    exclusion would have excluded **nothing at all while reading as complete**.
+    Matching is now a suffix test, which also catches keys orphaned from the
+    registry — the case a registry-driven loop misses, and the one most likely
+    to hold a stranger's ticks.
+  - Also new: `spare` separates *excluded from a backup* from *exempt from a
+    replace wipe*. The origin is both; a tick is only the first, because making a
+    device match a file cannot mean keeping the last occupant's half-cooked
+    recipe.
+  - 🔑 **What actually caught all three: writing the test before the fix and
+    watching it fail.** Four new tests failed against the old code; three failed
+    again under a deliberate revert to the flat lookup, which is what proves the
+    matcher rather than the table entry is load-bearing. **A fix nobody has seen
+    fail first is a fix nobody has evidence for** — and note this item had
+    already announced itself as *"wrong twice"* and was still wrong.
+
+[ADR 0073]: decisions/0073-a-backup-carries-only-what-it-can-put-back.md
+
 ### 36e — one place to look, not two `[M][ux]`
 
 A recipe currently renders **twice**, through two code paths: expanded inside

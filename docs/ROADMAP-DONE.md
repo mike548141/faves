@@ -1599,7 +1599,7 @@ the CSS root font size grows every `rem` box but does **not** move `rem`-based
 > (`atelier@1408d98`, zero drift at close). The local symptom went anyway,
 > because **worktrees moved out of the tree**.
 
-**What the item claimed.** Sessions take worktrees at `.claude/worktrees/<name>/`
+**What the item claimed.** Sessions take worktrees at `.claude/worktrees/<name>/` <!-- pathscan:allow: gitignored and untracked by design — present in a primary checkout, absent in a worktree, which is the point being made -->
 — gitignored, but a full second checkout — and the scanners walk it. So a bare
 `plainscan .` counted 2000 where the tree had 623, `pathscan .` counted 4 where
 2 were real, and `leakscan .` reported **101 findings, commit blocked**, whenever
@@ -1619,7 +1619,17 @@ faves-menus), from a clean primary checkout:
 **Why it changed.** `git worktree list` puts all five at `~/worktrees/<name>`,
 which atelier's own `CONCURRENCY.md:16` prescribes — *"worktrees live outside
 iCloud (`~/worktrees/…`)"*. That path is **outside the repo**, so `.` no longer
-contains a second checkout. `.claude/worktrees/` still exists here and is empty.
+contains a second checkout. `.claude/worktrees/` still exists here and is empty. <!-- pathscan:allow: gitignored and untracked by design — see the note below on pathscan's per-checkout verdict -->
+
+🔎 **A bonus finding, met while writing this up.** `pathscan` reports these very
+references as **missing paths in a worktree and as clean in the primary
+checkout** — same commit, same file, two verdicts, because the directory is
+untracked and only one checkout happens to have it on disk. That is this repo's
+decorative-guard tell almost word for word: *a check that gives a different
+verdict per checkout is a check nobody reads*. Both references now carry
+allow-markers, so the verdict no longer depends on which directory you run it
+from. 🚩 The general form is worth more than the fix: **a guard that consults
+untracked state is not checking the commit, it is checking the machine.**
 
 🔑 **Worth keeping, and it is the general lesson, not this item's detail.** The
 finding was true when written and false when read, and **nothing about it
