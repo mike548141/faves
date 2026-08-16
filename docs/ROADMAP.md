@@ -1102,7 +1102,11 @@ choose (Theme 10), rather than being trapped in one browser's storage.
   token scoped to two account groups and **no zone scope at all**, held only in
   the macOS keychain; `worker/wrangler.toml` keeps its placeholders on purpose,
   because this repo is public and the real ids live in the estate root.
-  **Still open, and NOT claimed:** the **push/pull/debounce client**; the
+  **CLAIMED 2026-08-16 12:14 UTC (wt: faves-sync-live)** — the **push/pull
+  client, the pairing UI and the base-snapshot store**, i.e. everything still
+  standing between a live endpoint and a working feature. Owner pushed back on
+  the parts-vs-machine distinction and asked for sync live; this is that.
+  **Was open, now claimed:** the **push/pull/debounce client**; the
   **pairing UI**; and the **base-snapshot store the merge needs** — that last is
   the only remaining piece of the *offline* half, and without it the merge
   silently degrades to the additive behaviour ADR 0060 exists to replace.
