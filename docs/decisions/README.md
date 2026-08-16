@@ -538,6 +538,10 @@ deliberation those compact docs omit.
   invented "simmer 20 min" on chicken is a food-safety failure; every step is
   also classed `prep`/`cook`/`wait` so the risky class is visible. `null` with
   a reason stays a legitimate answer.
+  **The timer clause is superseded in part by
+  [0066](0066-an-estimated-duration-drives-a-timer-marked-as-an-estimate.md)** —
+  the owner ruled on 2026-08-16 that estimates drive timers too, clearly marked,
+  and `timerSafe` is retired. The rest of this record stands.
   Per-kind ageing — a separate decay limit for hours against phone and address —
   is **explicitly not built**: the shape is ruled, the numbers still cannot come
   from a corpus whose every date sits in one 48-hour window.
@@ -555,3 +559,19 @@ deliberation those compact docs omit.
   `isRecipeKind()`, because the answer is **persisted** in hearts, ratings and
   share URLs and cannot be re-derived. Rendered DOM byte-identical before and
   after, measured from headless Chrome across five screens.
+- [0066](0066-an-estimated-duration-drives-a-timer-marked-as-an-estimate.md) —
+  **an estimated duration drives a timer, marked as an estimate.** Supersedes
+  [0064](0064-an-estimate-carries-its-working-and-never-a-timer.md) **in part**:
+  its timer clause only. Owner's ruling, verbatim: *"Estimates drive timers too,
+  clearly marked — every step gets a countdown; estimated ones are labelled as
+  estimates on the timer face."* The food-safety argument — an estimated
+  20-minute simmer on chicken thighs — and a middle option splitting on `phase`
+  rather than source were both put to him first; he took the widest one.
+  `timerSafe` is **retired, not inverted**: under the ruling it reads `true` on
+  all 115 steps with a number, and a field with one value tells a renderer
+  nothing. What replaces it as the hard failure is `minutes` with **no
+  `source`** — the countdown would then run with no way to mark it an estimate —
+  proved by deleting one and watching `--check` exit 1. The render spec now
+  requires the marker **on the timer face**, not only in the step text: a clock
+  that looks the same whether its number was read or guessed is not "clearly
+  marked". No UI built here.
