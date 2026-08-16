@@ -202,7 +202,8 @@
           "desc": "Beer-battered daily catch, house fries, green herb slaw, tartare sauce.",
           "price": 29.5,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-egg"
           ]
         },
         {
@@ -565,7 +566,7 @@
           "dishId": "lil-fish-flicks",
           "desc": "Crispy fish bites, fries, tartare sauce.",
           "price": 15.5,
-          "tags": []
+          "tags": ["contains-egg"]
         },
         {
           "name": "Meatballs",

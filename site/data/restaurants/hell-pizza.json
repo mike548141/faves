@@ -184,7 +184,8 @@
           "price": 26,
           "desc": "Premium NZ beef (or plant-based patty / Impossible Beef), smoked cheddar, honey mustard, onion and gherkins.",
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -192,7 +193,7 @@
           "dishId": "cursed",
           "price": 26,
           "desc": "Honey mustard, free-range chicken, ham, onions, gherkins, bacon and smoked cheddar.",
-          "tags": []
+          "tags": ["contains-dairy"]
         },
         {
           "name": "The Beast",
@@ -342,7 +343,8 @@
           "desc": "Plant-based patty or Impossible Beef, smoked cheddar, honey mustard, onion and gherkins.",
           "tags": [
             "v",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {

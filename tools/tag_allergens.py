@@ -88,8 +88,13 @@ RULES = [
     ("contains-gluten", "DERIVED", "battered/crumbed coatings are wheat flour",
      r"\b(battered|crumbed|schnitzel|katsu|tempura)\b", None),
     ("contains-gluten", "DERIVED", "a wheat-flour wrapper",
-     r"\b(dumplings?|wontons?|gyoza|samosas?|spring\s?rolls?|dim\s?sims?|pork\s?buns?)\b",
-     r"\brice\s?paper\b"),
+     # `tortillas?` added 2026-08-16 with the cheddar gap. Corn tortillas are
+     # real and are the excluded case below — but a burrito or a wrap on a NZ
+     # menu is wheat unless it says otherwise, and this rule may only ADD a
+     # contains- tag (ADR 0025), so over-reaching here is the safe direction.
+     r"\b(dumplings?|wontons?|gyoza|samosas?|spring\s?rolls?|dim\s?sims?|pork\s?buns?|"
+     r"tortillas?|burritos?|quesadillas?)\b",
+     r"\b(rice\s?paper|corn\s?tortillas?)\b"),
     # "pie spice" is a spice blend, and a fish/crab/rice cake is not a bakery
     # cake — both found by dry-run against the real corpus.
     ("contains-gluten", "DERIVED", "a wheat bakery item",
@@ -124,7 +129,15 @@ RULES = [
     # the right trade: an inference should under-reach, not mis-fire.
     ("contains-dairy", "STATED", "names a dairy product",
      r"\b(cheese|cheesy|butter|buttermilk|creams?|milks?|milkshakes?|yoghurt|yogurt|"
-     r"mozzarella|parmesan|feta|halloumi|paneer|camembert|brie|mascarpone|ricotta|ghee)\b",
+     r"mozzarella|parmesan|feta|halloumi|paneer|camembert|brie|mascarpone|ricotta|ghee|"
+     # Named cheeses that never say "cheese". Found 2026-08-16 by a sibling
+     # session: the rule matched "Cheeseburger" but not a bare "Cheddar", and
+     # `validate.py`'s twin check was already flagging the gap in the corpus —
+     # one Cheeseburger carried contains-dairy and its same-named twin did not.
+     # A cheese the menu names by variety is exactly as stated as one it calls
+     # cheese.
+     r"cheddar|gruy[eè]re|edam|colby|havarti|provolone|gouda|emmental|pecorino|"
+     r"gorgonzola|stilton|roquefort|blue\s?cheese|creme\s?fra[iî]che|cr[eè]me\s?fra[iî]che)\b",
      # Plant "yoghurt" is as common on a brunch menu as plant milk, and the
      # bare word is what the dairy rule matches — Southern Cross's House
      # Granola is served with coconut yoghurt and is not a dairy dish.
@@ -140,7 +153,11 @@ RULES = [
     # \begg\b never matches "eggplant".
     ("contains-egg", "STATED", "names egg", r"\beggs?\b", None),
     ("contains-egg", "DERIVED", "an egg emulsion",
-     r"\b(mayonnaise|mayo|aioli|hollandaise|meringue|custard|pavlova)\b", None),
+     # "tartare sauce" is mayonnaise with capers and gherkin — an egg emulsion
+     # by construction, and on a fish-and-chips menu it is everywhere. Added
+     # 2026-08-16 alongside the cheddar gap.
+     r"\b(mayonnaise|mayo|aioli|hollandaise|meringue|custard|pavlova|"
+     r"tartare\s?sauce|tartar\s?sauce)\b", None),
     ("contains-egg", "DERIVED", "egg is in the batter or base",
      r"\b(omelettes?|frittata|quiche|carbonara|tempura|tiramisu)\b", None),
 
