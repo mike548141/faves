@@ -251,6 +251,18 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
 - For `"recipes"`, the venue-only fields relax: `area`/`city`/`address`
   may be `null`, `services` is an empty list (a recipe is neither
   dine-in nor takeaway), and there is no contact/order card.
+- **That relaxation is declared, not scattered (ADR 0064).**
+  `site/js/kinds.js` is the one table saying what each `kind` has and can
+  do — `hasLocation`, `hasHours`, `hasPrices`, `canOrder`, `canReport`,
+  `hasFreshness`, `inFacets`, `pinnedFirst`, `hasContactCard`,
+  `itemsHaveRecipeFields`, `itemPage` — plus the words the kind supplies
+  for itself. Every screen asks it (`kindOf(r).hasHours`) rather than
+  testing the discriminator, so `"recipes"` appears as a literal in that
+  module alone. A capability goes in only when a call site reads it, and
+  never derived from whether a field happens to be present: an unrecorded
+  fact and an absent capability are different things. The one identity
+  question left, `isRecipeKind()`, exists because that answer is
+  **persisted** in hearts, ratings and share URLs.
 - Each menu item may carry recipe fields, all optional:
   - `serves`: integer (shown where a dish price would be).
   - `time`: string, e.g. `"40 min"`.
