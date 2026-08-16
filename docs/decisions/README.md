@@ -835,3 +835,21 @@ deliberation those compact docs omit.
   seen failing first, three of them again under a deliberate revert.
 
 [0067]: 0067-a-tick-is-keyed-on-the-line-not-its-place.md
+
+- [0082](0082-the-location-ask-explains-itself.md) — **the location ask explains
+  itself, and can be turned off for good.** Supersedes the *surface* half of
+  [0069] hours after it shipped: the owner asked for an explained dialog, a
+  "don't ask me again" tickbox binding both it and a follow-up banner, and the
+  removal of the "Use my location" pill. 🔑 **Not a reversal of 0069's
+  protection** — 0069 was about never springing the *browser's* prompt, and this
+  dialog is ours, so it cannot deny anything; it is the priming affordance
+  [0068]'s own Consequences asked for. The ask waits until the list has
+  rendered ("load the full page … then ask"), and never opens as a modal over a
+  reader who has already scrolled or tapped — a rule found by MEASUREMENT, when
+  opening it unconditionally made every filter control report "blocked by
+  DIALOG". With the pill gone, **Settings → Location is load-bearing**: without
+  it the tickbox would be a trapdoor. Guarded by `tools/geo_check.mjs`, the
+  eighth browser check, because a promise fails in the wiring while the pure
+  decision table stays green.
+
+[0082]: 0082-the-location-ask-explains-itself.md

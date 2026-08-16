@@ -158,10 +158,13 @@ jobs:
   # (`bypass_mode: always`), and the last 100 rule evaluations on `main` were
   # 100 bypasses. So on this repo's normal path — a direct push to `main`, which
   # IS the Cloudflare Pages deploy — the red arrives *after* the site is live.
-  # Nor is this job in the ruleset's required list, so it does not block a PR
-  # merge either. What it buys is that the check runs at all without a human
-  # remembering to type it, which is exactly how `sync_check` sat dead through a
-  # whole settings refactor with CI green throughout.
+  # This job WAS added to the ruleset's required list on 2026-08-17 (four checks
+  # became six) — which it could only be once the job existed. But the bypass is
+  # unchanged, so the resting state is REQUIRED-BUT-BYPASSABLE: correct, and it
+  # closes nothing in practice until the bypass is narrowed. What it buys today
+  # is that the check runs at all without a human remembering to type it, which
+  # is exactly how `sync_check` sat dead through a whole settings refactor with
+  # CI green throughout.
   boot:
     name: every screen boots
     runs-on: ubuntu-latest

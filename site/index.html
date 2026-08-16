@@ -118,6 +118,27 @@
     </header>
 
     <main id="main" class="wrap">
+      <!-- The quieter second ask (ADR 0082). Shown only to someone who dismissed
+           the dialog WITHOUT ticking "don't ask again" — ticking it suppresses
+           this too, permanently, which is the whole promise of the tickbox.
+           It is a banner, not a bar: it scrolls away with the page rather than
+           being fixed, so it can never own a tap meant for a card (Theme 29's
+           lesson about fixed controls). Hidden until app.js says otherwise, and
+           `browse-only` so it never appears over search results. -->
+      <div id="geo-banner" class="geo-banner browse-only" role="region"
+           aria-labelledby="geo-banner-text" hidden>
+        <p id="geo-banner-text" class="geo-banner-text">
+          <span aria-hidden="true">📍</span>
+          <span data-i18n="geo.banner">Share your location to see what’s closest — it never leaves your phone.</span>
+        </p>
+        <div class="geo-banner-actions">
+          <button type="button" id="geo-banner-allow" class="geo-btn geo-btn-primary"
+                  data-i18n="geo.use">Use my location</button>
+          <button type="button" id="geo-banner-dismiss" class="geo-btn geo-btn-quiet"
+                  data-i18n="geo.banner.dismiss">Not now</button>
+        </div>
+      </div>
+
       <!-- Global search. JS-only enhancement (app.js unhides it); hidden by
            default so the no-JS fallback list isn't preceded by a dead control.
            Favourites moved to the header overflow menu. -->
@@ -203,30 +224,15 @@
              hidden whenever nothing is on. -->
         <div id="active-filters" class="active-filters" hidden></div>
       </div>
-      <!-- The location ask, and what came of it (ADR 0069). Both stay out here
-           rather than in the filter sheet: this is a permission, not a facet,
-           and the answer to it survives the sheet closing.
-           #geo-ask is hidden until app.js has read the browser's permission
-           state and found it can usefully be offered — already-granted needs no
-           button, and blocked gets the status line instead. Tapping it is the
-           ONLY thing in this app that raises a browser prompt; nothing is
-           sprung on load. Both are 0 px until app.js says otherwise. -->
+      <!-- What came of the location ask (ADR 0082). The PILL IS GONE — the
+           owner removed it on 2026-08-17 ("I don't like the pill button to
+           prompt for location data"), so this row now carries only the status
+           line: "open places near you come first", or the blocked notice.
+           The ask itself moved to #geo-dialog below, which opens only AFTER the
+           list has rendered, and to #geo-banner above it. The way back for
+           someone who turned the ask off is Settings → Distance, because with
+           no pill there would otherwise be no route at all. -->
       <div id="geo-row" class="geo-row browse-only">
-        <!-- `geo.use` is a NEW key, and the owner authorised it on 2026-08-17
-             against his own parked-queue rule ("do not open new [reo] items
-             without asking" — he was asked). It first shipped as `toggle.nearMe`
-             / "Near me", the key this app's own pill carried before 15z, chosen
-             precisely to open nothing. He overrode that, and the reason is the
-             one thing this button is not like any other control in Faves:
-             tapping it is the ONLY action in the app that makes a browser show a
-             permission prompt. "Near me" names the *result*; "Use my location"
-             names the *action*, and someone who is surprised by a permission
-             prompt is someone who taps Block — which is sticky, and far harder
-             to undo than an ungranted permission ([ADR 0069]). Clarity here buys
-             a permission that survives, which is worth one queue item. -->
-        <button type="button" id="geo-ask" class="list-toggle geo-ask" hidden>
-          <span aria-hidden="true">📍</span> <span data-i18n="geo.use">Use my location</span>
-        </button>
         <p id="geo-status" class="geo-status" role="status" aria-live="polite" hidden></p>
       </div>
       <p id="tz-note" class="tz-note browse-only" data-i18n="tz.note" hidden>Open/closed times are New Zealand time.</p>
@@ -688,6 +694,52 @@
          deferring. Grouped and labelled for the first time: "Narrow to" makes
          the list shorter, "Sort by" only reorders it (ADR 0014) — a distinction
          the old undifferentiated chip row never made. -->
+    <!-- The location ask (ADR 0082, superseding ADR 0069's inline-control half).
+         WHY A DIALOG AT ALL, when 0069 ruled against one: this is OUR UI, not the
+         browser's. It cannot cause the permanent block 0069 was written to avoid,
+         because only the Allow button below raises the real prompt — so the ask
+         can be explained first, which is what 0068's own Consequences section
+         asked for ("a priming affordance BEFORE the prompt").
+         WHEN: never on load. The owner's ruling, 2026-08-17 — "load the full page
+         so they can see everything and sort to the best of Faves ability without
+         location data sharing, THEN ask" — so app.js opens this only after the
+         list has rendered. The reader has seen the thing location improves before
+         being asked to improve it.
+         `showModal()` is deliberate: everything outside an open modal <dialog> is
+         inert, so the tickbox and buttons cannot be scrolled past accidentally. -->
+    <dialog id="geo-dialog" class="geo-dialog" aria-labelledby="geo-dialog-title">
+      <div class="geo-dialog-inner">
+        <h2 id="geo-dialog-title" class="geo-dialog-title" data-i18n="geo.title">
+          See what’s closest?
+        </h2>
+        <p class="geo-dialog-body" data-i18n="geo.why">
+          Faves can put the places nearest you first, hide the ones too far to
+          reach tonight, and pick the closest branch of a chain.
+        </p>
+        <!-- The promise, and it is verifiable rather than decorative: this app
+             makes exactly two network requests, both in data.js, both for our own
+             menu JSON. No analytics, no telemetry, no beacon, no backend. Your
+             coordinates are held in this browser and used to sort a list.
+             If that ever stops being true, this sentence must be the first thing
+             that changes — it is a claim about privacy on a screen asking for a
+             permission, which is the one place a stale promise is a lie. -->
+        <p class="geo-dialog-promise">
+          <span aria-hidden="true">🔒</span>
+          <span data-i18n="geo.private">Your location never leaves your device. Faves has no accounts and no servers to send it to.</span>
+        </p>
+        <label class="geo-dialog-check">
+          <input type="checkbox" id="geo-dialog-never" />
+          <span data-i18n="geo.never">Don’t ask me about this again</span>
+        </label>
+        <div class="geo-dialog-actions">
+          <button type="button" id="geo-dialog-allow" class="geo-btn geo-btn-primary"
+                  data-i18n="geo.use">Use my location</button>
+          <button type="button" id="geo-dialog-skip" class="geo-btn geo-btn-quiet"
+                  data-i18n="geo.skip">Not now</button>
+        </div>
+      </div>
+    </dialog>
+
     <dialog id="filter-sheet" class="order-sheet filter-sheet" aria-labelledby="filter-sheet-title">
       <div class="order-inner">
         <div class="order-head">

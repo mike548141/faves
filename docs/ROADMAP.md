@@ -159,6 +159,24 @@ edge proxy) revisit against that precedent — each still its own ADR.
 
 ## Theme 2 — Location & maps
 
+> ✅ **Shipped 2026-08-17 — the location ask explains itself** ([ADR 0082],
+> superseding the surface half of [ADR 0069] the same day). The owner asked for
+> an explained dialog stating that location never leaves the device, a "don't
+> ask me about this again" tickbox binding **both** the dialog and a follow-up
+> banner, and the **removal of the "Use my location" pill**. The list now loads
+> and sorts as well as it can without location *first*, and the ask follows —
+> his ruling: *"load the full page so they can see everything … then ask for
+> location data sharing so they can see why its needed."*
+> 🔑 **Two findings worth carrying.** A modal opening 900 ms in makes the whole
+> page inert and steals focus — measured, when it broke `to_top_check` and
+> `filter_row_check` — so the dialog now yields to the banner for anyone already
+> scrolling or tapping. And **Settings → Location became load-bearing** rather
+> than a convenience: with the pill gone, without it the tickbox is a trapdoor.
+> Guarded by `tools/geo_check.mjs`, the eighth browser check.
+> ⚑ **Seven English-only te reo keys are owed** (`docs/reo-review-queue.md`);
+> `geo.private` is flagged there as the one that must not be approximately
+> translated, being a privacy claim rather than a label.
+
 ✅ **Shipped 2026-07-08** — availability + favourite ranking (`ranking.js`) and
 its tunable distance dials; schema coordinates, native-maps handoff (ADR 0005),
 and the "📍 Near me" distance-sorted list. A real tile-map view was ruled out on
@@ -3324,13 +3342,26 @@ printing `FAIL <assertion>` with exit 1. Detail →
       questions, not one.
       🎯 **Owner's call, and it is genuinely two decisions** — both repo
       settings, both his:
-      **(a) Promote `service-worker version lockstep` and `every screen boots`
-      to required.** Cost: a push with an unbumped version constant, or a screen
-      whose JS throws on load, starts failing instead of warning. That is the
-      intent. Do **not** extend it to `cook_check`/`sync_check` — both are
-      measurably contention-flaky and a flaky required check trains everyone to
-      hit re-run, which is worse than no check.
-      **(b) Decide whether admin bypass should stay `always`.** It is defensible
+      ✅ **(a) RULED AND DONE 2026-08-16 — required checks went 4 → 6.** Both
+      `service-worker version lockstep` and `every screen boots` are now in
+      `protect-main`'s required list; verified directly against the ruleset API,
+      not taken on report. Do **not** extend it to `cook_check`/`sync_check` —
+      both are measurably contention-flaky and a flaky required check trains
+      everyone to hit re-run, which is worse than no check.
+      ⚠️ **And the honest limit, which must stay attached to (a) wherever it is
+      quoted: the practical effect today is NIL.** `bypass_actors` is unchanged,
+      so pushes from the owner's machine still bypass all six. (a) takes effect
+      only if (b) moves. A session first reported this change as *"closing the
+      stale-menu hole"* and had to correct itself to the owner — on its own it
+      does not.
+      🔑 **What moved this, worth reusing:** the abstract argument about guard
+      layers had been in front of him for a while and did not land. What landed
+      was the concrete pairing — *the gate written because an unbumped
+      `SHELL_VERSION` shipped stale files to his own phone is the specific one
+      that cannot stop it happening again*, on a repo where a push is a deploy.
+      **A named past incident beat a principle.**
+      ⏳ **(b) Decide whether admin bypass should stay `always`** — deliberately
+      deferred by the owner, not overlooked. It is defensible
       — a solo owner locking himself out of his own default branch is a real
       cost, and the doctrine floor names lockout-class changes as
       stop-and-confirm. But while it stands, *every* required check on this repo
@@ -3396,6 +3427,23 @@ printing `FAIL <assertion>` with exit 1. Detail →
       the owner's own phone is advisory on every path. 🎯 Whether either becomes
       required is repo settings and therefore the owner's; it is being put to
       him from the session holding the live version-bump instance, as one ask.
+
+      ✅ **ANSWERED same day: the owner authorised it and a peer made the
+      change — `protect-main` now requires SIX contexts**, adding `every screen
+      boots` and `service-worker version lockstep`. Verified independently
+      against the ruleset API rather than taken on report. 🔑 **The boot job had
+      to exist before it could be required**, so the CI wiring above is what
+      made the addition possible.
+      🛑 **But `bypass_actors` is UNCHANGED — `RepositoryRole 5 → always`.** So
+      a push from the owner's machine still bypasses all six, and **on its own
+      this closes nothing in practice today.** The peer nearly overstated it to
+      the owner and corrected itself; that correction is the load-bearing part
+      and is preserved here rather than smoothed into a win. 🔑 The resting
+      state is now **required-but-bypassable** — better than advisory, not the
+      same as enforced, and it takes effect the moment the bypass is narrowed.
+      🎯 **Narrowing the bypass is a separate owner decision he has NOT taken**;
+      the peer recommended leaving it for now. Do not treat this item as
+      protected by the requirement.
       🚩 **A near-miss worth more than the finding it came from:** a peer nearly
       reported `check_decisions.py` as ungated too. It is not — it, plus
       `check_fallback`, `gen_sbom --check` and `check_visibility`, are **steps

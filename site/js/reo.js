@@ -61,7 +61,8 @@ const MI = {
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",
-  // The location ask (#geo-ask, ADR 0069). `toggle.nearMe` / "E tata ana" — the
+  // The location ask (ADR 0082; the #geo-ask pill it names was removed with
+  // that record). `toggle.nearMe` / "E tata ana" — the
   // key the "Near me" pill carried, then the retired "Sort by" select's second
   // option — is GONE with the last thing that rendered it. A translated string
   // no screen shows is not an asset; it is a claim that something is covered.
@@ -73,10 +74,24 @@ const MI = {
   // raises a browser permission prompt. A reader surprised by that prompt taps
   // Block, which is sticky and far harder to undo than an ungranted permission.
   //
-  // English-only keys now owed, both falling back safely (translate() captures
-  // the English on its first pass before mi() can miss): `geo.use`, and
-  // `menu.opensNewWindow` (the WCAG G201 new-window warning menu.js appends to
-  // every off-site link, 31d). `sort.usual` left the list with its select.
+  // ⚑ ADR 0082 added SIX more English-only keys, and they are declared here
+  // rather than slipped in: `geo.title`, `geo.why`, `geo.private`, `geo.never`,
+  // `geo.skip`, `geo.banner`, `geo.banner.dismiss`. They are the location
+  // dialog and its banner — a feature the owner asked for on 2026-08-17, so the
+  // strings are a consequence of that request rather than a new front opened on
+  // the parked queue. `geo.use` was NOT duplicated: both "Use my location"
+  // buttons reuse the key that already existed, because a second key carrying
+  // identical English is a second thing to translate for no gain.
+  // 🚩 `geo.private` is the one to look at first — "Your location never leaves
+  // your device" is a PRIVACY CLAIM, and a mistranslation of it is not a
+  // cosmetic fault, it is an untrue promise on the screen that asks for the
+  // permission. Better English-only indefinitely than approximately translated.
+  //
+  // English-only keys now owed, all falling back safely (translate() captures
+  // the English on its first pass before mi() can miss): the seven above,
+  // `geo.use`, and `menu.opensNewWindow` (the WCAG G201 new-window warning
+  // menu.js appends to every off-site link, 31d). `sort.usual` left with its
+  // select.
   // ⚠ Not on that list and not a reo item: the #geo-status sentences are set
   // from app.js by textContent, like every other JS-composed status string in
   // this app. They are English wherever they appear, which is the honest state.

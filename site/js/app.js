@@ -19,6 +19,7 @@ import { formatDistance } from "./units.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
 import { venueHours, nearestBranch } from "./locations.js";
 import { recallOrigin, rememberOrigin } from "./geo.js";
+import { askSurface, suppressAsk, declineAsk, readConsent } from "./geo-consent.js";
 import { openStatus, makeClock, viewerOnVenueTime } from "./hours.js";
 import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 import { closureBadge } from "./closure-ui.js";
@@ -1099,120 +1100,199 @@ const BLOCKED_MSG = "Location is blocked for this site — turn it on in your br
 // the ranking falls back to availability → favourite → curated, which is the
 // order this app has always actually shipped.
 //
-// NOTHING IS SPRUNG ON LOAD. ADR 0068 had `getCurrentPosition` firing on first
-// paint, and its own safety-valve — prime it "if the deny rate looks bad in
-// use" — turned out to have a trigger nothing can observe, because the app ships
-// no telemetry of any kind. An unexplained prompt at the moment of least earned
-// trust is the classic route to a PERMANENT block, and a block costs a trip into
-// per-site browser settings to undo where an ungranted permission costs one tap.
-// So: read the browser's mind first (permissions.query never prompts), and only
-// ever prompt because someone asked us to.
+// THE LOCATION ASK (ADR 0082, superseding ADR 0069's "inline control, never a
+// modal" half). Three rules, all the owner's, all 2026-08-17:
+//
+//   1. NOTHING IS ASKED UNTIL THE PAGE IS USEFUL. "Load the full page so they
+//      can see everything and sort to the best of Faves ability without location
+//      data sharing. Then ask for location data sharing so they can see why it's
+//      needed." So the list renders in the no-origin order first and the dialog
+//      opens after it — the reader has seen the thing location improves before
+//      being asked to improve it.
+//   2. THE PILL IS GONE. "I don't like the pill button to prompt for location
+//      data, remove it." The only routes now are this dialog, the banner behind
+//      it, and Settings -> Distance for anyone who turned both off.
+//   3. "DON'T ASK ME AGAIN" IS FOREVER, and binds the banner too (geo-consent.js).
+//
+// What 0069 got right and is kept whole: we never spring the BROWSER's prompt.
+// `permissions.query` reads state without prompting, and the real prompt is
+// raised only by a button someone pressed. That was 0069's actual protection —
+// a browser-level block is sticky and hard to undo — and none of the above
+// touches it, because a dialog of our own cannot deny anything.
 function wireLocation(state, render) {
-  const askBtn = document.getElementById("geo-ask");
   const status = document.getElementById("geo-status");
-  if (!askBtn || !("geolocation" in navigator)) return;
+  const dialog = document.getElementById("geo-dialog");
+  const banner = document.getElementById("geo-banner");
+  if (!status || !("geolocation" in navigator)) return;
+
+  const never = document.getElementById("geo-dialog-never");
 
   const setStatus = (msg) => {
     status.textContent = msg || "";
     status.hidden = !msg;
   };
-
-  const showAsk = (show) => {
-    askBtn.hidden = !show;
+  const showBanner = (show) => {
+    if (banner) banner.hidden = !show;
+  };
+  const closeDialog = () => {
+    if (dialog?.open) dialog.close();
   };
 
-  // Fetch and apply. Raises the browser prompt ONLY when the permission state is
-  // "prompt" — under "granted" the browser answers from the grant it already
-  // holds and the viewer sees nothing, which is the whole point of asking
-  // permissions.query first.
+  // Fetch and apply. Raises the browser prompt only where the state is
+  // "prompt"; under "granted" the browser answers from the grant it holds and
+  // the viewer sees nothing.
   function fetchOrigin({ silent }) {
-    askBtn.disabled = true;
     if (!silent) setStatus("Finding your location…");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        askBtn.disabled = false;
         state.origin = { lat: coords.latitude, lng: coords.longitude };
         rememberOrigin(state.origin); // let the menu screen order branches nearest-first
-        showAsk(false); // the ask is answered; the button has no second job
+        closeDialog();
+        showBanner(false);
         setStatus("Open places near you come first.");
         render();
       },
       (err) => {
-        askBtn.disabled = false;
+        closeDialog();
         if (err.code === err.PERMISSION_DENIED) {
-          // A refusal is not an error and gets no nag (ADR 0068 item 4 stands
-          // for this case). But the button must go: a control that can only
-          // fail is worse than no control, and re-offering it IS the second ask
-          // the ADR forbids.
-          showAsk(false);
+          // They said No to the BROWSER. That is sticky and we do not re-ask:
+          // ADR 0068 item 4 stands for exactly this case. The banner would be a
+          // second ask for a permission the browser will no longer grant, so it
+          // goes too, and the status line says what is true.
+          showBanner(false);
           setStatus(BLOCKED_MSG);
           return;
         }
-        // Timeout, no fix, position-unavailable: transient, so the button stays
-        // for a second try. Only a denial is permanent.
-        showAsk(true);
+        // Timeout, no fix, position-unavailable: transient rather than a
+        // refusal, so the banner stays as the way to try again.
+        showBanner(true);
         setStatus(silent ? "" : "Couldn't get your location — showing our usual order.");
       },
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
     );
   }
 
-  askBtn.addEventListener("click", () => fetchOrigin({ silent: false }));
+  // Honour the tickbox on EVERY exit from the dialog, including Esc and the
+  // backdrop. Someone who ticks the box and then presses Escape has told us the
+  // same thing as someone who ticks it and taps "Not now"; reading the tick only
+  // on one path would quietly break the promise on the others.
+  function leaveDialog({ allowed }) {
+    if (never?.checked) suppressAsk();
+    else if (!allowed) declineAsk();
+    closeDialog();
+    // The banner is the consequence of declining WITHOUT ticking. askSurface()
+    // owns that decision rather than this branch re-deriving it.
+    if (!allowed) {
+      showBanner(askSurface("prompt", readConsent(), Boolean(state.origin)) === "banner");
+    }
+  }
 
-  // The three states, read once at load. `permissions.query` is new to this
-  // codebase and is feature-detected: where it is missing (or throws on the
-  // "geolocation" name, which some older engines do) we land on the same branch
-  // as "prompt" — offer the button, prompt nobody. That is the safe direction,
-  // and it is why no path here depends on the API existing.
+  document.getElementById("geo-dialog-allow")?.addEventListener("click", () => {
+    if (never?.checked) suppressAsk(); // they may still never want asking again
+    fetchOrigin({ silent: false });
+  });
+  document.getElementById("geo-dialog-skip")?.addEventListener("click", () =>
+    leaveDialog({ allowed: false })
+  );
+  // Esc and backdrop dismissal both fire "close" without firing any click.
+  dialog?.addEventListener("close", () => leaveDialog({ allowed: false }));
+
+  document.getElementById("geo-banner-allow")?.addEventListener("click", () =>
+    fetchOrigin({ silent: false })
+  );
+  document.getElementById("geo-banner-dismiss")?.addEventListener("click", () => {
+    // Dismissing the banner is the SECOND decline. Two refusals is a no, so this
+    // suppresses permanently rather than deferring — a banner that returns next
+    // visit after being dismissed twice is precisely the nagging the owner ruled
+    // out. Settings -> Distance remains the way back.
+    suppressAsk();
+    showBanner(false);
+  });
+
+  // Rule 1, mechanically. `render()` has already run by the time wireLocation is
+  // called, but the browser has not necessarily PAINTED it: opening a modal in
+  // the same frame would show the dialog over a blank list, which is the
+  // opposite of "so they can see why it's needed". Two rAFs guarantee a painted
+  // frame, and the short timeout on top is the reading beat.
+  // 🚩 A MODAL MUST NOT LAND ON SOMEONE ALREADY USING THE PAGE. `showModal()`
+  // makes everything outside the dialog inert and pulls focus into it, so a
+  // dialog that opens 900 ms in will interrupt a reader who started scrolling,
+  // opened the filters, or tabbed to a control at 800 ms — their tap goes
+  // nowhere and their focus is yanked. Measured, not theorised: opening it
+  // unconditionally broke `to_top_check` (the tucked ↑ could not be focused)
+  // and `filter_row_check` (every filter control read "blocked by DIALOG",
+  // and focus had moved to this dialog's checkbox).
+  //
+  // So the modal is for a reader who has NOT started yet, and anyone already
+  // browsing gets the banner instead — which asks the same question without
+  // taking the page away. That is the owner's rule 1 read honestly: "load the
+  // full page so they can see everything ... then ask" is about not asking too
+  // early, and interrupting someone mid-tap is a different way of asking too
+  // early.
+  let engaged = false;
+  const markEngaged = () => {
+    engaged = true;
+  };
+  // `capture` so a click on a control that stops propagation still counts, and
+  // `once` because the flag never goes back.
+  for (const evt of ["scroll", "pointerdown", "keydown"]) {
+    window.addEventListener(evt, markEngaged, { once: true, capture: true, passive: true });
+  }
+
+  function openAsk() {
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => setTimeout(() => {
+        // Re-check: a grant may have arrived while we waited.
+        if (state.origin || !dialog || dialog.open) return;
+        // Already reading: ask quietly, never over the top of them.
+        if (engaged || typeof dialog.showModal !== "function") {
+          showBanner(true);
+          return;
+        }
+        dialog.showModal();
+      }, 900))
+    );
+  }
+
   function applyPermissionState(stateName) {
+    const surface = askSurface(stateName, readConsent(), Boolean(state.origin));
     if (stateName === "granted") {
-      showAsk(false);
       fetchOrigin({ silent: true }); // already ours to use — no prompt appears
       return;
     }
     if (stateName === "denied") {
-      // The gap this closes: before ADR 0069 "never asked" and "blocked
-      // forever" presented identically — no origin, no distance, nothing on
-      // screen — so nobody could tell an app that had not asked from one that
-      // could never ask again, the owner on his own phone included.
-      showAsk(false);
+      // The gap ADR 0069 closed and this record keeps: before it, "never asked"
+      // and "blocked forever" presented identically, so nobody could tell an app
+      // that had not asked from one that could never ask again.
+      closeDialog();
+      showBanner(false);
       setStatus(BLOCKED_MSG);
-      // Reached via perm.onchange when someone blocks us in site settings
-      // mid-visit. Keeping the coordinates we already hold would be legal and
-      // dishonest: they just told the browser to stop us using their location,
-      // and a list still silently ranked by it is not what they asked for.
+      // Reached via perm.onchange when someone blocks us mid-visit. Keeping the
+      // coordinates we already hold would be legal and dishonest.
       if (state.origin) {
         state.origin = null;
-        rememberOrigin(null); // the menu screen forgets it too
+        rememberOrigin(null);
         render();
       }
       return;
     }
-    // "prompt": offer the button — unless this session already captured a
-    // location, in which case there is nothing left to ask for.
-    showAsk(!state.origin);
+    if (surface === "dialog") openAsk();
+    else if (surface === "banner") showBanner(true);
+    // "none" — suppressed, or we already have what the ask would fetch.
   }
 
-  // Seeded from this browsing session's own capture (init, above): we already
-  // have what the button would fetch, so offering it would be asking a question
-  // already answered. Say what the list is doing and leave the button hidden —
-  // but still read the permission below, because a revoke mid-visit has to be
-  // able to take the seeded origin back off us.
+  // Seeded from this browsing session's own capture (init, above).
   if (state.origin) setStatus("Open places near you come first.");
 
-  if (!navigator.permissions?.query) return showAsk(!state.origin);
+  if (!navigator.permissions?.query) return applyPermissionState("prompt");
   navigator.permissions
     .query({ name: "geolocation" })
     .then((perm) => {
       applyPermissionState(perm.state);
-      // Granting or blocking in browser settings mid-visit changes this without
-      // any event of ours firing. Cheap to follow, and it means the button stops
-      // lying the moment the answer changes.
       perm.onchange = () => applyPermissionState(perm.state);
     })
     // Some engines reject on the "geolocation" name rather than resolving.
-    // Same landing as "prompt": offer the button, prompt nobody.
-    .catch(() => showAsk(!state.origin));
+    .catch(() => applyPermissionState("prompt"));
 }
 
 loadRestaurants()

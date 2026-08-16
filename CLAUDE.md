@@ -188,6 +188,15 @@ node tools/served_check.mjs   # a section's serving window, on a FROZEN clock (2
                               # outside-window state cannot be asserted any other way
                               # without waiting until 9pm, and a check whose verdict
                               # depends on the hour gets switched off within a week
+node tools/geo_check.mjs      # the location ask (ADR 0082). The tickbox on the
+                              # dialog makes a PROMISE — "don't ask me about this
+                              # again" — and a promise breaks in the WIRING, not in
+                              # the logic: a listener on the wrong element, a flag
+                              # read before it is written, a `close` event firing
+                              # twice. Every one of those leaves the pure decision
+                              # table (tests/geo-consent.test.js) green. It also
+                              # pins the pill's ABSENCE, which is the assertion
+                              # most likely to rot silently
 python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
 node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part of
                               # LINE IDENTITY, so the sheet can show the same dish
@@ -236,13 +245,13 @@ still orphans both — nothing can catch it** — so if a run was `kill -9`ed, r
 you. Orphans do not make a check fail; they make it **stall silently** with a
 wall of PASS and no summary line.
 
-🛑 **CI runs ONE of the ELEVEN browser checks — `boot_check`, and only since
+🛑 **CI runs ONE of the TWELVE browser checks — `boot_check`, and only since
 2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
 boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
 **not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
-`note_check` · `served_check` — **ten** guards, every one written
+`note_check` · `served_check` · `geo_check` — **eleven** guards, every one written
 precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through
 a whole settings refactor with CI green the entire time: nothing was calling it.
@@ -251,17 +260,20 @@ except `boot_check`'s, and skipping one because "CI will catch it" is still a
 category error.
 
 🛑 **And read what the one automated check actually promises: it REPORTS, it
-does not BLOCK.** `protect-main` requires four status checks, but a repository
-admin bypasses it always (`bypass_mode: always`) — measured 2026-08-17, **the
-last 100 ruleset evaluations on `main` were 100 bypasses**. On this repo's
+does not BLOCK.** `protect-main` requires **six** status checks as of
+2026-08-17 — `every screen boots` and `service-worker version lockstep` were
+added to the four (owner-authorised) once the boot job existed to be required.
+**But `bypass_actors` still carries `RepositoryRole 5 → always`, unchanged**, so
+a push from the owner's machine bypasses all six: measured 2026-08-17, **the
+last 100 ruleset evaluations on `main` were 100 bypasses.** On this repo's
 normal path a direct push to `main` **is** the Cloudflare Pages deploy, so the
-sequence is **push → deploy → CI goes red afterwards**. `every screen boots` is
-not in the required-checks list either, so it does not block a PR merge. What it
-buys is that this one check runs without anyone remembering to type it — which
-is worth having, and is a much weaker claim than "the push will fail".
-🚩 **The same is true of `service-worker version lockstep`** — the gate written
-*because* an unbumped `SHELL_VERSION` shipped to the owner's own phone is also
-absent from the required list, so it too is advisory on every path.
+sequence is still **push → deploy → CI goes red afterwards**.
+🔑 **So the resting state is REQUIRED-BUT-BYPASSABLE, which is better than
+advisory and is not the same as enforced.** The requirement takes effect the
+moment the bypass is narrowed — a decision the owner holds separately and has
+not taken. Until then, what the automation buys is that these checks *run*
+without anyone remembering to type them. That is worth having, and it is a much
+weaker claim than "the push will fail".
 🚩 **A transport timeout in `tools/lib/browser.mjs` is NOT specific to
 `cook_check`.** Measured 2026-08-17 on a five-session laptop: `boot_check` 2 of
 4 runs failed and `recipe_check` 4 of 8 aborted, every failure on the same

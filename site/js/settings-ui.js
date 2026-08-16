@@ -61,6 +61,7 @@ import { importControls } from "./personal-io-ui.js";
 import { syncControls } from "./sync-ui.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
+import { readConsent, resetAsk } from "./geo-consent.js";
 import { closeButton, wireDialog } from "./dialog.js";
 import { t, translate } from "./reo.js";
 
@@ -857,10 +858,16 @@ export function initSettingsUI() {
   // changes a list of 55 into a list of 55. That is the decorative-control
   // pattern; the fix is not to make it guess a location but to state its own
   // precondition, where the control is, at the moment it is inert.
+  // This hint named a button twice over: it said "Near me" long after that pill
+  // was relabelled "Use my location", and ADR 0082 then removed the pill
+  // altogether. A hint that points at a control which is not on screen is worse
+  // than no hint — it sends someone hunting for something that does not exist.
+  // So it now points at the control immediately below it, which is the only
+  // route left once the ask has been turned off.
   const farIdle = el("p", { className: "settings-hint settings-hint-idle" }, [
-    "⚠️ Not in effect yet — Faves doesn’t know where you are. Tap ",
-    el("strong", { textContent: "Near me" }),
-    " on the home screen and this will start hiding places.",
+    "⚠️ Not in effect yet — Faves doesn’t know where you are. Use ",
+    el("strong", { textContent: "Location" }),
+    " below and this will start hiding places.",
   ]);
   far.row.append(farIdle);
   const fav = field({
@@ -889,11 +896,92 @@ export function initSettingsUI() {
     allergenHeadRow,
     avoid.group,
   ]);
-  const distancePanel = el("div", { className: "settings-panel" }, [
-    el("p", { className: "settings-note", textContent: "How far you’ll go, and how many branches of one place you see." }),
-    far.row,
-    fav.row,
-  ]);
+  // THE ONLY ROUTE BACK (ADR 0082). With the home-screen pill removed and the
+  // ask suppressible forever by a tickbox, a reader who changes their mind had
+  // nowhere to go — the feature would be off with no visible off-switch, which
+  // is the same dead end the `farIdle` hint above used to create.
+  //
+  // It reports three different states because they are three different
+  // problems, and collapsing them is what made "never asked" and "blocked"
+  // indistinguishable before ADR 0069:
+  //   • on            — we hold a location; nothing to do.
+  //   • blocked       — the BROWSER refuses; only site settings can undo it, so
+  //                     a button here would be a lie. Say where to go instead.
+  //   • off / not yet — ours to fix: the button clears the suppression and
+  //                     raises the real prompt.
+  const geoRow = el("div", { className: "settings-row settings-row-geo" });
+  const geoLabel = el("p", { className: "settings-label", textContent: "Location" });
+  const geoState = el("p", { className: "settings-hint" });
+  const geoBtn = el("button", {
+    type: "button",
+    className: "geo-btn geo-btn-quiet",
+    textContent: "Use my location",
+  });
+  geoRow.append(geoLabel, geoState, geoBtn);
+
+  function syncGeo() {
+    const consent = readConsent();
+    // permissions.query is async and this runs synchronously on every settings
+    // change, so the *browser* state is read separately below and cached here.
+    const perm = geoRow.dataset.perm || "prompt";
+    geoBtn.hidden = perm === "granted" || perm === "denied";
+    if (perm === "granted") {
+      geoState.textContent = "On — nearby places come first. Your location never leaves this device.";
+    } else if (perm === "denied") {
+      geoState.textContent =
+        "Blocked by your browser for this site. Turn it back on in your browser’s site settings for this page.";
+    } else if (consent.suppressed) {
+      geoState.textContent = "Off — you asked us not to bring this up again. Turn it on here whenever you like.";
+    } else {
+      geoState.textContent = "Off — turn it on to rank by distance. Your location never leaves this device.";
+    }
+  }
+
+  geoBtn.addEventListener("click", () => {
+    // Clearing BOTH consent flags is the point: someone who came looking for
+    // this control has plainly changed their mind, and leaving `suppressed` set
+    // would silence a later ask for a reason they had since withdrawn.
+    resetAsk();
+    if (!("geolocation" in navigator)) return;
+    navigator.geolocation.getCurrentPosition(
+      () => {
+        geoRow.dataset.perm = "granted";
+        syncGeo();
+        // The home screen reads the permission itself on load and via
+        // permissions.onchange, so it picks this up without being told.
+      },
+      (err) => {
+        if (err.code === err.PERMISSION_DENIED) geoRow.dataset.perm = "denied";
+        syncGeo();
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+    );
+  });
+
+  // Read the browser's state once, without prompting, and again if it changes
+  // under us (someone flipping it in site settings while this sheet is open).
+  if (navigator.permissions?.query) {
+    navigator.permissions
+      .query({ name: "geolocation" })
+      .then((perm) => {
+        const apply = () => {
+          geoRow.dataset.perm = perm.state;
+          syncGeo();
+        };
+        apply();
+        perm.onchange = apply;
+      })
+      .catch(() => syncGeo());
+  }
+
+  // NOTE 2026-08-17: a `distancePanel` used to be declared here and was never
+  // referenced — the two-panel consolidation (owner, 2026-08-16) folded distance
+  // into `placesPanel` below and left the old constant behind. It looked live:
+  // it was well-commented, it listed `far.row` and `fav.row`, and it read as the
+  // home of the distance dials. It was not. Appending an element MOVES it, so
+  // whichever panel was built last owned the rows and this one owned nothing.
+  // Deleted rather than left, because the next person to add a distance control
+  // would have added it here — which is exactly what happened.
   // Two panels rather than four. Language and units are one question — how the
   // app talks to you — and distance and the maps app are the other: how it gets
   // you to a place. Splitting each into its own row made the index longer to
@@ -948,6 +1036,8 @@ export function initSettingsUI() {
     fxNote,
   ]);
   const placesPanel = el("div", { className: "settings-panel" }, [
+    el("p", { className: "settings-sub", textContent: "Location" }),
+    geoRow,
     el("p", { className: "settings-sub", textContent: "How far you’ll go" }),
     el("p", {
       className: "settings-note",
@@ -1181,6 +1271,7 @@ export function initSettingsUI() {
 
   // Keep controls in step with the store (reset, or a change from another tab).
   settings.subscribe(sync);
+  settings.subscribe(syncGeo);
   // Rebuild the profile radios whenever the roster or active profile changes
   // (here, or synced from another tab via app.js's registry listener).
   profiles.subscribe(() => {

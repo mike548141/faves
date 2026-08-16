@@ -69,6 +69,7 @@ const SHELL = [
   "js/filters.js",
   "js/filters-ui.js",
   "js/geo.js",
+  "js/geo-consent.js",
   "js/fx.js",
   "js/home.js",
   "js/hours.js",
