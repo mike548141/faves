@@ -90,6 +90,7 @@
       "items": [
         {
           "name": "The Aegean Melt",
+          "dishId": "the-aegean-melt",
           "desc": "Beef patty with mozzarella, feta yoghurt spread, red pepper salsa and iceberg lettuce in a Pōneke Bakery milk bun, served with fries and tzatziki. Gluten-free possible. Available lunch & dinner; takeaway available.",
           "price": 29.0,
           "tags": [
@@ -105,6 +106,7 @@
       "items": [
         {
           "name": "Garlic Pizza Bread",
+          "dishId": "garlic-pizza-bread",
           "desc": "Confit garlic butter, toasted rosemary.",
           "price": 14.0,
           "tags": [
@@ -115,6 +117,7 @@
         },
         {
           "name": "Korean-Fried Cauliflower",
+          "dishId": "korean-fried-cauliflower",
           "desc": "Korean BBQ sauce, spring onion, pickles.",
           "price": 20.0,
           "tags": [
@@ -124,6 +127,7 @@
         },
         {
           "name": "Salt & Pepper Squid",
+          "dishId": "salt-pepper-squid",
           "desc": "Lemon garlic aioli, seasonal leaves, fresh lemon.",
           "price": 22.5,
           "tags": [
@@ -133,6 +137,7 @@
         },
         {
           "name": "Sticky Pork Belly Bites",
+          "dishId": "sticky-pork-belly-bites",
           "desc": "Gochujang BBQ glaze, chilli, sesame seeds.",
           "price": 24.0,
           "tags": [
@@ -142,6 +147,7 @@
         },
         {
           "name": "Loaded Fries",
+          "dishId": "loaded-fries",
           "desc": "BBQ brisket, cheesy sauce, chipotle mayo, pickles, green onion.",
           "price": 25.5,
           "tags": [
@@ -151,6 +157,7 @@
         },
         {
           "name": "Buttermilk Fried Chicken",
+          "dishId": "buttermilk-fried-chicken",
           "desc": "Peri peri spiced chicken thigh, ranch, garden pickles, chilli herbs.",
           "price": 24.5,
           "tags": [
@@ -161,6 +168,7 @@
         },
         {
           "name": "Fries",
+          "dishId": "fries",
           "desc": "Confit garlic aioli & tomato sauce.",
           "price": 13.0,
           "tags": [
@@ -170,6 +178,7 @@
         },
         {
           "name": "Tools Down Platter",
+          "dishId": "tools-down-platter",
           "desc": "Sticky pork belly bites, buttermilk fried chicken, Korean fried cauliflower, salt & pepper squid, seasonal leaves, garlic flat bread, home made dipping sauces.",
           "price": 69.0,
           "tags": [
@@ -187,6 +196,7 @@
       "items": [
         {
           "name": "Chicken Schnitty",
+          "dishId": "chicken-schnitty",
           "desc": "Crumbed chicken breast, Caesar salad, gravy, choice of fries or mash.",
           "price": 29.5,
           "tags": [
@@ -196,6 +206,7 @@
         },
         {
           "name": "Fish & Chips",
+          "dishId": "fish-chips",
           "desc": "Beer-battered daily catch, house fries, green herb slaw, tartare sauce.",
           "price": 29.5,
           "tags": [
@@ -205,6 +216,7 @@
         },
         {
           "name": "Twice Cooked Pork Belly",
+          "dishId": "twice-cooked-pork-belly",
           "desc": "Potato gratin, seasonal greens, pear & fig relish, cider jus. No gluten added.",
           "price": 38.0,
           "tags": [
@@ -214,6 +226,7 @@
         },
         {
           "name": "Fettuccine Carbonara",
+          "dishId": "fettuccine-carbonara",
           "desc": "Creamy carbonara sauce, chicken, bacon, Grana Padano.",
           "price": 29.5,
           "tags": [
@@ -225,6 +238,7 @@
         },
         {
           "name": "Classic Caesar",
+          "dishId": "classic-caesar",
           "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow. Add grilled chicken +$6.",
           "price": 24.0,
           "tags": [
@@ -235,6 +249,7 @@
         },
         {
           "name": "Butcher's Cut Steak",
+          "dishId": "butcher-s-cut-steak",
           "desc": "Rotating cut of premium NZ beef, fries, café de Paris butter, red wine jus, charred seasonal greens.",
           "price": 38.0,
           "tags": [
@@ -249,6 +264,7 @@
       "items": [
         {
           "name": "Cheeseburger",
+          "dishId": "cheeseburger",
           "desc": "150g brisket patty, American cheese, special sauce, ketchup, sweet & spicy pickles, lettuce, milk bun, fries. No gluten added bun +$2.50 or lettuce bun available.",
           "price": 27.0,
           "tags": [
@@ -259,6 +275,7 @@
         },
         {
           "name": "The Cluckerson",
+          "dishId": "the-cluckerson",
           "desc": "Crispy-fried chicken, American cheese, chipotle mayo, sweet & spicy pickles, lettuce, milk bun, fries.",
           "price": 29.5,
           "tags": [
@@ -269,6 +286,7 @@
         },
         {
           "name": "The Halloumitarian",
+          "dishId": "the-halloumitarian",
           "desc": "Grilled halloumi, house-made vegan patty, American cheese, special sauce, sweet & spicy pickles, ranch, red onion, milk bun, fries.",
           "price": 29.5,
           "tags": [
@@ -285,6 +303,7 @@
       "items": [
         {
           "name": "Margherita",
+          "dishId": "margherita",
           "desc": "Cherry tomato, mozzarella, basil. No gluten added base +$2.50; dairy free mozzarella available.",
           "price": 27.0,
           "tags": [
@@ -296,6 +315,7 @@
         },
         {
           "name": "BBQ",
+          "dishId": "bbq",
           "desc": "Brisket, pork belly, pepperoni, mozzarella, smoky IPA BBQ sauce.",
           "price": 29.0,
           "tags": [
@@ -306,6 +326,7 @@
         },
         {
           "name": "Bianca",
+          "dishId": "bianca",
           "desc": "Mushrooms, white sauce, mozzarella, ricotta, kale, parmesan.",
           "price": 29.0,
           "tags": [
@@ -316,6 +337,7 @@
         },
         {
           "name": "Chicken & Chorizo",
+          "dishId": "chicken-chorizo",
           "desc": "Red onion, fire-roasted peppers, jalapeños.",
           "price": 29.0,
           "tags": [
@@ -327,6 +349,7 @@
         },
         {
           "name": "Pepperoni",
+          "dishId": "pepperoni",
           "desc": "Crispy pepperoni, mozzarella, hot honey, chilli flakes.",
           "price": 29.0,
           "tags": [
@@ -343,6 +366,7 @@
       "items": [
         {
           "name": "Rosti Benedict",
+          "dishId": "rosti-benedict",
           "desc": "House-made rosti, poached eggs, hollandaise. Choose bacon, hot-smoked salmon, or kale & mushrooms. No gluten added.",
           "price": 27.5,
           "tags": [
@@ -353,6 +377,7 @@
         },
         {
           "name": "Eggs Your Way",
+          "dishId": "eggs-your-way",
           "desc": "Toasted sourdough.",
           "price": 16.5,
           "tags": [
@@ -364,6 +389,7 @@
         },
         {
           "name": "Avocado on Toast",
+          "dishId": "avocado-on-toast",
           "desc": "Toasted sourdough, smashed avocado, poached egg, blistered tomato, seasonal leaves, parmesan.",
           "price": 27.0,
           "tags": [
@@ -376,6 +402,7 @@
         },
         {
           "name": "Breakfast Burger",
+          "dishId": "breakfast-burger",
           "desc": "Fried egg, bacon, cheddar cheese, onion relish, seasonal leaves. Choose fries or rosti.",
           "price": 27.5,
           "tags": [
@@ -387,6 +414,7 @@
         },
         {
           "name": "Mushroom on Toast",
+          "dishId": "mushroom-on-toast",
           "desc": "Creamy mushroom selection, sourdough, chives, poached free-range eggs, parmesan.",
           "price": 27.5,
           "tags": [
@@ -399,6 +427,7 @@
         },
         {
           "name": "Chicken Waffles",
+          "dishId": "chicken-waffles",
           "desc": "Buttermilk fried chicken, bacon, maple syrup, lemon mascarpone.",
           "price": 27.0,
           "tags": [
@@ -409,6 +438,7 @@
         },
         {
           "name": "Sweet Waffles",
+          "dishId": "sweet-waffles",
           "desc": "Mixed berry compote, lemon mascarpone, maple syrup.",
           "price": 23.0,
           "tags": [
@@ -420,6 +450,7 @@
         },
         {
           "name": "The Borough Big Breakfast",
+          "dishId": "the-borough-big-breakfast",
           "desc": "Bacon, house sausage, rosti, creamy mushrooms, charred tomatoes, eggs your way, buttered sourdough.",
           "price": 31.0,
           "tags": [
@@ -435,6 +466,7 @@
       "items": [
         {
           "name": "Eggs (2)",
+          "dishId": "eggs-2",
           "desc": null,
           "price": 7.0,
           "tags": [
@@ -444,12 +476,14 @@
         },
         {
           "name": "Bacon",
+          "dishId": "bacon",
           "desc": null,
           "price": 7.0,
           "tags": []
         },
         {
           "name": "Rosti",
+          "dishId": "rosti",
           "desc": null,
           "price": 6.0,
           "tags": [
@@ -458,6 +492,7 @@
         },
         {
           "name": "Halloumi",
+          "dishId": "halloumi",
           "desc": null,
           "price": 8.0,
           "tags": [
@@ -467,6 +502,7 @@
         },
         {
           "name": "Creamy Mushrooms",
+          "dishId": "creamy-mushrooms",
           "desc": null,
           "price": 8.0,
           "tags": [
@@ -476,6 +512,7 @@
         },
         {
           "name": "Hollandaise",
+          "dishId": "hollandaise",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -486,6 +523,7 @@
         },
         {
           "name": "NGA bread",
+          "dishId": "nga-bread",
           "desc": "No gluten added bread.",
           "price": 3.0,
           "tags": [
@@ -495,6 +533,7 @@
         },
         {
           "name": "Buttered sourdough",
+          "dishId": "buttered-sourdough",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -510,6 +549,7 @@
       "items": [
         {
           "name": "American Chocolate Brownie Sundae",
+          "dishId": "american-chocolate-brownie-sundae",
           "desc": "Warm chocolate brownie, vanilla ice cream whip, cookie crumble, chocolate sauce, honeycomb crumble, chocolate shards.",
           "price": 17.0,
           "tags": [
@@ -522,6 +562,7 @@
         },
         {
           "name": "Baked Cheesecake",
+          "dishId": "baked-cheesecake",
           "desc": "Chocolate crackle, raspberry gel, sherbet.",
           "price": 14.0,
           "tags": [
@@ -532,6 +573,7 @@
         },
         {
           "name": "Sticky Date Pudding",
+          "dishId": "sticky-date-pudding",
           "desc": "Butterscotch sauce, vanilla bean ice cream, honeycomb crunch.",
           "price": 14.0,
           "tags": [
@@ -548,6 +590,7 @@
       "items": [
         {
           "name": "Mini Beast Burger",
+          "dishId": "mini-beast-burger",
           "desc": "Beef patty, melted cheese, ketchup and a toasted bun, served with fries. Free sundae included with every kids' meal.",
           "price": 15.0,
           "tags": [
@@ -558,6 +601,7 @@
         },
         {
           "name": "Chook & Chips",
+          "dishId": "chook-chips",
           "desc": "Crispy chicken bites served with fries and ketchup. Free sundae included with every kids' meal.",
           "price": 15.0,
           "tags": [
@@ -566,6 +610,7 @@
         },
         {
           "name": "Lil' Fish & Chips",
+          "dishId": "lil-fish-chips",
           "desc": "Crispy fish bites served with fries and ketchup. Free sundae included with every kids' meal.",
           "price": 15.0,
           "tags": [
@@ -574,6 +619,7 @@
         },
         {
           "name": "Mini VIP Pizza",
+          "dishId": "mini-vip-pizza",
           "desc": "Mozzarella cheese and pizza sauce on a crispy base. Add your favourite toppings: pepperoni, pineapple (V) or chicken. Free sundae included with every kids' meal.",
           "price": 15.0,
           "tags": [
@@ -584,6 +630,7 @@
         },
         {
           "name": "Kids' Loaded Fries",
+          "dishId": "kids-loaded-fries",
           "desc": "Golden fries topped with cheese sauce, bacon bits and gravy. Free sundae included with every kids' meal.",
           "price": 15.0,
           "tags": [
@@ -593,6 +640,7 @@
         },
         {
           "name": "Kid's Hot Chocolate",
+          "dishId": "kid-s-hot-chocolate",
           "desc": null,
           "price": 4.5,
           "tags": [
@@ -602,6 +650,7 @@
         },
         {
           "name": "Kid's Fluffy",
+          "dishId": "kid-s-fluffy",
           "desc": null,
           "price": 2.0,
           "tags": [
@@ -616,6 +665,7 @@
       "items": [
         {
           "name": "Thickshake",
+          "dishId": "thickshake",
           "desc": "Chocolate, banana, caramel, strawberry, vanilla, or cookies & cream.",
           "price": 14.0,
           "tags": [
@@ -626,6 +676,7 @@
         },
         {
           "name": "Smoothie",
+          "dishId": "smoothie",
           "desc": "Mixed berry or mango.",
           "price": 12.0,
           "tags": [
@@ -639,6 +690,7 @@
       "items": [
         {
           "name": "Heineken",
+          "dishId": "heineken",
           "desc": "5%.",
           "price": 15.0,
           "tags": [
@@ -647,6 +699,7 @@
         },
         {
           "name": "Heineken Silver Low Carb",
+          "dishId": "heineken-silver-low-carb",
           "desc": "4%.",
           "price": 15.0,
           "tags": [
@@ -655,6 +708,7 @@
         },
         {
           "name": "Tiger",
+          "dishId": "tiger",
           "desc": "5%.",
           "price": 15.0,
           "tags": [
@@ -663,6 +717,7 @@
         },
         {
           "name": "Murphy's Irish Stout",
+          "dishId": "murphy-s-irish-stout",
           "desc": "4%.",
           "price": 14.0,
           "tags": [
@@ -671,6 +726,7 @@
         },
         {
           "name": "Export Ultra Low Carb Lager",
+          "dishId": "export-ultra-low-carb-lager",
           "desc": "4.2%. Larger pour $22.00; the menu doesn't label the size.",
           "price": 11.0,
           "tags": [
@@ -679,6 +735,7 @@
         },
         {
           "name": "Tuatara Hazy Pale Ale",
+          "dishId": "tuatara-hazy-pale-ale",
           "desc": "5.5%. Larger pour $28.00; the menu doesn't label the size.",
           "price": 14.0,
           "tags": [
@@ -687,6 +744,7 @@
         },
         {
           "name": "Tuatara Adapt APA",
+          "dishId": "tuatara-adapt-apa",
           "desc": "5%. Larger pour $28.00; the menu doesn't label the size.",
           "price": 14.0,
           "tags": [
@@ -695,6 +753,7 @@
         },
         {
           "name": "Tuatara Interstellar IPA",
+          "dishId": "tuatara-interstellar-ipa",
           "desc": "6%. Larger pour $28.00; the menu doesn't label the size.",
           "price": 14.0,
           "tags": [
@@ -703,6 +762,7 @@
         },
         {
           "name": "Monteith's Wayfarer Pilsner",
+          "dishId": "monteith-s-wayfarer-pilsner",
           "desc": "4.9%. Larger pour $22.00; the menu doesn't label the size.",
           "price": 11.0,
           "tags": [
@@ -711,6 +771,7 @@
         },
         {
           "name": "Monteith's Original Ale",
+          "dishId": "monteith-s-original-ale",
           "desc": "4%. Larger pour $22.00; the menu doesn't label the size.",
           "price": 11.0,
           "tags": [
@@ -719,6 +780,7 @@
         },
         {
           "name": "Monteith's West Coast Hazy IPA",
+          "dishId": "monteith-s-west-coast-hazy-ipa",
           "desc": "5.5%. Larger pour $24.00; the menu doesn't label the size.",
           "price": 12.0,
           "tags": [
@@ -727,6 +789,7 @@
         },
         {
           "name": "Monteith's Golden Lager",
+          "dishId": "monteith-s-golden-lager",
           "desc": "2.5%. Larger pour $22.00; the menu doesn't label the size.",
           "price": 11.0,
           "tags": [
@@ -735,18 +798,21 @@
         },
         {
           "name": "Monteith's Crushed Apple Cider",
+          "dishId": "monteith-s-crushed-apple-cider",
           "desc": "4.5%. Larger pour $24.00; the menu doesn't label the size.",
           "price": 12.0,
           "tags": []
         },
         {
           "name": "Monteith's Hazy Lemonade",
+          "dishId": "monteith-s-hazy-lemonade",
           "desc": "4.2%. Larger pour $24.00; the menu doesn't label the size.",
           "price": 12.0,
           "tags": []
         },
         {
           "name": "Guest Tap",
+          "dishId": "guest-tap",
           "desc": "Strength varies. Larger pour $28.00; the menu doesn't label the size.",
           "price": 14.0,
           "tags": []
@@ -776,6 +842,7 @@
         },
         {
           "name": "Tiger Crystal Ultra Low Carb",
+          "dishId": "tiger-crystal-ultra-low-carb",
           "desc": "4.2%.",
           "price": 11.0,
           "tags": [
@@ -784,6 +851,7 @@
         },
         {
           "name": "Sol",
+          "dishId": "sol",
           "desc": "4.2%.",
           "price": 11.0,
           "tags": [
@@ -792,6 +860,7 @@
         },
         {
           "name": "Behemoth Something Hoppy IPA",
+          "dishId": "behemoth-something-hoppy-ipa",
           "desc": "5.9%.",
           "price": 12.0,
           "tags": [
@@ -800,18 +869,21 @@
         },
         {
           "name": "Orchard Thieves Berry",
+          "dishId": "orchard-thieves-berry",
           "desc": "4%.",
           "price": 11.0,
           "tags": []
         },
         {
           "name": "Odd Company",
+          "dishId": "odd-company",
           "desc": "Ask staff for today's flavours.",
           "price": 11.0,
           "tags": []
         },
         {
           "name": "Bottle & Can Bucket",
+          "dishId": "bottle-can-bucket",
           "desc": "Any four bottles or cans.",
           "price": 38.0,
           "tags": []
@@ -823,6 +895,7 @@
       "items": [
         {
           "name": "Heineken 0.0",
+          "dishId": "heineken-0-0",
           "desc": null,
           "price": 10.0,
           "tags": [
@@ -831,6 +904,7 @@
         },
         {
           "name": "Garage Project Tiny Hazy IPA",
+          "dishId": "garage-project-tiny-hazy-ipa",
           "desc": "0.5%.",
           "price": 12.0,
           "tags": [
@@ -839,6 +913,7 @@
         },
         {
           "name": "Choice Bros Hold Me Closer Session Hazy",
+          "dishId": "choice-bros-hold-me-closer-session-hazy",
           "desc": "2.2%.",
           "price": 12.0,
           "tags": [
@@ -852,66 +927,77 @@
       "items": [
         {
           "name": "El Diablo",
+          "dishId": "el-diablo",
           "desc": "Tequila, Chambord, ginger beer, lime juice.",
           "price": 18.0,
           "tags": []
         },
         {
           "name": "Lynchburg Lemonade",
+          "dishId": "lynchburg-lemonade",
           "desc": "Jack Daniel's bourbon, triple sec, lemon juice, lemonade.",
           "price": 19.0,
           "tags": []
         },
         {
           "name": "Garden Martini",
+          "dishId": "garden-martini",
           "desc": "Bombay Sapphire gin, elderflower, apple juice, cucumber.",
           "price": 18.0,
           "tags": []
         },
         {
           "name": "Bitter Sweet Symphony",
+          "dishId": "bitter-sweet-symphony",
           "desc": "De Bortoli prosecco, lime juice, triple sec, cranberry juice, watermelon purée.",
           "price": 18.0,
           "tags": []
         },
         {
           "name": "Strawberry Night",
+          "dishId": "strawberry-night",
           "desc": "Absolut vanilla vodka, wild strawberry, passionfruit purée, lemon juice.",
           "price": 19.0,
           "tags": []
         },
         {
           "name": "Piña Colada",
+          "dishId": "pi-a-colada",
           "desc": "Bacardi Blanca, Malibu, lime juice, pineapple juice, coconut cream.",
           "price": 20.0,
           "tags": []
         },
         {
           "name": "Hugo Spritz",
+          "dishId": "hugo-spritz",
           "desc": "St-Germain elderflower liqueur, De Bortoli prosecco, fresh mint, lime and soda water.",
           "price": 17.0,
           "tags": []
         },
         {
           "name": "Mimosa",
+          "dishId": "mimosa",
           "desc": "De Bortoli prosecco, fresh orange.",
           "price": 14.0,
           "tags": []
         },
         {
           "name": "Peach Bellini",
+          "dishId": "peach-bellini",
           "desc": "De Bortoli prosecco, peach purée.",
           "price": 14.0,
           "tags": []
         },
         {
           "name": "Espresso Martini",
+          "dishId": "espresso-martini",
           "desc": "Absolut vanilla vodka, Kahlúa, fresh espresso, sugar syrup.",
           "price": 20.0,
           "tags": []
         },
         {
           "name": "Bloody Mary",
+          "dishId": "bloody-mary",
           "desc": "Vodka, tomato juice, lemon juice, Worcestershire sauce, Tabasco, cracked black pepper, celery salt.",
           "price": 16.0,
           "tags": [
@@ -925,24 +1011,28 @@
       "items": [
         {
           "name": "Moët & Chandon Impérial Brut",
+          "dishId": "mo-t-chandon-imp-rial-brut",
           "desc": "France. Bottle only.",
           "price": 110.0,
           "tags": []
         },
         {
           "name": "Moët & Chandon Impérial Rosé",
+          "dishId": "mo-t-chandon-imp-rial-ros",
           "desc": "France. Bottle only.",
           "price": 135.0,
           "tags": []
         },
         {
           "name": "De Bortoli KV Prosecco",
+          "dishId": "de-bortoli-kv-prosecco",
           "desc": "Australia. $50.00 bottle.",
           "price": 11.0,
           "tags": []
         },
         {
           "name": "Mionetto Prestige Prosecco",
+          "dishId": "mionetto-prestige-prosecco",
           "desc": "Veneto, Italy. 200ml bottle.",
           "price": 16.0,
           "tags": []
@@ -954,42 +1044,49 @@
       "items": [
         {
           "name": "Fleur de Lis Sauvignon Blanc",
+          "dishId": "fleur-de-lis-sauvignon-blanc",
           "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
           "price": 11.0,
           "tags": []
         },
         {
           "name": "Ngā Waka Sauvignon Blanc",
+          "dishId": "ng-waka-sauvignon-blanc",
           "desc": "Martinborough. $23.00 large glass; $65.00 bottle.",
           "price": 14.0,
           "tags": []
         },
         {
           "name": "Divinity Cross Pinot Gris",
+          "dishId": "divinity-cross-pinot-gris",
           "desc": "Gisborne. $18.00 large glass; $50.00 bottle.",
           "price": 11.0,
           "tags": []
         },
         {
           "name": "Devil's Staircase Pinot Gris",
+          "dishId": "devil-s-staircase-pinot-gris",
           "desc": "Central Otago. $23.00 large glass; $65.00 bottle.",
           "price": 14.0,
           "tags": []
         },
         {
           "name": "Growers Mark Chardonnay",
+          "dishId": "growers-mark-chardonnay",
           "desc": "Gisborne. $21.00 large glass; $60.00 bottle.",
           "price": 13.0,
           "tags": []
         },
         {
           "name": "Three Paddles Chardonnay",
+          "dishId": "three-paddles-chardonnay",
           "desc": "Martinborough. $23.00 large glass; $65.00 bottle.",
           "price": 14.0,
           "tags": []
         },
         {
           "name": "Lake Chalice The Falcon Riesling",
+          "dishId": "lake-chalice-the-falcon-riesling",
           "desc": "Marlborough. $21.00 large glass; $60.00 bottle.",
           "price": 13.0,
           "tags": []
@@ -1001,12 +1098,14 @@
       "items": [
         {
           "name": "Bijou Terre de Providence Rosé",
+          "dishId": "bijou-terre-de-providence-ros",
           "desc": "Pays d'Oc, France. $21.00 large glass; $60.00 bottle.",
           "price": 13.0,
           "tags": []
         },
         {
           "name": "Monarch Rosé",
+          "dishId": "monarch-ros",
           "desc": "Gisborne. $18.00 large glass; $50.00 bottle.",
           "price": 11.0,
           "tags": []
@@ -1018,30 +1117,35 @@
       "items": [
         {
           "name": "Rebel Merlot",
+          "dishId": "rebel-merlot",
           "desc": "Hawke's Bay. $18.00 large glass; $50.00 bottle.",
           "price": 11.0,
           "tags": []
         },
         {
           "name": "Fire Eagle Pinot Noir",
+          "dishId": "fire-eagle-pinot-noir",
           "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
           "price": 11.0,
           "tags": []
         },
         {
           "name": "The Bluff Pinot Noir",
+          "dishId": "the-bluff-pinot-noir",
           "desc": "Central Otago. $23.00 large glass; $65.00 bottle.",
           "price": 14.0,
           "tags": []
         },
         {
           "name": "Brookfields Cabernet Sauvignon",
+          "dishId": "brookfields-cabernet-sauvignon",
           "desc": "Hawke's Bay. $21.00 large glass; $60.00 bottle.",
           "price": 13.0,
           "tags": []
         },
         {
           "name": "Trinity Hill Syrah",
+          "dishId": "trinity-hill-syrah",
           "desc": "Hawke's Bay. $23.00 large glass; $65.00 bottle.",
           "price": 14.0,
           "tags": []
@@ -1053,6 +1157,7 @@
       "items": [
         {
           "name": "Marlborough Sun 0% Sauvignon Blanc",
+          "dishId": "marlborough-sun-0-sauvignon-blanc",
           "desc": "Marlborough. $18.00 large glass; $50.00 bottle.",
           "price": 11.0,
           "tags": []
@@ -1064,6 +1169,7 @@
       "items": [
         {
           "name": "Coca-Cola / Coke Zero Sugar",
+          "dishId": "coca-cola-coke-zero-sugar",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -1073,6 +1179,7 @@
         },
         {
           "name": "Schweppes Soda Water",
+          "dishId": "schweppes-soda-water",
           "desc": null,
           "price": 3.5,
           "tags": [
@@ -1082,6 +1189,7 @@
         },
         {
           "name": "Schweppes",
+          "dishId": "schweppes",
           "desc": "Dry lemonade, lemon lime & bitters, tonic water, or ginger ale.",
           "price": 6.5,
           "tags": [
@@ -1090,6 +1198,7 @@
         },
         {
           "name": "Red Bull / Red Bull Sugarfree",
+          "dishId": "red-bull-red-bull-sugarfree",
           "desc": null,
           "price": 7.0,
           "tags": [
@@ -1098,6 +1207,7 @@
         },
         {
           "name": "Red Bull Coconut Edition Sugarfree",
+          "dishId": "red-bull-coconut-edition-sugarfree",
           "desc": null,
           "price": 7.0,
           "tags": [
@@ -1106,6 +1216,7 @@
         },
         {
           "name": "Voyage Water",
+          "dishId": "voyage-water",
           "desc": "Sparkling or still.",
           "price": 10.0,
           "tags": [
@@ -1115,6 +1226,7 @@
         },
         {
           "name": "Juice",
+          "dishId": "juice",
           "desc": "Apple, pineapple, orange, cranberry or tomato.",
           "price": 7.0,
           "tags": [
@@ -1129,6 +1241,7 @@
       "items": [
         {
           "name": "Short Black",
+          "dishId": "short-black",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1138,6 +1251,7 @@
         },
         {
           "name": "Long Black",
+          "dishId": "long-black",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1147,6 +1261,7 @@
         },
         {
           "name": "Americano",
+          "dishId": "americano",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1156,6 +1271,7 @@
         },
         {
           "name": "Flat White",
+          "dishId": "flat-white",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1165,6 +1281,7 @@
         },
         {
           "name": "Latte",
+          "dishId": "latte",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1174,6 +1291,7 @@
         },
         {
           "name": "Cappuccino",
+          "dishId": "cappuccino",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1183,6 +1301,7 @@
         },
         {
           "name": "Chai Latte",
+          "dishId": "chai-latte",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -1192,6 +1311,7 @@
         },
         {
           "name": "Mochaccino",
+          "dishId": "mochaccino",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1201,6 +1321,7 @@
         },
         {
           "name": "Short Macchiato",
+          "dishId": "short-macchiato",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1210,6 +1331,7 @@
         },
         {
           "name": "Long Macchiato",
+          "dishId": "long-macchiato",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -1219,6 +1341,7 @@
         },
         {
           "name": "Matcha Latte",
+          "dishId": "matcha-latte",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -1228,6 +1351,7 @@
         },
         {
           "name": "Hot Chocolate",
+          "dishId": "hot-chocolate",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1237,6 +1361,7 @@
         },
         {
           "name": "Lemon, Honey & Ginger",
+          "dishId": "lemon-honey-ginger",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -1245,6 +1370,7 @@
         },
         {
           "name": "Tea",
+          "dishId": "tea",
           "desc": "English breakfast, Earl Grey, peppermint, chamomile, green jasmine or berrylicious.",
           "price": 5.0,
           "tags": [
@@ -1254,6 +1380,7 @@
         },
         {
           "name": "Iced Americano",
+          "dishId": "iced-americano",
           "desc": null,
           "price": 6.0,
           "tags": [
@@ -1263,6 +1390,7 @@
         },
         {
           "name": "Iced Latte",
+          "dishId": "iced-latte",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -1272,6 +1400,7 @@
         },
         {
           "name": "Iced Matcha Latte",
+          "dishId": "iced-matcha-latte",
           "desc": null,
           "price": 7.0,
           "tags": [
@@ -1281,6 +1410,7 @@
         },
         {
           "name": "Iced Coffee / Mocha / Chocolate",
+          "dishId": "iced-coffee-mocha-chocolate",
           "desc": null,
           "price": 9.0,
           "tags": [

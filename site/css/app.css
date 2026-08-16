@@ -186,51 +186,32 @@ main {
   gap: var(--space-2);
   margin-bottom: var(--space-3);
   min-height: 1.4rem;
-  /* Wraps so the active-filter chips can take a row of their own at phone
-     width — see .active-filters below. */
+  /* Last-resort wrap. The head now holds only the count and the capped chip
+     row, which fit one line at 390 px — but an unusually long area name should
+     drop to a second row rather than squash the count. */
   flex-wrap: wrap;
 }
 .result-count {
   color: var(--ink-soft);
   font-size: var(--step-sub);
   font-weight: 600;
+  /* Never break "6 of 51 places" across lines. It did exactly that — three
+     lines — when a neighbour stole its width (2026-08-16). Refusing to wrap
+     makes the chip row drop instead, which costs less height and reads better. */
+  white-space: nowrap;
 }
 
-/* Active area/cuisine filters, each with its own ✕. Accented rather than the
-   quiet grey of .list-toggle: these are the reason the list is short, so they
-   have to read as *on* at a glance — a reader who arrived here from a venue
-   link never pressed anything on this screen and has to be told what did. */
+/* Active filters, each with its own ✕. Accented rather than the quiet grey of
+   .list-toggle: these are the reason the list is short, so they have to read as
+   *on* at a glance — a reader who arrived here from a venue link never pressed
+   anything on this screen, and since the controls moved into a sheet nobody can
+   see what is on by looking at the controls either. */
 .active-filters {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
   align-items: center;
-  /* A row of its own on a phone. Squeezed into the head as a third column it
-     stole width from both neighbours — the count broke to three lines ("6 of /
-     48 / places") and the four toggles unstacked into a single column, which
-     costs far more height than the chip's own row does. Order 2 puts it under
-     the count and toggles, which keep the layout they already had. */
-  order: 2;
-  flex-basis: 100%;
-  margin-top: var(--space-2);
-}
-.result-count {
-  order: 0;
-}
-.list-toggles {
-  order: 1;
-}
-@media (min-width: 34rem) {
-  /* Wide enough for all three on one line, where the chip sits right beside
-     the count it explains — the better reading when there is room for it. */
-  .active-filters {
-    order: 0;
-    flex-basis: auto;
-    margin-top: 0;
-  }
-  .list-toggles {
-    order: 2;
-  }
+  min-width: 0;
 }
 .active-filter {
   display: inline-flex;
@@ -250,6 +231,35 @@ main {
   font-size: 0.9em;
   opacity: 0.75;
 }
+/* A long facet name ("Wellington Central") would push the row to two lines,
+   which is the height this redesign just bought back. Truncate the name, never
+   the ✕ — and the full name is in the chip's aria-label and its title either way. */
+.active-filter-name {
+  max-width: 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* "+2 more": the overflow escape, not a filter — so it wears the quiet chrome
+   of .list-toggle rather than the accent of an active filter. Opens the sheet,
+   where every filter is named at full size and can be cleared individually. */
+.active-filter-more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.3em 0.85em;
+  /* Dashed, and quiet, so it never reads as a filter that is on. The fill is
+     .list-toggle's --surface-2 rather than transparent: --ink-soft on --bg is
+     fine for text, but a control identified only by a 1.25:1 border is not. */
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
 @media (hover: hover) {
   .active-filter:hover {
     background: var(--accent);
@@ -257,6 +267,10 @@ main {
   }
   .active-filter:hover .active-filter-x {
     opacity: 1;
+  }
+  .active-filter-more:hover {
+    border-color: var(--accent);
+    color: var(--accent);
   }
 }
 /* The count is only focusable as a landing spot after a chip is removed
@@ -267,9 +281,9 @@ main {
   outline-offset: 3px;
 }
 
-/* Shared pill toggles in the results head: "Open now" (filter) and
-   "Near me" (distance sort). "Near me" stays hidden until app.js confirms
-   geolocation is available. */
+/* Shared pill toggles, now inside the filter sheet: "Open now" / "Cheap eats"
+   under "Narrow to", "Near me" / "Along a route" under "Sort by". The location
+   pair stays hidden until app.js confirms geolocation is available. */
 .list-toggles {
   display: flex;
   flex-wrap: wrap;
@@ -493,14 +507,13 @@ main {
   border-radius: var(--radius-chip);
 }
 
-/* Search / favourites mode: browse view + bottom filter bar + shuffle FAB
-   step aside so the results own the screen. */
+/* Search / favourites mode: browse view + the bottom bar step aside so the
+   results own the screen. The bar now carries "Pick for us" too, so hiding it
+   hides the shuffle — there is no separate floating control left to name. */
 body.searching .browse-only,
 body.searching .filter-bar,
-body.searching .pick-fab,
 body.faves-view .browse-only,
-body.faves-view .filter-bar,
-body.faves-view .pick-fab {
+body.faves-view .filter-bar {
   display: none;
 }
 
@@ -1032,23 +1045,80 @@ body.faves-view .pick-fab {
   width: min(100% - 2 * var(--space-3), 60rem);
   margin-inline: auto;
   display: flex;
-  flex-wrap: wrap;
   gap: var(--space-2);
   align-items: center;
+  /* Filters left, "Pick for us" right — one row, no wrap, at every width. The
+     bar used to wrap to two rows below 34rem (the service toggle took a row of
+     its own), which is what made --bar-h 7.6rem = 122.2 px of permanent screen. */
+  justify-content: space-between;
 }
-/* Mobile: the service toggle + two selects won't fit legibly on one row at
-   390px (the selects collapsed to ~39px stubs). Give the segmented toggle its
-   own full-width row and let the two selects share the row below. --bar-h is
-   bumped to match so the body padding and both FABs clear the taller bar in
-   lockstep (see body:not(.menu-page) below). At ≥34rem it all fits one row. */
-.filter-bar-inner .segmented {
-  flex: 1 1 100%;
-}
-.filter-bar-inner .segmented button {
-  flex: 1 1 auto;
-}
+/* One row of 48 px controls: 48 + 2 × --space-2 padding + the 1 px border top
+   = 69.8 px. 4.4rem (70.4) reserves it with a whisker to spare. The safe-area
+   inset is added SEPARATELY by the bar's own padding and by every consumer of
+   --bar-h, so this figure stays inset-free on purpose.
+   Six rules read --bar-h: main's padding-bottom, .order-fab, .to-top, .toast,
+   .update-notice — and, until this redesign, .pick-fab, which no longer floats. */
 body:not(.menu-page) {
-  --bar-h: 7.6rem;
+  --bar-h: 4.4rem;
+}
+
+/* The two bar controls. 48 px, not 44: they are the only two controls on the
+   screen that are always reachable, and the bar has the room. */
+.bar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  min-height: 48px;
+  padding: 0.6em 1.1em;
+  border-radius: var(--radius-chip);
+  font-size: var(--step-body);
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.bar-btn:active {
+  transform: scale(0.96);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar-btn:active {
+    transform: none;
+  }
+}
+.bar-filters {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink);
+  /* Give up width before the accented "Pick for us" does — the shuffle's label
+     is fixed, this one only ever grows by a badge. */
+  min-width: 0;
+}
+/* Something is on: the entry point itself has to say so, because it is now the
+   only control on screen and a reader must never meet a short list with no
+   visible reason for it. Chrome AND text (the badge), never colour alone —
+   which is also why the label keeps --ink rather than going accent: accent on
+   --surface-2 measures 4.40:1 in light mode, under AA's 4.5, and the badge is
+   the louder signal anyway. As a border it only has to clear 3:1, which it does. */
+.bar-filters:has(.filters-count:not([hidden])) {
+  border-color: var(--accent);
+}
+.filters-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5em;
+  padding: 0.05em 0.4em;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--step-sub);
+  font-variant-numeric: tabular-nums;
+}
+.bar-pick {
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: var(--shadow);
 }
 
 .segmented {
@@ -1062,7 +1132,11 @@ body:not(.menu-page) {
   border: 0;
   background: transparent;
   padding: 0.5em 0.85em;
-  min-height: 40px;
+  /* 44, not 40. It shipped at 40 at every viewport — a straight breach of the
+     ≥ 44 px rule, measured 2026-08-16, and invisible to a touch-target audit
+     that only looked at the chips. Fixing it in the old bottom bar would have
+     pushed --bar-h from 7.6rem to ~7.9rem; in the sheet it costs nothing. */
+  min-height: 44px;
   border-radius: var(--radius-chip);
   font-size: var(--step-sub);
   font-weight: 600;
@@ -1111,32 +1185,78 @@ body:not(.menu-page) {
   color: var(--accent);
 }
 
-/* Wide enough for the toggle + both selects on one row; undo the mobile
-   two-row layout and reset the bar height. */
-@media (min-width: 34rem) {
-  body:not(.menu-page) {
-    --bar-h: 4.6rem;
-  }
-  .filter-bar-inner {
-    flex-wrap: nowrap;
-  }
-  .filter-bar-inner .segmented {
-    flex: 0 0 auto;
-  }
-  .filter-bar-inner .segmented button {
-    flex: 0 0 auto;
-  }
+/* ---------- The filter sheet ----------
+   A fourth consumer of .order-sheet's frame (bottom sheet on a phone, centred
+   card on wide), so the ✕, the backdrop, Escape and the scrolling body all come
+   from a pattern that already ships. Only the group/field/footer chrome below
+   is new. */
+.filter-group {
+  margin-bottom: var(--space-4);
 }
-
-/* ---------- Pick for us (Phase 4) ---------- */
-.pick-fab {
-  position: fixed;
-  right: var(--space-3);
-  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3));
-  z-index: 11;
-  display: none;
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+/* The taxonomy, stated out loud for the first time: "Narrow to" makes the list
+   shorter, "Sort by" only reorders it. Both used to sit in one undifferentiated
+   chip row with nothing on screen saying they did different jobs (ADR 0014). */
+.filter-group-title {
+  font-size: var(--step-sub);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: var(--space-2);
+}
+.filter-group-note {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  margin-bottom: var(--space-2);
+}
+.filter-field {
+  margin-bottom: var(--space-3);
+}
+.filter-label {
+  display: block;
+  font-size: var(--step-sub);
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: var(--space-1);
+}
+/* Full width in the sheet — there is room here, which is the whole point of
+   moving them off a 390 px bar where they collapsed to ~39 px stubs. */
+.filter-field .segmented {
+  display: flex;
+  width: 100%;
+}
+.filter-field .segmented button {
+  flex: 1 1 auto;
+}
+/* Never an Apply button (DESIGN.md: filters are instant). "Clear all" on the
+   left, a dismiss naming the live result on the right. */
+.filter-foot {
+  display: flex;
   align-items: center;
-  gap: 0.45em;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+.filter-clear {
+  min-height: 44px;
+  padding: 0.5em 1em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  cursor: pointer;
+}
+.filter-clear[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+.filter-done {
   min-height: 48px;
   padding: 0.6em 1.2em;
   border: 0;
@@ -1145,32 +1265,7 @@ body:not(.menu-page) {
   color: var(--accent-ink);
   font-size: var(--step-body);
   font-weight: 700;
-  box-shadow: var(--shadow);
   cursor: pointer;
-}
-.app-ready .pick-fab {
-  display: inline-flex;
-}
-.pick-fab:active {
-  transform: scale(0.96);
-}
-/* Auto-hide on scroll-down (picker.js toggles .is-tucked): slide it off the
-   bottom edge so it stops covering the list, then slide back on scroll-up. */
-.pick-fab {
-  transition: transform 0.22s ease, opacity 0.22s ease;
-}
-.pick-fab.is-tucked {
-  transform: translateY(150%);
-  opacity: 0;
-  pointer-events: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .pick-fab {
-    transition: opacity 0.2s ease;
-  }
-  .pick-fab.is-tucked {
-    transform: none;
-  }
 }
 
 .picker {
@@ -1537,12 +1632,13 @@ body:not(.menu-page) {
     transition: none;
   }
 }
-/* On the home list the bottom-right already holds the "Pick for us" pill (above
-   the fixed filter bar), so sit the back-to-top clear above both — the pick FAB
-   tucks on scroll-down, but this keeps them from colliding mid-list on the way
-   back up. Suppressed in search / favourites, which drop the bar and FAB. */
+/* On the home list, clear the fixed filter bar. The extra 3.6rem this used to
+   add was headroom for the "Pick for us" pill that floated bottom-right above
+   the bar; the pill is in the bar now, so the back-to-top drops back down to
+   sit directly on it — closer to the thumb, and nothing between them to dodge.
+   Suppressed in search / favourites, which drop the bar. */
 body:not(.menu-page) .to-top {
-  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3) + 3.6rem);
+  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3));
 }
 body.searching .to-top,
 body.faves-view .to-top {

@@ -220,9 +220,9 @@ test("the venue migration and the dish migration compose, neither clobbering the
   // Both halves of the key are stale: the venue was renamed (renames.js) and
   // the dish half is still a display name (this module). A phone that has been
   // offline since before either landed hits exactly this on first read.
-  const before = { "d:sprig-and-fern-tawa Fish and Chips": 5 };
+  const before = { "d:sprig-and-fern Fish and Chips": 5 };
   const after = migrateDishKeys(migrateRatingKeys(before));
-  assert.deepEqual(after, { "d:sprig-and-fern fish-and-chips": 5 });
+  assert.deepEqual(after, { "d:sprig-and-fern-tawa fish-and-chips": 5 });
 });
 
 // ── The measured fact the whole migration rests on ─────────────────────────

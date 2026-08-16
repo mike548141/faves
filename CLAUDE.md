@@ -136,6 +136,7 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
 ```sh
 python3 tools/serve.py        # laptop + phone (same Wi-Fi); prints both URLs
 python3 tools/validate.py     # data validates against the schema
+python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051)
 python3 tools/test_validate.py # …and that gate still catches things (14 mutations)
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)

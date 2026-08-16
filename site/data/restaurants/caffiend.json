@@ -1,0 +1,28 @@
+{
+  "id": "caffiend",
+  "name": "Caffiend",
+  "cuisine": [
+    "Cafe"
+  ],
+  "area": "Petone",
+  "city": "Lower Hutt",
+  "currency": "NZD",
+  "address": "233-235 Jackson Street, Petone, Lower Hutt 5012",
+  "lat": -41.22593,
+  "lng": 174.88086,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": "+64 4 939 0009",
+  "website": null,
+  "ordering": [],
+  "hours": null,
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "third-party",
+  "lifecycle": {
+    "added": "2026-08-16"
+  },
+  "status": "stub",
+  "menu": []
+}

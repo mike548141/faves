@@ -289,9 +289,23 @@ CASES = {
         "error",
     ),
     # --- dish identity, ADR 0051 ------------------------------------------
-    # The default is the old behaviour, so the gate's job is the collision: two
-    # dishes resolving to one id share an anchor, a heart, a rating and an order
-    # line, and every one of those fails in silence.
+    # `dishId` is REQUIRED (owner ruling, 2026-08-16 — favourites and ratings
+    # must never be lost again). An id derived from `slug(name)` at read time is
+    # not immutable: rename the dish and it moves. So the gate that matters most
+    # is the dullest one — a dish that doesn't say who it is. Both a first row
+    # and a later one, because a loop that only ever reaches item [0] would pass
+    # the first of these and let the whole rest of a menu through unchecked.
+    "a dish with no dishId at all": (
+        lambda d: _first_item(d).pop("dishId", None),
+        "error",
+    ),
+    "a dish deeper in the menu with no dishId": (
+        lambda d: d["menu"][2]["items"][-1].pop("dishId", None),
+        "error",
+    ),
+    "dishId present but null": (lambda d: _first_item(d).update(dishId=None), "error"),
+    # Two dishes resolving to one id share an anchor, a heart, a rating and an
+    # order line, and every one of those fails in silence.
     "one dish printed twice under one id": (_twin, "error"),
     "the second copy carries its own dishId": (
         lambda d: _twin(d, "eggs-on-toast-soup"),
@@ -385,11 +399,14 @@ SOURCE_CASES = {
             "error",
         ),
     },
-    # The explicit ids ADR 0051 put on the 22 colliding rows are load-bearing,
-    # not decoration — and only a mutation of the REAL file can show that. Take
-    # one away and the Gold Card cheeseburger ($21) collides with the Mains one
-    # ($28) again: one anchor, one heart, one price for two different dishes.
-    "site/data/restaurants/sprig-and-fern.json": {
+    # The ids in the corpus are load-bearing, not decoration — and only a
+    # mutation of the REAL file can show that. Take the Gold Card cheeseburger's
+    # id away and it stops saying who it is; before the field was required it
+    # instead fell back to `slug(name)` and collided with the Mains cheeseburger
+    # ($28 charged for a $21 dish, one anchor, one heart). Requiring it turns the
+    # silent collision into a refusal at the gate, which is why this case now
+    # asserts the id is *missing* rather than that two rows fought over one.
+    "site/data/restaurants/sprig-and-fern-tawa.json": {
         "an explicit dishId removed from real data": (
             lambda s: s.replace('          "dishId": "cheeseburger-gold-card",\n', "", 1),
             "error",

@@ -111,6 +111,7 @@
       "items": [
         {
           "name": "Satay chicken",
+          "dishId": "satay-chicken",
           "code": "1",
           "desc": "Egg noodles with chicken and fresh vegetables in satay sauce.",
           "price": 19,
@@ -123,6 +124,7 @@
         },
         {
           "name": "Hokkien mee",
+          "dishId": "hokkien-mee",
           "code": "2",
           "desc": "Egg noodles with roast pork, shrimp, bean sprouts, onion, bok choy and spring onion in dark soy and mild chilli sauce.",
           "price": 19,
@@ -136,6 +138,7 @@
         },
         {
           "name": "Fried kuai teow",
+          "dishId": "fried-kuai-teow",
           "code": "3",
           "desc": "Thick rice noodles with roast pork, shrimp, bean sprouts, onion, carrots and spring onion in a dark soy and chilli sauce.",
           "price": 19,
@@ -147,6 +150,7 @@
         },
         {
           "name": "Combination noodles",
+          "dishId": "combination-noodles",
           "code": "4",
           "desc": "Egg noodles with prawn, beef, pork and chicken served with fresh and crispy vegetables in oyster sauce.",
           "price": 21,
@@ -159,6 +163,7 @@
         },
         {
           "name": "Black bean beef",
+          "dishId": "black-bean-beef",
           "code": "5",
           "desc": "Egg noodles with beef and fresh vegetables in a popular black bean sauce.",
           "price": 19,
@@ -170,6 +175,7 @@
         },
         {
           "name": "Singapore fried noodles",
+          "dishId": "singapore-fried-noodles",
           "code": "6",
           "desc": "Thin rice noodles with roast pork, shrimp, bean sprouts, onion, carrots and spring onion in a light curry sauce.",
           "price": 19,
@@ -179,6 +185,7 @@
         },
         {
           "name": "Sweet box",
+          "dishId": "sweet-box",
           "code": "7",
           "desc": "Egg noodles with roast pork, chicken, beef, pineapple, tomato and fresh vegetables in a special sweet sauce.",
           "price": 19.5,
@@ -189,6 +196,7 @@
         },
         {
           "name": "Hot box",
+          "dishId": "hot-box",
           "code": "8",
           "desc": "Egg noodles with roast pork, chicken, beef and fresh vegetables in a Thai chilli sauce. Choice of mild, medium or hot.",
           "price": 19.5,
@@ -200,6 +208,7 @@
         },
         {
           "name": "Teriyaki",
+          "dishId": "teriyaki",
           "code": "9",
           "desc": "Udon noodles with chicken, onion, bean sprouts, carrots, spring onion and bok choy in Japanese teriyaki sauce.",
           "price": 19,
@@ -210,6 +219,7 @@
         },
         {
           "name": "Seafood mee goreng",
+          "dishId": "seafood-mee-goreng",
           "code": "10",
           "desc": "Egg noodles with prawns, calamari, fish cakes, crab meat, tofu and fresh vegetables in an Indonesian style sauce. Choice of mild, medium or hot.",
           "price": 21,
@@ -223,6 +233,7 @@
         },
         {
           "name": "Thai sweet chilli beef",
+          "dishId": "thai-sweet-chilli-beef",
           "code": "11",
           "desc": "Egg noodles with beef and fresh vegetables in a Thai sweet chilli sauce.",
           "price": 19,
@@ -234,6 +245,7 @@
         },
         {
           "name": "Sambal chicken",
+          "dishId": "sambal-chicken",
           "code": "12",
           "desc": "Thin rice noodles with chicken and fresh vegetables in a Malaysian sambal sauce. Choice of mild, medium or hot.",
           "price": 13.5,
@@ -243,6 +255,7 @@
         },
         {
           "name": "Mongolian beef",
+          "dishId": "mongolian-beef",
           "code": "13",
           "desc": "Thin rice noodles with beef and fresh vegetables in a Mongolian sauce.",
           "price": 19,
@@ -250,6 +263,7 @@
         },
         {
           "name": "Thai curry chicken",
+          "dishId": "thai-curry-chicken",
           "code": "14",
           "desc": "Thin rice noodles with chicken, tomato and fresh vegetables in a Thai spicy curry sauce.",
           "price": 19,
@@ -259,6 +273,7 @@
         },
         {
           "name": "BBQ pork",
+          "dishId": "bbq-pork",
           "code": "15",
           "desc": "Egg noodles with roast pork, tomato and fresh vegetables in a Chinese BBQ sauce.",
           "price": 19,
@@ -269,6 +284,7 @@
         },
         {
           "name": "Garlic prawns",
+          "dishId": "garlic-prawns",
           "code": "16",
           "desc": "Egg noodles with king prawns, shrimps and fresh vegetables in a delicious garlic sauce.",
           "price": 22.5,
@@ -280,6 +296,7 @@
         },
         {
           "name": "Honey chicken noodle",
+          "dishId": "honey-chicken-noodle",
           "code": "17",
           "desc": "Battered chicken in honey sauce with wok-tossed noodles and vegetables.",
           "price": 19,
@@ -289,6 +306,7 @@
         },
         {
           "name": "Chilli beef",
+          "dishId": "chilli-beef",
           "code": "18",
           "desc": "Egg noodles with beef and fresh vegetables in chilli sauce. Choice of mild, medium or hot.",
           "price": 19,
@@ -300,6 +318,7 @@
         },
         {
           "name": "Seafood combination noodles",
+          "dishId": "seafood-combination-noodles",
           "code": "19",
           "desc": "Egg noodles with prawns, calamari, fish cakes, crab meat and fresh vegetables in oyster sauce.",
           "price": 21,
@@ -312,6 +331,7 @@
         },
         {
           "name": "Chicken chow mee",
+          "dishId": "chicken-chow-mee",
           "code": "20",
           "desc": "Egg noodles with chicken and fresh vegetables in hot wok sizzling oyster sauce.",
           "price": 19,
@@ -329,6 +349,7 @@
       "items": [
         {
           "name": "Vegetarian soy noodles",
+          "dishId": "vegetarian-soy-noodles",
           "code": "21",
           "desc": "Egg noodles with tofu, mushrooms and fresh vegetables in dark soy sauce.",
           "price": 18.5,
@@ -341,6 +362,7 @@
         },
         {
           "name": "Vegetarian mee goreng",
+          "dishId": "vegetarian-mee-goreng",
           "code": "22",
           "desc": "Egg noodles with tofu, mushrooms, tomato and fresh vegetables in an Indonesian style sauce. Choice of mild, medium or hot.",
           "price": 18.5,
@@ -354,6 +376,7 @@
         },
         {
           "name": "Vegetarian Singapore noodles",
+          "dishId": "vegetarian-singapore-noodles",
           "code": "23",
           "desc": "Thin rice noodles mixed with tofu, mushrooms and fresh vegetables in a light curry sauce.",
           "price": 18.5,
@@ -364,6 +387,7 @@
         },
         {
           "name": "Vegetarian soup",
+          "dishId": "vegetarian-soup",
           "code": "24",
           "desc": "Egg noodles with tofu, mushrooms and fresh vegetables served in soup.",
           "price": 18.5,
@@ -381,6 +405,7 @@
       "items": [
         {
           "name": "Combination soup",
+          "dishId": "combination-soup",
           "code": "25",
           "desc": "Egg noodles with prawns, beef, pork and chicken served with fresh vegetables in a chicken soup.",
           "price": 21,
@@ -392,6 +417,7 @@
         },
         {
           "name": "Curry laksa",
+          "dishId": "curry-laksa",
           "code": "26",
           "desc": "Egg noodles with prawns, crab meat, chicken, tofu and fresh vegetables in a coconut curry soup.",
           "price": 20.5,
@@ -404,6 +430,7 @@
         },
         {
           "name": "Tom yum",
+          "dishId": "tom-yum",
           "code": "27",
           "desc": "Rice noodles with chicken, tomato, pineapple and fresh vegetables in a Thai hot and sour soup.",
           "price": 19,
@@ -418,6 +445,7 @@
       "items": [
         {
           "name": "Special fried rice",
+          "dishId": "special-fried-rice",
           "code": "28",
           "desc": "Traditional rice dish comprising shrimp, roast pork, bean sprouts, onions, carrots, spring onions and peas.",
           "price": 19,
@@ -427,6 +455,7 @@
         },
         {
           "name": "Sambal fried rice",
+          "dishId": "sambal-fried-rice",
           "code": "29",
           "desc": "Malaysian style fried rice with chicken, bean sprouts, onion and peas in a sambal sauce.",
           "price": 19,
@@ -436,6 +465,7 @@
         },
         {
           "name": "Nasi goreng",
+          "dishId": "nasi-goreng",
           "code": "30",
           "desc": "Malaysian style fried rice with roast pork, bean sprouts, onion, carrots, spring onion and peas.",
           "price": 19,
@@ -443,6 +473,7 @@
         },
         {
           "name": "Seafood nasi goreng",
+          "dishId": "seafood-nasi-goreng",
           "code": "31",
           "desc": "Malaysian style fried rice with a combination of seafood, bean sprouts, onion, carrots, spring onion and peas.",
           "price": 21,
@@ -452,6 +483,7 @@
         },
         {
           "name": "Honey chicken fried rice",
+          "dishId": "honey-chicken-fried-rice",
           "code": "32",
           "desc": "Battered chicken in a honey sauce with wok-tossed fried rice and vegetables.",
           "price": 19,
@@ -466,6 +498,7 @@
       "items": [
         {
           "name": "Canteen noodle",
+          "dishId": "canteen-noodle",
           "code": "33",
           "desc": "Udon noodles with king prawns, chicken and vegetables in a hot sizzling canteen sauce.",
           "price": 19.5,
@@ -476,6 +509,7 @@
         },
         {
           "name": "Cashew chicken chow mee",
+          "dishId": "cashew-chicken-chow-mee",
           "code": "34",
           "desc": null,
           "price": 21,
@@ -485,6 +519,7 @@
         },
         {
           "name": "Wonton noodle soup",
+          "dishId": "wonton-noodle-soup",
           "code": "35",
           "desc": null,
           "price": 20.3,
@@ -494,6 +529,7 @@
         },
         {
           "name": "Malaysian fried rice",
+          "dishId": "malaysian-fried-rice",
           "code": "36",
           "desc": null,
           "price": 19,
@@ -501,6 +537,7 @@
         },
         {
           "name": "Chicken fried rice",
+          "dishId": "chicken-fried-rice",
           "code": "37",
           "desc": null,
           "price": 19,
@@ -508,6 +545,7 @@
         },
         {
           "name": "King prawn fried rice",
+          "dishId": "king-prawn-fried-rice",
           "code": "38",
           "desc": null,
           "price": 22.5,
@@ -517,6 +555,7 @@
         },
         {
           "name": "Vege fried rice",
+          "dishId": "vege-fried-rice",
           "code": "39",
           "desc": null,
           "price": 19,
@@ -526,6 +565,7 @@
         },
         {
           "name": "Honey king prawn noodle",
+          "dishId": "honey-king-prawn-noodle",
           "code": "40",
           "desc": null,
           "price": 22,
@@ -535,6 +575,7 @@
         },
         {
           "name": "Honey king prawn fried rice",
+          "dishId": "honey-king-prawn-fried-rice",
           "code": "41",
           "desc": null,
           "price": 22,
@@ -544,6 +585,7 @@
         },
         {
           "name": "Sweet & sour pork noodle",
+          "dishId": "sweet-sour-pork-noodle",
           "code": "42",
           "desc": null,
           "price": 19,
@@ -551,6 +593,7 @@
         },
         {
           "name": "Sweet & sour pork rice",
+          "dishId": "sweet-sour-pork-rice",
           "code": "43",
           "desc": null,
           "price": 19,
@@ -558,6 +601,7 @@
         },
         {
           "name": "Satay beef",
+          "dishId": "satay-beef",
           "code": "44",
           "desc": null,
           "price": 19,
@@ -568,6 +612,7 @@
         },
         {
           "name": "Chicken mee goreng",
+          "dishId": "chicken-mee-goreng",
           "code": "45",
           "desc": null,
           "price": 19,
@@ -577,6 +622,7 @@
         },
         {
           "name": "Sweet & sour chicken noodles",
+          "dishId": "sweet-sour-chicken-noodles",
           "code": "46",
           "desc": null,
           "price": 19,
@@ -584,6 +630,7 @@
         },
         {
           "name": "Sweet & sour chicken fried rice",
+          "dishId": "sweet-sour-chicken-fried-rice",
           "code": "47",
           "desc": null,
           "price": 19,
@@ -591,6 +638,7 @@
         },
         {
           "name": "Sweet & sour prawns noodles",
+          "dishId": "sweet-sour-prawns-noodles",
           "code": "48",
           "desc": null,
           "price": 22,
@@ -600,6 +648,7 @@
         },
         {
           "name": "Sweet & sour prawns fried rice",
+          "dishId": "sweet-sour-prawns-fried-rice",
           "code": "49",
           "desc": null,
           "price": 22,
@@ -609,6 +658,7 @@
         },
         {
           "name": "Honey pork noodle",
+          "dishId": "honey-pork-noodle",
           "code": "50",
           "desc": null,
           "price": 19,
@@ -616,6 +666,7 @@
         },
         {
           "name": "Honey pork fried rice",
+          "dishId": "honey-pork-fried-rice",
           "code": "51",
           "desc": null,
           "price": 19,
@@ -623,6 +674,7 @@
         },
         {
           "name": "Combination fried rice",
+          "dishId": "combination-fried-rice",
           "code": "52",
           "desc": null,
           "price": 21,
@@ -630,6 +682,7 @@
         },
         {
           "name": "Pork fried rice",
+          "dishId": "pork-fried-rice",
           "code": "53",
           "desc": null,
           "price": 19,
@@ -637,6 +690,7 @@
         },
         {
           "name": "Beef fried rice",
+          "dishId": "beef-fried-rice",
           "code": "54",
           "desc": null,
           "price": 19,
@@ -644,6 +698,7 @@
         },
         {
           "name": "Satay chicken fried rice",
+          "dishId": "satay-chicken-fried-rice",
           "code": "55",
           "desc": null,
           "price": 19,
@@ -654,6 +709,7 @@
         },
         {
           "name": "Hot box fried rice",
+          "dishId": "hot-box-fried-rice",
           "code": "56",
           "desc": null,
           "price": 19.5,
@@ -663,6 +719,7 @@
         },
         {
           "name": "Seafood combination soup",
+          "dishId": "seafood-combination-soup",
           "code": "57",
           "desc": null,
           "price": 21,
@@ -672,6 +729,7 @@
         },
         {
           "name": "Shanghai noodles",
+          "dishId": "shanghai-noodles",
           "code": "58",
           "desc": null,
           "price": 19,

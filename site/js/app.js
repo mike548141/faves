@@ -1,4 +1,7 @@
-// Home screen: load data, render cards, wire the sticky filter bar.
+// Home screen: load data, render cards, own the filter state. The controls
+// themselves live in the filter sheet (filters-ui.js) behind the bottom bar's
+// one "Filters (n)" button; this module still owns `state` and every handler,
+// so moving them changed where they sit, not who decides.
 // Fail-soft: if anything here throws, the static list in index.html
 // stays on screen untouched.
 
@@ -6,9 +9,11 @@ import { loadRestaurants } from "./data.js";
 import {
   deriveFacets,
   applyFilters,
+  activeFilters,
   DEFAULT_FILTERS,
   filtersFromQuery,
 } from "./filters.js";
+import { initFiltersUI } from "./filters-ui.js";
 import { formatDriveTime, estimateDriveMinutes } from "./distance.js";
 import { formatDistance } from "./units.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
@@ -353,52 +358,115 @@ function init(restaurants) {
     history.replaceState(null, "", location.pathname + (q ? `?${q}` : "") + location.hash);
   }
 
-  // A dismissible chip per active facet, sitting beside the count that says
+  // Turn one filter off and put its control back to neutral. The control now
+  // lives inside the sheet, so this is the only place that knows how to undo
+  // each kind — the chips, "Clear all" and the sheet all route through it.
+  const WHAT = {
+    cuisine: "cuisine",
+    area: "area",
+    service: "service",
+    openNow: "Open now",
+    cheap: "Cheap eats",
+  };
+  function clearFilter(kind) {
+    if (kind === "cuisine" || kind === "area") {
+      const sel = kind === "cuisine" ? cuisineSel : areaSel;
+      state[kind] = "all";
+      sel.value = "all";
+      sel.dataset.active = "all";
+      syncQuery();
+    } else if (kind === "service") {
+      state.service = "all";
+      serviceBtns.forEach((b) =>
+        b.setAttribute("aria-pressed", String(b.dataset.service === "all"))
+      );
+    } else {
+      state[kind] = false;
+      document
+        .getElementById(kind === "openNow" ? "open-now" : "cheap-eats")
+        ?.setAttribute("aria-pressed", "false");
+    }
+  }
+
+  // How many chips fit on the results head's one line beside the count.
+  // Measured at 390 px: the head has 358 px, the count takes ~110 and a chip
+  // ~104, so one chip plus the "+n more" escape is the honest cap; at ≥34rem
+  // there is room for three. A second chip row would claw back exactly the
+  // height this redesign just bought (98.4 px for two, measured 2026-08-16).
+  const wideMq = matchMedia("(min-width: 34rem)");
+  const chipCap = () => (wideMq.matches ? 3 : 1);
+
+  // A dismissible chip per active filter, sitting beside the count that says
   // the list is short. This is the way *out*.
   //
-  // It exists because of how you get here. Every other filter on this screen
-  // was pressed on this screen, so the control you pressed is the control you
-  // un-press. A cuisine arriving in the URL from a venue's subheading was
-  // chosen on a different page — the reader lands on a narrowed list having
-  // touched nothing here, and the only undo was a <select> in the sticky bar
-  // at the far end of the page, which reads as part of the furniture rather
-  // than as the thing currently doing this to the list. The search screen has
-  // always had a ✕ on its query for exactly this reason; browse had nothing
-  // (owner, 2026-08-16).
-  function renderActiveFilters() {
+  // It exists because of how you get here. A cuisine arriving in the URL from a
+  // venue's subheading was chosen on a different page — the reader lands on a
+  // narrowed list having touched nothing here, and the only undo was a <select>
+  // in the sticky bar at the far end of the page, which reads as part of the
+  // furniture rather than as the thing currently doing this to the list. The
+  // search screen has always had a ✕ on its query for exactly this reason;
+  // browse had nothing (owner, 2026-08-16).
+  //
+  // It now covers ALL five filters, not just the two a URL can carry. That is
+  // not a nicety: once the controls moved into a sheet, an uncovered filter
+  // would be a filter nothing on screen names. Over the cap the tail folds into
+  // one "+n more" button that opens the sheet — the filters are still named,
+  // just one tap away, and the row cannot grow a second line. `activeFilters`
+  // orders cuisine and area first precisely so an *arriving* facet is never the
+  // one folded away.
+  function renderActiveFilters(active) {
     if (!activeEl) return;
-    const chips = [];
-    for (const [kind, value, sel, what] of [
-      ["cuisine", state.cuisine, cuisineSel, "cuisine"],
-      ["area", state.area, areaSel, "area"],
-    ]) {
-      if (value === "all") continue;
+    const cap = chipCap();
+    const visible = active.length <= cap ? active : active.slice(0, cap);
+    const chips = visible.map(({ kind, label, key }) => {
+      const text = key ? t(key, label) : label;
       const chip = el("button", {
         type: "button",
         className: "active-filter",
         // The label carries the whole sentence: what is on, and what pressing
         // it does. "Malaysian ✕" alone tells a screen-reader user neither.
-        "aria-label": `${value} ${what} filter is on — clear it and show every place`,
+        "aria-label": `${text} ${WHAT[kind]} filter is on — clear it and show every place`,
+        // The visible name truncates at 10rem; the title gives it back on hover.
+        title: text,
       }, [
-        el("span", { className: "active-filter-name", textContent: value }),
+        el("span", { className: "active-filter-name", textContent: text }),
         el("span", { className: "active-filter-x", "aria-hidden": "true", textContent: "✕" }),
       ]);
       chip.addEventListener("click", () => {
-        state[kind] = "all";
-        sel.value = "all";
-        sel.dataset.active = "all";
-        syncQuery();
+        clearFilter(kind);
         render();
         // Send focus somewhere that still exists — the chip is about to be
         // removed from the DOM, and focus on a detached node falls to <body>,
         // stranding a keyboard user at the top of the document.
         countEl?.focus?.();
       });
-      chips.push(chip);
+      return chip;
+    });
+    const hiddenCount = active.length - visible.length;
+    if (hiddenCount > 0) {
+      const more = el("button", {
+        type: "button",
+        className: "active-filter-more",
+        textContent: `+${hiddenCount} more`,
+        "aria-label": `${hiddenCount} more filter${hiddenCount === 1 ? "" : "s"} are on — open filters to see them`,
+      });
+      more.addEventListener("click", () => filtersUI.open(more));
+      chips.push(more);
     }
     activeEl.replaceChildren(...chips);
     activeEl.hidden = chips.length === 0;
   }
+  // The cap is width-dependent, and a rotation or a resized window changes it
+  // without changing the filter state, so nothing else would redraw the row.
+  wideMq.addEventListener("change", () => renderActiveFilters(activeFilters(state)));
+
+  // One button, one sheet, and the badge that keeps a hidden filter honest.
+  const filtersUI = initFiltersUI({
+    onClearAll: () => {
+      for (const { kind } of activeFilters(state)) clearFilter(kind);
+      render();
+    },
+  });
 
   // Venues you've hearted, or that hold a dish you've hearted — a favourite
   // dish lifts its whole venue. Flattened to venue ids for the ranker.
@@ -440,9 +508,12 @@ function init(restaurants) {
     const total = restaurants.length;
     countEl.textContent =
       n === total ? `${total} places` : `${n} of ${total} place${n === 1 ? "" : "s"}`;
-    // Redrawn with the count so the chips and the number they explain can
-    // never disagree — including when a filter changes from the dropdowns.
-    renderActiveFilters();
+    // Redrawn with the count so the chips, the badge and the number they
+    // explain can never disagree — including when a filter changes inside the
+    // sheet. All three read the same activeFilters(state).
+    const active = activeFilters(state);
+    renderActiveFilters(active);
+    filtersUI.sync({ active, shown: n, total });
   }
 
   serviceBtns.forEach((btn) => {

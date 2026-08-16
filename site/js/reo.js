@@ -76,6 +76,23 @@ const MI = {
   // Filter select defaults
   "filter.allAreas": "Ngā rohe katoa",
   "filter.allCuisines": "Ngā momo kai katoa",
+  // The filter sheet — the bar's one button and the sheet's own chrome.
+  // "tātari" (to filter/sift) is the word already used in "pick.empty" below,
+  // so this stays consistent with a string that has been in the app a while;
+  // "Rohe" and "Momo kai" are the singular forms of the two select defaults
+  // just above. The group headings and "clear all" are fresh drafts.
+  // ⚠ The button's badge ("Filters — 2 on") and the footer's "Show 6 places"
+  // are composed with a number, so they stay English by the rule at the top of
+  // this file: the engine swaps whole strings only.
+  "filter.button": "Ngā tātari",
+  "filter.title": "Ngā tātari",
+  "filter.narrow": "Whakawhāitihia ki", // draft — "narrow to"
+  "filter.sort": "Raupapa mā", // draft — "order by"
+  "filter.sortNote": "He whakaraupapa anō i te rārangi. Kāore e whakapoto.", // draft
+  "filter.clearAll": "Whakawāteahia katoa", // draft — "clear all"
+  "filter.service": "Ratonga", // draft — "service" (dine-in / takeaway)
+  "filter.area": "Rohe",
+  "filter.cuisine": "Momo kai",
   // Overflow / navigation
   "nav.more": "Ētahi atu",
   "nav.favourites": "Ngā Makau",

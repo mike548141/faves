@@ -79,9 +79,25 @@ id makes it mechanical.
 **A dish's identity is `dishId`; its `name` is display text.** One optional
 field, one resolver, one gate.
 
-1. **`dishId` is optional, and absent it is `slug(name)`** — which is exactly
-   what every anchor, heart, rating and order line already resolved to. 1733 of
-   1755 rows therefore carry no new field and keep the identity they had.
+1. **`dishId` is REQUIRED on every dish, seeded once from `slug(name)`** — which
+   is exactly what every anchor, heart, rating and order line already resolved
+   to, so all 1755 rows keep the identity they had while gaining a *written*
+   one. `tools/seed_dish_ids.py` does the seeding and is safe to re-run; a dish
+   without one is a validation error naming the id to write.
+
+   The distinction that decides this is **seeded, not derived**. An id computed
+   from `slug(name)` at read time is a function of a mutable display name:
+   rename the dish and the id silently changes, which is the failure this whole
+   record exists to prevent, reintroduced one level up. Seeded once and written
+   into the data, it is a stored fact. The property that buys is not subtle —
+   a transcriber who renames a dish opens the file and finds
+   `"dishId": "cheeseburger"` sitting under the name. They change the name and
+   leave the id. **They cannot fail.** Nothing in the file reminded them before.
+
+   The `slug(name)` fallback stays in `dish-id.js`, but only for what genuinely
+   has no id: a heart stored on a phone before ids existed, and a share link
+   minted before them. Data is required to carry one; storage and the wire are
+   allowed not to.
 2. **`site/js/dish-id.js` is the single resolver**, the dish-level twin of
    `renames.js`: `dishId(item)`, `eachDish(record)`, `findDish(record, ref)`,
    `migrateDishKeys(map)`. Nobody learns a second way to point at a dish.
@@ -165,9 +181,31 @@ session would "fix" by adding a migration that does nothing.
   **Still flagged to the owner as a deviation from the shape he approved**
   rather than resolved quietly. Nothing in the corpus uses either field yet, so
   reversing it is a one-field rename, and the two are not mutually exclusive.
-- **Making `dishId` required.** It would have been a 1755-row edit for a
-  22-row problem, and it would have moved every anchor and every stored key on
-  the same day — trading a silent bug for a loud migration nobody asked for.
+- **Leaving `dishId` optional, defaulted to `slug(name)`.** This is the shape
+  the roadmap proposed, and it is what was built first — a 12-row edit rather
+  than a 1755-row one, and no payload cost at all. **The owner overruled it the
+  same day**, and the ruling is the sharpest sentence in this record:
+
+  > "I am ok with breaking changes that lose favourites, ratings etc right now
+  > but in the future I will not be ok with losing any of that and impacting
+  > end users. So make the change that is best for that long term even if its
+  > breaking now, but we MUST ENSURE things like ratings and favourites are
+  > never lost in future thus **immutable ID's** or somthing"
+
+  An id derived on every read is not immutable, so the optional shape did not
+  meet the requirement — it met it only by *convention*, a rule a transcriber
+  has to remember, which is the identical criticism this record levels at the
+  price-history carry-over three paragraphs earlier. Seeding meets it by
+  construction. Measured cost, taken deliberately: **+70.8 KB raw / +12.6 KB
+  gzipped**, 16.3% of the data cache, across 1743 newly seeded rows.
+
+- **Enforcing immutability with a CI gate instead of seeding** — compare each
+  record against its previous committed version and fail if a resolved id
+  vanished without a `formerIds` entry. Zero payload cost, and tempting. It
+  lost because it is a **guard rather than a property**: it needs git history
+  present in CI, it fails open on a shallow clone, and this repo has been
+  bitten four times by checks that could not fire when it mattered. A field
+  sitting in the file cannot fail to run.
 - **Merging the Mains / Gold Card / Kids rows into one dish with a
   serving-size or discount configuration.** Investigated by the parallel add-ons
   session: the evidence says they are not one dish. Several Gold Card
@@ -202,10 +240,14 @@ session would "fix" by adding a migration that does nothing.
   explicit one**, so a rename no longer orphans its price series. Records
   written before this keep their `{section, name, code}` keys and reconstruct
   byte-identically — the `--check` round-trip is what proves it.
-- **A new field on a payload record.** `dishId` ships to every phone (ADR
-  0047's rule: name the screen that renders it — here, every screen that links
-  to a dish). Twelve strings across three files; the cost is noise against a
-  56 KB payload.
+- **A new field on every payload record, and it is not free.** `dishId` ships
+  to every phone (ADR 0047's rule: name the screen that renders it — here,
+  every screen that links to a dish). **+12.6 KB gzipped, 16.3% of the data
+  cache.** That is the price of immutability and the owner authorised it
+  knowing the number. It is a one-off per version bump on a payload that
+  precaches once and then works offline, not a per-visit cost — but it is the
+  largest single field this corpus has ever added, and the next one should be
+  weighed against this precedent rather than against zero.
 - **`validate.py` now fails a menu that prints the same dish name twice in one
   venue without disambiguating it.** That is the intended cost: the next person
   to refresh Sprig & Fern's menu will be told, at the moment they can fix it,

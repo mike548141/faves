@@ -8,7 +8,24 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **The home screen is mostly places again.** Every filter and sort now lives in
+  one sheet behind a single `Filters` button in a slim bottom bar, grouped and
+  labelled for the first time — **Narrow to** (service, area, cuisine, open now,
+  cheap eats) and **Sort by** (near me, along a route), which is a real
+  distinction the old undifferentiated chip row never made. On an iPhone the
+  chrome drops from 50.7 % of the screen to 31.9 %, and from 58.4 % to 34.5 %
+  when you arrive by tapping a cuisine on a menu — 3 cards visible becomes 4,
+  and 2 becomes 4. Nothing was removed: the button carries a count of what's on,
+  and the chips beside the result count still name each one and clear it in a tap.
+- **"Pick for us" moved into the bar.** It used to float over the list, where it
+  covered 63 % of a venue's ♥ on the landing screen — measured, and exactly what
+  the owner had seen. Nothing floats over the cards now.
+
 ### Fixed
+- **Three filter buttons were under the minimum tap-target size.** The
+  Everywhere / Takeaway / Dine-in control shipped at 40 px tall at every screen
+  width, against the app's own 44 px floor.
 - **The "Call to order" button no longer looks cut off.** Pinned to the top of a
   long menu it was exactly as tall as the bar holding it, so its rounded bottom
   sat flush on the edge and blurred into whatever was scrolling past

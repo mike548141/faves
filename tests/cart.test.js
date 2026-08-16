@@ -181,7 +181,7 @@ test("order.merge folds a decoded share into the store and persists", () => {
 // passed explicitly here so the test proves the model, not the menu data.
 
 const burger = (over) => ({
-  venueId: "sprig-and-fern", venueName: "Sprig & Fern", name: "Cheeseburger", ...over,
+  venueId: "sprig-and-fern-tawa", venueName: "Sprig & Fern", name: "Cheeseburger", ...over,
 });
 const mains = burger({ dishId: "cheeseburger", price: 28 });
 const goldCard = burger({ dishId: "cheeseburger-gold-card", price: 21 });
@@ -192,17 +192,17 @@ test("two same-named dishes with different ids are two lines at the right total"
   o.add(goldCard);
   assert.equal(o.items().length, 2); // was 1 — the bug
   assert.equal(o.total(), 49); // was 56 — the money
-  assert.equal(o.qtyOf("sprig-and-fern", "cheeseburger"), 1);
-  assert.equal(o.qtyOf("sprig-and-fern", "cheeseburger-gold-card"), 1);
+  assert.equal(o.qtyOf("sprig-and-fern-tawa", "cheeseburger"), 1);
+  assert.equal(o.qtyOf("sprig-and-fern-tawa", "cheeseburger-gold-card"), 1);
 });
 
 test("the id, not the name, decides which line a stepper moves", () => {
   const o = createOrder(fakeStorage());
   o.add(mains);
   o.add(goldCard);
-  o.setQty("sprig-and-fern", "cheeseburger-gold-card", 3);
+  o.setQty("sprig-and-fern-tawa", "cheeseburger-gold-card", 3);
   assert.equal(o.total(), 28 + 63);
-  o.remove("sprig-and-fern", "cheeseburger");
+  o.remove("sprig-and-fern-tawa", "cheeseburger");
   assert.equal(o.items().length, 1);
   assert.equal(o.items()[0].dishId, "cheeseburger-gold-card");
 });
@@ -211,8 +211,8 @@ test("a line records its id, so it survives storage and a fresh store", () => {
   const storage = fakeStorage();
   createOrder(storage).add(goldCard);
   const b = createOrder(storage);
-  assert.equal(b.qtyOf("sprig-and-fern", "cheeseburger-gold-card"), 1);
-  assert.equal(b.qtyOf("sprig-and-fern", "cheeseburger"), 0); // not the other row
+  assert.equal(b.qtyOf("sprig-and-fern-tawa", "cheeseburger-gold-card"), 1);
+  assert.equal(b.qtyOf("sprig-and-fern-tawa", "cheeseburger"), 0); // not the other row
 });
 
 test("an id-less line keys exactly as it did before ids existed", () => {

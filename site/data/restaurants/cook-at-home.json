@@ -32,6 +32,7 @@
       "items": [
         {
           "name": "Easy Pad Thai",
+          "dishId": "easy-pad-thai",
           "desc": null,
           "ingredients": [
             "200g rice stick noodles (available in supermarkets)",
@@ -65,6 +66,7 @@
         },
         {
           "name": "Famous Brade Green Chicken Curry",
+          "dishId": "famous-brade-green-chicken-curry",
           "desc": null,
           "ingredients": [
             "Chicken",
@@ -93,6 +95,7 @@
         },
         {
           "name": "Jesse's Garlic Chicken Thighs",
+          "dishId": "jesse-s-garlic-chicken-thighs",
           "desc": null,
           "ingredients": [
             "6–8 garlic cloves, crushed",
@@ -123,6 +126,7 @@
         },
         {
           "name": "Shane's Ribs",
+          "dishId": "shane-s-ribs",
           "desc": "Made up from a few recipes, but it went something like this.",
           "time": "8 hr (slow cooker)",
           "ingredients": [
@@ -153,6 +157,7 @@
         },
         {
           "name": "Lamb Shanks",
+          "dishId": "lamb-shanks",
           "desc": null,
           "time": "2 hr",
           "ingredients": [
@@ -180,6 +185,7 @@
         },
         {
           "name": "Slow-Cooked Chicken Noodle Soup",
+          "dishId": "slow-cooked-chicken-noodle-soup",
           "desc": null,
           "ingredients": [
             "4 potatoes, peeled & diced",
@@ -199,6 +205,7 @@
         },
         {
           "name": "Mussels",
+          "dishId": "mussels",
           "desc": null,
           "ingredients": [
             "2 cups dry white wine",
@@ -221,6 +228,7 @@
         },
         {
           "name": "BBQ Prawns",
+          "dishId": "bbq-prawns",
           "desc": null,
           "ingredients": [
             "Olive oil",
@@ -251,6 +259,7 @@
       "items": [
         {
           "name": "Perfectly Pretty Hotcakes",
+          "dishId": "perfectly-pretty-hotcakes",
           "desc": "Makes 10–15.",
           "time": "~50 min",
           "ingredients": [
@@ -290,6 +299,7 @@
       "items": [
         {
           "name": "Booth's Ginger Crunch",
+          "dishId": "booth-s-ginger-crunch",
           "desc": "Base doubled and icing tripled from the original recipe.",
           "ingredients": [
             "250g butter, softened",
@@ -311,6 +321,7 @@
         },
         {
           "name": "B's Dope-As Brownie",
+          "dishId": "b-s-dope-as-brownie",
           "desc": null,
           "time": "~22 min",
           "ingredients": [
@@ -337,6 +348,7 @@
         },
         {
           "name": "Chocolate Chewy Cookies",
+          "dishId": "chocolate-chewy-cookies",
           "desc": null,
           "time": "15 min",
           "ingredients": [
@@ -362,6 +374,7 @@
         },
         {
           "name": "Gingerbread Cookies",
+          "dishId": "gingerbread-cookies",
           "desc": null,
           "ingredients": [
             "250g butter",
@@ -394,6 +407,7 @@
         },
         {
           "name": "Liège Waffles",
+          "dishId": "li-ge-waffles",
           "desc": "Plan to let the dough rest in the fridge overnight for light, flavourful waffles.",
           "serves": 12,
           "ingredients": [
@@ -424,6 +438,7 @@
         },
         {
           "name": "Orange Yoghurt Cake",
+          "dishId": "orange-yoghurt-cake",
           "desc": null,
           "time": "~1 hr",
           "ingredients": [
@@ -452,6 +467,7 @@
         },
         {
           "name": "Queen Cakes",
+          "dishId": "queen-cakes",
           "desc": "Makes 21.",
           "time": "~12 min",
           "ingredients": [
@@ -476,6 +492,7 @@
         },
         {
           "name": "Upside-Down Plum Cake",
+          "dishId": "upside-down-plum-cake",
           "desc": null,
           "ingredients": [
             "Topping: 2 tablespoons butter, melted",
@@ -517,6 +534,7 @@
       "items": [
         {
           "name": "Sticky Date Pudding",
+          "dishId": "sticky-date-pudding",
           "desc": null,
           "ingredients": [
             "185g dates",
@@ -545,6 +563,7 @@
         },
         {
           "name": "Chocolate Self-Saucing Pudding",
+          "dishId": "chocolate-self-saucing-pudding",
           "desc": "A Clements family dessert since the early 1980s — adapted from the Edmonds cookbook. Doubles well for a crowd.",
           "serves": 6,
           "time": "~35 min",
@@ -579,6 +598,7 @@
         },
         {
           "name": "Tiramisu",
+          "dishId": "tiramisu",
           "desc": "Coffee-soaked sponge fingers layered with creamy mascarpone and dusted with dark cocoa.",
           "serves": 6,
           "time": "30 min + chill",
@@ -611,6 +631,7 @@
         },
         {
           "name": "Pumpkin Pie",
+          "dishId": "pumpkin-pie",
           "desc": null,
           "ingredients": [
             "2 cups pumpkin (canned or purée)",
@@ -642,6 +663,7 @@
         },
         {
           "name": "Caramel Banana",
+          "dishId": "caramel-banana",
           "desc": "Warm caramelised banana spooned over vanilla ice cream.",
           "ingredients": [
             "Bananas, sliced",
@@ -666,6 +688,7 @@
       "items": [
         {
           "name": "Creamy Mushrooms",
+          "dishId": "creamy-mushrooms",
           "desc": null,
           "ingredients": [
             "30g butter",
@@ -686,6 +709,7 @@
         },
         {
           "name": "Turkish Flatbread",
+          "dishId": "turkish-flatbread",
           "desc": "Makes 1 large flatbread.",
           "ingredients": [
             "Approx. 2 cups flour",

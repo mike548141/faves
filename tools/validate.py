@@ -747,9 +747,10 @@ def dish_id(item):
     """A dish's resolved id: `dishId` where the data gives one, `slug(name)`
     otherwise — the mirror of `dishId()` in site/js/dish-id.js (ADR 0051).
 
-    The default is what every anchor, heart, rating and order line already
-    resolved to, so a record that has never heard of dish ids keeps the exact
-    identity it always had."""
+    The fallback stays even though the field is now REQUIRED in the data (see
+    the gate in check_restaurant), because this resolver runs on a record that
+    has already failed that gate: a dish missing its id must still be findable,
+    or one missing field would suppress every other complaint about the row."""
     v = item.get("dishId")
     if isinstance(v, str) and v:
         return v
@@ -1079,26 +1080,47 @@ def check_restaurant(path):
             if code is not None and not (isinstance(code, str) and code.strip()):
                 err(rid, f"code for {name!r} must be a non-empty string or absent")
 
-            # dishId: the dish's identity, optional and defaulting to slug(name)
-            # (ADR 0051). It must BE a slug, not merely resolve to one, because
-            # an anchor, a stored heart and an order line all carry it verbatim —
+            # dishId: the dish's identity, and REQUIRED (owner ruling,
+            # 2026-08-16: "we MUST ENSURE things like ratings and favourites are
+            # never lost in future thus immutable ID's"). ADR 0051 landed it as
+            # optional, defaulting to `slug(name)` — and a default computed from
+            # the display name is not an immutable id, it is the rename bug one
+            # level up: rename the dish and every heart, rating, shared link and
+            # order line pointing at it silently detaches. Storing the id is what
+            # makes it immutable, and it is stored so a transcriber SEES it on
+            # the line under the name they are about to change. Do not relax this
+            # back to optional; seed the field instead (tools/seed_dish_ids.py).
+            #
+            # It must also BE a slug, not merely resolve to one, because an
+            # anchor, a stored heart and an order line all carry it verbatim —
             # `"Gold Card"` in the data would build `#dish-Gold Card`.
             did = item.get("dishId")
-            if did is not None:
-                if not (isinstance(did, str) and did.strip()):
-                    err(rid, f"dishId for {name!r} must be a non-empty string or absent")
-                elif not ID_RE.match(did):
-                    suggestion = slug(did) or (slug(name) if isinstance(name, str) else "")
-                    err(
-                        rid,
-                        f"dishId {did!r} on {name!r} is not in slug form (lower-case, "
-                        f"digits, single hyphens) — write {suggestion!r}",
-                    )
+            if did is None:
+                # The message names the exact id to write, because a validator
+                # that only says what is wrong makes the reader re-derive the
+                # answer — and re-deriving it by hand is how a wrong one gets in.
+                want = slug(name) if isinstance(name, str) else ""
+                err(
+                    rid,
+                    f'dish {name!r} has no "dishId" — add "dishId": "{want}" '
+                    "(run tools/seed_dish_ids.py)",
+                )
+            elif not (isinstance(did, str) and did.strip()):
+                err(rid, f"dishId for {name!r} must be a non-empty string")
+            elif not ID_RE.match(did):
+                suggestion = slug(did) or (slug(name) if isinstance(name, str) else "")
+                err(
+                    rid,
+                    f"dishId {did!r} on {name!r} is not in slug form (lower-case, "
+                    f"digits, single hyphens) — write {suggestion!r}",
+                )
 
             # Two dishes resolving to one id is the bug this whole field exists to
             # fix: one anchor reachable, one heart shared, one price charged twice.
-            # The FIRST row keeps the bare slug (that is today's behaviour), so it
-            # is always the later one that needs the explicit id.
+            # Now that every row states its id, seeding a repeated name produces
+            # the collision here rather than silently downstream — which is the
+            # point: `seed_dish_ids.py` writes what the dish already resolved to,
+            # so a clash it creates is a clash that was already live.
             resolved = dish_id(item)
             if resolved:
                 if resolved in dish_ids:

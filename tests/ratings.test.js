@@ -36,14 +36,14 @@ test("ratingKey: venue vs dish identity (mirrors favKey)", () => {
 // --- dish ids (ADR 0051) --------------------------------------------------
 
 const goldCard = {
-  type: "dish", venueId: "sprig-and-fern", venueName: "Sprig & Fern",
+  type: "dish", venueId: "sprig-and-fern-tawa", venueName: "Sprig & Fern",
   name: "Cheeseburger", dishId: "cheeseburger-gold-card",
 };
-const mainsBurger = { type: "dish", venueId: "sprig-and-fern", name: "Cheeseburger" };
+const mainsBurger = { type: "dish", venueId: "sprig-and-fern-tawa", name: "Cheeseburger" };
 
 test("ratingKey uses the id where the data gives one, slug(name) otherwise", () => {
-  assert.equal(ratingKey(goldCard), "d:sprig-and-fern cheeseburger-gold-card");
-  assert.equal(ratingKey(mainsBurger), "d:sprig-and-fern cheeseburger");
+  assert.equal(ratingKey(goldCard), "d:sprig-and-fern-tawa cheeseburger-gold-card");
+  assert.equal(ratingKey(mainsBurger), "d:sprig-and-fern-tawa cheeseburger");
 });
 
 test("two same-named dishes with different ids rate independently", () => {
@@ -66,9 +66,10 @@ test("a stored name-form key is migrated to id form on read", () => {
 });
 
 test("the venue half migrates first, then the dish half", () => {
-  // "sprig-and-fern-tawa" is a renamed venue (renames.js); the dish name is in
-  // its old form too. Both halves have to move for the mark to be found.
-  const r = createRatings(fakeStorage('{"d:sprig-and-fern-tawa Cheeseburger":4}'));
+  // "sprig-and-fern" is a retired venue id (renames.js — the shared record was
+  // split back into one per tavern); the dish name is in its old form too. Both
+  // halves have to move for the mark to be found.
+  const r = createRatings(fakeStorage('{"d:sprig-and-fern Cheeseburger":4}'));
   assert.equal(r.get(mainsBurger), 4);
   assert.equal(r.count(), 1);
 });

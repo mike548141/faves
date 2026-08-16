@@ -182,42 +182,21 @@
              that had focus is removed from the DOM by that very click, and
              focus on a detached node falls to <body>. Not in the tab order. -->
         <p id="result-count" class="result-count" role="status" aria-live="polite" tabindex="-1"></p>
-        <!-- Active area/cuisine filters, each with its own ✕ (app.js fills
-             this). Arriving from a venue's subheading link narrows the list
-             without the reader having chosen anything on this screen, so the
-             way out has to be next to the count that says it is narrowed —
-             not only in a dropdown at the far end of the page (owner,
-             2026-08-16). Empty and hidden whenever no facet is active. -->
+        <!-- Every active filter, each with its own ✕ (app.js fills this).
+             Arriving from a venue's subheading link narrows the list without
+             the reader having chosen anything on this screen, so the way out
+             has to be next to the count that says it is narrowed — not only in
+             a control at the far end of the page (owner, 2026-08-16). Since the
+             controls moved behind a sheet this row carries EVERY filter, not
+             just the two a URL can bring; it stays one line by folding the
+             overflow into a "+n more" button that opens the sheet. Empty and
+             hidden whenever nothing is on. -->
         <div id="active-filters" class="active-filters" hidden></div>
-        <div class="list-toggles">
-          <button type="button" id="open-now" class="list-toggle" aria-pressed="false">
-            <span aria-hidden="true">🟢</span> <span data-i18n="toggle.openNow">Open now</span>
-          </button>
-          <!-- Narrows the list to the $ price band (see price.isCheapEats);
-               the "Pick for us" shuffle inherits it via applyFilters. -->
-          <button type="button" id="cheap-eats" class="list-toggle" aria-pressed="false">
-            <span aria-hidden="true">💸</span> <span data-i18n="toggle.cheapEats">Cheap eats</span>
-          </button>
-          <!-- JS + geolocation only; app.js unhides it when available. -->
-          <button type="button" id="near-me" class="near-me list-toggle" aria-pressed="false" hidden>
-            <span aria-hidden="true">📍</span> <span class="near-me-label" data-i18n="toggle.nearMe">Near me</span>
-          </button>
-          <!-- "Along a route": pick a place between here and a destination you
-               name (least-detour sort). JS + geolocation only. -->
-          <button type="button" id="along-route" class="list-toggle" aria-pressed="false" hidden>
-            <span aria-hidden="true">🛣️</span> <span data-i18n="toggle.alongRoute">Along a route</span>
-          </button>
-        </div>
       </div>
-      <!-- Destination picker for "Along a route" (app.js unhides it once the
-           mode is armed). One obvious step: choose where you're heading. -->
-      <div id="route-bar" class="route-bar browse-only" hidden>
-        <div class="select-field route-dest-field">
-          <label class="sr-only" for="route-dest" data-i18n="route.destLabel">Heading to</label>
-          <select id="route-dest" data-active="all"></select>
-        </div>
-        <button type="button" id="route-clear" class="route-clear" data-i18n="route.clear">Done</button>
-      </div>
+      <!-- The sort's own explanation ("Sorted by distance from you"). It stays
+           out here rather than in the sheet: a sort mode survives the sheet
+           closing, and this is the sentence that says the list is not in its
+           usual order. Hidden — and 0 px — until a location mode is on. -->
       <p id="geo-status" class="geo-status browse-only" role="status" aria-live="polite" hidden></p>
       <p id="tz-note" class="tz-note browse-only" data-i18n="tz.note" hidden>Open/closed times are New Zealand time.</p>
 
@@ -268,8 +247,8 @@
           </a>
         </li>
         <li class="card" data-status="menu-complete">
-          <a class="card-link" href="restaurant.html?id=sprig-and-fern">
-            <h3 class="card-name">Sprig + Fern</h3>
+          <a class="card-link" href="restaurant.html?id=sprig-and-fern-tawa">
+            <h3 class="card-name">Sprig + Fern Tawa</h3>
             <p class="card-meta"><span class="card-area">Tawa</span><span>Dine-in</span></p>
             <div class="chip-row"><span class="chip chip-cuisine">Gastropub</span></div>
           </a>
@@ -561,6 +540,54 @@
             <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
           </div>
         </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">The Victoria Tavern</h3>
+            <p class="card-meta"><span class="card-area">Petone</span><span>Dine-in</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Caffiend</h3>
+            <p class="card-meta"><span class="card-area">Petone</span><span>Dine-in, Takeaway</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="menu-complete">
+          <a class="card-link" href="restaurant.html?id=baylands-brewery">
+            <h3 class="card-name">Baylands Brewery</h3>
+            <p class="card-meta"><span class="card-area">Petone</span><span>Dine-in, Takeaway</span></p>
+          </a>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Sprig + Fern Petone</h3>
+            <p class="card-meta"><span class="card-area">Petone</span><span>Dine-in</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Sprig + Fern Berhampore</h3>
+            <p class="card-meta"><span class="card-area">Berhampore</span><span>Dine-in</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Sprig + Fern Thorndon</h3>
+            <p class="card-meta"><span class="card-area">Thorndon</span><span>Dine-in</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
+        <li class="card" data-status="stub">
+          <div class="card-body">
+            <h3 class="card-name">Little Sprig Seatoun</h3>
+            <p class="card-meta"><span class="card-area">Seatoun</span><span>Dine-in</span></p>
+            <div class="chip-row"><span class="chip chip-status">Menu coming soon</span></div>
+          </div>
+        </li>
       </ul>
 
       <p id="empty-state" class="empty browse-only" data-i18n="result.empty" hidden>No places match those filters. Try widening them.</p>
@@ -581,27 +608,135 @@
       </footer>
     </main>
 
+    <!-- The sticky bottom bar DESIGN.md mandates, now one row of two controls.
+         It used to hold the service toggle and both selects, which wrapped to
+         two rows at 390 px: 122.2 px of permanently fixed screen, measured, at
+         every scroll depth. The filters collapse into one button whose badge
+         counts what is on; "Pick for us" moves in beside it, off the floating
+         FAB that was measured covering 63 % of a venue's heart on the landing
+         screen. Nothing floats over the list any more — `main`'s padding-bottom
+         reserves this bar's band, which a fixed FAB could never do. -->
     <nav class="filter-bar" aria-label="Filter places">
       <div class="filter-bar-inner">
-        <div class="segmented" role="group" aria-label="Service">
-          <button type="button" data-service="all" aria-pressed="true" data-i18n="service.all">Everywhere</button>
-          <button type="button" data-service="takeaway" aria-pressed="false" data-i18n="service.takeaway">Takeaway</button>
-          <button type="button" data-service="dine-in" aria-pressed="false" data-i18n="service.dineIn">Dine-in</button>
-        </div>
-        <div class="select-field">
-          <label class="sr-only" for="filter-area">Area</label>
-          <select id="filter-area" data-active="all"></select>
-        </div>
-        <div class="select-field">
-          <label class="sr-only" for="filter-cuisine">Cuisine</label>
-          <select id="filter-cuisine" data-active="all"></select>
-        </div>
+        <!-- aria-label is composed in JS ("Filters — 2 on") so the badge count
+             is spoken, not just seen; the badge itself is decorative. -->
+        <button
+          type="button"
+          id="filters-btn"
+          class="bar-btn bar-filters"
+          aria-haspopup="dialog"
+          aria-controls="filter-sheet"
+        >
+          <span aria-hidden="true">⚙</span>
+          <span data-i18n="filter.button">Filters</span>
+          <span id="filters-count" class="filters-count" aria-hidden="true" hidden></span>
+        </button>
+        <button type="button" id="pick-btn" class="bar-btn bar-pick">
+          <span aria-hidden="true">🎲</span> <span data-i18n="pick.button">Pick for us</span>
+        </button>
       </div>
     </nav>
 
-    <button type="button" id="pick-btn" class="pick-fab">
-      <span aria-hidden="true">🎲</span> <span data-i18n="pick.button">Pick for us</span>
-    </button>
+    <!-- The filter sheet. Its controls are in the DOM from first paint (a
+         closed <dialog> keeps its children) rather than built on first open the
+         way Settings and About are — three reasons: `filtersFromQuery` sets the
+         selects before anything is opened (ADR 0050 requires the control and the
+         list to agree on arrival), `boot_check.mjs` reads #filter-cuisine's
+         value without opening a dialog, and there is nothing here worth
+         deferring. Grouped and labelled for the first time: "Narrow to" makes
+         the list shorter, "Sort by" only reorders it (ADR 0014) — a distinction
+         the old undifferentiated chip row never made. -->
+    <dialog id="filter-sheet" class="order-sheet filter-sheet" aria-labelledby="filter-sheet-title">
+      <div class="order-inner">
+        <div class="order-head">
+          <h2 id="filter-sheet-title" class="order-title" data-i18n="filter.title">Filters</h2>
+          <button
+            type="button"
+            id="filter-sheet-close"
+            class="order-close"
+            aria-label="Close"
+            data-i18n-aria="generic.close"
+          >
+            ✕
+          </button>
+        </div>
+        <div class="order-body">
+          <section class="filter-group" aria-labelledby="filter-narrow-title">
+            <h3 id="filter-narrow-title" class="filter-group-title" data-i18n="filter.narrow">Narrow to</h3>
+            <div class="filter-field">
+              <span class="filter-label" id="filter-service-label" data-i18n="filter.service">Service</span>
+              <div class="segmented" role="group" aria-labelledby="filter-service-label">
+                <button type="button" data-service="all" aria-pressed="true" data-i18n="service.all">Everywhere</button>
+                <button type="button" data-service="takeaway" aria-pressed="false" data-i18n="service.takeaway">Takeaway</button>
+                <button type="button" data-service="dine-in" aria-pressed="false" data-i18n="service.dineIn">Dine-in</button>
+              </div>
+            </div>
+            <div class="filter-field">
+              <label class="filter-label" for="filter-area" data-i18n="filter.area">Area</label>
+              <div class="select-field">
+                <select id="filter-area" data-active="all"></select>
+              </div>
+            </div>
+            <div class="filter-field">
+              <label class="filter-label" for="filter-cuisine" data-i18n="filter.cuisine">Cuisine</label>
+              <div class="select-field">
+                <select id="filter-cuisine" data-active="all"></select>
+              </div>
+            </div>
+            <div class="list-toggles">
+              <button type="button" id="open-now" class="list-toggle" aria-pressed="false">
+                <span aria-hidden="true">🟢</span> <span data-i18n="toggle.openNow">Open now</span>
+              </button>
+              <!-- Narrows the list to the $ price band (see price.isCheapEats);
+                   the "Pick for us" shuffle inherits it via applyFilters. -->
+              <button type="button" id="cheap-eats" class="list-toggle" aria-pressed="false">
+                <span aria-hidden="true">💸</span> <span data-i18n="toggle.cheapEats">Cheap eats</span>
+              </button>
+            </div>
+          </section>
+          <!-- Both controls here need geolocation, so app.js unhides them only
+               where it exists; filters-ui.js hides this whole group when neither
+               made it, rather than leaving a heading over nothing. -->
+          <section id="filter-sort-group" class="filter-group" aria-labelledby="filter-sort-title" hidden>
+            <h3 id="filter-sort-title" class="filter-group-title" data-i18n="filter.sort">Sort by</h3>
+            <p class="filter-group-note" data-i18n="filter.sortNote">
+              These reorder the list. They never shorten it.
+            </p>
+            <div class="list-toggles">
+              <button type="button" id="near-me" class="near-me list-toggle" aria-pressed="false" hidden>
+                <span aria-hidden="true">📍</span> <span class="near-me-label" data-i18n="toggle.nearMe">Near me</span>
+              </button>
+              <!-- "Along a route": pick a place between here and a destination
+                   you name (least-detour sort). -->
+              <button type="button" id="along-route" class="list-toggle" aria-pressed="false" hidden>
+                <span aria-hidden="true">🛣️</span> <span data-i18n="toggle.alongRoute">Along a route</span>
+              </button>
+            </div>
+            <!-- Destination picker for "Along a route" (app.js unhides it once
+                 the mode is armed). It lives beside the control that arms it, so
+                 choosing a destination is one continuous step inside the sheet
+                 rather than a control revealing itself behind the sheet. -->
+            <div id="route-bar" class="route-bar" hidden>
+              <div class="select-field route-dest-field">
+                <label class="sr-only" for="route-dest" data-i18n="route.destLabel">Heading to</label>
+                <select id="route-dest" data-active="all"></select>
+              </div>
+              <button type="button" id="route-clear" class="route-clear" data-i18n="route.clear">Done</button>
+            </div>
+          </section>
+        </div>
+        <!-- Never an Apply button: filters are instant (DESIGN.md). "Show 6
+             places" is a dismiss that names what is already true — and it is
+             the live region while the sheet is open, because showModal() makes
+             #result-count inert and its announcements stop reaching anyone. -->
+        <div class="filter-foot">
+          <button type="button" id="filters-clear" class="filter-clear" data-i18n="filter.clearAll">Clear all</button>
+          <button type="button" id="filters-done" class="filter-done">
+            <span id="filters-done-label" role="status" aria-live="polite"></span>
+          </button>
+        </div>
+      </div>
+    </dialog>
 
     <dialog id="picker" class="picker" aria-labelledby="picker-title">
       <div class="picker-inner">

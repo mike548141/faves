@@ -84,6 +84,7 @@
       "items": [
         {
           "name": "Chicken Curry on Rice",
+          "dishId": "chicken-curry-on-rice",
           "code": "1",
           "desc": null,
           "price": 21.7,
@@ -91,6 +92,7 @@
         },
         {
           "name": "Chicken Satay Kebab (6 Pcs)",
+          "dishId": "chicken-satay-kebab-6-pcs",
           "code": "2",
           "desc": null,
           "price": 19.4,
@@ -101,6 +103,7 @@
         },
         {
           "name": "Nasi Goreng",
+          "dishId": "nasi-goreng",
           "code": "3",
           "desc": null,
           "price": 21.7,
@@ -108,6 +111,7 @@
         },
         {
           "name": "BBQ Pork & Chicken on Rice",
+          "dishId": "bbq-pork-chicken-on-rice",
           "code": "4",
           "desc": null,
           "price": 23.4,
@@ -115,6 +119,7 @@
         },
         {
           "name": "Grill Pork Dumpling (6 Pcs)",
+          "dishId": "grill-pork-dumpling-6-pcs",
           "code": "5",
           "desc": null,
           "price": 16.7,
@@ -124,6 +129,7 @@
         },
         {
           "name": "Seafood Udon",
+          "dishId": "seafood-udon",
           "code": "6",
           "desc": null,
           "price": 24.5,
@@ -134,6 +140,7 @@
         },
         {
           "name": "Curry Laksa",
+          "dishId": "curry-laksa",
           "code": "7",
           "desc": null,
           "price": 24.0,
@@ -143,6 +150,7 @@
         },
         {
           "name": "Mee Goreng",
+          "dishId": "mee-goreng",
           "code": "8",
           "desc": null,
           "price": 22.3,
@@ -152,6 +160,7 @@
         },
         {
           "name": "Roti Chanai",
+          "dishId": "roti-chanai",
           "code": "9",
           "desc": null,
           "price": 19.5,
@@ -161,6 +170,7 @@
         },
         {
           "name": "Chow Kueh Teow (BBQ Pork with Stir Fried Rice Noodle)",
+          "dishId": "chow-kueh-teow-bbq-pork-with-stir-fried-rice-noodle",
           "code": "10",
           "desc": null,
           "price": 24.0,
@@ -168,6 +178,7 @@
         },
         {
           "name": "Roast Duck or BBQ Pork with Rice Noodle or Egg Noodle Soup",
+          "dishId": "roast-duck-or-bbq-pork-with-rice-noodle-or-egg-noodle-soup",
           "code": "11",
           "desc": null,
           "price": 25.1,
@@ -178,6 +189,7 @@
         },
         {
           "name": "BBQ Pork Wonton Noodle Soup",
+          "dishId": "bbq-pork-wonton-noodle-soup",
           "code": "12",
           "desc": null,
           "price": 24.0,
@@ -192,6 +204,7 @@
       "items": [
         {
           "name": "Soya Chicken on Rice",
+          "dishId": "soya-chicken-on-rice",
           "code": "13",
           "desc": null,
           "price": 23.4,
@@ -201,6 +214,7 @@
         },
         {
           "name": "Honey BBQ Pork Ribs on Rice",
+          "dishId": "honey-bbq-pork-ribs-on-rice",
           "code": "14",
           "desc": null,
           "price": 23.4,
@@ -208,6 +222,7 @@
         },
         {
           "name": "Two Combination BBQ Meat on Rice",
+          "dishId": "two-combination-bbq-meat-on-rice",
           "code": "15",
           "desc": null,
           "price": 26.8,
@@ -215,6 +230,7 @@
         },
         {
           "name": "Three Combination BBQ Meat on Rice",
+          "dishId": "three-combination-bbq-meat-on-rice",
           "code": "16",
           "desc": null,
           "price": 30.7,
@@ -222,6 +238,7 @@
         },
         {
           "name": "Roast Duck on Rice",
+          "dishId": "roast-duck-on-rice",
           "code": "17",
           "desc": null,
           "price": 24.0,
@@ -229,6 +246,7 @@
         },
         {
           "name": "Crispy Roast Pork on Rice",
+          "dishId": "crispy-roast-pork-on-rice",
           "code": "19",
           "desc": null,
           "price": 24.0,
@@ -236,6 +254,7 @@
         },
         {
           "name": "Prawn Wonton Soup",
+          "dishId": "prawn-wonton-soup",
           "code": "20",
           "desc": null,
           "price": 18.2,
@@ -246,6 +265,7 @@
         },
         {
           "name": "Prawn Wonton Noodle Soup or Noodle Dry",
+          "dishId": "prawn-wonton-noodle-soup-or-noodle-dry",
           "code": "21",
           "desc": null,
           "price": 21.0,
@@ -256,6 +276,7 @@
         },
         {
           "name": "Honey BBQ Pork Wontons Noodle Soup or Noodle Dry",
+          "dishId": "honey-bbq-pork-wontons-noodle-soup-or-noodle-dry",
           "code": "22",
           "desc": null,
           "price": 24.0,
@@ -265,6 +286,7 @@
         },
         {
           "name": "Roast Duck or Crispy Roast Pork or BBQ Pork Noodle Dry",
+          "dishId": "roast-duck-or-crispy-roast-pork-or-bbq-pork-noodle-dry",
           "code": "23",
           "desc": null,
           "price": 25.1,
@@ -272,6 +294,7 @@
         },
         {
           "name": "Soya Chicken or BBQ Pork Ribs Noodle Dry",
+          "dishId": "soya-chicken-or-bbq-pork-ribs-noodle-dry",
           "code": "24",
           "desc": null,
           "price": 24.5,
@@ -281,6 +304,7 @@
         },
         {
           "name": "Beef Brisket Noodle Soup or Noodle Dry",
+          "dishId": "beef-brisket-noodle-soup-or-noodle-dry",
           "code": "25",
           "desc": null,
           "price": 25.1,
@@ -288,6 +312,7 @@
         },
         {
           "name": "Hot & Spicy Mix OX Combination Noodle Soup or Noodle Dry",
+          "dishId": "hot-spicy-mix-ox-combination-noodle-soup-or-noodle-dry",
           "code": "26",
           "desc": null,
           "price": 25.6,
@@ -295,6 +320,7 @@
         },
         {
           "name": "Braised Pork Noodle Soup or Noodle Dry",
+          "dishId": "braised-pork-noodle-soup-or-noodle-dry",
           "code": "27",
           "desc": null,
           "price": 23.4,
@@ -302,6 +328,7 @@
         },
         {
           "name": "Vietnamese Style Beef Noodle Soup",
+          "dishId": "vietnamese-style-beef-noodle-soup",
           "code": "28",
           "desc": null,
           "price": 23.6,
@@ -309,6 +336,7 @@
         },
         {
           "name": "Shredded Duck Meat Lai Fen Noodle Soup",
+          "dishId": "shredded-duck-meat-lai-fen-noodle-soup",
           "code": "29",
           "desc": null,
           "price": 25.1,
@@ -321,6 +349,7 @@
       "items": [
         {
           "name": "Chicken Sweet Corn Soup",
+          "dishId": "chicken-sweet-corn-soup",
           "code": "30",
           "desc": null,
           "price": 11.2,
@@ -328,6 +357,7 @@
         },
         {
           "name": "Mince Beef and Egg Soup",
+          "dishId": "mince-beef-and-egg-soup",
           "code": "31",
           "desc": null,
           "price": 11.2,
@@ -337,6 +367,7 @@
         },
         {
           "name": "Hot & Sour Soup",
+          "dishId": "hot-sour-soup",
           "code": "32",
           "desc": null,
           "price": 13.4,
@@ -344,6 +375,7 @@
         },
         {
           "name": "Tofu & Vegetable Soup",
+          "dishId": "tofu-vegetable-soup",
           "code": "33",
           "desc": null,
           "price": 10.6,
@@ -353,6 +385,7 @@
         },
         {
           "name": "Shredded Duck Meat Soup",
+          "dishId": "shredded-duck-meat-soup",
           "code": "34",
           "desc": null,
           "price": 15.6,
@@ -360,6 +393,7 @@
         },
         {
           "name": "Hot & Sour Wonton Soup",
+          "dishId": "hot-sour-wonton-soup",
           "code": "35",
           "desc": null,
           "price": 19.5,
@@ -369,6 +403,7 @@
         },
         {
           "name": "Chinese Pork Dumpling Soup",
+          "dishId": "chinese-pork-dumpling-soup",
           "code": "36",
           "desc": null,
           "price": 19.5,
@@ -378,6 +413,7 @@
         },
         {
           "name": "Chicken Feet and Mushroom Soup",
+          "dishId": "chicken-feet-and-mushroom-soup",
           "code": "37",
           "desc": null,
           "price": 18.7,
@@ -385,6 +421,7 @@
         },
         {
           "name": "Roast Duck, Gai Choy and Tofu Soup",
+          "dishId": "roast-duck-gai-choy-and-tofu-soup",
           "code": "38",
           "desc": null,
           "price": 17.3,
@@ -394,6 +431,7 @@
         },
         {
           "name": "Seaweed, Pork and Egg Soup",
+          "dishId": "seaweed-pork-and-egg-soup",
           "code": "39",
           "desc": null,
           "price": 14.5,
@@ -403,6 +441,7 @@
         },
         {
           "name": "Chicken Salad",
+          "dishId": "chicken-salad",
           "code": "40",
           "desc": null,
           "price": 13.3,
@@ -410,6 +449,7 @@
         },
         {
           "name": "Pig Ears with Chilli Sauce",
+          "dishId": "pig-ears-with-chilli-sauce",
           "code": "41",
           "desc": null,
           "price": 15.1,
@@ -417,6 +457,7 @@
         },
         {
           "name": "Duck Feet with Chilli Sauce",
+          "dishId": "duck-feet-with-chilli-sauce",
           "code": "42",
           "desc": null,
           "price": 15.8,
@@ -424,6 +465,7 @@
         },
         {
           "name": "Duck Wing with Chilli Sauce",
+          "dishId": "duck-wing-with-chilli-sauce",
           "code": "43",
           "desc": null,
           "price": 10.0,
@@ -431,6 +473,7 @@
         },
         {
           "name": "Duck Chin with Salt and Pepper or Garlic",
+          "dishId": "duck-chin-with-salt-and-pepper-or-garlic",
           "code": "44",
           "desc": null,
           "price": 15.7,
@@ -438,6 +481,7 @@
         },
         {
           "name": "Wu Xi Pork Ribs",
+          "dishId": "wu-xi-pork-ribs",
           "code": "45",
           "desc": null,
           "price": 14.5,
@@ -445,6 +489,7 @@
         },
         {
           "name": "BBQ Pork Bun",
+          "dishId": "bbq-pork-bun",
           "code": "46",
           "desc": null,
           "price": 5.6,
@@ -454,6 +499,7 @@
         },
         {
           "name": "Deep Fried Chicken Wing",
+          "dishId": "deep-fried-chicken-wing",
           "code": "47",
           "desc": null,
           "price": 4.3,
@@ -461,6 +507,7 @@
         },
         {
           "name": "Deep Fried Spring Roll",
+          "dishId": "deep-fried-spring-roll",
           "code": "48",
           "desc": null,
           "price": 4.2,
@@ -470,6 +517,7 @@
         },
         {
           "name": "Deep Fried Wonton",
+          "dishId": "deep-fried-wonton",
           "code": "49",
           "desc": null,
           "price": 1.5,
@@ -479,6 +527,7 @@
         },
         {
           "name": "Deep Fried Squid",
+          "dishId": "deep-fried-squid",
           "code": "50",
           "desc": null,
           "price": 21.2,
@@ -488,6 +537,7 @@
         },
         {
           "name": "Pork and Preserved Egg Congee",
+          "dishId": "pork-and-preserved-egg-congee",
           "code": "51",
           "desc": null,
           "price": 14.0,
@@ -497,6 +547,7 @@
         },
         {
           "name": "Fish Congee",
+          "dishId": "fish-congee",
           "code": "52",
           "desc": null,
           "price": 14.0,
@@ -504,6 +555,7 @@
         },
         {
           "name": "Seafood Congee",
+          "dishId": "seafood-congee",
           "code": "53",
           "desc": null,
           "price": 14.0,
@@ -518,6 +570,7 @@
       "items": [
         {
           "name": "Eggplant with Salted Fish & Pork Mince",
+          "dishId": "eggplant-with-salted-fish-pork-mince",
           "code": "54",
           "desc": null,
           "price": 27.3,
@@ -525,6 +578,7 @@
         },
         {
           "name": "Roast Pork with Tofu & Vegetable",
+          "dishId": "roast-pork-with-tofu-vegetable",
           "code": "55",
           "desc": null,
           "price": 24.5,
@@ -534,6 +588,7 @@
         },
         {
           "name": "Groper Wing with Tofu & Roast Pork",
+          "dishId": "groper-wing-with-tofu-roast-pork",
           "code": "56",
           "desc": null,
           "price": 26.8,
@@ -543,6 +598,7 @@
         },
         {
           "name": "Pork Maw with Pepper & Vegetable Pickle",
+          "dishId": "pork-maw-with-pepper-vegetable-pickle",
           "code": "57",
           "desc": null,
           "price": 26.2,
@@ -550,6 +606,7 @@
         },
         {
           "name": "Braised Pork with Dried Vegetable or Taro",
+          "dishId": "braised-pork-with-dried-vegetable-or-taro",
           "code": "58",
           "desc": null,
           "price": 25.6,
@@ -557,6 +614,7 @@
         },
         {
           "name": "Chicken Wing with Chinese Mushroom",
+          "dishId": "chicken-wing-with-chinese-mushroom",
           "code": "59",
           "desc": null,
           "price": 25.6,
@@ -564,6 +622,7 @@
         },
         {
           "name": "Chicken Feet with Pork Spare Ribs",
+          "dishId": "chicken-feet-with-pork-spare-ribs",
           "code": "60",
           "desc": null,
           "price": 25.6,
@@ -571,6 +630,7 @@
         },
         {
           "name": "Bitter Melon with Pork Spare Ribs",
+          "dishId": "bitter-melon-with-pork-spare-ribs",
           "code": "61",
           "desc": null,
           "price": 25.6,
@@ -578,6 +638,7 @@
         },
         {
           "name": "Hot & Spicy Chicken",
+          "dishId": "hot-spicy-chicken",
           "code": "62",
           "desc": null,
           "price": 25.1,
@@ -585,6 +646,7 @@
         },
         {
           "name": "Salted Fish & Chicken with Tofu",
+          "dishId": "salted-fish-chicken-with-tofu",
           "code": "63",
           "desc": null,
           "price": 26.1,
@@ -594,6 +656,7 @@
         },
         {
           "name": "Chicken with Wine Soup",
+          "dishId": "chicken-with-wine-soup",
           "code": "64",
           "desc": null,
           "price": 27.9,
@@ -601,6 +664,7 @@
         },
         {
           "name": "Chicken with Soya and Oyster Sauce",
+          "dishId": "chicken-with-soya-and-oyster-sauce",
           "code": "65",
           "desc": null,
           "price": 25.1,
@@ -611,6 +675,7 @@
         },
         {
           "name": "Lamb Flap with Oyster Sauce",
+          "dishId": "lamb-flap-with-oyster-sauce",
           "code": "66",
           "desc": null,
           "price": 27.3,
@@ -621,6 +686,7 @@
         },
         {
           "name": "Lamb Flap with Taro in Coconut Cream",
+          "dishId": "lamb-flap-with-taro-in-coconut-cream",
           "code": "67",
           "desc": null,
           "price": 27.3,
@@ -628,6 +694,7 @@
         },
         {
           "name": "Beef Brisket",
+          "dishId": "beef-brisket",
           "code": "68",
           "desc": null,
           "price": 27.3,
@@ -635,6 +702,7 @@
         },
         {
           "name": "Hot & Spicy Tendon",
+          "dishId": "hot-spicy-tendon",
           "code": "69",
           "desc": null,
           "price": 28.0,
@@ -642,6 +710,7 @@
         },
         {
           "name": "Hot & Spicy Beef Tripe",
+          "dishId": "hot-spicy-beef-tripe",
           "code": "70",
           "desc": null,
           "price": 26.2,
@@ -649,6 +718,7 @@
         },
         {
           "name": "Beef & Vegetable with Satay Sauce",
+          "dishId": "beef-vegetable-with-satay-sauce",
           "code": "71",
           "desc": null,
           "price": 25.6,
@@ -659,6 +729,7 @@
         },
         {
           "name": "Duck with Garlic and Oyster Sauce",
+          "dishId": "duck-with-garlic-and-oyster-sauce",
           "code": "72",
           "desc": null,
           "price": 26.2,
@@ -669,6 +740,7 @@
         },
         {
           "name": "Seafood with Japanese Style Tofu",
+          "dishId": "seafood-with-japanese-style-tofu",
           "code": "73",
           "desc": null,
           "price": 28.0,
@@ -679,6 +751,7 @@
         },
         {
           "name": "Mix Vegetable with Vermicelli",
+          "dishId": "mix-vegetable-with-vermicelli",
           "code": "74",
           "desc": null,
           "price": 24.5,
@@ -691,6 +764,7 @@
       "items": [
         {
           "name": "Mapo Tofu (Tofu with Pork Mince)",
+          "dishId": "mapo-tofu-tofu-with-pork-mince",
           "code": "75",
           "desc": null,
           "price": 24.3,
@@ -700,6 +774,7 @@
         },
         {
           "name": "Tofu, Vegetable & Pork with Oyster Sauce",
+          "dishId": "tofu-vegetable-pork-with-oyster-sauce",
           "code": "76",
           "desc": null,
           "price": 24.9,
@@ -710,6 +785,7 @@
         },
         {
           "name": "Homestyle Tofu with Pork",
+          "dishId": "homestyle-tofu-with-pork",
           "code": "77",
           "desc": null,
           "price": 25.6,
@@ -719,6 +795,7 @@
         },
         {
           "name": "Belly Pork with Chilli Sauce",
+          "dishId": "belly-pork-with-chilli-sauce",
           "code": "78",
           "desc": null,
           "price": 26.1,
@@ -726,6 +803,7 @@
         },
         {
           "name": "Belly Pork with Bean Sauce",
+          "dishId": "belly-pork-with-bean-sauce",
           "code": "79",
           "desc": null,
           "price": 25.6,
@@ -733,6 +811,7 @@
         },
         {
           "name": "Belly Pork with Chef's Special Sauce",
+          "dishId": "belly-pork-with-chef-s-special-sauce",
           "code": "80",
           "desc": null,
           "price": 25.6,
@@ -740,6 +819,7 @@
         },
         {
           "name": "Mao's Braised Pork with Chilli",
+          "dishId": "mao-s-braised-pork-with-chilli",
           "code": "81",
           "desc": null,
           "price": 26.1,
@@ -747,6 +827,7 @@
         },
         {
           "name": "Pork with Chilli Sauce",
+          "dishId": "pork-with-chilli-sauce",
           "code": "82",
           "desc": null,
           "price": 24.9,
@@ -754,6 +835,7 @@
         },
         {
           "name": "Pork with Peking Sauce",
+          "dishId": "pork-with-peking-sauce",
           "code": "83",
           "desc": null,
           "price": 24.9,
@@ -761,6 +843,7 @@
         },
         {
           "name": "Pork with Chinese Black Mushroom",
+          "dishId": "pork-with-chinese-black-mushroom",
           "code": "84",
           "desc": null,
           "price": 25.6,
@@ -768,6 +851,7 @@
         },
         {
           "name": "Fried Beans with Pork Mince and Chilli",
+          "dishId": "fried-beans-with-pork-mince-and-chilli",
           "code": "85",
           "desc": null,
           "price": 26.1,
@@ -775,6 +859,7 @@
         },
         {
           "name": "Fried Beans with Pork Mince in XO Sauce",
+          "dishId": "fried-beans-with-pork-mince-in-xo-sauce",
           "code": "86",
           "desc": null,
           "price": 26.1,
@@ -784,6 +869,7 @@
         },
         {
           "name": "KC Homemade Tofu with Pork Mince",
+          "dishId": "kc-homemade-tofu-with-pork-mince",
           "code": "87",
           "desc": null,
           "price": 26.8,
@@ -793,6 +879,7 @@
         },
         {
           "name": "Salt & Pepper Pork Spare Ribs",
+          "dishId": "salt-pepper-pork-spare-ribs",
           "code": "88",
           "desc": null,
           "price": 25.3,
@@ -800,6 +887,7 @@
         },
         {
           "name": "Pork Maw with Vegetable and Pickle",
+          "dishId": "pork-maw-with-vegetable-and-pickle",
           "code": "89",
           "desc": null,
           "price": 25.1,
@@ -807,6 +895,7 @@
         },
         {
           "name": "Seasonal Vegetable with Chinese Sausage and Pork",
+          "dishId": "seasonal-vegetable-with-chinese-sausage-and-pork",
           "code": "90",
           "desc": null,
           "price": 30.7,
@@ -814,6 +903,7 @@
         },
         {
           "name": "Chinese Sausage with Dried Tofu and Vegetable",
+          "dishId": "chinese-sausage-with-dried-tofu-and-vegetable",
           "code": "91",
           "desc": null,
           "price": 26.8,
@@ -823,6 +913,7 @@
         },
         {
           "name": "Sweet & Sour Pork with Pineapple",
+          "dishId": "sweet-sour-pork-with-pineapple",
           "code": "92",
           "desc": null,
           "price": 26.2,
@@ -830,6 +921,7 @@
         },
         {
           "name": "Chicken Hot Pepper Sauce",
+          "dishId": "chicken-hot-pepper-sauce",
           "code": "93",
           "desc": null,
           "price": 25.1,
@@ -837,6 +929,7 @@
         },
         {
           "name": "Sichuan Chicken",
+          "dishId": "sichuan-chicken",
           "code": "94",
           "desc": null,
           "price": 25.1,
@@ -844,6 +937,7 @@
         },
         {
           "name": "Hot and Sour Chicken",
+          "dishId": "hot-and-sour-chicken",
           "code": "95",
           "desc": null,
           "price": 24.3,
@@ -851,6 +945,7 @@
         },
         {
           "name": "Stir Fried Chicken with Fresh Chilli and Ginger",
+          "dishId": "stir-fried-chicken-with-fresh-chilli-and-ginger",
           "code": "96",
           "desc": null,
           "price": 25.6,
@@ -858,6 +953,7 @@
         },
         {
           "name": "Deep Fried Chilli Chicken",
+          "dishId": "deep-fried-chilli-chicken",
           "code": "97",
           "desc": null,
           "price": 25.1,
@@ -865,6 +961,7 @@
         },
         {
           "name": "Xinjiang Chicken with Fresh Chilli and Ginger",
+          "dishId": "xinjiang-chicken-with-fresh-chilli-and-ginger",
           "code": "98",
           "desc": null,
           "price": 24.9,
@@ -872,6 +969,7 @@
         },
         {
           "name": "Salt and Pepper Chicken Ribs",
+          "dishId": "salt-and-pepper-chicken-ribs",
           "code": "99",
           "desc": null,
           "price": 25.6,
@@ -879,6 +977,7 @@
         },
         {
           "name": "Sichuan Fish with Spicy & Soya Sauce",
+          "dishId": "sichuan-fish-with-spicy-soya-sauce",
           "code": "100",
           "desc": null,
           "price": 25.4,
@@ -889,6 +988,7 @@
         },
         {
           "name": "Pickle Cabbage with Fish Fillet",
+          "dishId": "pickle-cabbage-with-fish-fillet",
           "code": "101",
           "desc": null,
           "price": 26.2,
@@ -896,6 +996,7 @@
         },
         {
           "name": "Hot & Spicy Beef Soup",
+          "dishId": "hot-spicy-beef-soup",
           "code": "102",
           "desc": null,
           "price": 28.4,
@@ -903,6 +1004,7 @@
         },
         {
           "name": "Korean Style Chilli Beef",
+          "dishId": "korean-style-chilli-beef",
           "code": "103",
           "desc": null,
           "price": 28.5,
@@ -910,6 +1012,7 @@
         },
         {
           "name": "Stir Fried Beef with Chilli Bean Paste",
+          "dishId": "stir-fried-beef-with-chilli-bean-paste",
           "code": "104",
           "desc": null,
           "price": 28.5,
@@ -917,6 +1020,7 @@
         },
         {
           "name": "Beef and Vegetable in Teriyaki Sauce",
+          "dishId": "beef-and-vegetable-in-teriyaki-sauce",
           "code": "105",
           "desc": null,
           "price": 29.8,
@@ -927,6 +1031,7 @@
         },
         {
           "name": "Orange Beef or Chicken",
+          "dishId": "orange-beef-or-chicken",
           "code": "106",
           "desc": null,
           "price": 27.3,
@@ -934,6 +1039,7 @@
         },
         {
           "name": "KC Clear Soup Beef Brisket with Vegetable",
+          "dishId": "kc-clear-soup-beef-brisket-with-vegetable",
           "code": "107",
           "desc": null,
           "price": 27.3,
@@ -941,6 +1047,7 @@
         },
         {
           "name": "Stir Fried Lamb with Spicy Sauce",
+          "dishId": "stir-fried-lamb-with-spicy-sauce",
           "code": "108",
           "desc": null,
           "price": 27.3,
@@ -948,6 +1055,7 @@
         },
         {
           "name": "Sambal King Prawns",
+          "dishId": "sambal-king-prawns",
           "code": "109",
           "desc": null,
           "price": 25.9,
@@ -957,6 +1065,7 @@
         },
         {
           "name": "Salt and Pepper King Prawns",
+          "dishId": "salt-and-pepper-king-prawns",
           "code": "110",
           "desc": null,
           "price": 25.9,
@@ -966,6 +1075,7 @@
         },
         {
           "name": "Stir Fried King Prawn with Chilli Bean Paste",
+          "dishId": "stir-fried-king-prawn-with-chilli-bean-paste",
           "code": "111",
           "desc": null,
           "price": 25.9,
@@ -975,6 +1085,7 @@
         },
         {
           "name": "Salt & Pepper Squid",
+          "dishId": "salt-pepper-squid",
           "code": "112",
           "desc": null,
           "price": 26.1,
@@ -984,6 +1095,7 @@
         },
         {
           "name": "Stir Fried Squid with Shrimp Paste",
+          "dishId": "stir-fried-squid-with-shrimp-paste",
           "code": "113",
           "desc": null,
           "price": 26.1,
@@ -993,6 +1105,7 @@
         },
         {
           "name": "Stir Fried Squid with Chinese Satay Sauce",
+          "dishId": "stir-fried-squid-with-chinese-satay-sauce",
           "code": "114",
           "desc": null,
           "price": 26.1,
@@ -1004,6 +1117,7 @@
         },
         {
           "name": "Stir Fried Fish with Fish Flavour Sauce",
+          "dishId": "stir-fried-fish-with-fish-flavour-sauce",
           "code": "115",
           "desc": null,
           "price": 25.3,
@@ -1011,6 +1125,7 @@
         },
         {
           "name": "Stir Fried Beans with Dace Fish",
+          "dishId": "stir-fried-beans-with-dace-fish",
           "code": "116",
           "desc": null,
           "price": 26.1,
@@ -1018,6 +1133,7 @@
         },
         {
           "name": "Tora Tora in Black Bean Sauce",
+          "dishId": "tora-tora-in-black-bean-sauce",
           "code": "117",
           "desc": null,
           "price": 27.3,
@@ -1027,6 +1143,7 @@
         },
         {
           "name": "Tora Tora in Chef's Special Sauce",
+          "dishId": "tora-tora-in-chef-s-special-sauce",
           "code": "118",
           "desc": null,
           "price": 27.3,
@@ -1034,6 +1151,7 @@
         },
         {
           "name": "Plum Sauce Duck with Pickle",
+          "dishId": "plum-sauce-duck-with-pickle",
           "code": "119",
           "desc": null,
           "price": 26.8,
@@ -1041,6 +1159,7 @@
         },
         {
           "name": "KC Chef's Stir Fried Special",
+          "dishId": "kc-chef-s-stir-fried-special",
           "code": "120",
           "desc": null,
           "price": 25.1,
@@ -1048,6 +1167,7 @@
         },
         {
           "name": "Lemon Chicken",
+          "dishId": "lemon-chicken",
           "code": "121",
           "desc": null,
           "price": 26.8,
@@ -1060,6 +1180,7 @@
       "items": [
         {
           "name": "Hot & Spicy Fish Fillet with Pickles",
+          "dishId": "hot-spicy-fish-fillet-with-pickles",
           "code": "122",
           "desc": null,
           "price": 32.3,
@@ -1067,6 +1188,7 @@
         },
         {
           "name": "Hot & Spicy Beef Brisket with Bean Curd",
+          "dishId": "hot-spicy-beef-brisket-with-bean-curd",
           "code": "123",
           "desc": null,
           "price": 32.9,
@@ -1074,6 +1196,7 @@
         },
         {
           "name": "Tender Beef in Hot & Sour Soup",
+          "dishId": "tender-beef-in-hot-sour-soup",
           "code": "124",
           "desc": null,
           "price": 34.0,
@@ -1081,6 +1204,7 @@
         },
         {
           "name": "Hot & Spicy Beef with Tofu and Bean Curd",
+          "dishId": "hot-spicy-beef-with-tofu-and-bean-curd",
           "code": "125",
           "desc": null,
           "price": 34.0,
@@ -1090,6 +1214,7 @@
         },
         {
           "name": "Hot & Spicy Lamb with Tofu and Bean Curd",
+          "dishId": "hot-spicy-lamb-with-tofu-and-bean-curd",
           "code": "126",
           "desc": null,
           "price": 34.0,
@@ -1099,6 +1224,7 @@
         },
         {
           "name": "Hot & Spicy Lamb Rib",
+          "dishId": "hot-spicy-lamb-rib",
           "code": "127",
           "desc": null,
           "price": 34.0,
@@ -1106,6 +1232,7 @@
         },
         {
           "name": "Hot & Spicy Lamb with Cold Tofu",
+          "dishId": "hot-spicy-lamb-with-cold-tofu",
           "code": "128",
           "desc": null,
           "price": 34.0,
@@ -1115,6 +1242,7 @@
         },
         {
           "name": "Chicken and Potato in Hot & Spicy Sauce",
+          "dishId": "chicken-and-potato-in-hot-spicy-sauce",
           "code": "129",
           "desc": null,
           "price": 32.3,
@@ -1122,6 +1250,7 @@
         },
         {
           "name": "Pork Maw and Chicken with Black Pepper",
+          "dishId": "pork-maw-and-chicken-with-black-pepper",
           "code": "130",
           "desc": null,
           "price": 34.0,
@@ -1129,6 +1258,7 @@
         },
         {
           "name": "Beef Tripe and Mix Mushroom in Hot & Spicy Sauce",
+          "dishId": "beef-tripe-and-mix-mushroom-in-hot-spicy-sauce",
           "code": "131",
           "desc": null,
           "price": 34.0,
@@ -1136,6 +1266,7 @@
         },
         {
           "name": "Hot & Spicy Tora Tora",
+          "dishId": "hot-spicy-tora-tora",
           "code": "132",
           "desc": null,
           "price": 34.0,
@@ -1143,6 +1274,7 @@
         },
         {
           "name": "KC Chicken, Pork Duck and Seafood Hot Wok",
+          "dishId": "kc-chicken-pork-duck-and-seafood-hot-wok",
           "code": "133",
           "desc": null,
           "price": 32.3,
@@ -1157,6 +1289,7 @@
       "items": [
         {
           "name": "Shanghai Style Fried Noodle with BBQ Pork & Bok Choy",
+          "dishId": "shanghai-style-fried-noodle-with-bbq-pork-bok-choy",
           "code": "134",
           "desc": null,
           "price": 22.9,
@@ -1164,6 +1297,7 @@
         },
         {
           "name": "Beef Brisket Stirred Noodle or Fried Noodle",
+          "dishId": "beef-brisket-stirred-noodle-or-fried-noodle",
           "code": "135",
           "desc": null,
           "price": 26.8,
@@ -1171,6 +1305,7 @@
         },
         {
           "name": "Stir Fried Udon with Black Pepper and Beef",
+          "dishId": "stir-fried-udon-with-black-pepper-and-beef",
           "code": "136",
           "desc": null,
           "price": 25.6,
@@ -1180,6 +1315,7 @@
         },
         {
           "name": "Chow Mein Noodle with Chicken / Beef / BBQ Pork",
+          "dishId": "chow-mein-noodle-with-chicken-beef-bbq-pork",
           "code": "137",
           "desc": null,
           "price": 25.6,
@@ -1189,6 +1325,7 @@
         },
         {
           "name": "Chow Kueh Teow with Beef or Black Bean Sauce",
+          "dishId": "chow-kueh-teow-with-beef-or-black-bean-sauce",
           "code": "138",
           "desc": null,
           "price": 25.6,
@@ -1198,6 +1335,7 @@
         },
         {
           "name": "Seafood Soft Egg on Rice Noodle",
+          "dishId": "seafood-soft-egg-on-rice-noodle",
           "code": "139",
           "desc": null,
           "price": 26.2,
@@ -1208,6 +1346,7 @@
         },
         {
           "name": "Singapore Fried Noodle with BBQ Pork and Shrimp",
+          "dishId": "singapore-fried-noodle-with-bbq-pork-and-shrimp",
           "code": "140",
           "desc": null,
           "price": 23.4,
@@ -1217,6 +1356,7 @@
         },
         {
           "name": "Shredded Duck Meat with Vermicelli",
+          "dishId": "shredded-duck-meat-with-vermicelli",
           "code": "141",
           "desc": null,
           "price": 24.0,
@@ -1224,6 +1364,7 @@
         },
         {
           "name": "Pad Thai with Chicken / Beef / Vegetarian",
+          "dishId": "pad-thai-with-chicken-beef-vegetarian",
           "code": "142",
           "desc": null,
           "price": 22.9,
@@ -1233,6 +1374,7 @@
         },
         {
           "name": "Hot and Sour Noodle Soup with Pork Mince and Pickle",
+          "dishId": "hot-and-sour-noodle-soup-with-pork-mince-and-pickle",
           "code": "143",
           "desc": null,
           "price": 23.4,
@@ -1240,6 +1382,7 @@
         },
         {
           "name": "Hainanese Chicken with Rice",
+          "dishId": "hainanese-chicken-with-rice",
           "code": "144",
           "desc": null,
           "price": 25.6,
@@ -1247,6 +1390,7 @@
         },
         {
           "name": "Salted Fish and Chicken Fried Rice",
+          "dishId": "salted-fish-and-chicken-fried-rice",
           "code": "145",
           "desc": null,
           "price": 24.1,
@@ -1254,6 +1398,7 @@
         },
         {
           "name": "Fried Rice with Chinese Pork & Vegetable",
+          "dishId": "fried-rice-with-chinese-pork-vegetable",
           "code": "146",
           "desc": null,
           "price": 25.1,
@@ -1261,6 +1406,7 @@
         },
         {
           "name": "Young Chow Fried Rice with Shrimp and BBQ Pork",
+          "dishId": "young-chow-fried-rice-with-shrimp-and-bbq-pork",
           "code": "147",
           "desc": null,
           "price": 22.9,
@@ -1270,6 +1416,7 @@
         },
         {
           "name": "Hokkien Fried Rice or Noodle",
+          "dishId": "hokkien-fried-rice-or-noodle",
           "code": "148",
           "desc": null,
           "price": 25.6,
@@ -1279,6 +1426,7 @@
         },
         {
           "name": "Roast Pork Fried Rice with Shrimp Paste",
+          "dishId": "roast-pork-fried-rice-with-shrimp-paste",
           "code": "149",
           "desc": null,
           "price": 22.9,
@@ -1288,6 +1436,7 @@
         },
         {
           "name": "Pork Chop with Lemon Grass or Black Pepper",
+          "dishId": "pork-chop-with-lemon-grass-or-black-pepper",
           "code": "150",
           "desc": null,
           "price": 22.9,
@@ -1295,6 +1444,7 @@
         },
         {
           "name": "Salted Chicken on Rice",
+          "dishId": "salted-chicken-on-rice",
           "code": "151",
           "desc": null,
           "price": 22.3,
@@ -1302,6 +1452,7 @@
         },
         {
           "name": "Deep Fried Garlic Chicken on Rice",
+          "dishId": "deep-fried-garlic-chicken-on-rice",
           "code": "152",
           "desc": null,
           "price": 23.4,
@@ -1309,6 +1460,7 @@
         },
         {
           "name": "Shredded Duck Meat Fried Rice",
+          "dishId": "shredded-duck-meat-fried-rice",
           "code": "153",
           "desc": null,
           "price": 24.0,
@@ -1316,6 +1468,7 @@
         },
         {
           "name": "Bitter Melon & Beef on Rice",
+          "dishId": "bitter-melon-beef-on-rice",
           "code": "154",
           "desc": null,
           "price": 22.9,
@@ -1323,6 +1476,7 @@
         },
         {
           "name": "Beef & Vegetable on Rice",
+          "dishId": "beef-vegetable-on-rice",
           "code": "155",
           "desc": null,
           "price": 22.9,
@@ -1330,6 +1484,7 @@
         },
         {
           "name": "Beef Brisket on Rice",
+          "dishId": "beef-brisket-on-rice",
           "code": "156",
           "desc": null,
           "price": 24.3,
@@ -1337,6 +1492,7 @@
         },
         {
           "name": "Curry Beef or Lamb Flap Brisket on Rice",
+          "dishId": "curry-beef-or-lamb-flap-brisket-on-rice",
           "code": "157",
           "desc": null,
           "price": 25.1,
@@ -1344,6 +1500,7 @@
         },
         {
           "name": "Beef or Shrimp Soft Egg on Rice",
+          "dishId": "beef-or-shrimp-soft-egg-on-rice",
           "code": "158",
           "desc": null,
           "price": 23.4,
@@ -1354,6 +1511,7 @@
         },
         {
           "name": "Beef Tomato Egg on Rice",
+          "dishId": "beef-tomato-egg-on-rice",
           "code": "159",
           "desc": null,
           "price": 23.4,
@@ -1363,6 +1521,7 @@
         },
         {
           "name": "Sweet Corn with Soft Egg and Fish Fillet on Rice",
+          "dishId": "sweet-corn-with-soft-egg-and-fish-fillet-on-rice",
           "code": "160",
           "desc": null,
           "price": 22.3,
@@ -1377,6 +1536,7 @@
       "items": [
         {
           "name": "Hong Kong Style Milk Tea",
+          "dishId": "hong-kong-style-milk-tea",
           "desc": null,
           "price": 7.2,
           "tags": [
@@ -1385,30 +1545,35 @@
         },
         {
           "name": "Hong Kong Style Coffee",
+          "dishId": "hong-kong-style-coffee",
           "desc": null,
           "price": 7.2,
           "tags": []
         },
         {
           "name": "Lemon Tea",
+          "dishId": "lemon-tea",
           "desc": null,
           "price": 7.2,
           "tags": []
         },
         {
           "name": "Lemon & Honey Tea",
+          "dishId": "lemon-honey-tea",
           "desc": null,
           "price": 7.2,
           "tags": []
         },
         {
           "name": "Lemon and Coke",
+          "dishId": "lemon-and-coke",
           "desc": null,
           "price": 7.2,
           "tags": []
         },
         {
           "name": "Soya Milk",
+          "dishId": "soya-milk",
           "desc": null,
           "price": 6.7,
           "tags": [
@@ -1417,12 +1582,14 @@
         },
         {
           "name": "Chinese Tea",
+          "dishId": "chinese-tea",
           "desc": null,
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Deep Fried Banana with Ice Cream",
+          "dishId": "deep-fried-banana-with-ice-cream",
           "desc": null,
           "price": 14.5,
           "tags": [
@@ -1431,6 +1598,7 @@
         },
         {
           "name": "Tofu Far",
+          "dishId": "tofu-far",
           "desc": null,
           "price": 6.1,
           "tags": [
@@ -1439,6 +1607,7 @@
         },
         {
           "name": "Deep Fried Milk Cube",
+          "dishId": "deep-fried-milk-cube",
           "desc": null,
           "price": 15.6,
           "tags": [

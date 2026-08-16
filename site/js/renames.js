@@ -14,6 +14,16 @@
 // "Khandallah Trading Company" keep theirs, because there the place name really
 // does contain the place (owner, 2026-08-16).
 //
+// 2026-08-16, later the same day: the Sprig + Fern entry is REVERSED. The
+// taverns turned out to be separate franchises with separate kitchens and
+// different food menus, so one shared record was showing Tawa's allergen tags
+// against four kitchens that don't cook that food; the owner ruled one record
+// per tavern. The suburb there is not a branch label — it is the venue. So Tawa
+// takes its own id back and the entry flips to point the other way. It is
+// REPLACED, never added alongside: two entries pointing at each other is a
+// cycle, and the live id must never appear as a KEY here or it would resolve
+// away from itself before the record is ever fetched.
+//
 // The map is written here rather than derived from each record's `formerIds`
 // because it has to answer BEFORE any record is fetched — resolving
 // `restaurant.html?id=<old>` is what decides which file to ask for. `formerIds`
@@ -25,7 +35,7 @@ export const RENAMED = Object.freeze({
   "noodle-canteen-johnsonville": "noodle-canteen",
   "hell-pizza-newlands": "hell-pizza",
   "pizza-hut-johnsonville": "pizza-hut",
-  "sprig-and-fern-tawa": "sprig-and-fern",
+  "sprig-and-fern": "sprig-and-fern-tawa",
 });
 
 /**

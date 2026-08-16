@@ -1,0 +1,73 @@
+{
+  "id": "sprig-and-fern-thorndon",
+  "name": "Sprig + Fern Thorndon",
+  "cuisine": [
+    "Gastropub"
+  ],
+  "area": "Thorndon",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "342 Tinakori Road, Wellington 6011",
+  "lat": -41.27879,
+  "lng": 174.76902,
+  "services": [
+    "dine-in"
+  ],
+  "phone": "+64 4 499 1390",
+  "website": "https://sprigandfern.co.nz/pages/thorndon",
+  "ordering": [],
+  "hours": {
+    "mon": [
+      [
+        "16:00",
+        "21:00"
+      ]
+    ],
+    "tue": [
+      [
+        "14:00",
+        "22:00"
+      ]
+    ],
+    "wed": [
+      [
+        "14:00",
+        "22:00"
+      ]
+    ],
+    "thu": [
+      [
+        "14:00",
+        "22:00"
+      ]
+    ],
+    "fri": [
+      [
+        "12:00",
+        "23:00"
+      ]
+    ],
+    "sat": [
+      [
+        "12:00",
+        "22:00"
+      ]
+    ],
+    "sun": [
+      [
+        "12:00",
+        "21:00"
+      ]
+    ]
+  },
+  "vibe": [
+    "craft beer"
+  ],
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "official-site",
+  "lifecycle": {
+    "added": "2026-08-16"
+  },
+  "status": "stub",
+  "menu": []
+}

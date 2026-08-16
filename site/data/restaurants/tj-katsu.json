@@ -348,6 +348,7 @@
       "items": [
         {
           "name": "Edamame",
+          "dishId": "edamame",
           "desc": "Steamed green soy beans.",
           "price": 6.9,
           "tags": [
@@ -357,6 +358,7 @@
         },
         {
           "name": "Seaweed Salad",
+          "dishId": "seaweed-salad",
           "desc": "Japanese style seaweed salad.",
           "price": 6.9,
           "tags": [
@@ -365,6 +367,7 @@
         },
         {
           "name": "Spring Rolls",
+          "dishId": "spring-rolls",
           "desc": "Crispy vegetable rolls.",
           "price": 8.9,
           "tags": [
@@ -374,6 +377,7 @@
         },
         {
           "name": "Gyoza",
+          "dishId": "gyoza",
           "desc": "Japanese style crispy vegetable dumplings.",
           "price": 10.9,
           "tags": [
@@ -383,6 +387,7 @@
         },
         {
           "name": "Breaded Prawns",
+          "dishId": "breaded-prawns",
           "desc": "Crispy prawns with sweet chilli sauce.",
           "price": 10.9,
           "tags": [
@@ -392,6 +397,7 @@
         },
         {
           "name": "Takoyaki",
+          "dishId": "takoyaki",
           "desc": "Ball-shaped Japanese octopus pancake — Japan's best-known street food.",
           "price": 10.9,
           "tags": [
@@ -406,6 +412,7 @@
       "items": [
         {
           "name": "Katsu",
+          "dishId": "katsu",
           "desc": "TJ's signature dish. Japanese style crispy chicken served with salad, rice and miso soup.",
           "price": 18.9,
           "tags": [
@@ -415,6 +422,7 @@
         },
         {
           "name": "Katsu + Curry",
+          "dishId": "katsu-curry",
           "desc": "Japanese style crispy chicken served with Japanese curry, rice and miso soup.",
           "price": 19.9,
           "tags": [
@@ -424,6 +432,7 @@
         },
         {
           "name": "Katsu + Teriyaki Noodle",
+          "dishId": "katsu-teriyaki-noodle",
           "desc": "Japanese crispy chicken with teriyaki noodles, salad and miso soup.",
           "price": 19.9,
           "tags": [
@@ -433,6 +442,7 @@
         },
         {
           "name": "Teriyaki Chicken Noodle",
+          "dishId": "teriyaki-chicken-noodle",
           "desc": "Pan-fried chicken with teriyaki noodles, salad and miso soup.",
           "price": 19.9,
           "tags": [
@@ -442,6 +452,7 @@
         },
         {
           "name": "Teriyaki Beef Noodle",
+          "dishId": "teriyaki-beef-noodle",
           "desc": "Pan-fried beef with teriyaki noodles, salad and miso soup.",
           "price": 19.9,
           "tags": [
@@ -451,6 +462,7 @@
         },
         {
           "name": "Teriyaki Tofu Noodle",
+          "dishId": "teriyaki-tofu-noodle",
           "desc": "Pan-fried tofu with teriyaki noodles, salad and miso soup.",
           "price": 18.9,
           "tags": [
@@ -460,6 +472,7 @@
         },
         {
           "name": "Teriyaki Chicken-don",
+          "dishId": "teriyaki-chicken-don",
           "desc": "Pan-fried teriyaki chicken on rice with salad and miso soup.",
           "price": 18.9,
           "tags": [
@@ -469,6 +482,7 @@
         },
         {
           "name": "Teriyaki Beef-don",
+          "dishId": "teriyaki-beef-don",
           "desc": "Pan-fried teriyaki beef on rice with salad and miso soup.",
           "price": 18.9,
           "tags": [
@@ -478,6 +492,7 @@
         },
         {
           "name": "Spicy Chicken-don",
+          "dishId": "spicy-chicken-don",
           "desc": "Pan-fried spicy chicken on rice with salad and miso soup.",
           "price": 18.9,
           "tags": [
@@ -487,6 +502,7 @@
         },
         {
           "name": "Teriyaki Tofu-don",
+          "dishId": "teriyaki-tofu-don",
           "desc": "Pan-fried teriyaki tofu on rice with salad and miso soup.",
           "price": 17.9,
           "tags": [
@@ -496,6 +512,7 @@
         },
         {
           "name": "Teriyaki Salmon-don",
+          "dishId": "teriyaki-salmon-don",
           "desc": "Pan-fried teriyaki salmon on rice with miso soup.",
           "price": 19.9,
           "tags": [
@@ -505,6 +522,7 @@
         },
         {
           "name": "Sashimi-don",
+          "dishId": "sashimi-don",
           "desc": "Fresh salmon with avocado and salad on rice, served with miso soup.",
           "price": 19.9,
           "tags": [
@@ -518,6 +536,7 @@
       "items": [
         {
           "name": "Teriyaki Tofu Bento",
+          "dishId": "teriyaki-tofu-bento",
           "desc": "Pan-fried teriyaki tofu with tempura, sushi, salad, rice and miso soup.",
           "price": 23.9,
           "tags": [
@@ -528,6 +547,7 @@
         },
         {
           "name": "Teriyaki Chicken Bento",
+          "dishId": "teriyaki-chicken-bento",
           "desc": "Pan-fried teriyaki chicken with teriyaki beef, sushi, salad, rice and miso soup.",
           "price": 25.9,
           "tags": [
@@ -537,6 +557,7 @@
         },
         {
           "name": "Fresh Salmon Bento",
+          "dishId": "fresh-salmon-bento",
           "desc": "Sliced fresh salmon with tempura, sushi, salad, rice and miso soup.",
           "price": 25.9,
           "tags": [
@@ -547,6 +568,7 @@
         },
         {
           "name": "Teriyaki Eel Bento",
+          "dishId": "teriyaki-eel-bento",
           "desc": "Roasted teriyaki eel with teriyaki beef, sushi, salad, rice and miso soup.",
           "price": 25.9,
           "tags": [
@@ -556,6 +578,7 @@
         },
         {
           "name": "Combination Bento",
+          "dishId": "combination-bento",
           "desc": "Japanese style crispy chicken with teriyaki chicken, tempura, sushi, rice and miso soup.",
           "price": 29.9,
           "tags": [

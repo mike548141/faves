@@ -181,15 +181,16 @@ excluded from both stores, always.
       "items": [
         {
           "name": "Char kway teow",
-          "dishId": null,            // optional. The dish's IDENTITY (ADR 0051) —
+          "dishId": "char-kway-teow", // REQUIRED. The dish's IDENTITY (ADR 0051) —
                                      //   anchors, hearts, ratings, picks and order
-                                     //   lines all key on it. Absent = slug(name),
-                                     //   which is what they always keyed on, so
-                                     //   almost every dish leaves this out. Write
-                                     //   one when two rows in a venue share a name
-                                     //   (validate.py errors and tells you), or to
-                                     //   PIN the id through a rename so links,
-                                     //   hearts and price history carry over.
+                                     //   lines all key on it. Seeded ONCE from
+                                     //   slug(name) — run tools/seed_dish_ids.py —
+                                     //   and then IMMUTABLE: a rename changes the
+                                     //   name and leaves this alone, which is what
+                                     //   carries links, hearts, ratings and price
+                                     //   history across it. Never recompute it from
+                                     //   a name; that is the bug this field exists
+                                     //   to prevent. Unique within the record.
           "formerIds": [],           // optional: ids this dish used to have, for the
                                      //   rarer case where the id itself had to move.
                                      //   A live id always wins over another dish's
@@ -445,15 +446,16 @@ When you transcribe a new menu for a venue that already has one:
    record, and the venue's `verified` date already says when we last looked.
 3. **A dish that has gone** → add `available.offBy` (the day you confirmed it
    was gone). Do **not** delete it.
-4. **A dish that was renamed** → **pin its `dishId` to the id it already had**,
-   then change the name (ADR 0051). That one field is what carries the price
-   history, every shared link, and every heart and rating on a family phone
-   across the rename — mechanically, instead of by a transcriber remembering.
-   Without it, treating a rename as "one dish dropped, one added" is a false
-   claim about the world and silently loses all four.
-   The id a dish already had is `slug(name)` of the OLD name — lower-case, every
-   run of non-alphanumerics collapsed to a single `-`. It is also visible as the
-   `#dish-…` fragment in the dish's own link.
+4. **A dish that was renamed** → change the `name` and **leave `dishId` exactly
+   as it is** (ADR 0051). That is the whole procedure. The id is what carries
+   the price history, every shared link, and every heart and rating on a family
+   phone across the rename, so an id that never moves means none of them move
+   either. Treating a rename as "one dish dropped, one added" is a false claim
+   about the world and silently loses all four.
+   🚩 **Never "correct" a `dishId` to match a new name.** It will look tidier
+   and it will detach every heart, rating and shared link pointing at that dish,
+   silently, on every phone. If an id genuinely must change, record the old one
+   in the dish's `formerIds` so it still resolves.
 5. **Correction vs change** — if you are fixing something we recorded *wrong*
    (a typo, a price we never knew), that is **not** a price change: overwrite it
    and add no entry. Recording a correction as a series fabricates a price rise.

@@ -114,6 +114,7 @@
       "items": [
         {
           "name": "Roti with satay sauce",
+          "dishId": "roti-with-satay-sauce",
           "code": "A1",
           "desc": "Roti bread served with satay peanut sauce.",
           "price": [
@@ -130,6 +131,7 @@
         },
         {
           "name": "French fries",
+          "dishId": "french-fries",
           "code": "A2",
           "desc": "Deep-fried potatoes mixed with salt and served with tomato sauce.",
           "price": 8,
@@ -139,6 +141,7 @@
         },
         {
           "name": "Spring rolls",
+          "dishId": "spring-rolls",
           "code": "A3",
           "desc": "Crispy homemade spring rolls with vegetables and glass noodles. Served with sweet and sour sauce.",
           "price": [
@@ -153,6 +156,7 @@
         },
         {
           "name": "Deep fried wontons",
+          "dishId": "deep-fried-wontons",
           "code": "A4",
           "desc": "Crispy wrappers filled with chicken and prawns. Served with sweet and sour sauce.",
           "price": [
@@ -168,6 +172,7 @@
         },
         {
           "name": "Curry puffs",
+          "dishId": "curry-puffs",
           "code": "A5",
           "desc": "Deep-fried puff pastry filled with spiced kūmara and served with sweet and sour sauce.",
           "price": [
@@ -182,6 +187,7 @@
         },
         {
           "name": "Prawns tempura",
+          "dishId": "prawns-tempura",
           "code": "A6",
           "desc": "Thai style deep-fried prawns served with sweet and sour sauce.",
           "price": 10.9,
@@ -193,6 +199,7 @@
         },
         {
           "name": "Money bags",
+          "dishId": "money-bags",
           "code": "A7",
           "desc": "Crispy parcels filled with minced chicken and vegetables. Served with sweet and sour sauce.",
           "price": [
@@ -211,6 +218,7 @@
         },
         {
           "name": "Squid rings",
+          "dishId": "squid-rings",
           "code": "A8",
           "desc": "Deep-fried squid rings served with sweet and sour sauce.",
           "price": 10.9,
@@ -220,6 +228,7 @@
         },
         {
           "name": "Satay chicken kebabs",
+          "dishId": "satay-chicken-kebabs",
           "code": "A9",
           "desc": "Grilled marinated chicken skewers served with satay peanut sauce.",
           "price": [
@@ -235,6 +244,7 @@
         },
         {
           "name": "Fish cake",
+          "dishId": "fish-cake",
           "code": "A10",
           "desc": "Red cod blended with fragrant Thai herbs and red curry paste. Served with sweet and sour sauce.",
           "price": [
@@ -247,6 +257,7 @@
         },
         {
           "name": "Crispy pork snack",
+          "dishId": "crispy-pork-snack",
           "code": "A11",
           "desc": "Sliced crispy pork belly served with sweet dark soy sauce.",
           "price": 12.9,
@@ -257,6 +268,7 @@
         },
         {
           "name": "Prawns twister",
+          "dishId": "prawns-twister",
           "code": "A12",
           "desc": "Deep-fried succulent seasoned prawn. Served with sweet chilli sauce. Price not recorded — the menu's handwritten price sticker was unreadable, so ask when you order.",
           "price": null,
@@ -266,6 +278,7 @@
         },
         {
           "name": "Spicy squid tentacles",
+          "dishId": "spicy-squid-tentacles",
           "code": "A13",
           "desc": "Deep-fried squid tentacles served with sweet chilli sauce.",
           "price": 12.9,
@@ -276,6 +289,7 @@
         },
         {
           "name": "Mix appetiser for 1",
+          "dishId": "mix-appetiser-for-1",
           "code": "A14",
           "desc": "A mixture of spring roll, curry puff, deep fried wonton, money bag, prawn tempura and fish cake. Served with sweet and sour sauce.",
           "price": 14.5,
@@ -292,6 +306,7 @@
       "items": [
         {
           "name": "Fried rice",
+          "dishId": "fried-rice",
           "code": "R1",
           "desc": "Fried rice with a choice of meat, mixed with seasonal vegetables and egg.",
           "price": [
@@ -306,6 +321,7 @@
         },
         {
           "name": "Green curry fried rice",
+          "dishId": "green-curry-fried-rice",
           "code": "R2",
           "desc": "Fried rice with a choice of meat, green curry paste, mixed seasonal vegetables, coconut cream and Thai basil.",
           "price": [
@@ -318,6 +334,7 @@
         },
         {
           "name": "Nasi goreng",
+          "dishId": "nasi-goreng",
           "code": "R3",
           "desc": "Fried rice with a choice of meat, egg and nasi goreng curry powder.",
           "price": [
@@ -332,6 +349,7 @@
         },
         {
           "name": "Tom yum fried rice",
+          "dishId": "tom-yum-fried-rice",
           "code": "R4",
           "desc": "Hot and spicy fried rice with a choice of meat, lemongrass, galangal and kaffir lime leaves.",
           "price": [
@@ -346,6 +364,7 @@
         },
         {
           "name": "Spicy fried rice",
+          "dishId": "spicy-fried-rice",
           "code": "R5",
           "desc": "Hot and spicy fried rice with a choice of meat, seasonal vegetables, sliced bamboo and Thai basil.",
           "price": [
@@ -365,6 +384,7 @@
       "items": [
         {
           "name": "Pad thai",
+          "dishId": "pad-thai",
           "code": "N1",
           "desc": "Stir-fried rice noodles with a choice of meat, egg, tamarind, garlic chive and bean sprouts. Served with peanuts and lemon on side.",
           "price": [
@@ -380,6 +400,7 @@
         },
         {
           "name": "Pad see ewe",
+          "dishId": "pad-see-ewe",
           "code": "N2",
           "desc": "Stir-fried large flat noodles with a choice of meat, egg, mixed seasonal vegetables, oyster sauce, soy sauce and sugar.",
           "price": [
@@ -397,6 +418,7 @@
         },
         {
           "name": "Pad kee mao",
+          "dishId": "pad-kee-mao",
           "code": "N3",
           "desc": "Stir-fried large flat noodles with a choice of meat, egg, mixed seasonal vegetables, bamboo shoots and basil.",
           "price": [
@@ -411,6 +433,7 @@
         },
         {
           "name": "Mee goreng",
+          "dishId": "mee-goreng",
           "code": "N4",
           "desc": "Stir-fried yellow noodles with a choice of meat, nasi goreng curry powder and mixed seasonal vegetables. Goes great with our BBQ pork.",
           "price": [
@@ -430,6 +453,7 @@
       "items": [
         {
           "name": "Green curry",
+          "dishId": "green-curry",
           "code": "C1",
           "desc": "Green curry paste with coconut cream, seasonal vegetables, Thai herbs and a choice of meat. Served with rice.",
           "price": [
@@ -442,6 +466,7 @@
         },
         {
           "name": "Red curry",
+          "dishId": "red-curry",
           "code": "C2",
           "desc": "Red curry paste with coconut cream, seasonal vegetables, Thai herbs and a choice of meat. Served with rice.",
           "price": [
@@ -454,6 +479,7 @@
         },
         {
           "name": "Yellow curry",
+          "dishId": "yellow-curry",
           "code": "C3",
           "desc": "Yellow curry paste with a choice of meat, coconut cream, potatoes and fried onion. Topped with crispy fried shallots. Served with rice.",
           "price": [
@@ -466,6 +492,7 @@
         },
         {
           "name": "Panang curry",
+          "dishId": "panang-curry",
           "code": "C4",
           "desc": "Panang curry paste with coconut cream, Thai herb, sliced thinned kaffir lime leaves, capsicum, long bean, carrot, zucchini and a choice of meat. Served with rice.",
           "price": [
@@ -478,6 +505,7 @@
         },
         {
           "name": "Beef massamun curry",
+          "dishId": "beef-massamun-curry",
           "code": "C5",
           "desc": "Slow-cooked beef with massamun curry paste, Thai herbs, coconut cream, potatoes and onion. Topped with crispy shallots and cashew nuts. Served with rice.",
           "price": [
@@ -493,6 +521,7 @@
         },
         {
           "name": "Roasted duck curry",
+          "dishId": "roasted-duck-curry",
           "code": "C6",
           "desc": "Roasted duck with red curry paste, coconut cream, Thai herbs, mixed seasonal vegetables, grapes, tomatoes and pineapple. Served with rice.",
           "price": [
@@ -510,6 +539,7 @@
       "items": [
         {
           "name": "Sizzling cashew nuts",
+          "dishId": "sizzling-cashew-nuts",
           "code": "H1",
           "desc": "Stir-fried cashew nuts with a choice of meat, pineapple, spring onions, mixed seasonal vegetables, onion, oyster sauce and capsicum. Served with rice.",
           "price": 28.5,
@@ -521,6 +551,7 @@
         },
         {
           "name": "Sizzling black pepper",
+          "dishId": "sizzling-black-pepper",
           "code": "H2",
           "desc": "Black pepper stir-fried with a choice of meat and seasonal vegetables, onion, oyster sauce and capsicum. Served with rice.",
           "price": 28.5,
@@ -531,6 +562,7 @@
         },
         {
           "name": "Sizzling house special",
+          "dishId": "sizzling-house-special",
           "code": "H3",
           "desc": "Stir-fried with our special sauce, a choice of meat, onion, mixed seasonal vegetables, kaffir lime leaves and Thai chilli paste. Served with rice.",
           "price": 28.5,
@@ -540,6 +572,7 @@
         },
         {
           "name": "Hot pot tom yum soup",
+          "dishId": "hot-pot-tom-yum-soup",
           "code": "H4",
           "desc": "Thai-style hot and spicy soup with herbs, mushrooms, tomatoes, shallots and a choice of meat. Topped with creamy milk. Served with rice.",
           "price": 28.5,
@@ -555,6 +588,7 @@
       "items": [
         {
           "name": "Grilled beef salad",
+          "dishId": "grilled-beef-salad",
           "code": "TS1",
           "desc": "A tangy Thai-style spicy salad with lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.",
           "price": 21.5,
@@ -564,6 +598,7 @@
         },
         {
           "name": "Larb kai salad",
+          "dishId": "larb-kai-salad",
           "code": "TS2",
           "desc": "A tangy Thai-style spicy salad with minced chicken, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.",
           "price": 21.5,
@@ -573,6 +608,7 @@
         },
         {
           "name": "Larb duck salad",
+          "dishId": "larb-duck-salad",
           "code": "TS3",
           "desc": "A tangy Thai-style spicy salad with roasted duck, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.",
           "price": 26,
@@ -582,6 +618,7 @@
         },
         {
           "name": "Larb crispy pork",
+          "dishId": "larb-crispy-pork",
           "code": "TS4",
           "desc": "A tangy Thai-style spicy salad with crispy pork belly, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs. Served with rice.",
           "price": 28.5,
@@ -596,6 +633,7 @@
       "items": [
         {
           "name": "BBQ pork on rice",
+          "dishId": "bbq-pork-on-rice",
           "code": "OR1",
           "desc": "Sliced BBQ pork topped with Thai-style peanut butter sauce. Served with mixed steamed vegetables and Thai sweet soy sauce.",
           "price": [
@@ -612,6 +650,7 @@
         },
         {
           "name": "Roasted duck on rice",
+          "dishId": "roasted-duck-on-rice",
           "code": "OR2",
           "desc": "Sliced boneless roasted duck topped with Thai-style peanut butter sauce. Served with mixed steamed vegetables and sweet soy sauce.",
           "price": [
@@ -628,6 +667,7 @@
         },
         {
           "name": "Crispy pork on rice",
+          "dishId": "crispy-pork-on-rice",
           "code": "OR3",
           "desc": "Chopped crispy pork belly topped with Thai-style peanut butter sauce. Served with mixed steamed vegetables and sweet soy sauce.",
           "price": [
@@ -649,6 +689,7 @@
       "items": [
         {
           "name": "Beef noodle soup",
+          "dishId": "beef-noodle-soup",
           "code": "S1",
           "desc": "Slow-cooked and rare beef in beef stock broth with rice noodles, bean sprouts, bok choy, spring onion and coriander.",
           "price": [
@@ -663,6 +704,7 @@
         },
         {
           "name": "Tom yum noodle soup",
+          "dishId": "tom-yum-noodle-soup",
           "code": "S2",
           "desc": "Rice noodles in Thai style hot and spicy tom yum soup with a selection of meat, lemongrass, galanga, kaffir lime leaves and lemon juice.",
           "price": [
@@ -678,6 +720,7 @@
         },
         {
           "name": "Wonton soup with BBQ pork",
+          "dishId": "wonton-soup-with-bbq-pork",
           "code": "S3",
           "desc": "Steam wontons and BBQ pork in chicken stock broth with bean sprouts, bok choy, spring onion and coriander.",
           "price": [
@@ -692,6 +735,7 @@
         },
         {
           "name": "Duck noodle",
+          "dishId": "duck-noodle",
           "code": "S4",
           "desc": "Roasted duck in duck stock broth with rice noodles, bean sprouts, bok choy, spring, onion and coriander.",
           "price": [
@@ -710,6 +754,7 @@
         },
         {
           "name": "Laksa curry noodle soup",
+          "dishId": "laksa-curry-noodle-soup",
           "desc": "Asian style rice noodles with laksa sauce, coconut cream, bean sprouts, dry shallot, onions, Vietnamese mint and a choice of meat.",
           "price": [
             {
@@ -730,6 +775,7 @@
       "items": [
         {
           "name": "Tom kha soup",
+          "dishId": "tom-kha-soup",
           "code": "SP1",
           "desc": "Thai coconut milk soup with herbs, tomatoes, carrots, mushrooms, cauliflower, cabbage and a choice of meat.",
           "price": [
@@ -748,6 +794,7 @@
         },
         {
           "name": "Tom yum soup",
+          "dishId": "tom-yum-soup",
           "code": "SP2",
           "desc": "Thai-style hot and spicy tom yum soup with a choice of meat, lemongrass, galanga, coriander, onion and kaffir lime leaves.",
           "price": [
@@ -767,6 +814,7 @@
       "items": [
         {
           "name": "Thai chilli",
+          "dishId": "thai-chilli",
           "code": "F1",
           "desc": "Thai chilli paste stir-fried with a selection of meat, Thai basil, garlic, capsicum, condensed milk, long beans and courgette. Served with rice.",
           "price": [
@@ -788,6 +836,7 @@
         },
         {
           "name": "Thai basil",
+          "dishId": "thai-basil",
           "code": "F2",
           "desc": "Stir-fried basil with a selection of meat, long bean, carrot, bamboo shoot and capsicum. Served with rice.",
           "price": [
@@ -806,6 +855,7 @@
         },
         {
           "name": "The cashew nut",
+          "dishId": "the-cashew-nut",
           "code": "F3",
           "desc": "Stir-fried cashew nuts with a selection of meat, pineapple, mixed seasonal vegetables, onion, oyster sauce and capsicum. Served with rice.",
           "price": [
@@ -828,6 +878,7 @@
         },
         {
           "name": "Sweet and sour",
+          "dishId": "sweet-and-sour",
           "code": "F4",
           "desc": "Sweet and sour sauce stir-fried with a selection of meat, mixed seasonal vegetables, pineapple, tomatoes, onion and mushrooms. Served with rice.",
           "price": [
@@ -846,6 +897,7 @@
         },
         {
           "name": "Satay sauce",
+          "dishId": "satay-sauce",
           "code": "F5",
           "desc": "Peanut sauce stir-fried with a selection of meat, seasonal vegetables, onion, capsicum and pineapple. Served with rice.",
           "price": [
@@ -867,6 +919,7 @@
         },
         {
           "name": "Ginger and vegetable",
+          "dishId": "ginger-and-vegetable",
           "code": "F6",
           "desc": "Fresh ginger stir-fried with a selection of meat and seasonal vegetables. Served with rice.",
           "price": [
@@ -885,6 +938,7 @@
         },
         {
           "name": "Crispy pork stir-fry vegetable",
+          "dishId": "crispy-pork-stir-fry-vegetable",
           "code": "F7",
           "desc": "Oyster sauce stir-fried with bok choy and mixed seasonal vegetables. Topped with crispy pork. Served with rice.",
           "price": [
@@ -906,6 +960,7 @@
         },
         {
           "name": "Roasted duck stir-fry vegetable",
+          "dishId": "roasted-duck-stir-fry-vegetable",
           "code": "F8",
           "desc": "Oyster sauce stir-fried with bok choy and mixed seasonal vegetables. Topped with roasted duck. Served with rice.",
           "price": 28.5,
@@ -921,6 +976,7 @@
       "items": [
         {
           "name": "Chicken, pork, beef or vegetable with tofu",
+          "dishId": "chicken-pork-beef-or-vegetable-with-tofu",
           "desc": "The standard choice of meat — no charge.",
           "price": 0,
           "tags": [
@@ -929,6 +985,7 @@
         },
         {
           "name": "Upgrade to combination, duck, crispy pork, BBQ pork, prawn or seafood",
+          "dishId": "upgrade-to-combination-duck-crispy-pork-bbq-pork-prawn-or-seafood",
           "desc": null,
           "price": 4,
           "tags": [
@@ -937,6 +994,7 @@
         },
         {
           "name": "Extra chicken, pork, beef or vegetable with tofu",
+          "dishId": "extra-chicken-pork-beef-or-vegetable-with-tofu",
           "desc": null,
           "price": 4,
           "tags": [
@@ -945,6 +1003,7 @@
         },
         {
           "name": "Extra combination, crispy pork, BBQ pork, prawn or seafood",
+          "dishId": "extra-combination-crispy-pork-bbq-pork-prawn-or-seafood",
           "desc": null,
           "price": 6.5,
           "tags": [
@@ -958,6 +1017,7 @@
       "items": [
         {
           "name": "Jasmine rice",
+          "dishId": "jasmine-rice",
           "desc": null,
           "price": 3,
           "tags": [
@@ -968,6 +1028,7 @@
         },
         {
           "name": "Coconut rice",
+          "dishId": "coconut-rice",
           "desc": null,
           "price": 3.5,
           "tags": [
@@ -978,6 +1039,7 @@
         },
         {
           "name": "Steam noodle",
+          "dishId": "steam-noodle",
           "desc": null,
           "price": 3.5,
           "tags": [
@@ -987,6 +1049,7 @@
         },
         {
           "name": "Steam veges",
+          "dishId": "steam-veges",
           "desc": null,
           "price": 3.5,
           "tags": [
@@ -1001,6 +1064,7 @@
       "items": [
         {
           "name": "Thai iced coffee",
+          "dishId": "thai-iced-coffee",
           "desc": "Homemade.",
           "price": 7,
           "tags": [
@@ -1010,6 +1074,7 @@
         },
         {
           "name": "Thai lemon iced tea",
+          "dishId": "thai-lemon-iced-tea",
           "desc": "Homemade.",
           "price": 7,
           "tags": [
@@ -1019,6 +1084,7 @@
         },
         {
           "name": "Thai iced milk tea",
+          "dishId": "thai-iced-milk-tea",
           "desc": "Homemade.",
           "price": 7,
           "tags": [
@@ -1028,6 +1094,7 @@
         },
         {
           "name": "Apple juice",
+          "dishId": "apple-juice",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -1037,6 +1104,7 @@
         },
         {
           "name": "Orange juice",
+          "dishId": "orange-juice",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -1046,6 +1114,7 @@
         },
         {
           "name": "Pineapple juice",
+          "dishId": "pineapple-juice",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -1055,6 +1124,7 @@
         },
         {
           "name": "Coconut drink",
+          "dishId": "coconut-drink",
           "desc": null,
           "price": 5.5,
           "tags": [
@@ -1064,6 +1134,7 @@
         },
         {
           "name": "Pot of jasmine tea",
+          "dishId": "pot-of-jasmine-tea",
           "desc": null,
           "price": 5,
           "tags": [
@@ -1073,6 +1144,7 @@
         },
         {
           "name": "Pot of green tea",
+          "dishId": "pot-of-green-tea",
           "desc": null,
           "price": 5,
           "tags": [
@@ -1082,6 +1154,7 @@
         },
         {
           "name": "Coke, Coke No Sugar, Sprite or Fanta",
+          "dishId": "coke-coke-no-sugar-sprite-or-fanta",
           "desc": null,
           "price": 4,
           "tags": [
@@ -1091,6 +1164,7 @@
         },
         {
           "name": "Lemon lime bitters",
+          "dishId": "lemon-lime-bitters",
           "desc": null,
           "price": 4.5,
           "tags": [
@@ -1100,6 +1174,7 @@
         },
         {
           "name": "Ginger beer",
+          "dishId": "ginger-beer",
           "desc": null,
           "price": 4.5,
           "tags": [

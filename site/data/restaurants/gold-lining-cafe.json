@@ -66,6 +66,7 @@
       "items": [
         {
           "name": "Eggs on Toast",
+          "dishId": "eggs-on-toast",
           "desc": "Eggs your way on butter toasted ciabatta, house-made tomato relish. Creamy scrambled eggs +$1; GF seeded toast +$1.",
           "price": 14.0,
           "tags": [
@@ -78,6 +79,7 @@
         },
         {
           "name": "Eggs Benedict",
+          "dishId": "eggs-benedict",
           "desc": "Poached eggs, potato rosti, wilted baby spinach, paprika mustard hollandaise, with your choice of bacon, smoked salmon, halloumi (V) or mushroom (V).",
           "price": 23.0,
           "tags": [
@@ -88,6 +90,7 @@
         },
         {
           "name": "Salmon and Avo Bagel",
+          "dishId": "salmon-and-avo-bagel",
           "desc": "Zesty creme fraiche, cold smoked salmon, sliced avocado, poached egg, pickled onions and lemon wedge.",
           "price": 23.0,
           "tags": [
@@ -98,6 +101,7 @@
         },
         {
           "name": "Chilli Scrambled Eggs",
+          "dishId": "chilli-scrambled-eggs",
           "desc": "Creamy scrambled eggs, house-made chilli oil, ricotta cheese, dukkah, toasted ciabatta. GF on request +$1.",
           "price": 19.0,
           "tags": [
@@ -111,6 +115,7 @@
         },
         {
           "name": "Winter Porridge",
+          "dishId": "winter-porridge",
           "desc": "Mixed spiced creamy oats, apple cinnamon compote, brown butter and honey glazed almond, Pic's peanut butter, Greek yoghurt.",
           "price": 19.0,
           "tags": [
@@ -123,6 +128,7 @@
         },
         {
           "name": "Avo on Toast",
+          "dishId": "avo-on-toast",
           "desc": "Smashed avo on toasted multigrain bread, vegan feta, salsa verde, pickled red onions, cucumber, everything bagel seasoning, toasted seeds. GF on request +$1.",
           "price": 22.0,
           "tags": [
@@ -136,6 +142,7 @@
         },
         {
           "name": "Gold Lining Nourish Bowl",
+          "dishId": "gold-lining-nourish-bowl",
           "desc": "Hot maple roasted kumara, quinoa, mixed greens, avocado, cucumber, pickled carrot, alfalfa, sumac, harissa garlic herb dressing, with your choice of grilled chicken, halloumi (V) or falafel (VG).",
           "price": 25.0,
           "tags": [
@@ -145,6 +152,7 @@
         },
         {
           "name": "Cheese & Spinach Omelette",
+          "dishId": "cheese-spinach-omelette",
           "desc": "3 eggs filled with melty cheese, creamed spinach, crispy onions, mixed greens salad. Add bacon +$7.",
           "price": 21.0,
           "tags": [
@@ -156,12 +164,14 @@
         },
         {
           "name": "Fried Chicken Chop",
+          "dishId": "fried-chicken-chop",
           "desc": "Crispy fried whole chicken thigh, Japanese-style potato salad, grilled tomato.",
           "price": 24.0,
           "tags": []
         },
         {
           "name": "Curly Fries",
+          "dishId": "curly-fries",
           "desc": "With aioli or tomato sauce.",
           "price": 13.0,
           "tags": [
@@ -177,6 +187,7 @@
       "items": [
         {
           "name": "Eggs Your Way — One",
+          "dishId": "eggs-your-way-one",
           "price": 4.0,
           "tags": [
             "v",
@@ -186,6 +197,7 @@
         },
         {
           "name": "Eggs Your Way — Two",
+          "dishId": "eggs-your-way-two",
           "price": 8.0,
           "tags": [
             "v",
@@ -195,6 +207,7 @@
         },
         {
           "name": "Potato Rosti",
+          "dishId": "potato-rosti",
           "price": 6.0,
           "tags": [
             "v"
@@ -202,6 +215,7 @@
         },
         {
           "name": "Portobello Mushroom",
+          "dishId": "portobello-mushroom",
           "price": 6.0,
           "tags": [
             "v"
@@ -209,6 +223,7 @@
         },
         {
           "name": "Avocado",
+          "dishId": "avocado",
           "price": 6.0,
           "tags": [
             "vg",
@@ -219,6 +234,7 @@
         },
         {
           "name": "Herb Roasted Tomato",
+          "dishId": "herb-roasted-tomato",
           "price": 6.0,
           "tags": [
             "vg",
@@ -229,6 +245,7 @@
         },
         {
           "name": "Hashbrowns",
+          "dishId": "hashbrowns",
           "price": 6.0,
           "tags": [
             "v"
@@ -236,6 +253,7 @@
         },
         {
           "name": "Halloumi",
+          "dishId": "halloumi",
           "price": 8.0,
           "tags": [
             "v",
@@ -245,6 +263,7 @@
         },
         {
           "name": "Bacon",
+          "dishId": "bacon",
           "price": 8.0,
           "tags": [
             "gf",
@@ -253,6 +272,7 @@
         },
         {
           "name": "Grilled Chicken",
+          "dishId": "grilled-chicken",
           "price": 8.0,
           "tags": [
             "gf",
@@ -261,6 +281,7 @@
         },
         {
           "name": "Cold-Smoked Salmon",
+          "dishId": "cold-smoked-salmon",
           "price": 9.0,
           "tags": [
             "gf",
@@ -274,6 +295,7 @@
       "items": [
         {
           "name": "Seafood Chowder",
+          "dishId": "seafood-chowder",
           "desc": "With your choice of bread: butter toasted ciabatta or multigrain (GF toast +$2). Marked GF-NF.",
           "price": 18.0,
           "tags": [
@@ -290,6 +312,7 @@
       "items": [
         {
           "name": "Corn Fritter Stack",
+          "dishId": "corn-fritter-stack",
           "desc": "Marked GF and vegetarian.",
           "price": 14.0,
           "tags": [
@@ -299,6 +322,7 @@
         },
         {
           "name": "Mixed Vegetable Cheese Frittata",
+          "dishId": "mixed-vegetable-cheese-frittata",
           "desc": "With green salad. Marked GF.",
           "price": 12.5,
           "tags": [
@@ -310,6 +334,7 @@
         },
         {
           "name": "Ham & Brie Panini",
+          "dishId": "ham-brie-panini",
           "price": 13.5,
           "tags": [
             "contains-gluten",
@@ -318,6 +343,7 @@
         },
         {
           "name": "Beef Pastrami Pita Pocket",
+          "dishId": "beef-pastrami-pita-pocket",
           "price": 12.5,
           "tags": [
             "contains-gluten"
@@ -325,6 +351,7 @@
         },
         {
           "name": "Vegan Truffle Filo",
+          "dishId": "vegan-truffle-filo",
           "desc": "Mushroom and spinach filo with salad. Marked vegan.",
           "price": 12.0,
           "tags": [
@@ -336,6 +363,7 @@
         },
         {
           "name": "Sausage Roll",
+          "dishId": "sausage-roll",
           "desc": "With tomato sauce.",
           "price": 12.0,
           "tags": [
@@ -344,6 +372,7 @@
         },
         {
           "name": "Salmon & Zucchini Quiche",
+          "dishId": "salmon-zucchini-quiche",
           "desc": "With green salad.",
           "price": 14.0,
           "tags": [
@@ -354,6 +383,7 @@
         },
         {
           "name": "Fried Chicken Focaccia",
+          "dishId": "fried-chicken-focaccia",
           "price": 15.0,
           "tags": [
             "contains-gluten"
@@ -361,6 +391,7 @@
         },
         {
           "name": "Bacon Turkish",
+          "dishId": "bacon-turkish",
           "price": 14.0,
           "tags": [
             "contains-gluten"
@@ -368,6 +399,7 @@
         },
         {
           "name": "Halloumi & Mushroom Turkish",
+          "dishId": "halloumi-mushroom-turkish",
           "price": 14.0,
           "tags": [
             "v",
@@ -377,6 +409,7 @@
         },
         {
           "name": "Falafel Wrap",
+          "dishId": "falafel-wrap",
           "price": null,
           "tags": [
             "v"
@@ -391,6 +424,7 @@
         },
         {
           "name": "Mexican Chicken Wrap",
+          "dishId": "mexican-chicken-wrap",
           "price": 14.0,
           "tags": [
             "contains-gluten"
@@ -398,6 +432,7 @@
         },
         {
           "name": "Breakfast Wrap",
+          "dishId": "breakfast-wrap",
           "price": 13.5,
           "tags": [
             "contains-egg",
@@ -406,6 +441,7 @@
         },
         {
           "name": "Chicken & Brie Croissant",
+          "dishId": "chicken-brie-croissant",
           "price": 14.5,
           "tags": [
             "contains-gluten",
@@ -414,6 +450,7 @@
         },
         {
           "name": "Ham & Cheese Croissant",
+          "dishId": "ham-cheese-croissant",
           "price": 13.0,
           "tags": [
             "contains-gluten",
@@ -427,6 +464,7 @@
       "items": [
         {
           "name": "Almond Croissant",
+          "dishId": "almond-croissant",
           "price": 7.0,
           "tags": [
             "v",
@@ -437,6 +475,7 @@
         },
         {
           "name": "Apricot Plum Danish",
+          "dishId": "apricot-plum-danish",
           "price": 7.5,
           "tags": [
             "v",
@@ -446,6 +485,7 @@
         },
         {
           "name": "Cinnamon Roll",
+          "dishId": "cinnamon-roll",
           "price": 7.0,
           "tags": [
             "v",
@@ -455,6 +495,7 @@
         },
         {
           "name": "K-Style Creamy Garlic Brioche",
+          "dishId": "k-style-creamy-garlic-brioche",
           "price": 7.0,
           "tags": [
             "v",
@@ -464,6 +505,7 @@
         },
         {
           "name": "Blueberry Sweet Muffin",
+          "dishId": "blueberry-sweet-muffin",
           "price": 5.8,
           "tags": [
             "v",
@@ -472,6 +514,7 @@
         },
         {
           "name": "Raspberry Vegan Muffin",
+          "dishId": "raspberry-vegan-muffin",
           "price": 5.8,
           "tags": [
             "vg",
@@ -482,6 +525,7 @@
         },
         {
           "name": "Vegetarian Savoury Muffin",
+          "dishId": "vegetarian-savoury-muffin",
           "price": 5.8,
           "tags": [
             "v",
@@ -490,6 +534,7 @@
         },
         {
           "name": "Vegetarian Savoury Brioche",
+          "dishId": "vegetarian-savoury-brioche",
           "price": 7.0,
           "tags": [
             "v",
@@ -499,6 +544,7 @@
         },
         {
           "name": "Cheese Scone",
+          "dishId": "cheese-scone",
           "price": 5.5,
           "tags": [
             "v",
@@ -508,6 +554,7 @@
         },
         {
           "name": "Keto Choco Loaf",
+          "dishId": "keto-choco-loaf",
           "desc": "Marked GF.",
           "price": 6.0,
           "tags": [
@@ -517,6 +564,7 @@
         },
         {
           "name": "Garlic & Potato Focaccia",
+          "dishId": "garlic-potato-focaccia",
           "desc": "Marked GF.",
           "price": 6.5,
           "tags": [
@@ -526,6 +574,7 @@
         },
         {
           "name": "Lemon Loaf",
+          "dishId": "lemon-loaf",
           "price": 6.5,
           "tags": [
             "v",
@@ -534,6 +583,7 @@
         },
         {
           "name": "Banana & Walnut Loaf",
+          "dishId": "banana-walnut-loaf",
           "price": 6.0,
           "tags": [
             "v",
@@ -548,6 +598,7 @@
       "items": [
         {
           "name": "Basque Cheesecake",
+          "dishId": "basque-cheesecake",
           "desc": "Marked GF.",
           "price": 8.0,
           "tags": [
@@ -559,6 +610,7 @@
         },
         {
           "name": "Tiramisu",
+          "dishId": "tiramisu",
           "price": 8.0,
           "tags": [
             "v",
@@ -568,6 +620,7 @@
         },
         {
           "name": "Milk Pudding",
+          "dishId": "milk-pudding",
           "desc": "Berry compote and coconut almond crumble.",
           "price": 8.5,
           "tags": [
@@ -578,6 +631,7 @@
         },
         {
           "name": "Raspberry Crumble Slice",
+          "dishId": "raspberry-crumble-slice",
           "price": 6.5,
           "tags": [
             "v",
@@ -586,6 +640,7 @@
         },
         {
           "name": "Citrus Slice",
+          "dishId": "citrus-slice",
           "price": 6.5,
           "tags": [
             "v",
@@ -594,6 +649,7 @@
         },
         {
           "name": "Ginger Slice",
+          "dishId": "ginger-slice",
           "price": 6.5,
           "tags": [
             "v",
@@ -602,6 +658,7 @@
         },
         {
           "name": "Lolly Cake",
+          "dishId": "lolly-cake",
           "price": 5.5,
           "tags": [
             "v",
@@ -610,6 +667,7 @@
         },
         {
           "name": "Custard Slice",
+          "dishId": "custard-slice",
           "price": 6.5,
           "tags": [
             "v",
@@ -620,6 +678,7 @@
         },
         {
           "name": "Cookie Caramel Slice",
+          "dishId": "cookie-caramel-slice",
           "price": 5.5,
           "tags": [
             "v",
@@ -628,6 +687,7 @@
         },
         {
           "name": "Carrot Cake",
+          "dishId": "carrot-cake",
           "desc": "Marked GF.",
           "price": 7.5,
           "tags": [
@@ -637,6 +697,7 @@
         },
         {
           "name": "Choco Fudge Brownie",
+          "dishId": "choco-fudge-brownie",
           "desc": "Marked GF.",
           "price": 6.0,
           "tags": [
@@ -646,6 +707,7 @@
         },
         {
           "name": "Caramel Slice",
+          "dishId": "caramel-slice",
           "desc": "Marked GF.",
           "price": 6.0,
           "tags": [
@@ -655,6 +717,7 @@
         },
         {
           "name": "Salted Caramel Cookie",
+          "dishId": "salted-caramel-cookie",
           "desc": "Marked GF.",
           "price": 5.5,
           "tags": [
@@ -664,6 +727,7 @@
         },
         {
           "name": "Double Choc Cookie",
+          "dishId": "double-choc-cookie",
           "desc": "Marked GF.",
           "price": 5.5,
           "tags": [
@@ -678,6 +742,7 @@
       "items": [
         {
           "name": "PB Slice",
+          "dishId": "pb-slice",
           "price": 7.0,
           "tags": [
             "vg",
@@ -689,6 +754,7 @@
         },
         {
           "name": "Boysenberry Cup",
+          "dishId": "boysenberry-cup",
           "price": 8.0,
           "tags": [
             "vg",
@@ -698,6 +764,7 @@
         },
         {
           "name": "Snicker Cup",
+          "dishId": "snicker-cup",
           "price": 8.0,
           "tags": [
             "vg",
@@ -708,6 +775,7 @@
         },
         {
           "name": "Mint Choco Slice",
+          "dishId": "mint-choco-slice",
           "price": 7.0,
           "tags": [
             "vg",
@@ -718,6 +786,7 @@
         },
         {
           "name": "Bliss Balls",
+          "dishId": "bliss-balls",
           "desc": "Jar-label ingredients: cashew, almonds, matcha, apricot, dates, chocolate, chia, coconut, sunflower.",
           "price": null,
           "tags": [
@@ -747,21 +816,25 @@
       "items": [
         {
           "name": "Short Black",
+          "dishId": "short-black",
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Long Black",
+          "dishId": "long-black",
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Americano",
+          "dishId": "americano",
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Macchiato",
+          "dishId": "macchiato",
           "price": 5.2,
           "tags": [
             "contains-dairy"
@@ -769,11 +842,13 @@
         },
         {
           "name": "Piccolo",
+          "dishId": "piccolo",
           "price": 5.2,
           "tags": []
         },
         {
           "name": "Con Panna",
+          "dishId": "con-panna",
           "price": 5.7,
           "tags": []
         }
@@ -784,6 +859,7 @@
       "items": [
         {
           "name": "Flat White",
+          "dishId": "flat-white",
           "price": 5.9,
           "tags": [
             "contains-dairy"
@@ -791,6 +867,7 @@
         },
         {
           "name": "Flat White - Large",
+          "dishId": "flat-white-large",
           "price": 6.8,
           "tags": [
             "contains-dairy"
@@ -798,6 +875,7 @@
         },
         {
           "name": "Latte",
+          "dishId": "latte",
           "price": 5.9,
           "tags": [
             "contains-dairy"
@@ -805,6 +883,7 @@
         },
         {
           "name": "Latte - Large",
+          "dishId": "latte-large",
           "price": 6.8,
           "tags": [
             "contains-dairy"
@@ -812,6 +891,7 @@
         },
         {
           "name": "Cappuccino",
+          "dishId": "cappuccino",
           "price": 5.9,
           "tags": [
             "contains-dairy"
@@ -819,6 +899,7 @@
         },
         {
           "name": "Cappuccino - Large",
+          "dishId": "cappuccino-large",
           "price": 6.8,
           "tags": [
             "contains-dairy"
@@ -826,6 +907,7 @@
         },
         {
           "name": "Mocha",
+          "dishId": "mocha",
           "price": 5.9,
           "tags": [
             "contains-dairy"
@@ -833,6 +915,7 @@
         },
         {
           "name": "Mocha - Large",
+          "dishId": "mocha-large",
           "price": 6.8,
           "tags": [
             "contains-dairy"
@@ -840,6 +923,7 @@
         },
         {
           "name": "Chai Latte",
+          "dishId": "chai-latte",
           "price": 5.7,
           "tags": [
             "contains-dairy"
@@ -847,6 +931,7 @@
         },
         {
           "name": "Chai Latte - Large",
+          "dishId": "chai-latte-large",
           "price": 6.5,
           "tags": [
             "contains-dairy"
@@ -854,6 +939,7 @@
         },
         {
           "name": "Hot Chocolate",
+          "dishId": "hot-chocolate",
           "price": 5.7,
           "tags": [
             "contains-dairy"
@@ -861,6 +947,7 @@
         },
         {
           "name": "Hot Chocolate - Large",
+          "dishId": "hot-chocolate-large",
           "price": 6.5,
           "tags": [
             "contains-dairy"
@@ -873,6 +960,7 @@
       "items": [
         {
           "name": "Chia Sisters Lemon Honey Ginger & Turmeric",
+          "dishId": "chia-sisters-lemon-honey-ginger-turmeric",
           "price": 6.0,
           "tags": [
             "vg",
@@ -883,6 +971,7 @@
         },
         {
           "name": "Hakanoa Golden Latte with Oat Milk",
+          "dishId": "hakanoa-golden-latte-with-oat-milk",
           "desc": "Ginger, turmeric and pumpkin pie spice.",
           "price": 6.2,
           "tags": [
@@ -892,6 +981,7 @@
         },
         {
           "name": "Hakanoa Golden Latte with Oat Milk - Large",
+          "dishId": "hakanoa-golden-latte-with-oat-milk-large",
           "desc": "Ginger, turmeric and pumpkin pie spice.",
           "price": 6.8,
           "tags": [
@@ -901,6 +991,7 @@
         },
         {
           "name": "Matcha Latte with Oat Milk",
+          "dishId": "matcha-latte-with-oat-milk",
           "price": 6.2,
           "tags": [
             "v",
@@ -909,6 +1000,7 @@
         },
         {
           "name": "Matcha Latte with Oat Milk - Large",
+          "dishId": "matcha-latte-with-oat-milk-large",
           "price": 6.8,
           "tags": [
             "v",
@@ -917,6 +1009,7 @@
         },
         {
           "name": "Noble & Sunday Tea",
+          "dishId": "noble-sunday-tea",
           "desc": "English breakfast, Earl Grey, jade sencha, peppermint, lime & camomile, strawberry plum, or orange sky.",
           "price": 5.8,
           "tags": [
@@ -933,6 +1026,7 @@
       "items": [
         {
           "name": "Iced Latte",
+          "dishId": "iced-latte",
           "desc": "With maple, vanilla, caramel or hazelnut.",
           "price": 7.0,
           "tags": [
@@ -942,6 +1036,7 @@
         },
         {
           "name": "Iced Americano",
+          "dishId": "iced-americano",
           "price": 5.8,
           "tags": [
             "vg",
@@ -951,6 +1046,7 @@
         },
         {
           "name": "Iced Mocha",
+          "dishId": "iced-mocha",
           "price": 7.0,
           "tags": [
             "contains-dairy"
@@ -958,6 +1054,7 @@
         },
         {
           "name": "Iced Chocolate",
+          "dishId": "iced-chocolate",
           "price": 6.8,
           "tags": [
             "contains-dairy"
@@ -970,6 +1067,7 @@
       "items": [
         {
           "name": "Iced Matcha Latte",
+          "dishId": "iced-matcha-latte",
           "price": 7.5,
           "tags": [
             "v",
@@ -978,6 +1076,7 @@
         },
         {
           "name": "Iced Mango Matcha Latte",
+          "dishId": "iced-mango-matcha-latte",
           "price": 7.5,
           "tags": [
             "v",
@@ -986,6 +1085,7 @@
         },
         {
           "name": "Iced Strawberry Matcha Latte",
+          "dishId": "iced-strawberry-matcha-latte",
           "price": 7.5,
           "tags": [
             "v",
@@ -994,6 +1094,7 @@
         },
         {
           "name": "Iced White Choco Matcha Latte",
+          "dishId": "iced-white-choco-matcha-latte",
           "price": 7.5,
           "tags": [
             "v",
@@ -1007,11 +1108,13 @@
       "items": [
         {
           "name": "Decaf, Honey or Syrups",
+          "dishId": "decaf-honey-or-syrups",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Coconut, Soy, Oat or Almond Milk",
+          "dishId": "coconut-soy-oat-or-almond-milk",
           "price": 1.0,
           "tags": [
             "df",
@@ -1026,16 +1129,19 @@
       "items": [
         {
           "name": "Huskee Keep Cup 6oz",
+          "dishId": "huskee-keep-cup-6oz",
           "price": 18.0,
           "tags": []
         },
         {
           "name": "Huskee Keep Cup 8oz",
+          "dishId": "huskee-keep-cup-8oz",
           "price": 20.0,
           "tags": []
         },
         {
           "name": "Huskee Keep Cup 12oz",
+          "dishId": "huskee-keep-cup-12oz",
           "price": 25.0,
           "tags": []
         }

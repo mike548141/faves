@@ -20,13 +20,30 @@
 // anchor reached only the first, one heart covered all three, and the order
 // tally charged $56 for a $49 pair.
 //
-// THE DEFAULT IS THE OLD BEHAVIOUR. `dishId` is optional; absent, a dish's id is
-// `slug(name)`, which is exactly what every anchor, heart, rating and order line
-// already resolved to. So on the day this landed, 1733 of 1755 dish rows kept
-// the identity they already had, byte for byte. Only the 22 colliding rows moved
-// — and only the 2nd and 3rd of each collision, because the FIRST row keeps the
-// bare slug. What moved was therefore only behaviour that was already wrong: an
-// anchor that could never be reached, a heart that was always the other dish's.
+// REQUIRED IN THE DATA; DEFAULTED EVERYWHERE ELSE. Those are two different
+// rules and the distinction is the whole design, so state both:
+//
+//   • In `site/data/`, `dishId` is REQUIRED and `validate.py` refuses a dish
+//     without one. It was seeded once from `slug(name)` (tools/seed_dish_ids.py,
+//     1743 rows) precisely so it would STOP being a function of the name — a
+//     derived id moves when the shop renames a dish, and a moved id drops the
+//     heart, rating, shared link and order line pointing at it. The owner ruled
+//     on 2026-08-16 that must never happen again, so the id is now a stored
+//     fact sitting on the line under the name a transcriber is about to edit.
+//     Nothing moved on the day it was seeded: every row was written the id it
+//     already resolved to.
+//
+//   • In `dishId()` below, the `slug(name)` fallback STAYS, and is not dead
+//     code. It reads two things the repo does not control: entries stored on a
+//     family phone (a heart saved before ids existed carries only a name), and
+//     ids decoded out of a shared link. Both must keep resolving to what they
+//     always meant, which is why hearts needed no migration.
+//
+// The 22 rows that collided under the old derived scheme (10 slugs across 3
+// records, every collision at a different price — see above) are the only ones
+// whose behaviour ever changed, and only the 2nd and 3rd of each: what moved was
+// an anchor that could never be reached and a heart that was always the other
+// dish's.
 //
 // FORMER IDS, not former names. When a shop renames a dish, pin its `dishId` to
 // what it already was and the id never moves at all. `formerIds: []` is for the
@@ -39,13 +56,14 @@ import { slug } from "./slug.js";
 
 /**
  * The id of a dish, from its record. `dishId` where the data gives one,
- * `slug(name)` otherwise — so a record that has never heard of dish ids
- * resolves to exactly the identity it always had.
+ * `slug(name)` otherwise.
  *
- * Also the reader for stored personal entries (`{ type, venueId, name,
- * dishId? }`), which is why hearts needed no migration: an entry saved before
- * ids existed has no `dishId`, and falls through to the same `slug(name)` its
- * key was always built from.
+ * Every dish in `site/data/` gives one — the field is required there and seeded
+ * (see the header). The fallback is for what the repo cannot reach: stored
+ * personal entries (`{ type, venueId, name, dishId? }`) saved on a phone before
+ * ids existed, and ids decoded out of an old shared link. Both fall through to
+ * the same `slug(name)` their key was always built from, which is why hearts
+ * needed no migration. Removing it would silently orphan them.
  */
 export function dishId(item) {
   if (!item || typeof item !== "object") return "";

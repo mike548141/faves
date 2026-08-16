@@ -1525,7 +1525,48 @@ stopped saying "restaurants"). 🎯 **Two judgement calls the owner may want to
 overrule, and one pre-existing flaw found:** detail →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-**c. Home screen: one place for filters** `[M][design]` — **owner, raw:**
+**c. Home screen: one place for filters** — ✅ **MEASURED AND BUILT 2026-08-16.**
+The owner re-raised it from his own iPhone (*"On the iPhone its pretty bad"*),
+so it was **measured in real headless Chrome** rather than reasoned about, and
+then built on his ruling. What the measurement changed:
+
+| At 390 × 844 | Before | After the redesign |
+|---|---|---|
+| Chrome above the first result | **50.7%** | see the build's own figures |
+| …arriving via a facet link (`?cuisine=`) | **58.4%** | |
+| Result cards fully visible | **3** | |
+| Fixed bar, at every scroll depth, forever | 122.2 px = **14.5%** | |
+
+At 1280 × 800 it is 36.1% — **one design, not two**: both rows wrap below 34rem,
+same cause. 15c's own `--bar-h: 7.6rem` claim was confirmed exactly (122.2 px),
+as was "six places" (exactly six).
+
+🔎 **Two live defects fell out of the measurement, neither of them a design
+question.** `.segmented button` was `min-height: 40px` — a standing breach of
+CLAUDE.md's 44 px hard constraint, and fixing it *pushes `--bar-h` higher*,
+which is its own argument for the redesign. And "Pick for us" covered
+**48 × 30.3 px of a venue's heart — 63% of a 48 px control, unreachable**.
+
+🔎 **The redundancy finding, which no amount of layout work would have found.**
+The service segmented control returns **38 of 47 places for "Takeaway" (81%)**
+and **37 of 47 for "Dine-in" (79%)**; 60% of places offer both. It removes a
+fifth of the list — and it is the *sole* reason `--bar-h` was 7.6rem rather than
+4.6rem (`.segmented { flex: 1 1 100% }`), costing **54.4 px of permanently fixed
+screen**. The same argument was already accepted on 2026-08-16 when "Dine-in,
+Takeaway" was dropped from every card (`app.js:45-49`). Also: two of the four
+chips (Near me, Along a route) are **sort modes, not filters** (ADR 0014), sitting
+in an undifferentiated row — which is why the sheet separates "Narrow to" from
+"Sort by".
+
+**Thumb reach — the trade 15c said would decide it, answered with evidence.**
+The bar cost 14.5% of the viewport at every scroll depth across a 7.5-viewport
+document, to save *one tap* on `to-top.js`, which already ships. Reach is bought
+by having a control down there, not by 122 px of it: a 44 px entry in a 66 px bar
+keeps 100% of the reach for 54% of the pixels. It stays a **bar, not a FAB** —
+`main`'s padding reserves a bar's space, and the FAB overlap above is measured
+proof of what a fourth floating control does.
+
+**Original ask, for the record — owner, raw:**
 *"I am considering moving the bottom section of the main page that filters
 Everywhere vs takeaway vs dine-in, location/suburb, and cuisine to sit with the
 other filters like Open now, cheap eats etc."*
@@ -1955,8 +1996,38 @@ PR at all).
 
 ## Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)
 
-- [~] **CLAIMED 2026-08-16 05:27 UTC (wt: faves-dish-ids)** — the whole theme.
-  Leave it alone until this claim clears.
+✅ **BUILT 2026-08-16 (ADR 0051).** Claim cleared. `site/js/dish-id.js` is the
+single resolver; `dishId` is **required and seeded** on all 1755 rows, not
+optional-and-derived — the owner ruled mid-build that identity must be
+**immutable**, and an id recomputed from a mutable display name is not. The 22
+colliding rows are disambiguated with the first of each group keeping the bare
+slug, so nothing that ever worked moved. Fixed with it: the `$56`-for-`$49`
+overcharge, three elements sharing `id="dish-cheeseburger"`, a duplicate
+`aria-controls` target, a shared add-on radio group, and an export/import round
+trip that re-merged the two Cheeseburgers. Measured cost: **+12.6 KB gzipped**,
+16.3% of the data cache. Detail → ADR 0051.
+
+- [ ] **A shared *shortlist* still carries dish names, not ids** `[S][js]` —
+  fell out of the build. `share-codec.js` packs shortlist dishes as a bare array
+  of name strings; changing the element type would break every decoder already
+  in the wild, so it decodes through `slug(name)`. A shared shortlist naming a
+  disambiguated row (the Gold Card Cheeseburger) arrives as the bare-slug one.
+  **Not a regression** — precisely what it did before ids existed — but not
+  fixed either. Order lines *were* fixed, by appending a positional slot; the
+  same trick needs its own slot shape here.
+- [ ] **`temporal.js` filters `picks` by name before the resolver ever sees
+  them** `[XS][js]` — `temporal.js:524-528` intersects `record.picks` against a
+  `Set` of live dish *names*, so a pick written as a `dishId` is deleted at that
+  gate and vanishes from the page silently. Harmless today (every pick in the
+  corpus is a name) and primed for whoever first writes one as an id. One line:
+  `out.picks = record.picks.filter((p) => findDish(out, p))`.
+- [ ] **Cross-record `goesWith` refs (`id#Dish`) still resolve by name only**
+  `[S][js]` — the other record is not loaded, so `validate.py`'s `ALL_NAMES`
+  pre-pass matches names and not ids. Widening it is a separate, larger change.
+- [ ] **`tests/share-codec.test.js` and `tests/personal-data.test.js` use
+  `"sprig-and-fern"` as a synthetic venue id** `[XS][js]` — which is now a
+  *retired* id. They pass (those paths don't migrate), but they read as a
+  mistake to a future session. Rename the fixture.
 
 <!-- Numbered 25, not 22: two other live sessions had already taken 22, 23 and
      24 while this branch was open. The note on Theme 19 says to check

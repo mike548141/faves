@@ -74,6 +74,7 @@
       "items": [
         {
           "name": "Wonton Soup",
+          "dishId": "wonton-soup",
           "desc": null,
           "price": [
             {
@@ -88,6 +89,7 @@
         },
         {
           "name": "Wonton Noodle Soup",
+          "dishId": "wonton-noodle-soup",
           "desc": null,
           "price": [
             {
@@ -102,6 +104,7 @@
         },
         {
           "name": "Chicken Sweet Corn Soup",
+          "dishId": "chicken-sweet-corn-soup",
           "desc": null,
           "price": [
             {
@@ -119,6 +122,7 @@
       "items": [
         {
           "name": "Chicken Fried Rice",
+          "dishId": "chicken-fried-rice",
           "desc": null,
           "price": [
             {
@@ -131,6 +135,7 @@
         },
         {
           "name": "Pork Fried Rice",
+          "dishId": "pork-fried-rice",
           "desc": null,
           "price": [
             {
@@ -143,6 +148,7 @@
         },
         {
           "name": "Steak Fried Rice",
+          "dishId": "steak-fried-rice",
           "desc": null,
           "price": [
             {
@@ -155,6 +161,7 @@
         },
         {
           "name": "Combination Fried Rice",
+          "dishId": "combination-fried-rice",
           "desc": null,
           "price": [
             {
@@ -167,6 +174,7 @@
         },
         {
           "name": "Vegetarian Fried Rice",
+          "dishId": "vegetarian-fried-rice",
           "desc": null,
           "price": [
             {
@@ -181,6 +189,7 @@
         },
         {
           "name": "Bacon Fried Rice",
+          "dishId": "bacon-fried-rice",
           "desc": null,
           "price": [
             {
@@ -193,6 +202,7 @@
         },
         {
           "name": "Shrimp Fried Rice",
+          "dishId": "shrimp-fried-rice",
           "desc": null,
           "price": [
             {
@@ -207,6 +217,7 @@
         },
         {
           "name": "Prawn Fried Rice",
+          "dishId": "prawn-fried-rice",
           "desc": null,
           "price": [
             {
@@ -226,6 +237,7 @@
       "items": [
         {
           "name": "Chicken Curry on Rice",
+          "dishId": "chicken-curry-on-rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
@@ -238,6 +250,7 @@
         },
         {
           "name": "Pork Curry on Rice",
+          "dishId": "pork-curry-on-rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
@@ -250,6 +263,7 @@
         },
         {
           "name": "Steak Curry on Rice",
+          "dishId": "steak-curry-on-rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
@@ -262,6 +276,7 @@
         },
         {
           "name": "Combination Curry on Rice",
+          "dishId": "combination-curry-on-rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
@@ -274,6 +289,7 @@
         },
         {
           "name": "Vegetarian Curry on Rice",
+          "dishId": "vegetarian-curry-on-rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
@@ -288,6 +304,7 @@
         },
         {
           "name": "Shrimp Curry on Rice",
+          "dishId": "shrimp-curry-on-rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
@@ -302,6 +319,7 @@
         },
         {
           "name": "Prawn Curry on Rice",
+          "dishId": "prawn-curry-on-rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
@@ -321,6 +339,7 @@
       "items": [
         {
           "name": "Steamed Rice - Small",
+          "dishId": "steamed-rice-small",
           "desc": null,
           "price": [
             {
@@ -333,6 +352,7 @@
         },
         {
           "name": "Steamed Rice - Medium",
+          "dishId": "steamed-rice-medium",
           "desc": null,
           "price": [
             {
@@ -345,6 +365,7 @@
         },
         {
           "name": "Steamed Rice - Large",
+          "dishId": "steamed-rice-large",
           "desc": null,
           "price": [
             {
@@ -362,6 +383,7 @@
       "items": [
         {
           "name": "Chicken Egg Fu Young",
+          "dishId": "chicken-egg-fu-young",
           "desc": null,
           "price": [
             {
@@ -376,6 +398,7 @@
         },
         {
           "name": "Pork Egg Fu Young",
+          "dishId": "pork-egg-fu-young",
           "desc": null,
           "price": [
             {
@@ -390,6 +413,7 @@
         },
         {
           "name": "Steak Egg Fu Young",
+          "dishId": "steak-egg-fu-young",
           "desc": null,
           "price": [
             {
@@ -404,6 +428,7 @@
         },
         {
           "name": "Combination Egg Fu Young",
+          "dishId": "combination-egg-fu-young",
           "desc": null,
           "price": [
             {
@@ -418,6 +443,7 @@
         },
         {
           "name": "Vegetarian Egg Fu Young",
+          "dishId": "vegetarian-egg-fu-young",
           "desc": null,
           "price": [
             {
@@ -433,6 +459,7 @@
         },
         {
           "name": "Bacon Egg Fu Young",
+          "dishId": "bacon-egg-fu-young",
           "desc": null,
           "price": [
             {
@@ -447,6 +474,7 @@
         },
         {
           "name": "Shrimp Egg Fu Young",
+          "dishId": "shrimp-egg-fu-young",
           "desc": null,
           "price": [
             {
@@ -462,6 +490,7 @@
         },
         {
           "name": "Prawn Egg Fu Young",
+          "dishId": "prawn-egg-fu-young",
           "desc": null,
           "price": [
             {
@@ -482,6 +511,7 @@
       "items": [
         {
           "name": "Chicken Chow Mein",
+          "dishId": "chicken-chow-mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
@@ -496,6 +526,7 @@
         },
         {
           "name": "Pork Chow Mein",
+          "dishId": "pork-chow-mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
@@ -510,6 +541,7 @@
         },
         {
           "name": "Steak Chow Mein",
+          "dishId": "steak-chow-mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
@@ -524,6 +556,7 @@
         },
         {
           "name": "Combination Chow Mein",
+          "dishId": "combination-chow-mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
@@ -538,6 +571,7 @@
         },
         {
           "name": "Vegetarian Chow Mein",
+          "dishId": "vegetarian-chow-mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
@@ -553,6 +587,7 @@
         },
         {
           "name": "Bacon Chow Mein",
+          "dishId": "bacon-chow-mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
@@ -567,6 +602,7 @@
         },
         {
           "name": "Shrimp Chow Mein",
+          "dishId": "shrimp-chow-mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
@@ -582,6 +618,7 @@
         },
         {
           "name": "Prawn Chow Mein",
+          "dishId": "prawn-chow-mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
@@ -602,6 +639,7 @@
       "items": [
         {
           "name": "Chicken Chop Suey",
+          "dishId": "chicken-chop-suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
@@ -614,6 +652,7 @@
         },
         {
           "name": "Pork Chop Suey",
+          "dishId": "pork-chop-suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
@@ -626,6 +665,7 @@
         },
         {
           "name": "Steak Chop Suey",
+          "dishId": "steak-chop-suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
@@ -638,6 +678,7 @@
         },
         {
           "name": "Combination Chop Suey",
+          "dishId": "combination-chop-suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
@@ -650,6 +691,7 @@
         },
         {
           "name": "Vegetarian Chop Suey",
+          "dishId": "vegetarian-chop-suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
@@ -664,6 +706,7 @@
         },
         {
           "name": "Bacon Chop Suey",
+          "dishId": "bacon-chop-suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
@@ -676,6 +719,7 @@
         },
         {
           "name": "Shrimp Chop Suey",
+          "dishId": "shrimp-chop-suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
@@ -690,6 +734,7 @@
         },
         {
           "name": "Prawn Chop Suey",
+          "dishId": "prawn-chop-suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
@@ -709,6 +754,7 @@
       "items": [
         {
           "name": "Sweet and Sour Pork",
+          "dishId": "sweet-and-sour-pork",
           "desc": null,
           "price": [
             {
@@ -721,6 +767,7 @@
         },
         {
           "name": "Sweet and Sour Chicken",
+          "dishId": "sweet-and-sour-chicken",
           "desc": null,
           "price": [
             {
@@ -733,6 +780,7 @@
         },
         {
           "name": "Sweet and Sour Fish",
+          "dishId": "sweet-and-sour-fish",
           "desc": null,
           "price": [
             {
@@ -745,6 +793,7 @@
         },
         {
           "name": "Sweet and Sour Wontons (12)",
+          "dishId": "sweet-and-sour-wontons-12",
           "desc": null,
           "price": [
             {
@@ -759,6 +808,7 @@
         },
         {
           "name": "Lemon Chicken",
+          "dishId": "lemon-chicken",
           "desc": null,
           "price": [
             {
@@ -771,6 +821,7 @@
         },
         {
           "name": "Honey Chicken",
+          "dishId": "honey-chicken",
           "desc": null,
           "price": [
             {
@@ -783,6 +834,7 @@
         },
         {
           "name": "Orange Beef with Rice",
+          "dishId": "orange-beef-with-rice",
           "desc": null,
           "price": 24.9,
           "tags": [],
@@ -795,6 +847,7 @@
       "items": [
         {
           "name": "Chicken Black Bean on Rice",
+          "dishId": "chicken-black-bean-on-rice",
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -809,6 +862,7 @@
         },
         {
           "name": "Pork Black Bean on Rice",
+          "dishId": "pork-black-bean-on-rice",
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -823,6 +877,7 @@
         },
         {
           "name": "Steak Black Bean on Rice",
+          "dishId": "steak-black-bean-on-rice",
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -837,6 +892,7 @@
         },
         {
           "name": "Combination Black Bean on Rice",
+          "dishId": "combination-black-bean-on-rice",
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -851,6 +907,7 @@
         },
         {
           "name": "Shrimp Black Bean on Rice",
+          "dishId": "shrimp-black-bean-on-rice",
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -866,6 +923,7 @@
         },
         {
           "name": "Prawn Black Bean on Rice",
+          "dishId": "prawn-black-bean-on-rice",
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -886,6 +944,7 @@
       "items": [
         {
           "name": "Chicken Satay on Rice",
+          "dishId": "chicken-satay-on-rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -901,6 +960,7 @@
         },
         {
           "name": "Pork Satay on Rice",
+          "dishId": "pork-satay-on-rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -916,6 +976,7 @@
         },
         {
           "name": "Steak Satay on Rice",
+          "dishId": "steak-satay-on-rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -931,6 +992,7 @@
         },
         {
           "name": "Combination Satay on Rice",
+          "dishId": "combination-satay-on-rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -946,6 +1008,7 @@
         },
         {
           "name": "Shrimp Satay on Rice",
+          "dishId": "shrimp-satay-on-rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -962,6 +1025,7 @@
         },
         {
           "name": "Prawn Satay on Rice",
+          "dishId": "prawn-satay-on-rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
@@ -983,6 +1047,7 @@
       "items": [
         {
           "name": "Chicken with Pineapple and Cashew Nuts",
+          "dishId": "chicken-with-pineapple-and-cashew-nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
@@ -997,6 +1062,7 @@
         },
         {
           "name": "Pork with Pineapple and Cashew Nuts",
+          "dishId": "pork-with-pineapple-and-cashew-nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
@@ -1011,6 +1077,7 @@
         },
         {
           "name": "Steak with Pineapple and Cashew Nuts",
+          "dishId": "steak-with-pineapple-and-cashew-nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
@@ -1025,6 +1092,7 @@
         },
         {
           "name": "Combination with Pineapple and Cashew Nuts",
+          "dishId": "combination-with-pineapple-and-cashew-nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
@@ -1039,6 +1107,7 @@
         },
         {
           "name": "Shrimp with Pineapple and Cashew Nuts",
+          "dishId": "shrimp-with-pineapple-and-cashew-nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
@@ -1054,6 +1123,7 @@
         },
         {
           "name": "Prawn with Pineapple and Cashew Nuts",
+          "dishId": "prawn-with-pineapple-and-cashew-nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
@@ -1074,6 +1144,7 @@
       "items": [
         {
           "name": "Nasi Goreng (Rice)",
+          "dishId": "nasi-goreng-rice",
           "desc": null,
           "price": [
             {
@@ -1086,6 +1157,7 @@
         },
         {
           "name": "Bami Goreng (Noodles)",
+          "dishId": "bami-goreng-noodles",
           "desc": null,
           "price": [
             {
@@ -1100,6 +1172,7 @@
         },
         {
           "name": "Hot Spicy Chicken with Cashew and Vegetables",
+          "dishId": "hot-spicy-chicken-with-cashew-and-vegetables",
           "desc": null,
           "price": [
             {
@@ -1114,6 +1187,7 @@
         },
         {
           "name": "Hot Spicy Beef with Cashew and Vegetables",
+          "dishId": "hot-spicy-beef-with-cashew-and-vegetables",
           "desc": null,
           "price": [
             {
@@ -1133,6 +1207,7 @@
       "items": [
         {
           "name": "Combination Fried Noodles",
+          "dishId": "combination-fried-noodles",
           "desc": null,
           "price": [
             {
@@ -1145,6 +1220,7 @@
         },
         {
           "name": "Combination Chilly Noodles",
+          "dishId": "combination-chilly-noodles",
           "desc": null,
           "price": [
             {
@@ -1157,6 +1233,7 @@
         },
         {
           "name": "Combination Egg Noodles",
+          "dishId": "combination-egg-noodles",
           "desc": null,
           "price": [
             {
@@ -1172,6 +1249,7 @@
         },
         {
           "name": "Combination Seafood",
+          "dishId": "combination-seafood",
           "desc": "Choose from fried rice, chow mein or egg fu young.",
           "price": [
             {
@@ -1188,6 +1266,7 @@
         },
         {
           "name": "Steak Tomato Onion on Rice",
+          "dishId": "steak-tomato-onion-on-rice",
           "desc": null,
           "price": [
             {
@@ -1200,6 +1279,7 @@
         },
         {
           "name": "Curry Laksa",
+          "dishId": "curry-laksa",
           "desc": null,
           "price": 20.5,
           "tags": [
@@ -1209,6 +1289,7 @@
         },
         {
           "name": "Rice Noodles",
+          "dishId": "rice-noodles",
           "desc": null,
           "price": 21.9,
           "tags": [],
@@ -1221,6 +1302,7 @@
       "items": [
         {
           "name": "Extra Meat",
+          "dishId": "extra-meat",
           "desc": null,
           "price": [
             {
@@ -1233,6 +1315,7 @@
         },
         {
           "name": "Extra Seafood",
+          "dishId": "extra-seafood",
           "desc": null,
           "price": [
             {
@@ -1247,6 +1330,7 @@
         },
         {
           "name": "Extra Cashew Nuts",
+          "dishId": "extra-cashew-nuts",
           "desc": null,
           "price": [
             {
@@ -1261,6 +1345,7 @@
         },
         {
           "name": "Extra Tomato, Pineapple or Mushrooms",
+          "dishId": "extra-tomato-pineapple-or-mushrooms",
           "desc": null,
           "price": [
             {
@@ -1278,6 +1363,7 @@
       "items": [
         {
           "name": "Fish - Battered",
+          "dishId": "fish-battered",
           "desc": null,
           "price": [
             {
@@ -1291,6 +1377,7 @@
         },
         {
           "name": "Fish - Crumbed",
+          "dishId": "fish-crumbed",
           "desc": null,
           "price": [
             {
@@ -1304,6 +1391,7 @@
         },
         {
           "name": "Fish Fillet - Battered",
+          "dishId": "fish-fillet-battered",
           "desc": null,
           "price": [
             {
@@ -1317,6 +1405,7 @@
         },
         {
           "name": "Fish Fillet - Crumbed",
+          "dishId": "fish-fillet-crumbed",
           "desc": null,
           "price": [
             {
@@ -1330,6 +1419,7 @@
         },
         {
           "name": "Fish Fillet - Grilled",
+          "dishId": "fish-fillet-grilled",
           "desc": null,
           "price": [
             {
@@ -1341,6 +1431,7 @@
         },
         {
           "name": "Fish - Grilled",
+          "dishId": "fish-grilled",
           "desc": null,
           "price": [
             {
@@ -1352,6 +1443,7 @@
         },
         {
           "name": "Chips - One Scoop",
+          "dishId": "chips-one-scoop",
           "desc": null,
           "price": [
             {
@@ -1363,6 +1455,7 @@
         },
         {
           "name": "Small Chips",
+          "dishId": "small-chips",
           "desc": null,
           "price": [
             {
@@ -1374,6 +1467,7 @@
         },
         {
           "name": "Wedges",
+          "dishId": "wedges",
           "desc": null,
           "price": [
             {
@@ -1385,6 +1479,7 @@
         },
         {
           "name": "Criss-Cut Fries",
+          "dishId": "criss-cut-fries",
           "desc": null,
           "price": [
             {
@@ -1396,12 +1491,14 @@
         },
         {
           "name": "Kumara Chips",
+          "dishId": "kumara-chips",
           "desc": null,
           "price": 9.2,
           "tags": []
         },
         {
           "name": "Homemade Chunkies",
+          "dishId": "homemade-chunkies",
           "desc": null,
           "price": [
             {
@@ -1413,6 +1510,7 @@
         },
         {
           "name": "Potato Fritters",
+          "dishId": "potato-fritters",
           "desc": null,
           "price": [
             {
@@ -1424,6 +1522,7 @@
         },
         {
           "name": "Battered Sav",
+          "dishId": "battered-sav",
           "desc": null,
           "price": [
             {
@@ -1437,6 +1536,7 @@
         },
         {
           "name": "Hot Dog on Stick",
+          "dishId": "hot-dog-on-stick",
           "desc": null,
           "price": [
             {
@@ -1448,6 +1548,7 @@
         },
         {
           "name": "Sausages",
+          "dishId": "sausages",
           "desc": null,
           "price": [
             {
@@ -1459,6 +1560,7 @@
         },
         {
           "name": "Battered Sausage",
+          "dishId": "battered-sausage",
           "desc": null,
           "price": [
             {
@@ -1472,6 +1574,7 @@
         },
         {
           "name": "Prawn Cutlet",
+          "dishId": "prawn-cutlet",
           "desc": null,
           "price": [
             {
@@ -1485,6 +1588,7 @@
         },
         {
           "name": "Crab Stick",
+          "dishId": "crab-stick",
           "desc": null,
           "price": [
             {
@@ -1498,6 +1602,7 @@
         },
         {
           "name": "Fish Cake",
+          "dishId": "fish-cake",
           "desc": null,
           "price": [
             {
@@ -1509,6 +1614,7 @@
         },
         {
           "name": "Spring Roll",
+          "dishId": "spring-roll",
           "desc": null,
           "price": [
             {
@@ -1522,6 +1628,7 @@
         },
         {
           "name": "Curry Roll",
+          "dishId": "curry-roll",
           "desc": null,
           "price": [
             {
@@ -1533,6 +1640,7 @@
         },
         {
           "name": "Vege Roll",
+          "dishId": "vege-roll",
           "desc": null,
           "price": [
             {
@@ -1546,6 +1654,7 @@
         },
         {
           "name": "Steak & Onion Roll",
+          "dishId": "steak-onion-roll",
           "desc": null,
           "price": [
             {
@@ -1557,6 +1666,7 @@
         },
         {
           "name": "Lasagne Square",
+          "dishId": "lasagne-square",
           "desc": null,
           "price": [
             {
@@ -1570,6 +1680,7 @@
         },
         {
           "name": "Meat Pattie",
+          "dishId": "meat-pattie",
           "desc": null,
           "price": [
             {
@@ -1581,6 +1692,7 @@
         },
         {
           "name": "Paua Fritter 100%",
+          "dishId": "paua-fritter-100",
           "desc": null,
           "price": [
             {
@@ -1594,6 +1706,7 @@
         },
         {
           "name": "Mini Spring Rolls",
+          "dishId": "mini-spring-rolls",
           "desc": null,
           "price": 1.6,
           "tags": [
@@ -1602,6 +1715,7 @@
         },
         {
           "name": "Corn Fritter",
+          "dishId": "corn-fritter",
           "desc": null,
           "price": [
             {
@@ -1613,6 +1727,7 @@
         },
         {
           "name": "Mussel Fritter",
+          "dishId": "mussel-fritter",
           "desc": null,
           "price": [
             {
@@ -1626,6 +1741,7 @@
         },
         {
           "name": "Pineapple Fritter",
+          "dishId": "pineapple-fritter",
           "desc": null,
           "price": [
             {
@@ -1637,6 +1753,7 @@
         },
         {
           "name": "Banana Fritter",
+          "dishId": "banana-fritter",
           "desc": null,
           "price": [
             {
@@ -1648,6 +1765,7 @@
         },
         {
           "name": "Mars Bar",
+          "dishId": "mars-bar",
           "desc": null,
           "price": [
             {
@@ -1659,6 +1777,7 @@
         },
         {
           "name": "Cinnamon Donut",
+          "dishId": "cinnamon-donut",
           "desc": null,
           "price": [
             {
@@ -1672,6 +1791,7 @@
         },
         {
           "name": "Jam Rap",
+          "dishId": "jam-rap",
           "desc": null,
           "price": [
             {
@@ -1683,6 +1803,7 @@
         },
         {
           "name": "Hash Brown",
+          "dishId": "hash-brown",
           "desc": null,
           "price": [
             {
@@ -1694,6 +1815,7 @@
         },
         {
           "name": "Stuffed Mushroom",
+          "dishId": "stuffed-mushroom",
           "desc": null,
           "price": [
             {
@@ -1705,6 +1827,7 @@
         },
         {
           "name": "Chicken Schnitzel",
+          "dishId": "chicken-schnitzel",
           "desc": null,
           "price": [
             {
@@ -1718,6 +1841,7 @@
         },
         {
           "name": "Chicken Nugget (each)",
+          "dishId": "chicken-nugget-each",
           "desc": null,
           "price": [
             {
@@ -1729,6 +1853,7 @@
         },
         {
           "name": "Calamari Ring (each)",
+          "dishId": "calamari-ring-each",
           "desc": null,
           "price": [
             {
@@ -1742,6 +1867,7 @@
         },
         {
           "name": "Battered Mussel (each)",
+          "dishId": "battered-mussel-each",
           "desc": null,
           "price": [
             {
@@ -1756,6 +1882,7 @@
         },
         {
           "name": "Scallop (each)",
+          "dishId": "scallop-each",
           "desc": null,
           "price": [
             {
@@ -1769,6 +1896,7 @@
         },
         {
           "name": "Prawn Twister",
+          "dishId": "prawn-twister",
           "desc": null,
           "price": 3.0,
           "tags": [
@@ -1777,6 +1905,7 @@
         },
         {
           "name": "Bluff Oysters",
+          "dishId": "bluff-oysters",
           "desc": "Available during season.",
           "price": null,
           "tags": [
@@ -1785,6 +1914,7 @@
         },
         {
           "name": "Onion Rings (6)",
+          "dishId": "onion-rings-6",
           "desc": null,
           "price": [
             {
@@ -1796,6 +1926,7 @@
         },
         {
           "name": "Wontons (6)",
+          "dishId": "wontons-6",
           "desc": null,
           "price": [
             {
@@ -1809,6 +1940,7 @@
         },
         {
           "name": "Dim Sim (each)",
+          "dishId": "dim-sim-each",
           "desc": null,
           "price": [
             {
@@ -1822,6 +1954,7 @@
         },
         {
           "name": "Pork Bun",
+          "dishId": "pork-bun",
           "desc": null,
           "price": [
             {
@@ -1835,6 +1968,7 @@
         },
         {
           "name": "Plain Roti",
+          "dishId": "plain-roti",
           "desc": null,
           "price": [
             {
@@ -1848,6 +1982,7 @@
         },
         {
           "name": "Vegetarian Pattie",
+          "dishId": "vegetarian-pattie",
           "desc": null,
           "price": [
             {
@@ -1861,6 +1996,7 @@
         },
         {
           "name": "Chicken Dumplings (6)",
+          "dishId": "chicken-dumplings-6",
           "desc": null,
           "price": [
             {
@@ -1874,6 +2010,7 @@
         },
         {
           "name": "Vegetarian Dumplings (6)",
+          "dishId": "vegetarian-dumplings-6",
           "desc": null,
           "price": [
             {
@@ -1888,6 +2025,7 @@
         },
         {
           "name": "Curly Fries",
+          "dishId": "curly-fries",
           "desc": null,
           "price": 8.8,
           "tags": []
@@ -1899,6 +2037,7 @@
       "items": [
         {
           "name": "Kids Ham Burger (no salad)",
+          "dishId": "kids-ham-burger-no-salad",
           "desc": null,
           "price": [
             {
@@ -1912,6 +2051,7 @@
         },
         {
           "name": "Kids Beef Burger (no salad)",
+          "dishId": "kids-beef-burger-no-salad",
           "desc": null,
           "price": [
             {
@@ -1925,6 +2065,7 @@
         },
         {
           "name": "Kids Fish Burger (no salad)",
+          "dishId": "kids-fish-burger-no-salad",
           "desc": null,
           "price": [
             {
@@ -1938,6 +2079,7 @@
         },
         {
           "name": "Kids Chicken Burger (no salad)",
+          "dishId": "kids-chicken-burger-no-salad",
           "desc": null,
           "price": [
             {
@@ -1951,6 +2093,7 @@
         },
         {
           "name": "Ham Burger",
+          "dishId": "ham-burger",
           "desc": null,
           "price": [
             {
@@ -1964,6 +2107,7 @@
         },
         {
           "name": "Cheese Burger",
+          "dishId": "cheese-burger",
           "desc": null,
           "price": [
             {
@@ -1978,6 +2122,7 @@
         },
         {
           "name": "Egg Burger",
+          "dishId": "egg-burger",
           "desc": null,
           "price": [
             {
@@ -1992,6 +2137,7 @@
         },
         {
           "name": "Mushroom Burger",
+          "dishId": "mushroom-burger",
           "desc": null,
           "price": [
             {
@@ -2005,6 +2151,7 @@
         },
         {
           "name": "Hawaiian Burger",
+          "dishId": "hawaiian-burger",
           "desc": null,
           "price": [
             {
@@ -2018,6 +2165,7 @@
         },
         {
           "name": "Chicken Burger",
+          "dishId": "chicken-burger",
           "desc": null,
           "price": [
             {
@@ -2031,6 +2179,7 @@
         },
         {
           "name": "Fish Burger",
+          "dishId": "fish-burger",
           "desc": null,
           "price": [
             {
@@ -2044,6 +2193,7 @@
         },
         {
           "name": "Crumb Fish Burger",
+          "dishId": "crumb-fish-burger",
           "desc": null,
           "price": [
             {
@@ -2057,6 +2207,7 @@
         },
         {
           "name": "Bacon Egg Burger",
+          "dishId": "bacon-egg-burger",
           "desc": "With meat pattie.",
           "price": [
             {
@@ -2071,6 +2222,7 @@
         },
         {
           "name": "Vegetarian Burger",
+          "dishId": "vegetarian-burger",
           "desc": null,
           "price": [
             {
@@ -2085,6 +2237,7 @@
         },
         {
           "name": "Works Burger",
+          "dishId": "works-burger",
           "desc": "2 meat patties, bacon, cheese, egg.",
           "price": [
             {
@@ -2105,6 +2258,7 @@
       "items": [
         {
           "name": "Gourmet Beef Burger",
+          "dishId": "gourmet-beef-burger",
           "desc": null,
           "price": [
             {
@@ -2118,6 +2272,7 @@
         },
         {
           "name": "Beef & Egg",
+          "dishId": "beef-egg",
           "desc": null,
           "price": [
             {
@@ -2131,6 +2286,7 @@
         },
         {
           "name": "Beef & Cheese",
+          "dishId": "beef-cheese",
           "desc": null,
           "price": [
             {
@@ -2144,6 +2300,7 @@
         },
         {
           "name": "Beef Cheese & Chilli",
+          "dishId": "beef-cheese-chilli",
           "desc": null,
           "price": [
             {
@@ -2157,6 +2314,7 @@
         },
         {
           "name": "Beef, Bacon & Egg",
+          "dishId": "beef-bacon-egg",
           "desc": null,
           "price": [
             {
@@ -2170,6 +2328,7 @@
         },
         {
           "name": "Crumb Chicken Fillet",
+          "dishId": "crumb-chicken-fillet",
           "desc": null,
           "price": [
             {
@@ -2181,6 +2340,7 @@
         },
         {
           "name": "Cheesy Chicken",
+          "dishId": "cheesy-chicken",
           "desc": null,
           "price": [
             {
@@ -2194,6 +2354,7 @@
         },
         {
           "name": "Gourmet Vegetarian Burger",
+          "dishId": "gourmet-vegetarian-burger",
           "desc": null,
           "price": [
             {
@@ -2208,6 +2369,7 @@
         },
         {
           "name": "Gourmet Fish Burger",
+          "dishId": "gourmet-fish-burger",
           "desc": null,
           "price": [
             {
@@ -2221,6 +2383,7 @@
         },
         {
           "name": "Lamb Burger",
+          "dishId": "lamb-burger",
           "desc": null,
           "price": [
             {
@@ -2234,6 +2397,7 @@
         },
         {
           "name": "Chicken Bacon & Avo",
+          "dishId": "chicken-bacon-avo",
           "desc": null,
           "price": [
             {
@@ -2245,6 +2409,7 @@
         },
         {
           "name": "Beef Bacon & Avo",
+          "dishId": "beef-bacon-avo",
           "desc": null,
           "price": [
             {
@@ -2256,6 +2421,7 @@
         },
         {
           "name": "Beef & Camembert",
+          "dishId": "beef-camembert",
           "desc": null,
           "price": [
             {
@@ -2269,6 +2435,7 @@
         },
         {
           "name": "Beef & Blue Cheese",
+          "dishId": "beef-blue-cheese",
           "desc": null,
           "price": [
             {
@@ -2282,6 +2449,7 @@
         },
         {
           "name": "Fillet of the Day",
+          "dishId": "fillet-of-the-day",
           "desc": null,
           "price": [
             {
@@ -2293,6 +2461,7 @@
         },
         {
           "name": "Chicken Apricot Cream Cheese & Chilli",
+          "dishId": "chicken-apricot-cream-cheese-chilli",
           "desc": null,
           "price": [
             {
@@ -2306,6 +2475,7 @@
         },
         {
           "name": "Churton Whopper",
+          "dishId": "churton-whopper",
           "desc": null,
           "price": 18.5,
           "tags": []
@@ -2317,6 +2487,7 @@
       "items": [
         {
           "name": "Grilled Chicken & Bacon Wrap",
+          "dishId": "grilled-chicken-bacon-wrap",
           "desc": "With hummus, salad, mayo.",
           "price": [
             {
@@ -2331,6 +2502,7 @@
         },
         {
           "name": "Chicken Schnitzel & Bacon Wrap",
+          "dishId": "chicken-schnitzel-bacon-wrap",
           "desc": "With hummus, salad, mayo.",
           "price": [
             {
@@ -2351,6 +2523,7 @@
       "items": [
         {
           "name": "Single Filling",
+          "dishId": "single-filling",
           "desc": null,
           "price": [
             {
@@ -2362,6 +2535,7 @@
         },
         {
           "name": "Double Filling",
+          "dishId": "double-filling",
           "desc": null,
           "price": [
             {
@@ -2373,6 +2547,7 @@
         },
         {
           "name": "Bacon & Egg",
+          "dishId": "bacon-egg",
           "desc": null,
           "price": [
             {
@@ -2391,6 +2566,7 @@
       "items": [
         {
           "name": "Family Pack 1",
+          "dishId": "family-pack-1",
           "desc": "3 fish, 3 hotdogs, 3 crab sticks, 2 chips.",
           "price": [
             {
@@ -2404,6 +2580,7 @@
         },
         {
           "name": "Family Pack 2",
+          "dishId": "family-pack-2",
           "desc": "5 fish, 5 potato fritters, 2 chips.",
           "price": [
             {
@@ -2415,6 +2592,7 @@
         },
         {
           "name": "Family Pack 3",
+          "dishId": "family-pack-3",
           "desc": "4 fish, 2 hotdogs, 2 crab sticks, 2 sausages, 2 potato fritters, 2 chips.",
           "price": [
             {
@@ -2428,6 +2606,7 @@
         },
         {
           "name": "Fish Dinner",
+          "dishId": "fish-dinner",
           "desc": "Fish fillet, chips, lemon, lettuce, tartare sauce.",
           "price": [
             {
@@ -2439,6 +2618,7 @@
         },
         {
           "name": "Seafood Pack",
+          "dishId": "seafood-pack",
           "desc": "2 fish, 4 calamari rings, 2 crab sticks, 2 mussels, 2 prawn cutlets, 2 scallops, chips & sauce.",
           "price": [
             {
@@ -2452,6 +2632,7 @@
         },
         {
           "name": "Calamari Pack",
+          "dishId": "calamari-pack",
           "desc": "10 calamari, chips & sauce.",
           "price": [
             {
@@ -2465,6 +2646,7 @@
         },
         {
           "name": "Fish Burger Pack",
+          "dishId": "fish-burger-pack",
           "desc": "Fish burger (standard), 1 crab stick, chips.",
           "price": [
             {
@@ -2479,6 +2661,7 @@
         },
         {
           "name": "Pack 4",
+          "dishId": "pack-4",
           "desc": "1 fish, 1 hotdog & chips with 6 nuggets, 6 onion rings or 6 mini spring rolls.",
           "price": 21.0,
           "tags": [
@@ -2487,6 +2670,7 @@
         },
         {
           "name": "Kids Packs",
+          "dishId": "kids-packs",
           "desc": "4 chicken nuggets, 4 fish bites or 2 mini hotdogs, with chips & sauce.",
           "price": [
             {

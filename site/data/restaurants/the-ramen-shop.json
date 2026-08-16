@@ -89,6 +89,7 @@
       "items": [
         {
           "name": "Steamed bao buns",
+          "dishId": "steamed-bao-buns",
           "desc": "2 pieces. Pork, chicken or tofu.",
           "price": 12,
           "tags": [
@@ -99,6 +100,7 @@
         },
         {
           "name": "Dumplings",
+          "dishId": "dumplings",
           "desc": "6 pieces. Housemade pork and chive dumplings.",
           "price": 12,
           "tags": [
@@ -107,6 +109,7 @@
         },
         {
           "name": "Karaage",
+          "dishId": "karaage",
           "desc": "Japanese fried chicken with kewpie mayo.",
           "price": 12,
           "tags": [
@@ -115,6 +118,7 @@
         },
         {
           "name": "Takoyaki",
+          "dishId": "takoyaki",
           "desc": "6 pieces. Deep fried savoury balls with octopus, served with mayo, tonkatsu sauce and katsuobushi.",
           "price": 10,
           "tags": [
@@ -123,6 +127,7 @@
         },
         {
           "name": "Ebi katsu",
+          "dishId": "ebi-katsu",
           "desc": "5 pieces. Deep fried prawn katsu served with tonkatsu sauce and mayo.",
           "price": 15,
           "tags": [
@@ -133,6 +138,7 @@
         },
         {
           "name": "Okonomiyaki",
+          "dishId": "okonomiyaki",
           "desc": "2 pieces. Deep fried savoury Japanese pancake served with mayo, tonkatsu sauce, seaweed and katsuobushi.",
           "price": 12,
           "tags": [
@@ -142,6 +148,7 @@
         },
         {
           "name": "Potato croquette",
+          "dishId": "potato-croquette",
           "desc": "3 pieces. Deep fried potato croquettes served with tonkatsu sauce.",
           "price": 12,
           "tags": [
@@ -151,6 +158,7 @@
         },
         {
           "name": "Kimchi",
+          "dishId": "kimchi",
           "desc": "Housemade vegan kimchi.",
           "price": 9,
           "tags": [
@@ -160,6 +168,7 @@
         },
         {
           "name": "Seaweed salad",
+          "dishId": "seaweed-salad",
           "desc": "Wakame seaweed seasoned in a sesame vinaigrette.",
           "price": 9,
           "tags": [
@@ -170,6 +179,7 @@
         },
         {
           "name": "Kinoko salad",
+          "dishId": "kinoko-salad",
           "desc": "Kinoko mushrooms seasoned in a sesame vinaigrette.",
           "price": 9,
           "tags": [
@@ -180,6 +190,7 @@
         },
         {
           "name": "Edamame",
+          "dishId": "edamame",
           "desc": "Salted soybeans.",
           "price": 9,
           "tags": [
@@ -190,6 +201,7 @@
         },
         {
           "name": "Korean shake shake fries",
+          "dishId": "korean-shake-shake-fries",
           "desc": "Fries shaken in special seasoning served with spicy mayo.",
           "price": 7,
           "tags": [
@@ -204,6 +216,7 @@
       "items": [
         {
           "name": "Pork rice bowl",
+          "dishId": "pork-rice-bowl",
           "desc": "Braised pork and kimchi topped with mesclun and sesame.",
           "price": 21,
           "tags": [
@@ -212,6 +225,7 @@
         },
         {
           "name": "Chicken rice bowl",
+          "dishId": "chicken-rice-bowl",
           "desc": "Spicy chicken mince, egg and BBQ sauce topped with mesclun.",
           "price": 21,
           "tags": [
@@ -221,6 +235,7 @@
         },
         {
           "name": "Karaage rice bowl",
+          "dishId": "karaage-rice-bowl",
           "desc": "Karaage chicken and mayo topped with mesclun.",
           "price": 21,
           "tags": [
@@ -229,6 +244,7 @@
         },
         {
           "name": "Curry rice bowl",
+          "dishId": "curry-rice-bowl",
           "desc": "Curry sauce, potatoes, carrots and onions topped with spring onion and sesame. Choice of beef, chicken, potato croquette or ebi.",
           "price": 21,
           "tags": [
@@ -237,6 +253,7 @@
         },
         {
           "name": "Unagi rice bowl",
+          "dishId": "unagi-rice-bowl",
           "desc": "Grilled unagi, teriyaki sauce, spring onion and Japanese sanshō pepper.",
           "price": 26,
           "tags": [
@@ -246,6 +263,7 @@
         },
         {
           "name": "Yakiniku beef rice bowl",
+          "dishId": "yakiniku-beef-rice-bowl",
           "desc": "Japanese style BBQ beef, fried onions and egg topped with spring onion and sesame.",
           "price": 21,
           "tags": [
@@ -255,6 +273,7 @@
         },
         {
           "name": "Tofu rice bowl",
+          "dishId": "tofu-rice-bowl",
           "desc": "Tofu, mixed mushrooms, eggplant and mapo sauce topped with spring onion and sesame.",
           "price": 21,
           "tags": [
@@ -271,12 +290,14 @@
       "items": [
         {
           "name": "Tonkotsu",
+          "dishId": "tonkotsu",
           "desc": "Pork broth, double pork belly, sprouts, nori, corn, pickled cucumber and fried onion.",
           "price": 22,
           "tags": []
         },
         {
           "name": "Spicy tonkotsu",
+          "dishId": "spicy-tonkotsu",
           "desc": "Pork broth, double pork belly, spring onion, egg, corn and chilli threads.",
           "price": 22,
           "tags": [
@@ -286,12 +307,14 @@
         },
         {
           "name": "Black garlic tonkotsu",
+          "dishId": "black-garlic-tonkotsu",
           "desc": "Pork broth, double pork belly, bamboo shoots, black fungus, spring onion, fried garlic and mayu.",
           "price": 22,
           "tags": []
         },
         {
           "name": "Tokyo chicken",
+          "dishId": "tokyo-chicken",
           "desc": "Chicken broth, karaage, teriyaki sauce, sprouts, spring onion, nori and pickled cucumber.",
           "price": 22,
           "tags": [
@@ -301,6 +324,7 @@
         },
         {
           "name": "Spicy chicken",
+          "dishId": "spicy-chicken",
           "desc": "Chicken broth, spicy chicken mince, spring onion, corn, capsicum and coriander.",
           "price": 22,
           "tags": [
@@ -309,6 +333,7 @@
         },
         {
           "name": "Dan dan chicken",
+          "dishId": "dan-dan-chicken",
           "desc": "Chicken broth, peanut sesame sauce, spicy chicken mince, spring onion, fried onion and corn.",
           "price": 22,
           "tags": [
@@ -319,6 +344,7 @@
         },
         {
           "name": "Mala chicken",
+          "dishId": "mala-chicken",
           "desc": "Chicken broth, soy peanut sesame sauce, mala oil, spicy chicken mince, spring onion, black fungus and corn.",
           "price": 22,
           "tags": [
@@ -330,6 +356,7 @@
         },
         {
           "name": "Paitan ramen",
+          "dishId": "paitan-ramen",
           "desc": "Chicken broth, chicken chashu, corn, spring onion, black fungus and sesame.",
           "price": 22,
           "tags": [
@@ -339,6 +366,7 @@
         },
         {
           "name": "Gyu ramen",
+          "dishId": "gyu-ramen",
           "desc": "Chicken broth, Japanese BBQ beef, sautéed onion, corn, spring onion, black fungus and sesame.",
           "price": 22,
           "tags": [
@@ -348,6 +376,7 @@
         },
         {
           "name": "Spicy ebi ramen",
+          "dishId": "spicy-ebi-ramen",
           "desc": "Spicy soup, ebi katsu, corn, spring onion and nori.",
           "price": 22,
           "tags": [
@@ -358,6 +387,7 @@
         },
         {
           "name": "Miso ramen",
+          "dishId": "miso-ramen",
           "desc": "Miso broth, kinoko mushrooms, nori, corn and marinated tofu.",
           "price": 21,
           "tags": [
@@ -369,6 +399,7 @@
         },
         {
           "name": "Spicy miso",
+          "dishId": "spicy-miso",
           "desc": "Spicy miso broth, fried veges, bamboo shoots, corn, spring onion, nori and chilli threads.",
           "price": 21,
           "tags": [
@@ -380,6 +411,7 @@
         },
         {
           "name": "Kids ramen",
+          "dishId": "kids-ramen",
           "desc": "Choice of teriyaki pork, teriyaki chicken or marinated tofu with teriyaki sauce, all served with corn.",
           "price": 12,
           "tags": [
@@ -390,6 +422,7 @@
         },
         {
           "name": "Yakisoba",
+          "dishId": "yakisoba",
           "desc": "Choice of chicken or pork, stir fried noodle with mixed veges topped with spring onion, katsuobushi, tonkatsu sauce and mayo.",
           "price": 22,
           "tags": [
@@ -398,6 +431,7 @@
         },
         {
           "name": "Pork abura ramen",
+          "dishId": "pork-abura-ramen",
           "desc": "Brothless. Double pork belly, tonkotsu sauce, bamboo shoots, fried onion, egg, nori and furikake.",
           "price": 22,
           "tags": [
@@ -412,12 +446,14 @@
       "items": [
         {
           "name": "Pork belly",
+          "dishId": "pork-belly",
           "desc": null,
           "price": 4.5,
           "tags": []
         },
         {
           "name": "Ebi katsu (extra)",
+          "dishId": "ebi-katsu-extra",
           "desc": null,
           "price": 5,
           "tags": [
@@ -427,12 +463,14 @@
         },
         {
           "name": "Chicken chashu",
+          "dishId": "chicken-chashu",
           "desc": null,
           "price": 4.5,
           "tags": []
         },
         {
           "name": "Slow cooked egg",
+          "dishId": "slow-cooked-egg",
           "desc": null,
           "price": 3.5,
           "tags": [
@@ -441,6 +479,7 @@
         },
         {
           "name": "Marinated tofu",
+          "dishId": "marinated-tofu",
           "desc": "2 pieces.",
           "price": 4.5,
           "tags": [
@@ -451,6 +490,7 @@
         },
         {
           "name": "Pickled cucumber",
+          "dishId": "pickled-cucumber",
           "desc": null,
           "price": 2.5,
           "tags": [
@@ -460,6 +500,7 @@
         },
         {
           "name": "Bamboo shoots",
+          "dishId": "bamboo-shoots",
           "desc": null,
           "price": 2.5,
           "tags": [
@@ -469,6 +510,7 @@
         },
         {
           "name": "Spring onion",
+          "dishId": "spring-onion",
           "desc": null,
           "price": 2.5,
           "tags": [
@@ -478,6 +520,7 @@
         },
         {
           "name": "Sprouts",
+          "dishId": "sprouts",
           "desc": null,
           "price": 2.5,
           "tags": [
@@ -487,6 +530,7 @@
         },
         {
           "name": "Corn",
+          "dishId": "corn",
           "desc": null,
           "price": 2.5,
           "tags": [
@@ -496,6 +540,7 @@
         },
         {
           "name": "Nori",
+          "dishId": "nori",
           "desc": "Seaweed.",
           "price": 2.5,
           "tags": [
@@ -505,6 +550,7 @@
         },
         {
           "name": "Black fungus",
+          "dishId": "black-fungus",
           "desc": null,
           "price": 2.5,
           "tags": [
@@ -514,6 +560,7 @@
         },
         {
           "name": "Fried garlic",
+          "dishId": "fried-garlic",
           "desc": null,
           "price": 1.5,
           "tags": [
@@ -523,6 +570,7 @@
         },
         {
           "name": "Mayu",
+          "dishId": "mayu",
           "desc": "Black oil.",
           "price": 2.5,
           "tags": [
@@ -532,6 +580,7 @@
         },
         {
           "name": "Chilli oil",
+          "dishId": "chilli-oil",
           "desc": null,
           "price": 2.5,
           "tags": [
@@ -542,6 +591,7 @@
         },
         {
           "name": "Kewpie mayo",
+          "dishId": "kewpie-mayo",
           "desc": null,
           "price": 2,
           "tags": [
@@ -550,18 +600,21 @@
         },
         {
           "name": "Extra noodles",
+          "dishId": "extra-noodles",
           "desc": null,
           "price": 4.5,
           "tags": []
         },
         {
           "name": "Extra broth",
+          "dishId": "extra-broth",
           "desc": null,
           "price": 4.5,
           "tags": []
         },
         {
           "name": "Steamed rice",
+          "dishId": "steamed-rice",
           "desc": null,
           "price": 3.5,
           "tags": [
@@ -571,6 +624,7 @@
         },
         {
           "name": "Gluten free noodles",
+          "dishId": "gluten-free-noodles",
           "desc": null,
           "price": 3,
           "tags": [
@@ -584,6 +638,7 @@
       "items": [
         {
           "name": "Two mains & one entrée",
+          "dishId": "two-mains-one-entr-e",
           "desc": "Weekend only.",
           "price": 48,
           "tags": []

@@ -62,36 +62,45 @@
       "items": [
         {
           "name": "Big Mac",
+          "dishId": "big-mac",
           "price": null,
+          "image": "img/mcdonalds/big-mac.jpg",
+          "alt": "A Big Mac: two beef patties, lettuce, cheese, pickles and sauce in a three-layer sesame seed bun",
           "tags": []
         },
         {
           "name": "Quarter Pounder",
+          "dishId": "quarter-pounder",
           "price": null,
           "tags": []
         },
         {
           "name": "Double Quarter Pounder",
+          "dishId": "double-quarter-pounder",
           "price": null,
           "tags": []
         },
         {
           "name": "Cheeseburger",
+          "dishId": "cheeseburger",
           "price": null,
           "tags": []
         },
         {
           "name": "Double Cheeseburger",
+          "dishId": "double-cheeseburger",
           "price": null,
           "tags": []
         },
         {
           "name": "Hamburger",
+          "dishId": "hamburger",
           "price": null,
           "tags": []
         },
         {
           "name": "Big Arch",
+          "dishId": "big-arch",
           "price": null,
           "tags": []
         }
@@ -102,42 +111,52 @@
       "items": [
         {
           "name": "McChicken",
+          "dishId": "mcchicken",
           "price": null,
           "tags": []
         },
         {
           "name": "McCrispy",
+          "dishId": "mccrispy",
           "price": null,
           "tags": []
         },
         {
           "name": "Double McCrispy",
+          "dishId": "double-mccrispy",
           "price": null,
           "tags": []
         },
         {
           "name": "McCrispy Bacon Deluxe",
+          "dishId": "mccrispy-bacon-deluxe",
           "price": null,
           "tags": []
         },
         {
           "name": "Chicken McNuggets (6 pack)",
+          "dishId": "chicken-mcnuggets-6-pack",
           "price": null,
           "tags": []
         },
         {
           "name": "Chicken McNuggets (10 pack)",
+          "dishId": "chicken-mcnuggets-10-pack",
           "price": null,
           "tags": []
         },
         {
           "name": "Chicken McNuggets (20 pack)",
+          "dishId": "chicken-mcnuggets-20-pack",
           "price": null,
           "tags": []
         },
         {
           "name": "Filet-O-Fish",
+          "dishId": "filet-o-fish",
           "price": null,
+          "image": "img/mcdonalds/filet-o-fish.jpg",
+          "alt": "A Filet-O-Fish: a crumbed fish patty with melting cheese and tartare sauce in a soft steamed bun",
           "tags": []
         }
       ]
@@ -147,21 +166,25 @@
       "items": [
         {
           "name": "Fries (Small)",
+          "dishId": "fries-small",
           "price": null,
           "tags": []
         },
         {
           "name": "Fries (Medium)",
+          "dishId": "fries-medium",
           "price": null,
           "tags": []
         },
         {
           "name": "Fries (Large)",
+          "dishId": "fries-large",
           "price": null,
           "tags": []
         },
         {
           "name": "Hash Brown",
+          "dishId": "hash-brown",
           "price": null,
           "tags": []
         }
@@ -172,6 +195,7 @@
       "items": [
         {
           "name": "Bacon & Egg McMuffin",
+          "dishId": "bacon-egg-mcmuffin",
           "price": null,
           "tags": [
             "contains-egg"
@@ -179,6 +203,7 @@
         },
         {
           "name": "Sausage & Egg McMuffin",
+          "dishId": "sausage-egg-mcmuffin",
           "price": null,
           "tags": [
             "contains-egg"
@@ -186,26 +211,31 @@
         },
         {
           "name": "Sausage McMuffin",
+          "dishId": "sausage-mcmuffin",
           "price": null,
           "tags": []
         },
         {
           "name": "Chicken McMuffin",
+          "dishId": "chicken-mcmuffin",
           "price": null,
           "tags": []
         },
         {
           "name": "Massive McMuffin",
+          "dishId": "massive-mcmuffin",
           "price": null,
           "tags": []
         },
         {
           "name": "Hotcakes",
+          "dishId": "hotcakes",
           "price": null,
           "tags": []
         },
         {
           "name": "Big Brekkie Burger",
+          "dishId": "big-brekkie-burger",
           "price": null,
           "tags": [
             "contains-gluten"
@@ -218,6 +248,7 @@
       "items": [
         {
           "name": "Flat White",
+          "dishId": "flat-white",
           "price": null,
           "tags": [
             "contains-dairy"
@@ -225,6 +256,7 @@
         },
         {
           "name": "Latte",
+          "dishId": "latte",
           "price": null,
           "tags": [
             "contains-dairy"
@@ -232,6 +264,7 @@
         },
         {
           "name": "Cappuccino",
+          "dishId": "cappuccino",
           "price": null,
           "tags": [
             "contains-dairy"
@@ -239,6 +272,7 @@
         },
         {
           "name": "Mocha",
+          "dishId": "mocha",
           "price": null,
           "tags": [
             "contains-dairy"
@@ -246,16 +280,19 @@
         },
         {
           "name": "Long Black",
+          "dishId": "long-black",
           "price": null,
           "tags": []
         },
         {
           "name": "Hot Chocolate",
+          "dishId": "hot-chocolate",
           "price": null,
           "tags": []
         },
         {
           "name": "Iced Latte",
+          "dishId": "iced-latte",
           "price": null,
           "tags": [
             "contains-dairy"
@@ -263,6 +300,7 @@
         },
         {
           "name": "Iced Mocha",
+          "dishId": "iced-mocha",
           "price": null,
           "tags": [
             "contains-dairy"
@@ -270,6 +308,7 @@
         },
         {
           "name": "Iced Chocolate",
+          "dishId": "iced-chocolate",
           "price": null,
           "tags": []
         }
@@ -280,6 +319,7 @@
       "items": [
         {
           "name": "Hot Apple Pie",
+          "dishId": "hot-apple-pie",
           "price": null,
           "tags": [
             "contains-gluten"
@@ -287,26 +327,31 @@
         },
         {
           "name": "Soft Serve Cone",
+          "dishId": "soft-serve-cone",
           "price": null,
           "tags": []
         },
         {
           "name": "Hot Fudge Sundae",
+          "dishId": "hot-fudge-sundae",
           "price": null,
           "tags": []
         },
         {
           "name": "McFlurry",
+          "dishId": "mcflurry",
           "price": null,
           "tags": []
         },
         {
           "name": "Thickshake",
+          "dishId": "thickshake",
           "price": null,
           "tags": []
         },
         {
           "name": "Frozen Coke",
+          "dishId": "frozen-coke",
           "price": null,
           "tags": []
         }

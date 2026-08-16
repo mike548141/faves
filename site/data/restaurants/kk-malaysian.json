@@ -99,6 +99,7 @@
       "items": [
         {
           "name": "Chicken Satay",
+          "dishId": "chicken-satay",
           "desc": "6 sticks of satay served with peanut sauce.",
           "price": 24.0,
           "tags": [
@@ -108,6 +109,7 @@
         },
         {
           "name": "Beef Satay",
+          "dishId": "beef-satay",
           "desc": "6 sticks of satay served with peanut sauce.",
           "price": 24.0,
           "tags": [
@@ -117,24 +119,28 @@
         },
         {
           "name": "Fried Won Tons",
+          "dishId": "fried-won-tons",
           "desc": "6 pieces of won tons filled with chicken mince and veges, served with sweet and sour sauce.",
           "price": 15.0,
           "tags": []
         },
         {
           "name": "Chicken Wings",
+          "dishId": "chicken-wings",
           "desc": "6 pieces of crispy deep fried chicken wings, served with chilli sauce.",
           "price": 17.5,
           "tags": []
         },
         {
           "name": "Won Ton Soup",
+          "dishId": "won-ton-soup",
           "desc": null,
           "price": 15.5,
           "tags": []
         },
         {
           "name": "Spring Rolls",
+          "dishId": "spring-rolls",
           "desc": null,
           "price": 15.5,
           "tags": [
@@ -148,6 +154,7 @@
       "items": [
         {
           "name": "Chicken Mee Goreng",
+          "dishId": "chicken-mee-goreng",
           "desc": "Stir fried egg noodles flavoured with Malaysian spices.",
           "price": 25.0,
           "tags": [
@@ -157,6 +164,7 @@
         },
         {
           "name": "Seafood Mee Goreng",
+          "dishId": "seafood-mee-goreng",
           "desc": "Stir fried egg noodles flavoured with Malaysian spices.",
           "price": 25.0,
           "tags": [
@@ -167,6 +175,7 @@
         },
         {
           "name": "Sin Chew Mee Hoon",
+          "dishId": "sin-chew-mee-hoon",
           "desc": "Stir fried rice noodles with chicken, shrimp, cabbage, carrots, tomatoes, onion, and eggs.",
           "price": 25.0,
           "tags": [
@@ -176,6 +185,7 @@
         },
         {
           "name": "Char Kuey Teow",
+          "dishId": "char-kuey-teow",
           "desc": "Thick flat rice noodles stir fried with chicken, shrimps, fishcakes, and eggs.",
           "price": 25.0,
           "tags": [
@@ -190,6 +200,7 @@
       "items": [
         {
           "name": "Nasi Goreng",
+          "dishId": "nasi-goreng",
           "desc": "Malaysian style fried rice with combination of shrimps, chicken, mixed vegetables, and eggs.",
           "price": 25.0,
           "tags": [
@@ -199,12 +210,14 @@
         },
         {
           "name": "Hainanese Chicken Rice",
+          "dishId": "hainanese-chicken-rice",
           "desc": "Tasty rice served with cucumbers and specially blended chilli sauce.",
           "price": 26.0,
           "tags": []
         },
         {
           "name": "Nasi Lemak",
+          "dishId": "nasi-lemak",
           "desc": "Aromatic coconut rice served with rendang, peanuts, egg, cucumber, and sambal on the side. Chicken or beef options available.",
           "price": 26.0,
           "tags": [
@@ -214,24 +227,28 @@
         },
         {
           "name": "Beef Rendang",
+          "dishId": "beef-rendang",
           "desc": "Beef in spiced dry curry blended with desiccated coconut. Served with steamed rice.",
           "price": 26.0,
           "tags": []
         },
         {
           "name": "Chicken Rendang",
+          "dishId": "chicken-rendang",
           "desc": "Chicken in spiced dry curry blended with desiccated coconut. Served with steamed rice.",
           "price": 26.0,
           "tags": []
         },
         {
           "name": "Chicken Sambal",
+          "dishId": "chicken-sambal",
           "desc": "Boneless chicken pieces cooked in sweet and sour chilli sauce. Served with steamed rice.",
           "price": 26.0,
           "tags": []
         },
         {
           "name": "Kung Po Beef",
+          "dishId": "kung-po-beef",
           "desc": "Boneless beef pieces stir fried with onions and peanuts in tangy sauce. Served with steamed rice.",
           "price": 26.0,
           "tags": [
@@ -240,6 +257,7 @@
         },
         {
           "name": "Kung Po Chicken",
+          "dishId": "kung-po-chicken",
           "desc": "Boneless chicken pieces stir fried with onions and peanuts in tangy sauce. Served with steamed rice.",
           "price": 26.0,
           "tags": [
@@ -248,6 +266,7 @@
         },
         {
           "name": "Sweet & Sour Chicken",
+          "dishId": "sweet-sour-chicken",
           "desc": "Boneless chicken pieces stir fried with pineapple pieces, onions, capsicum, and tomatoes with sweet and sour sauce. Served with steamed rice.",
           "price": 26.0,
           "tags": []
@@ -259,6 +278,7 @@
       "items": [
         {
           "name": "Roti Chanai",
+          "dishId": "roti-chanai",
           "desc": "Traditional plain roti served with creamy chicken or vege curry.",
           "price": 19.0,
           "tags": [
@@ -267,12 +287,14 @@
         },
         {
           "name": "Chicken Curry",
+          "dishId": "chicken-curry",
           "desc": "Boneless chicken pieces in creamy curry. Served with steamed rice.",
           "price": 26.0,
           "tags": []
         },
         {
           "name": "Vegetarian Curry",
+          "dishId": "vegetarian-curry",
           "desc": "Mixed vegetables in creamy curry. Served with steamed rice.",
           "price": 24.5,
           "tags": [
@@ -286,6 +308,7 @@
       "items": [
         {
           "name": "Curry Laksa",
+          "dishId": "curry-laksa",
           "desc": "Egg noodles with chicken pieces, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.",
           "price": 25.0,
           "tags": [
@@ -297,6 +320,7 @@
         },
         {
           "name": "Seafood Laksa",
+          "dishId": "seafood-laksa",
           "desc": "Egg noodles with prawns, mussels, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.",
           "price": 26.0,
           "tags": [
@@ -308,6 +332,7 @@
         },
         {
           "name": "Vegetarian Laksa",
+          "dishId": "vegetarian-laksa",
           "desc": "Egg noodles with an assortment of vegetables and egg in creamy laksa soup.",
           "price": 24.5,
           "tags": [
@@ -323,6 +348,7 @@
       "items": [
         {
           "name": "Plain Roti",
+          "dishId": "plain-roti",
           "desc": null,
           "price": 5.0,
           "tags": [
@@ -331,24 +357,28 @@
         },
         {
           "name": "Steamed Rice",
+          "dishId": "steamed-rice",
           "desc": null,
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Coconut Rice",
+          "dishId": "coconut-rice",
           "desc": null,
           "price": 5.5,
           "tags": []
         },
         {
           "name": "Steamed Vegetables",
+          "dishId": "steamed-vegetables",
           "desc": null,
           "price": 8.0,
           "tags": []
         },
         {
           "name": "Peanut Sauce",
+          "dishId": "peanut-sauce",
           "desc": null,
           "price": 5.0,
           "tags": [

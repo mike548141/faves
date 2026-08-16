@@ -345,3 +345,23 @@ deliberation those compact docs omit.
   section may carry `addOnsOnly: true`; the rows stay in the data, and
   `validate.py` refuses the flag unless every row it hides is still reachable
   as an option.
+- [0051](0051-a-dish-has-an-id-and-its-name-is-not-it.md) — **a dish has an id,
+  and its name is not it.** The `name` was doing five jobs at once — URL anchor,
+  `picks` reference, stored heart, stored rating, order line — and four failed
+  silently under a rename. Not hypothetical: `slug(name)` was never unique
+  within a venue (10 slugs, 22 rows, 3 records, every collision at a different
+  price), so three elements shared `id="dish-cheeseburger"`, one heart covered
+  all three rows, and the order tally charged **$56 for a $49 pair**. `dishId`
+  is **required and seeded** rather than defaulted from the name, because the
+  owner ruled identity must be immutable and an id recomputed from a mutable
+  display name is not. Costs +12.6 KB gzipped, taken knowingly.
+- [0052](0052-the-home-filters-collapse-into-one-sheet.md) — **the home
+  screen's filters collapse into one sheet.** Measured before designing: 50.7%
+  of a 390 px screen was chrome before the first result (58.4% arriving via a
+  facet link), only 3 cards fit, and the bottom bar ate 14.5% at every scroll
+  depth forever. The bar becomes one row — `Filters (n)` and `Pick for us` —
+  and everything else moves into a sheet that separates *Narrow to* from
+  *Sort by* (ADR 0014's distinction, never surfaced before). Chrome drops to
+  31.9%, cards 3 → 4. Two live defects went with it: 40 px segmented buttons
+  against a 44 px hard constraint, and a floating "Pick for us" covering 63% of
+  a venue's heart.
