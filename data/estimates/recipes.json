@@ -1,0 +1,1279 @@
+{
+  "about": "Estimated cooking times and serving sizes for site/data/restaurants/cook-at-home.json, recorded with the working that produced each number. Owner ruling 2026-08-16 (ROADMAP 36a/36c): estimate them, and label them as estimates. This file is the record, never the payload — nothing under site/ reads it (ADR 0047). Read data/estimates/README.md before changing it.",
+  "venue": "cook-at-home",
+  "recorded": "2026-08-16",
+  "safety": {
+    "rule": "AN ESTIMATED DURATION MUST NEVER DRIVE A TIMER. Only a duration the recipe itself states may do that, and it is marked timerSafe: true. An invented 'simmer 20 min' on chicken thighs is a food-safety failure, not a disappointing dinner.",
+    "timerSafe": "true only where source == 'stated'. tools/recipe_estimates.py --check exits 1 on any other combination.",
+    "phase": {
+      "prep": "no heat on the food — mixing, shaping, and heating an empty oven or pan",
+      "cook": "food is in the heat; this is the class where an estimated duration is risky",
+      "wait": "chilling, rising, resting, marinating, cooling — passive"
+    },
+    "ranges": "A stated range takes its LOWER bound, matching stepDuration() in site/js/cook.js.",
+    "limits": "These are one assistant's estimates read off recipe text, not times measured by cooking the food. They must render labelled as estimates, never bare."
+  },
+  "fields": {
+    "serves": "people served, our estimate unless servesSource is 'stated'",
+    "yield": "what the recipe makes (21 cakes, 1 flatbread) — NOT the same as serves",
+    "timeTotal": "minutes, elapsed start to serving; null where it cannot be built",
+    "steps[].minutes": "minutes this step takes; null with a reason where no number is honest"
+  },
+  "recipes": {
+    "perfectly-pretty-hotcakes": {
+      "name": "Perfectly Pretty Hotcakes",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "desc states the yield, not the serving: 10–15 hotcakes at 3 a person ⇒ about 4.",
+      "yield": "10–15 hotcakes",
+      "yieldSource": "stated",
+      "timeTotal": 50,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '~50 min'. Its steps state only 6 min between them, so the total is mostly the untimed prep and the 20 min it takes to fry 10–15 hotcakes one pan at a time.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 5,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Leave to sit for 5 minutes to curdle.\" ⇒ 5 min. The 5 minutes is the milk curdling; nothing else happens in it."
+        },
+        {
+          "index": 1,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Sifting four dry ingredients together and whisking them even: about 2 min."
+        },
+        {
+          "index": 2,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "3 eggs beaten with ¼ cup sugar to thick and pale is 2–3 min in a mixer, plus the melted butter."
+        },
+        {
+          "index": 3,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Wet into dry, whisked from the centre until smooth: about 2 min."
+        },
+        {
+          "index": 4,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "A pan on medium-low reaches the water-dance point in about 4 min, plus the one sacrificial hotcake."
+        },
+        {
+          "index": 5,
+          "minutes": 1,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Cook each hotcake for a minute or so until bubbles form and pop, then flip and cook through until golden on both sides.\" ⇒ 1 min. Per hotcake, not per batch: at 10–15 hotcakes and one pan, the step itself runs about 20 min. A timer on it counts one hotcake."
+        },
+        {
+          "index": 6,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Plating and pouring syrup."
+        }
+      ]
+    },
+    "booth-s-ginger-crunch": {
+      "name": "Booth's Ginger Crunch",
+      "serves": 24,
+      "servesSource": "estimated",
+      "servesWorking": "desc says the base is doubled from the original: a standard ginger crunch base is 125g butter and 1½ cups flour, so 250g and 3 cups is two of them — a 20×30cm slice tin at full depth, cut 4×6 ⇒ about 24 pieces.",
+      "yield": "about 24 pieces",
+      "yieldSource": "estimated",
+      "timeTotal": null,
+      "timeTotalSource": null,
+      "timeTotalWorking": "NO NUMBER, DELIBERATELY. This record has no method at all — `steps` is empty. A total would be inventing the method as well as its duration. The owner has the recipe.",
+      "steps": []
+    },
+    "b-s-dope-as-brownie": {
+      "name": "B's Dope-As Brownie",
+      "serves": 9,
+      "servesSource": "estimated",
+      "servesWorking": "A single quantity — 100g chocolate, 100g butter, ½ cup flour — fills a 20cm cast-iron pan; cut 3×3 ⇒ about 9. Doubled in a baking pan (step 2) it is about 18.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 22,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '~22 min', which is the bake alone; melting and mixing add about 6 min in front of it.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 6,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "100g butter with 100g chocolate melts in about 4 min over a low heat; sugar, 2 eggs and the dry ingredients stirred in take about 2 more."
+        },
+        {
+          "index": 1,
+          "minutes": null,
+          "source": null,
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Not an action and not timed — a note that toppings are optional and open-ended."
+        },
+        {
+          "index": 2,
+          "minutes": null,
+          "source": null,
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Not an action and not timed — a note about which dish to use, decided before step 0."
+        },
+        {
+          "index": 3,
+          "minutes": 22,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Bake at 170°C for about 22 minutes.\" ⇒ 22 min. The bake is the only timed part of this recipe."
+        }
+      ]
+    },
+    "chocolate-chewy-cookies": {
+      "name": "Chocolate Chewy Cookies",
+      "serves": 12,
+      "servesSource": "estimated",
+      "servesWorking": "2 cups of flour with 185g of butter is a standard 24-cookie batch at ~35g of dough a ball; 2 cookies a person ⇒ about 12.",
+      "yield": "about 24 cookies",
+      "yieldSource": "estimated",
+      "timeTotal": 15,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '15 min', which is one tray's bake. Mixing and rolling add about 12 min, and a 24-cookie batch is two or three trays.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 12,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "A melted-butter dough comes together in about 4 min; 2 cups of flour and 185g of butter make roughly 24 balls at ~20 s each, so about 8 min rolling."
+        },
+        {
+          "index": 1,
+          "minutes": 15,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Bake for 15 minutes at 170°C.\" ⇒ 15 min. One tray. A second tray repeats the 15 min."
+        }
+      ]
+    },
+    "gingerbread-cookies": {
+      "name": "Gingerbread Cookies",
+      "serves": 20,
+      "servesSource": "estimated",
+      "servesWorking": "5 cups of flour (≈750g) with 250g butter, 2 eggs and 1 cup of syrup makes about 1.7 kg of dough; at ~35g a cookie rolled to 4–5mm that is roughly 45–50 cookies, 2–3 a person ⇒ about 20. Weak: the cutter size is not stated and it changes the count outright.",
+      "yield": "about 45–50 cookies",
+      "yieldSource": "estimated",
+      "timeTotal": 75,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "10 min of mixing + 30 min chilling + 15 min rolling and cutting + 5 min chilling + 8 min a tray, and a batch this size is four or five trays baked in sequence ⇒ about 75 min elapsed.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "250g butter creamed with 1 cup brown sugar: 3–4 min in a mixer."
+        },
+        {
+          "index": 1,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Three ground spices in and mixed."
+        },
+        {
+          "index": 2,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "2 eggs and 1 cup of golden syrup beaten in."
+        },
+        {
+          "index": 3,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "5 cups of flour added slowly, in three or four goes."
+        },
+        {
+          "index": 4,
+          "minutes": 30,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Chill in cling film for 30 minutes.\" ⇒ 30 min. Chilling in cling film; the dough is unworkable warm."
+        },
+        {
+          "index": 5,
+          "minutes": 15,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "About 1.7 kg of dough (250g butter, 5 cups flour, 1 cup syrup) rolled to 4–5mm and cut in batches: about 15 min."
+        },
+        {
+          "index": 6,
+          "minutes": 5,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Chill in the fridge for 5–10 minutes.\" ⇒ 5 min. A range, so the lower bound: back to the fridge for 5 min before baking."
+        },
+        {
+          "index": 7,
+          "minutes": 8,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Bake on the pizza setting for 8 minutes at 180°C.\" ⇒ 8 min. Per tray. A 1.7 kg batch is four or five trays, so the oven time repeats."
+        }
+      ]
+    },
+    "li-ge-waffles": {
+      "name": "Liège Waffles",
+      "serves": 12,
+      "servesSource": "stated",
+      "servesWorking": "The record already says serves 12, and step 3 divides the dough into 12 portions — one waffle a person.",
+      "yield": "12 waffles",
+      "yieldSource": "stated",
+      "timeTotal": 590,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "15 min sponge + 60 min rise + about 8 hr overnight + 15 min shaping + 20 min at the iron ⇒ roughly 9 hr 50 elapsed, of which only about 50 min is hands-on. The overnight is our figure, not the recipe's.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 15,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Let rest for about 15 minutes.\" ⇒ 15 min. The 15 min is the yeast sponge resting; mixing it beforehand adds 2–3 min."
+        },
+        {
+          "index": 1,
+          "minutes": 60,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Cover and let rise in a warm place for 1 hour.\" ⇒ 60 min. The full dough rising in a warm place."
+        },
+        {
+          "index": 2,
+          "minutes": 480,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "wait",
+          "working": "The recipe says 'overnight' and gives no hours, so this number is ours, not the recipe's: 8 hr is taken as overnight. Nothing here should ever run a timer."
+        },
+        {
+          "index": 3,
+          "minutes": 15,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "12 portions shaped and rolled in pearled sugar at about 1 min each."
+        },
+        {
+          "index": 4,
+          "minutes": 20,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "12 waffles at about 3 min in the iron, two at a time: about 20 min."
+        }
+      ]
+    },
+    "orange-yoghurt-cake": {
+      "name": "Orange Yoghurt Cake",
+      "serves": 8,
+      "servesSource": "estimated",
+      "servesWorking": "Step 0 states a 20cm tin; a 125g-butter, 2-cup-flour batter fills it to a standard depth and cuts 8 slices.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 60,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '~1 hr' — which is the bake alone. Prep adds about 15 min, so allow 1 hr 15 elapsed.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Greasing and lining a 20cm tin."
+        },
+        {
+          "index": 1,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "125g butter creamed with 1 cup caster sugar to light and fluffy is 3–4 min, plus 3 yolks one at a time."
+        },
+        {
+          "index": 2,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Two alternating additions of flour, yoghurt and juice, mixed well between."
+        },
+        {
+          "index": 3,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "3 egg whites to soft peaks: 2–3 min."
+        },
+        {
+          "index": 4,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Folded in two stages."
+        },
+        {
+          "index": 5,
+          "minutes": 60,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Bake at 160°C for about 1 hour.\" ⇒ 60 min. The bake, and the whole of the recipe's stated total."
+        }
+      ]
+    },
+    "queen-cakes": {
+      "name": "Queen Cakes",
+      "serves": 10,
+      "servesSource": "estimated",
+      "servesWorking": "The recipe states the yield, not the serving: 21 small patty cakes at 2 a person ⇒ about 10.",
+      "yield": "21 cakes",
+      "yieldSource": "stated",
+      "timeTotal": 12,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '~12 min', which is the bake alone; creaming and filling 21 tins add about 11 min in front of it.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 6,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "125g butter and 125g sugar creamed (about 3 min), 2 eggs one at a time, 175g flour sifted in."
+        },
+        {
+          "index": 1,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "21 patty tins greased and filled by spoon."
+        },
+        {
+          "index": 2,
+          "minutes": 10,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Bake for 10–12 minutes at 200°C.\" ⇒ 10 min. A range, so the lower bound: 10 min, and they are watched from there."
+        }
+      ]
+    },
+    "upside-down-plum-cake": {
+      "name": "Upside-Down Plum Cake",
+      "serves": 10,
+      "servesSource": "estimated",
+      "servesWorking": "Step 1 states a 10-inch (25cm) pan; a 1⅔-cup-flour batter in a 25cm round cuts about 10 slices.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 105,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "13 min of prep and mixing + 60 min bake + 30 min cooling ⇒ about 105 min. The oven preheat (step 0) runs underneath the mixing, so it is not added.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 12,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "A domestic oven reaches 175°C in about 10–12 min. Steps 1–5 are done while it heats, so this is not added to the elapsed total."
+        },
+        {
+          "index": 1,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Butter melted and swirled round a 25cm pan."
+        },
+        {
+          "index": 2,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "4 plums cut into 6 wedges each — 24 wedges — and laid out in one layer."
+        },
+        {
+          "index": 3,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Six dry ingredients sifted together."
+        },
+        {
+          "index": 4,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "½ cup butter creamed with 1 cup sugar for about 3 min, then 2 eggs beaten in."
+        },
+        {
+          "index": 5,
+          "minutes": 1,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "prep",
+          "working": "Stated by the recipe: \"Alternating, add a third of the dry ingredients and a third of the milk, beating between additions, then beat for 1 minute.\" ⇒ 1 min. The stated minute is the final beat only; the three alternating additions before it take about 3 min more."
+        },
+        {
+          "index": 6,
+          "minutes": 60,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Pour the batter over the plum wedges and bake for about 60 minutes, until a skewer comes out clean.\" ⇒ 60 min. The bake, with a skewer as the real test."
+        },
+        {
+          "index": 7,
+          "minutes": 30,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Cool in the pan on a wire rack for 30 minutes, then invert onto a plate to serve.\" ⇒ 30 min. Cooling in the pan before it will turn out in one piece."
+        }
+      ]
+    },
+    "easy-pad-thai": {
+      "name": "Easy Pad Thai",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "200g of dried rice noodles is about 50g a person for a main, and 3 eggs with 1 cup of meat matches that ⇒ 4.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 25,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "8 min of wok work + 2 min plating, with the 15 min noodle soak run alongside the chopping ⇒ about 25 min.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 15,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Soak the noodles in hot water for around 15 minutes or until soft, rinse in cold water, drain and set aside.\" ⇒ 15 min. Soaking in off-the-boil water — passive, and the other prep is done during it."
+        },
+        {
+          "index": 1,
+          "minutes": 1,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Heat the oil in a wok or large fry pan and cook the garlic and shallots for a minute, taking care not to burn.\" ⇒ 1 min. Stated in words rather than digits: 'for a minute'. Garlic burns after that."
+        },
+        {
+          "index": 2,
+          "minutes": 1,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Add the egg and allow to set for a minute, stir, then add the noodles, prawns and meat and toss to combine.\" ⇒ 1 min. The stated minute is the egg setting; the noodles, prawns and meat tossed in after it add about 2 min."
+        },
+        {
+          "index": 3,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Three liquids in and stirred through."
+        },
+        {
+          "index": 4,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Peanuts and a cup of sprouts heated through: 2–3 min, no longer or the sprouts collapse."
+        },
+        {
+          "index": 5,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Garnished and plated."
+        }
+      ]
+    },
+    "famous-brade-green-chicken-curry": {
+      "name": "Famous Brade Green Chicken Curry",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "The only quantities in the recipe are two 400ml cans of coconut — about 800ml of sauce, which serves 4 with rice. Weak: the chicken is unquantified, so this rests on the sauce alone.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 35,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "8 min browning + 5 min building the sauce + about 20 min simmering ⇒ about 35 min. The simmer is our number and the chicken's doneness, not the clock, ends it.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 8,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Diced chicken and an onion browning in a pan: 6–8 min. Browning is colour, not doneness — the chicken is finished at step 5, not here."
+        },
+        {
+          "index": 1,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Two dried herbs stirred in."
+        },
+        {
+          "index": 2,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "A tablespoon of paste stirred in and fried off."
+        },
+        {
+          "index": 3,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Two 400ml cans in, brought back to a simmer."
+        },
+        {
+          "index": 4,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Peas in."
+        },
+        {
+          "index": 5,
+          "minutes": 20,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "The recipe says 'for a while' and gives no number. 20 min is what about 800ml of coconut takes to reduce to a sauce, and it is the step that cooks the chicken through — so DONENESS GOVERNS, not this number. It must never drive a timer."
+        }
+      ]
+    },
+    "jesse-s-garlic-chicken-thighs": {
+      "name": "Jesse's Garlic Chicken Thighs",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "1 cup of stock with a 375ml can of evaporated milk makes sauce for about 4. Weak: the thighs are unquantified, so this rests on the sauce.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 45,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "13 min to the browning + 10 min reducing + 3 min for the milk and soup + 15 min covered + 3 min of greens ⇒ about 45 min.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Oil brought up to frying heat; no food in the pan yet."
+        },
+        {
+          "index": 1,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "6–8 crushed cloves and a thin-sliced onion sautéed."
+        },
+        {
+          "index": 2,
+          "minutes": 8,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "The onion softens in 4–5 min, then the thighs are browned for 3–4. Browning is not cooking through; step 6 is."
+        },
+        {
+          "index": 3,
+          "minutes": 10,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "1 cup of stock reduced by half over a moderate heat."
+        },
+        {
+          "index": 4,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "A sachet of soup powder in and mixed."
+        },
+        {
+          "index": 5,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Evaporated milk added slowly enough not to split — the pace is the point, not the clock."
+        },
+        {
+          "index": 6,
+          "minutes": 15,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Reduce the heat, put the lid on and cook a further 15 minutes.\" ⇒ 15 min. The covered cook that finishes the chicken, and the only duration this recipe states."
+        },
+        {
+          "index": 7,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "The recipe says 'a few minutes'; green beans or bok choy need about 3."
+        },
+        {
+          "index": 8,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Served over rice cooked alongside."
+        }
+      ]
+    },
+    "shane-s-ribs": {
+      "name": "Shane's Ribs",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "½ cup of BBQ sauce and ½ cup of Coke is enough sauce for about 1–1.5 kg of ribs ⇒ 4. Weak: the ribs are unquantified.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 480,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '8 hr (slow cooker)', which is the slow cook alone; the rub (10 min) and reducing the sauce (about 15 min) put the elapsed time nearer 8 hr 30.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 10,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Mix everything (except the ribs) over medium heat for 10 minutes.\" ⇒ 10 min. The rub and sauce cooked out together."
+        },
+        {
+          "index": 1,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Ribs and sauce into the slow cooker and turned over."
+        },
+        {
+          "index": 2,
+          "minutes": 480,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Cook on low for 8 hours.\" ⇒ 480 min. The slow cook, and the whole of the recipe's stated total."
+        },
+        {
+          "index": 3,
+          "minutes": 15,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "About a cup of slow-cooker liquid reduced to a thick sauce: 10–15 min."
+        }
+      ]
+    },
+    "lamb-shanks": {
+      "name": "Lamb Shanks",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "One shank a person is the standard serve, and a can of tomatoes with 1½ cups of stock covers about 4 of them.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 120,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '2 hr', which is the oven time; flouring, browning and boiling up the braise add about 20 min in front of it.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 10,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Four shanks floured and browned on every side, in a pan that will only hold two at a time."
+        },
+        {
+          "index": 1,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "A can of tomatoes, ¼ cup vinegar, 1½ cups stock and herbs in."
+        },
+        {
+          "index": 2,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "About a litre of braise brought to the boil."
+        },
+        {
+          "index": 3,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Shanks into an oven dish and the braise poured over."
+        },
+        {
+          "index": 4,
+          "minutes": 120,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Bake at 180°C for 2 hours.\" ⇒ 120 min. The braise, and the whole of the recipe's stated total."
+        }
+      ]
+    },
+    "slow-cooked-chicken-noodle-soup": {
+      "name": "Slow-Cooked Chicken Noodle Soup",
+      "serves": 6,
+      "servesSource": "estimated",
+      "servesWorking": "2L of stock with 6 chicken thighs, 4 potatoes and 4 carrots ⇒ about 6 bowls of roughly 330ml.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": null,
+      "timeTotalSource": null,
+      "timeTotalWorking": "NO NUMBER, DELIBERATELY. Step 0 has no duration and cannot be given one without inventing the slow-cooker setting (about 4 hr on high, 7–8 on low), so nothing can be totalled from it. The owner's own setting settles both at once.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": null,
+          "source": null,
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "NO NUMBER, DELIBERATELY. The recipe says 'until tender' and never says low or high — about 4 hr on high, 7–8 on low — so choosing one would be inventing the setting as well as the time. It is also the step that cooks 6 chicken thighs, which is exactly where a made-up number stops being a disappointing dinner. The owner's own setting would settle it."
+        },
+        {
+          "index": 1,
+          "minutes": 8,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Dried noodles take 4–8 min; the packet governs, and it is not in this recipe."
+        }
+      ]
+    },
+    "mussels": {
+      "name": "Mussels",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "2 cups of wine and 90g of butter is a steam for about 1–1.5 kg of mussels, which is 4 as a starter or 2 as a main. Weak: the mussels are unquantified.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 10,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "5 min to bring the wine and butter up + the stated 5 min covered ⇒ about 10 min.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "2 cups of wine with 6 tbsp butter and aromatics brought to a simmer: about 5 min."
+        },
+        {
+          "index": 1,
+          "minutes": 5,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Add the rinsed and scrubbed mussels and cook covered for 5 minutes, until the shells open.\" ⇒ 5 min. Stated — and the shells opening is the real test, which is why the number is safe to time."
+        }
+      ]
+    },
+    "bbq-prawns": {
+      "name": "BBQ Prawns",
+      "serves": null,
+      "servesSource": null,
+      "servesWorking": "NO NUMBER, DELIBERATELY. Every line of this recipe is unquantified — 'Prawns', 'Olive oil', 'Garlic' — so there is nothing to divide. It scales to whatever is bought.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 66,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "The stated hour of marinating plus about 6 min on the grill ⇒ about 1 hr 5, nearly all of it waiting.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 60,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Marinate the prawns in the fridge for at least an hour.\" ⇒ 60 min. Stated in words: 'at least an hour'. An open-ended minimum, so the lower bound is the number, and longer is the recipe's own advice."
+        },
+        {
+          "index": 1,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Laying them on the grill."
+        },
+        {
+          "index": 2,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Prawns take 2–3 min a side on a hot BBQ, turned once. The recipe's test is colour ('until golden brown') and colour governs — this number must not drive a timer."
+        }
+      ]
+    },
+    "sticky-date-pudding": {
+      "name": "Sticky Date Pudding",
+      "serves": 6,
+      "servesSource": "estimated",
+      "servesWorking": "185g of flour with 185g of dates is a standard single-tin sticky date ⇒ 6. The tin size is not stated, which is the weak point.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 40,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "8 min softening the dates + 4 min mixing + 25 min bake + 2 min to serve ⇒ about 40 min. The sauce is made during the bake, so its 5 min is not added.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 8,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "185g of dates simmered in 1 cup of water until soft: 5–8 min."
+        },
+        {
+          "index": 1,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "60g butter and 185g flour beaten into the hot dates."
+        },
+        {
+          "index": 2,
+          "minutes": 25,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Pour into a tin and bake at 190°C for 25 minutes.\" ⇒ 25 min. The bake."
+        },
+        {
+          "index": 3,
+          "minutes": 5,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"For the sauce, place all the sauce ingredients in a pot, bring to the boil stirring, and boil for 5 minutes.\" ⇒ 5 min. The sauce, boiled while the pudding is in the oven — so it adds nothing to the elapsed total."
+        },
+        {
+          "index": 4,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Sauce poured over."
+        }
+      ]
+    },
+    "chocolate-self-saucing-pudding": {
+      "name": "Chocolate Self-Saucing Pudding",
+      "serves": 6,
+      "servesSource": "stated",
+      "servesWorking": "The record already says serves 6, and step 0's 1.5–2L dish agrees with it.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 35,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '~35 min', which is the bake alone; the batter and the boiling water add about 10 min, so allow 45 elapsed.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 12,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "A domestic oven reaches 180°C in about 10–12 min, and the dish is lined while it does. Steps 1–4 run inside this, so it adds nothing to the elapsed total."
+        },
+        {
+          "index": 1,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "100g butter beaten with ¾ cup sugar, an egg and vanilla."
+        },
+        {
+          "index": 2,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Three dry ingredients sifted and folded in, with liquid added to a thick batter."
+        },
+        {
+          "index": 3,
+          "minutes": 1,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Spooned into the dish."
+        },
+        {
+          "index": 4,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "2 cups of water boiled (about 3 min in a kettle) and poured over the back of a spoon."
+        },
+        {
+          "index": 5,
+          "minutes": 35,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Bake at 180°C for 35 minutes, or until cooked through (try covering two-thirds of the dish with a lid).\" ⇒ 35 min. The bake, and the whole of the recipe's stated total."
+        }
+      ]
+    },
+    "tiramisu": {
+      "name": "Tiramisu",
+      "serves": 6,
+      "servesSource": "stated",
+      "servesWorking": "The record already says serves 6; the 20×20cm dish and 400g of biscuits would stretch to 8 in smaller portions.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 30,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The recipe's own '30 min + chill'. The active steps as written come to nearer 39 min, and the chill is 3 hr on top of whichever you take.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "A medium pot of water brought to a simmer; no food in it, so nothing is cooking yet."
+        },
+        {
+          "index": 1,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "6 eggs separated and the yolks weighed up with 1 cup of sugar."
+        },
+        {
+          "index": 2,
+          "minutes": 12,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Set the bowl over the pot and whisk continuously for about 10 minutes, until light and fluffy.\" \"Remove and cool for 2 minutes.\" ⇒ 10 + 2 = 12 min. Two stated durations in one step, so both count: 10 min over the water, then 2 min cooling. cook.js would time the first leg only, which is right — the second is a fresh decision."
+        },
+        {
+          "index": 3,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "250g mascarpone whisked into the cooled yolks."
+        },
+        {
+          "index": 4,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "500ml of cream to stiff peaks is 3–4 min in a mixer, then folded in."
+        },
+        {
+          "index": 5,
+          "minutes": 8,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "400g of sponge fingers is roughly 40 biscuits, dipped one at a time and laid out: about 8 min for the first layer."
+        },
+        {
+          "index": 6,
+          "minutes": 6,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Half the mascarpone spread, a second layer of biscuits dipped and laid, the rest spread and dusted."
+        },
+        {
+          "index": 7,
+          "minutes": 180,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Chill for at least 3 hours, ideally overnight.\" ⇒ 180 min. 'At least 3 hours' — the lower bound, and the recipe itself prefers overnight."
+        }
+      ]
+    },
+    "pumpkin-pie": {
+      "name": "Pumpkin Pie",
+      "serves": 8,
+      "servesSource": "estimated",
+      "servesWorking": "The ingredients state a 9-inch (23cm) pie crust, and a 23cm pie cuts 8.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 105,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "6 min of mixing + 10 min hot bake + 30 min at 175°C + about 60 min cooling to set ⇒ about 105 min. The preheat runs under the mixing.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 15,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "220°C is a high oven; a domestic one takes about 15 min to reach it, and steps 1–3 are done while it heats."
+        },
+        {
+          "index": 1,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "2 cups of pumpkin with melted butter stirred through."
+        },
+        {
+          "index": 2,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "2 eggs beaten, then milk, sugar, salt and four spices, then the pumpkin folded in."
+        },
+        {
+          "index": 3,
+          "minutes": 10,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Pour into the pie shell and bake at 220°C for 10 minutes.\" ⇒ 10 min. The first, hot leg of the bake."
+        },
+        {
+          "index": 4,
+          "minutes": 30,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Reduce the heat to 175°C and bake a further 30–40 minutes, until the filling is firm.\" ⇒ 30 min. A range, so the lower bound: 30 min, with the filling firming as the real test."
+        },
+        {
+          "index": 5,
+          "minutes": 60,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "wait",
+          "working": "A custard pie has to cool before it will cut; about an hour."
+        }
+      ]
+    },
+    "caramel-banana": {
+      "name": "Caramel Banana",
+      "serves": null,
+      "servesSource": null,
+      "servesWorking": "NO NUMBER, DELIBERATELY. The recipe is written to scale — 'Bananas, sliced', 'liberal amounts' of sugar — so it serves as many as there are bananas. A count here would be inventing a quantity the recipe refuses to give.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 12,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "3 min slicing while the pan heats + about 9 min to melt the sugar and soften the banana ⇒ about 12 min.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "A pan on gentle heat while two or three bananas are sliced; nothing is in the pan yet."
+        },
+        {
+          "index": 1,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Butter melted, then brown sugar, which takes 3–5 min to start melting."
+        },
+        {
+          "index": 2,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "Stirred slowly until the sugar becomes a caramel: 3–4 min."
+        }
+      ]
+    },
+    "creamy-mushrooms": {
+      "name": "Creamy Mushrooms",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "200g of mushrooms and 250ml of cream as a side ⇒ 4, at 50g of mushrooms each.",
+      "yield": null,
+      "yieldSource": null,
+      "timeTotal": 13,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "6 min cooking the mushrooms down + 3 min to the boil + 4 min thickening ⇒ about 13 min.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 6,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "200g of mushrooms cook down in 5–6 min with 30g of butter."
+        },
+        {
+          "index": 1,
+          "minutes": 3,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "250ml of cream up to the boil on a high heat."
+        },
+        {
+          "index": 2,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "cook",
+          "working": "The cream reduces and thickens in 3–5 min; thickness is the test."
+        }
+      ]
+    },
+    "turkish-flatbread": {
+      "name": "Turkish Flatbread",
+      "serves": 4,
+      "servesSource": "estimated",
+      "servesWorking": "About 2 cups of flour in one large flatbread, torn to share with a curry or mussels ⇒ 4. desc states the yield (1 flatbread), not the serving.",
+      "yield": "1 large flatbread",
+      "yieldSource": "stated",
+      "timeTotal": 92,
+      "timeTotalSource": "estimated",
+      "timeTotalWorking": "7 min mixing + 60 min rise (the oven preheats inside it) + 6 min shaping and seeding + 17 min baking + 2 min wrapping ⇒ about 92 min.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Flour, yeast and salt stirred together."
+        },
+        {
+          "index": 1,
+          "minutes": 5,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "300–400ml of water added bit by bit and mixed to a sloppy dough."
+        },
+        {
+          "index": 2,
+          "minutes": 60,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Cover with a tea towel and rise in a warm place for about 1 hour.\" ⇒ 60 min. The rise. The oven reaches 250°C inside it, so the preheat costs nothing extra."
+        },
+        {
+          "index": 3,
+          "minutes": 4,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Hot tray out, floured, dough scraped on and pressed out — fast, because the tray is hot."
+        },
+        {
+          "index": 4,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Sprayed with water and oil and seeded."
+        },
+        {
+          "index": 5,
+          "minutes": 17,
+          "source": "stated",
+          "timerSafe": true,
+          "phase": "cook",
+          "working": "Stated by the recipe: \"Bake for about 12 minutes, brush/spray again, then bake a further 5–8 minutes until golden.\" ⇒ 17 min. Two stated legs: 12 min, then a further 5–8 (lower bound), with a spray between them."
+        },
+        {
+          "index": 6,
+          "minutes": 2,
+          "source": "estimated",
+          "timerSafe": false,
+          "phase": "prep",
+          "working": "Wrapped in a tea towel to hold a soft crust."
+        }
+      ]
+    }
+  }
+}
