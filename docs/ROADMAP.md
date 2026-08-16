@@ -4093,6 +4093,37 @@ and the cheap one may well be right:
 3. **Leave it and keep patching** `[S]` — what today did. Fine once; the third
    time is a pattern.
 
+### 🔎 Reported as a bug, checked, and it is not one — but a real question sits inside it `[S][design]`
+
+A peer session measured in headless Chrome that **sorting by distance puts Cook
+at Home first despite it having no coordinates**, and reported it as a live
+`kind` bug on the render path. The measurement is right; the diagnosis is not.
+Checked against the source and the record before acting on it:
+
+- `ranking.js:153` — `pinned: r.kind === "recipes" ? 0 : 1`, commented *"Cook at
+  Home always anchors the top"*, and `pinned` is the **first** sort key, ahead
+  of `stub`, `far`, availability and distance alike.
+- `ROADMAP-DONE.md` — *"Home ranking pass, done 2026-07-12 — added two sort
+  keys ahead of the existing ones: `pinned` (the Cook-at-Home recipes collection
+  always anchors the top)"*. **Deliberate, shipped, and documented.**
+- `ranking.js:79` `availabilityTier` returns 0 for recipes with the reason
+  stated: *"always an option"*. Also deliberate.
+
+🎯 **The real question, which the 2026-07-12 pass may simply not have faced:**
+the pin was added ahead of *every* key, including distance — but "Near me /
+nearest first" is a question the reader asked **explicitly**, and answering it
+with a coordinate-less collection at the top answers a different one. Cooking
+genuinely is always available, so the pin is right in the default view; whether
+it should survive an explicit *distance* sort is a design call nobody has taken.
+The capability refactor makes it expressible ("has a location" → false) rather
+than deciding it. ⚑ Owner's call; nothing is being changed on a peer's report.
+
+🔑 **Worth keeping as method:** a peer's measurement and a peer's *diagnosis*
+are different goods. The measurement was reproducible and valuable; the
+diagnosis reversed a deliberate decision, and two greps (the source comment, the
+done-record) separated them. Verify a report before you build on it — the same
+lesson [ADR 0017]'s merge rule taught this repo from the other direction.
+
 Plus one cheap open question regardless of which is chosen: **`area: "Home"`** —
 null it per ADR 0003, or keep it and name the screen that reads it. `[XS][data]`
 (`currency` is settled and stays — owner ruling above.)
