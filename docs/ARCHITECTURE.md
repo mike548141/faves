@@ -819,6 +819,21 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   deliberately not synced. **Nothing imports it yet** — the Worker and KV store
   are unbuilt and are the owner's go.
 
+- **Cross-device sync, the engine** (`faves.sync.v1`, `faves.sync.base.v1`):
+  `sync.js` + `sync-start.js` + `sync-ui.js` — the modules that *run* the parts
+  below. **One operation, not two**: `syncNow()` reads the blob, merges it
+  against this device, writes it back under `If-Match`, and only then records
+  the base. A push is that cycle triggered by a local change (debounced 20 s,
+  flushed on `visibilitychange`); a pull is the same cycle on foreground. The
+  **base snapshot** is load-bearing — without it `mergePersonal` cannot tell a
+  deletion from an addition — and it is written *only* after a write the server
+  accepted, never after a merge that was not pushed. `writeSnapshot()` replaces
+  each store rather than merging, which is what lets a deletion travel;
+  `applyPersonalData` is additive and is deliberately not used here. Every
+  failure path degrades to local-only. `sync-start.js` is the ignition, imported
+  by all three screens; it exists as its own named file because the failure it
+  fixes was an *absence* — every other part was built, tested and green while
+  nothing imported any of it.
 - **Sync's encryption and its code** (no key of their own): `sync-crypto.js` +
   `sync-code.js`, specified by **ADR 0061**. The sync code is a 65-bit
   Crockford-base32 bearer secret with a mod-29 check symbol, minted from

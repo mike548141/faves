@@ -203,3 +203,32 @@ them change what the next session is allowed to do.
    **Consequence worth having: the device roster is no longer needed at all**,
    which removes the one piece of per-device state the blob would have had to
    carry, and with it the age-out guess that state would have needed.
+
+## Addendum 2 — 2026-08-16: an answer that is asked for and then discarded
+
+Found while wiring the engine, and recorded because it is a *class* of bug this
+ADR's own design invites.
+
+`mergePersonal` resolves a two-sided allergen change to the **union** and reports
+it as blocking (see the Decision above). The engine's `resolve(decisions)` then
+took the user's answer and used it only to **unblock the write** — the snapshot
+it pushed still carried the provisional union. So a person shown the allergen
+question and choosing *"keep the settings on this device"* would have had **both
+devices' allergens written to both devices anyway**, silently, having been asked.
+
+Nothing was computed wrongly. The merge was correct, the conflict was correct,
+the question was correct, the tests were green. **The answer was simply never
+applied.** The gap sat exactly on the boundary between the module that decides
+(`sync-merge.js`) and the module that acts (`sync.js`) — which is the boundary
+this ADR created by separating them, and neither one's test suite could see it.
+
+Fixed by `applyDietDecision()`, which rewrites the merged snapshot from the
+user's choice before it is sealed, and is tested on all three of ADR 0030's
+values. The generalisable rule, worth more than the fix:
+
+> **A provisional value plus a question is only half a design. The other half is
+> the write that the answer changes** — and if asking and applying live in
+> different modules, one test must span both.
+
+This is the third time in one day that building the thing disproved the spec, and
+the only one of the three that could have hurt somebody.

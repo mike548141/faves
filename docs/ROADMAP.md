@@ -1116,12 +1116,20 @@ choose (Theme 10), rather than being trapped in one browser's storage.
   token scoped to two account groups and **no zone scope at all**, held only in
   the macOS keychain; `worker/wrangler.toml` keeps its placeholders on purpose,
   because this repo is public and the real ids live in the estate root.
-  **CLAIMED 2026-08-16 12:14 UTC (wt: faves-sync-live)** — the **push/pull
-  client, the pairing UI and the base-snapshot store**, i.e. everything still
-  standing between a live endpoint and a working feature. Owner pushed back on
-  the parts-vs-machine distinction and asked for sync live; this is that.
-  **Was open, now claimed:** the **push/pull/debounce client**; the
-  **pairing UI**; and the **base-snapshot store the merge needs** — that last is
+  ✅ **SYNC IS LIVE — 2026-08-16.** The engine (`sync.js`), the ignition
+  (`sync-start.js`, imported by all three screens) and the pairing screen
+  (`sync-ui.js`, Settings → *Sync across your devices*) all shipped. **Verified
+  two-device against the deployed Worker**, not against a stub: two devices with
+  different hearts converge, a rating crosses, and **un-hearting on one device
+  removes it on the other** rather than being resurrected — the failure the
+  original ADR 0017 design could never have avoided.
+  🔎 **The finding that made it worth wiring rather than declaring done:** every
+  part — the code, the crypto, the merge, the deployed Worker — was built,
+  tested and green while **nothing imported any of it**. The parts were correct
+  in isolation and the feature did not exist. See ADR 0060 addendum 2 for the
+  sharper one: the allergen question was asked and the answer discarded.
+  ~~**Was open:** the push/pull/debounce client; the
+  pairing UI; and the base-snapshot store the merge needs~~ — that last is
   the only remaining piece of the *offline* half, and without it the merge
   silently degrades to the additive behaviour ADR 0060 exists to replace.
   🚩 **The endpoint being live is not the feature being live**: nothing under

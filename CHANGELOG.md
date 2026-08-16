@@ -8,6 +8,24 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Your favourites, ratings and settings now follow you across your devices.**
+  Settings → *Sync across your devices* → turn it on, and you get a code. Type
+  that code into Faves on your other phone, tablet or laptop and the two stay in
+  step from then on — hearts, star ratings, food preferences, distance dials,
+  language and units. **It is end-to-end encrypted**, so the server stores
+  nothing anyone can read, including us. There is no email, no password and no
+  profile: the code is the only thing that identifies your data, which also
+  means anyone holding it can read and change that data, so it is worth keeping
+  like a password. It is entirely optional, off until you turn it on, and if it
+  can't reach the internet the app carries on exactly as before — your data
+  always lives on your device first.
+  - **Removing something removes it everywhere.** Un-hearting a place on your
+    phone takes it off your laptop too, rather than the laptop putting it back.
+  - **Allergen settings are never merged behind your back.** If you changed
+    them on both devices, Faves asks which to keep, and warns about both in the
+    meantime.
+
 ### Removed
 - **The "Clear ticks" button is gone**, from both the recipe page and cook
   mode. Ticks already clear themselves twelve hours after the last one is
