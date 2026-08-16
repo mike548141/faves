@@ -455,11 +455,20 @@ function refreshResetSection() {
   });
 
   const resetHead = el("p", { className: "settings-sub", textContent: "Start over" });
+  // Two sentences, in the order the reader needs them: what goes, then what
+  // stays. The old copy opened with a five-item list of setting names — the
+  // reader has to hold all five to work out whether this is the button they
+  // want. "Everything you've told Faves about how you eat" is the one that
+  // matters and it goes first, by name, because clearing it silently is the
+  // real risk here.
   const resetNote = el("p", {
     className: "settings-hint",
     textContent:
-      "Puts food preferences, distance, units, language and maps app back to their defaults for the person browsing. " +
-      "Favourites, ratings and other people’s settings are untouched.",
+      "Clears everything you’ve told Faves about how you eat — dietary needs, " +
+      "flagged allergens — along with your distance, units, language and maps " +
+      "app, and puts them back to how they arrived. " +
+      "It only affects the person browsing: your favourites, your ratings and " +
+      "everyone else’s settings stay exactly as they are.",
   });
   const resetBtn = el("button", { type: "button", className: "settings-reset", textContent: "Reset to defaults" });
   const resetConfirmText = el("p", { className: "profile-confirm-text" });
@@ -526,7 +535,16 @@ function refreshResetSection() {
   const typeHelp = el("p", { className: "reset-type-help", id: "reset-type-help" });
   const armed = () => typeInput.value.trim().toLowerCase() === PHRASE;
   function syncArmed() {
-    resetGo.disabled = !armed();
+    const ok = armed();
+    resetGo.disabled = !ok;
+    // The field itself answers, the moment the words match — red while it is a
+    // barrier, green once it is not. The buttons deliberately do NOT change
+    // colour (owner): the destructive one should look destructive throughout,
+    // and the reassurance belongs on the thing the reader is actually typing
+    // into. `aria-invalid` carries the same state to a screen reader, which a
+    // border colour never could.
+    typeInput.classList.toggle("is-armed", ok);
+    typeInput.setAttribute("aria-invalid", ok ? "false" : "true");
   }
   typeInput.addEventListener("input", syncArmed);
   typeInput.addEventListener("keydown", (e) => {
