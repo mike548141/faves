@@ -1,7 +1,7 @@
 // Converting a menu price into the currency you asked to see it in (ADR 0045).
 //
 // The rates are DATA, not an API call: `site/data/fx.json`, fetched by
-// `tools/fetch_fx.py`, committed, refreshed daily by a scheduled job, and
+// `tools/fetch_fx.py`, committed, refreshed weekly by a scheduled job, and
 // served out of the same offline cache as the menus. A live FX call would be a
 // third-party runtime dependency (ADR 0001 forbids it outright) and would go
 // blank in flight mode, which is exactly when someone is looking at a menu

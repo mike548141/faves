@@ -192,7 +192,7 @@ def main():
         "--bump",
         action="store_true",
         help="also bump DATA_VERSION in site/sw.js when the rates actually changed "
-        "(what the daily job uses — see .github/workflows/fx.yml)",
+        "(what the scheduled job uses — see .github/workflows/fx.yml)",
     )
     args = ap.parse_args()
 
@@ -211,7 +211,7 @@ def main():
         return 0
 
     if not rates_changed(doc) and not args.force:
-        # The daily job runs whether or not the rates moved. Rewriting the file
+        # The scheduled job runs whether or not the rates moved. Rewriting the file
         # with only a new `fetched` stamp would produce a commit a day that
         # changes no rate, and every one of those would invalidate the data
         # cache on every installed phone for nothing.

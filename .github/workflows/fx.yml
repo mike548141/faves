@@ -9,7 +9,13 @@
 # Two things worth knowing before changing this:
 #
 #   • A push to `main` IS a deploy — Cloudflare Pages builds from it. So this
-#     job deploys the site up to once a day, by design.
+#     job deploys the site up to once a week, by design.
+#   • It needs a RULESET BYPASS to push at all. `protect-main` requires four
+#     status checks, and a direct push can never satisfy them — the checks run
+#     on the push the rule is refusing. Proved on 2026-08-16, not assumed:
+#     "GH013: Repository rule violations found … 4 of 4 required status checks
+#     are expected … [remote rejected]". The bypass is only defensible because
+#     this job runs those four checks itself, below, before the commit exists.
 #   • `--bump` moves DATA_VERSION in sw.js in the same commit. Without it the
 #     new rates would sit in the repo while every installed phone kept serving
 #     the cached old ones, which is the lockstep rule in CLAUDE.md and the one
@@ -51,6 +57,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
 
       - name: Fetch the latest rates
         run: python3 tools/fetch_fx.py --bump ${{ inputs.force && '--force' || '' }}
@@ -68,13 +77,26 @@ jobs:
             git --no-pager diff --stat
           fi
 
-      # Belt and braces: the same gates a human push would face. Rates are data
-      # the app divides by, so a malformed file is a page full of NaN.
-      - name: Validate before committing
+      # THE SAME FOUR CHECKS the protect-main ruleset requires, run here, before
+      # the commit exists — not as belt and braces but as the substance of the
+      # rule. A scheduled job cannot satisfy a required status check on a direct
+      # push (the check runs after the push the rule is refusing), so for this
+      # job to work at all it needs a bypass. A bypass is only defensible if
+      # nothing is actually skipped, and this is what makes that true: whatever
+      # the ruleset would have demanded afterwards has already passed here.
+      #
+      # If you add a required check to the ruleset, add it here too, or the
+      # bypass quietly starts skipping something real.
+      - name: Everything the ruleset would have required
         if: steps.diff.outputs.changed == 'true'
         run: |
-          python3 tools/fetch_fx.py --check
-          python3 tools/validate.py
+          python3 tools/fetch_fx.py --check   # the rate file loads and its base is sane
+          python3 tools/validate.py           # "menu data validates"
+          python3 tools/test_validate.py      # ...and that gate still catches things
+          python3 tools/check_no_deps.py      # "zero dependencies"
+      - name: JS unit tests
+        if: steps.diff.outputs.changed == 'true'
+        run: node --test
 
       - name: Commit and deploy
         if: steps.diff.outputs.changed == 'true'
@@ -84,7 +106,7 @@ jobs:
           AS_OF=$(python3 -c "import json;print(json.load(open('site/data/fx.json'))['asOf'])")
           git add site/data/fx.json site/sw.js
           git commit -m "data: refresh FX rates (as at ${AS_OF})" \
-                     -m "Automated daily refresh — tools/fetch_fx.py --bump." \
+                     -m "Automated weekly refresh — tools/fetch_fx.py --bump." \
                      -m "Rates are reference rates, not transaction rates; the app says so beside the prices."
           # Rebase rather than force: a human may have pushed while this ran,
           # and their commit is worth more than this one.

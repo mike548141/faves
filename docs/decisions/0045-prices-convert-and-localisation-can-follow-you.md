@@ -30,7 +30,7 @@ should this look, for someone *here*? — so each should be able to answer
 ### Rates are data, not a call
 
 `site/data/fx.json`: a base (NZD), an `asOf` date, a named source, and 35 rates.
-Written by `tools/fetch_fx.py`, committed, refreshed daily by
+Written by `tools/fetch_fx.py`, committed, refreshed weekly by
 `.github/workflows/fx.yml`, cached beside the menus, read offline.
 
 A live FX API was never available to us: it is a third-party runtime dependency
@@ -113,10 +113,22 @@ defaults) and `defaults.js` (the two distance numbers) are leaf modules that
 import nothing, so nothing on the cycle imports anything on the cycle. Constants
 shared by three modules should start there rather than arrive there.
 
-**A daily push to `main` is a daily deploy.** The refresh job commits only when a
-rate actually moved, and bumps `DATA_VERSION` in the same commit so installed
-phones refetch — the lockstep rule, honoured by the tool rather than by a human
-remembering.
+**A weekly push to `main` is a weekly deploy.** The refresh job commits only
+when a rate actually moved, and bumps `DATA_VERSION` in the same commit so
+installed phones refetch — the lockstep rule, honoured by the tool rather than
+by a human remembering. Weekly rather than daily on the owner's call
+(2026-08-16): a menu price is read off a wall months apart, so a rate a few days
+old is nowhere near the biggest approximation in the figure a reader sees.
+
+**The job cannot push without a ruleset bypass, and this was proved rather than
+assumed.** A forced run on 2026-08-16 was refused: *"GH013: Repository rule
+violations found for refs/heads/main … 4 of 4 required status checks are
+expected … [remote rejected]"*. A direct push can never satisfy a required
+status check, because the check runs on the push the rule is refusing. So the
+job runs those four checks **itself, before the commit exists** — which is what
+makes a bypass defensible: it skips the mechanism, not the substance. Adding a
+required check to the ruleset without adding it to the job would quietly make
+that untrue.
 
 **A currency with no shipped rate is a validation error**, not a warning: the
 venue would render correctly in its own currency while silently ignoring the
