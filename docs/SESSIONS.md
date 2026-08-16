@@ -6472,10 +6472,33 @@ by a file map.
   overflow menu that opened it has already closed. Pre-existing; worth its own
   item.
 
-### 🎯 Owner calls owed, none resolved quietly
+### ✅ Owner rulings taken at the close
 
-1. **[ADR 0037] §3 supersession** — currency stated once where it is asked, or
-   twice as 0037 decided. The build takes "once"; the ADR still says "twice".
+- **`contains-fish`, `vg-option` and `df-option` all adopted**, landing **with**
+  the 37n sweep rather than beside it — the vocabulary is closed in three files
+  that move together, and doing tag and sweep separately walks 55 venues twice.
+- **The trace tier: app tags unchanged, and it lives in `site/data/`.** Only `P`
+  becomes a `contains-*` tag; the payload gains the ability to carry `T` rather
+  than discarding it. 🔑 **He overruled the premise a peer put to him**, which is
+  the part worth keeping: *"In ruling 47 I said it only holds data the screen
+  shows, **or may with future features**."* ADR 0047's Context says exactly that
+  — but its own **Consequences** and `CLAUDE.md`'s restatement both state the
+  rule *without* the future clause. **Two of the three places a builder looks are
+  narrower than the decision**, which is why two sessions read it strictly on the
+  same day. 🎯 Wants a superseding note; raised, not taken.
+- **`crumbed → contains-egg` splits into two classes** — house-crumbed
+  egg-washes, commercial frozen goods often do not.
+- **The currency record**: he confirmed the shipped behaviour is intended —
+  About names no currency, the venue page does. Written up as [ADR 0075],
+  superseding only the *second home* of ADR 0037 §3. 🚩 **A fact-check worth
+  keeping:** the agent's report cited "ADR 0037 §3" while the file is named
+  `0037-confidence-reads-both-ways.md`, which reads like an unrelated record. It
+  was right — verified by opening it before publishing, because superseding the
+  wrong ADR is very hard to find later. **Check a citation by opening it, not by
+  recognising the number.**
+
+### 🎯 Owner calls still owed
+
 2. **The tier a note-derived allergen tag carries.** Kept as the firing rule's
    own tier, so "sesame bun" lands STATED. The alternative — every note-derived
    tag is DERIVED, because "this note covers this dish" is itself an inference —
@@ -6484,31 +6507,8 @@ by a file map.
    default cheese is dairy, and under ADR 0025's one-way rule tagging is
    fail-safe. Stopped short because the *dish* it attaches to is unknowable from
    the note. One line either way.
-4. **Is `crumbed → contains-egg` a real class?** 30 of 42 disagree — the largest
-   block in the report. A house kitchen egg-washes; a commercial nugget often
-   does not. Keep, drop, or split.
 5. **Should add-on options appear in the disagreement report?** They are not
    dishes and have no `dishId`. Including them found one real gap.
-6. **There is no `contains-fish` tag, and the corpus needs one.** Found
-   independently by three agents in a peer session: fish sauce runs through a
-   dozen Rock Yard dishes, the venue prints its own badge as literally "Fish",
-   and anchovy is on two Pizza Pomodoro pizzas. All untagged, because the only
-   alternative was inventing a vocabulary entry. `vg-option` and `df-option` are
-   missing for the same reason. The vocabulary is a closed set in three places
-   (`ARCHITECTURE.md`, `validate.py`, `settings.js`) — extending it is an owner
-   call, and it should land **with** the 37n sweep, not beside it, or the sweep
-   is run twice.
-7. **Pizza Hut's TRACE tier — a batch-wide rule, not one dish.** Its first-party
-   allergen document grades `P` (present) against `T` (*"stored or used to
-   manufacture other items at the site"*). `T` is near-universal across the
-   pizza line for nuts, peanuts, sesame and shellfish. Only `P` was tagged.
-   [ADR 0025] points the other way — when unsure, tag — but this is the venue's
-   own **graded** signal rather than uncertainty, and collapsing the two tiers
-   would fire allergen warnings on every pizza, which is a warning carrying no
-   information. 🔑 **The general question is whether ADR 0025's rule applies to a
-   venue's own explicit "trace" grade**, and it will recur on every chain that
-   publishes a proper allergen matrix.
-
 ## 2026-08-16 15:08 UTC — the alarm, a guard that had been dead for a refactor, and four collisions between correct decisions
 
 Orchestration session on the primary checkout, one worktree (`faves-cook`),
