@@ -1058,10 +1058,14 @@ choose (Theme 10), rather than being trapped in one browser's storage.
   bugs fell out of the same read and are fixed: a transfer link that destroyed
   the "follow me" localisation preference, and a merge import that silently
   dropped `units` and `currency`.
-  **Still open, and none of it claimed:** the **Worker + KV** (a new trust
-  surface and the ⚑ below — the owner's go, not taken); the **E2E crypto** and
-  the **bearer sync-code**; the push/pull/debounce client; the pairing UI; and
-  the base-snapshot store the merge needs. 🚩 **Two gates before any of it
+  **CLAIMED 2026-08-16 11:32 UTC (wt: faves-sync-crypto)** — the **E2E crypto,
+  the bearer sync-code, and the Worker source + config**, now that the owner has
+  authorised the backend (ADR 0060 addendum). 🚩 **The Worker cannot be deployed
+  from this machine** — no `wrangler`, no Cloudflare credential — so this claim
+  builds and tests its source and stops short of publishing it.
+  **Still open, and NOT claimed:** the push/pull/debounce client; the pairing
+  UI; the base-snapshot store the merge needs; and the deploy itself.
+  🚩 **Two gates before any of it
   ships:** the Reset-propagation wording (owner's ruling, Theme 32 — and ADR
   0060's last consequence shows that ruling cannot be met as stated, because an
   E2E blob cannot count devices); and the About-screen "no accounts" line, in
