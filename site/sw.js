@@ -11,7 +11,7 @@
 //   - Change both? bump both.
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
-const SHELL_VERSION = "2026-08-16.69";
+const SHELL_VERSION = "2026-08-16.70";
 const DATA_VERSION = "2026-08-16.30";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
@@ -68,6 +68,7 @@ const SHELL = [
   "js/fx.js",
   "js/home.js",
   "js/hours.js",
+  "js/kinds.js",
   "js/lang.js",
   "js/locale.js",
   "js/locations.js",

@@ -8,6 +8,7 @@
 // Pure, so it's unit-tested directly (tests/search.test.js).
 
 import { dishId } from "./dish-id.js";
+import { isRecipeKind, kindOf } from "./kinds.js";
 import { searchableText, venueLanguage } from "./lang.js";
 import { DIET_FILTERS } from "./dietary.js";
 
@@ -96,7 +97,11 @@ export function buildIndex(restaurants) {
   const places = [];
   const dishes = [];
   for (const r of restaurants) {
-    const isRecipe = r.kind === "recipes";
+    // `isRecipe` rides along on each dish as the persisted identity marker the
+    // favourites/share formats already use; where the deep link *goes* is a
+    // capability — whether this kind's items have a page of their own.
+    const isRecipe = isRecipeKind(r);
+    const itemPage = kindOf(r).itemPage;
     const venueLang = venueLanguage(r);
     places.push({
       id: r.id,
@@ -138,8 +143,8 @@ export function buildIndex(restaurants) {
           venueName: r.name,
           isRecipe,
           section: section.section || "",
-          href: isRecipe
-            ? `recipe.html?id=${r.id}&dish=${dishId(item)}`
+          href: itemPage
+            ? `${itemPage}?id=${r.id}&dish=${dishId(item)}`
             : `restaurant.html?id=${r.id}#dish-${dishId(item)}`,
           // The venue's order-number (e.g. "14") joins the haystack so a
           // guest reading "two number 14s" off the board can find it.

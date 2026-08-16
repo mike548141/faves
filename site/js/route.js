@@ -17,6 +17,7 @@
 // Pure (no DOM, no network, no geolocation), so it's unit-tested and offline.
 
 import { haversineKm } from "./distance.js";
+import { kindOf } from "./kinds.js";
 import { branchesOf, branchCoords } from "./locations.js";
 import { venueTimezone } from "./place.js";
 import { tierFromHours } from "./ranking.js";
@@ -93,16 +94,16 @@ export function rankByDetour(
   { clock, origin = null, dest = null, favouriteIds = null } = {}
 ) {
   const keyed = restaurants.map((r, i) => {
-    const isRecipes = r.kind === "recipes";
+    const kind = kindOf(r);
     const best = bestBranchForRoute(r, origin, dest);
-    // Recipes never detour (no location); keep them Infinity but pinned.
-    const detour = isRecipes ? Infinity : best.detourKm;
+    // A kind with no location can't detour you; keep it Infinity but pinned.
+    const detour = kind.hasLocation ? best.detourKm : Infinity;
     const hours = best.branch?.hours ?? null;
     const stub = r.status === "stub" ? 1 : 0;
     const isFav = !!(favouriteIds && favouriteIds.has(r.id));
-    // Availability is meaningless for a stub (nothing to order) and always-on
-    // for recipes; zero it so those groups order by detour/curated alone.
-    const tier = stub || isRecipes ? 0 : tierFromHours(hours, clock.at(venueTimezone(r, origin)));
+    // Availability is meaningless for a stub (nothing to order) and for a kind
+    // with no hours; zero it so those groups order by detour/curated alone.
+    const tier = stub || !kind.hasHours ? 0 : tierFromHours(hours, clock.at(venueTimezone(r, origin)));
     return {
       r,
       i,
@@ -111,7 +112,7 @@ export function rankByDetour(
       hours,
       stub,
       tier,
-      pinned: isRecipes ? 0 : 1, // Cook at Home anchors the top, as everywhere
+      pinned: kind.pinnedFirst ? 0 : 1, // Cook at Home anchors the top, as everywhere
       favTie: isFav ? 0 : 1,
     };
   });
@@ -142,7 +143,7 @@ export function rankByDetour(
 export function areaCentroids(restaurants) {
   const acc = new Map();
   for (const r of restaurants) {
-    if (r.kind === "recipes") continue;
+    if (!kindOf(r).hasLocation) continue;
     if (typeof r.lat !== "number" || typeof r.lng !== "number") continue;
     if (!r.area) continue;
     const a = acc.get(r.area) || { lat: 0, lng: 0, n: 0 };

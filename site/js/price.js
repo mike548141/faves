@@ -15,6 +15,7 @@
 // as our call rather than "estimated from the menu".
 
 import { convert } from "./fx.js";
+import { kindOf } from "./kinds.js";
 import { displayPrice, formatMoney, venueCurrency } from "./place.js";
 
 // Fewer than this many priced items → not a meaningful signal on its own.
@@ -78,7 +79,7 @@ function median(nums) {
  *   the UI shows the band alone rather than a contradictory "~$Npp".
  */
 export function priceBand(record) {
-  if (record?.kind === "recipes") return null; // cooking, not spending
+  if (!kindOf(record).hasPrices) return null; // cooking, not spending
   const currency = venueCurrency(record);
 
   const curatedBand = BAND_LETTERS.has(record?.priceBand) ? record.priceBand : null;

@@ -6,6 +6,7 @@
 import { t } from "./reo.js";
 import { el } from "./dom.js";
 import { wireDialog } from "./dialog.js";
+import { kindOf, labelsOf } from "./kinds.js";
 
 const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
 // Guarded so the pure helpers below import cleanly under `node --test` (no
@@ -38,9 +39,13 @@ export function weightedPick(items, isFav = () => false, rnd = Math.random) {
 }
 
 function metaText(r) {
-  if (r.kind === "recipes") {
+  // A kind that names itself ("Cook at home") counts what it holds; a venue
+  // says where it is and how you get food out of it. The difference is the
+  // browse label, not the record's id.
+  const { browseLabel, itemNoun } = labelsOf(r);
+  if (browseLabel) {
     const n = (r.menu || []).reduce((sum, s) => sum + (s.items?.length || 0), 0);
-    return n ? `Cook at home · ${n} recipe${n === 1 ? "" : "s"}` : "Cook at home";
+    return n ? `${browseLabel} · ${n} ${itemNoun}${n === 1 ? "" : "s"}` : browseLabel;
   }
   const services = (r.services || []).map((s) => SERVICE_LABEL[s] || s).join(", ");
   return [r.area, services].filter(Boolean).join(" · ");
@@ -48,12 +53,15 @@ function metaText(r) {
 
 function chips(r) {
   const row = el("div", { className: "chip-row picker-chips" });
-  if (r.kind === "recipes") {
-    row.append(el("span", { className: "chip chip-recipes", textContent: "🏠 Recipes" }));
-  } else {
+  const { chip } = labelsOf(r);
+  // Cuisines are a facet, so only a kind that sits in the facets shows them;
+  // one that doesn't wears its own single chip instead.
+  if (kindOf(r).inFacets) {
     for (const c of r.cuisine || []) {
       row.append(el("span", { className: "chip chip-cuisine", textContent: c }));
     }
+  } else if (chip) {
+    row.append(el("span", { className: `chip ${chip.className}`, textContent: chip.text }));
   }
   if (r.status === "stub") {
     row.append(el("span", { className: "chip chip-status", textContent: "Menu coming soon" }));

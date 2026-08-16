@@ -33,6 +33,7 @@
 // The viewer can tune both distances (settings.js).
 
 import { openStatus } from "./hours.js";
+import { kindOf } from "./kinds.js";
 import { nearestBranch, venueDistanceKm, venueHours } from "./locations.js";
 import { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
 import { venueTimezone } from "./place.js";
@@ -76,7 +77,10 @@ export function tierFromHours(hours, now) {
  * can't say "nearest" without a location.
  */
 export function availabilityTier(r, clock, origin = null) {
-  if (r.kind === "recipes") return 0; // always an option
+  // Nothing with no opening hours can be ranked by them. Cook at Home answers
+  // this the way it does because your own kitchen has no timetable, not
+  // because of what it is called.
+  if (!kindOf(r).hasHours) return 0; // always an option
   // A venue shut for a refit (or for good) is closed whatever its posted hours
   // say — the lifecycle outranks the weekly timetable (temporal.js, ADR 0023).
   if (!isTrading(r)) return 3;
@@ -126,6 +130,7 @@ export function rankVenues(
   { clock, origin = null, favouriteIds = null, favBoostKm = FAV_BOOST_KM, farKm = FAR_KM } = {}
 ) {
   const keyed = restaurants.map((r, i) => {
+    const kind = kindOf(r);
     // Resolve the nearest branch once: its distance and its hours both feed the
     // ranking (and the hours are handed to the card so its badge matches the
     // branch the distance refers to). For a single-location venue this is just
@@ -147,10 +152,10 @@ export function rankVenues(
     // closed" (tier 3), so a nearer closed stub sank below a farther unknown
     // one. Zero it for stubs so they order by distance instead.
     const tier =
-      stub || r.kind === "recipes" ? 0 : tierFromHours(hours, clock.at(venueTimezone(r, origin)));
+      stub || !kind.hasHours ? 0 : tierFromHours(hours, clock.at(venueTimezone(r, origin)));
     return {
       r, i, effective, dist, hours, far, tier, stub,
-      pinned: r.kind === "recipes" ? 0 : 1, // Cook at Home always anchors the top
+      pinned: kind.pinnedFirst ? 0 : 1, // Cook at Home always anchors the top
       favTie: isFav ? 0 : 1,
     };
   });
