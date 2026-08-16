@@ -385,6 +385,60 @@ delivery app.** Clear one by bringing back the fact.
       session can start rather than repeat it.
       **CLAIMED 2026-08-16 12:14 UTC (wt: faves-menu-18)** — the fetch of the 18
       first-party-fetchable venues, under the owner ruling below.
+      ✅ **4 of 18 done 2026-08-16: the Sprig + Fern taverns** — Petone 10,
+      Berhampore 19, Thorndon 20, Little Sprig Seatoun 16 = **65 dishes** where
+      there were none. Confirmed they are four separate kitchens: four menus
+      with zero overlap, Tawa's included. **The remaining 14 are open** and the
+      recipe below makes them repeatable.
+      🔑 **What the pilot learnt, and a brief for the next 14 must carry:**
+      - **The `/pages/<slug>` pages hold no menu at all** — every one is a link
+        to a per-venue PDF. This is PDF work, not page-scraping work.
+      - **`tag_allergens.py` writes NOTHING on any record with
+        `addOnGroups`.** It patches `tags` positionally and bails when the count
+        mismatches, so it exits clean having done nothing — a green run that
+        means "I declined". All four needed the tags applied by hand and the
+        tool re-run to zero to prove none were dropped. 🚩 This is the
+        decorative-guard pattern again, in the one tool whose silence is a
+        safety question: it *reports* the missing tags and cannot *apply* them.
+      - **It reads item text only, so it cannot see a section note.** Thorndon
+        prints "on a Sesame Bun" once above the burgers — all three burgers came
+        back untagged for sesame. Berhampore's "our pizza bases contain dairy"
+        likewise. **30+ tags were missed this way**; the sweep is a first pass,
+        never the answer.
+      - **Never trust PDF text extraction's ORDER.** `pypdf` emits
+        Berhampore description-before-name, which would have given a fried item
+        the polenta sticks' *"Vegan, DF, GF"* — a false SAFETY claim. Render to
+        PNG and read it visually. No `pdftotext`/poppler on this machine;
+        `pypdf` + `sips` works, and `qlmanage` covers the PDFs `sips` renders
+        black.
+      - **A dropped toppings line survives as a tag.** Thorndon's "Margherita"
+        arrived as a bare name with `contains-nuts` while every other pizza
+        carried its toppings in the name — the tag outlived the text that
+        justified it. Caught by reading the data, not by any gate.
+      🚩 **Two menus are years old and now say so.** Petone's PDF was exported
+      **2023-06-02** and Berhampore's **2023-12-21**; both carry that as
+      `verified`, so both correctly show the stale caveat. Recording the
+      document's own date rather than the day we read it is what makes that
+      caveat fire — ADR 0038's `/CreationDate` rule doing its job.
+      ⚑ **Little Sprig Seatoun's date is contested and left at 2026-06-29.**
+      The PDF's Canva `/Title` says *"Bar Snacks Menu (Oct 2025)"* but it was
+      exported 2026-06-29 and the venue's own filename calls it the 2026 menu.
+      The export date is the only full-precision date the document supports;
+      the conservative read would be older. Owner's call if it matters.
+      🚩 **Roughly a third of the allergen tags are judgement, not reading** —
+      croquettes assumed crumbed, calamari assumed floured, pizzas assumed
+      cheesed from a "dairy free cheese available" footer. Each is a small
+      safety bet, recorded in the session log. **`contains-egg` was DECLINED
+      twice** (croquettes, cheesecake) where the split is genuine; those are
+      the two most likely to be wrong in the dangerous direction.
+      🔎 **An inconsistency the pilot exposed rather than caused:** Tawa's
+      sausage dishes carry no `contains-gluten` while Seatoun's now do, on the
+      same reasoning (NZ sausages standardly contain wheat rusk). The corpus
+      disagrees with itself; nobody touched Tawa. Worth a sweep of its own.
+      🔎 **Unrelated but found here:** the no-JS fallback `<ul>` in
+      `site/index.html` is **35 venues behind** `site/data/index.json`. That is
+      a lockstep rule in CLAUDE.md going unenforced corpus-wide, not something
+      this batch introduced — and nothing checks it.
 
       > 🔎 **The title understates the gap by five times — measured 2026-08-16.**
       > Counted across all 55 venue records: **32 carry zero dishes**, not six.
