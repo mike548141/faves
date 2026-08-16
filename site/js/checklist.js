@@ -149,14 +149,6 @@ export function createChecklist(storage, now = () => Date.now()) {
       return on;
     },
 
-    /** Start again — the "cooked twice" reset. Silent no-op if nothing is ticked. */
-    clear(rid) {
-      if (!ticks[rid]) return false;
-      ticks = Object.fromEntries(Object.entries(ticks).filter(([k]) => k !== rid));
-      commit();
-      return true;
-    },
-
     /** Re-read from storage — after a profile switch, or a cross-tab write. */
     reload() {
       ticks = read();

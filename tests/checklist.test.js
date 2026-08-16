@@ -107,18 +107,13 @@ test("unticking the last line removes the record rather than leaving it empty", 
   assert.deepEqual(JSON.parse(s.getItem(CHECKLIST_KEY)), {});
 });
 
-test("ticks are scoped per recipe — one recipe's clear leaves the other alone", () => {
+test("ticks are scoped per recipe — unticking one leaves the other alone", () => {
   const c = createChecklist(fakeStorage());
   c.set("a", "i:1", true);
   c.set("b", "i:1", true);
-  c.clear("a");
+  c.set("a", "i:1", false);
   assert.equal(c.count("a"), 0);
   assert.equal(c.count("b"), 1);
-});
-
-test("clear on a recipe with nothing ticked is a silent no-op", () => {
-  const c = createChecklist(fakeStorage());
-  assert.equal(c.clear("r"), false);
 });
 
 test("ticked() hands back a set the caller cannot use to mutate the store", () => {
@@ -134,7 +129,7 @@ test("subscribers are told on every write and on reload", () => {
   let calls = 0;
   const off = c.subscribe(() => calls++);
   c.set("r", "i:1", true);
-  c.clear("r");
+  c.set("r", "i:1", false); // unticking the last line is still a write
   c.reload();
   assert.equal(calls, 3);
   off();

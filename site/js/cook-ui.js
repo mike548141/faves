@@ -32,7 +32,7 @@ import { translate } from "./reo.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
 import { checklist, lineId, recipeId } from "./checklist.js";
-import { clearTicksButton, syncTicks, tickRow } from "./checklist-ui.js";
+import { syncTicks, tickRow } from "./checklist-ui.js";
 import {
   canCook,
   createSpeaker,
@@ -259,10 +259,10 @@ export function openCookMode(item, { venueId } = {}) {
       ])
     : null;
 
-  const tools = el("div", { className: "cook-tools" }, [
-    stepTick,
-    el("div", { className: "cook-tool-btns" }, [readBtn, clearTicksButton(rid)]),
-  ]);
+  // readBtn is null where the browser has no speechSynthesis (el() skips a
+  // null child), so this stays a plain two-item row rather than a wrapper
+  // built to hold a pair that no longer exists.
+  const tools = el("div", { className: "cook-tools" }, [stepTick, readBtn]);
 
   // Two buttons, always the same two, always in the same place. The Ingredients
   // toggle that used to span this row is gone — its content is on screen now —
@@ -481,10 +481,10 @@ export function openCookMode(item, { venueId } = {}) {
     paint();
     paintStepIngredients(index);
   });
-  // Clear ticks, and the recipe page's own boxes sitting behind this dialog,
-  // both write through the same store. Follow it rather than owning a second
-  // copy of the truth — `paintTicks` sets properties only, so nothing in the
-  // live region is mutated and nothing is re-announced.
+  // The recipe page's own boxes sit behind this dialog and both write through
+  // the same store. Follow it rather than owning a second copy of the truth —
+  // `paintTicks` sets properties only, so nothing in the live region is
+  // mutated and nothing is re-announced.
   const unsubscribeTicks = checklist.subscribe(paintTicks);
 
   dialog.addEventListener("close", () => {

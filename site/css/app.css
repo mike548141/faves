@@ -4416,10 +4416,6 @@ body.faves-view .to-top {
 .recipe-body .method li:has(.tick) {
   align-items: center;
 }
-.tick-clear-row {
-  margin-top: var(--space-3);
-}
-
 /* Cook mode's own tick row, between the timer and the nav. Outside the live
    region, and always present — a control that vanishes while focused drops
    focus out of the dialog (ADR 0039). */
@@ -4430,11 +4426,6 @@ body.faves-view .to-top {
   gap: var(--space-2);
   flex-wrap: wrap;
   flex: none;
-}
-.cook-tool-btns {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
 }
 /* Read aloud. Quiet by default — it is an offer, not the way you are meant to
    use cook mode — and unmistakable while it is talking, because the only way to

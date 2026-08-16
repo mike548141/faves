@@ -8,6 +8,12 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Removed
+- **The "Clear ticks" button is gone**, from both the recipe page and cook
+  mode. Ticks already clear themselves twelve hours after the last one is
+  made, so a recipe cooked again next week never started half-ticked without
+  it — the button had no job left to do (owner ruling).
+
 ### Fixed
 - **Ordering, website and pickup links now warn a screen reader before they
   leave the site.** Every link that opens in a new window — "Order online",
@@ -29,8 +35,8 @@ content freshness separately from this file.
   on both the recipe page and inside cook mode, and what you tick in one shows
   up in the other. They survive a reload, a call and closing cook mode — and
   they clear themselves after twelve hours, so a recipe you cook again next
-  week never starts half-ticked. **Clear ticks** starts you over whenever you
-  want. Ticks are per person, like your hearts and your allergen settings.
+  week never starts half-ticked. Ticks are per person, like your hearts and
+  your allergen settings.
 - **Cook mode can read the step out loud**, for when your hands are in a bowl.
   One tap starts it, another stops it, and it stops on its own when you move to
   the next step or close cook mode. It uses the voice built into your phone, so

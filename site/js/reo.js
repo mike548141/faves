@@ -277,7 +277,6 @@ const MI = {
   "cook.timerDone": "Kua oti te tāima", // draft — "the time is finished"
   "cook.timerReset": "Tīmata anō", // draft — "start again"
   "cook.stepDone": "Kua oti tēnei hipanga", // draft — "this step is finished"
-  "cook.clearTicks": "Whakawāteahia ngā tohu", // draft — "clear the marks"
   "cook.read": "Pānui ā-waha", // draft — "read aloud"
   "cook.readStop": "Kāti", // draft — "stop"
 };

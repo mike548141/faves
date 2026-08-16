@@ -257,7 +257,6 @@ const SNAP = `(() => {
     pageTicksNative: [...document.querySelectorAll(".recipe-detail-page .tick-box")].every(
       (b) => b.tagName === "INPUT" && b.type === "checkbox"
     ),
-    pageClear: document.querySelectorAll(".recipe-detail-page .tick-clear").length,
     pageFocus: document.activeElement ? document.activeElement.className : null,
     // Reading the step aloud (ROADMAP 17e). synthSpeaking is the PLATFORM's own
     // flag, so "nothing outlived cook mode" is read off the browser rather than
@@ -307,7 +306,7 @@ const SNAP = `(() => {
     stepTicked: q(".cook-step-tick .tick-box") ? q(".cook-step-tick .tick-box").checked : null,
     ingTicks: [...d.querySelectorAll(".cook-ing .tick-box")].map((b) => b.checked),
     ingTickIds: [...d.querySelectorAll(".cook-ing .tick-box")].map((b) => b.dataset.tick),
-    tickTaps: [side(q(".cook-step-tick")), side(q(".cook-ing .tick")), side(q(".cook-tools .tick-clear"))],
+    tickTaps: [side(q(".cook-step-tick")), side(q(".cook-ing .tick"))],
     readShown: !!q(".cook-read"),
     readPressed: q(".cook-read") ? q(".cook-read").getAttribute("aria-pressed") : null,
     readTap: side(q(".cook-read")),
@@ -676,7 +675,7 @@ async function run(opts) {
           t0.ingTicks.every((on) => on === false) &&
           t0.tickTaps.every((n) => n >= 44),
         `${t0.ingTicks.length} ingredient boxes, rows ${t0.tickTaps.map((n) => `${n}px`).join("/")}` +
-          ` (step tick / ingredient row / clear)`
+          ` (step tick / ingredient row)`
       );
 
       const firstId = t0.ingTickIds[0];
@@ -987,7 +986,7 @@ async function run(opts) {
     await press("Escape");
     await closed();
 
-    // --- 15. The ticks survive a reload, and can be cleared ---------------
+    // --- 15. The ticks survive a reload ------------------------------------
     // The roadmap's whole ask is "state that survives a phone call", so the
     // assertion has to be a real page load, not a re-render: everything below
     // reads a document built from scratch out of localStorage.
@@ -998,28 +997,15 @@ async function run(opts) {
       "the recipe page makes every ingredient and every step tickable",
       reloaded.pageTicks.length === lines &&
         reloaded.pageTicksNative === true &&
-        reloaded.pageTickRows.every((h) => h >= 44) &&
-        reloaded.pageClear === 1,
+        reloaded.pageTickRows.every((h) => h >= 44),
       `${reloaded.pageTicks.length} of ${lines} lines, native=${reloaded.pageTicksNative}, ` +
-        `shortest row ${Math.min(...reloaded.pageTickRows)}px, ${reloaded.pageClear} reset control`
+        `shortest row ${Math.min(...reloaded.pageTickRows)}px`
     );
     const survived = reloaded.pageTicks.filter(([, on]) => on);
     report.check(
       "ticks made in cook mode are still ticked after a full page reload",
       survived.length === 2,
       `${survived.length} lines still ticked on a document rebuilt from storage`
-    );
-
-    await click(".recipe-detail-page .tick-clear");
-    const cleared = await snap();
-    await goto(recipeUrl, ".recipe-detail-page .tick-box");
-    const stayedClear = await snap();
-    report.check(
-      "Clear ticks empties them, and they stay empty across a reload",
-      cleared.pageTicks.some(() => true) &&
-        cleared.pageTicks.every(([, on]) => on === false) &&
-        stayedClear.pageTicks.every(([, on]) => on === false),
-      `${cleared.pageTicks.length} boxes cleared in place, and still clear after reloading`
     );
 
     report.check(

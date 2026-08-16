@@ -56,23 +56,3 @@ export function syncTicks(root, rid) {
     box.checked = checklist.has(rid, box.dataset.tick);
   }
 }
-
-/**
- * The reset. Always present and always enabled rather than appearing once
- * something is ticked: a control that comes and goes drops focus to <body> the
- * moment it vanishes while focused, and cook mode has already paid for that bug
- * twice (ADR 0039). Clearing an empty recipe is a harmless no-op.
- */
-export function clearTicksButton(rid, onClear = () => {}) {
-  const btn = el("button", {
-    type: "button",
-    className: "btn tick-clear",
-    "data-i18n": "cook.clearTicks",
-    textContent: "Clear ticks",
-  });
-  btn.addEventListener("click", () => {
-    checklist.clear(rid);
-    onClear();
-  });
-  return btn;
-}
