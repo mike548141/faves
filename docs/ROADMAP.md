@@ -383,8 +383,21 @@ delivery app.** Clear one by bringing back the fact.
 - [~] **Menus still owed on six venues — and where each one lives**
       `[M][content]`. Researched 2026-08-16 and written down here so a fresh
       session can start rather than repeat it.
-      **CLAIMED 2026-08-16 14:10 UTC (wt: faves-menus)** — the remaining 14,
-      under the owner ruling below.
+      ✅ **7 of the 14 DONE 2026-08-16 (wt: faves-menus) — 850 dishes.**
+      The Catch Sushi Bar 87 · Satay Kingdom 53 · Charley Noble 125 · Regal
+      Chinese 264 · Rock Yard Vietnamese 58 · Pizza Pomodoro 83 · Gong Cha 131.
+      Every price from the venue's own site or its own menu PDF.
+      **The other 7 are accounted for, not abandoned** — see the two findings
+      below: 4 publish a site with **no menu on it**, and 3 need an owner call
+      (`pizza-hut` transcribable and in progress at close · `subway` publishes
+      no price anywhere · `the-victoria-tavern` reachable only with TLS
+      verification disabled). 🔑 **The recipe that made this repeatable:** a
+      venue's own ordering storefront on its own domain counts as
+      `official-site` — three of the seven came from TuckerFox/Pump'd/appropo
+      pages linked from the venue's own nav, and two agents independently found
+      the venue's *marketing homepage* price tiles **stale** against them
+      (Salmon Nigiri $6.50 vs $7.50; satay $16.00 vs $17.90). **Read the
+      ordering page, never the marketing tile.**
       🔎 **The previous claim was released as ORPHANED, on evidence, not
       impatience.** It read `CLAIMED 2026-08-16 12:14 UTC (wt: faves-menu-18)`.
       Three independent facts say that session closed rather than paused:
@@ -801,6 +814,31 @@ Two streams, deliberately separated because they land in different places:
   the reporter can't cancel (rationale in ADR 0028).
 
 ## Theme 5 — Richer dish data
+
+- [ ] 🎯 ⚑ **The tag vocabulary has no `contains-fish`, and three sub-agents
+      found it independently on one day** `[S][schema]` (2026-08-16). The closed
+      set carries `contains-shellfish` and **nothing for finned fish** — one of
+      the major declarable allergens, and the one this corpus meets constantly.
+      Rock Yard names **fish sauce** in a dozen dishes (dipping sauces,
+      dressings, marinades) and prints its own badge literally as **"Fish"**;
+      Pizza Pomodoro has anchovy on two pizzas; Regal has a spicy fish sauce.
+      All of it is currently **untagged**, because the honest alternative is
+      inventing a tag, which the vocabulary's own header forbids
+      (*"extend here, not ad hoc"*).
+      🚩 **This is not a tidiness gap — it is a silent safety hole**, and worse
+      than a missing tag on one dish: a reader with a fish allergy gets a corpus
+      that never once warns them, which reads as "no dish here contains fish".
+      Adding it is a schema change plus a corpus sweep plus a rule in
+      `tools/tag_allergens.py` (fish sauce · anchovy · unagi · bonito/dashi ·
+      Worcestershire sauce, which is the one people miss), and it should land
+      with 37n rather than beside it.
+      **Two smaller holes found the same way, same day, lower stakes:** there is
+      `gf-option` and `v-option` but no **`vg-option`** or **`df-option`**. Gong
+      Cha offers a free soy/oat swap on 15 drinks and Rock Yard prints "Vegan
+      Optional" on two — genuinely useful to the people the dietary filters
+      exist for, and currently unrecordable.
+      ⚑ **Owner's call**, because it widens a closed set that safety copy leans
+      on. Recorded, not acted on.
 
 ✅ **Shipped 2026-07-08 → 09** — price-per-person + cheap-eats filter (`price.js`,
 curated `priceBand` override), dish order-codes, the extended allergen
