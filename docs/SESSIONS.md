@@ -6477,3 +6477,22 @@ by a file map.
    does not. Keep, drop, or split.
 5. **Should add-on options appear in the disagreement report?** They are not
    dishes and have no `dishId`. Including them found one real gap.
+6. **There is no `contains-fish` tag, and the corpus needs one.** Found
+   independently by three agents in a peer session: fish sauce runs through a
+   dozen Rock Yard dishes, the venue prints its own badge as literally "Fish",
+   and anchovy is on two Pizza Pomodoro pizzas. All untagged, because the only
+   alternative was inventing a vocabulary entry. `vg-option` and `df-option` are
+   missing for the same reason. The vocabulary is a closed set in three places
+   (`ARCHITECTURE.md`, `validate.py`, `settings.js`) — extending it is an owner
+   call, and it should land **with** the 37n sweep, not beside it, or the sweep
+   is run twice.
+7. **Pizza Hut's TRACE tier — a batch-wide rule, not one dish.** Its first-party
+   allergen document grades `P` (present) against `T` (*"stored or used to
+   manufacture other items at the site"*). `T` is near-universal across the
+   pizza line for nuts, peanuts, sesame and shellfish. Only `P` was tagged.
+   [ADR 0025] points the other way — when unsure, tag — but this is the venue's
+   own **graded** signal rather than uncertainty, and collapsing the two tiers
+   would fire allergen warnings on every pizza, which is a warning carrying no
+   information. 🔑 **The general question is whether ADR 0025's rule applies to a
+   venue's own explicit "trace" grade**, and it will recur on every chain that
+   publishes a proper allergen matrix.
