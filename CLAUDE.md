@@ -260,17 +260,20 @@ except `boot_check`'s, and skipping one because "CI will catch it" is still a
 category error.
 
 🛑 **And read what the one automated check actually promises: it REPORTS, it
-does not BLOCK.** `protect-main` requires four status checks, but a repository
-admin bypasses it always (`bypass_mode: always`) — measured 2026-08-17, **the
-last 100 ruleset evaluations on `main` were 100 bypasses**. On this repo's
+does not BLOCK.** `protect-main` requires **six** status checks as of
+2026-08-17 — `every screen boots` and `service-worker version lockstep` were
+added to the four (owner-authorised) once the boot job existed to be required.
+**But `bypass_actors` still carries `RepositoryRole 5 → always`, unchanged**, so
+a push from the owner's machine bypasses all six: measured 2026-08-17, **the
+last 100 ruleset evaluations on `main` were 100 bypasses.** On this repo's
 normal path a direct push to `main` **is** the Cloudflare Pages deploy, so the
-sequence is **push → deploy → CI goes red afterwards**. `every screen boots` is
-not in the required-checks list either, so it does not block a PR merge. What it
-buys is that this one check runs without anyone remembering to type it — which
-is worth having, and is a much weaker claim than "the push will fail".
-🚩 **The same is true of `service-worker version lockstep`** — the gate written
-*because* an unbumped `SHELL_VERSION` shipped to the owner's own phone is also
-absent from the required list, so it too is advisory on every path.
+sequence is still **push → deploy → CI goes red afterwards**.
+🔑 **So the resting state is REQUIRED-BUT-BYPASSABLE, which is better than
+advisory and is not the same as enforced.** The requirement takes effect the
+moment the bypass is narrowed — a decision the owner holds separately and has
+not taken. Until then, what the automation buys is that these checks *run*
+without anyone remembering to type them. That is worth having, and it is a much
+weaker claim than "the push will fail".
 🚩 **A transport timeout in `tools/lib/browser.mjs` is NOT specific to
 `cook_check`.** Measured 2026-08-17 on a five-session laptop: `boot_check` 2 of
 4 runs failed and `recipe_check` 4 of 8 aborted, every failure on the same

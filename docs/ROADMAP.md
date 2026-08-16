@@ -3397,6 +3397,23 @@ printing `FAIL <assertion>` with exit 1. Detail →
       the owner's own phone is advisory on every path. 🎯 Whether either becomes
       required is repo settings and therefore the owner's; it is being put to
       him from the session holding the live version-bump instance, as one ask.
+
+      ✅ **ANSWERED same day: the owner authorised it and a peer made the
+      change — `protect-main` now requires SIX contexts**, adding `every screen
+      boots` and `service-worker version lockstep`. Verified independently
+      against the ruleset API rather than taken on report. 🔑 **The boot job had
+      to exist before it could be required**, so the CI wiring above is what
+      made the addition possible.
+      🛑 **But `bypass_actors` is UNCHANGED — `RepositoryRole 5 → always`.** So
+      a push from the owner's machine still bypasses all six, and **on its own
+      this closes nothing in practice today.** The peer nearly overstated it to
+      the owner and corrected itself; that correction is the load-bearing part
+      and is preserved here rather than smoothed into a win. 🔑 The resting
+      state is now **required-but-bypassable** — better than advisory, not the
+      same as enforced, and it takes effect the moment the bypass is narrowed.
+      🎯 **Narrowing the bypass is a separate owner decision he has NOT taken**;
+      the peer recommended leaving it for now. Do not treat this item as
+      protected by the requirement.
       🚩 **A near-miss worth more than the finding it came from:** a peer nearly
       reported `check_decisions.py` as ungated too. It is not — it, plus
       `check_fallback`, `gen_sbom --check` and `check_visibility`, are **steps
