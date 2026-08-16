@@ -4615,7 +4615,9 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 > ✅ **Shipped 2026-08-16** — 37b — the timer's whole presentation is wrong. Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [ ] **37c — the ingredients section should collapse** `[S][js][css]`. Owner:
+- [~] **37c — the ingredients section should collapse** `[S][js][css]`.
+      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page pass.
+      Owner:
       *"I should be able to collapse or hide the ingredients section"*. Once
       everything is in the bowl the list is a wall of struck-through text
       between the reader and the method. Use the house pattern — native
@@ -4626,7 +4628,8 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       *unfamiliar* recipe then hides the ingredients you have not bought yet.
       If that bites, the fix is per-recipe state, not abandoning persistence.
 
-- [ ] **37d — two columns for ingredients when there is room** `[S][css]`.
+- [~] **37d — two columns for ingredients when there is room** `[S][css]`.
+      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page pass.
       Owner: *"consider if the ingredients should go into two columns if there
       is screen space"*. The screenshot that prompted it shows a laptop-width
       window with the recipe held to a reading measure and most of the viewport
@@ -4635,8 +4638,9 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       *consider*, not an instruction** — if the measure test says a two-column
       ingredient list reads worse at that width, say so and don't ship it.
 
-- [ ] **37e — a recipe should carry its attribution as a field** `[S][schema]
-      [js]`. Owner: *"Recipes should be able to be attributed, for example to
+- [~] **37e — a recipe should carry its attribution as a field** `[S][schema]
+      [js]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page
+      pass. Owner: *"Recipes should be able to be attributed, for example to
       the Edmunds cookbook"* (the NZ cookbook is spelled **Edmonds**; the data
       already has it right). Today attribution is buried in free prose — the
       pudding's `description` reads *"A Clements family dessert since the early
@@ -4678,8 +4682,8 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 > ✅ **Shipped 2026-08-16** — 37i — Sync lives inside "Your data". Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [ ] **37j — "Everywhere" is a place word on a service filter** `[XS][ux]`.
-      Owner: *"Everywhere does not make sense for a drop down to select dine-in
+- [~] **37j — "Everywhere" is a place word on a service filter** `[XS][ux]`.
+      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)**. Owner: *"Everywhere does not make sense for a drop down to select dine-in
       vs takeaway."* He is right and it is one string: `site/index.html`'s
       `#filter-service` offers **Everywhere / Takeaway / Dine-in** under the
       label "Service". Its neighbours read "All areas" and "All cuisines", so
@@ -4704,8 +4708,9 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       Check whether "style" is simply that proposal's `service` axis under
       another name before opening a second front.
 
-- [ ] **37l — a recipe with components needs grouped ingredients**
-      `[M][schema][js]`. Owner, 2026-08-16: *"Some recipes have multiple
+- [~] **37l — a recipe with components needs grouped ingredients**
+      `[M][schema][js]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the
+      recipe-page pass. Owner, 2026-08-16: *"Some recipes have multiple
       components. For example Booth's Ginger Crunch has the base and the icing,
       look at how we should organise the ingredients to improve this."*
       🔎 **The corpus is already doing this by hand, and the measurement says
@@ -4732,8 +4737,9 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       makes the other two easier — a two-column list breaks far better on
       component boundaries than mid-list.
 
-- [ ] **37m — the tick boxes do not line up, in two different ways**
-      `[XS][css]`. Owner, 2026-08-16: *"the ingredients tick boxes are not
+- [~] **37m — the tick boxes do not line up, in two different ways**
+      `[XS][css]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the
+      recipe-page pass. Owner, 2026-08-16: *"the ingredients tick boxes are not
       lined up with the method steps. And the method steps tick boxes are not
       lined up with the method step numbers."* Two complaints, two separate
       causes, both found in `app.css` and both cheap.
@@ -4764,8 +4770,9 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       component grouping all move these same rows, and aligning them twice is
       the waste.
 
-- [ ] 🚩 **37n — the corpus disagrees with itself about allergens, and one dish
-      at a time will never fix it** `[M][data]`. Owner-directed 2026-08-16, when
+- [~] 🚩 **37n — the corpus disagrees with itself about allergens, and one dish
+      at a time will never fix it** `[M][data]`.
+      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-allergens)**. Owner-directed 2026-08-16, when
       he ruled on two `contains-egg` tags: *"add egg, and fix the real
       problem."* The two dishes are done; this is the problem.
       🔎 **The evidence that started it.** Seatoun's "Sausages n Fries" now
