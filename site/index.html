@@ -465,7 +465,7 @@
         </li>
         <li class="card" data-status="menu-complete">
           <a class="card-link" href="restaurant.html?id=southern-cross">
-            <h3 class="card-name">Southern Cross Garden Bar Restaurant</h3>
+            <h3 class="card-name">Southern Cross Garden Bar &amp; Restaurant</h3>
             <p class="card-meta"><span class="card-area">Te Aro</span><span>Dine-in</span></p>
             <div class="chip-row"><span class="chip chip-cuisine">Gastropub</span></div>
           </a>
@@ -608,7 +608,9 @@
       </footer>
     </main>
 
-    <!-- The sticky bottom bar DESIGN.md mandates, now one row of two controls.
+    <!-- The sticky bottom bar DESIGN.md mandates, now one row of up to three
+         controls — Filters · Order · Pick for us — which shrinks to icon-only
+         once you scroll (bar-shrink.js).
          It used to hold the service toggle and both selects, which wrapped to
          two rows at 390 px: 122.2 px of permanently fixed screen, measured, at
          every scroll depth. The filters collapse into one button whose badge
@@ -628,11 +630,20 @@
           aria-controls="filter-sheet"
         >
           <span aria-hidden="true">⚙</span>
-          <span data-i18n="filter.button">Filters</span>
+          <span class="bar-label" data-i18n="filter.button">Filters</span>
           <span id="filters-count" class="filters-count" aria-hidden="true" hidden></span>
         </button>
+        <!-- Where cart-ui.js puts the order pill on this screen. It used to
+             float bottom-left over the cards, which `main`'s padding cannot
+             reserve for: measured, it covered 138.4 × 36.4 px of the first card
+             and all but 3.7 px of the "About & privacy" button. `display:
+             contents` means an empty order costs no box at all, and keeping a
+             real slot (rather than a CSS `order` shuffle) keeps the tab order
+             the same as the reading order. -->
+        <span class="bar-order-slot" id="bar-order-slot"></span>
         <button type="button" id="pick-btn" class="bar-btn bar-pick">
-          <span aria-hidden="true">🎲</span> <span data-i18n="pick.button">Pick for us</span>
+          <span aria-hidden="true">🎲</span>
+          <span class="bar-label" data-i18n="pick.button">Pick for us</span>
         </button>
       </div>
     </nav>

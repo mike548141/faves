@@ -491,10 +491,21 @@ function refreshResetSection() {
     // warning that overstates gets discounted the first time someone notices.
     // Widening what Reset destroys is the owner's call, not a side effect of
     // rewording its warning (ROADMAP).
-    resetConfirmText.textContent =
-      `This wipes ${who}’s saved preferences on this device — dietary needs and ` +
-      `flagged allergens included — and cannot be undone. Favourites, ratings and ` +
-      `other profiles are not touched.`;
+    // The possessive of a profile name reads badly — "Me's saved preferences"
+    // (owner, 2026-08-16) — and the name was carrying a question the sentence
+    // never answered: one profile or all of them? Reset is per-profile
+    // (settings.reset writes through profileScopedStorage), so the copy now
+    // says which, and says it differently depending on whether there is
+    // anyone else on the device to be reassured about.
+    const others = profiles.list().length - 1;
+    resetConfirmText.textContent = others > 0
+      ? `This wipes the saved preferences for the profile you are using now, ` +
+        `${who}, on this device — dietary needs and flagged allergens included. ` +
+        `It cannot be undone. The other ${others === 1 ? "profile keeps theirs" : `${others} profiles keep theirs`}, ` +
+        `and favourites and ratings are not touched.`
+      : `This wipes your saved preferences on this device — dietary needs and ` +
+        `flagged allergens included — and cannot be undone. Your favourites and ` +
+        `ratings are not touched.`;
     typeLabel.textContent = "Type I agree to confirm";
     typeHelp.textContent =
       "Typed, not tapped: this one destroys settings you may rely on to eat safely.";
