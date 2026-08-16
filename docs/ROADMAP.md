@@ -2892,50 +2892,62 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
 `data.js` passes it on every load. Detail, and the honest residue in each →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-- [~] 🚩 **`sync_check.mjs` aborts before its FIRST assertion — the guard proves
-  nothing at all** `[S][js]`. **CLAIMED 2026-08-16 14:35 UTC (wt: faves-cook)**.
-  ⚠️ **Measured 2026-08-16, and the title of this item was wrong.** It said
-  "before its last three assertions". Run on a clean `main`, the check prints
-  its banner and then dies at the **first UI interaction**, with **zero PASS
-  lines**:
-  `harness error: no element matching .settings-row containing "Sync across
-  your devices"`.
-  🔎 **Cause, and it is not the race below.** Commit `e745923` *"settings:
-  remove Transfer to another device, and fold Sync into Your data"* turned that
-  top-level row into a `<p class="settings-sub">` inside the Your-data panel
-  (`settings-ui.js:384`). `sync_check.mjs:405` still clicks `.settings-row`.
-  🛑 **The documented warning is itself stale, and it misleads in the dangerous
-  direction.** `CLAUDE.md`'s verify list says to watch for *"a wall of PASS
-  lines followed by 'harness error'"*. There is no wall of PASS lines — there
-  are none — so a reader matching the documented symptom concludes they are
-  looking at something else. **Fix `CLAUDE.md` in the same change.**
-  🔑 **Third sighting today of one shape: a record whose premise expired in
-  silence.** The scanner-inflation item (closed above) and the "source did not
-  move" hand-check are the other two. Here a *UI refactor* invalidated a *test's
-  selector* and a *doctrine file's description of the failure*, and none of the
-  three knew about the others.
-  ⚠️ **Everything below this line is now UNVERIFIED, not false.** The
-  overflow-menu race was real when observed, but the check cannot reach it any
-  more, so nothing has re-confirmed it since `e745923`. Fix the selector first,
-  then find out whether the race is still there:
-  the two-device sync check (Theme 9 v2) **was** passing every sync assertion
-  including
-  the headline one (a removed heart is removed on the other device, not
-  re-added), then **aborting on an overflow-menu interaction**, so
-  rating-replace, sync-off-leaves-data-intact and server-unreachable are
-  *written and never observed*. 🔎 **The trace points at a real product hazard,
-  not just a flaky check:** after a rating slider takes focus deep in a menu,
-  the header scrolls off; the check compensates, and it was still observed
-  failing — scroll snapping back to 879px on its own, and the ⋯ button's own
-  handler reporting **two** open/close cycles from **one** click. The suspect is
-  `menu.js`'s `reapply()` (`settings.subscribe(reapply)`, wrapped in
-  capture/restoreUiState), which a completed sync now triggers on every device
-  via `sync-start.js`'s `onApplied` hook and which is asynchronous relative to
-  the panel saying "Last synced…". **So a real person acting fast right after
-  their device finishes syncing may hit it.** Full evidence is in the check's
-  own header; an unwired `waitQuiet()` MutationObserver helper sits in
-  `openDevice()` as an untested starting point. Owner is `overflow-ui.js` /
-  `menu.js`, not the sync engine.
+> ✅ **FIXED 2026-08-16 (wt: faves-cook)** — `sync_check.mjs` reaches its own
+> `OK — 16 passed, 0 failed` again, five consecutive green runs, and three
+> deliberately re-broken selectors each named the step they broke. **Nothing in
+> `site/js/` was changed to achieve it.** Three things it taught, all of which
+> outlive the fix:
+> - 🛑 **The "real person could hit this" hazard is RETIRED — it was the
+>   check's own bug, twice over.** The overflow-menu race did not reproduce
+>   once the selector was fixed. Both causes were in the tool: `window.scrollTo(0, 0)`
+>   (the two-argument form) obeys `app.css`'s `html { scroll-behavior: smooth }`
+>   and returned mid-animation — which fully explains the old trace's mystery
+>   reading of *"scrollY:879 immediately after scrollTo(0,0), then scrollY:0 on
+>   the next read"*: **one unfinished scroll, not a second scroller.** And
+>   scrolling to the top makes `initContactBar()`'s IntersectionObserver drop
+>   `body.contact-bar-open` a frame later, moving the layout between
+>   `d.click()`'s rect read and its mouse dispatch — the click landed on
+>   `#menu-page`, 39 ms apart, while a programmatic `.click()` on the same
+>   button worked instantly. **The button was fine; the coordinates went stale
+>   under it.** `waitQuiet()` is now wired and shown to change the outcome
+>   (9 passes → 16). ⚠️ **Honest residue:** the old trace's third observation —
+>   `aria-expanded` reporting two open/close cycles from one click — never
+>   reproduced. Unexplained, not disproved.
+> - 🔎 **A second dead assertion, found while fixing the first.** The landing
+>   check `!!document.querySelector(".sync-body")` would have passed **on the
+>   index screen**: `sync-ui.js` builds that node once at construction and the
+>   panel only un-hides it. It now requires a laid-out box. A guard that passes
+>   before you have navigated anywhere is not checking navigation.
+> - 🔑 **Why it stayed dead for a whole refactor:** see the CLAUDE.md note added
+>   with this fix — **CI runs none of the browser checks.** Nothing was calling
+>   it. Every Settings selector now lives in one `NAV` block so the next
+>   refactor breaks one line loudly.
+> Detail in the tool's own header and → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+
+- [ ] 🚩 **CI runs NONE of the browser checks** `[M][docs]` — found 2026-08-16
+      while closing the item above, and it is the reason that one could sit dead
+      through a whole settings refactor. `.github/workflows/ci.yml` runs
+      `node --test` and the Python gates. It does **not** run `sync_check`,
+      `cook_check`, `device_check`, `boot_check`, `addon_check`, `branch_check`,
+      `to_top_check` or `filter_row_check` — **eight** browser guards, every one
+      of them written *because* unit tests had already missed something real (a
+      leaked wake lock, a silent `init()` throw, a mistapped price, an unsafe
+      add-on). They run only when a person or an agent types them from
+      CLAUDE.md's list.
+      🔑 **The asymmetry is the point:** the cheap guards that catch the least
+      are automated, and the expensive guards that catch the most are on the
+      honour system. So "CI is green" is not evidence about anything on that
+      list, and the checks most likely to be skipped under time pressure are
+      exactly the ones nothing else covers.
+      🤔 **Not obviously a "wire them into CI" job, which is why this is an item
+      and not a fix.** They need headless Chrome, a throwaway profile and a live
+      server; `sync_check` drives **two** browsers and takes minutes; several are
+      timing-sensitive, and a flaky required check trains people to re-run until
+      green, which is worse than no check. Options worth costing before choosing:
+      a nightly/pre-deploy job rather than per-push; a fast subset
+      (`boot_check` alone is seconds and catches the worst class); or leaving
+      them manual and making the *list* impossible to skip. ⚑ Owner's call on
+      whether CI minutes get spent here.
 
 - [ ] 🚩 **`linkscan` is blind to reference-style links, and it is an ENFORCED
       floor guard** `[S][docs]` ⏳ **owed upstream to atelier; nothing to fix
