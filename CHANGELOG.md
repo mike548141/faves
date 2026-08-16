@@ -8,7 +8,37 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Three chains now show all their Wellington branches.** Hell Pizza went from
+  one location to **14**, BurgerFuel to 4 and Kaffee Eis to 3 — each with its own
+  address, phone and opening hours, so the card can offer you the nearest one
+  that is actually open. Gong Cha, Noodle Canteen and Pizza Hut are deliberately
+  still showing one branch: their own websites don't publish opening hours per
+  store, and a branch without hours would be offered to you with no way of
+  knowing whether it is open.
+- **A saved favourite that isn't there any more now says so — and offers to
+  check.** Previously, a hearted dish that had left the menu just sat in your
+  list, and tapping it landed on a menu with the dish quietly absent, or a dead
+  error screen. Now it's marked *"Not on your current list"*, with a **Refresh**
+  that goes and looks. **The wording never guesses**: until it has actually
+  checked, it says *"This may have been removed, or your list may be out of
+  date"*, because your phone genuinely cannot tell those apart. Offline it says
+  so and stops. Only after a real check comes back empty does it say the dish is
+  gone — and if it turns out your list was simply behind, the mark disappears and
+  it tells you that instead.
+- **The filter controls are now on the page on a laptop**, instead of hidden
+  behind a button that opens a sheet designed for a phone. "Clear all" comes with
+  them. On a phone nothing changes.
+
 ### Fixed
+- **The back-to-top button no longer sits on top of a price.** It slides out of
+  the way while you're scrolling down and comes back when you scroll up. Measured
+  rather than eyeballed: it had been covering **the whole width of a dish price**,
+  and on the home screen up to 94.6% of a place's heart — at roughly one in five
+  of the places you might stop scrolling. It also starts out of the way, so a link
+  straight to a dish no longer opens with a button over it.
+- **The `Faves` wordmark in the header is now a full-size tap target** (it was
+  32 px tall against a 44 px floor).
 - **A shortlist you share now opens on the dish you meant.** Where a venue has
   two dishes with the same name at different prices — Sprig & Fern Tawa lists
   *Cheeseburger* three times, at $28, $21 and $15 — a shared shortlist arrived
