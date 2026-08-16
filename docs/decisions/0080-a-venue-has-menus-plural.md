@@ -236,6 +236,29 @@ section headings as prose. Decision 1's third convergence — availability as a
 priority-ordered rule set — is the shape 28c should be built into, so that the
 venue-level and menu-level machinery are one thing rather than two.
 
+**The naming collision is settled, and this record names the last of the three
+so a fourth session cannot invent a fourth word.** One word, `service`, had come
+to mean three different things: the shipped venue filter facet
+(`all|takeaway|dine-in`, on 55/55 venues), this record's price-and-tax axis, and
+Theme 30's proposed label for a `cuisine` value's kind.
+✅ **Owner ruled 2026-08-16: `service` becomes `order-mode` everywhere,
+including the already-shipped filter.** He was offered the cheap option — rename
+only the two proposals and leave the shipped one — and declined it, so the word
+stops being overloaded rather than surviving as the one case future readers must
+still disambiguate. ⇒ **`channel` is ratified for the price axis** — it was never
+the contested word, and Square, Toast and Uber Eats all use it.
+🎯 **The third meaning is named here as `format`**, on the evidence in the
+paragraph below rather than by preference: the values that would carry it are
+Bakery, Bar, Cafe, Deli, Gastropub, Pub, Steakhouse — they are venue *formats*,
+and the word describes them exactly. So a `cuisine` value declares
+`axis: origin | dish_form | format`. Recorded rather than deferred because a
+naming decision left open is how this collision happened the first time.
+🚩 **And the shipped rename carries a trap that belongs with it:** the filter key
+is **in URLs**. Renaming without a compatibility shim makes every shared
+`?service=takeaway` link silently lose its filter — no error, just a different
+result set than the sender saw. That rename is not this record's work, but any
+work that reads or writes filter query keys inherits the shim requirement.
+
 **The cuisine axis is a LABELLING job, not a relocation — and the obvious fix
 would have broken the filter.** ROADMAP Theme 30 names `cuisine[]` as our "one
 genuine ontology weakness" because it mixes origin ("Malaysian") with dish form
