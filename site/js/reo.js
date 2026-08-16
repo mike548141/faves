@@ -167,19 +167,18 @@ const MI = {
   // to guide/direct, both per maoridictionary.co.nz; "ngā aratohu" reads as
   // "the directions". Flagged for the fluent-speaker queue like the rest.
   "settings.placesTitle": "Te Mamao me ngā Aratohu", // draft
-  // "Your data" — save a copy, bring one back, hand one to your other device
+  // "Your data" — save a copy, bring one back, keep your devices in step
   // (draft). Only the neutral chrome is swapped: the import review itself
   // stays English, because most of it is interpolated counts and the rest is
-  // allergen wording, which the safety boundary above keeps English.
-  // kōnae = file · raraunga = data · pūrere = device/appliance ·
-  // kawe = carry/convey · whakawhiti = transfer/cross over — all per
+  // allergen wording, which the safety boundary above keeps English. Sync's
+  // own section is untranslated for the same reason its panel always was —
+  // it is nearly all prose, not chrome.
+  // kōnae = file · raraunga = data · kawe = carry/convey — all per
   // maoridictionary.co.nz.
   "data.title": "Ō raraunga", // draft — "your data"
   "data.download": "Tikina ō raraunga", // draft — "fetch your data"
   "data.importTitle": "Kawea mai anō he raraunga", // draft — "bring data back in"
   "data.chooseFile": "Tīpakohia he kōnae", // draft — "choose a file"
-  "data.transferTitle": "Whakawhitia ki tētahi atu pūrere", // draft
-  "data.transferButton": "Hangaia he hono whakawhiti", // draft — "make a transfer link"
   // Row title for the panel Theme 15 split "Your data" into: refresh the
   // app's cached menus/code, or reset this profile's preferences. Paired
   // with "settings.localeTitle"/"settings.placesTitle" above, not "data.*" —

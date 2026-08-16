@@ -13,9 +13,8 @@
 //
 // THE APPLY COUNTERPART (Theme 12b, ADR 0030) lives at the bottom of this file:
 // `parsePersonalData` → `planImport` → `applyPersonalData`. It is the one seam
-// both ways in and out of the personal layer use — a file import and a
-// cross-device transfer link (Theme 9 v1) differ only in how the bytes arrive.
-// Three rules it exists to hold, all of them recorded in ADR 0030:
+// everything coming back into the personal layer uses, whatever door the bytes
+// arrived by. Three rules it exists to hold, all of them recorded in ADR 0030:
 //   • merge is the default; replace is destructive and the UI confirms it;
 //   • a profile matching an existing one by name alone, OR by id alone, is a
 //     QUESTION, never a guess — the plan says "this needs a decision" and
@@ -368,28 +367,6 @@ export function parsePersonalData(input) {
       order: sanitiseOrderLines(raw.order),
       other,
     },
-  };
-}
-
-/** Wrap one profile's slice of the layer in the same envelope a file carries,
- *  so a transfer link (Theme 9 v1) and an imported file reach `applyPersonalData`
- *  as the same shape. share-codec.js stays free of any personal-layer knowledge. */
-export function envelopeFromTransfer({ profile, favourites, ratings, settings } = {}) {
-  return {
-    format: FORMAT,
-    v: FORMAT_VERSION,
-    exportedAt: null,
-    profiles: [
-      {
-        id: profile?.id ?? "",
-        name: profile?.name ?? "",
-        active: true,
-        favourites: favourites ?? [],
-        ratings: ratings ?? {},
-        settings: settings ?? null,
-      },
-    ],
-    order: [],
   };
 }
 

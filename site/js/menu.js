@@ -59,7 +59,6 @@ import { dishReportButton, venueReportRow, initReportEntry } from "./report-ui.j
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
-import { initTransferReceive } from "./personal-io-ui.js";
 import { startSync } from "./sync-start.js";
 import { cookButton } from "./cook-ui.js";
 import { mountNotFound } from "./cache-refresh.js";
@@ -1541,7 +1540,6 @@ function initContactBar(bar, cardEl) {
 // The order FAB rides along on every screen so a running order is always
 // reachable — even on a stub page or if this menu fails to load.
 initOrderUI();
-initTransferReceive(); // a transfer link can land on any screen (Theme 9 v1)
 startSync(); // continual sync, if the user turned it on (Theme 9 v2)
 initBackToTop();
 // Remember where the page is scrolled to *before* the Settings dialog opens —

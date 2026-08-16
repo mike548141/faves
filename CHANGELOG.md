@@ -26,7 +26,20 @@ content freshness separately from this file.
     them on both devices, Faves asks which to keep, and warns about both in the
     meantime.
 
+### Changed
+- **Sync now lives inside Settings → *Your data*.** It used to be a row of its
+  own, one below it. Saving a copy of your data, bringing one back, and keeping
+  your devices in step are three answers to the same question — "how do I not
+  lose this?" — so they are now on one screen instead of two.
+
 ### Removed
+- **"Transfer to another device" is gone.** It made a one-off link that copied
+  the person you were browsing as — favourites, ratings and preferences — onto
+  a second device, and then the two drifted apart again. Both of the things it
+  sat between do the job better and are still here: *Download my data* saves a
+  file that restores a whole device, and *Sync across your devices* keeps two
+  devices the same from then on. Any transfer link you were sent before today
+  no longer opens.
 - **The "Along a route" sort is gone.** It asked you to pick a *suburb* you were
   heading to, then ordered places by how far off the straight line between you
   and the middle of that suburb they sat. The middle of a suburb is not a route,

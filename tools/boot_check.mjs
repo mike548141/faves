@@ -111,12 +111,17 @@ const SETTINGS_ROWS = [
   "Food preferences",
   "Distance & directions",
   "Language & units",
+  // Sync (Theme 9 v2) had a row of its own here until 2026-08-16; the owner
+  // moved it INSIDE this one. Losing the row from this list would quietly lose
+  // the coverage that sync's UI is reachable at all, so the section it became
+  // is asserted separately below (SETTINGS_DATA_SECTIONS) rather than dropped.
   "Your data",
-  // Theme 9 v2. Sits next to "Your data" on purpose: both are about where a
-  // person's own data goes, and the two are easy to confuse if separated.
-  "Sync across your devices",
   "Refresh & reset",
 ];
+
+// Drilling into "Your data" must still reach all three things it now covers.
+// A sub-label here, not a row: sync is a section of that panel now.
+const SETTINGS_DATA_SECTIONS = ["Bring data back in", "Sync across your devices"];
 
 async function bootScreen(cdp, sessionId, driver, report, base, screen, venueId) {
   const errors = [];
@@ -333,6 +338,41 @@ async function run(opts) {
           missing.length || extra.length
             ? `missing ${JSON.stringify(missing)} · unexpected ${JSON.stringify(extra)}`
             : rows.rows.join(" · ")
+        );
+      }
+
+      // Drill into "Your data" — the panel that swallowed sync's row. Asserted
+      // by the sub-labels *and* by a real sync control, so a heading left
+      // behind after the panel underneath it broke would still fail.
+      await driver.evalPage(`(() => {
+        const t = [...document.querySelectorAll(".settings-row .settings-row-title")]
+          .find((e) => e.textContent.trim() === "Your data");
+        if (t) t.closest(".settings-row").click();
+      })()`);
+      await until(
+        () => driver.evalPage(`!!document.querySelector(".settings-panel:not([hidden]) .import-block")`),
+        { label: "settings: the Your data panel opened" }
+      );
+      const dataPanel = await driver.evalPage(`(() => {
+        const panel = document.querySelector(".import-block")?.closest(".settings-panel");
+        return {
+          subs: [...panel.querySelectorAll(".settings-sub")].map((e) => e.textContent.trim()),
+          syncBody: !!panel.querySelector(".sync-block .sync-body"),
+          syncButton: !!(panel.querySelector(".sync-block")?.textContent ?? "").match(/sync/i),
+        };
+      })()`);
+      if (dataPanel.error) {
+        report.check("settings: the Your data panel read", false, dataPanel.error);
+      } else {
+        const missing = SETTINGS_DATA_SECTIONS.filter((r) => !dataPanel.subs.includes(r));
+        report.check(
+          "settings: Your data covers backup, restore and sync in one panel",
+          missing.length === 0 && dataPanel.syncBody && dataPanel.syncButton,
+          missing.length
+            ? `missing sub-sections ${JSON.stringify(missing)}`
+            : !dataPanel.syncBody
+              ? "the sync section has no sync-ui body under it"
+              : dataPanel.subs.join(" · ")
         );
       }
     } catch (e) {

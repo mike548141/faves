@@ -16,7 +16,6 @@ import {
   applyPersonalData,
   collectPersonalData,
   decisionKey,
-  envelopeFromTransfer,
   listStoredKeys,
   parsePersonalData,
   personalDataFilename,
@@ -221,7 +220,7 @@ test("the file is pretty-printed and round-trips", () => {
 });
 
 // =========================================================================
-// APPLY — the import / transfer seam (Theme 12b + 9 v1, ADR 0030)
+// APPLY — the import seam (Theme 12b, ADR 0030)
 // =========================================================================
 // The load-bearing properties here are the three safety rules: merge never
 // destroys, a name collision is a question rather than a guess, and an
@@ -744,36 +743,6 @@ test("a storage backend that throws on write never throws out of apply", () => {
   const r = applyPersonalData(hostile, file(), { mode: "replace" });
   assert.equal(r.ok, true);
   assert.equal(r.persisted, false);
-});
-
-// --- the transfer envelope ----------------------------------------------
-
-test("a transfer's parts become the same envelope a file carries", () => {
-  const env = envelopeFromTransfer({
-    profile: { id: "p9", name: "Ari" },
-    favourites: [{ type: "venue", venueId: "kk-malaysian", venueName: "KK Malaysian" }],
-    ratings: { "v:kk-malaysian": 5 },
-    settings: { diet: { dietary: ["vg"], avoid: [] } },
-  });
-  const parsed = parsePersonalData(env);
-  assert.equal(parsed.ok, true);
-  assert.equal(parsed.data.profiles.length, 1);
-  // …and it applies through the one seam, with the same collision rules.
-  const store = device();
-  const plan = planImport(store, env);
-  assert.equal(plan.entries[0].action, "new");
-  const r = applyPersonalData(store, env);
-  assert.deepEqual(r.created, ["Ari"]);
-});
-
-test("a transfer carrying a colliding name asks the same question a file does", () => {
-  const env = envelopeFromTransfer({
-    profile: { id: "p-elsewhere", name: "Sam" },
-    favourites: [{ type: "venue", venueId: "kk-malaysian", venueName: "KK Malaysian" }],
-  });
-  const plan = planImport(device(), env);
-  assert.equal(plan.entries[0].collides, true);
-  assert.match(plan.blocking.join(" "), /same person/);
 });
 
 test("a re-import that changed nothing says so, rather than claiming an update", () => {

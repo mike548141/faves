@@ -2793,6 +2793,13 @@ body.faves-view .to-top {
 .settings-panel {
   animation: settings-panel-in 180ms ease-out;
 }
+/* Sync's panel is now a SECTION of the "Your data" panel (settings-ui.js), and
+   sync-ui.js still builds it as a .settings-panel. Two nested slides compound
+   into a 1.5rem lurch for that one section, so the inner one sits still: the
+   directional "you went one level in" cue belongs to the level you entered. */
+.settings-panel .settings-panel {
+  animation: none;
+}
 @keyframes settings-panel-in {
   from {
     opacity: 0;
@@ -2909,12 +2916,13 @@ body.faves-view .to-top {
   font-size: var(--step-sub);
 }
 
-/* --- "Your data": import + transfer (ADR 0030) -------------------------
+/* --- "Your data": import + sync (ADR 0030, ADR 0025) -------------------
    Both blocks sit inside the Settings "Your data" panel and are separated
    from the export above them by a rule, because "save a copy" and "bring a
-   copy back" are opposite operations one tap apart. */
+   copy back" are opposite operations one tap apart — and sync, which does
+   both forever, is a third subject again. */
 .import-block,
-.transfer-block {
+.sync-block {
   margin-top: var(--space-4);
   padding-top: var(--space-4);
   border-top: 1px solid var(--line);
@@ -3063,7 +3071,7 @@ body.faves-view .to-top {
 /* A visual break between two unrelated actions inside one panel view (today:
    the "off" screen's primary "Turn on sync" vs. its secondary "I already
    have a code" path) — the same border-plus-space treatment import-block/
-   transfer-block use to separate "save a copy" from "bring one back". */
+   sync-block use to separate "save a copy" from "bring one back". */
 .sync-divider {
   margin-top: var(--space-4);
   padding-top: var(--space-4);

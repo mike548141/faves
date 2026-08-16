@@ -14,7 +14,7 @@
 // no usable lines) fails soft to `null`, so the UI can say "this link didn't
 // work — ask them to resend" rather than merging garbage.
 
-import { dishId, migrateDishKeys } from "./dish-id.js";
+import { dishId } from "./dish-id.js";
 import { slug } from "./slug.js";
 
 const PARAM = "share";
@@ -23,13 +23,6 @@ export const CODEC_VERSION = 1;
 // Long names of the payload types <-> the single-letter tags stored on the wire.
 const TYPE_OF_TAG = { o: "order", s: "shortlist" };
 const TAG_OF_TYPE = { order: "o", shortlist: "s" };
-
-// The personal transfer (Theme 9 v1, ADR 0030) rides the same base64url wire and
-// the same group packing, but under its OWN fragment parameter and its own tag —
-// so a transfer link can never be read as a shortlist to merge into favourites,
-// and cart-ui.js's `#share=` handler never sees it.
-const XFER_PARAM = "xfer";
-const XFER_TAG = "x";
 
 // Sanity ceilings. The payload is attacker-authorable (anyone can craft a
 // link), so every string is clipped and every number clamped before it can
@@ -116,10 +109,10 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
     // Each line is a positional [name, price, qty] triple to keep it short,
     // with the add-on selection appended as an optional fourth slot (ADR 0048
     // §4) and the dish id as an optional fifth (ADR 0051). Deliberately NOT a
-    // CODEC_VERSION bump: that field is shared by orders, shortlists AND
-    // personal transfers and is checked with a strict `!==`, so bumping it
-    // would invalidate every outstanding link of all three kinds for a change
-    // two of them don't use. Appending is safe instead because a decoder that
+    // CODEC_VERSION bump: that field is shared by orders AND shortlists and is
+    // checked with a strict `!==`, so bumping it would invalidate every
+    // outstanding link of both kinds for a change one of them doesn't use.
+    // Appending is safe instead because a decoder that
     // predates either slot reads line[0..2] and ignores the rest by
     // construction — and `price` here is the CONFIGURED unit price, so that
     // older reader still totals correctly. It under-specifies the order rather
@@ -164,8 +157,7 @@ export function encodeShortlist({ label = "", groups = [] }) {
   return toB64url(JSON.stringify(payload));
 }
 
-// Venue-grouped favourites on the wire. Shared by the shortlist share and the
-// personal transfer so the two can never drift into two shapes for one thing.
+// Venue-grouped favourites on the wire.
 //
 // `d` stays a bare array of NAME strings, byte for byte, even though dishes now
 // have ids (ADR 0051): changing that array's ELEMENT TYPE is the one change to
@@ -173,9 +165,8 @@ export function encodeShortlist({ label = "", groups = [] }) {
 // through `clip(raw ?? "")`, so an array or object element would arrive as
 // stringified garbage rather than degrading, and only a CODEC_VERSION bump
 // could stop it. That bump is what the whole append-a-slot design exists to
-// avoid: the version is shared by orders, shortlists AND personal transfers and
-// checked with a strict `!==`, so bumping it invalidates every outstanding link
-// of all three kinds.
+// avoid: the version is shared by orders AND shortlists and checked with a
+// strict `!==`, so bumping it invalidates every outstanding link of both kinds.
 //
 // So the id rides BESIDE the name, in `k`: an optional array positionally
 // parallel to `d`, holding the id at the same index where it says something the
@@ -356,82 +347,6 @@ function decodeShortlistItems(groups) {
   return items;
 }
 
-// ---- personal transfer (Theme 9 v1) ---------------------------------------
-
-/**
- * Encode one person's hearts, ratings and settings for a hand-off to their own
- * second device. Deliberately ONE profile (see ADR 0030): the whole-device
- * backup is the file export's job, and a URL fragment is a small pipe.
- *
- * `groups` is groupForShare()-shaped, exactly as a shortlist (dish ids included
- * where the producer supplies them — see packGroups); `ratings` is the
- * flat `{ key: 1..5 }` map and `settings` the profile's settings object. The
- * profile's id and name ride along so the receiving device can tell "my own
- * other phone" from "someone else called Sam" (ADR 0030's collision rule).
- */
-export function encodeTransfer({ profile = {}, groups = [], ratings = {}, settings = null } = {}) {
-  const payload = {
-    v: CODEC_VERSION,
-    t: XFER_TAG,
-    p: { i: clip(profile.id ?? "", 64), n: cleanLabel(profile.name ?? "") },
-    g: packGroups(groups),
-  };
-  const r = {};
-  if (ratings && typeof ratings === "object") {
-    for (const [k, val] of Object.entries(ratings)) {
-      const score = Math.round(Number(val));
-      if (!k || !Number.isFinite(score) || score <= 0) continue;
-      r[clip(k, MAX_NAME)] = Math.min(score, 5);
-    }
-  }
-  if (Object.keys(r).length) payload.r = r;
-  if (settings && typeof settings === "object") payload.s = settings;
-  return toB64url(JSON.stringify(payload));
-}
-
-/**
- * Decode a transfer token to `{ profile, favourites, ratings, settings }` —
- * the *parts*, not a personal-data envelope: assembling that is
- * `envelopeFromTransfer` in personal-data.js, so this codec keeps no knowledge
- * of the personal layer. Returns null for anything unreadable, and for a
- * payload carrying nothing worth applying.
- */
-export function decodeTransfer(token) {
-  if (typeof token !== "string" || !token) return null;
-  let p;
-  try {
-    p = JSON.parse(fromB64url(token));
-  } catch {
-    return null;
-  }
-  if (!p || typeof p !== "object") return null;
-  if (p.v !== CODEC_VERSION || p.t !== XFER_TAG) return null;
-
-  const favourites = decodeShortlistItems(Array.isArray(p.g) ? p.g : []);
-  let ratings = {};
-  if (p.r && typeof p.r === "object" && !Array.isArray(p.r)) {
-    for (const [k, val] of Object.entries(p.r)) {
-      const score = Math.round(Number(val));
-      if (!k || !Number.isFinite(score) || score <= 0) continue;
-      ratings[clip(k, MAX_NAME)] = Math.min(score, 5);
-    }
-    // Ratings ride as whole composite key strings, and a build that predates
-    // dish ids exported them with the dish's NAME in them (ADR 0051). Migrated
-    // here so a transfer from an older phone lands on the same marks a newer
-    // one would write, rather than as a parallel set the next read discards.
-    ratings = migrateDishKeys(ratings);
-  }
-  const settings = p.s && typeof p.s === "object" && !Array.isArray(p.s) ? p.s : null;
-  if (!favourites.length && !Object.keys(ratings).length && !settings) return null;
-
-  return {
-    profile: { id: clip(p.p?.i ?? "", 64), name: cleanLabel(p.p?.n ?? "") },
-    favourites,
-    ratings,
-    settings,
-  };
-}
-
 // ---- URL glue -------------------------------------------------------------
 
 function withFragment(param, token, baseUrl) {
@@ -456,13 +371,4 @@ export function buildShareUrl(token, baseUrl) {
  *  Accepts `#share=xyz`, `share=xyz`, or a whole URL containing either. */
 export function readShareToken(hashOrUrl) {
   return tokenFrom(PARAM, hashOrUrl);
-}
-
-/** Transfer's own fragment parameter — `#xfer=<token>`. */
-export function buildTransferUrl(token, baseUrl) {
-  return withFragment(XFER_PARAM, token, baseUrl);
-}
-
-export function readTransferToken(hashOrUrl) {
-  return tokenFrom(XFER_PARAM, hashOrUrl);
 }

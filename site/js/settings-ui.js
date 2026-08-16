@@ -21,12 +21,12 @@
 //     temperatures in a recipe. Display only: the dials still store kilometres.
 //   • Maps app / Language / Units — one <select> each.
 //   • People — the device-local profile roster (add / rename / delete).
-//   • Your data — export everything, import a backup, or transfer one person
-//     to another device. All three move the personal data blob itself.
-//   • Sync across your devices — continual cross-device sync (ADR 0017, ADR
-//     0060), built and tested entirely in sync-ui.js/sync.js; this file only
-//     places its row and panel. A one-off transfer (above) copies a moment in
-//     time; sync keeps two devices the same going forward.
+//   • Your data — export everything, import a backup, or keep your devices in
+//     step. All three move the personal data blob itself, so they are one row.
+//     The third is continual cross-device sync (ADR 0017, ADR 0060), built and
+//     tested entirely in sync-ui.js/sync.js; this file only places its panel as
+//     a section of "Your data". It had a top-level row of its own until the
+//     owner moved it in here on 2026-08-16.
 //   • Refresh & reset — force a full refresh of the stored menus and app
 //     code, or reset this profile's preferences. Split from "Your data"
 //     (Theme 15): its one-line summary had grown to naming five actions
@@ -53,7 +53,7 @@ import {
   summarisePersonalData,
 } from "./personal-data.js";
 import { forceRefresh } from "./cache-refresh.js";
-import { importControls, transferControls } from "./personal-io-ui.js";
+import { importControls } from "./personal-io-ui.js";
 import { syncControls } from "./sync-ui.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
@@ -309,12 +309,21 @@ function peopleSection() {
 
 // --- Your data ---------------------------------------------------------
 // Export everything (every profile, not just the active one), import it back,
-// or transfer one person to another device. All three move the *personal data
-// blob itself* — out, back in, or across to another device — which is one
-// topic under ADR 0025 even though it's three actions: none of them is
-// reachable without the same "here's what's in it, choose how to apply it"
-// review (personal-data.js), so grouping them reads as one coherent story
-// (backup → restore → transfer) rather than a junk drawer.
+// or keep it in step across your devices. All three move the *personal data
+// blob itself* — out, back in, or continuously both ways — which is one topic
+// under ADR 0025 even though it's three actions: none of them is reachable
+// without the same "here's what's in it, choose how to apply it" review
+// (personal-data.js / sync-merge.js), so grouping them reads as one coherent
+// story (backup → restore → sync) rather than a junk drawer.
+//
+// Sync had its own top-level row until 2026-08-16; the owner moved it in here,
+// which is also where it always belonged under ADR 0025's "one row per
+// question": "how do I not lose this?" is one question with three answers, not
+// three questions. `syncCtl` is COMPOSED, not reimplemented — sync-ui.js owns
+// every pixel inside its panel and this file only places it and labels it.
+//
+// A one-shot "transfer to another device" link used to sit here too (Theme 9
+// v1). Removed 2026-08-16 at the owner's direction, superseded by these two.
 //
 // Refresh (the app's cached menus/code) and Reset (this profile's
 // preferences) used to live in this panel too, on the theory that "what's
@@ -322,10 +331,10 @@ function peopleSection() {
 // (Theme 15) turned up the real seam: those two never touch the personal
 // data blob this panel is about — see refreshResetSection() below.
 //
-// Order is deliberate: out, back in, across. The import and transfer halves
-// live in personal-io-ui.js (they share one applier with the receive path on
-// every screen); this panel only places them.
-function dataSection() {
+// Order is deliberate: out, back in, both ways forever. The import half lives
+// in personal-io-ui.js and the sync half in sync-ui.js; this panel only places
+// them.
+function dataSection(syncCtl) {
   const note = el("p", {
     className: "settings-note",
     textContent:
@@ -364,12 +373,21 @@ function dataSection() {
   });
 
   const imports = importControls();
-  const transfer = transferControls();
+
+  // sync-ui.js hands back a `.settings-panel` because it used to BE a panel.
+  // Nested here it is a section, so it gets a heading of its own — without one
+  // the reader falls off the end of "Bring data back in" straight into sync's
+  // intro prose with nothing saying the subject changed. (These sub-labels are
+  // <p class="settings-sub">, not headings: the whole sheet has exactly one
+  // heading, the <h2> the panels retitle, so nesting introduces no heading-order
+  // break to fix. See renderTitle().)
+  const syncHead = el("p", { className: "settings-sub", textContent: "Sync across your devices" });
+  const syncBlock = el("div", { className: "sync-block" }, [syncHead, syncCtl.panel]);
 
   const panel = el("div", { className: "settings-panel" }, [
     note, btn, status,
     imports.node,
-    transfer.node,
+    syncBlock,
   ]);
   return {
     panel,
@@ -377,6 +395,10 @@ function dataSection() {
       // An abandoned import review must not still be sitting there, one tap
       // from applying, when the panel is reopened later.
       imports.close();
+      // Sync's own reset: it used to be reached by leaving sync's row, and is
+      // now reached by leaving this one. Called from the one place that knows
+      // the panel was left, so it can't be missed or double-fired.
+      syncCtl.close();
     },
   };
 }
@@ -654,8 +676,10 @@ export function initSettingsUI() {
   btn.hidden = false;
 
   const people = peopleSection();
-  const data = dataSection();
+  // Built before dataSection(), which composes its panel (ADR 0025 — sync is a
+  // section of "Your data", not a topic of its own).
   const syncCtl = syncControls();
+  const data = dataSection(syncCtl);
   const storage = refreshResetSection();
   // "Local" heads all three localisation lists: it is the default, and it is
   // the answer most readers want without knowing they want it (ADR 0045).
@@ -874,8 +898,7 @@ export function initSettingsUI() {
       panel: localePanel,
       summary: (s) => localeSummary(settings.raw(), s),
     },
-    { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save a copy, bring it back, or hand it to another device" },
-    { key: "sync", title: "Sync across your devices", i18n: null, panel: syncCtl.panel, summary: () => syncCtl.summary() },
+    { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save a copy, bring one back, or sync your devices" },
     { key: "refreshReset", title: "Refresh & reset", i18n: "settings.refreshResetTitle", panel: storage.panel, summary: () => "Refresh the offline copy, or reset your preferences" },
   ];
 
@@ -892,12 +915,20 @@ export function initSettingsUI() {
     topic.row = row;
     topic.value = value;
     rows.append(el("li", {}, [row]));
-    // Sync's row has to update on the engine's own timetable (a background
-    // sync completing, another device's conflict arriving), not only when
-    // this dialog's settings()/profiles() subscriptions happen to fire — see
-    // sync-ui.js's bindRow().
-    if (topic.key === "sync") syncCtl.bindRow(value);
   }
+  // Sync used to own an index row, and bound it (sync-ui.js's bindRow) so the
+  // engine's own timetable — a background sync finishing, another device's
+  // conflict arriving — could repaint it between this dialog's subscription
+  // cycles. Sync is a section inside "Your data" now, and that row is
+  // deliberately left UNBOUND: `.settings-row-value` is one ellipsised line
+  // (see app.css), so a composed "Save a copy, bring one back, or sync your
+  // devices · On — synced 2 minutes ago" would truncate away the live half at
+  // 390 px — worst in the states worth surfacing. A summary that is sometimes
+  // silently cut is worse than one that is always true, so the row states what
+  // the panel does and the live state stays inside the panel, where it is a
+  // role="status" live region that updates in place. bindRow() is simply not
+  // called: sync-ui.js holds `rowEl = null` and skips the write, so nothing is
+  // left writing into a detached node.
 
   // The profile switcher sits above the rows so a hand-off between two people is
   // one tap. With only one profile there's nothing to switch, so it's hidden and
@@ -968,8 +999,7 @@ export function initSettingsUI() {
     for (const other of TOPICS) other.panel.hidden = true;
     switcherSlot.append(people.list);
     people.hidePanels(false);
-    data.close();
-    syncCtl.close();
+    data.close(); // …which closes the sync section nested inside it
     storage.close();
     index.hidden = false;
     renderTitle();
