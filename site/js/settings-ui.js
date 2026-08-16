@@ -37,6 +37,7 @@
 // app.js's own subscription, and each menu reads the preferences on load.
 
 import { settings, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS, AS_CHARGED, LOCAL } from "./settings.js";
+import { recallOrigin } from "./geo.js";
 import { UNIT_OPTIONS, dialSpec, dialValue, dialKm, formatDial } from "./units.js";
 import { fxAsOf, fxCurrencies } from "./fx.js";
 import { localCurrency } from "./locale.js";
@@ -634,10 +635,22 @@ export function initSettingsUI() {
     hint: "Beyond this, a place is treated as too far to reach tonight and drops off your list.",
     ...dialSpec("farKm", "metric"),
   });
+  // A dial that cannot bite must say so. `farKm` filters on straight-line
+  // distance, and with no captured location every distance is Infinity, so
+  // ranking.js hides nothing and the reader is left dragging a slider that
+  // changes a list of 55 into a list of 55. That is the decorative-control
+  // pattern; the fix is not to make it guess a location but to state its own
+  // precondition, where the control is, at the moment it is inert.
+  const farIdle = el("p", { className: "settings-hint settings-hint-idle" }, [
+    "⚠️ Not in effect yet — Faves doesn’t know where you are. Tap ",
+    el("strong", { textContent: "Near me" }),
+    " on the home screen and this will start hiding places.",
+  ]);
+  far.row.append(farIdle);
   const fav = field({
     id: "set-fav-boost",
     label: "Show a place’s branches within",
-    hint: "When one place has several branches (McDonald’s, say), the two nearest inside this distance show on its contact card — the rest tuck under “Show all branches”.",
+    hint: "When one place has several branches (McDonald’s, say), this is how far out we will offer you one. The nearest open branch leads its contact card, the next few sit one tap below, and anything past this distance is not offered — the card says how many that hid.",
     ...dialSpec("favBoostKm", "metric"),
   });
 
@@ -904,6 +917,10 @@ export function initSettingsUI() {
     for (const { key, chip } of avoid.chips) chip.setAttribute("aria-pressed", String(avoidSet.has(key)));
     applyDial(fav, "favBoostKm", s.favBoostKm, s.units);
     applyDial(far, "farKm", s.farKm, s.units);
+    // Re-read on every sync rather than once at build: the sheet is built lazily
+    // but stays in the DOM, so a reader who taps Near me and comes back must see
+    // the warning gone.
+    farIdle.hidden = !!recallOrigin();
     for (const topic of TOPICS) topic.value.textContent = topic.summary(s);
     // A language switch arrives through this same subscription, and app.js
     // registers us *before* reo.js — so at this instant reo still holds the old

@@ -384,6 +384,43 @@ delivery app.** Clear one by bringing back the fact.
       precedent, 2026-08-15). The venue publishes only an email. One glance
       at a receipt or the door clears it — or the per-branch provenance pair
       that Theme 13 already owes would.
+- [ ] ⏳ **Baylands — the food menu we hold is a festival menu** `[S][content]`.
+      It is `WOAP_Menu_2026-1-Food_Menu.pdf`, a **Wellington on a Plate** menu
+      whose embedded `/CreationDate` is **2026-08-04**. It is not the brewery's
+      standing menu and it comes down when the festival ends, so this is a
+      *scheduled re-read*, not a gap: go back once the festival is over and
+      record whatever the kitchen returns to. Append, never overwrite — the
+      departed festival dishes move whole to `data/history/dishes/baylands.json`
+      (ADR 0023 / ADR 0047), because a festival menu is exactly the kind of
+      thing the history store exists to keep.
+- [ ] 🚩 **Baylands has no drinks, and that is deliberate** `[content]`. The
+      brewery advertises **"30+ taps"** and publishes no tap list anywhere. A
+      board that rotates cannot be captured accurately, and a wrong beer on a
+      brewery's own page is worse than none — so the gap is a decision, not an
+      oversight. **Do not "fix" it by transcribing the retail can range**: that
+      answers a different question ("what can I buy to take away", not "what is
+      on tap") and would read as the tap list to anyone scanning it. Only a
+      dated photo of the actual board clears it, and it starts going stale the
+      moment it is taken. Same reasoning as the 1841 drinks item above, one step
+      stronger.
+- [ ] **Menus still owed on six venues — and where each one lives**
+      `[M][content]`. Researched 2026-08-16 and written down here so a fresh
+      session can start rather than repeat it.
+      - **Four Sprig + Fern taverns**, all `stub`: `sprig-and-fern-petone`,
+        `sprig-and-fern-berhampore`, `sprig-and-fern-thorndon`,
+        `little-sprig-seatoun`. Each publishes **its own** food menu PDF at
+        `sprigandfern.co.nz/pages/<slug>`. They are separate franchises with
+        separate kitchens — which is why they are separate records and not
+        branches of one, the ADR 0011 assumption having broken here (this
+        session's `SESSIONS.md` entry records the finding).
+      - **The Victoria Tavern** and **Caffiend** are blocked on their own broken
+        web presence, not on our effort. Nothing to fetch until someone brings
+        back a photo of the menu — the `intake/` pipeline.
+
+      Two tool steps are **not optional** when any of these lands:
+      `python3 tools/tag_allergens.py` for the allergen sweep (ADR 0025 — the
+      burden falls on *not* tagging), and `python3 tools/seed_dish_ids.py`
+      after, or `validate.py` fails with **one error per dish** (ADR 0051).
 - [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
       — **10 of the corpus's 22 branches**, measured 2026-08-16. This is now
       load-bearing rather than cosmetic: [ADR 0054](decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
@@ -557,6 +594,22 @@ at 291 it is more attractive, and it's the right answer if generous flagging
 ever reads as wallpaper. Still touches the vocabulary, the render and the
 avoid-matching — all safety-critical — so it needs its own session. `[M]`,
 unclaimed.
+
+- [ ] 🔎 **`tools/tag_allergens.py` has two holes** `[S][tools]`, found
+      2026-08-16. Missing patterns rather than design faults, and both surfaced
+      the same way — a dish escaping a tag it obviously needed:
+      - **The dairy rule matches `cheese` but not bare `cheddar`.** A dish that
+        names the variety and never the word slips through, so this is very
+        likely mis-tagging records **corpus-wide**, not only the one that
+        exposed it. The same hole will exist for `mozzarella`, `parmesan`,
+        `feta` and the rest. Add the varieties, then **re-run over the whole
+        corpus and diff** — how much it newly catches is the measure of how
+        long this has been wrong.
+      - **No rule at all for `tartare sauce` (egg) or `tortilla` (gluten).**
+
+      Fixing these adds tags to existing records, so it is a data change as well
+      as a tools change: bump `DATA_VERSION`, and expect `validate.py`'s
+      allergen warnings to move.
 
 ✅ **Menu prose tidy-up — Takeaway @ Churton, 2026-08-09** (owner steer: *"where
 the menu writer has not used the best prose we should tidy that up… without

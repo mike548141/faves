@@ -415,3 +415,13 @@ deliberation those compact docs omit.
   "known-closed" rather than being folded into it. A two-state rule would have
   been incapable of firing on McDonald's, the venue that prompted the change.
   Amends 0011.
+- [0055](0055-a-venue-website-may-be-a-platform-page.md) — **a venue's
+  `website` may be a page on someone else's platform.** `caffiend.co.nz` has no
+  DNS record at all and the directory-listed `business.site` URL died with
+  Google's 2024 shutdown, so a cafe trading since 2003 had a phone number and
+  nothing else. Owner ruled a Facebook page may fill the field where the venue
+  has no site of its own — bounded by confirmation (titled page, an independent
+  directory citing that exact URL at the street address, the matching Instagram
+  handle), and `null` wherever that standard cannot be met, because a wrong link
+  is worse than none. A `social` field beside `website` lost on ADR 0047: no
+  screen would render it differently.

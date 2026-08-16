@@ -2219,6 +2219,17 @@ body.faves-view .to-top {
   font-size: var(--step-sub);
   margin-top: var(--space-1);
 }
+
+/* A dial that cannot currently do anything says so, here, rather than leaving
+   the reader to conclude the app is broken (owner hit exactly that with
+   "Hide places further than 5 km" against an unfiltered list of 55). */
+.settings-hint-idle {
+  margin-top: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm, 8px);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--ink);
+}
 .settings-reset {
   min-height: 46px;
   padding: 0.5em 1.2em;
@@ -3500,21 +3511,17 @@ body.faves-view .to-top {
   line-height: 1;
   cursor: pointer;
 }
-/* The dish photos are transparent cutouts on purpose (ADR 0053) — one image set
-   serves both themes because the subject sits straight on the card's own
-   surface. In dark mode that backfires for a dark subject: the six hot McCafé
-   drinks are all the same near-black closed cup, and measured at 390 px its body
-   scored 1.18:1 against --surface-2 — the silhouette was invisible, only the
-   white rim and the wordmark read. Lifting the tile a quarter of the way toward
-   the muted foreground takes that to 1.93:1 while staying a warm dark panel, not
-   a light box: the fix must not undo ADR 0053 by putting a white rectangle
-   behind forty photos that do not need one. Light mode is untouched — a dark
-   subject on a light card was never the problem. */
-@media (prefers-color-scheme: dark) {
-  .dish-photo {
-    background: color-mix(in srgb, var(--ink-soft) 25%, var(--surface-2));
-  }
-}
+/* No dark-mode tint on .dish-photo, deliberately — see --photo-mat above.
+   Two sessions fixed the same defect within an hour on 2026-08-16: the six hot
+   McCafé drinks are all the same near-black closed cup, which measured 1.18:1
+   against --surface-2 in dark mode, so the silhouette vanished and only the rim
+   and the wordmark read. One fix tinted the tile a quarter toward the muted
+   foreground (1.18:1 → 1.93:1); the other gave every cutout a white mat in both
+   themes (~15:1) and made the photo a tappable thumbnail. The white mat won on
+   the measurement and on coherence — the products were shot on white, so the mat
+   is part of the picture rather than part of the page — and the tint was removed
+   because, layered over that mat, it painted the win straight back out. Recorded
+   here because a tint is the obvious fix and someone will propose it again. */
 
 /* "Goes well with" pairings — deep-link chips to other dishes. */
 .dish-pairs {
