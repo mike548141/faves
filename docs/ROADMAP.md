@@ -1071,13 +1071,21 @@ choose (Theme 10), rather than being trapped in one browser's storage.
   by HKDF into a blob id the server may hold and a key it must never see), and
   the **Worker source, config and README** (`worker/`, 19 tests against a fake
   KV). The owner authorised the backend (ADR 0060 addendum).
-  🚩 **The Worker is NOT deployed** — this machine has no `wrangler` and no
-  Cloudflare credential, and installing one is the owner's call. Everything
-  needed is in `worker/README.md`, including the least-privilege token scope.
-  **Still open, and NOT claimed:** the **deploy**; the push/pull/debounce
-  client; the pairing UI; and the base-snapshot store the merge needs — that
-  last one is the only remaining piece of the *offline* half, and without it the
-  merge silently degrades to the additive behaviour ADR 0060 exists to replace.
+  ✅ **DEPLOYED 2026-08-16** at `https://faves-sync.cakeit.workers.dev`, on the
+  owner's go, and **verified live** — ten checks against the running Worker, not
+  inferred from the unit tests: 404 before write, 204 PUT, 200 GET with ETag,
+  ciphertext decrypting identical, no plaintext on the wire, stale `If-Match`
+  412, correct `If-Match` 204, another code's id 404, malformed id 400, and a
+  300 KiB body refused 413. Deployed with a purpose-minted Cloudflare child
+  token scoped to two account groups and **no zone scope at all**, held only in
+  the macOS keychain; `worker/wrangler.toml` keeps its placeholders on purpose,
+  because this repo is public and the real ids live in the estate root.
+  **Still open, and NOT claimed:** the **push/pull/debounce client**; the
+  **pairing UI**; and the **base-snapshot store the merge needs** — that last is
+  the only remaining piece of the *offline* half, and without it the merge
+  silently degrades to the additive behaviour ADR 0060 exists to replace.
+  🚩 **The endpoint being live is not the feature being live**: nothing under
+  `site/` calls it yet, so sync does not work for a user today.
   🚩 **Two gates before any of it
   ships:** the Reset-propagation wording (owner's ruling, Theme 32 — and ADR
   0060's last consequence shows that ruling cannot be met as stated, because an

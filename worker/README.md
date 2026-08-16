@@ -234,3 +234,56 @@ network call. It is **not** a substitute for a real deploy smoke test
 (step 5 above) — it can't tell you whether `wrangler.toml`'s bindings are
 correct, whether KV's real consistency behaviour differs in a way that
 matters, or whether the account/namespace ids are right.
+
+---
+
+## Deployed — 2026-08-16
+
+**Live at `https://faves-sync.cakeit.workers.dev`.** The owner authorised the
+backend that day (ADR 0060 addendum) and it was deployed the same session.
+
+**Where the real config lives, and why not here.** `wrangler.toml` in this
+directory keeps its `REPLACE_WITH_…` placeholders **on purpose**. Faves is a
+public repo; a Cloudflare account id and two KV namespace ids sitting in a
+public tree are reconnaissance, and this repo's own rule is that estate
+resources are pointed at rather than copied down. The real values, the live
+verification and the deploy credential's story are recorded in the operator's
+private estate-root repo — its credential registry and its inventory. To
+redeploy, regenerate a filled config **outside this tree** from those values and
+run `wrangler deploy -c <that file>`.
+
+**The credential.** A dedicated Cloudflare child token, `faves-sync-deploy`,
+minted through the estate root's own mint tooling and stored **only** in the
+macOS login keychain — never in any repo. Two account permission groups and
+nothing else: `Workers Scripts Write` and `Workers KV Storage Write`. **No zone
+scope at all**, so it cannot reach DNS; and deliberately **not** the Pages
+credential the site deploys on, because reusing that would put two unrelated
+blast radii on one token.
+
+Write scope is acceptable here only because of what this Worker holds: the blobs
+are encrypted client-side and the key derives from the user's sync code under a
+different HKDF label from the blob id (ADR 0061). Whoever holds this credential
+can replace the Worker or delete ciphertext. They cannot read one user's data.
+
+**Verified live against the deployed Worker**, not inferred from the unit tests —
+all ten passed:
+
+| Check | Result |
+|---|---|
+| `GET` before any write | `404` |
+| First `PUT` | `204` |
+| `GET` after write, with `ETag` | `200`, ETag present |
+| Ciphertext decrypts to the identical snapshot | ✅ |
+| No plaintext anywhere in the bytes on the wire | ✅ |
+| Stale `If-Match` | `412` |
+| Correct `If-Match` | `204` |
+| Another code's blob id | `404` |
+| Malformed blob id | `400` |
+| 300 KiB body against the 256 KiB cap | `413` |
+
+**Residue:** one test blob written under a throwaway minted code during that
+verification. It is ciphertext of a fixture and expires with the 180-day TTL.
+
+**Still not reachable from the app.** Nothing in `site/` calls this yet — the
+push/pull client, the pairing screen and the base-snapshot store the merge needs
+are all still to build. The endpoint being live is not the feature being live.
