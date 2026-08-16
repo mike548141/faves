@@ -183,11 +183,28 @@ node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part 
                               # the note is rendered as characters, not parsed: it
                               # is the first free text a person types on this screen
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
-                              # ⚠️ Currently ABORTS before its last three assertions
-                              # on an overflow-menu race — a wall of PASS lines
-                              # followed by "harness error" is NOT a pass. Check it
-                              # reached its own "OK — N passed" summary line.
+                              # Reaches its end: "OK — 16 passed, 0 failed". Check the
+                              # summary line is there AND that N is still 16 — a
+                              # shrunken N is the tell. A harness abort exits 2 and
+                              # prints no "FAIL" line, so it does not look like a
+                              # failure; if it aborts, the message now names which
+                              # Settings navigation step broke — fix the NAV block in
+                              # the tool. It spent a whole refactor dead (clicking a
+                              # settings row e745923 had removed), proving nothing,
+                              # because NOTHING RUNS IT BUT YOU — see below.
 ```
+
+🛑 **CI runs NONE of the browser checks.** Measured 2026-08-16 against
+`.github/workflows/ci.yml`: CI runs `node --test` and the Python gates, and not
+one of `sync_check` · `cook_check` · `device_check` · `boot_check` ·
+`addon_check` · `branch_check` · `to_top_check` · `filter_row_check`. Every
+guard that drives a real browser — the ones written precisely because unit tests
+missed a leak, a wreck or a mistap — runs **only when a human or an agent types
+it from this list**. That is how `sync_check` sat dead through a whole settings
+refactor with CI green the entire time: nothing was calling it. So a green CI
+run is *not* evidence about any behaviour on this list, and skipping one of
+these because "CI will catch it" is a category error. Discipline is the only
+thing running them.
 
 **The exchange rates refresh themselves weekly** — `.github/workflows/fx.yml`
 opens an auto-merging PR every Sunday (ADR 0045). Until an `FX_TOKEN` secret

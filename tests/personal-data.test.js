@@ -9,6 +9,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
+import { CHECKLIST_KEY } from "../site/js/checklist.js";
 import {
   FORMAT,
   FORMAT_VERSION,
@@ -754,4 +755,80 @@ test("a re-import that changed nothing says so, rather than claiming an update",
   assert.deepEqual(again.merged, []);
   assert.deepEqual(again.unchanged, ["Me", "Sam"]);
   assert.equal(again.settingsUpdated, 0);
+});
+
+// =========================================================================
+// COOK-MODE TICKS ARE NOT PART OF A BACKUP (ROADMAP 36g)
+// =========================================================================
+// Owner's ruling: "if it isn't restored, it shouldn't be exported." Half-cooked
+// progress has a twelve-hour life (ADR 0067) and is keyed to the exporting
+// device's profile ids, so restoring it is at best a no-op and at worst puts
+// somebody else's ticks under a profile that merely happens to share an id.
+//
+// THE TRAP THESE TESTS EXIST TO HOLD: `faves.checklist.v1` is never the key in
+// storage. `checklist.js` reads through `profileScopedStorage()`, so the real
+// keys are `faves.p.<id>.checklist.v1` — one per profile. An exclusion matched
+// on the bare key would exclude precisely nothing, and would look right.
+
+/** A tick record as `checklist.js` writes it, fresh enough not to have expired. */
+const ticks = (line) => JSON.stringify({ "kk-malaysian roti-canai": { at: Date.now(), t: [line] } });
+
+test("a cook-mode tick never reaches the export — for any profile", () => {
+  const storage = seeded();
+  storage.setItem(scopeKey("default", CHECKLIST_KEY), ticks("i:tick-of-me"));
+  storage.setItem(scopeKey("p2", CHECKLIST_KEY), ticks("s:tick-of-sam"));
+  const data = collectPersonalData(storage, { exportedAt: AT });
+  const json = personalDataJson(data);
+  assert.equal(json.includes("tick-of-me"), false);
+  assert.equal(json.includes("tick-of-sam"), false);
+  // The store is named once, in the `excluded` declaration, and nowhere as a
+  // carrier: no scoped key, no field, no empty husk of one.
+  assert.equal(json.includes("faves.p.default.checklist.v1"), false);
+  assert.equal(json.includes("faves.p.p2.checklist.v1"), false);
+  assert.equal("other" in data, false);
+  assert.equal(data.profiles.some((p) => "checklist" in p), false);
+});
+
+test("ticks left behind by a profile that no longer exists are excluded too", () => {
+  // The sweep enumerates real storage, not the registry, so an orphan is the
+  // case a registry-driven exclusion would miss.
+  const storage = seeded();
+  storage.setItem(scopeKey("p-long-gone", CHECKLIST_KEY), ticks("i:orphan-tick"));
+  const data = collectPersonalData(storage, { exportedAt: AT });
+  assert.equal(personalDataJson(data).includes("orphan-tick"), false);
+  assert.equal("other" in data, false);
+});
+
+test("the export declares the ticks it left out, in words and without profile ids", () => {
+  const storage = seeded();
+  storage.setItem(scopeKey("default", CHECKLIST_KEY), ticks("i:tick-of-me"));
+  const data = collectPersonalData(storage, { exportedAt: AT });
+  const note = data.excluded[CHECKLIST_KEY];
+  assert.equal(typeof note, "string");
+  assert.match(note, /tick/i);
+  // One line naming the store, not one line per profile: the ids are noise to
+  // the person reading their own backup.
+  assert.equal(Object.keys(data.excluded).some((k) => k.startsWith("faves.p.")), false);
+  assert.match(data.excluded["faves.origin.v1"], /Near me/); // the old one survives
+});
+
+test("an older backup's ticks are not read back in", () => {
+  // Files exported before this rule landed carry the scoped keys in `other`.
+  // "Not exported" has to mean "not imported either", or the round trip
+  // resurrects what we just decided not to keep.
+  const r = parsePersonalData(
+    file({ other: { [scopeKey("default", CHECKLIST_KEY)]: ticks("i:stale"), "faves.recipes.v1": "[]" } })
+  );
+  assert.equal(r.ok, true);
+  assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
+});
+
+test("a replace still wipes the ticks it refuses to restore", () => {
+  // Refusing to export them is not a promise to preserve them: `replace` makes
+  // the device look like the file, and the file has no ticks. Leaving them
+  // would hand the restored `default` profile the previous occupant's cooking.
+  const store = device();
+  store.setItem(scopeKey("default", CHECKLIST_KEY), ticks("i:previous-occupant"));
+  applyPersonalData(store, file(), { mode: "replace" });
+  assert.equal(store.getItem(scopeKey("default", CHECKLIST_KEY)), null);
 });

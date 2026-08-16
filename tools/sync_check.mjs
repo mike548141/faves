@@ -7,74 +7,56 @@
 //     node tools/sync_check.mjs             # headless, exit 0 = pass
 //     node tools/sync_check.mjs --help
 //
-// CURRENT STATUS — READ THIS BEFORE TRUSTING A GREEN-LOOKING RUN. The run does
-// NOT currently reach the end. It aborts partway through with a harness error
-// (exit 2, not exit 1 — see "the verdict" in tools/lib/browser.mjs), which
-// means the exit code and the PASS lines printed before the abort are real,
-// but the assertions after the abort point NEVER RAN — they are not failures,
-// they are absent. A wall of PASS lines followed by "harness error" is not a
-// pass; check that the run reached its own final "OK/FAILED — N passed, N
-// failed" summary line before trusting any of it.
+// CURRENT STATUS — the run reaches the end. 16 assertions, all passing, in a
+// real two-browser run (2026-08-17). Read the verdict the same way regardless:
+// a harness abort is exit 2, not exit 1 (see "the verdict" in
+// tools/lib/browser.mjs), so an abort leaves the assertions after it ABSENT,
+// not failed, and the run still looks orderly. Trust nothing until the run has
+// printed its own final "OK/FAILED — N passed, N failed" summary line, and
+// check that N is 16 — a *shrunken* N is the shape this file failed in for
+// however long nobody ran it.
 //
-//   RUNS AND PASSES TODAY, in a real two-browser run:
-//     • turning on sync mints a well-formed code
-//     • a malformed code is rejected by the UI before any network call
-//     • the real code from the other device is accepted and joins
-//     • a heart made on A appears on B after a sync
-//     • a rating made on A appears on B after the same sync
-//     • a heart REMOVED on A is removed on B, not re-added — the single most
-//       valuable assertion in this file, the one that would have caught the
-//       additive-merge bug this whole ADR 0060 exists to prevent
-//     • the rating survives the heart's removal (the two stores don't
-//       cross-contaminate)
+// HOW THIS FILE WENT DECORATIVE, because the next refactor will try it again.
+// Commit e745923 ("settings: remove Transfer to another device, and fold Sync
+// into Your data") demoted Sync from a top-level `.settings-row` to a
+// `<p class="settings-sub">` inside the Your-data panel. openSyncPanel() still
+// clicked the old row, so the check died at its FIRST UI interaction with zero
+// PASS lines — and CI stayed green, because exit 2 is not a failed assertion.
+// Two counters were fitted rather than more care: every Settings selector now
+// lives in the single `NAV` block below, and every navigation move is wrapped
+// in `nav()` so a break names the step and points at NAV.
 //
-//   DOES NOT YET RUN: turning off sync on B leaving its own data intact, and
-//   the fake-server-unreachable/app-keeps-working assertion. The run reaches
-//   the rating-change step (setRating to a new value on A, the setup for "a
-//   rating changed on A replaces, not duplicates, the old value on B") and
-//   then fails to re-open the Settings sheet — see KNOWN OPEN ISSUE below.
-//   Assertions for the rating-replace, sync-off-leaves-data-intact and
-//   server-unreachable claims are WRITTEN (further down this file) but their
-//   PASS/FAIL has never actually been observed.
+// THE OLD "KNOWN OPEN ISSUE" IS CLOSED, AND ITS DIAGNOSIS WAS WRONG. The
+// header used to record an overflow-menu race, blamed on menu.js's reapply()
+// dispatching asynchronously after a sync, and flagged as a hazard a real
+// person could hit. Re-measured 2026-08-17 with the selector fixed: the check
+// aborted at "the overflow menu (⋯) to open" on three consecutive runs, at
+// three different points — and it was this file's own doing, twice over.
 //
-// KNOWN OPEN ISSUE — the overflow (⋯) menu, not sync. Reproduced while
-// building this check, and NOT a sync-engine fault: after `setRating()`
-// focuses a rating slider partway down a 70-item menu, the browser's default
-// focus-scrolls-into-view behaviour scrolls the (non-fixed, in-flow) header
-// off-screen. openSettings() already compensates — blur the focused element
-// and `window.scrollTo(0, 0)` before reaching for the header — and that fixes
-// the common case. But it has also been observed, once, NOT to fix it:
+//   1. `window.scrollTo(0, 0)` — the TWO-ARGUMENT form — obeys app.css's
+//      `html { scroll-behavior: smooth }` (which applies here, because
+//      headless Chrome reports prefers-reduced-motion: no-preference). It
+//      returned with the page still animating. That is the whole of the old
+//      trace's mystery: "scrollY:879 immediately AFTER scrollTo(0,0) had run,
+//      then scrollY:0 on the next read" is one unfinished scroll, not
+//      something scrolling the page a second time. ui-state.js's
+//      restoreScroll() documents the identical trap.
+//   2. The contact bar. Scrolling from deep in the menu back to the top makes
+//      initContactBar()'s IntersectionObserver fire on a LATER frame, hiding
+//      the bar and dropping body.contact-bar-open — a layout change landing
+//      between this file's rect read and its mouse dispatch. Instrumented, the
+//      failing click showed `mousedown` and `mouseup` 39 ms apart resolving to
+//      a click on `#menu-page` rather than the ⋯ glyph, while a programmatic
+//      `.click()` on the same button worked immediately. The button was fine;
+//      the coordinates had gone stale under it.
 //
-//     pre-click rect:  y:-863, scrollY:879   (button still off-screen above,
-//                                              immediately AFTER the blur +
-//                                              scrollTo(0,0) call had already run)
-//     post-click rect: y:16,   scrollY:0     (page had jumped back to top by
-//                                              the time of the NEXT read, i.e.
-//                                              something scrolled it a second
-//                                              time on its own)
-//     event log: overflow-btn's own click handler fired and reported
-//                aria-expanded flipping true, then false, then true, then
-//                false again — i.e. it read as TWO full open/close cycles
-//                from what this file only ever sent ONE click for.
-//
-// The scroll snapping back to 879px on its own, and the button's click
-// handler seeing double, both point at something scrolling and/or dispatching
-// asynchronously with respect to this file's own blur()+scrollTo(0,0)+click()
-// sequence — plausibly menu.js's reapply() (settings.subscribe(reapply),
-// wrapped in captureUiState/restoreUiState), which a completed sync now
-// triggers on every device via sync-start.js's onApplied hook, and which is
-// asynchronous relative to the sync panel reporting "Last synced…". That is a
-// real timing hazard a real person could hit by acting fast right after their
-// own device finishes syncing — but it was reproduced through the overflow
-// menu (site/js/overflow-ui.js) and the reapply/scroll-restore machinery
-// (site/js/menu.js), NOT through anything in the sync engine, and diagnosing
-// or fixing it is out of this file's scope (file ownership: this check may
-// only touch tools/sync_check.mjs) and out of this session's remaining
-// budget. Whoever picks this up: an unwired MutationObserver-based
-// `waitQuiet()` helper is already sitting in `openDevice()` below (counts DOM
-// mutations under <html>, polls until the count goes quiet) as a documented,
-// untested starting point — it was never actually called from anywhere before
-// this file was handed off, so it fixes nothing yet.
+// So the previously-suspected product hazard is NOT evidenced here. The
+// asynchrony is real, but it belongs to a scroll-driven observer doing its job,
+// and it only ever bit a robot clicking at a remembered pixel. Nothing was
+// changed in site/js/ to make this pass. Honest residue: the old trace's third
+// observation — aria-expanded reading as TWO open/close cycles from one click —
+// was never reproduced in 2026-08-17's runs, so it is unexplained rather than
+// disproved. Every failure seen here had aria-expanded never move at all.
 //
 // WHY THIS ONE IS SHAPED DIFFERENTLY. Every other check in the family proves
 // something about ONE device. Sync's entire claim is about TWO — that a heart
@@ -379,41 +361,129 @@ const syncStatusExpr = `(() => {
 
 // --- Small driving helpers, shared by both devices --------------------------
 
-/** See the file header ("KNOWN OPEN ISSUE"). The overflow button sits in
- *  normal document flow (not fixed/sticky), so anything that scrolls the page
- *  — notably a rating slider's own `.focus()`, which the browser scrolls into
- *  view by default — can carry it off-screen; this has been observed to make
- *  the very next click on it land unreliably even after scrolling back. The
- *  blur+scrollTo below is a partial mitigation (it fixes the common case) but
- *  did not fix every case seen while building this check — see the header. */
+// EVERY selector used to WALK the Settings UI lives here, in one block, and
+// nowhere else in this file. That is the whole lesson of 2026-08-16: commit
+// e745923 ("settings: remove Transfer to another device, and fold Sync into
+// Your data") demoted Sync from a top-level `.settings-row` to a
+// `<p class="settings-sub">` inside the "Your data" panel, one hard-coded
+// selector three functions down stopped matching, and this check went from
+// eight passing assertions to *zero* without anyone noticing — CI is green
+// either way, because a harness abort is exit 2, not a failed assertion.
+// A refactor now breaks one line here, loudly and in one place, instead of
+// silently emptying the guard.
+const NAV = {
+  overflowBtn: "#overflow-btn",
+  settingsBtn: "#settings-btn",
+  sheet: "dialog.settings-sheet[open]",
+  closeBtn: ".settings-close",
+  indexRow: ".settings-row",
+  // Sync is a *section* inside this index row's panel, not a row of its own.
+  syncTopic: "Your data",
+  syncBody: ".sync-body",
+};
+
+/** Wrap one move of the Settings walk so a break names the STEP, not just a
+ *  selector. The harness's own "no element matching X" is true and useless to
+ *  anyone who doesn't already carry this UI in their head — it cannot tell a
+ *  renamed control apart from a sheet that never opened, or say how far the
+ *  walk got before it stopped. */
+async function nav(step, looksFor, fn) {
+  try {
+    return await fn();
+  } catch (err) {
+    throw new Error(
+      `Settings navigation broke at step "${step}" (looking for ${looksFor}) — ` +
+        `has the Settings UI been refactored? Update NAV in tools/sync_check.mjs. ` +
+        `Underlying: ${err.message}`
+    );
+  }
+}
+
+/** Present is not the same as reached. sync-ui.js builds `.sync-body` once, at
+ *  construction time, and the "Your data" panel merely un-hides it — so a bare
+ *  `querySelector(".sync-body")` is truthy while the reader is still staring at
+ *  the index. Only a laid-out box proves the drill-in actually happened. */
+const syncBodyVisibleExpr = `(() => {
+  const b = document.querySelector(${JSON.stringify(NAV.syncBody)});
+  return !!b && b.getClientRects().length > 0;
+})()`;
+
+/** Getting back to the header from wherever the last step left the page is the
+ *  most fragile move in this file, and all three of its steps are here for a
+ *  measured reason (see the header's diagnosis). The overflow button sits in
+ *  normal document flow, so a rating slider's `.focus()` or a dish click deep
+ *  in a 70-item menu carries it off-screen; scrolling back is asynchronous
+ *  twice over — the scroll itself, then the observers that react to it. */
 async function openSettings(d) {
-  await d.evalPage(`(() => { document.activeElement?.blur(); window.scrollTo(0, 0); })()`);
-  await d.click("#overflow-btn");
-  await until(
-    async () =>
-      d.evalPage(`document.getElementById("overflow-btn")?.getAttribute("aria-expanded") === "true"`),
-    { label: "the overflow menu (⋯) to open" }
+  // `behavior: "instant"` is load-bearing, and its absence is what the header's
+  // "KNOWN OPEN ISSUE" trace was actually recording. app.css smooth-scrolls the
+  // document for anyone who hasn't asked for reduced motion — which headless
+  // Chrome hasn't — and the two-argument `scrollTo(0, 0)` OBEYS that, returning
+  // while the page is still animating. ui-state.js's restoreScroll() documents
+  // the same trap for the same reason. That is why the old trace read
+  // "scrollY:879 immediately AFTER scrollTo(0, 0) had already run", and then
+  // "scrollY:0 by the time of the NEXT read": nothing was scrolling the page a
+  // second time on its own — this line simply had not finished scrolling it the
+  // first time.
+  await d.evalPage(
+    `(() => { document.activeElement?.blur(); window.scrollTo({ top: 0, left: 0, behavior: "instant" }); })()`
   );
-  await d.click("#settings-btn");
-  await until(async () => d.evalPage(`!!document.querySelector("dialog.settings-sheet[open]")`), {
-    label: "the Settings sheet to open",
+  await until(async () => (await d.evalPage("window.scrollY")) === 0, {
+    label: "the page to actually be back at the top",
+  });
+  // Landing at the top is not the same as being settled there. menu.js's
+  // initContactBar() watches the contact card with an IntersectionObserver, so
+  // arriving at the top hides the compact bar and drops body.contact-bar-open
+  // on a LATER frame — a layout change that lands between the rect read inside
+  // d.click() and the mouse event it then dispatches. Measured: without this
+  // wait the click resolved to #menu-page instead of the ⋯ glyph. Waiting for
+  // the DOM to go quiet is the honest fix; a fixed sleep would be a wall-clock
+  // wait, which this file's TIME-INDEPENDENCE promise rules out.
+  await d.waitQuiet();
+  await nav("open the overflow (⋯) menu", NAV.overflowBtn, async () => {
+    await d.click(NAV.overflowBtn);
+    await until(
+      async () =>
+        d.evalPage(
+          `document.querySelector(${JSON.stringify(NAV.overflowBtn)})?.getAttribute("aria-expanded") === "true"`
+        ),
+      { label: "the overflow menu (⋯) to open" }
+    );
+  });
+  await nav("open Settings from the ⋯ menu", NAV.settingsBtn, async () => {
+    await d.click(NAV.settingsBtn);
+    await until(async () => d.evalPage(`!!document.querySelector(${JSON.stringify(NAV.sheet)})`), {
+      label: "the Settings sheet to open",
+    });
   });
 }
 
+/** Settings → the "Your data" index row → the Sync section nested inside it.
+ *  The sheet always reopens on the index (settings-ui.js closes back to it
+ *  however it was dismissed), so the drill-in is repeated every time rather
+ *  than assumed to have stuck. */
 async function openSyncPanel(d) {
   await openSettings(d);
-  await d.click(".settings-row", "Sync across your devices");
-  await until(async () => d.evalPage(`!!document.querySelector(".sync-body")`), {
-    label: "the Sync panel to render",
-  });
+  await nav(
+    `drill into the "${NAV.syncTopic}" panel`,
+    `${NAV.indexRow} containing "${NAV.syncTopic}"`,
+    () => d.click(NAV.indexRow, NAV.syncTopic)
+  );
+  await nav(
+    `reach the Sync section inside "${NAV.syncTopic}"`,
+    `a visible ${NAV.syncBody}`,
+    () => until(async () => d.evalPage(syncBodyVisibleExpr), { label: "the Sync panel to render" })
+  );
 }
 
 async function closeSettings(d) {
-  await d.click(".settings-close");
-  await until(
-    async () => !(await d.evalPage(`!!document.querySelector("dialog.settings-sheet[open]")`)),
-    { label: "the Settings sheet to close" }
-  );
+  await nav("close the Settings sheet", NAV.closeBtn, async () => {
+    await d.click(NAV.closeBtn);
+    await until(
+      async () => !(await d.evalPage(`!!document.querySelector(${JSON.stringify(NAV.sheet)})`)),
+      { label: "the Settings sheet to close" }
+    );
+  });
 }
 
 /** Turn on sync from the "off" view, capture the minted code, dismiss the
@@ -574,15 +644,13 @@ async function openDevice({ label, profileDir, headed, siteUrl, fakeBlobPort, re
   // (profiles.js) to fire menu.js's SAFETY-CRITICAL reapply() — a full rebuild
   // of the dish list, wrapped in captureUiState/restoreUiState so scroll
   // position and focus survive it. That rebuild is asynchronous relative to
-  // "Sync now" settling in the panel, so an interaction fired immediately
-  // afterwards (in practice: focusing a rating slider, which the browser
-  // scrolls into view) can race a still-in-flight restoreUiState() and end up
-  // with a click landing at the wrong scroll position, or on an element the
-  // rebuild is about to replace. A real person could hit the same race by
-  // acting fast right after their own device finishes syncing — so this is
-  // observed and waited out (`waitQuiet`, below), not swept under a fixed
-  // sleep. The observer counts DOM mutations under <body>; `waitQuiet` polls
-  // until the count stops moving.
+  // "Sync now" settling in the panel. That rebuild is one of several things
+  // this file must not click into the middle of; menu.js's contact-bar
+  // IntersectionObserver is the one actually caught doing it (see the header).
+  // Rather than name each source and time it, observe the page and wait for it
+  // to stop changing — `waitQuiet`, below, polls this counter until it stops
+  // moving. A fixed sleep would be a wall-clock wait, which this file's
+  // TIME-INDEPENDENCE promise rules out.
   await cdp.send(
     "Page.addScriptToEvaluateOnNewDocument",
     {

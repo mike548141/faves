@@ -46,6 +46,7 @@ import {
   stepState,
   stepsOf,
 } from "./cook.js";
+import { createAlarm, wantsNotification } from "./alarm.js";
 
 // Ids must be unique across however many dialogs a session opens and discards.
 let seq = 0;
@@ -219,6 +220,47 @@ export function openCookMode(item, { venueId } = {}) {
     el("div", { className: "cook-timer-track" }, [timerFill]),
   ]);
 
+  // --- The alarm (ROADMAP 36d, ADR 0071) ---------------------------------
+  // A countdown that ends in silence is a countdown you have to watch, which is
+  // the one thing a cook cannot do. Three channels: a tone and a buzz on every
+  // timer, and — only for a timer long enough to have walked away from — a
+  // notification. alarm.js owns all three; this owns *when*.
+  const alarm = createAlarm();
+  // Step indices whose bell has already gone, so a bell rings once and not once
+  // a second for the rest of the recipe. Cleared per timer by a reset.
+  const alarmed = new Set();
+
+  // THE THIRD CHANNEL, AND THE ONLY ONE EVERYONE HAS. The face flips to
+  // "Time's up" and the tone sounds, but neither reaches a screen reader: the
+  // numeral is role="timer" (aria-live: off, deliberately — see above) and a
+  // sound is not a channel every reader has. This region is written only when a
+  // bell actually goes, so it announces an event rather than a clock. It sits
+  // OUTSIDE the stage for the same reason the timer does: a change inside an
+  // aria-atomic live region re-announces the whole step.
+  const timerAlert = el("div", { className: "sr-only cook-timer-alert", role: "alert" });
+
+  // Shown only where the browser has been told, by this reader, never to
+  // notify. Silence about a choice they made would be courtesy; silence about a
+  // STATE they may not know they are in is a defect (ADR 0069's ruling, applied
+  // here). Stated once, in place, and never a nag: the timer still sounds and
+  // still buzzes, which the line says out loud so it reads as information
+  // rather than as a failure. `cook-awake` is the existing soft-note style —
+  // `cook-notify-blocked` is the hook for a rule of its own if one is ever
+  // wanted (this session could not touch app.css).
+  const timerNote = el(
+    "p",
+    { className: "cook-awake cook-notify-blocked", hidden: true },
+    [
+      el("span", { className: "cook-awake-ico", textContent: "🔕", "aria-hidden": "true" }),
+      el("span", {
+        "data-i18n": "cook.notifyBlocked",
+        textContent:
+          "Notifications are blocked for this site — the timer still sounds and vibrates. " +
+          "Your browser's site settings can turn them back on.",
+      }),
+    ]
+  );
+
   // What this step needs, shown by default rather than hidden behind a toggle
   // (owner, 2026-08-16). It lives INSIDE the live region on purpose: stepping
   // forward should announce "Step 2 of 6. Beat together… What you need: ¾ cup
@@ -320,6 +362,8 @@ export function openCookMode(item, { venueId } = {}) {
       // second, and the stage is aria-live/aria-atomic — a timer in there would
       // re-announce the whole step once a second, which is unusable.
       timerRow,
+      timerNote,
+      timerAlert,
       tools,
       nav,
     ]),
@@ -388,6 +432,11 @@ export function openCookMode(item, { venueId } = {}) {
   function paintTimer() {
     const t = timerFor(index);
     timerRow.hidden = !t;
+    // The blocked-notifications line belongs to a LONG timer and to no other
+    // state: a short timer never asks, so there is nothing for the reader to
+    // have blocked, and a browser with no Notification API at all is told
+    // nothing (there is no setting behind it to go and change).
+    timerNote.hidden = !(t && wantsNotification(t.total) && alarm.permission() === "denied");
     if (!t) return;
     const left = t.remaining();
     const running = t.running();
@@ -419,13 +468,69 @@ export function openCookMode(item, { venueId } = {}) {
     if (done && document.activeElement === timerBtn) nextBtn.focus();
   }
 
+  /**
+   * Ring the bell for the timer on step `i`, exactly once.
+   *
+   * The strings are built from the visible label and the step's own words, so
+   * the announcement, the notification and the face can never drift apart — and
+   * so "Time's up" is translated by the same path as every other string
+   * (reo.js). The rest is interpolated and therefore stays English, exactly as
+   * "Step 3 of 9" already does.
+   */
+  function ringFor(i) {
+    if (alarmed.has(i)) return;
+    alarmed.add(i);
+    const t = timers.get(i);
+    const s = stepState(i, steps.length);
+    const over = timerLabels.done.textContent;
+    // Cleared first so an identical message rings again rather than being
+    // swallowed as "no change" by a screen reader.
+    timerAlert.textContent = "";
+    timerAlert.textContent = `${over} — ${s.label}. ${item.name}`;
+    // Fire-and-forget: the two permission-free channels inside fire() are
+    // synchronous, and nothing on screen waits on the notification.
+    alarm.fire({
+      title: `${over} — ${item.name}`,
+      body: `${s.label}. ${steps[s.index]}`,
+      // Where notificationclick sends you: the recipe you were cooking.
+      url: location.href,
+      // One live notification per timer, replaced rather than stacked.
+      tag: `faves-timer:${rid}:${i}`,
+      notify: wantsNotification(t?.total),
+    });
+  }
+
+  /**
+   * EVERY timer, not just the one on screen. Reading ahead while a bake runs is
+   * normal, and a bell that only rings when you happen to be looking at its
+   * step is not a bell. The countdown is wall-clock based (cook.js), so this is
+   * correct however late it is called — which matters, because a backgrounded
+   * tab's interval is throttled to roughly once a minute.
+   */
+  function checkAlarms() {
+    for (const [i, t] of timers) {
+      if (!t) continue;
+      if (t.done()) ringFor(i);
+      else alarmed.delete(i); // a reset re-arms the bell
+    }
+  }
+
   // One interval for the whole dialog, started lazily and stopped the moment
   // nothing is counting — a bare setInterval left running behind a closed sheet
   // is the same class of leak as an unreleased wake lock (ADR 0034).
   let tick = null;
+  function onTick() {
+    checkAlarms();
+    paintTimer();
+    // The tick that takes the last timer to zero is also the tick that should
+    // stop the clock. Without this call the interval outlived every countdown
+    // and ran until the sheet closed — true before the alarm existed, and now
+    // load-bearing, because `checkAlarms` is what the interval is FOR.
+    syncTicking();
+  }
   function syncTicking() {
     const anyRunning = [...timers.values()].some((t) => t?.running());
-    if (anyRunning && tick === null) tick = setInterval(paintTimer, 1000);
+    if (anyRunning && tick === null) tick = setInterval(onTick, 1000);
     else if (!anyRunning && tick !== null) {
       clearInterval(tick);
       tick = null;
@@ -433,12 +538,28 @@ export function openCookMode(item, { venueId } = {}) {
   }
 
   timerBtn.addEventListener("click", () => {
-    timerFor(index)?.toggle();
+    const t = timerFor(index);
+    if (!t) return;
+    const starting = !t.running();
+    // THE TAP THAT STARTS THE TIMER IS THE TAP THAT UNLOCKS THE SOUND. Autoplay
+    // policy only lets an AudioContext run when it was armed inside a user
+    // gesture, and both calls below must therefore run BEFORE anything is
+    // awaited — an await spends the gesture, and the failure is silent until
+    // the bell is due 35 minutes later.
+    alarm.arm();
+    // …and the same tap is the only place the notification permission is ever
+    // asked for, for a timer long enough to walk away from (ADR 0071). A short
+    // timer never asks: a prompt is a thing you can spend once per browser.
+    if (starting && wantsNotification(t.total)) alarm.requestNotify().then(paintTimer);
+    t.toggle();
     paintTimer();
     syncTicking();
   });
   timerReset.addEventListener("click", () => {
     timerFor(index)?.reset();
+    // Re-arm this step's bell, and clear an announcement it has already made.
+    alarmed.delete(index);
+    timerAlert.textContent = "";
     paintTimer();
     syncTicking();
   });
@@ -485,6 +606,14 @@ export function openCookMode(item, { venueId } = {}) {
   async function onVisibility() {
     await lock.onVisibilityChange();
     showAwake();
+    // A hidden tab's 1s interval is throttled to roughly once a minute (and a
+    // suspended one stops altogether), so coming back to the recipe is the
+    // second chance to notice a bell that fell due while you were elsewhere.
+    // The countdown is wall-clock based, so what it says here is the truth and
+    // not a counter that lost time.
+    checkAlarms();
+    paintTimer();
+    syncTicking();
   }
 
   // --- Wiring ------------------------------------------------------------
@@ -543,6 +672,11 @@ export function openCookMode(item, { venueId } = {}) {
       clearInterval(tick);
       tick = null;
     }
+    // …and the same rule again for the audio hardware. An AudioContext holds a
+    // real device handle; left open it keeps a closed sheet's page marked as
+    // playing audio. The cost is that a bell rung in the same instant you tap ✕
+    // is cut off — which is the right trade, because you are already there.
+    alarm.close();
     dialog.remove();
     // <dialog> restores focus to the opener itself; this is the belt to that
     // brace, for the case where the opener was re-rendered underneath us (a

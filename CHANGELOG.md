@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Cook-mode timers now ring.** A timer that finishes sounds three short beeps
+  and buzzes the phone — no download, no network and nothing to allow, so it
+  works in flight mode on the first visit. Timers longer than fifteen minutes,
+  the ones you walk away from, can also raise a notification; Faves asks for
+  that permission at the moment you start such a timer and never on arrival,
+  and if you say no the bell and the buzz still work. "Time's up" is announced
+  to screen readers. ⚠️ Vibration does nothing on iPhones — Safari ignores the
+  API entirely.
 - **Order it the way you eat it — a note on any line of your order.** "No
   tomato", "sauce on the side": tap *Add a note* on a line in the order sheet
   and it goes with that dish, reads out in collect mode, and travels with a
@@ -40,6 +48,12 @@ content freshness separately from this file.
   searching for *Edmonds* finds it.
 
 ### Fixed
+- **Cook-mode ticks no longer appear in your data export, or travel between your
+  devices.** Which ingredients you had ticked off while cooking was being written
+  into the backup file and into the sync blob, but it could never be usefully
+  restored — a tick belongs to the meal in front of you and expires after twelve
+  hours. The exported file now names ticks among the things it deliberately
+  leaves out, rather than carrying them silently.
 - **The tick boxes line up.** The ingredients' ticks and the method's ticks now
   share one column down the page, and on a method step that runs to more than one
   line the step number sits beside the first line rather than floating halfway

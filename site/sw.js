@@ -11,7 +11,7 @@
 //   - Change both? bump both.
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
-const SHELL_VERSION = "2026-08-16.91";
+const SHELL_VERSION = "2026-08-16.92";
 const DATA_VERSION = "2026-08-16.37";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
@@ -43,6 +43,7 @@ const SHELL = [
   "recipe.html",
   "css/app.css",
   "js/about-ui.js",
+  "js/alarm.js",
   "js/app.js",
   "js/cache-refresh.js",
   "js/checklist.js",
@@ -283,6 +284,43 @@ self.addEventListener("activate", (event) => {
         names.filter((n) => !keep.has(n)).map((n) => caches.delete(n))
       );
       await self.clients.claim();
+    })()
+  );
+});
+
+// A cook-mode timer's bell, tapped (ROADMAP 36d, ADR 0071). The notification is
+// raised through `registration.showNotification` because Chrome on Android
+// refuses `new Notification()` outright, and the click for one raised that way
+// arrives HERE — the page that scheduled it may have been closed for half an
+// hour by then, so this handler is the only thing that can answer it.
+//
+// The rule is: get the reader back to the recipe they were cooking, and never
+// leave them with a second copy of the app. So an open window already on that
+// exact URL is focused; any other open window of ours is focused and navigated;
+// only with nothing open at all is a new one launched. `notification.data.url`
+// is written by alarm.js — an absolute same-origin URL, re-resolved here rather
+// than trusted, so a malformed one can only ever land on the home screen.
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = new URL(event.notification.data?.url || "./", self.location.href);
+  if (target.origin !== self.location.origin) return;
+  const url = target.href;
+  event.waitUntil(
+    (async () => {
+      // includeUncontrolled: a window loaded before this worker took over is
+      // still the reader's open recipe, and opening a second one over it is
+      // exactly the failure this is written to avoid.
+      const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      const exact = windows.find((c) => c.url === url);
+      if (exact) return exact.focus();
+      const any = windows[0];
+      if (any) {
+        await any.focus();
+        // Not every browser implements client.navigate; falling through to a
+        // focused window on the wrong page beats failing the click entirely.
+        return any.navigate?.(url)?.catch?.(() => {});
+      }
+      return self.clients.openWindow?.(url);
     })()
   );
 });

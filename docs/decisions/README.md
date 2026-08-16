@@ -648,6 +648,26 @@ deliberation those compact docs omit.
   say so in place when `denied`. Owner-ruled 2026-08-17 with both costs stated;
   the cost he took is that on a first visit distance does nothing until one tap,
   once per browser.
+- [0071](0071-an-alarm-has-three-channels-and-only-one-of-them-asks.md) — **an
+  alarm has three channels, and only one of them asks.** ROADMAP 36d, owner-ruled
+  in full 2026-08-16. Cook mode's countdown ended in silence, which is a
+  countdown you have to watch. Now: a tone (an `OscillatorNode`, generated — no
+  asset, no precache entry, no network) and a vibration on **every** timer, both
+  permission-free; a notification on a timer of **more than** fifteen minutes and
+  no other, because a prompt is a thing you can only spend once per browser and a
+  refusal is sticky. The AudioContext is armed by the tap that STARTS the timer —
+  autoplay policy suspends one built anywhere else, and a suspended context is
+  silent thirty-five minutes later with nothing on screen to say so. Owes
+  [0069](0069-the-location-ask-is-primed-not-sprung.md) an argument and makes it:
+  the ask stays on the start tap rather than behind a priming control, because a
+  denied notification costs the third of three channels where a denied location
+  cost that feature all of its value — but `denied` is rendered in place, per that
+  record's own rule. Two firsts for this codebase (audio, vibration) and a
+  permission prompt built the same week as [0069]'s, in another worktree; which
+  lands first is merge order, so neither record claims to be first. 🔑 One
+  assertion was found decorative before it shipped: "a bell rings exactly once"
+  passed with the guard **deleted**, because the tick that rings the last timer
+  also stops the clock — it needed a second timer running to bite.
 - [0068](0068-the-home-list-ranks-on-one-blend.md) — **the home list has one
   ranking, and distance is in it.** Supersedes
   [0014](0014-pick-along-a-route.md). The owner asked to delete the "Nearest
@@ -688,3 +708,22 @@ deliberation those compact docs omit.
   code, not necessarily of a runtime that fetches its voices. `cook_check.mjs`
   42 → 57 assertions, and all fifteen new ones were seen to fail under a
   targeted break.
+- [0074](0074-a-backup-carries-only-what-it-can-put-back.md) — **a backup
+  carries only what the import path can put back usefully.** ROADMAP 36g, the
+  owner's *"if it isn't restored, it shouldn't be exported."* Supersedes **the
+  final clause of [0067]'s decision 4 only** — that record justified keeping
+  cook-mode ticks out of `SCOPED_BASE_KEYS` partly on the grounds that
+  `collectPersonalData`'s catch-all *"still carries the raw key through a
+  backup, so nothing is silently lost"*. Measured false: the sweep exported
+  them and the import wrote them back under the **exporting** device's profile
+  id, twelve-hour expiry and all — restored uselessly, or onto the wrong
+  person. `sync.js` was shipping them between devices for `sync-merge.js` to
+  discard. 🛑 The fix the roadmap specified — add the base key to `EXCLUDED` —
+  would have excluded **nothing at all while looking exactly right**, because
+  `profileScopedStorage()` makes the real key `faves.p.<id>.checklist.v1`;
+  matching moved to a suffix test that also catches profiles orphaned from the
+  registry. `spare` now separates *excluded from a backup* from *exempt from a
+  replace wipe*, which the origin is and a tick is not. Proved by four tests
+  seen failing first, three of them again under a deliberate revert.
+
+[0067]: 0067-a-tick-is-keyed-on-the-line-not-its-place.md
