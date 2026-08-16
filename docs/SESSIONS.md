@@ -4761,3 +4761,51 @@ you **may** do. Now inlined.
   reference recheck stops leaving never-served entries in the data cache.
 - **ADR 0020 invariant 5** (share/merge flags an unknown ref) stays with Theme 10,
   owner-gated.
+
+### Close addendum — 2026-08-16 (same session)
+
+The two items left open above both closed before this session ended.
+
+**28g-tail is done.** The six held files landed (`9cae14e`), the seed finished
+the job — burgerfuel 9, hell-pizza 11, noodle-canteen 5 — and `validate.py`
+flipped from "gated if present" to **required**. All 235 sections carry their
+own id. The two-step was worth the awkwardness: a required field that 25
+sections could not satisfy would have turned the gate red on `main` for three
+sessions at once.
+
+**A handover taken rather than roadmapped.** The ADR 0020 session built
+`mountNotFound()` — styled, browser-proven — but `fail()` lives in `menu.js`,
+so **nothing called it**. Three lines and a comment. An exported-but-uncalled
+function is precisely the shape that reads as finished to the next session, and
+the screen it replaced asserted *"check your connection and reload"* without
+having checked anything. Verified in a real browser on both branches, because
+neither is covered by any existing harness: a missing venue gets the honest
+panel with Refresh and Back; no `?id=` at all keeps the generic copy, because
+there is no reference to check.
+
+### The habit that earned its keep today
+
+A sibling shipped a fix for the version guard accepting a **backwards** version
+— a real defect, well fixed, tests green. Probing it adversarially instead of
+trusting the green run found the same defect *in the fix*: the new ordering
+check sat behind a scope test written for the **equality** question, so a
+commit touching only `sw.js` moved a version backwards and exited **0**. The
+distinction that resolves it: equality needs a payload change to be meaningful
+("did you bump when you should have?"); **going backwards needs no
+precondition, because it is never legitimate**. Handed over with the literal
+probe output rather than fixed here — two sessions editing the version guard
+while allocating version numbers to each other is a joke with a bad ending.
+
+**Eight instances of one shape in a day, and the eighth was in the fix for the
+seventh.** The transferable part is not "write checks more carefully". It is
+that a guard is a claim, and a claim is verified by trying to break it —
+including, especially, a guard written to close a hole of the same class.
+
+### Owed to whoever is next
+
+- **Theme 35 (split-flap search placeholder)** — owner-raised, owner-ruled to
+  queue. Three content decisions are his before it is built.
+- **Two findings from siblings, both recorded by them, both worth knowing here:**
+  the order FAB owning 82.5% of a *dietary* chip's tap at Very-large text, and a
+  one-line `sw.js` fix (skip `cache.put` when the URL carries `_fresh`) left
+  alone while versions were in motion.
