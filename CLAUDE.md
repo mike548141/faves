@@ -151,6 +151,12 @@ python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
 python3 tools/check_visibility.py # the visibility bullet above is still true
+python3 tools/check_fallback.py # the no-JS <ul> in site/index.html still mirrors
+                              # site/data/index.json — same ids, same order, and a
+                              # link on everything that isn't a `stub`. The lockstep
+                              # rule below was unenforced from the day it was written;
+                              # its first run found NINE venues with finished menus
+                              # rendered as unreachable "Menu coming soon" cards
 python3 tools/check_decisions.py # every ADR is in the decisions index (it's the
                               # allocator — an unindexed record is how a number
                               # gets reused; seven were missing on 2026-08-16)

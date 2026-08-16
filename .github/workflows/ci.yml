@@ -62,6 +62,15 @@ jobs:
       # times is not a guard, so it is a gate now.
       - name: Assert every decision record is indexed
         run: python3 tools/check_decisions.py
+      # The no-JS `<ul>` in site/index.html is the home screen a reader gets
+      # when app.js has not run — which is not hypothetical: an unimported
+      # symbol made it the live home screen on 2026-08-16 while 570 unit tests
+      # stayed green. CLAUDE.md has carried the lockstep rule since the repo's
+      # conventions were written and NOTHING has ever checked it. First run
+      # found nine venues with finished menus rendered as unreachable "Menu
+      # coming soon" cards, four of them landed the day before.
+      - name: Assert the no-JS fallback mirrors index.json
+        run: python3 tools/check_fallback.py
 
   versions:
     name: service-worker version lockstep
