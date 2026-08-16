@@ -320,14 +320,25 @@ delivery app.** Clear one by bringing back the fact.
 - [~] **Other venues with drinks nobody has captured** `[M][content]` —
       **the derivation CLAIMED 2026-08-16 11:22 UTC (wt: faves-content-growth)**;
       transcribing what it finds stays open and owner-gated.
-      Now that drinks are in scope, the obvious gap is any venue that sells
-      them and has no drink rows. **Derive the list, don't re-type it:**
-      compare `services`/cuisine against records whose sections carry no
-      Beer/Wine/Coffee heading. Sprig + Fern Tawa is the standout — it is a
-      brewery bar and its record is food-only. ⚠️ **Adding drinks silently
-      breaks `priceBand`** — they are cheaper than mains and drag the median
-      under the `$` ceiling. Curate the band from the food-only median, as
-      the two 2026-08-15 pubs now do. Detail →
+      **Derived, don't re-typed** (same fix as ADR 0041 gave dish-level gaps):
+      `python3 tools/drinks_gap.py --gaps` reads `cuisine`/`vibe`/name against
+      each record's own section-heading vocabulary (no naive "Beer"/"Wine"
+      string match — see the tool's docstring for the 175-heading harvest
+      behind it) and finds **3** non-stub venues with a drink signal and no
+      drink rows: **1841 Bar & Restaurant**, **Baylands Brewery**, and
+      **Sprig + Fern Tawa** (a brewery bar; its record is food-only). Run
+      `--count`/`--json` for the full 54-venue picture including the
+      `probable`-tier venues (weaker signal — e.g. a bare "Bar" in the
+      name, or a bakery/dessert cuisine tag) the strict list above doesn't
+      include. ⚠️ **Adding drinks silently affects `priceBand`** — measured
+      with `--price-effect`: of the 11 venues that already mix food and
+      drink rows, **5 (45%)** get a cheaper blended median than their
+      food-only median (never the other way), and 2 of those 5
+      (BurgerFuel, Hell Pizza) currently ship the cheaper blended band with
+      **no curation** — a pre-existing mislabel this item didn't cause but
+      did surface. Curate the band from the food-only median, as the two
+      2026-08-15 pubs (Southern Cross, The Borough) plus Khandallah Trading
+      Company now do. Detail →
       [`ROADMAP-DONE.md`](ROADMAP-DONE.md), Theme 4.
 - [ ] **1841 — kids menu not transcribed** `[S][content]`. It is a separate
       PDF (`Kids-Menu-2023.pdf`) and is dated **2023** by its own filename,
