@@ -1399,6 +1399,45 @@ an unpriced choice, **17** dishes *are* add-ons wearing a dish's clothes, and
 you would order alone. Four of those venues are one pub group with near-
 identical prose, so one modelling decision covers them all.
 
+## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
+
+<!-- Numbered 27 after `grep '^## Theme' docs/ROADMAP.md`; 25 and 26 were taken
+     by parallel sessions on the same day. Re-check at merge, not at write. -->
+
+🔎 **A measurement, not a hunch.** Comparing, for every one of the 51 cuisines
+and areas in the corpus, the venues `applyFilters` returns against the venues
+`search()` returns for the same word: the two agree exactly on **45**, and on
+the other **6 search never misses — it adds**. The haystack includes name,
+address, city, service and phone as well as cuisine, so:
+
+| Search for | Also returns | Because |
+|---|---|---|
+| "Pub" | 6 places, **5 of them not pubs** | the name contains "Pub" |
+| "Bar" | 1841 Bar & Restaurant, Charley Noble, Southern Cross, The Catch Sushi Bar | the name contains "Bar" |
+| "Cafe" | KC Cafe, Satay Kingdom Cafe — neither tagged Cafe | the name contains "Cafe" |
+| "Courtenay Place" | Dragonfly, Regal Chinese, The Catch Sushi Bar | the address contains it |
+
+**This is not a bug, and that is the point of recording it.** A wide haystack is
+correct for free text — you typed "Pub", and a place called The Pub is a fair
+hit. The question is one of **ranking, not matching**: today a venue that *is*
+Malaysian and a venue merely *named* "…Malaysian" are indistinguishable in the
+result list, so the reader cannot tell a property match from a spelling
+coincidence. [ADR 0050](decisions/0050-a-facet-link-filters-the-list-rather-than-searching.md)
+records why this kept the facet links off search; it did not settle what search
+itself should do.
+
+- [ ] **27a — Rank a facet match above a text match** `[M][design]` — weight a
+  hit on `cuisine`/`area` above one on `name`/`address`, so the six above still
+  *appear* but sort below the venues that genuinely carry the property. Cheaper
+  and less surprising than narrowing the haystack, which would lose real finds
+  ("Charley Noble" is a fair answer to "Noble").
+- [ ] **27b — Say which field matched** `[S][ux]` — the result row already shows
+  "Te Aro · Malaysian"; making the matched part visibly the reason would let the
+  reader judge relevance themselves, which is the honest version of ranking and
+  may make 27a optional. Try this one first.
+- **Owner steer, 2026-08-16:** recorded, not scheduled — *"roadmap it, don't fix
+  now"*. Nothing here is blocking; it surfaced while measuring something else.
+
 ## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
 
 <!-- Numbered 26, not 25: a parallel session took 25 (dish ids) while this

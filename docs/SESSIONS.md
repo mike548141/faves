@@ -3793,3 +3793,51 @@ Four decisions put to the owner with the trade-offs stated, all answered.
 - **The queue behind this is all four of 14b, Theme 25, 14f and 14c.** Theme 25
   is the one that unblocks the other two, so it wants to go first even though
   14b is the larger pile.
+
+## 2026-08-16 05:05 UTC — closing: two rulings recorded, and 3.5 GB of leaked Chrome
+
+**Owner ruling 1 — the facet links stay as they are.** Presented with the
+measurement (facet and text search agree on 45 of 51 facets; on the other 6
+search never misses, it *adds* — "Pub" returns 6 places of which 5 are not
+pubs), the owner ruled **keep as is**, and asked that the option stay open in
+case he changes his mind. Recorded as **ADR 0050**, which is deliberately a
+*kept-open* record rather than a closed one: it carries the measurement table,
+the four-step switch path (`filterHref` → `?q=`, `wireSearch` reads it, delete
+the now-duplicate chip, retarget the two `boot_check` assertions), and — the
+part that matters — **what switching costs**, so the trade is never
+re-litigated from memory by a session that only remembers the ask.
+
+**Owner ruling 2 — search's over-matching is roadmapped, not fixed.** Recorded
+as **Theme 27**. The framing that survived the analysis: this is not a matching
+bug, it is a **ranking** gap. A wide haystack is correct for free text; what is
+missing is that a venue which *is* Malaysian and a venue merely *named*
+"…Malaysian" are indistinguishable in the result list. 27b (show which field
+matched) is recommended before 27a (weight facet hits higher), because letting
+the reader judge relevance may make the weighting unnecessary.
+
+🔎 **The closing sweep found 64 leaked headless-Chrome processes holding
+3.48 GB**, plus 60 abandoned throwaway profile directories. The owner's Chrome
+had just crashed, and this is a very plausible contributor. **None were from
+this session** — `tools/lib/browser.mjs` calls `stopChrome` in a `finally`, and
+every `boot-check`/`shot`/`live` profile was already gone. The survivors were
+`stub`, `tip`, `fade` (56 processes, from earlier ad-hoc one-off scripts written
+inline during the browse sweep) and `addon-check` (8, from the live Theme 14
+session). Owner approved killing all 64; done, plus the profile dirs.
+
+🚩 **The lesson is about ad-hoc scripts, not the harness.** The three purpose-
+built live runs recorded in the 03:13 UTC entry each launched Chrome inline and
+never stopped it. Anything that launches a browser must use
+`tools/lib/browser.mjs`'s try/finally shape — or, better, earn its place as an
+assertion inside `boot_check`/`device_check`/`cook_check` rather than existing
+as a throwaway. A one-off script that leaks 3 GB is not cheaper than a check
+that lives in the tree.
+
+**Also noted, not fixed (not this session's lane):** ADRs **0048** and **0049**
+are not yet in `docs/decisions/README.md`. They belong to the live add-ons
+session, which is mid-flight; an unindexed record is invisible to the next
+allocator and is exactly how the duplicate `0025` survived, so it is flagged
+here for that session to close rather than filled in from outside.
+
+**Session close.** Six commits landed on `main` across the session, each with
+CI and floor green. Nothing owed, nothing uncommitted, no open PRs, worktrees
+removed.

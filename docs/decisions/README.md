@@ -315,3 +315,14 @@ deliberation those compact docs omit.
   only written down is not a bound. Widens the *no personal data* constraint
   for the first time on a public repo; home addresses of people and health
   detail stay absolutely excluded.
+- [0050](0050-a-facet-link-filters-the-list-rather-than-searching.md) — **a
+  facet link filters the list rather than searching for the word.** The owner
+  asked for a venue's "Malaysian" link to open the search screen, which the
+  reader knows and which has a ✕ to get back. Measured first: across all 51
+  cuisines and areas the filter and a text search agree on 45, and on the other
+  6 search never misses — it *adds*. "Pub" returns 6 places of which 5 are not
+  pubs, because the haystack includes names and addresses. So the links keep
+  filtering, and the escape the owner was actually missing was built instead (a
+  dismissible chip beside the count). Owner ruled keep-as-is on 2026-08-16 and
+  asked that the option stay open; the record carries the four-step switch and
+  what switching costs, so the trade is never re-litigated from memory.
