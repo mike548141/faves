@@ -1291,7 +1291,8 @@ $7 and friends) that is really an add-on group for every brunch dish, not a set
 of things you'd order alone. The information is captured; only the *shape* is
 wrong.
 
-- [ ] **14a — Structured add-ons** `[L][schema][content]` — optional `addOns` on
+- [~] **14a — Structured add-ons** `[L][schema][content]` —
+  CLAIMED 2026-08-16 04:50 UTC (wt: faves-addons) — optional `addOns` on
   a dish (`{ name, price, tags }`) plus a **reusable group** defined once per
   section or venue that dishes reference, so "brunch sides" attaches to eight
   brunch dishes without being written eight times. Design calls: single-select vs
@@ -1314,14 +1315,16 @@ wrong.
   per dish (structured and safe, but it's the whole ingredient-transcription
   problem for 31 venues). Recommend the note now; components only if a venue's
   data ever justifies it.
-- [ ] **14d — Safety: an add-on carries its own tags** `[M]` 🚩 — **the
+- [~] **14d — Safety: an add-on carries its own tags** `[M]` 🚩 —
+  CLAIMED 2026-08-16 04:50 UTC (wt: faves-addons) — **the
   load-bearing point.** Adding halloumi to a dairy-free dish makes it not
   dairy-free; a satay add-on makes a dish contain peanuts. So `dietary.js`'s
   `dishFlagged` / `dishSatisfiesDiet` must evaluate **dish + selected add-ons**,
   not the dish alone, and the order line must show the resulting warning — a
   dish that was safe when you tapped it can stop being safe when you configure
   it. This is not optional polish on 14a; it ships with it.
-- [ ] **14e — Order-tally knock-ons** `[M]` — a dish added twice with different
+- [~] **14e — Order-tally knock-ons** `[M]` —
+  CLAIMED 2026-08-16 04:50 UTC (wt: faves-addons) — a dish added twice with different
   add-ons is **two lines, not a quantity of 2**; the subtotal maths takes add-on
   prices; and the group-order share codec (ADR 0009) has to carry the
   configuration, which means a **versioned codec bump** and a receive-side path
