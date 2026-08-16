@@ -132,6 +132,62 @@ CASES = {
     # --- values, not just types (the class the first run found a hole in) --
     "negative price": (lambda d: _first_item(d).update(price=-5), "error"),
     "free item is legal": (lambda d: _first_item(d).update(price=0), "clean"),
+    # --- grouped ingredients, ADR 0070 ------------------------------------
+    # `ingredients` accepts a string OR a {component, items} group, so the gate
+    # has to police a union rather than a type — and the two rules that make the
+    # union readable (loose lines lead; a component appears once) are exactly the
+    # ones a shape check alone would let through.
+    "flat ingredients still legal": (
+        lambda d: _first_item(d).update(ingredients=["250g butter", "1 cup sugar"]),
+        "clean",
+    ),
+    "grouped ingredients legal": (
+        lambda d: _first_item(d).update(
+            ingredients=["250g butter", {"component": "Sauce", "items": ["60g butter"]}]
+        ),
+        "clean",
+    ),
+    "ingredient group with no component": (
+        lambda d: _first_item(d).update(ingredients=[{"items": ["60g butter"]}]),
+        "error",
+    ),
+    "ingredient group with an empty component": (
+        lambda d: _first_item(d).update(ingredients=[{"component": "  ", "items": ["x"]}]),
+        "error",
+    ),
+    "ingredient group with no items": (
+        lambda d: _first_item(d).update(ingredients=[{"component": "Sauce", "items": []}]),
+        "error",
+    ),
+    "ingredient group whose item is not a string": (
+        lambda d: _first_item(d).update(ingredients=[{"component": "Sauce", "items": [7]}]),
+        "error",
+    ),
+    "ingredient group carrying an unknown key": (
+        lambda d: _first_item(d).update(
+            ingredients=[{"component": "Sauce", "items": ["x"], "note": "hi"}]
+        ),
+        "error",
+    ),
+    "a loose ingredient line after a group": (
+        lambda d: _first_item(d).update(
+            ingredients=[{"component": "Sauce", "items": ["x"]}, "250g butter"]
+        ),
+        "error",
+    ),
+    "the same component twice": (
+        lambda d: _first_item(d).update(
+            ingredients=[
+                {"component": "Sauce", "items": ["x"]},
+                {"component": "Sauce", "items": ["y"]},
+            ]
+        ),
+        "error",
+    ),
+    "ingredients is not a list at all": (
+        lambda d: _first_item(d).update(ingredients="250g butter"),
+        "error",
+    ),
     # --- referential integrity -------------------------------------------
     "pick names a non-existent dish": (
         lambda d: d.update(picks=["Totally Invented Dish 9000"]),

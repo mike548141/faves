@@ -100,6 +100,15 @@ export const DEFAULTS = {
   mapsApp: "auto",
   units: LOCAL,
   currency: LOCAL,
+  // Whether the recipe page's ingredient list starts folded away (37c, owner
+  // ruling 2026-08-16: remember it for ALL recipes, not one flag per recipe).
+  // It rides the settings store rather than a store of its own because a brand
+  // new `faves.` key is swept into the backup export by personal-data.js's
+  // catch-all and then never restored — exported but not restorable is the
+  // defect the "ticks must leave the backup export" item exists to fix, and one
+  // instance of it is enough. Deliberately NOT on the settings screen: it is
+  // set by folding the panel, which is where anyone would look for it.
+  ingredientsFolded: false,
 };
 
 // [min, max] accepted for each; values outside are clamped in, non-numbers
@@ -154,6 +163,7 @@ function sanitise(obj) {
     mapsApp: MAPS_APP_KEYS.has(obj?.mapsApp) ? obj.mapsApp : DEFAULTS.mapsApp,
     units: obj?.units === LOCAL || UNITS.includes(obj?.units) ? obj.units : DEFAULTS.units,
     currency: validCurrency(obj?.currency) ? obj.currency : DEFAULTS.currency,
+    ingredientsFolded: obj?.ingredientsFolded === true,
   };
 }
 

@@ -52,6 +52,7 @@ import { dishNeeds, priceUnknown } from "./needs.js";
 import { filterHref } from "./filters.js";
 import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
+import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
 import { wireSearchClear } from "./search-clear.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
@@ -1141,7 +1142,7 @@ function renderDish(item, r = null, avoid = EMPTY_SET, section = null) {
   li.dataset.name = item.name.toLowerCase();
   li.dataset.dishId = dishId(item);
   // Include ingredients in the search haystack so "lemon" finds the pasta.
-  li.dataset.desc = [item.desc, ...(item.ingredients || [])]
+  li.dataset.desc = [item.desc, ...ingredientKeys(item.ingredients)]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
@@ -1166,10 +1167,28 @@ function renderDish(item, r = null, avoid = EMPTY_SET, section = null) {
 
 function renderRecipeDetail(item) {
   const body = [];
-  if (item.ingredients?.length) {
-    const ul = el("ul", { className: "ingredients" });
-    for (const ing of item.ingredients) ul.append(el("li", { textContent: ing }));
-    body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }), ul);
+  // The credit renders here too, not only on the recipe's own page: 37e took
+  // "adapted from the Edmonds cookbook" OUT of the description, and the
+  // description is what this row shows. One screen rendering the field would
+  // have quietly deleted the fact from the other.
+  if (item.attribution) {
+    body.push(el("p", { className: "recipe-credit", textContent: item.attribution }));
+  }
+  const blocks = ingredientBlocks(item.ingredients);
+  if (blocks.length) {
+    body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }));
+    for (const block of blocks) {
+      // No ticks on this surface — this row is a preview, and the tick boxes
+      // live on the recipe's own page (ADR 0067). It still has to render a
+      // component's lines under their heading, or a grouped recipe reads as one
+      // undifferentiated list here and a structured one there.
+      if (block.component) {
+        body.push(el("h5", { className: "ingredient-component", textContent: block.component }));
+      }
+      const ul = el("ul", { className: "ingredients" });
+      for (const line of block.lines) ul.append(el("li", { textContent: line.text }));
+      body.push(ul);
+    }
   }
   if (item.steps?.length) {
     // Oven temperatures live inside the step text, so an imperial reader gets

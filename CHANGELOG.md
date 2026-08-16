@@ -9,6 +9,26 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A recipe made of parts now says so.** Recipes with a base and an icing, or a
+  pudding and its sauce, show each component under its own heading instead of
+  repeating "Sauce:" at the front of every line. Your ticks carry over — nothing
+  you had already ticked has come undone.
+- **Fold the ingredients away once everything is in the bowl.** Tap *Ingredients*
+  on a recipe to collapse the list and get the method up the screen. Faves
+  remembers, so every recipe opens the way you left the last one.
+- **Two columns of ingredients on a wide screen.** On a laptop a long list now
+  uses the space beside it rather than running off the bottom. Phones are
+  unchanged, and a short list stays in one column where a split would just look
+  broken.
+- **A recipe can credit where it came from.** The chocolate self-saucing pudding
+  now carries "Adapted from the Edmonds cookbook" as a proper credit, and
+  searching for *Edmonds* finds it.
+
+### Fixed
+- **The tick boxes line up.** The ingredients' ticks and the method's ticks now
+  share one column down the page, and on a method step that runs to more than one
+  line the step number sits beside the first line rather than floating halfway
+  down the paragraph.
 - **Your favourites, ratings and settings now follow you across your devices.**
   Settings → *Sync across your devices* → turn it on, and you get a code. Type
   that code into Faves on your other phone, tablet or laptop and the two stay in

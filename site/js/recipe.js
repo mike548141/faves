@@ -17,6 +17,7 @@ import { initReo, translate } from "./reo.js";
 import { cookButton } from "./cook-ui.js";
 import { CHECKLIST_KEY, checklist, recipeId } from "./checklist.js";
 import { syncTicks, tickRow } from "./checklist-ui.js";
+import { ingredientBlocks } from "./ingredients.js";
 import { el } from "./dom.js";
 // The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
 // a recipe could show CONTAINS GLUTEN chips with no route to the Settings that
@@ -113,6 +114,15 @@ function render(collection, item) {
   const metaBits = [item.serves ? `Serves ${item.serves}` : null, item.time || null].filter(Boolean);
   if (metaBits.length) parts.push(el("p", { className: "menu-sub", textContent: metaBits.join(" · ") }));
   if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
+  // Where it came from, as a field rather than buried in the prose (37e). The
+  // field ships WITH this line and never before it: site/data/ is precached to
+  // every phone, so a field no screen renders is a download nobody asked for
+  // (ADR 0047). A source credit — a cookbook, a publication — is not personal
+  // data; a family attribution in a home recipe is owner-approved (CLAUDE.md
+  // Exception 1).
+  if (item.attribution) {
+    parts.push(el("p", { className: "recipe-credit", textContent: item.attribution }));
+  }
 
   if (item.image) {
     parts.push(el("img", {
@@ -141,11 +151,50 @@ function render(collection, item) {
   // they flipped units, and never on the index, or an edited recipe would slide
   // every tick onto the wrong line (checklist.js).
   const rid = recipeId(id, item);
-  if (item.ingredients?.length) {
-    parts.push(el("h2", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }));
-    const ul = el("ul", { className: "ingredients" });
-    for (const ing of item.ingredients) ul.append(el("li", {}, [tickRow(rid, "i", ing)]));
-    parts.push(ul);
+  const blocks = ingredientBlocks(item.ingredients);
+  if (blocks.length) {
+    // Folded away once everything is in the bowl (37c). Native <details>, the
+    // same control the collection list and the add-on picker already use, so
+    // the platform gives the disclosure semantics and the keyboard for free.
+    //
+    // The fold is remembered for EVERY recipe, not per recipe — the owner's
+    // ruling, and he was told the cost he was accepting: opening an unfamiliar
+    // recipe now hides the list you have not shopped for yet. If that bites,
+    // the fix is per-recipe state, not abandoning the memory.
+    const body = [];
+    for (const b of blocks) {
+      // A component heading is h3 under the h2 in the summary — a real heading,
+      // so the list is navigable by heading on a screen reader rather than a
+      // bolded line that only looks like one.
+      if (b.component) {
+        body.push(el("h3", { className: "ingredient-component", textContent: b.component }));
+      }
+      const ul = el("ul", { className: "ingredients" });
+      // `line.key` carries the component, `line.text` does not: the tick is
+      // keyed on the line's full identity while the reader sees the text under
+      // its heading, unrepeated (ingredients.js, ADR 0070).
+      for (const line of b.lines) ul.append(el("li", {}, [tickRow(rid, "i", line.key, line.text)]));
+      body.push(ul);
+    }
+    const fold = el("details", { className: "ingredients-fold", open: !settings.get().ingredientsFolded }, [
+      el("summary", { className: "ingredients-summary" }, [
+        el("h2", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }),
+      ]),
+      el("div", { className: "ingredients-fold-body" }, body),
+    ]);
+    // Write the preference, never read it back here: `settings.subscribe` below
+    // re-renders on any change, and re-rendering the panel the reader is in the
+    // middle of opening would fight their own click.
+    fold.addEventListener("toggle", () => {
+      if (settings.get().ingredientsFolded === !fold.open) return;
+      foldWrite = true;
+      try {
+        settings.set({ ingredientsFolded: !fold.open });
+      } finally {
+        foldWrite = false;
+      }
+    });
+    parts.push(fold);
   }
   if (item.steps?.length) {
     parts.push(el("h2", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" }));
@@ -194,10 +243,19 @@ function render(collection, item) {
 // fresh prefs — no separate, drift-prone update path). null until first render.
 let current = null;
 
+// True only for the instant the ingredients fold is writing its own preference
+// (37c). A fold toggle IS a settings change, but the panel is already in the
+// state the setting now records, so re-rendering would rebuild the element the
+// reader is mid-interaction with and take their keyboard focus off it with it
+// (WCAG 2.4.3). `commit()` calls subscribers synchronously, so this flag is
+// only ever raised inside that one call.
+let foldWrite = false;
+
 // Re-apply on any settings change — re-reads settings.get().diet.avoid and
 // rebuilds the tags. No-op until the recipe has rendered.
 function reRender() {
-  if (current) render(current.collection, current.item);
+  if (foldWrite || !current) return;
+  render(current.collection, current.item);
 }
 
 async function main() {

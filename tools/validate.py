@@ -177,6 +177,60 @@ def warn(rid, msg):
     warnings.append(f"[{rid}] {msg}")
 
 
+def check_ingredients(rid, name, value):
+    """`ingredients` is optional; when present it is a list whose entries are
+    either a plain string (one ungrouped line) or a group object
+    ``{"component": str, "items": [str, ...]}`` — ADR 0070.
+
+    Two rules beyond the shape, both load-bearing:
+
+    * **Loose lines must lead.** A bare string after a component would render
+      under that component's heading while claiming not to belong to it, so the
+      reader cannot tell which block it is in. Refuse it at the gate rather than
+      leave the render to guess.
+    * **A component may not repeat.** Two "Sauce" groups would put two headings
+      with the same name on one page and, worse, could key two different lines
+      to the same tick hash (``"<component>: <text>"``, ADR 0067/0070). One
+      component, one block.
+    """
+    if value is None:
+        return
+    shape = f"ingredients for {name!r} must be a list of strings or {{component, items}} groups, or absent"
+    if not isinstance(value, list):
+        err(rid, shape)
+        return
+    seen_group = False
+    components = set()
+    for entry in value:
+        if isinstance(entry, str):
+            if seen_group:
+                err(
+                    rid,
+                    f"ingredients for {name!r}: ungrouped line {entry!r} follows a component "
+                    f"group — loose lines must come first, or give it a component of its own",
+                )
+            continue
+        if not isinstance(entry, dict):
+            err(rid, shape)
+            return
+        seen_group = True
+        component = entry.get("component")
+        items = entry.get("items")
+        if not isinstance(component, str) or not component.strip():
+            err(rid, f"ingredients for {name!r}: a group needs a non-empty string component")
+            continue
+        if component in components:
+            err(rid, f"ingredients for {name!r}: component {component!r} appears twice")
+        components.add(component)
+        if not isinstance(items, list) or not items or not all(isinstance(x, str) for x in items):
+            err(
+                rid,
+                f"ingredients for {name!r}: component {component!r} needs a non-empty list of strings",
+            )
+        for extra in set(entry) - {"component", "items"}:
+            err(rid, f"ingredients for {name!r}: unknown key {extra!r} on component {component!r}")
+
+
 def check_image(rid, obj, where):
     """image is an optional self-hosted path; alt is required when set."""
     img = obj.get("image")
@@ -1251,18 +1305,29 @@ def check_restaurant(path):
 
             # Recipe-only item fields (all optional). Validated whenever
             # present so a stray field on a venue item is also caught.
-            for field in ("ingredients", "steps"):
-                v = item.get(field)
-                if v is not None and (
-                    not isinstance(v, list) or not all(isinstance(x, str) for x in v)
-                ):
-                    err(rid, f"{field} for {name!r} must be a list of strings or absent")
+            steps = item.get("steps")
+            if steps is not None and (
+                not isinstance(steps, list) or not all(isinstance(x, str) for x in steps)
+            ):
+                err(rid, f"steps for {name!r} must be a list of strings or absent")
+            check_ingredients(rid, name, item.get("ingredients"))
             serves = item.get("serves")
             if serves is not None and (not isinstance(serves, int) or isinstance(serves, bool)):
                 err(rid, f"serves for {name!r} must be an integer or absent")
             time = item.get("time")
             if time is not None and not isinstance(time, str):
                 err(rid, f"time for {name!r} must be a string or absent")
+            # Where the recipe came from (37e). ONE string, holding the credit as
+            # it should read — "Adapted from the Edmonds cookbook" — not a
+            # {source, relation} pair. A pair would make the app supply the
+            # framing, and the app cannot know whether a recipe was adapted,
+            # taken whole, or merely inspired by its source; guessing that on the
+            # reader's behalf is how a credit becomes wrong.
+            attribution = item.get("attribution")
+            if attribution is not None and (
+                not isinstance(attribution, str) or not attribution.strip()
+            ):
+                err(rid, f"attribution for {name!r} must be a non-empty string or absent")
 
             # Dish photo (optional, self-hosted); alt required when set.
             check_image(rid, item, f"item {name!r}")
