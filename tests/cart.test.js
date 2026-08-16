@@ -10,6 +10,8 @@ import {
   orderTotal,
   groupByVenue,
   mergeItems,
+  lineKey,
+  normaliseNote,
 } from "../site/js/cart.js";
 
 // A Map-backed stand-in for localStorage.
@@ -236,6 +238,204 @@ test("mergeItems keeps two same-named incoming lines apart and carries the id", 
   // …and an id-less line still merges by name-as-slug, adding no stray field.
   const plain = mergeItems([], [line({ qty: 1 })]);
   assert.equal("dishId" in plain[0], false);
+});
+
+// --- a free-text note per line (Theme 14c) --------------------------------
+// The owner's ask was "the ability to customise a dish e.g. no tomato in a big
+// breakfast". A note is part of the line's IDENTITY, on ADR 0048 §4's reasoning
+// applied consistently: "eggs on toast, no tomato" and "eggs on toast" are two
+// different things to make, exactly as "with bacon" is.
+
+const eggs = { venueId: "cafe", venueName: "A Cafe", name: "Eggs on Toast", price: 20 };
+
+test("normaliseNote: trims, collapses runs, and makes absent notes empty", () => {
+  assert.equal(normaliseNote(" no  tomato "), "no tomato");
+  assert.equal(normaliseNote("no\ttomato"), "no tomato");
+  assert.equal(normaliseNote(""), "");
+  assert.equal(normaliseNote("   "), "");
+  assert.equal(normaliseNote(null), "");
+  assert.equal(normaliseNote(undefined), "");
+  assert.equal(normaliseNote(7), "");
+  assert.equal(normaliseNote({}), "");
+  // Case is NOT folded: a note is composed by a person and read out by one.
+  assert.notEqual(normaliseNote("No tomato"), normaliseNote("no tomato"));
+});
+
+test("same dish, two different notes → two lines, not a quantity of 2", () => {
+  const o = createOrder(fakeStorage());
+  o.add({ ...eggs, note: "no tomato" });
+  o.add({ ...eggs, note: "sauce on the side" });
+  assert.equal(o.items().length, 2);
+  assert.equal(o.count(), 2);
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast", "", "no tomato"), 1);
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast", "", "sauce on the side"), 1);
+  // …and the un-noted line is a third thing that does not exist yet.
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast"), 0);
+});
+
+test("same dish, same note, added twice → one line of qty 2", () => {
+  const o = createOrder(fakeStorage());
+  o.add({ ...eggs, note: "no tomato" });
+  o.add({ ...eggs, note: "no tomato" });
+  assert.equal(o.items().length, 1);
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast", "", "no tomato"), 2);
+  assert.equal(o.total(), 40);
+});
+
+test("a line with no note keys exactly as it always did", () => {
+  // The property that matters most: nothing already in a family's browser moves.
+  const o = createOrder(fakeStorage());
+  o.add(eggs);
+  o.add(eggs);
+  assert.equal(o.items().length, 1);
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast"), 2);
+  // No stray field on the stored shape, byte for byte what it has always been.
+  assert.equal("note" in o.items()[0], false);
+
+  // …and a line STORED before notes existed answers the three-argument call.
+  const old = createOrder(
+    fakeStorage('[{"venueId":"kk","venueName":"KK","name":"Mee Goreng","price":18,"qty":2,"collected":false}]')
+  );
+  assert.equal(old.qtyOf("kk", "mee-goreng"), 2);
+  old.add(kk); // the same dish, added the new way, still finds the stored line
+  assert.equal(old.items().length, 1);
+  assert.equal(old.qtyOf("kk", "mee-goreng"), 3);
+  old.setQty("kk", "mee-goreng", 5);
+  assert.equal(old.qtyOf("kk", "mee-goreng"), 5);
+  old.toggleCollected("kk", "mee-goreng");
+  assert.equal(old.items()[0].collected, true);
+  old.remove("kk", "mee-goreng");
+  assert.equal(old.items().length, 0);
+});
+
+test("a note is normalised before it enters the key", () => {
+  const o = createOrder(fakeStorage());
+  o.add({ ...eggs, note: " no  tomato " });
+  o.add({ ...eggs, note: "no tomato" });
+  assert.equal(o.items().length, 1);
+  assert.equal(o.items()[0].qty, 2);
+  assert.equal(o.items()[0].note, "no tomato"); // stored normalised, not as typed
+  // …and the lookup normalises too, so either spelling addresses the line.
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast", "", "  no   tomato "), 2);
+});
+
+test("lineKey: an absent note keys identically to an empty one", () => {
+  const base = { venueId: "cafe", name: "Eggs on Toast" };
+  assert.equal(lineKey(base), lineKey({ ...base, note: "" }));
+  assert.equal(lineKey(base), lineKey({ ...base, note: "   " }));
+  assert.equal(lineKey(base), lineKey({ ...base, note: null }));
+  assert.notEqual(lineKey(base), lineKey({ ...base, note: "no tomato" }));
+});
+
+test("setNote preserves qty and collected", () => {
+  const o = createOrder(fakeStorage());
+  o.add(eggs);
+  o.add(eggs);
+  o.add(eggs);
+  o.toggleCollected("cafe", "eggs-on-toast");
+  o.setNote("cafe", "eggs-on-toast", "", "", "no tomato");
+  assert.equal(o.items().length, 1);
+  const [ln] = o.items();
+  assert.equal(ln.note, "no tomato");
+  assert.equal(ln.qty, 3);
+  assert.equal(ln.collected, true);
+  // The line now answers to its note and no longer to the bare call.
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast", "", "no tomato"), 3);
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast"), 0);
+});
+
+test("setNote can edit one note into another, and clear it back to none", () => {
+  const o = createOrder(fakeStorage());
+  o.add({ ...eggs, note: "no tomato" });
+  o.setNote("cafe", "eggs-on-toast", "", "no tomato", "no onion");
+  assert.equal(o.items()[0].note, "no onion");
+  o.setNote("cafe", "eggs-on-toast", "", "no onion", "  ");
+  // Cleared back to the exact shape an un-noted line has always had.
+  assert.equal("note" in o.items()[0], false);
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast"), 1);
+});
+
+test("setNote MERGES when the key it moves to is already taken", () => {
+  // The case a naive implementation gets wrong: it writes the field and leaves
+  // two lines sharing one key, which every lookup then resolves to the first.
+  const o = createOrder(fakeStorage());
+  o.add(eggs); // 1× plain
+  o.add(eggs); // 2× plain
+  o.add({ ...eggs, note: "no tomato" }); // a separate line
+  assert.equal(o.items().length, 2);
+
+  o.setNote("cafe", "eggs-on-toast", "", "no tomato", ""); // clear it → collide
+  assert.equal(o.items().length, 1);
+  assert.equal(o.items()[0].qty, 3); // summed, not overwritten
+  assert.equal("note" in o.items()[0], false);
+  assert.equal(o.qtyOf("cafe", "eggs-on-toast"), 3);
+  // No two lines share a key — the property the merge exists to keep.
+  assert.equal(new Set(o.items().map(lineKey)).size, o.items().length);
+});
+
+test("setNote's merge only keeps collected when BOTH halves were collected", () => {
+  const o = createOrder(fakeStorage());
+  o.add(eggs);
+  o.add({ ...eggs, note: "no tomato" });
+  o.toggleCollected("cafe", "eggs-on-toast"); // the plain line is in the bag
+  o.setNote("cafe", "eggs-on-toast", "", "no tomato", "");
+  // One of the two was not collected, so the merged line is not either: being
+  // told to re-check the bag is cheaper than being told you already have it.
+  assert.equal(o.items().length, 1);
+  assert.equal(o.items()[0].collected, false);
+  assert.equal(o.items()[0].qty, 2);
+});
+
+test("setNote on a line that isn't there does nothing, and never commits", () => {
+  const o = createOrder(fakeStorage());
+  o.add(eggs);
+  let calls = 0;
+  o.subscribe(() => calls++);
+  o.setNote("cafe", "eggs-on-toast", "", "no tomato", "no onion"); // no such line
+  o.setNote("cafe", "eggs-on-toast", "", "", ""); // a no-op edit
+  assert.equal(calls, 0);
+  assert.equal(o.items().length, 1);
+});
+
+test("a note survives storage and re-hydrates as its own line", () => {
+  const storage = fakeStorage();
+  const a = createOrder(storage);
+  a.add(eggs);
+  a.add({ ...eggs, note: "no tomato" });
+  const b = createOrder(storage);
+  assert.equal(b.items().length, 2);
+  assert.equal(b.qtyOf("cafe", "eggs-on-toast"), 1);
+  assert.equal(b.qtyOf("cafe", "eggs-on-toast", "", "no tomato"), 1);
+});
+
+test("a note and add-ons are independent parts of the same identity", () => {
+  const o = createOrder(fakeStorage());
+  const sauce = [{ group: "Sauce", name: "Satay", price: 1 }];
+  o.add({ ...eggs, options: sauce, note: "no tomato" });
+  o.add({ ...eggs, options: sauce });
+  o.add({ ...eggs, note: "no tomato" });
+  o.add(eggs);
+  assert.equal(o.items().length, 4);
+  assert.equal(new Set(o.items().map(lineKey)).size, 4);
+});
+
+test("mergeItems keeps two notes apart and adds no stray field to a plain line", () => {
+  const out = mergeItems(
+    [],
+    [
+      { ...eggs, qty: 1, note: " no  tomato " },
+      { ...eggs, qty: 2, note: "no onion" },
+      { ...eggs, qty: 1 },
+    ]
+  );
+  assert.equal(out.length, 3);
+  assert.equal(out[0].note, "no tomato"); // normalised on the way in
+  assert.equal(out[1].note, "no onion");
+  assert.equal("note" in out[2], false);
+  // A second pass over the same lines sums rather than duplicating.
+  const again = mergeItems(out, [{ ...eggs, qty: 4, note: "no tomato" }]);
+  assert.equal(again.length, 3);
+  assert.equal(again[0].qty, 5);
 });
 
 test("orderCount / orderTotal helpers are pure", () => {

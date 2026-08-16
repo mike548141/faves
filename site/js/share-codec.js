@@ -29,6 +29,11 @@ const TAG_OF_TYPE = { order: "o", shortlist: "s" };
 // reach storage or the DOM.
 const MAX_LABEL = 40;
 const MAX_NAME = 120;
+// A note is one spoken sentence — "no tomato", "sauce on the side" — so it gets
+// its own, shorter ceiling rather than borrowing MAX_NAME's 120. 80 is the cap
+// the order sheet's input enforces too, and the two must agree or a note typed
+// on one phone would arrive truncated on another with nothing having said so.
+const MAX_NOTE = 80;
 const MAX_QTY = 99;
 const MAX_ITEMS = 200; // guard against a hostile or accidentally huge link
 const MAX_OPTIONS = 20; // add-ons per line — the widest real group is 20 rows
@@ -74,6 +79,27 @@ const cleanPhone = (v) => {
   return s || null;
 };
 
+// A per-line note (Theme 14c). Control characters become spaces first (a note
+// is rendered as text, and a stray newline in an order line is nobody's
+// customisation), then whitespace runs collapse and the ends trim — the SAME
+// normalisation `normaliseNote` in cart.js applies, because a note that arrives
+// spelt differently keys as a different line and quietly splits the order in
+// two. tests/share-codec.test.js runs both over one table so they cannot drift.
+//
+// A non-string (a crafted number, object or null) becomes "" rather than going
+// through String(): "[object Object]" on someone's plate is landing garbage,
+// which is exactly what the clip-everything rule exists to prevent. Clipped
+// LAST-but-one and trimmed again after, so a cut mid-word can't leave a
+// trailing space that would key as a different line from the sender's.
+const cleanNote = (v) => {
+  if (typeof v !== "string") return "";
+  // `\p{Cc}` — the whole C0/C1 control category — rather than cleanLabel's
+  // explicit range, and mapped to a SPACE rather than deleted: a NUL between
+  // two words must not weld them into one.
+  const collapsed = v.replace(/\p{Cc}/gu, " ").replace(/\s+/g, " ").trim();
+  return clip(collapsed, MAX_NOTE).trim();
+};
+
 const clampQty = (v) => {
   const n = Math.floor(Number(v));
   return Number.isFinite(n) ? Math.min(Math.max(n, 0), MAX_QTY) : 0;
@@ -108,7 +134,8 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
     p: cleanPhone(g.phone),
     // Each line is a positional [name, price, qty] triple to keep it short,
     // with the add-on selection appended as an optional fourth slot (ADR 0048
-    // §4) and the dish id as an optional fifth (ADR 0051). Deliberately NOT a
+    // §4), the dish id as an optional fifth (ADR 0051) and the free-text note
+    // as an optional sixth (Theme 14c). Deliberately NOT a
     // CODEC_VERSION bump: that field is shared by orders AND shortlists and is
     // checked with a strict `!==`, so bumping it would invalidate every
     // outstanding link of both kinds for a change one of them doesn't use.
@@ -118,6 +145,19 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
     // older reader still totals correctly. It under-specifies the order rather
     // than mis-stating it: dropping an add-on can never put something extra on
     // a plate, which is the only degradation direction that is safe.
+    //
+    // 🚩 THE NOTE IS THE EXCEPTION, AND THAT PARAGRAPH MUST NOT BE READ AS
+    // COVERING IT. An add-on is an ADDITION, so an old decoder dropping it
+    // takes something off the plate. A note is characteristically a REMOVAL —
+    // "no tomato", "no onion", "sauce on the side" — so an old decoder dropping
+    // it leaves the unwanted thing ON the plate. That is the other degradation
+    // direction, and it is the unsafe one. The slot is appended anyway, with
+    // eyes open, because the alternative is worse: a note that does not travel
+    // sends your friend to the counter to order the exact dish you asked to
+    // have changed, and that fails EVERY time. Carrying it fails only against a
+    // decoder old enough to predate the slot — a link minted by a phone still
+    // running a build from before this shipped. The choice is a guaranteed
+    // failure against a shrinking one, not a safe option against a risky one.
     i: (g.items || []).map((it) => {
       const name = clip(it.name, MAX_NAME);
       const line = [name, priceOrNull(it.price), clampQty(it.qty)];
@@ -128,9 +168,16 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
       // what "the name alone would have meant" even for an over-long one.
       const id = clip(dishId({ dishId: it.dishId, name: name.trim() }), MAX_NAME);
       const carryId = !!id && id !== slug(name.trim());
-      if (opts.length || carryId)
+      const note = cleanNote(it.note);
+      // Positional slots need PLACEHOLDERS, not omission: a note on a line with
+      // no add-ons and no distinguishing id would otherwise land at index 3 and
+      // be read as an options array. So a later slot forces `null` into every
+      // earlier optional one, and each condition is "mine, or anything after
+      // mine".
+      if (opts.length || carryId || note)
         line.push(opts.length ? opts.map((o) => [clip(o.group, MAX_NAME), clip(o.name, MAX_NAME), priceOrNull(o.price)]) : null);
-      if (carryId) line.push(id);
+      if (carryId || note) line.push(carryId ? id : null);
+      if (note) line.push(note);
       return line;
     }),
   }));
@@ -297,6 +344,19 @@ function decodeOrderItems(groups) {
       // and never an href, so no further escaping is owed.
       const id = clip(line[4] ?? "", MAX_NAME).trim();
       if (id && id !== slug(name)) item.dishId = id;
+      // Slot 5, the free-text note (Theme 14c). Set only when there is one, so
+      // a link minted before notes existed decodes to exactly the object it
+      // always did, field for field.
+      //
+      // Unlike the dish id above — which "reaches a storage key and never an
+      // href" — a note REACHES THE DOM: it is rendered as text to whoever is
+      // reading the order out at the counter. cart-ui.js sets it with
+      // `textContent`, never `innerHTML`, so markup in a crafted link is shown
+      // as the characters someone typed rather than parsed. Sanitising here is
+      // the belt; textContent there is the braces, and the braces are the part
+      // that actually holds.
+      const note = cleanNote(line[5]);
+      if (note) item.note = note;
       items.push(item);
       if (items.length >= MAX_ITEMS) break outer;
     }

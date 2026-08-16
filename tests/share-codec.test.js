@@ -11,7 +11,7 @@ import {
   readShareToken,
   CODEC_VERSION,
 } from "../site/js/share-codec.js";
-import { mergeItems } from "../site/js/cart.js";
+import { mergeItems, normaliseNote, lineKey } from "../site/js/cart.js";
 import { favKey } from "../site/js/favourites.js";
 
 // groupByVenue()-shaped input: what the order sheet hands the encoder.
@@ -299,6 +299,182 @@ test("a crafted id is clipped and trimmed like every other string off the wire",
   assert.equal(decodeShare(craft("z".repeat(300))).items[0].dishId.length, 120);
   assert.equal(decodeShare(craft("  spaced  ")).items[0].dishId, "spaced");
   assert.equal("dishId" in decodeShare(craft("   ")).items[0], false); // blank → none
+});
+
+// --- the free-text note on the wire (Theme 14c) ----------------------------
+// The note rides as slot 5, after the dish id, with `null` forced into every
+// earlier optional slot so it lands at a stable index. NOT a CODEC_VERSION bump,
+// for the reason above — the version is shared with shortlists and checked with
+// a strict `!==`.
+//
+// 🚩 The safety argument written against the add-on slot does NOT transfer here,
+// and the code comment says so. An add-on is an ADDITION, so an old decoder
+// dropping it takes something off the plate; a note is characteristically a
+// REMOVAL ("no tomato"), so an old decoder dropping it leaves the unwanted thing
+// ON the plate — the unsafe degradation direction. It is appended anyway,
+// eyes open: a note that does not travel fails every time, where this fails only
+// against a decoder that predates the slot.
+
+const notedGroups = [
+  {
+    venueId: "fixture-venue",
+    venueName: "A Cafe",
+    phone: null,
+    items: [{ name: "Eggs on Toast", price: 20, qty: 1, note: "no tomato" }],
+  },
+];
+
+test("a note-only line: null placeholders keep it at slot 5", () => {
+  const line = payloadOf(encodeShare({ groups: notedGroups })).g[0].i[0];
+  assert.deepEqual(line, ["Eggs on Toast", 20, 1, null, null, "no tomato"]);
+});
+
+test("a note-only line round-trips (no add-ons, no explicit id)", () => {
+  const decoded = decodeShare(encodeShare({ groups: notedGroups }));
+  assert.equal(decoded.items.length, 1);
+  assert.deepEqual(decoded.items[0], {
+    venueId: "fixture-venue",
+    venueName: "A Cafe",
+    phone: null,
+    name: "Eggs on Toast",
+    price: 20,
+    qty: 1,
+    note: "no tomato",
+  });
+  // …and it merges into an order as its OWN line, not onto the plain one.
+  const merged = mergeItems([{ ...decoded.items[0], note: undefined, qty: 1 }], decoded.items);
+  assert.equal(merged.length, 2);
+});
+
+test("a note, add-ons and an explicit id all ride together", () => {
+  const g = [{
+    venueId: "x", venueName: "X", phone: null,
+    items: [{
+      name: "Kebab", dishId: "kebab-large", price: 20, qty: 2,
+      options: [{ group: "Sauce", name: "Satay", price: 1 }],
+      note: "no onion",
+    }],
+  }];
+  const line = payloadOf(encodeShare({ groups: g })).g[0].i[0];
+  assert.deepEqual(line, [
+    "Kebab", 20, 2,
+    [["Sauce", "Satay", 1]],
+    "kebab-large",
+    "no onion",
+  ]);
+  const decoded = decodeShare(encodeShare({ groups: g }));
+  assert.equal(decoded.items[0].dishId, "kebab-large");
+  assert.deepEqual(decoded.items[0].options, [{ group: "Sauce", name: "Satay", price: 1 }]);
+  assert.equal(decoded.items[0].note, "no onion");
+});
+
+test("a note with add-ons but no distinguishing id still needs the id placeholder", () => {
+  const g = [{
+    venueId: "x", venueName: "X", phone: null,
+    items: [{ name: "Kebab", price: 20, qty: 1, options: [{ group: "Sauce", name: "Satay", price: 1 }], note: "no onion" }],
+  }];
+  const line = payloadOf(encodeShare({ groups: g })).g[0].i[0];
+  assert.deepEqual(line, ["Kebab", 20, 1, [["Sauce", "Satay", 1]], null, "no onion"]);
+  assert.equal(decodeShare(encodeShare({ groups: g })).items[0].note, "no onion");
+});
+
+test("a token minted WITHOUT a note decodes to exactly the object it did before", () => {
+  // The backward-compatibility guarantee, field for field on both sides of the
+  // wire: no extra slot on the way out, no extra key on the way in.
+  assert.deepEqual(payloadOf(encodeShare({ groups })).g[0].i, [
+    ["Mee Goreng", 18, 2],
+    ["Roti", 6, 1],
+  ]);
+  const decoded = decodeShare(encodeShare({ groups }));
+  assert.deepEqual(decoded.items[0], {
+    venueId: "kk",
+    venueName: "KK Malaysian",
+    phone: "04 555 1234",
+    name: "Mee Goreng",
+    price: 18,
+    qty: 2,
+  });
+  for (const i of decoded.items) assert.equal("note" in i, false);
+  // …and an id-carrying line is still five slots, not six.
+  assert.deepEqual(payloadOf(encodeShare({ groups: burgerGroups })).g[0].i[1],
+    ["Cheeseburger", 21, 1, null, "cheeseburger-gold-card"]);
+});
+
+test("a hostile note is clipped, collapsed and clamped, and never lands garbage", () => {
+  const craft = (note) => tokenOf({
+    v: CODEC_VERSION, t: "o",
+    g: [{ v: "x", n: "X", p: null, i: [["A", 1, 1, null, null, note]] }],
+  });
+  const first = (note) => decodeShare(craft(note)).items[0];
+
+  // A number, an object, an array and null are all "no note" — never
+  // "[object Object]" read out at a counter.
+  for (const bad of [7, { evil: 1 }, ["evil"], null, true]) {
+    assert.equal("note" in first(bad), false, `note survived for ${JSON.stringify(bad)}`);
+  }
+  // Over-length is cut to the ceiling, not refused (the order is still usable).
+  assert.equal(first("z".repeat(300)).note.length, 80);
+  // Whitespace and control characters normalise the same as they do locally.
+  assert.equal(first("  no   tomato  ").note, "no tomato");
+  assert.equal(first("no\ttomato").note, "no tomato");
+  assert.equal(first("no\u0000tomato").note, "no tomato"); // a NUL is not a word joiner
+  assert.equal("note" in first("   "), false);
+  assert.equal("note" in first(""), false);
+  // Markup is carried as CHARACTERS. cart-ui.js sets it with textContent, so it
+  // is shown, not parsed; the codec's job is only to not mangle it.
+  assert.equal(first("<img src=x onerror=alert(1)>").note, "<img src=x onerror=alert(1)>");
+  // A clip that lands mid-space cannot leave a trailing one — that would key as
+  // a different line from the sender's.
+  const cut = first("y".repeat(79) + "   tail");
+  assert.equal(cut.note, "y".repeat(79));
+});
+
+test("a line whose only extra slots are placeholders decodes as a plain line", () => {
+  // Explicit nulls in slots 3 and 4 must mean "nothing here", not "an empty
+  // options array" or "a blank id".
+  const token = tokenOf({
+    v: CODEC_VERSION, t: "o",
+    g: [{ v: "kk", n: "KK Malaysian", p: null, i: [["Mee Goreng", 18, 2, null, null]] }],
+  });
+  assert.deepEqual(decodeShare(token).items, [
+    { venueId: "kk", venueName: "KK Malaysian", phone: null, name: "Mee Goreng", price: 18, qty: 2 },
+  ]);
+});
+
+test("the codec and cart.js normalise a note IDENTICALLY", () => {
+  // share-codec.js keeps its own cleaner (it re-sanitises everything off the
+  // wire by design) — but a note that arrives spelt differently from the way the
+  // sender's store spelt it keys as a DIFFERENT line, so the two must agree.
+  // This is the guard that fires if either drifts.
+  const cases = [
+    "no tomato", " no  tomato ", "no\ttomato", "no\n\ntomato", "  ", "",
+    "Sauce ON the side", "Māori kūmara, no butter", "a".repeat(40),
+  ];
+  const craft = (note) => tokenOf({
+    v: CODEC_VERSION, t: "o",
+    g: [{ v: "x", n: "X", p: null, i: [["A", 1, 1, null, null, note]] }],
+  });
+  for (const c of cases) {
+    const local = normaliseNote(c);
+    const wire = decodeShare(craft(c)).items[0].note ?? "";
+    assert.equal(wire, local, `disagreed on ${JSON.stringify(c)}`);
+  }
+});
+
+test("end-to-end: a noted line survives encode → share → decode → merge", () => {
+  const g = [{
+    venueId: "cafe", venueName: "A Cafe", phone: null,
+    items: [
+      { name: "Eggs on Toast", price: 20, qty: 1 },
+      { name: "Eggs on Toast", price: 20, qty: 1, note: " no  tomato " },
+    ],
+  }];
+  const back = decodeShare(readShareToken(buildShareUrl(encodeShare({ groups: g }), "https://faves.example/")));
+  assert.equal(back.items.length, 2);
+  const merged = mergeItems([], back.items);
+  assert.equal(merged.length, 2); // two things to make, not a quantity of 2
+  assert.equal(new Set(merged.map(lineKey)).size, 2);
+  assert.equal(merged[1].note, "no tomato");
 });
 
 // --- dish ids on a shortlist (ADR 0051 residue) ---------------------------

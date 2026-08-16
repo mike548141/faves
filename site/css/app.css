@@ -5539,3 +5539,82 @@ mark.search-match {
   color: var(--ink-soft);
   font-style: italic;
 }
+
+/* ---------- A free-text note per order line (ROADMAP Theme 14c) ----------
+   "No tomato in the big breakfast" is what you SAY at the counter, so the note
+   has to survive a glance in a busy shop. It is made secondary by size and by
+   the pencil mark — never by dropping contrast: it keeps full --ink, where the
+   add-on configuration line above it uses --ink-soft. */
+.order-line.has-note-row {
+  flex-wrap: wrap; /* so the note control can take a row of its own below */
+}
+.order-line-note {
+  display: block;
+  font-size: var(--step-sub);
+  color: var(--ink);
+}
+/* The button reads "Add a note" until there is one, then "Edit note"; both are
+   full-height targets, right-aligned so the line above stays the thing you
+   read. It sits on its own wrapped row rather than in the flex line, because at
+   390 px a third control beside the stepper and the price squeezes all three
+   below 44 px. */
+.order-note-row {
+  flex: 1 0 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-2);
+}
+.order-note-btn {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  cursor: pointer;
+}
+.order-note-btn:hover {
+  background: var(--surface-2);
+}
+.order-note-input {
+  flex: 1 1 10rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  /* --step-body is 1rem: iOS Safari zooms the whole page when a focused field
+     is under 16px, and the order sheet never zooms back out. */
+  font-size: var(--step-body);
+}
+.order-note-save {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  cursor: pointer;
+}
+.order-note-save:hover {
+  filter: brightness(0.96);
+}
+/* Says what the field is for AND what the cap is, before the field silently
+   refuses the 81st keystroke. --ink-soft here is fine: it is help text beside a
+   labelled field, not the note itself. */
+.order-note-help {
+  flex: 1 0 100%;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  text-align: left;
+}

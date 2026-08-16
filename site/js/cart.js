@@ -18,6 +18,24 @@ import { dishId } from "./dish-id.js";
 const KEY = "faves.order.v1";
 
 /**
+ * A note as the line's IDENTITY sees it (Theme 14c): whitespace runs collapsed
+ * to one space, ends trimmed, anything that isn't a string → `""`.
+ *
+ * Normalising before the key is what stops `" no  tomato "` and `"no tomato"`
+ * becoming two lines for one plate — the same job `selectionKey`'s sort does for
+ * add-ons. `""` for absent/null/empty is the load-bearing case: it means every
+ * line already sitting in a family's browser keys exactly as it does now,
+ * relative to every other line.
+ *
+ * Case is deliberately NOT folded. "No tomato" is read out at a counter, and a
+ * note is the one field here a person actually composes.
+ */
+export function normaliseNote(note) {
+  if (typeof note !== "string") return "";
+  return note.replace(/\s+/g, " ").trim();
+}
+
+/**
  * What makes one order line distinct from another: venue, DISH ID, add-ons.
  *
  * A dish added twice with different add-ons is two lines, not a quantity of 2
@@ -37,9 +55,18 @@ const KEY = "faves.order.v1";
  * `dishId()` falls through to `slug(name)`, so everything already in a family's
  * browser reads back as itself. (Only the colliding rows moved, and only their
  * 2nd and 3rd printings — behaviour that was already wrong.)
+ *
+ * The FOURTH component is the free-text note (Theme 14c), and it is ADR 0048 §4
+ * applied consistently rather than a new idea: "eggs on toast, no tomato" and
+ * "eggs on toast" are two different things to make, exactly as "with bacon" is.
+ * Leave the note out of the identity and adding the dish twice, then noting one
+ * of them, yields ONE line of qty 2 carrying a note meant for one plate — wrong
+ * at the counter, and wrong in a way nobody would notice. An absent note
+ * normalises to "", so every existing line keeps its identity relative to every
+ * other one; the suffix is the same on all of them.
  */
 export const lineKey = (i) =>
-  `${i.venueId}\n${dishId(i)}\n${selectionKey(i.options)}`;
+  `${i.venueId}\n${dishId(i)}\n${selectionKey(i.options)}\n${normaliseNote(i.note)}`;
 
 // A line's `price` is the CONFIGURED unit price — the dish plus its selected
 // add-ons. Keeping the total in the field every consumer already reads means
@@ -103,7 +130,7 @@ export function groupByVenue(items) {
 
 /**
  * Merge `incoming` lines into `base`, summing quantities of matching
- * (venueId, dishId, add-ons) lines and appending the rest in first-seen order. Returns a
+ * (venueId, dishId, add-ons, note) lines and appending the rest in first-seen order. Returns a
  * new array and never mutates its inputs — the receive side of group ordering
  * (Theme 1b): a decoded shared order folds into whatever the host already has.
  * `collected` is preserved on existing lines and starts false on new ones.
@@ -133,6 +160,10 @@ export function mergeItems(base, incoming) {
       // survives, without which a shared order of two same-named dishes would
       // collapse back into one line the moment it was received.
       if (inc.dishId) line.dishId = inc.dishId;
+      // Same conditional, same reason (Theme 14c). Stored normalised, so the
+      // line reads back under the key it was just filed under.
+      const note = normaliseNote(inc.note);
+      if (note) line.note = note;
       out.push(line);
       idxOf.set(key, out.length - 1);
     }
@@ -174,23 +205,30 @@ export function createOrder(storage) {
   //
   // `sel` is a selectionKey (addons.js) — "" for a dish ordered as it comes,
   // which is what every line stored before add-ons existed reads back as.
-  const find = (venueId, id, sel = "") =>
-    items.find((i) => lineKey(i) === `${venueId}\n${id}\n${sel}`);
+  //
+  // `note` is the fourth part and is likewise OPTIONAL, defaulting to "": every
+  // three-argument call already written addresses the UN-noted line, which is
+  // the correct meaning of those calls, so nothing had to be rewritten to keep
+  // working.
+  const find = (venueId, id, sel = "", note = "") =>
+    items.find((i) => lineKey(i) === `${venueId}\n${id}\n${sel}\n${normaliseNote(note)}`);
 
   return {
     items: () => items,
     count: () => orderCount(items),
     total: () => orderTotal(items),
     groups: () => groupByVenue(items),
-    qtyOf: (venueId, id, sel = "") => find(venueId, id, sel)?.qty || 0,
+    qtyOf: (venueId, id, sel = "", note = "") => find(venueId, id, sel, note)?.qty || 0,
 
     /** Add one of a dish (or increment if already listed). `meta` is
-     *  { venueId, venueName, phone?, name, dishId?, price?, options? }. `price`
-     *  is the CONFIGURED unit price and `options` the chosen add-ons (ADR 0048);
-     *  `dishId` is what separates two identically-named rows (ADR 0051). */
+     *  { venueId, venueName, phone?, name, dishId?, price?, options?, note? }.
+     *  `price` is the CONFIGURED unit price and `options` the chosen add-ons
+     *  (ADR 0048); `dishId` is what separates two identically-named rows
+     *  (ADR 0051); `note` is the free-text customisation (Theme 14c). */
     add(meta) {
       const options = meta.options || [];
-      const ex = find(meta.venueId, dishId(meta), selectionKey(options));
+      const note = normaliseNote(meta.note);
+      const ex = find(meta.venueId, dishId(meta), selectionKey(options), note);
       if (ex) ex.qty += 1;
       else {
         const line = {
@@ -207,33 +245,75 @@ export function createOrder(storage) {
         // Recorded on the line so it survives storage, export and sharing; a
         // meta without one keeps the shape a line has always had.
         if (meta.dishId) line.dishId = meta.dishId;
+        // Written ONLY when non-empty, the same discipline `dishId` follows
+        // above: a line without a note keeps byte-for-byte the shape it has had
+        // since Theme 1, so nothing about the stored payload moves for the
+        // people who never use this.
+        if (note) line.note = note;
         items.push(line);
       }
       commit();
     },
 
     /** Set an exact quantity; 0 (or less) removes the line. */
-    setQty(venueId, id, qty, sel = "") {
-      const ex = find(venueId, id, sel);
+    setQty(venueId, id, qty, sel = "", note = "") {
+      const ex = find(venueId, id, sel, note);
       if (!ex) return;
       if (qty <= 0) items = items.filter((i) => i !== ex);
       else ex.qty = qty;
       commit();
     },
 
-    remove(venueId, id, sel = "") {
-      const target = `${venueId}\n${id}\n${sel}`;
+    remove(venueId, id, sel = "", note = "") {
+      const target = `${venueId}\n${id}\n${sel}\n${normaliseNote(note)}`;
       items = items.filter((i) => lineKey(i) !== target);
       commit();
     },
 
     /** Collect mode: tick an item off as it's handed over. */
-    toggleCollected(venueId, id, sel = "") {
-      const ex = find(venueId, id, sel);
+    toggleCollected(venueId, id, sel = "", note = "") {
+      const ex = find(venueId, id, sel, note);
       if (ex) {
         ex.collected = !ex.collected;
         commit();
       }
+    },
+
+    /**
+     * Change a line's note (Theme 14c). Because the note is part of the
+     * identity, this is not a field edit — it MOVES the line to a new key, so
+     * the call has to name both ends: `from` is the note the line carries now
+     * ("" for an un-noted line), `to` is what it should carry.
+     *
+     * (The roadmap sketched a four-argument `setNote(venueId, id, sel, note)`.
+     * That shape cannot express "change 'no tomato' to 'no onion'" at all — it
+     * can only ever address the un-noted line — so the old note is a parameter.)
+     *
+     * The case a naive implementation gets wrong is the COLLISION: clear the
+     * note from a line when a plain line of the same dish already exists and
+     * you would produce two lines sharing one key, which every lookup here then
+     * resolves to whichever came first. So a move onto an occupied key merges.
+     */
+    setNote(venueId, id, sel = "", from = "", to = "") {
+      const src = find(venueId, id, sel, from);
+      if (!src) return;
+      const next = normaliseNote(to);
+      if (next === normaliseNote(from)) return; // nothing moved; don't churn subscribers
+      const dest = find(venueId, id, sel, next);
+      if (dest && dest !== src) {
+        dest.qty += src.qty;
+        // Ticked-off-ness does NOT survive a merge unless both halves had it.
+        // Un-ticking something you already collected costs a second glance in
+        // the bag; the other direction hands you a line that says it's in the
+        // bag when half of it isn't.
+        dest.collected = dest.collected && src.collected;
+        items = items.filter((i) => i !== src);
+      } else if (next) {
+        src.note = next; // qty and collected ride along untouched
+      } else {
+        delete src.note; // back to the exact shape an un-noted line has always had
+      }
+      commit();
     },
 
     /** Fold a decoded shared order (group ordering, Theme 1b) into this one,
