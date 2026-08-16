@@ -567,7 +567,50 @@
     {
       "section": "Brunch",
       "sectionId": "brunch",
-      "note": "Monday to Sunday, open till 3pm",
+      "served": {
+        "mon": [
+          [
+            null,
+            "15:00"
+          ]
+        ],
+        "tue": [
+          [
+            null,
+            "15:00"
+          ]
+        ],
+        "wed": [
+          [
+            null,
+            "15:00"
+          ]
+        ],
+        "thu": [
+          [
+            null,
+            "15:00"
+          ]
+        ],
+        "fri": [
+          [
+            null,
+            "15:00"
+          ]
+        ],
+        "sat": [
+          [
+            null,
+            "15:00"
+          ]
+        ],
+        "sun": [
+          [
+            null,
+            "15:00"
+          ]
+        ]
+      },
       "items": [
         {
           "name": "1841 Brekkie",

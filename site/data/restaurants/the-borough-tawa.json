@@ -369,7 +369,50 @@
     {
       "section": "Brunch",
       "sectionId": "brunch",
-      "note": "served till 2pm",
+      "served": {
+        "mon": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "tue": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "wed": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "thu": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "fri": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sat": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sun": [
+          [
+            null,
+            "14:00"
+          ]
+        ]
+      },
       "items": [
         {
           "name": "Rosti Benedict",

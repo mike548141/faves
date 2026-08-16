@@ -146,7 +146,7 @@ python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
                               # renamed without breaking every link to it
-python3 tools/test_validate.py # …and that gate still catches things (99 mutations)
+python3 tools/test_validate.py # …and that gate still catches things (110 mutations)
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
@@ -180,6 +180,14 @@ node tools/branch_check.mjs   # the branch picker in headless Chrome (ADR 0054)
 node tools/to_top_check.mjs   # the back-to-top button gets out of the way (Theme 29)
 node tools/filter_row_check.mjs # filters inline when wide, in the sheet when narrow
 node tools/recipe_check.mjs   # the recipe page's ingredient layout (ADR 0070)
+node tools/served_check.mjs   # a section's serving window, on a FROZEN clock (28c).
+                              # `served` ANNOTATES, it never filters — so this asserts
+                              # the out-of-window section is STILL on the page, its
+                              # prices still legible, and `#section-<id>` still
+                              # resolving at 9pm. Freezing the clock is the point: the
+                              # outside-window state cannot be asserted any other way
+                              # without waiting until 9pm, and a check whose verdict
+                              # depends on the hour gets switched off within a week
 python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
 node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part of
                               # LINE IDENTITY, so the sheet can show the same dish
@@ -228,14 +236,14 @@ still orphans both — nothing can catch it** — so if a run was `kill -9`ed, r
 you. Orphans do not make a check fail; they make it **stall silently** with a
 wall of PASS and no summary line.
 
-🛑 **CI runs ONE of the TEN browser checks — `boot_check`, and only since
+🛑 **CI runs ONE of the ELEVEN browser checks — `boot_check`, and only since
 2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
 boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
 **not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
-`note_check` — **nine** guards, every one written precisely because unit tests
-had already missed a leak, a wreck or a mistap. Those run **only when a human or
+`note_check` · `served_check` — **ten** guards, every one written
+precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through
 a whole settings refactor with CI green the entire time: nothing was calling it.
 So a green CI run is still *not* evidence about any behaviour on this list

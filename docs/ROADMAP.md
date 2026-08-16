@@ -1832,10 +1832,19 @@ wrong.
 - ✅ **14e — Order-tally knock-ons** — **shipped 2026-08-16**. Line identity is
   now `(venueId, name, selectionKey)`; the share codec deliberately did *not*
   bump. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [~] **14b — The content sweep** `[M][content]` — **the TOOL half CLAIMED
-  2026-08-16 22:40 UTC (wt: faves-schema30)**; the conversion half stays open,
-  because converting a row is a judgement and the tool deliberately refuses to
-  make it. Retro-fitting the corpus is
+- [~] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
+  2026-08-16** (wt: faves-schema30): `tools/find_addons.py` + 44 test cases +
+  17 breakers, and a `validate.py` **warning** on the 15 high-confidence
+  convertible rows. **The conversion half stays open and is the bulk of it** —
+  converting a row is a judgement and the tool deliberately refuses to make it.
+  🔑 **It became a CLASSIFIER rather than a matcher**, because 14b and 28b were
+  reading the same field with two regexes written a month apart. It reports 12
+  classes and names the theme each routes to: **14b owns 136, 28b owns 220,
+  14f 28, 14c 82.** Convertible-now is **15 rows**, not the 28 this item
+  assumed. It prints where its numbers differ from the roadmap's rather than
+  letting the gap be forgotten, and it exits 0 always — a reporter over prose
+  that never fully drains, and a check that always fires is one nobody reads.
+  Retro-fitting the corpus is
   the bulk of the work, not the code. Pattern-match `Add …$` / `+$` in every
   `desc` and convert; keep the prose only where it isn't an orderable choice.
   Model it on `tools/tag_allergens.py` (ADR 0024): a re-runnable script plus a
@@ -2976,24 +2985,12 @@ contain shellfish.
   shape must express "size unknown, price known", and Hell's 13 drink rows
   state two volumes at ONE price. A required price-per-size would force
   inventing prices the menu does not state.
-- [~] **28c — A section's time window is unreadable prose** `[M][schema]` 🔎 —
-  **CLAIMED 2026-08-16 22:40 UTC (wt: faves-schema30)**.
-  the one clean, self-contained defect here. `available` accepts dates and
-  seasons only, so "Mon–Fri 11:30–17:30" is **inexpressible**.
-  ⚠️ **The next clause was stale and is corrected here: ZERO sections cram a
-  time window into the section NAME.** ADR 0057 moved every one of them into
-  `note` on 2026-08-16 — eleven lines below this item, 28d/28f are marked done
-  for doing exactly that. The real figure is **5 sections in 4 venues carrying a
-  window as prose in `section.note`** (`1841-bar-restaurant` mains + brunch,
-  `gold-lining-cafe` all-day-brunch, `sprig-and-fern-tawa` gold-card,
-  `the-borough-tawa` brunch). So 28c adds a field beside `note` and needs no
-  name migration at all — it is smaller than it was written. It remains true
-  that exactly one section in the
-  corpus uses `available` at all. `hours.js` already does weekday+interval
-  reasoning for the venue's own opening hours — the machinery exists and the
-  section schema cannot reach it. Consequence today: nothing checks the clock,
-  so a Gold Card price shows at 9pm on a Sunday with no indication it is not
-  available.
+- ✅ **28c — a section's serving window** — **done 2026-08-16**, [ADR 0081](decisions/0081-a-serving-window-annotates-it-never-filters.md).
+  `served` on a section, in the shape of a venue's `hours`; it **annotates,
+  it never filters**, because a filtered section breaks a link someone was
+  *sent* as a function of the clock. Full write-up, including the two
+  decorative assertions found inside the new check itself, in
+  [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - ✅ **28d, 28f, 28g — the section heading, its qualifier and its identity** —
   **done 2026-08-16** (`82ddb4b`, `b391f1b`, `2f0da85`), ADRs 0057 and 0058.
   The qualifier came out of eleven headings into a `note`; the anchor stopped
@@ -3810,6 +3807,28 @@ around it. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   just proceed"* sits against `RECORD.md`'s *"Recoverability of bytes is the
   wrong test for a record store"* with no boundary drawn between them; and CF3
   itself may want an explicit monolithic-board branch.
+  🚩 **A FOURTH, queued 2026-08-17 — atelier's branch-protection check is
+  specified to catch the wrong failure, and this repo is the counterexample.**
+  AP1's open "machine-check half" (`docs/roadmap/140-…/010-the-machine-check-half…`)
+  owes *"a parent-row check reading branch-protection/ruleset state and going
+  **RED when absent**"*, on the reasoning that *"nothing would notice if the
+  ruleset were deleted"*. **On faves that check would report GREEN today.**
+  `protect-main` is present and `active` — so a presence test passes — while
+  the **last 100 ruleset evaluations on `main` were 100 bypasses**, because
+  `bypass_actors` carries `RepositoryRole 5 → always`. 🔑 **Present is not
+  enforcing, and absence is the failure mode that already raises its hand** —
+  a deleted ruleset is loud, a permanently-bypassed one is silent and looks
+  identical to a working one from outside. The absences-raise-their-hands
+  doctrine needs its second limb: **a control that exists but cannot change any
+  outcome is the same defect as one that is gone**, which is ADR 0072's
+  decorative-guard rule arriving at the branch-protection layer.
+  ⚠️ **The interaction is the other half, and neither end records it.** C4
+  (*"make the local bypass visible"*) reasons about `--no-verify` on the stated
+  premise *"with CI as backstop rather than gate"* — and here CI is not a
+  backstop either, since two of its six jobs could not block a push until this
+  was found. **Two bypass layers, each of whose write-ups assumes the other one
+  holds.** Evidence is this repo's own state on 2026-08-17, measured by three
+  independent sessions, not testimony.
 
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**

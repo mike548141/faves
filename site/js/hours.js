@@ -114,7 +114,14 @@ export function makeClock(date = new Date()) {
 // Expand the week into absolute open segments (minutes from Sun 00:00).
 // A null close is open-ended: capped at midnight for "is it open now" but
 // carries closeMin=null so we show no countdown.
-function segments(hours) {
+//
+// EXPORTED for `servedStatus` below, which asks the identical question of a
+// menu section's serving window ("is the Gold Card menu on right now, and when
+// is it next?"). It was module-private until 2026-08-17. The alternative was a
+// second copy of the week-expansion in the section code, and the same rule
+// applies here as to `tierFromHours` in ranking.js: export it again if a second
+// caller needs this reasoning; don't duplicate it.
+export function segments(hours) {
   const out = [];
   DAYS.forEach((key, dow) => {
     for (const [open, close] of hours[key] || []) {
@@ -189,11 +196,23 @@ export function openStatus(hours, now) {
   return { state: "closed", label: "Closed", detail: when };
 }
 
-/** One-line human intervals for a day: "11:30am–2pm, 5–9pm" or "Closed". */
+/**
+ * One-line human intervals for a day: "11:30am–2pm, 5–9pm" or "Closed".
+ *
+ * A NULL OPEN reads as "till 2pm", not as a range. Venue `hours` never carry
+ * one — validate.py requires a real open time there — but a section's `served`
+ * window may (ROADMAP Theme 28c): a menu that says *"served till 2pm"* states no start,
+ * and writing one we were never told would be inventing evidence. "late–2pm"
+ * is what the naive formatter produced, which is worse than saying nothing.
+ */
 export function formatDay(intervals) {
   if (!intervals || !intervals.length) return "Closed";
   return intervals
-    .map(([o, c]) => `${formatTime(toMinutes(o))}–${formatTime(toMinutes(c))}`)
+    .map(([o, c]) => {
+      if (o == null && c == null) return "all day"; // no bound either end
+      if (o == null) return `till ${formatTime(toMinutes(c))}`;
+      return `${formatTime(toMinutes(o))}–${formatTime(toMinutes(c))}`;
+    })
     .join(", ");
 }
 
@@ -219,4 +238,153 @@ export function groupWeek(hours) {
     text: r.text,
     dows: r.keys.map((k) => DOW[k]), // getDay() indices, for "today" highlighting
   }));
+}
+
+// ——————————————————— When a SECTION is served (Theme 28c) ————————————————————
+//
+// `section.served` has exactly the same shape as a venue's `hours` — all seven
+// day keys, each a list of [open, close] "HH:MM" pairs, [] meaning not served
+// that day — which is the whole point: everything above applies to it unchanged
+// and there is one week-reasoning engine, not two.
+//
+// ONE DELIBERATE EXTENSION: `open` may be null, meaning "from opening". `hours`
+// already allows a null CLOSE for "till late"; this is the symmetric case, and
+// real menus need it — "served till 2pm" states an end and no start.
+//
+// IT ANNOTATES; IT NEVER FILTERS. This diverges from `available` (temporal.js),
+// which removes an out-of-window section from the record before anything
+// renders. Three reasons, and each of them is a bug we would be shipping:
+//   1. `available` resolves once per load from `todayIn()`, so it is date-
+//      granular and stable for a whole session. A time-of-day window resolved
+//      the same way would make the menu CHANGE UNDER THE READER mid-session —
+//      dishes disappearing at 2pm while they are looking at them.
+//   2. Hiding the section means a reader at 9pm cannot discover that the venue
+//      HAS a Gold Card menu. That is information they want, for tomorrow.
+//   3. `#section-<id>` DEEP LINKS would break as a function of the clock. A
+//      link someone was sent would work at 1pm and 404 at 1am. Theme 34 is
+//      entirely about sending a URL that survives; a section that vanishes on a
+//      timetable is the opposite of that.
+// So everything below returns text to put BESIDE the section. Nothing here
+// removes anything.
+
+const DAY_KEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+
+/**
+ * `served` with its null opens resolved to real times, in the venue `hours`
+ * shape `segments()` consumes. A null open takes the venue's FIRST opening time
+ * that day when we have hours, and 00:00 when we don't (the section is served
+ * from whenever the doors open; with no hours the safest reasoning bound is the
+ * start of the day, which can only make the window wider, never narrower).
+ *
+ * The 00:00 is a REASONING bound and must never be rendered — see
+ * `openIsStated`. Pure; `hours` may be null.
+ */
+export function resolveServed(served, hours = null) {
+  const out = {};
+  for (const key of DAY_KEYS) {
+    const intervals = Array.isArray(served?.[key]) ? served[key] : [];
+    out[key] = intervals
+      .filter((iv) => Array.isArray(iv) && iv.length === 2)
+      .map(([open, close]) => {
+        if (open != null) return [open, close];
+        const day = Array.isArray(hours?.[key]) ? hours[key] : [];
+        return [day.length && day[0][0] != null ? day[0][0] : "00:00", close];
+      });
+  }
+  return out;
+}
+
+/**
+ * Did the SECTION itself state this start time, or did we derive it from the
+ * venue's hours (or from the 00:00 floor)? Only a stated time may be printed as
+ * a start time: "brunch starts at 10am" is our inference from two facts, not
+ * something the shop ever said, and "next served 12am" would be a pure
+ * invention. The derived case renders "from opening" instead.
+ */
+function openIsStated(served, dow, openMin) {
+  const key = DAY_KEYS[(dow + 6) % 7]; // getDay() (Sun=0) → mon-first index
+  const intervals = Array.isArray(served?.[key]) ? served[key] : [];
+  return intervals.some((iv) => Array.isArray(iv) && iv[0] != null && toMinutes(iv[0]) === openMin);
+}
+
+/**
+ * Is this section being served at moment `now` ({dow, minutes}), and if not,
+ * when is it next? Pure — the clock is read by the caller (nowIn/makeClock).
+ *
+ * Returns `{ state, next, today, stated, minutes }`:
+ *   state    'served' | 'not-served' | 'unknown' ('unknown' = no window at all,
+ *            or a window with no servable minutes: render nothing, never a guess)
+ *   next     the next segment {start,end,openMin,closeMin,dow}, or null
+ *   today    that segment falls later on the same day
+ *   stated   the section stated that start time itself (see openIsStated)
+ *   minutes  how far away it is
+ */
+export function servedStatus(served, now, hours = null) {
+  const none = { state: "unknown", next: null, today: false, stated: false, minutes: null };
+  if (!served || typeof served !== "object") return none;
+  const segs = segments(resolveServed(served, hours));
+  if (!segs.length) return none;
+
+  const at = now.dow * 1440 + now.minutes;
+  if (segs.some((s) => at >= s.start && at < s.end)) {
+    return { state: "served", next: null, today: false, stated: false, minutes: null };
+  }
+
+  let best = Infinity;
+  let nextSeg = null;
+  for (const s of segs) {
+    const delta = (s.start - at + WEEK) % WEEK;
+    if (delta > 0 && delta < best) {
+      best = delta;
+      nextSeg = s;
+    }
+  }
+  if (!nextSeg) return { state: "not-served", next: null, today: false, stated: false, minutes: null };
+  return {
+    state: "not-served",
+    next: nextSeg,
+    today: nextSeg.dow === now.dow && nextSeg.start > at,
+    stated: openIsStated(served, nextSeg.dow, nextSeg.openMin),
+    minutes: best,
+  };
+}
+
+/**
+ * The section's serving window in the same words the venue's hours table uses:
+ * "Served Mon–Fri 11:30am–5:30pm, Sat–Sun 10am–5:30pm", "Served every day till
+ * 3pm". Built on groupWeek/formatDay/formatTime so there is one formatter for
+ * both, and from the RAW `served` — never the resolved one — so a start time we
+ * derived from the venue's hours cannot leak into the line.
+ *
+ * Days with no window are left out rather than printed as "Closed": the line
+ * lists when the section IS served, and the days it omits say the rest.
+ * null when there is nothing to say. Pure.
+ */
+export function servedText(served) {
+  if (!served || typeof served !== "object") return null;
+  const rows = groupWeek(served).filter((r) =>
+    r.dows.some((d) => (served[DAY_KEYS[(d + 6) % 7]] || []).length)
+  );
+  if (!rows.length) return null;
+  // One row covering all seven days is "every day", not "Mon–Sun" — it is how a
+  // menu writes it, and it is shorter on a 390 px screen.
+  if (rows.length === 1 && rows[0].dows.length === 7) return `Served every day ${rows[0].text}`;
+  return `Served ${rows.map((r) => `${r.days} ${r.text}`).join(", ")}`;
+}
+
+/**
+ * The quiet marker for a section that is not being served right now, naming
+ * when it next is. null when it IS being served, or when we cannot say.
+ *
+ * "from opening" rather than a time whenever the start was not stated by the
+ * section itself — the one thing this must never do is print a start time
+ * nobody told us (see openIsStated). Pure; takes a `servedStatus` result.
+ */
+export function notServedText(status) {
+  if (!status || status.state !== "not-served") return null;
+  const seg = status.next;
+  if (!seg) return "Not served right now";
+  const when = status.stated ? `at ${formatTime(seg.openMin)}` : "from opening";
+  const day = status.today ? "" : `${DAY_LABEL[DAYS[seg.dow]]} `;
+  return `Not served right now · next served ${day}${when}`;
 }

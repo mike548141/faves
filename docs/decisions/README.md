@@ -672,6 +672,35 @@ deliberation those compact docs omit.
   directory kept while held, removed once unheld). 🛑 `SIGKILL` still orphans
   both and always will. One more face of [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md),
   whose cure generalises: **make the all-clear carry a denominator.**
+- [0081](0081-a-serving-window-annotates-it-never-filters.md) — **a section's
+  serving window annotates; it never filters.** `served` on a section, in exactly
+  the shape of a venue's `hours`, so `hours.js`'s week reasoning applies
+  unchanged and there is one engine rather than two (`segments()` exported, not
+  copied). One extension: a null `open` means "from opening", because *"served
+  till 2pm"* states no start and writing one would invent evidence. 🔑 **The
+  decision that matters is that it does NOT filter**, unlike `available` — three
+  reasons, and the third settles it: `#section-<id>` is a real anchor
+  ([0058](0058-a-section-has-an-id-and-its-heading-is-not-it.md)), so a filtered
+  section makes a link someone was *sent* work at 1pm and fail at 1am, which is
+  the direct negation of ROADMAP Theme 34. Also corrects 28c: it claimed six
+  sections bury a window in the section *name*; **zero do** — ADR 0057 moved them
+  all, eleven lines above where the same file marks that work done.
+- [0080](0080-a-venue-has-menus-plural.md) — **a venue has *menus*, plural: the
+  shape is recorded and the build is deliberately held.** Discharges the owner's
+  ruling on ROADMAP 30a — no venue in the corpus has two menus, so building
+  `menus[]` would ship a schema nothing exercises. Adopts the industry survey's
+  three convergences as binding constraints (flat entity pools joined by id ·
+  price as a resolution over context · availability as a priority-ordered rule
+  set with overlap **allowed**, against Deliveroo and with Simphony). 🔑 **Its
+  operative half is Decision 4, an admission test:** a shape recorded before its
+  first instance is a hypothesis, and the session that builds it must re-derive
+  against a real venue rather than transcribe this record. **The test fired on
+  its first use and split the four candidates** — `pizza-pomodoro` prices one
+  pizza at $29.00 in-store and $17.00 online, so `channel` is exercised and
+  `menus[]`, `charges[]` and per-branch overrides are not. Also corrects Theme
+  28's size count (81 rows/5 venues → **122/10**) and names a seventh axis
+  neither theme carried: 19 rows in 7 venues price a *dietary substitution*
+  whose `gf-option` tag already exists and whose price has nowhere to live.
 - [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
   — **a guard is decorative when its output is the same whether or not the thing
   it guards is broken.** Twelve faces, most of them surfaced in one day of parallel

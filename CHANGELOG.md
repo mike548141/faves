@@ -9,6 +9,18 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A menu section now says when it is actually served.** Sprig + Fern's Gold
+  Card menu, The Borough's brunch, Gold Lining's all-day brunch and 1841's
+  brunch each carry their serving hours, shown under the heading the way the
+  venue's own opening hours are — "Served Mon–Fri 11:30am–5:30pm, Sat–Sun
+  10am–5:30pm". Look outside those hours and the section says so quietly, and
+  tells you when it is next on. 🔑 **Nothing is ever hidden.** At 9pm you can
+  still read the whole Gold Card menu and its prices; you are simply told it
+  is not being served right now — because "this place has a Gold Card menu,
+  from 11:30" is the thing worth knowing at 9pm, and because a link someone
+  sent you to a section has to still work whatever time you open it. Where a
+  menu says only *"served till 2pm"* and never states a start, Faves says
+  exactly that rather than inventing an opening time it was never told.
 - **Cooking for more (or fewer) — scale a recipe.** A recipe page now offers
   ½× · 1× · 2× · 3× above the ingredients, and the amounts follow: "2 cups
   milk" becomes "4 cups milk", "1 cup sugar" halves to "½ cup sugar" — in

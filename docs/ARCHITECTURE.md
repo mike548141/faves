@@ -188,8 +188,34 @@ excluded from both stores, always.
                                      //   ("served till 2pm"). NEVER inside the
                                      //   name — the name is also the jump-nav
                                      //   chip (ADR 0057). Prose, because the
-                                     //   machine-readable window is ROADMAP 28c
-                                     //   and doesn't exist yet
+                                     //   machine-readable window is `served`
+                                     //   below; prose is still right for a
+                                     //   qualifier that isn't a timetable
+                                     //   ("12 and under")
+      "served": null,                // optional: the hours of the day this section
+                                     //   is actually served (ROADMAP 28c). EXACTLY
+                                     //   a venue's `hours` shape — all 7 day keys,
+                                     //   each [[open, close], …] in "HH:MM", [] =
+                                     //   not served that day — so hours.js's week
+                                     //   reasoning applies unchanged. One extension:
+                                     //   `open` may be NULL, "from opening", the
+                                     //   mirror of the null close `hours` already
+                                     //   allows; a menu that says "served till 2pm"
+                                     //   states no start, and writing one would be
+                                     //   inventing evidence.
+                                     //   IT ANNOTATES, IT NEVER FILTERS — unlike
+                                     //   `available`, an out-of-window section is
+                                     //   still rendered, still readable and still
+                                     //   reachable by `#section-<id>`; it just
+                                     //   gains a quiet "not served right now ·
+                                     //   next served …" marker. Filtering would
+                                     //   change the menu under a reader mid-session
+                                     //   (`available` resolves once per DAY, this
+                                     //   would resolve per minute), hide the fact
+                                     //   that the venue has the menu at all, and
+                                     //   make a shared deep link 404 as a function
+                                     //   of the clock. Section-only: a per-dish
+                                     //   window is rejected until a menu needs one
       "available": null,             // optional window/season for a WHOLE section
       "addOns": [],                  // optional add-on group ids, offered on every
                                      //   dish in this section (ADR 0048)

@@ -587,11 +587,14 @@ def main():
     by_tag = {}
     skipped = []
     reviews = []
+    swept_records = swept_dishes = 0
     for path in sorted(DATA.glob("*.json")):
         raw = path.read_text()
         record = json.loads(raw)
         items = [it for sec in record.get("menu", []) for it in sec["items"]]
         index = {id(it): i for i, it in enumerate(items)}
+        swept_records += 1
+        swept_dishes += len(items)
 
         for section, clause, reason, tags in review_notes(record):
             reviews.append(
@@ -623,7 +626,16 @@ def main():
                     by_tag[tag] -= 1
 
     verb = "applied" if args.apply else "missing (dry run)"
-    print(f"\n{sum(total.values())} tag(s) {verb} — {total['STATED']} STATED, {total['DERIVED']} DERIVED")
+    # SAY WHAT WAS SWEPT, not just what was found. Until 2026-08-16 the summary
+    # printed the finding count alone, so "0 tag(s) missing" was the same line
+    # whether the tool had read 55 records or none — and that is exactly how the
+    # positional-scan bug hid: it refused six records whole, wrote nothing, and
+    # exited 0 behind a clean-looking total. The denominator is what makes this
+    # all-clear falsifiable; a reader who knows the corpus size can now tell a
+    # real sweep from a sweep that never happened. Same reasoning as the
+    # SKIPPED line below, one step earlier in the pipeline.
+    print(f"\nSwept {swept_records} record(s), {swept_dishes} dish(es).")
+    print(f"{sum(total.values())} tag(s) {verb} — {total['STATED']} STATED, {total['DERIVED']} DERIVED")
     for tag, n in sorted(by_tag.items(), key=lambda kv: -kv[1]):
         print(f"  {tag:<22} {n}")
     # Never silent: a record we couldn't write is reported, not swallowed.

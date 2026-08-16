@@ -3825,6 +3825,32 @@ body.faves-view .to-top {
   color: var(--ink-soft);
   font-size: var(--step-sub);
 }
+/* `.section-served` is the structured serving window ("Served Mon–Fri
+   11:30am–5:30pm"), and takes .section-note's styling unchanged on purpose: to
+   a reader it is the same kind of thing as the venue's own qualifier — subtext
+   under the heading — and only its SOURCE differs. */
+.section-not-served {
+  /* "Not served right now · next served Mon at 11:30am" (Theme 28c). The
+     section stays, the prices stay legible, and nothing here dims a dish: this
+     marker ANNOTATES. Muted rather than alarming — a menu that isn't on yet is
+     not an error, and --warn on a Gold Card section at 9pm would read as one.
+     Colour is never the signal: the whole message is in the text, the icon is
+     aria-hidden, and the block still reads correctly in monochrome.
+     --ink-soft on --surface-2 is 5.2:1 light / 6.6:1 dark — AA at this size. */
+  display: flex;
+  gap: var(--space-1);
+  align-items: baseline;
+  margin: 0 0 var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-left: 3px solid var(--line);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.section-not-served-ico {
+  flex: none;
+}
 .dish-list {
   display: grid;
   gap: var(--space-1);
