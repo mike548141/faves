@@ -200,6 +200,34 @@ node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 
                               # because NOTHING RUNS IT BUT YOU — see below.
 ```
 
+**Every check prints a SECOND, indented line naming the tree it served, that
+tree's `SHELL_VERSION`, and its `branch@sha`. Read it.** A green run against the
+wrong worktree is otherwise invisible, and one shipped that way: a session's
+shell cwd drifted out of its worktree via one compound `cd`, its edits were safe
+(absolute paths) and its *verification* ran against a tree without the change.
+Everything green, everything meaningless. It surfaced only because a **passing**
+run reported 22 where an agent had just said 25 — nobody interrogates a green
+run, so this is a mechanism and not a discipline.
+
+**`HARNESS ERROR — the browser stopped answering` means the CDP transport died,
+NOT that an assertion failed.** It exits **2**, never 1, and never prints a
+`FAIL` line carrying an assertion's name. That distinction did not exist until
+2026-08-17: a 30-second timeout rendered as `FAIL home: the filter bar is live`
+with exit 1, byte-indistinguishable from a real regression — and a peer measured
+`boot_check` failing **2 of 4** runs and `recipe_check` aborting **4 of 8** on a
+loaded five-session machine, every one of them that timeout. Give a loaded
+machine more rope with `FAVES_CDP_TIMEOUT_MS` (default 30000); never lower it to
+make a run finish. There is deliberately **no retry** — CDP calls are not
+idempotent, so re-issuing one silently changes what the next assertion measures.
+
+**The harness reaps its own Chrome and profile directory** on `SIGINT`,
+`SIGTERM` and uncaught exceptions, and sweeps unheld `faves-*-check-*` profiles
+from `$TMPDIR` on first launch (`FAVES_NO_SWEEP=1` opts out). 🛑 **`SIGKILL`
+still orphans both — nothing can catch it** — so if a run was `kill -9`ed, run
+`pgrep -f 'user-data-dir=.*faves-'` before believing what the next run tells
+you. Orphans do not make a check fail; they make it **stall silently** with a
+wall of PASS and no summary line.
+
 🛑 **CI runs ONE of the TEN browser checks — `boot_check`, and only since
 2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
