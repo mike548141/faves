@@ -6496,3 +6496,153 @@ by a file map.
    information. 🔑 **The general question is whether ADR 0025's rule applies to a
    venue's own explicit "trace" grade**, and it will recur on every chain that
    publishes a proper allergen matrix.
+
+## 2026-08-16 15:08 UTC — the alarm, a guard that had been dead for a refactor, and four collisions between correct decisions
+
+Orchestration session on the primary checkout, one worktree (`faves-cook`),
+three agents, and **five peer sessions live in the same repo the whole time**.
+Delivered: **36d** the cook-mode timer's alarm (ADR 0071), **36g** cook-mode
+ticks out of the backup export and the sync blob (ADR 0074), and the repair of
+`tools/sync_check.mjs`, which had been proving nothing since `e745923`. Merged
+as `42b1a7a`. Three roadmap items closed on measurement, three new ones opened.
+
+⏱️ **Note on the stamp**: this entry is stamped from `date -u` per CLAUDE.md.
+The entry above it carries **15:40 UTC**, which was in the future when this was
+written at 15:08. Flagged, not edited — but "newest last" cannot be trusted to
+mean "latest" while entries are stamped from different clocks.
+
+### 🎯 The work I could not take, and why that is the interesting part
+
+The owner asked for cook mode and recipes first. **Almost all of it was claimed
+within two minutes of this session starting** — 37c/d/e/j/l/m by faves-recipe,
+37g by faves-ranking, 37n by faves-allergens. His standing instruction is that a
+live claim overrides even a direct instruction to take that item, so the
+recipe-page pass was left alone.
+
+🔑 **The item I *chose* not to claim taught more than the ones I did.** 36a
+(getting the estimated per-step minutes into the payload) was unclaimed,
+owner-ruled and ready. I left it, because it rewrites `steps` inside
+`cook-at-home.json` — the same records, adjacent keys, that 37l was rewriting
+`ingredients` in, and it lands the ADR 0067 tick-rehash trap **twice, from two
+sessions, in one file**. A merge conflict there is the *good* outcome; the bad
+one is a clean textual merge that silently detaches every tick.
+**File-disjointness is the unit of parallel safety, not item-disjointness.**
+
+### 🔎 Three roadmap items were stale, and each had expired in a different silence
+
+1. **"Whole-repo scanner runs are inflated by every live worktree"** — measured
+   with five worktrees live: `leakscan .` clean (the item predicts 101 findings
+   and a blocked commit), `plainscan .` 652 with no doubling. Worktrees moved to
+   `~/worktrees/`, **outside** the tree, so `.` no longer holds a second
+   checkout. The item's premise was *a convention in a neighbouring repo* that it
+   never named as a premise. Closed on evidence, not on the upstream fix it was
+   waiting for.
+2. **"`sync_check.mjs` aborts before its last three assertions"** — it aborts
+   before its **first**, with zero PASS lines, because `e745923` folded Sync into
+   "Your data" and the check still clicked the old row. 🛑 **The documented
+   symptom in CLAUDE.md misled in the dangerous direction**: it told you to watch
+   for *"a wall of PASS lines followed by a harness error"*, so a reader matching
+   the real output concludes they are looking at something else.
+3. **The overflow-menu race that item described was never a product hazard.**
+   Both causes were the check's own: `scrollTo(0, 0)` obeys
+   `scroll-behavior: smooth` and returned mid-animation — which fully explains
+   the old trace's *"scrollY:879 then scrollY:0"* as **one unfinished scroll, not
+   a second scroller** — and `initContactBar()`'s observer dropped
+   `body.contact-bar-open` a frame later, so the click's coordinates went stale
+   between rect read and dispatch. **Nothing in `site/js/` changed to make it
+   pass.** Two sessions had that hazard written down as real, and I claimed the
+   item partly on its strength. ⚠️ Honest residue: the old trace's third
+   observation (`aria-expanded` reporting two cycles from one click) never
+   reproduced — unexplained, not disproved.
+
+### 🛑 The structural finding: CI runs none of the browser checks
+
+`.github/workflows/ci.yml` runs `node --test` and the Python gates. It does not
+run `sync_check`, `cook_check`, `device_check`, `boot_check`, `addon_check`,
+`branch_check`, `to_top_check` or `filter_row_check` — **eight** guards, every
+one written *because* unit tests had already missed something real. They run only
+when a person types them. That is the whole answer to how `sync_check` stayed
+dead through a refactor: nothing was calling it.
+🔑 **The cheap guards that catch the least are automated; the expensive guards
+that catch the most are on the honour system.** Now a 🛑 note in CLAUDE.md's
+verify list and a roadmap item — deliberately *not* fixed by wiring them into
+CI, because several are timing-sensitive and a flaky required check trains people
+to re-run until green.
+
+⚠️ **Which is not hypothetical — `cook_check` did it to me the same hour.** Four
+completed runs of one commit: 75/0, **73/2**, 75/0, 75/0. I re-ran and it went
+green, which is precisely the trained behaviour. Recorded as its own item rather
+than enjoyed. The two failing assertions were **not captured** — a real gap in
+that evidence.
+
+### 🔑 An assertion nobody has watched fail is not yet a guard
+
+The 36d agent broke each new `cook_check` assertion on purpose: inverting the
+15-minute guard failed exactly the two notification assertions; dropping the
+vibrate call failed exactly the five vibration ones and left the tone green.
+**And one of its own new assertions failed to fail** — the ring-once guard could
+not bite, because the tick that rings the last timer also stops the interval. It
+was decorative, and it was written *in the same session that was hunting
+decorative guards elsewhere*. Replaced with a two-timer scenario.
+
+Same shape one level down in 36g: the fix the roadmap specified in as many words
+— add `faves.checklist.v1` to `EXCLUDED` — **would have excluded nothing at all
+while reading as complete**, because `profileScopedStorage()` makes the real key
+`faves.p.<id>.checklist.v1`. Three of four new tests fail against that version.
+The roadmap bullet had already announced itself as *"wrong twice"* and was wrong
+a third time. What caught it was writing the test first and watching it fail.
+
+### 🚩 Four collisions between two correct decisions — the class our doctrine cannot name
+
+Named jointly with the peer sessions and carried into their **ADR 0072**:
+**the defect lives in the gap between two correct decisions taken by different
+sessions, and the party it stops is usually neither of them.**
+
+| # | Decision A | Decision B | Who it stopped |
+|---|---|---|---|
+| 1 | my 36d claim asserted file-disjointness | ADR 0070 pulled `cook-ui.js` into 37l | both, silently |
+| 2 | I reserved SHELL `.84` | faves-ranking spent `.84` and pushed | a rebase would have *absorbed* the bump |
+| 3 | a forward `[ADR 0073]` link (fine under warn-only `pathscan`) | `pathscan` promoted to enforced | **every session's commits** |
+| 4 | a correct harvest of delivered items | `sizescan` harvest-integrity is enforced | **every session's commits** |
+
+🔑 **Two sessions each holding a correct map of their own files still had a
+collision neither could see.** A file map is a claim about your own writes; a
+collision is a fact about somebody else's. What found #1 was a *third* session
+noticing two answers to one broadcast. The broadcast is the mechanism that
+works, not the map.
+🔑 **And #3 sharpened it**: renumbering 0073→0074 felt like the repair and
+changed nothing, because **it was never the number that was wrong — it was the
+reference existing before the referent.** A guard firing on the right condition
+can still send you to the wrong repair when two faults land on one line.
+🎯 **The practical rule, owed upstream:** a change that makes the repo's *gates*
+stricter is a change to everyone's ability to commit. Announce it the way we
+announce a `SHELL_VERSION`.
+
+### 🛑 An incident in the shared checkout, and a `git push` that lied
+
+A `git pull --rebase --autostash` in the primary checkout landed **mid-rebase
+replaying a peer's four commits**, stopped on a conflict, and swept my
+uncommitted roadmap write-up into the autostash. **`git push` then reported
+success while pushing nothing**, because `main` was mid-rebase. Recovery: verify
+every peer commit was already reachable from `origin/main` **before** touching
+anything; back the autostash out to a file (`git show <sha>:docs/ROADMAP.md`)
+*before* aborting; then `rebase --abort`. Nothing lost.
+🚩 **We have a careful protocol for shared *files* and none for the shared
+checkout's *repository state*.** A rebase in progress produces no `[~]` claim, no
+dirty-file signal, and nothing in `git status --short` that reads as "stop".
+
+### 🚩 My own orchestration fault, self-reported by the agent
+
+I put two agents in **one** worktree on disjoint files. One ran `git add -A` and
+**swallowed 101 lines of the other's in-progress `sync_check.mjs` work** into its
+commit. Nothing was lost and the tree stayed consistent, but the attribution in
+`fdd6a99` is wrong. **Disjoint file ownership does not make a shared worktree
+safe, because `git add -A` is not file-scoped** — either give each agent its own
+worktree, or forbid `-A` in the brief. I did neither.
+
+### Left deliberately
+
+**36a's payload/render** (see above — 37l's file). **The three owner questions on
+36d**: a notification fires even when you are looking at the page; there is no
+visible on-screen cue when a timer ends; `cook.notifyBlocked` has no te reo
+string. All three want `app.css`/`reo.js`, held by peers all session.
