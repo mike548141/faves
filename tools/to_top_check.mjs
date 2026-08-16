@@ -122,7 +122,7 @@ async function run(opts) {
     const { sessionId } = await cdp.send("Target.attachToTarget", { targetId, flatten: true });
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
-    // ISOLATION, not a workaround: ADR 0082 gives the home screen a location
+    // ISOLATION, not a workaround: ADR 0083 gives the home screen a location
     // dialog that opens ~900 ms after the list renders and, being a real
     // `showModal()`, makes every control outside it inert and pulls focus. This
     // check is about the back-to-top button, so an unrelated modal landing mid-run

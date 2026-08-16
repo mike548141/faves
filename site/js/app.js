@@ -1100,7 +1100,7 @@ const BLOCKED_MSG = "Location is blocked for this site — turn it on in your br
 // the ranking falls back to availability → favourite → curated, which is the
 // order this app has always actually shipped.
 //
-// THE LOCATION ASK (ADR 0082, superseding ADR 0069's "inline control, never a
+// THE LOCATION ASK (ADR 0083, superseding ADR 0069's "inline control, never a
 // modal" half). Three rules, all the owner's, all 2026-08-17:
 //
 //   1. NOTHING IS ASKED UNTIL THE PAGE IS USEFUL. "Load the full page so they

@@ -61,7 +61,7 @@ const MI = {
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",
-  // The location ask (ADR 0082; the #geo-ask pill it names was removed with
+  // The location ask (ADR 0083; the #geo-ask pill it names was removed with
   // that record). `toggle.nearMe` / "E tata ana" — the
   // key the "Near me" pill carried, then the retired "Sort by" select's second
   // option — is GONE with the last thing that rendered it. A translated string
@@ -74,7 +74,7 @@ const MI = {
   // raises a browser permission prompt. A reader surprised by that prompt taps
   // Block, which is sticky and far harder to undo than an ungranted permission.
   //
-  // ⚑ ADR 0082 added SIX more English-only keys, and they are declared here
+  // ⚑ ADR 0083 added SIX more English-only keys, and they are declared here
   // rather than slipped in: `geo.title`, `geo.why`, `geo.private`, `geo.never`,
   // `geo.skip`, `geo.banner`, `geo.banner.dismiss`. They are the location
   // dialog and its banner — a feature the owner asked for on 2026-08-17, so the

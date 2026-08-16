@@ -7440,7 +7440,7 @@ The owner looked at [ADR 0069]'s inline pill on his phone and asked for
 something materially different: an explained dialog, a privacy promise, a
 "don't ask me about this again" tickbox, a follow-up banner — and then, plainly,
 *"I don't like the 'pill' button to prompt for location data, remove it."*
-[ADR 0082] holds the reasoning; this is what the build taught.
+[ADR 0083] holds the reasoning; this is what the build taught.
 
 ### 🔑 The apparent contradiction dissolved once the two permissions were separated
 
@@ -7510,7 +7510,7 @@ which is the same gap 0069 was written to close one level up.
 ### The concurrency record
 
 Four faves sessions live throughout. What worked, all of it already in the
-method: broadcasting the ADR number (**0082**) and the SHELL range (`.99`–`.104`)
+method: broadcasting the ADR number (**0083**) and the SHELL range (`.99`–`.104`)
 on open caught a peer about to jump the series to `2026-08-17.1`, which would
 have made *my* pushes fail rather than theirs. Two rebases, both with real
 conflicts, both resolved by **keeping both sides** — a peer's `served_check` and

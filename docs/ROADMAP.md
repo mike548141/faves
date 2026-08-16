@@ -159,7 +159,7 @@ edge proxy) revisit against that precedent — each still its own ADR.
 
 ## Theme 2 — Location & maps
 
-> ✅ **Shipped 2026-08-17 — the location ask explains itself** ([ADR 0082],
+> ✅ **Shipped 2026-08-17 — the location ask explains itself** ([ADR 0083],
 > superseding the surface half of [ADR 0069] the same day). The owner asked for
 > an explained dialog stating that location never leaves the device, a "don't
 > ask me about this again" tickbox binding **both** the dialog and a follow-up
@@ -3939,7 +3939,7 @@ loanword "supper" — unfortunate on a food app, though context resolves it).
       half-started**, because it is fresh work across twelve tools rather than a
       tidy-up of anything already in flight. Unclaimed.
       🔎 **The concrete instance, which is worth more than the principle.**
-      [ADR 0082] removed the `#geo-ask` location pill on the owner's word.
+      [ADR 0083] removed the `#geo-ask` location pill on the owner's word.
       `tools/filter_row_check.mjs` drove that id directly and **crashed on a
       null** the moment it went — `Cannot set properties of null (setting
       'hidden')`, mid-run, no summary line. One line to fix once seen.
