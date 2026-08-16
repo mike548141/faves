@@ -747,6 +747,24 @@
                 <select id="filter-cuisine" data-active="all"></select>
               </div>
             </div>
+            <!-- Style of dining (37k) — the `style` facet of `vibe`, filled by
+                 app.js in vocabulary order (quick eats → fine dining) from the
+                 styles the data actually carries. The FOURTH select in this
+                 row, which 15z's measurement said to check rather than assume:
+                 the row's budget at the 60rem breakpoint is 928 px, and with
+                 this control in it the row still measures ONE band 67 px tall,
+                 narrowest select 134 px at 960 px and 142 px at 1280 px against
+                 a 104 px floor, no horizontal overflow — measured by
+                 `tools/filter_row_check.mjs`, 2026-08-17. It fits because
+                 the row lost a whole select group when "Sort by" went (ADR
+                 0068) and 256 px of segmented service control when 15z made
+                 Service a <select>. Measure again before a fifth. -->
+            <div class="filter-field">
+              <label class="filter-label" for="filter-style" data-i18n="filter.style">Style</label>
+              <div class="select-field">
+                <select id="filter-style" data-active="all"></select>
+              </div>
+            </div>
             <div class="list-toggles">
               <button type="button" id="open-now" class="list-toggle" aria-pressed="false">
                 <span aria-hidden="true">🟢</span> <span data-i18n="toggle.openNow">Open now</span>

@@ -982,6 +982,20 @@ body.faves-view .filter-bar {
   background: var(--accent-soft);
   color: var(--accent);
 }
+/* What the place is LIKE — the `vibe` vocabulary (vibes.js), rendered on cards
+   for the first time in 37k. ONE class for all three facets (style, amenity,
+   character), not three: the row it joins already carries a filled accent chip
+   (cuisine) and a filled neutral one (price), and a third and fourth fill at
+   390 px stops reading as structure and starts reading as decoration. An
+   outline is the one remaining shape that separates "what it serves" from
+   "what it's like" at a glance without adding a colour to learn.
+   --ink-soft on --surface is 6.1:1 light / 7.4:1 dark — AA for the 0.74rem
+   text either way. */
+.chip-vibe {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
 /* Typical price-per-person, derived from the venue's own menu prices. */
 .chip-price {
   background: var(--surface-2);
@@ -1512,10 +1526,13 @@ body.filters-inline .filter-field {
      60rem breakpoint's 928 px had to hold four selects, two chips, a rule,
      "Sort by" and "Clear all" — the first cut of this gave the selects 107 px
      each, enough to render "All cuisi…" and "Everywh…", and a truncated
-     select is worse than the label it replaced. The row now holds three
-     selects, two chips and "Clear all", with no rule and no "Sort by" (ADR
-     0068) — roomier than what these numbers were tuned for, so the old,
-     tighter floor stays safe unmeasured. */
+     select is worse than the label it replaced. The row holds FOUR selects
+     again since 37k added "Style" — but no rule and no "Sort by" (ADR 0068),
+     and Service as a select rather than 256 px of segmented control (15z). So
+     the floor is back in the regime it was tuned for, and this time it was
+     re-measured rather than reasoned about: 134 px per select at the 960 px
+     breakpoint, 142 px at 1280 px, one band, no overflow
+     (tools/filter_row_check.mjs, 2026-08-17). */
   flex: 1 1 7rem;
   min-width: 6.5rem;
   max-width: 11rem;
@@ -1539,14 +1556,16 @@ body.filters-inline .list-toggles {
 /* NOTE for whoever adds a control to this row. `flex-wrap` stays OFF here, and
    that is load-bearing, not tidy: turned on it put the row back to 121 px,
    because a wrapping flex line breaks on its items' *basis* and this row only
-   fits because the selects SHRINK below theirs. The row holds six controls
-   today — three narrow selects, two chips, "Clear all" — one whole select
-   group lighter than when this rule was written, now that the sort group is
-   gone (ADR 0068). Measure before adding a seventh rather than assuming it
-   fits: the one control that used to overflow this row (the "Along a route"
-   destination picker) laid itself over "All cuisines", "Open now" and "Cheap
-   eats", all three still passing a visibility check and all three
-   untappable. */
+   fits because the selects SHRINK below theirs. The row holds SEVEN controls
+   since 37k — four narrow selects (Service, Area, Cuisine, Style), two chips,
+   "Clear all". The fourth select was added only after measuring, because 15z
+   had recorded that a fourth control was "the single largest reason the inline
+   row could not be one row": it fits, at 134 px per select at the 960 px
+   breakpoint against a 104 px floor. Measure before adding an eighth rather
+   than assuming it fits: the one control that used to overflow this row (the
+   "Along a route" destination picker) laid itself over "All cuisines", "Open
+   now" and "Cheap eats", all three still passing a visibility check and all
+   three untappable. */
 /* Moved here from the sheet's footer by filters-ui.js — the same button, not a
    second one. Trailing, so it reads as the way out of the row rather than
    another filter. */

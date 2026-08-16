@@ -64,10 +64,10 @@
     ]
   },
   "vibe": [
-    "garden bar",
-    "beer garden",
-    "family friendly",
-    "Wellington icon"
+    "garden-bar",
+    "beer-garden",
+    "family-friendly",
+    "wellington-icon"
   ],
   "picks": [],
   "priceBand": "$$",

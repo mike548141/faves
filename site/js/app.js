@@ -45,6 +45,7 @@ import { startSync } from "./sync-start.js";
 import { initBackToTop } from "./to-top.js";
 import { displayPrice, formatMoney, venueTimezone, zoneLabel } from "./place.js";
 import { priceBand } from "./price.js";
+import { vibesFor } from "./vibes.js";
 import { initReo, t } from "./reo.js";
 import { el } from "./dom.js";
 import { wireSearchClear } from "./search-clear.js";
@@ -101,6 +102,31 @@ function priceChip(r) {
   }
   return chip;
 }
+
+// How many `vibe` chips a card is allowed. MEASURED, not guessed — headless
+// Chrome at 390 × 844 over the real 55-card home list, 2026-08-17, with every
+// vibe chip stripped first so n really is n (chips of representative width:
+// "Sit-down", "Family friendly", "Cheap and cheerful"):
+//
+//   chips  median card  tallest  whole list   cards whose chip row wraps
+//     0       114 px     138 px    6354 px     0 of 55        (2 lines: 0)
+//     1       116 px     143 px    6563 px     5 of 55        (2 lines: 0)
+//     2       143 px     169 px    7259 px    29 of 55        (2 lines: 0)
+//     3       145 px     169 px    8013 px    55 of 55        (2 lines: 0)
+//     4       145 px     171 px    8153 px    55 of 55        (2 lines: 5)
+//
+// Three is the cliff: it wraps the chip row on EVERY card for +26 % of total
+// list height, and buys a third fact about a place a reader has not opened yet.
+// Two costs +14 %, leaves 26 cards unwrapped, and no card gets a third chip
+// line at any width tested. So: two.
+//
+// Two is also the number that fits what a reader is choosing between. vibes.js
+// orders style → amenity → character, so the head of the list is always the
+// style — the axis the filter above acts on — plus the one other thing the
+// place is known for. The rest is on the venue's own page. Dropping to 1 is a
+// one-character change and costs only +3 %, if the list ever needs the height
+// back.
+const VIBE_CHIP_CAP = 2;
 
 // Live open/closed badge from the venue's hours (null hours → no badge).
 // A lifecycle closure (refit, gone for good) outranks the weekly hours: showing
@@ -223,6 +249,24 @@ function card(r, clock, origin = null) {
     for (const c of r.cuisine || []) {
       chips.append(el("span", { className: "chip chip-cuisine", textContent: c }));
     }
+    // What the place is LIKE, after what it serves. ARCHITECTURE.md has
+    // specified "chips shown on cards" for `vibe` since the original schema and
+    // no code ever rendered them, so every phone has been precaching a field
+    // nothing showed — an ADR 0047 breach inherited rather than introduced, and
+    // this line is what closes it.
+    //
+    // `vibesFor` returns VOCABULARY order (style → amenity → character) and
+    // drops anything outside the vocabulary, so taking the head of the list
+    // leads with the style on every card, and a venue still holding a
+    // pre-migration string simply shows fewer chips rather than a raw
+    // "quick-lunch". One class for all three facets, deliberately: the row
+    // already carries a price chip and up to three cuisine chips, and a third
+    // and fourth colour at 390 px reads as decoration rather than as structure
+    // — the facets are a data distinction, and nothing a reader does with this
+    // card depends on knowing which one a chip came from.
+    for (const v of vibesFor(r.vibe).slice(0, VIBE_CHIP_CAP)) {
+      chips.append(el("span", { className: "chip chip-vibe", textContent: v.label }));
+    }
   }
 
   const li = el("li", { className: labels.cardModifier ? `card ${labels.cardModifier}` : "card" });
@@ -271,7 +315,13 @@ function fillSelect(select, values, allLabel, i18nKey) {
   if (i18nKey) all.dataset.i18n = i18nKey; // "All areas"/"All cuisines" translate; the values are place/cuisine names, left as-is
   select.append(all);
   for (const v of values) {
-    select.append(el("option", { value: v, textContent: v }));
+    // Areas and cuisines are their own labels — they are content, written by
+    // the venues. A style is not: its stored value is a kebab-case key and the
+    // reader sees a separate label (vibes.js, "KEY vs LABEL"), so the option's
+    // value and its text are different strings and have to stay that way — the
+    // key is what the URL, the filter state and validate.py all handle.
+    const { key, label } = typeof v === "string" ? { key: v, label: v } : v;
+    select.append(el("option", { value: key, textContent: label }));
   }
 }
 
@@ -283,16 +333,20 @@ function init(restaurants) {
   const areaSel = document.getElementById("filter-area");
   const cuisineSel = document.getElementById("filter-cuisine");
   const serviceSel = document.getElementById("filter-service");
+  const styleSel = document.getElementById("filter-style");
 
-  const { areas, cuisines } = deriveFacets(restaurants);
+  const { areas, cuisines, styles } = deriveFacets(restaurants);
   fillSelect(areaSel, areas, "All areas", "filter.allAreas");
   fillSelect(cuisineSel, cuisines, "All cuisines", "filter.allCuisines");
+  // Vocabulary order (quick eats → fine dining), not alphabetical, and only the
+  // styles some venue actually carries — deriveFacets owns both rules.
+  if (styleSel) fillSelect(styleSel, styles, "All styles", "filter.allStyles");
 
   // A menu page's subheading links its cuisines and area back here as
   // `?cuisine=…` / `?area=…` (filters.js owns the names, and drops any value
   // the data doesn't have). The controls are set from it too, so the list and
   // the dropdown above it never disagree about why it's short.
-  const fromUrl = filtersFromQuery(location.search, { areas, cuisines });
+  const fromUrl = filtersFromQuery(location.search, { areas, cuisines, styles });
   // `origin` is the viewer's {lat,lng}, and it is seeded from the location this
   // browsing session already captured — sessionStorage, same key the menu screen
   // reads (geo.js).
@@ -310,6 +364,7 @@ function init(restaurants) {
     [areaSel, state.area],
     [cuisineSel, state.cuisine],
     [serviceSel, state.service],
+    [styleSel, state.style],
   ]) {
     if (!sel) continue;
     sel.value = value;
@@ -323,7 +378,15 @@ function init(restaurants) {
   // arrived from, not step through every dropdown they tried.
   function syncQuery() {
     const params = new URLSearchParams(location.search);
-    for (const [key, value] of [["area", state.area], ["cuisine", state.cuisine]]) {
+    // `style` joins area and cuisine here because it is the same kind of thing:
+    // a pick-one value that survives a reload and travels in a shared link. It
+    // carries the vocabulary KEY, which is why a renamed value degrades to "all"
+    // (filtersFromQuery) instead of filtering on a string nothing matches.
+    for (const [key, value] of [
+      ["area", state.area],
+      ["cuisine", state.cuisine],
+      ["style", state.style],
+    ]) {
       if (value === "all") params.delete(key);
       else params.set(key, value);
     }
@@ -337,16 +400,21 @@ function init(restaurants) {
   const WHAT = {
     cuisine: "cuisine",
     area: "area",
+    style: "style",
     service: "service",
     openNow: "Open now",
     cheap: "Cheap eats",
   };
+  // The three <select>s a URL can carry, and the only ones syncQuery writes.
+  const QUERY_SELECTS = { cuisine: cuisineSel, area: areaSel, style: styleSel };
   function clearFilter(kind) {
-    if (kind === "cuisine" || kind === "area") {
-      const sel = kind === "cuisine" ? cuisineSel : areaSel;
+    if (kind in QUERY_SELECTS) {
+      const sel = QUERY_SELECTS[kind];
       state[kind] = "all";
-      sel.value = "all";
-      sel.dataset.active = "all";
+      if (sel) {
+        sel.value = "all";
+        sel.dataset.active = "all";
+      }
       syncQuery();
     } else if (kind === "service") {
       state.service = "all";
@@ -496,6 +564,15 @@ function init(restaurants) {
   cuisineSel.addEventListener("change", () => {
     state.cuisine = cuisineSel.value;
     cuisineSel.dataset.active = cuisineSel.value;
+    syncQuery();
+    render();
+  });
+  // Style of dining (37k) — the `style` facet of `vibe`, and the only facet the
+  // filter offers: amenity and character are freely combined and orthogonal to
+  // how the meal happens, so neither is a pick-one axis (vibes.js).
+  styleSel?.addEventListener("change", () => {
+    state.style = styleSel.value;
+    styleSel.dataset.active = styleSel.value;
     syncQuery();
     render();
   });

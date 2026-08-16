@@ -18,7 +18,7 @@ what a chain actually serves.
                  A tag that commonly pairs with a drinks counter but isn't
                  itself one: "Bakery", "Deli", "Cake shop", "Gelato",
                  "Dessert", "Crepes" → PROBABLE.
-  vibe chip      "craft beer", "beer garden", "garden bar" name alcohol
+  vibe chip      "craft-beer", "beer-garden", "garden-bar" name alcohol
                  explicitly → DEFINITE.
   venue name     "brewery" or "tavern" as a whole word is unambiguous →
                  DEFINITE. A bare "bar" is not — "The Catch Sushi Bar" is a
@@ -98,7 +98,10 @@ DRINK_HEADING_RE = re.compile(
 
 DEFINITE_CUISINE = {"Bar", "Pub", "Gastropub", "Coffee", "Bubble tea", "Cafe"}
 PROBABLE_CUISINE = {"Bakery", "Deli", "Cake shop", "Gelato", "Dessert", "Crepes"}
-DEFINITE_VIBE = {"craft beer", "beer garden", "garden bar"}
+# Vocabulary keys since ROADMAP 37k (site/js/vibes.js) — these were the free-text
+# spellings "craft beer" / "beer garden" / "garden bar" until the migration, and
+# a set that no longer matches anything degrades this tool in silence.
+DEFINITE_VIBE = {"craft-beer", "beer-garden", "garden-bar"}
 NAME_DEFINITE_RE = re.compile(r"\b(brewery|tavern)\b", re.IGNORECASE)
 NAME_PROBABLE_RE = re.compile(r"\bbar\b", re.IGNORECASE)
 

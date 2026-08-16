@@ -6,11 +6,41 @@ import { kindOf } from "./kinds.js";
 import { isCheapEats } from "./price.js";
 import { venueHours } from "./locations.js";
 import { venueTimezone } from "./place.js";
+import { vibeLabel, vibesFor, vibesOf } from "./vibes.js";
 
-/** Unique, sorted areas and cuisines present in the data. */
+/** The style-facet values a venue carries, as keys. Usually one — style is
+ *  mutually exclusive in practice (vibes.js) — but the data is an array and
+ *  some venues genuinely are two things: `regal-chinese` is tagged `sit-down`
+ *  AND `banquet`, and it does both.
+ *
+ *  🔎 This reads ALL of them rather than `vibes.styleOf`, which returns only the
+ *  first in vocabulary order. Measured 2026-08-17 in real Chrome: with `styleOf`
+ *  driving the dropdown, Regal Chinese's card rendered a "Banquet" chip while
+ *  "Banquet" was absent from the filter entirely — the only venue carrying it
+ *  was already claimed by `sit-down`. A chip naming a thing the control beside
+ *  it cannot offer is a dead end in both directions, and reading every value
+ *  also makes this clause exactly the shape of the cuisine clause below: a
+ *  venue matches if it carries the value, not if the value happens to lead. */
+const styleKeysOf = (vibe) => vibesFor(vibe).filter((v) => v.facet === "style");
+
+/**
+ * Unique areas and cuisines present in the data, plus the styles of dining.
+ *
+ * Areas and cuisines are sorted alphabetically because they are open sets of
+ * content words with no inherent order. `styles` is NOT: `vibes.js` orders the
+ * style values by commitment (quick eats → fine dining), which is the order a
+ * reader compares them in, so this filters the vocabulary rather than sorting
+ * the data's own values. Only styles some venue actually carries are offered —
+ * a dropdown option that can only ever return nothing is a dead end.
+ *
+ * Styles come back as `{ key, label }` pairs, not bare strings: the stored value
+ * is a kebab-case key and the reader sees a label, and both ends of the select
+ * need them (`vibes.js` — KEY vs LABEL).
+ */
 export function deriveFacets(restaurants) {
   const areas = new Set();
   const cuisines = new Set();
+  const styleKeys = new Set();
   for (const r of restaurants) {
     // A kind that isn't in the facets stays out of the area/cuisine dropdowns,
     // so they keep meaning "where to eat out" (ADR 0003; the table is
@@ -18,9 +48,16 @@ export function deriveFacets(restaurants) {
     if (!kindOf(r).inFacets) continue;
     if (r.area) areas.add(r.area);
     for (const c of r.cuisine || []) cuisines.add(c);
+    for (const style of styleKeysOf(r.vibe)) styleKeys.add(style.key);
   }
   const sort = (set) => [...set].sort((a, b) => a.localeCompare(b));
-  return { areas: sort(areas), cuisines: sort(cuisines) };
+  return {
+    areas: sort(areas),
+    cuisines: sort(cuisines),
+    styles: vibesOf("style")
+      .filter((v) => styleKeys.has(v.key))
+      .map(({ key, label }) => ({ key, label })),
+  };
 }
 
 /**
@@ -52,18 +89,27 @@ export function filtersFromQuery(search, facets) {
   return {
     area: pick("area", facets.areas || []),
     cuisine: pick("cuisine", facets.cuisines || []),
+    // The URL carries the stored KEY ("?style=fine-dining"), never the label:
+    // a key is stable, url-safe and the thing the data holds, where a label is
+    // wording we are free to change. Same "unknown means all" rule as above —
+    // and here it also covers a value the vocabulary has since renamed
+    // (vibes.js FORMER_VIBES), which is exactly the case a link shared before
+    // the migration would carry.
+    style: pick("style", (facets.styles || []).map((s) => s.key)),
   };
 }
 
 /**
  * Filter state shape:
- * { service: 'all'|'takeaway'|'dine-in', area, cuisine, openNow: bool,
- *   cheap: bool }.
+ * { service: 'all'|'takeaway'|'dine-in', area, cuisine, style, openNow: bool,
+ *   cheap: bool }. `style` is a `vibes.js` style KEY ("sit-down"), never a
+ * label.
  */
 export const DEFAULT_FILTERS = {
   service: "all",
   area: "all",
   cuisine: "all",
+  style: "all",
   openNow: false,
   cheap: false,
 };
@@ -103,6 +149,18 @@ export function activeFilters(state) {
   if (state.area && state.area !== "all") {
     out.push({ kind: "area", value: state.area, label: state.area, key: null });
   }
+  // Third, ahead of service. A URL can carry `?style=` too, but no venue's
+  // subheading links one, so the reason cuisine and area lead — a reader who
+  // arrived on a narrowed list having pressed nothing on this screen — does not
+  // extend to it, and neither does its claim on the first chip slot.
+  //
+  // `key: null` like cuisine and area, for a different reason: these labels are
+  // ours, not the venues', but the reo table carries no gloss for an individual
+  // vibe and inventing one here is exactly what reo.js's SAFETY BOUNDARY note
+  // forbids. English is the honest state until a fluent speaker reviews them.
+  if (state.style && state.style !== "all") {
+    out.push({ kind: "style", value: state.style, label: vibeLabel(state.style), key: null });
+  }
   const service = SERVICE_LABEL[state.service];
   if (service) {
     out.push({ kind: "service", value: state.service, label: service.label, key: service.key });
@@ -129,6 +187,19 @@ export function applyFilters(restaurants, state, clock = null) {
     }
     if (state.area !== "all" && r.area !== state.area) return false;
     if (state.cuisine !== "all" && !(r.cuisine || []).includes(state.cuisine)) {
+      return false;
+    }
+    // Style of dining reads the `style` FACET of `vibe`, never the raw array:
+    // amenities and character tags are dropped, so "sit-down" cannot be
+    // answered by a venue tagged "licensed", and a pre-migration string is
+    // outside the vocabulary and matches nothing. A venue with no style is not
+    // silently a match — an untagged place drops out, the same way an unpriced
+    // one drops out of Cheap eats rather than being called a bargain.
+    if (
+      state.style &&
+      state.style !== "all" &&
+      !styleKeysOf(r.vibe).some((v) => v.key === state.style)
+    ) {
       return false;
     }
     if (state.openNow && clock) {

@@ -122,6 +122,7 @@ const SHELL = [
   "js/units.js",
   "js/update-notice.js",
   "js/versions.js",
+  "js/vibes.js",
   "site.webmanifest",
   "favicon.ico",
   "icons/favicon.svg",

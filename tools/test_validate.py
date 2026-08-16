@@ -223,6 +223,16 @@ CASES = {
     # Legal, but it costs the venue its derived price band — so the gate must
     # WARN rather than pass in silence (validate.py exits 0 on warnings).
     "an uncalibrated currency is legal but warns": (lambda d: d.update(currency="GBP"), "clean"),
+    # `vibe` became a closed vocabulary at ROADMAP 37k, read out of
+    # site/js/vibes.js. It was free text for a year and grew five spellings for
+    # one idea, so the three ways it can now be wrong are each worth a mutation:
+    # never in the vocabulary, superseded by a rename, and dropped deliberately.
+    "vibe off the vocabulary": (lambda d: d.update(vibe=["gastropub"]), "error"),
+    "vibe using a pre-migration spelling": (lambda d: d.update(vibe=["craft beer"]), "error"),
+    "vibe using a deliberately dropped value": (lambda d: d.update(vibe=["steakhouse"]), "error"),
+    "vibe listed twice": (lambda d: d.update(vibe=["craft-beer", "craft-beer"]), "error"),
+    "vibe as a bare string": (lambda d: d.update(vibe="craft-beer"), "error"),
+    "a vocabulary vibe is legal": (lambda d: d.update(vibe=["craft-beer", "sit-down"]), "clean"),
     "verifiedBy off the closed set": (lambda d: d.update(verifiedBy="vibes"), "error"),
     "verifiedBy names a person": (lambda d: d.update(verifiedBy="owner-mike"), "error"),
     "method with no date": (lambda d: d.update(verified=None), "error"),
@@ -560,11 +570,13 @@ def main() -> int:
         work.mkdir(parents=True)
         shutil.copytree(ROOT / "tools", work / "tools")
         shutil.copytree(ROOT / "site" / "data", work / "site" / "data")
-        # validate.py reads two tables out of the shipped JS so they can't drift
-        # from their Python counterparts (see _load_renames and
-        # _load_contradicts there), so the sandbox needs those modules too.
+        # validate.py reads three tables out of the shipped JS so they can't
+        # drift from their Python counterparts (see _load_renames,
+        # _load_contradicts and _load_vibes there), so the sandbox needs those
+        # modules too. Omitting one is fatal, not silent: _load_vibes exits
+        # rather than returning an empty vocabulary that would pass everything.
         (work / "site" / "js").mkdir(parents=True, exist_ok=True)
-        for mod in ("renames.js", "addons.js"):
+        for mod in ("renames.js", "addons.js", "vibes.js"):
             shutil.copy(ROOT / "site" / "js" / mod, work / "site" / "js" / mod)
 
         rc, out = run_validate(work)

@@ -25,14 +25,18 @@ import {
 const clockAt = (now) => ({ date: new Date(0), at: () => now });
 
 // A small fixture that mirrors the real record shape (see ARCHITECTURE.md).
+// `vibe` carries vocabulary KEYS (vibes.js), which is what validate.py enforces
+// and what the data was migrated to in 37k — never the raw strings the corpus
+// used to hold.
 const FIXTURE = [
-  { id: "cook", kind: "recipes", area: null, cuisine: [], services: [] },
+  { id: "cook", kind: "recipes", area: null, cuisine: [], services: [], vibe: ["sit-down"] },
   {
     id: "kk",
     name: "KK Malaysian",
     area: "Te Aro",
     cuisine: ["Malaysian"],
     services: ["dine-in", "takeaway"],
+    vibe: ["sit-down", "byo"],
   },
   {
     id: "rs",
@@ -40,6 +44,7 @@ const FIXTURE = [
     area: "Te Aro",
     cuisine: ["Malaysian", "Chinese"],
     services: ["dine-in", "takeaway"],
+    vibe: ["quick-eats", "cheap-and-cheerful"],
   },
   {
     id: "ktc",
@@ -47,6 +52,7 @@ const FIXTURE = [
     area: "Khandallah",
     cuisine: ["Cafe"],
     services: ["dine-in"],
+    vibe: ["sit-down", "dog-friendly"],
   },
   {
     id: "churton",
@@ -54,6 +60,7 @@ const FIXTURE = [
     area: "Churton Park",
     cuisine: ["Fish and chips"],
     services: ["takeaway"],
+    // No `vibe` at all — the case that must not become a silent match.
   },
 ];
 
@@ -65,17 +72,78 @@ test("deriveFacets: sorted, de-duped, recipes excluded", () => {
 });
 
 test("deriveFacets: the recipes collection contributes no area or cuisine", () => {
-  const { areas, cuisines } = deriveFacets([
-    { id: "cook", kind: "recipes", area: "Nowhere", cuisine: ["Ghost"], services: [] },
+  const { areas, cuisines, styles } = deriveFacets([
+    { id: "cook", kind: "recipes", area: "Nowhere", cuisine: ["Ghost"], services: [], vibe: ["banquet"] },
   ]);
   assert.deepEqual(areas, []);
   assert.deepEqual(cuisines, []);
+  // …and no style either: whatever Cook at Home is, it is not a way of dining
+  // out, and an option that can only ever return nothing is a dead end.
+  assert.deepEqual(styles, []);
 });
 
 test("deriveFacets: tolerates missing area/cuisine fields", () => {
-  const { areas, cuisines } = deriveFacets([{ id: "x", name: "X" }]);
+  const { areas, cuisines, styles } = deriveFacets([{ id: "x", name: "X" }]);
   assert.deepEqual(areas, []);
   assert.deepEqual(cuisines, []);
+  assert.deepEqual(styles, []);
+});
+
+// --- deriveFacets: the style axis (37k) --------------------------------------
+
+test("deriveFacets: styles come back in VOCABULARY order, not alphabetical", () => {
+  const { styles } = deriveFacets(FIXTURE);
+  // vibes.js orders style by commitment (quick eats → … → fine dining), which
+  // is the order a reader compares them in. Alphabetically this would be
+  // ["Quick eats", "Sit-down"] too, so the fixture is not proof on its own —
+  // the assertion below is.
+  assert.deepEqual(styles, [
+    { key: "quick-eats", label: "Quick eats" },
+    { key: "sit-down", label: "Sit-down" },
+  ]);
+});
+
+test("deriveFacets: vocabulary order is not alphabetical order", () => {
+  const { styles } = deriveFacets([
+    { id: "a", cuisine: [], services: [], vibe: ["fine-dining"] },
+    { id: "b", cuisine: [], services: [], vibe: ["quick-eats"] },
+    { id: "c", cuisine: [], services: [], vibe: ["banquet"] },
+  ]);
+  // Alphabetically: banquet, fine-dining, quick-eats. By commitment: the
+  // reverse-ish order below. The two disagree, which is the point.
+  assert.deepEqual(styles.map((s) => s.key), ["quick-eats", "banquet", "fine-dining"]);
+});
+
+test("deriveFacets: only styles the data actually carries are offered", () => {
+  const { styles } = deriveFacets([{ id: "a", cuisine: [], services: [], vibe: ["sit-down"] }]);
+  assert.deepEqual(styles.map((s) => s.key), ["sit-down"]);
+});
+
+test("deriveFacets: an amenity or a character tag is not a style", () => {
+  // The reason `vibe` is faceted at all: `craft-beer` and `wellington-icon` are
+  // 21 of the corpus's 38 taggings, and a style vocabulary that swallowed them
+  // would be lying about what it means (vibes.js).
+  const { styles } = deriveFacets([
+    { id: "a", cuisine: [], services: [], vibe: ["craft-beer", "wellington-icon", "byo"] },
+  ]);
+  assert.deepEqual(styles, []);
+});
+
+test("deriveFacets: a pre-migration string contributes no style", () => {
+  // The data was rewritten from raw strings to keys in 37k. A record that
+  // somehow still holds "quick-lunch" must not create a phantom option — it is
+  // not in the vocabulary, so vibesFor drops it.
+  const { styles } = deriveFacets([
+    { id: "a", cuisine: [], services: [], vibe: ["quick-lunch", "craft beer"] },
+  ]);
+  assert.deepEqual(styles, []);
+});
+
+test("deriveFacets: tolerates vibe being absent, empty or not an array", () => {
+  for (const vibe of [undefined, null, [], "sit-down", 7]) {
+    const { styles } = deriveFacets([{ id: "a", cuisine: [], services: [], vibe }]);
+    assert.deepEqual(styles, [], `vibe: ${JSON.stringify(vibe)}`);
+  }
 });
 
 test("applyFilters: defaults return everything, including recipes", () => {
@@ -101,6 +169,50 @@ test("applyFilters: area is an exact match", () => {
 test("applyFilters: cuisine matches any of a venue's cuisines", () => {
   const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, cuisine: "Chinese" });
   assert.deepEqual(shown.map((r) => r.id), ["rs"]);
+});
+
+// --- applyFilters: style of dining (37k) ------------------------------------
+
+test("applyFilters: style matches the venue's style facet, not its whole vibe", () => {
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, style: "sit-down" });
+  assert.deepEqual(shown.map((r) => r.id).sort(), ["cook", "kk", "ktc"]);
+});
+
+test("applyFilters: a venue that is genuinely two styles answers to both", () => {
+  // Not hypothetical: `regal-chinese` ships tagged `sit-down` AND `banquet`,
+  // and it does both. Matching only the first in vocabulary order left the
+  // card rendering a "Banquet" chip while "Banquet" was absent from the filter,
+  // measured in real Chrome 2026-08-17 — a dead end in both directions.
+  const two = [{ id: "regal", cuisine: [], services: [], vibe: ["sit-down", "banquet"] }];
+  assert.deepEqual(applyFilters(two, { ...DEFAULT_FILTERS, style: "sit-down" }).map((r) => r.id), ["regal"]);
+  assert.deepEqual(applyFilters(two, { ...DEFAULT_FILTERS, style: "banquet" }).map((r) => r.id), ["regal"]);
+  // …and the dropdown offers both, so neither chip names an unreachable option.
+  assert.deepEqual(deriveFacets(two).styles.map((s) => s.key), ["sit-down", "banquet"]);
+});
+
+test("applyFilters: an amenity cannot answer a style question", () => {
+  // "byo" and "sit-down" sit in the same array on `kk`. Asking for a style must
+  // read the style facet only — otherwise the vocabulary's facets are decoration.
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, style: "byo" });
+  assert.deepEqual(shown, []);
+});
+
+test("applyFilters: a venue with no vibe is not silently a match", () => {
+  // Same rule as Cheap eats and an unpriced venue: absence of a tag is not
+  // evidence of the tag. `churton` carries no vibe at all.
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, style: "quick-eats" });
+  assert.deepEqual(shown.map((r) => r.id), ["rs"]);
+});
+
+test("applyFilters: style 'all' (the default) keeps every venue, tagged or not", () => {
+  assert.equal(applyFilters(FIXTURE, DEFAULT_FILTERS).length, FIXTURE.length);
+});
+
+test("applyFilters: a state with no style key at all is a safe no-op", () => {
+  // Callers that predate this axis (and the older tests below) hand in a state
+  // object without `style`. It must not filter everything out.
+  const shown = applyFilters(FIXTURE, { service: "all", area: "all", cuisine: "all" });
+  assert.equal(shown.length, FIXTURE.length);
 });
 
 test("applyFilters: clauses are AND-ed together", () => {
@@ -170,7 +282,14 @@ test("cheap off (the default) keeps every venue regardless of price", () => {
 // Facet links: a menu page's subheading routes back into this list carrying a
 // filter (`index.html?cuisine=Malaysian`). menu.js writes those URLs and app.js
 // reads them, so both ends are tested here against the one pair of helpers.
-const FACETS = { areas: ["Johnsonville", "Te Aro"], cuisines: ["Malaysian", "Thai"] };
+const FACETS = {
+  areas: ["Johnsonville", "Te Aro"],
+  cuisines: ["Malaysian", "Thai"],
+  styles: [
+    { key: "quick-eats", label: "Quick eats" },
+    { key: "fine-dining", label: "Fine dining" },
+  ],
+};
 
 test("filterHref points at the home list with the facet as a query param", () => {
   assert.equal(filterHref("cuisine", "Malaysian"), "index.html?cuisine=Malaysian");
@@ -184,7 +303,23 @@ test("filterHref escapes values that would otherwise break the URL", () => {
 
 test("filtersFromQuery reads a known area and cuisine back out", () => {
   const got = filtersFromQuery("?cuisine=Malaysian&area=Johnsonville", FACETS);
-  assert.deepEqual(got, { area: "Johnsonville", cuisine: "Malaysian" });
+  assert.deepEqual(got, { area: "Johnsonville", cuisine: "Malaysian", style: "all" });
+});
+
+test("filtersFromQuery reads a style KEY, and only a key", () => {
+  assert.equal(filtersFromQuery("?style=fine-dining", FACETS).style, "fine-dining");
+  // The label is not the value. A link carrying "Fine dining" is not a link the
+  // <select> can honour, so it degrades to "all" rather than emptying the list
+  // under a control that says nothing is wrong.
+  assert.equal(filtersFromQuery("?style=Fine%20dining", FACETS).style, "all");
+});
+
+test("filtersFromQuery drops a style the data doesn't have, and a renamed one", () => {
+  // "sit-down" is real vocabulary but no venue here carries it; "quick-lunch"
+  // is a pre-migration string the vocabulary renamed (vibes.js FORMER_VIBES) —
+  // exactly what a link shared before 37k would hold. Both mean "all".
+  assert.equal(filtersFromQuery("?style=sit-down", FACETS).style, "all");
+  assert.equal(filtersFromQuery("?style=quick-lunch", FACETS).style, "all");
 });
 
 test("filtersFromQuery round-trips what filterHref wrote, escaping included", () => {
@@ -197,9 +332,10 @@ test("filtersFromQuery drops a value the data doesn't have", () => {
   // The trap this exists for: a <select> with no matching <option> falls back
   // to "All cuisines" while the state filters on the unknown value — a control
   // that says one thing over a list doing another. Unknown must mean "all".
-  assert.deepEqual(filtersFromQuery("?cuisine=Klingon&area=Mars", FACETS), {
+  assert.deepEqual(filtersFromQuery("?cuisine=Klingon&area=Mars&style=drive-thru", FACETS), {
     area: "all",
     cuisine: "all",
+    style: "all",
   });
 });
 
@@ -209,14 +345,15 @@ test("filtersFromQuery is case- and whitespace-exact, not fuzzy", () => {
 
 test("filtersFromQuery: no query, empty query, or foreign params → defaults", () => {
   for (const q of ["", "?", "?utm_source=x", undefined]) {
-    assert.deepEqual(filtersFromQuery(q, FACETS), { area: "all", cuisine: "all" });
+    assert.deepEqual(filtersFromQuery(q, FACETS), { area: "all", cuisine: "all", style: "all" });
   }
 });
 
-test("filtersFromQuery survives facets with no areas or cuisines", () => {
-  assert.deepEqual(filtersFromQuery("?area=Johnsonville", {}), {
+test("filtersFromQuery survives facets with no areas, cuisines or styles", () => {
+  assert.deepEqual(filtersFromQuery("?area=Johnsonville&style=quick-eats", {}), {
     area: "all",
     cuisine: "all",
+    style: "all",
   });
 });
 
@@ -248,13 +385,14 @@ test("every kind of filter is named — none can be on and invisible", () => {
     service: "takeaway",
     area: "Johnsonville",
     cuisine: "Malaysian",
+    style: "fine-dining",
     openNow: true,
     cheap: true,
   });
-  assert.equal(all.length, 5);
+  assert.equal(all.length, 6);
   assert.deepEqual(
     all.map((f) => f.kind).sort(),
-    ["area", "cheap", "cuisine", "openNow", "service"]
+    ["area", "cheap", "cuisine", "openNow", "service", "style"]
   );
   // Every entry can be shown to a person and cleared by its kind.
   for (const f of all) {
@@ -270,10 +408,27 @@ test("the two facets a URL can carry come first, so neither is ever the one fold
     service: "dine-in",
     area: "Te Aro",
     cuisine: "Malaysian",
+    style: "sit-down",
     openNow: true,
     cheap: true,
   }).map((f) => f.kind);
   assert.deepEqual(kinds.slice(0, 2), ["cuisine", "area"]);
+  // Style is URL-carryable too, but no venue's subheading links one, so it does
+  // not share their claim on the first chip slot — it sits third, ahead of the
+  // controls a reader can only have set on this screen.
+  assert.equal(kinds[2], "style");
+});
+
+test("an active style is named by its LABEL, never by its stored key", () => {
+  const [f] = activeFilters({ ...DEFAULT_FILTERS, style: "fine-dining" });
+  assert.equal(f.kind, "style");
+  assert.equal(f.value, "fine-dining"); // what clears it, and what the URL holds
+  assert.equal(f.label, "Fine dining"); // what a person reads on the chip
+});
+
+test("style 'all' is the absence of a filter, and so is a missing style key", () => {
+  assert.deepEqual(activeFilters({ ...DEFAULT_FILTERS, style: "all" }), []);
+  assert.deepEqual(activeFilters({ service: "all", openNow: false, cheap: false }), []);
 });
 
 test("a sort mode is not a filter — it reorders, it never shortens (ADR 0014)", () => {
@@ -297,6 +452,7 @@ test("the count matches what applyFilters actually did — badge and list agree"
     { ...DEFAULT_FILTERS },
     { ...DEFAULT_FILTERS, cuisine: facets.cuisines[0] },
     { ...DEFAULT_FILTERS, service: "takeaway" },
+    { ...DEFAULT_FILTERS, style: facets.styles[0].key },
     { ...DEFAULT_FILTERS, cheap: true },
   ]) {
     const shown = applyFilters(FIXTURE, state);
@@ -312,6 +468,7 @@ test("a te reo key rides along for the filters that have one; facet values don't
       service: "takeaway",
       area: "Johnsonville",
       cuisine: "Malaysian",
+      style: "fine-dining",
       openNow: true,
       cheap: true,
     }).map((f) => [f.kind, f])
@@ -323,4 +480,8 @@ test("a te reo key rides along for the filters that have one; facet values don't
   // …place and cuisine names are content, and are shown as the venues wrote them.
   assert.equal(byKind.area.key, null);
   assert.equal(byKind.cuisine.key, null);
+  // A vibe label is ours rather than the venue's, but reo.js carries no gloss
+  // for one and inventing a key here would claim a translation that does not
+  // exist — the same failure as a `data-i18n` pointing at a missing entry.
+  assert.equal(byKind.style.key, null);
 });

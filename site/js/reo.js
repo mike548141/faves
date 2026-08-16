@@ -98,6 +98,9 @@ const MI = {
   // Filter select defaults
   "filter.allAreas": "Ngā rohe katoa",
   "filter.allCuisines": "Ngā momo kai katoa",
+  // "All styles" — the style-of-dining select (37k). Same `Ngā … katoa` frame
+  // as its two neighbours, over the noun drafted for "filter.style" below.
+  "filter.allStyles": "Ngā tāera kai katoa", // draft
   // The filter sheet — the bar's one button and the sheet's own chrome.
   // "tātari" (to filter/sift) is the word already used in "pick.empty" below,
   // so this stays consistent with a string that has been in the app a while;
@@ -115,6 +118,20 @@ const MI = {
   "filter.service": "Ratonga", // draft — "service" (dine-in / takeaway)
   "filter.area": "Rohe",
   "filter.cuisine": "Momo kai",
+  // "Style" — how the meal happens (quick eats → fine dining), the `style`
+  // facet of `vibe`. `tāera` is the owner-nominated dictionary's own entry for
+  // "style, method, technique, fashion, way" (a loan word, and the only
+  // attested one in this sense — `huatau` and `tōrire` are style-as-elegance,
+  // which is not what this control asks). `kai` qualifies it the same way
+  // "Momo kai" qualifies "momo" just above, and keeps the two from colliding:
+  // cuisine is what you eat, style is how you eat it.
+  //
+  // 🚩 It is a DRAFT and it renders the moment someone flips the toggle, so it
+  // wants a fluent speaker's eye — but it is chrome, not safety text, so it is
+  // inside this table's boundary rather than English-only. The individual vibe
+  // LABELS ("Fine dining", "Quick eats") carry no key at all and stay English;
+  // the queue is parked and this closes a control's chrome, not a vocabulary.
+  "filter.style": "Tāera kai", // draft
   // Overflow / navigation
   "nav.more": "Ētahi atu",
   "nav.favourites": "Ngā Makau",

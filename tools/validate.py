@@ -152,6 +152,47 @@ def _load_fx_rates():
 
 FX_RATES = _load_fx_rates()
 
+
+def _load_vibes():
+    """The `vibe` vocabulary from site/js/vibes.js: (keys in file order, the
+    FORMER_VIBES migration map).
+
+    Read out of the JS rather than restated here — same reason as _load_renames
+    and _load_contradicts above. The vocabulary is what the cards render and
+    what the filter offers; a Python copy of it could refuse a value the browser
+    happily shows, or wave through one it cannot label.
+
+    A parse that came back empty would make this gate DECORATIVE — it would
+    still run, still print nothing, and still pass every file (ADR 0072). So an
+    empty key list is fatal here, not a quiet {}: better no validator than one
+    that cannot fail. FORMER_VIBES may legitimately be empty (nothing has been
+    superseded yet), so only the keys are load-bearing."""
+    path = ROOT / "site" / "js" / "vibes.js"
+    try:
+        src = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise SystemExit(f"error: cannot read {path} — the vibe vocabulary gate cannot run ({exc})")
+    keys = re.findall(r'\{\s*key:\s*"([^"]+)"\s*,', src)
+    if not keys:
+        raise SystemExit(
+            f"error: read no vibe keys out of {path} — the vocabulary gate would "
+            f"pass every value silently. Has the VIBES literal changed shape?"
+        )
+    former = {}
+    body = re.search(r"FORMER_VIBES\s*=\s*\{(.*?)\n\};", src, re.S)
+    if body:
+        for m in re.finditer(
+            r'^\s*(?:"([^"]+)"|([A-Za-z_$][\w$]*))\s*:\s*(?:"([^"]+)"|null)\s*,?\s*$',
+            body.group(1),
+            re.M,
+        ):
+            # group(3) is None when the JS value was `null` — "dropped, not renamed".
+            former[m.group(1) or m.group(2)] = m.group(3)
+    return keys, former
+
+
+VIBES, FORMER_VIBES = _load_vibes()
+
 CURRENCY_RE = re.compile(r"^[A-Z]{3}$")
 
 def valid_timezone(tz):
@@ -1141,6 +1182,35 @@ def check_restaurant(path):
         isinstance(price_pp, (int, float)) and not isinstance(price_pp, bool) and price_pp > 0
     ):
         err(rid, f"pricePerPerson must be a positive number, got {price_pp!r}")
+
+    # vibe: a closed vocabulary since ROADMAP 37k (owner-ruled 2026-08-16), read
+    # from site/js/vibes.js above. It was free text for a year and grew FIVE
+    # strings for one idea ("quick", "quick-eats", "quick-lunch", "grab-and-go",
+    # "counter-order") — no filter can aggregate those, which is the whole point
+    # of closing it.
+    vibe = data.get("vibe")
+    if vibe is not None:
+        if not isinstance(vibe, list):
+            err(rid, f"vibe must be a list, got {vibe!r}")
+        else:
+            seen = set()
+            for v in vibe:
+                if not isinstance(v, str):
+                    err(rid, f"vibe entry must be a string, got {v!r}")
+                elif v in VIBES:
+                    if v in seen:
+                        err(rid, f"vibe {v!r} listed twice")
+                    seen.add(v)
+                elif v in FORMER_VIBES:
+                    became = FORMER_VIBES[v]
+                    err(rid, (
+                        f"vibe {v!r} was renamed to {became!r} — use that"
+                        if became is not None else
+                        f"vibe {v!r} was dropped deliberately (it duplicated a cuisine "
+                        f"value the venue already carries) — remove it"
+                    ) + " (site/js/vibes.js)")
+                else:
+                    err(rid, f"vibe {v!r} not in the vocabulary in site/js/vibes.js: {sorted(VIBES)}")
 
     # Optional curated household rating for the venue (see site/js/ratings.js).
     check_rating(rid, data, "card")

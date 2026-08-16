@@ -65,11 +65,11 @@
     ]
   },
   "vibe": [
-    "garden bar",
-    "live sport",
-    "dog friendly",
-    "family friendly",
-    "quiz night"
+    "garden-bar",
+    "live-sport",
+    "dog-friendly",
+    "family-friendly",
+    "quiz-night"
   ],
   "picks": [],
   "priceBand": "$$",
