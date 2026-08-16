@@ -36,6 +36,9 @@ content freshness separately from this file.
   that date, plus what was checked and how.
 
 ### Fixed
+- **The rate-age line under the currency picker stops crowding it.** The note
+  sat hard against the dropdown, close enough to touch its highlight the moment
+  the control was used — which is exactly when you're looking at both.
 - **The "something's wrong" flag on a dish is visible.** It was rendering at
   two-thirds the size of the ♥ next to it *and* dimmed to 75% — two reductions
   stacked on one control, in a box that gave no hint anything was there. It now

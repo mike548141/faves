@@ -3350,3 +3350,29 @@ live at the time and untouched. ⚠️ `SHELL_VERSION` was bumped .13 → .14 ag
 `main` as it stood — if another branch merges its own bump first, that constant
 is the expected conflict, and the resolution is always "deployed + 1", never a
 merge of both strings.
+
+**A second owner report, same session — the currency note crowded its control.**
+*"The text sits too close to the highlight around the drop down box, close to
+overlapping."* The rate-age line under the Currency picker (new this day, from
+the FX work) had no top margin, so it butted against the select. The part that
+made it look like an overlap is the **focus ring**, which sits 4 px *outside*
+the border (2 px outline + 2 px offset) and appears precisely when the reader
+has just used the control and is reading the note under it. Every other note in
+that panel is preceded by a heading that supplies the gap; this is the only one
+that follows its control directly, so the rule is written on the pairing
+(`.lang-select + .settings-note`) rather than on the one note — the next note
+placed under a select inherits the fix. Measured after: 16 px gap, 12 px clear
+of the ring, and eyeballed focused at 390 px.
+
+**Concurrency, how it actually went.** The FX session pushed `main` (a merge
+commit, 7 commits) while this work was mid-flight. Rebasing onto it conflicted
+in exactly one place — `site/sw.js` — as predicted. Resolved to
+`SHELL_VERSION 2026-08-16.14` + `DATA_VERSION 2026-08-16.4`: theirs for data
+(they added three venues), deployed-plus-one for the shell.
+🚩 **Worth knowing:** their merge changed `app.css`, `index.html` and 15 JS
+files but left `SHELL_VERSION` at `.13`, so `main` deployed a new shell under
+the old version — installed phones would not have refetched it, and the FX
+conversion would not have reached them. This branch's `.14` carries both
+changes and fixes that on merge. Re-verified after the rebase against the
+combined tree: `node --test` **655**, `validate.py` 48 files 0 errors,
+`boot_check` 13/13, `device_check` 19/19, `cook_check` 36/36.
