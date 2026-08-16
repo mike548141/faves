@@ -2936,6 +2936,37 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
   own header; an unwired `waitQuiet()` MutationObserver helper sits in
   `openDevice()` as an untested starting point. Owner is `overflow-ui.js` /
   `menu.js`, not the sync engine.
+
+- [ ] 🚩 **`linkscan` is blind to reference-style links, and it is an ENFORCED
+      floor guard** `[S][docs]` ⏳ **owed upstream to atelier; nothing to fix
+      locally.** Found 2026-08-16 when `pathscan` (warn-only) caught a broken ADR
+      link in a commit that `linkscan` (enforced) had just passed.
+      🔎 **Isolated with a two-line probe, not inferred.** A file containing both
+      `[inline](does-not-exist-a.md)` and a `[refstyle]` whose definition is
+      `[refstyle]: does-not-exist-b.md` reports **exactly one** broken link — the
+      inline one. A file containing *only* the reference-style link reports
+      `✓ linkscan clean — every internal link resolves`. The whole syntax class
+      is invisible to it, and the all-clear says the opposite in as many words.
+      🔎 **Exposure here, measured: 26 reference-style definitions across the
+      repo's markdown, and `docs/ROADMAP.md` alone carries 10 of them — all its
+      `[ADR 00xx]` links.** So the repo's densest cross-reference surface is the
+      one the enforced guard cannot see. **Currently none of them are broken**
+      (the only miss is this session's own `[ADR 0073]`, which resolves when
+      `cook-36` merges), so this is exposure, not damage — say so plainly rather
+      than dressing it up.
+      🔑 **Why it is worth an item anyway.** `pathscan` does catch these, but
+      `pathscan` is **warn-only** in this repo's hook plane while `linkscan` is
+      enforced. So a broken ADR reference can never block a commit, and the one
+      guard that would have blocked it prints a clean bill of health. Two guards
+      whose union looks complete and whose *enforced* half has the hole is worse
+      than one honest guard, because the green line is what gets quoted.
+      🛑 **Do not "fix" this by making `linkscan` stricter from here** — it is
+      atelier's tool at `../atelier/tools/linkscan.py`, shared by every repo on <!-- pathscan:allow: atelier cross-repo path — exists in atelier's tools/, not this repo's tree -->
+      the floor, and a local patch would fork it. Queue it upstream under the
+      queue-never-deliver rule, the way atelier's Track E item E9 was. Until it
+      lands, the honest local mitigation is to prefer inline `[text](path.md)`
+      over reference-style in new records.
+
 > ✅ **Closed 2026-08-16** — whole-repo scanner runs inflated by live worktrees.
 > **Stale, and re-measured with five worktrees live**: `leakscan .` clean (not
 > 101-and-blocked), `plainscan .` 652 with no doubling. Worktrees moved to
