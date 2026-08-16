@@ -81,7 +81,7 @@
 // NOT PART OF THE SHIPPED SITE — dev tooling, like tools/serve.py. No npm
 // install, no dependency added to site/ (ADR 0001).
 
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -764,15 +764,13 @@ async function run(opts) {
       `${ran + 1} of ${EXPECTED_ASSERTIONS} — a short run is a failed run, not a pass`
     );
 
-    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
-    return report.failed ? 1 : 0;
+    return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();
-    await stopChrome(chrome?.proc);
+    await stopChrome(chrome?.proc, { keepProfile: opts.keepProfile });
     server.closeAllConnections?.();
     await new Promise((r) => server.close(r));
     if (opts.keepProfile) console.log(`Chrome profile kept at ${profileDir}`);
-    else await rm(profileDir, { recursive: true, force: true });
   }
 }
 

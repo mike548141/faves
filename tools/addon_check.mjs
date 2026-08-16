@@ -40,7 +40,7 @@
 // run, because a stale service worker will happily serve the last run's
 // modules and a hard reload does not bust it.
 
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -252,15 +252,13 @@ async function run(opts) {
       s.lines.map((l) => `${l[2]}× ${l[0]}${l[3] ? ` (${l[3]})` : ""} @ ${l[1]}`).join(" | "),
     );
 
-    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
-    return report.failed ? 1 : 0;
+    return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();
-    await stopChrome(chrome?.proc);
+    await stopChrome(chrome?.proc, { keepProfile: opts.keepProfile });
     server.closeAllConnections?.();
     await new Promise((r) => server.close(r));
     if (opts.keepProfile) console.log(`Chrome profile kept at ${profileDir}`);
-    else await rm(profileDir, { recursive: true, force: true });
   }
 }
 

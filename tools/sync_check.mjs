@@ -149,7 +149,7 @@
 // "B now shows what A just set", never a wall-clock check — so nothing here
 // can pass at 1pm and fail at 1am.
 
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -889,13 +889,12 @@ async function run(opts) {
       `${DISH_Y}: heart=${aStillWorks.heart}, ${stillRendered} dishes still rendered`
     );
 
-    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
-    return report.failed ? 1 : 0;
+    return report.summary(SITE) ? 0 : 1;
   } finally {
     A?.cdp?.close();
     B?.cdp?.close();
-    await stopChrome(A?.chrome?.proc);
-    await stopChrome(B?.chrome?.proc);
+    await stopChrome(A?.chrome?.proc, { keepProfile: opts.keepProfile });
+    await stopChrome(B?.chrome?.proc, { keepProfile: opts.keepProfile });
     siteServer.closeAllConnections?.();
     await new Promise((r) => siteServer.close(r));
     // blobServer may already be closed (assertion 8) — closing twice is a
@@ -904,9 +903,6 @@ async function run(opts) {
     if (opts.keepProfile) {
       console.log(`Chrome profile A kept at ${profileDirA}`);
       console.log(`Chrome profile B kept at ${profileDirB}`);
-    } else {
-      await rm(profileDirA, { recursive: true, force: true });
-      await rm(profileDirB, { recursive: true, force: true });
     }
   }
 }

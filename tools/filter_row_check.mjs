@@ -383,8 +383,7 @@ async function run(opts) {
       JSON.stringify({ inSheet: s.inSheet, visible: s.visible, btnHidden: s.btnHidden, bodyClass: s.bodyClass })
     );
 
-    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
-    return report.failed === 0;
+    return report.summary(SITE);
   } finally {
     cdp?.close();
     await stopChrome(chrome?.proc);

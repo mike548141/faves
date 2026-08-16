@@ -25,7 +25,7 @@
 //
 // Run it after touching cart.js, cart-ui.js, share-codec.js, or the order
 // sheet's markup or CSS.
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Cdp, Report, createDriver, launchChrome, startServer, stopChrome, until } from "./lib/browser.mjs";
@@ -184,13 +184,11 @@ const run = async () => {
       `${s.imgsInSheet} img(s) · xssRan=${s.xssRan} · ${s.noteText}`);
 
     report.check("no console errors anywhere in the run", errors.length === 0, errors.join(" | ") || "none");
-    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
-    return report.failed === 0;
+    return report.summary(SITE);
   } finally {
     if (cdp) cdp.close();
     if (chrome) await stopChrome(chrome.proc);
     server.close();
-    await rm(profileDir, { recursive: true, force: true });
   }
 };
 

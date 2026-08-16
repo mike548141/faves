@@ -547,8 +547,7 @@ async function run(opts) {
       report.check("about: the dialog opened", false, String(e.message || e));
     }
 
-    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
-    return report.failed === 0;
+    return report.summary(SITE);
   } finally {
     if (chrome) await stopChrome(chrome.proc ?? chrome);
     if (cdp) cdp.close?.();
