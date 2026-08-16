@@ -30,8 +30,9 @@ should this look, for someone *here*? — so each should be able to answer
 ### Rates are data, not a call
 
 `site/data/fx.json`: a base (NZD), an `asOf` date, a named source, and 35 rates.
-Written by `tools/fetch_fx.py`, committed, refreshed weekly by
-`.github/workflows/fx.yml`, cached beside the menus, read offline.
+Written by `tools/fetch_fx.py`, committed, refreshed **once per working session
+by whoever is working**, cached beside the menus, read offline. The tool refuses
+to write twice in a day, so the habit needs no discipline behind it.
 
 A live FX API was never available to us: it is a third-party runtime dependency
 (ADR 0001 forbids it outright) and it goes blank in flight mode — which is
@@ -113,22 +114,24 @@ defaults) and `defaults.js` (the two distance numbers) are leaf modules that
 import nothing, so nothing on the cycle imports anything on the cycle. Constants
 shared by three modules should start there rather than arrive there.
 
-**A weekly push to `main` is a weekly deploy.** The refresh job commits only
-when a rate actually moved, and bumps `DATA_VERSION` in the same commit so
-installed phones refetch — the lockstep rule, honoured by the tool rather than
-by a human remembering. Weekly rather than daily on the owner's call
-(2026-08-16): a menu price is read off a wall months apart, so a rate a few days
-old is nowhere near the biggest approximation in the figure a reader sees.
+**Refreshing the rates is a human step, and that is a decision rather than a
+gap.** A scheduled job was built, and removed the same day. It could not push to
+`main` — proved, not assumed: *"GH013: Repository rule violations found for
+refs/heads/main … 4 of 4 required status checks are expected … [remote
+rejected]"*. A direct push can never satisfy a required status check, because
+the check runs on the push the rule is refusing.
 
-**The job cannot push without a ruleset bypass, and this was proved rather than
-assumed.** A forced run on 2026-08-16 was refused: *"GH013: Repository rule
-violations found for refs/heads/main … 4 of 4 required status checks are
-expected … [remote rejected]"*. A direct push can never satisfy a required
-status check, because the check runs on the push the rule is refusing. So the
-job runs those four checks **itself, before the commit exists** — which is what
-makes a bypass defensible: it skips the mechanism, not the substance. Adding a
-required check to the ruleset without adding it to the job would quietly make
-that untrue.
+Both ways round that were worse than the problem. Adding a ruleset bypass
+weakens a protection on a public repo so a convenience can work. Staging the
+commit on a branch, polling for its checks and fast-forwarding `main` works, but
+is the kind of machinery a later reader has to reverse-engineer before they can
+trust it — the owner's objection, and the right one (2026-08-16).
+
+So the rates are refreshed by whoever is working on Faves, once a session, and
+the tool enforces the owner's ceiling of once a day itself. That makes the
+instruction mindless to follow, which is the only kind of instruction that gets
+followed. The cost is honest and small: rates go stale exactly as fast as the
+repo goes quiet, and a quiet repo is one nobody is reading menus from either.
 
 **A currency with no shipped rate is a validation error**, not a warning: the
 venue would render correctly in its own currency while silently ignoring the

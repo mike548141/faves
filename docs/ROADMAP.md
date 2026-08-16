@@ -1754,6 +1754,47 @@ Two consequences recorded rather than buried:
 
 ---
 
+## Automating the FX refresh — parked 2026-08-16
+
+Faves converts prices from rates it ships (ADR 0045). Those go stale unless
+someone fetches them, so a scheduled GitHub Action was the obvious answer. It was
+built, tested, and **removed the same day**. Recorded here because it looks like
+an obvious win and the next person will reach for it too.
+
+**It cannot push to `main`.** Proved, not assumed — a forced run was refused:
+
+> `GH013: Repository rule violations found for refs/heads/main.`
+> `- 4 of 4 required status checks are expected.`
+> `! [remote rejected] HEAD -> main (push declined due to repository rule violations)`
+
+A direct push can never satisfy a required status check, because the check runs
+*on* the push the rule is refusing. The owner's own pushes land because a repo
+admin bypasses the rule; `github-actions[bot]` is not one.
+
+**Both ways round are worse than the problem.**
+
+| Way | Why it was rejected |
+|---|---|
+| Add a ruleset bypass for GitHub Actions | Weakens a protection on a public repo so a convenience can work. Applies to every workflow, not just this one. |
+| Open a PR and auto-merge it | Owner: each refresh then waits on a human, which defeats the point. |
+| Stage the commit on a branch, poll for its checks, fast-forward `main` | It works, and it is unusual enough that a later reader must reverse-engineer it before trusting it. Owner, 2026-08-16: *"the advice you are giving me sounds like the things that in a later session you will tell me this session was crazy wrong and did something weird / risky that we then undo."* He was right. |
+
+**What we do instead.** Whoever is working on Faves runs
+`python3 tools/fetch_fx.py --bump` once a session and commits the result with
+their work (CLAUDE.md's verify block). The tool enforces the owner's ceiling —
+**at most one rate change per day** — by doing nothing if it already fetched
+today or if no rate moved. So the instruction is safe to follow mindlessly,
+which is the only kind that gets followed.
+
+- [ ] **Revisit if the refresh ever actually lapses.** The failure mode is
+  visible rather than silent: the app states its rates' date beside the prices
+  and in Settings, so a stale table announces itself. If that date is ever
+  embarrassing, the honest fix is probably the bypass **plus** the job running
+  the four required checks itself before committing — that version was written
+  and is in the history at `d9a2629` if it is ever wanted.
+
+---
+
 ## Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)
 
 <!-- Numbered 25, not 22: two other live sessions had already taken 22, 23 and
