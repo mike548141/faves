@@ -623,6 +623,19 @@ deliberation those compact docs omit.
   recipe looks finished. Measured 204/204 byte-identical at 1×; 20 of 24
   recipes double clean, 14 halve. Times never scale — under-scaling a meat
   time is a food-safety failure, not a bad dinner.
+- [0085](0085-a-delivery-price-fills-a-hole-it-is-not-a-feature.md) — **a
+  delivery-app price fills a hole in the data; it is not a feature.** Supersedes
+  the **channel half only** of [0080](0080-a-venue-has-menus-plural.md). 0080
+  found `channel` already exercised — `pizza-pomodoro` sells one pizza at $29.00
+  in-store and $17.00 online — and admitted it. 🔑 **The owner answered none of
+  the four options and restated the goal instead:** show only in-store pricing;
+  an app price is a stopgap *"until an in-store menu can be collected"*; never
+  show both, because that is *"a way to fill a hole in the data not a feature"*.
+  ⇒ One price per dish, delivery as a captioned fallback, and **`channel` is NOT
+  admitted to `site/data/`**. The evidence 0080 cited was sound and the inference
+  from it was wrong: **a duplicated row is a data-collection gap wearing the
+  clothes of a modelling gap**, and an industry consensus is evidence about what
+  a POS must model, not about what this app should show.
 - [0084](0084-vibe-is-a-closed-vocabulary-with-facets.md) — **`vibe` is a
   closed vocabulary with facets, and every value is rendered.** Four owner
   rulings on 37k, taken after he was shown the strongest case AGAINST building
