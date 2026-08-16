@@ -592,4 +592,5 @@ deliberation those compact docs omit.
   Read-aloud ships beside it, cancelled on every exit for the same reason ADR
   0034's wake lock is released — and honest that "no dependency" is true of the
   code, not necessarily of a runtime that fetches its voices. `cook_check.mjs`
-  36 → 57 assertions, all fourteen new ones seen to fail under a targeted break.
+  42 → 57 assertions, and all fifteen new ones were seen to fail under a
+  targeted break.

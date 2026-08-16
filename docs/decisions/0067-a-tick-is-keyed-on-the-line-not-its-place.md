@@ -134,13 +134,16 @@ button.
   reset and Read aloud). Both entry points into cook mode reach the same
   checklist, which `cook_check.mjs` asserts by opening the recipe from the Cook
   at Home list and finding the tick made from the recipe page still there.
-- `tools/cook_check.mjs`: **36 → 57 assertions**, with `speechSynthesis.speak`
+- `tools/cook_check.mjs`: **42 → 57 assertions as run** (ADR 0039's stated 36
+  is the count at the time; several blocks are conditional on the fixture), with
+  `speechSynthesis.speak`
   and `.cancel` instrumented at the real API alongside the wake lock. Two new
   gaps are declared in its header rather than papered over: whether a voice was
   fetched over the network, and whether `pagehide` really stops speech on a
   navigation (a headless browser has the API and no voice, so its `speaking`
   flag is never true and an assertion there would pass either way).
-- **Proven to bite, by fourteen deliberate breaks, each reverted.** Removing the
+- **Proven to bite: all fifteen new assertions were seen to fail, under
+  fourteen deliberate breaks, each reverted.** Removing the
   focus hand-off before the ingredient list is rebuilt → the focus assertion
   (plus two cascades, because the arrow keys die with the focus); toggling a
   class inside the live region → the byte-for-byte markup assertion, alone;
