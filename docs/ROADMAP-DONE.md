@@ -2167,3 +2167,76 @@ per-batch findings, the pilot's transcription recipe, and the traps it named.
       `python3 tools/tag_allergens.py` for the allergen sweep (ADR 0025 — the
       burden falls on *not* tagging), and `python3 tools/seed_dish_ids.py`
       after, or `validate.py` fails with **one error per dish** (ADR 0051).
+
+## Theme 36g — ticks must leave the backup export (shipped 2026-08-16)
+
+🚩 **Ticks must leave the backup export** `[S][js]` — *"if it isn't
+  restored, it shouldn't be exported."* ✅ **RULED AND BUILT** (claim released
+  2026-08-17: `wt: faves-cook` no longer exists).
+  ⚠️ **This header used to read "CLAIMED … Ruled, not yet built" while its own
+  body below said "✅ BUILT 2026-08-16" — the item contradicted itself**, so a
+  reader arriving at the top walked away from finished work. Corrected here
+  rather than only clearing the claim, or the contradiction outlives the claim
+  that explained it.
+  Verified 2026-08-17 against the two things the item itself specified were
+  needed: the exclusion is matched **by suffix** (`personal-data.js`,
+  `key.endsWith("." + base…)`) rather than by base key — the item's own analysis
+  showed a base-key match would have excluded *nothing at all while reading as
+  complete* — and the unit test it demanded exists and passes: *"a cook-mode
+  tick never reaches the export — for any profile"*, seeding ticks under two
+  different profile ids and asserting neither reaches the JSON. Recorded as
+  ADR 0074. The mechanism below is kept because the first analysis was wrong
+  twice:
+
+  🔎 **A tick reaches the backup through the CATCH-ALL, not the key list.**
+  `faves.checklist.v1` is deliberately **not** in `SCOPED_BASE_KEYS`, so the
+  named-field path in `collectPersonalData()` never sees it — which is why one
+  report said it was absent. But `personal-data.js` then sweeps *every*
+  remaining `faves.` key into `data.other` verbatim, precisely so that
+  *"everything you put in"* stays true without that file being updated in
+  lockstep with each new store. The sweep picks the ticks up. **Both halves of
+  the contradictory report were true; they described different code paths.**
+
+  So the fix is not "remove it from a list" — it is to add the checklist to the
+  module's **`EXCLUDED`** set, the same mechanism that already keeps location
+  out and, importantly, *declares* the exclusion to the user rather than
+  silently dropping it. Note the comment guarding that set: *"an exclusion that
+  only holds while nobody moves a key is not an exclusion"* — `EXCLUDED` is
+  seeded into `known` before the sweep for exactly this reason, so the fix must
+  go there and not into an ad-hoc skip.
+
+  ⏳ **Deliberately not built at session close**: `personal-data.js` was being
+  actively changed by the sync session the same day, and the export path is the
+  wrong place to make a hurried, unguarded edit. Needs a unit test asserting a
+  tick never appears in `collectPersonalData()`'s output, proved by breaking it.
+
+  ✅ **BUILT 2026-08-16 (wt: faves-cook) — and the analysis above was wrong a
+  THIRD time, in both directions. Recorded as ADR 0074 (lands with the cook-36 merge).**
+  - 🔎 **"Never restored by import" is false.** `parsePersonalData` keeps the
+    scoped key in `other` — watched directly, `['faves.p.default.checklist.v1',
+    …]` — and `applyPersonalData` writes every `other` entry back. Ticks *were*
+    restored: under the **exporting** device's profile id, which the import may
+    have re-minted, with a twelve-hour expiry that voids them by the next day.
+    The mechanism is *restored uselessly, or onto the wrong person*, not
+    *silently dropped*. The owner's ruling lands either way.
+  - 🔎 **They were also leaving the phone.** `sync.js` calls the same collector
+    and `sync-merge.js` never reads `other`, so ticks were encrypted and shipped
+    between devices in order to be discarded at the far end.
+  - 🛑 **And the fix this item specified would have done nothing.** "Add the
+    checklist to `EXCLUDED`" is right in spirit and inert in fact: `EXCLUDED` is
+    matched with `key in EXCLUDED`, while `profileScopedStorage()` makes the real
+    key `faves.p.<id>.checklist.v1`. The base key matches no stored key, so the
+    exclusion would have excluded **nothing at all while reading as complete**.
+    Matching is now a suffix test, which also catches keys orphaned from the
+    registry — the case a registry-driven loop misses, and the one most likely
+    to hold a stranger's ticks.
+  - Also new: `spare` separates *excluded from a backup* from *exempt from a
+    replace wipe*. The origin is both; a tick is only the first, because making a
+    device match a file cannot mean keeping the last occupant's half-cooked
+    recipe.
+  - 🔑 **What actually caught all three: writing the test before the fix and
+    watching it fail.** Four new tests failed against the old code; three failed
+    again under a deliberate revert to the flat lookup, which is what proves the
+    matcher rather than the table entry is load-bearing. **A fix nobody has seen
+    fail first is a fix nobody has evidence for** — and note this item had
+    already announced itself as *"wrong twice"* and was still wrong.

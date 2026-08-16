@@ -2289,9 +2289,19 @@ problem. Sequence the content with the build or the feature ships blank.
       test cannot have. That is the argument for the guard existing, made by
       the guard itself within an hour of being written.
 - [~] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
-  **The checklist and read-aloud bullets CLAIMED 2026-08-16 11:22 UTC
-  (wt: faves-cook-checklist)**; the shopping list, personal notes and
-  substitutions bullets are open. Files: `cook.js`, `cook-ui.js`,
+  ✅ **The checklist and read-aloud bullets are SHIPPED** (claim released
+  2026-08-17: `wt: faves-cook-checklist` no longer exists and both bullets are
+  in the tree with tests). **Checklist** — `site/js/checklist.js` +
+  `checklist-ui.js`, 17 unit tests in `tests/checklist.test.js`, and
+  `tools/recipe_check.mjs` asserts in a real browser that every line is
+  tickable and that the ingredient and method tick columns share a left edge
+  (37m). **Read aloud** — `createSpeaker()` in `cook.js` with `synth`/
+  `Utterance` injected, wired to a real "Read aloud" button in `cook-ui.js`,
+  omitted entirely where the browser has no `speechSynthesis`, stopped on every
+  exit path, and never speaking unprompted; covered by `tests/cook.test.js`
+  including the unsupported-browser and user-initiated cases.
+  **Still open and unclaimed:** the shopping list, personal notes and
+  substitutions bullets. Files: `cook.js`, `cook-ui.js`,
   `tools/cook_check.mjs`, `tests/cook*.test.js`.
   ordered by how well they fit a zero-dependency offline app. ✅ **Ingredient-
   first search is delivered** and was struck from the list below on 2026-08-16
@@ -4635,10 +4645,20 @@ actually reads a field before acting on a record's licence to drop it. Same
 family as *"an ADR is a design, not evidence"*. (`currency` likewise stays —
 owner ruling above.)
 
-🎯 **Recommend 1** — **CLAIMED 2026-08-16 11:22 UTC (wt: faves-kind-capabilities)**,
-together with the `area: "Home"` question above. Files: new `site/js/kinds.js`,
-plus `app.js`, `menu.js`, `filters.js`, `ranking.js`, `route.js`, `search.js`,
-`price.js`, `picker.js`, `site/data/restaurants/cook-at-home.json`.
+🎯 **Recommend 1** — ✅ **DELIVERED** (claim released 2026-08-17: `wt:
+faves-kind-capabilities` no longer exists and the refactor is on `main`).
+Verified at code level, not by the file existing: `site/js/kinds.js` exports the
+capability API (`kindOf`, `labelsOf`, `kindIds`, `isRecipeKind`) and is imported
+by **all seven** surviving modules named below — `app.js`, `menu.js`,
+`filters.js`, `ranking.js`, `search.js`, `price.js`, `picker.js`. `route.js` is
+absent because 37f removed "Along a route" whole, so the eighth was deleted
+rather than skipped. `site/data/restaurants/cook-at-home.json` carries
+`kind: "recipes"`, and `tests/kinds.test.js` covers it.
+🔑 **The measure that actually proves it: `isRecipes` is gone.** The item existed
+because ~20 scattered `isRecipes` branches were the ADR's relaxation expressed as
+conditionals. There is now **not one** in executable code — the single remaining
+occurrence anywhere under `site/js/` is a comment in `menu.js` explaining that
+the boolean was a second copy of a fact the record already stated.
 And note it does not contradict [ADR 0003] — it *implements*
 it. The ADR said venue-only fields relax for recipes; twenty `isRecipes`
 branches are that relaxation expressed as scattered conditionals instead of as a
@@ -4929,63 +4949,11 @@ to the owner at close and answered:
   renders it as if it were the total. `data/estimates/` already holds a full
   estimated total for each. `[S][ux]`, unblocked — and it lands with the
   serves/yield render above, since both change the same recipe meta line.
-- [~] 🚩 **Ticks must leave the backup export** `[S][js]` — *"if it isn't
-  restored, it shouldn't be exported."* **CLAIMED 2026-08-16 13:59 UTC
-  (wt: faves-cook)**. **Ruled, not yet built**, and the
-  mechanism matters because the first analysis of it was wrong twice:
-
-  🔎 **A tick reaches the backup through the CATCH-ALL, not the key list.**
-  `faves.checklist.v1` is deliberately **not** in `SCOPED_BASE_KEYS`, so the
-  named-field path in `collectPersonalData()` never sees it — which is why one
-  report said it was absent. But `personal-data.js` then sweeps *every*
-  remaining `faves.` key into `data.other` verbatim, precisely so that
-  *"everything you put in"* stays true without that file being updated in
-  lockstep with each new store. The sweep picks the ticks up. **Both halves of
-  the contradictory report were true; they described different code paths.**
-
-  So the fix is not "remove it from a list" — it is to add the checklist to the
-  module's **`EXCLUDED`** set, the same mechanism that already keeps location
-  out and, importantly, *declares* the exclusion to the user rather than
-  silently dropping it. Note the comment guarding that set: *"an exclusion that
-  only holds while nobody moves a key is not an exclusion"* — `EXCLUDED` is
-  seeded into `known` before the sweep for exactly this reason, so the fix must
-  go there and not into an ad-hoc skip.
-
-  ⏳ **Deliberately not built at session close**: `personal-data.js` was being
-  actively changed by the sync session the same day, and the export path is the
-  wrong place to make a hurried, unguarded edit. Needs a unit test asserting a
-  tick never appears in `collectPersonalData()`'s output, proved by breaking it.
-
-  ✅ **BUILT 2026-08-16 (wt: faves-cook) — and the analysis above was wrong a
-  THIRD time, in both directions. Recorded as ADR 0074 (lands with the cook-36 merge).**
-  - 🔎 **"Never restored by import" is false.** `parsePersonalData` keeps the
-    scoped key in `other` — watched directly, `['faves.p.default.checklist.v1',
-    …]` — and `applyPersonalData` writes every `other` entry back. Ticks *were*
-    restored: under the **exporting** device's profile id, which the import may
-    have re-minted, with a twelve-hour expiry that voids them by the next day.
-    The mechanism is *restored uselessly, or onto the wrong person*, not
-    *silently dropped*. The owner's ruling lands either way.
-  - 🔎 **They were also leaving the phone.** `sync.js` calls the same collector
-    and `sync-merge.js` never reads `other`, so ticks were encrypted and shipped
-    between devices in order to be discarded at the far end.
-  - 🛑 **And the fix this item specified would have done nothing.** "Add the
-    checklist to `EXCLUDED`" is right in spirit and inert in fact: `EXCLUDED` is
-    matched with `key in EXCLUDED`, while `profileScopedStorage()` makes the real
-    key `faves.p.<id>.checklist.v1`. The base key matches no stored key, so the
-    exclusion would have excluded **nothing at all while reading as complete**.
-    Matching is now a suffix test, which also catches keys orphaned from the
-    registry — the case a registry-driven loop misses, and the one most likely
-    to hold a stranger's ticks.
-  - Also new: `spare` separates *excluded from a backup* from *exempt from a
-    replace wipe*. The origin is both; a tick is only the first, because making a
-    device match a file cannot mean keeping the last occupant's half-cooked
-    recipe.
-  - 🔑 **What actually caught all three: writing the test before the fix and
-    watching it fail.** Four new tests failed against the old code; three failed
-    again under a deliberate revert to the flat lookup, which is what proves the
-    matcher rather than the table entry is load-bearing. **A fix nobody has seen
-    fail first is a fix nobody has evidence for** — and note this item had
-    already announced itself as *"wrong twice"* and was still wrong.
+> ✅ **Shipped 2026-08-16 — 36g — ticks must leave the backup export**, on the
+> owner's ruling *"if it isn't restored, it shouldn't be exported."* Claim
+> released 2026-08-17 (`wt: faves-cook` gone) and the item's self-contradicting
+> header — "Ruled, not yet built" above its own "✅ BUILT" — corrected with it.
+> ADR 0074. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 
 ### 36e — one place to look, not two `[M][ux]`
@@ -5046,8 +5014,12 @@ symptom of it.
 Five defects and asks, given live during the 2026-08-16 session while looking at
 `recipe.html?id=cook-at-home&dish=chocolate-self-saucing-pudding` on a wide
 screen and in cook mode. All five are **presentation**, not model: the timer,
-the checklist and the recipe data are all sound underneath. **CLAIMED
-2026-08-16 12:30 UTC (wt: faves-tidy)**, all five.
+the checklist and the recipe data are all sound underneath. ✅ **All five are
+SHIPPED** — 37a, 37b and 37c/37d/37e each carry their own ✅ line below (claim
+released 2026-08-17: `wt: faves-tidy` no longer exists).
+⚠️ **Later items in this theme are a different matter and are NOT covered by
+that release** — 37k is live-claimed by `wt: faves-cook2`, and 37n is open.
+The released claim only ever covered the owner's original five.
 
 > ✅ **Shipped 2026-08-16** — 37a — the Clear ticks button goes. Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
