@@ -3,7 +3,7 @@
 **Status:** Accepted. Records a schema shape that is deliberately **not built**.
 Nothing in `site/data/` changes on this record. Supersedes nothing.
 
-**Date:** 2026-08-17
+**Date:** 2026-08-16
 
 ## Context
 
@@ -35,11 +35,23 @@ Theme 30 sequences the whole theme behind **30a (`menus[]`)** on the grounds tha
 30a because nothing exercises it. The first clause is true of the *containers*.
 It is **not** true of the pricing half, and the corpus says so.
 
-Measured 2026-08-17 across all 48 records in `site/data/restaurants/`: **152 dish
+Measured 2026-08-16 across the 55 records in `site/data/restaurants/`: **152 dish
 rows in 13 venues carry a price inside a `desc` string** — a price with nowhere
-structured to live. Theme 28 reported 81 rows in 5 venues and read them as
-"overwhelmingly a *drinks* problem". Both halves of that read are too narrow.
-Classified by what the second price actually varies with:
+structured to live.
+
+The directly comparable figure first, because it is the one that moves.
+Theme 28 reported **81 rows in 5 venues** for the size dimension and read it as
+"overwhelmingly a *drinks* problem". Counting the same thing — a row whose desc
+prices a different size or quantity of the same dish — gives **122 rows in 10
+venues**. The "drinks" half of the read is right (wine, beer pours and coffee
+sizes dominate, and 106 of the 122 sit in four pub/bar records). The *extent* is
+not: the corpus has moved from 48 records to 55 since that count, and the
+dimension reaches half again as many rows and twice as many venues.
+
+Classified by what the second price actually varies with. **The axes overlap and
+do not sum to 152** — a row may price both a measure and a size ("Larger pour
+$28.00"), and 42 rows match no axis pattern at all, which is how the third row
+of this table was found:
 
 | Axis | Rows | Note |
 |---|---|---|
@@ -79,7 +91,7 @@ surveyed lands on the same three, and each is a decision our tree cannot make:
 
 - **Flat entity pools joined by id, not nested containment.** A dish is an entity
   in the venue's catalogue; a menu is an *ordered list of references*. Deliveroo
-  tells partners outright to avoid duplicating items across mealtimes. ADR 0051's
+  tells partners outright to avoid duplicating items across mealtimes. [ADR 0051](0051-a-dish-has-an-id-and-its-name-is-not-it.md)'s
   `dishId` is exactly the primitive that makes this possible, and it already
   landed.
 - **Price is a resolution over context, not a scalar on a dish.** Toast's
@@ -110,10 +122,27 @@ allow-list does not scale to a 400-store chain). Non-dish charges are
 `coperto`, so venues charge `pane` instead. Full JSON in ROADMAP Theme 30.
 
 **4. The admission test, which is the operative half of this record.** The
+🔑 **And the test has already been run once, against this record, and one of the
+four passed.** Written first as *"`channel` waits for a venue with two channel
+prices"* — then found, the same day, by re-testing an unrelated stale premise:
+`pizza-pomodoro` sells `Margherita - Large` at **$29.00** and `Large Margherita
+(Online Deal)` at **$17.00**, desc *"Online ordering special price."* A 41%
+spread on identical ingredients, in one section of one file, distinguished only
+by a parenthetical in the dish **name**. `pizza-hut` carries the same shape in
+five `Meal Deals` rows named *"…Delivered"*. So **`channel`'s admission test is
+MET and the others are not** — which is exactly the discrimination Decision 4
+exists to make, and it separated the four on its first use rather than on some
+future session's. Note the encoding: the channel is in the *name*, which is the
+pattern [ADR 0057](0057-a-section-heading-is-a-name-not-a-sentence.md) spent a
+whole theme removing from section headings. Note also that this makes it a
+`dishId` question — `large-margherita-online-deal` and `margherita-large` are two
+ids for one dish in two channels.
+
+The general form. The
 candidate shape may not be built until a **real venue in the corpus exercises the
 container being built**, and the session that builds it must re-derive the shape
 against that venue rather than transcribe this ADR. Concretely: `menus[]` waits
-for a venue with two menus. `channel` waits for a venue with two channel prices.
+for a venue with two menus. `channel` **no longer waits — see above.**
 `charges[]` waits for a non-NZ venue. Per-branch overrides wait for a chain with
 a genuinely per-branch menu. **A shape recorded before its first instance is a
 hypothesis, and this ADR is the hypothesis written down — not its confirmation.**
@@ -162,7 +191,7 @@ survives independently. The pricing work moves to Theme 28b's evidence.
 **Themes 14b and 28b acquire a shared dependency they did not have.** Neither can
 be sized honestly until one classifier separates the 152 rows, because their
 published counts were measured over an overlapping set. Building two pattern
-matchers is how the corpus acquired its allergen inconsistency (ADR 0024's
+matchers is how the corpus acquired its allergen inconsistency ([ADR 0024](0024-derived-allergen-tags.md)'s
 lesson) and it is the same mistake with prices.
 
 **A new roadmap item exists that neither theme carried:** the dietary-substitution
@@ -175,7 +204,8 @@ section headings as prose. Decision 1's third convergence — availability as a
 priority-ordered rule set — is the shape 28c should be built into, so that the
 venue-level and menu-level machinery are one thing rather than two.
 
-**Nothing ships.** `site/data/` is unchanged, no payload grows, and ADR 0047 is
+**Nothing ships.** `site/data/` is unchanged, no payload grows, and
+[ADR 0047](0047-the-app-ships-only-what-it-renders.md) is
 untouched — which is the point of recording a shape rather than building one.
 
 ## What this record does not establish
