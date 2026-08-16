@@ -6,6 +6,7 @@ import { resolveRecord, todayIn } from "./temporal.js";
 import { venueHemisphere, venueTimezone } from "./place.js";
 import { canonicalVenueId } from "./renames.js";
 import { loadFx } from "./fx.js";
+import { findDish, dishId } from "./dish-id.js";
 
 const INDEX_URL = "data/index.json";
 const restaurantUrl = (id) => `data/restaurants/${id}.json`;
@@ -89,4 +90,171 @@ export async function loadRestaurant(id) {
     loadFx(fetchJson),
   ]);
   return load(raw);
+}
+
+// ---------------------------------------------------------------------------
+// Reference integrity (ADR 0020) — the only truthful way to say "removed".
+// ---------------------------------------------------------------------------
+//
+// A stored heart or rating names a venue and a dish that the data on this
+// device may not contain. A client CANNOT tell "the shop removed it" from "my
+// copy is stale" — both are just "id not in my data" — so the honesty floor
+// forbids saying "removed" from local knowledge. The only truthful resolution
+// is a fetch that PROVABLY reached the network.
+//
+// WHY THIS NEEDS NO NEW SERVICE-WORKER MESSAGE. ADR 0020 listed a "forced
+// refresh / cache-bust data path (service-worker cooperation)" as a
+// consequence still to be built. It is already here, in two halves that landed
+// for other reasons:
+//
+//   • sw.js serves everything under `/data/` NETWORK-FIRST, and with
+//     `cache: "no-cache"`, so while online a plain fetch is already the live
+//     file rather than the worker's copy or the browser's four-hour one.
+//   • The gap that leaves is invisibility, not staleness: the worker's OFFLINE
+//     fallback (`cache.match(req)`) is indistinguishable from a network hit up
+//     here, and reading "absent" out of a cached answer is precisely the lie.
+//
+// A unique query per check closes that gap, because `cache.match` honours the
+// query string (only the shell route passes `ignoreSearch`). The busted URL is
+// in no cache, so the worker's fallback MISSES and the fetch rejects. Hence:
+// a resolved response PROVES the network answered, which is the whole thing
+// the ADR wanted the worker's cooperation for.
+//
+// The cost, stated rather than hidden: the worker caches each 200 it sees, so
+// a recheck leaves one entry per URL in the data cache that will never be
+// served again (cleared on the next DATA_VERSION bump). Skipping `cache.put`
+// for a URL carrying `_fresh` is a one-line sw.js change and the permanent fix.
+//
+// Deliberately NOT `forceRefresh()` (cache-refresh.js). That clears the shell
+// and data caches, unregisters the worker and reloads the page: it re-downloads
+// the entire site to answer "is one dish still there?", it destroys the open
+// Favourites panel on the way, and — the disqualifying part — a page reload
+// cannot RETURN an answer to the code that asked. The two live side by side:
+// nuclear reset in Settings, targeted question here.
+
+const FRESH_PARAM = "_fresh";
+
+const bust = (url, token) =>
+  `${url}${url.includes("?") ? "&" : "?"}${FRESH_PARAM}=${encodeURIComponent(token)}`;
+
+const freshToken = () =>
+  `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+
+/**
+ * Every sentence the app is allowed to say about a stored reference, kept in
+ * one place next to the check that earns each one — so the wording and the
+ * evidence behind it cannot drift apart.
+ *
+ * The rule the strings encode: until a live fetch has answered, BOTH
+ * possibilities stay open. `removedVenue`/`removedDish` are the only ones that
+ * name a deletion, and nothing may show them without a `"absent"` result.
+ */
+export const REFERENCE_COPY = {
+  // Local knowledge only. Never picks one of the two possibilities.
+  unresolvedLabel: "Not on your current list",
+  unresolvedWhy: "This may have been removed, or your list may be out of date.",
+  checking: "Checking…",
+  // We asked and could not get an answer. Say only that, and say it is unknown.
+  offline: "Can’t check while you’re offline — this may still be there.",
+  unreachable: "Couldn’t reach the site just now, so this is still unchecked.",
+  // A live fetch came back WITH it: it was staleness all along.
+  restored: "Still there — your list was just out of date.",
+  // A live fetch came back WITHOUT it. Only now may the word be used.
+  removedVenue: "No longer listed",
+  removedDish: "No longer on the menu",
+  removedWhy: "Checked just now: this is no longer in the menu data.",
+  // The menu screen's honest not-found screen (invariant 4).
+  notFoundTitle: "We couldn’t open this menu",
+};
+
+/** The state word for a reference, given what a recheck returned. */
+export const referenceCopyFor = (entry, state) => {
+  if (state === "absent")
+    return entry?.type === "venue" ? REFERENCE_COPY.removedVenue : REFERENCE_COPY.removedDish;
+  if (state === "checking") return REFERENCE_COPY.checking;
+  return REFERENCE_COPY.unresolvedLabel;
+};
+
+/** The explaining sentence beneath it. */
+export const referenceWhyFor = (state) =>
+  state === "absent"
+    ? REFERENCE_COPY.removedWhy
+    : state === "offline"
+      ? REFERENCE_COPY.offline
+      : state === "unreachable"
+        ? REFERENCE_COPY.unreachable
+        : REFERENCE_COPY.unresolvedWhy;
+
+/**
+ * Ask the NETWORK whether the things these stored entries name are still
+ * published. One index fetch plus one fetch per distinct venue, however many
+ * entries point at it.
+ *
+ * @param {Array<{type: string, venueId: string, name?: string, dishId?: string}>} entries
+ * @returns {Promise<Array<{entry: object, state: "present"|"absent"|"offline"|"unreachable"}>>}
+ *   in the order given. Only `"absent"` licenses the word "removed"; the other
+ *   three all mean "still unknown", and the UI must say so.
+ */
+export async function recheckReferences(entries, opts = {}) {
+  const {
+    fetchImpl = (...args) => globalThis.fetch(...args),
+    // `navigator.onLine` is trustworthy only in the negative — the same reading
+    // cache-refresh.js takes, and the reason a browser that doesn't report it
+    // is treated as online rather than blocked.
+    isOnline = () => globalThis.navigator?.onLine !== false,
+    token = freshToken(),
+  } = opts;
+
+  const list = [...(entries || [])];
+  if (!list.length) return [];
+  if (!isOnline()) return list.map((entry) => ({ entry, state: "offline" }));
+
+  // `{ok:false}` is "we did not get an answer", which is never evidence of
+  // absence — a 5xx, a dropped connection and the service worker's cache
+  // MISSING our busted URL all land here, and all three mean "still unknown".
+  const getFresh = async (url) => {
+    let res;
+    try {
+      res = await fetchImpl(bust(url, token), { cache: "reload" });
+    } catch {
+      return { ok: false };
+    }
+    if (res.status === 404) return { ok: true, missing: true };
+    if (!res.ok) return { ok: false };
+    try {
+      return { ok: true, body: await res.json() };
+    } catch {
+      return { ok: false };
+    }
+  };
+
+  const index = await getFresh(INDEX_URL);
+  if (!index.ok || index.missing || !Array.isArray(index.body)) {
+    return list.map((entry) => ({ entry, state: "unreachable" }));
+  }
+  const published = new Set(index.body);
+
+  const wanted = new Set();
+  for (const e of list) {
+    const id = canonicalVenueId(e.venueId);
+    if (e.type !== "venue" && published.has(id)) wanted.add(id);
+  }
+  const records = new Map();
+  await Promise.all(
+    [...wanted].map(async (id) => records.set(id, await getFresh(restaurantUrl(id))))
+  );
+
+  return list.map((entry) => {
+    const id = canonicalVenueId(entry.venueId);
+    if (!published.has(id)) return { entry, state: "absent" };
+    if (entry.type === "venue") return { entry, state: "present" };
+    const rec = records.get(id);
+    if (!rec) return { entry, state: "unreachable" };
+    if (rec.missing) return { entry, state: "absent" };
+    if (!rec.ok) return { entry, state: "unreachable" };
+    // The RAW record, deliberately — NOT `load()`. Time resolution drops a dish
+    // that is out of season today, and telling someone their winter special was
+    // removed because it is January would be the same lie in a smaller costume.
+    return { entry, state: findDish(rec.body, dishId(entry)) ? "present" : "absent" };
+  });
 }

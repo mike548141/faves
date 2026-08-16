@@ -213,6 +213,26 @@ def _(repo):
     write(repo, "site/js/app.js", "// v2\n")
 
 
+@case("a backwards move with NO payload change must still fail", True)
+def _(repo):
+    # The hole in the fix for the case above, found by a peer session hours
+    # after it landed. sw.js is excluded from the "did the payload change?"
+    # test — correctly, it is the version carrier and not an asset — so a
+    # commit touching only sw.js short-circuits at "nothing in scope" and the
+    # ordering test never runs. That is precisely what "just fix the version"
+    # looks like: a rebase conflict resolved in sw.js alone. The damage is
+    # identical, and there is nothing else in the diff to draw the eye.
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.40", data="2026-08-16.20"))
+
+
+@case("a version-only commit going FORWARDS is still not in scope", False)
+def _(repo):
+    # The guard above must not turn every version-only commit into a failure —
+    # bumping ahead of a rebase, with the payload arriving in the next commit,
+    # is legitimate and common.
+    write(repo, "site/sw.js", SW_TEMPLATE.format(shell="2026-08-16.60", data="2026-08-16.20"))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("-v", "--verbose", action="store_true", help="show each case's output")

@@ -730,6 +730,118 @@ body.faves-view .filter-bar {
   border-left: 2px solid var(--line);
 }
 
+/* Reference integrity (ADR 0020): a saved heart whose venue or dish isn't in
+   the data this device holds. The row is MARKED, never dropped.
+
+   "Dimmed" here is a DASHED BORDER and a muted NAME, not an opacity fade. An
+   opacity on the row would drag the note, the explanation and both buttons
+   below AA along with it — and the explanation is the one thing on the row that
+   has to be readable. --ink-soft is the site's existing secondary-text colour,
+   so the name dims to a tone already carrying body copy elsewhere.
+
+   Colour by state, and never colour alone: --info while the question is open
+   (green already means "open now" on this site, so it can't mean "fine" here),
+   --warn once a live fetch has answered. Both states also say which they are in
+   words, on the row. */
+.fav-unresolved {
+  flex-wrap: wrap;
+}
+.fav-unresolved .search-link {
+  border-style: dashed;
+  border-color: var(--info);
+  background: var(--surface-2);
+}
+.fav-unresolved .search-row-name {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.fav-unresolved-note {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--info);
+}
+.fav-unresolved[data-ref-state="absent"] .search-link {
+  border-color: var(--warn);
+}
+.fav-unresolved[data-ref-state="absent"] .fav-unresolved-note {
+  color: var(--warn);
+}
+
+/* The actions take a full row of their own beneath the link: two 44px targets
+   side by side fit 390px comfortably, where a third control on the link's own
+   line would not (the heart is already 44px of it). */
+.fav-unresolved-actions {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-1) 0 var(--space-2);
+}
+.fav-unresolved-why {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--step-sub);
+  color: var(--ink);
+}
+.fav-action {
+  flex: 1 1 8rem;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.fav-action:disabled {
+  cursor: default;
+  color: var(--ink-soft);
+}
+.fav-recheck {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+@media (hover: hover) {
+  .fav-action:hover:not(:disabled) {
+    background: var(--surface-2);
+  }
+}
+
+/* The menu screen's honest not-found screen (ADR 0020 invariant 4). Built from
+   inline-level nodes so it is valid inside the `<p id="menu-error">` it
+   replaces, and blocked out here. */
+.notfound-title,
+.notfound-why {
+  display: block;
+}
+.notfound-title {
+  font-size: var(--step-name);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: var(--space-2);
+}
+.notfound-why {
+  color: var(--ink);
+  margin-bottom: var(--space-3);
+}
+[data-ref-state="absent"] .notfound-title {
+  color: var(--warn);
+}
+.notfound-actions {
+  display: flex;
+  max-width: 26rem;
+  margin-inline: auto;
+}
+/* An <a> styled as a button doesn't centre its own text the way a <button> does. */
+.fav-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: 1fr;

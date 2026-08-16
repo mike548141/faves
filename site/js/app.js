@@ -5,7 +5,7 @@
 // Fail-soft: if anything here throws, the static list in index.html
 // stays on screen untouched.
 
-import { loadRestaurants } from "./data.js";
+import { loadRestaurants, recheckReferences, REFERENCE_COPY } from "./data.js";
 import {
   deriveFacets,
   applyFilters,
@@ -27,8 +27,10 @@ import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
 import { rotateHints, defaultHints } from "./search-hints.js";
 import { initOrderUI } from "./cart-ui.js";
-import { favourites, favHref, groupForShare } from "./favourites.js";
-import { heartButton } from "./favourites-ui.js";
+import { favourites, favHref, favKey, groupForShare, unresolvedReason } from "./favourites.js";
+import { heartButton, markUnresolved } from "./favourites-ui.js";
+import { ratings } from "./ratings.js";
+import { toast } from "./toast.js";
 import { encodeShortlist, buildShareUrl } from "./share-codec.js";
 import { openShareDialog } from "./share-ui.js";
 import { groupSection, resultRow } from "./results-view.js";
@@ -561,7 +563,7 @@ function init(restaurants) {
   wireOpenNow(state, render);
   wireCheapEats(state, render);
   wireSearch(restaurants);
-  wireFavourites();
+  wireFavourites(restaurants);
   wireHomeButton();
   initSettingsUI();
   wireProfiles();
@@ -756,7 +758,14 @@ function wireHomeButton() {
 // gathers the venues and dishes hearted across the app (from localStorage,
 // so it works offline and needs no data reload). Rows link out and carry
 // their own heart to un-favourite in place. Empty until you save something.
-function wireFavourites() {
+//
+// REFERENCE INTEGRITY (ADR 0020). A heart saved months ago may name a venue or
+// a dish the loaded data no longer has. Such a row is MARKED and kept — never
+// dropped, because a silent disappearance is data loss the user is never told
+// about — and its copy holds both possibilities open ("removed, or your list is
+// out of date") until a fetch that provably reached the network settles it.
+// This device cannot tell the two apart, so it does not get to guess.
+function wireFavourites(restaurants) {
   const btn = document.getElementById("favourites-toggle");
   const panel = document.getElementById("favourites-panel");
   const summary = document.getElementById("favourites-summary");
@@ -764,6 +773,86 @@ function wireFavourites() {
   const shareBtn = document.getElementById("favourites-share");
   if (!btn || !panel) return;
   btn.hidden = false;
+  // Focusable only programmatically: somewhere for focus to land when the row
+  // holding it is removed from the DOM (otherwise it falls to <body>).
+  if (summary) summary.tabIndex = -1;
+
+  const byId = new Map((restaurants || []).map((r) => [r.id, r]));
+  // What the NETWORK said about a reference, keyed by favKey. It outranks the
+  // local reading in both directions: "present" un-marks a row this device's
+  // data can't match, and "absent" is the only thing that licenses the word
+  // "removed" anywhere on this screen.
+  const checked = new Map();
+
+  /** The mark a row should wear, or null for a row that's fine. */
+  function rowState(entry) {
+    const net = checked.get(favKey(entry));
+    if (net === "present") return null;
+    if (!unresolvedReason(entry, byId)) return null;
+    return net || "unresolved";
+  }
+
+  /** Put focus back after a re-render swapped the buttons out from under it. */
+  function refocus(key) {
+    const row = groups.querySelector(`[data-fav-key="${CSS.escape(key)}"]`);
+    const btnEl = row?.querySelector(".fav-recheck") || row?.querySelector(".fav-drop");
+    (btnEl || summary)?.focus?.();
+  }
+
+  // Ask the network about these entries. Anything but "present" leaves the row
+  // marked; only "absent" changes what the row is allowed to say.
+  async function recheck(entries) {
+    const keys = entries.map(favKey);
+    for (const k of keys) checked.set(k, "checking");
+    render();
+    const results = await recheckReferences(entries);
+    let restored = 0;
+    for (const { entry, state } of results) {
+      checked.set(favKey(entry), state);
+      if (state === "present") restored++;
+    }
+    render();
+    // "Reappears ⇒ it was stale ⇒ fix silently" — the mark just goes. A word of
+    // confirmation still goes out, because a button press with no feedback at
+    // all reads as broken; it demands nothing of the reader.
+    if (restored) toast(REFERENCE_COPY.restored);
+    refocus(keys[0]);
+  }
+
+  // Forget one unresolved entry on this device. A rating is stored under the
+  // SAME key, so it goes too — the button's label and title say so before the
+  // tap, and the toast says what happened after it. Leaving the rating behind
+  // would strand a mark with nothing on any screen that could reach it again.
+  function forget(entry, name) {
+    const rated = ratings.has(entry);
+    if (rated) ratings.clear(entry);
+    checked.delete(favKey(entry));
+    favourites.removeKey(favKey(entry)); // fires the subscriber → re-render
+    toast(rated ? `Removed ${name} and your rating.` : `Removed ${name}.`);
+    summary?.focus?.();
+  }
+
+  /**
+   * Tag a row with its key and, when it doesn't resolve, mark it.
+   *
+   * `refreshWith` widens what Refresh asks about. A venue heading checks its
+   * WHOLE group: the answer to "is this place still published" settles every
+   * dish under it too, and a heading reading "still there" above dishes still
+   * marked "not on your current list" is one screen telling two stories.
+   */
+  function decorate(li, entry, name, { removable = true, refreshWith = null } = {}) {
+    li.dataset.favKey = favKey(entry);
+    const state = rowState(entry);
+    if (!state) return li;
+    return markUnresolved(li, {
+      entry,
+      state,
+      name,
+      alsoRated: ratings.has(entry),
+      onRefresh: () => recheck(refreshWith || [entry]),
+      onRemove: removable ? () => forget(entry, name) : null,
+    });
+  }
 
   // Share the current shortlist (Theme 1b): the same dialog the order sheet
   // uses, encoding a `shortlist` payload instead of an order. Hidden when
@@ -803,14 +892,25 @@ function wireFavourites() {
       ]),
       heartButton(venueEntry, venueName),
     ]);
+    // A heading shown only because a DISH of the place is hearted has no heart
+    // of its own, so it can be marked but not removed (its dish rows each carry
+    // their own Remove). `g.venue` is what tells the two apart.
+    decorate(head, venueEntry, venueName, {
+      removable: !!g.venue,
+      refreshWith: [venueEntry, ...g.dishes],
+    });
     const dishRows = g.dishes.map((e) =>
-      resultRow({
-        name: e.name,
-        // The venue is the parent now, so don't repeat its name as the sub.
-        sub: e.sub && e.sub !== venueName ? e.sub : "",
-        href: favHref(e),
-        trailing: heartButton(e, e.name),
-      })
+      decorate(
+        resultRow({
+          name: e.name,
+          // The venue is the parent now, so don't repeat its name as the sub.
+          sub: e.sub && e.sub !== venueName ? e.sub : "",
+          href: favHref(e),
+          trailing: heartButton(e, e.name),
+        }),
+        e,
+        e.name
+      )
     );
     return el("section", { className: "search-group fav-venue-group" }, [
       el("ul", { className: "search-list" }, [head, ...dishRows]),
@@ -853,9 +953,22 @@ function wireFavourites() {
       dishTotal += g.dishes.length;
       groups.append(favVenueGroup(id, g));
     }
+    // Count the marked rows too, so the panel's live region states the fact
+    // rather than leaving it to be noticed. The two counts are kept apart on
+    // purpose: "not on your current list" is an open question, "no longer in
+    // the menu data" is an answer a live fetch gave us.
+    let pending = 0;
+    let gone = 0;
+    for (const e of items) {
+      const s = rowState(e);
+      if (s === "absent") gone++;
+      else if (s) pending++;
+    }
     summary.textContent =
       `${order.length} place${order.length === 1 ? "" : "s"}, ` +
-      `${dishTotal} dish${dishTotal === 1 ? "" : "es"} saved.`;
+      `${dishTotal} dish${dishTotal === 1 ? "" : "es"} saved.` +
+      (pending ? ` ${pending} not on your current list.` : "") +
+      (gone ? ` ${gone} no longer in the menu data.` : "");
   }
 
   function open(on) {

@@ -12,6 +12,17 @@
 // *unverified* mark (ratings-ui.js styles it apart), the same principle as the
 // recorded personal-tags design note.
 //
+// REFERENCE INTEGRITY (ADR 0020) is inherited whole from favourites, because
+// `ratingKey` and `favKey` are byte-identical: a rating whose dish has gone is
+// the same stale-vs-removed question, resolved by the same `recheckReferences`
+// (data.js) and worded from the same copy table. The one thing this store does
+// NOT get is a screen of its own — there is no "your ratings" view, so an
+// unresolved rating is only ever reachable through the Favourites row that
+// shares its key. That is why removing such a row clears the rating with it
+// (app.js `forget`), saying so before and after: leaving it would strand a mark
+// with nothing on any screen that could reach it again. A rated dish that was
+// never hearted still has nowhere to surface — noted, not solved.
+//
 // Identity mirrors favourites (favourites.js): a venue by id, a dish by
 // venueId + dish id (ADR 0051) — so the same `{ type, venueId, name, dishId? }`
 // entry shape works for hearts and ratings alike. Stored as a flat

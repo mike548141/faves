@@ -8,6 +8,9 @@ import {
   favKey,
   favHref,
   groupForShare,
+  unresolvedReason,
+  UNRESOLVED_VENUE,
+  UNRESOLVED_DISH,
 } from "../site/js/favourites.js";
 import { encodeShortlist, decodeShare } from "../site/js/share-codec.js";
 
@@ -204,4 +207,83 @@ test("a hearted dish's id survives heart -> groupForShare -> wire -> favKey (ADR
     "d:fixture-venue cheeseburger",
     "d:fixture-venue cheeseburger-gold-card",
   ]);
+});
+
+// --- reference integrity (ADR 0020) ---------------------------------------
+//
+// A heart saved months ago may name a venue or a dish the data no longer has.
+// These cover the *local* half — deciding a row can't be matched — and, just as
+// importantly, what that decision is NOT allowed to conclude. The network half
+// (the only thing that may say "removed") is in tests/data-loader.test.js.
+
+const RECORD = {
+  id: "kk-malaysian",
+  name: "KK Malaysian",
+  menu: [
+    {
+      section: "Mains",
+      items: [
+        { name: "Mee Goreng", dishId: "mee-goreng", price: 18 },
+        { name: "Cheeseburger", dishId: "cheeseburger-gold-card", price: 21 },
+      ],
+    },
+  ],
+};
+const loaded = (...records) => new Map(records.map((r) => [r.id, r]));
+
+test("unresolvedReason: a heart the loaded data covers is not marked", () => {
+  const byId = loaded(RECORD);
+  assert.equal(unresolvedReason(venue, byId), null);
+  assert.equal(unresolvedReason(dish, byId), null);
+});
+
+test("unresolvedReason: the venue is missing entirely", () => {
+  const byId = loaded({ id: "somewhere-else", menu: [] });
+  assert.equal(unresolvedReason(venue, byId), UNRESOLVED_VENUE);
+  // …and every dish of it inherits that, rather than claiming the dish went.
+  assert.equal(unresolvedReason(dish, byId), UNRESOLVED_VENUE);
+});
+
+test("unresolvedReason: the venue is there, the dish isn't", () => {
+  const byId = loaded({ ...RECORD, menu: [{ section: "Mains", items: [] }] });
+  assert.equal(unresolvedReason(venue, byId), null); // the place is still fine
+  assert.equal(unresolvedReason(dish, byId), UNRESOLVED_DISH);
+});
+
+test("unresolvedReason resolves by dish id, never by name (ADR 0051)", () => {
+  // The venue's row is called "Cheeseburger" and so is the stored heart — but
+  // they are different rows at different prices. Matching on the name would
+  // call this resolved and re-open the collision ADR 0051 closed.
+  const heart = { type: "dish", venueId: "kk-malaysian", name: "Cheeseburger", dishId: "cheeseburger-kids" };
+  assert.equal(unresolvedReason(heart, loaded(RECORD)), UNRESOLVED_DISH);
+  // The id the venue does carry resolves.
+  assert.equal(
+    unresolvedReason({ ...heart, dishId: "cheeseburger-gold-card" }, loaded(RECORD)),
+    null
+  );
+});
+
+test("unresolvedReason follows a renamed venue id rather than dangling", () => {
+  // `sprig-and-fern` is retired in renames.js; a heart still holding the old id
+  // must find the record filed under the new one.
+  const rec = { id: "sprig-and-fern-tawa", menu: [] };
+  assert.equal(unresolvedReason({ type: "venue", venueId: "sprig-and-fern" }, loaded(rec)), null);
+});
+
+test("marking is not removal: the store still holds an unresolved heart", () => {
+  // Invariant 1, at the layer where it could go wrong. The view marks; nothing
+  // in the model drops. Re-resolving on read is the failure mode this guards.
+  const f = createFavourites(fakeStorage());
+  f.toggle(dish);
+  const byId = loaded({ id: "somewhere-else", menu: [] });
+  assert.equal(unresolvedReason(f.items()[0], byId), UNRESOLVED_VENUE);
+  assert.equal(f.count(), 1, "an unresolved favourite must survive being unresolvable");
+  assert.equal(f.items()[0].name, "Mee Goreng", "and still render from its own stored copy");
+});
+
+test("unresolvedReason answers null when it has nothing to check against", () => {
+  // Offline first paint, or a screen that never loaded the index: no data is
+  // not evidence of absence, so nothing gets marked.
+  assert.equal(unresolvedReason(dish, null), null);
+  assert.equal(unresolvedReason(null, loaded(RECORD)), null);
 });

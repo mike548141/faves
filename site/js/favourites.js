@@ -11,10 +11,46 @@
 // favourited dish always anchors to the exact row the menu screen builds.
 
 import { profileScopedStorage } from "./profiles.js";
-import { migrateEntries } from "./renames.js";
-import { dishId } from "./dish-id.js";
+import { migrateEntries, canonicalVenueId } from "./renames.js";
+import { dishId, findDish } from "./dish-id.js";
 
 const KEY = "faves.favourites.v1";
+
+/** The venue itself isn't in the data this device holds. */
+export const UNRESOLVED_VENUE = "venue";
+/** The venue is, but the dish isn't in its menu. */
+export const UNRESOLVED_DISH = "dish";
+
+/**
+ * Why a stored entry can't be matched to the data this device holds —
+ * `UNRESOLVED_VENUE`, `UNRESOLVED_DISH`, or `null` when it resolves fine.
+ * `byId` maps venue id → loaded record.
+ *
+ * TWO THINGS THIS IS NOT, both of them traps ADR 0020 names by hand:
+ *
+ *  - It is NOT re-resolution of the stored copy. The entry still renders from
+ *    its own denormalised `venueName`/`name`, which is what lets the Favourites
+ *    view work offline and a share carry its own labels. This only decides
+ *    whether to MARK the row. Re-resolving on read is what would make an
+ *    unresolved favourite silently VANISH — the exact failure being fixed.
+ *  - It is NOT a save-time check. Data changes after a heart is saved, so
+ *    validating at favourite-time catches none of the interesting cases;
+ *    resolution has to happen at render/open, which is where this is called.
+ *
+ * And note what it must never be read as: "unresolved" is not "deleted". This
+ * device cannot tell the two apart. Only `recheckReferences` (data.js) can, and
+ * only from a fetch that provably reached the network.
+ */
+export function unresolvedReason(entry, byId) {
+  if (!entry || !byId?.get) return null;
+  const rec = byId.get(entry.venueId) || byId.get(canonicalVenueId(entry.venueId));
+  if (!rec) return UNRESOLVED_VENUE;
+  if (entry.type === "venue") return null;
+  // findDish, never a name match: three rows at Sprig & Fern are called
+  // "Cheeseburger" at three prices, and matching on the name is the collision
+  // ADR 0051 exists to end.
+  return findDish(rec, dishId(entry)) ? null : UNRESOLVED_DISH;
+}
 
 /**
  * Stable identity of a favourite: venue by id, dish by venue + dish id

@@ -247,6 +247,33 @@ def main(argv=None):
                 "  finished branch, run:  check_versions.py --range origin/main..HEAD"
             )
             return 0
+        # …but a version that moved BACKWARDS is wrong whatever else is in the
+        # diff, so the ordering test is NOT gated on scope. The equality test
+        # genuinely needs a payload change to mean anything ("did you bump when
+        # you should have?"); going backwards needs no such precondition,
+        # because it is never legitimate. Missing that distinction left a hole
+        # in the very fix that closed the last one: a commit touching only
+        # sw.js — which is exactly what "just fix the version" looks like after
+        # a rebase conflict — returned 0 while sending SHELL_VERSION back to a
+        # value already deployed that day. Found by a peer session on
+        # 2026-08-16, hours after the backwards check landed. A guard written
+        # to close a hole is not thereby free of holes of its own class.
+        back = [
+            f"{n} goes BACKWARDS, {versions_in(before)[n]!r} → {versions_in(after)[n]!r}, "
+            f"in a commit that changes nothing else under site/."
+            for n in VERSION_RE
+            if went_backwards(versions_in(before)[n], versions_in(after)[n])
+        ]
+        if back:
+            print("✗ Service-worker version went backwards.\n")
+            for b in back:
+                print(f"  {b}\n")
+            print(
+                "  A cache name already deployed is already installed: the worker finds\n"
+                "  it present and READY and serves the OLD files from it. Pick a value\n"
+                "  above the one on the integration branch."
+            )
+            return 1
         print("Version lockstep not in scope: nothing under site/ changed.")
         return 0
 
