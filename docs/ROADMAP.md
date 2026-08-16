@@ -700,8 +700,15 @@ real dry-run false positive: per-rule exclusions ("rice noodles" aren't wheat,
 "oat milk" isn't dairy, "pumpkin pie spice" isn't a pie), curation outranking a
 pattern (a `gf` dish never gains `contains-gluten`), and paid add-ons not
 counting as ingredients.
-⚑ **Now the strongest queued follow-up here** — a `may-contain` tier that shows
-a reader *which* tier a tag came from. Deferred at 36 derived tags (ADR 0024);
+✅ **RULED 2026-08-16: record the tier in the DATA, do not show it yet.**
+Each derived tag carries where it came from (menu-stated vs inferred) so the
+information exists when it is needed, and every screen stays exactly as it is —
+one tier, every warning equally serious. How to show a confidence level *while
+someone decides what is safe to eat* is deferred, not answered. ⚠️ Nothing may
+render the tier without a fresh ruling: a warning that looks softer is a warning
+people act on differently.
+~~⚑ a `may-contain` tier that shows
+a reader *which* tier a tag came from.~~ Deferred at 36 derived tags (ADR 0024);
 at 291 it is more attractive, and it's the right answer if generous flagging
 ever reads as wallpaper. Still touches the vocabulary, the render and the
 avoid-matching — all safety-critical — so it needs its own session. `[M]`,
@@ -1255,7 +1262,12 @@ from the rest.
   parameter change: the grant has to carry *which* recipes, and stay
   revocable and re-scopeable after the fact. Otherwise it inherits Theme
   10 wholesale — opt-in, read-only, forward-only revocation.
-- **11d — A family shared set** `[L][constraint]` ⚑ — the hardest item here
+- **11d — A family shared set** `[L][constraint]` ✅ **RULED 2026-08-16: build
+  it, once sync exists.** Queued behind **Theme 9 v2's backend** rather than
+  decided now or dropped. It shares that dependency with **Theme 10** (a shared
+  list is live, not a snapshot), so 9 v2 gates both. ⚑ discharged as a
+  *sequencing* answer; the conflict and permission model below is still unbuilt
+  design, not a blocker. — the hardest item here
   and the one to scope last. Theme 10's model is a **one-way, read-only**
   grant; a family cookbook everyone can *add to* is **multi-writer**, which
   brings concurrent edits, conflict resolution, and "who may remove whose
