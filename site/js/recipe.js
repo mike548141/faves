@@ -114,6 +114,15 @@ function render(collection, item) {
   const metaBits = [item.serves ? `Serves ${item.serves}` : null, item.time || null].filter(Boolean);
   if (metaBits.length) parts.push(el("p", { className: "menu-sub", textContent: metaBits.join(" · ") }));
   if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
+  // Where it came from, as a field rather than buried in the prose (37e). The
+  // field ships WITH this line and never before it: site/data/ is precached to
+  // every phone, so a field no screen renders is a download nobody asked for
+  // (ADR 0047). A source credit — a cookbook, a publication — is not personal
+  // data; a family attribution in a home recipe is owner-approved (CLAUDE.md
+  // Exception 1).
+  if (item.attribution) {
+    parts.push(el("p", { className: "recipe-credit", textContent: item.attribution }));
+  }
 
   if (item.image) {
     parts.push(el("img", {

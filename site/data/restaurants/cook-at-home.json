@@ -588,7 +588,7 @@
         {
           "name": "Chocolate Self-Saucing Pudding",
           "dishId": "chocolate-self-saucing-pudding",
-          "desc": "A Clements family dessert since the early 1980s — adapted from the Edmonds cookbook. Doubles well for a crowd.",
+          "desc": "A Clements family dessert since the early 1980s. Doubles well for a crowd.",
           "serves": 6,
           "time": "~35 min",
           "ingredients": [
@@ -623,7 +623,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg"
-          ]
+          ],
+          "attribution": "Adapted from the Edmonds cookbook"
         },
         {
           "name": "Tiramisu",

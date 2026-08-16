@@ -4083,6 +4083,15 @@ body.faves-view .to-top {
 .recipe-body {
   padding-top: var(--space-3);
 }
+/* A source credit (37e). Quieter than the lede and set apart from it: it is
+   provenance, not part of the description — the reader should be able to skip
+   it without skipping anything about the food. */
+.recipe-credit {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-style: italic;
+  margin-top: var(--space-1);
+}
 .recipe-head {
   font-size: 0.72rem;
   font-weight: 700;

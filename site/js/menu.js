@@ -1167,6 +1167,13 @@ function renderDish(item, r = null, avoid = EMPTY_SET, section = null) {
 
 function renderRecipeDetail(item) {
   const body = [];
+  // The credit renders here too, not only on the recipe's own page: 37e took
+  // "adapted from the Edmonds cookbook" OUT of the description, and the
+  // description is what this row shows. One screen rendering the field would
+  // have quietly deleted the fact from the other.
+  if (item.attribution) {
+    body.push(el("p", { className: "recipe-credit", textContent: item.attribution }));
+  }
   const blocks = ingredientBlocks(item.ingredients);
   if (blocks.length) {
     body.push(el("h4", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }));

@@ -1317,6 +1317,17 @@ def check_restaurant(path):
             time = item.get("time")
             if time is not None and not isinstance(time, str):
                 err(rid, f"time for {name!r} must be a string or absent")
+            # Where the recipe came from (37e). ONE string, holding the credit as
+            # it should read — "Adapted from the Edmonds cookbook" — not a
+            # {source, relation} pair. A pair would make the app supply the
+            # framing, and the app cannot know whether a recipe was adapted,
+            # taken whole, or merely inspired by its source; guessing that on the
+            # reader's behalf is how a credit becomes wrong.
+            attribution = item.get("attribution")
+            if attribution is not None and (
+                not isinstance(attribution, str) or not attribution.strip()
+            ):
+                err(rid, f"attribution for {name!r} must be a non-empty string or absent")
 
             # Dish photo (optional, self-hosted); alt required when set.
             check_image(rid, item, f"item {name!r}")

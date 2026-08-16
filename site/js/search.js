@@ -137,7 +137,9 @@ export function buildIndex(restaurants) {
       for (const item of section.items || []) {
         // Ingredients join the haystack so "lemon" finds the pasta — mirrors
         // the menu screen's own dish search.
-        const ingredients = ingredientKeys(item.ingredients).join(" ");
+        // Attribution joins the haystack so "Edmonds" finds the pudding — the
+        // whole reason 37e made it a field instead of leaving it in prose.
+        const ingredients = [...ingredientKeys(item.ingredients), item.attribution || ""].join(" ");
         dishes.push({
           name: item.name,
           venueId: r.id,
