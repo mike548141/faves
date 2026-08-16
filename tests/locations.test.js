@@ -14,7 +14,8 @@ import {
   orderedBranches,
   isMultiLocation,
   branchAsPlace,
-  branchesToShow,
+  leadBranch,
+  branchCard,
 } from "../site/js/locations.js";
 
 const week = (o, c) =>
@@ -148,40 +149,87 @@ test("orderedBranches does not mutate the record's branches", () => {
   assert.equal(JSON.stringify(chain), snap);
 });
 
-// --- branchesToShow: cap at the 2 nearest within the proximity dial ---------
+// --- leadBranch / branchCard: which branch leads, which are one tap away ----
 const b = (label, distanceKm) => ({ label, distanceKm });
+const labels = (xs) => xs.map((x) => x.label);
+// An openness oracle built from a map of label → state, so a test says what it
+// means without constructing hours and a clock.
+const states = (m) => (x) => m[x.label] ?? "unknown";
 
-test("branchesToShow: two nearest within threshold shown, the rest tucked away", () => {
-  const branches = [b("a", 1), b("b", 3), b("c", 8), b("d", 12), b("e", 20)];
-  const { shown, rest } = branchesToShow(branches, 10);
-  assert.deepEqual(shown.map((x) => x.label), ["a", "b"]);
-  assert.deepEqual(rest.map((x) => x.label), ["c", "d", "e"]);
+test("leadBranch: the nearest OPEN branch leads, not simply the nearest", () => {
+  const branches = [b("a", 1), b("b", 3), b("c", 8)];
+  const lead = leadBranch(branches, states({ a: "closed", b: "open", c: "open" }));
+  assert.equal(lead.label, "b");
 });
 
-test("branchesToShow: 2nd beyond threshold is dropped, nearest always kept", () => {
-  const branches = [b("a", 6), b("b", 40), b("c", 55)];
-  const { shown, rest } = branchesToShow(branches, 10);
-  assert.deepEqual(shown.map((x) => x.label), ["a"]); // b is >10km, so only the nearest
-  assert.deepEqual(rest.map((x) => x.label), ["b", "c"]);
+test("leadBranch: unknown hours beat known-closed — absence of evidence is not evidence", () => {
+  // The McDonald's case: no branch carries hours, so nothing is known open.
+  const branches = [b("a", 1), b("b", 3)];
+  assert.equal(leadBranch(branches, states({ a: "closed" })).label, "b");
+  assert.equal(leadBranch(branches, states({})).label, "a");
 });
 
-test("branchesToShow: nearest kept even when it is itself beyond threshold (never empty)", () => {
-  const branches = [b("a", 25), b("b", 40)];
-  const { shown } = branchesToShow(branches, 10);
-  assert.deepEqual(shown.map((x) => x.label), ["a"]);
+test("leadBranch: every branch known closed → the nearest still leads", () => {
+  const branches = [b("a", 1), b("b", 3)];
+  assert.equal(leadBranch(branches, states({ a: "closed", b: "closed" })).label, "a");
 });
 
-test("branchesToShow: no distances (coordless / no location) → first two in data order", () => {
-  const branches = [b("a", Infinity), b("b", Infinity), b("c", Infinity), b("d", Infinity)];
-  const { shown, rest } = branchesToShow(branches, 10);
-  assert.deepEqual(shown.map((x) => x.label), ["a", "b"]);
-  assert.deepEqual(rest.map((x) => x.label), ["c", "d"]);
+test("leadBranch: no oracle at all behaves as all-unknown → nearest", () => {
+  assert.equal(leadBranch([b("a", 1), b("b", 2)]).label, "a");
 });
 
-test("branchesToShow: two or fewer branches → all shown, nothing tucked", () => {
-  const { shown, rest } = branchesToShow([b("a", 2), b("b", 3)], 10);
-  assert.deepEqual(shown.map((x) => x.label), ["a", "b"]);
+test("branchCard: one lead expanded, up to four one-tap, the rest behind step two", () => {
+  const branches = [b("a", 1), b("b", 2), b("c", 3), b("d", 4), b("e", 5), b("f", 6)];
+  const { lead, near, rest, beyondDial } = branchCard(branches, 10);
+  assert.equal(lead.label, "a");
+  assert.deepEqual(labels(near), ["b", "c", "d", "e"]);
+  assert.deepEqual(labels(rest), ["f"]);
+  assert.equal(beyondDial, 0);
+});
+
+test("branchCard: a five-branch chain needs no second step (the McDonald's shape)", () => {
+  const branches = [b("a", 1), b("b", 2), b("c", 3), b("d", 4), b("e", 5)];
+  const { near, rest } = branchCard(branches, 10);
+  assert.equal(near.length, 4);
   assert.equal(rest.length, 0);
+});
+
+test("branchCard: the lead is excluded from the rows beside it, wherever it came from", () => {
+  const branches = [b("a", 1), b("b", 2), b("c", 3)];
+  const { lead, near } = branchCard(branches, 10, states({ a: "closed", b: "closed", c: "open" }));
+  assert.equal(lead.label, "c");
+  assert.deepEqual(labels(near), ["a", "b"]); // distance order preserved, lead removed
+});
+
+test("branchCard: the dial drops branches from BOTH lists and the drop is counted", () => {
+  const branches = [b("a", 1), b("b", 2), b("c", 40), b("d", 55)];
+  const { near, rest, beyondDial } = branchCard(branches, 10);
+  assert.deepEqual(labels(near), ["b"]);
+  assert.deepEqual(labels(rest), []);
+  assert.equal(beyondDial, 2); // c and d — named in the UI, never dropped silently
+});
+
+test("branchCard: the lead survives the dial even when it is itself beyond it", () => {
+  const { lead, near, beyondDial } = branchCard([b("a", 25), b("b", 40)], 10);
+  assert.equal(lead.label, "a");
+  assert.deepEqual(labels(near), []);
+  assert.equal(beyondDial, 1);
+});
+
+test("branchCard: no distances → the dial cannot apply, so nothing is dropped", () => {
+  const branches = [b("a", Infinity), b("b", Infinity), b("c", Infinity)];
+  const { lead, near, beyondDial } = branchCard(branches, 10);
+  assert.equal(lead.label, "a");
+  assert.deepEqual(labels(near), ["b", "c"]);
+  assert.equal(beyondDial, 0);
+});
+
+test("branchCard: a two-branch venue is a lead and one row, nothing hidden", () => {
+  const { lead, near, rest, beyondDial } = branchCard([b("a", 2), b("b", 3)], 10);
+  assert.equal(lead.label, "a");
+  assert.deepEqual(labels(near), ["b"]);
+  assert.equal(rest.length, 0);
+  assert.equal(beyondDial, 0);
 });
 
 test("isMultiLocation: true only for 2+ branches", () => {

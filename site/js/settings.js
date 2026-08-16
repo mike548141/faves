@@ -6,9 +6,12 @@
 //    nearer" pull; that ranking use went inert once ordering became pure
 //    distance (see ranking.js — owner ruling 2026-07-23). Repurposed as the
 //    branch-proximity cutoff for multi-location venues: on a chain's menu
-//    page, show the 2 nearest branches within this distance (locations.js
-//    branchesToShow). The storage key keeps its old name so existing
+//    page, a branch further than this is not offered (locations.js
+//    branchCard). The storage key keeps its old name so existing
 //    viewers' saved values aren't reset by a label change.
+//    #!## The name is now a lie in both directions: it is not a favourites
+//    boost and it is not a boost. It is the branch distance limit, and that is
+//    what the UI calls it. Renaming the key needs a migration in store.js.
 //  - farKm: beyond this straight-line distance a venue is "another town" and
 //    sinks below everything reachable (and the shuffle skips it).
 //

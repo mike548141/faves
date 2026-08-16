@@ -155,6 +155,7 @@ node --test                   # JS unit tests (pure logic); no npm install neede
 node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)
 node tools/addon_check.mjs    # add-on composition in headless Chrome (ADR 0048)
+node tools/branch_check.mjs   # the branch picker in headless Chrome (ADR 0054)
 ```
 
 **The exchange rates refresh themselves weekly** — `.github/workflows/fx.yml`
@@ -197,6 +198,16 @@ the option and the allergen live, the flagged treatment follows the
 order line. Run it after touching `addons.js`, `addons-ui.js`, `cart.js`,
 `cart-ui.js` or the dish render. Its header names what a green run cannot show
 you — above all that no browser can check whether the tagging is *true*.
+
+`branch_check.mjs` is the fourth (ADR 0054). Choosing a branch is choosing where
+your food comes from, and the card now makes that choice for you, so it drives
+two real chains at 390 px: one with hours on every branch (TJ Katsu) and one
+with hours on none (McDonald's). It asserts one branch leads expanded, that a
+collapsed row opens on **one** click and reveals *that* branch's number, and —
+the assertion that matters — that **no branch is given a status it has no hours
+to support**. Every assertion is time-independent by design: a check that passes
+at 1pm and fails at 1am gets switched off within a week. Run it after touching
+`locations.js`, the contact card in `menu.js`, or per-branch hours data.
 
 `cook_check.mjs` is its sibling for cook mode (ADR 0039), on the same
 harness (`tools/lib/browser.mjs`): it opens a real recipe, steps through

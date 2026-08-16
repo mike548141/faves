@@ -88,32 +88,83 @@ export function orderedBranches(r, origin = null) {
   return branches;
 }
 
-/**
- * Which branches to surface on the contact card, and which to tuck behind a
- * "show all". A many-branch chain (e.g. McDonald's) otherwise floods the page
- * with far-away addresses. Rule (owner, 2026-07-23): at most the **2 nearest**,
- * and only within `thresholdKm` — the viewer's "Show a place’s branches within"
- * distance dial (favBoostKm in settings; originally a home-ranking favourite boost,
- * repurposed here as the branch-proximity cutoff — see settings.js).
- *
- * `branches` must already be nearest-first (orderedBranches). When we know real
- * distances (origin set + at least one located branch), the 2nd is dropped
- * beyond the threshold — but the single nearest is always kept so the card is
- * never empty. With no distances (no location, or coordless branches) we can't
- * rank, so the first two in data order show. Returns { shown, rest }. Pure.
- */
-export function branchesToShow(branches, thresholdKm) {
-  const haveDistances = branches.some((b) => Number.isFinite(b.distanceKm));
-  const shown = haveDistances
-    ? branches.filter((b, i) => i === 0 || b.distanceKm <= thresholdKm).slice(0, 2)
-    : branches.slice(0, 2);
-  const shownSet = new Set(shown);
-  return { shown, rest: branches.filter((b) => !shownSet.has(b)) };
-}
-
 /** True when a venue has more than one branch (drives the per-branch UI). */
 export function isMultiLocation(r) {
   return Array.isArray(r.locations) && r.locations.length > 1;
+}
+
+// How many branches sit beside the lead as one-tap rows. Owner, 2026-08-16:
+// "2-4 more branches in some kind of collapsed state … a user can pick a
+// different branch to use in a single step", and the second step only "if there
+// are more than 3-5 branches". Four is the top of both ranges, and it is what
+// retires the second step for four of this corpus's five chains (McDonald's 5,
+// Subway 5, Sushi Bi 3, Pandan 2; only TJ Katsu's 7 still needs it).
+export const NEAR_BRANCH_LIMIT = 4;
+
+/**
+ * Pick the branch that leads the card. Owner's rule, 2026-08-16: *"the top most
+ * branches must not only be closest, but open as well"*.
+ *
+ * `openStateOf(branch)` returns `"open"`, `"closed"` or `"unknown"` — three
+ * states, not two, because **10 of this corpus's 22 branches carry no hours at
+ * all** (every McDonald's and every Subway). A two-state rule would quietly
+ * treat "we never captured the hours" as "shut", and the openness half of the
+ * rule would never fire on the very chain that prompted it — the decorative
+ * check this repo keeps re-inventing.
+ *
+ * So the preference runs in three tiers, each nearest-first:
+ *   1. a branch we know is **open**
+ *   2. a branch whose hours we **don't have** — unverified beats known-shut,
+ *      because it may well be open and we have no evidence either way
+ *   3. the nearest branch, even though we know it is closed
+ *
+ * `branches` must already be nearest-first (orderedBranches). Pure.
+ */
+export function leadBranch(branches, openStateOf = () => "unknown") {
+  return (
+    branches.find((b) => openStateOf(b) === "open") ??
+    branches.find((b) => openStateOf(b) !== "closed") ??
+    branches[0]
+  );
+}
+
+/**
+ * How the contact card splits a chain's branches three ways.
+ *
+ *   { lead, near, rest, beyondDial }
+ *
+ * `lead` is the one branch shown expanded (leadBranch above). `near` is up to
+ * NEAR_BRANCH_LIMIT more, collapsed to a single tappable row each so a different
+ * branch is one step away. `rest` needs the second step ("Show all N"), which is
+ * how a 7-branch chain stops flooding a 390 px screen.
+ *
+ * `thresholdKm` is the viewer's branch-proximity dial. Branches beyond it are
+ * dropped from `near` **and** from `rest` — the owner's rule is that the fuller
+ * list "would still be limited by the settings configuration". `beyondDial`
+ * counts what that removed, because a cap the reader cannot see reads as "this
+ * is all of them"; the UI says so and points at the setting.
+ *
+ * The lead always survives the dial. A card that can render empty is worse than
+ * one that occasionally over-shows, and "your nearest is 40 km away" is a useful
+ * answer where silence is not.
+ *
+ * With no distances at all (no captured location, or coordless branches) the
+ * dial cannot be applied and nothing is dropped — an unknown distance is not
+ * evidence of a far one. Order falls back to the data's own. Pure.
+ */
+export function branchCard(branches, thresholdKm, openStateOf = () => "unknown") {
+  const lead = leadBranch(branches, openStateOf);
+  const others = branches.filter((b) => b !== lead);
+  const haveDistances = branches.some((b) => Number.isFinite(b.distanceKm));
+  const within = haveDistances
+    ? others.filter((b) => b.distanceKm <= thresholdKm)
+    : others;
+  return {
+    lead,
+    near: within.slice(0, NEAR_BRANCH_LIMIT),
+    rest: within.slice(NEAR_BRANCH_LIMIT),
+    beyondDial: others.length - within.length,
+  };
 }
 
 /**
