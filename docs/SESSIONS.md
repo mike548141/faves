@@ -3874,3 +3874,45 @@ intersection so no merge rule preserves safety. Recorded as Theme 28.
 Mains `Cheeseburger` carries no `contains-dairy` while the Kids one does — and
 its own desc ends "Dairy free available.", which implies the default has cheese.
 Left as a warning rather than guessed at; it is a claim about food.
+
+### Owner ruling — 2026-08-16: identity must be immutable
+
+Asked to choose between `formerNames` and `formerIds` for Theme 25, the owner
+answered past the question, and the answer is the more important one:
+
+> *"There is no much (maybe no) use beyond myself and I am ok with breaking
+> changes that lose favourites, ratings etc right now but in the future I will
+> not be ok with losing any of that and impacting end users. So make the change
+> that is best for that long term even if its breaking now, but we MUST ENSURE
+> things like ratings and favourites are never lost in future thus immutable
+> ID's or somthing"*
+
+Two grants and a requirement. **He may be broken now** — he is the only user and
+has accepted the cost of losing hearts and ratings once. **Choose the long-term
+shape, not the least disruptive one** — "even if its breaking now" removes the
+constraint that had been shaping the design. And **identity must be immutable**,
+so it cannot happen twice.
+
+The requirement bites on the shape Theme 25 was written to. `dishId` optional
+with *"Absent = `slug(name)`"* is a **derived** id: recomputed from a mutable
+display name on every read, so a rename silently changes it — the exact failure
+the theme exists to fix, reintroduced one level up. The distinction that
+survives the ruling is **seeded once and written into the data** (immutable; a
+later rename touches `name` and leaves `dishId` alone) versus **derived on every
+read** (not). Seeding keeps "nothing moves on day one" intact, because the
+seeded value is what every existing anchor already resolves to.
+
+Relayed to the Theme 25 session while it was live rather than recorded and left;
+the shape is its call and its ADR, but it was building on the premise the ruling
+moves.
+
+**A false alarm, checked rather than assumed.** The owner and the Theme 25
+session both believed a *third* session was working on dish identity. Evidence
+says no: `origin` carries `main` and `faves-dish-ids` only, ROADMAP holds exactly
+one claim, `git log --all -S"dishId"` finds only that session's commit and the
+original write-up, and `ListAgents` shows one other faves session. The likely
+source is that this session wrote the Theme 25 *analysis* — the four-jobs
+evidence, the collision measurement, the $56-vs-$49 proof — into ROADMAP twenty
+minutes before that session claimed the theme. From outside, analysis handed
+over is indistinguishable from work in progress. Worth a habit: a claim line
+says who holds an item, but nothing says who merely *wrote about* one.
