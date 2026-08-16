@@ -187,6 +187,19 @@ const SNAP = `(() => {
     focusIsStart: !!document.activeElement && document.activeElement.classList.contains("cook-start"),
     overflow: document.scrollingElement.scrollWidth - document.scrollingElement.clientWidth,
     visibility: document.visibilityState,
+    // The recipe page's own checklist, behind the dialog (ROADMAP 17e).
+    pageTicks: [...document.querySelectorAll(".recipe-detail-page .tick-box")].map((b) => [
+      b.dataset.tick,
+      b.checked,
+    ]),
+    pageTickRows: [...document.querySelectorAll(".recipe-detail-page .tick")].map((l) =>
+      Math.round(l.getBoundingClientRect().height)
+    ),
+    pageTicksNative: [...document.querySelectorAll(".recipe-detail-page .tick-box")].every(
+      (b) => b.tagName === "INPUT" && b.type === "checkbox"
+    ),
+    pageClear: document.querySelectorAll(".recipe-detail-page .tick-clear").length,
+    pageFocus: document.activeElement ? document.activeElement.className : null,
   };
   const d = document.querySelector("dialog.cook-sheet");
   if (!d) return { ...base, open: false };
@@ -219,6 +232,18 @@ const SNAP = `(() => {
       : null,
     timerRunning: q(".cook-timer") ? q(".cook-timer").classList.contains("is-running") : null,
     resetShown: shown(q(".cook-timer-reset")),
+    // Ticking off (ROADMAP 17e). stageHtml is how the tool asserts that a tick
+    // does NOT mutate the live region — the strike-through is CSS, so a tick
+    // must leave the stage's markup byte-identical, or a screen reader would
+    // re-read the whole step every time a box was checked.
+    stageHtml: stage.innerHTML,
+    stepTicked: q(".cook-step-tick .tick-box") ? q(".cook-step-tick .tick-box").checked : null,
+    ingTicks: [...d.querySelectorAll(".cook-ing .tick-box")].map((b) => b.checked),
+    ingTickIds: [...d.querySelectorAll(".cook-ing .tick-box")].map((b) => b.dataset.tick),
+    tickTaps: [side(q(".cook-step-tick")), side(q(".cook-ing .tick")), side(q(".cook-tools .tick-clear"))],
+    ticksNative: [...d.querySelectorAll(".tick-box")].every(
+      (b) => b.tagName === "INPUT" && b.type === "checkbox"
+    ),
     live: stage.getAttribute("aria-live"),
     atomic: stage.getAttribute("aria-atomic"),
     focusInStage: document.activeElement === stage,
@@ -562,6 +587,85 @@ async function run(opts) {
 
     await press("Home");
 
+    // --- 4b. Ticking off as you go (ROADMAP 17e) --------------------------
+    // A checklist is trivial to write and easy to get wrong in three ways a
+    // unit test cannot see: the box may not be a real checkbox, the tick may
+    // mutate the live region (which re-reads the whole step aloud), and
+    // rebuilding the ingredient list around a focused box drops focus to
+    // <body> — the exact fault this tool found on the Back button in 2026-08-15
+    // and on the timer's Reset the day after.
+    if (idxNeeding >= 0) {
+      const needed = ingredientsForStep(steps[idxNeeding], recipe.ingredients || []);
+      await press("Home");
+      for (let i = 0; i < idxNeeding; i++) await click(".cook-next");
+      const t0 = await snap();
+      report.check(
+        "every tickable line is a real checkbox on a 44px row",
+        t0.ticksNative === true &&
+          t0.ingTicks.length === needed.length &&
+          t0.ingTicks.every((on) => on === false) &&
+          t0.tickTaps.every((n) => n >= 44),
+        `${t0.ingTicks.length} ingredient boxes, rows ${t0.tickTaps.map((n) => `${n}px`).join("/")}` +
+          ` (step tick / ingredient row / clear)`
+      );
+
+      const firstId = t0.ingTickIds[0];
+      await click(".cook-ing .tick-box");
+      const t1 = await snap();
+      report.check(
+        "ticking an ingredient changes nothing in the live region",
+        t1.ingTicks[0] === true && t1.stageHtml === t0.stageHtml,
+        `ticked=${t1.ingTicks[0]}, stage markup identical=${t1.stageHtml === t0.stageHtml}` +
+          ` (the strike-through is CSS, so no re-announcement)`
+      );
+      report.check(
+        "a tick made in cook mode reaches the recipe page behind it, live",
+        (t1.pageTicks.find(([id]) => id === firstId) || [])[1] === true,
+        `line ${firstId} ticked on both surfaces without a reload`
+      );
+
+      // The trap: the ingredient list is rebuilt on every step change, so a
+      // step taken while a box holds focus destroys the focused node.
+      await evalPage(`document.querySelector(".cook-ing .tick-box").focus()`);
+      const held = await snap();
+      await press("ArrowRight");
+      const moved = await snap();
+      report.check(
+        "stepping on while a tick box holds focus keeps focus inside the dialog",
+        held.focusInDialog === true &&
+          /tick-box/.test(held.focusClass || "") &&
+          moved.focusInDialog === true &&
+          /cook-next/.test(moved.focusClass || ""),
+        `focus “${held.focusClass}” → “${moved.focusClass}”, in the dialog=${moved.focusInDialog}`
+      );
+      await press("ArrowLeft");
+      const backOn = await snap();
+      report.check(
+        "the tick survives the step being rebuilt around it",
+        backOn.ingTickIds[0] === firstId && backOn.ingTicks[0] === true,
+        `line ${firstId} still ticked after stepping away and back`
+      );
+    }
+
+    // The step's own tick, which is one box re-pointed rather than one per step
+    // — so it must follow the step you are on, and never carry a tick across.
+    await press("Home");
+    const p0 = await snap();
+    await click(".cook-step-tick .tick-box");
+    const p1 = await snap();
+    await click(".cook-next");
+    const p2 = await snap();
+    await click(".cook-prev");
+    const p3 = await snap();
+    report.check(
+      "the step tick belongs to the step, and follows you as you move",
+      p0.stepTicked === false && p1.stepTicked === true && p2.stepTicked === false &&
+        p3.stepTicked === true,
+      `step 1 ${p0.stepTicked}→${p1.stepTicked}, step 2 ${p2.stepTicked}, back on step 1 ${p3.stepTicked}`
+    );
+
+    await press("Home");
+
     // --- 5. Exit one: Escape, with the panel open (ADR 0034 §3) -----------
     await press("Escape");
     const escaped = await closed();
@@ -706,6 +810,14 @@ async function run(opts) {
       listOpen >= 1 && fromList.open && /^Step 1 of \d+$/.test(fromList.counter) && fromList.held === 1,
       `“${fromList.counter}” from the expanded recipe, ${fromList.held} lock held`
     );
+    // The two entry points must key the checklist the same way, or a recipe
+    // started from the list would be a second, empty copy of the same recipe.
+    // Step 1 was ticked back in 4b, from the recipe page.
+    report.check(
+      "the list's way in reaches the SAME checklist, not a second copy",
+      fromList.stepTicked === true,
+      `step 1 still ticked when cook mode is opened from the Cook at Home list`
+    );
     await press("Escape");
     const listClosed = await closed();
     report.check(
@@ -741,6 +853,41 @@ async function run(opts) {
     );
     await press("Escape");
     await closed();
+
+    // --- 15. The ticks survive a reload, and can be cleared ---------------
+    // The roadmap's whole ask is "state that survives a phone call", so the
+    // assertion has to be a real page load, not a re-render: everything below
+    // reads a document built from scratch out of localStorage.
+    await goto(recipeUrl, ".recipe-detail-page .tick-box");
+    const reloaded = await snap();
+    const lines = (recipe.ingredients || []).length + (recipe.steps || []).length;
+    report.check(
+      "the recipe page makes every ingredient and every step tickable",
+      reloaded.pageTicks.length === lines &&
+        reloaded.pageTicksNative === true &&
+        reloaded.pageTickRows.every((h) => h >= 44) &&
+        reloaded.pageClear === 1,
+      `${reloaded.pageTicks.length} of ${lines} lines, native=${reloaded.pageTicksNative}, ` +
+        `shortest row ${Math.min(...reloaded.pageTickRows)}px, ${reloaded.pageClear} reset control`
+    );
+    const survived = reloaded.pageTicks.filter(([, on]) => on);
+    report.check(
+      "ticks made in cook mode are still ticked after a full page reload",
+      survived.length === 2,
+      `${survived.length} lines still ticked on a document rebuilt from storage`
+    );
+
+    await click(".recipe-detail-page .tick-clear");
+    const cleared = await snap();
+    await goto(recipeUrl, ".recipe-detail-page .tick-box");
+    const stayedClear = await snap();
+    report.check(
+      "Clear ticks empties them, and they stay empty across a reload",
+      cleared.pageTicks.some(() => true) &&
+        cleared.pageTicks.every(([, on]) => on === false) &&
+        stayedClear.pageTicks.every(([, on]) => on === false),
+      `${cleared.pageTicks.length} boxes cleared in place, and still clear after reloading`
+    );
 
     report.check(
       "no uncaught page exception anywhere in the run",

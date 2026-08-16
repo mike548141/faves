@@ -15,6 +15,8 @@ import { convertTemperatures } from "./units.js";
 import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { cookButton } from "./cook-ui.js";
+import { CHECKLIST_KEY, checklist, recipeId } from "./checklist.js";
+import { clearTicksButton, syncTicks, tickRow } from "./checklist-ui.js";
 import { el } from "./dom.js";
 // The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
 // a recipe could show CONTAINS GLUTEN chips with no route to the Settings that
@@ -130,13 +132,19 @@ function render(collection, item) {
   // Cook mode sits above the recipe, not below it: someone who opened this page
   // to cook from should not have to scroll past the method to find it. Absent on
   // the one recipe with no steps (cook-ui returns null) — nothing to step through.
-  const cook = cookButton(item);
+  const cook = cookButton(item, { venueId: id });
   if (cook) parts.push(el("div", { className: "cook-start-row" }, [cook]));
 
+  // Ticking off what you have already done (ROADMAP 17e). Every ingredient and
+  // every step is a real checkbox, keyed on the RAW line — never on the
+  // converted render, or an imperial reader would lose their ticks the moment
+  // they flipped units, and never on the index, or an edited recipe would slide
+  // every tick onto the wrong line (checklist.js).
+  const rid = recipeId(id, item);
   if (item.ingredients?.length) {
     parts.push(el("h2", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }));
     const ul = el("ul", { className: "ingredients" });
-    for (const ing of item.ingredients) ul.append(el("li", { textContent: ing }));
+    for (const ing of item.ingredients) ul.append(el("li", {}, [tickRow(rid, "i", ing)]));
     parts.push(ul);
   }
   if (item.steps?.length) {
@@ -147,9 +155,12 @@ function render(collection, item) {
     const units = settings.get().units;
     const ol = el("ol", { className: "method" });
     for (const step of item.steps) {
-      ol.append(el("li", { textContent: convertTemperatures(step, units) }));
+      ol.append(el("li", {}, [tickRow(rid, "s", step, convertTemperatures(step, units))]));
     }
     parts.push(ol);
+  }
+  if (item.ingredients?.length || item.steps?.length) {
+    parts.push(el("div", { className: "tick-clear-row" }, [clearTicksButton(rid)]));
   }
 
   if (item.goesWith?.length) {
@@ -246,6 +257,14 @@ initChrome();
 // cross-tab write. (Matches how the menu/home screens react.)
 settings.subscribe(reRender);
 
+// Ticks can change from somewhere other than these boxes: Clear ticks, and cook
+// mode ticking the same lines in the modal sitting over this page. Re-read them
+// rather than re-render — `syncTicks` sets properties only, so the boxes follow
+// without rebuilding the recipe underneath the reader.
+checklist.subscribe(() => {
+  if (current) syncTicks(root, recipeId(current.collection.id, current.item));
+});
+
 const activeProfileAtLoad = profiles.activeId();
 window.addEventListener("storage", (e) => {
   // A cross-tab profile switch: reload the registry; if the active person
@@ -259,6 +278,9 @@ window.addEventListener("storage", (e) => {
   // A cross-tab allergen/dietary (or any settings) change to THIS profile:
   // re-read so settings.subscribe → reRender repaints the tags, never lagging.
   if (e.key === profiles.scopedKey("faves.settings.v1")) settings.reload();
+  // The same recipe open in two tabs: a line ticked in one shows ticked in the
+  // other, which is the whole point of ticks that survive a phone call.
+  if (e.key === profiles.scopedKey(CHECKLIST_KEY)) checklist.reload();
 });
 
 main();

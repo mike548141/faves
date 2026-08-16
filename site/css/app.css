@@ -4374,6 +4374,72 @@ body.faves-view .to-top {
   color: var(--accent);
 }
 
+/* ---------- Ticking off (ROADMAP 17e) ---------- */
+
+/* The whole row is the target, not the box: a bare checkbox is a 13px hit and
+   this is read one-handed with wet hands — the same argument `.addon-option`
+   makes for its options. `align-items: flex-start` because a method step wraps
+   to four lines and the box belongs beside the FIRST of them, not floating in
+   the middle of the paragraph. */
+.tick {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+  min-height: 44px;
+  padding: 0.35em 0;
+  cursor: pointer;
+}
+.tick-box {
+  flex: none;
+  width: 1.15em;
+  height: 1.15em;
+  /* Line the box up with the cap-height of the first line of text rather than
+     its box top, which is what stops it looking a pixel high on every row. */
+  margin-top: 0.28em;
+  accent-color: var(--accent);
+}
+/* Done in CSS, never by adding a class in JS: in cook mode these rows sit
+   inside an aria-live/aria-atomic region, and a DOM mutation there re-announces
+   the entire step. `:checked` costs no mutation at all. */
+.tick:has(.tick-box:checked) .tick-text {
+  text-decoration: line-through;
+  color: var(--ink-soft);
+}
+/* The bullet and the box say the same thing; the box says it better. */
+.ingredients li:has(.tick) {
+  padding-left: 0;
+}
+.ingredients li:has(.tick)::before {
+  content: none;
+}
+/* The step number stays — it is how you say "I'm on four" out loud. */
+.recipe-body .method li:has(.tick) {
+  align-items: center;
+}
+.tick-clear-row {
+  margin-top: var(--space-3);
+}
+
+/* Cook mode's own tick row, between the timer and the nav. Outside the live
+   region, and always present — a control that vanishes while focused drops
+   focus out of the dialog (ADR 0039). */
+.cook-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex: none;
+}
+.cook-step-tick {
+  align-items: center;
+  font-weight: 700;
+}
+.cook-step-tick .tick-box {
+  margin-top: 0;
+  width: 1.35em;
+  height: 1.35em;
+}
+
 .cook-nav {
   display: grid;
   grid-template-columns: 1fr 1fr;

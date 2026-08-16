@@ -31,6 +31,8 @@ import { el } from "./dom.js";
 import { translate } from "./reo.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
+import { checklist, lineId, recipeId } from "./checklist.js";
+import { clearTicksButton, syncTicks, tickRow } from "./checklist-ui.js";
 import {
   canCook,
   createTimer,
@@ -74,7 +76,7 @@ const canModal =
  * The label says what happens next rather than naming a mode the app happens to
  * have — nobody wants to enter Cook Mode, they want to start cooking.
  */
-export function cookButton(item, { quiet = false } = {}) {
+export function cookButton(item, { quiet = false, venueId } = {}) {
   if (!canCook(item) || !canModal) return null;
   const btn = el("button", {
     type: "button",
@@ -85,15 +87,27 @@ export function cookButton(item, { quiet = false } = {}) {
     // must open cook mode, never navigate away from it.
     e.preventDefault();
     e.stopPropagation();
-    openCookMode(item);
+    openCookMode(item, { venueId });
   });
   return btn;
 }
 
+/**
+ * Which collection the recipe belongs to, when the caller didn't say. Cook mode
+ * is only ever opened from a page whose `?id=` IS that collection — the recipe
+ * page (`recipe.html?id=…&dish=…`) and the Cook at Home list
+ * (`restaurant.html?id=…`) — so reading it here lets the checklist key on a
+ * whole identity (venue + dish, ADR 0051) without every call site having to
+ * thread it through. A caller that knows should still pass it: the fallback is
+ * a default, not the design.
+ */
+const pageVenueId = () => new URLSearchParams(location.search).get("id") || "";
+
 /** Open the full-screen view for `item`. Assumes canCook(item). */
-export function openCookMode(item) {
+export function openCookMode(item, { venueId } = {}) {
   const steps = stepsOf(item);
   if (!steps.length || !canModal) return null;
+  const rid = recipeId(venueId ?? pageVenueId(), item);
 
   const n = ++seq;
   const ingId = `cook-ing-${n}`;
@@ -207,6 +221,25 @@ export function openCookMode(item) {
     nextLabel, doneLabel, nextIco,
   ]);
 
+  // Ticking off as you go (ROADMAP 17e). OUTSIDE the stage on purpose, for the
+  // same reason the timer is: the stage is aria-live/aria-atomic, so a control
+  // that lives in there re-announces the whole step every time it changes.
+  //
+  // ONE box, re-pointed at whichever step is on screen, never a box per step
+  // that appears and vanishes — a control that hides while it holds focus drops
+  // that focus to <body>, outside the dialog, and the arrow keys go dead with
+  // it. Cook mode has paid for that bug twice already (ADR 0039); a control that
+  // is always present cannot spring it a third time.
+  const stepBox = el("input", { type: "checkbox", className: "tick-box" });
+  const stepTick = el("label", { className: "tick cook-step-tick" }, [
+    stepBox,
+    el("span", { className: "tick-text", "data-i18n": "cook.stepDone", textContent: "Step done" }),
+  ]);
+  stepBox.addEventListener("change", () =>
+    checklist.set(rid, lineId("s", steps[index]), stepBox.checked)
+  );
+  const tools = el("div", { className: "cook-tools" }, [stepTick, clearTicksButton(rid)]);
+
   // Two buttons, always the same two, always in the same place. The Ingredients
   // toggle that used to span this row is gone — its content is on screen now —
   // and with it the row that appeared and vanished between steps, moving Next
@@ -224,6 +257,7 @@ export function openCookMode(item) {
       // second, and the stage is aria-live/aria-atomic — a timer in there would
       // re-announce the whole step once a second, which is unusable.
       timerRow,
+      tools,
       nav,
     ]),
   ]);
@@ -235,10 +269,26 @@ export function openCookMode(item) {
   function paintStepIngredients(stepIndex) {
     const units = settings.get().units;
     const needed = ingredientsForStep(steps[stepIndex], ingredients);
+    // These lines are rebuilt on every step change, and now they contain
+    // focusable boxes — so replacing them while one holds focus would drop
+    // focus to <body>, outside the dialog, and kill the arrow keys. Hand focus
+    // to Next FIRST, exactly as the Back button and the timer's Reset already
+    // do (ADR 0039).
+    if (ingList.contains(document.activeElement)) nextBtn.focus();
     ingPanel.hidden = needed.length === 0;
+    // The tick is keyed on the RAW line; the reader sees the converted one, so
+    // flipping to imperial re-labels the box without losing what it recorded.
     ingList.replaceChildren(
-      ...needed.map((ing) => el("li", { textContent: convertTemperatures(ing, units) }))
+      ...needed.map((ing) =>
+        el("li", {}, [tickRow(rid, "i", ing, convertTemperatures(ing, units))])
+      )
     );
+  }
+
+  /** Re-read every box from the store: the step's, and the step's ingredients'. */
+  function paintTicks() {
+    stepBox.checked = checklist.has(rid, lineId("s", steps[index]));
+    syncTicks(ingList, rid);
   }
 
   // The countdown's face. Re-run every second while one is running, and once on
@@ -315,6 +365,7 @@ export function openCookMode(item) {
     if (s.atFirst && document.activeElement === prevBtn) nextBtn.focus();
     paintStepIngredients(s.index);
     paintTimer();
+    paintTicks();
     prevBtn.disabled = s.atFirst;
     nextLabel.hidden = s.atLast;
     doneLabel.hidden = !s.atLast;
@@ -361,10 +412,16 @@ export function openCookMode(item) {
     paint();
     paintStepIngredients(index);
   });
+  // Clear ticks, and the recipe page's own boxes sitting behind this dialog,
+  // both write through the same store. Follow it rather than owning a second
+  // copy of the truth — `paintTicks` sets properties only, so nothing in the
+  // live region is mutated and nothing is re-announced.
+  const unsubscribeTicks = checklist.subscribe(paintTicks);
 
   dialog.addEventListener("close", () => {
     document.removeEventListener("visibilitychange", onVisibility);
     unsubscribe();
+    unsubscribeTicks();
     // Never leave the screen pinned awake on a page nobody is reading.
     lock.release();
     // Same rule for the countdown: a 1s interval behind a closed sheet is a
