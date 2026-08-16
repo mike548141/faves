@@ -575,3 +575,21 @@ deliberation those compact docs omit.
   requires the marker **on the timer face**, not only in the step text: a clock
   that looks the same whether its number was read or guessed is not "clearly
   marked". No UI built here.
+- [0067](0067-a-tick-is-keyed-on-the-line-not-its-place.md) — **a tick is keyed
+  on the line's own text, not on where the line sits, and it expires.** ROADMAP
+  17e's checklist. A recipe keys on venue + dish id (ADR 0051); a LINE inside it
+  has nothing to key on, and the obvious answer — the index — fails silently:
+  insert an ingredient and every tick below slides onto the wrong one, which in
+  a kitchen means "I already added the salt" pointing at the sugar. A hash of
+  the line's own **raw** text (never the `convertTemperatures` render, or an
+  imperial reader would lose the lot) means a moved line keeps its tick and an
+  edited one loses only its own. Persistence argues with **ADR 0034**, which
+  refused to store the step index — resolved by separating *where I am* from
+  *what I have already put in the bowl*, and by a twelve-hour expiry evaluated
+  on read from disk, so a recipe cooked twice never starts half-ticked. The
+  strike-through is CSS rather than a JS class **because the lines sit inside an
+  `aria-live` region** and a DOM mutation there re-reads the whole step aloud.
+  Read-aloud ships beside it, cancelled on every exit for the same reason ADR
+  0034's wake lock is released — and honest that "no dependency" is true of the
+  code, not necessarily of a runtime that fetches its voices. `cook_check.mjs`
+  36 → 57 assertions, all fourteen new ones seen to fail under a targeted break.

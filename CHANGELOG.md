@@ -24,6 +24,20 @@ content freshness separately from this file.
   silently dropped on that path since those settings were added.
 
 ### Added
+- **You can tick off ingredients and steps as you cook, and the ticks survive a
+  phone call.** Every ingredient and every step on a recipe is a real checkbox,
+  on both the recipe page and inside cook mode, and what you tick in one shows
+  up in the other. They survive a reload, a call and closing cook mode — and
+  they clear themselves after twelve hours, so a recipe you cook again next
+  week never starts half-ticked. **Clear ticks** starts you over whenever you
+  want. Ticks are per person, like your hearts and your allergen settings.
+- **Cook mode can read the step out loud**, for when your hands are in a bowl.
+  One tap starts it, another stops it, and it stops on its own when you move to
+  the next step or close cook mode. It uses the voice built into your phone, so
+  there is nothing to install — **but some phones fetch their better voices from
+  the internet, so this one control may not work in flight mode**. The words
+  stay on screen either way. A browser with no speech simply doesn't show the
+  button.
 - **"How we know" is now told branch by branch.** Where a venue has several
   branches, the ⓘ beside its name can say how *that* branch's phone, address
   and hours were checked, and name it. Pandan is the first: its Melling details
