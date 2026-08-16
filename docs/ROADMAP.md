@@ -4478,3 +4478,85 @@ is mostly data entry — and it is the prerequisite for the full 36f, so doing i
 once buys both. 36f's staged version is `[S]` and independent of all of it. The
 structural call above (1/2/3) should be taken before 36e, because 36e is a
 symptom of it.
+
+---
+
+## Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)
+
+Five defects and asks, given live during the 2026-08-16 session while looking at
+`recipe.html?id=cook-at-home&dish=chocolate-self-saucing-pudding` on a wide
+screen and in cook mode. All five are **presentation**, not model: the timer,
+the checklist and the recipe data are all sound underneath. **CLAIMED
+2026-08-16 12:30 UTC (wt: faves-tidy)**, all five.
+
+- [~] **37a — the Clear ticks button goes** `[XS][js]`. Owner: *"Get rid of the
+      clear ticks button, its unnecessary"*. It renders twice — the recipe page
+      (`recipe.js`, in a `tick-clear-row`) and cook mode's tool row
+      (`cook-ui.js`) — from one factory in `checklist-ui.js`. Removed from both,
+      with the store's now-unreferenced `clear()`.
+      🚩 **The consequence, recorded rather than argued:** ticks expire on a
+      12-hour clock (`checklist.js` `STALE_MS`) measured from the *last tick*,
+      so a recipe cooked twice inside that window starts part-ticked with no
+      one-tap reset — you untick line by line. The store's own comment
+      ("a recipe cooked twice must not start half-ticked") named the button as
+      the answer to exactly this. His call, made knowingly; if it bites, the
+      cheaper fix is a shorter clock, not the button back.
+
+- [ ] **37b — the timer's whole presentation is wrong** `[S][css][js][ux]`.
+      Owner: *"The whole timer UX is poorly designed… you keep producing poor
+      UX by default."* Three named defects, and **all three have one cause** —
+      the countdown numeral and its state word live inside the *same* button:
+      - *not centred horizontally* — `.cook-timer-btn` centres the flex **pair**
+        `[34:48][Pause]`, which puts the numeral left of centre by half the
+        label's width. It can never look centred while the label shares its box.
+      - *not centred vertically* — `align-items: baseline` sits a
+        `var(--step-sub)` word on a `1.5rem` numeral's baseline.
+      - *"Pause"/"Resume" text should not be required either way* — an explicit
+        steer to an icon, and it also kills the *"does this say what it is, or
+        what it will do"* ambiguity a swapping label always carries.
+      - *the Reset button is ugly* — a transparent bordered box with different
+        fill and weight from the control beside it, hugging the right edge.
+      **Direction taken:** one row, three zones —
+      `[⏸/▶ 56px] [ numeral, flex:1, truly centred ] [↺ 56px]`. Equal-width
+      flankers are what actually centre the numeral. Icons carry pause/reset, so
+      no text to misalign and Reset stops out-shouting its neighbour; the words
+      survive in `aria-label`. A hairline progress bar on the card's bottom edge
+      makes it glanceable from across the kitchen at no extra height.
+      🔑 **It also retires a fragile hack.** Reset is `hidden` today until there
+      is something to reset, and `paintTimer()` carries a focus-rescue for
+      exactly that (`if (nowHidden && document.activeElement === timerReset)`).
+      Always-present controls delete the rescue and the bug class with it — the
+      same rule ADR 0039 drew, and the same one `clearTicksButton`'s own comment
+      cited. Resetting an unstarted timer is a harmless no-op.
+
+- [ ] **37c — the ingredients section should collapse** `[S][js][css]`. Owner:
+      *"I should be able to collapse or hide the ingredients section"*. Once
+      everything is in the bowl the list is a wall of struck-through text
+      between the reader and the method. Use the house pattern — native
+      `<details>/<summary>`, as `addons-ui.js` already does — open by default.
+      ⚑ **Open: should the collapsed state persist, and at what scope?** Not
+      persisting is a control that forgets; persisting per-recipe and
+      persisting globally are different products. Recorded, not silently picked.
+
+- [ ] **37d — two columns for ingredients when there is room** `[S][css]`.
+      Owner: *"consider if the ingredients should go into two columns if there
+      is screen space"*. The screenshot that prompted it shows a laptop-width
+      window with the recipe held to a reading measure and most of the viewport
+      empty. CSS multi-column above a breakpoint, `break-inside: avoid` so a
+      tick and its line never split across the fold. **Note it is a
+      *consider*, not an instruction** — if the measure test says a two-column
+      ingredient list reads worse at that width, say so and don't ship it.
+
+- [ ] **37e — a recipe should carry its attribution as a field** `[S][schema]
+      [js]`. Owner: *"Recipes should be able to be attributed, for example to
+      the Edmunds cookbook"* (the NZ cookbook is spelled **Edmonds**; the data
+      already has it right). Today attribution is buried in free prose — the
+      pudding's `description` reads *"A Clements family dessert since the early
+      1980s — adapted from the Edmonds cookbook"*. A field can be rendered
+      consistently, styled as a credit, and eventually searched; prose cannot.
+      🚩 **ADR 0047 applies**: this adds a field to `site/data/`, which every
+      phone downloads — so the screen that renders it (the recipe page's credit
+      line) ships in the *same* change, never after.
+      🔎 This is squarely inside CLAUDE.md's **Exception 1** — family
+      attributions in home recipes are owner-approved. A *source* credit
+      (a cookbook, a publication) is not personal data at all.
