@@ -2213,7 +2213,8 @@ Two consequences recorded rather than buried:
   statement about its premises, and the venue-level field must read as weakly as
   its weakest input. The 🚩 below is the real fix.
 
-- [ ] 🚩 **Derivation is venue-level, but provenance is now per-branch**
+- [~] 🚩 **Derivation is venue-level, but provenance is now per-branch**
+  **CLAIMED 2026-08-16 11:20 UTC (wt: faves-branch-provenance)**
   `[S][schema]` — Pandan proves the gap: address and phone first-party from the
   venue's own site, one branch's hours third-party from its landlord, and one
   `detailsVerifiedBy` to describe both. The honest read (weakest wins) throws
@@ -3334,7 +3335,8 @@ Android, all paths but `/_/*`). The rest are worse than absent:
   people's servers and change without notice; two `curl` calls per domain
   confirm them. A cheap scheduled job in the mould of `fx.yml` would stop a
   silently-rotted link. Optional, and only worth it once we ship more than one.
-- **31d — accessibility wording** `[XS][a11y]`. WCAG **G201** advises warning
+- [~] **31d — accessibility wording** `[XS][a11y]` — **CLAIMED
+  2026-08-16 11:20 UTC (wt: faves-order-link-a11y)**. WCAG **G201** advises warning
   before a link opens a new window; there is **no** technique for "may switch to
   a native app" — the standard predates it. The defensible reading: warn about
   the guaranteed behaviour (leaving the site), never promise the app switch.
