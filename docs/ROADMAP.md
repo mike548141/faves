@@ -390,11 +390,9 @@ delivery app.** Clear one by bringing back the fact.
       standing menu and it comes down when the festival ends, so this is a
       *scheduled re-read*, not a gap: go back once the festival is over and
       record whatever the kitchen returns to. Append, never overwrite — the
-      departed festival dishes move whole to `data/history/dishes/baylands.json`
+      departed festival dishes move whole to `data/history/dishes/baylands.json` <!-- pathscan:allow: the history file is created BY this item when the festival menu comes down — naming it before it exists is the point -->
       (ADR 0023 / ADR 0047), because a festival menu is exactly the kind of
       thing the history store exists to keep.
-      <!-- pathscan:allow: the history file is created BY this item, when the
-           festival menu comes down — naming it before it exists is the point -->
 
 - [ ] 🚩 **Baylands has no drinks, and that is deliberate** `[content]`. The
       brewery advertises **"30+ taps"** and publishes no tap list anywhere. A
@@ -2379,7 +2377,12 @@ contain shellfish.
   filters a section out of the menu entirely when its window closes, and
   `menu.js` never reads `available` at all, so the note explaining *why*
   ("The Borough's entry in Burger Wellington") is never rendered anywhere.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+  **CLAIMED 2026-08-16 09:45 UTC (wt: faves-headings)** — reassigned from
+  `faves-inflight`, which had started it. It is one `el()` call inside the
+  section-heading block that Theme 28f is rewriting whole, and two sessions
+  stacking two subtitles under one `<h2>` is worse than either alone. Recorded
+  as a handover rather than a silent drop, so the item is not orphaned if 28f
+  changes shape.
 - [ ] **28e — eligibility is unstated** `[S][design]` — "Gold Card" and "12 and
   under" are rules about *who may order*, recorded only inside a heading
   string. Worth a field only if 28c lands; and note a "show me Gold Card

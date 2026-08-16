@@ -3031,10 +3031,8 @@ here landed as one small commit on a clean tree, pushed immediately.
 **What the drift check found — and what it missed.** 38 commits on atelier's
 `origin/main` since `72cf216`. The doctrine delta is confined to the first 22
 (`72cf216..eef38be`); the 16 newer ones are cold-pass reviews, board items and
-session records that touch no file under `docs/method/`. Ten method documents
+session records that touch no file under `docs/method/`. Ten method documents <!-- pathscan:allow: atelier cross-repo path — docs/method/ exists in atelier, not in this repo's tree; the same allowance CLAUDE.md and MODEL-ECONOMICS.md already carry -->
 moved, but only three carry text this repo inlines.
-<!-- pathscan:allow: atelier cross-repo path — docs/method/ exists in atelier,
-     not in this repo's tree; same allowance CLAUDE.md already carries -->
 
 
 The check as written would not have found any of it much longer. It read the
