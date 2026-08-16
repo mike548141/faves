@@ -3770,3 +3770,26 @@ on Theme 25), a `min`/required rule for pick-one groups, and a group-level
 marker for preparation-only options that today have to write vacuously-true
 tags to survive the intersection rule. All named in ROADMAP rather than left
 in this log.
+
+### Owner rulings — 2026-08-16, closing the add-ons session
+
+Four decisions put to the owner with the trade-offs stated, all answered.
+
+- **Free is written `0`, not implied by an absent price — ratified.** The
+  deviation from the prior session's note stands, on the ground given: a
+  forgotten price would otherwise be a silent under-charge nobody catches, and
+  the group-level default keeps the sauce board terse anyway.
+- **Hide the duplicated section — ruled, and built the same session.** The
+  cost was stated first: a heart or rating saved against a hidden row stops
+  appearing. He took it, because a menu that prints "Extra halloumi" twice is
+  the version a person is holding in the shop. `addOnsOnly` + ADR 0049; the
+  rows stay in the record, and `validate.py` refuses the flag unless every row
+  it hides is still reachable as an option. Proved by breaking it, both ways —
+  removing an option makes the validator name the orphan, and un-hiding the
+  section makes `addon_check` fail.
+- **The `$56`-for-`$49` overcharge waits for Theme 25, as reserved.** Not
+  patched narrowly here: a second identity concept in `cart.js` is something
+  the dish-ids session would then have to unpick.
+- **The queue behind this is all four of 14b, Theme 25, 14f and 14c.** Theme 25
+  is the one that unblocks the other two, so it wants to go first even though
+  14b is the larger pile.

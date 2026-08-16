@@ -172,6 +172,11 @@ excluded from both stores, always.
       "available": null,             // optional window/season for a WHOLE section
       "addOns": [],                  // optional add-on group ids, offered on every
                                      //   dish in this section (ADR 0048)
+      "addOnsOnly": false,           // optional: these rows are offered as add-ons,
+                                     //   so don't print the section too (ADR 0049).
+                                     //   The rows STAY — old hearts/links resolve;
+                                     //   validate.py requires every one of them to
+                                     //   be reachable as an option first
       "items": [
         {
           "name": "Char kway teow",

@@ -1228,6 +1228,7 @@
     },
     {
       "section": "Extras",
+      "addOnsOnly": true,
       "items": [
         {
           "name": "Extra meat",

@@ -116,6 +116,8 @@ const snapshotExpr = `(() => {
     warnText: warn.textContent,
     addLabel: (box.querySelector(".addon-stepper .stepper-add") || {}).ariaLabel || null,
     lines: JSON.parse(localStorage.getItem("faves.order.v1") || "[]").map((l) => [l.name, l.price, l.qty, (l.options || []).map((o) => o.name).join("+")]),
+    sections: [...document.querySelectorAll(".menu-section .section-title")].map((h) => h.textContent),
+    navLinks: [...document.querySelectorAll(".section-link")].map((a) => a.textContent),
   };
 })()`;
 
@@ -175,6 +177,25 @@ async function run(opts) {
       s.checked.length === 0 && s.warnHidden,
       `${s.checked.length} ticked, warning hidden=${s.warnHidden}`,
     );
+
+    // --- a section offered as add-ons is not also printed as dishes ----
+    const hidden = (venue.menu || []).filter((x) => x.addOnsOnly).map((x) => x.section);
+    if (hidden.length) {
+      const offered = new Set((venue.addOnGroups || []).flatMap((g) => g.options.map((o) => o.name)));
+      report.check(
+        "a section whose rows are all offered as add-ons is not printed twice",
+        hidden.every((h) => !s.sections.includes(h) && !s.navLinks.includes(h)),
+        `hidden: ${hidden.join(", ")} · rendered: ${s.sections.length} section(s)`,
+      );
+      report.check(
+        "…and every row it hid is still reachable as an option",
+        (venue.menu || [])
+          .filter((x) => x.addOnsOnly)
+          .flatMap((x) => x.items)
+          .every((i) => offered.has(i.name)),
+        `${hidden.length} hidden section(s), all rows offered`,
+      );
+    }
 
     // --- (b)+(c) satay names peanuts, loudly ---------------------------
     await driver.click(".dish-addons-summary");

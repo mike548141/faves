@@ -23,6 +23,10 @@ content freshness separately from this file.
   and a vegan dish stops claiming vegan once you add chicken — with the reason
   spelled out, because "Halloumi contains dairy" and "we can't say whether
   Mushrooms is dairy free" are different things to be told.
+- **A menu no longer prints the same thing twice.** Where a section's rows are
+  all offered as add-ons — Wellington Kebab Grill's "Extras", Sprig & Fern's
+  "Brunch Sides" — the section itself is no longer listed. The dishes are still
+  in the record, so an order link that names one still works.
 - **The same dish, configured two ways, is two lines on the order sheet** — at
   its own price, and read out at the counter with what you asked for
   ("2× Iskender with Mild chilli, Garlic yogurt"). Shared group orders carry

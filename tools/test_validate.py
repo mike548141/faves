@@ -264,6 +264,16 @@ CASES = {
         _breaks(lambda g, d: g.update(maxx=2)),
         "error",
     ),
+    # addOnsOnly must never be a delete wearing a nicer name: it may only hide
+    # rows that some group still offers.
+    "addOnsOnly on a section no group offers": (
+        _breaks(lambda g, d: d["menu"][0].update(addOnsOnly=True)),
+        "error",
+    ),
+    "addOnsOnly set to something other than true": (
+        _breaks(lambda g, d: d["menu"][0].update(addOnsOnly="yes")),
+        "error",
+    ),
 }
 
 

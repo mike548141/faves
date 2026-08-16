@@ -525,6 +525,38 @@ def check_add_on_groups(rid, data):
     return defs
 
 
+def check_add_ons_only(rid, section, defs):
+    """`section.addOnsOnly`: this section's rows are offered as add-ons, so the
+    menu screen doesn't print them twice (owner ruling, 2026-08-16).
+
+    The rows deliberately STAY in the data — a stored heart, a personal rating
+    or a shared order link naming "Extra halloumi" all still resolve, and
+    deleting them would break every one of those silently.
+
+    The gate that earns the flag: **every dish in the section must be reachable
+    as an option somewhere in this record.** Hiding a section whose rows are not
+    all offered elsewhere would take real, orderable food off the menu and leave
+    nothing pointing at it — the flag would be a delete wearing a nicer name.
+    """
+    if "addOnsOnly" not in section:
+        return
+    where = f"section {section.get('section')!r}"
+    if section["addOnsOnly"] is not True:
+        err(rid, f"{where}: addOnsOnly must be true or absent, got {section['addOnsOnly']!r}")
+        return
+    offered = {o.get("name") for g in defs.values() for o in (g.get("options") or []) if isinstance(o, dict)}
+    missing = sorted(
+        i["name"] for i in section.get("items", []) if isinstance(i.get("name"), str) and i["name"] not in offered
+    )
+    if missing:
+        err(
+            rid,
+            f"{where}: addOnsOnly hides {len(missing)} dish(es) that no add-on "
+            f"group offers, so nothing on the menu would reach them: "
+            f"{', '.join(missing[:5])}",
+        )
+
+
 def collect_add_on_refs(rid, obj, where):
     """The add-on group ids `obj` names (`section.addOns` or `item.addOns`).
 
@@ -954,6 +986,7 @@ def check_restaurant(path):
         check_available(rid, section, f"section {section.get('section')!r}")
         check_translations(rid, section, f"section {section.get('section')!r}", {"section"})
         add_on_refs += collect_add_on_refs(rid, section, f"section {section.get('section')!r}")
+        check_add_ons_only(rid, section, add_on_defs)
         for item in section.get("items", []):
             name = item.get("name")
             if not isinstance(name, str) or not name.strip():

@@ -680,6 +680,7 @@
     },
     {
       "section": "Brunch Sides",
+      "addOnsOnly": true,
       "items": [
         {
           "name": "Spinach",

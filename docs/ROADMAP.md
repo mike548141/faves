@@ -1383,11 +1383,14 @@ stays as the design input it was.
   writing vacuously-true claims (`vg, gf, df`) on both options. It is fail-safe
   either way, but the honest fix is a group-level marker saying the group
   changes method rather than contents, so composition can skip it.
-- 🚩 **Converted rows now exist twice** — Wellington Kebab Grill's five
-  `Extras` and Sprig & Fern's twelve `Brunch Sides` are each both an orderable
-  dish and an add-on option. Deliberate: deleting the dish rows would break
-  stored hearts, ratings and any shared link naming them. It stays structural
-  until Theme 25 settles whether an option may reference a dish by id.
+- ✅ **Converted rows existed twice; ruled and fixed the same day.** Wellington
+  Kebab Grill's five `Extras` and Sprig & Fern's twelve `Brunch Sides` were
+  each both an orderable dish and an add-on option. 🎯 **Owner ruled
+  2026-08-16: hide the duplicated section** — given the stated cost, that a
+  heart or rating saved against a hidden row stops appearing. `addOnsOnly` on
+  the section (ADR 0049); the rows stay in the record so old links, hearts and
+  `picks` still resolve, and `validate.py` refuses the flag unless every row it
+  hides is reachable as an option. Theme 25 may retire it entirely.
 
 **Sizing for 14b, measured 2026-08-16 rather than estimated.** Across the 48
 records: **28** dish descriptions carry a priced add-on in prose, **63** carry

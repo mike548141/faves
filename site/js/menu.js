@@ -1071,6 +1071,11 @@ function render(r) {
   const menuWrap = el("div", { className: "menu-sections" });
   const sectionEls = [];
   for (const section of r.menu) {
+    // A section whose rows are all offered as add-ons is not shown twice
+    // (owner ruling, 2026-08-16). The rows stay in the data — a shared order
+    // link naming "Extra halloumi" still decodes, and validate.py guarantees
+    // every one of them is reachable as an option before the flag is allowed.
+    if (section.addOnsOnly) continue;
     const id = `section-${slug(section.section)}`;
     navScroll.append(
       el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
