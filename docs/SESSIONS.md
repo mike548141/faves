@@ -6646,3 +6646,30 @@ worktree, or forbid `-A` in the brief. I did neither.
 36d**: a notification fires even when you are looking at the page; there is no
 visible on-screen cue when a timer ends; `cook.notifyBlocked` has no te reo
 string. All three want `app.css`/`reo.js`, held by peers all session.
+
+### 🔎 Addendum — the flaky check had a cause, and a clean bisect got it wrong
+
+After close, the 36d agent retracted its own diagnosis of a `cook_check` stall
+and ran a five-arm bisect **plus a control on the tree before any of its work**.
+Every arm stalled at the identical point, control included. It correctly
+concluded *"not my code"* — then overreached to *"`cook_check` cannot complete on
+this machine"*.
+
+🔑 **It could not, because the confound was still running underneath every arm.**
+Six orphaned headless-Chrome processes, leaked from its own killed runs, had
+pushed load past **100**; the same agent cleaned them up only afterwards.
+Re-running once they were gone, on a quiet machine: **`OK — 75 passed, 0
+failed`** — including the two-timer assertion it had reported as unverifiable.
+
+- 🛑 **A killed browser check leaks its Chrome.** Nothing reaps it. At the
+  resulting load the check does not fail, it **stalls with no summary line** —
+  manufacturing, from no code change at all, the exact trap CLAUDE.md documents
+  for `sync_check`. `pgrep -f faves-.*-check` finds them.
+- 🔑 **A bisect whose every arm carries the same confound returns a uniform,
+  confident, meaningless result — and its *control* is the thing that makes it
+  look rigorous.** The control did real work here (it cleared the code) and the
+  overreach rode on the credibility the control earned.
+- ✅ **What settled it was the cheapest possible test**: remove the confound, run
+  it once. Not more bisecting.
+⚠️ Still unexplained: the 73/2 run during integration, at load 5.9–15.8, well
+below the orphan-driven level. Its failing assertions were not captured.
