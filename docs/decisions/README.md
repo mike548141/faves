@@ -575,6 +575,22 @@ deliberation those compact docs omit.
   requires the marker **on the timer face**, not only in the step text: a clock
   that looks the same whether its number was read or guessed is not "clearly
   marked". No UI built here.
+- [0069](0069-the-location-ask-is-primed-not-sprung.md) — **the location ask is
+  primed, not sprung.** Supersedes **item 4 only** of
+  [0068](0068-the-home-list-ranks-on-one-blend.md). That item said the prompt
+  fires on load, unexplained, and that priming was the fix *"if the deny rate
+  looks bad in use"*. Checking that trigger is the record: Faves ships no
+  analytics and no backend — two `fetch` calls in the whole app, both loading
+  our own menu JSON — so there is **no deny rate to look at**, and the deferred
+  revisit resolves to *never* while reading like a plan. 🔑 **A deferred
+  decision whose trigger nothing can observe is not deferred, it is taken.** A
+  second gap found alongside it: `navigator.permissions` appears nowhere, so the
+  app could not tell *"never asked"* from *"blocked forever"* — the two present
+  identically. So: query the permission on load (which never prompts), use it
+  silently when already `granted`, offer a one-tap control when `prompt`, and
+  say so in place when `denied`. Owner-ruled 2026-08-17 with both costs stated;
+  the cost he took is that on a first visit distance does nothing until one tap,
+  once per browser.
 - [0068](0068-the-home-list-ranks-on-one-blend.md) — **the home list has one
   ranking, and distance is in it.** Supersedes
   [0014](0014-pick-along-a-route.md). The owner asked to delete the "Nearest
