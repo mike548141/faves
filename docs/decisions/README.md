@@ -623,7 +623,7 @@ deliberation those compact docs omit.
   recipe looks finished. Measured 204/204 byte-identical at 1×; 20 of 24
   recipes double clean, 14 halve. Times never scale — under-scaling a meat
   time is a food-safety failure, not a bad dinner.
-- [0083](0083-vibe-is-a-closed-vocabulary-with-facets.md) — **`vibe` is a
+- [0084](0084-vibe-is-a-closed-vocabulary-with-facets.md) — **`vibe` is a
   closed vocabulary with facets, and every value is rendered.** Four owner
   rulings on 37k, taken after he was shown the strongest case AGAINST building
   it (`priceBand`, the only comparable curated-judgement field, sits at 8 of

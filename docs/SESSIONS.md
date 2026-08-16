@@ -7628,7 +7628,7 @@ and is recorded at the head of `ROADMAP.md` until someone writes it.
 `site/js/vibes.js` · 15 venues migrated (23 raw strings → 17 keys, 3 dropped as
 verified cuisine duplicates) · `validate.py` reads the vocabulary from the JS
 rather than copying it, and dies loudly on a zero-key parse · chips on cards ·
-a fourth filter select · ADR **0083**. `node --test` **1051 pass / 0 fail**,
+a fourth filter select · ADR **0084**. `node --test` **1051 pass / 0 fail**,
 `validate.py` 55 valid, `test_validate.py` 110 mutations, `boot_check` 24/24,
 `filter_row_check` 25/25, `recipe_check` 29/29.
 

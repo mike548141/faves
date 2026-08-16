@@ -1,4 +1,4 @@
-# 0083 — `vibe` is a closed vocabulary with facets, and every value is rendered
+# 0084 — `vibe` is a closed vocabulary with facets, and every value is rendered
 
 **Status:** Accepted, on four owner rulings taken 2026-08-16. Closes the two
 questions [ADR 0077](0077-style-of-dining-is-not-the-cuisine-axis-work.md) left
