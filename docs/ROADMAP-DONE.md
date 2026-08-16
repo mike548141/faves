@@ -8,6 +8,43 @@ when a one-line pointer in the roadmap isn't enough; do not load it whole.
 Sections follow the roadmap's own theme order. The current-truth/history split,
 same as `SESSIONS`→`SESSIONS-ARCHIVE`.
 
+## Theme 14c — Customise / omit: a note on the order line (shipped 2026-08-16)
+
+The owner's ask was *"the ability to customise a dish e.g. no tomato in a big
+breakfast"*. Two shapes were weighed: a **free-text note per order line**, or
+**curated removable components** per dish. The note shipped; components did not,
+and the reason is not squeamishness — restaurant dishes carry no ingredient
+lists at all (only Cook-at-Home recipes do), so there is literally nothing
+structured to remove *from* until the whole transcription problem is solved
+across 55 venues. Components remain the right answer if a venue's data ever
+justifies it.
+
+**The note is part of LINE IDENTITY** — the fourth component of `lineKey` —
+which is [ADR 0048] §4 applied consistently rather than a new rule: two notes
+are two different things to make, exactly as two add-on selections are. Outside
+the identity, adding a dish twice and then annotating it would produce one line
+of quantity 2 carrying a note meant for one of them: wrong at the counter, and
+wrong in a way nobody reading the tally would notice. `setNote` therefore takes
+the note **twice** (the old one locates the line) and merges on collision.
+
+**It travels in a shared order as slot 5, with no `CODEC_VERSION` bump.**
+🚩 The codec's existing justification for appending is a *safety* argument —
+*"dropping an add-on can never put something extra on a plate"* — and it does
+**not** transfer. A note is characteristically a **removal**, so dropping one
+leaves the unwanted thing **on** the plate. Carried anyway, because not carrying
+it fails for everyone every time (a group order sends your friend to order the
+exact dish you asked to have changed) while carrying it fails only against a
+decoder older than the slot. Recorded in [ADR 0073].
+
+**Verified:** 938 unit tests (23 net new), with 8 reintroduced bugs each seen to
+fail first; `tools/note_check.mjs` 19/19 in real headless Chrome at 390 px —
+the seventh of the browser-check family, and it exists because it caught the ±
+stepper **operating the wrong line** when two lines differed only by a note,
+which no unit test can see. Its own XSS assertion was verified by breaking the
+render, and its payload was changed from `alert(1)` to a global-setter so that
+regression fails as a named assertion rather than a 30-second timeout.
+
+
 ## Theme 1 — From *decided* to *ordered*: the Order tally ★ flagship
 
 > ✅ **Shipped 2026-07-08.** Built as designed below (`site/js/cart.js`

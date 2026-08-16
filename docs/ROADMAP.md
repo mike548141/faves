@@ -1740,16 +1740,10 @@ wrong.
   Model it on `tools/tag_allergens.py` (ADR 0024): a re-runnable script plus a
   `validate.py` warning, because a hand sweep across 31 venues is exactly how
   the allergen inconsistency got created in the first place.
-- [~] **14c — Customise / omit** `[M][design]` — **CLAIMED 2026-08-16 14:10 UTC
-  (wt: faves-menus)**, building the recommended half (the note).
-  "no tomato" is a *removal*, and
-  we have no ingredient lists for restaurant dishes (only Cook-at-Home recipes
-  carry ingredients), so there is nothing structured to remove **from**. Two
-  honest options: a **free-text note per order line** (works everywhere, ships
-  now, and is what you'd say out loud anyway) or **curated removable components**
-  per dish (structured and safe, but it's the whole ingredient-transcription
-  problem for 31 venues). Recommend the note now; components only if a venue's
-  data ever justifies it.
+- ✅ **14c — Customise / omit — SHIPPED 2026-08-16** ([ADR 0073]) as the
+  recommended half: a free-text note per order line, part of line identity.
+  The **components** half stays unbuilt and is still the right answer *if* a
+  venue's data ever justifies it. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [ ] **14f — Combos: several dishes ordered as one** `[M][schema][design]`
   (owner-raised 2026-08-16) — *"the concept of Combo's e.g. coffee and scone,
   where multiple dishes are combined to make a dish to order them together with
