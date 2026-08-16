@@ -183,10 +183,13 @@ node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part 
                               # the note is rendered as characters, not parsed: it
                               # is the first free text a person types on this screen
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
-                              # ⚠️ Currently ABORTS before its last three assertions
-                              # on an overflow-menu race — a wall of PASS lines
-                              # followed by "harness error" is NOT a pass. Check it
-                              # reached its own "OK — N passed" summary line.
+                              # Reaches its end: "OK — 16 passed, 0 failed". ⚠️ A
+                              # harness abort exits 2, not 1, so it prints NO "FAIL"
+                              # line and CI reads green — it went a whole refactor
+                              # proving nothing that way. Check the summary line is
+                              # there AND that N is still 16; a shrunken N is the
+                              # tell. If it aborts, the message names which Settings
+                              # navigation step broke — fix the NAV block in the tool.
 ```
 
 **The exchange rates refresh themselves weekly** — `.github/workflows/fx.yml`
