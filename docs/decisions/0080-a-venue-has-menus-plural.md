@@ -213,9 +213,67 @@ section headings as prose. Decision 1's third convergence — availability as a
 priority-ordered rule set — is the shape 28c should be built into, so that the
 venue-level and menu-level machinery are one thing rather than two.
 
+**The cuisine axis is a LABELLING job, not a relocation — and the obvious fix
+would have broken the filter.** ROADMAP Theme 30 names `cuisine[]` as our "one
+genuine ontology weakness" because it mixes origin ("Malaysian") with dish form
+("Burgers"), and the natural reading is *move the wrong values out*. Measured by
+the faves-cook2 session across 55 venues — 41 distinct values, 88 taggings — a
+third category nobody named dominates: **11 values are venue FORMAT** (Bakery,
+Bar, Cafe, Deli, Gastropub, Pub, Steakhouse…) carrying **32 taggings**, and
+**22 of 55 venues carry only format words**. The two most-used facet values in
+the whole corpus, `Gastropub` (10) and `Cafe` (6), are both format. So stripping
+them out to tidy the taxonomy would gut the home screen's most-used filter
+values. **Give each value an axis and leave it where it is**: cost ≈ 0, versus
+cost ≈ the filter. Recorded here because the tidy instinct is the wrong one and
+a future session will have it again.
+
+**The worked example of this record's governing principle, which it otherwise
+argues in the abstract: `vibe`.** Verified 2026-08-16 — `grep -rn vibe site/js
+site/*.html site/css` returns **nothing**, while
+[ARCHITECTURE.md](../ARCHITECTURE.md) describes it as *"free-form chips shown on
+cards"*. **20 venues carry it, 574 bytes, precached to every phone, rendered by
+no screen** — `app.js` builds `chip-price` and `chip-cuisine` and stops. It
+predates [ADR 0047](0047-the-app-ships-only-what-it-renders.md), so it is
+inherited debt rather than a breach, and at 574 bytes it is a *principle*
+problem, not a performance one.
+
+⚠️ **But it is a MISSING RENDER, not a dead field, and this record must not be
+read as arguing for deletion.** The faves-cook2 session made the correction and
+it is the right one: the design was specified, ratified into `ARCHITECTURE.md`,
+and the code never caught up. Deleting satisfies ADR 0047 in the cheapest way
+and destroys 38 taggings of real signal across 20 venues that no other field
+carries — `dog friendly`, `byo`, `garden bar`, `live sport`, `Wellington icon`.
+🎯 **Which way it goes is the owner's call, not a doctrine call**, and
+`0077-style-of-dining-is-not-the-cuisine-axis-work.md` deliberately
+records it without resolving it. <!-- linkscan:allow: 0077 landed on main after
+this branch was cut; converted to an inline link when this merges -->
+ What this record takes from it is narrower and
+survives either ruling: **a field can pass every gate for months while the
+screen it was added for does not exist**, which is exactly the gap Decision 4's
+admission test is aimed at. If it is rendered rather than removed, note
+`validate.py` has **no vocabulary check on `vibe`** and the corpus already holds
+five strings for one idea (`quick` · `quick-eats` · `quick-lunch` ·
+`grab-and-go` · `counter-order`) — free text becomes visible inconsistency on
+day one.
+
 **Nothing ships.** `site/data/` is unchanged, no payload grows, and
 [ADR 0047](0047-the-app-ships-only-what-it-renders.md) is
 untouched — which is the point of recording a shape rather than building one.
+
+**Every number in this record has a shelf life, and that is the generalisable
+finding.** Theme 28's counts were measured across 48 records and are quoted as
+current at 55. Its *"there are no discounts in the corpus at all"* is still true
+against its own stated word list — no "% off", no "happy hour", no "senior" —
+and false in substance, because `satay-kingdom-cafe` prints *"(Save $2.50)"* and
+the Online Deal rows above are a channel discount under another name. The
+faves-38 session, closing stale counts of its own the same day, named the
+mechanism better than "true on its word list, false in substance" does:
+🔑 **a measurement that names its own method expires when the corpus grows, and
+nothing tells you.** The method was stated, the scope was never restated, and
+the number went on looking authoritative. It caught this session too — the ADR
+ceiling measured at 0075 was stale within ten minutes. **So the counts above are
+dated deliberately, and a session acting on them should re-run them, not cite
+them.**
 
 ## What this record does not establish
 
