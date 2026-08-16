@@ -326,3 +326,22 @@ deliberation those compact docs omit.
   dismissible chip beside the count). Owner ruled keep-as-is on 2026-08-16 and
   asked that the option stay open; the record carries the four-step switch and
   what switching costs, so the trade is never re-litigated from memory.
+- [0048](0048-an-add-on-is-part-of-the-dish-you-are-ordering.md) — **an add-on
+  is part of the dish you are ordering.** Measured before designing: 28 dish
+  descriptions carried a priced add-on in prose, 63 an unpriced choice, 17
+  dishes *were* add-ons wearing a dish's clothes, and 11 whole sections across
+  9 venues were add-on groups rather than things you would order alone. The
+  safety case was already proven by the corpus — `tag_allergens.py` correctly
+  excludes add-on prose from inference, so every allergen named in an add-on
+  was being dropped on the floor. Allergens union across a configuration and
+  dietary claims intersect; an order line is keyed by its selection, so a dish
+  configured two ways is two lines.
+- [0049](0049-a-row-offered-as-an-add-on-is-not-printed-twice.md) — **a row
+  offered as an add-on is not printed twice.** Converting a menu to structured
+  add-ons left the source rows in place, so two venues printed their extras
+  twice. The owner was given the cost first — those rows are named by stored
+  hearts, ratings, `picks` and shared links — and ruled hide, because the menu
+  a person is holding in the shop does not print "Extra halloumi" twice. A
+  section may carry `addOnsOnly: true`; the rows stay in the data, and
+  `validate.py` refuses the flag unless every row it hides is still reachable
+  as an option.
