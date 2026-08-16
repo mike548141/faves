@@ -1754,6 +1754,39 @@ Two consequences recorded rather than buried:
 
 ---
 
+## Theme 20 — Places from anywhere (owner-raised 2026-08-16)
+
+Owner's intent, stated 2026-08-16: the collection is **not** scoped to
+Wellington, or to New Zealand. A place loved anywhere in the world may be added.
+
+✅ **The framing is fixed — 2026-08-16** (ADR 0042). Title, install name, About
+lede, share text and the te reo subtitle name no city; README and CONTRIBUTING
+follow. Venue data keeps its real areas and addresses.
+
+What the rename exposed is below. All three are **correct for the venues held
+as at 2026-08-16 and silently wrong for the first one outside NZ** — the failure
+mode is a confident wrong answer, not a blank. Each is marked at the source
+(`#!####` / `#!###`).
+
+- [ ] 🚩 **Venue timezone — blocking, do before the first non-NZ venue**
+  `[M][schema]` — `hours.js` computes open/closed in `Pacific/Auckland` and
+  `temporal.js` reads the current date the same way (ADR 0006). A London venue
+  would render open/closed against Wellington's clock, off by roughly half a
+  day, with nothing on screen saying so. Needs an optional per-venue `timezone`
+  (IANA) defaulting to `Pacific/Auckland`, `nzNow`/`todayNZ` taking a zone, an
+  ADR superseding 0006, and the two visible strings that hard-code the claim —
+  `Hours · NZ time` and *"Open/closed times are New Zealand time"* — becoming
+  the venue's own zone. `viewerOnNzTime` generalises to a per-venue comparison.
+- [ ] **Currency is NZD by construction** `[S][schema]` — About states it once
+  for the whole site rather than per price (ADR 0037), and `price.js`'s `$`/`$$`
+  bands are calibrated to NZD amounts. A venue priced in another currency needs
+  the statement to move down to the venue, and the bands to stop being global.
+- [ ] **Seasons assume the southern hemisphere** `[XS][js]` — `temporal.js` maps
+  `summer` to Dec–Feb, which inverts north of the equator. Smallest of the
+  three, and it falls out of the timezone work: a zone implies a hemisphere.
+
+---
+
 ---
 
 ## Also parked (small)
