@@ -3777,6 +3777,28 @@ around it. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   just proceed"* sits against `RECORD.md`'s *"Recoverability of bytes is the
   wrong test for a record store"* with no boundary drawn between them; and CF3
   itself may want an explicit monolithic-board branch.
+  🚩 **A FOURTH, queued 2026-08-17 — atelier's branch-protection check is
+  specified to catch the wrong failure, and this repo is the counterexample.**
+  AP1's open "machine-check half" (`docs/roadmap/140-…/010-the-machine-check-half…`)
+  owes *"a parent-row check reading branch-protection/ruleset state and going
+  **RED when absent**"*, on the reasoning that *"nothing would notice if the
+  ruleset were deleted"*. **On faves that check would report GREEN today.**
+  `protect-main` is present and `active` — so a presence test passes — while
+  the **last 100 ruleset evaluations on `main` were 100 bypasses**, because
+  `bypass_actors` carries `RepositoryRole 5 → always`. 🔑 **Present is not
+  enforcing, and absence is the failure mode that already raises its hand** —
+  a deleted ruleset is loud, a permanently-bypassed one is silent and looks
+  identical to a working one from outside. The absences-raise-their-hands
+  doctrine needs its second limb: **a control that exists but cannot change any
+  outcome is the same defect as one that is gone**, which is ADR 0072's
+  decorative-guard rule arriving at the branch-protection layer.
+  ⚠️ **The interaction is the other half, and neither end records it.** C4
+  (*"make the local bypass visible"*) reasons about `--no-verify` on the stated
+  premise *"with CI as backstop rather than gate"* — and here CI is not a
+  backstop either, since two of its six jobs could not block a push until this
+  was found. **Two bypass layers, each of whose write-ups assumes the other one
+  holds.** Evidence is this repo's own state on 2026-08-17, measured by three
+  independent sessions, not testimony.
 
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
