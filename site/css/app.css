@@ -4672,3 +4672,37 @@ body.faves-view .to-top {
   color: var(--ink-soft);
   font-size: var(--step-sub);
 }
+
+/* Type-to-confirm on Reset (owner, 2026-08-16: "a disruptive/unusal UX … that
+   jars people"). It is meant to interrupt: a field where a button was, so the
+   gesture that got you here cannot finish the job. */
+.reset-type {
+  margin: var(--space-2) 0;
+}
+.reset-type-label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.92rem;
+  margin-bottom: var(--space-1);
+}
+.reset-type-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5em 0.7em;
+  border: 2px solid var(--danger, #c0392b);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+.reset-type-help {
+  margin: var(--space-1) 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+/* A disabled destructive button must not look merely quiet — it must look
+   unavailable, or the reader reads the gate as decoration. */
+.profile-btn-danger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

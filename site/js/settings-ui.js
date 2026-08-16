@@ -465,23 +465,88 @@ function refreshResetSection() {
   const resetConfirmText = el("p", { className: "profile-confirm-text" });
   const resetGo = el("button", { type: "button", className: "profile-btn profile-btn-danger", textContent: "Reset" });
   const resetCancel = el("button", { type: "button", className: "profile-btn", textContent: "Cancel", "data-i18n": "generic.cancel" });
-  const resetConfirm = el("div", { className: "profile-confirm", role: "group", hidden: true }, [
+  const resetConfirm = el("div", { className: "profile-confirm profile-confirm-danger", role: "group", hidden: true }, [
     resetConfirmText, el("div", { className: "profile-form-actions" }, [resetGo, resetCancel]),
   ]);
   resetConfirm.setAttribute("aria-label", "Confirm reset");
   const resetStatus = el("p", { className: "settings-note settings-data-status", role: "status", "aria-live": "polite" });
 
   resetBtn.addEventListener("click", () => {
+    const who = profiles.active().name;
+    // Names what actually goes, and does not overstate it. The owner asked the
+    // phrase to acknowledge "the destruction of all of their personal data";
+    // this action clears one profile's PREFERENCES — dietary needs, flagged
+    // allergens, distances, units, language, maps app — and leaves favourites,
+    // ratings, the order tally and other profiles alone. Saying otherwise would
+    // make the scariest sentence in the app the least accurate one, and a
+    // warning that overstates gets discounted the first time someone notices.
+    // Widening what Reset destroys is the owner's call, not a side effect of
+    // rewording its warning (ROADMAP).
     resetConfirmText.textContent =
-      `Reset ${profiles.active().name}’s preferences to defaults? Any dietary needs and flagged allergens will be cleared.`;
+      `This wipes ${who}’s saved preferences on this device — dietary needs and ` +
+      `flagged allergens included — and cannot be undone. Favourites, ratings and ` +
+      `other profiles are not touched.`;
+    typeLabel.textContent = "Type I agree to confirm";
+    typeHelp.textContent =
+      "Typed, not tapped: this one destroys settings you may rely on to eat safely.";
+    typeInput.value = "";
+    syncArmed();
     resetConfirm.hidden = false;
-    resetGo.focus();
+    typeInput.focus();
   });
   resetCancel.addEventListener("click", () => {
     resetConfirm.hidden = true;
+    typeInput.value = "";
+    syncArmed();
     resetBtn.focus();
   });
+  // THIRD STEP: type it out. Owner, 2026-08-16: *"I want a disruptive/unusal UX
+  // … that jars people and they won't keep tapping on by mistake."* Two taps is
+  // still two taps, and a Reset button that appears exactly where your thumb
+  // already is gets hit by momentum. Typing cannot be done by momentum — it is
+  // the one confirmation that requires you to have read the sentence, which is
+  // why every tool that destroys something you cannot get back uses it.
+  //
+  // The gate is deliberately strict-but-forgiving: case and surrounding spaces
+  // are ignored (a phone keyboard capitalises the "I" for you either way), the
+  // words are not. Enter submits, so the flow ends where the hands already are.
+  const PHRASE = "i agree";
+  const typeLabel = el("label", { className: "reset-type-label", htmlFor: "reset-type" });
+  const typeInput = el("input", {
+    type: "text",
+    id: "reset-type",
+    className: "reset-type-input",
+    autocomplete: "off",
+    autocapitalize: "off",
+    autocorrect: "off",
+    spellcheck: false,
+    placeholder: "I agree",
+  });
+  typeInput.setAttribute("aria-describedby", "reset-type-help");
+  const typeHelp = el("p", { className: "reset-type-help", id: "reset-type-help" });
+  const armed = () => typeInput.value.trim().toLowerCase() === PHRASE;
+  function syncArmed() {
+    resetGo.disabled = !armed();
+  }
+  typeInput.addEventListener("input", syncArmed);
+  typeInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && armed()) {
+      e.preventDefault();
+      resetGo.click();
+    }
+  });
+  const typeRow = el("div", { className: "reset-type" }, [typeLabel, typeInput, typeHelp]);
+  // Between the sentence and the buttons — the order you read it in.
+  resetConfirmText.after(typeRow);
+
   resetGo.addEventListener("click", () => {
+    // Belt and braces: the button is disabled until the phrase matches, but a
+    // disabled button is a UI state, not a guarantee — this is the check that
+    // actually stands between a stray tap and someone's data.
+    if (!armed()) {
+      typeInput.focus();
+      return;
+    }
     settings.reset();
     resetConfirm.hidden = true;
     resetStatus.textContent = "Settings reset to defaults.";
