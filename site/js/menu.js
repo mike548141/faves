@@ -4,7 +4,13 @@
 
 import { loadRestaurant } from "./data.js";
 import { mapsUrl, recallOrigin } from "./geo.js";
-import { orderedBranches, isMultiLocation, branchAsPlace, branchCard } from "./locations.js";
+import {
+  orderedBranches,
+  isMultiLocation,
+  branchAsPlace,
+  branchCard,
+  nearestBranch,
+} from "./locations.js";
 import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, makeClock, nowIn, viewerOnVenueTime } from "./hours.js";
@@ -473,7 +479,11 @@ function renderHeader(r) {
   // and equally nothing to reassure anyone about. They keep a bare title.
   const caveat = isRecipes ? null : refreshCaveat(r, todayIn(venueTimezone(r)));
   if (caveat) {
-    const [caveatBtn, caveatNote] = caveatDisclosure(r.id, caveat, r);
+    // The same branch `venueTimezone` and `venueHours` pick — nearest when the
+    // home screen captured a location this session, else the primary. The note
+    // must describe the branch the rest of the screen is about.
+    const branch = nearestBranch(r, recallOrigin()).branch;
+    const [caveatBtn, caveatNote] = caveatDisclosure(r.id, caveat, r, branch);
     // Button after the title, note absolutely positioned within the group
     // (its positioning context) so it can appear on hover of its sibling.
     titleGroup.append(caveatBtn, caveatNote);
@@ -674,12 +684,12 @@ function convertedNote(record) {
 // currency is stated — a reader wondering "is this NZD?" is looking at the
 // prices, which is exactly where this sits. (The About dialog carries the
 // same fact for anyone who looks there first.)
-function caveatDisclosure(id, caveat, record) {
+function caveatDisclosure(id, caveat, record, branch) {
   const warn = caveat.show;
   const [btn, note] = disclosure({
     noteId: `menu-caveat-${id}`,
     label: warn ? "Why this menu needs a refresh" : "When we last checked this menu",
-    text: warn ? caveatText(caveat) : confidenceNote(caveat, record),
+    text: warn ? caveatText(caveat) : confidenceNote(caveat, record, branch),
     // Shape first, colour second — see disclosure.js.
     glyph: warn ? "⚠" : "ⓘ",
   });
@@ -716,23 +726,37 @@ const CHECKED_PHRASE = {
  * nothing about the phone number or the opening hours, so those are only
  * mentioned when `detailsVerified` gives them their own date — otherwise the
  * note stays quiet about them rather than borrowing the menu's credit.
+ *
+ * `branch` is the one whose details are being described: the nearest, which is
+ * also the branch whose hours drive the open/closed status this reader is
+ * looking at (locations.js `venueHours`). Describing one branch while the card
+ * shows another's hours would be the same borrowed credit one level down.
  */
-function confidenceNote(caveat, record) {
+function confidenceNote(caveat, record, branch) {
   const how = CHECKED_PHRASE[caveat.method] || "checked";
   const when = niceDate(caveat.date);
-  const details = detailsVerification(record);
+  const details = detailsVerification(record, branch);
+  // Name the branch only when the reading is genuinely that branch's AND there
+  // is more than one to tell apart — a lone branch's label ("Manners Street")
+  // adds a distinction the reader doesn't have to make.
+  const named =
+    details?.scope === "branch" && isMultiLocation(record) && branch?.label ? branch.label : null;
+  const whose = named ? `Phone, address and opening hours at ${named}` : "Phone, address and opening hours";
 
   let lead = `Menu and prices ${how} on ${when}.`;
   if (details) {
     // Same day and same method is the common case — one reading of the shop,
-    // recorded as the two facts it establishes. Say it as one sentence.
-    if (details.date === caveat.date && details.method === caveat.method) {
+    // recorded as the two facts it establishes. Say it as one sentence. Never
+    // when the reading is one branch's, though: the merged sentence claims the
+    // venue's details entire, which is exactly what per-branch provenance is
+    // for not saying.
+    if (!named && details.date === caveat.date && details.method === caveat.method) {
       lead = `Menu, prices and the venue’s details — phone, address and opening hours — ${how} on ${when}.`;
     } else {
       const dHow = CHECKED_PHRASE[details.method] || "checked";
       lead =
         `Menu and prices ${how} on ${when}. ` +
-        `Phone, address and opening hours ${dHow} on ${niceDate(details.date)}.`;
+        `${whose} ${dHow} on ${niceDate(details.date)}.`;
     }
   }
 
