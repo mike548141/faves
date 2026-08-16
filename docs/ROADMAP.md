@@ -3249,6 +3249,54 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
       (`boot_check` alone is seconds and catches the worst class); or leaving
       them manual and making the *list* impossible to skip. ⚑ Owner's call on
       whether CI minutes get spent here.
+      ✅ **RULED 2026-08-16: the FAST SUBSET, per push. `[S][tools]` OPEN AND
+      UNCLAIMED — next session takes it.** Wire **`boot_check.mjs` into
+      `.github/workflows/ci.yml` on every push**; the other seven stay manual on
+      CLAUDE.md's list. The full-CI and nightly options were both put to him with
+      their costs and both declined.
+      🔑 **Why this is the right subset and not a compromise:** `boot_check` runs
+      in seconds, needs no timing assumptions, and catches the single worst class
+      — *a screen whose JavaScript does not run at all*. That is the exact failure
+      it was written for (2026-08-16: `app.js` threw on a missing import, the home
+      screen silently served its no-JS fallback, and **570 unit tests,
+      `device_check` 19/19 and `cook_check` 36/36 were all green**).
+      🛑 **And it is the one that is safe to make REQUIRED**, which is the whole
+      point: `cook_check` is measurably contention-flaky (see the item above) and
+      `sync_check` drives two browsers for minutes. A flaky required check trains
+      everyone to hit re-run, which is worse than no check. Do **not** quietly
+      add the others later without re-testing that assumption.
+      ⚠️ **This does not close the item.** Seven guards remain on the honour
+      system, so *"CI is green"* still is not evidence about most browser
+      behaviour. Keep the 🛑 note in CLAUDE.md's verify list saying so.
+
+> ✅ **OWNER RULING 2026-08-16 — FIVE parallel sessions stay. Recommendation
+> overruled, deliberately.** A session proposed cutting to **three**, each given
+> a *file territory* rather than a roadmap item, on the evidence that the fifth
+> session was producing coordination overhead rather than throughput: a ready,
+> owner-ruled item (36a) was declined purely for file contention; two sessions
+> spent messages negotiating `SHELL_VERSION` ranges; and **twice, one session's
+> entirely correct action hard-blocked every other session's commits**.
+> **He heard all of that and kept five**, judging the raw parallel output worth
+> the per-session friction. That is his call and it is now the operating model —
+> do not re-propose the cut without new evidence.
+> 🔑 **So the job is to make five work, not to argue about five.** The mechanisms
+> that demonstrably paid for themselves on the day, and should be treated as
+> standing practice rather than good manners:
+> - **Broadcast your FILE SET on open, not just your roadmap claim.** A claim
+>   does not say which files. This surfaced `cook.js`/`cook-ui.js` double-held by
+>   two sessions who did not know about each other, and it was a *third* session
+>   noticing two answers to one broadcast that found it.
+> - **Announce version RANGES out loud and re-verify after every rebase.** Never
+>   take "deployed + 1" — a rebase does not conflict on a version constant, it
+>   **absorbs** it, leaving CI green and installed phones on the old shell.
+> - **Ask peers what the owner has ruled at their end.** Rulings do not cross by
+>   themselves; three arrived that way today.
+> - 🚩 **Announce a change that makes the repo's GATES stricter** the way a
+>   `SHELL_VERSION` is announced. Two of the day's four repo-wide stops came from
+>   correct changes whose blast radius was everyone else's ability to commit.
+> - **One worktree per agent**, or forbid `git add -A` in the brief — disjoint
+>   *file ownership* does not make a shared worktree safe, because `git add -A`
+>   is not file-scoped. That cost 101 lines of misattributed work today.
 
 - [ ] 🚩 **`linkscan` is blind to reference-style links, and it is an ENFORCED
       floor guard** `[S][docs]` ⏳ **owed upstream to atelier; nothing to fix
@@ -4944,16 +4992,31 @@ says the two were concurrent and that merge order settles nothing worth
 asserting. Peer sessions carried this into ADR 0072 as a face of the same
 family.
 
-**🎯 Three questions for the owner, left open rather than decided quietly:**
-1. **A notification fires even when you are looking at the page.** The ruling
-   conditions it on duration and nothing else; adding a "only if the tab is
-   hidden" rule would be inventing one. Recorded as a rejected option in 0071.
-2. **No visible cue at all.** A timer that ends for a step you are not looking
-   at has sound, buzz and notification — and nothing on screen. The `denied`
-   line reuses `.cook-awake`. Both want `app.css`, which live peer sessions held
-   all session, so nothing was written there.
-3. **`cook.notifyBlocked` has no te reo string.** `reo.js` was held by a peer;
-   it falls back to English safely. Belongs in the reo review queue.
+**🎯 Three questions put to the owner — ✅ ALL THREE ANSWERED 2026-08-16:**
+1. ✅ **A notification fires even when you are looking at the page — RULED: LEAVE
+   IT, duration only.** The condition stays *over fifteen minutes* and nothing
+   else. He took the redundant-notification cost knowingly, over an offered
+   "only if the tab is hidden" alternative. 🔑 **His reasoning generalises and is
+   worth keeping**: a rule with one condition is predictable; a second condition
+   buys quiet and costs predictability, and "hidden" is a poor proxy anyway — a
+   phone locking mid-bake counts as hidden. **Nothing to build.** ADR 0071's
+   rejected-options list already records the alternative; it is now rejected by
+   the owner rather than by the agent's restraint.
+2. ✅ **No visible cue at all — RULED: BUILD IT, and style the blocked line
+   too.** `[S][css]` **OPEN AND UNCLAIMED — the next session should take this.**
+   Two parts, one small CSS pass in `app.css`:
+   - a **finished timer's card visibly changes** (the timer face reaching zero
+     must be legible without sound), and
+   - the notifications-blocked line gets **its own styling** instead of borrowing
+     `.cook-awake` via the `.cook-notify-blocked` hook already in the markup.
+   🚩 **Why this is the highest-value of the three, in his own case:** iOS Safari
+   ignores `navigator.vibrate` entirely, so on the owner's own phone the alarm is
+   tone plus notification. **A silenced phone with notifications denied currently
+   gives no alarm at all** — and a silenced phone in a kitchen is the likely
+   case, not the edge case. Verify at 390 px and extend `cook_check.mjs`.
+3. ✅ **`cook.notifyBlocked` has no te reo string — RULED: to the reo queue.**
+   Add it to `docs/reo-review-queue.md` as a `// draft` string in `reo.js`; it
+   falls back to English safely until then, so nothing is broken meanwhile.
 
 ⚠️ **Vibration is NOT gated on `prefers-reduced-motion`, and that was a
 judgement call worth challenging.** `settings.js` has no quiet/haptics

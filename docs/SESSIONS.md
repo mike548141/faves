@@ -6748,3 +6748,47 @@ convention that unpriced lines are simply omitted — a convention it verified
 against two other venues before following. Both defensible, and opposite.
 🎯 Left with the owner: is an unpriced row a record of what the venue sells, or
 noise until someone prices it?
+
+### ✅ Owner rulings taken at the close (2026-08-16)
+
+Four questions were put to him rather than resolved quietly. All four were
+answered, and **one overruled the session's own recommendation** — recorded here
+because the reasoning is the part that carries forward.
+
+- **A notification while you are looking at the page → LEAVE IT, duration only.**
+  The alternative ("only if the tab is hidden") was offered with its costs and
+  declined. 🔑 **A rule with one condition is predictable; a second condition
+  buys quiet and spends predictability** — and "hidden" is a poor proxy anyway,
+  since a phone locking mid-bake counts as hidden. Nothing to build.
+- **No visible cue when a timer ends → BUILD IT, and style the blocked line
+  too.** `[S][css]`, open and unclaimed. This was the highest-value of the three
+  in his own case: iOS ignores `navigator.vibrate`, so on his phone the alarm is
+  tone plus notification, and **a silenced phone with notifications denied
+  currently gives no alarm at all**. A silenced phone in a kitchen is the likely
+  case, not the edge case.
+- **`cook.notifyBlocked` te reo string → to the reo review queue.** Falls back to
+  English safely meanwhile.
+- **CI and the browser checks → the FAST SUBSET, per push.** `boot_check` into
+  `ci.yml`; the other seven stay manual. Full-CI and nightly were both offered
+  and declined. 🔑 **The subset is chosen for what is safe to make *required*,
+  not for what is cheap**: `boot_check` needs no timing assumptions, while
+  `cook_check` is contention-flaky and `sync_check` drives two browsers for
+  minutes — and a flaky *required* check trains everyone to hit re-run, which is
+  worse than no check.
+
+### 🎯 And the one he overruled — five parallel sessions stay
+
+This session recommended cutting to **three**, each given a *file territory*
+rather than a roadmap item, on the evidence above: a ready owner-ruled item
+declined purely for file contention, version-range negotiation by message, and
+**two occasions where one session's entirely correct action hard-blocked every
+other session's commits**.
+
+**He heard it and kept five**, judging the raw parallel output worth the
+per-session friction. 🔑 **Which reframes the work rather than ending it: the job
+is to make five work, not to argue about five.** The mechanisms that
+demonstrably paid for themselves are now written into the roadmap as standing
+practice — broadcast the *file set* not just the claim, announce version
+*ranges* and re-verify after every rebase, ask peers what the owner has ruled at
+their end, announce any change that makes the repo's **gates** stricter, and give
+each agent its own worktree or forbid `git add -A`.
