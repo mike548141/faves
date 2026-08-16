@@ -61,6 +61,14 @@ const MI = {
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",
+  // These two moved from a pair of pill toggles to two <option>s of the "Sort
+  // by" select in 15z, and kept their keys on purpose: the queue is parked
+  // (owner ruled 2026-08-16, "do not open new [reo] items without asking"), so
+  // re-keying already-drafted strings would have added two entries to it for no
+  // gain. The select's third option, "Our usual order", is the one genuinely
+  // new string and is deliberately NOT drafted here — `sort.usual` falls back
+  // to the captured English, which is the documented partial state, not an
+  // oversight. Key owed: sort.usual.
   "toggle.nearMe": "E tata ana",
   "toggle.alongRoute": "I te ara", // draft — "on the way / along the route"
   // "Along a route" destination picker + card labels (neutral chrome; the

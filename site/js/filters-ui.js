@@ -72,9 +72,6 @@ export function initFiltersUI({ onClearAll } = {}) {
   const clearBtn = document.getElementById("filters-clear");
   const doneBtn = document.getElementById("filters-done");
   const doneLabel = document.getElementById("filters-done-label");
-  const sortGroup = document.getElementById("filter-sort-group");
-  const nearBtn = document.getElementById("near-me");
-  const routeBtn = document.getElementById("along-route");
 
   // ---- The desktop row: one element, two homes (see the header note) -------
   const controls = document.getElementById("filter-controls");
@@ -200,11 +197,12 @@ export function initFiltersUI({ onClearAll } = {}) {
       // the old language. A microtask lands after reo has caught up. Same
       // reasoning, same fix, as settings-ui.js's renderTitle().
       queueMicrotask(() => setEntryLabel(n));
-      // No geolocation means neither sort control was unhidden; a group heading
-      // over nothing is worse than no group.
-      if (sortGroup) {
-        sortGroup.hidden = !!nearBtn?.hidden && !!routeBtn?.hidden;
-      }
+      // The sort group's visibility is NOT set here. It is one control now, and
+      // whether it can exist at all is a browser-capability question that only
+      // app.js's wireLocation tests — it unhides the group once, on the one
+      // path that proves geolocation is there. Re-deciding it on every render
+      // from the *button* ids this file used to hold is how it would come back
+      // as an empty heading the day those ids change.
     },
   };
 }

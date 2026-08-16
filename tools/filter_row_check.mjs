@@ -98,6 +98,43 @@ const STATE = `(() => {
     cuisineReach: reach("filter-cuisine"),
     activeId: document.activeElement?.id || document.activeElement?.tagName || "",
     count: (count?.textContent || "").trim(),
+    // --- 15z: the row has to BE a row ------------------------------------
+    // Everything below is measured, never inferred from the CSS. The three
+    // properties here are the three that actually broke while it was built,
+    // each caught by measurement and none of them visible to a unit test.
+    panelH: box ? Math.round(box.height) : 0,
+    // A wrapping flex row breaks on its items' flex-basis, not on their
+    // shrunk width — so "it fits" and "it does not wrap" are different
+    // questions and only the second one is the promise.
+    tallestControl: Math.max(
+      0,
+      ...[...(controls?.querySelectorAll("select, .list-toggle, #filters-clear") ?? [])]
+        .filter((e) => e.offsetParent !== null)
+        .map((e) => Math.round(e.getBoundingClientRect().height))
+    ),
+    // Distinct top edges of the interactive controls, clustered at 8 px. One
+    // band = one row. Two bands is the panel this redesign replaced.
+    bands: (() => {
+      const tops = [...(controls?.querySelectorAll("select, .list-toggle, #filters-clear") ?? [])]
+        .filter((e) => e.offsetParent !== null)
+        .map((e) => Math.round(e.getBoundingClientRect().top))
+        .sort((a, b) => a - b);
+      const out = [];
+      for (const t of tops) if (!out.length || t - out.at(-1) > 8) out.push(t);
+      return out.length;
+    })(),
+    // A select squeezed to 107 px renders "All cuisi…". The floor is what
+    // stops that, and a floor nothing measures is a floor that drifts.
+    narrowest: Math.min(
+      Infinity,
+      ...[...(controls?.querySelectorAll(".filter-field select") ?? [])]
+        .filter((e) => e.offsetParent !== null)
+        .map((e) => Math.round(e.getBoundingClientRect().width))
+    ),
+    overflowsX: !!controls && controls.scrollWidth > controls.clientWidth + 1,
+    routing: !!controls?.classList.contains("routing"),
+    routeBarHidden: document.getElementById("route-bar")?.hidden !== false,
+    openNowReach: reach("open-now"),
   };
 })()`;
 
@@ -119,6 +156,15 @@ async function run(opts) {
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
+    // Pre-granted and overridden, so "Along a route" can actually arm without a
+    // permission prompt no headless run can answer. Wellington, so the distance
+    // sort has somewhere to sort from.
+    await cdp.send("Browser.grantPermissions", { permissions: ["geolocation"] });
+    await cdp.send(
+      "Emulation.setGeolocationOverride",
+      { latitude: -41.2, longitude: 174.8, accuracy: 50 },
+      sessionId
+    );
 
     const size = async (w) => {
       await cdp.send(
@@ -161,6 +207,40 @@ async function run(opts) {
       s.clearWithControls,
       JSON.stringify({ clearWithControls: s.clearWithControls })
     );
+
+    // --- 15z: one row, roughly one control tall. ---------------------------
+    // The brief was the owner's and it was numeric: "only be the height of the
+    // Open Now button UI element roughly as a row of UI elements". What shipped
+    // before was 284 px in five bands. These assertions are deliberately about
+    // the RENDERED box rather than the CSS that produces it — the first cut of
+    // this row satisfied every rule it was written to and still wrapped.
+    report.check(
+      "1280px: the filter row is ONE band of controls, not a stacked panel",
+      s.bands === 1,
+      `bands: ${s.bands} · panel ${s.panelH}px · tallest control ${s.tallestControl}px`
+    );
+    report.check(
+      "1280px: …and the panel is that control's height plus its padding, not a multiple of it",
+      s.panelH > 0 && s.panelH < s.tallestControl * 2,
+      `panel ${s.panelH}px vs 2 × ${s.tallestControl}px`
+    );
+    report.check(
+      "1280px: no select is squeezed below the width its own default text needs",
+      s.narrowest >= 100 && !s.overflowsX,
+      `narrowest select ${s.narrowest}px · panel overflows horizontally: ${s.overflowsX}`
+    );
+
+    // Same three at the breakpoint itself, which is where the budget is
+    // tightest — 928 px inside the padding, for content that needs 918.
+    await size(960);
+    const narrow = await state();
+    report.check(
+      "960px (the breakpoint itself): still one band, still nothing squeezed",
+      narrow.bands === 1 && narrow.narrowest >= 100 && !narrow.overflowsX,
+      `bands ${narrow.bands} · panel ${narrow.panelH}px · narrowest ${narrow.narrowest}px · overflowX ${narrow.overflowsX}`
+    );
+    await size(1280);
+    s = await state();
 
     // The landmark and the live region, at both widths.
     const landmarkWide = s.landmark;
@@ -236,6 +316,52 @@ async function run(opts) {
       "390→1280 with the sheet OPEN: the control that had focus keeps it",
       s.activeId === "filter-area",
       `activeElement: ${s.activeId}`
+    );
+
+    // --- 15z: arming a route must not lay a control over another one. -------
+    // The destination picker is a fourth control in a row measured for three.
+    // Left to the flex row it rendered ON TOP of "All cuisines", "Open now" and
+    // "Cheap eats" — all three still passed a visibility check, and all three
+    // were untappable. Only elementFromPoint sees that, and only in this state.
+    await size(1280);
+    await driver.evalPage(`(() => {
+      const s = document.getElementById("filter-sort");
+      s.value = "route";
+      s.dispatchEvent(new Event("change", { bubbles: true }));
+    })()`);
+    await sleep(600); // the geolocation callback is async even when pre-granted
+    s = await state();
+    if (s.routeBarHidden) {
+      report.check(
+        "1280px: 'Along a route' arms the destination picker",
+        false,
+        "the route bar stayed hidden — geolocation was not granted, so the "
+          + "overlap assertion below could not be made at all"
+      );
+    } else {
+      report.check(
+        "1280px: arming a route reflows the row rather than overlapping it",
+        s.routing && s.bands >= 2,
+        `routing class: ${s.routing} · bands: ${s.bands} · panel ${s.panelH}px`
+      );
+      report.check(
+        "1280px: …and the controls it displaced are still tappable, not just visible",
+        s.cuisineReach === "reachable" && s.openNowReach === "reachable",
+        `#filter-cuisine: ${s.cuisineReach} · #open-now: ${s.openNowReach}`
+      );
+    }
+    // Back to rest — and the row must be one band again, not stuck wide.
+    await driver.evalPage(`(() => {
+      const s = document.getElementById("filter-sort");
+      s.value = "usual";
+      s.dispatchEvent(new Event("change", { bubbles: true }));
+    })()`);
+    await sleep(300);
+    s = await state();
+    report.check(
+      "1280px: leaving the route puts the row back to one band",
+      s.bands === 1 && !s.routing && s.routeBarHidden,
+      `bands ${s.bands} · routing ${s.routing} · panel ${s.panelH}px`
     );
 
     // --- Idempotence. -------------------------------------------------------

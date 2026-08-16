@@ -325,7 +325,7 @@ function init(restaurants) {
   const activeEl = document.getElementById("active-filters");
   const areaSel = document.getElementById("filter-area");
   const cuisineSel = document.getElementById("filter-cuisine");
-  const serviceBtns = [...document.querySelectorAll(".segmented button")];
+  const serviceSel = document.getElementById("filter-service");
 
   const { areas, cuisines } = deriveFacets(restaurants);
   fillSelect(areaSel, areas, "All areas", "filter.allAreas");
@@ -340,7 +340,12 @@ function init(restaurants) {
   // the dropdown above it never disagree about why it's short.
   const fromUrl = filtersFromQuery(location.search, { areas, cuisines });
   const state = { ...DEFAULT_FILTERS, ...fromUrl, origin: null, dest: null };
-  for (const [sel, value] of [[areaSel, state.area], [cuisineSel, state.cuisine]]) {
+  for (const [sel, value] of [
+    [areaSel, state.area],
+    [cuisineSel, state.cuisine],
+    [serviceSel, state.service],
+  ]) {
+    if (!sel) continue;
     sel.value = value;
     sel.dataset.active = value;
   }
@@ -379,9 +384,10 @@ function init(restaurants) {
       syncQuery();
     } else if (kind === "service") {
       state.service = "all";
-      serviceBtns.forEach((b) =>
-        b.setAttribute("aria-pressed", String(b.dataset.service === "all"))
-      );
+      if (serviceSel) {
+        serviceSel.value = "all";
+        serviceSel.dataset.active = "all";
+      }
     } else {
       state[kind] = false;
       document
@@ -518,14 +524,14 @@ function init(restaurants) {
     filtersUI.sync({ active, shown: n, total });
   }
 
-  serviceBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      state.service = btn.dataset.service;
-      serviceBtns.forEach((b) =>
-        b.setAttribute("aria-pressed", String(b === btn))
-      );
-      render();
-    });
+  // Service is a pick-one-of-three like Area and Cuisine, so since 15z it is a
+  // <select> like them. It is deliberately NOT in syncQuery: `?service=` was
+  // never a shareable facet (ADR 0050 carries area and cuisine only), and
+  // adding it here would change what a shared link means.
+  serviceSel?.addEventListener("change", () => {
+    state.service = serviceSel.value;
+    serviceSel.dataset.active = serviceSel.value;
+    render();
   });
 
   areaSel.addEventListener("change", () => {
@@ -1050,24 +1056,34 @@ function wireCheapEats(state, render) {
   wireListToggle("cheap-eats", "cheap", state, render);
 }
 
-// Location modes — "Near me" (distance sort) and "Along a route" (least-detour
-// sort). Both need the device location, so they share one origin; the two
-// buttons are mutually exclusive sort modes (like search vs favourites).
-// Purely additive — geolocation is feature-detected and both controls stay
-// hidden (plain list stays) where it's unavailable or blocked. `state.origin`
-// is the viewer's {lat,lng}; `state.dest` is the chosen destination
-// {lat,lng,label}; `state.routeOpen` is the "choosing a destination" arming
-// state (bar visible, sort still Near-me until a destination lands).
+// Location modes — "Nearest first" (distance sort) and "Along a route"
+// (least-detour sort). Both need the device location, so they share one origin,
+// and they are mutually exclusive sort modes (like search vs favourites).
+//
+// ONE SELECT SINCE 15z. These were two `aria-pressed` buttons, which is the
+// markup for two independent switches — and this comment has always said the
+// opposite. A `<select>` says one-of-N, which is what they are, and it names
+// the third state ("Our usual order") that used to exist only as "neither
+// pressed". Every behaviour below is unchanged: same permission prompt, same
+// destination bar, same fallbacks when location is refused.
+//
+// Purely additive — geolocation is feature-detected and the whole group stays
+// hidden (plain list stays) where it's unavailable. `state.origin` is the
+// viewer's {lat,lng}; `state.dest` is the chosen destination {lat,lng,label};
+// `state.routeOpen` is the "choosing a destination" arming state (bar visible,
+// sort still by distance until a destination lands).
 function wireLocation(state, render, restaurants) {
-  const nearBtn = document.getElementById("near-me");
-  const routeBtn = document.getElementById("along-route");
+  const sortSel = document.getElementById("filter-sort");
+  const sortGroup = document.getElementById("filter-sort-group");
   const status = document.getElementById("geo-status");
   const routeBar = document.getElementById("route-bar");
   const destSel = document.getElementById("route-dest");
   const clearBtn = document.getElementById("route-clear");
-  if (!nearBtn || !("geolocation" in navigator)) return;
-  nearBtn.hidden = false;
-  if (routeBtn) routeBtn.hidden = false;
+  if (!sortSel || !("geolocation" in navigator)) return;
+  // app.js owns this, not filters-ui.js: the reason the group can exist is a
+  // browser capability, and only this function tests it. A heading over a
+  // control nobody can use is worse than no heading.
+  if (sortGroup) sortGroup.hidden = false;
 
   // Destination options come only from data we already hold — a suburb (its
   // venues' centroid) or a specific place — never free-text (that needs a
@@ -1081,13 +1097,24 @@ function wireLocation(state, render, restaurants) {
     status.hidden = !msg;
   };
 
+  // The select is a view of the state, never a second copy of it: every path
+  // that changes origin/dest/routeOpen ends here, so a refused permission or a
+  // cleared route puts the control back by itself rather than being remembered
+  // to. `data-active` drives the accent, with "usual" as this control's neutral.
   function syncUI() {
     const routing = !!(state.origin && state.dest);
-    const nearOnly = !!state.origin && !state.dest && !state.routeOpen;
-    nearBtn.setAttribute("aria-pressed", String(nearOnly));
-    nearBtn.querySelector(".near-me-label").textContent = nearOnly ? "Nearest first" : "Near me";
-    if (routeBtn) routeBtn.setAttribute("aria-pressed", String(!!state.routeOpen));
+    const mode = state.routeOpen || state.dest ? "route" : state.origin ? "near" : "usual";
+    sortSel.value = mode;
+    sortSel.dataset.active = mode;
     if (routeBar) routeBar.hidden = !state.routeOpen;
+    // The inline row is one line, sized to fit exactly its resting controls.
+    // The destination picker is a fourth control that only exists while a route
+    // is armed, and it does not fit — left to CSS alone it laid itself over
+    // "All cuisines", "Open now" and "Cheap eats". A class, not `:has()`: the
+    // rest of this row's layout is already decided in JS (filters-ui.js owns the
+    // one breakpoint), and a second mechanism deciding the same box is how the
+    // two come to disagree.
+    document.getElementById("filter-controls")?.classList.toggle("routing", !!state.routeOpen);
     if (routing) {
       setStatus(`Sorted by detour on the way to ${state.dest.label} — straight-line estimate.`);
     } else if (state.routeOpen) {
@@ -1102,21 +1129,21 @@ function wireLocation(state, render, restaurants) {
   // Get the device location (reusing what we already have), then continue.
   function withOrigin(after) {
     if (state.origin) return after();
-    nearBtn.disabled = true;
-    if (routeBtn) routeBtn.disabled = true;
+    sortSel.disabled = true;
     setStatus("Finding your location…");
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        nearBtn.disabled = false;
-        if (routeBtn) routeBtn.disabled = false;
+        sortSel.disabled = false;
         state.origin = { lat: coords.latitude, lng: coords.longitude };
         rememberOrigin(state.origin); // let the menu screen order branches nearest-first
         after();
       },
       (err) => {
-        nearBtn.disabled = false;
-        if (routeBtn) routeBtn.disabled = false;
+        sortSel.disabled = false;
         state.routeOpen = false; // couldn't arm a route without a location
+        // syncUI() puts the select back to "Our usual order" on its own: with
+        // no origin the mode reads `usual`. A refused prompt must never leave
+        // the control claiming a sort the list is not in.
         syncUI();
         // Denied is the common, non-error case; be matter-of-fact.
         setStatus(
@@ -1139,39 +1166,25 @@ function wireLocation(state, render, restaurants) {
     render();
   }
 
-  nearBtn.addEventListener("click", () => {
-    // Currently plain Near me → turn location off entirely.
-    if (state.origin && !state.dest && !state.routeOpen) return clearLocation();
-    // Otherwise switch to (plain) Near me: drop any route, reuse/get origin.
+  // One handler for three modes. Choosing "Our usual order" is the way OUT of
+  // location sorting, which the two toggles could only express as "press the
+  // one that is already pressed" — a gesture nothing on screen taught.
+  sortSel.addEventListener("change", () => {
+    const mode = sortSel.value;
+    if (mode === "usual") return clearLocation();
+    // Both location modes drop any destination first; "route" then re-arms the
+    // picker. Order matters: withOrigin may go async for the permission prompt,
+    // so the state it will read has to be settled before the call.
     state.dest = null;
     state.routeOpen = false;
     if (destSel) destSel.value = "";
     withOrigin(() => {
+      state.routeOpen = mode === "route";
       syncUI();
       render();
+      if (state.routeOpen && destSel) destSel.focus();
     });
   });
-
-  if (routeBtn) {
-    routeBtn.addEventListener("click", () => {
-      if (state.routeOpen) {
-        // Turn the route off; fall back to plain Near me (origin persists).
-        state.routeOpen = false;
-        state.dest = null;
-        if (destSel) destSel.value = "";
-        syncUI();
-        render();
-        return;
-      }
-      // Arm the route: need a location, then reveal the destination picker.
-      withOrigin(() => {
-        state.routeOpen = true;
-        syncUI();
-        render();
-        if (destSel) destSel.focus();
-      });
-    });
-  }
 
   if (destSel) {
     destSel.addEventListener("change", () => {
