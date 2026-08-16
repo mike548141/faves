@@ -518,3 +518,16 @@ deliberation those compact docs omit.
   **on top of** three controls that stayed visible and non-zero-sized, which
   only `elementFromPoint` sees. Dropping the near-useless Service filter
   entirely was **left to the owner** — that is a product call, not a layout one.
+- [0063](0063-details-provenance-belongs-to-a-branch.md) — **details provenance
+  belongs to a branch, not to a chain.** `detailsVerified`/`detailsVerifiedBy`
+  are now valid per branch, the branch winning and the venue level standing as
+  the default — the `timezone` precedent (ADR 0043) copied exactly, and
+  deliberately **not** the address/phone/hours rule that forbids the top level
+  once `locations` is set. The pair is taken **whole** from one level or the
+  other: a branch's date welded to the chain's method would describe a reading
+  nobody performed. Unblocked by the owner's 2026-08-16 ruling that this comes
+  *before* capturing McDonald's and Subway hours. Pandan is migrated (Melling
+  `official-site`, Press Hall `third-party`) and its ⓘ now names the branch.
+  Per-kind ageing — a separate decay limit for hours against phone and address —
+  is **explicitly not built**: the shape is ruled, the numbers still cannot come
+  from a corpus whose every date sits in one 48-hour window.

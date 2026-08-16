@@ -24,6 +24,7 @@ import {
   VERIFY_MAX_AGE_MONTHS,
   verification,
   verificationText,
+  detailsVerification,
   refreshCaveat,
 } from "../site/js/temporal.js";
 
@@ -435,6 +436,78 @@ test("verification: every method in the closed set has a phrase", () => {
     assert.equal(typeof v.label, "string");
     assert.ok(v.label.length > 0, `${m} has no phrase`);
   }
+});
+
+// ---------- details provenance: venue-level, branch-level (ADR NNNN) ----------
+
+test("detailsVerification: a record with no branch reads exactly as it always did", () => {
+  // BACKWARD COMPATIBILITY. Every record in the corpus but one carries the pair
+  // at the venue level only, and nothing about them may change.
+  const r = { detailsVerified: "2026-08-15", detailsVerifiedBy: "third-party" };
+  const v = detailsVerification(r);
+  assert.equal(v.date, "2026-08-15");
+  assert.equal(v.method, "third-party");
+  assert.equal(v.label, "Read from a third-party listing");
+  assert.equal(v.scope, "venue");
+  // …and the same when a branch is passed that has no pair of its own.
+  assert.deepEqual(detailsVerification(r, { label: "Melling", hours: null }), v);
+  // No reading anywhere is still null, with or without a branch.
+  assert.equal(detailsVerification({}), null);
+  assert.equal(detailsVerification({}, { label: "Melling" }), null);
+  assert.equal(detailsVerification(null, null), null);
+});
+
+test("detailsVerification: a branch's own reading wins over the venue's", () => {
+  // Pandan, the record that forced this: Melling's address, phone and hours are
+  // all from Pandan's own site; Press Hall's hours are its landlord's. The
+  // venue-level field had to read as the weaker of the two for BOTH.
+  const r = { detailsVerified: "2026-08-15", detailsVerifiedBy: "third-party" };
+  const melling = { label: "Melling", detailsVerified: "2026-08-15", detailsVerifiedBy: "official-site" };
+  const pressHall = { label: "Press Hall", detailsVerified: "2026-08-15", detailsVerifiedBy: "third-party" };
+
+  const m = detailsVerification(r, melling);
+  assert.equal(m.method, "official-site", "the stronger branch must stop being dragged down");
+  assert.equal(m.label, "Read from the place’s own site");
+  assert.equal(m.scope, "branch");
+
+  const p = detailsVerification(r, pressHall);
+  assert.equal(p.method, "third-party");
+  assert.equal(p.scope, "branch");
+});
+
+test("detailsVerification: the pair is taken whole from one level, never mixed", () => {
+  // A branch date paired with the venue's method would describe a reading
+  // nobody did — the exact "guesses dressed as precision" this field exists to
+  // avoid. A branch with a date and no method is method-less, not inheriting.
+  const r = { detailsVerified: "2026-01-01", detailsVerifiedBy: "in-store" };
+  const v = detailsVerification(r, { detailsVerified: "2026-08-15" });
+  assert.equal(v.date, "2026-08-15");
+  assert.equal(v.method, null, "the venue's method must not attach to the branch's date");
+  assert.equal(v.scope, "branch");
+
+  // The mirror case: a branch method with no branch date is not a derivation,
+  // so the venue's whole pair answers — the branch method is discarded, never
+  // welded to the venue's date.
+  const w = detailsVerification(r, { detailsVerifiedBy: "delivery-app" });
+  assert.deepEqual(w, { date: "2026-01-01", method: "in-store", label: "Read in store", scope: "venue" });
+});
+
+test("detailsVerification: a branch reading with no venue fallback still stands alone", () => {
+  const v = detailsVerification(
+    {},
+    { label: "Press Hall", detailsVerified: "2026-08-15", detailsVerifiedBy: "third-party" }
+  );
+  assert.equal(v.method, "third-party");
+  assert.equal(v.scope, "branch");
+});
+
+test("detailsVerification: an off-vocabulary branch method is dropped, not echoed", () => {
+  const v = detailsVerification(
+    { detailsVerified: "2026-01-01", detailsVerifiedBy: "in-store" },
+    { detailsVerified: "2026-08-15", detailsVerifiedBy: "a mate reckons" }
+  );
+  assert.equal(v.method, null);
+  assert.equal(v.label, "Verified");
 });
 
 test("verificationText: reads as a sentence, and says nothing when we know nothing", () => {

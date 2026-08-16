@@ -743,25 +743,40 @@ def check_verification(rid, data, status):
         err(rid, "status is 'verified' but there is no dated derivation — set verified AND verifiedBy")
 
     # The venue's DETAILS — phone, address, opening hours — carry their own
-    # reading (ADR 0037), because `verified` above dates the menu and nothing
-    # else. Same shape, same closed method set, and equally optional: absent
-    # means those were never checked as a distinct act, and the menu screen
-    # then declines to claim they were.
-    d_verified = data.get("detailsVerified")
-    d_by = data.get("detailsVerifiedBy")
+    # reading (ADR 0037), checked here for the venue and again for each branch.
+    check_details_verification(rid, data, "card")
+
+
+def check_details_verification(rid, obj, where):
+    """`detailsVerified` + `detailsVerifiedBy` on one object — the venue record
+    or one branch of it.
+
+    Because `verified` dates the menu and nothing else (ADR 0037). Same shape,
+    same closed method set, and equally optional: absent means those were never
+    checked as a distinct act, and the menu screen then declines to claim they
+    were.
+
+    Valid at BOTH levels, branch winning, exactly as `timezone` is — details
+    belong to a place, not to a chain, and a venue whose branches were checked
+    from different sources cannot state one honest derivation for all of them.
+    A branch that omits the pair inherits the venue's. Unlike address / phone /
+    hours, the top level is NOT forbidden when `locations` is set: there it is
+    the default, not an ambiguity."""
+    d_verified = obj.get("detailsVerified")
+    d_by = obj.get("detailsVerifiedBy")
     d_has_date = isinstance(d_verified, str) and bool(DATE_RE.match(d_verified))
 
     if d_verified is not None and not d_has_date:
-        err(rid, f"detailsVerified must be null or an ISO date (YYYY-MM-DD), got {d_verified!r}")
+        err(rid, f"{where}: detailsVerified must be null or an ISO date (YYYY-MM-DD), got {d_verified!r}")
     if d_by is not None and d_by not in VERIFY_METHODS:
-        err(rid, f"detailsVerifiedBy {d_by!r} not in {sorted(VERIFY_METHODS)}")
+        err(rid, f"{where}: detailsVerifiedBy {d_by!r} not in {sorted(VERIFY_METHODS)}")
     if d_by is not None and d_verified is None:
-        err(rid, "detailsVerifiedBy is set but detailsVerified is null — a method with no date is not a derivation")
+        err(rid, f"{where}: detailsVerifiedBy is set but detailsVerified is null — a method with no date is not a derivation")
     # Unlike `verified`, this one is an ERROR without its method. There is no
     # pre-ADR-0037 corpus to be gentle about: every use of the field is new,
     # so a method-less one is a gap being created now, not inherited.
     if d_has_date and d_by is None:
-        err(rid, f"detailsVerified {d_verified} carries no detailsVerifiedBy — state how the details were checked ({sorted(VERIFY_METHODS)})")
+        err(rid, f"{where}: detailsVerified {d_verified} carries no detailsVerifiedBy — state how the details were checked ({sorted(VERIFY_METHODS)})")
 
 
 def check_hours(rid, hours, where):
@@ -961,6 +976,10 @@ def check_restaurant(path):
             if not check_coords(rid, b, where):
                 warn(rid, f"{where}: no coordinates (lat/lng) — maps opens by address only")
             check_hours(rid, b.get("hours"), where)
+            # Provenance is per-branch (see check_details_verification). Checked
+            # inside this loop rather than beside the venue's, because a branch
+            # is where the address, phone and hours actually live.
+            check_details_verification(rid, b, where)
     else:
         if not check_coords(rid, data, "card") and not is_recipes:
             warn(rid, "no coordinates (lat/lng) set — maps opens by address only")

@@ -294,11 +294,47 @@ async function run(opts) {
       // record carries their own reading — the whole point of splitting the
       // field out (ADR 0037).
       const claimsDetails = /opening hours/.test(tip.text);
+      const primary = venue.locations?.[0];
+      // Per-branch provenance (ADR NNNN). A branch may carry its own reading, in
+      // which case the note describes THAT branch and the venue-level pair is
+      // only the fallback — so "does the note mention hours" now has to ask both
+      // levels, in the order the app resolves them.
+      const detailsDate = primary?.detailsVerified ?? venue.detailsVerified;
       report.check(
         "the note claims venue details only when they have their own date",
-        claimsDetails === Boolean(venue.detailsVerified),
-        `detailsVerified=${venue.detailsVerified ?? "absent"}, note mentions hours=${claimsDetails}`
+        claimsDetails === Boolean(detailsDate),
+        `detailsVerified=${detailsDate ?? "absent"} (branch or venue), note mentions hours=${claimsDetails}`
       );
+      // With no captured location the nearest branch IS the first one
+      // (locations.js), so this is deterministic rather than a lucky ordering.
+      if (venue.locations?.length > 1 && primary?.detailsVerified) {
+        report.check(
+          "a branch-scoped reading names the branch it describes",
+          tip.text.includes(`at ${primary.label}`),
+          tip.text.trim()
+        );
+        // The assertion that matters: the stronger branch has stopped being
+        // dragged down to the venue's weakest-wins summary. Only fires when the
+        // two levels genuinely disagree, so it cannot pass vacuously.
+        // The phrases are menu.js's CHECKED_PHRASE; a reword there breaks this
+        // check loudly, which is the safe direction for a drift.
+        const PHRASE = {
+          "in-store": "checked in store",
+          "paper-menu": "read from the shop’s own menu",
+          "official-site": "checked against the place’s own site",
+          phone: "confirmed with the place by phone",
+          "delivery-app": "taken from a delivery app",
+          "third-party": "taken from a directory listing",
+        };
+        if (venue.detailsVerifiedBy && primary.detailsVerifiedBy !== venue.detailsVerifiedBy) {
+          report.check(
+            "the branch's own method wins over the venue's weakest-wins summary",
+            tip.text.includes(PHRASE[primary.detailsVerifiedBy]) &&
+              !tip.text.includes(PHRASE[venue.detailsVerifiedBy]),
+            `branch=${primary.detailsVerifiedBy}, venue=${venue.detailsVerifiedBy ?? "—"}: ${tip.text.trim()}`
+          );
+        }
+      }
     }
     await evalPage(`document.querySelector(".menu-title-group .caveat-btn").click()`);
 

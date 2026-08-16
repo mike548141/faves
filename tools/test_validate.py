@@ -451,6 +451,33 @@ SOURCE_CASES = {
             "error",
         ),
     },
+    # Per-branch provenance. Pandan is the only record that carries it and the
+    # record that forced it — Melling first-party, Press Hall's hours its
+    # landlord's. The venue-level pair was already gated; the branch-level one
+    # is new code on a path nothing else in the corpus exercises, so it is
+    # mutated on the REAL file rather than trusted to be symmetric.
+    "site/data/restaurants/pandan-asian-cuisine.json": {
+        "a branch method with no branch date": (
+            lambda s: s.replace('      "detailsVerified": "2026-08-15",\n      "detailsVerifiedBy": "official-site"', '      "detailsVerifiedBy": "official-site"', 1),
+            "error",
+        ),
+        "a branch date with no method — an ERROR here, unlike `verified`": (
+            lambda s: s.replace('      "detailsVerified": "2026-08-15",\n      "detailsVerifiedBy": "official-site"', '      "detailsVerified": "2026-08-15"', 1),
+            "error",
+        ),
+        "a branch method outside the closed set": (
+            lambda s: s.replace('"detailsVerifiedBy": "official-site"', '"detailsVerifiedBy": "a mate reckons"', 1),
+            "error",
+        ),
+        "a branch date that is not a date": (
+            lambda s: s.replace(
+                '      "detailsVerified": "2026-08-15",\n      "detailsVerifiedBy": "official-site"',
+                '      "detailsVerified": "last winter",\n      "detailsVerifiedBy": "official-site"',
+                1,
+            ),
+            "error",
+        ),
+    },
 }
 
 

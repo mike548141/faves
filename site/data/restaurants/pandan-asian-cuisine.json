@@ -93,7 +93,9 @@
             "21:00"
           ]
         ]
-      }
+      },
+      "detailsVerified": "2026-08-15",
+      "detailsVerifiedBy": "official-site"
     },
     {
       "label": "Press Hall",
@@ -134,7 +136,9 @@
         ],
         "sat": [],
         "sun": []
-      }
+      },
+      "detailsVerified": "2026-08-15",
+      "detailsVerifiedBy": "third-party"
     }
   ],
   "vibe": [],
