@@ -363,7 +363,9 @@ delivery app.** Clear one by bringing back the fact.
       the daily deals only reference "any tap beer" and "tap beer and wine by
       the glass" without naming or pricing one. Nothing to transcribe until a
       photo of the bar list or the tap board exists — `intake/` pipeline.
-- [ ] **Other venues with drinks nobody has captured** `[M][content]`.
+- [~] **Other venues with drinks nobody has captured** `[M][content]` —
+      **the derivation CLAIMED 2026-08-16 11:22 UTC (wt: faves-content-growth)**;
+      transcribing what it finds stays open and owner-gated.
       Now that drinks are in scope, the obvious gap is any venue that sells
       them and has no drink rows. **Derive the list, don't re-type it:**
       compare `services`/cuisine against records whose sections carry no
@@ -2062,7 +2064,11 @@ problem. Sequence the content with the build or the feature ships blank.
       `<body>`" is platform behaviour that a fake wake lock and a jsdom-shaped
       test cannot have. That is the argument for the guard existing, made by
       the guard itself within an hour of being written.
-- [ ] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
+- [~] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
+  **The checklist and read-aloud bullets CLAIMED 2026-08-16 11:22 UTC
+  (wt: faves-cook-checklist)**; the shopping list, personal notes and
+  substitutions bullets are open. Files: `cook.js`, `cook-ui.js`,
+  `tools/cook_check.mjs`, `tests/cook*.test.js`.
   ordered by how well they fit a zero-dependency offline app. ✅ **Ingredient-
   first search is delivered** and was struck from the list below on 2026-08-16
   by audit: `search.js buildIndex()` folds `item.ingredients` into the haystack
@@ -4069,7 +4075,11 @@ Plus one cheap open question regardless of which is chosen: **`area: "Home"`** �
 null it per ADR 0003, or keep it and name the screen that reads it. `[XS][data]`
 (`currency` is settled and stays — owner ruling above.)
 
-🎯 **Recommend 1**, and note it does not contradict [ADR 0003] — it *implements*
+🎯 **Recommend 1** — **CLAIMED 2026-08-16 11:22 UTC (wt: faves-kind-capabilities)**,
+together with the `area: "Home"` question above. Files: new `site/js/kinds.js`,
+plus `app.js`, `menu.js`, `filters.js`, `ranking.js`, `route.js`, `search.js`,
+`price.js`, `picker.js`, `site/data/restaurants/cook-at-home.json`.
+And note it does not contradict [ADR 0003] — it *implements*
 it. The ADR said venue-only fields relax for recipes; twenty `isRecipes`
 branches are that relaxation expressed as scattered conditionals instead of as a
 declared property of the `kind`. Option 1 turns the ADR's prose into something
