@@ -696,14 +696,22 @@
                dialog it is not exposed, which is correct: neither are the
                controls it names. -->
           <section id="filter-controls" aria-label="Filters and sorting">
-          <section class="filter-group" aria-labelledby="filter-narrow-title">
+          <section class="filter-group filter-narrow-group" aria-labelledby="filter-narrow-title">
             <h3 id="filter-narrow-title" class="filter-group-title" data-i18n="filter.narrow">Narrow to</h3>
+            <!-- Service was a three-button segmented control until 15z. It is a
+                 pick-one-of-three, exactly like Area and Cuisine, and it was
+                 costing 256 px of a 928 px row to say so in a different shape —
+                 the single largest reason the inline row could not be one row.
+                 As a <select> it reads the same, filters the same, and matches
+                 the two controls beside it. -->
             <div class="filter-field" id="filter-service-field">
-              <span class="filter-label" id="filter-service-label" data-i18n="filter.service">Service</span>
-              <div class="segmented" role="group" aria-labelledby="filter-service-label">
-                <button type="button" data-service="all" aria-pressed="true" data-i18n="service.all">Everywhere</button>
-                <button type="button" data-service="takeaway" aria-pressed="false" data-i18n="service.takeaway">Takeaway</button>
-                <button type="button" data-service="dine-in" aria-pressed="false" data-i18n="service.dineIn">Dine-in</button>
+              <label class="filter-label" for="filter-service" data-i18n="filter.service">Service</label>
+              <div class="select-field">
+                <select id="filter-service" data-active="all">
+                  <option value="all" data-i18n="service.all">Everywhere</option>
+                  <option value="takeaway" data-i18n="service.takeaway">Takeaway</option>
+                  <option value="dine-in" data-i18n="service.dineIn">Dine-in</option>
+                </select>
               </div>
             </div>
             <div class="filter-field">
@@ -729,23 +737,41 @@
               </button>
             </div>
           </section>
-          <!-- Both controls here need geolocation, so app.js unhides them only
-               where it exists; filters-ui.js hides this whole group when neither
-               made it, rather than leaving a heading over nothing. -->
-          <section id="filter-sort-group" class="filter-group" aria-labelledby="filter-sort-title" hidden>
+          <!-- Sorting needs geolocation, so app.js unhides this group only where
+               it exists, rather than leaving a heading over a control nobody can
+               use.
+               ONE SELECT, NOT TWO TOGGLES (15z). "Near me" and "Along a route"
+               were `aria-pressed` buttons, which promises they are independent
+               switches — app.js's own comment has always said the opposite
+               ("the two buttons are mutually exclusive sort modes"). A select is
+               what a one-of-N choice is, it is what every reader already expects
+               a "Sort by" control to be, and it costs 160 px where the two
+               toggles cost 238. Nothing was dropped: the same two modes, plus a
+               name for the third state that was previously only "neither". -->
+          <section id="filter-sort-group" class="filter-group filter-sort-group" aria-labelledby="filter-sort-title" hidden>
             <h3 id="filter-sort-title" class="filter-group-title" data-i18n="filter.sort">Sort by</h3>
             <p class="filter-group-note" data-i18n="filter.sortNote">
               These reorder the list. They never shorten it.
             </p>
-            <div class="list-toggles">
-              <button type="button" id="near-me" class="near-me list-toggle" aria-pressed="false" hidden>
-                <span aria-hidden="true">📍</span> <span class="near-me-label" data-i18n="toggle.nearMe">Near me</span>
-              </button>
-              <!-- "Along a route": pick a place between here and a destination
-                   you name (least-detour sort). -->
-              <button type="button" id="along-route" class="list-toggle" aria-pressed="false" hidden>
-                <span aria-hidden="true">🛣️</span> <span data-i18n="toggle.alongRoute">Along a route</span>
-              </button>
+            <div class="filter-field" id="filter-sort-field">
+              <!-- sr-only always: in the sheet the <h3> above already says "Sort
+                   by", and inline the <h3> is what stands beside the select. A
+                   third copy of the same two words would be noise in both. -->
+              <label class="sr-only" for="filter-sort" data-i18n="filter.sort">Sort by</label>
+              <!-- The two mode options keep the reo keys their buttons carried,
+                   so nothing new joins the te reo review queue (owner ruled it
+                   parked, 2026-08-16). `sort.usual` is the one genuinely new
+                   string and deliberately has no MI entry — reo.js falls back to
+                   the captured English, which is the documented partial state. -->
+              <div class="select-field">
+                <select id="filter-sort" data-active="usual">
+                  <option value="usual" data-i18n="sort.usual">Our usual order</option>
+                  <option value="near" data-i18n="toggle.nearMe">Nearest first</option>
+                  <!-- "Along a route": pick a place between here and a
+                       destination you name (least-detour sort). -->
+                  <option value="route" data-i18n="toggle.alongRoute">Along a route</option>
+                </select>
+              </div>
             </div>
             <!-- Destination picker for "Along a route" (app.js unhides it once
                  the mode is armed). It lives beside the control that arms it, so
