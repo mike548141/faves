@@ -4299,6 +4299,34 @@ rich*.
   per-person price and course sequence, a kids menu changes legally-required
   calorie footer text in England. Closed set, extended when a real venue needs
   a value — never invented ahead of one (owner's 2026-08-16 scope ruling).
+- ✅ **30d IS CLOSED AS A SCHEMA ITEM — owner ruled 2026-08-16,
+  [ADR 0085](decisions/0085-a-delivery-price-fills-a-hole-it-is-not-a-feature.md).**
+  He was given four options and answered none of them, restating the goal
+  instead: *"Our goal is to show only in-store pricing, but if we don't have any
+  other data to hand then we will at least show the app store pricing until an
+  in-store menu can be collected. I do not want Faves to show both the in-store
+  and in-app pricing as a feature, it's a way to fill a hole in the data not a
+  feature."*
+  ⇒ **One price per dish. Delivery is a captioned fallback, never a second
+  price shown beside the first. `channel` is NOT admitted to `site/data/`.**
+  🔑 **The inference that had to be retracted, worth keeping:** the evidence was
+  sound and the conclusion drawn from it was wrong — **a duplicated row is a
+  data-collection gap wearing the clothes of a modelling gap**, and an industry
+  consensus is evidence about what a POS must model, not about what this app
+  should show. ADR 0085 supersedes the channel half of ADR 0080 on that point.
+  ⏳ **What survives is a CONTENT task, not a schema one:** collect in-store
+  prices where only app prices are held. Two open pieces, both needing the
+  owner because content is owner-directed — (1) `pizza-pomodoro` currently shows
+  **both** an in-store $29.00 and an Online Deal $17.00 for one pizza, which the
+  ruling forbids; the in-store price is the one to keep and the deal rows belong
+  in `data/`. (2) `pizza-hut`'s five *"…Delivered"* rows are **NOT** the same
+  case and must not be swept up with them — a delivery-only bundle is one
+  product, not one dish at two prices.
+  ✅ **KK Malaysian and KC Cafe are now correct rather than incomplete** — they
+  hold a delivery-sourced price because no in-store reading exists, which is
+  exactly the ruling, and since 2026-08-16 they say so (`verifiedBy:
+  delivery-app`). Their fix is an in-store menu, at which point the fallback is
+  replaced and the caveat retires itself.
 - ⚠️ **CORRECTION, same session, 2026-08-16 (wt: faves-schema30). The block
   immediately below said the channel dimension is exercised by nothing. That is
   WRONG and it is corrected here rather than rewritten away.** It was arrived at
