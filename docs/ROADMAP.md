@@ -1765,24 +1765,39 @@ Hotel Bristol. Address and pin from OpenStreetMap, so each carries
 `detailsVerifiedBy: "third-party"` — the weakest honest label, because nobody has
 stood in the shop.
 
-- [ ] **Three guidebook places have no findable address** `[S][data]` — **Chilly
-  Pot** (build-your-own malatang), **Crepes A Go Go** and **COSMIC Vape & Coffee**.
-  OpenStreetMap has no entry for any of them under several spellings, and the
-  guidebook gives no street address (Airbnb strips links). Deliberately NOT added
-  with a guessed address: a wrong pin sends someone to the wrong door, which is
-  worse than an absent venue. Each needs one street number, most cheaply read off
-  the door next time someone is on Cuba St.
+✅ **The three missing addresses — owner supplied them, 2026-08-16.** Crepes A Go
+Go (61 Manners St) and COSMIC Vape & Coffee (99 Cuba St) added, along with <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
+**Moore Wilson's**. Chilly Pot was **not** added — see below.
+
+- [ ] 🎯 **Is "Chilly Pot" just Babaili Malatang?** `[XS][data]` — the owner
+  suspected so and the evidence agrees: the guidebook's Chilly Pot is at
+  41/47 Dixon St, the Babaili Malatang record already held is at 45 Dixon St, and <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
+  a local food post describes the same shop as *"Ba Bai Li, Malatang Chilli Pot,
+  Dixon Street"* — "chilli pot" being what 麻辣烫 *is*, not a second business.
+  Deliberately NOT added as a second record: a duplicate splits a venue's hearts
+  and ratings between two ids and looks like a data error on a public list.
+  Needs one look at the shopfront. If confirmed, the useful follow-up is an
+  `alsoKnownAs` searchable alias, so the name in the guidebook still finds it.
+- [ ] **COSMIC Vape & Coffee has no pin** `[XS][data]` — OSM has no entry at
+  99 Cuba St for it, so the record carries the street address and no <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
+  coordinates. Maps opens by address; distance sorting skips it.
+- [ ] 🎯 **Where does Moore Wilson's stop being a place you eat?** `[S][product]`
+  — owner-raised. Its coffee and bakery are in scope; its cleaning aisle plainly
+  is not, and its wholesale grocery half is the grey middle. Added as a stub with
+  cuisine `Deli · Bakery · Coffee` so the question is about what goes in its
+  *menu*, not whether the venue belongs. One record is not an evidence base for a
+  schema change (the same restraint ADR 0037 applied), so no `kind: "food-store"`
+  until a second one arrives.
 - [ ] **The seven new stubs have no hours, phone or menu** `[M][data]` — they are
   findable by name and pin only. Hours and phone are a web-research pass; the
   menus want an in-store or official-site read (ADR 0036's trusted four).
-- [ ] **Bars and a bakery stretch the "cuisine" vocabulary** `[S][data]` — four of
-  the seven are drinking places, tagged `Bar`/`Pub`, and one is a `Bakery`. Faves
-  has always been an eating app; whether a bar belongs in the same list as a
-  takeaway, or wants its own filter, is a product question the owner should rule
-  on before more arrive.
+✅ **Bars and bakeries are in — ruled 2026-08-16.** Owner: *"add them all, bars,
+restaurants. Anything food and drink related."* So the collection's boundary is
+food and drink, not eating specifically. A cuisine filter that mixes `Bar` with
+`Malaysian` may still want a rethink once there are enough of them; that is a
+UI question now, not a scope one.
 
-**Deliberately not added.** *Moore Wilson's* is in the guidebook's Shopping
-section — a delicatessen and wholesaler, not a place you eat. The rest of the
+**Deliberately not added.** The rest of the
 guidebook (parking, gyms, the zoo, the cable car) is out of scope for a menu app.
 
 ---

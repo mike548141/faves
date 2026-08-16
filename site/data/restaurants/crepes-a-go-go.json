@@ -1,0 +1,28 @@
+{
+  "id": "crepes-a-go-go",
+  "name": "Crepes A Go Go",
+  "cuisine": [
+    "Crepes",
+    "Dessert"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "61 Manners Street, Te Aro, Wellington 6011",
+  "lat": -41.29065,
+  "lng": 174.77629,
+  "services": [
+    "takeaway"
+  ],
+  "phone": null,
+  "website": null,
+  "ordering": [],
+  "hours": null,
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "third-party",
+  "lifecycle": {
+    "added": "2026-08-16"
+  },
+  "status": "stub",
+  "menu": []
+}
