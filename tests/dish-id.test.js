@@ -163,11 +163,20 @@ test("findDish returns null rather than throwing on anything it can't resolve", 
 
 // ── migrateDishKeys — the personal-data migration ──────────────────────────
 
+// `fixture-venue` and not `sprig-and-fern`: these tests exercise the DISH-key
+// migration only, not the venue rename (renames.js maps the retired
+// `sprig-and-fern` to `sprig-and-fern-tawa`), so the venue id here is
+// arbitrary — a retired-but-live id in a fixture that isn't testing the
+// rename would quietly start exercising that path the day one of these tests
+// grew a migration. See tests/share-codec.test.js for the same convention.
+// (The venue+dish composition test below DOES exercise the rename, on
+// purpose, and keeps `sprig-and-fern`.)
+
 test("a stored heart keyed by dish name moves to the dish id", () => {
-  const before = { "d:sprig-and-fern Fish and Chips": 5, "v:sprig-and-fern": 4 };
+  const before = { "d:fixture-venue Fish and Chips": 5, "v:fixture-venue": 4 };
   assert.deepEqual(migrateDishKeys(before), {
-    "v:sprig-and-fern": 4,
-    "d:sprig-and-fern fish-and-chips": 5,
+    "v:fixture-venue": 4,
+    "d:fixture-venue fish-and-chips": 5,
   });
 });
 
@@ -175,8 +184,8 @@ test("migrateDishKeys is idempotent — safe to run on every read, forever", () 
   // There is no "have I migrated yet" flag to get wrong, so the only thing
   // making that safe is that a second pass is a no-op. Same object out, the
   // way renames.js signals "nothing moved".
-  const once = migrateDishKeys({ "d:sprig-and-fern Fish and Chips": 5 });
-  assert.deepEqual(once, { "d:sprig-and-fern fish-and-chips": 5 });
+  const once = migrateDishKeys({ "d:fixture-venue Fish and Chips": 5 });
+  assert.deepEqual(once, { "d:fixture-venue fish-and-chips": 5 });
   assert.equal(migrateDishKeys(once), once, "a second pass returns the same object");
 });
 
@@ -204,8 +213,8 @@ test("a collision keeps the entry already in id form", () => {
   // Both keys point at the same dish. The one already in id form was written
   // by a build that understood ids — i.e. more recently — so it is the honest
   // survivor. Same rule as renames.js, for the same reason.
-  const before = { "d:sprig-and-fern Fish and Chips": 2, "d:sprig-and-fern fish-and-chips": 5 };
-  assert.deepEqual(migrateDishKeys(before), { "d:sprig-and-fern fish-and-chips": 5 });
+  const before = { "d:fixture-venue Fish and Chips": 2, "d:fixture-venue fish-and-chips": 5 };
+  assert.deepEqual(migrateDishKeys(before), { "d:fixture-venue fish-and-chips": 5 });
 });
 
 test("migrateDishKeys survives junk rather than throwing at boot", () => {

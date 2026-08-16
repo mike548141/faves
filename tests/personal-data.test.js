@@ -608,14 +608,21 @@ test("…but it does restore the tally onto a device with no order running", () 
 
 // --- dish ids (ADR 0051) --------------------------------------------------
 
+// `fixture-venue`, not `sprig-and-fern`: the latter is a RETIRED id — renames.js
+// maps it to `sprig-and-fern-tawa`, and the five taverns are separate records
+// now. A retired-but-live id in a synthetic fixture reads as a real venue to
+// the next session, and these paths would start exercising the rename table the
+// day one of them grew a migration. The `fixture-` prefix is reserved for tests
+// and can never be a real venue id. The two Cheeseburgers stay — the price
+// collision they encode is the real one this feature was built for.
 test("an order line's dish id survives the export/import round trip", () => {
-  // Without it, a restored order re-merges Sprig & Fern's $28 Cheeseburger and
-  // its $21 Gold Card one into a single line at the wrong price.
+  // Without it, a restored order re-merges a $28 Cheeseburger and a $21 Gold
+  // Card one into a single line at the wrong price.
   const store = device();
   const data = file({
     order: [
-      { venueId: "sprig-and-fern", venueName: "Sprig & Fern", name: "Cheeseburger", dishId: "cheeseburger", price: 28, qty: 1 },
-      { venueId: "sprig-and-fern", venueName: "Sprig & Fern", name: "Cheeseburger", dishId: "cheeseburger-gold-card", price: 21, qty: 1 },
+      { venueId: "fixture-venue", venueName: "Fixture Venue", name: "Cheeseburger", dishId: "cheeseburger", price: 28, qty: 1 },
+      { venueId: "fixture-venue", venueName: "Fixture Venue", name: "Cheeseburger", dishId: "cheeseburger-gold-card", price: 21, qty: 1 },
     ],
   });
   const decisions = { [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "new" } };
@@ -632,8 +639,8 @@ test("a heart's dish id survives too, and keys the entry", () => {
     profiles: [{
       name: "Me",
       favourites: [
-        { type: "dish", venueId: "sprig-and-fern", name: "Cheeseburger" },
-        { type: "dish", venueId: "sprig-and-fern", name: "Cheeseburger", dishId: "cheeseburger-gold-card" },
+        { type: "dish", venueId: "fixture-venue", name: "Cheeseburger" },
+        { type: "dish", venueId: "fixture-venue", name: "Cheeseburger", dishId: "cheeseburger-gold-card" },
       ],
     }],
   });

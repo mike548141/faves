@@ -147,11 +147,15 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
 
 /**
  * Encode a shortlist (shared favourites) into a token. `groups` is grouped by
- * venue: `{ venueId, venueName, isRecipe, sub, venueFav, dishes: [name, …] }`,
- * where `venueFav` means the whole place is hearted (not just some dishes) and
- * `sub` is the venue's area/cuisine caption. Unlike an order, a shortlist has
- * no prices or quantities; it does carry the recipe flag, so a received recipe
+ * venue: `{ venueId, venueName, isRecipe, sub, venueFav, dishes }`, where
+ * `venueFav` means the whole place is hearted (not just some dishes) and `sub`
+ * is the venue's area/cuisine caption. Unlike an order, a shortlist has no
+ * prices or quantities; it does carry the recipe flag, so a received recipe
  * favourite links to recipe.html rather than a 404 on restaurant.html.
+ *
+ * `dishes` entries may be a bare name string or `{ name, dishId }` — pass the
+ * id and a shared shortlist naming a disambiguated row (the Gold Card
+ * Cheeseburger, not the Mains one) lands on that row. See packGroups.
  */
 export function encodeShortlist({ label = "", groups = [] }) {
   const payload = { v: CODEC_VERSION, t: TAG_OF_TYPE.shortlist, g: packGroups(groups) };
@@ -163,23 +167,54 @@ export function encodeShortlist({ label = "", groups = [] }) {
 // Venue-grouped favourites on the wire. Shared by the shortlist share and the
 // personal transfer so the two can never drift into two shapes for one thing.
 //
-// `d` stays a bare array of NAME strings, deliberately, even though dishes now
-// have ids (ADR 0051): changing that array's element type is the one change to
-// this wire that an existing decoder cannot ignore, so it would need the
-// CODEC_VERSION bump the whole append-a-slot design exists to avoid. The cost
-// is a known limitation, not a regression: a shared shortlist naming a
-// disambiguated row — Sprig & Fern's Gold Card Cheeseburger — arrives as the
-// bare-slug one, which is precisely what it did before ids existed. Fixing it
-// needs a slot for ids alongside `d`, and that is roadmap work, not a comment.
+// `d` stays a bare array of NAME strings, byte for byte, even though dishes now
+// have ids (ADR 0051): changing that array's ELEMENT TYPE is the one change to
+// this wire that an existing decoder cannot ignore — it reads each element
+// through `clip(raw ?? "")`, so an array or object element would arrive as
+// stringified garbage rather than degrading, and only a CODEC_VERSION bump
+// could stop it. That bump is what the whole append-a-slot design exists to
+// avoid: the version is shared by orders, shortlists AND personal transfers and
+// checked with a strict `!==`, so bumping it invalidates every outstanding link
+// of all three kinds.
+//
+// So the id rides BESIDE the name, in `k`: an optional array positionally
+// parallel to `d`, holding the id at the same index where it says something the
+// name doesn't, and `null` everywhere else. This is the order line's trick, in
+// the container this payload actually has — a group is a KEYED object, not a
+// positional array, so its "appended slot" is a new key. The guarantee is the
+// same one and it is what makes the change safe: a decoder that predates `k`
+// reads `g.d` and never looks at `g.k`, so a new code degrades in it to the
+// bare slug — precisely what a shortlist did before ids existed. It
+// under-specifies rather than mis-states, the only safe direction.
+//
+// `dishes` accepts a bare name string (what groupForShare hands us) or an
+// entry-shaped `{ name, dishId }`. A group of bare strings encodes to the same
+// bytes it always did, `k` and all — absent.
 function packGroups(groups) {
-  return (groups || []).map((g) => ({
-    v: clip(g.venueId, MAX_NAME),
-    n: clip(g.venueName, MAX_NAME),
-    r: g.isRecipe ? 1 : 0,
-    s: clip(g.sub ?? "", MAX_NAME),
-    f: g.venueFav ? 1 : 0,
-    d: (g.dishes || []).map((name) => clip(name, MAX_NAME)),
-  }));
+  return (groups || []).map((g) => {
+    const dishes = (g.dishes || []).map((d) => (typeof d === "string" ? { name: d } : d || {}));
+    const names = dishes.map((d) => clip(d.name, MAX_NAME));
+    // Resolved against the CLIPPED name, so encode and decode agree about what
+    // "the name alone would have meant" even for an over-long one — the same
+    // rule the order line's slot 4 uses.
+    const ids = dishes.map((d, i) => {
+      const id = clip(dishId({ dishId: d.dishId, name: names[i].trim() }), MAX_NAME);
+      return id && id !== slug(names[i].trim()) ? id : null;
+    });
+    const out = {
+      v: clip(g.venueId, MAX_NAME),
+      n: clip(g.venueName, MAX_NAME),
+      r: g.isRecipe ? 1 : 0,
+      s: clip(g.sub ?? "", MAX_NAME),
+      f: g.venueFav ? 1 : 0,
+      d: names,
+    };
+    // Only where at least one id says something its name doesn't, so an
+    // ordinary shortlist — every shortlist on the day this shipped — does not
+    // grow by a single byte.
+    if (ids.some(Boolean)) out.k = ids;
+    return out;
+  });
 }
 
 // ---- decode ---------------------------------------------------------------
@@ -280,9 +315,12 @@ function decodeOrderItems(groups) {
 
 // Shortlist → flat favourites entries (matching favourites.js: a `venue` entry
 // for a whole-place heart, a `dish` entry per hearted dish). A group with
-// neither a venue heart nor any dish is dropped. No `dishId` is set, because
-// the wire carries none (see packGroups) — favKey then resolves the entry to
-// `slug(name)`, the identity a received shortlist has always landed under.
+// neither a venue heart nor any dish is dropped.
+//
+// `dishId` comes off the parallel `k` array (see packGroups), and only where
+// the wire carries one: a code minted before `k` existed sets no `dishId`, so
+// favKey resolves the entry through `slug(name)` — the identity a received
+// shortlist has always landed under, unchanged.
 function decodeShortlistItems(groups) {
   const items = [];
   outer: for (const g of groups) {
@@ -298,10 +336,20 @@ function decodeShortlistItems(groups) {
       if (items.length >= MAX_ITEMS) break outer;
     }
     const dishes = Array.isArray(g.d) ? g.d : [];
-    for (const raw of dishes) {
+    // Attacker-authorable, like everything else here: a `k` that is the wrong
+    // type, the wrong length or full of objects must degrade to "no ids", never
+    // throw and never attach an id to the wrong row.
+    const ids = Array.isArray(g.k) ? g.k : [];
+    for (const [i, raw] of dishes.entries()) {
       const name = clip(raw ?? "", MAX_NAME).trim();
       if (!name) continue;
-      items.push({ type: "dish", name, ...base });
+      const item = { type: "dish", name, ...base };
+      // Carried only when it says something the name doesn't — so an old code
+      // and a new one for the same plain dish decode to identical objects.
+      // Reaches a storage key and never an href, so no further escaping is owed.
+      const id = typeof ids[i] === "string" ? clip(ids[i], MAX_NAME).trim() : "";
+      if (id && id !== slug(name)) item.dishId = id;
+      items.push(item);
       if (items.length >= MAX_ITEMS) break outer;
     }
   }
@@ -315,7 +363,8 @@ function decodeShortlistItems(groups) {
  * second device. Deliberately ONE profile (see ADR 0030): the whole-device
  * backup is the file export's job, and a URL fragment is a small pipe.
  *
- * `groups` is groupForShare()-shaped, exactly as a shortlist; `ratings` is the
+ * `groups` is groupForShare()-shaped, exactly as a shortlist (dish ids included
+ * where the producer supplies them — see packGroups); `ratings` is the
  * flat `{ key: 1..5 }` map and `settings` the profile's settings object. The
  * profile's id and name ride along so the receiving device can tell "my own
  * other phone" from "someone else called Sam" (ADR 0030's collision rule).

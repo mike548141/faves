@@ -30,7 +30,12 @@ export const favKey = (e) =>
 /**
  * Group a flat favourites list by venue for sharing (Theme 1b shortlist), in
  * first-seen order: `{ venueId, venueName, isRecipe, sub, venueFav, dishes }`.
- * `venueFav` marks a whole-place heart; `dishes` is the hearted dish names.
+ * `venueFav` marks a whole-place heart; `dishes` is `{ name, dishId? }` per
+ * hearted dish — the id rides along (ADR 0051) so a shared shortlist naming a
+ * disambiguated row (the Gold Card Cheeseburger, not the Mains one) lands on
+ * that row rather than whichever same-named dish happens to match first.
+ * `dishId` is present only when the entry carries one; share-codec.js's
+ * packGroups() accepts a bare string too, so either shape rides the wire.
  * Facts (name, recipe flag, sub) come from whichever entry carries them —
  * mirrors the Favourites view's own grouping so the share matches what's shown.
  */
@@ -47,7 +52,7 @@ export function groupForShare(items) {
     if (e.type === "venue") {
       g.venueFav = true;
     } else {
-      g.dishes.push(e.name);
+      g.dishes.push(e.dishId ? { name: e.name, dishId: e.dishId } : { name: e.name });
     }
     g.venueName = g.venueName || e.venueName || "";
     g.isRecipe = g.isRecipe || !!e.isRecipe;

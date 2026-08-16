@@ -350,7 +350,11 @@ export function initOrderUI() {
       title.textContent = `Add ${whose} ${plural(decoded.items.length, "favourite")}?`;
       const list = el("ul", { className: "recv-list" });
       for (const g of groupForShare(decoded.items)) {
-        const bits = [...g.dishes];
+        // A group's dishes may arrive as bare name strings (an OLD-shaped
+        // producer, or a link decoded before dish ids existed) or as
+        // `{ name, dishId? }` objects (favourites.js's groupForShare today) —
+        // read the name whichever shape a given element is.
+        const bits = g.dishes.map((d) => (typeof d === "string" ? d : d.name));
         if (g.venueFav) bits.unshift("the place");
         list.append(
           el("li", { className: "recv-group" }, [

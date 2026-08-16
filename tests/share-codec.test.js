@@ -225,9 +225,15 @@ test("order and shortlist tokens decode to their own type", () => {
 // shared by all three payload kinds, so bumping it would break every
 // outstanding link of all three.
 
+// `fixture-venue` and not `sprig-and-fern`: that id is RETIRED — renames.js
+// maps it to `sprig-and-fern-tawa`, and the five taverns are now separate
+// records in site/data/index.json. A retired-but-live id in a synthetic fixture
+// reads as a real venue to the next session and would quietly start exercising
+// the rename path the day one of these tests grew a migration. The `fixture-`
+// prefix is reserved for tests and can never be a real venue id.
 const burgerGroups = [
   {
-    venueId: "sprig-and-fern",
+    venueId: "fixture-venue",
     venueName: "Sprig & Fern",
     phone: null,
     items: [
@@ -299,17 +305,126 @@ test("a crafted id is clipped and trimmed like every other string off the wire",
   assert.equal("dishId" in decodeShare(craft("   ")).items[0], false); // blank → none
 });
 
-test("a shared shortlist still carries dish NAMES, not ids (known limitation)", () => {
-  // Deliberate: `d` is a bare string array and changing its element type is the
-  // one change an old decoder cannot ignore. So a shortlist naming the Gold
-  // Card Cheeseburger arrives as the bare-slug one — what it did before ids
-  // existed, and no worse.
-  const decoded = decodeShare(encodeShortlist({ groups: [
-    { venueId: "sprig-and-fern", venueName: "Sprig & Fern", venueFav: false, dishes: ["Cheeseburger"] },
-  ] }));
-  assert.equal(decoded.items[0].name, "Cheeseburger");
-  assert.equal("dishId" in decoded.items[0], false);
-  assert.equal(favKey(decoded.items[0]), "d:sprig-and-fern cheeseburger");
+// --- dish ids on a shortlist (ADR 0051 residue) ---------------------------
+// `d` is still a bare array of NAME strings, byte for byte: changing its
+// element type is the one change to this wire an existing decoder cannot
+// ignore. The ids ride BESIDE it in `k`, a parallel array — the same
+// append-an-optional-slot trick the order line used, in the container this
+// payload actually has (a keyed group object, so the "appended slot" is a new
+// key). Old decoders read `g.d` and never look at `g.k`, so they degrade to the
+// bare slug, which is exactly what they do today.
+
+const goldCardShortlist = [
+  {
+    venueId: "fixture-venue",
+    venueName: "Fixture Venue",
+    isRecipe: false,
+    sub: "",
+    venueFav: false,
+    dishes: [
+      { name: "Cheeseburger", dishId: "cheeseburger" },
+      { name: "Cheeseburger", dishId: "cheeseburger-gold-card" },
+    ],
+  },
+];
+
+const tokenOf = (payload) => Buffer.from(JSON.stringify(payload)).toString("base64url");
+
+test("an ordinary shortlist carries no id array — links do not grow", () => {
+  const g = payloadOf(encodeShortlist({ groups: shortlistGroups })).g[0];
+  assert.deepEqual(g.d, ["Mee Goreng", "Roti Canai"]);
+  assert.equal("k" in g, false);
+});
+
+test("a shortlist naming a disambiguated row resolves to the RIGHT row", () => {
+  const decoded = decodeShare(encodeShortlist({ groups: goldCardShortlist }));
+  assert.equal(decoded.items.length, 2);
+  // Both are called "Cheeseburger"; only the id keeps them apart.
+  assert.equal("dishId" in decoded.items[0], false); // "cheeseburger" == slug(name)
+  assert.equal(decoded.items[1].dishId, "cheeseburger-gold-card");
+  assert.deepEqual(decoded.items.map(favKey), [
+    "d:fixture-venue cheeseburger",
+    "d:fixture-venue cheeseburger-gold-card",
+  ]);
+});
+
+test("the id rides in a parallel `k`; `d` stays a bare string array", () => {
+  const g = payloadOf(encodeShortlist({ groups: goldCardShortlist })).g[0];
+  assert.deepEqual(g.d, ["Cheeseburger", "Cheeseburger"]);
+  assert.deepEqual(g.k, [null, "cheeseburger-gold-card"]);
+});
+
+test("an OLD decoder reading a NEW code degrades to the bare slug, and never throws", () => {
+  // An old decoder reads `g.d` and `g.f` and ignores every key it doesn't know,
+  // so what it sees is the new payload with `k` deleted. Simulated exactly.
+  const payload = payloadOf(encodeShortlist({ groups: goldCardShortlist }));
+  for (const g of payload.g) delete g.k;
+  const asOldDecoderSeesIt = decodeShare(tokenOf(payload));
+  assert.equal(asOldDecoderSeesIt.items.length, 2);
+  assert.deepEqual(asOldDecoderSeesIt.items.map(favKey), [
+    "d:fixture-venue cheeseburger",
+    "d:fixture-venue cheeseburger", // both land on the bare slug — today's behaviour
+  ]);
+});
+
+test("a shortlist minted before ids existed decodes to exactly what it always did", () => {
+  // Hand-built at the old shape — no `k` key anywhere.
+  const token = tokenOf({
+    v: CODEC_VERSION,
+    t: "s",
+    l: "Alex",
+    g: [{ v: "kk", n: "KK Malaysian", r: 0, s: "Tawa · Malaysian", f: 1, d: ["Mee Goreng"] }],
+  });
+  assert.deepEqual(decodeShare(token), {
+    version: CODEC_VERSION,
+    type: "shortlist",
+    label: "Alex",
+    items: [
+      { type: "venue", venueId: "kk", venueName: "KK Malaysian", isRecipe: false, sub: "Tawa · Malaysian" },
+      { type: "dish", name: "Mee Goreng", venueId: "kk", venueName: "KK Malaysian", isRecipe: false, sub: "Tawa · Malaysian" },
+    ],
+  });
+});
+
+test("a plain string dish is still accepted, and encodes to the old bytes", () => {
+  // groupForShare() hands bare name strings today; the encoder must keep
+  // producing byte-identical payloads for them.
+  const asStrings = encodeShortlist({ groups: [
+    { venueId: "kk", venueName: "KK", isRecipe: false, sub: "", venueFav: false, dishes: ["Roti Canai"] },
+  ] });
+  const asObjects = encodeShortlist({ groups: [
+    { venueId: "kk", venueName: "KK", isRecipe: false, sub: "", venueFav: false, dishes: [{ name: "Roti Canai" }] },
+  ] });
+  assert.equal(asStrings, asObjects);
+  assert.equal(decodeShare(asStrings).items[0].name, "Roti Canai");
+});
+
+test("a crafted `k` cannot smuggle anything past the sanitisers", () => {
+  const craft = (k) => tokenOf({
+    v: CODEC_VERSION, t: "s",
+    g: [{ v: "x", n: "X", r: 0, s: "", f: 0, d: ["A", "B"], k }],
+  });
+  // Not an array, shorter than `d`, over-long, padded, and blank — none of it
+  // may throw, and none of it may become an id the name doesn't warrant.
+  assert.equal("dishId" in decodeShare(craft("nope")).items[0], false);
+  assert.equal("dishId" in decodeShare(craft(["only-one"])).items[1], false);
+  assert.equal(decodeShare(craft(["only-one"])).items[0].dishId, "only-one");
+  assert.equal(decodeShare(craft(["z".repeat(300)])).items[0].dishId.length, 120);
+  assert.equal(decodeShare(craft(["  spaced  "])).items[0].dishId, "spaced");
+  assert.equal("dishId" in decodeShare(craft(["   "])).items[0], false);
+  assert.equal("dishId" in decodeShare(craft(["a"])).items[0], false); // == slug("A")
+  assert.equal("dishId" in decodeShare(craft([{ evil: 1 }])).items[0], false);
+});
+
+test("a transfer carries dish ids too — the same packer, so they cannot drift", () => {
+  const out = decodeTransfer(encodeTransfer({
+    profile: { id: "p1", name: "Me" },
+    groups: goldCardShortlist,
+  }));
+  assert.deepEqual(out.favourites.map(favKey), [
+    "d:fixture-venue cheeseburger",
+    "d:fixture-venue cheeseburger-gold-card",
+  ]);
 });
 
 // --- personal transfer (Theme 9 v1, ADR 0030) -----------------------------

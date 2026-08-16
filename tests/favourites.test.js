@@ -9,6 +9,7 @@ import {
   favHref,
   groupForShare,
 } from "../site/js/favourites.js";
+import { encodeShortlist, decodeShare } from "../site/js/share-codec.js";
 
 function fakeStorage(initial = null) {
   const m = new Map();
@@ -37,18 +38,24 @@ test("favHref: venue, restaurant dish, and recipe dish", () => {
 
 // --- dish ids (ADR 0051) --------------------------------------------------
 
+// `fixture-venue` and not `sprig-and-fern`: that id is RETIRED — renames.js
+// maps it to `sprig-and-fern-tawa`. These tests exercise dish-id disambiguation
+// (favKey/favHref/toggle), not the venue rename, so the venue id is arbitrary;
+// a retired-but-live id here would quietly start exercising the rename path
+// the day one of these tests grew a migration. See tests/share-codec.test.js
+// for the same convention.
 const goldCard = {
-  type: "dish", venueId: "sprig-and-fern", venueName: "Sprig & Fern",
+  type: "dish", venueId: "fixture-venue", venueName: "Sprig & Fern",
   name: "Cheeseburger", dishId: "cheeseburger-gold-card",
 };
 const mainsBurger = { ...goldCard, dishId: undefined };
 delete mainsBurger.dishId;
 
 test("favKey keys on the id where the data gives one", () => {
-  assert.equal(favKey(goldCard), "d:sprig-and-fern cheeseburger-gold-card");
+  assert.equal(favKey(goldCard), "d:fixture-venue cheeseburger-gold-card");
   // …and on slug(name) where it doesn't — the key it always had, which is why
   // stored hearts need no migration (they are entries, not key strings).
-  assert.equal(favKey(mainsBurger), "d:sprig-and-fern cheeseburger");
+  assert.equal(favKey(mainsBurger), "d:fixture-venue cheeseburger");
 });
 
 test("two same-named dishes with different ids heart independently", () => {
@@ -72,8 +79,8 @@ test("a heart saved before ids existed reads back as itself", () => {
 });
 
 test("favHref anchors on the id, so a disambiguated row is reachable", () => {
-  assert.equal(favHref(goldCard), "restaurant.html?id=sprig-and-fern#dish-cheeseburger-gold-card");
-  assert.equal(favHref(mainsBurger), "restaurant.html?id=sprig-and-fern#dish-cheeseburger");
+  assert.equal(favHref(goldCard), "restaurant.html?id=fixture-venue#dish-cheeseburger-gold-card");
+  assert.equal(favHref(mainsBurger), "restaurant.html?id=fixture-venue#dish-cheeseburger");
 });
 
 test("toggle adds then removes; has() tracks it", () => {
@@ -165,9 +172,36 @@ test("groupForShare groups by venue with venueFav and dish names", () => {
   assert.equal(kk.venueId, "kk-malaysian");
   assert.equal(kk.venueName, "KK Malaysian");
   assert.equal(kk.venueFav, true); // the venue itself is hearted
-  assert.deepEqual(kk.dishes, ["Mee Goreng"]);
+  assert.deepEqual(kk.dishes, [{ name: "Mee Goreng" }]);
   const cah = groups[1];
   assert.equal(cah.venueFav, false); // only a dish of it is hearted
   assert.equal(cah.isRecipe, true);
-  assert.deepEqual(cah.dishes, ["Shane's Ribs"]);
+  assert.deepEqual(cah.dishes, [{ name: "Shane's Ribs" }]);
+});
+
+test("groupForShare carries a hearted dish's id, so a share can disambiguate it (ADR 0051)", () => {
+  // Without this, share-codec.js's `k` array is packed from nothing — the id
+  // the dish carries in storage never reaches the producer's `dishes` list.
+  assert.deepEqual(groupForShare([goldCard])[0].dishes, [
+    { name: "Cheeseburger", dishId: "cheeseburger-gold-card" },
+  ]);
+  // A dish with no id pushes without the key at all — never an explicit
+  // `dishId: undefined`, which would fail deepEqual against a plain `{ name }`.
+  assert.deepEqual(groupForShare([mainsBurger])[0].dishes, [{ name: "Cheeseburger" }]);
+});
+
+test("a hearted dish's id survives heart -> groupForShare -> wire -> favKey (ADR 0051 residue)", () => {
+  // The end-to-end property the whole exercise is for: two dishes sharing a
+  // name at the same venue stay two distinct favourites after a real
+  // shortlist round-trip, not just at the in-memory model layer.
+  const f = createFavourites(fakeStorage());
+  f.toggle(mainsBurger);
+  f.toggle(goldCard);
+  const token = encodeShortlist({ groups: groupForShare(f.items()) });
+  const decoded = decodeShare(token);
+  assert.equal(decoded.type, "shortlist");
+  assert.deepEqual(decoded.items.map(favKey).sort(), [
+    "d:fixture-venue cheeseburger",
+    "d:fixture-venue cheeseburger-gold-card",
+  ]);
 });
