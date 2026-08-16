@@ -63,11 +63,179 @@
   "vibe": [
     "craft beer"
   ],
+  "verified": "2023-06-02",
+  "verifiedBy": "paper-menu",
   "detailsVerified": "2026-08-16",
   "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "croquette-filling",
+      "name": "Choose from chicken, spicy beef or vegetarian",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Chicken",
+          "tags": []
+        },
+        {
+          "name": "Spicy beef",
+          "tags": []
+        },
+        {
+          "name": "Vegetarian",
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "add-bacon",
+      "name": "Add bacon",
+      "select": "one",
+      "options": [
+        {
+          "name": "Bacon",
+          "price": 2.0,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Kai to Share",
+      "sectionId": "kai-to-share",
+      "items": [
+        {
+          "name": "Curly Fries",
+          "dishId": "curly-fries",
+          "desc": "With aioli.",
+          "price": 12.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Calamari",
+          "dishId": "calamari",
+          "desc": "With sriracha aioli.",
+          "price": 16.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Croquettes",
+          "dishId": "croquettes",
+          "desc": "Choose from chicken, spicy beef or vegetarian, with ole yella habanero mustard.",
+          "price": 17.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "addOns": [
+            "croquette-filling"
+          ]
+        },
+        {
+          "name": "Buffalo Wedges",
+          "dishId": "buffalo-wedges",
+          "desc": "Wedges, cheese, buffalo sauce, ranch dressing, jalapenos.",
+          "price": 16.0,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ],
+          "addOns": [
+            "add-bacon"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pizza",
+      "sectionId": "pizza",
+      "note": "All pizzas $24. Gluten free pizza bases available; dairy free cheese available.",
+      "items": [
+        {
+          "name": "Fame",
+          "dishId": "fame",
+          "desc": "Basil pesto, semi-dried tomatoes.",
+          "price": 24.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Three Little Pigs",
+          "dishId": "three-little-pigs",
+          "desc": "Pulled pork, cabanossi, bourbon bacon jam.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fungus Amongus",
+          "dishId": "fungus-amongus",
+          "desc": "Chicken, mushroom, red peppers, red onion, honey + chipotle bbq sauce.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Omertà",
+          "dishId": "omert",
+          "desc": "Artichoke, olives, semi-dried tomatoes, oregano.",
+          "price": 24.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Starman",
+          "dishId": "starman",
+          "desc": "Pepperoni, olives, parmesan, chilli flakes.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Trip to Arrakis",
+          "dishId": "trip-to-arrakis",
+          "desc": "Pizza of the month. Pulled lamb, spice melange, tomato, tzatziki, cucumber.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ]
 }

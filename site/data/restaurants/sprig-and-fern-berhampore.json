@@ -63,11 +63,402 @@
   "vibe": [
     "craft beer"
   ],
+  "verified": "2023-12-21",
+  "verifiedBy": "paper-menu",
   "detailsVerified": "2026-08-16",
   "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "side-gravy",
+      "name": "Want some gravy on the side?",
+      "select": "one",
+      "options": [
+        {
+          "name": "Gravy",
+          "price": 3.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "add-cheese",
+      "name": "Add cheese",
+      "select": "one",
+      "options": [
+        {
+          "name": "Cheese",
+          "price": 3.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wing-sauce",
+      "name": "Your way — dry rubbed, Korean BBQ or buffalo sauce",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Dry rubbed",
+          "tags": []
+        },
+        {
+          "name": "Korean BBQ",
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Buffalo sauce",
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "extra-topping",
+      "name": "Add any additional topping",
+      "select": "one",
+      "options": [
+        {
+          "name": "Additional topping",
+          "price": 3.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "kids-pizza-toppings",
+      "name": "Add two toppings (if you want)",
+      "select": "many",
+      "max": 2,
+      "price": 0,
+      "options": [
+        {
+          "name": "Salami",
+          "tags": []
+        },
+        {
+          "name": "Feta",
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Sun dried tomatoes",
+          "tags": []
+        },
+        {
+          "name": "Rocket",
+          "tags": []
+        },
+        {
+          "name": "Olives",
+          "tags": []
+        },
+        {
+          "name": "Basil",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "kids-sauce-swirl",
+      "name": "Add a sauce swirl (if you want)",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Aioli",
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Korean BBQ",
+          "tags": [
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kids-drink",
+      "name": "Add any kids size fizzy or juice",
+      "select": "one",
+      "price": 3.5,
+      "options": [
+        {
+          "name": "Fizzy",
+          "tags": []
+        },
+        {
+          "name": "Juice",
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Sharing",
+      "sectionId": "sharing",
+      "note": "Vegan aioli available on request, no charge. Need some more heat — check out the spice rack next to the bar. All our fried food is cooked in the same deep fryer.",
+      "items": [
+        {
+          "name": "Curly Fries",
+          "dishId": "curly-fries",
+          "desc": "Served with Old Bay seasoning and aioli.",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "contains-egg"
+          ],
+          "addOns": [
+            "side-gravy"
+          ]
+        },
+        {
+          "name": "Beer Battered Chips with Gravy",
+          "dishId": "beer-battered-chips-with-gravy",
+          "desc": "Yes, suitable for vegetarians.",
+          "price": 13.0,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ],
+          "addOns": [
+            "add-cheese"
+          ]
+        },
+        {
+          "name": "Broccoli Bites",
+          "dishId": "broccoli-bites",
+          "desc": "Served with chipotle mayo.",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "addOns": [
+            "side-gravy"
+          ]
+        },
+        {
+          "name": "Rosemary + Chilli Polenta Sticks",
+          "dishId": "rosemary-chilli-polenta-sticks",
+          "desc": "Served with aioli.",
+          "price": 12.5,
+          "tags": [
+            "vg",
+            "df",
+            "gf"
+          ],
+          "addOns": [
+            "side-gravy"
+          ]
+        },
+        {
+          "name": "Corn Nuggets",
+          "dishId": "corn-nuggets",
+          "desc": "Served with chipotle mayo.",
+          "price": 11.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "addOns": [
+            "side-gravy"
+          ]
+        },
+        {
+          "name": "Cheeseburger Spring Rolls",
+          "dishId": "cheeseburger-spring-rolls",
+          "desc": "Served with Korean BBQ sauce.",
+          "price": 16.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-soy"
+          ],
+          "addOns": [
+            "side-gravy"
+          ]
+        },
+        {
+          "name": "Vege Bites",
+          "dishId": "vege-bites",
+          "desc": "A selection of Wild Nations Kai Pono's vegetable bites — beetroot + plum, pea & mint and smoked chipotle + sweet potato. Served with hummus.",
+          "price": 14.0,
+          "tags": [
+            "vg",
+            "contains-sesame"
+          ],
+          "addOns": [
+            "side-gravy"
+          ]
+        },
+        {
+          "name": "Buffalo Chicken Wings - Regular",
+          "dishId": "buffalo-chicken-wings-regular",
+          "desc": "Three wings. Check out our spice rack if you need a little more heat.",
+          "price": 18.0,
+          "tags": [],
+          "addOns": [
+            "wing-sauce"
+          ]
+        },
+        {
+          "name": "Buffalo Chicken Wings - Large",
+          "dishId": "buffalo-chicken-wings-large",
+          "desc": "Five wings. Check out our spice rack if you need a little more heat.",
+          "price": 24.0,
+          "tags": [],
+          "addOns": [
+            "wing-sauce"
+          ]
+        },
+        {
+          "name": "Bread and Dips",
+          "dishId": "bread-and-dips",
+          "desc": "Gramercy bread, hummus, olive oil with white truffle glaze.",
+          "price": 16.0,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Antipasto Platter",
+          "dishId": "antipasto-platter",
+          "desc": "Sopressa salami, French brie, Mediterranean mix, pickled veges, hummus, quince paste, Gramercy breads.",
+          "price": 30.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Vegetarian Antipasto Platter",
+          "dishId": "vegetarian-antipasto-platter",
+          "desc": "French brie, Mediterranean mix, pickled veges, hummus, quince paste, Gramercy breads.",
+          "price": 26.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-sesame"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pizza",
+      "sectionId": "pizza",
+      "note": "Our pizza bases contain dairy. Gluten free bases and gluten + dairy free bases available on request, no charge. Vegan cheese also available — just ask.",
+      "addOns": [
+        "extra-topping"
+      ],
+      "items": [
+        {
+          "name": "Margherita",
+          "dishId": "margherita",
+          "desc": "Tomato, mozzarella, basil pesto leaves.",
+          "price": 22.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Prosciutto",
+          "dishId": "prosciutto",
+          "desc": "Mozzarella, prosciutto, rocket, basil.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Super Salami",
+          "dishId": "super-salami",
+          "desc": "Piccante and sopressa salami, mozzarella.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mediterranean",
+          "dishId": "mediterranean",
+          "desc": "Sun dried tomatoes, feta, green and black olives.",
+          "price": 24.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "For the Kids",
+      "sectionId": "for-the-kids",
+      "addOns": [
+        "kids-drink"
+      ],
+      "items": [
+        {
+          "name": "Small Curly Fries",
+          "dishId": "small-curly-fries",
+          "desc": "Served with tomato sauce.",
+          "price": 9.0,
+          "tags": []
+        },
+        {
+          "name": "Chicken Nuggets or Hot Dogs",
+          "dishId": "chicken-nuggets-or-hot-dogs",
+          "desc": "Served with fries and tomato sauce.",
+          "price": 12.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mini Pizza + Fries",
+          "dishId": "mini-pizza-fries",
+          "desc": "Kids sized slices with tomato sauce and mozzarella cheese.",
+          "price": 13.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "addOns": [
+            "kids-pizza-toppings",
+            "kids-sauce-swirl"
+          ]
+        }
+      ]
+    }
+  ]
 }

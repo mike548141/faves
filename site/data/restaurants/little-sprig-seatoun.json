@@ -58,11 +58,309 @@
   "vibe": [
     "craft beer"
   ],
+  "verified": "2026-06-29",
+  "verifiedBy": "paper-menu",
   "detailsVerified": "2026-08-16",
   "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "add-prosciutto",
+      "name": "Add prosciutto",
+      "select": "one",
+      "options": [
+        {
+          "name": "Prosciutto",
+          "price": 5.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "fries-cheese-gravy",
+      "name": "Add cheese & beef gravy",
+      "select": "one",
+      "options": [
+        {
+          "name": "Cheese & beef gravy",
+          "price": 5.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "add-fries",
+      "name": "Add fries",
+      "select": "one",
+      "options": [
+        {
+          "name": "Fries",
+          "price": 6.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "burger-extras",
+      "name": "Burger extras",
+      "select": "many",
+      "options": [
+        {
+          "name": "Fries",
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Patty",
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Bacon",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Cheese",
+          "price": 3.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Egg",
+          "price": 3.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "GF bun",
+          "price": 3.0,
+          "tags": [
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kids-gravy",
+      "name": "Add gravy",
+      "select": "one",
+      "options": [
+        {
+          "name": "Gravy",
+          "price": 3.0,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Sharing Plates",
+      "sectionId": "sharing-plates",
+      "items": [
+        {
+          "name": "House Made Flatbreads",
+          "dishId": "house-made-flatbreads",
+          "desc": "Parmesan, radicchio, garlic chilli oil.",
+          "price": 17.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "addOns": [
+            "add-prosciutto"
+          ]
+        },
+        {
+          "name": "House Made Flatbreads",
+          "dishId": "house-made-flatbreads-aubergine",
+          "desc": "Aromatic spiced aubergine dip & herb labneh.",
+          "price": 21.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fried Chicken",
+          "dishId": "fried-chicken",
+          "desc": "Southern style — pickles, ranch.",
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Lamb Kofta's",
+          "dishId": "lamb-kofta-s",
+          "desc": "Turmeric buckwheat tabbouleh, carrot salad, herb labneh & grilled flatbread.",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Crispy Tempura Broccolini",
+          "dishId": "crispy-tempura-broccolini",
+          "desc": "Honey & sesame dipping sauce, fresh seasonal salad.",
+          "price": 18.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Best Bitter Rarebit",
+          "dishId": "best-bitter-rarebit",
+          "desc": "Grilled best bitter cheese, on sourdough & truffle oil.",
+          "price": 18.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fries",
+          "dishId": "fries",
+          "desc": null,
+          "price": 12.0,
+          "tags": [],
+          "addOns": [
+            "fries-cheese-gravy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Meals",
+      "sectionId": "meals",
+      "items": [
+        {
+          "name": "Herb & Parmesan Chicken Schnitzel",
+          "dishId": "herb-parmesan-chicken-schnitzel",
+          "desc": "Cos, green goddess dressing.",
+          "price": 28.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ],
+          "addOns": [
+            "add-fries"
+          ]
+        },
+        {
+          "name": "Fish of the Day",
+          "dishId": "fish-of-the-day",
+          "desc": "Roast butternut squash, grilled zucchini, red pepper, radicchio, shallot & caper e.v.o sauce.",
+          "price": 30.0,
+          "tags": []
+        },
+        {
+          "name": "Daily Special's",
+          "dishId": "daily-special-s",
+          "desc": "Ask our staff.",
+          "price": null,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Burgers",
+      "sectionId": "burgers",
+      "addOns": [
+        "burger-extras"
+      ],
+      "items": [
+        {
+          "name": "Thick Patty Beef",
+          "dishId": "thick-patty-beef",
+          "desc": "American cheese, mac sauce, pickles, lettuce, brioche bun.",
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Crispy Halloumi",
+          "dishId": "crispy-halloumi",
+          "desc": "Jalapeno relish, aioli, pickles, lettuce, brioche bun.",
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Kids",
+      "sectionId": "kids",
+      "items": [
+        {
+          "name": "Cheese Burger",
+          "dishId": "cheese-burger",
+          "desc": "Served with fries.",
+          "price": 15.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mini Schnitzel",
+          "dishId": "mini-schnitzel",
+          "desc": "Served with fries.",
+          "price": 16.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Sausages n Fries",
+          "dishId": "sausages-n-fries",
+          "desc": null,
+          "price": 15.0,
+          "tags": [
+            "contains-gluten"
+          ],
+          "addOns": [
+            "kids-gravy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sweet",
+      "sectionId": "sweet",
+      "items": [
+        {
+          "name": "Sticky Toffee Pudding",
+          "dishId": "sticky-toffee-pudding",
+          "desc": "Vanilla ice cream & toffee sauce.",
+          "price": 10.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -63,11 +63,298 @@
   "vibe": [
     "craft beer"
   ],
+  "verified": "2026-05-12",
+  "verifiedBy": "paper-menu",
   "detailsVerified": "2026-08-16",
   "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "nga-bun",
+      "name": "No added gluten bun",
+      "select": "one",
+      "options": [
+        {
+          "name": "No added gluten bun",
+          "price": 2.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "swap-curly-fries",
+      "name": "Swap to curly fries",
+      "select": "one",
+      "options": [
+        {
+          "name": "Curly fries",
+          "price": 2.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "nga-base",
+      "name": "No added gluten base",
+      "select": "one",
+      "options": [
+        {
+          "name": "No added gluten base",
+          "price": 3.5,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Small Plates",
+      "sectionId": "small-plates",
+      "items": [
+        {
+          "name": "Warmed Marinated Olives",
+          "dishId": "warmed-marinated-olives",
+          "desc": null,
+          "price": 12.0,
+          "tags": [
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Edamame Beans / Chilli Salt",
+          "dishId": "edamame-beans-chilli-salt",
+          "desc": null,
+          "price": 12.0,
+          "tags": [
+            "vg",
+            "gf",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Hummus / Dukkah / Toasted Ciabatta / Chilli Oil",
+          "dishId": "hummus-dukkah-toasted-ciabatta-chilli-oil",
+          "desc": null,
+          "price": 18.0,
+          "tags": [
+            "vg",
+            "contains-gluten",
+            "contains-nuts",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Beef Meatballs / Tomato + Roast Capsicum Ragu / Mozzarella",
+          "dishId": "beef-meatballs-tomato-roast-capsicum-ragu-mozzarella",
+          "desc": null,
+          "price": 14.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Baked Brie / Honey / Roasted Hazelnuts / Toasted Ciabatta",
+          "dishId": "baked-brie-honey-roasted-hazelnuts-toasted-ciabatta",
+          "desc": null,
+          "price": 21.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Hand Cut Corn Chips / Guacamole / Salsa",
+          "dishId": "hand-cut-corn-chips-guacamole-salsa",
+          "desc": null,
+          "price": 14.0,
+          "tags": [
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Crumbed Fish Bites / Lemon / Tartare Sauce",
+          "dishId": "crumbed-fish-bites-lemon-tartare-sauce",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Cheese + Crackers / Brie / Creamy Blue / Olives",
+          "dishId": "cheese-crackers-brie-creamy-blue-olives",
+          "desc": null,
+          "price": 22.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Samosas + Poppadoms / Sweet Chilli Sauce / Mango + Peach Chutney",
+          "dishId": "samosas-poppadoms-sweet-chilli-sauce-mango-peach-chutney",
+          "desc": null,
+          "price": 22.5,
+          "tags": [
+            "vg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Curly Fries / Aioli",
+          "dishId": "curly-fries-aioli",
+          "desc": null,
+          "price": 12.5,
+          "tags": [
+            "v",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Hot Chips / Tomato Sauce",
+          "dishId": "hot-chips-tomato-sauce",
+          "desc": null,
+          "price": 11.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Cheesecake / Lemon or Passionfruit / Berry Coulis",
+          "dishId": "cheesecake-lemon-or-passionfruit-berry-coulis",
+          "desc": null,
+          "price": 12.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Burgers",
+      "sectionId": "burgers",
+      "note": "All burgers served with lettuce, tomato and pickle on a sesame bun with hot chips.",
+      "addOns": [
+        "nga-bun",
+        "swap-curly-fries"
+      ],
+      "items": [
+        {
+          "name": "Chicken Schnitzburger",
+          "dishId": "chicken-schnitzburger",
+          "desc": "Crumbed free range chicken breast, rocket sauce, aioli.",
+          "price": 25.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Fish Burger",
+          "dishId": "fish-burger",
+          "desc": "Crumbed hoki fillet, tartare sauce.",
+          "price": 25.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Black Bean Burger",
+          "dishId": "black-bean-burger",
+          "desc": "Chipotle sauce.",
+          "price": 24.0,
+          "tags": [
+            "vg",
+            "gf-option",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pizza",
+      "sectionId": "pizza",
+      "addOns": [
+        "nga-base"
+      ],
+      "items": [
+        {
+          "name": "Margherita",
+          "dishId": "margherita",
+          "desc": "Basil pesto, mozzarella.",
+          "price": 23.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Kale / Blue Cheese / Pumpkin Seed / Mozzarella",
+          "dishId": "kale-blue-cheese-pumpkin-seed-mozzarella",
+          "desc": null,
+          "price": 25.5,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Pepperoni / Mozzarella",
+          "dishId": "pepperoni-mozzarella",
+          "desc": null,
+          "price": 25.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chicken / Brie / Mango / Mozzarella",
+          "dishId": "chicken-brie-mango-mozzarella",
+          "desc": null,
+          "price": 26.5,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Smoked Salmon / Cream Cheese / Capers / Mozzarella",
+          "dishId": "smoked-salmon-cream-cheese-capers-mozzarella",
+          "desc": null,
+          "price": 26.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ]
 }
