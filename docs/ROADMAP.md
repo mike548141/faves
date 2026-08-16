@@ -451,6 +451,30 @@ delivery app.** Clear one by bringing back the fact.
       `site/index.html` is **35 venues behind** `site/data/index.json`. That is
       a lockstep rule in CLAUDE.md going unenforced corpus-wide, not something
       this batch introduced — and nothing checks it.
+      ✅ **RESOLVED 2026-08-16 — and the "35" was a measurement artefact.**
+      The fallback was never 35 behind: all **55** venues were listed, in
+      `index.json` order, names matching. The 35 came from counting
+      `restaurant.html?id=` hrefs against the 55 ids — but **a stub is
+      deliberately rendered without a link**, as a `<div class="card-body">`
+      carrying a "Menu coming soon" chip, because there is no menu to open. So
+      the count measured *venues with a menu*, not *venues in the list*, and
+      55 − 20 linked = 35. 🔑 **The same trap this file names one item above**
+      (*"a count derived from 'records with more than one branch' answers a
+      different question from 'records that are a chain', and reads identically
+      in prose"*) — and it caught a second reader, who reproduced the 35 exactly
+      before noticing the stubs.
+      🚩 **But there WAS a real defect underneath, and it is worse than a
+      stale list.** Nine venues had **finished menus rendered as unreachable
+      "Menu coming soon" cards** — `takeaway-at-churton`, `spices-indian`,
+      `thai-tara-express`, `satay-kingdom-cafe`, `the-catch-sushi-bar` and all
+      four Sprig + Fern taverns, the last four landed the day before. A reader
+      with no JavaScript was told those menus did not exist. That is a **status
+      drift**, not a membership drift, which is why a membership count could not
+      see it.
+      **`tools/check_fallback.py`** now gates it in CI and in the CLAUDE.md
+      verify list: same ids, same order, same names, **and a link on everything
+      that is not a `stub`**. Encoding the link rule is the point — it is what
+      stops the next reader re-measuring this wrong.
 
       > 🔎 **The title understates the gap by five times — measured 2026-08-16.**
       > Counted across all 55 venue records: **32 carry zero dishes**, not six.
