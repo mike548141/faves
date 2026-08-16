@@ -118,7 +118,7 @@
     </header>
 
     <main id="main" class="wrap">
-      <!-- The quieter second ask (ADR 0082). Shown only to someone who dismissed
+      <!-- The quieter second ask (ADR 0083). Shown only to someone who dismissed
            the dialog WITHOUT ticking "don't ask again" — ticking it suppresses
            this too, permanently, which is the whole promise of the tickbox.
            It is a banner, not a bar: it scrolls away with the page rather than
@@ -224,7 +224,7 @@
              hidden whenever nothing is on. -->
         <div id="active-filters" class="active-filters" hidden></div>
       </div>
-      <!-- What came of the location ask (ADR 0082). The PILL IS GONE — the
+      <!-- What came of the location ask (ADR 0083). The PILL IS GONE — the
            owner removed it on 2026-08-17 ("I don't like the pill button to
            prompt for location data"), so this row now carries only the status
            line: "open places near you come first", or the blocked notice.
@@ -694,7 +694,7 @@
          deferring. Grouped and labelled for the first time: "Narrow to" makes
          the list shorter, "Sort by" only reorders it (ADR 0014) — a distinction
          the old undifferentiated chip row never made. -->
-    <!-- The location ask (ADR 0082, superseding ADR 0069's inline-control half).
+    <!-- The location ask (ADR 0083, superseding ADR 0069's inline-control half).
          WHY A DIALOG AT ALL, when 0069 ruled against one: this is OUR UI, not the
          browser's. It cannot cause the permanent block 0069 was written to avoid,
          because only the Allow button below raises the real prompt — so the ask

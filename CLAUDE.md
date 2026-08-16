@@ -188,7 +188,7 @@ node tools/served_check.mjs   # a section's serving window, on a FROZEN clock (2
                               # outside-window state cannot be asserted any other way
                               # without waiting until 9pm, and a check whose verdict
                               # depends on the hour gets switched off within a week
-node tools/geo_check.mjs      # the location ask (ADR 0082). The tickbox on the
+node tools/geo_check.mjs      # the location ask (ADR 0083). The tickbox on the
                               # dialog makes a PROMISE — "don't ask me about this
                               # again" — and a promise breaks in the WIRING, not in
                               # the logic: a listener on the wrong element, a flag

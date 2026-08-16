@@ -859,7 +859,7 @@ export function initSettingsUI() {
   // pattern; the fix is not to make it guess a location but to state its own
   // precondition, where the control is, at the moment it is inert.
   // This hint named a button twice over: it said "Near me" long after that pill
-  // was relabelled "Use my location", and ADR 0082 then removed the pill
+  // was relabelled "Use my location", and ADR 0083 then removed the pill
   // altogether. A hint that points at a control which is not on screen is worse
   // than no hint — it sends someone hunting for something that does not exist.
   // So it now points at the control immediately below it, which is the only
@@ -896,7 +896,7 @@ export function initSettingsUI() {
     allergenHeadRow,
     avoid.group,
   ]);
-  // THE ONLY ROUTE BACK (ADR 0082). With the home-screen pill removed and the
+  // THE ONLY ROUTE BACK (ADR 0083). With the home-screen pill removed and the
   // ask suppressible forever by a tickbox, a reader who changes their mind had
   // nowhere to go — the feature would be off with no visible off-switch, which
   // is the same dead end the `farIdle` hint above used to create.

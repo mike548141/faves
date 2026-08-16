@@ -96,7 +96,7 @@ const STATE = `(() => {
     clearWithControls: !!controls?.contains(clear),
     clearPresent: !!clear && !!clear.offsetParent === !!controls?.offsetParent,
     cuisineReach: reach("filter-cuisine"),
-    // #geo-banner (ADR 0082) starts hidden — the harness forces it visible
+    // #geo-banner (ADR 0083) starts hidden — the harness forces it visible
     // before reading this, the same way it forces the sheet open above.
     geoAskReach: reach("geo-banner-allow"),
     // Whole-document overflow, not #filter-controls' own — a control that
@@ -162,7 +162,7 @@ async function run(opts) {
     const { sessionId } = await cdp.send("Target.attachToTarget", { targetId, flatten: true });
     await cdp.send("Page.enable", {}, sessionId);
     await cdp.send("Runtime.enable", {}, sessionId);
-    // ISOLATION, not a workaround: ADR 0082 gives the home screen a location
+    // ISOLATION, not a workaround: ADR 0083 gives the home screen a location
     // dialog that opens ~900 ms after the list renders and, being a real
     // `showModal()`, makes every control outside it inert and pulls focus. This
     // check is about the filter row, so an unrelated modal landing mid-run
@@ -366,7 +366,7 @@ async function run(opts) {
     // stack) in a way it never needs to at 1280 px.
     //
     // RETARGETED 2026-08-17: this used to drive `#geo-ask`, the location pill,
-    // which the owner removed in ADR 0082. The pill's disappearance took the
+    // which the owner removed in ADR 0083. The pill's disappearance took the
     // assertion's subject with it and the check CRASHED on a null — worth
     // noting as the failure mode, because it is the loud one: a check that
     // silently kept passing against an element that no longer existed would

@@ -1,4 +1,4 @@
-// The location ask, in a real browser (ADR 0082). The eighth of the family.
+// The location ask, in a real browser (ADR 0083). The eighth of the family.
 //
 // WHY THIS EXISTS. The tickbox on the dialog makes a PROMISE — "don't ask me
 // about this again" — and a promise is exactly the kind of thing unit tests

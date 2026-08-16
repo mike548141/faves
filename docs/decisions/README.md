@@ -836,7 +836,7 @@ deliberation those compact docs omit.
 
 [0067]: 0067-a-tick-is-keyed-on-the-line-not-its-place.md
 
-- [0082](0082-the-location-ask-explains-itself.md) — **the location ask explains
+- [0083](0083-the-location-ask-explains-itself.md) — **the location ask explains
   itself, and can be turned off for good.** Supersedes the *surface* half of
   [0069] hours after it shipped: the owner asked for an explained dialog, a
   "don't ask me again" tickbox binding both it and a follow-up banner, and the
@@ -852,4 +852,4 @@ deliberation those compact docs omit.
   eighth browser check, because a promise fails in the wiring while the pure
   decision table stays green.
 
-[0082]: 0082-the-location-ask-explains-itself.md
+[0083]: 0083-the-location-ask-explains-itself.md

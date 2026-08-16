@@ -331,7 +331,7 @@ main {
 .list-toggle:active {
   transform: scale(0.97);
 }
-/* What came of the location ask (ADR 0082). The pill that used to sit here is
+/* What came of the location ask (ADR 0083). The pill that used to sit here is
    gone — the owner removed it — so this row now carries only the status line.
    It still wraps rather than truncates, because the blocked message is a whole
    instruction and a clipped instruction is no instruction. */
@@ -352,7 +352,7 @@ main {
   font-size: var(--step-sub);
 }
 
-/* ── The location ask: dialog and banner (ADR 0082) ──────────────────────────
+/* ── The location ask: dialog and banner (ADR 0083) ──────────────────────────
    Shared button look first. These are NOT `.list-toggle`s: a toggle reads as a
    filter you can flip back off, and neither of these is that — one raises a
    browser permission prompt that cannot be un-raised. Different job, different

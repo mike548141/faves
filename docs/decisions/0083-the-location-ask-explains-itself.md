@@ -1,4 +1,4 @@
-# 0082 — The location ask explains itself, and can be turned off for good
+# 0083 — The location ask explains itself, and can be turned off for good
 
 **Status:** Accepted. Supersedes **the surface half** of
 [0069](0069-the-location-ask-is-primed-not-sprung.md); 0069's core protection —

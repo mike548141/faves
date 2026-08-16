@@ -1,5 +1,5 @@
 // Unit tests for site/js/geo-consent.js — the decision table behind the
-// location ask (ADR 0082). Pure: a fake storage object, no DOM, no geolocation.
+// location ask (ADR 0083). Pure: a fake storage object, no DOM, no geolocation.
 // Run: `node --test`.
 //
 // WHAT THESE GUARD, and why each is here rather than left to the browser check:

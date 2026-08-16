@@ -1,5 +1,5 @@
 // Whether Faves may ASK for your location — which is a different question from
-// whether the browser will give it (ADR 0082, superseding ADR 0069 in part).
+// whether the browser will give it (ADR 0083, superseding ADR 0069 in part).
 //
 // Two permissions, and conflating them is the bug this module exists to avoid:
 //
