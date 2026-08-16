@@ -1,17 +1,19 @@
 {
-  "id": "garage-project-leeds-street",
-  "name": "Garage Project Leeds Street",
+  "id": "moore-wilsons",
+  "name": "Moore Wilson's",
   "cuisine": [
-    "Bar"
+    "Deli",
+    "Bakery",
+    "Coffee"
   ],
   "area": "Te Aro",
   "city": "Wellington",
   "currency": "NZD",
-  "address": "7 Leeds Street, Te Aro, Wellington 6011",
-  "lat": -41.29304,
-  "lng": 174.77673,
+  "address": "Cnr Tory & College Streets, Te Aro, Wellington 6011",
+  "lat": -41.29575,
+  "lng": 174.78069,
   "services": [
-    "dine-in"
+    "takeaway"
   ],
   "phone": null,
   "website": null,

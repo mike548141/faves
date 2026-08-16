@@ -1,17 +1,18 @@
 {
-  "id": "garage-project-leeds-street",
-  "name": "Garage Project Leeds Street",
+  "id": "crepes-a-go-go",
+  "name": "Crepes A Go Go",
   "cuisine": [
-    "Bar"
+    "Crepes",
+    "Dessert"
   ],
   "area": "Te Aro",
   "city": "Wellington",
   "currency": "NZD",
-  "address": "7 Leeds Street, Te Aro, Wellington 6011",
-  "lat": -41.29304,
-  "lng": 174.77673,
+  "address": "61 Manners Street, Te Aro, Wellington 6011",
+  "lat": -41.29065,
+  "lng": 174.77629,
   "services": [
-    "dine-in"
+    "takeaway"
   ],
   "phone": null,
   "website": null,

@@ -1754,6 +1754,55 @@ Two consequences recorded rather than buried:
 
 ---
 
+## Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)
+
+<!-- Numbered 25, not 22: two other live sessions had already taken 22, 23 and
+     24 while this branch was open. The note on Theme 19 says to check
+     `grep '^## Theme' ROADMAP.md` before adding one — it is there because this
+     keeps happening, and it happened again here. -->
+
+Owner, on reading ADR 0044's "a dish's `name` is its identity": *"that is fine
+but does a dish need a unique ID as well so it is referenceable when a name
+changes, as menus tend to?"*
+
+**The answer is yes, and the reason is sharper than it first looks.** A dish's
+name is doing four jobs at once today:
+
+| Job | Where | What a rename breaks |
+|---|---|---|
+| URL anchor | `#dish-<slug(name)>` | every link anyone has shared to that dish |
+| Pick reference | `picks: ["Bastard"]` | the pick silently stops matching (validate.py catches this one) |
+| Stored heart | `d:<venueId> <name>` | the heart detaches, on every family phone |
+| Stored rating | `d:<venueId> <name>` | same |
+
+Three of those four fail **silently**, which is the same shape of problem
+`renames.js` was written for at the venue level (ADR 0042's consequences) — and
+that is the precedent to follow, not reinvent.
+
+There is a second reason the venue level didn't have: **a menu refresh is
+append-only** (ADR 0023). A renamed dish is supposed to *carry its history over*
+— its price series, its revisions, its `verified` dates. With the name as the
+only identity, "carry it over" is a manual instruction a transcriber has to
+remember, and nothing checks it. An id makes it mechanical.
+
+**Recommended shape** — deliberately mirroring what already worked for venues:
+
+- `dishId`, kebab-case, unique within the venue, **optional at first**. Absent =
+  `slug(name)`, which is what every existing anchor already resolves to, so
+  nothing moves on the day it lands.
+- `formerNames: []` beside it, holding what the dish used to be called — the
+  dish-level twin of `formerIds`, and the thing that lets an old shared link and
+  an old stored heart still find it.
+- One resolver module, the way `renames.js` is the single place a venue id is
+  canonicalised, so no consumer learns two ways to identify a dish.
+- `validate.py` enforces uniqueness within a venue and that `picks` resolve
+  through the same path.
+
+**Not started.** It is a personal-data migration on every family device, and it
+wants doing once, carefully, rather than folded into a session already carrying
+FX and localisation. Its own ADR.
+
+---
 ## Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)
 
 Searching "mexican" returns nothing. Not a search defect — `cuisine` has always
@@ -1798,24 +1847,39 @@ Hotel Bristol. Address and pin from OpenStreetMap, so each carries
 `detailsVerifiedBy: "third-party"` — the weakest honest label, because nobody has
 stood in the shop.
 
-- [ ] **Three guidebook places have no findable address** `[S][data]` — **Chilly
-  Pot** (build-your-own malatang), **Crepes A Go Go** and **COSMIC Vape & Coffee**.
-  OpenStreetMap has no entry for any of them under several spellings, and the
-  guidebook gives no street address (Airbnb strips links). Deliberately NOT added
-  with a guessed address: a wrong pin sends someone to the wrong door, which is
-  worse than an absent venue. Each needs one street number, most cheaply read off
-  the door next time someone is on Cuba St.
+✅ **The three missing addresses — owner supplied them, 2026-08-16.** Crepes A Go
+Go (61 Manners St) and COSMIC Vape & Coffee (99 Cuba St) added, along with <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
+**Moore Wilson's**. Chilly Pot was **not** added — see below.
+
+- [ ] 🎯 **Is "Chilly Pot" just Babaili Malatang?** `[XS][data]` — the owner
+  suspected so and the evidence agrees: the guidebook's Chilly Pot is at
+  41/47 Dixon St, the Babaili Malatang record already held is at 45 Dixon St, and <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
+  a local food post describes the same shop as *"Ba Bai Li, Malatang Chilli Pot,
+  Dixon Street"* — "chilli pot" being what 麻辣烫 *is*, not a second business.
+  Deliberately NOT added as a second record: a duplicate splits a venue's hearts
+  and ratings between two ids and looks like a data error on a public list.
+  Needs one look at the shopfront. If confirmed, the useful follow-up is an
+  `alsoKnownAs` searchable alias, so the name in the guidebook still finds it.
+- [ ] **COSMIC Vape & Coffee has no pin** `[XS][data]` — OSM has no entry at
+  99 Cuba St for it, so the record carries the street address and no <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
+  coordinates. Maps opens by address; distance sorting skips it.
+- [ ] 🎯 **Where does Moore Wilson's stop being a place you eat?** `[S][product]`
+  — owner-raised. Its coffee and bakery are in scope; its cleaning aisle plainly
+  is not, and its wholesale grocery half is the grey middle. Added as a stub with
+  cuisine `Deli · Bakery · Coffee` so the question is about what goes in its
+  *menu*, not whether the venue belongs. One record is not an evidence base for a
+  schema change (the same restraint ADR 0037 applied), so no `kind: "food-store"`
+  until a second one arrives.
 - [ ] **The seven new stubs have no hours, phone or menu** `[M][data]` — they are
   findable by name and pin only. Hours and phone are a web-research pass; the
   menus want an in-store or official-site read (ADR 0036's trusted four).
-- [ ] **Bars and a bakery stretch the "cuisine" vocabulary** `[S][data]` — four of
-  the seven are drinking places, tagged `Bar`/`Pub`, and one is a `Bakery`. Faves
-  has always been an eating app; whether a bar belongs in the same list as a
-  takeaway, or wants its own filter, is a product question the owner should rule
-  on before more arrive.
+✅ **Bars and bakeries are in — ruled 2026-08-16.** Owner: *"add them all, bars,
+restaurants. Anything food and drink related."* So the collection's boundary is
+food and drink, not eating specifically. A cuisine filter that mixes `Bar` with
+`Malaysian` may still want a rethink once there are enough of them; that is a
+UI question now, not a scope one.
 
-**Deliberately not added.** *Moore Wilson's* is in the guidebook's Shopping
-section — a delicatessen and wholesaler, not a place you eat. The rest of the
+**Deliberately not added.** The rest of the
 guidebook (parking, gyms, the zoo, the cable car) is out of scope for a menu app.
 
 ---

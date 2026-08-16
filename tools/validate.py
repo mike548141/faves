@@ -107,13 +107,21 @@ def check_translations(rid, obj, where, fields):
             if not isinstance(text, str) or not text.strip():
                 err(rid, f"{where}: translations.{field}[{tag!r}] must be a non-empty string")
 
+
+def _load_fx_rates():
+    """Rate codes from site/data/fx.json, so a venue can't use a currency the
+    app has no rate for. Read rather than hard-coded — the file is refreshed by
+    a scheduled job, and a second list here would drift the first time it ran."""
+    path = ROOT / "site" / "data" / "fx.json"
+    try:
+        return set(json.loads(path.read_text(encoding="utf-8")).get("rates", {}))
+    except (OSError, json.JSONDecodeError):
+        return set()
+
+
+FX_RATES = _load_fx_rates()
+
 CURRENCY_RE = re.compile(r"^[A-Z]{3}$")
-
-# Currencies price.js has band thresholds for. Kept in step by hand — a short
-# list that changes when someone sits down with a country's menus and chooses
-# its two numbers, which is not something a script can derive.
-PRICE_BANDED_CURRENCIES = {"NZD"}
-
 
 def valid_timezone(tz):
     """True when `tz` is an IANA zone. Uses the stdlib's own tz database rather
@@ -636,21 +644,25 @@ def check_restaurant(path):
         elif not valid_timezone(tz):
             err(rid, f"{where}: timezone {tz!r} is not an IANA zone this machine knows")
 
+    # currency is REQUIRED (ADR 0045). Every stored price must state what
+    # currency it is in, or it cannot be converted into the one the reader asked
+    # for — and, worse, a price of unknown currency looks exactly like a price
+    # of the right one. A recipe collection has no prices, so it is exempt.
     currency = data.get("currency")
-    if currency is not None:
-        if not isinstance(currency, str) or not CURRENCY_RE.match(currency):
-            err(rid, "currency must be a 3-letter ISO 4217 code (e.g. 'GBP') or absent")
-        elif currency not in PRICE_BANDED_CURRENCIES:
-            # Not an error: the venue is still correct and its prices still
-            # render in its own currency. But price.js will show no derived
-            # $/$$/$$$ chip, because a band is a calibration against local
-            # prices and nobody has made one — worth saying out loud rather
-            # than leaving someone to wonder where the chip went.
-            warn(
-                rid,
-                f"currency {currency!r} has no price-band calibration in site/js/price.js — "
-                "the venue will show no derived price band (a curated `priceBand` still works)",
-            )
+    if is_recipes:
+        if currency is not None and not (isinstance(currency, str) and CURRENCY_RE.match(currency)):
+            err(rid, "currency must be a 3-letter ISO 4217 code or absent on a recipe collection")
+    elif not isinstance(currency, str) or not CURRENCY_RE.match(currency):
+        err(rid, f"currency is required and must be a 3-letter ISO 4217 code (got {currency!r})")
+    elif currency not in FX_RATES:
+        # Not an error — the venue and its prices are correct, and they render
+        # in its own currency. But nobody can convert them, so a reader who
+        # asked for another currency silently gets this one. Say so.
+        err(
+            rid,
+            f"currency {currency!r} has no rate in site/data/fx.json — prices could not be "
+            "converted. Add it to WANTED in tools/fetch_fx.py and rerun.",
+        )
 
     # formerIds: ids this record used to have (ADR 0011 branches arriving late,
     # a name corrected). They are not decoration — site/js/renames.js resolves an

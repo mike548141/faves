@@ -34,16 +34,14 @@
 
 import { openStatus } from "./hours.js";
 import { nearestBranch, venueDistanceKm, venueHours } from "./locations.js";
+import { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
 import { venueTimezone } from "./place.js";
 import { isTrading } from "./temporal.js";
 
-// Product defaults, also the source of truth for settings.js DEFAULTS.
-// FAR_KM: straight-line km beyond which a venue is "another town" — 50 km
-// keeps a whole metropolitan region reachable while catching a favourite in
-// another city or country. FAV_BOOST_KM: how much nearer a favourite is
-// treated as being. Both only apply when we know the viewer's location.
-export const FAR_KM = 50;
-export const FAV_BOOST_KM = 10;
+// The two distance defaults live in `defaults.js` (a leaf) so settings.js can
+// have them without importing this module, which imports place.js, which
+// imports settings.js. Re-exported so every existing importer is unaffected.
+export { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
 
 // Safe numeric compare (Infinity − Infinity is NaN, which would corrupt a
 // subtraction-based comparator; coordless venues carry Infinity distance).

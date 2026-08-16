@@ -4151,3 +4151,26 @@ body.faves-view .to-top {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: var(--step-sub);
 }
+
+/* The one line that says a menu's prices have been converted (ADR 0045). Shown
+   ONLY when they have been, so it is never noise for a reader at home looking
+   at a local menu. Styled as a quiet statement rather than a warning: nothing
+   is wrong, the reader is simply being told whose money they are looking at. */
+.menu-currency-note {
+  display: flex;
+  gap: var(--space-1);
+  align-items: baseline;
+  margin-top: var(--space-1);
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.menu-currency-ico {
+  font-weight: 600;
+  opacity: 0.7;
+}
+/* The rate-age line under the currency picker — supporting detail, one step
+   quieter than the note that explains the setting itself. */
+.settings-note-quiet {
+  opacity: 0.8;
+}

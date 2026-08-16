@@ -10,11 +10,16 @@ import { encodeShare, decodeShare, buildShareUrl, readShareToken } from "./share
 import { favourites, groupForShare } from "./favourites.js";
 import { openShareDialog } from "./share-ui.js";
 import { el } from "./dom.js";
-import { formatMoney } from "./place.js";
+import { displayPrice, formatMoney } from "./place.js";
 
 // A line, subtotal or total always carries the currency it is in — an order
 // can span venues in different countries, and an unlabelled number then lies.
-const money = (n, currency) => formatMoney(n, currency);
+// Converted into the reader's currency where we can (ADR 0045), which is also
+// what collapses a two-country order back into a single addable total.
+const money = (n, currency) => {
+  const shown = displayPrice(n, { currency });
+  return formatMoney(shown.amount, shown.currency);
+};
 const tel = (p) => "tel:" + p.replace(/\s+/g, "");
 const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
 
@@ -193,13 +198,25 @@ export function initOrderUI() {
 
   function renderTotal() {
     const anyUnpriced = order.groups().some((g) => g.hasUnpriced);
-    // "$42.50", or "$42.50 + £18" once an order spans currencies. Joined rather
-    // than summed: the two are not addable, and the "+" here is the same "+"
-    // that already means "and something unpriced on top".
+    // An order spanning two countries used to read "$42.50 + £18", because the
+    // two were not addable. With rates they usually are: convert each currency's
+    // subtotal into whatever the reader is seeing and, when they all land in the
+    // same money, add them into ONE number — which is what someone splitting a
+    // bill actually wants. Where a rate is missing the old joined form survives,
+    // because a wrong single total would be worse than an awkward true one.
     const totals = orderTotals(order.items());
-    totalEl.textContent =
-      (totals.length ? totals.map((x) => money(x.total, x.currency)).join(" + ") : money(0)) +
-      (anyUnpriced ? "+" : "");
+    const shown = totals.map((x) => displayPrice(x.total, { currency: x.currency }));
+    const currencies = new Set(shown.map((s) => s.currency));
+    const text =
+      shown.length === 0
+        ? money(0)
+        : currencies.size === 1
+          ? formatMoney(
+              shown.reduce((sum, s) => sum + s.amount, 0),
+              shown[0].currency
+            )
+          : shown.map((s) => formatMoney(s.amount, s.currency)).join(" + ");
+    totalEl.textContent = text + (anyUnpriced ? "+" : "");
   }
 
   function renderFab() {

@@ -8,6 +8,7 @@
   ],
   "area": "Te Aro",
   "city": "Wellington",
+  "currency": "NZD",
   "address": "Ground Floor, Huddart Parker Building, 1 Post Office Square, Te Aro, Wellington 6011",
   "lat": -41.28511,
   "lng": 174.77754,
@@ -18,13 +19,48 @@
   "website": "https://www.charleynoble.co.nz",
   "ordering": [],
   "hours": {
-    "mon": [["11:30", null]],
-    "tue": [["11:30", null]],
-    "wed": [["11:30", null]],
-    "thu": [["11:30", null]],
-    "fri": [["11:30", null]],
-    "sat": [["17:00", null]],
-    "sun": [["17:00", null]]
+    "mon": [
+      [
+        "11:30",
+        null
+      ]
+    ],
+    "tue": [
+      [
+        "11:30",
+        null
+      ]
+    ],
+    "wed": [
+      [
+        "11:30",
+        null
+      ]
+    ],
+    "thu": [
+      [
+        "11:30",
+        null
+      ]
+    ],
+    "fri": [
+      [
+        "11:30",
+        null
+      ]
+    ],
+    "sat": [
+      [
+        "17:00",
+        null
+      ]
+    ],
+    "sun": [
+      [
+        "17:00",
+        null
+      ]
+    ]
   },
   "vibe": [],
   "picks": [],

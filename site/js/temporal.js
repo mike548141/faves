@@ -26,7 +26,7 @@
 // of a menu scan dated only by its year, and §9's "unknown is not none" applied
 // to precision rather than presence. Comparisons always widen a partial date to
 // its full interval, so a partial never accidentally reads as 1 January.
-import { HOME_TIMEZONE } from "./place.js";
+import { HOME_TIMEZONE } from "./home.js";
 
 const DATE_RE = /^\d{4}(-\d{2}(-\d{2})?)?$/;
 const isDate = (s) => typeof s === "string" && DATE_RE.test(s);

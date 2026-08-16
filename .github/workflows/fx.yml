@@ -1,0 +1,85 @@
+# Refresh the exchange rates Faves ships (ADR 0045).
+#
+# Faves converts menu prices offline, from rates committed as data — it never
+# calls an FX API at runtime, because the site must work in flight mode and
+# carries no third-party dependency (ADR 0001). The cost of that choice is
+# staleness, and this is what pays it down: once a day, fetch, and commit only
+# if a rate actually moved.
+#
+# Two things worth knowing before changing this:
+#
+#   • A push to `main` IS a deploy — Cloudflare Pages builds from it. So this
+#     job deploys the site up to once a day, by design.
+#   • `--bump` moves DATA_VERSION in sw.js in the same commit. Without it the
+#     new rates would sit in the repo while every installed phone kept serving
+#     the cached old ones, which is the lockstep rule in CLAUDE.md and the one
+#     a scheduled job can't be trusted to remember by hand.
+name: FX rates
+
+on:
+  schedule:
+    # 19:10 UTC — after the source's own daily roll (it restamps around 00:0x
+    # UTC) and comfortably outside NZ waking hours, so a deploy lands when
+    # nobody is mid-order. GitHub runs cron on UTC and may delay a scheduled
+    # job under load; a missed day is harmless here, which is why this is a
+    # schedule and not an alarm.
+    - cron: "10 19 * * *"
+  workflow_dispatch:
+
+# Least privilege: this job writes one data file and one version constant.
+permissions:
+  contents: write
+
+concurrency:
+  # Never two refreshes racing each other onto main.
+  group: fx-rates
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: refresh site/data/fx.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch the latest rates
+        run: python3 tools/fetch_fx.py --bump
+
+      # The tool is a no-op when no rate moved, so an unchanged tree is the
+      # normal outcome most days, not a failure.
+      - name: Did anything change?
+        id: diff
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No rate moved since the committed snapshot — nothing to do."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git --no-pager diff --stat
+          fi
+
+      # Belt and braces: the same gates a human push would face. Rates are data
+      # the app divides by, so a malformed file is a page full of NaN.
+      - name: Validate before committing
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          python3 tools/fetch_fx.py --check
+          python3 tools/validate.py
+
+      - name: Commit and deploy
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "faves-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          AS_OF=$(python3 -c "import json;print(json.load(open('site/data/fx.json'))['asOf'])")
+          git add site/data/fx.json site/sw.js
+          git commit -m "data: refresh FX rates (as at ${AS_OF})" \
+                     -m "Automated daily refresh — tools/fetch_fx.py --bump." \
+                     -m "Rates are reference rates, not transaction rates; the app says so beside the prices."
+          # Rebase rather than force: a human may have pushed while this ran,
+          # and their commit is worth more than this one.
+          git pull --rebase --autostash origin main
+          git push origin HEAD:main

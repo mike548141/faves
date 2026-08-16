@@ -9,6 +9,7 @@
   ],
   "area": "Johnsonville",
   "city": "Wellington",
+  "currency": "NZD",
   "locations": [
     {
       "label": "Johnsonville",

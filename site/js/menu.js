@@ -9,6 +9,7 @@ import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, makeClock, nowIn, viewerOnVenueTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
+import { fxAsOf } from "./fx.js";
 import { alternates, preferred, venueLanguage } from "./lang.js";
 // `verificationText` is deliberately NOT imported any more — the header line it
 // fed was removed 2026-08-16 as a duplicate of the ⓘ note. It stays exported
@@ -16,8 +17,9 @@ import { alternates, preferred, venueLanguage } from "./lang.js";
 // know", and the ⓘ would need it back if the date ever left that note.
 import { todayIn, refreshCaveat, detailsVerification } from "./temporal.js";
 import {
-  HOME_CURRENCY,
   branchTimezone,
+  displayCurrency,
+  displayPrice,
   currencyName,
   formatMoney,
   venueCurrency,
@@ -52,15 +54,28 @@ import { cookButton } from "./cook-ui.js";
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
 
-// The currency this page's prices are in, set once from the record in render()
-// before anything is drawn. Module state rather than a threaded parameter
-// because a menu page IS one venue — every price on screen is that venue's, in
-// its currency — and threading it through ~40 render helpers would say the same
-// thing forty times. Reset per render so a re-render (profile switch, settings
-// change) can never inherit the previous venue's currency.
-let pageCurrency = HOME_CURRENCY;
+// The record this page is drawing, set at the top of render() before anything
+// is built. Module state rather than a threaded parameter because a menu page
+// IS one venue — every price on screen is that venue's — and threading it
+// through ~40 render helpers would say the same thing forty times. Reset per
+// render, so a re-render (profile switch, settings change) can never inherit
+// the previous venue.
+let pageRecord = null;
 
-const money = (n) => (n == null ? "" : formatMoney(n, pageCurrency));
+/**
+ * A price, in whatever currency this reader asked to see it in (ADR 0045).
+ *
+ * Note what is NOT here: any currency code, badge or marker. When the reader's
+ * currency is the shop's — which it is for every reader at home, looking at a
+ * local menu — this returns exactly what it always did, and the page is
+ * indistinguishable from before. When it isn't, the conversion is disclosed
+ * ONCE per menu (see convertedNote and the ⓘ), never once per dish.
+ */
+const money = (n) => {
+  if (n == null) return "";
+  const shown = displayPrice(n, pageRecord);
+  return formatMoney(shown.amount, shown.currency);
+};
 
 // --- Tag vocabulary → display ---------------------------------------
 const DIETARY = {
@@ -359,6 +374,11 @@ function renderHeader(r) {
     bits.push(banner);
   }
 
+  // Only present when prices are being converted — so a reader at home never
+  // sees it, and a reader abroad is told once instead of 187 times.
+  const currencyNote = convertedNote(r);
+  if (currencyNote) bits.push(currencyNote);
+
   // Venue marks: our optional curated household rating (static, from the data;
   // absent today — the feature ships dormant) sits beside the viewer's own
   // interactive personal rating, which is styled distinctly as their unverified
@@ -376,7 +396,11 @@ function renderHeader(r) {
   if (pb) {
     const parts = [el("span", { className: "price-band", textContent: pb.band })];
     if (pb.perPerson !== null) {
-      parts.push(` about $${pb.perPerson} per person `);
+      // `money()` rather than a hard-coded "$": priceBand returns the figure in
+      // the VENUE's currency, and this page may be showing the reader another
+      // one (ADR 0045). A literal dollar sign here was the one price on the
+      // page that didn't convert.
+      parts.push(` about ${money(pb.perPerson)} per person `);
       // Curated figure is our call; a derived one is read off the menu prices.
       const est = pb.curated ? "· our estimate" : "· estimated from the menu";
       parts.push(el("span", { className: "price-est", textContent: est }));
@@ -466,6 +490,49 @@ function niceDate(iso) {
     : d.toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" });
 }
 
+
+/**
+ * The currency sentence in the ⓘ beside a menu's prices.
+ *
+ * Two shapes, and the difference is the whole design. Same currency: one plain
+ * statement, as it has always read. Converting: the shop's currency FIRST —
+ * because that is what it will charge — then what we are showing, then the date
+ * of the rate. "About" and a date are the honest framing for a reference rate;
+ * a bare converted figure would read as a quote.
+ */
+function currencyLine(record) {
+  const native = venueCurrency(record);
+  const shown = displayCurrency(record);
+  if (shown === native) return ` Prices are in ${currencyName(native)}.`;
+  const asOf = fxAsOf();
+  const dated = asOf ? ` using rates from ${niceDate(asOf)}` : "";
+  return (
+    ` This place charges in ${currencyName(native)}.` +
+    ` You're seeing about what that comes to in ${currencyName(shown)}${dated}` +
+    ` — the shop will take the ${native} price.`
+  );
+}
+
+/**
+ * The one visible line that says prices on this page have been converted, shown
+ * under the menu header and only when they have been. It answers the two things
+ * a reader needs — what the shop charges in, and what they're looking at — once
+ * for the whole menu rather than on all 187 dishes.
+ */
+function convertedNote(record) {
+  const native = venueCurrency(record);
+  const shown = displayCurrency(record);
+  if (shown === native) return null;
+  return el("p", { className: "menu-currency-note" }, [
+    el("span", { className: "menu-currency-ico", textContent: "≈", "aria-hidden": "true" }),
+    el("span", {
+      textContent:
+        `Prices shown in ${currencyName(shown)}. ` +
+        `${record.name} charges in ${currencyName(native)}.`,
+    }),
+  ]);
+}
+
 // The confidence note as an accessible disclosure: a small ⓘ button beside
 // the venue name that reveals the note on tap/click (and on hover for mouse
 // users, via CSS). A button + aria-expanded, not a bare `title`, so it works
@@ -550,7 +617,9 @@ function confidenceNote(caveat, record) {
       // The venue's OWN currency, not the site's — there is no site currency
       // any more (ADR 0043). This is the sentence a reader looking straight at
       // the prices needs, which is why it sits here and not only in About.
-      textContent: ` Prices are in ${currencyName(venueCurrency(record))}.`,
+      // When we're converting, it also has to say so, and how old the rate is:
+      // an "about" figure presented without its date is a quote we can't honour.
+      textContent: currencyLine(record),
     }),
   ]);
 }
@@ -817,7 +886,7 @@ function renderRecipeDetail(item) {
 }
 
 function render(r) {
-  pageCurrency = venueCurrency(r);
+  pageRecord = r;
   document.title = `${r.name} — Faves`;
   const isRecipes = r.kind === "recipes";
   const allItems = r.menu.flatMap((s) => s.items);

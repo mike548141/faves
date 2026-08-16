@@ -6,6 +6,7 @@
   ],
   "area": "Wellington Central",
   "city": "Wellington",
+  "currency": "NZD",
   "address": "1 Whitmore Street, Wellington Central, Wellington 6011",
   "lat": -41.28171,
   "lng": 174.77872,
@@ -762,7 +763,9 @@
         {
           "name": "Macchiato",
           "price": 5.2,
-          "tags": ["contains-dairy"]
+          "tags": [
+            "contains-dairy"
+          ]
         },
         {
           "name": "Piccolo",

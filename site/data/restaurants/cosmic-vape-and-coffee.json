@@ -1,17 +1,15 @@
 {
-  "id": "garage-project-leeds-street",
-  "name": "Garage Project Leeds Street",
+  "id": "cosmic-vape-and-coffee",
+  "name": "COSMIC Vape & Coffee",
   "cuisine": [
-    "Bar"
+    "Coffee"
   ],
   "area": "Te Aro",
   "city": "Wellington",
   "currency": "NZD",
-  "address": "7 Leeds Street, Te Aro, Wellington 6011",
-  "lat": -41.29304,
-  "lng": 174.77673,
+  "address": "99 Cuba Street, Te Aro, Wellington 6011",
   "services": [
-    "dine-in"
+    "takeaway"
   ],
   "phone": null,
   "website": null,

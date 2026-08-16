@@ -111,6 +111,10 @@ CASES = {
         lambda d: d.update(formerIds=[d["id"]]),
         "error",
     ),
+    # currency is REQUIRED now (ADR 0045) — a price whose currency is unknown
+    # cannot be converted, and looks exactly like one that can.
+    "currency missing entirely": (lambda d: d.pop("currency", None), "error"),
+    "currency with no shipped FX rate": (lambda d: d.update(currency="ZWL"), "error"),
     "timezone that is not an IANA zone": (
         lambda d: d.update(timezone="Pacific/Wellington"),  # plausible, and not real
         "error",

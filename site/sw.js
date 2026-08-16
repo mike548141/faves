@@ -12,7 +12,7 @@
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
 const SHELL_VERSION = "2026-08-16.13";
-const DATA_VERSION = "2026-08-16.3";
+const DATA_VERSION = "2026-08-16.4";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
 const DATA_CACHE = `faves-data-${DATA_VERSION}`;
@@ -43,6 +43,7 @@ const SHELL = [
   "js/cook.js",
   "js/cook-ui.js",
   "js/data.js",
+  "js/defaults.js",
   "js/dialog.js",
   "js/dietary.js",
   "js/disclosure.js",
@@ -52,8 +53,11 @@ const SHELL = [
   "js/favourites-ui.js",
   "js/filters.js",
   "js/geo.js",
+  "js/fx.js",
+  "js/home.js",
   "js/hours.js",
   "js/lang.js",
+  "js/locale.js",
   "js/locations.js",
   "js/menu.js",
   "js/needs.js",
@@ -103,8 +107,13 @@ const SHELL = [
   "icons/apple-touch-icon.png",
 ];
 
-// The one data file known ahead of time; the rest are read from it at install.
+// The two data files known ahead of time; the menus are read from the index at
+// install. fx.json holds the exchange rates the app converts prices with — it
+// belongs in the DATA cache, not the shell, because it changes on the same
+// rhythm as the menus (a scheduled job, daily) and a shell edit shouldn't force
+// a re-download of it or vice versa (ADR 0015, ADR 0045).
 const DATA_INDEX = "data/index.json";
+const DATA_FX = "data/fx.json";
 
 // Cloudflare Pages 308-redirects /foo.html → /foo (and /index.html → /), so a
 // naive fetch of a shell page yields a *redirected* response. The browser
@@ -156,6 +165,15 @@ self.addEventListener("install", (event) => {
         // Every menu listed in the index, so offline covers all data.
         const ids = await (await cache.match(DATA_INDEX)).json();
         await cache.addAll(ids.map((id) => `data/restaurants/${id}.json`));
+        // Rates last: a failure here must not cost the menus their cache entry.
+        // Without it the app simply shows each place's own currency, which is
+        // the correct fallback rather than a broken state.
+        try {
+          const fx = await fetchClean(DATA_FX);
+          if (fx.ok) await cache.put(DATA_FX, fx);
+        } catch {
+          /* offline install, or the file is briefly missing — no conversion */
+        }
       });
       // NO unconditional skipWaiting (ADR 0027). A new worker that takes over
       // immediately serves new assets to a page still running the old HTML and
