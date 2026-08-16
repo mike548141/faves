@@ -1,0 +1,655 @@
+{
+  "id": "sprig-and-fern",
+  "formerIds": [
+    "sprig-and-fern-tawa"
+  ],
+  "name": "Sprig + Fern",
+  "cuisine": [
+    "Gastropub"
+  ],
+  "area": "Tawa",
+  "city": "Wellington",
+  "locations": [
+    {
+      "label": "Tawa",
+      "address": "99 Main Road, Tawa, Wellington 5028",
+      "lat": -41.17564,
+      "lng": 174.82473,
+      "phone": "+64 4 232 1111",
+      "hours": {
+        "mon": [
+          [
+            "11:30",
+            "21:00"
+          ]
+        ],
+        "tue": [
+          [
+            "11:30",
+            "21:00"
+          ]
+        ],
+        "wed": [
+          [
+            "11:30",
+            null
+          ]
+        ],
+        "thu": [
+          [
+            "11:30",
+            null
+          ]
+        ],
+        "fri": [
+          [
+            "11:30",
+            null
+          ]
+        ],
+        "sat": [
+          [
+            "10:00",
+            null
+          ]
+        ],
+        "sun": [
+          [
+            "10:00",
+            null
+          ]
+        ]
+      }
+    }
+  ],
+  "services": [
+    "dine-in"
+  ],
+  "website": "https://sprigandfern.co.nz/pages/tawa",
+  "ordering": [],
+  "vibe": [
+    "craft beer",
+    "beer garden",
+    "dog friendly"
+  ],
+  "picks": [],
+  "verified": null,
+  "lifecycle": {
+    "added": "2026-07-06"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Small Plates",
+      "items": [
+        {
+          "name": "Thick Cut Fries",
+          "desc": "Served with aioli. Add gravy $3.",
+          "price": 10.0,
+          "tags": [
+            "gf",
+            "v",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Curly Fries",
+          "desc": "Served with aioli. Add gravy $3.",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Loaded Fries",
+          "desc": "Curly fries topped with BBQ pulled pork, aioli, crispy onions and parmesan cheese.",
+          "price": 18.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Mash and Gravy",
+          "desc": "What it says above.",
+          "price": 12.0,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Arancini",
+          "desc": "Tomato and mozzarella arancini, basil pesto mayo and parmesan.",
+          "price": 16.0,
+          "tags": [
+            "v",
+            "contains-nuts",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Southern Fried Cauliflower Bites",
+          "desc": "Served with watercress and coriander hot sauce.",
+          "price": 17.0,
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Buttermilk Chicken Tenders",
+          "desc": "Served with ranch dressing.",
+          "price": 19.0,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Garlic Loaf",
+          "desc": "Loaf with garlic herb butter, topped with parmesan cheese.",
+          "price": 15.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Bread and Dips",
+          "desc": "Selection of warmed breads from Nada Bakery, served with hummus, pesto, olive oil and balsamic vinegar.",
+          "price": 17.0,
+          "tags": [
+            "v",
+            "contains-nuts",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Salmon Bruschetta",
+          "desc": "Cured salmon, cherry tomatoes, pickled cucumber and whipped raita.",
+          "price": 26.0,
+          "tags": []
+        },
+        {
+          "name": "Garden Salad",
+          "desc": "Seasonal garden salad with house dressing. Add chicken, halloumi, prawns or beef +$7.",
+          "price": 17.0,
+          "tags": [
+            "vg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Mains",
+      "items": [
+        {
+          "name": "Fish and Chips",
+          "desc": "Locally sourced fish in our signature fern lager batter, paired with house salad, thick cut fries and lemon wedge.",
+          "price": 29.0,
+          "tags": [
+            "df",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Grilled Fish",
+          "desc": "Market catch of the day, served with grilled courgette, capsicum jam and potato chip salad. Price on application.",
+          "price": null,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Sirloin",
+          "desc": "230g cooked to your liking, served with fries and house salad. Choice of garlic butter or mushroom sauce. Surf + turf: add prawns +$7. Dairy free available.",
+          "price": 39.5,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chicken Parma",
+          "desc": "Crumbed breast topped with Napoli sauce, ham, mozzarella cheese, served with mash and slaw.",
+          "price": 32.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Corn Fritters",
+          "desc": "Corn fritters served with tomato kasundi, asparagus, whipped avocado and feta with a grilled lemon dressing.",
+          "price": 27.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cheeseburger",
+          "desc": "Onion, pickles, chopped lettuce, served in a seeded bun with thick cut fries. No gluten added bun +$2.5. Dairy free available.",
+          "price": 28.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pork Loin",
+          "desc": "Roasted pork loin served with gnocchi, ratatouille, frisée lettuce and mustard gravy.",
+          "price": 33.0,
+          "tags": []
+        },
+        {
+          "name": "Scallop Risotto",
+          "desc": "Seared scallops on pea and fennel risotto, served with snow pea shoots and toasted hazelnuts.",
+          "price": 35.0,
+          "tags": [
+            "gf",
+            "contains-nuts",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Summer Salad",
+          "desc": "Summer vegetables with egg noodles, toasted sesame, crispy shallots, coriander and a ginger scallion dressing. Add chicken, halloumi, prawns or beef +$7.",
+          "price": 23.0,
+          "tags": [
+            "df",
+            "gf-option",
+            "v-option",
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pizza",
+      "items": [
+        {
+          "name": "Margherita",
+          "desc": "Napoli sauce, mozzarella and basil.",
+          "price": 20.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Potato, Rosemary + Basil Pesto",
+          "desc": "Shaved baby potatoes, rosemary and basil pesto. Add salmon +$7.",
+          "price": 21.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Hot Honey Pepperoni",
+          "desc": "Spicy pepperoni, mozzarella, Napoli sauce with a drizzle of hot honey and chilli flakes.",
+          "price": 24.5,
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Meatlovers",
+          "desc": "Pulled pork, chorizo, pepperoni, mozzarella and Napoli sauce.",
+          "price": 26.5,
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Double Smoked Ham + Mushroom",
+          "desc": "Double smoked roasted ham, field mushrooms, Taleggio cheese and Napoli sauce.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Prawns, Roast Capsicum + Rocket",
+          "desc": "Rocket, prawns, roasted capsicum, Napoli sauce with a drizzle of watercress and coriander hot sauce.",
+          "price": 26.5,
+          "tags": [
+            "gf-option",
+            "contains-shellfish"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Brunch",
+      "items": [
+        {
+          "name": "Eggs on Toast",
+          "desc": "Eggs your way on toasted sourdough. Gluten free toast +$2.",
+          "price": 13.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Steak Sandwich",
+          "desc": "Grilled sirloin, Nada Bakery bread, tomato relish, roasted red peppers, rocket, parmesan, served with thick cut chips.",
+          "price": 28.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Housemade Waffles",
+          "desc": "Served with bananas and caramel sauce.",
+          "price": 21.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Fern Benedict",
+          "desc": "Poached eggs served on a breakfast muffin and topped with brown butter hollandaise. Add brunch sides.",
+          "price": 17.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "The Fern Breakfast",
+          "desc": "Eggs your way on toasted sourdough, bacon, sausages, grilled tomato, potato rosti, roasted field mushrooms and hollandaise.",
+          "price": 28.5,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "The Vegetarian Breakfast",
+          "desc": "Eggs your way on toasted sourdough, halloumi, spinach, grilled tomato, potato rosti, roasted field mushrooms and hollandaise.",
+          "price": 26.5,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Halloumi Burger",
+          "desc": "Halloumi, potato rosti, fried egg, spinach and brown butter hollandaise in a seeded bun.",
+          "price": 24.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Brunch Sides",
+      "items": [
+        {
+          "name": "Spinach",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Halloumi",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Sausages",
+          "desc": null,
+          "price": 8.0,
+          "tags": []
+        },
+        {
+          "name": "Bacon",
+          "desc": null,
+          "price": 8.0,
+          "tags": []
+        },
+        {
+          "name": "Salmon",
+          "desc": null,
+          "price": 9.0,
+          "tags": []
+        },
+        {
+          "name": "Free Range Egg",
+          "desc": null,
+          "price": 4.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tomatoes",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Hollandaise",
+          "desc": null,
+          "price": 2.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Potato Rosti",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Roasted Field Mushrooms",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Toast",
+          "desc": null,
+          "price": 4.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Gluten Free Toast",
+          "desc": null,
+          "price": 6.0,
+          "tags": [
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "items": [
+        {
+          "name": "Ice Cream Sundae",
+          "desc": "Choice of caramel, strawberry or chocolate sauce.",
+          "price": 13.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Tiramisu",
+          "desc": "Served with berry compote.",
+          "price": 14.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Pistachio Cake",
+          "desc": "Served with fresh strawberries and ice cream.",
+          "price": 15.0,
+          "tags": [
+            "contains-nuts",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chocolate Mousse",
+          "desc": "Mixed with preserved peaches and candied orange.",
+          "price": 15.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Affogato",
+          "desc": "Vanilla bean ice cream and a shot of freshly brewed espresso. Add Baileys, Kahlua or butterscotch liqueur +$9.",
+          "price": 12.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Kids (12 and under)",
+      "items": [
+        {
+          "name": "Chicken Tenders",
+          "desc": "Housemade chicken tenders with curly fries and carrot sticks.",
+          "price": 15.0,
+          "tags": []
+        },
+        {
+          "name": "Cheeseburger",
+          "desc": "Beef patty, cheese, tomato sauce with curly fries and carrot sticks.",
+          "price": 15.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fish and Chips",
+          "desc": "Battered market catch with curly fries and carrot sticks.",
+          "price": 15.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cheerio Sausages",
+          "desc": "Warm mini sausages with tomato sauce, curly fries and carrot sticks.",
+          "price": 15.0,
+          "tags": []
+        },
+        {
+          "name": "Cheese Pizza",
+          "desc": "Napoli sauce, mozzarella cheese. Add additional toppings $2 per topping.",
+          "price": 15.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Kids Ice Cream Sundae",
+          "desc": "Vanilla ice cream sundae with wafers and your choice of chocolate, strawberry or caramel sauce.",
+          "price": 5.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Gold Card (Mon–Fri 11:30–17:30, weekends 10:00–17:30)",
+      "items": [
+        {
+          "name": "Fish and Chips",
+          "desc": "Gold Card portion.",
+          "price": 21.0,
+          "tags": [
+            "df"
+          ]
+        },
+        {
+          "name": "Sirloin",
+          "desc": "150g. Dairy free available.",
+          "price": 27.0,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Chicken Parma",
+          "desc": "Gold Card portion.",
+          "price": 21.0,
+          "tags": []
+        },
+        {
+          "name": "Corn Fritters",
+          "desc": "Gold Card portion.",
+          "price": 21.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Cheeseburger",
+          "desc": "No gluten added bun +$2.5. Dairy free available.",
+          "price": 21.0,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Pork Loin",
+          "desc": "Gold Card portion.",
+          "price": 26.0,
+          "tags": []
+        },
+        {
+          "name": "Summer Salad",
+          "desc": "Add chicken, halloumi, prawns or beef +$7.",
+          "price": 17.0,
+          "tags": [
+            "gf-option",
+            "v-option"
+          ]
+        }
+      ]
+    }
+  ]
+}

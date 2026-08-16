@@ -11,6 +11,7 @@
 // favourited dish always anchors to the exact row the menu screen builds.
 
 import { profileScopedStorage } from "./profiles.js";
+import { migrateEntries } from "./renames.js";
 import { slug } from "./slug.js";
 
 const KEY = "faves.favourites.v1";
@@ -62,7 +63,11 @@ export function createFavourites(storage) {
   function read() {
     try {
       const a = JSON.parse(storage.getItem(KEY) || "[]");
-      return Array.isArray(a) ? a : [];
+      // Hearts stored against an id that has since been corrected follow the
+      // venue rather than detaching from it (renames.js). Rewritten in memory
+      // on read and persisted by the next commit — nothing is destroyed if the
+      // viewer never touches their favourites again.
+      return Array.isArray(a) ? migrateEntries(a) : [];
     } catch {
       return [];
     }

@@ -25,6 +25,13 @@ content freshness separately from this file.
   build if any screen stops running its own JavaScript.
 
 ### Changed
+- **A chain no longer wears a suburb in its name.** BurgerFuel, Hell Pizza,
+  Noodle Canteen, Pizza Hut and Sprig + Fern are national chains, so the suburb
+  moved to where branches have always lived — the venue now reads **BurgerFuel**
+  with a **Johnsonville** branch, ready for the next one. ("Takeaway @ Churton"
+  and "Khandallah Trading Company" keep theirs: there the place name really does
+  contain the place.) Links you shared before the change still open the right
+  venue, and your hearts, ratings and order lines followed it.
 - **Settings is six groups instead of eight.** Language and units are one
   question — how the app talks to you — and distance and the maps app are the
   other: how it gets you to a place. Each half keeps its own sub-heading, and

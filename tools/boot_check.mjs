@@ -87,6 +87,21 @@ const SCREENS = [
       },
     ],
   },
+  {
+    // A link shared before a venue was renamed must still land on the venue,
+    // not on a 404 (renames.js). This is the only check that exercises the
+    // resolve-before-fetch path end to end.
+    name: "menu via a retired id",
+    url: () => `/restaurant.html?id=burgerfuel-johnsonville`,
+    ready: `!!document.querySelector(".menu-title")`,
+    checks: [
+      {
+        what: "an old shared link still opens the venue, under its current name",
+        expr: `document.querySelector(".menu-title")?.textContent?.trim() ?? ""`,
+        assert: (v) => (v === "BurgerFuel" ? null : `menu title reads ${JSON.stringify(v)}`),
+      },
+    ],
+  },
 ];
 
 // Settings is a dialog, not a screen, and it is where a merged or renamed panel
