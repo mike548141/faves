@@ -425,3 +425,13 @@ deliberation those compact docs omit.
   handle), and `null` wherever that standard cannot be met, because a wrong link
   is worse than none. A `social` field beside `website` lost on ADR 0047: no
   screen would render it differently.
+- [0056](0056-a-precache-must-not-read-the-browsers-cache.md) — **a precache
+  must not be filled from the browser's cache.** The owner reported a button
+  doing nothing; the code was fine and the worker was fine. `sw.js` precached
+  with a plain `fetch()`, which reads the browser's HTTP cache, and Pages served
+  `js/*` with `max-age=14400` — so bumping `SHELL_VERSION` renamed the cache and
+  the install **refilled it from the previous deploy**. The `READY` sentinel then
+  made that permanent. Installs now fetch with `cache: "reload"` and `_headers`
+  revalidates everything precached. Reproduced end to end before it was touched.
+  The sharp part: **every check in the tree was green**, because they all launch
+  a fresh profile — nothing tested an *upgrade*.

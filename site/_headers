@@ -1,0 +1,57 @@
+# Cloudflare Pages response headers.
+#
+# WHY THIS FILE EXISTS. On 2026-08-16 the owner reported the home screen's
+# Filters button doing nothing. It was not a code fault and not a stale service
+# worker — it was the HTTP cache underneath both, and the mechanism is worth
+# stating because nothing about it is obvious:
+#
+#   1. `sw.js` builds its versioned precache with `fetch()`.
+#   2. A plain `fetch()` reads the browser's own HTTP cache first.
+#   3. Pages served `js/*` with `max-age=14400` — four hours.
+#   4. So bumping SHELL_VERSION renamed the cache, and the install then
+#      REFILLED IT FROM THE PREVIOUS DEPLOY.
+#   5. The READY sentinel then marked that cache fully built, so it never
+#      self-healed on a later cold start.
+#
+# The phone ended up holding the NEW `index.html` (revalidated, `max-age=0`)
+# against the OLD `app.js` — a page whose markup knows about a control its
+# JavaScript has never heard of. It renders, it logs nothing, and the button
+# does nothing. Reproduced end to end against the real worker with these exact
+# headers before anything was changed.
+#
+# The fix has two halves and needs both:
+#   - `sw.js` now fetches every precached asset with `cache: "reload"`, so an
+#     install always goes to the network. That is the half that protects an
+#     already-installed phone.
+#   - This file stops the browser holding a stale copy in the first place,
+#     which is what protects a FIRST visit landing between a deploy and the
+#     service-worker update.
+#
+# Why `max-age=0, must-revalidate` and not a long cache with hashed filenames:
+# there is no build step (ADR 0001), so there are no content hashes to put in a
+# filename, and there never will be. Revalidation is the only correctness
+# mechanism available. It costs a conditional request per asset — a 304 with no
+# body — and only on a visit where the service worker is not already answering,
+# which is the first visit and no other. Every subsequent visit is served from
+# the precache without touching the network at all.
+#
+# Immutable by construction, so cache them hard: nothing else in site/ is.
+/img/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Everything the service worker precaches must be revalidated, or a version
+# bump can refill the new cache with the old deploy's bytes. This includes the
+# data: a menu is precached the same way the shell is.
+/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+/css/*
+  Cache-Control: public, max-age=0, must-revalidate
+/data/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# The worker itself. A browser that caches sw.js cannot learn that a new one
+# exists — the update check fetches this URL, so a stale copy makes the whole
+# update cycle a no-op. Browsers cap sw.js freshness at 24h regardless; saying
+# it here removes the guesswork.
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate

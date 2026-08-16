@@ -11,7 +11,7 @@
 //   - Change both? bump both.
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
-const SHELL_VERSION = "2026-08-16.29";
+const SHELL_VERSION = "2026-08-16.31";
 const DATA_VERSION = "2026-08-16.13";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
@@ -132,10 +132,31 @@ const DATA_FX = "data/fx.json";
 // refuses to return a redirected response to a navigation (net::ERR_FAILED),
 // and cache.match would hand one straight back — so copy the body into a fresh,
 // non-redirected Response before it ever reaches the cache or a navigation.
-async function fetchClean(url) {
-  const res = await fetch(url);
+async function fetchClean(url, init) {
+  const res = await fetch(url, init);
   return res.redirected ? new Response(res.body, res) : res;
 }
+
+// Building a versioned cache must not read the browser's own HTTP cache.
+// `fetch()` defaults to `cache: "default"`, and Cloudflare Pages serves every
+// non-HTML asset with `cache-control: public, max-age=14400` (four hours; only
+// HTML gets max-age=0). So a precache built with a plain fetch can be filled
+// with files up to four hours old — the version constant renames the cache and
+// then refills it with the *previous* deploy. Measured 2026-08-16 against the
+// live headers: after the filter redesign shipped, a cold start landed on the
+// new SHELL_VERSION holding the NEW index.html and the OLD js/app.js. The page
+// drew the new bottom bar, the Filters button was there, the click landed on an
+// element nothing had wired, the sheet never opened and the console was clean —
+// the owner's exact report, and it did not self-heal on the next cold start
+// because the skewed cache carries its READY sentinel. The menus came through
+// the same hole: 48 places cached when the site had 55.
+//   "reload" for the precache — bypass the HTTP cache and refresh it.
+//   "no-cache" for runtime data — revalidate rather than refetch, so a menu is
+//   never served from a four-hour-old copy while online.
+// A `_headers` file setting max-age=0 on js/css would fix the deploy side too,
+// and is the belt to this braces; this is the half that protects a phone which
+// already has the old files.
+const PRECACHE_FETCH = { cache: "reload" };
 
 // Build `name` only if it isn't already fully populated. Because each cache
 // name carries its own version, bumping only one constant renames only that
@@ -164,24 +185,34 @@ self.addEventListener("install", (event) => {
         // asset that offline visitors then serve until the next version bump.
         await Promise.all(
           SHELL.map(async (u) => {
-            const res = await fetchClean(u);
+            const res = await fetchClean(u, PRECACHE_FETCH);
             if (!res.ok) throw new Error(`SW install: ${u} → ${res.status}`);
             await cache.put(u, res);
           })
         );
       });
       await ensureCache(DATA_CACHE, async (cache) => {
-        const res = await fetchClean(DATA_INDEX);
+        const res = await fetchClean(DATA_INDEX, PRECACHE_FETCH);
         if (!res.ok) throw new Error(`SW install: ${DATA_INDEX} → ${res.status}`);
         await cache.put(DATA_INDEX, res);
-        // Every menu listed in the index, so offline covers all data.
+        // Every menu listed in the index, so offline covers all data. Not
+        // cache.addAll: that fetches with the default cache mode, which is the
+        // hole above — a menu precached from a four-hour-old copy. Same ok-guard
+        // addAll gave us, kept by hand.
         const ids = await (await cache.match(DATA_INDEX)).json();
-        await cache.addAll(ids.map((id) => `data/restaurants/${id}.json`));
+        await Promise.all(
+          ids.map(async (id) => {
+            const u = `data/restaurants/${id}.json`;
+            const menu = await fetchClean(u, PRECACHE_FETCH);
+            if (!menu.ok) throw new Error(`SW install: ${u} → ${menu.status}`);
+            await cache.put(u, menu);
+          })
+        );
         // Rates last: a failure here must not cost the menus their cache entry.
         // Without it the app simply shows each place's own currency, which is
         // the correct fallback rather than a broken state.
         try {
-          const fx = await fetchClean(DATA_FX);
+          const fx = await fetchClean(DATA_FX, PRECACHE_FETCH);
           if (fx.ok) await cache.put(DATA_FX, fx);
         } catch {
           /* offline install, or the file is briefly missing — no conversion */
@@ -278,7 +309,10 @@ async function cacheFirst(req) {
 async function networkFirst(req) {
   const cache = await caches.open(DATA_CACHE);
   try {
-    const res = await fetch(req);
+    // "no-cache" = always revalidate, never serve from the browser's HTTP cache
+    // on its four-hour max-age. Without it "network-first" quietly means
+    // "four-hour-old-copy-first" for a menu (see PRECACHE_FETCH above).
+    const res = await fetch(req, { cache: "no-cache" });
     if (res.ok) cache.put(req, res.clone());
     return res;
   } catch (err) {
