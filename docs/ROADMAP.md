@@ -2183,7 +2183,18 @@ recipes: **`serves` is set on 3** (Liège Waffles, the pudding, Tiramisu) and
 they can only come from the owner — the same shape as the empty `picks`
 problem. Sequence the content with the build or the feature ships blank.
 
-- [ ] **17a — Serves, and scaling it** `[M][schema][design]` — the owner's items
+- [~] **17a — Serves, and scaling it** `[M][schema][design]` — **CLAIMED
+  2026-08-16 22:32 UTC (wt: faves-cook2, branch `cook-recipes-17`)**. Files:
+  `site/data/restaurants/cook-at-home.json`, `site/js/ingredients.js`,
+  `site/js/recipe.js`, `tools/recipe_check.mjs`, `docs/decisions/`.
+  🔎 **Taking it in two halves, because the header's "the data is the blocker"
+  is only half true.** Scaling the *ingredients* needs no owner input at all —
+  a ½/1×/2× multiplier is meaningful without knowing the yield ("double the
+  recipe" is a complete thought). Only *"serve N people"* needs `serves`, which
+  is on 3 of 24. So the multiplier half ships now and the target-serves half
+  waits on him. 🚩 **17c, 18b and 36b all ride on the quantity schema this
+  lands** — coordinate with this worktree before starting any of them.
+  The owner's items
   1 and 4. `serves` already exists in the schema and renders where a price
   would; the ask is to make it **load-bearing**: show it clearly, then let the
   reader pick ½ / 1× / 2× (or type a number) and rescale the ingredients.
@@ -5061,7 +5072,11 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
 > ✅ **Shipped 2026-08-17** — 37j — "Everywhere" → "Any service", and the te reo
 > re-glossed with it. Landed inside 37g. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-- [ ] **37k — a "style of dining" filter** `[M][schema][design]` ⚑ — owner
+- [~] **37k — a "style of dining" filter** `[M][schema][design]` ⚑ — **CLAIMED
+      2026-08-16 22:32 UTC (wt: faves-cook2)**. Taking only the 🚩 *decision*
+      below — is this Theme 30's `service` axis under another name? — because
+      the item says itself that deciding it is the whole job and that no data
+      may be entered until it is settled. No data entry in this claim. owner
       idea, 2026-08-16: *"Another useful filter might be style of dining/food
       e.g. silver service vs quick eats."* Genuinely useful and genuinely
       under-specified, so it is recorded as an idea rather than a spec.
