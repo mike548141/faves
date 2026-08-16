@@ -64,6 +64,7 @@ import {
   createDriver,
   launchChrome,
   settleUntil,
+  sleep,
   startServer,
   stopChrome,
   until,
@@ -71,6 +72,15 @@ import {
 // The app's own slugger, so the ?dish= URL this tool builds is the one the app
 // would build — a copy here could drift and quietly test nothing.
 import { slug } from "../site/js/slug.js";
+// The same pure rules the page uses, so the check asserts against the CONTRACT
+// rather than against a second copy of it that could drift. If these ever
+// disagree with the render, that is the bug worth finding.
+import {
+  formatDuration,
+  ingredientsForStep,
+  stepDuration,
+  stepUsesIngredients,
+} from "../site/js/cook.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -200,8 +210,15 @@ const SNAP = `(() => {
     motion: getComputedStyle(q(".cook-progress-fill")).transitionDuration,
     awakeShown: shown(q(".cook-awake")),
     ingOpen: ing ? !ing.hidden : null,
-    ingExpanded: q(".cook-ing-toggle") ? q(".cook-ing-toggle").getAttribute("aria-expanded") : null,
     ingItems: d.querySelectorAll(".cook-ing .ingredients li").length,
+    ingText: [...d.querySelectorAll(".cook-ing .ingredients li")].map((li) => li.textContent),
+    timerShown: shown(q(".cook-timer")),
+    timerTime: q(".cook-timer-time") ? q(".cook-timer-time").textContent : null,
+    timerLabel: q(".cook-timer-state")
+      ? [...q(".cook-timer-state").querySelectorAll("span")].filter(shown).map((x) => x.textContent).join("")
+      : null,
+    timerRunning: q(".cook-timer") ? q(".cook-timer").classList.contains("is-running") : null,
+    resetShown: shown(q(".cook-timer-reset")),
     live: stage.getAttribute("aria-live"),
     atomic: stage.getAttribute("aria-atomic"),
     focusInStage: document.activeElement === stage,
@@ -445,26 +462,111 @@ async function run(opts) {
       `“${home.counter}”`
     );
 
-    // --- 4. Ingredients, without losing your place ------------------------
-    await click(".cook-ing-toggle");
-    const ing = await snap();
-    report.check(
-      "the ingredients panel opens without moving the step",
-      ing.ingOpen === true && ing.ingExpanded === "true" && ing.counter === home.counter &&
-        ing.ingItems === (recipe.ingredients || []).length,
-      `${ing.ingItems} ingredients listed, still on “${ing.counter}”`
-    );
-    report.check(
-      "no horizontal overflow at 390 px with the panel open",
-      ing.overflow <= 0,
-      `scrollWidth − clientWidth = ${ing.overflow}px`
-    );
+    // --- 4. Each step carries its own ingredients, and its own timer ------
+    // Rewritten 2026-08-16: the "Ingredients" toggle is gone. A step now SHOWS
+    // the lines it is about and nothing when it is about none, and a step that
+    // states a duration offers a one-tap countdown. Both are the owner's asks,
+    // and both are things only a real render can confirm.
+    //
+    // Every assertion below is driven off the RECIPE DATA, not off hard-coded
+    // step numbers: the corpus is edited constantly, and a check pinned to
+    // "step 4" would start asserting something else the first time a recipe
+    // gained a line.
+    const idxNeeding = steps.findIndex((t) => stepUsesIngredients(t, recipe.ingredients || []));
+    const idxIdle = steps.findIndex((t) => !stepUsesIngredients(t, recipe.ingredients || []));
+    const idxTimed = steps.findIndex((t) => stepDuration(t) != null);
+
+    if (idxNeeding >= 0) {
+      await press("Home");
+      for (let i = 0; i < idxNeeding; i++) await click(".cook-next");
+      const needs = await snap();
+      const expected = ingredientsForStep(steps[idxNeeding], recipe.ingredients || []);
+      report.check(
+        "a step shows just the ingredients it names — not the whole recipe",
+        needs.ingOpen === true &&
+          needs.ingItems === expected.length &&
+          needs.ingItems < (recipe.ingredients || []).length,
+        `${needs.ingItems} of ${(recipe.ingredients || []).length} lines on “${needs.counter}”`
+      );
+      report.check(
+        "no horizontal overflow at 390 px with the step's ingredients shown",
+        needs.overflow <= 0,
+        `scrollWidth − clientWidth = ${needs.overflow}px`
+      );
+    }
+
+    if (idxIdle >= 0) {
+      await press("Home");
+      for (let i = 0; i < idxIdle; i++) await click(".cook-next");
+      const idle = await snap();
+      report.check(
+        "a step that needs nothing shows no ingredients at all",
+        idle.ingOpen === false && idle.ingItems === 0,
+        `“${idle.step.slice(0, 52)}…” → panel hidden=${!idle.ingOpen}`
+      );
+    }
+
+    if (idxTimed >= 0) {
+      await press("Home");
+      for (let i = 0; i < idxTimed; i++) await click(".cook-next");
+      const before = await snap();
+      report.check(
+        "a step that states how long it takes offers a timer, set to that long",
+        before.timerShown === true &&
+          before.timerTime === formatDuration(stepDuration(steps[idxTimed])) &&
+          before.timerRunning === false &&
+          before.resetShown === false,
+        `“${before.timerTime}” on “${before.counter}”, reset hidden until started`
+      );
+      // One tap runs it, one tap stops it — the owner's whole spec for it.
+      await click(".cook-timer-btn");
+      // Let a real second elapse before pausing. Without it the timer pauses on
+      // the same tick it started, `remaining === total`, and the control is
+      // correctly still pristine — which proves nothing about pause/resume.
+      await sleep(1200);
+      const running = await snap();
+      report.check(
+        "one tap starts the countdown, and Reset appears once there is something to reset",
+        running.timerRunning === true && running.resetShown === true,
+        `running=${running.timerRunning}, label “${running.timerLabel}”`
+      );
+      await click(".cook-timer-btn");
+      const paused = await snap();
+      report.check(
+        "a second tap pauses it, keeping the time it had reached",
+        paused.timerRunning === false &&
+          paused.timerTime !== formatDuration(stepDuration(steps[idxTimed])) &&
+          paused.timerLabel === "Resume",
+        `paused at ${paused.timerTime}, label “${paused.timerLabel}”`
+      );
+      await click(".cook-timer-reset");
+      const reset = await snap();
+      report.check(
+        "Reset puts it back to the full duration",
+        reset.timerTime === formatDuration(stepDuration(steps[idxTimed])) && reset.timerRunning === false,
+        `back to ${reset.timerTime}`
+      );
+    }
+
+    const untimed = steps.findIndex((t) => stepDuration(t) == null);
+    if (untimed >= 0) {
+      await press("Home");
+      for (let i = 0; i < untimed; i++) await click(".cook-next");
+      const none = await snap();
+      report.check(
+        "a step that never says how long gets NO timer — the number is read, never guessed",
+        none.timerShown === false,
+        `“${none.step.slice(0, 52)}…”`
+      );
+    }
+
+    await press("Home");
 
     // --- 5. Exit one: Escape, with the panel open (ADR 0034 §3) -----------
     await press("Escape");
     const escaped = await closed();
     report.check(
-      "Escape closes cook mode outright, even with the ingredients panel open",
+      "Escape closes cook mode outright, ingredients on screen and all",
       escaped.open === false,
       `dialog present=${escaped.open}`
     );

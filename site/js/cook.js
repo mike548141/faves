@@ -33,6 +33,250 @@ export function stepsOf(item) {
 /** Whether the "Cook mode" affordance should exist at all (23 of 24 recipes). */
 export const canCook = (item) => stepsOf(item).length > 0;
 
+// --- What each step needs, in the step's own words ------------------------
+//
+// Owner, 2026-08-16, in two goes. First: the Ingredients button sat on every
+// step, including "Preheat the oven to 180°C and line a 1.5–2L ovenproof dish
+// with baking paper" — a step with nothing to measure. Then the better idea
+// that replaced the button altogether: *"I want some other UI element shown by
+// default that shows just the ingredients and quantity used at that step… Then
+// the text describing the step can stay short and simple to read."*
+//
+// So a step no longer offers the whole list behind a tap; it SHOWS the lines it
+// is about, and shows nothing when it is about none of them. The instruction
+// gets to stay short because the quantities are already on screen beside it.
+//
+// 🛑 WHAT THIS CANNOT DO, AND WHY. The owner's example — 2 cups of sugar in
+// total, 1 cup used at this step — is not derivable. `ingredients` is a flat
+// list of free-text lines and `steps` is a flat list of sentences; nothing ties
+// a line to a step, and no line records a split. So this shows the recipe's
+// stated quantity for each ingredient the step names, which is right whenever
+// an ingredient is used all at once (every case in the current corpus) and
+// overstates it when a recipe divides one line across two steps. Splitting a
+// quantity needs the ingredient/step link in the DATA — a schema change, an
+// ADR, and a pass over all 23 recipes. Recorded as ROADMAP Theme 35b; guessing
+// the split here would be inventing a fact about food, which this repo does not
+// do.
+//
+// THE BIAS IS DELIBERATE AND ONE-WAY: when in doubt, SHOW the line. A missing
+// ingredient mid-cook is a real failure; a redundant one is a blemish. Every
+// rule below only ever *fails to hide*, and a recipe whose ingredients cannot
+// be parsed at all shows its whole list on every step, exactly as the old
+// button did.
+
+// Measurements, packaging and size words — they appear in ingredient lines and
+// in instructions alike ("2 cups flour" / "spoon into the dish"), so matching on
+// them would make every step look like it used something.
+const MEASURE_WORDS = new Set([
+  "cup", "cups", "tsp", "tsps", "teaspoon", "teaspoons", "tbsp", "tbsps",
+  "tablespoon", "tablespoons", "ml", "l", "litre", "litres", "g", "kg", "gram",
+  "grams", "oz", "lb", "pinch", "dash", "handful", "packet", "packets", "pkt",
+  "can", "cans", "tin", "tins", "jar", "bunch", "punnet", "sheet", "sheets",
+  "large", "small", "medium", "extra", "approx", "about", "plus", "for", "the",
+  "and", "or", "of", "to", "as", "required", "needed", "taste", "serve",
+  "serving", "optional", "each", "any", "some", "few",
+]);
+
+// Crude plural stem, applied to BOTH sides so it only ever has to be
+// self-consistent, never linguistically right ("wedges" → "wedg" is fine as
+// long as the ingredient stems the same way). It exists because the corpus
+// keeps ingredients in the plural and instructions in the singular: "3 eggs,
+// separated" against "beat the egg whites", "4 prune plums" against "over the
+// plum wedges". Both were wrongly hidden before this was added.
+const stem = (w) => (w.length > 3 ? w.replace(/(?:es|s)$/, "") : w);
+
+/** Lower-case, strip accents/punctuation to spaces, collapse runs, stem. */
+const words = (s) =>
+  String(s ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z]+/g, " ")
+    .trim()
+    .split(" ")
+    .filter(Boolean)
+    .map(stem);
+
+// Words that describe PREPARATION or EQUIPMENT rather than food. They occur in
+// ingredient lines and in instructions alike, so letting one match would make a
+// step claim things it never touches: "baking powder" would claim "line the
+// dish with baking paper" — the exact step the owner pointed at.
+const PREP_WORDS = new Set([
+  "baking", "cooking", "frying", "ground", "grated", "chopped", "melted",
+  "sifted", "crushed", "softened", "peeled", "sliced", "diced", "beaten",
+  "warm", "cold", "hot", "room", "temperature",
+]);
+
+/**
+ * The searchable terms of one ingredient line: the whole phrase, and each
+ * significant word in it.
+ *
+ * "Sauce: ½ cup (125 ml) brown sugar" → ["brown sugar", "brown", "sugar"]
+ * "100g butter, softened"             → ["butter"]
+ * "Water or milk, as required…"       → ["water", "milk"]
+ *
+ * The shape it exploits is that a line names its ingredient BEFORE the first
+ * comma and AFTER the quantity — everything past the comma is preparation
+ * ("softened", "finely chopped"), which is instruction language and would match
+ * steps it has nothing to do with. A leading "Sauce:"-style label is a grouping
+ * hint, not an ingredient, so it goes too.
+ */
+export function ingredientTerms(line) {
+  const head = String(line ?? "")
+    .replace(/^[^:,]{0,20}:\s*/, "") // "Sauce: …" — a group label, not a thing
+    .split(",")[0] // before the first comma: the thing, not its preparation
+    .replace(/\([^)]*\)/g, " "); // "(190 ml)" — a restatement of the quantity
+  const terms = new Set();
+  for (const fragment of head.split(/\bor\b|\band\b|\//)) {
+    const kept = words(fragment).filter(
+      (w) => w.length >= 3 && !MEASURE_WORDS.has(w) && !PREP_WORDS.has(w)
+    );
+    if (!kept.length) continue;
+    terms.add(kept.join(" ")); // the whole phrase — "brown sugar"
+    for (const w of kept) terms.add(w); // and each word — "brown", "sugar"
+  }
+  return [...terms];
+}
+
+/**
+ * The ingredient lines this step is about, in the recipe's own order — what the
+ * per-step panel shows. Empty means the step needs nothing (it preheats, it
+ * bakes, it chills), and the panel is then absent rather than empty.
+ *
+ * Head words are matched whole ("flour" must not fire on "flourish"), and the
+ * FIRST word of a multi-word ingredient is deliberately not a term on its own —
+ * that is what stops "baking powder" from claiming "line the dish with baking
+ * paper", the exact step the owner pointed at.
+ */
+export function ingredientsForStep(step, ingredients) {
+  const list = (Array.isArray(ingredients) ? ingredients : []).filter(
+    (l) => typeof l === "string" && l.trim() !== ""
+  );
+  if (!list.length) return [];
+  const haystack = ` ${words(step).join(" ")} `;
+  // A step that says "ingredients" out loud is asking for the list by name —
+  // Sticky Date Pudding's "place all the sauce ingredients in a pot" names not
+  // one of them, and was the worst omission this rule produced. Same fallback
+  // when nothing parsed: show everything rather than risk hiding what's needed.
+  const termsOf = new Map(list.map((l) => [l, ingredientTerms(l)]));
+  if (![...termsOf.values()].some((t) => t.length) || haystack.includes(" ingredient ")) {
+    return list;
+  }
+  // A SINGLE word shared by two different ingredients cannot tell them apart:
+  // "white sugar" and "brown sugar" both end in "sugar", so a step that beats
+  // the white sugar would drag the sauce's brown sugar in with it. Such a word
+  // is usable only inside its full phrase. Caught by the tests, not by reading.
+  const seen = new Map();
+  for (const terms of termsOf.values()) {
+    for (const t of new Set(terms)) seen.set(t, (seen.get(t) || 0) + 1);
+  }
+  const usable = (t) => t.includes(" ") || seen.get(t) === 1;
+  return list.filter((line) =>
+    termsOf.get(line).some((t) => usable(t) && haystack.includes(` ${t} `))
+  );
+}
+
+/** Whether this step needs anything at all — `ingredientsForStep`, as a test. */
+export const stepUsesIngredients = (step, ingredients) =>
+  ingredientsForStep(step, ingredients).length > 0;
+
+// --- How long a step takes, and the timer that runs it -------------------
+//
+// Owner, 2026-08-16: *"A step like this one where no work is required by the
+// chef (cooking in oven, waiting etc) should have a one tap timer."*
+//
+// THE DURATION IS READ, NEVER GUESSED. "Bake at 180°C for 35 minutes" says 35
+// minutes; "Beat together the sugar and butter" says nothing, and this returns
+// null rather than inventing a number. That line matters: a wrong timer on a
+// cake is a burnt cake, and a made-up "≈3 min" would be a claim with no source.
+// 17 of the 24 recipes have at least one step that states its own time, which
+// is where every timer in the app comes from.
+//
+// A RANGE TAKES ITS LOWER BOUND. "Bake 5–8 minutes" times 5, because the timer
+// exists to bring you back to the oven, and coming back early to look is right
+// while coming back at 8 may already be too late.
+
+const UNIT_SECONDS = { sec: 1, second: 1, min: 60, minute: 60, hr: 3600, hour: 3600 };
+
+// "for 35 minutes", "8 hours", "5–8 minutes", "1 hr", "90 seconds". The number
+// must be followed by a time unit, so oven temperatures ("180°C"), tin sizes
+// ("20cm") and yields ("makes 21") can never be read as a duration.
+const DURATION = /(\d+(?:\.\d+)?)\s*(?:[–—-]\s*\d+(?:\.\d+)?\s*)?(sec|second|min|minute|hr|hour)s?\b/i;
+
+/**
+ * Seconds this step states it takes, or null if it doesn't say. Pure.
+ *
+ * Only the FIRST duration in the step is used. A step that says two things
+ * ("bake 12 minutes, then a further 5–8") is timing its first leg; the second
+ * is a fresh decision the cook makes when the first bell goes, and a timer that
+ * silently ran 20 minutes would be wrong about both.
+ */
+export function stepDuration(step) {
+  const m = DURATION.exec(String(step ?? ""));
+  if (!m) return null;
+  const value = Number(m[1]);
+  const unit = UNIT_SECONDS[m[2].toLowerCase()];
+  if (!Number.isFinite(value) || value <= 0 || !unit) return null;
+  const seconds = Math.round(value * unit);
+  // A "timer" of a few seconds is noise, and one over a day is a slow-cooker
+  // instruction nobody stands and watches. Both stay as plain text.
+  return seconds < 30 || seconds > 86_400 ? null : seconds;
+}
+
+/** "35:00", "1:05:00" — a clock, not prose, so it reads at arm's length. */
+export function formatDuration(seconds) {
+  const t = Math.max(0, Math.round(Number(seconds) || 0));
+  const h = Math.floor(t / 3600);
+  const m = Math.floor((t % 3600) / 60);
+  const s = t % 60;
+  const pad = (n) => String(n).padStart(2, "0");
+  return h ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
+}
+
+/**
+ * A countdown that survives being backgrounded, because it stores the wall
+ * clock it ends at rather than decrementing a counter — a phone that sleeps
+ * mid-bake stops firing intervals, and a decrementing timer would come back
+ * minutes slow with no way to tell. `now` is injected so this is testable
+ * without waiting 35 real minutes.
+ *
+ * One tap starts it, one tap pauses it, and reset() puts it back to the top.
+ */
+export function createTimer(totalSeconds, now = () => Date.now()) {
+  const total = Math.max(0, Math.round(Number(totalSeconds) || 0));
+  let endsAt = null; // set while running
+  let left = total; // authoritative while paused
+
+  const remaining = () =>
+    endsAt === null ? left : Math.max(0, Math.round((endsAt - now()) / 1000));
+
+  return {
+    total,
+    remaining,
+    running: () => endsAt !== null && remaining() > 0,
+    done: () => remaining() === 0 && (endsAt !== null || left !== total),
+    /** Start, or resume from where a pause left it. No-op when already running. */
+    start() {
+      if (endsAt !== null || left <= 0) return;
+      endsAt = now() + left * 1000;
+    },
+    /** Freeze the countdown, keeping what's left. No-op when already paused. */
+    pause() {
+      if (endsAt === null) return;
+      left = remaining();
+      endsAt = null;
+    },
+    /** One tap does whichever of the two makes sense — the owner's ask. */
+    toggle() {
+      endsAt === null ? this.start() : this.pause();
+    },
+    reset() {
+      endsAt = null;
+      left = total;
+    },
+  };
+}
+
 /** Keep an index inside [0, count-1]; an empty recipe pins at 0. */
 export function clampIndex(index, count) {
   const n = Number.isFinite(index) ? Math.trunc(index) : 0;

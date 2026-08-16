@@ -12,10 +12,22 @@ import { initTransferReceive } from "./personal-io-ui.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
-import { profiles, PROFILES_KEY } from "./profiles.js";
+import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { cookButton } from "./cook-ui.js";
 import { el } from "./dom.js";
+// The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
+// a recipe could show CONTAINS GLUTEN chips with no route to the Settings that
+// decide which allergens are flagged, and no way to reach Favourites, Share or
+// About without going back twice (owner). Same modules, same markup and the
+// same order as restaurant.html, so all three ⋯ menus read identically.
+import { favourites } from "./favourites.js";
+import { ratings } from "./ratings.js";
+import { initAboutUI } from "./about-ui.js";
+import { initShareApp } from "./share-app.js";
+import { initReportEntry } from "./report-ui.js";
+import { initOverflowMenu } from "./overflow-ui.js";
+import { initSettingsUI } from "./settings-ui.js";
 
 const root = document.getElementById("recipe-root");
 const EMPTY_SET = new Set();
@@ -202,12 +214,36 @@ initOrderUI(); // the running order stays reachable from the recipe screen too
 initTransferReceive(); // a transfer link can land on any screen (Theme 9 v1)
 initReo(); // sets <html lang>; the back link is set to the collection name by render()
 
-// Keep the ⚠ allergen tags live against an allergen/dietary change made in
-// ANOTHER tab (home/menu Settings) — the recipe screen has no Settings dialog of
-// its own, so an in-tab settings.set won't fire here, but a cross-tab write to
-// this profile's settings key must still re-apply. settings.subscribe drives the
-// repaint; the storage listener re-reads on the cross-tab write. (Matches how the
-// menu/home screens react — previously this page only handled a profile switch.)
+// The ⋯ menu's dialogs. Settings now lives on this page, so an allergen change
+// made right here re-applies through the same settings.subscribe below that a
+// cross-tab change already used — one path, not two.
+function initChrome() {
+  initAboutUI();
+  initShareApp();
+  initReportEntry();
+  initOverflowMenu();
+  initSettingsUI();
+  // A profile switch inside that dialog must re-point THIS page's stores before
+  // anything repaints, or the new person would inherit the last one's hearts.
+  // settings.reload() fires last by contract, so the reRender below is already
+  // the new person's. Without this line the ⋯ menu would have shipped a
+  // cross-profile data leak, which is the whole reason it is here.
+  profiles.subscribe(() => reloadProfileStores({ favourites, ratings, settings }));
+  const nameEl = document.querySelector(".profile-caption-name");
+  if (nameEl) {
+    const setName = () => { nameEl.textContent = profiles.active().name; };
+    setName();
+    profiles.subscribe(setName);
+  }
+  const topbar = document.querySelector(".menu-topbar");
+  if (topbar) translate(topbar);
+}
+initChrome();
+
+// Keep the ⚠ allergen tags live against an allergen/dietary change — made in
+// the Settings dialog now on this page, or in ANOTHER tab (home/menu Settings).
+// settings.subscribe drives the repaint; the storage listener re-reads on the
+// cross-tab write. (Matches how the menu/home screens react.)
 settings.subscribe(reRender);
 
 const activeProfileAtLoad = profiles.activeId();

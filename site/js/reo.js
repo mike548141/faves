@@ -247,12 +247,24 @@ const MI = {
   // engine swaps whole strings only. Per maoridictionary.co.nz: aratau = mode ·
   // tunu = to cook/bake · whai ake = next/following · oti = finished ·
   // mataara = awake/alert · mata = screen/face.
-  "cook.start": "Aratau tunu", // draft — "cooking mode"
+  // "Start cooking", not "Cook mode": the button was relabelled 2026-08-16
+  // because it named a mode the app has rather than the thing you are about to
+  // do. tīmata = to begin. Every line here is still a DRAFT awaiting a fluent
+  // speaker (Theme 23 tracks the review).
+  "cook.start": "Tīmata te tunu", // draft — "start the cooking"
   "cook.close": "Katia te aratau tunu", // draft — "close cook mode"
   "cook.next": "Whai ake", // draft — "next"
   "cook.prev": "Hoki", // draft — "back"
   "cook.done": "Kua oti", // draft — "it is finished"
   "cook.awake": "Ka noho mataara te mata", // draft — "the screen stays awake"
+  // The per-step panel and countdown (2026-08-16). hipanga = step ·
+  // tāima = time/timer · tatari = wait · okioki = pause/rest · anō = again.
+  "cook.needs": "Ngā huānga mō tēnei hipanga", // draft — "ingredients for this step"
+  "cook.timerStart": "Tīmata te tāima", // draft — "start the timer"
+  "cook.timerPause": "Okioki", // draft — "pause"
+  "cook.timerResume": "Haere tonu", // draft — "carry on"
+  "cook.timerDone": "Kua oti te tāima", // draft — "the time is finished"
+  "cook.timerReset": "Tīmata anō", // draft — "start again"
 };
 
 let current = "en";

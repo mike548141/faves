@@ -23,7 +23,64 @@
     <link rel="stylesheet" href="css/app.css" />
   </head>
   <body class="menu-page">
-    <p class="skip"><a id="recipe-back" href="index.html">← Back</a></p>
+    <!-- The SAME slim top bar restaurant.html carries — back-link left, app ⋯
+         menu right — because it is the same journey one level deeper. It used
+         to be a bare <p class="skip"> outside any .wrap, so the back pill
+         aligned to the viewport edge while the recipe aligned to the content
+         column, and the whole page carried no app chrome at all: a recipe
+         showing CONTAINS GLUTEN chips had no route to the Settings that decide
+         which allergens are flagged (owner, 2026-08-16). -->
+    <div class="menu-topbar wrap">
+      <p class="skip"><a id="recipe-back" href="index.html">← Back</a></p>
+      <div class="overflow" hidden>
+        <button
+          type="button"
+          id="overflow-btn"
+          class="overflow-btn"
+          aria-label="More"
+          data-i18n-aria="nav.more"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="overflow-menu"
+        >
+          <span aria-hidden="true">⋯</span>
+        </button>
+        <div id="overflow-menu" class="overflow-menu" role="menu" aria-label="More" data-i18n-aria="nav.more" hidden>
+          <p class="overflow-caption">
+            <span data-i18n="profile.browsingAs">Browsing as</span>
+            <span class="profile-caption-name"></span>
+          </p>
+          <!-- The favourites *view* lives on home, so here it's a link there
+               (opened via #faves) rather than the in-page toggle home uses. -->
+          <a id="favourites-link" class="overflow-item" role="menuitem" href="index.html#faves">
+            <span class="overflow-item-icon" aria-hidden="true">♥</span>
+            <span data-i18n="nav.favourites">Favourites</span>
+          </a>
+          <button
+            type="button"
+            id="settings-btn"
+            class="overflow-item"
+            role="menuitem"
+            hidden
+          >
+            <span class="overflow-item-icon" aria-hidden="true">⚙</span>
+            <span data-i18n="nav.settings">Settings</span>
+          </button>
+          <button type="button" id="share-app-btn" class="overflow-item" role="menuitem" hidden>
+            <span class="overflow-item-icon" aria-hidden="true">⤴</span>
+            <span data-i18n="nav.shareApp">Share this app</span>
+          </button>
+          <button type="button" id="report-btn" class="overflow-item" role="menuitem" hidden>
+            <span class="overflow-item-icon" aria-hidden="true">⚑</span>
+            <span data-i18n="nav.report">Suggest or report</span>
+          </button>
+          <button type="button" id="about-btn" class="overflow-item" role="menuitem" hidden>
+            <span class="overflow-item-icon" aria-hidden="true">ⓘ</span>
+            <span data-i18n="nav.about">About</span>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <main id="recipe-root" class="wrap" aria-busy="true">
       <p id="recipe-loading" class="menu-status" data-i18n="recipe.loading">Loading recipe…</p>

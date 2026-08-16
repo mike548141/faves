@@ -14,10 +14,16 @@ import {
   advance,
   canCook,
   clampIndex,
+  createTimer,
   createWakeLock,
+  formatDuration,
+  ingredientTerms,
+  ingredientsForStep,
   keyToIndex,
+  stepDuration,
   stepLabel,
   stepState,
+  stepUsesIngredients,
   stepsOf,
 } from "../site/js/cook.js";
 
@@ -269,4 +275,139 @@ test("visibilitychange on an unsupported browser stays silent", async () => {
   const lock = createWakeLock({ wakeLock: undefined });
   await lock.acquire();
   assert.deepEqual(await lock.onVisibilityChange(), { ok: false, reason: "unsupported" });
+});
+
+// --- What a step needs ----------------------------------------------------
+// The rule errs one way on purpose: showing an ingredient that isn't needed is
+// a blemish, hiding one that is needed is a ruined dish. Every case below that
+// asserts a HIDE is a step that genuinely names nothing from the list.
+
+const PUDDING = [
+  "¾ cup (190 ml) white sugar",
+  "100g butter, softened",
+  "1 egg",
+  "1 tsp (5 ml) vanilla essence",
+  "1¼ cups (310 ml) white flour",
+  "2 tsp (10 ml) baking powder",
+  "1 tbsp (15 ml) cocoa",
+  "Water or milk, as required for a thick batter",
+  "Sauce: ½ cup (125 ml) brown sugar",
+  "Sauce: 2 cups (500 ml) boiling water",
+];
+
+test("ingredientTerms strips quantity, packaging and preparation", () => {
+  assert.deepEqual(ingredientTerms("100g butter, softened"), ["butter"]);
+  // The group label is a heading, not a thing you add.
+  assert.deepEqual(ingredientTerms("Sauce: ½ cup (125 ml) brown sugar"), [
+    "brown sugar",
+    "brown",
+    "sugar",
+  ]);
+  // "or" splits into two real alternatives, both searchable.
+  assert.ok(ingredientTerms("Water or milk, as required for a thick batter").includes("water"));
+  assert.ok(ingredientTerms("Water or milk, as required for a thick batter").includes("milk"));
+});
+
+test("a step that only preheats needs nothing — the owner's case", () => {
+  // The trap: "baking powder" is an ingredient and this step says "baking
+  // paper". Matching the FIRST word of a phrase would wrongly claim it.
+  const step = "Preheat the oven to 180°C and line a 1.5–2L ovenproof dish with baking paper, or grease it.";
+  assert.deepEqual(ingredientsForStep(step, PUDDING), []);
+  assert.equal(stepUsesIngredients(step, PUDDING), false);
+});
+
+test("a step lists only what it names, not the whole recipe", () => {
+  const got = ingredientsForStep("Beat together the white sugar, softened butter, egg and vanilla.", PUDDING);
+  assert.deepEqual(got, [
+    "¾ cup (190 ml) white sugar",
+    "100g butter, softened",
+    "1 egg",
+    "1 tsp (5 ml) vanilla essence",
+  ]);
+  // Emphatically NOT the sauce, the flour or the baking powder.
+  assert.ok(!got.some((l) => l.startsWith("Sauce:")));
+});
+
+test("plural ingredient vs singular instruction still matches", () => {
+  // Both were wrongly hidden before stemming was added.
+  assert.ok(stepUsesIngredients("Beat the egg whites to soft peaks.", ["3 eggs, separated"]));
+  assert.ok(stepUsesIngredients("Pour the batter over the plum wedges.", ["4 prune plums, not peeled"]));
+});
+
+test("a step that asks for 'the ingredients' by name gets all of them", () => {
+  const step = "For the sauce, place all the sauce ingredients in a pot and boil.";
+  assert.deepEqual(ingredientsForStep(step, PUDDING), PUDDING);
+});
+
+test("unparseable or absent ingredients never hide anything", () => {
+  assert.deepEqual(ingredientsForStep("Bake it.", []), []);
+  // Nothing survives the measure-word filter → show the lot rather than guess.
+  assert.deepEqual(ingredientsForStep("Bake it.", ["2 cups", "a pinch"]), ["2 cups", "a pinch"]);
+});
+
+// --- Step durations and the timer -----------------------------------------
+
+test("stepDuration reads a stated time and refuses everything else", () => {
+  assert.equal(stepDuration("Bake at 180°C for 35 minutes, or until cooked through."), 35 * 60);
+  assert.equal(stepDuration("Cook on low for 8 hours."), 8 * 3600);
+  // A range times its LOWER bound — come back early and look.
+  assert.equal(stepDuration("Bake a further 5–8 minutes until golden."), 5 * 60);
+  // None of these is a duration, and each has burned a naive parser.
+  assert.equal(stepDuration("Preheat the oven to 180°C."), null);
+  assert.equal(stepDuration("Prepare a 20cm cake tin."), null);
+  assert.equal(stepDuration("Put the mixture into greased patty tins (makes 21)."), null);
+  assert.equal(stepDuration("Roll out to about 4–5mm and cut."), null);
+  assert.equal(stepDuration("Cover and rest in the fridge overnight."), null);
+  assert.equal(stepDuration("Beat together the sugar and butter."), null);
+});
+
+test("stepDuration times the FIRST leg only, not the sum", () => {
+  // "12 minutes, then a further 5–8" is two decisions; timing 20 would be wrong
+  // about both.
+  assert.equal(
+    stepDuration("Bake for about 12 minutes, brush again, then bake a further 5–8 minutes."),
+    12 * 60
+  );
+});
+
+test("formatDuration reads as a clock", () => {
+  assert.equal(formatDuration(35 * 60), "35:00");
+  assert.equal(formatDuration(3900), "1:05:00");
+  assert.equal(formatDuration(0), "0:00");
+});
+
+test("the timer starts, pauses and resumes off the wall clock", () => {
+  let now = 1_000_000;
+  const t = createTimer(600, () => now);
+  assert.equal(t.remaining(), 600);
+  assert.equal(t.running(), false);
+
+  t.toggle(); // start
+  assert.equal(t.running(), true);
+  now += 60_000; // a minute passes
+  assert.equal(t.remaining(), 540);
+
+  t.toggle(); // pause
+  assert.equal(t.running(), false);
+  now += 300_000; // five minutes pass while paused — must not count
+  assert.equal(t.remaining(), 540);
+
+  t.toggle(); // resume
+  now += 40_000;
+  assert.equal(t.remaining(), 500);
+  t.reset();
+  assert.equal(t.remaining(), 600);
+  assert.equal(t.running(), false);
+});
+
+test("a backgrounded phone comes back with the right number, not a frozen one", () => {
+  // The whole reason the timer stores an end time instead of decrementing: no
+  // interval fires while the screen is off, and a counter would come back slow.
+  let now = 0;
+  const t = createTimer(300, () => now);
+  t.start();
+  now += 400_000; // longer than the timer, with nothing ticking
+  assert.equal(t.remaining(), 0);
+  assert.equal(t.done(), true);
+  assert.equal(t.running(), false); // finished is not running
 });

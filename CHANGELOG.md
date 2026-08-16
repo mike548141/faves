@@ -29,6 +29,19 @@ content freshness separately from this file.
 - **The filter controls are now on the page on a laptop**, instead of hidden
   behind a button that opens a sheet designed for a phone. "Clear all" comes with
   them. On a phone nothing changes.
+- **Cook mode shows you what each step needs, and times the waiting.** A step
+  now lists just the ingredients it actually names — with their quantities —
+  instead of hiding the whole recipe behind an "Ingredients" button that sat
+  there even on "preheat the oven". The instruction can stay short because the
+  amounts are already beside it. And a step that says how long it takes ("bake
+  for 35 minutes") gets a one-tap countdown: tap to start, tap to pause, Reset
+  to put it back. The countdown runs off the clock, so a phone that sleeps
+  mid-bake comes back with the right number. Timers only ever appear where the
+  recipe states a time — none is invented.
+- **The app menu (⋯) is now on recipe pages too.** A recipe could show CONTAINS
+  GLUTEN chips with no way to reach the Settings that decide which allergens get
+  flagged. Settings, Favourites, Share and About are one tap away there now,
+  from the same ⋯ menu the other screens use.
 
 ### Fixed
 - **The back-to-top button no longer sits on top of a price.** It slides out of
@@ -70,6 +83,17 @@ content freshness separately from this file.
   a menu page are unaffected — those float over the page and move nothing.
 
 ### Changed
+- **"Start cooking", and a button that no longer shouts.** The way into cook
+  mode was a full-width orange bar with an emoji on it — the heaviest thing on
+  a page whose subject is a recipe, and on some machines the emoji fell back to
+  a glyph that read as a magnifier. It is now an ordinary-sized button in the
+  app's own style: accent on a recipe's own page, where starting to cook is the
+  point, and quiet in the Cook at Home list, where it is one of twenty-odd. In
+  the list it leads the recipe rather than trailing the method, so you no longer
+  scroll past the whole thing to reach it.
+- **The back link on a recipe now sits where every other back link sits.** It
+  was a lone pill hard against the edge of the window while the recipe itself
+  sat in the centre column; it is now in the same top bar the menu pages use.
 - **Search results now show you *why* they matched.** Searching "Bar" returned
   1841 Bar & Restaurant and The Catch Sushi Bar alongside places that genuinely
   are bars, with nothing to tell the two apart — a wide search is right (you

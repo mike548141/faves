@@ -4145,29 +4145,32 @@ body.faves-view .to-top {
 
 /* ---------- Cook mode (ROADMAP 17d, ADR 0034) ---------- */
 
-/* The way in. Full-width and accent-filled: on a recipe you have opened in a
-   kitchen this is the primary action, not one option among several. */
+/* The way in. It is a `.btn` first — same height, radius, weight and padding as
+   every other action in the app — and only then an accent one, so it reads as
+   "the main thing to do here" rather than as a component of its own. It used to
+   be a full-bleed 52px accent bar, which made it the heaviest element on a page
+   whose subject is a recipe (owner, 2026-08-16). Sized to its words now. */
 .cook-start-row {
   margin-top: var(--space-4);
 }
 .cook-start {
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.5em;
-  width: 100%;
-  min-height: 52px;
-  padding: 0 var(--space-3);
-  border: 0;
-  border-radius: var(--radius);
+  border-color: transparent;
   background: var(--accent);
   color: var(--accent-ink);
-  font-size: var(--step-name);
-  font-weight: 700;
   cursor: pointer;
 }
-.cook-start-ico {
-  font-size: 1.1em;
+/* In the Cook at Home list the same control drops to the ordinary `.btn`
+   surface: one accent per screen means something, twenty means nothing. */
+.cook-start-quiet {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--line);
+}
+/* Leading the expanded recipe rather than trailing it, so it needs the margin
+   below rather than above. */
+.cook-start-lead {
+  margin: 0 0 var(--space-3);
 }
 
 /* Full-bleed: a <dialog>'s UA styles cap its width/height and centre it, so
@@ -4277,10 +4280,14 @@ body.faves-view .to-top {
 
 /* Ingredients without leaving the step. Capped so the step you're on is still
    on screen behind it — the point is to check a quantity, not to change page. */
+/* "What you need" — the step's own ingredients, in the stage beside the
+   instruction rather than in a panel that covered it. No max-height/scroller
+   any more: it holds the lines for ONE step (one to four, in this corpus), not
+   the whole recipe, so it is short by construction. */
 .cook-ing {
-  flex: 0 1 auto;
-  max-height: 40vh;
-  overflow-y: auto;
+  flex: 0 0 auto;
+  align-self: stretch;
+  max-width: 32rem;
   padding: var(--space-3);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -4337,9 +4344,66 @@ body.faves-view .to-top {
 }
 /* Full width and first in reading order: checking a quantity is a detour from
    Back/Next, so it gets its own row rather than crowding them. */
-.cook-ing-toggle {
-  grid-column: 1 / -1;
-  order: -1;
+/* The per-step countdown. Sits between the stage and the nav, so it never
+   moves Back/Next: the stage is the only flexible row, and it absorbs the
+   change. Steps that state no duration have no timer, so the row is absent
+   rather than empty — the nav is a fixed anchor either way. */
+.cook-timer {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+  flex: none;
+}
+.cook-timer-btn {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 56px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+/* Tabular figures so the seconds ticking down don't shuffle the whole label
+   sideways once a second — the same reason clocks everywhere use them. */
+.cook-timer-time {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.cook-timer-state {
+  font-size: var(--step-sub);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+/* Running: accent the edge, not the fill — a solid accent block would out-shout
+   Next, and Next is still the thing you press when the bell goes. */
+.cook-timer.is-running .cook-timer-btn {
+  border-color: var(--accent);
+}
+.cook-timer.is-running .cook-timer-time {
+  color: var(--accent);
+}
+.cook-timer.is-done .cook-timer-btn {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.cook-timer-reset {
+  flex: 0 0 auto;
+  min-height: 56px;
+  min-width: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* Wider screens: hold the step to a comfortable measure and stop the nav

@@ -1129,8 +1129,11 @@ function renderRecipeDetail(item) {
   }
   // Cook mode is reachable from the list too, not only from the recipe's own
   // page — this is where people are browsing when they decide to start cooking.
-  const cook = cookButton(item);
-  if (cook) body.push(el("div", { className: "cook-start-row" }, [cook]));
+  // At the TOP of the expanded body, not the bottom: you decide to cook from
+  // the ingredients, and burying it under the method meant scrolling the whole
+  // recipe to reach the one control that would have read it out to you.
+  const cook = cookButton(item, { quiet: true });
+  if (cook) body.unshift(el("div", { className: "cook-start-row cook-start-lead" }, [cook]));
   return el("details", { className: "recipe-detail" }, [
     el("summary", { className: "recipe-summary", "data-i18n": "recipe.detail", textContent: "Ingredients & method" }),
     el("div", { className: "recipe-body" }, body),

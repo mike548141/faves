@@ -14,11 +14,14 @@
 // Chrome's close-watcher force-closed the dialog two times in six (ADR 0025).
 // A promise the platform keeps only most of the time is worse than no promise.
 //
-// THE INGREDIENTS PANEL is a toggle, not a navigation. The roadmap's stated
-// problem for 17c is "don't send the reader back up the page", and the cheap
-// half of that is reachable here: open the list, read it, close it, and you are
-// still on the step you were on — the index is never touched. Inline per-step
-// quantities are 17c and deliberately not attempted.
+// THE STEP CARRIES ITS OWN INGREDIENTS. Until 2026-08-16 the whole list sat
+// behind an "Ingredients" toggle on every step, including the ones that only
+// preheat an oven. The owner replaced the idea outright: show, by default, just
+// the lines this step is about — so the instruction can stay short ("Mix the
+// butter and sugar together") while the quantities sit beside it. Which lines
+// those are is `ingredientsForStep` in cook.js, and it errs towards showing.
+// What is still NOT possible is splitting one line across two steps ("1 of the
+// 2 cups"): nothing in the data ties an ingredient to a step. ROADMAP 35b.
 //
 // REO. Every button label carries a data-i18n key. The step counter does not:
 // it is interpolated ("Step 3 of 9"), and reo.js swaps whole strings only —
@@ -28,7 +31,17 @@ import { el } from "./dom.js";
 import { translate } from "./reo.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
-import { canCook, createWakeLock, keyToIndex, stepState, stepsOf } from "./cook.js";
+import {
+  canCook,
+  createTimer,
+  createWakeLock,
+  formatDuration,
+  ingredientsForStep,
+  keyToIndex,
+  stepDuration,
+  stepState,
+  stepsOf,
+} from "./cook.js";
 
 // Ids must be unique across however many dialogs a session opens and discards.
 let seq = 0;
@@ -38,17 +51,35 @@ const canModal =
   typeof HTMLDialogElement.prototype.showModal === "function";
 
 /**
- * The "Cook mode" affordance for a recipe, or null when there is nothing to
+ * The "Start cooking" affordance for a recipe, or null when there is nothing to
  * cook from. Returning null (rather than a disabled button) is deliberate: the
  * one recipe without a method should look like a recipe without a method, not
  * like a broken feature.
+ *
+ * TWO WEIGHTS, ONE CONTROL (owner, 2026-08-16: *"terribly ugly… giant, and
+ * poorly placed"*). On a recipe's own page starting to cook is THE action, so
+ * it carries the accent. In the Cook at Home list it is one of twenty-odd
+ * recipes, and twenty accent slabs is not emphasis, it is wallpaper — so there
+ * it is `quiet`, the same button in the app's ordinary `.btn` clothes.
+ *
+ * It is sized to its words either way. The full-bleed 52px bar it replaces was
+ * the heaviest element on both screens, which said "this page is a button" when
+ * the page is a recipe.
+ *
+ * NO EMOJI. The old 🍳 relied on the platform having a colour glyph for
+ * U+1F373; on the owner's own machine it fell back to something that read as a
+ * magnifier. A primary control cannot be a rendering lottery, and the word
+ * "cooking" needs no picture.
+ *
+ * The label says what happens next rather than naming a mode the app happens to
+ * have — nobody wants to enter Cook Mode, they want to start cooking.
  */
-export function cookButton(item) {
+export function cookButton(item, { quiet = false } = {}) {
   if (!canCook(item) || !canModal) return null;
-  const btn = el("button", { type: "button", className: "cook-start" }, [
-    el("span", { className: "cook-start-ico", textContent: "🍳", "aria-hidden": "true" }),
-    el("span", { "data-i18n": "cook.start", textContent: "Cook mode" }),
-  ]);
+  const btn = el("button", {
+    type: "button",
+    className: `btn cook-start${quiet ? " cook-start-quiet" : ""}`,
+  }, [el("span", { "data-i18n": "cook.start", textContent: "Start cooking" })]);
   btn.addEventListener("click", (e) => {
     // Recipe rows can sit inside a link on the Cook at Home list; a tap here
     // must open cook mode, never navigate away from it.
@@ -92,6 +123,63 @@ export function openCookMode(item) {
 
   const counter = el("p", { className: "cook-count" });
   const stepText = el("p", { className: "cook-step" });
+
+  // A step that only waits ("Bake for 35 minutes") gets a one-tap countdown
+  // (owner, 2026-08-16). The duration is READ OUT OF THE STEP — never guessed —
+  // so a step that doesn't say how long simply has no timer (see cook.js).
+  //
+  // One timer per step, kept in a Map so walking Back and Next doesn't restart
+  // a bake you have already begun. They tick off the wall clock, so a phone
+  // that sleeps mid-bake comes back with the right number.
+  const timers = new Map();
+  const timerFor = (i) => {
+    if (!timers.has(i)) {
+      const secs = stepDuration(steps[i]);
+      timers.set(i, secs == null ? null : createTimer(secs));
+    }
+    return timers.get(i);
+  };
+
+  const timerTime = el("span", { className: "cook-timer-time" });
+  // Four fixed label spans swapped by `hidden`, never one span whose key gets
+  // rewritten — same rule as Next/Done above, and for the same reason: reo.js
+  // caches an element's English on first translate(), so re-keying a live
+  // element strands the wrong word when the language is switched back.
+  const timerLabels = {
+    start: el("span", { "data-i18n": "cook.timerStart", textContent: "Start timer" }),
+    pause: el("span", { "data-i18n": "cook.timerPause", textContent: "Pause", hidden: true }),
+    resume: el("span", { "data-i18n": "cook.timerResume", textContent: "Resume", hidden: true }),
+    done: el("span", { "data-i18n": "cook.timerDone", textContent: "Time\u2019s up", hidden: true }),
+  };
+  const timerState = el("span", { className: "cook-timer-state" }, Object.values(timerLabels));
+  const timerBtn = el("button", { type: "button", className: "cook-timer-btn" }, [
+    timerTime,
+    timerState,
+  ]);
+  const timerReset = el("button", {
+    type: "button",
+    className: "cook-timer-reset",
+    "data-i18n": "cook.timerReset",
+    textContent: "Reset",
+    hidden: true,
+  });
+  const timerRow = el("div", { className: "cook-timer", hidden: true }, [timerBtn, timerReset]);
+
+  // What this step needs, shown by default rather than hidden behind a toggle
+  // (owner, 2026-08-16). It lives INSIDE the live region on purpose: stepping
+  // forward should announce "Step 2 of 6. Beat together… What you need: ¾ cup
+  // white sugar; 100g butter, softened…" as one utterance. Cook mode is used
+  // with hands in a bowl and eyes elsewhere, so the quantities being spoken
+  // alongside the instruction is the feature, not noise.
+  const ingList = el("ul", { className: "ingredients" });
+  const ingPanel = el("section", { className: "cook-ing", id: ingId, hidden: true }, [
+    el("h3", {
+      className: "recipe-head",
+      "data-i18n": "cook.needs",
+      textContent: "What you need",
+    }),
+    ingList,
+  ]);
   // One live region holding both, so a step change is announced as a whole
   // ("Step 4 of 9. Beat the eggs…") rather than as two fragments. Focus lands
   // here on open so the first step is read without moving focus again later —
@@ -103,13 +191,7 @@ export function openCookMode(item) {
     "aria-live": "polite",
     "aria-atomic": "true",
     "aria-labelledby": titleId,
-  }, [counter, stepText]);
-
-  const ingList = el("ul", { className: "ingredients" });
-  const ingPanel = el("section", { className: "cook-ing", id: ingId, hidden: true }, [
-    el("h3", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }),
-    ingList,
-  ]);
+  }, [counter, stepText, ingPanel]);
 
   const prevBtn = el("button", { type: "button", className: "cook-btn cook-prev" }, [
     el("span", { className: "cook-btn-ico", textContent: "‹", "aria-hidden": "true" }),
@@ -125,18 +207,11 @@ export function openCookMode(item) {
     nextLabel, doneLabel, nextIco,
   ]);
 
-  const ingBtn = ingredients.length
-    ? el("button", {
-        type: "button",
-        className: "cook-btn cook-ing-toggle",
-        "aria-expanded": "false",
-        "aria-controls": ingId,
-        "data-i18n": "recipe.ingredients",
-        textContent: "Ingredients",
-      })
-    : null;
-
-  const nav = el("div", { className: "cook-nav" }, [prevBtn, ingBtn, nextBtn]);
+  // Two buttons, always the same two, always in the same place. The Ingredients
+  // toggle that used to span this row is gone — its content is on screen now —
+  // and with it the row that appeared and vanished between steps, moving Next
+  // under the finger that was tapping it.
+  const nav = el("div", { className: "cook-nav" }, [prevBtn, nextBtn]);
   const dialog = el("dialog", { className: "cook-sheet", "aria-labelledby": titleId }, [
     el("div", { className: "cook-inner" }, [
       el("div", { className: "cook-top" }, [
@@ -145,18 +220,86 @@ export function openCookMode(item) {
       ]),
       progress,
       stage,
-      ingPanel,
+      // OUTSIDE the live region on purpose: the countdown rewrites itself every
+      // second, and the stage is aria-live/aria-atomic — a timer in there would
+      // re-announce the whole step once a second, which is unusable.
+      timerRow,
       nav,
     ]),
   ]);
 
   // --- Painting ----------------------------------------------------------
-  function paintIngredients() {
+  // The lines this step is about, at the recipe's stated quantity. Absent — not
+  // empty — when the step needs nothing ("Preheat the oven…"), which was the
+  // owner's first complaint and falls out of the same rule.
+  function paintStepIngredients(stepIndex) {
     const units = settings.get().units;
+    const needed = ingredientsForStep(steps[stepIndex], ingredients);
+    ingPanel.hidden = needed.length === 0;
     ingList.replaceChildren(
-      ...ingredients.map((ing) => el("li", { textContent: convertTemperatures(ing, units) }))
+      ...needed.map((ing) => el("li", { textContent: convertTemperatures(ing, units) }))
     );
   }
+
+  // The countdown's face. Re-run every second while one is running, and once on
+  // every step change. The button is the whole control — one tap starts it, one
+  // tap pauses it — with Reset appearing only once there is something to reset,
+  // so a step you have not started shows exactly one thing to press.
+  function paintTimer() {
+    const t = timerFor(index);
+    timerRow.hidden = !t;
+    if (!t) return;
+    const left = t.remaining();
+    const running = t.running();
+    const done = left === 0;
+    const which = done ? "done" : running ? "pause" : left < t.total ? "resume" : "start";
+    timerTime.textContent = formatDuration(left);
+    for (const [key, span] of Object.entries(timerLabels)) span.hidden = key !== which;
+    timerBtn.disabled = done;
+    // The accessible name has to say what the tap DOES, not just read the clock
+    // — "35:00" alone tells a screen-reader user nothing about the verb. Built
+    // from the visible label so the two can never drift apart.
+    timerBtn.setAttribute(
+      "aria-label",
+      done ? timerLabels.done.textContent : `${timerLabels[which].textContent} \u2014 ${formatDuration(left)}`
+    );
+    timerRow.classList.toggle("is-running", running);
+    timerRow.classList.toggle("is-done", done);
+    // Hiding the element that currently has focus drops focus to <body> —
+    // OUTSIDE the dialog, where the keydown listener never sees it, so the
+    // arrows, Home and End all go dead. cook_check caught exactly this on the
+    // Back button on 2026-08-15 and caught it again here the moment Reset
+    // learned to hide itself. Hand focus on before hiding, never after.
+    const nowHidden = left === t.total && !running;
+    if (nowHidden && document.activeElement === timerReset) timerBtn.focus();
+    timerReset.hidden = nowHidden;
+    // Same trap on the button itself: it is disabled when the bell has gone.
+    if (done && document.activeElement === timerBtn) nextBtn.focus();
+  }
+
+  // One interval for the whole dialog, started lazily and stopped the moment
+  // nothing is counting — a bare setInterval left running behind a closed sheet
+  // is the same class of leak as an unreleased wake lock (ADR 0034).
+  let tick = null;
+  function syncTicking() {
+    const anyRunning = [...timers.values()].some((t) => t?.running());
+    if (anyRunning && tick === null) tick = setInterval(paintTimer, 1000);
+    else if (!anyRunning && tick !== null) {
+      clearInterval(tick);
+      tick = null;
+    }
+  }
+
+  timerBtn.addEventListener("click", () => {
+    timerFor(index)?.toggle();
+    paintTimer();
+    syncTicking();
+  });
+  timerReset.addEventListener("click", () => {
+    timerFor(index)?.reset();
+    paintTimer();
+    syncTicking();
+  });
 
   function paint() {
     const s = stepState(index, steps.length);
@@ -170,6 +313,8 @@ export function openCookMode(item) {
     // (found by cook_check.mjs, owner ruled 2026-08-15). Hand focus to Next
     // before disabling: it is the only control that still does anything here.
     if (s.atFirst && document.activeElement === prevBtn) nextBtn.focus();
+    paintStepIngredients(s.index);
+    paintTimer();
     prevBtn.disabled = s.atFirst;
     nextLabel.hidden = s.atLast;
     doneLabel.hidden = !s.atLast;
@@ -201,13 +346,6 @@ export function openCookMode(item) {
     if (stepState(index, steps.length).atLast) dialog.close();
     else goTo(index + 1);
   });
-  ingBtn?.addEventListener("click", () => {
-    const open = ingPanel.hidden;
-    ingPanel.hidden = !open;
-    ingBtn.setAttribute("aria-expanded", String(open));
-    if (open) ingPanel.scrollIntoView({ block: "nearest" });
-  });
-
   dialog.addEventListener("keydown", (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     const next = keyToIndex(e.key, index, steps.length);
@@ -221,7 +359,7 @@ export function openCookMode(item) {
   // bench; repaint rather than leave °C on screen for an imperial reader.
   const unsubscribe = settings.subscribe(() => {
     paint();
-    paintIngredients();
+    paintStepIngredients(index);
   });
 
   dialog.addEventListener("close", () => {
@@ -229,6 +367,12 @@ export function openCookMode(item) {
     unsubscribe();
     // Never leave the screen pinned awake on a page nobody is reading.
     lock.release();
+    // Same rule for the countdown: a 1s interval behind a closed sheet is a
+    // leak, and cook mode has shipped one of those before (ADR 0034).
+    if (tick !== null) {
+      clearInterval(tick);
+      tick = null;
+    }
     dialog.remove();
     // <dialog> restores focus to the opener itself; this is the belt to that
     // brace, for the case where the opener was re-rendered underneath us (a
@@ -238,7 +382,7 @@ export function openCookMode(item) {
     }
   });
 
-  paintIngredients();
+  paintStepIngredients(index);
   paint();
   document.body.append(dialog);
   translate(dialog); // pick up the stored language before the first frame
