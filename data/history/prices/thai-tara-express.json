@@ -1,0 +1,538 @@
+{
+  "venue": "thai-tara-express",
+  "note": "Price entries superseded by a later reading. Appended, never rewritten (ADR 0023); moved out of the payload by ADR 0045 because no screen renders them. The current price stays on the dish in site/data/.",
+  "rows": [
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Roti with satay sauce",
+        "code": "A1"
+      },
+      "superseded": [
+        {
+          "value": 5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Spring rolls",
+        "code": "A3"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Deep fried wontons",
+        "code": "A4"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Curry puffs",
+        "code": "A5"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Money bags",
+        "code": "A7"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Satay chicken kebabs",
+        "code": "A9"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Fish cake",
+        "code": "A10"
+      },
+      "superseded": [
+        {
+          "value": 10,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried rice",
+        "name": "Fried rice",
+        "code": "R1"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried rice",
+        "name": "Green curry fried rice",
+        "code": "R2"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried rice",
+        "name": "Nasi goreng",
+        "code": "R3"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried rice",
+        "name": "Tom yum fried rice",
+        "code": "R4"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried rice",
+        "name": "Spicy fried rice",
+        "code": "R5"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried noodles",
+        "name": "Pad thai",
+        "code": "N1"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried noodles",
+        "name": "Pad see ewe",
+        "code": "N2"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried noodles",
+        "name": "Pad kee mao",
+        "code": "N3"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried noodles",
+        "name": "Mee goreng",
+        "code": "N4"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Thai curry",
+        "name": "Green curry",
+        "code": "C1"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Thai curry",
+        "name": "Red curry",
+        "code": "C2"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Thai curry",
+        "name": "Yellow curry",
+        "code": "C3"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Thai curry",
+        "name": "Panang curry",
+        "code": "C4"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Thai curry",
+        "name": "Beef massamun curry",
+        "code": "C5"
+      },
+      "superseded": [
+        {
+          "value": 16,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Thai curry",
+        "name": "Roasted duck curry",
+        "code": "C6"
+      },
+      "superseded": [
+        {
+          "value": 16,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "On rice",
+        "name": "BBQ pork on rice",
+        "code": "OR1"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "On rice",
+        "name": "Roasted duck on rice",
+        "code": "OR2"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "On rice",
+        "name": "Crispy pork on rice",
+        "code": "OR3"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle soup",
+        "name": "Beef noodle soup",
+        "code": "S1"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle soup",
+        "name": "Tom yum noodle soup",
+        "code": "S2"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle soup",
+        "name": "Wonton soup with BBQ pork",
+        "code": "S3"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle soup",
+        "name": "Duck noodle",
+        "code": "S4"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Thai soup",
+        "name": "Tom kha soup",
+        "code": "SP1"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Thai soup",
+        "name": "Tom yum soup",
+        "code": "SP2"
+      },
+      "superseded": [
+        {
+          "value": 15,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir fry",
+        "name": "Thai chilli",
+        "code": "F1"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir fry",
+        "name": "Thai basil",
+        "code": "F2"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir fry",
+        "name": "The cashew nut",
+        "code": "F3"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir fry",
+        "name": "Sweet and sour",
+        "code": "F4"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir fry",
+        "name": "Satay sauce",
+        "code": "F5"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir fry",
+        "name": "Ginger and vegetable",
+        "code": "F6"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir fry",
+        "name": "Crispy pork stir-fry vegetable",
+        "code": "F7"
+      },
+      "superseded": [
+        {
+          "value": 17.5,
+          "recorded": "2026-07-06",
+          "method": "paper-menu"
+        }
+      ]
+    }
+  ]
+}

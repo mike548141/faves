@@ -1,0 +1,125 @@
+{
+  "venue": "takeaway-at-churton",
+  "note": "Dishes confirmed off the menu (`available.offBy`). The whole item is kept so it can be restored verbatim if it returns.",
+  "rows": [
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Sweet Potato Wedges",
+        "code": null
+      },
+      "item": {
+        "name": "Sweet Potato Wedges",
+        "desc": null,
+        "tags": [],
+        "price": [
+          {
+            "value": 6.2,
+            "recorded": "2019",
+            "note": "2019 menu scan"
+          }
+        ],
+        "available": {
+          "offBy": "2026-08-08",
+          "note": "not on the 2026-08-08 printed menu"
+        }
+      }
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Seafood Fritter",
+        "code": null
+      },
+      "item": {
+        "name": "Seafood Fritter",
+        "desc": null,
+        "tags": [
+          "contains-shellfish"
+        ],
+        "price": [
+          {
+            "value": 4.5,
+            "recorded": "2019",
+            "note": "2019 menu scan"
+          }
+        ],
+        "available": {
+          "offBy": "2026-08-08",
+          "note": "not on the 2026-08-08 printed menu"
+        }
+      }
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Bacon Fritter",
+        "code": null
+      },
+      "item": {
+        "name": "Bacon Fritter",
+        "desc": null,
+        "tags": [],
+        "price": [
+          {
+            "value": 4.0,
+            "recorded": "2019",
+            "note": "2019 menu scan"
+          }
+        ],
+        "available": {
+          "offBy": "2026-08-08",
+          "note": "not on the 2026-08-08 printed menu"
+        }
+      }
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Chocolate Rap",
+        "code": null
+      },
+      "item": {
+        "name": "Chocolate Rap",
+        "desc": null,
+        "tags": [],
+        "price": [
+          {
+            "value": 3.0,
+            "recorded": "2019",
+            "note": "2019 menu scan"
+          }
+        ],
+        "available": {
+          "offBy": "2026-08-08",
+          "note": "not on the 2026-08-08 printed menu"
+        }
+      }
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Pacific Oyster",
+        "code": null
+      },
+      "item": {
+        "name": "Pacific Oyster",
+        "desc": null,
+        "tags": [
+          "contains-shellfish"
+        ],
+        "price": [
+          {
+            "value": 2.5,
+            "recorded": "2019",
+            "note": "2019 menu scan"
+          }
+        ],
+        "available": {
+          "offBy": "2026-08-08",
+          "note": "not on the 2026-08-08 printed menu"
+        }
+      }
+    }
+  ]
+}

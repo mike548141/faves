@@ -70,8 +70,9 @@ in atelier and is read on demand — never wholesale.
   Theme 8). A push *is* publication — to the world, immediately and
   irreversibly; git history is public too, so a secret committed and then
   removed is still disclosed and must be **rotated**, never just deleted.
-  Content is publication-bound: no personal data beyond the owner-approved
-  recipe exception below. Verify:
+  Content is publication-bound: no personal data beyond the two
+  owner-approved exceptions below (recipe attributions; `data/`
+  ownership records under ADR 0046's provenance rule). Verify:
   `gh repo view mike548141/faves --json visibility`.
 
 Read `docs/STRATEGY.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, then
@@ -95,15 +96,31 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
   menu data; the whole site must work in flight mode after first visit.
 - **New Zealand English** throughout (favourite, organise). Correct
   macrons on te reo Māori words. Prices in NZD.
-- **No personal data — one owner-approved exception.** No addresses of
-  people, no phone/contact details, no health details, anywhere. For
-  restaurants and menus: no personal data at all. **Exception
-  (owner-approved 2026-07-06):** home recipes in the Cook at Home
-  collection may keep family attributions in their titles/notes (e.g.
-  "Booth's Ginger Crunch", "a Clements family dessert") at the owner's
-  discretion — it's a public site and that call is his. Still never
-  addresses, contact details, or health details. Allergen tagging is a
-  product feature, not a personal disclosure.
+- **No personal data — two owner-approved exceptions.** No home
+  addresses of people, no health details, anywhere — those two are
+  absolute. **In the app's dataset (`site/data/`) and every screen: no
+  personal data at all.** Allergen tagging is a product feature, not a
+  personal disclosure.
+  - **Exception 1 (owner-approved 2026-07-06):** home recipes in the
+    Cook at Home collection may keep family attributions in their
+    titles/notes (e.g. "Booth's Ginger Crunch", "a Clements family
+    dessert") at the owner's discretion — it's a public site and that
+    call is his.
+  - **Exception 2 (owner ruled 2026-08-16, ADR 0046):** the research
+    store `data/` may record ownership and contact details — **name,
+    email, phone** — for the people and organisations behind a venue,
+    bounded by **provenance**: only what is in the public domain
+    (`public-record`) or was purposely given to us for use in Faves
+    (`given`). Every such record carries a `source` saying which, and
+    `tools/registry.py` errors without one. Never served, never
+    precached, never referenced from `site/`. Still never a person's
+    home address, date of birth, or health.
+- **The app ships only what it renders (ADR 0045).** `site/data/` is a
+  precached payload: a field added there is downloaded by every phone
+  whether a screen reads it or not. Data no screen shows — superseded
+  prices, departed dishes — lives in `data/`, the repo-only research
+  store, and is kept forever there. Before adding a field to a venue
+  file, name the screen that renders it.
 - **Accessibility is non-negotiable.** WCAG 2.2 AA, semantic HTML,
   visible focus, prefers-reduced-motion respected, dark mode supported.
 
@@ -204,13 +221,19 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
     `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
     in `site/data/index.json` + a fallback `<li>`; then `validate.py`.
-  - **Refreshing a menu = append, never overwrite.** A changed price gains a
-    dated entry beside the old one; a departed dish gains `available.offBy`
-    rather than being deleted; a renamed dish carries its history over. But a
-    *correction* (we recorded it wrong) overwrites and adds nothing — the test
-    is *did the shop change it, or did we?* Full rules: ARCHITECTURE.md
-    "Refreshing a menu". This is how the price history accrues at zero cost;
-    a refresh done the old way silently destroys it (ADR 0023).
+  - **Refreshing a menu = append, never overwrite — but the append lands
+    in the record, not the payload (ADR 0045).** A changed price replaces
+    the dish's single entry in `site/data/` *and* appends the superseded
+    one to `data/history/prices/<venue>.json`; a departed dish moves whole
+    to `data/history/dishes/<venue>.json` rather than being deleted; a
+    renamed dish carries its history over. But a *correction* (we recorded
+    it wrong) overwrites and adds nothing, in both stores — the test is
+    *did the shop change it, or did we?* Full rules: ARCHITECTURE.md
+    "Refreshing a menu". This is how the price history accrues at zero
+    cost to the phone; a refresh done the old way silently destroys it
+    (ADR 0023). Run `python3 tools/split_data.py --check` after: the two
+    stores must still reconstruct the corpus between them, which is what
+    stops a relocation quietly becoming a deletion.
 
 There is no `man` page: faves ships a website, not a CLI. The `tools/`
 scripts are the only command surface — keep their `--help`/argparse and
