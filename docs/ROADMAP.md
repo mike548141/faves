@@ -4652,7 +4652,9 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
 > ✅ **Shipped 2026-08-16** — 37f — "Along a route" is removed whole. Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [~] **37g — the whole SORT BY section goes, and distance moves into the one
-      ranking** `[M][js][ux]` ⚑ — **DESIGNED, NOT BUILT.** Owner: *"I don't see
+      ranking** `[M][js][ux]` ⚑ — **DESIGNED, NOT BUILT.**
+      **CLAIMED 2026-08-16 13:43 UTC (wt: faves-ranking)** — the ADR 0068 build.
+      Owner: *"I don't see
       the need for the nearest first sort by button… remove nearest first
       removes the need for the sort section of the filters altogether."* The
       full design, the evidence and the three traps are in **[ADR 0068]**; read
