@@ -144,6 +144,20 @@ function callRow(phone) {
   ]);
 }
 
+// Visually-hidden warning appended inside a target="_blank" anchor's content,
+// so it joins the accessible name (same .sr-only technique ratings-ui.js and
+// settings-ui.js already use). Shared by every link this screen sends off-site
+// — the pickup/maps link and the order/website buttons — so the wording, and
+// the reasoning behind it, live in exactly one place. G201 (WCAG technique):
+// warn before a link opens a new window/tab — the one behaviour target="_blank"
+// always delivers. 31d ruled out promising more: on mobile the OS may silently
+// upgrade the address to a universal link and hand off to an installed app,
+// but no API can tell us whether it did, so the warning names only what is
+// certain — never the app switch.
+function newWindowWarning() {
+  return el("span", { className: "sr-only", "data-i18n": "menu.opensNewWindow", textContent: " (opens in a new window)" });
+}
+
 // Pickup address — hand off to the maps app to show the venue *on a map* (a pin
 // at its street address; see geo.js / ADR 0016). `place` is a {name,address,lat,
 // lng} — for a multi-location venue it's the chosen branch, so the pin targets
@@ -169,6 +183,9 @@ function addressRow(place, km) {
   ]);
   if (hint) {
     text.append(el("span", { className: "contact-travel", textContent: hint.text }));
+  }
+  if (web) {
+    text.append(newWindowWarning());
   }
   return el("a", { className: "contact-row", href, ...(web ? { rel: "noopener", target: "_blank" } : {}) }, [
     el("span", { className: "contact-ico", textContent: "📍", "aria-hidden": "true" }),
@@ -390,13 +407,18 @@ function orderCard(r) {
   const btns = el("div", { className: "order-links" });
   for (const l of links) {
     btns.append(
-      el("a", {
-        className: "btn btn-order",
-        href: l.url,
-        rel: "noopener",
-        target: "_blank",
-        textContent: l.platform,
-      })
+      el(
+        "a",
+        {
+          className: "btn btn-order",
+          href: l.url,
+          rel: "noopener",
+          target: "_blank",
+        },
+        // 31d: warn about the one thing target="_blank" guarantees (a new
+        // window), never promise the app switch the OS may or may not make.
+        [l.platform, newWindowWarning()]
+      )
     );
   }
   return el("section", { className: "order-block", "aria-label": "Order online", "data-i18n-aria": "menu.orderOnline" }, [
