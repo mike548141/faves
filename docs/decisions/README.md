@@ -528,6 +528,16 @@ deliberation those compact docs omit.
   nobody performed. Unblocked by the owner's 2026-08-16 ruling that this comes
   *before* capturing McDonald's and Subway hours. Pandan is migrated (Melling
   `official-site`, Press Hall `third-party`) and its ⓘ now names the branch.
+- [0064](0064-an-estimate-carries-its-working-and-never-a-timer.md) — **an
+  estimate carries its working, and never a timer.** The owner's 2026-08-16
+  ruling reversed ROADMAP 36a/36c: estimate the times and serving sizes, and
+  label them. Each lands in `data/estimates/` — the record, not the payload
+  (ADR 0047) — with a `*Source` saying `stated` or `estimated` and a `*Working`
+  naming the numbers used. An **estimated** duration may never drive a timer
+  (`timerSafe`, hard-failed by `tools/recipe_estimates.py --check`), because an
+  invented "simmer 20 min" on chicken is a food-safety failure; every step is
+  also classed `prep`/`cook`/`wait` so the risky class is visible. `null` with
+  a reason stays a legitimate answer.
   Per-kind ageing — a separate decay limit for hours against phone and address —
   is **explicitly not built**: the shape is ruled, the numbers still cannot come
   from a corpus whose every date sits in one 48-hour window.
