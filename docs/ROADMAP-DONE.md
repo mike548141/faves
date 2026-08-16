@@ -2240,3 +2240,52 @@ per-batch findings, the pilot's transcription recipe, and the traps it named.
     matcher rather than the table entry is load-bearing. **A fix nobody has seen
     fail first is a fix nobody has evidence for** — and note this item had
     already announced itself as *"wrong twice"* and was still wrong.
+
+## Theme 20 — the browser summary names its tree (closed 2026-08-17)
+
+✅ **SHIPPED `ecbc82e`.** Every one of the ten browser checks now prints a
+second, indented line under its verdict:
+
+```
+OK — 24 passed, 0 failed
+   tree /Users/mike/worktrees/faves-hygiene/site · shell 2026-08-16.98 · hygiene-20@1460bec
+```
+
+The `OK — N passed, N failed` first line is **byte-identical** to what it was,
+which is load-bearing: `CLAUDE.md` instructs readers to check for the literal
+string `OK — 16 passed, 0 failed` from `sync_check`, and a grep-based reader
+would otherwise have broken.
+
+🔑 **The item's own premise was false, and making it true was the fix.** It said
+*"`tools/lib/browser.mjs` owns the summary, so it is one place."* It did not —
+all ten checks hand-rolled the same `console.log` tail. Rather than patch ten
+tails, `Report.summary(siteDir)` was added to `browser.mjs` and every tool now
+calls it, so the next thing the verdict needs to carry is a one-place change.
+This is the same argument that put the reaping in `browser.mjs`: a second copy
+of a shared mechanism is a second place for a quirk to be fixed once and missed
+once, which is why that library exists at all.
+
+🔎 **Proven against a second tree, not asserted.** The same check code was
+pointed at a different served tree and produced **identical verdicts** with
+**three independent discriminators differing** — path, `SHELL_VERSION` (`.95`
+vs `.97`) and `branch@sha`:
+
+```
+OK — 24 passed, 0 failed
+   tree /Users/mike/worktrees/faves-hygiene/site · shell 2026-08-16.95 · hygiene-20@0d5c426
+OK — 24 passed, 0 failed
+   tree /.../wrongtree/site · shell 2026-08-16.97 · main@344adfb
+```
+
+**Why three discriminators rather than one.** Two worktrees of the same repo
+have near-identical paths and are easy to misread at a glance; the version and
+the sha disagree the moment either tree has moved. The original bug surfaced
+only because someone noticed a passing run reporting **22** where an agent had
+just said **25** — a coincidence of attention. Now it is one glance, in the
+artefact everyone already reads.
+
+**Bearing:** a session's shell cwd drifted out of its worktree via one compound
+command containing a `cd`. Its *edits* used absolute paths and were safe; its
+**verification** ran against a tree without the change. Everything green,
+everything meaningless. Nobody interrogates a green run, which is exactly why
+this wanted a mechanism and not a discipline.

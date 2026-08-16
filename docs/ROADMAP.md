@@ -3529,19 +3529,13 @@ exempting `docs/reviews/` and `CHANGELOG.md`; both apply, both kept.
 The residue is **302 advisory findings, all in live rewritable prose**, none of
 them the unfixable class. That is a scanner whose output can still be read.
 
-- [~] 🚩 **A passing browser check does not say which tree it ran in** `[S][js]`
-      **CLAIMED 2026-08-16 22:38 UTC (wt: faves-hygiene)**
-      — the mechanism [ADR 0072] calls for and does not build. A session's shell
-      cwd drifted out of its worktree via one compound command containing a `cd`;
-      its edits used absolute paths and were safe, but its **verification** ran
-      against a tree without the change. Everything green, everything
-      meaningless. It surfaced only because a *passing* run reported 22 where an
-      agent had just reported 25 — nobody interrogates a green run, which is why
-      this wants a mechanism rather than a discipline. **Fix:** every
-      headless-browser harness prints the tree it served and the `SHELL_VERSION`
-      it ran against in its own `OK — N passed` line, so a wrong-tree run is
-      visible in the artefact everyone already reads. `tools/lib/browser.mjs`
-      owns the summary, so it is one place.
+✅ **Shipped 2026-08-17 (`ecbc82e`)** — **a passing browser check now says which
+tree it ran in.** All ten checks print a second indented line naming the served
+tree, its `SHELL_VERSION` and its `branch@sha`; the `OK — N passed, N failed`
+first line is byte-identical, so every existing grep still works. The item's own
+premise — that `tools/lib/browser.mjs` owns the summary — was **false**, all ten
+hand-rolled their own tail, so the fix made the premise true rather than working
+around it. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 - [ ] 🛑 **CI runs none of the eight browser checks** `[M][ops]` — the structural
       face of [ADR 0072] and the one that undercuts the rest.
