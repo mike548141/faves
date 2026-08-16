@@ -1413,3 +1413,45 @@ the CSS root font size grows every `rem` box but does **not** move `rem`-based
   ⚠️ Note the **curated-vs-personal split** mentioned in the old text is itself
   superseded: the curated household rating was withdrawn the same day (Theme 5),
   because it was never what the owner asked for.
+
+## Per-branch details provenance — Theme 19 (2026-08-16)
+
+- [x] ✅ **Derivation is venue-level, but provenance is now per-branch** —
+  **DONE 2026-08-16** (`434f6b1`,
+  [ADR 0063](decisions/0063-details-provenance-belongs-to-a-branch.md)).
+  Branch-wins, venue as the default — the `timezone` precedent, not the
+  address/phone/hours one. The pair moves **whole**: a branch's date welded to
+  the chain's method would describe a reading nobody performed. Pandan migrated
+  (Melling `official-site`, Press Hall `third-party`); its ⓘ now names the
+  branch. `test_validate` 79 → 83 mutations, each new one proved to catch a
+  hole. **Per-kind ageing deliberately not built** — the shape is ruled, the
+  numbers still cannot come from a corpus whose every date sits in one 48-hour
+  window. This unblocks the McDonald's/Subway third-party hours capture.
+  Original text:
+  `[S][schema]` — Pandan proves the gap: address and phone first-party from the
+  venue's own site, one branch's hours third-party from its landlord, and one
+  `detailsVerifiedBy` to describe both. The honest read (weakest wins) throws
+  away true information about the stronger facts. A per-branch
+  `detailsVerified`/`detailsVerifiedBy` would fix it; deferred because one record
+  is not an evidence base for a schema change, which is the same restraint
+  ADR 0037 applied to ageing the field.
+✅ **Reo: the confidence-note strings — drafted and queued 2026-08-16**
+
+## 31d — a warning before a link leaves the site — Theme 31 (2026-08-16)
+
+- [x] ✅ **31d — accessibility wording** — **DONE 2026-08-16** (`cfc9309`).
+  Every off-site link the menu screen renders — ordering, the venue's own
+  website and the pickup/maps link — now carries a visually-hidden
+  " (opens in a new window)": the literal **WCAG G201** wording, naming only the
+  guaranteed behaviour and never the app switch, exactly as this item argued.
+  Guarded by a **source** test (`tests/menu-link-warning.test.js`) because
+  `menu.js` touches `document` at module load and cannot be imported under
+  `node --test` in a zero-dependency repo — the same reasoning that made 15y's
+  guard a source test. Proved by deleting the warning and watching it fail.
+  Original text: WCAG **G201** advises warning
+  before a link opens a new window; there is **no** technique for "may switch to
+  a native app" — the standard predates it. The defensible reading: warn about
+  the guaranteed behaviour (leaving the site), never promise the app switch.
+  Also note both platforms let the user permanently choose "open in browser"
+  (Apple documents that iOS *"examines the user's recent choices"*), so **two
+  people with identical phones can correctly get different behaviour.**

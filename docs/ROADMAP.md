@@ -1870,15 +1870,27 @@ now holds only "Pick for us" and the order pill, so its label is slightly off.
 > guard is a source test rather than a headless one →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-- [~] **15z — the desktop filter row is a panel, and it should be a row**
-  `[M][css][design]` — **CLAIMED 2026-08-16 10:57 UTC (wt: faves-filter-row)**.
-  Owner, raw, on seeing 15x shipped: *"truly horrible UI, it wastes a ton of
-  screen space, it makes no sense i.e. not intuitive… There are two clear
-  groups some filters and some sorting controls. And it should only be the
-  height of the Open Now button UI element roughly as a row of UI elements."*
-  15x moved the sheet's controls inline and kept the **sheet's** vertical
-  stacking — group headings, a note, labels above each select, "Clear all" on
-  its own line. That is right in a bottom sheet and wrong on a desktop row.
+> ✅ **15z — the desktop filter row IS a row** (2026-08-16, `58432eb`,
+> [ADR 0062]). Owner, raw, on seeing 15x shipped: *"truly horrible UI, it wastes
+> a ton of screen space, it makes no sense i.e. not intuitive… There are two
+> clear groups some filters and some sorting controls. And it should only be the
+> height of the Open Now button UI element roughly as a row of UI elements."*
+> 15x had moved the sheet's controls inline and kept the **sheet's** vertical
+> stacking. Measured before touching it: **284 px in five bands** beside a 44 px
+> chip, and **63.9% of a 960 × 800 viewport was chrome before the first card —
+> against 25.1% on the phone the sheet was written for.** Now **67 px in one
+> band** at every width from 960 px up; 36.8% chrome. Service became a
+> `<select>` and the two location toggles became one "Sort by" select — both are
+> one-of-N choices that were not shaped like one — and no capability was
+> dropped. Three defects only measurement found, the guards that now catch each
+> (`filter_row_check` 18 → 22, every new one proved to fail on the reintroduced
+> defect), and the rejected alternatives → [ADR 0062].
+> 🎯 **One question left with the owner:** the Service filter returns **81% of
+> the list for "Takeaway" and 79% for "Dine-in"** (Theme 15c's own measurement).
+> Dropping it would free 160 px and simplify the row further, but removing a
+> filter is a product call, not a layout one — so it was raised, not taken.
+
+[ADR 0062]: decisions/0062-a-toolbar-is-not-a-sheet-lying-down.md
 
 [ADR 0059]: decisions/0059-the-info-disclosure-is-click-only.md
 
@@ -2244,16 +2256,12 @@ Two consequences recorded rather than buried:
   statement about its premises, and the venue-level field must read as weakly as
   its weakest input. The 🚩 below is the real fix.
 
-- [~] 🚩 **Derivation is venue-level, but provenance is now per-branch**
-  **CLAIMED 2026-08-16 11:20 UTC (wt: faves-branch-provenance)**
-  `[S][schema]` — Pandan proves the gap: address and phone first-party from the
-  venue's own site, one branch's hours third-party from its landlord, and one
-  `detailsVerifiedBy` to describe both. The honest read (weakest wins) throws
-  away true information about the stronger facts. A per-branch
-  `detailsVerified`/`detailsVerifiedBy` would fix it; deferred because one record
-  is not an evidence base for a schema change, which is the same restraint
-  ADR 0037 applied to ageing the field.
-✅ **Reo: the confidence-note strings — drafted and queued 2026-08-16**
+> ✅ **Per-branch details provenance — DONE 2026-08-16** (`434f6b1`,
+> [ADR 0063](decisions/0063-details-provenance-belongs-to-a-branch.md)). Branch
+> wins, venue is the default, and the date/method pair moves whole. Unblocks the
+> McDonald's/Subway third-party hours capture. Per-kind ageing deliberately
+> **not** built — the shape is ruled, the numbers still cannot come from this
+> corpus. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 (`c2e07fc`). 🔎 **The finding was bigger than the item.** The "fluent-speaker
 review queue" that ADR 0037 and this file have both pointed at for weeks **did
 not exist anywhere** — not a file, not a convention, not a list. It exists now, as
@@ -3368,14 +3376,10 @@ Android, all paths but `/_/*`). The rest are worse than absent:
   people's servers and change without notice; two `curl` calls per domain
   confirm them. A cheap scheduled job in the mould of `fx.yml` would stop a
   silently-rotted link. Optional, and only worth it once we ship more than one.
-- [~] **31d — accessibility wording** `[XS][a11y]` — **CLAIMED
-  2026-08-16 11:20 UTC (wt: faves-order-link-a11y)**. WCAG **G201** advises warning
-  before a link opens a new window; there is **no** technique for "may switch to
-  a native app" — the standard predates it. The defensible reading: warn about
-  the guaranteed behaviour (leaving the site), never promise the app switch.
-  Also note both platforms let the user permanently choose "open in browser"
-  (Apple documents that iOS *"examines the user's recent choices"*), so **two
-  people with identical phones can correctly get different behaviour.**
+- ✅ **31d — accessibility wording — DONE 2026-08-16** (`cfc9309`). Every
+  off-site link the menu screen renders now carries a visually-hidden
+  " (opens in a new window)" — the literal WCAG G201 wording, naming only the
+  guaranteed behaviour. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 🚩 **Do not publish** any per-store Domino's link, `order.subway.com/en-nz/menu`,
 `subway.co.nz`, `easyeats.nz`, or `hellpizza.com` — none verified or resolving.
