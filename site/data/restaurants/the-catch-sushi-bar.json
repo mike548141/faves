@@ -17,7 +17,12 @@
   ],
   "phone": null,
   "website": "https://www.thecatchsushibar.co.nz/",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "Order on our site",
+      "url": "https://www.thecatchsushibar.co.nz/menu"
+    }
+  ],
   "hours": {
     "mon": [
       [
@@ -83,10 +88,958 @@
   },
   "vibe": [],
   "picks": [],
-  "verified": null,
+  "verified": "2026-08-16",
+  "verifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-07-08"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Soba Noodle Soup",
+      "sectionId": "soba-noodle-soup",
+      "items": [
+        {
+          "name": "Chicken Soba Noodle Soup",
+          "dishId": "chicken-soba-noodle-soup",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Beef Soba Noodle Soup",
+          "dishId": "beef-soba-noodle-soup",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Vegetable Soba Noodle Soup",
+          "dishId": "vegetable-soba-noodle-soup",
+          "desc": null,
+          "price": 20.7,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Seafood Soba Noodle Soup",
+          "dishId": "seafood-soba-noodle-soup",
+          "desc": null,
+          "price": 29.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Veg Tempura Soba Noodle Soup",
+          "dishId": "veg-tempura-soba-noodle-soup",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Normal Tempura Soba Noodle Soup",
+          "dishId": "normal-tempura-soba-noodle-soup",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Udon Noodle Soup",
+      "sectionId": "udon-noodle-soup",
+      "items": [
+        {
+          "name": "Chicken Udon Noodle Soup",
+          "dishId": "chicken-udon-noodle-soup",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Beef Udon Noodle Soup",
+          "dishId": "beef-udon-noodle-soup",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Vegetable Udon Noodle Soup",
+          "dishId": "vegetable-udon-noodle-soup",
+          "desc": null,
+          "price": 20.7,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Seafood Udon Noodle Soup",
+          "dishId": "seafood-udon-noodle-soup",
+          "desc": null,
+          "price": 29.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Veg Tempura Udon Noodle Soup",
+          "dishId": "veg-tempura-udon-noodle-soup",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Normal Tempura Udon Noodle Soup",
+          "dishId": "normal-tempura-udon-noodle-soup",
+          "desc": null,
+          "price": 25.3,
+          "tags": [
+            "contains-gluten",
+            "contains-soy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sushi & Sashimi",
+      "sectionId": "sushi-sashimi",
+      "items": [
+        {
+          "name": "Salmon Sashimi",
+          "dishId": "salmon-sashimi",
+          "desc": "5 pieces. With wasabi, ginger and soya sauce.",
+          "price": 18.4,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tuna Sashimi",
+          "dishId": "tuna-sashimi",
+          "desc": "5 pieces. With wasabi, ginger and soya sauce.",
+          "price": 18.4,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tarakihi Sashimi",
+          "dishId": "tarakihi-sashimi",
+          "desc": "5 pieces. With wasabi, ginger and soya sauce.",
+          "price": 18.4,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Oyster on Shell",
+          "dishId": "oyster-on-shell",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 20.7,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Salmon Nigiri",
+          "dishId": "salmon-nigiri",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 7.5,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tuna Nigiri",
+          "dishId": "tuna-nigiri",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 8.1,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tarakihi Nigiri",
+          "dishId": "tarakihi-nigiri",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.2,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Oyster Nigiri",
+          "dishId": "oyster-nigiri",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 15.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Egg Sushi",
+          "dishId": "egg-sushi",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Unagi Sushi",
+          "dishId": "unagi-sushi",
+          "desc": "Two pieces eel. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Inari Sushi",
+          "dishId": "inari-sushi",
+          "desc": "Two pieces bean curd. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Ebi Sushi",
+          "dishId": "ebi-sushi",
+          "desc": "Two pieces prawn. With wasabi, ginger and soya sauce.",
+          "price": 10.4,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Squid Sushi",
+          "dishId": "squid-sushi",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Scallop Sushi",
+          "dishId": "scallop-sushi",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 11.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Salmon and Avocado Roll",
+          "dishId": "salmon-and-avocado-roll",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Teriyaki Chicken Roll",
+          "dishId": "teriyaki-chicken-roll",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Canned Tuna Roll",
+          "dishId": "canned-tuna-roll",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 4.0,
+          "tags": [
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Long California Roll",
+          "dishId": "long-california-roll",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Round California Roll",
+          "dishId": "round-california-roll",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Egg Roll",
+          "dishId": "egg-roll",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.2,
+          "tags": [
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Veggie Roll",
+          "dishId": "veggie-roll",
+          "desc": "Four pieces of carrot and cucumber roll. With wasabi, ginger and soya sauce.",
+          "price": 4.6,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Seafood Salad Sushi",
+          "dishId": "seafood-salad-sushi",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 5.8,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Seaweed Salad Sushi",
+          "dishId": "seaweed-salad-sushi",
+          "desc": "Two pieces. With wasabi, ginger and soya sauce.",
+          "price": 4.6,
+          "tags": [
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chopped Salmon and Avocado Sushi",
+          "dishId": "chopped-salmon-and-avocado-sushi",
+          "desc": "Three pieces. With wasabi, ginger and soya sauce.",
+          "price": 6.9,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Salmon Roll",
+          "dishId": "salmon-roll",
+          "desc": "Three pieces. With wasabi, ginger and soya sauce.",
+          "price": 6.9,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Avocado Roll",
+          "dishId": "avocado-roll",
+          "desc": "Three pieces. With wasabi, ginger and soya sauce.",
+          "price": 6.9,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tempura Prawn Roll",
+          "dishId": "tempura-prawn-roll",
+          "desc": "Three pieces. With wasabi, ginger and soya sauce.",
+          "price": 6.9,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Side Dish",
+      "sectionId": "side-dish",
+      "items": [
+        {
+          "name": "Rice",
+          "dishId": "rice",
+          "desc": null,
+          "price": 4.0,
+          "tags": []
+        },
+        {
+          "name": "Miso",
+          "dishId": "miso",
+          "desc": null,
+          "price": 4.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Japanese Green Salad",
+          "dishId": "japanese-green-salad",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-sesame",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Salmon Skewer",
+          "dishId": "salmon-skewer",
+          "desc": "Two pieces.",
+          "price": 9.8,
+          "tags": []
+        },
+        {
+          "name": "Beef Skewer",
+          "dishId": "beef-skewer",
+          "desc": "Two pieces.",
+          "price": 8.6,
+          "tags": []
+        },
+        {
+          "name": "Seaweed Salad",
+          "dishId": "seaweed-salad",
+          "desc": null,
+          "price": 6.9,
+          "tags": [
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Seafood Salad",
+          "dishId": "seafood-salad",
+          "desc": null,
+          "price": 6.9,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tempura Veggie",
+          "dishId": "tempura-veggie",
+          "desc": "Ten pieces. Seasonal mixed veg.",
+          "price": 12.7,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tempura Plate",
+          "dishId": "tempura-plate",
+          "desc": "Assorted seafood and veg mixed.",
+          "price": 23.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Teriyaki Chicken Nibbles",
+          "dishId": "teriyaki-chicken-nibbles",
+          "desc": "Three pieces.",
+          "price": 6.9,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tempura Fish",
+          "dishId": "tempura-fish",
+          "desc": "Three pieces.",
+          "price": 6.9,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Homemade Spring Roll",
+          "dishId": "homemade-spring-roll",
+          "desc": "Three pieces.",
+          "price": 6.9,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Homemade Veg Spring Roll",
+          "dishId": "homemade-veg-spring-roll",
+          "desc": "Three pieces.",
+          "price": 6.9,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Veg Mini Spring Roll",
+          "dishId": "veg-mini-spring-roll",
+          "desc": "Five pieces.",
+          "price": 6.9,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Deep Fried Squid",
+          "dishId": "deep-fried-squid",
+          "desc": null,
+          "price": 10.4,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Agedashi Tofu",
+          "dishId": "agedashi-tofu",
+          "desc": "Three pieces. Battered tofu in special broth.",
+          "price": 6.9,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Edamame Soy Beans",
+          "dishId": "edamame-soy-beans",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Takoyaki",
+          "dishId": "takoyaki",
+          "desc": "Baby octopus balls topped with bonito flakes seaweed and Japanese sauce.",
+          "price": 11.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Shrimp Cocktail",
+          "dishId": "shrimp-cocktail",
+          "desc": null,
+          "price": 8.6,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Deep Fried Salmon Dumplings",
+          "dishId": "deep-fried-salmon-dumplings",
+          "desc": "Three pieces.",
+          "price": 6.9,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Temaki (Hand Roll)",
+      "sectionId": "temaki-hand-roll",
+      "items": [
+        {
+          "name": "Salmon and Avocado Hand Roll",
+          "dishId": "salmon-and-avocado-hand-roll",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Fresh Tuna Hand Roll",
+          "dishId": "fresh-tuna-hand-roll",
+          "desc": null,
+          "price": 9.2,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Canned Tuna Hand Roll",
+          "dishId": "canned-tuna-hand-roll",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetable Hand Roll",
+          "dishId": "vegetable-hand-roll",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Eel Hand Roll",
+          "dishId": "eel-hand-roll",
+          "desc": null,
+          "price": 8.1,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Teriyaki Chicken Hand Roll",
+          "dishId": "teriyaki-chicken-hand-roll",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Teriyaki Beef Hand Roll",
+          "dishId": "teriyaki-beef-hand-roll",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tempura Prawn Hand Roll",
+          "dishId": "tempura-prawn-hand-roll",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Seafood Salad Hand Roll",
+          "dishId": "seafood-salad-hand-roll",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Flying Fish Egg Hand Roll",
+          "dishId": "flying-fish-egg-hand-roll",
+          "desc": null,
+          "price": 8.1,
+          "tags": ["contains-egg"]
+        }
+      ]
+    },
+    {
+      "section": "Mains",
+      "sectionId": "mains",
+      "items": [
+        {
+          "name": "Teriyaki Chicken",
+          "dishId": "teriyaki-chicken",
+          "desc": "Served with Japanese salad, miso, and rice.",
+          "price": 31.1,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Teriyaki Steak",
+          "dishId": "teriyaki-steak",
+          "desc": "Served with Japanese salad, miso, and rice.",
+          "price": 31.1,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Teriyaki Salmon",
+          "dishId": "teriyaki-salmon",
+          "desc": "Served with Japanese salad, miso, and rice.",
+          "price": 31.1,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Teriyaki Tofu",
+          "dishId": "teriyaki-tofu",
+          "desc": "Served with Japanese salad, miso, and rice.",
+          "price": 31.1,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Unagi (Eel)",
+          "dishId": "unagi-eel",
+          "desc": "Served with Japanese salad, miso, and rice.",
+          "price": 31.1,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sushi Bento",
+      "sectionId": "sushi-bento",
+      "items": [
+        {
+          "name": "Nigiri Plate",
+          "dishId": "nigiri-plate",
+          "desc": "Two pieces salmon, one piece tarakihi, one piece tuna, one egg, one inari, and one seafood salad. With wasabi, ginger and soya sauce.",
+          "price": 23.0,
+          "tags": [
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Maki Lover",
+          "dishId": "maki-lover",
+          "desc": "Two piece long California, one piece round California, one piece salmon and avocado, one piece teriyaki chicken, one egg futo and one piece canned tuna. With wasabi, ginger and soya sauce.",
+          "price": 23.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Sushi and Sashimi",
+          "dishId": "sushi-and-sashimi",
+          "desc": "15 pieces salmon tuna tarakihi sashimi, two pieces tarakihi nigiri, two pieces salmon nigiri, two pieces canned tuna roll, one piece round California roll and one veggie roll. With wasabi, ginger and soya sauce.",
+          "price": 51.8,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sashimi Plate",
+          "dishId": "sashimi-plate",
+          "desc": "15 pieces mixed salmon tuna tarakihi. With wasabi, ginger, and soya sauce.",
+          "price": 40.3,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Donburi",
+      "sectionId": "donburi",
+      "items": [
+        {
+          "name": "Teriyaki Chicken",
+          "dishId": "teriyaki-chicken-donburi",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Teriyaki Beef",
+          "dishId": "teriyaki-beef",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Teriyaki Salmon",
+          "dishId": "teriyaki-salmon-donburi",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Roast Eel",
+          "dishId": "roast-eel",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chirashi",
+          "dishId": "chirashi",
+          "desc": "Served with cold sushi rice and topped with a variety of raw fish and garnishes.",
+          "price": 34.5,
+          "tags": [
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Dessert",
+      "sectionId": "dessert",
+      "items": [
+        {
+          "name": "Tempura Banana",
+          "dishId": "tempura-banana",
+          "desc": "Four pieces battered banana. Served with plain yogurt.",
+          "price": 11.5,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Panna Cotta",
+          "dishId": "panna-cotta",
+          "desc": "Berry or passionfruit.",
+          "price": 9.2,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "sectionId": "drinks",
+      "items": [
+        {
+          "name": "Japanese Kids Beer",
+          "dishId": "japanese-kids-beer",
+          "desc": null,
+          "price": 11.5,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Mogu Mogu",
+          "dishId": "mogu-mogu",
+          "desc": null,
+          "price": 4.0,
+          "tags": []
+        }
+      ]
+    }
+  ]
 }

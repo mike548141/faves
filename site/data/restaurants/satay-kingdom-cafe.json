@@ -17,7 +17,12 @@
   ],
   "phone": null,
   "website": "https://www.sataykingdomcafe.co.nz/",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "Order on our site",
+      "url": "https://www.sataykingdomcafe.co.nz/menu"
+    }
+  ],
   "hours": {
     "mon": [
       [
@@ -64,10 +69,637 @@
   },
   "vibe": [],
   "picks": [],
-  "verified": null,
+  "verified": "2026-08-16",
   "lifecycle": {
     "added": "2026-07-08"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Starters",
+      "sectionId": "starters",
+      "items": [
+        {
+          "name": "Satay Kingdom (6 Pcs)",
+          "dishId": "satay-kingdom-6-pcs",
+          "code": "1",
+          "desc": "6 chicken or beef marinated with traditional malaysian spices. Skewer grilled, served with peanut sauce.",
+          "price": 17.9,
+          "tags": [
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Seafood Satay / Prawn Satay (4 Pcs)",
+          "dishId": "seafood-satay-prawn-satay-4-pcs",
+          "code": "2",
+          "desc": "4 skewers with prawns, fish ball, squid and mussel marinated with traditional Malaysian spices. Skewer grilled, served with peanut sauce and salad.",
+          "price": 19.6,
+          "tags": [
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Satay Burger (Veggie available)",
+          "dishId": "satay-burger-veggie-available",
+          "code": "3",
+          "desc": "Burger filled with marinated chicken, beef pieces and satay sauce. Vegetable option available.",
+          "price": 10.6,
+          "tags": [
+            "contains-peanuts",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sides & Add-ons",
+      "sectionId": "sides-add-ons",
+      "items": [
+        {
+          "name": "6 Grill Pork Dumplings",
+          "dishId": "6-grill-pork-dumplings",
+          "code": "a",
+          "desc": null,
+          "price": 13.4,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "6 Fried Squid Rings",
+          "dishId": "6-fried-squid-rings",
+          "code": "b",
+          "desc": null,
+          "price": 13.4,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "10 Vegetable Spring Rolls",
+          "dishId": "10-vegetable-spring-rolls",
+          "code": "c",
+          "desc": null,
+          "price": 13.4,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "6 Chicken Wings",
+          "dishId": "6-chicken-wings",
+          "code": "e",
+          "desc": null,
+          "price": 13.4,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "8 Fried Chicken Wontons",
+          "dishId": "8-fried-chicken-wontons",
+          "code": "f",
+          "desc": null,
+          "price": 13.4,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Roti",
+          "dishId": "roti",
+          "code": "g",
+          "desc": null,
+          "price": 4.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Rice",
+          "dishId": "rice",
+          "code": "h",
+          "desc": null,
+          "price": 3.9,
+          "tags": []
+        },
+        {
+          "name": "Homemade Satay Sauce",
+          "dishId": "homemade-satay-sauce",
+          "code": "i",
+          "desc": null,
+          "price": 1.7,
+          "tags": [
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Fried/Boiled egg",
+          "dishId": "fried-boiled-egg",
+          "code": "j",
+          "desc": null,
+          "price": 1.7,
+          "tags": [
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Malaysian Curries",
+      "sectionId": "malaysian-curries",
+      "items": [
+        {
+          "name": "Roti Chanai",
+          "dishId": "roti-chanai",
+          "code": "4",
+          "desc": "Malaysian bread served with chicken or vegetable curry gravy.",
+          "price": 10.1,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Curry",
+          "dishId": "chicken-curry",
+          "code": "5",
+          "desc": "Chicken boneless pieces cooked in traditional Malaysian spices and potatoes in rich gravy. Served with steamed rice.",
+          "price": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Lamb Curry",
+          "dishId": "lamb-curry",
+          "code": "6",
+          "desc": "Tender lamb pieces in traditional Malaysian spices and potatoes in rich gravy. Served with steamed rice.",
+          "price": 21.3,
+          "tags": []
+        },
+        {
+          "name": "Fish Curry",
+          "dishId": "fish-curry",
+          "code": "7",
+          "desc": "Fresh fish cooked in curry soup with veggies. Served with steamed rice.",
+          "price": 21.3,
+          "tags": []
+        },
+        {
+          "name": "Mussel Curry",
+          "dishId": "mussel-curry",
+          "code": "8",
+          "desc": "Fresh mussel cooked in curry soup with veggies. Served with steamed rice.",
+          "price": 20.7,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Veggie Curry",
+          "dishId": "veggie-curry",
+          "code": "9",
+          "desc": "Mixed seasoned vegetables, tofu and tomatoes cooked in curry gravy.",
+          "price": 19.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Beef Rendang",
+          "dishId": "beef-rendang",
+          "code": "10",
+          "desc": "Beef in dried curry blended with desiccated coconut. Served with steamed rice or roti.",
+          "price": 21.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Rendang",
+          "dishId": "chicken-rendang",
+          "code": "11",
+          "desc": "Chicken in dried curry blended with desiccated coconut. Served with steamed rice or roti.",
+          "price": 21.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Char Kueh Teaw",
+          "dishId": "char-kueh-teaw",
+          "code": "12",
+          "desc": "Broad rice noodle, stir fried with shrimp, chicken, mix veggies, bean sprout, egg and traditional Malaysian sambal and chef special sauce.",
+          "price": 19.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Nasi Lemak",
+          "dishId": "chicken-nasi-lemak",
+          "code": "13",
+          "desc": "Traditional Malaysian dish offers beef rendang, coconut rice, steam vegetables, peanuts and half boiled egg.",
+          "price": 23.0,
+          "tags": [
+            "contains-peanuts",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Fried Noodles & Rice",
+      "sectionId": "fried-noodles-rice",
+      "items": [
+        {
+          "name": "Combo Meal A",
+          "dishId": "combo-meal-a",
+          "desc": "Any Fried Noodles or Rice plus half portion of Sides and a 330ml can of drink (Save $2.50)",
+          "price": 24.6,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish",
+            "contains-soy",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Combo Meal B",
+          "dishId": "combo-meal-b",
+          "desc": "SK Fried Chicken with egg fried rice plus 330ml can of drink. (Save $2.50)",
+          "price": 22.4,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Mee Goreng",
+          "dishId": "mee-goreng",
+          "code": "14",
+          "desc": "Fresh egg noodles, stir-fried with shrimp, chicken, mix veggies, bean sprout, egg and traditional Malaysian sambal and chef special sauce.",
+          "price": 19.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Bee Hoon Goreng",
+          "dishId": "bee-hoon-goreng",
+          "code": "15",
+          "desc": "Rice vermicelli, stir-fried with shrimp, chicken, mix veggies, beans sprout, egg and traditional Malaysian sambal and chef special sauce.",
+          "price": 19.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Char Kueh Teaw",
+          "dishId": "char-kueh-teaw-fried-noodles",
+          "code": "16",
+          "desc": "Broad rice noodle, stir-fried with shrimp, chicken, mix veggies, beans sprout, egg and traditional Malaysian sambal and chef special sauce.",
+          "price": 19.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Nasi Kampong",
+          "dishId": "nasi-kampong",
+          "code": "18",
+          "desc": "Fried rice with shrimps, chicken, mix veggies and tomato sauces, top with egg omelet.",
+          "price": 20.2,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Wat Tan Hor",
+          "dishId": "wat-tan-hor",
+          "code": "19",
+          "desc": "Fried broad rice noodle with chicken, mix seafood and egg gravy sauce.",
+          "price": 20.7,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Hokkien Mee",
+          "dishId": "hokkien-mee",
+          "code": "20",
+          "desc": "Fried egg noodle with chicken and mix seafood and dark sauce gravy.",
+          "price": 20.7,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Stir Fry",
+      "sectionId": "stir-fry",
+      "items": [
+        {
+          "name": "Sweet & Sour Pork or Chicken",
+          "dishId": "sweet-sour-pork-or-chicken",
+          "code": "21",
+          "desc": "Marinated pork or chicken stir fried with season vegetables and homemade sweet and sour sauce. Served with steamed rice or roti.",
+          "price": 20.7,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Noyonya Chicken",
+          "dishId": "noyonya-chicken",
+          "code": "22",
+          "desc": "Chicken pieces stir fried with season vegetables in Malaysian spices. Served with steamed rice or roti.",
+          "price": 20.7,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Sambal Chicken/Kung Poh Chicken or Pork",
+          "dishId": "sambal-chicken-kung-poh-chicken-or-pork",
+          "code": "23",
+          "desc": "Marinated Chicken pieces stir-fried with traditional Malaysia spices and season vegetables. Served with steamed rice or roti.",
+          "price": 20.7,
+          "tags": [
+            "contains-gluten",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "General Tso's Chicken",
+          "dishId": "general-tso-s-chicken",
+          "code": "24",
+          "desc": "Marinated pork or chicken stir fried with season vegetables and homemade sweet and sour sauce and Chinese vinegar. Served with steamed rice or roti.",
+          "price": 20.7,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sambal Squid",
+          "dishId": "sambal-squid",
+          "code": "25",
+          "desc": "Fresh squid stir fried with onion, season vegetables and homemade chili paste. Served with steamed rice or roti.",
+          "price": 20.7,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Sambal Prawns",
+          "dishId": "sambal-prawns",
+          "code": "26",
+          "desc": "Prawns stir fried with onion, season vegetables and homemade chili paste. Served with steamed rice or roti.",
+          "price": 23.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Sambal Seafood",
+          "dishId": "sambal-seafood",
+          "code": "27",
+          "desc": "Prawns, fish ball, crab meat, squid and veggie stir fried with season vegetables and Malaysian spices. Served with steamed rice or roti.",
+          "price": 22.4,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Stir Fry Vegetables",
+          "dishId": "stir-fry-vegetables",
+          "code": "28",
+          "desc": "Season vegetables and tofu stir fry with choice of sweet & sour sauce, satay sauce or chef special sauce Served with steamed rice or roti.",
+          "price": 20.2,
+          "tags": [
+            "contains-soy",
+            "contains-peanuts",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Laksa & Noodle Soup",
+      "sectionId": "laksa-noodle-soup",
+      "items": [
+        {
+          "name": "Curry Laksa",
+          "dishId": "curry-laksa",
+          "code": "29",
+          "desc": "Fresh egg noodle or rice noodle with chicken pieces, mussels, tofu, fish ball and bean sprout in rich creamy curry soup.",
+          "price": 19.6,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Seafood Laksa/ Prawn Laksa",
+          "dishId": "seafood-laksa-prawn-laksa",
+          "code": "30",
+          "desc": "Fresh egg noodle or rice noodle with prawns, mussels, fish ball crab meat and bean sprout in rich creamy curry soup.",
+          "price": 20.2,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Dumpling Laksa",
+          "dishId": "dumpling-laksa",
+          "code": "31",
+          "desc": "Fresh egg noodle or rice noodle with homemade dumplings, seafood and bean sprout in rich creamy curry soup.",
+          "price": 20.2,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "BBQ Pork Wonton Noodle Soup",
+          "dishId": "bbq-pork-wonton-noodle-soup",
+          "code": "32",
+          "desc": "Egg or rice noodle with BBQ pork, wontons and season vegetables",
+          "price": 19.6,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Beef Noodle Soup",
+          "dishId": "beef-noodle-soup",
+          "code": "33",
+          "desc": "Egg or rice noodle with beef, bean sprout and seasoned vegetables.",
+          "price": 21.3,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken Noodle Soup",
+          "dishId": "chicken-noodle-soup",
+          "code": "34",
+          "desc": "Egg or rice noodle with chicken pieces, bean sprout and season vegetables.",
+          "price": 19.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Veggie Noodle Soup",
+          "dishId": "veggie-noodle-soup",
+          "code": "35",
+          "desc": "Egg or rice noodle with mix season vegetbales, bean sprout in clear soup.",
+          "price": 19.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Seafood Noodle Soup",
+          "dishId": "seafood-noodle-soup",
+          "code": "36",
+          "desc": "Fresh egg noodle or rice noodle with prawns, mussels, fish ball crab meat and bean sprout.",
+          "price": 20.2,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Malaysian Prawn Noodle Soup",
+          "dishId": "malaysian-prawn-noodle-soup",
+          "code": "37",
+          "desc": null,
+          "price": 20.2,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tom Yam Noodle Soup",
+          "dishId": "tom-yam-noodle-soup",
+          "code": "38",
+          "desc": null,
+          "price": 20.2,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Chef Special",
+      "sectionId": "chef-special",
+      "items": [
+        {
+          "name": "Foil Wrapped Grilled Sambal Fish",
+          "dishId": "foil-wrapped-grilled-sambal-fish",
+          "code": "39",
+          "desc": null,
+          "price": 20.7,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Egg Foo Young",
+          "dishId": "egg-foo-young",
+          "code": "40",
+          "desc": null,
+          "price": 20.2,
+          "tags": [
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Black Pepper",
+          "dishId": "black-pepper",
+          "code": "41",
+          "desc": "Rice noodles with chicken, seafood and vegetables in thai satyle tom yam soup.",
+          "price": 25.2,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Stewed with Potato and Chinese Mushrooms",
+          "dishId": "chicken-stewed-with-potato-and-chinese-mushrooms",
+          "code": "42",
+          "desc": null,
+          "price": 25.2,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Hainanese Chicken Rice",
+          "dishId": "hainanese-chicken-rice",
+          "code": "43",
+          "desc": "The hainanese chicken rice is a dish that consists of succulent steamed white chicken cut into bit size pieces and served on fragrant rice with some light soy sauce.",
+          "price": 23.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        }
+      ]
+    }
+  ],
+  "verifiedBy": "official-site"
 }
