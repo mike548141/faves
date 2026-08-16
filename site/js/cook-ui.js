@@ -237,7 +237,7 @@ export function openCookMode(item, { venueId } = {}) {
   // bell actually goes, so it announces an event rather than a clock. It sits
   // OUTSIDE the stage for the same reason the timer does: a change inside an
   // aria-atomic live region re-announces the whole step.
-  const timerAlert = el("div", { className: "sr-only", role: "alert" });
+  const timerAlert = el("div", { className: "sr-only cook-timer-alert", role: "alert" });
 
   // Shown only where the browser has been told, by this reader, never to
   // notify. Silence about a choice they made would be courtesy; silence about a

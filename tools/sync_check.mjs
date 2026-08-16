@@ -379,6 +379,53 @@ const syncStatusExpr = `(() => {
 
 // --- Small driving helpers, shared by both devices --------------------------
 
+// EVERY selector used to WALK the Settings UI lives here, in one block, and
+// nowhere else in this file. That is the whole lesson of 2026-08-16: commit
+// e745923 ("settings: remove Transfer to another device, and fold Sync into
+// Your data") demoted Sync from a top-level `.settings-row` to a
+// `<p class="settings-sub">` inside the "Your data" panel, one hard-coded
+// selector three functions down stopped matching, and this check went from
+// eight passing assertions to *zero* without anyone noticing — CI is green
+// either way, because a harness abort is exit 2, not a failed assertion.
+// A refactor now breaks one line here, loudly and in one place, instead of
+// silently emptying the guard.
+const NAV = {
+  overflowBtn: "#overflow-btn",
+  settingsBtn: "#settings-btn",
+  sheet: "dialog.settings-sheet[open]",
+  closeBtn: ".settings-close",
+  indexRow: ".settings-row",
+  // Sync is a *section* inside this index row's panel, not a row of its own.
+  syncTopic: "Your data",
+  syncBody: ".sync-body",
+};
+
+/** Wrap one move of the Settings walk so a break names the STEP, not just a
+ *  selector. The harness's own "no element matching X" is true and useless to
+ *  anyone who doesn't already carry this UI in their head — it cannot tell a
+ *  renamed control apart from a sheet that never opened, or say how far the
+ *  walk got before it stopped. */
+async function nav(step, looksFor, fn) {
+  try {
+    return await fn();
+  } catch (err) {
+    throw new Error(
+      `Settings navigation broke at step "${step}" (looking for ${looksFor}) — ` +
+        `has the Settings UI been refactored? Update NAV in tools/sync_check.mjs. ` +
+        `Underlying: ${err.message}`
+    );
+  }
+}
+
+/** Present is not the same as reached. sync-ui.js builds `.sync-body` once, at
+ *  construction time, and the "Your data" panel merely un-hides it — so a bare
+ *  `querySelector(".sync-body")` is truthy while the reader is still staring at
+ *  the index. Only a laid-out box proves the drill-in actually happened. */
+const syncBodyVisibleExpr = `(() => {
+  const b = document.querySelector(${JSON.stringify(NAV.syncBody)});
+  return !!b && b.getClientRects().length > 0;
+})()`;
+
 /** See the file header ("KNOWN OPEN ISSUE"). The overflow button sits in
  *  normal document flow (not fixed/sticky), so anything that scrolls the page
  *  — notably a rating slider's own `.focus()`, which the browser scrolls into
@@ -388,32 +435,50 @@ const syncStatusExpr = `(() => {
  *  did not fix every case seen while building this check — see the header. */
 async function openSettings(d) {
   await d.evalPage(`(() => { document.activeElement?.blur(); window.scrollTo(0, 0); })()`);
-  await d.click("#overflow-btn");
-  await until(
-    async () =>
-      d.evalPage(`document.getElementById("overflow-btn")?.getAttribute("aria-expanded") === "true"`),
-    { label: "the overflow menu (⋯) to open" }
-  );
-  await d.click("#settings-btn");
-  await until(async () => d.evalPage(`!!document.querySelector("dialog.settings-sheet[open]")`), {
-    label: "the Settings sheet to open",
+  await nav("open the overflow (⋯) menu", NAV.overflowBtn, async () => {
+    await d.click(NAV.overflowBtn);
+    await until(
+      async () =>
+        d.evalPage(
+          `document.querySelector(${JSON.stringify(NAV.overflowBtn)})?.getAttribute("aria-expanded") === "true"`
+        ),
+      { label: "the overflow menu (⋯) to open" }
+    );
+  });
+  await nav("open Settings from the ⋯ menu", NAV.settingsBtn, async () => {
+    await d.click(NAV.settingsBtn);
+    await until(async () => d.evalPage(`!!document.querySelector(${JSON.stringify(NAV.sheet)})`), {
+      label: "the Settings sheet to open",
+    });
   });
 }
 
+/** Settings → the "Your data" index row → the Sync section nested inside it.
+ *  The sheet always reopens on the index (settings-ui.js closes back to it
+ *  however it was dismissed), so the drill-in is repeated every time rather
+ *  than assumed to have stuck. */
 async function openSyncPanel(d) {
   await openSettings(d);
-  await d.click(".settings-row", "Sync across your devices");
-  await until(async () => d.evalPage(`!!document.querySelector(".sync-body")`), {
-    label: "the Sync panel to render",
-  });
+  await nav(
+    `drill into the "${NAV.syncTopic}" panel`,
+    `${NAV.indexRow} containing "${NAV.syncTopic}"`,
+    () => d.click(NAV.indexRow, NAV.syncTopic)
+  );
+  await nav(
+    `reach the Sync section inside "${NAV.syncTopic}"`,
+    `a visible ${NAV.syncBody}`,
+    () => until(async () => d.evalPage(syncBodyVisibleExpr), { label: "the Sync panel to render" })
+  );
 }
 
 async function closeSettings(d) {
-  await d.click(".settings-close");
-  await until(
-    async () => !(await d.evalPage(`!!document.querySelector("dialog.settings-sheet[open]")`)),
-    { label: "the Settings sheet to close" }
-  );
+  await nav("close the Settings sheet", NAV.closeBtn, async () => {
+    await d.click(NAV.closeBtn);
+    await until(
+      async () => !(await d.evalPage(`!!document.querySelector(${JSON.stringify(NAV.sheet)})`)),
+      { label: "the Settings sheet to close" }
+    );
+  });
 }
 
 /** Turn on sync from the "off" view, capture the minted code, dismiss the

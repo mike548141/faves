@@ -113,6 +113,9 @@ import {
   stepDuration,
   stepUsesIngredients,
 } from "../site/js/cook.js";
+// Same rule for the alarm: the fifteen-minute line is asserted against the
+// constant the app reads, never against a "900" typed a second time here.
+import { NOTIFY_OVER_SECONDS, wantsNotification } from "../site/js/alarm.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -196,6 +199,83 @@ const INSTRUMENT = `(() => {
       return cancel();
     };
   }
+  // The alarm's three channels (ROADMAP 36d, ADR 0071), instrumented the same
+  // way as everything else here: the real APIs are WRAPPED, never replaced, so
+  // every number below is a call the platform actually received. Headless
+  // Chrome on macOS has all three — vibrate (which returns false, because there
+  // is no motor), AudioContext (which builds a real graph into a null sink) and
+  // Notification (whose permission this tool sets through CDP, so "granted" and
+  // "denied" are the browser's own states and not a stub).
+  const A = (window.__cookAlarm = {
+    contexts: 0, oscillators: 0, closes: 0, ctxStates: [],
+    vibrations: [], notifyRequests: 0, swNotifications: [], pageNotifications: [],
+    hasVibrate: typeof navigator.vibrate === "function",
+    hasAudio: typeof window.AudioContext === "function",
+    hasNotification: typeof window.Notification === "function",
+  });
+  // THE CLOCK IS THE ONE THING FAKED, AND ONLY THE CLOCK. A bake timer is
+  // thirty minutes long; nothing else in this file can wait that out. cook.js
+  // stores the wall clock a countdown ENDS at (rather than decrementing), so
+  // moving Date.now forward is exactly what a phone that slept through the bake
+  // sees on waking — the interval, the render, the alarm and every API call
+  // stay the platform's own.
+  const C = (window.__cookClock = { skew: 0 });
+  const realNow = Date.now.bind(Date);
+  Date.now = () => realNow() + C.skew;
+
+  if (A.hasVibrate) {
+    const vibrate = navigator.vibrate.bind(navigator);
+    navigator.vibrate = (pattern) => {
+      A.vibrations.push(pattern);
+      return vibrate(pattern);
+    };
+  }
+  if (A.hasAudio) {
+    const Real = window.AudioContext;
+    const make = Real.prototype.createOscillator;
+    Real.prototype.createOscillator = function (...args) {
+      A.oscillators++;
+      return make.apply(this, args);
+    };
+    const shut = Real.prototype.close;
+    Real.prototype.close = function (...args) {
+      A.closes++;
+      return shut.apply(this, args);
+    };
+    window.AudioContext = function (...args) {
+      const ctx = new Real(...args);
+      A.contexts++;
+      A.ctxStates.push(ctx.state);
+      return ctx;
+    };
+    window.AudioContext.prototype = Real.prototype;
+  }
+  const swProto = globalThis.ServiceWorkerRegistration && ServiceWorkerRegistration.prototype;
+  if (swProto && typeof swProto.showNotification === "function") {
+    const show = swProto.showNotification;
+    swProto.showNotification = function (title, options) {
+      A.swNotifications.push({ title, options });
+      return show.call(this, title, options);
+    };
+  }
+  if (A.hasNotification) {
+    const Real = window.Notification;
+    // A wrapper rather than a replacement: new Wrapped() returns the
+    // platform's own Notification, and permission is read THROUGH to the real
+    // one so a CDP-set permission is what the page sees.
+    function Wrapped(title, options) {
+      A.pageNotifications.push({ title, options });
+      return new Real(title, options);
+    }
+    Wrapped.prototype = Real.prototype;
+    Object.defineProperty(Wrapped, "permission", { get: () => Real.permission });
+    Wrapped.requestPermission = (...args) => {
+      A.notifyRequests++;
+      return Real.requestPermission(...args);
+    };
+    window.Notification = Wrapped;
+  }
+
   const api = navigator.wakeLock;
   if (!api || typeof api.request !== "function") return;
   const proto = globalThis.WakeLockSentinel && WakeLockSentinel.prototype;
@@ -228,6 +308,13 @@ const NO_WAKE_LOCK = `Object.defineProperty(Navigator.prototype, "wakeLock", {
 /** A browser with no speech at all — removed, not stubbed, for the same reason:
  *  the requirement is that cook mode then offers NO control, not a dead one. */
 const NO_SPEECH = `Object.defineProperty(window, "speechSynthesis", {
+  get: () => undefined, configurable: true,
+});`;
+
+/** A browser with no Notification API. Removed, not stubbed: the requirement is
+ *  that the bell still sounds and buzzes, and that NOTHING is said about a
+ *  setting there is no way to go and change (ADR 0071). */
+const NO_NOTIFICATION = `Object.defineProperty(window, "Notification", {
   get: () => undefined, configurable: true,
 });`;
 
@@ -266,6 +353,27 @@ const SNAP = `(() => {
     spoken: ((window.__cookSpeech || {}).texts || []).slice(-1)[0] || null,
     synthSpeaking: !!(window.speechSynthesis && window.speechSynthesis.speaking),
     hasSpeech: !!window.speechSynthesis,
+    // The alarm (ROADMAP 36d, ADR 0071). Every count is a call the real API
+    // received; nothing here is inferred from the DOM. They reset with each
+    // document, which is what lets one scenario per page load start from zero.
+    alarm: (() => {
+      const A = window.__cookAlarm || {};
+      return {
+        contexts: A.contexts | 0,
+        oscillators: A.oscillators | 0,
+        closes: A.closes | 0,
+        ctxStates: (A.ctxStates || []).slice(),
+        vibrations: (A.vibrations || []).length,
+        lastPattern: (A.vibrations || []).slice(-1)[0] || null,
+        notifyRequests: A.notifyRequests | 0,
+        sw: (A.swNotifications || []).slice(),
+        page: (A.pageNotifications || []).slice(),
+        hasVibrate: A.hasVibrate === true,
+        hasAudio: A.hasAudio === true,
+        hasNotification: A.hasNotification === true,
+      };
+    })(),
+    notifyPermission: window.Notification ? window.Notification.permission : "unsupported",
   };
   const d = document.querySelector("dialog.cook-sheet");
   if (!d) return { ...base, open: false };
@@ -316,6 +424,14 @@ const SNAP = `(() => {
       return Math.abs((t.left + t.width / 2) - (f.left + f.width / 2));
     })(),
     timerFill: q(".cook-timer-fill") ? parseFloat(q(".cook-timer-fill").style.width) : null,
+    timerDone: q(".cook-timer") ? q(".cook-timer").classList.contains("is-done") : null,
+    // The alarm's third channel: the one a deaf reader and a screen-reader user
+    // both depend on, and the only one a headless browser can read back.
+    timerAlert: q(".cook-timer-alert") ? q(".cook-timer-alert").textContent : null,
+    // Shown only where THIS reader has blocked notifications for the site — a
+    // state they may not know they are in (ADR 0069's rule, ADR 0071's case).
+    noteShown: shown(q(".cook-notify-blocked")),
+    noteText: q(".cook-notify-blocked") ? q(".cook-notify-blocked").textContent : null,
     // Ticking off (ROADMAP 17e). stageHtml is how the tool asserts that a tick
     // does NOT mutate the live region — the strike-through is CSS, so a tick
     // must leave the stage's markup byte-identical, or a screen reader would
@@ -1004,6 +1120,268 @@ async function run(opts) {
         bare.starts === 0,
         `“${noMethod.name}”: ${bare.starts} cook buttons`
       );
+    }
+
+    // --- 13b. The timer's alarm (ROADMAP 36d, ADR 0071) -------------------
+    // Three channels, three ways to get it wrong, and one scarce resource. A
+    // countdown that ends in silence is a countdown you have to watch, which is
+    // the one thing a cook cannot do — so the assertions below are about what
+    // the platform was actually ASKED to do at the moment a timer hit zero.
+    //
+    // WHAT IS FAKED: the clock, and nothing else. A thirty-minute bake cannot
+    // be waited out, and cook.js stores the wall clock a countdown ends at
+    // rather than decrementing a counter — so winding Date.now forward is
+    // precisely what a phone that slept through the bake sees when it wakes.
+    // The oscillator, the vibrate call, the permission state and the
+    // notification are all the browser's own.
+    //
+    // WHAT A GREEN RUN HERE CANNOT SHOW, stated rather than glossed:
+    //   · that a sound came out. There is no speaker; what is counted is the
+    //     node graph the page built and scheduled.
+    //   · that a phone moved. `navigator.vibrate` exists on desktop Chrome and
+    //     returns false — no motor. The call is real, the buzz is not.
+    //   · that a notification was drawn, survived being backgrounded, or that
+    //     tapping it reopened the recipe. Headless Chrome accepts the call and
+    //     there is nothing to look at; `notificationclick` in sw.js is exercised
+    //     by nothing here and needs a real phone.
+    //   · that a bell rings at all on a phone whose screen is off and whose tab
+    //     the OS has frozen. That is the case the notification exists FOR, and
+    //     it is the one no browser on a laptop can reproduce.
+    const timedIn = (item, pred) => {
+      const list = item.steps || [];
+      const i = list.findIndex((s) => {
+        const d = stepDuration(s);
+        return d != null && pred(d);
+      });
+      return i < 0 ? null : { item, index: i, seconds: stepDuration(list[i]) };
+    };
+    // The run's own recipe first, so `--dish` still steers this where it can;
+    // otherwise whichever recipe in the collection has a step of the right
+    // length. Driven off the DATA, like everything else here — a check pinned to
+    // "Gingerbread Cookies, step 5" starts asserting something else the first
+    // time the corpus is edited.
+    const findTimed = (pred) => {
+      for (const it of [recipe, ...items]) {
+        const found = timedIn(it, pred);
+        if (found) return found;
+      }
+      return null;
+    };
+    const shortTimer = findTimed((d) => d <= NOTIFY_OVER_SECONDS);
+    const longTimer = findTimed((d) => d > NOTIFY_OVER_SECONDS);
+    const urlFor = (item) => `${base}/recipe.html?id=${COLLECTION}&dish=${slug(item.name)}`;
+
+    /** Set the browser's real notification permission for our origin. */
+    const setNotifications = (setting) =>
+      cdp.send("Browser.setPermission", {
+        origin: base,
+        permission: { name: "notifications" },
+        setting,
+      });
+
+    /** Open `item`, walk to its timed step, and start the countdown there. */
+    const startTimerOn = async ({ item, index }) => {
+      await goto(urlFor(item), ".cook-start");
+      await openCook();
+      await press("Home");
+      for (let i = 0; i < index; i++) await click(".cook-next");
+      const before = await snap();
+      await click(".cook-timer-toggle");
+      return before;
+    };
+    /** Wind the wall clock past the end and wait for the bell. */
+    const ringOut = async (seconds) => {
+      await evalPage(`window.__cookClock.skew = ${(seconds + 5) * 1000}`);
+      // The interval ticks once a second; give it a few, then assert on
+      // whatever arrived rather than throwing (settleUntil's whole point).
+      return settleUntil(snap, (s) => s.timerDone === true && s.alarm.oscillators > 0, {
+        timeout: 8000,
+      });
+    };
+
+    if (shortTimer) {
+      await setNotifications("prompt");
+      const before = await startTimerOn(shortTimer);
+      report.check(
+        "arming happens on the tap that starts the timer, not at page load",
+        before.alarm.contexts === 0 && (await snap()).alarm.contexts === 1,
+        `${before.alarm.contexts} audio context(s) before the tap, ` +
+          `${(await snap()).alarm.contexts} after — autoplay policy needs the gesture`
+      );
+      const rung = await ringOut(shortTimer.seconds);
+      report.check(
+        "a timer that reaches zero sounds a tone and buzzes — both permission-free",
+        rung.alarm.oscillators === 3 &&
+          rung.alarm.vibrations === 1 &&
+          Array.isArray(rung.alarm.lastPattern) &&
+          rung.alarm.lastPattern.length > 1,
+        `${rung.alarm.oscillators} oscillator(s) scheduled, ${rung.alarm.vibrations} vibrate() ` +
+          `call(s) with pattern [${rung.alarm.lastPattern}] — real APIs, no speaker, no motor`
+      );
+      // The bell has to reach a reader who cannot hear it. The numeral is
+      // role="timer" (aria-live: off, deliberately), so without this region
+      // "time's up" reaches nobody using a screen reader.
+      report.check(
+        "the bell is announced, not merely sounded",
+        typeof rung.timerAlert === "string" &&
+          rung.timerAlert.includes("Step ") &&
+          rung.timerAlert.includes(shortTimer.item.name) &&
+          rung.timerDone === true,
+        `role="alert" says “${(rung.timerAlert || "").slice(0, 70)}”`
+      );
+      report.check(
+        `a timer of ${shortTimer.seconds}s asks for NO permission — a prompt is spent once per browser`,
+        rung.alarm.notifyRequests === 0 &&
+          rung.alarm.sw.length === 0 &&
+          rung.alarm.page.length === 0 &&
+          rung.noteShown === false,
+        `${rung.alarm.notifyRequests} permission request(s), ` +
+          `${rung.alarm.sw.length + rung.alarm.page.length} notification(s), ` +
+          `at or under the ${NOTIFY_OVER_SECONDS}s line (wantsNotification=${wantsNotification(shortTimer.seconds)})`
+      );
+      // A reset re-arms the bell: without it a timer run twice rings once.
+      await click(".cook-timer-reset");
+      await click(".cook-timer-toggle");
+      const twice = await ringOut(shortTimer.seconds * 2);
+      report.check(
+        "a reset re-arms the bell, and a bell still rings exactly once per run",
+        twice.alarm.oscillators === 6 && twice.alarm.vibrations === 2,
+        `${twice.alarm.oscillators} oscillators and ${twice.alarm.vibrations} buzzes over two runs ` +
+          `(a bell stuck on would be dozens of each — the interval ticks every second)`
+      );
+      await press("Escape");
+      const shut = await closed();
+      report.check(
+        "closing cook mode hands the audio hardware back",
+        shut.alarm.closes >= 1,
+        `${shut.alarm.closes} AudioContext.close() call(s) — the wake lock's lesson, third coat`
+      );
+    }
+
+    if (longTimer) {
+      // (a) Undecided: the ask arrives on the tap that starts a long timer, and
+      //     at no other moment in the whole session.
+      await setNotifications("prompt");
+      const before = await startTimerOn(longTimer);
+      const asked = await snap();
+      report.check(
+        `a timer of ${longTimer.seconds}s asks — once, on the start tap, never on arrival`,
+        before.alarm.notifyRequests === 0 && asked.alarm.notifyRequests === 1,
+        `${before.alarm.notifyRequests} request(s) after loading the recipe and opening cook mode, ` +
+          `${asked.alarm.notifyRequests} after the tap`
+      );
+      // Headless Chrome auto-dismisses the prompt, which resolves to "default"
+      // — the dismissed case, and the one that must stay silent.
+      report.check(
+        "a dismissed prompt says nothing at all — it is not a refusal",
+        asked.notifyPermission === "default" && asked.noteShown === false,
+        `permission “${asked.notifyPermission}”, blocked line shown=${asked.noteShown}`
+      );
+
+      // (b) Granted: the notification is raised through the service worker,
+      //     carrying the recipe it must reopen. The permission is the browser's,
+      //     set through CDP — not a stub.
+      await setNotifications("granted");
+      await goto(urlFor(longTimer.item), ".cook-start");
+      // The SW path is the only one Chrome on Android accepts, so wait for the
+      // registration rather than letting the run silently take the fallback.
+      const registered = await until(
+        async () => await evalPage(`navigator.serviceWorker.getRegistration().then((r) => !!r)`),
+        { label: "the service worker to register" }
+      );
+      await openCook();
+      await press("Home");
+      for (let i = 0; i < longTimer.index; i++) await click(".cook-next");
+      await click(".cook-timer-toggle");
+      const rung = await ringOut(longTimer.seconds);
+      const raised = rung.alarm.sw[0];
+      report.check(
+        "a granted long timer raises ONE notification through the service worker",
+        registered === true &&
+          rung.alarm.sw.length === 1 &&
+          rung.alarm.page.length === 0 &&
+          rung.alarm.notifyRequests === 0,
+        `${rung.alarm.sw.length} showNotification() call(s) on the real registration, ` +
+          `${rung.alarm.page.length} via the page constructor, ` +
+          `${rung.alarm.notifyRequests} fresh prompt(s) — already granted, so it never asks again`
+      );
+      report.check(
+        "the notification carries the recipe it has to reopen, and a tag so it cannot stack",
+        !!raised &&
+          String(raised.title).includes(longTimer.item.name) &&
+          String(raised.options?.data?.url).includes(`dish=${slug(longTimer.item.name)}`) &&
+          String(raised.options?.tag).startsWith("faves-timer:"),
+        `“${raised?.title}” → ${raised?.options?.data?.url} (tag ${raised?.options?.tag})`
+      );
+      report.check(
+        "the tone and the buzz fire alongside it, not instead of it",
+        rung.alarm.oscillators === 3 && rung.alarm.vibrations === 1,
+        `${rung.alarm.oscillators} oscillator(s), ${rung.alarm.vibrations} vibrate() call(s)`
+      );
+      await press("Escape");
+      await closed();
+
+      // (c) Denied: the channel is gone, the other two are not, and the reader
+      //     is told once — silence about a state they may not know they are in
+      //     is a defect (ADR 0069, applied here by ADR 0071).
+      await setNotifications("denied");
+      await startTimerOn(longTimer);
+      const denied = await ringOut(longTimer.seconds);
+      report.check(
+        "a blocked browser still sounds and buzzes, and raises nothing",
+        denied.alarm.oscillators === 3 &&
+          denied.alarm.vibrations === 1 &&
+          denied.alarm.sw.length === 0 &&
+          denied.alarm.page.length === 0 &&
+          denied.alarm.notifyRequests === 0,
+        `${denied.alarm.oscillators} oscillator(s), ${denied.alarm.vibrations} buzz(es), ` +
+          `${denied.alarm.sw.length + denied.alarm.page.length} notification(s), ` +
+          `${denied.alarm.notifyRequests} re-asks (a decided browser is never asked again)`
+      );
+      report.check(
+        "a long timer on a blocked browser says so once, in place, and never nags",
+        denied.noteShown === true &&
+          /blocked/i.test(denied.noteText || "") &&
+          /sounds and vibrates/i.test(denied.noteText || "") &&
+          denied.errors.length === 0,
+        `“${(denied.noteText || "").slice(0, 96)}…”`
+      );
+      await press("Escape");
+      await closed();
+
+      // (d) No Notification API at all. Removed, not stubbed — the requirement
+      //     is two working channels and NOTHING said about a setting there is
+      //     no way to go and change.
+      const { identifier } = await cdp.send(
+        "Page.addScriptToEvaluateOnNewDocument",
+        { source: NO_NOTIFICATION },
+        sessionId
+      );
+      await setNotifications("prompt");
+      await startTimerOn(longTimer);
+      const bare = await ringOut(longTimer.seconds);
+      // Read off the page rather than off the instrument: `hasNotification` is
+      // recorded when the instrument runs, which is BEFORE this removal, so it
+      // would say "true" here and quietly assert nothing.
+      report.check(
+        "with no Notification API the bell still rings in two channels, and says nothing",
+        bare.notifyPermission === "unsupported" &&
+          bare.alarm.oscillators === 3 &&
+          bare.alarm.vibrations === 1 &&
+          bare.alarm.notifyRequests === 0 &&
+          bare.noteShown === false &&
+          bare.errors.length === 0,
+        `window.Notification → ${bare.notifyPermission}, ${bare.alarm.oscillators} oscillator(s), ` +
+          `${bare.alarm.vibrations} buzz(es), blocked line shown=${bare.noteShown}, ` +
+          `page errors=${bare.errors.length}`
+      );
+      await press("Escape");
+      await closed();
+      // Put the API back: the sections below are not about notifications, and a
+      // removal that outlives its own scenario is how a check starts measuring
+      // something nobody meant it to.
+      await cdp.send("Page.removeScriptToEvaluateOnNewDocument", { identifier }, sessionId);
+      await setNotifications("prompt");
     }
 
     // --- 14. A browser without the API (iOS before 16.4) ------------------
