@@ -68,6 +68,13 @@ recipe and Cook at Home screens that offer cook mode.
 - **Tests before behaviour for pure logic.** New pure functions (like
   those in `site/js/filters.js`) ship with a `tests/*.test.js` unit test.
   DOM-coupled code stays browser + Lighthouse verified.
+- **Never hide or disable a control while it has focus.** Focus falls to
+  `<body>`, outside whatever subtree your keydown listener is scoped to,
+  and every keyboard shortcut in that subtree goes silently dead. Hand
+  focus somewhere sensible *first*, then hide or disable. This has now
+  shipped twice in cook mode — the Back button (owner-ruled 2026-08-15)
+  and the timer's Reset (2026-08-16) — and both times unit tests were
+  green and only the headless browser check caught it.
 - **Comments say _why_, not _what_** — constraints and non-obvious
   reasons only.
 - **Record real decisions.** Rejecting a plausible alternative, or
@@ -87,6 +94,13 @@ recipe and Cook at Home screens that offer cook mode.
 - **Message style:** `area: imperative subject` (e.g. `picker: land on
   the filtered set`, `data: refresh KK Malaysian prices`, `a11y: fix
   dark-mode contrast on the call label`). Note how you verified it.
+- **When the area prefix and the file list disagree, believe the file
+  list.** A `docs:` commit that also touches two lines of `site/js/`
+  still needs its `SHELL_VERSION` bump — the prefix is a hint to humans,
+  the paths are what the service worker caches. This left `main` red on
+  2026-08-16: the change was comment-only, every human signal said
+  "documentation", and the version gate read the paths and was right.
+  It cannot know a change is inert, and must not guess.
 - **Lockstep** (same commit): bump the right version constant in
   `site/sw.js` — data-only change under `site/data/` → `DATA_VERSION`;
   any other `site/` change → `SHELL_VERSION`; both → both (ADR 0015).

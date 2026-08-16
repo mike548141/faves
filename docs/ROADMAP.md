@@ -3934,14 +3934,44 @@ ingredients, the per-step timer, the recipe page's top bar — see CHANGELOG).
 What is left is the structural half he was pointing at, plus the two asks that
 turned out to be blocked on data rather than on design.
 
-### 🔎 The finding: a recipe collection is a restaurant with its restaurant-ness subtracted
+### 🔎 The finding, corrected against [ADR 0003] — this is DRIFT, not a design gap
 
-Cook at Home is a venue file. `site/data/restaurants/cook-at-home.json` carries
-`address: null`, `phone: null`, `website: null`, `hours: null`, `services: []`,
-`ordering: []`, `verified: null`, `city: null` — every one a thing a venue has
-and a recipe box does not — plus `currency: "NZD"` on a collection with no
-prices and `area: "Home"`, a suburb invented so the filter machinery would not
-choke on it.
+⚠️ **First pass at this theme missed that the question was already decided.**
+[ADR 0003] (accepted 2026-07-06) chose `kind: "recipes"` reusing the venue
+shape, and its **Rejected** list already covers two of the three options below.
+Anyone reading this theme must read that ADR first; the recommendation survives,
+the framing needed fixing.
+
+What ADR 0003 actually decided: venue-only fields **relax** for recipes —
+`area`/`city`/`address` *may be null*, `services` empty, no contact or order
+card. It explicitly rejected *"forcing recipes into a fake venue"* on the
+grounds that it produces *"misleading contact/service semantics… and pollutes
+the area/cuisine filter facets"*.
+
+Measured against that, `site/data/restaurants/cook-at-home.json` is **partly
+compliant and partly the very thing the ADR rejected**:
+
+| Field | Value | Against ADR 0003 |
+|---|---|---|
+| `address`, `phone`, `website`, `hours`, `city`, `verified` | `null` | ✅ the relaxation the ADR granted |
+| `services`, `ordering`, `vibe` | `[]` | ✅ as specified |
+| `currency` | `"NZD"` | ✅ **owner ruling, 2026-08-16** — see below |
+| `area` | `"Home"` | 🤔 an invented suburb rather than the `null` the ADR allowed — open question |
+
+🎯 **Owner ruling on `currency`, 2026-08-16.** This analysis called it a fake
+fact on a collection with no prices. He disagreed, and he is right: *"a recipe
+may in the future include the total cost to make that dish."* The field is
+**anticipatory, not spurious** — a recipe that one day carries a cost needs a
+currency to carry it in, and NZD is the correct one. Corrected here rather than
+quietly dropped, because the reasoning is the useful part: a field that looks
+empty may be holding a place. See 36f, which is the feature behind it.
+
+That leaves `area: "Home"` as the only open one, and it is a question rather
+than a finding: ADR 0003 allowed `area` to be **null** for recipes, and the
+facet pollution it feared is dodged in code rather than in data —
+`filters.js` opens with `if (r.kind === "recipes") continue`. So `"Home"` is
+inert today, on a guarantee held by a single line. Worth deciding deliberately:
+either null it per the ADR, or keep it and say what reads it.
 
 The code then subtracts what the data asserted: **`kind === "recipes"` is
 special-cased in about twenty places** across `app.js`, `menu.js` and
@@ -3967,16 +3997,27 @@ and the cheap one may well be right:
    has a location, has prices, can be ordered, can be reported). Same screens,
    same reuse, but a screen asks "does this have hours?" instead of "is this a
    recipe?". Cheapest, and it makes the next `kind` free.
-2. **A parallel screen for collections** `[L]`. `collection.html` beside
-   `restaurant.html`, sharing components but not the venue frame. Most honest,
-   most duplication, and it forks the search/favourites/offline paths that
-   currently come free.
+2. ~~**A parallel screen for collections**~~ 🛑 **already rejected by
+   [ADR 0003]** as *"a separate content type with its own route/renderer"* —
+   it duplicates the menu screen, the filters and the card logic for a
+   collection that is 95% the same shape, and forks the search/favourites/
+   offline paths that currently come free. Do not re-propose without
+   superseding that ADR.
 3. **Leave it and keep patching** `[S]` — what today did. Fine once; the third
    time is a pattern.
 
-🎯 **Recommend 1.** It is the only one that pays down the cause rather than the
-symptoms, without giving up the reuse that made recipes cheap. Do it before any
-further recipe UX, or the next fix lands on the same sand.
+Plus one cheap open question regardless of which is chosen: **`area: "Home"`** —
+null it per ADR 0003, or keep it and name the screen that reads it. `[XS][data]`
+(`currency` is settled and stays — owner ruling above.)
+
+🎯 **Recommend 1**, and note it does not contradict [ADR 0003] — it *implements*
+it. The ADR said venue-only fields relax for recipes; twenty `isRecipes`
+branches are that relaxation expressed as scattered conditionals instead of as a
+declared property of the `kind`. Option 1 turns the ADR's prose into something
+the code can read. Do it before any further recipe UX, or the next fix lands on
+the same sand.
+
+[ADR 0003]: decisions/0003-recipes-as-kind-not-separate-type.md
 
 ### 36a — what the data says about time, and what it doesn't `[S][data]` 🎯
 
@@ -4064,8 +4105,43 @@ cook button had to be fixed in two places, and why it had to be given two
 weights. Decide what the list row is *for* — a preview that makes you choose, or
 the whole recipe — and let the other path be the one that owns the detail.
 
+### 36f — what it costs to make it `[L][schema][data]` — owner-signalled 2026-08-16
+
+Raised by the owner while correcting this theme: *"a recipe may in the future
+include the total cost to make that dish."* That is why `currency` sits on the
+collection, and it is a stronger feature than it first looks — **Faves' whole
+question is "order out, or cook?", and it currently answers only one half of it
+with a number.** A recipe that says "$14 to make, serves 6" beside a takeaway
+that says "$28" is the app finally comparing the two things it puts side by side
+on the home screen.
+
+**What makes it hard is not the arithmetic.** A cost needs a price per
+ingredient, and:
+- **We do not hold grocery prices, and they move.** Menu prices come from the
+  owner or an owner-directed fetch (CLAUDE.md's standing rule); grocery prices
+  are a different corpus entirely, with no first-party source and weekly drift.
+  Every objection that blocked live menu scraping applies here with more force.
+- **A recipe line is prose, not a quantity.** "Water or milk, as required for a
+  thick batter" cannot be costed. The same ingredient/step structure 36b needs
+  is the prerequisite here too — this is 36b's schema, used a second way.
+- **Pack sizes, not recipe sizes.** A recipe wanting 100g of butter costs a
+  500g block; "cost to make" and "cost to shop for" are different numbers and
+  the app must not conflate them. Which one is wanted is a design call.
+- **ADR 0047 applies.** A per-ingredient price is a field on every recipe line,
+  precached to every phone. It ships only if a screen renders it.
+
+🎯 **The staged version that is actually buildable:** an owner-supplied
+`costToMake` on the recipe — one number, one date, his own figure — rendered
+beside `serves` as "about $X, serves Y (priced <date>)". No grocery corpus, no
+per-ingredient maths, no invented facts, and it answers the comparison question
+today. Per-ingredient costing stays behind 36b's schema.
+⚑ The full version needs a decision on where grocery prices come from, which is
+a new content source and therefore the owner's alone.
+
 ### Sizing
 
 36a and 36c are small in code and blocked on the owner. 36b is the big one and
-is mostly data entry. The structural call above (1/2/3) should be taken before
-36e, because 36e is a symptom of it.
+is mostly data entry — and it is the prerequisite for the full 36f, so doing it
+once buys both. 36f's staged version is `[S]` and independent of all of it. The
+structural call above (1/2/3) should be taken before 36e, because 36e is a
+symptom of it.
