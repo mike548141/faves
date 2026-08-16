@@ -6673,3 +6673,38 @@ failed`** — including the two-timer assertion it had reported as unverifiable.
   it once. Not more bisecting.
 ⚠️ Still unexplained: the 73/2 run during integration, at load 5.9–15.8, well
 below the orphan-driven level. Its failing assertions were not captured.
+
+### Owner rulings taken at the close (2026-08-16)
+
+Four questions were put to him rather than resolved quietly. All four changed
+something, and one of them changed the *shape* of the question.
+
+- 🎯 **`contains-fish` → ADD IT, and land it WITH 37n.** Asked with the cost
+  stated (schema change + corpus sweep + a tagger rule). His reasoning: it is a
+  major declarable allergen we currently warn about **zero** times, and sweeping
+  the corpus once beats sweeping it twice. The dishes already found and left
+  untagged are listed on the roadmap item so nothing is re-derived.
+- 🎯 **Trace allergens → he split the question.** Asked as "tag `T` or not";
+  he answered *"keep tagging only P as you recommended, but extend the data
+  model to enable us to capture both present and trace allergens at a data
+  level."* 🔑 **The displayed warning and the recorded fact are two decisions,
+  and only one of them was actually being asked about.** Tagging `T` would fire
+  nut/sesame/shellfish warnings on every pizza; *discarding* `T` throws away the
+  venue's own graded statement and makes recovering it a 55-menu re-read. Both
+  costs avoided by separating them.
+  🚩 **It leaves a real design question, recorded rather than assumed:** under
+  [ADR 0047] `site/data/` holds only what a screen renders, and under this
+  ruling no screen renders trace — so the trace tier probably belongs in the
+  repo-only record `data/`. That would make the split-store rule load-bearing
+  for **safety** data for the first time. Recommended, not built; his call.
+- 🎯 **The Victoria Tavern → fetch it, record the weaker provenance.** Its TLS
+  certificate is a self-signed Plesk placeholder from a 2026-08-03 hosting move,
+  so the menu is only reachable with verification disabled. Transcribed as
+  `paper-menu` rather than `official-site`: we read a menu document, and we
+  could **not** establish that the server is the venue's own site — which is
+  exactly what the certificate would have proved. 🔑 **A provenance value is a
+  claim about what we verified, not about where the bytes came from.**
+- 🎯 **Subway → build it, every price `null`.** Subway NZ publishes no price
+  anywhere first-party (franchise pricing varies by store), so `null` is the
+  correct record rather than a failure. Dish names plus a first-party allergen
+  guide is most of what the app is for; the price band already reads as unknown.
