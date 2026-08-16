@@ -3841,3 +3841,36 @@ here for that session to close rather than filled in from outside.
 **Session close.** Six commits landed on `main` across the session, each with
 CI and floor green. Nothing owed, nothing uncommitted, no open PRs, worktrees
 removed.
+
+### 2026-08-16 — a safety defect found by asking a modelling question
+
+The owner asked whether Sprig & Fern's three Cheeseburgers ($28 Mains, $21 Gold
+Card, $15 Kids) should be one dish with a serving size and a discount. Two
+corpus surveys were run before answering, and they turned up something more
+urgent than the question.
+
+**The Gold Card rows had lost their allergen warnings.** All seven carried
+fewer `contains-*` tags than their full-price twins; Chicken Parma shipped with
+`tags: []` on a crumbed, mozzarella-topped dish. Cause: `tag_allergens.py`
+matches on name + desc, and a `"Gold Card portion."` stub has no ingredients in
+it. Effect: a reader filtering for gluten free saw the $21 row survive the
+filter while the $32 row dimmed. Fixed fail-safe — only `contains-*` added,
+only what the twin already carried; Summer Salad's missing `df` deliberately
+left off, because restoring a positive claim from a stub desc is precisely what
+ADR 0025 forbids. `check_twin_allergens()` is the guard, a warning not an error
+because a kids' version really is different food.
+
+**On the question itself, the measurement contradicted the premise.** Gold Card
+is not a discount: four rows say `"Gold Card portion."`, the Sirloin says 150g
+against the Mains 230g, and the ratios run 66–79% rather than one percentage.
+The corpus contains **zero** discount language of any kind. The real pattern is
+size — 41 variant groups over 96 rows, plus **81 rows carrying a second price
+inside a `desc` string** (153 price points), 72 of them drinks. Collapsing on
+name would be actively wrong for 29 rows, including merging an alcohol-free
+`Heineken 0.0` into a beer, and 5 variant groups have an empty allergen-tag
+intersection so no merge rule preserves safety. Recorded as Theme 28.
+
+**Incidental finding worth someone's judgement:** the new twin check flags that
+Mains `Cheeseburger` carries no `contains-dairy` while the Kids one does — and
+its own desc ends "Dairy free available.", which implies the default has cheese.
+Left as a warning rather than guessed at; it is a claim about food.

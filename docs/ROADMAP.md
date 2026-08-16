@@ -2046,6 +2046,95 @@ the data and the resolver in step); and `tests/renames.test.js` shows the shape
 of the tests, including the one that matters most — *nothing moves on day one*.
 
 ---
+## Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)
+
+<!-- Numbered 28: 25/26/27 were taken by parallel sessions. Checked with
+     `grep '^## Theme' ROADMAP.md` at write, per the note on Theme 19. -->
+
+**The ask, raw (owner):** *"$28 (Mains), $21 (Gold Card) should be one dish… a
+discount offered for gold card. However the $15 (Kids) dish is very likely
+actually a different dish… Perhaps on each dish we could have (a) a serving
+size e.g. kids vs adults, and (b) discounts available by dish, by menu, by
+branch or restaurant chain?"*
+
+🔎 **Measured before answering, and the measurement changes the answer.**
+
+**The Gold Card rows are not a discount — they are a smaller dish.** Four of
+the seven say exactly `"Gold Card portion."` and nothing else; the Sirloin says
+`"150g."` against the Mains row's `"230g cooked to your liking"`. The price
+ratios run 66%–79%, not one percentage — consistent with re-portioning, not a
+card discount. Calling it a discount would tell a reader they get the 230g
+steak for $27.
+
+**There are no discounts in the corpus at all.** Across all 48 records: zero
+occurrences of `%` off, `$X off`, "discount", "happy hour", "early bird",
+"senior", "student", "member", "loyalty", or any dine-in/takeaway price
+difference. The word "discount" does not appear once. A discount model would
+be invented rather than observed — and the standing rule from 2026-08-16 is
+that scope comes from what the owner hands over, not from a taxonomy drawn in
+advance.
+
+**The real pattern is size, and it is 13× bigger than the Gold Card case.**
+- **41 variant groups · 96 rows · 13 venues** where a name collides exactly or
+  near-exactly at a different price.
+- **81 rows · 5 venues** carry a *second price inside the `desc` string* —
+  **153 discrete price points** with nowhere to live, because `item.price` is a
+  scalar. `"Regular $17.00; large $25.00; bottle $73.00."`
+- **72 of those 81 are drinks** — wine by glass/bottle, beer pours, coffee cup
+  sizes. This is overwhelmingly a *drinks* problem that food happens to share.
+- Deduplicated, a size dimension touches **~210–230 of 1,755 rows (12–13%)**,
+  ~70% of it in five venues.
+
+🚩 **Collapsing on name would be actively wrong for 29 of those 96 rows.**
+- `Heineken` at The Borough is on-tap 5% $15, bottle 5% $11, **and `Heineken
+  0.0` alcohol-free $10**. A size ladder merges an alcohol-free drink into a
+  beer.
+- `sushi-bi`'s `Sushi Platter 1`–`9` are nine different compositions at
+  $70–$90, not a ladder. Hell's `Splatter Platter 1` and `2` are **the same
+  price** with different contents.
+- Only **33 of 96 rows** collapse cleanly (pure quantity, no divergence).
+
+🚩 **And the tags would not survive it.** 11 of the 41 groups carry divergent
+allergen tags, and **5 have an empty intersection** — there is no safe tag to
+keep. Union-merging would wrongly put `contains-shellfish` on two Sushi Bi
+platters; intersection-merging would strip it off three rows that really do
+contain shellfish.
+
+**What that leaves.**
+
+- [ ] **28a — Nothing to do about "one dish or three": they are three dishes**
+  `[design]` — the evidence says a size variant needs its own desc, tags,
+  section, availability and `addOns`, and once it needs all five it *is* a
+  dish. The relationship is worth expressing, but as an optional **link
+  between dish ids** ("also available as…"), not by merging records. Blocked on
+  Theme 25, which must land one id per ROW and must not merge same-named rows.
+- [ ] **28b — A second price has nowhere to live** `[L][schema]` — the 153
+  prose price points. This is the item with real weight, and it is mostly
+  drinks. Note 26 of the 81 rows explicitly record that the venue *does not
+  label* the larger size (`"the menu doesn't label the larger sizes"`), so any
+  shape must express "size unknown, price known", and Hell's 13 drink rows
+  state two volumes at ONE price. A required price-per-size would force
+  inventing prices the menu does not state.
+- [ ] **28c — A section's time window is unreadable prose** `[M][schema]` 🔎 —
+  the one clean, self-contained defect here. `available` accepts dates and
+  seasons only, so "Mon–Fri 11:30–17:30" is **inexpressible**; six sections
+  cram a time window into the section NAME and exactly one section in the
+  corpus uses `available` at all. `hours.js` already does weekday+interval
+  reasoning for the venue's own opening hours — the machinery exists and the
+  section schema cannot reach it. Consequence today: nothing checks the clock,
+  so a Gold Card price shows at 9pm on a Sunday with no indication it is not
+  available.
+- [ ] **28d — `available.note` is write-only** `[XS][js]` — `temporal.js`
+  filters a section out of the menu entirely when its window closes, and
+  `menu.js` never reads `available` at all, so the note explaining *why*
+  ("The Borough's entry in Burger Wellington") is never rendered anywhere.
+- [ ] **28e — eligibility is unstated** `[S][design]` — "Gold Card" and "12 and
+  under" are rules about *who may order*, recorded only inside a heading
+  string. Worth a field only if 28c lands; and note a "show me Gold Card
+  prices" preference would be the first thing in the app that asks the reader
+  something about themselves beyond diet, which is a decision the owner should
+  make explicitly rather than as a side effect.
+
 ## Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)
 
 Searching "mexican" returns nothing. Not a search defect — `cuisine` has always
