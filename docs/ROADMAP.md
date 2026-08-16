@@ -4236,16 +4236,28 @@ the same sand.
 > carrying its **working**, guarded by `tools/recipe_estimates.py --check`
 > and recorded as [ADR 0064]. It landed in the record first, not the payload,
 > so the numbers are auditable before any of them reach a phone.
-> ⚠️ **One safety line the ruling does not cover, raised rather than assumed —
-> and now built in:** an *estimated* duration must never drive a **timer**. An
-> invented "simmer 20 min" on chicken is a food-safety failure, not a
-> disappointing dinner. `timerSafe` is true only where `source: "stated"`, and
-> `--check` **exits 1** on any violation with the failure sorted to the top of
-> the output. Proved by breaking it deliberately: setting `timerSafe: true` on
-> Perfectly Pretty Hotcakes' estimated cook step produced
-> `🛑 SAFETY: … an estimated duration may never drive a timer`, exit 1.
-> 🎯 **Still the owner's to rule** — he said "estimate them and label them",
-> not "and never time them". Held conservatively until he says otherwise.
+> 🎯 **A safety line was raised here and the owner OVERRULED it the same day —
+> [ADR 0066] supersedes [ADR 0064]'s decision 2.** This build first held that an
+> *estimated* duration must never drive a **timer**, on the grounds that an
+> invented "simmer 20 min" on chicken is a food-safety failure rather than a
+> disappointing dinner. That argument, and a middle option splitting on `phase`
+> rather than on source, were both put to him. His ruling, verbatim:
+> *"Estimates drive timers too, clearly marked — every step gets a countdown;
+> estimated ones are labelled as estimates on the timer face."*
+> So **`timerSafe` is retired, not inverted** — under the ruling every duration
+> is timer-eligible, making the flag `true` everywhere and therefore
+> information-free. `source` (`stated`/`estimated`) is what the timer face
+> reads. **The gate was replaced, not dropped:** a step carrying `minutes` with
+> **no `source`** now exits 1, because that is a countdown with no way to know
+> whether to mark it. Proved by deleting a `source`: `🛑 SAFETY: … has minutes 5
+> but source None … its countdown would run with no way to mark it an estimate`.
+> ⚑ **"Clearly marked" means on the timer face itself** — `12:00 (estimate)` as
+> real text, not a colour and not the step text alone. A countdown that looks
+> identical whether the number was read or guessed is not marked.
+> 🔑 **Worth keeping as method, not as grievance:** raising the concern *before*
+> building to it was right, and so was complying the moment it was ruled. What
+> made the reversal cheap was landing in `data/` rather than `site/` — no phone
+> ever held the retired rule.
 >
 > 🔎 **The corpus is better than this item said: 32 steps state their time,
 > not 28.** The extra four state it in *words* — "cook the garlic for a
@@ -4263,6 +4275,7 @@ the same sand.
 >   6–15 min of prep, yet the app renders `time` as if it were the total.
 
 [ADR 0064]: decisions/0064-an-estimate-carries-its-working-and-never-a-timer.md
+[ADR 0066]: decisions/0066-an-estimated-duration-drives-a-timer-marked-as-an-estimate.md
 
 The owner asked for *"an estimate of time required for each step and each recipe
 as a total"*. Measured across the corpus, 2026-08-16:
@@ -4363,8 +4376,16 @@ him and a middle option (split on risk, not on source) also offered.
 **Every step with a duration gets a countdown; an estimated one is marked as an
 estimate ON THE TIMER FACE**, not merely in the step text — a countdown that
 looks identical whether the number was read or guessed is not "clearly marked".
-So `timerSafe` is not a function of `stated` vs `estimated`; any gate asserting
-that inverts.
+So `timerSafe` is not a function of `stated` vs `estimated`.
+✅ **Done 2026-08-16, and the gate was RETIRED rather than inverted** —
+[ADR 0066]. Under the ruling every duration is timer-eligible, so a boolean
+asking "may this drive a timer?" is `true` everywhere and carries nothing;
+`source` is what the timer face reads. The replacement invariant is that a step
+with `minutes` and **no `source`** exits 1. 🚩 **One trap for whoever builds the
+render:** `stepDuration()` in `cook.js` re-parses the recipe *sentence* rather
+than reading a stored number, so the per-step minutes must actually reach the
+payload — otherwise the estimated steps stay silently untimed while every check
+stays green.
 
 ### 36e — one place to look, not two `[M][ux]`
 
