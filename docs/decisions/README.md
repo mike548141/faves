@@ -708,7 +708,7 @@ deliberation those compact docs omit.
   code, not necessarily of a runtime that fetches its voices. `cook_check.mjs`
   42 → 57 assertions, and all fifteen new ones were seen to fail under a
   targeted break.
-- [0073](0073-a-backup-carries-only-what-it-can-put-back.md) — **a backup
+- [0074](0074-a-backup-carries-only-what-it-can-put-back.md) — **a backup
   carries only what the import path can put back usefully.** ROADMAP 36g, the
   owner's *"if it isn't restored, it shouldn't be exported."* Supersedes **the
   final clause of [0067]'s decision 4 only** — that record justified keeping

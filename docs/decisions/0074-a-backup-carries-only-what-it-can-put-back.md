@@ -1,4 +1,4 @@
-# 0073 — A backup carries only what it can put back
+# 0074 — A backup carries only what it can put back
 
 **Status:** Accepted. Supersedes **decision 4's final clause only** of
 [0067](0067-a-tick-is-keyed-on-the-line-not-its-place.md); the rest of that
