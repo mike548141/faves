@@ -2267,8 +2267,13 @@ problem. Sequence the content with the build or the feature ships blank.
 > needs its own schema — and note only **2 steps in the whole corpus** carry a
 > scalable amount, so 36b has almost nothing to bind to today.
 
-- [~] **17a — Serves, and scaling it** `[M][schema][design]` — **CLAIMED
-  2026-08-16 22:32 UTC (wt: faves-cook2, branch `cook-recipes-17`)**. Files:
+- [ ] **17a — Serves, and scaling it** `[M][schema][design]` — ⚠️ **CLAIM
+  RELEASED 2026-08-16 22:59 UTC. The scaling half is SHIPPED (see the block
+  above); what is left is the `serves` half and it is OWNER-BLOCKED, not
+  unclaimed work** — `serves` is on 3 of 24 recipes and can only come from him.
+  🎯 The one piece anyone may take without him: surface the **4 yields already
+  stated in prose** (`"Makes 21"`, `"Makes 10–15"`), which invents no facts.
+  Former claim (wt: faves-cook2, branch `cook-recipes-17`). Files:
   `site/data/restaurants/cook-at-home.json`, `site/js/ingredients.js`,
   `site/js/recipe.js`, `tools/recipe_check.mjs`, `docs/decisions/`.
   🔎 **Taking it in two halves, because the header's "the data is the blocker"
@@ -5647,8 +5652,12 @@ The released claim only ever covered the owner's original five.
 > reason the inline row could not be one row". `filter_row_check.mjs` is the
 > guard that would fail.
 
-- [~] **37k — a "style of dining" filter** `[M][schema][design]` ⚑ — **CLAIMED
-      2026-08-16 22:32 UTC (wt: faves-cook2)**. Taking only the 🚩 *decision*
+- [ ] **37k — a "style of dining" filter** `[M][schema][design]` ⚑ — 🛑 **CLAIM
+      RELEASED 2026-08-16 22:59 UTC. The blocking 🚩 is CLEARED (ADR 0077,
+      block above) and the item is now OWNER-BLOCKED on two questions — do NOT
+      treat it as open work.** Entering data against an unratified vocabulary
+      is the one thing the item says not to do. Former claim
+      (wt: faves-cook2). It took only the 🚩 *decision*
       below — is this Theme 30's `service` axis under another name? — because
       the item says itself that deciding it is the whole job and that no data
       may be entered until it is settled. No data entry in this claim. owner
