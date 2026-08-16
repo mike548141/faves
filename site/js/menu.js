@@ -1011,8 +1011,16 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
   if (dishEntry) {
     children.push(el("div", { className: "dish-rating" }, [ratingControl(dishEntry, item.name)]));
   }
+  // The photo goes in FIRST, ahead of the name row, and that position is the
+  // whole point (owner, 2026-08-16: "aligning the top of the photo roughly with
+  // the top of the dish title, not below the rating as it is now"). A float
+  // starts on the line where it is declared, so appended after the rating it
+  // began a line down and the title sat above it rather than beside it. Nothing
+  // about the reading order changes — a float is taken out of flow, and it
+  // carries its own accessible name — but the picture now starts level with the
+  // name it belongs to.
   const photo = dishPhoto(item);
-  if (photo) children.push(photo);
+  if (photo) children.unshift(photo);
   if (item.desc) {
     const d = preferred(item, "desc", venueLang) ?? { text: item.desc, lang: venueLang };
     children.push(el("p", { className: "dish-desc", lang: d.lang, textContent: d.text }));
