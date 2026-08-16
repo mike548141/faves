@@ -409,6 +409,28 @@ delivery app.** Clear one by bringing back the fact.
 - [ ] **Menus still owed on six venues — and where each one lives**
       `[M][content]`. Researched 2026-08-16 and written down here so a fresh
       session can start rather than repeat it.
+
+      > 🔎 **The title understates the gap by five times — measured 2026-08-16.**
+      > Counted across all 55 venue records: **32 carry zero dishes**, not six.
+      > Of those, **18 publish a website** (a fetchable first-party source) and
+      > **14 publish nothing at all** — for those fourteen, only a photo or an
+      > in-store visit can ever clear them, so no amount of research will:
+      > `abrakebabra`, `cosmic-vape-and-coffee`, `cozy-cake-shop`,
+      > `crepes-a-go-go`, `dirty-little-secret`, `dragonfly`,
+      > `garage-project-leeds-street`, `goldings-free-dive`, `groundup-cafe`,
+      > `hotel-bristol`, `marigold-takeaway`, `moore-wilsons`, `simmer`,
+      > `wellington-sourdough`.
+      >
+      > Reproduce, don't re-type — the same lesson ADR 0041 already drew for
+      > dish-level gaps, one level up:
+      > ```sh
+      > python3 -c "import json,glob;[print(json.load(open(f))['id']) for f in sorted(glob.glob('site/data/restaurants/*.json')) if not sum(len(s.get('items',[])) for s in (json.load(open(f)).get('menu') or []))]"
+      > ```
+      > ⚑ **The six below are not a worklist, they are the six somebody looked
+      > at.** Whether any of the 18 fetchable ones get fetched is the owner's
+      > call under CLAUDE.md's standing rule — *"if I don't give them to you or
+      > tell you to fetch them they are not"* — and naming a URL here is not
+      > that instruction. 🎯 Sitting with him.
       - **Four Sprig + Fern taverns**, all `stub`: `sprig-and-fern-petone`,
         `sprig-and-fern-berhampore`, `sprig-and-fern-thorndon`,
         `little-sprig-seatoun`. Each publishes **its own** food menu PDF at
