@@ -39,6 +39,14 @@ content freshness separately from this file.
   straight to a dish no longer opens with a button over it.
 - **The `Faves` wordmark in the header is now a full-size tap target** (it was
   32 px tall against a 44 px floor).
+- **A menu that won't open now tells you the truth about why.** Opening a link
+  to a place we can't load used to say "check your connection and reload" —
+  asserting a network problem it had never checked, when the usual cause is a
+  place that has moved, closed or been renamed. It now names both
+  possibilities, and only says the place was removed after actually going to
+  look. **Refresh** does that check from the screen; if the place is still
+  there, the menu simply opens. A link with no place in it at all keeps the
+  plain old message, because there is nothing to go and check.
 - **A shortlist you share now opens on the dish you meant.** Where a venue has
   two dishes with the same name at different prices — Sprig & Fern Tawa lists
   *Cheeseburger* three times, at $28, $21 and $15 — a shared shortlist arrived

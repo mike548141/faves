@@ -54,6 +54,7 @@ import { initSettingsUI } from "./settings-ui.js";
 import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
 import { initTransferReceive } from "./personal-io-ui.js";
 import { cookButton } from "./cook-ui.js";
+import { mountNotFound } from "./cache-refresh.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -1570,7 +1571,18 @@ const loadingEl = document.getElementById("menu-loading");
 
 function fail() {
   if (loadingEl) loadingEl.hidden = true;
-  if (errorEl) errorEl.hidden = false;
+  if (errorEl) {
+    // A venue we can't load is usually a link to a place that moved or closed,
+    // not a flat network — but the old copy asserted "check your connection"
+    // without having checked anything (ADR 0020). `mountNotFound` names both
+    // possibilities and only says *removed* after a live fetch comes back
+    // empty. Every node it builds is inline-level, so it is valid inside the
+    // `<p id="menu-error">` this page already has.
+    // With no `?id=` at all there is no reference to check, so the generic
+    // wording stays: the honest two-possibility copy would be wrong there.
+    if (id) mountNotFound(errorEl, { venueId: id });
+    errorEl.hidden = false;
+  }
   root.setAttribute("aria-busy", "false");
 }
 
