@@ -1,0 +1,147 @@
+# Refresh the exchange rates Faves ships (ADR 0045), weekly, via an
+# auto-merging pull request.
+#
+# Faves converts menu prices offline from rates committed as data — it never
+# calls an FX API at runtime, because the site must work in flight mode and
+# carries no third-party dependency (ADR 0001). The cost of that choice is
+# staleness, and this is what pays it down without anyone having to remember.
+#
+# ————————————————————— Why a PR and not a push —————————————————————
+#
+# A scheduled job cannot push to `main`. `protect-main` requires four status
+# checks, and a direct push can never satisfy them — the checks would run on the
+# push the rule is refusing. Proved on 2026-08-16, not assumed:
+#
+#   GH013: Repository rule violations found for refs/heads/main.
+#   - 4 of 4 required status checks are expected.
+#   ! [remote rejected] HEAD -> main
+#
+# Two earlier answers were rejected, and both for good reasons worth keeping:
+# adding a ruleset bypass weakens a protection on a public repo so a convenience
+# can work, and staging the commit on a branch to poll for its own checks is
+# machinery a later reader has to reverse-engineer before trusting it.
+#
+# A pull request needs neither. It is how the required checks were designed to
+# be satisfied, and `--auto` means it lands the moment they pass with nobody
+# waiting on it. Nothing here is special: the rule is met the ordinary way.
+#
+# ————————————————————————— Worth knowing —————————————————————————
+#
+#   • A merge to `main` IS a deploy — Cloudflare Pages builds from it. So this
+#     deploys the site up to once a week, by design.
+#   • `--bump` moves DATA_VERSION in the same commit, because fx.json lives
+#     under site/data/ and an unbumped version means installed phones keep
+#     serving the old rates (the lockstep rule in CLAUDE.md).
+#   • Most weeks this does nothing at all: the tool writes only when a rate
+#     actually moved, and refuses to write twice in a day. A run that opens no
+#     PR is the normal outcome, not a failure.
+#   • The branch deletes itself on merge (`delete_branch_on_merge` is on).
+name: FX rates
+
+on:
+  schedule:
+    # Weekly, Sunday 14:10 UTC — Monday ~2am in New Zealand, so the deploy this
+    # triggers lands when nobody is mid-order. GitHub runs cron on UTC and may
+    # delay a scheduled job under load; a missed week is harmless here, which is
+    # why this is a schedule and not an alarm.
+    - cron: "10 14 * * 0"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Refresh even if it already ran today or no rate moved"
+        type: boolean
+        default: false
+
+# Least privilege: write the branch, open the PR. Nothing else.
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  # Never two refreshes racing each other.
+  group: fx-rates
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: refresh site/data/fx.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch the latest rates
+        run: python3 tools/fetch_fx.py --bump ${{ inputs.force && '--force' || '' }}
+
+      - name: Did anything change?
+        id: diff
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No rate moved since the committed snapshot — nothing to do."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git --no-pager diff --stat
+          fi
+
+      # Cheap local sanity pass. NOT a substitute for the required checks — those
+      # run on the pull request below, as themselves, which is the whole point of
+      # doing it this way. This just avoids opening a PR over a broken file.
+      - name: Sanity-check the file we just wrote
+        if: steps.diff.outputs.changed == 'true'
+        run: python3 tools/fetch_fx.py --check
+
+      - name: Open a pull request and let it merge itself
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          AS_OF=$(python3 -c "import json;print(json.load(open('site/data/fx.json'))['asOf'])")
+          BRANCH="fx/refresh-${AS_OF}"
+
+          git config user.name "faves-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add site/data/fx.json site/sw.js
+          git commit -m "data: refresh FX rates (as at ${AS_OF})" \
+                     -m "Automated weekly refresh — tools/fetch_fx.py --bump." \
+                     -m "Reference rates, not transaction rates; the app says so beside the prices."
+          # --force so a rerun on the same day reuses the branch cleanly. Safe:
+          # the ref is this job's own scratch space, outside protect-main (which
+          # covers the default branch only).
+          git push --force origin "$BRANCH"
+
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "data: refresh FX rates (as at ${AS_OF})" \
+            --body "Automated weekly refresh — \`tools/fetch_fx.py --bump\`.
+
+          Rates are daily reference rates, not transaction rates: what a card
+          actually charges includes the issuer's margin, so a converted price in
+          Faves is an estimate and the app says so beside the prices (ADR 0045).
+
+          \`DATA_VERSION\` is bumped in the same commit so installed phones
+          refetch the new rates rather than serving the cached old ones.
+
+          Merges itself once the required checks pass. Nobody is waiting on it." \
+            || echo "PR already open for $BRANCH — reusing it"
+
+          # The point of the whole design: the four required checks run on this
+          # PR the ordinary way, and it lands the moment they pass.
+          gh pr merge "$BRANCH" --auto --squash
+
+      - name: What happened
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "Opened a PR and queued it for auto-merge:"
+            gh pr list --state open --head "fx/refresh-$(python3 -c "import json;print(json.load(open('site/data/fx.json'))['asOf'])")" || true
+          else
+            echo "Nothing to do — rates unchanged since the committed snapshot."
+          fi

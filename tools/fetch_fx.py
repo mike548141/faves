@@ -12,19 +12,19 @@ That makes staleness the honest cost, and the file carries its own `asOf` so the
 app can say how old its rates are rather than implying they're live. See
 ADR 0045 for why a dated approximation beats both a live API and no conversion.
 
-**Run this once per working session on Faves.** That is the whole refresh
-policy, and it is deliberately a human step rather than a scheduled job — see
-ROADMAP "Automating the FX refresh" for the several ways automation turned out
-to be worse than this. The tool guards itself so it cannot become noise:
+**A scheduled job runs this weekly** (`.github/workflows/fx.yml`), opening a
+pull request that merges itself once the required checks pass. Running it by
+hand alongside your own work is equally fine and needs no coordination, because
+the tool guards itself so it cannot become noise:
 
   • already fetched today  → does nothing
   • no rate actually moved → does nothing
   • otherwise              → writes, and `--bump` moves DATA_VERSION with it
 
 So running it on every commit is harmless, and the rates change in the repo at
-most once a day.
+most once a day — whether it is you running it or the schedule.
 
-    python3 tools/fetch_fx.py            # the session step: fetch if due
+    python3 tools/fetch_fx.py            # fetch if due
     python3 tools/fetch_fx.py --bump     # ...and bump DATA_VERSION if it wrote
     python3 tools/fetch_fx.py --check    # exit 1 if the file is missing/malformed
     python3 tools/fetch_fx.py --dry-run  # print what would be written
