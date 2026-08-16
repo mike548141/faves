@@ -297,7 +297,7 @@ deliberation those compact docs omit.
   keeps meaning "the shop prices it on application". Renders as its own `?` pill
   and never in the allergen tag row, which must not be diluted; `tools/needs.py`
   derives the worklist. Closed set written in three files, with a drift guard.
-- [0045](0045-the-app-ships-only-what-it-renders.md) — **the app ships only
+- [0047](0047-the-app-ships-only-what-it-renders.md) — **the app ships only
   what it renders.** `site/data/` is precached in full, so a field added there
   is downloaded by every phone whether a screen reads it or not. Superseded
   prices and departed dishes move to `data/`, the repo-only research store,

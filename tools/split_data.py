@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Move what no screen renders out of the payload and into `data/` (ADR 0045).
+"""Move what no screen renders out of the payload and into `data/` (ADR 0047).
 
 WHY THIS EXISTS. `site/data/restaurants/<id>.json` is precached in full by the
 service worker, so a field added there is downloaded by every phone whether a
@@ -137,7 +137,7 @@ def write_history(vid, kind, rows, note):
 
 
 PRICE_NOTE = ("Price entries superseded by a later reading. Appended, never "
-              "rewritten (ADR 0023); moved out of the payload by ADR 0045 "
+              "rewritten (ADR 0023); moved out of the payload by ADR 0047 "
               "because no screen renders them. The current price stays on the "
               "dish in site/data/.")
 DISH_NOTE = ("Dishes confirmed off the menu (`available.offBy`). The whole "

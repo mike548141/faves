@@ -3376,3 +3376,121 @@ conversion would not have reached them. This branch's `.14` carries both
 changes and fixes that on merge. Re-verified after the rebase against the
 combined tree: `node --test` **655**, `validate.py` 48 files 0 errors,
 `boot_check` 13/13, `device_check` 19/19, `cook_check` 36/36.
+
+## 2026-08-16 04:16 UTC — the polish pass, and a number that was taken twice
+
+**Ask.** The owner kept browsing and raising items; each was triaged on his
+standing rule — deliver it, or queue it if it wants a session of its own. A
+parallel session ran throughout, landing FX/localisation and facet links.
+
+**Delivered.** The report ⚑ on a dish row was invisible, and the cause was
+worth naming: it rendered at 55% of the ♥ beside it, dimmed to 0.75, in a
+smaller box — **three reductions stacked on one control**, each defensible
+alone. It now matches the ♥'s family (86%, since a solid ⚑ reads heavier than
+an outline ♡) at full strength in a matching 52 px box, and is recessive by
+**colour alone**. That shape — de-emphasis applied on several axes at once —
+is the same one that made the allergen ⓘ hard to see earlier, and belongs in
+Theme 23b's guide as a rule: pick one axis to recede on.
+
+The hours badge stopped repeating itself. It renders `label · detail`, and both
+"soon" states had a detail restating the label: "Opens soon · opens in 14 min".
+Both now carry one phrase — "Opens in 14 min", "Closes in 12 min" — with the
+amber dot carrying "soon". Further out the halves genuinely differ, so "Closed ·
+opens Tue 11am" is untouched. All five phrasings were checked against real
+hours, not just the two that changed.
+
+The update prompt took the owner's own wording: *"Get it while it's hot! Update
+for the latest menus and prices."*
+
+**The cuisine gap, and why the answer is nothing.** Searching "mexican" returns
+nothing. Before proposing any venue, every menu was audited against
+cuisine-signature dishes in case a cuisine we already serve was merely untagged.
+Seven venues matched and **all but one are a single dish** — "Korean-Fried
+Cauliflower" at three separate gastropubs, one "Korean Style Chilli Beef" in KC
+Cafe's 169. Tagging any of them Korean would be false and would make search
+worse. So the gap needed venues, not tags — and the owner ruled **leave it**:
+coverage is not a goal, a cuisine arrives when a place he likes arrives. Written
+into Theme 24 as prose rather than a `[x]` item, deliberately: the cold-content
+gate would have harvested a completed checkbox to `ROADMAP-DONE.md`, and the
+whole value of the entry is the next session reading *do not re-propose this* in
+the live roadmap. `leakscan` blocked the first attempt — a candidate street name
+contained a private estate term, on a public repo. The guard earned its keep;
+the names came out.
+
+**ADR 0045 existed twice.** The FX branch merged minutes after this one and both
+took 0045. Both sessions allocated at merge as the rule requires, and both found
+it free when they checked — two long-lived branches, not a broken rule. Ruled by
+the owner: this record moves to **0047**, because the FX decision is a shipped
+feature carrying its number in nine `site/js` comments. Eleven references updated
+in one commit; every reference the FX record owns re-checked afterwards and left
+alone. The record now states on its face that it was renumbered, because a dozen
+of today's commit messages call it "ADR 0045" and git history cannot be edited —
+without the note, someone following one of those messages lands on the currency
+decision. The contrast with `0025` is recorded with it: same rule, opposite
+answer, because the rule is about **cost**. 0025 was found weeks late with 24
+inbound references; this was found within the hour and cost eleven.
+
+**Verification.** `node --test` **655**; `validate.py` 48 files clean;
+`device_check` 19/19; `cook_check` 36/36; `registry` and `split_data --check`
+clean; plus live runs in headless Chrome at 390 px for the ⚑ geometry (5/5) and
+the card layout (8/8). `SHELL_VERSION` → 2026-08-16.13.
+
+**A harness lesson, repeated often enough to write down.** Purpose-built live
+checks produced false failures three times before producing true ones: one timed
+an interval from page load, and two waited on `li.card` — which the **no-JS
+fallback `<ul>` already satisfies**, so they measured the static mirror rather
+than the rendered page. On a fail-soft site, wait for a JS-only signal
+(`body.app-ready`, an unhidden control), never for markup the fallback provides.
+## 2026-08-16 04:20 UTC — the guard the missed version bump earned
+
+**The report.** The owner clicked "Malaysian" on a venue page, landed on
+`index.html?cuisine=Malaysian`, and got all 48 places with the dropdown
+reading "All cuisines".
+
+**The verdict: the deployed code was correct, his browser was not.** Verified
+against the live site on a fresh profile, twice — once navigating straight to
+the URL, once walking the real journey (load home so the service worker
+installs and takes control, open a menu page, *click* the link so the
+navigation goes through the worker exactly as a tap does). Both gave
+**"6 of 48 places"**, six Malaysian cards, dropdown set to Malaysian, no
+console errors. `curl` confirmed the deployed `app.js`, `filters.js` and
+`sw.js` all carry the new code at `SHELL_VERSION 2026-08-16.14`.
+
+**Why his was stale, and the real defect underneath.** Earlier the same day the
+FX merge changed `app.css`, `index.html` and 15 JS files while leaving
+`SHELL_VERSION` at `.13`. That is not a cosmetic slip. `sw.js` only rebuilds a
+cache that lacks its `READY` sentinel (`if (await existing.match(READY))
+return`), so a cache under an unchanged version name is **skipped entirely** —
+the new shell was never cached, every phone that already had the site kept
+serving the old one, and nothing anywhere reported an error. CI was green. The
+site was correct for anyone arriving fresh. The only way to find it was to be
+holding an affected phone, which is exactly how it was found.
+
+**So the fix is not to the feature — it is a guard.** `tools/check_versions.py`
+compares two states and fails if files changed under `site/` without the
+matching constant moving: `site/data/` → `DATA_VERSION`, everything else →
+`SHELL_VERSION`. Wired into CI (PR against its base, push against
+`event.before`), added to CLAUDE.md's verify list, and named in the lockstep
+rule that previously relied on memory alone.
+
+**Proof it fires, on the real case.** Run against `15a467d..99701ec` — the
+actual merge that shipped the bug — it exits 1 and names the 19 shell files.
+Against this branch's own range it passes. A guard verified on the incident it
+was written for, not on a fixture.
+
+🔎 **And the test found a flaw in the guard on its first run.**
+`tools/test_check_versions.py` builds throwaway git repos and asserts the
+checker fires exactly when it should (9 cases). Case 4 failed immediately:
+`site/sw.js` was being classified as a shell file, so **every data-only menu
+edit** would have been flagged — because bumping `DATA_VERSION` *is* an edit to
+`sw.js`. A guard that cries wolf on the documented-correct action is one people
+learn to override, which is precisely how four earlier checks in this repo went
+decorative. `sw.js` is now excluded as the *carrier* of the versions rather
+than a cached asset (it is in no precache list, and the browser always fetches
+it fresh), and a case pins that exclusion so it cannot come back.
+
+**Verification.** `test_check_versions.py` 9/9 · `check_versions.py` correct on
+three real historical ranges (one bad, two good) · `validate.py` 48 files
+0 errors · `check_no_deps` / `gen_sbom --check` clean · live site verified twice
+in headless Chrome, including the full click journey under an installed and
+controlling service worker.

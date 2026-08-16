@@ -55,6 +55,46 @@ jobs:
           python3 tools/check_visibility.py
           --actual ${{ github.event.repository.private && 'private' || 'public' }}
 
+  versions:
+    name: service-worker version lockstep
+    runs-on: ubuntu-latest
+    steps:
+      # Needs history, not just the tip: the check compares two states, and a
+      # shallow clone has nothing to compare against.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Change a file under site/ without bumping the matching constant in
+      # sw.js and the install step SKIPS that cache entirely — installed phones
+      # keep serving the old files indefinitely, with CI green and no error
+      # anywhere. It shipped exactly that way on 2026-08-16 (the FX merge
+      # changed 19 shell files at SHELL_VERSION .13) and surfaced only when the
+      # owner hit it on his own phone. The range differs by event: a PR is
+      # judged against its base, a push against what main was before it.
+      - name: Assert sw.js versions were bumped in lockstep
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            RANGE="origin/${{ github.base_ref }}..HEAD"
+          elif [ -n "${{ github.event.before }}" ] && \
+               [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            RANGE="${{ github.event.before }}..HEAD"
+          else
+            echo "No comparable base for this event — nothing to check."
+            exit 0
+          fi
+          echo "Range: $RANGE"
+          python3 tools/check_versions.py --range "$RANGE"
+      # And prove the guard can still fire. It found a flaw in itself on its
+      # first run — sw.js was being counted as a shell file, so every data-only
+      # menu edit (which bumps DATA_VERSION, i.e. edits sw.js) was flagged. A
+      # guard that cries wolf on the correct action gets overridden into
+      # decoration, which is how four earlier checks here went quiet.
+      - name: Prove the version guard actually catches things
+        run: python3 tools/test_check_versions.py
+
   test:
     name: JS unit tests
     runs-on: ubuntu-latest

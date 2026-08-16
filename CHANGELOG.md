@@ -36,6 +36,12 @@ content freshness separately from this file.
   that date, plus what was checked and how.
 
 ### Fixed
+- **A new version of the site can no longer fail to reach installed phones.**
+  Changing a file under `site/` without bumping the matching version constant
+  made the service worker skip rebuilding that cache — so phones that already
+  had the site kept serving the old one, indefinitely, with no error anywhere.
+  It happened on 2026-08-16 and reached a real phone. Now caught in CI
+  (`tools/check_versions.py`), with its own test proving the check still fires.
 - **The rate-age line under the currency picker stops crowding it.** The note
   sat hard against the dropdown, close enough to touch its highlight the moment
   the control was used — which is exactly when you're looking at both.
