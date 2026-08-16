@@ -41,6 +41,9 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lib.net import build_ssl_context  # noqa: E402  (needs the path above)
+
 ROOT = Path(__file__).resolve().parent.parent
 RESTAURANTS = ROOT / "site" / "data" / "restaurants"
 
@@ -61,26 +64,6 @@ CORRECT_M = 100.0
 # OSM stores the street number, so the part after the slash is what to ask for.
 UNIT_SLASH = re.compile(r"^\s*[0-9A-Za-z]{1,4}\s*/\s*(?=\d)")
 HOUSE_NUMBER = re.compile(r"^\s*(\d+[A-Za-z]?)\b")
-
-
-def build_ssl_context():
-    """A fully verifying context, working around an empty Python trust store.
-
-    A python.org build on macOS ships no CA bundle until someone runs its
-    `Install Certificates.command`, so every HTTPS call dies with
-    CERTIFICATE_VERIFY_FAILED. Rather than make the tool unusable there — or,
-    far worse, disable verification — fall back to the OS bundle that macOS
-    and most Linux distros already ship. Verification stays fully on; only
-    the source of the trusted roots changes.
-    """
-    context = ssl.create_default_context()
-    if context.cert_store_stats()["x509_ca"]:
-        return context
-    for bundle in ("/etc/ssl/cert.pem", "/etc/ssl/certs/ca-certificates.crt"):
-        if Path(bundle).exists():
-            context.load_verify_locations(cafile=bundle)
-            return context
-    return context
 
 
 def haversine_m(lat1, lng1, lat2, lng2):

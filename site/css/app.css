@@ -3979,23 +3979,29 @@ body.faves-view .to-top {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  min-height: 48px;
+  /* Same box as the ♥ it sits beside, so the action cluster lines up. */
+  width: 52px;
+  min-height: 52px;
   border: 0;
   border-radius: var(--radius-chip);
   background: transparent;
   color: var(--ink-soft);
-  font-size: 1.15rem;
+  /* Sized to sit in the same family as the ♥ beside it (1.7rem). It was
+     1.15rem AND dimmed to 0.75 — two reductions stacked on one control, in a
+     48px box that gave no hint anything was there (owner, 2026-08-16). It is a
+     secondary action, so it stays recessive, but by COLOUR alone (--ink-soft
+     against the accent ♥ and Add): one signal of "secondary", not three.
+     A shade under the ♥ because ⚑ is a solid glyph and ♡ an outline, so equal
+     type sizes would not read as equal weight. */
+  font-size: 1.8rem;
   line-height: 1;
-  opacity: 0.75;
   cursor: pointer;
-  transition: color 0.16s ease, background 0.16s ease, opacity 0.16s ease;
+  transition: color 0.16s ease, background 0.16s ease;
 }
 @media (hover: hover) {
   .dish-report:hover {
     background: var(--surface-2);
     color: var(--ink);
-    opacity: 1;
   }
 }
 .dish-report:focus-visible {

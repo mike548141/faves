@@ -27,6 +27,13 @@ content freshness separately from this file.
   that date, plus what was checked and how.
 
 ### Fixed
+- **The "something's wrong" flag on a dish is visible.** It was rendering at
+  two-thirds the size of the ♥ next to it *and* dimmed to 75% — two reductions
+  stacked on one control, in a box that gave no hint anything was there. It now
+  sits in the same size family as the ♥ (86% of it, since a solid ⚑ reads
+  heavier than an outline ♡) at full strength, in a matching 52 px box. It's
+  still the secondary action, but signalled by colour alone rather than three
+  ways at once.
 - **The allergen ⓘ in Settings is legible again.** Its halo was a filled block
   the size of the 44 px tap target sitting off-centre beside a small glyph — it
   is now a circle around the glyph itself, and the tap target is unchanged. The
