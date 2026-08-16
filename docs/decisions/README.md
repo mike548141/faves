@@ -297,3 +297,21 @@ deliberation those compact docs omit.
   keeps meaning "the shop prices it on application". Renders as its own `?` pill
   and never in the allergen tag row, which must not be diluted; `tools/needs.py`
   derives the worklist. Closed set written in three files, with a drift guard.
+- [0045](0045-the-app-ships-only-what-it-renders.md) — **the app ships only
+  what it renders.** `site/data/` is precached in full, so a field added there
+  is downloaded by every phone whether a screen reads it or not. Superseded
+  prices and departed dishes move to `data/`, the repo-only research store,
+  and are kept forever there. Measured before acting: `priceSeries`/`priceNext`
+  had zero consumers outside the module computing them, and the history cost
+  648 B gzipped of a 56 KB payload — the case is the missing *rule*, not this
+  year's kilobytes. `split_data.py --check` proves the two stores still
+  reconstruct the original corpus, so relocation can't decay into deletion.
+- [0046](0046-ownership-is-recorded-bounded-by-provenance.md) — **ownership is
+  recorded, bounded by provenance.** The owner ruled (2026-08-16) that
+  ownership and contact details — name, email, phone — may be held in `data/`
+  and linked to venues, limited to what is in the public domain or was
+  purposely given to us for Faves. Every record carries a `source` saying
+  which, enforced by `tools/registry.py` as an error, because a bound that is
+  only written down is not a bound. Widens the *no personal data* constraint
+  for the first time on a public repo; home addresses of people and health
+  detail stay absolutely excluded.

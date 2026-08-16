@@ -70,8 +70,9 @@ in atelier and is read on demand — never wholesale.
   Theme 8). A push *is* publication — to the world, immediately and
   irreversibly; git history is public too, so a secret committed and then
   removed is still disclosed and must be **rotated**, never just deleted.
-  Content is publication-bound: no personal data beyond the owner-approved
-  recipe exception below. Verify:
+  Content is publication-bound: no personal data beyond the two
+  owner-approved exceptions below (recipe attributions; `data/`
+  ownership records under ADR 0046's provenance rule). Verify:
   `gh repo view mike548141/faves --json visibility`.
 
 Read `docs/STRATEGY.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, then
@@ -95,15 +96,31 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
   menu data; the whole site must work in flight mode after first visit.
 - **New Zealand English** throughout (favourite, organise). Correct
   macrons on te reo Māori words. Prices in NZD.
-- **No personal data — one owner-approved exception.** No addresses of
-  people, no phone/contact details, no health details, anywhere. For
-  restaurants and menus: no personal data at all. **Exception
-  (owner-approved 2026-07-06):** home recipes in the Cook at Home
-  collection may keep family attributions in their titles/notes (e.g.
-  "Booth's Ginger Crunch", "a Clements family dessert") at the owner's
-  discretion — it's a public site and that call is his. Still never
-  addresses, contact details, or health details. Allergen tagging is a
-  product feature, not a personal disclosure.
+- **No personal data — two owner-approved exceptions.** No home
+  addresses of people, no health details, anywhere — those two are
+  absolute. **In the app's dataset (`site/data/`) and every screen: no
+  personal data at all.** Allergen tagging is a product feature, not a
+  personal disclosure.
+  - **Exception 1 (owner-approved 2026-07-06):** home recipes in the
+    Cook at Home collection may keep family attributions in their
+    titles/notes (e.g. "Booth's Ginger Crunch", "a Clements family
+    dessert") at the owner's discretion — it's a public site and that
+    call is his.
+  - **Exception 2 (owner ruled 2026-08-16, ADR 0046):** the research
+    store `data/` may record ownership and contact details — **name,
+    email, phone** — for the people and organisations behind a venue,
+    bounded by **provenance**: only what is in the public domain
+    (`public-record`) or was purposely given to us for use in Faves
+    (`given`). Every such record carries a `source` saying which, and
+    `tools/registry.py` errors without one. Never served, never
+    precached, never referenced from `site/`. Still never a person's
+    home address, date of birth, or health.
+- **The app ships only what it renders (ADR 0045).** `site/data/` is a
+  precached payload: a field added there is downloaded by every phone
+  whether a screen reads it or not. Data no screen shows — superseded
+  prices, departed dishes — lives in `data/`, the repo-only research
+  store, and is kept forever there. Before adding a field to a venue
+  file, name the screen that renders it.
 - **Accessibility is non-negotiable.** WCAG 2.2 AA, semantic HTML,
   visible focus, prefers-reduced-motion respected, dark mode supported.
 

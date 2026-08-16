@@ -61,6 +61,26 @@ reversible in an afternoon.
 
 ## Data model
 
+**Two stores, cut on rendered / not rendered (ADR 0045).** `site/data/` is a
+**payload** — the service worker precaches every venue file, so a field added
+there is downloaded by every phone whether a screen reads it or not. It holds
+exactly what a screen can show. `data/` at the repo root is the **record** —
+never served, never precached, never referenced from `site/` — and holds
+everything else, kept forever: superseded prices (`data/history/prices/`),
+departed dishes (`data/history/dishes/`), and the ownership graph
+(`data/entities/`, `data/people/`, `data/ownership.json`, ADR 0046). The record
+keys on the venue `id` from its own side only, so the payload needs no field to
+gain an owner or a history. Before adding a field to a venue file, name the
+screen that renders it; `data/README.md` has the full rule, and
+`tools/split_data.py --check` proves the two stores still reconstruct the
+pre-split corpus.
+
+Personal data is barred from the payload absolutely. It is permitted in the
+record only under ADR 0046's provenance rule — name, email and phone, sourced
+either `public-record` or `given`, with `tools/registry.py` erroring on a
+record that cannot say which. Home addresses of people and health detail are
+excluded from both stores, always.
+
 `site/data/restaurants/<id>.json`:
 
 ```jsonc
