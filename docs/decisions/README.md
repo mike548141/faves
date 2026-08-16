@@ -28,6 +28,24 @@ repo — dearer than the oddity. So `0025` is permanently ambiguous: **cite an A
 by its file path, never by bare number.** Numbering carries on from the highest
 in the directory as usual; 0025 is simply used twice.
 
+🕳️ **0082 is a permanent HOLE — leave it empty, do not "fix" it.** On
+2026-08-16 two sessions each pushed a record stamped `0082`, `main` went red for
+everyone, and **both then politely renumbered to the next free number and both
+landed on `0083`** — red again, five minutes later. The survivors are `0083`
+(the location ask) and `0084` (the vibe vocabulary); nobody reclaimed `0082`. A
+number that was briefly two different accepted records in git history is better
+left vacant than reused, and `check_decisions.py` counts records rather than
+contiguity, so the gap costs nothing. The index simply runs 0081 → 0083.
+
+🎯 **The rule that came out of it, because "check before you write" did not
+survive contact:** allocate, **push**, and then run `python3
+tools/check_decisions.py` **immediately AFTER the push** — never only before.
+Checking before is checking a shared mutable counter whose value expires within
+minutes; the post-push check is the only step that closes the window. If it does
+collide, **move whichever record has FEWER inbound references**, not whichever
+landed second: this file's own objection to renumbering is the cost of breaking
+references, so cheapest-repair beats precedence — especially while `main` is red.
+
 **Add the index entry in the same commit as the record.** The collision above
 survived because `0025-infer-allergens-by-default.md` was never indexed here,
 and this index is the one place a duplicate number is visible. An unindexed ADR
