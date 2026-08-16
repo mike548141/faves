@@ -6428,12 +6428,20 @@ Five faves sessions ran concurrently. Every one of the following was found by a
   and is unbumped relative to `origin/main`, so the service worker skips the
   shell cache with CI green. Only `check_versions.py --range origin/main..HEAD`
   caught it.
-- **A forward link to an unlanded ADR hard-blocked every commit** once `pathscan`
-  was promoted from warn-only to enforced mid-session. Neither half was a
-  mistake: the forward reference was fine while pathscan was advisory, and
-  promoting pathscan was right. 🔑 **The defect appeared in the gap between two
-  correct decisions taken by different sessions** — the same shape as the double
-  hold and the absorbed bump. Nobody was wrong and it still broke.
+- **A forward link to an unlanded ADR, and a correct harvest, each hard-blocked
+  every commit in the repo in turn** — mine stopped a peer minutes after theirs
+  stopped me. Neither was a mistake: a forward reference is fine, and harvesting
+  delivered items to the archive is exactly right. 🔑 **The defect appeared in
+  the gap between two correct decisions taken by different sessions, and in three
+  of four instances today the gate that fired was owned by neither party and
+  blocked a third.** That is what makes it concurrency rather than code review.
+  🚩 **And we both misdiagnosed the mechanism, identically.** Both sessions
+  concluded `pathscan` had been promoted from warn-only to enforced, because a
+  `✗ pathscan` line sat above a failed commit. **It had not been.** The blocker
+  was `sizescan` both times, and its `BLOCKED by:` line was thirty lines further
+  down the same output. One of us renumbered an ADR that never needed
+  renumbering because of it. The ✗ that catches the eye is not necessarily the ✗
+  that stopped you.
 - **`0073` was claimed twice** and `0070`/`0071` had to be traded mid-session.
 
 What worked was **the broadcast**: announcing holdings in public and answering
@@ -6442,11 +6450,15 @@ by a file map.
 
 ### 🚩 Honest residue
 
-- **`cook_check.mjs` is flaky under parallel load.** Two runs on this machine
-  aborted on `Runtime.evaluate` and `Input.dispatchKeyEvent` timeouts, a third
-  passed 60/60. That is contention, not a logic fault — but per CLAUDE.md's own
-  warning, a wall of PASS lines followed by `harness error` is not a pass, and it
-  now has a second known cause.
+- **`cook_check.mjs` is flaky, and the flakiness defeats the rule we rely on.**
+  Two runs here aborted on `Runtime.evaluate` and `Input.dispatchKeyEvent`
+  timeouts while a third passed 60/60; a peer session got 75/0, **73/2**, 75/0,
+  75/0 across four runs of one unchanged commit. 🔑 CLAUDE.md's discipline is
+  *"a wall of PASS followed by an error is not a pass — read the summary line"*.
+  Flakiness beats that **specifically**, because the summary line is present and
+  says FAILED, and the right response to a flake is indistinguishable from the
+  wrong response to a real regression: run it again. It goes green. That is the
+  trained behaviour. ⚠️ Neither session captured the failing assertions.
 - **37n's sweep is not done.** The report exists and names 7 class/allergen
   splits over 58 rows; resolving them is a human pass against ADR 0025, and four
   owner calls are owed first (below).

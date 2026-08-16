@@ -23,7 +23,7 @@ see what the property is.
 guards is broken.** That is the test. It is cheap to apply, it does not require
 knowing why the guard was written, and every instance below fails it.
 
-Ten faces, all observed in this repo or its parent, over a single day of
+Twelve faces, all observed in this repo or its parent, over a single day of
 parallel work plus the trail behind it:
 
 **1. It always fires.** The atelier drift check hard-coded a baseline that was
@@ -106,6 +106,38 @@ for face 8 was itself dead: `!!document.querySelector(".sync-body")` passes on
 the index screen, because `sync-ui.js` builds that node once at construction and
 the panel merely un-hides it. A guard that passes before you have navigated
 anywhere is not checking navigation. It now requires a laid-out box.
+
+**10. Two sessions read one output and misattribute the same blocker.** Two
+sessions independently concluded `pathscan` had been promoted from warn-only to
+enforced, because a `✗ pathscan: N finding(s)` line appeared above a failed
+commit. It had not. The blocker was `sizescan` both times — cold-content once,
+harvest-integrity the second — and its `BLOCKED by:` line sat further down the
+same output. **Both of us acted on the wrong mechanism, and one of us renumbered
+an ADR that did not need renumbering because of it.** A gate that prints every
+scanner's findings and its own verdict in one stream invites this: the ✗ that
+catches the eye is not necessarily the ✗ that stopped you. 🔑 **A guard that
+reports honestly can still be read wrongly, and two people reading it wrongly
+the same way is not evidence.** The fix is on the reporter — name the blocking
+gate where the reader is already looking, not thirty lines below.
+
+**11. It is flaky, and flakiness defeats the rule we rely on.** `cook_check`
+returned 75/0, **73/2**, 75/0, 75/0 across four runs of one unchanged commit,
+and `Runtime.evaluate` / `Input.dispatchKeyEvent` timeouts on two more under
+parallel load. This repo's discipline is *"a wall of PASS followed by an error is
+not a pass — read the summary line"*. Flakiness beats that rule **specifically**,
+because the summary line is present and says FAILED, and the correct response to
+a flake is indistinguishable from the wrong response to a real regression: run it
+again. It went green. That is the trained behaviour. ⚠️ And it binds with face 7:
+a check too flaky to gate CI is also too flaky to trust when typed by hand, so
+"leave them manual" quietly assumes the manual runs are believed.
+
+**12. `git add -A` is not file-scoped, so disjoint file ownership does not make a
+shared worktree safe.** Two agents on disjoint files in one worktree; one ran
+`git add -A` and swallowed 101 lines of the other's in-progress work into its
+commit. Nothing was lost and the tree stayed consistent — the *attribution* was
+wrong, which is the kind of damage no gate looks for. The author of this record
+did the same thing in the same session, sweeping a new tool and a changelog into
+an ADR commit. Either one worktree per agent, or forbid `-A` in the brief.
 
 **10. Two identical values do not conflict — they absorb.** A session bumped
 `SHELL_VERSION` to `.88` while `main` independently moved to `.88`. A rebase does
