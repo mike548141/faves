@@ -623,22 +623,13 @@ ever reads as wallpaper. Still touches the vocabulary, the render and the
 avoid-matching — all safety-critical — so it needs its own session. `[M]`,
 unclaimed.
 
-- [ ] 🔎 **`tools/tag_allergens.py` has two holes** `[S][tools]`, found
-      2026-08-16. Missing patterns rather than design faults, and both surfaced
-      the same way — a dish escaping a tag it obviously needed:
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
-      - **The dairy rule matches `cheese` but not bare `cheddar`.** A dish that
-        names the variety and never the word slips through, so this is very
-        likely mis-tagging records **corpus-wide**, not only the one that
-        exposed it. The same hole will exist for `mozzarella`, `parmesan`,
-        `feta` and the rest. Add the varieties, then **re-run over the whole
-        corpus and diff** — how much it newly catches is the measure of how
-        long this has been wrong.
-      - **No rule at all for `tartare sauce` (egg) or `tortilla` (gluten).**
-
-      Fixing these adds tags to existing records, so it is a data change as well
-      as a tools change: bump `DATA_VERSION`, and expect `validate.py`'s
-      allergen warnings to move.
+✅ **`tools/tag_allergens.py`'s two holes — closed 2026-08-16** (`eb9b38f`),
+      ticked here 2026-08-16 by a second session that found the item still open
+      after the work had landed. 6 real missing tags applied corpus-wide; a
+      re-run now reports **0 missing**. Detail →
+      [`ROADMAP-DONE.md`](ROADMAP-DONE.md). ⚠️ One residue stays open under
+      Theme 4, not here: three `sprig-and-fern-tawa` Cheeseburger twin warnings
+      that ADR 0025 forbids a rule from closing.
 
 ✅ **Menu prose tidy-up — Takeaway @ Churton, 2026-08-09** (owner steer: *"where
 the menu writer has not used the best prose we should tidy that up… without
@@ -1709,6 +1700,22 @@ unaffected; watch the landmark change (`<nav aria-label="Filter restaurants">`
 disappears) and keep the filters adjacent to the `role="status"` result count,
 which is a genuine a11y gain — change a filter, hear the new count.
 
+- [ ] 🎯 **15x — The desktop filter row: the real controls, inline** `[M][css][js]`
+  — **the owner has asked for this twice and it is still not built.** Handed over
+  2026-08-16 by the session that designed it and then closed. Recorded here
+  because it was only ever written in a session log's "owed and open" list, which
+  is not a worklist anybody reads.
+  🔎 **It is *not* a media query, and that is the whole difficulty.** The
+  controls live inside `<dialog id="filter-sheet">`, and **a closed dialog cannot
+  render its children on the page** — no amount of CSS makes them appear inline
+  while the dialog is shut. The settled design: one `<div id="filter-controls">`
+  that lives inline by default, which `filters-ui.js` **moves into the dialog**
+  on narrow and back out on wide. A DOM move (rather than duplicate markup)
+  preserves both state and listeners, so there is never a second copy to keep in
+  step. Watch: focus management across the move, the `role="status"` result count
+  staying adjacent, and the landmark not disappearing at one breakpoint only.
+  **CLAIMED 2026-08-16 09:20 UTC (wt: faves-inflight)**
+
 ## Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)
 
 **The report, raw (owner):** *"the ability to force a full refresh of data
@@ -2032,10 +2039,11 @@ Applied; detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   number for that street address, so the stored pin is the street, not the door. Kept
   because the venue is ~15 km out, where the error cannot change a distance
   sort. Worth a house-level fix if OSM ever gains the number.
+  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+
 ✅ **Pandan's Press Hall hours — ruled 2026-08-15**: use the food hall's own
 hours. Applied as **Mon–Fri 11:00–15:00**, the house standard it publishes.
 Two consequences recorded rather than buried:
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
 - **Weekends are the hall's silence, not a stated closure.** It publishes
   weekday hours only. They are stored as closed, which is the safe direction —
   a false "closed" hides the branch, a false "open" sends someone into town.
@@ -2244,12 +2252,24 @@ of the tests, including the one that matters most — *nothing moves on day one*
   enough end padding, or let the control get out of the way while the list is
   moving. **Hiding a price is the part that matters** — a decoration overlapping
   is cosmetic, an unreadable number is not.
+  **CLAIMED 2026-08-16 09:20 UTC (wt: faves-inflight)**
 - [ ] **Audit every fixed/sticky control against the content beneath it**
   `[S][css]` — the contact bar, the section jump-nav, the order FAB and the
   back-to-top all float over the menu, and two of the four have now been found
   wanting by eye rather than by any check. Worth one pass measuring clearance
   at 390px with the largest supported text size, where the boxes grow but the
   offsets are guesses.
+  🔎 **Three measurements already exist — cite them, do not re-take them.**
+  Taken in a real browser at 390 px on 2026-08-16 by the session that closed
+  before it could act on them, and handed over rather than lost:
+  - `.to-top` covers **69.4%** of a venue's heart, leaving **14.7 px** of it
+    reachable — under the 44 px target floor, and the heart is a control, not a
+    decoration, so this is the worse of the two overlaps the owner saw by eye.
+  - `a.app-home-link` (the `Faves` wordmark) measures **81.7 × 31.9 px** — the
+    height is under the 44 px floor.
+  - The Order pill floats over the list **and is tappable** on `main`. The
+    untappable version existed only in discarded work, so do not "fix" it.
+  **CLAIMED 2026-08-16 09:20 UTC (wt: faves-inflight)**
 
 ## Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)
 
