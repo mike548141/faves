@@ -27,6 +27,14 @@ the next one is caught before it ships, not after.
     python3 tools/check_versions.py --range A..B     # a commit range (CI)
     python3 tools/check_versions.py --range A..B -v  # list the files that count
 
+⚠ RUN `--range origin/main..HEAD` ONLY WHEN YOUR BRANCH IS AHEAD. If HEAD is
+*behind* origin/main, `git diff` reads the range in reverse and every constant
+main has moved on looks like it went backwards — a real-looking failure whose
+actual meaning is "you have not pulled". CI never hits this (its range is always
+before..HEAD), but a local run right after someone else pushes will. Fetch first,
+and read the two version numbers in the message before believing the verdict —
+which is how the backwards case itself was found.
+
 Exit 0 = every touched cache had its constant bumped; 1 = at least one didn't.
 Stdlib only, no build step.
 """
