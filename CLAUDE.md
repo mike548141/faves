@@ -167,6 +167,12 @@ python3 tools/check_versions.py --range origin/main..HEAD # sw.js versions bumpe
                               # nothing. Two sessions have now collided on a version
                               # that the bare form called clean.
 node --test                   # JS unit tests (pure logic); no npm install needed
+node tools/boot_check.mjs     # does each screen's JavaScript actually RUN? The ONLY
+                              # browser check CI also runs (job: "every screen boots"),
+                              # so a green CI run IS evidence here — and this is the
+                              # only line on this list where that sentence is true.
+                              # Still type it locally: CI's red arrives AFTER the push
+                              # has already deployed (see the note below the fence)
 node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)
 node tools/addon_check.mjs    # add-on composition in headless Chrome (ADR 0048)
@@ -194,17 +200,42 @@ node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 
                               # because NOTHING RUNS IT BUT YOU — see below.
 ```
 
-🛑 **CI runs NONE of the browser checks.** Measured 2026-08-16 against
-`.github/workflows/ci.yml`: CI runs `node --test` and the Python gates, and not
-one of `sync_check` · `cook_check` · `device_check` · `boot_check` ·
-`addon_check` · `branch_check` · `to_top_check` · `filter_row_check`. Every
-guard that drives a real browser — the ones written precisely because unit tests
-missed a leak, a wreck or a mistap — runs **only when a human or an agent types
-it from this list**. That is how `sync_check` sat dead through a whole settings
-refactor with CI green the entire time: nothing was calling it. So a green CI
-run is *not* evidence about any behaviour on this list, and skipping one of
-these because "CI will catch it" is a category error. Discipline is the only
-thing running them.
+🛑 **CI runs ONE of the TEN browser checks — `boot_check`, and only since
+2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
+and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
+boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
+**not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
+`branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
+`note_check` — **nine** guards, every one written precisely because unit tests
+had already missed a leak, a wreck or a mistap. Those run **only when a human or
+an agent types them from this list**. That is how `sync_check` sat dead through
+a whole settings refactor with CI green the entire time: nothing was calling it.
+So a green CI run is still *not* evidence about any behaviour on this list
+except `boot_check`'s, and skipping one because "CI will catch it" is still a
+category error.
+
+🛑 **And read what the one automated check actually promises: it REPORTS, it
+does not BLOCK.** `protect-main` requires four status checks, but a repository
+admin bypasses it always (`bypass_mode: always`) — measured 2026-08-17, **the
+last 100 ruleset evaluations on `main` were 100 bypasses**. On this repo's
+normal path a direct push to `main` **is** the Cloudflare Pages deploy, so the
+sequence is **push → deploy → CI goes red afterwards**. `every screen boots` is
+not in the required-checks list either, so it does not block a PR merge. What it
+buys is that this one check runs without anyone remembering to type it — which
+is worth having, and is a much weaker claim than "the push will fail".
+🚩 **The same is true of `service-worker version lockstep`** — the gate written
+*because* an unbumped `SHELL_VERSION` shipped to the owner's own phone is also
+absent from the required list, so it too is advisory on every path.
+🚩 **A transport timeout in `tools/lib/browser.mjs` is NOT specific to
+`cook_check`.** Measured 2026-08-17 on a five-session laptop: `boot_check` 2 of
+4 runs failed and `recipe_check` 4 of 8 aborted, every failure on the same
+30-second CDP timeout. The ruling picked `boot_check` because it "makes no
+timing assumptions" — true of its *assertions*, and the timeout is in the
+*transport*, so it inherits the flakiness anyway. Worse, `boot_check` renders a
+transport timeout as `FAIL <assertion name>` and exit 1, which is
+byte-indistinguishable from a real regression. On the quiet CI runner this has
+not been observed (7/7); on a loaded machine, believe the exit code before you
+believe the assertion name.
 
 **The exchange rates refresh themselves weekly** — `.github/workflows/fx.yml`
 opens an auto-merging PR every Sunday (ADR 0045). Until an `FX_TOKEN` secret
@@ -268,11 +299,14 @@ assertions was verified by reintroducing the bug it covers. Run it after
 touching `recipe.js`, `ingredients.js`, `checklist*.js` or the recipe region of
 `app.css`.
 
-🛑 **None of these run in CI.** `.github/workflows/ci.yml` runs `node --test` and
-the Python gates only, so every check in this family runs when a human types it
-and at no other time — which is how `sync_check.mjs` stayed dead through a whole
-refactor. Type them. A roadmap item tracks fixing it; until then the honour
-system IS the mechanism.
+🛑 **Only `boot_check` runs in CI.** `.github/workflows/ci.yml` runs `node
+--test`, the Python gates and `boot_check` — so every *other* check in this
+family runs when a human types it and at no other time, which is how
+`sync_check.mjs` stayed dead through a whole refactor. Type them. And note that
+even the automated one cannot stop a bad deploy: admins bypass `protect-main`,
+so its red lands **after** the push it is describing (see the fuller note above
+the check descriptions). For the other nine, the honour system IS still the
+mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The
 first sweeps the **whole document** in 37 px steps at two widths and two text
