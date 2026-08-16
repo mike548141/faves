@@ -262,7 +262,8 @@ deliberation those compact docs omit.
   apart in luminance, so **the glyph and the accessible name carry the
   difference**, never colour alone.
 - [0038](0038-intake-provenance-from-the-file.md) — **intake provenance comes
-  off the file, never off the import.** [0031](0031-verified-carries-its-derivation.md)
+  off the file, never off the import.**
+  [0031](0031-verified-carries-its-derivation.md)
   said every reading carries *how* it was obtained but not where that answer
   comes from, so in practice the transcriber asserted it. A file's mtime is not
   the reading date (copying or syncing a photo rewrites it, silently claiming a
@@ -554,7 +555,8 @@ deliberation those compact docs omit.
   way. `hasPrices` stays separate from `canOrder` on the owner's ruling that a
   recipe may one day carry its cost; deriving a capability from the data
   (`hours != null`) lost, because an unrecorded fact and an absent capability
-  are different things and [0054](0054-the-branch-offered-first-is-the-nearest-open-one.md)
+  are different things and
+  [0054](0054-the-branch-offered-first-is-the-nearest-open-one.md)
   already paid for that confusion. One identity survivor,
   `isRecipeKind()`, because the answer is **persisted** in hearts, ratings and
   share URLs and cannot be re-derived. Rendered DOM byte-identical before and
@@ -590,11 +592,13 @@ deliberation those compact docs omit.
   `setNote` needs the note **twice** (the old one locates the line, since the
   note is the identity), and the ± stepper was operating the wrong line when
   two lines differed only by a note — `tools/note_check.mjs` exists for that.
-- [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
+-
+[0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
   — **a guard is decorative when its output is the same whether or not the thing
-  it guards is broken.** Ten instances across two repos, three of them found on
-  one day by three parallel sessions that did not know about each other. Six
-  faces: a guard that always fires (a drift baseline 31 commits stale); one that
+  it guards is broken.** Ten faces, most of them surfaced in one day of parallel
+  work by sessions that only discovered they overlapped because a fourth noticed
+  they had answered the same broadcast. Among them: a guard that always fires (a
+  drift baseline 31 commits stale); one that
   can never fire (a revisit trigger the app ships no telemetry to observe); one
   that answers a different question than it is read as (`check_versions.py` bare
   says "not in scope" on a clean tree, which reads as a pass — two sessions
@@ -608,7 +612,10 @@ deliberation those compact docs omit.
   record's "first X in Faves' history" superlative, which is a claim about every
   other change including ones being written in parallel. Two rules follow: a
   guard must distinguish *"I checked and it is fine"* from *"I did not check"*,
-  and a verdict is worthless without the identity of what it checked.
+  a verdict is worthless without the identity of what it checked; and **a guard
+  that is not automated is not a guard** — `ci.yml` runs none of the eight
+  headless-browser checks, so every guard written *because* unit tests missed
+  something real runs only when a human types it.
 - [0070](0070-an-ingredient-list-may-be-grouped-and-the-group-is-part-of-the-line.md)
   — **an ingredient list may be grouped, and the component is part of the line's
   identity.** ROADMAP 37l. Four recipes had already invented grouping by
@@ -617,7 +624,8 @@ deliberation those compact docs omit.
   a thing"*, so the schema was insisting it was text while both ends treated it
   as structure. Entries become a string **or** a `{component, items[]}` group, so
   a flat recipe is untouched and no component name has to be invented for the
-  unlabelled half of Ginger Crunch. The hard half was the tick ([ADR 0067](0067-a-tick-is-keyed-on-the-line-not-its-place.md)):
+  unlabelled half of Ginger Crunch. The hard half was the tick ([ADR
+  0067](0067-a-tick-is-keyed-on-the-line-not-its-place.md)):
   the key is `"<component>: <text>"`, because **Sticky Date Pudding lists "60g
   butter" in the pudding and again in the sauce** — key on the text alone and
   ticking one ticks the other. That the key then reproduces the old string
