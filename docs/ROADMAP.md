@@ -1044,7 +1044,15 @@ choose (Theme 10), rather than being trapped in one browser's storage.
   profile multiplies the one dimension that's already binding.
   ⏳ Owner to eyeball the wording and the 390 px layout; ADR 0030 wants
   ratifying.
-- **v2 — continual sync (Cloudflare Worker + KV)** `[M][constraint]` ⚑ —
+- [~] **v2 — continual sync (Cloudflare Worker + KV)** `[M][constraint]` ⚑ —
+  **CLAIMED 2026-08-16 10:52 UTC (wt: faves-sync-client)** — owner-directed this
+  session ("so my iphone and laptop show the same favourites, ratings etc").
+  **The claim covers the client half only**: the E2E crypto, the sync-code, the
+  merge engine and their tests, which is the claim-agnostic store ADR 0017's
+  build shape says to build first. **The Worker, the KV namespace and any
+  Cloudflare resource are NOT claimed and are not being built** — standing one
+  up is a new trust surface and the ⚑ owner's-go below, neither of which this
+  session has. A peer session may take the backend half; say so here first.
   a tiny Worker holds **one E2E-encrypted blob per user** in Workers KV.
   Design (all in ADR 0017):
   - **Continual bidirectional**, not a one-off migrate: each device keeps
