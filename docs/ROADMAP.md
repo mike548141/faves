@@ -1802,10 +1802,19 @@ wrong.
 - ✅ **14e — Order-tally knock-ons** — **shipped 2026-08-16**. Line identity is
   now `(venueId, name, selectionKey)`; the share codec deliberately did *not*
   bump. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [~] **14b — The content sweep** `[M][content]` — **the TOOL half CLAIMED
-  2026-08-16 22:40 UTC (wt: faves-schema30)**; the conversion half stays open,
-  because converting a row is a judgement and the tool deliberately refuses to
-  make it. Retro-fitting the corpus is
+- [~] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
+  2026-08-16** (wt: faves-schema30): `tools/find_addons.py` + 44 test cases +
+  17 breakers, and a `validate.py` **warning** on the 15 high-confidence
+  convertible rows. **The conversion half stays open and is the bulk of it** —
+  converting a row is a judgement and the tool deliberately refuses to make it.
+  🔑 **It became a CLASSIFIER rather than a matcher**, because 14b and 28b were
+  reading the same field with two regexes written a month apart. It reports 12
+  classes and names the theme each routes to: **14b owns 136, 28b owns 220,
+  14f 28, 14c 82.** Convertible-now is **15 rows**, not the 28 this item
+  assumed. It prints where its numbers differ from the roadmap's rather than
+  letting the gap be forgotten, and it exits 0 always — a reporter over prose
+  that never fully drains, and a check that always fires is one nobody reads.
+  Retro-fitting the corpus is
   the bulk of the work, not the code. Pattern-match `Add …$` / `+$` in every
   `desc` and convert; keep the prose only where it isn't an orderable choice.
   Model it on `tools/tag_allergens.py` (ADR 0024): a re-runnable script plus a
@@ -2946,24 +2955,12 @@ contain shellfish.
   shape must express "size unknown, price known", and Hell's 13 drink rows
   state two volumes at ONE price. A required price-per-size would force
   inventing prices the menu does not state.
-- [~] **28c — A section's time window is unreadable prose** `[M][schema]` 🔎 —
-  **CLAIMED 2026-08-16 22:40 UTC (wt: faves-schema30)**.
-  the one clean, self-contained defect here. `available` accepts dates and
-  seasons only, so "Mon–Fri 11:30–17:30" is **inexpressible**.
-  ⚠️ **The next clause was stale and is corrected here: ZERO sections cram a
-  time window into the section NAME.** ADR 0057 moved every one of them into
-  `note` on 2026-08-16 — eleven lines below this item, 28d/28f are marked done
-  for doing exactly that. The real figure is **5 sections in 4 venues carrying a
-  window as prose in `section.note`** (`1841-bar-restaurant` mains + brunch,
-  `gold-lining-cafe` all-day-brunch, `sprig-and-fern-tawa` gold-card,
-  `the-borough-tawa` brunch). So 28c adds a field beside `note` and needs no
-  name migration at all — it is smaller than it was written. It remains true
-  that exactly one section in the
-  corpus uses `available` at all. `hours.js` already does weekday+interval
-  reasoning for the venue's own opening hours — the machinery exists and the
-  section schema cannot reach it. Consequence today: nothing checks the clock,
-  so a Gold Card price shows at 9pm on a Sunday with no indication it is not
-  available.
+- ✅ **28c — a section's serving window** — **done 2026-08-16**, [ADR 0081](decisions/0081-a-serving-window-annotates-it-never-filters.md).
+  `served` on a section, in the shape of a venue's `hours`; it **annotates,
+  it never filters**, because a filtered section breaks a link someone was
+  *sent* as a function of the clock. Full write-up, including the two
+  decorative assertions found inside the new check itself, in
+  [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - ✅ **28d, 28f, 28g — the section heading, its qualifier and its identity** —
   **done 2026-08-16** (`82ddb4b`, `b391f1b`, `2f0da85`), ADRs 0057 and 0058.
   The qualifier came out of eleven headings into a `note`; the anchor stopped
