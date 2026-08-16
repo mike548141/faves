@@ -6107,7 +6107,7 @@ either side wrote. Two things came out of it worth keeping:
   array in the raw file including each add-on option's — and reports the decline
   as `SKIPPED`, exit 0. That is the third instance of the pattern found between
   2026-08-11 and 2026-08-17, on the one tool whose silence is a safety
-  question. It is writing [ADR 0071] for
+  question. It is writing [ADR 0072] for
   the family, with the test that unifies them: **a guard is decorative when its
   output is the same whether or not the thing it guards is broken.** 0069 is a
   fifth face of it and links there.
