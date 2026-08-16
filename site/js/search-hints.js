@@ -24,7 +24,20 @@
 // Everything is injected — timer, media query, the hint list — so the whole
 // lifecycle is unit-testable without a DOM timer (tests/search-hints.test.js).
 
-const DEFAULT_INTERVAL = 4000;
+// How long a hint holds before the next one. 4s read as restless in use
+// (owner, 2026-08-16) — a hint is a whole sentence with an example in it, and
+// it has to be readable by someone who only glances at it. Note the fade eats
+// into the dwell at both ends, so the *readable* still time is roughly
+// INTERVAL − FADE, not INTERVAL.
+const DEFAULT_INTERVAL = 7000;
+
+// Paired with the ::placeholder transition in app.css. The script holds the
+// faded-out state for exactly this long before swapping the text, so if one
+// changes the other must.
+const FADE_MS = 450;
+
+// Toggled on the input while the placeholder is faded out.
+const FADING = "hint-fading";
 
 /**
  * Cycle `input`'s placeholder through `hints`.
@@ -41,9 +54,12 @@ export function rotateHints(input, hints, deps = {}) {
   const {
     setInterval: setEvery = globalThis.setInterval,
     clearInterval: clearEvery = globalThis.clearInterval,
+    setTimeout: later = globalThis.setTimeout,
+    clearTimeout: cancel = globalThis.clearTimeout,
     reducedMotion = () =>
       globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true,
     interval = DEFAULT_INTERVAL,
+    fade = FADE_MS,
   } = deps;
 
   const list = (hints || []).filter(Boolean);
@@ -55,13 +71,46 @@ export function rotateHints(input, hints, deps = {}) {
   let timer = null;
   input.placeholder = list[0];
 
+  let fading = null;
+
+  const swap = () => {
+    i = (i + 1) % list.length;
+    input.placeholder = list[i];
+  };
+
+  // Cancel a fade caught mid-flight and put the placeholder back to visible.
+  // Every pause path goes through this: the one unacceptable outcome is an
+  // input left holding an invisible placeholder because someone focused the
+  // field during the 450 ms the text was faded out.
+  const settle = () => {
+    if (fading !== null) {
+      cancel(fading);
+      fading = null;
+    }
+    input.classList?.remove(FADING);
+  };
+
   const tick = () => {
     // Belt and braces: the timer is cleared on focus and on input, but a
     // stale tick arriving in between must not overwrite what someone is
     // reading. Checking here means there is no ordering to get wrong.
     if (input.value || document.activeElement === input) return;
-    i = (i + 1) % list.length;
-    input.placeholder = list[i];
+    if (fading !== null) return; // a fade is already running; don't stack them
+    if (!fade) {
+      swap();
+      return;
+    }
+    // Fade out, swap under cover, fade back in. The class going off in the
+    // same step as the new text is what makes it a cross-fade rather than a
+    // blink — CSS transitions the opacity back up while the new text is
+    // already in place.
+    input.classList?.add(FADING);
+    fading = later(() => {
+      fading = null;
+      // Re-check: the field may have been focused or typed into while faded.
+      if (!input.value && document.activeElement !== input) swap();
+      input.classList?.remove(FADING);
+    }, fade);
   };
 
   const start = () => {
@@ -69,6 +118,7 @@ export function rotateHints(input, hints, deps = {}) {
     timer = setEvery(tick, interval);
   };
   const pause = () => {
+    settle();
     if (timer === null) return;
     clearEvery(timer);
     timer = null;

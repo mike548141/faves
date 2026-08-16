@@ -11,9 +11,16 @@ import { rotateHints, defaultHints } from "../site/js/search-hints.js";
 // A minimal input stand-in: enough DOM surface for the module, no jsdom.
 function fakeInput() {
   const handlers = {};
+  const classes = new Set();
   return {
     value: "",
     placeholder: "",
+    classList: {
+      add: (c) => classes.add(c),
+      remove: (c) => classes.delete(c),
+      contains: (c) => classes.has(c),
+    },
+    faded: () => classes.has("hint-fading"),
     addEventListener: (ev, fn) => {
       (handlers[ev] ||= []).push(fn);
     },
@@ -25,22 +32,48 @@ function fakeInput() {
   };
 }
 
-function harness({ reduced = false, hints = ["one", "two", "three"] } = {}) {
+function harness({ reduced = false, hints = ["one", "two", "three"], fade } = {}) {
   let tick = null;
+  let pending = null;
   let cleared = 0;
+  let delay = null;
   const input = fakeInput();
   const api = rotateHints(input, hints, {
-    setInterval: (fn) => {
+    setInterval: (fn, ms) => {
       tick = fn;
+      delay = ms;
       return 1;
     },
     clearInterval: () => {
       cleared += 1;
       tick = null;
     },
+    setTimeout: (fn) => {
+      pending = fn;
+      return 2;
+    },
+    clearTimeout: () => {
+      pending = null;
+    },
     reducedMotion: () => reduced,
+    ...(fade === undefined ? {} : { fade }),
   });
-  return { input, api, advance: () => tick && tick(), running: () => tick !== null, cleared: () => cleared };
+  return {
+    input,
+    api,
+    // The interval only *starts* the fade; the swap lands when the fade
+    // timeout runs. A full cycle is both, which is what `advance` models.
+    startFade: () => tick && tick(),
+    endFade: () => pending && pending(),
+    advance: () => {
+      if (tick) tick();
+      if (pending) pending();
+    },
+    pendingFade: () => pending !== null,
+    running: () => tick !== null,
+    cleared: () => cleared,
+    delay: () => delay,
+  };
 }
 
 // `document` is referenced by the tick guard; give it a null activeElement.
@@ -135,4 +168,80 @@ test("defaultHints falls back to the English when no translation exists", () => 
   for (const kind of ["dish", "ingredient", "vegan", "takeaway", "phone"]) {
     assert.ok(joined.includes(kind), `hints mention ${kind}`);
   }
+});
+
+// ─── Cross-fade (owner: 4s read as restless; fade rather than snap) ─────────
+
+test("a hint holds well past four seconds", () => {
+  // The owner's complaint was pace, so the pace is asserted rather than left
+  // to a constant nobody reads.
+  const { delay } = harness();
+  assert.ok(delay() >= 6000, `interval is ${delay()}ms, expected a slow hold`);
+});
+
+test("the placeholder fades out BEFORE the text changes", () => {
+  const { input, startFade } = harness();
+  startFade();
+  assert.equal(input.faded(), true, "faded out");
+  assert.equal(input.placeholder, "one", "text has not swapped yet");
+});
+
+test("the text swaps under cover, then fades back in", () => {
+  const { input, startFade, endFade } = harness();
+  startFade();
+  endFade();
+  assert.equal(input.placeholder, "two", "new text is in place");
+  assert.equal(input.faded(), false, "and the fade class is off, so it fades in");
+});
+
+test("focus mid-fade never leaves the placeholder invisible", () => {
+  // The one unacceptable outcome: someone taps the box during the 450ms the
+  // text is transparent and is left staring at an empty field.
+  const { input, startFade, pendingFade } = harness();
+  startFade();
+  assert.equal(input.faded(), true);
+  input.fire("focus");
+  assert.equal(input.faded(), false, "fade class removed on pause");
+  assert.equal(pendingFade(), false, "and the pending swap is cancelled");
+});
+
+test("typing mid-fade also restores visibility", () => {
+  const { input, startFade } = harness();
+  startFade();
+  input.value = "l";
+  input.fire("input");
+  assert.equal(input.faded(), false);
+});
+
+test("stop() mid-fade restores visibility", () => {
+  const { input, api, startFade } = harness();
+  startFade();
+  api.stop();
+  assert.equal(input.faded(), false);
+});
+
+test("fades do not stack if a tick lands while one is running", () => {
+  const { input, startFade, endFade } = harness();
+  startFade();
+  startFade(); // a second interval tick arrives mid-fade
+  endFade();
+  assert.equal(input.placeholder, "two", "advanced exactly one hint, not two");
+});
+
+test("a field focused during the fade does not swap when it completes", () => {
+  const { input, startFade, endFade } = harness();
+  startFade();
+  globalThis.document.activeElement = input;
+  endFade();
+  globalThis.document.activeElement = null;
+  assert.equal(input.placeholder, "one", "text left alone");
+  assert.equal(input.faded(), false, "but visible again");
+});
+
+test("fade: 0 swaps instantly, with no class and no timeout", () => {
+  const { input, startFade, pendingFade } = harness({ fade: 0 });
+  startFade();
+  assert.equal(input.placeholder, "two");
+  assert.equal(input.faded(), false);
+  assert.equal(pendingFade(), false);
 });

@@ -347,8 +347,31 @@ main {
   color: var(--ink);
   font-size: var(--step-body);
 }
+/* The placeholder rotates through examples (search-hints.js). It cross-fades
+   rather than snapping: search-hints.js adds `.hint-fading`, waits out this
+   transition, swaps the text, then removes it. Opacity is set explicitly
+   because a browser's own default for ::placeholder is not 1 everywhere, and
+   fading from an unknown start is how you get a visible jump.
+   Honest limit: transitions on ::placeholder are well supported in Chrome and
+   Firefox and less reliably in older Safari. Where the transition is ignored
+   the text simply swaps instantly — the same behaviour as before, never a
+   stuck-invisible placeholder, because the class is always removed. */
 .search-input::placeholder {
   color: var(--ink-soft);
+  opacity: 1;
+  /* Paired with FADE_MS in search-hints.js — the script waits out exactly this
+     long before swapping the text, so the two must change together. */
+  transition: opacity 450ms ease;
+}
+.search-input.hint-fading::placeholder {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Rotation is already off under reduce-motion, so this only covers a hint
+     set before the first tick — no transition, no exception to the setting. */
+  .search-input::placeholder {
+    transition: none;
+  }
 }
 /* Suppress the browser's own clear affordance (WebKit only, inconsistent) — we
    ship our own so it's present everywhere, including mobile. */

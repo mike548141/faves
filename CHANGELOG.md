@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **The search hints hold longer, and cross-fade instead of snapping.** They
+  changed every 4 seconds, which read as restless — a hint is a whole sentence
+  and needs to survive a glance. Now roughly 7 seconds, with the placeholder
+  fading out, swapping under cover and fading back in. Still frozen the moment
+  you focus or type, and still no rotation at all under *reduce motion*.
 - **About → Version reads in the right order.** "What this page is currently
   running." sat *underneath* the version numbers, where it read as a stray
   caption; it now sits under the **Version** heading and above them, at body
