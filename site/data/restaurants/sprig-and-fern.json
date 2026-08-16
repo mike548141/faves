@@ -881,40 +881,31 @@
           "name": "Fish and Chips",
           "desc": "Gold Card portion.",
           "price": 21.0,
-          "tags": [
-            "df"
-          ]
+          "tags": ["df", "contains-gluten"]
         },
         {
           "name": "Sirloin",
           "desc": "150g. Dairy free available.",
           "price": 27.0,
-          "tags": [
-            "gf"
-          ]
+          "tags": ["gf", "contains-dairy"]
         },
         {
           "name": "Chicken Parma",
           "desc": "Gold Card portion.",
           "price": 21.0,
-          "tags": []
+          "tags": ["contains-dairy", "contains-gluten"]
         },
         {
           "name": "Corn Fritters",
           "desc": "Gold Card portion.",
           "price": 21.0,
-          "tags": [
-            "v",
-            "gf"
-          ]
+          "tags": ["v", "gf", "contains-dairy"]
         },
         {
           "name": "Cheeseburger",
           "desc": "Dairy free available.",
           "price": 21.0,
-          "tags": [
-            "gf-option"
-          ],
+          "tags": ["gf-option", "contains-gluten"],
           "addOns": [
             "nga-bun"
           ]
@@ -929,10 +920,7 @@
           "name": "Summer Salad",
           "desc": null,
           "price": 17.0,
-          "tags": [
-            "gf-option",
-            "v-option"
-          ],
+          "tags": ["gf-option", "v-option", "contains-egg", "contains-gluten", "contains-sesame"],
           "addOns": [
             "salad-protein"
           ]

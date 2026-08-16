@@ -1154,6 +1154,51 @@ def check_allergen_tags():
             warn(record.get("id", path.stem), f"{item['name']}: missing {tag} ({tier} — {why}) — run tools/tag_allergens.py")
 
 
+def check_twin_allergens():
+    """Warn when two rows share a name in one venue but disagree about allergens.
+
+    Found by measurement on 2026-08-16, not by reasoning. Sprig & Fern lists
+    seven dishes twice — a full-price row and a "Gold Card portion." row — and
+    every Gold Card row had FEWER `contains-*` tags than its twin. One shipped
+    with `tags: []` on a crumbed, mozzarella-topped chicken parmigiana whose
+    $32 twin carried both gluten and dairy.
+
+    Nothing was wrong with the inference. `tag_allergens.py` reads a row's name
+    and desc, and these rows have a stub desc with no ingredients in it, so
+    there was nothing to match. The gap is invisible per-row and obvious across
+    the pair, which is exactly what this check is for.
+
+    A WARNING, not an error: a kids' version really is different food — Sprig &
+    Fern's kids cheeseburger has different toppings and different sides — so a
+    genuine divergence must stay expressible. It is the *silence* that needs
+    saying out loud.
+    """
+    for path in sorted((DATA / "restaurants").glob("*.json")):
+        record = json.loads(path.read_text())
+        rid = record.get("id", path.stem)
+        by_name = {}
+        for section in record.get("menu", []):
+            if not isinstance(section, dict):
+                continue
+            for item in section.get("items", []):
+                if isinstance(item.get("name"), str):
+                    tags = {t for t in (item.get("tags") or []) if str(t).startswith("contains-")}
+                    by_name.setdefault(item["name"], []).append((section.get("section"), tags))
+        for name, rows in by_name.items():
+            if len(rows) < 2:
+                continue
+            union = set().union(*(t for _, t in rows))
+            for where, tags in rows:
+                missing = sorted(union - tags)
+                if missing:
+                    warn(
+                        rid,
+                        f"{name!r} in {where!r} lacks {', '.join(missing)}, which "
+                        f"another row of the same name carries — same food, or a "
+                        f"stub description the allergen sweep could not read?",
+                    )
+
+
 def check_contradiction_tables():
     """`CONTRADICTS` (site/js/addons.js) and `CONTRADICTED_BY`
     (tools/tag_allergens.py) are the same food fact written both ways round, so
@@ -1232,6 +1277,7 @@ def main():
 
     check_version_bump()
     check_allergen_tags()
+    check_twin_allergens()
     check_contradiction_tables()
 
     for w in warnings:
