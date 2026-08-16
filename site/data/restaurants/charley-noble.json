@@ -62,12 +62,1315 @@
       ]
     ]
   },
-  "vibe": [],
+  "vibe": [
+    "fine dining",
+    "steakhouse"
+  ],
   "picks": [],
-  "verified": null,
+  "verified": "2026-01-12",
   "lifecycle": {
     "added": "2026-07-06"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Raw & Cured",
+      "sectionId": "raw-cured",
+      "items": [
+        {
+          "name": "Live Marlborough Oysters — Natural",
+          "dishId": "live-marlborough-oysters-natural",
+          "desc": "Freshly shucked to order (minimum order 3). Champagne mignonette, lemon, bádisch dunkel rye.",
+          "price": null,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "gf-option"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Priced as MP (market price) on the menu.",
+              "since": "2026-01-12"
+            }
+          ]
+        },
+        {
+          "name": "Live Marlborough Oysters — Beer Battered",
+          "dishId": "live-marlborough-oysters-beer-battered",
+          "desc": "Freshly shucked to order (minimum order 3). Tartare, lemon, kale chip.",
+          "price": null,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Priced as MP + $0.50 on the menu (base market price not fixed).",
+              "since": "2026-01-12"
+            }
+          ]
+        },
+        {
+          "name": "Charcuterie Board",
+          "dishId": "charcuterie-board",
+          "desc": "San Daniele (Italy), Salame Milano (Italy), Porchetta (NZ – Charley Noble), Coppa (Italy), pickles, crostini. $41 with gluten-free bread instead of crostini (Gluten Free Menu, 2025-11-06).",
+          "price": 39,
+          "tags": [
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Classic Beef Tartare",
+          "dishId": "classic-beef-tartare",
+          "desc": "Egg yolk, crostini. $35 with gluten-free bread instead of crostini (Gluten Free Menu, 2025-11-06).",
+          "price": 34,
+          "tags": [
+            "contains-egg",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Market Fish Ceviche",
+          "dishId": "market-fish-ceviche",
+          "desc": "Tiger's milk, red capsicum, cucumber, red onion, orange, red chilli, coriander, crispy shallot.",
+          "price": 28,
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Oscietra Caviar (10g or 14g)",
+          "dishId": "oscietra-caviar-10g-or-14g",
+          "desc": "Selections change daily across four grades — Prestige, Classic, Royal, Imperial. Chive, shaved egg yolk, crostini.",
+          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Priced as MP (market price) on the menu for both sizes and all four grades.",
+              "since": "2026-01-12"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "To Share - Small Plates",
+      "sectionId": "to-share-small-plates",
+      "items": [
+        {
+          "name": "Honey Ciabatta",
+          "dishId": "honey-ciabatta",
+          "desc": "House-churned butter.",
+          "price": 9,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Focaccia",
+          "dishId": "focaccia",
+          "desc": "Rosemary, Juno olive oil, aged balsamic.",
+          "price": 9,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Taramasalata",
+          "dishId": "taramasalata",
+          "desc": "Salmon roe, cucumber — a bread topping. Traditionally made with a bread or potato base.",
+          "price": 14,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Muhammara",
+          "dishId": "muhammara",
+          "desc": "Fire-roasted pepper, walnut, pomegranate molasses — a bread topping.",
+          "price": 12,
+          "tags": [
+            "contains-nuts",
+            "gf"
+          ]
+        },
+        {
+          "name": "Chicken Liver Parfait",
+          "dishId": "chicken-liver-parfait",
+          "desc": "Ham hock jelly, parsley, crostini.",
+          "price": 14,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Warmed Olives",
+          "dishId": "warmed-olives",
+          "desc": "Fennel & orange oil, pickled garlic, preserved lemon.",
+          "price": 10,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Sourdough Bruschetta",
+          "dishId": "sourdough-bruschetta",
+          "desc": "White bean purée, escalivada, green olive, parsley — or rocket pesto, stracciatella, red grape, balsamic.",
+          "price": 14,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Arancini",
+          "dishId": "arancini",
+          "desc": "Minimum order of 2. Tomato, mozzarella, basil.",
+          "price": 8.5,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Smoked Fish Croquette",
+          "dishId": "smoked-fish-croquette",
+          "desc": "Minimum order of 2. Béchamel sauce, smoked fish, soft herbs, salsa verde.",
+          "price": 9.5,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Salads & Starters",
+      "sectionId": "salads-starters",
+      "items": [
+        {
+          "name": "Panzanella Salad",
+          "dishId": "panzanella-salad",
+          "desc": "Pickled baby beetroot, cherry tomato, red onion, kale, cucumber, crutons, honey mustard & olive dressing.",
+          "price": 26,
+          "tags": [
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Seafood Chowder",
+          "dishId": "seafood-chowder",
+          "desc": "Mussel, fish, prawn, carrot, celery, bacon-infused coconut cream.",
+          "price": 30,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Focaccia (with Seafood Chowder)",
+          "dishId": "focaccia-with-seafood-chowder",
+          "desc": "A smaller side portion of focaccia to accompany the chowder.",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten",
+            "contains-shellfish"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Woodfired Mains",
+      "sectionId": "woodfired-mains",
+      "items": [
+        {
+          "name": "Woodfired Rotisserie New Zealand Pork Belly",
+          "dishId": "woodfired-rotisserie-new-zealand-pork-belly",
+          "desc": "Dinner only, subject to availability. Beetroot purée, pork jus, pickled daikon, orange gelée, mint.",
+          "price": 46,
+          "tags": [
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Wild Awatoru Venison Loin",
+          "dishId": "wild-awatoru-venison-loin",
+          "desc": "Cooked medium-rare. Potato mille-feuille, baby carrot, onion, mustard seed caviar, red wine sauce.",
+          "price": 52,
+          "tags": [
+            "contains-dairy",
+            "gf"
+          ]
+        },
+        {
+          "name": "Fire Grilled Cauliflower",
+          "dishId": "fire-grilled-cauliflower",
+          "desc": "Almond, caper, sherry, chilli.",
+          "price": 38,
+          "tags": [
+            "contains-nuts",
+            "gf"
+          ]
+        },
+        {
+          "name": "Twice Cooked Beef Cheek",
+          "dishId": "twice-cooked-beef-cheek",
+          "desc": "From Greenstone Creek. Saffron risotto, gremolata, herb salad.",
+          "price": 48,
+          "tags": [
+            "contains-dairy",
+            "gf"
+          ]
+        },
+        {
+          "name": "Charley Noble Burger",
+          "dishId": "charley-noble-burger",
+          "desc": "Beef patty, smoked cheese, bacon, pickles, relish, mayo, milk bun, fries. +$10 for an additional patty. $40 with a gluten-free bun (Gluten Free Menu; cooked in the same oil/surface as gluten-containing items).",
+          "price": 38,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Charley Noble Veg Burger",
+          "dishId": "charley-noble-veg-burger",
+          "desc": "Crumbed portobello mushroom, grilled halloumi, onion jam, rocket, chimichurri, smoky pepper mayo, milk bun, fries.",
+          "price": 30,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Roasted Pumpkin",
+          "dishId": "roasted-pumpkin",
+          "desc": "Gluten-free menu dish. Sunflower emulsion, silverbeet, quinoa, raisin & mint salad, coconut yoghurt.",
+          "price": 40,
+          "tags": [
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Larger Plates",
+      "sectionId": "larger-plates",
+      "items": [
+        {
+          "name": "Local Line Caught Market Fish",
+          "dishId": "local-line-caught-market-fish",
+          "desc": "Tabbouleh salad, cherry tomato, lemon dressing.",
+          "price": 48,
+          "tags": [
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Local Line Caught Market Fish (Gluten Free)",
+          "dishId": "local-line-caught-market-fish-gluten-free",
+          "desc": "Gluten-free menu preparation. Dry vermouth cream, basil oil, heirloom tomato, provenzal, tapenade crisp, lemon.",
+          "price": 49,
+          "tags": [
+            "contains-dairy",
+            "gf"
+          ]
+        },
+        {
+          "name": "Beer Battered Fish & Chips",
+          "dishId": "beer-battered-fish-chips",
+          "desc": "Tartare, lemon.",
+          "price": 39,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "House Pot Pie",
+          "dishId": "house-pot-pie",
+          "desc": "Leaf salad.",
+          "price": 35,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Cappelletti (Entrée)",
+          "dishId": "cappelletti-entr-e",
+          "desc": "Caramelised onion, taleggio, mushroom beurre monté, walnut pangrattato, sage.",
+          "price": 28,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Cappelletti (Main)",
+          "dishId": "cappelletti-main",
+          "desc": "Caramelised onion, taleggio, mushroom beurre monté, walnut pangrattato, sage.",
+          "price": 37,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Mafaldine (Entrée)",
+          "dishId": "mafaldine-entr-e",
+          "desc": "Prawn, cherry tomato, chilli oil, baby spinach.",
+          "price": 28,
+          "tags": [
+            "contains-gluten",
+            "contains-shellfish",
+            "contains-egg",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Mafaldine (Main)",
+          "dishId": "mafaldine-main",
+          "desc": "Prawn, cherry tomato, chilli oil, baby spinach.",
+          "price": 37,
+          "tags": [
+            "contains-gluten",
+            "contains-shellfish",
+            "contains-egg",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Tagliatelle (Entrée, Gluten Free)",
+          "dishId": "tagliatelle-entr-e-gluten-free",
+          "desc": "Gluten-free menu preparation of the prawn pasta, using tagliatelle-shaped gluten-free pasta. Prawn, cherry tomato, chilli oil, baby spinach.",
+          "price": 30,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Tagliatelle (Main, Gluten Free)",
+          "dishId": "tagliatelle-main-gluten-free",
+          "desc": "Gluten-free menu preparation of the prawn pasta, using tagliatelle-shaped gluten-free pasta. Prawn, cherry tomato, chilli oil, baby spinach.",
+          "price": 39,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sides",
+      "sectionId": "sides",
+      "items": [
+        {
+          "name": "Iceberg Wedge",
+          "dishId": "iceberg-wedge",
+          "desc": "Buttermilk ranch, pink onion.",
+          "price": 15,
+          "tags": [
+            "contains-dairy",
+            "gf"
+          ]
+        },
+        {
+          "name": "Radicchio Chopped Salad",
+          "dishId": "radicchio-chopped-salad",
+          "desc": "Frisée, radicchio, witloof, hazelnut, pomegranate molasses dressing.",
+          "price": 15,
+          "tags": [
+            "contains-nuts",
+            "gf"
+          ]
+        },
+        {
+          "name": "French Peas",
+          "dishId": "french-peas",
+          "desc": "Bacon, cream, white wine, Parmesan.",
+          "price": 15,
+          "tags": [
+            "contains-dairy",
+            "gf"
+          ]
+        },
+        {
+          "name": "Sweetcorn",
+          "dishId": "sweetcorn",
+          "desc": "Kewpie mayonnaise, nori butter.",
+          "price": 15,
+          "tags": [
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Grilled Asparagus",
+          "dishId": "grilled-asparagus",
+          "desc": "Honey Dijon dressing.",
+          "price": 15,
+          "tags": []
+        },
+        {
+          "name": "Asparagus (Gluten Free)",
+          "dishId": "asparagus-gluten-free",
+          "desc": "Gluten-free menu preparation. Lemon, Parmesan & feta crème, green apple & cucumber salsa. Cooked in the same oil/surface as gluten-containing items.",
+          "price": 15,
+          "tags": [
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Zucchini",
+          "dishId": "zucchini",
+          "desc": "Gluten-free menu dish. Coconut & honey cream, almond, dill.",
+          "price": 15,
+          "tags": [
+            "contains-nuts",
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Spencer Potato",
+          "dishId": "spencer-potato",
+          "desc": "Rosemary & confit garlic butter, mascarpone, sundried tomato, chive.",
+          "price": 15,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fries — Aioli",
+          "dishId": "fries-aioli",
+          "desc": "Aioli. Cooked in the same oil/surface as gluten-containing items (per the Gluten Free menu's own caveat).",
+          "price": 14,
+          "tags": [
+            "contains-egg",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Fries — Truffle Mayo",
+          "dishId": "fries-truffle-mayo",
+          "desc": "Truffle mayo.",
+          "price": 15,
+          "tags": [
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Woodfired Grill",
+      "sectionId": "woodfired-grill",
+      "note": "All grill items served with a choice of sauce (peppercorn brandy, blue cheese, salsa verde — chimichurri on the Gluten Free menu) or butter (black garlic, Café de Paris, garlic/rosemary/chive, wasabi nori); additional sauce or butter $4. The Woodfired Grill section itself carries the venue's own gluten-free asterisk (cooked on a shared grill/surface with gluten-containing items), and only black garlic and wasabi nori butters are marked GF — Café de Paris and garlic/rosemary/chive are not.",
+      "items": [
+        {
+          "name": "Eye Fillet (200g)",
+          "dishId": "eye-fillet-200g",
+          "desc": "Grass-fed Angus.",
+          "price": 52,
+          "tags": [
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Greenstone Creek Scotch Fillet (300g)",
+          "dishId": "greenstone-creek-scotch-fillet-300g",
+          "desc": "Grass-fed Angus. Hand-selected, marbling score 4+, dry-aged in-house no less than 14 days.",
+          "price": 65,
+          "tags": [
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Greenstone Creek Sirloin (300g)",
+          "dishId": "greenstone-creek-sirloin-300g",
+          "desc": "Grass-fed Angus. Marbling score 4+, dry-aged in-house no less than 55 days.",
+          "price": 60,
+          "tags": [
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Southern Stations NZ Wagyu Ribeye on the Bone",
+          "dishId": "southern-stations-nz-wagyu-ribeye-on-the-bone",
+          "desc": "Per 100g, served carved, size subject to availability. Elite purebred Wagyu, dry-aged in-house no less than 55 days, marbling score 9.",
+          "price": 26,
+          "tags": [
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "NZ Lamb Rump (300g)",
+          "dishId": "nz-lamb-rump-300g",
+          "desc": "Cooked medium, size subject to availability. Grass-fed, chicory & clover finished.",
+          "price": 48,
+          "tags": [
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "NZ Lamb Rump (400g)",
+          "dishId": "nz-lamb-rump-400g",
+          "desc": "Cooked medium, size subject to availability. Grass-fed, chicory & clover finished.",
+          "price": 58,
+          "tags": [
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "A5 Sirloin (Japanese Wagyu)",
+          "dishId": "a5-sirloin-japanese-wagyu",
+          "desc": "Per 100g, cooked medium rare, size subject to availability. Grass-fed, grain-finished Kuroge (Japanese Black) A5-grade Wagyu.",
+          "price": 87,
+          "tags": [
+            "contains-dairy",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Dessert",
+      "sectionId": "dessert",
+      "items": [
+        {
+          "name": "Strawberry Meringue",
+          "dishId": "strawberry-meringue",
+          "desc": "Mascarpone sabayon, vanilla coulis, strawberry sorbet, sugared pistachio.",
+          "price": 22,
+          "tags": [
+            "contains-dairy",
+            "contains-nuts",
+            "contains-egg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Chocolate Hazelnut Crackle Bar",
+          "dishId": "chocolate-hazelnut-crackle-bar",
+          "desc": null,
+          "price": 23,
+          "tags": [
+            "contains-nuts",
+            "contains-dairy",
+            "gf"
+          ]
+        },
+        {
+          "name": "Layered Honey Cake",
+          "dishId": "layered-honey-cake",
+          "desc": null,
+          "price": 19,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Apple Tarte Tatin",
+          "dishId": "apple-tarte-tatin",
+          "desc": "Vanilla ice cream, apple caramel.",
+          "price": 19,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chocolate Raspberry Marshmallow",
+          "dishId": "chocolate-raspberry-marshmallow",
+          "desc": null,
+          "price": 10,
+          "tags": [
+            "contains-dairy",
+            "gf"
+          ]
+        },
+        {
+          "name": "Peanut Brittle",
+          "dishId": "peanut-brittle",
+          "desc": null,
+          "price": 9,
+          "tags": [
+            "contains-peanuts",
+            "gf"
+          ]
+        },
+        {
+          "name": "Seasonal Fruit Sorbet",
+          "dishId": "seasonal-fruit-sorbet",
+          "desc": null,
+          "price": 8,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Affogato",
+          "dishId": "affogato",
+          "desc": "Vanilla ice cream; additional liqueurs available.",
+          "price": 10,
+          "tags": [
+            "contains-dairy",
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cheese",
+      "sectionId": "cheese",
+      "items": [
+        {
+          "name": "Cheese Selection (One)",
+          "dishId": "cheese-selection-one",
+          "desc": "Choose one: Brie de Moutere (Little River Estate, cow's milk, Nelson), Goat's Blue (Over the Moon, goat's milk, Waikato), or Barry's Bay Extra Mature Cheddar (cow's milk, Akaroa). Served with lavosh, toasted bread, fruit.",
+          "price": 15,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cheese Selection (Two)",
+          "dishId": "cheese-selection-two",
+          "desc": "Choose two of: Brie de Moutere, Goat's Blue, Barry's Bay Extra Mature Cheddar. Served with lavosh, toasted bread, fruit.",
+          "price": 24,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cheese Selection (Three)",
+          "dishId": "cheese-selection-three",
+          "desc": "All three: Brie de Moutere, Goat's Blue, Barry's Bay Extra Mature Cheddar. Served with lavosh, toasted bread, fruit.",
+          "price": 32,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cheese Selection (Four)",
+          "dishId": "cheese-selection-four",
+          "desc": "Three cheeses (Brie de Moutere, Goat's Blue, Barry's Bay Extra Mature Cheddar) plus an extra serving. Served with lavosh, toasted bread, fruit.",
+          "price": 38,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Kids",
+      "sectionId": "kids",
+      "note": "$25 for two courses (one main, one dessert).",
+      "items": [
+        {
+          "name": "Kids Charley Noble Burger",
+          "dishId": "kids-charley-noble-burger",
+          "desc": "Beef patty, bacon, cheese, lettuce, tomato, mayo, fries.",
+          "price": null,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Part of the $25-for-two-courses kids menu (one main + one dessert); no standalone price is printed.",
+              "since": "2024-08-29"
+            }
+          ]
+        },
+        {
+          "name": "Kids Spaghetti",
+          "dishId": "kids-spaghetti",
+          "desc": "Roasted tomato sauce, parmesan. Served with a leaf salad.",
+          "price": null,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Part of the $25-for-two-courses kids menu (one main + one dessert); no standalone price is printed.",
+              "since": "2024-08-29"
+            }
+          ]
+        },
+        {
+          "name": "Kids Battered Fish & Chips",
+          "dishId": "kids-battered-fish-chips",
+          "desc": "Tomato sauce. Served with a leaf salad.",
+          "price": null,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Part of the $25-for-two-courses kids menu (one main + one dessert); no standalone price is printed.",
+              "since": "2024-08-29"
+            }
+          ]
+        },
+        {
+          "name": "Kids Vanilla Ice Cream or Seasonal Sorbet",
+          "dishId": "kids-vanilla-ice-cream-or-seasonal-sorbet",
+          "desc": "Served with a choice of two toppings: marshmallow, chocolate sauce. House policy: dessert only once the kids have eaten their greens.",
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Part of the $25-for-two-courses kids menu (one main + one dessert); no standalone price is printed.",
+              "since": "2024-08-29"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Beer & Cider",
+      "sectionId": "beer-cider",
+      "note": "285ml/425ml sizes on tap; 330ml bottles & cans.",
+      "items": [
+        {
+          "name": "Kereru 'Maidstone' Lager (285ml)",
+          "dishId": "kereru-maidstone-lager-285ml",
+          "desc": "5% ABV. Upper Hutt.",
+          "price": 10,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Kereru 'Maidstone' Lager (425ml)",
+          "dishId": "kereru-maidstone-lager-425ml",
+          "desc": "5% ABV. Upper Hutt.",
+          "price": 14,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Abandoned Pilsner (285ml)",
+          "dishId": "abandoned-pilsner-285ml",
+          "desc": "5% ABV. Lower Hutt.",
+          "price": 10,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Abandoned Pilsner (425ml)",
+          "dishId": "abandoned-pilsner-425ml",
+          "desc": "5% ABV. Lower Hutt.",
+          "price": 14,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Double Vision Brewing 'Tiny Terror' (285ml)",
+          "dishId": "double-vision-brewing-tiny-terror-285ml",
+          "desc": "2.3% ABV. Wellington.",
+          "price": 8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Double Vision Brewing 'Tiny Terror' (425ml)",
+          "dishId": "double-vision-brewing-tiny-terror-425ml",
+          "desc": "2.3% ABV. Wellington.",
+          "price": 11.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Brave Brewing 'Stay Gold' XPA (285ml)",
+          "dishId": "brave-brewing-stay-gold-xpa-285ml",
+          "desc": "4.5% ABV. Hawke's Bay.",
+          "price": 10,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Brave Brewing 'Stay Gold' XPA (425ml)",
+          "dishId": "brave-brewing-stay-gold-xpa-425ml",
+          "desc": "4.5% ABV. Hawke's Bay.",
+          "price": 14,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mount Brewing 'Mermaid's Mirth' APA (285ml)",
+          "dishId": "mount-brewing-mermaid-s-mirth-apa-285ml",
+          "desc": "6.0% ABV. Mt. Maunganui.",
+          "price": 10,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mount Brewing 'Mermaid's Mirth' APA (425ml)",
+          "dishId": "mount-brewing-mermaid-s-mirth-apa-425ml",
+          "desc": "6.0% ABV. Mt. Maunganui.",
+          "price": 14,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Parrotdog 'Greyhound' Low Carb Hazy Pale Ale (285ml)",
+          "dishId": "parrotdog-greyhound-low-carb-hazy-pale-ale-285ml",
+          "desc": "4.3% ABV. Lyall Bay.",
+          "price": 10,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Parrotdog 'Greyhound' Low Carb Hazy Pale Ale (425ml)",
+          "dishId": "parrotdog-greyhound-low-carb-hazy-pale-ale-425ml",
+          "desc": "4.3% ABV. Lyall Bay.",
+          "price": 14,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Double Vision Brewing 'Mouth Party' Hazy Pale Ale (285ml)",
+          "dishId": "double-vision-brewing-mouth-party-hazy-pale-ale-285ml",
+          "desc": "5.3% ABV. Wellington.",
+          "price": 10,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Double Vision Brewing 'Mouth Party' Hazy Pale Ale (425ml)",
+          "dishId": "double-vision-brewing-mouth-party-hazy-pale-ale-425ml",
+          "desc": "5.3% ABV. Wellington.",
+          "price": 14,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Morningcider 'Original Apple' Cider (285ml)",
+          "dishId": "morningcider-original-apple-cider-285ml",
+          "desc": "4.9% ABV. Auckland.",
+          "price": 10,
+          "tags": []
+        },
+        {
+          "name": "Morningcider 'Original Apple' Cider (425ml)",
+          "dishId": "morningcider-original-apple-cider-425ml",
+          "desc": "4.9% ABV. Auckland.",
+          "price": 14,
+          "tags": []
+        },
+        {
+          "name": "Peckham's 'Wild Feijoa' Cider (330ml)",
+          "dishId": "peckham-s-wild-feijoa-cider-330ml",
+          "desc": "5.6% ABV. Moutere.",
+          "price": 13,
+          "tags": []
+        },
+        {
+          "name": "Bach Brewing 'All Day' IPA (330ml)",
+          "dishId": "bach-brewing-all-day-ipa-330ml",
+          "desc": "0.5% ABV. Hawke's Bay.",
+          "price": 12,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Bach Brewing 'All Day' Pilsner (330ml)",
+          "dishId": "bach-brewing-all-day-pilsner-330ml",
+          "desc": "0.5% ABV. Hawke's Bay.",
+          "price": 12,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Kereru 'Flyboy' Gluten-Free Rice Lager (330ml)",
+          "dishId": "kereru-flyboy-gluten-free-rice-lager-330ml",
+          "desc": "5.0% ABV. Upper Hutt.",
+          "price": 13,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Panhead 'Supercharger' APA (330ml)",
+          "dishId": "panhead-supercharger-apa-330ml",
+          "desc": "5.7% ABV. Upper Hutt.",
+          "price": 13,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Parrotdog Black Stout (330ml)",
+          "dishId": "parrotdog-black-stout-330ml",
+          "desc": "5.0% ABV. Lyall Bay.",
+          "price": 13,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Double Vision Brewing 'Red Rascal' Red IPA (330ml)",
+          "dishId": "double-vision-brewing-red-rascal-red-ipa-330ml",
+          "desc": "6.2% ABV. Wellington.",
+          "price": 13,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Abbaye de Leffe S.A. 'Blonde' (330ml)",
+          "dishId": "abbaye-de-leffe-s-a-blonde-330ml",
+          "desc": "6.6% ABV. Belgium.",
+          "price": 15,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Brouwerij Duvel Moortgat NV 'Vedett Extra Pilsner' (330ml)",
+          "dishId": "brouwerij-duvel-moortgat-nv-vedett-extra-pilsner-330ml",
+          "desc": "5.2% ABV. Belgium.",
+          "price": 17.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Brasserie de Rochefort 'Trappistes Rochefort 6' (330ml)",
+          "dishId": "brasserie-de-rochefort-trappistes-rochefort-6-330ml",
+          "desc": "7.5% ABV. Belgium.",
+          "price": 19,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cocktails",
+      "sectionId": "cocktails",
+      "note": "Winter 2025 list: Disc 1 – The Mainstage Mix (tall, party-starting) and Disc 2 – The Afterparty Sessions (short, strong). \"Disc 3 – Classics Always Available\" is also printed, without itemising the classics.",
+      "items": [
+        {
+          "name": "Fat Freddy's Drop • Wandering Eye",
+          "dishId": "fat-freddy-s-drop-wandering-eye",
+          "desc": "Reposado tequila, raspberry, lime, chocolate miso caramel, matcha.",
+          "price": 24,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Patea Maori Club • Poi E",
+          "dishId": "patea-maori-club-poi-e",
+          "desc": "Vodka, kiwifruit, honey, hazelnut, lemon, soda.",
+          "price": 19,
+          "tags": [
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Dave Dobbyn • Slice of Heaven",
+          "dishId": "dave-dobbyn-slice-of-heaven",
+          "desc": "London Dry Gin, dry sherry, Americano Apéritif, Amaro Montenegro, lemon.",
+          "price": 20,
+          "tags": ["contains-gluten"]
+        },
+        {
+          "name": "Flight of the Concords • Think About It",
+          "dishId": "flight-of-the-concords-think-about-it",
+          "desc": "Tamarillo, thyme & Szechuan pepper infused white rum, Cynar, sweet vermouth, Pedro Ximenez.",
+          "price": 21,
+          "tags": []
+        },
+        {
+          "name": "Split Enz • I Got You",
+          "dishId": "split-enz-i-got-you",
+          "desc": "House-spiced Scotch blend, Amaro Averna, bitters.",
+          "price": 22,
+          "tags": []
+        },
+        {
+          "name": "Ladyhawke • My Delirium",
+          "dishId": "ladyhawke-my-delirium",
+          "desc": "Cognac, white rum, orange & cinnamon falernum, lemon.",
+          "price": 21,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Non-Alcoholic",
+      "sectionId": "non-alcoholic",
+      "note": "Organic and fair-trade coffee & tea, made in NZ.",
+      "items": [
+        {
+          "name": "Seasonal Fruit Mojito",
+          "dishId": "seasonal-fruit-mojito",
+          "desc": "Seasonal fruit, mint, lime — freshly juiced.",
+          "price": 12,
+          "tags": []
+        },
+        {
+          "name": "'Drink Yourself More Bliss' (Th' Dudes)",
+          "dishId": "drink-yourself-more-bliss-th-dudes",
+          "desc": "Kiwifruit, honey, verjuice, apple.",
+          "price": 14,
+          "tags": []
+        },
+        {
+          "name": "'Always Take The Weather' (Crowded House)",
+          "dishId": "always-take-the-weather-crowded-house",
+          "desc": "NA botanical spirit, housemade blueberry spirit, NA amaro, mint.",
+          "price": 14,
+          "tags": []
+        },
+        {
+          "name": "'Green Light' (Lorde)",
+          "dishId": "green-light-lorde",
+          "desc": "House-made winter spice mix, Chinotto, lemon.",
+          "price": 14,
+          "tags": []
+        },
+        {
+          "name": "Freshly Pressed Juice",
+          "dishId": "freshly-pressed-juice",
+          "desc": "Orange, apple, pear or tomato.",
+          "price": 9,
+          "tags": []
+        },
+        {
+          "name": "Karma Cola",
+          "dishId": "karma-cola",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Karma Zero Sugar Cola",
+          "dishId": "karma-zero-sugar-cola",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Lemmy",
+          "dishId": "lemmy",
+          "desc": null,
+          "price": 7.5,
+          "tags": []
+        },
+        {
+          "name": "Gingerella",
+          "dishId": "gingerella",
+          "desc": null,
+          "price": 7.5,
+          "tags": []
+        },
+        {
+          "name": "Little City 'Naked Booch' Kombucha",
+          "dishId": "little-city-naked-booch-kombucha",
+          "desc": null,
+          "price": 8,
+          "tags": []
+        },
+        {
+          "name": "Fever-Tree Premium Indian Tonic",
+          "dishId": "fever-tree-premium-indian-tonic",
+          "desc": null,
+          "price": 5,
+          "tags": []
+        },
+        {
+          "name": "Otakiri Still Mineral Water (750ml)",
+          "dishId": "otakiri-still-mineral-water-750ml",
+          "desc": null,
+          "price": 11,
+          "tags": []
+        },
+        {
+          "name": "Otakiri Sparkling Mineral Water (750ml)",
+          "dishId": "otakiri-sparkling-mineral-water-750ml",
+          "desc": null,
+          "price": 11,
+          "tags": []
+        },
+        {
+          "name": "Supreme Coffee — Black",
+          "dishId": "supreme-coffee-black",
+          "desc": "+$0.50 for coconut or oat milk.",
+          "price": 4.5,
+          "tags": []
+        },
+        {
+          "name": "Supreme Coffee — White",
+          "dishId": "supreme-coffee-white",
+          "desc": "+$0.50 for coconut or oat milk.",
+          "price": 5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mochaccino",
+          "dishId": "mochaccino",
+          "desc": "Marshmallow. +$0.50 for coconut or oat milk.",
+          "price": 7,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Assam Breakfast Tea",
+          "dishId": "assam-breakfast-tea",
+          "desc": null,
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Earl Grey Paris Tea",
+          "dishId": "earl-grey-paris-tea",
+          "desc": null,
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Aotearoa Kakariki Green Tea",
+          "dishId": "aotearoa-kakariki-green-tea",
+          "desc": null,
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Pure Peppermint Tea",
+          "dishId": "pure-peppermint-tea",
+          "desc": null,
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Ginger Kawakawa Spice Tea",
+          "dishId": "ginger-kawakawa-spice-tea",
+          "desc": null,
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Rooibos Madagascar Vanilla Tea",
+          "dishId": "rooibos-madagascar-vanilla-tea",
+          "desc": null,
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Mulled Wine Spice Tea",
+          "dishId": "mulled-wine-spice-tea",
+          "desc": null,
+          "price": 5.5,
+          "tags": [
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Chai Latte",
+          "dishId": "chai-latte",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Callebaut 70% Hot Chocolate",
+          "dishId": "callebaut-70-hot-chocolate",
+          "desc": "Marshmallow.",
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ],
+  "verifiedBy": "official-site"
 }

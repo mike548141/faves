@@ -90,12 +90,2829 @@
       ]
     ]
   },
-  "vibe": [],
+  "vibe": [
+    "yum cha",
+    "banquet",
+    "licensed",
+    "byo",
+    "sit-down"
+  ],
   "picks": [],
-  "verified": null,
+  "verified": "2023-10-29",
   "lifecycle": {
     "added": "2026-07-08"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Steam",
+      "sectionId": "steam",
+      "items": [
+        {
+          "name": "Prawn Dumplings (4pc)",
+          "dishId": "prawn-dumplings-4pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Dim Sums (4pc)",
+          "dishId": "dim-sums-4pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Shrimp & Vege Dumplings (4pc)",
+          "dishId": "shrimp-vege-dumplings-4pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Pork & Peanuts Dumplings (3pc)",
+          "dishId": "pork-peanuts-dumplings-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-peanuts",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Dried Scallop & Pork Dumplings (4pc)",
+          "dishId": "dried-scallop-pork-dumplings-4pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Scallop Dumplings (3pc)",
+          "dishId": "scallop-dumplings-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chive & Prawn Dumplings (4pc)",
+          "dishId": "chive-prawn-dumplings-4pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Spicy Prawn Dumplings (4pc)",
+          "dishId": "spicy-prawn-dumplings-4pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Coriander & Prawn Dumplings (4pc)",
+          "dishId": "coriander-prawn-dumplings-4pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Pork & Ginger Dumplings (3pc)",
+          "dishId": "pork-ginger-dumplings-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken Sticky Rice (1pc)",
+          "dishId": "chicken-sticky-rice-1pc",
+          "desc": null,
+          "price": 9.5,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steamed BBQ Pork Buns (3pc)",
+          "dishId": "steamed-bbq-pork-buns-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Marinated Pork Spare Ribs",
+          "dishId": "marinated-pork-spare-ribs",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Marinated Pig Intestine",
+          "dishId": "marinated-pig-intestine",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Marinated Chicken Knuckle",
+          "dishId": "marinated-chicken-knuckle",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Marinated Chicken Feet",
+          "dishId": "marinated-chicken-feet",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steamed Beef Meat Balls (3pc)",
+          "dishId": "steamed-beef-meat-balls-3pc",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Steamed Beef Spare Ribs",
+          "dishId": "steamed-beef-spare-ribs",
+          "desc": null,
+          "price": 11.5,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "ChuHau Beef Honeycomb Tripe",
+          "dishId": "chuhau-beef-honeycomb-tripe",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Marinated Beef Tendon with Chili",
+          "dishId": "marinated-beef-tendon-with-chili",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Steamed Beef Omasum",
+          "dishId": "steamed-beef-omasum",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Steamed Stuffed Tofu",
+          "dishId": "steamed-stuffed-tofu",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pan/Deep Fried",
+      "sectionId": "pan-deep-fried",
+      "items": [
+        {
+          "name": "Crispy Spring Rolls (3pc)",
+          "dishId": "crispy-spring-rolls-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Savory Pork Dumplings (3pc)",
+          "dishId": "savory-pork-dumplings-3pc",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Prawn Won Tons (4pc)",
+          "dishId": "deep-fried-prawn-won-tons-4pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Chicken Wings (4pc)",
+          "dishId": "deep-fried-chicken-wings-4pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Squid",
+          "dishId": "deep-fried-squid",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Pan Fried Pork Dumplings (3pc)",
+          "dishId": "pan-fried-pork-dumplings-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Pan Fried Chive Cakes (3pc)",
+          "dishId": "pan-fried-chive-cakes-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pan Fried Turnip Cakes (3pc)",
+          "dishId": "pan-fried-turnip-cakes-3pc",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Stuffed Capsicums with Fish (3pc)",
+          "dishId": "stuffed-capsicums-with-fish-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Stuffed Eggplant with Fish (3pc)",
+          "dishId": "stuffed-eggplant-with-fish-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Deep Fried Prawn Rolls (3pc)",
+          "dishId": "deep-fried-prawn-rolls-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Preserved Pork Sticky Rice Roll",
+          "dishId": "preserved-pork-sticky-rice-roll",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Taro Pastries (3pc)",
+          "dishId": "taro-pastries-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chinese Fried Breads (2pc)",
+          "dishId": "chinese-fried-breads-2pc",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pan Fried Taro Cake (3pc)",
+          "dishId": "pan-fried-taro-cake-3pc",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Rice Rolls/Porridge",
+      "sectionId": "rice-rolls-porridge",
+      "items": [
+        {
+          "name": "Prawn Rice Rolls (3pc)",
+          "dishId": "prawn-rice-rolls-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "BBQ Pork Rice Rolls (3pc)",
+          "dishId": "bbq-pork-rice-rolls-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Beef Rice Rolls (3pc)",
+          "dishId": "beef-rice-rolls-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Plain Rice Rolls (6pc)",
+          "dishId": "plain-rice-rolls-6pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "v",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mixed Vege Rice Rolls (3pc)",
+          "dishId": "mixed-vege-rice-rolls-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "v",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chinese Fried Bread Rice Rolls (3pc)",
+          "dishId": "chinese-fried-bread-rice-rolls-3pc",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Pork & Preserved Egg Porridge",
+          "dishId": "pork-preserved-egg-porridge",
+          "desc": null,
+          "price": 11.5,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Hong Kong Boat Porridge",
+          "dishId": "hong-kong-boat-porridge",
+          "desc": "Venue notes: peanuts, squid, fish, Chinese fried bread.",
+          "price": 11.5,
+          "tags": [
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Fish Fillet Porridge",
+          "dishId": "fish-fillet-porridge",
+          "desc": null,
+          "price": 11.5,
+          "tags": []
+        },
+        {
+          "name": "Chicken Porridge",
+          "dishId": "chicken-porridge",
+          "desc": null,
+          "price": 11.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Baked",
+      "sectionId": "baked",
+      "items": [
+        {
+          "name": "Baked BBQ Pork Buns (3pc)",
+          "dishId": "baked-bbq-pork-buns-3pc",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Baked Coconut Buns (3pc)",
+          "dishId": "baked-coconut-buns-3pc",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Baked Custard Buns (3pc)",
+          "dishId": "baked-custard-buns-3pc",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "BBQ Pork Pastries (3pc)",
+          "dishId": "bbq-pork-pastries-3pc",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Egg Tarts (3pc)",
+          "dishId": "egg-tarts-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Creamy Custard Tarts (3pc)",
+          "dishId": "creamy-custard-tarts-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Coconut Tarts (3pc)",
+          "dishId": "coconut-tarts-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Dessert",
+      "sectionId": "dessert",
+      "items": [
+        {
+          "name": "Sweet Sponge Cake",
+          "dishId": "sweet-sponge-cake",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Red Bean Sesame Balls (3pc)",
+          "dishId": "red-bean-sesame-balls-3pc",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-sesame",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Red Bean Sago Dumplings (3pc)",
+          "dishId": "red-bean-sago-dumplings-3pc",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mango Pudding",
+          "dishId": "mango-pudding",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Coconut Jelly (4pc)",
+          "dishId": "coconut-jelly-4pc",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Steamed Red Bean Buns (3pc)",
+          "dishId": "steamed-red-bean-buns-3pc",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Steamed Custard Buns (3pc)",
+          "dishId": "steamed-custard-buns-3pc",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Durian Mochi (3pc)",
+          "dishId": "durian-mochi-3pc",
+          "desc": null,
+          "price": 11.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Durian Pastries",
+          "dishId": "durian-pastries",
+          "desc": null,
+          "price": 11.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sweet Tofu",
+          "dishId": "sweet-tofu",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Ice Cream Mochi (3pc)",
+          "dishId": "ice-cream-mochi-3pc",
+          "desc": "Flavours: vanilla, mango, green tea.",
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Golden Egg Yolk Buns (3pc)",
+          "dishId": "golden-egg-yolk-buns-3pc",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Starter",
+      "sectionId": "starter",
+      "items": [
+        {
+          "name": "Regal Dim Sum Platter",
+          "dishId": "regal-dim-sum-platter",
+          "desc": "Minimum two people, price per person. Prawn Dumpling, Pork Dumpling, Crispy WonTon and Spring Roll.",
+          "price": 12.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Won Tons",
+          "dishId": "won-tons",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Spring Rolls",
+          "dishId": "spring-rolls",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Har Gow - Steamed Prawn Dumplings",
+          "dishId": "har-gow-steamed-prawn-dumplings",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Shu Mei - Steamed Pork Dumplings",
+          "dishId": "shu-mei-steamed-pork-dumplings",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Wo Tip - Shanghai Style Pan Fried Pork Dumplings",
+          "dishId": "wo-tip-shanghai-style-pan-fried-pork-dumplings",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Prawn Balls",
+          "dishId": "deep-fried-prawn-balls",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Prawns served with Honey Sauce",
+          "dishId": "deep-fried-prawns-served-with-honey-sauce",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Marinated Chicken Wings",
+          "dishId": "deep-fried-marinated-chicken-wings",
+          "desc": null,
+          "price": 12.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Squid",
+          "dishId": "deep-fried-squid-starter",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Mushrooms stuffed with Minced Pork",
+          "dishId": "deep-fried-mushrooms-stuffed-with-minced-pork",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Pan Fried Chive Cakes",
+          "dishId": "pan-fried-chive-cakes",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Soup",
+      "sectionId": "soup",
+      "items": [
+        {
+          "name": "Shark Fin Soup with Shredded Chicken (For One)",
+          "dishId": "shark-fin-soup-with-shredded-chicken-for-one",
+          "desc": "Venue notes it serves imitation shark fin only.",
+          "price": 9.0,
+          "tags": []
+        },
+        {
+          "name": "Shark Fin Soup with Shredded Chicken (For Ten)",
+          "dishId": "shark-fin-soup-with-shredded-chicken-for-ten",
+          "desc": "Venue notes it serves imitation shark fin only.",
+          "price": 68.0,
+          "tags": []
+        },
+        {
+          "name": "Shark Fin Soup with Shredded Chicken & Fresh Crab Meat (For One)",
+          "dishId": "shark-fin-soup-with-shredded-chicken-fresh-crab-meat-for-one",
+          "desc": "Venue notes it serves imitation shark fin only.",
+          "price": 12.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Shark Fin Soup with Shredded Chicken & Fresh Crab Meat (For Ten)",
+          "dishId": "shark-fin-soup-with-shredded-chicken-fresh-crab-meat-for-ten",
+          "desc": "Venue notes it serves imitation shark fin only.",
+          "price": 78.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Chicken Sweet Corn Soup (For One)",
+          "dishId": "chicken-sweet-corn-soup-for-one",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken Sweet Corn Soup (For Ten)",
+          "dishId": "chicken-sweet-corn-soup-for-ten",
+          "desc": null,
+          "price": 56.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Fresh Crab Meat Sweet Corn Soup (For One)",
+          "dishId": "fresh-crab-meat-sweet-corn-soup-for-one",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Fresh Crab Meat Sweet Corn Soup (For Ten)",
+          "dishId": "fresh-crab-meat-sweet-corn-soup-for-ten",
+          "desc": null,
+          "price": 68.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Szechuan Hot & Sour Soup (Prawn & BBQ Pork) (For One)",
+          "dishId": "szechuan-hot-sour-soup-prawn-bbq-pork-for-one",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Szechuan Hot & Sour Soup (Prawn & BBQ Pork) (For Ten)",
+          "dishId": "szechuan-hot-sour-soup-prawn-bbq-pork-for-ten",
+          "desc": null,
+          "price": 56.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Prawn Won Ton Soup (For One)",
+          "dishId": "prawn-won-ton-soup-for-one",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Prawn Won Ton Soup (For Ten)",
+          "dishId": "prawn-won-ton-soup-for-ten",
+          "desc": null,
+          "price": 75.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "B.B.Q.",
+      "sectionId": "b-b-q",
+      "items": [
+        {
+          "name": "Baak Cit Gai - Cantonese Style Steamed Chicken (Half)",
+          "dishId": "baak-cit-gai-cantonese-style-steamed-chicken-half",
+          "desc": null,
+          "price": 40.0,
+          "tags": []
+        },
+        {
+          "name": "Baak Cit Gai - Cantonese Style Steamed Chicken (Whole)",
+          "dishId": "baak-cit-gai-cantonese-style-steamed-chicken-whole",
+          "desc": null,
+          "price": 78.0,
+          "tags": []
+        },
+        {
+          "name": "Si Jau Gai - Soy Sauce Chicken (Half)",
+          "dishId": "si-jau-gai-soy-sauce-chicken-half",
+          "desc": "Pre-order only.",
+          "price": 40.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Si Jau Gai - Soy Sauce Chicken (Whole)",
+          "dishId": "si-jau-gai-soy-sauce-chicken-whole",
+          "desc": "Pre-order only.",
+          "price": 78.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken braised with Seasonal Vegetables (Half)",
+          "dishId": "chicken-braised-with-seasonal-vegetables-half",
+          "desc": null,
+          "price": 40.0,
+          "tags": []
+        },
+        {
+          "name": "Chicken braised with Seasonal Vegetables (Whole)",
+          "dishId": "chicken-braised-with-seasonal-vegetables-whole",
+          "desc": null,
+          "price": 78.0,
+          "tags": []
+        },
+        {
+          "name": "Chicken braised with Ginger & Spring Onion Gravy (Half)",
+          "dishId": "chicken-braised-with-ginger-spring-onion-gravy-half",
+          "desc": null,
+          "price": 40.0,
+          "tags": []
+        },
+        {
+          "name": "Chicken braised with Ginger & Spring Onion Gravy (Whole)",
+          "dishId": "chicken-braised-with-ginger-spring-onion-gravy-whole",
+          "desc": null,
+          "price": 78.0,
+          "tags": []
+        },
+        {
+          "name": "Cantonese Style Roasted Duck (Half)",
+          "dishId": "cantonese-style-roasted-duck-half",
+          "desc": null,
+          "price": 32.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cantonese Style Roasted Duck (Whole)",
+          "dishId": "cantonese-style-roasted-duck-whole",
+          "desc": null,
+          "price": 60.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Siu Juk - Crispy Roasted Pork",
+          "dishId": "siu-juk-crispy-roasted-pork",
+          "desc": null,
+          "price": 42.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Char Siu Honeyed Barbeque Pork",
+          "dishId": "char-siu-honeyed-barbeque-pork",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Jellyfish & Spiced Pork Leg Slices (cold dish)",
+          "dishId": "jellyfish-spiced-pork-leg-slices-cold-dish",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-sesame",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Peking Duck",
+      "sectionId": "peking-duck",
+      "items": [
+        {
+          "name": "Peking Duck - Two Courses",
+          "dishId": "peking-duck-two-courses",
+          "desc": "1. Crispy Duck Slices with Pancake Wraps. 2. Diced Duck Lettuce Sang-Choi-Baau.",
+          "price": 98.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Peking Duck - Three Courses",
+          "dishId": "peking-duck-three-courses",
+          "desc": "As Two Courses, plus: 3. Vegetables & Tofu Duck Soup.",
+          "price": 108.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sizzling Plate",
+      "sectionId": "sizzling-plate",
+      "items": [
+        {
+          "name": "Beef Steak in Hong Kong Style Sauce",
+          "dishId": "beef-steak-in-hong-kong-style-sauce",
+          "desc": null,
+          "price": 58.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Beef Steak in Black Pepper Sauce",
+          "dishId": "beef-steak-in-black-pepper-sauce",
+          "desc": null,
+          "price": 58.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Venison with Ginger & Spring Onion",
+          "dishId": "venison-with-ginger-spring-onion",
+          "desc": null,
+          "price": 58.0,
+          "tags": []
+        },
+        {
+          "name": "Seafood stirfried with Seasonal Vegetables",
+          "dishId": "seafood-stirfried-with-seasonal-vegetables",
+          "desc": null,
+          "price": 42.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Shelled Prawns stirfried with Seasonal Vegetables",
+          "dishId": "shelled-prawns-stirfried-with-seasonal-vegetables",
+          "desc": null,
+          "price": 45.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Scallops stirfried with Seasonal Vegetables",
+          "dishId": "scallops-stirfried-with-seasonal-vegetables",
+          "desc": null,
+          "price": 45.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Squid stirfried with Seasonal Vegetables",
+          "dishId": "squid-stirfried-with-seasonal-vegetables",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Beef in Satay Sauce",
+          "dishId": "beef-in-satay-sauce",
+          "desc": null,
+          "price": 34.0,
+          "tags": [
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Beef with Ginger & Spring Onion",
+          "dishId": "beef-with-ginger-spring-onion",
+          "desc": null,
+          "price": 34.0,
+          "tags": []
+        },
+        {
+          "name": "Pork in Satay Sauce",
+          "dishId": "pork-in-satay-sauce",
+          "desc": null,
+          "price": 34.0,
+          "tags": [
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chicken with Ginger & Spring Onion",
+          "dishId": "chicken-with-ginger-spring-onion",
+          "desc": null,
+          "price": 34.0,
+          "tags": []
+        },
+        {
+          "name": "Chicken in Satay Sauce",
+          "dishId": "chicken-in-satay-sauce",
+          "desc": null,
+          "price": 34.0,
+          "tags": [
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Hot Pot",
+      "sectionId": "hot-pot",
+      "items": [
+        {
+          "name": "Lamb Brisket with Dried Bean Curd Sticks",
+          "dishId": "lamb-brisket-with-dried-bean-curd-sticks",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Brisket & Chinese Turnip",
+          "dishId": "brisket-chinese-turnip",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Eggplant with Diced Chicken & Salted Fish",
+          "dishId": "eggplant-with-diced-chicken-salted-fish",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Seafood with Tofu",
+          "dishId": "seafood-with-tofu",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Roasted Pork Brisket with Tofu",
+          "dishId": "roasted-pork-brisket-with-tofu",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Eight Treasures with Tofu",
+          "dishId": "eight-treasures-with-tofu",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Braised Tofu with Chinese Mushrooms",
+          "dishId": "braised-tofu-with-chinese-mushrooms",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Diced Chicken & Salted Fish with Tofu",
+          "dishId": "diced-chicken-salted-fish-with-tofu",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Hakka Tofu",
+          "dishId": "hakka-tofu",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Braised Bean Curd Skin Roll with Pork and Mushrooms",
+          "dishId": "braised-bean-curd-skin-roll-with-pork-and-mushrooms",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chao Zhou Style Pork Tripe",
+          "dishId": "chao-zhou-style-pork-tripe",
+          "desc": null,
+          "price": 36.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Chicken",
+      "sectionId": "chicken",
+      "items": [
+        {
+          "name": "Chicken Fillet stuffed with Prawns Paste",
+          "dishId": "chicken-fillet-stuffed-with-prawns-paste",
+          "desc": null,
+          "price": 38.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Diced Chicken stirfried with Vegetables served with Lettuce",
+          "dishId": "diced-chicken-stirfried-with-vegetables-served-with-lettuce",
+          "desc": null,
+          "price": 35.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Crispy Skin Chicken (half)",
+          "dishId": "crispy-skin-chicken-half",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Fillet in Lemon Sauce",
+          "dishId": "chicken-fillet-in-lemon-sauce",
+          "desc": null,
+          "price": 26.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken Fillet in HK Style Sauce with Onion Rings",
+          "dishId": "chicken-fillet-in-hk-style-sauce-with-onion-rings",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chicken Fillet in Sweet & Sour Sauce",
+          "dishId": "chicken-fillet-in-sweet-sour-sauce",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken stirfried with Cashew Nuts & Vegetables in Basket",
+          "dishId": "chicken-stirfried-with-cashew-nuts-vegetables-in-basket",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-nuts",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken stirfried with Seasonal Vegetables & Mushrooms",
+          "dishId": "chicken-stirfried-with-seasonal-vegetables-mushrooms",
+          "desc": null,
+          "price": 26.0,
+          "tags": []
+        },
+        {
+          "name": "Chicken stirfried with Vegetables in Kwan Po Sauce",
+          "dishId": "chicken-stirfried-with-vegetables-in-kwan-po-sauce",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken stirfried with Vegetables in Spicy Szechuan Sauce",
+          "dishId": "chicken-stirfried-with-vegetables-in-spicy-szechuan-sauce",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Chicken in Honey Sauce with Pineapple",
+          "dishId": "chicken-in-honey-sauce-with-pineapple",
+          "desc": null,
+          "price": 30.0,
+          "tags": []
+        },
+        {
+          "name": "Steamed Chicken Pieces with Chinese Sausage",
+          "dishId": "steamed-chicken-pieces-with-chinese-sausage",
+          "desc": null,
+          "price": 38.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Steamed Chicken Pieces & Chinese Mushrooms on Lotus Leaf",
+          "dishId": "steamed-chicken-pieces-chinese-mushrooms-on-lotus-leaf",
+          "desc": null,
+          "price": 38.0,
+          "tags": [
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Duck",
+      "sectionId": "duck",
+      "items": [
+        {
+          "name": "Roasted Duck braised with 8 Treasures (half)",
+          "dishId": "roasted-duck-braised-with-8-treasures-half",
+          "desc": "8 treasures: a combination of meats & vegetables (venue's own description).",
+          "price": 48.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Crispy Duck stuffed with Mashed Taro (half)",
+          "dishId": "crispy-duck-stuffed-with-mashed-taro-half",
+          "desc": null,
+          "price": 48.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Roasted Duck braised with Arhat Treasures (half)",
+          "dishId": "roasted-duck-braised-with-arhat-treasures-half",
+          "desc": "Arhat treasures: a combination of Chinese-monk-style vegetables (venue's own description).",
+          "price": 42.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pork",
+      "sectionId": "pork",
+      "items": [
+        {
+          "name": "Sweet & Sour Pork",
+          "dishId": "sweet-sour-pork",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Jing-Du Sweet & Sour Spare Ribs",
+          "dishId": "jing-du-sweet-sour-spare-ribs",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Spicy Salt Spare Ribs",
+          "dishId": "spicy-salt-spare-ribs",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Garlic Spare Ribs",
+          "dishId": "garlic-spare-ribs",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steamed Spare Ribs in Black Bean Sauce",
+          "dishId": "steamed-spare-ribs-in-black-bean-sauce",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pork Belly & Taro Layers stewed in Thick Sauce",
+          "dishId": "pork-belly-taro-layers-stewed-in-thick-sauce",
+          "desc": null,
+          "price": 38.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Seasonal Round Beans stirfried with Minced Pork",
+          "dishId": "seasonal-round-beans-stirfried-with-minced-pork",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Pork stirfried with Cashew Nuts & Vegetables in Basket",
+          "dishId": "pork-stirfried-with-cashew-nuts-vegetables-in-basket",
+          "desc": null,
+          "price": 32.0,
+          "tags": [
+            "contains-nuts",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Pork stirfried with Seasonal Vegetables",
+          "dishId": "pork-stirfried-with-seasonal-vegetables",
+          "desc": null,
+          "price": 26.0,
+          "tags": []
+        },
+        {
+          "name": "Pork stirfried with Black Bean Sauce & Capsicums",
+          "dishId": "pork-stirfried-with-black-bean-sauce-capsicums",
+          "desc": null,
+          "price": 26.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pork stirfried with Vegetables in Kwan Po Sauce",
+          "dishId": "pork-stirfried-with-vegetables-in-kwan-po-sauce",
+          "desc": null,
+          "price": 26.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steam Salted Fish & Pork Mince Cakes",
+          "dishId": "steam-salted-fish-pork-mince-cakes",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Grilled Salted Fish & Pork Mince Cakes",
+          "dishId": "grilled-salted-fish-pork-mince-cakes",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pork Tripe with Pickled Chinese Vegetables",
+          "dishId": "pork-tripe-with-pickled-chinese-vegetables",
+          "desc": null,
+          "price": 32.0,
+          "tags": []
+        },
+        {
+          "name": "Chinese Sausage & Meat stirfried with Seasonal Vegetables",
+          "dishId": "chinese-sausage-meat-stirfried-with-seasonal-vegetables",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Beef",
+      "sectionId": "beef",
+      "items": [
+        {
+          "name": "Orange Beef",
+          "dishId": "orange-beef",
+          "desc": null,
+          "price": 32.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Beef stirfried with Cashew Nuts & Vegetables in Basket",
+          "dishId": "beef-stirfried-with-cashew-nuts-vegetables-in-basket",
+          "desc": null,
+          "price": 35.0,
+          "tags": [
+            "contains-nuts",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Beef stirfried with Seasonal Vegetables & Mushrooms",
+          "dishId": "beef-stirfried-with-seasonal-vegetables-mushrooms",
+          "desc": null,
+          "price": 28.0,
+          "tags": []
+        },
+        {
+          "name": "Beef stirfried with Black Bean Sauce & Capsicums",
+          "dishId": "beef-stirfried-with-black-bean-sauce-capsicums",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Beef stirfried with Vegetables in Kwan Po Sauce",
+          "dishId": "beef-stirfried-with-vegetables-in-kwan-po-sauce",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Beef stirfried with Vegetables in Spicy Szechuan Sauce",
+          "dishId": "beef-stirfried-with-vegetables-in-spicy-szechuan-sauce",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Shredded Beef Steak stirfried with Pickled Vegetables",
+          "dishId": "shredded-beef-steak-stirfried-with-pickled-vegetables",
+          "desc": null,
+          "price": 58.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Tofu",
+      "sectionId": "tofu",
+      "items": [
+        {
+          "name": "Steamed Tofu stuffed with Prawn Paste",
+          "dishId": "steamed-tofu-stuffed-with-prawn-paste",
+          "desc": null,
+          "price": 33.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Steamed Tofu stuffed with Fish Paste",
+          "dishId": "steamed-tofu-stuffed-with-fish-paste",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Diced Prawns & Chinese Sausage wrapped with Tofu in Crispy Rice Paper",
+          "dishId": "diced-prawns-chinese-sausage-wrapped-with-tofu-in-crispy-rice-paper",
+          "desc": null,
+          "price": 26.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Spicy Szechuan Tofu with Diced Pork & Prawns",
+          "dishId": "spicy-szechuan-tofu-with-diced-pork-prawns",
+          "desc": null,
+          "price": 26.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Spicy Salt Tofu",
+          "dishId": "spicy-salt-tofu",
+          "desc": null,
+          "price": 22.0,
+          "tags": [
+            "contains-gluten",
+            "spicy-1",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Crispy Bean Curd Skin Roll with Pork and Shrimps",
+          "dishId": "crispy-bean-curd-skin-roll-with-pork-and-shrimps",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Regal Silky Smooth Tofu served with Bak Choi, Chicken, Chinese Mushroom",
+          "dishId": "regal-silky-smooth-tofu-served-with-bak-choi-chicken-chinese-mushroom",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Egg Foo Yoong",
+      "sectionId": "egg-foo-yoong",
+      "items": [
+        {
+          "name": "Combination Foo Yoong",
+          "dishId": "combination-foo-yoong",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sundried Scallop Foo Yoong",
+          "dishId": "sundried-scallop-foo-yoong",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Vegetables Foo Yoong",
+          "dishId": "vegetables-foo-yoong",
+          "desc": null,
+          "price": 25.0,
+          "tags": [
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Vegetables",
+      "sectionId": "vegetables",
+      "items": [
+        {
+          "name": "Stirfried Seasonal Vegetables with Garlic",
+          "dishId": "stirfried-seasonal-vegetables-with-garlic",
+          "desc": null,
+          "price": 22.0,
+          "tags": []
+        },
+        {
+          "name": "Stirfried Seasonal Vegetables in Oyster Sauce",
+          "dishId": "stirfried-seasonal-vegetables-in-oyster-sauce",
+          "desc": null,
+          "price": 22.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Braised Seasonal Vegetables in Soup",
+          "dishId": "braised-seasonal-vegetables-in-soup",
+          "desc": null,
+          "price": 25.0,
+          "tags": []
+        },
+        {
+          "name": "Bamboo Sponge braised with Chinese Monk Style Vegetables",
+          "dishId": "bamboo-sponge-braised-with-chinese-monk-style-vegetables",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "v",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chinese Monk Style Vegetarian Dish",
+          "dishId": "chinese-monk-style-vegetarian-dish",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Chinese Mushrooms braised with Oyster Sauce",
+          "dishId": "chinese-mushrooms-braised-with-oyster-sauce",
+          "desc": null,
+          "price": 32.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Steamed Eggplant with Garlic",
+          "dishId": "steamed-eggplant-with-garlic",
+          "desc": null,
+          "price": 30.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Rice, noodle",
+      "sectionId": "rice-noodle",
+      "items": [
+        {
+          "name": "Seafood Selection Fried Rice",
+          "dishId": "seafood-selection-fried-rice",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Yang Zhou Fried Rice",
+          "dishId": "yang-zhou-fried-rice",
+          "desc": "Prawn & barbeque pork.",
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Shrimp Fried Rice",
+          "dishId": "shrimp-fried-rice",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken Fried Rice",
+          "dishId": "chicken-fried-rice",
+          "desc": null,
+          "price": 25.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Barbeque Pork Fried Rice",
+          "dishId": "barbeque-pork-fried-rice",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Combination Fried Rice",
+          "dishId": "combination-fried-rice",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Salted Fish & Diced Chicken Fried Rice",
+          "dishId": "salted-fish-diced-chicken-fried-rice",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Egg and Spring Onion Fried Rice",
+          "dishId": "egg-and-spring-onion-fried-rice",
+          "desc": null,
+          "price": 15.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Seafood Selection Chow Mein",
+          "dishId": "seafood-selection-chow-mein",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Shrimp Chow Mein",
+          "dishId": "shrimp-chow-mein",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Barbeque Pork Chow Mein",
+          "dishId": "barbeque-pork-chow-mein",
+          "desc": null,
+          "price": 25.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Beef Chow Mein",
+          "dishId": "beef-chow-mein",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Chow Mein",
+          "dishId": "chicken-chow-mein",
+          "desc": null,
+          "price": 25.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Combination Chow Mein",
+          "dishId": "combination-chow-mein",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-gluten",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Arhat Vegetables Chow Mein",
+          "dishId": "arhat-vegetables-chow-mein",
+          "desc": null,
+          "price": 25.0,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Bean Sprouts Chow Mein with Regal Sauce",
+          "dishId": "bean-sprouts-chow-mein-with-regal-sauce",
+          "desc": null,
+          "price": 16.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Beef and Regal Soy Sauce stirfried with Freshly made Ho-fun",
+          "dishId": "beef-and-regal-soy-sauce-stirfried-with-freshly-made-ho-fun",
+          "desc": null,
+          "price": 27.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Singaporean Style stirfried Vermicelli (Prawn & BBQ Pork)",
+          "dishId": "singaporean-style-stirfried-vermicelli-prawn-bbq-pork",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Shrimp Dumpling Noodle Soup",
+          "dishId": "shrimp-dumpling-noodle-soup",
+          "desc": "Serves one - 4 dumplings.",
+          "price": 18.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Won Ton Noodle Soup",
+          "dishId": "won-ton-noodle-soup",
+          "desc": "Serves one - 4 dumplings.",
+          "price": 18.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "BBQ Pork & Chinese Mushroom stirfried with E-fu Noodle",
+          "dishId": "bbq-pork-chinese-mushroom-stirfried-with-e-fu-noodle",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Steamed Rice (For One)",
+          "dishId": "steamed-rice-for-one",
+          "desc": null,
+          "price": 2.0,
+          "tags": []
+        },
+        {
+          "name": "Steamed Rice (For Five)",
+          "dishId": "steamed-rice-for-five",
+          "desc": null,
+          "price": 7.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Vegetarian",
+      "sectionId": "vegetarian",
+      "items": [
+        {
+          "name": "Deep Fried Mushrooms",
+          "dishId": "deep-fried-mushrooms",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Vegetarian Spring Rolls",
+          "dishId": "vegetarian-spring-rolls",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetarian Won Tons",
+          "dishId": "vegetarian-won-tons",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Mushrooms Sweet Corn Soup",
+          "dishId": "mushrooms-sweet-corn-soup",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "v",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Rainbow Tofu Soup",
+          "dishId": "rainbow-tofu-soup",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "v",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Spicy Salt Tofu",
+          "dishId": "spicy-salt-tofu-vegetarian",
+          "desc": null,
+          "price": 22.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "spicy-1",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Vegetarian Spicy Szechuan Tofu with Mushrooms",
+          "dishId": "vegetarian-spicy-szechuan-tofu-with-mushrooms",
+          "desc": null,
+          "price": 24.0,
+          "tags": [
+            "v",
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Braised Tofu with Chinese Mushrooms Hot Pot",
+          "dishId": "braised-tofu-with-chinese-mushrooms-hot-pot",
+          "desc": null,
+          "price": 34.0,
+          "tags": [
+            "v",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Seasonal Vegetables with Bean Threads Hot Pot",
+          "dishId": "seasonal-vegetables-with-bean-threads-hot-pot",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "v",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chinese Monk Style Vegetarian Hot Pot",
+          "dishId": "chinese-monk-style-vegetarian-hot-pot",
+          "desc": null,
+          "price": 26.0,
+          "tags": [
+            "v",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Twin Mushroom braised with Seasonal Vegetables",
+          "dishId": "twin-mushroom-braised-with-seasonal-vegetables",
+          "desc": null,
+          "price": 26.0,
+          "tags": [
+            "v",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mixed Vegetables Chow Mein",
+          "dishId": "mixed-vegetables-chow-mein",
+          "desc": null,
+          "price": 20.0,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Bean Sprouts Chow Mein with Regal Sauce",
+          "dishId": "bean-sprouts-chow-mein-with-regal-sauce-vegetarian",
+          "desc": null,
+          "price": 16.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Set Menus",
+      "sectionId": "set-menus",
+      "note": "Limited to one set menu per table; minimum table of 6 people.",
+      "items": [
+        {
+          "name": "Peking Duck Set Menu",
+          "dishId": "peking-duck-set-menu",
+          "desc": "Per person, minimum table of 6 (select 2 mains for a table of 6-7, select 3 for 8-9, select 4 for 10+; limited to one set menu per table). Entree: Prawn Won Tons, Spring Rolls, Spicy Salt Squid, Har Gow, Shu Mei. Peking Duck Two Courses: Crispy Duck Slices with Pancake Wraps, Shredded Duck Chow Mein. Mains selected from: BBQ Pork & Roast Pork, Prawns with Cashew Nuts & Vegetables in Basket, Black Pepper Beef Steak on Sizzling Plate, Sweet & Sour Pork, Lemon Fish Pieces, Crispy Chicken, Stirfried Vegetables with Garlic. Includes Yang Zhou Fried Rice, a daily-special dessert and Chinese tea.",
+          "price": 48.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Regal Set Menu",
+          "dishId": "regal-set-menu",
+          "desc": "Per person, minimum table of 6 (select 4 mains for a table of 6-7, select 5 for 8-9, select 6 for 10+; limited to one set menu per table). Entree: Prawn Won Tons, Spring Rolls, Har Gow, Shu Mei. Soup: Chicken Sweet Corn Soup. Mains selected from: Sweet & Sour Pork, Orange Beef, Lemon Fish Pieces, Crispy Chicken, Squid in Black Bean Sauce with Vegetables, BBQ Pork & Roast Pork, Stirfried Vegetables with Garlic (vegetarian option available), Spicy Salt Tofu (vegetarian option available). Rice/Noodle: select 1 for a table of 6-9, all for 10+, from Egg & Spring Onion Fried Rice (vegetarian option available) or Regal Sauce Noodle with Bean Sprouts (vegetarian option available). Includes Chinese tea.",
+          "price": 39.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pre-order Special",
+      "sectionId": "pre-order-special",
+      "note": "Please order one or two days in advance.",
+      "items": [
+        {
+          "name": "Crayfish braised with Thick Soup",
+          "dishId": "crayfish-braised-with-thick-soup",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Crayfish braised with Ginger & Spring Onion",
+          "dishId": "crayfish-braised-with-ginger-spring-onion",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Crayfish baked with Cheddar Cheese",
+          "dishId": "crayfish-baked-with-cheddar-cheese",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-shellfish",
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Salmon in Two Courses",
+          "dishId": "salmon-in-two-courses",
+          "desc": "1. Sashimi. 2. Fish Belly steamed in Black Bean Sauce OR Spicy Salt Fish Belly.",
+          "price": null,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Steamed Salmon in Black Bean Sauce",
+          "dishId": "steamed-salmon-in-black-bean-sauce",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-soy",
+            "contains-gluten"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Sea Cucumber stuffed with Prawn Paste",
+          "dishId": "sea-cucumber-stuffed-with-prawn-paste",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Fish Maw stuffed with Prawn Paste",
+          "dishId": "fish-maw-stuffed-with-prawn-paste",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Chinese Mushroom & Sea Cucumber braised in Soup",
+          "dishId": "chinese-mushroom-sea-cucumber-braised-in-soup",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Fish Maw & Chinese Mushroom braised with Seasonal Vegetables",
+          "dishId": "fish-maw-chinese-mushroom-braised-with-seasonal-vegetables",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Hand-shredded Salted Roast Chicken (whole)",
+          "dishId": "hand-shredded-salted-roast-chicken-whole",
+          "desc": null,
+          "price": 59.0,
+          "tags": []
+        },
+        {
+          "name": "Chicken steamed in Shaoxing Wine (whole)",
+          "dishId": "chicken-steamed-in-shaoxing-wine-whole",
+          "desc": null,
+          "price": 56.0,
+          "tags": []
+        },
+        {
+          "name": "Salted Roast Chicken (whole)",
+          "dishId": "salted-roast-chicken-whole",
+          "desc": null,
+          "price": 56.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Chef Special",
+      "sectionId": "chef-special",
+      "items": [
+        {
+          "name": "Griddled Chicken Wings/Chicken Soft Bone with Dried Chili in Casserole",
+          "dishId": "griddled-chicken-wings-chicken-soft-bone-with-dried-chili-in-casserole",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Sichuan Style Chicken with Chili Oil and Black Bean (half)",
+          "dishId": "sichuan-style-chicken-with-chili-oil-and-black-bean-half",
+          "desc": null,
+          "price": 40.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Sichuan Style Chicken with Chili Oil and Black Bean (whole)",
+          "dishId": "sichuan-style-chicken-with-chili-oil-and-black-bean-whole",
+          "desc": null,
+          "price": 78.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Spicy Chicken Wings/Chicken Soft Bone with Chili",
+          "dishId": "spicy-chicken-wings-chicken-soft-bone-with-chili",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Sauteed Shredded Pork, Black Fungus Slices and Bamboo Shoot with Spicy Fish Sauce",
+          "dishId": "sauteed-shredded-pork-black-fungus-slices-and-bamboo-shoot-with-spicy-fish-sauce",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Sauteed Chicken with Chili and Black Fungus Slices",
+          "dishId": "sauteed-chicken-with-chili-and-black-fungus-slices",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "spicy-1",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Griddled Pork Tripe with Dried Chili in Casserole",
+          "dishId": "griddled-pork-tripe-with-dried-chili-in-casserole",
+          "desc": null,
+          "price": 32.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Steamed Blue Cod with Chopped Chili",
+          "dishId": "steamed-blue-cod-with-chopped-chili",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "spicy-1"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Steamed Grouper with Chopped Chili",
+          "dishId": "steamed-grouper-with-chopped-chili",
+          "desc": null,
+          "price": 48.0,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Stir Fried Beef/Chicken with Cumin and Chili",
+          "dishId": "stir-fried-beef-chicken-with-cumin-and-chili",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Stir Fried Lamb Cutlet with Cumin and Chili",
+          "dishId": "stir-fried-lamb-cutlet-with-cumin-and-chili",
+          "desc": null,
+          "price": 68.0,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Stir Fried Shredded Potato with Chopped Chili",
+          "dishId": "stir-fried-shredded-potato-with-chopped-chili",
+          "desc": null,
+          "price": 24.0,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Stewed Chicken with Chili in Casserole",
+          "dishId": "stewed-chicken-with-chili-in-casserole",
+          "desc": null,
+          "price": 30.0,
+          "tags": [
+            "contains-soy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Stir Fried Beef with Wasabi, Black Fungus and Round Bean",
+          "dishId": "stir-fried-beef-with-wasabi-black-fungus-and-round-bean",
+          "desc": null,
+          "price": 28.0,
+          "tags": []
+        },
+        {
+          "name": "Fish Patties with Vermicelli and Cabbage",
+          "dishId": "fish-patties-with-vermicelli-and-cabbage",
+          "desc": null,
+          "price": 45.0,
+          "tags": []
+        },
+        {
+          "name": "Poached King Prawn with Chili and Pickled Vegetable",
+          "dishId": "poached-king-prawn-with-chili-and-pickled-vegetable",
+          "desc": null,
+          "price": 48.0,
+          "tags": [
+            "contains-shellfish",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Poached Beef with Chili Oil and Lettuce",
+          "dishId": "poached-beef-with-chili-oil-and-lettuce",
+          "desc": null,
+          "price": 38.0,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Poached Fish Fillet with Chili Oil and Lettuce",
+          "dishId": "poached-fish-fillet-with-chili-oil-and-lettuce",
+          "desc": null,
+          "price": 32.0,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Poached Fish Fillet with Thirteen Spices and Chili",
+          "dishId": "poached-fish-fillet-with-thirteen-spices-and-chili",
+          "desc": null,
+          "price": 32.0,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Stir Fried Round Bean with Sun Dried Shrimp and Pickled Olive",
+          "dishId": "stir-fried-round-bean-with-sun-dried-shrimp-and-pickled-olive",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Steamed Paua with Garlic and Vermicelli (each)",
+          "dishId": "steamed-paua-with-garlic-and-vermicelli-each",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Menu prints \"市價 M.P.\" (market price); no fixed price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Dessert Menu",
+      "sectionId": "dessert-menu",
+      "items": [
+        {
+          "name": "Durian Mochi (3pcs)",
+          "dishId": "durian-mochi-3pcs",
+          "desc": null,
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Mango and Black Glutinous Rice (3pcs)",
+          "dishId": "mango-and-black-glutinous-rice-3pcs",
+          "desc": "Preorder.",
+          "price": 9.0,
+          "tags": []
+        },
+        {
+          "name": "Traditional Cantonese Sweet Beancurd",
+          "dishId": "traditional-cantonese-sweet-beancurd",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Marked \"Sold out\" on the Nov 2024 printed menu; no price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Coconut Jelly (3pcs)",
+          "dishId": "coconut-jelly-3pcs",
+          "desc": null,
+          "price": 9.0,
+          "tags": []
+        },
+        {
+          "name": "Deep Fried and Steamed Mini Sweet Buns (6pcs)",
+          "dishId": "deep-fried-and-steamed-mini-sweet-buns-6pcs",
+          "desc": null,
+          "price": 12.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep Fried Banana served with Ice Cream",
+          "dishId": "deep-fried-banana-served-with-ice-cream",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Marked \"Sold out\" on the Nov 2024 printed menu; no price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        },
+        {
+          "name": "Ice Cream Mochi",
+          "dishId": "ice-cream-mochi",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mango Pudding",
+          "dishId": "mango-pudding-dessert-menu",
+          "desc": null,
+          "price": 9.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Taro Glutinous Rice Ball (4pcs)",
+          "dishId": "taro-glutinous-rice-ball-4pcs",
+          "desc": "Preorder.",
+          "price": 9.0,
+          "tags": []
+        },
+        {
+          "name": "Homemade Cheese Ice Cream",
+          "dishId": "homemade-cheese-ice-cream",
+          "desc": null,
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Marked \"Sold out\" on the Nov 2024 printed menu; no price given.",
+              "since": "2026-08-17"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "verifiedBy": "paper-menu"
 }

@@ -17,47 +17,952 @@
   ],
   "phone": "+64 4 381 2929",
   "website": "https://www.pizzapomodoro.co.nz/",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "Order on our site",
+      "url": "https://order.pizzapomodoro.co.nz"
+    },
+    {
+      "platform": "Delivereasy",
+      "url": "https://www.delivereasy.co.nz/pizza-pomodoro-delivery-wellington"
+    }
+  ],
   "hours": {
     "mon": [],
     "tue": [
       [
-        "12:00",
-        "21:00"
+        "11:40",
+        "20:30"
       ]
     ],
     "wed": [
       [
-        "12:00",
+        "11:40",
         "21:00"
       ]
     ],
     "thu": [
       [
-        "12:00",
-        "21:00"
+        "11:40",
+        "20:30"
       ]
     ],
     "fri": [
       [
-        "12:00",
-        "21:00"
+        "11:40",
+        "21:30"
       ]
     ],
     "sat": [
       [
-        "13:00",
-        "21:00"
+        "12:00",
+        "21:30"
       ]
     ],
-    "sun": []
+    "sun": [
+      [
+        "12:00",
+        "20:30"
+      ]
+    ]
   },
   "vibe": [],
   "picks": [],
-  "verified": null,
+  "verified": "2026-08-16",
   "lifecycle": {
     "added": "2026-07-08"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Chef's Specials",
+      "sectionId": "chef-s-specials",
+      "items": [
+        {
+          "name": "Bosco e Orto",
+          "dishId": "bosco-e-orto",
+          "desc": "San Marzano tomato sauce, Eggplant, Red onion, Spinach, Garlic, Mushroom, Mozzarella",
+          "price": 29.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Buffalo Amatricella",
+          "dishId": "buffalo-amatricella",
+          "desc": "San Marzano Tomato Sauce, Red onions, Pancetta, Parmigiano, Ground pepper and Buffalo mozzarella",
+          "price": 32.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Porchetta",
+          "dishId": "porchetta",
+          "desc": "Italian pork mince, Roasted capsicums, Cherry tomato, Pickle Fennel, Mozzarella, Extra virgin olive oil",
+          "price": 30.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pizze Rosse",
+      "sectionId": "pizze-rosse",
+      "items": [
+        {
+          "name": "Large Margherita (Online Deal)",
+          "dishId": "large-margherita-online-deal",
+          "desc": "Tomato sauce, mozzarella, basil, parmesan, and extra virgin olive oil. Large size only. Online ordering special price.",
+          "price": 17.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Large Marinara (Online Deal)",
+          "dishId": "large-marinara-online-deal",
+          "desc": "Tomato sauce, garlic, oregano, basil, extra virgin olive oil. No cheese. Large size only. Online ordering special price.",
+          "price": 17.0,
+          "tags": [
+            "v",
+            "df",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Siciliana - Small",
+          "dishId": "siciliana-small",
+          "desc": "Tomato sauce, mozzarella, eggplants, salami, chillis and ricotta. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Siciliana - Large",
+          "dishId": "siciliana-large",
+          "desc": "Tomato sauce, mozzarella, eggplants, salami, chillis and ricotta. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Capricciosa - Small",
+          "dishId": "capricciosa-small",
+          "desc": "Tomato sauce, mozzarella, olives, ham, mushrooms and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Capricciosa - Large",
+          "dishId": "capricciosa-large",
+          "desc": "Tomato sauce, mozzarella, olives, ham, mushrooms and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Bambina - Small",
+          "dishId": "bambina-small",
+          "desc": "Tomato sauce, mozzarella, ham. Gluten free (on request)",
+          "price": 12.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Bambina - Large",
+          "dishId": "bambina-large",
+          "desc": "Tomato sauce, mozzarella, ham. Gluten free (on request)",
+          "price": 24.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Carne - Small",
+          "dishId": "carne-small",
+          "desc": "Tomato sauce, mozzarella, salami, ham, and sausage (contain cheese). Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Carne - Large",
+          "dishId": "carne-large",
+          "desc": "Tomato sauce, mozzarella, salami, ham, and sausage (contain cheese). Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Romana - Small",
+          "dishId": "romana-small",
+          "desc": "Tomato sauce, mozzarella, anchovies, olives, capers and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Romana - Large",
+          "dishId": "romana-large",
+          "desc": "Tomato sauce, mozzarella, anchovies, olives, capers and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cardinale - Small",
+          "dishId": "cardinale-small",
+          "desc": "Tomato sauce, mozzarella, cherry tomatoes, salami, basil and olives. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cardinale - Large",
+          "dishId": "cardinale-large",
+          "desc": "Tomato sauce, mozzarella, cherry tomatoes, salami, basil and olives. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Parma - Small",
+          "dishId": "parma-small",
+          "desc": "Tomato sauce, mozzarella, rocket, prosciutto, grana extra virgin olive oil, and balsamic glaze. (When rocket is unavailable, we will use mesclun salad as substitute) Gluten free (on request)",
+          "price": 16.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Parma - Large",
+          "dishId": "parma-large",
+          "desc": "Tomato sauce, mozzarella, rocket, prosciutto, grana extra virgin olive oil, and balsamic glaze. (When rocket is unavailable, we will use mesclun salad as substitute) Gluten free (on request)",
+          "price": 32.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Inferno - Small",
+          "dishId": "inferno-small",
+          "desc": "Tomato sauce, mozzarella, chillis, sausage (contain cheese), olives, anchovies and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Inferno - Large",
+          "dishId": "inferno-large",
+          "desc": "Tomato sauce, mozzarella, chillis, sausage (contain cheese), olives, anchovies and oregano. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Pomodorina - Small",
+          "dishId": "pomodorina-small",
+          "desc": "Touch of tomato sauce, garlic, olives, buffalo mozzarella, fresh basil, and topped with cherry tomatoes, grana and baby rocket (When rocket is unavailable, we will use mesclun salad as substitute) Gluten free (on request)",
+          "price": 16.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Pomodorina - Large",
+          "dishId": "pomodorina-large",
+          "desc": "Touch of tomato sauce, garlic, olives, buffalo mozzarella, fresh basil, and topped with cherry tomatoes, grana and baby rocket (When rocket is unavailable, we will use mesclun salad as substitute) Gluten free (on request)",
+          "price": 32.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Bufalina - Small",
+          "dishId": "bufalina-small",
+          "desc": "Tomato sauce, buffalo mozzarella, fresh basil, and extra virgin olive oil. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Bufalina - Large",
+          "dishId": "bufalina-large",
+          "desc": "Tomato sauce, buffalo mozzarella, fresh basil, and extra virgin olive oil. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Mediterranea - Small",
+          "dishId": "mediterranea-small",
+          "desc": "Tomato sauce, spinach, olives, basil pesto (contain nuts), parmesan and mozzarella. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Mediterranea - Large",
+          "dishId": "mediterranea-large",
+          "desc": "Tomato sauce, spinach, olives, basil pesto (contain nuts), parmesan and mozzarella. We purchase pitted olives, but there is always the possibility that a stray pit may make it through. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Boschetta - Small",
+          "dishId": "boschetta-small",
+          "desc": "Mushrooms, capsicum, capers, rocket, sundried tomatoes and E.V.O.O. (When rocket is unavailable, we will use mesclun salad as substitute). Gluten free (on request)",
+          "price": 16.0,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Boschetta - Large",
+          "dishId": "boschetta-large",
+          "desc": "Mushrooms, capsicum, capers, rocket, sundried tomatoes and E.V.O.O. (When rocket is unavailable, we will use mesclun salad as substitute). Gluten free (on request)",
+          "price": 32.0,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cinque Formaggi - Small",
+          "dishId": "cinque-formaggi-small",
+          "desc": "Tomato sauce, mozzarella, parmigano, swiss cheese, provolone and gorgonzola. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cinque Formaggi - Large",
+          "dishId": "cinque-formaggi-large",
+          "desc": "Tomato sauce, mozzarella, parmigano, swiss cheese, provolone and gorgonzola. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Ortolana - Small",
+          "dishId": "ortolana-small",
+          "desc": "Tomato sauce, mozzarella, zucchini, capsicum and eggplants. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Ortolana - Large",
+          "dishId": "ortolana-large",
+          "desc": "Tomato sauce, mozzarella, zucchini, capsicum and eggplants. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Margherita - Small",
+          "dishId": "margherita-small",
+          "desc": "Tomato sauce, mozzarella, basil, parmesan, and extra virgin olive oil. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Margherita - Large",
+          "dishId": "margherita-large",
+          "desc": "Tomato sauce, mozzarella, basil, parmesan, and extra virgin olive oil. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Marinara - Small",
+          "dishId": "marinara-small",
+          "desc": "Tomato sauce, garlic, oregano, basil, extra virgin olive oil. (No cheese). Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Marinara - Large",
+          "dishId": "marinara-large",
+          "desc": "Tomato sauce, garlic, oregano, basil, extra virgin olive oil. (No cheese). Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "vg",
+            "v",
+            "df",
+            "contains-gluten",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cacciatore - Small",
+          "dishId": "cacciatore-small",
+          "desc": "Tomato sauce, smoked chicken, roasted capsicum, olives, rosemary, chillis and mozzarella. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cacciatore - Large",
+          "dishId": "cacciatore-large",
+          "desc": "Tomato sauce, smoked chicken, roasted capsicum, olives, rosemary, chillis and mozzarella. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Pepperoni - Small",
+          "dishId": "pepperoni-small",
+          "desc": "Spicy selezione Italian salame, tomato sauce, and mozzarella.",
+          "price": 13.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Pepperoni - Large",
+          "dishId": "pepperoni-large",
+          "desc": "Spicy selezione Italian salame, tomato sauce, and mozzarella.",
+          "price": 26.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Rustico Bosco - Small",
+          "dishId": "rustico-bosco-small",
+          "desc": "San Marzano tomato sauce, shaved italian prosciutto, mixed forest (misto bosco) mushrooms, smoked provolone, Rellow cherry tomatoes, mozzarella",
+          "price": 15.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Rustico Bosco - Large",
+          "dishId": "rustico-bosco-large",
+          "desc": "San Marzano tomato sauce, shaved italian prosciutto, mixed forest (misto bosco) mushrooms, smoked provolone, Rellow cherry tomatoes, mozzarella",
+          "price": 30.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pizze Bianche",
+      "sectionId": "pizze-bianche",
+      "items": [
+        {
+          "name": "Salsiccia - Small",
+          "dishId": "salsiccia-small",
+          "desc": "Garlic olive oil, buffalo mozzarella, parmigiano, Italian sausage meat and spinach. Gluten free (on request)",
+          "price": 16.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Salsiccia - Large",
+          "dishId": "salsiccia-large",
+          "desc": "Garlic olive oil, buffalo mozzarella, parmigiano, Italian sausage meat and spinach. Gluten free (on request)",
+          "price": 32.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Tartufo - Small",
+          "dishId": "tartufo-small",
+          "desc": "Porcini and mixed mushrooms, garlic, and mozzarella. Topped w prosciutto, shaved grana cheese, and truffle oil. Gluten free (on request)",
+          "price": 16.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Tartufo - Large",
+          "dishId": "tartufo-large",
+          "desc": "Porcini and mixed mushrooms, garlic, and mozzarella. Topped w prosciutto, shaved grana cheese, and truffle oil. Gluten free (on request)",
+          "price": 32.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Funghi Bianca - Small",
+          "dishId": "funghi-bianca-small",
+          "desc": "Garlic infused olive oil, mushrooms, Parmigiano, oregano and mozzarella. Gluten free (on request)",
+          "price": 12.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Funghi Bianca - Large",
+          "dishId": "funghi-bianca-large",
+          "desc": "Garlic infused olive oil, mushrooms, Parmigiano, oregano and mozzarella. Gluten free (on request)",
+          "price": 25.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Paesana - Small",
+          "dishId": "paesana-small",
+          "desc": "Garlic infused olive oil, roasted potatoes with rosemary, pancetta (italian bacon) and mozzarella. Gluten free (on request)",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Paesana - Large",
+          "dishId": "paesana-large",
+          "desc": "Garlic infused olive oil, roasted potatoes with rosemary, pancetta (italian bacon) and mozzarella. Gluten free (on request)",
+          "price": 29.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Pizza Bread - Small",
+          "dishId": "pizza-bread-small",
+          "desc": "Garlic infused olive oil, parmesan, oregano.",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Pizza Bread - Large",
+          "dishId": "pizza-bread-large",
+          "desc": "Garlic infused olive oil, parmesan, oregano.",
+          "price": 18.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Bomba - Small",
+          "dishId": "bomba-small",
+          "desc": "Roasted potatoes, garlic, salame, nduja (spicy spreadable sausage), parmesan and mozzarella. Gluten free (on request).",
+          "price": 15.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Bomba - Large",
+          "dishId": "bomba-large",
+          "desc": "Roasted potatoes, garlic, salame, nduja (spicy spreadable sausage), parmesan and mozzarella. Gluten free (on request).",
+          "price": 30.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Giardinella - Small",
+          "dishId": "giardinella-small",
+          "desc": "Basil pesto (contain nuts), mozzarella, roasted capsicum, parmesan, mushrooms and sundried tomatoes. Gluten free (on request)",
+          "price": 15.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Giardinella - Large",
+          "dishId": "giardinella-large",
+          "desc": "Basil pesto (contain nuts), mozzarella, roasted capsicum, parmesan, mushrooms and sundried tomatoes. Gluten free (on request)",
+          "price": 30.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts",
+            "gf-option"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "sectionId": "desserts",
+      "items": [
+        {
+          "name": "WCF Calzone",
+          "dishId": "wcf-calzone",
+          "desc": "Folded pizza filled w Nutella custard and WCF chocolate. Delicious! Serves 2.",
+          "price": 18.0,
+          "tags": [
+            "contains-gluten",
+            "contains-nuts",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Vanilla Panna Cotta",
+          "dishId": "vanilla-panna-cotta",
+          "desc": "Rich and delicious Italian mousse. Vanilla flavour.",
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chocolate Panna Cotta",
+          "dishId": "chocolate-panna-cotta",
+          "desc": "Rich and delicious Italian mousse. Dark chocolate flavour.",
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Tiramisu Limone",
+          "dishId": "tiramisu-limone",
+          "desc": "Layers of limoncello liquor soaked sponge. Covered w marscarpone cream.",
+          "price": 9.5,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tiramisu Caffe",
+          "dishId": "tiramisu-caffe",
+          "desc": "Layers of marsala and coffee soaked sponge. Covered w marscapone cream.",
+          "price": 9.5,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tiramisu Pistacchio",
+          "dishId": "tiramisu-pistacchio",
+          "desc": "Layers of chocolate soaked sponge covered w marscapone and pistacchio cream.",
+          "price": 9.5,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg",
+            "contains-nuts"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "sectionId": "drinks",
+      "items": [
+        {
+          "name": "Karma Cola 330ml",
+          "dishId": "karma-cola-330ml",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Gingerella 330ml",
+          "dishId": "gingerella-330ml",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Lemmy 330ml",
+          "dishId": "lemmy-330ml",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Raspberry Razza 330ml",
+          "dishId": "raspberry-razza-330ml",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Six Barrel Cola Six",
+          "dishId": "six-barrel-cola-six",
+          "desc": null,
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Six Barrel Raspberry & Lemon",
+          "dishId": "six-barrel-raspberry-lemon",
+          "desc": null,
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Coke No Sugar 1.5L",
+          "dishId": "coke-no-sugar-1-5l",
+          "desc": null,
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Coke 1.5L",
+          "dishId": "coke-1-5l",
+          "desc": null,
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Sprite 1.5L",
+          "dishId": "sprite-1-5l",
+          "desc": null,
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Coke Zero 330ml",
+          "dishId": "coke-zero-330ml",
+          "desc": null,
+          "price": 3.5,
+          "tags": []
+        },
+        {
+          "name": "Coke 330ml",
+          "dishId": "coke-330ml",
+          "desc": null,
+          "price": 3.5,
+          "tags": []
+        },
+        {
+          "name": "Sprite 330ml",
+          "dishId": "sprite-330ml",
+          "desc": null,
+          "price": 3.5,
+          "tags": []
+        },
+        {
+          "name": "Fanta 330ml",
+          "dishId": "fanta-330ml",
+          "desc": null,
+          "price": 3.5,
+          "tags": []
+        },
+        {
+          "name": "Ginger Beer Classic Schweppes",
+          "dishId": "ginger-beer-classic-schweppes",
+          "desc": null,
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Phoenix Apple, Orange & Mango Juice",
+          "dishId": "phoenix-apple-orange-mango-juice",
+          "desc": null,
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "San Pellegrino Limonata",
+          "dishId": "san-pellegrino-limonata",
+          "desc": "200mL bottle of sparkling lemon beverage.",
+          "price": 6.5,
+          "tags": []
+        },
+        {
+          "name": "San Pellegrino Aranciata",
+          "dishId": "san-pellegrino-aranciata",
+          "desc": "200mL bottle sparkling orange beverage.",
+          "price": 6.5,
+          "tags": []
+        },
+        {
+          "name": "San Pellegrino Chinotto",
+          "dishId": "san-pellegrino-chinotto",
+          "desc": "200mL.",
+          "price": 6.5,
+          "tags": []
+        },
+        {
+          "name": "San Pellegrino Sparkling Water 200mL",
+          "dishId": "san-pellegrino-sparkling-water-200ml",
+          "desc": null,
+          "price": 6.5,
+          "tags": []
+        },
+        {
+          "name": "Pump Water 750mL",
+          "dishId": "pump-water-750ml",
+          "desc": null,
+          "price": 5.5,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "official-site",
+  "verifiedBy": "official-site"
 }

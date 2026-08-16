@@ -16,7 +16,12 @@
   ],
   "phone": "+64 4 381 3930",
   "website": "https://www.rockyard.co.nz/",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "Order on our site",
+      "url": "https://www.rockyard.co.nz/order-pickup"
+    }
+  ],
   "hours": {
     "mon": [],
     "tue": [
@@ -61,6 +66,10 @@
     ],
     "sat": [
       [
+        "11:30",
+        "14:30"
+      ],
+      [
         "17:00",
         "22:00"
       ]
@@ -76,12 +85,761 @@
       ]
     ]
   },
-  "vibe": [],
+  "vibe": [
+    "sit-down"
+  ],
   "picks": [],
-  "verified": null,
+  "verified": "2026-08-16",
   "lifecycle": {
     "added": "2026-07-08"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Combo Lunch",
+      "sectionId": "combo-lunch",
+      "note": "All combos are served with jasmine rice & roti. Swap roti for veggie soup for a gluten-free option.",
+      "items": [
+        {
+          "name": "Combo Hanoi",
+          "dishId": "combo-hanoi",
+          "desc": "Stir-fried medium-rare beef, prawn rice paper rolls, stir-fried Asian greens.",
+          "price": 18.0,
+          "tags": [
+            "df",
+            "gf-option",
+            "contains-peanuts",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Combo Saigon",
+          "dishId": "combo-saigon",
+          "desc": "Braised pork belly, pork spring rolls and Asian slaw.",
+          "price": 18.0,
+          "tags": [
+            "df",
+            "gf-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Combo Sapa",
+          "dishId": "combo-sapa",
+          "desc": "Lemongrass chicken, pork & prawn dumpling and stir-fried Asian greens.",
+          "price": 18.0,
+          "tags": [
+            "df",
+            "gf-option",
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-sesame",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Combo Hoian",
+          "dishId": "combo-hoian",
+          "desc": "Tofu & mushroom yellow curry, veggie dumpling & stir-fried garlic bok choy. Contains peanut.",
+          "price": 18.0,
+          "tags": [
+            "vg",
+            "gf-option",
+            "contains-peanuts",
+            "contains-gluten",
+            "contains-sesame",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Lunch Express",
+      "sectionId": "lunch-express",
+      "note": "Quick & tasty lunch meals.",
+      "items": [
+        {
+          "name": "Vietnamese Baguette",
+          "dishId": "vietnamese-baguette",
+          "desc": "Crispy, airy baguette filled with savoury meats, mayo and chicken pate, topped with fresh cucumbers & herbs. Choose from grilled pork, lemongrass beef, lemongrass chicken, or soy-glazed tofu (vegetarian/vegan).",
+          "price": 13.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Hue Spicy Beef Noodle Soup",
+          "dishId": "hue-spicy-beef-noodle-soup-lunch",
+          "desc": "Sliced medium-rare beef sirloin & Vietnamese pork ham in a fragrant lemongrass chilli beef broth with rice noodle, fresh herbs & coriander. Mild to hot spicy.",
+          "price": 17.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Vermicelli Noodles",
+          "dishId": "vermicelli-noodles-lunch",
+          "desc": "With fried spring roll, lettuce, crushed peanuts, herbs & Vietnamese traditional dressing. Vegan optional.",
+          "price": 17.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts",
+            "v-option"
+          ]
+        },
+        {
+          "name": "Vietnamese Salad",
+          "dishId": "vietnamese-salad",
+          "desc": "Fresh orange, Asian slaw, fresh herbs, shallot, peanut, Vietnamese dressing & prawn crackers. Choose lemongrass chicken or soy-glazed tofu (vegan).",
+          "price": 16.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Roti Rolls",
+          "dishId": "roti-rolls",
+          "desc": "Wrapped with fresh Asian slaw & mayo. Choose five-spice pork belly, lemongrass chicken, or soy-glazed tofu (vegetarian/vegan optional).",
+          "price": 15.0,
+          "tags": [
+            "df",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy",
+            "v-option"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Small Bites",
+      "sectionId": "small-bites",
+      "items": [
+        {
+          "name": "Freshly Rolled Rice Paper Roll (2 Rolls)",
+          "dishId": "freshly-rolled-rice-paper-roll-2-rolls",
+          "desc": "Wrapped with fresh herbs, lettuce, rice noodles. Served with house peanut sauce. Choose prawn or tofu.",
+          "price": 10.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Freshly Rolled Rice Paper Roll (3 Rolls)",
+          "dishId": "freshly-rolled-rice-paper-roll-3-rolls",
+          "desc": "Wrapped with fresh herbs, lettuce, rice noodles. Served with house peanut sauce. Choose prawn or tofu.",
+          "price": 13.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Fried Spring Rolls",
+          "dishId": "fried-spring-rolls",
+          "desc": "3 rolls. Choose pork & mushroom, or vegetables (GF, vegan).",
+          "price": 15.0,
+          "tags": [
+            "df",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pork & Prawn Shumai Dumplings",
+          "dishId": "pork-prawn-shumai-dumplings",
+          "desc": "4pcs. Wild mushroom, fragrant herbs, sweet & tangy soy sauce.",
+          "price": 16.0,
+          "tags": [
+            "df",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Mushroom & Bamboo Dumplings",
+          "dishId": "mushroom-bamboo-dumplings",
+          "desc": "4pcs. Served with soy dipping sauce.",
+          "price": 14.0,
+          "tags": [
+            "vg",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Small Beginnings",
+      "sectionId": "small-beginnings",
+      "note": "Perfect for plates to share with friends and family.",
+      "items": [
+        {
+          "name": "Freshly Rolled Rice Paper Roll (2 Rolls)",
+          "dishId": "freshly-rolled-rice-paper-roll-2-rolls-small-beginnings",
+          "desc": "Wrapped with fresh herbs, lettuce, rice noodles. Served with house peanut sauce. Choose prawn or tofu.",
+          "price": 10.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Freshly Rolled Rice Paper Roll (3 Rolls)",
+          "dishId": "freshly-rolled-rice-paper-roll-3-rolls-small-beginnings",
+          "desc": "Wrapped with fresh herbs, lettuce, rice noodles. Served with house peanut sauce. Choose prawn or tofu.",
+          "price": 13.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Fried Spring Rolls",
+          "dishId": "fried-spring-rolls-small-beginnings",
+          "desc": "3 rolls. Choose pork & mushroom, or vegetables (GF, vegan).",
+          "price": 15.0,
+          "tags": [
+            "df",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pork & Prawn Shumai Dumplings",
+          "dishId": "pork-prawn-shumai-dumplings-small-beginnings",
+          "desc": "4pcs. Wild mushroom, fragrant herbs, sweet & tangy soy sauce.",
+          "price": 16.0,
+          "tags": [
+            "df",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Mushroom & Bamboo Dumplings",
+          "dishId": "mushroom-bamboo-dumplings-small-beginnings",
+          "desc": "4pcs. Served with soy dipping sauce.",
+          "price": 14.0,
+          "tags": [
+            "vg",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Crispy Calamari",
+          "dishId": "crispy-calamari",
+          "desc": "7pcs. With chilli jam ginger sauce.",
+          "price": 16.0,
+          "tags": [
+            "df",
+            "contains-egg",
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Soft-shell Crab Bao Buns",
+          "dishId": "soft-shell-crab-bao-buns",
+          "desc": "2pcs.",
+          "price": 16.0,
+          "tags": [
+            "contains-egg",
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Crispy Pillows Dumplings",
+          "dishId": "crispy-pillows-dumplings",
+          "desc": "4pcs. Stuffed with roasted buttercup squash with Vietnamese spices & pumpkin seeds.",
+          "price": 14.0,
+          "tags": [
+            "vg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Green Chicken Popcorn",
+          "dishId": "green-chicken-popcorn",
+          "desc": "10pcs. Coated in young green sticky rice, served with house chilli mayo.",
+          "price": 16.0,
+          "tags": [
+            "df",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Saigon Crunch Eggplant Fritter",
+          "dishId": "saigon-crunch-eggplant-fritter",
+          "desc": "4pcs. Crispy golden eggplant fritter, served with a rich & creamy Vietnamese-style smoked paprika vegan cheese sauce.",
+          "price": 15.0,
+          "tags": [
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Traditional Tasting Platter (2 people)",
+          "dishId": "traditional-tasting-platter-2-people",
+          "desc": "Min 2 people, $16/head. Prawn rice paper roll, crispy calamari, pork & mushroom fried spring roll, steamed pork & prawn shumai dumplings.",
+          "price": 32.0,
+          "tags": [
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Traditional Tasting Platter (3 people)",
+          "dishId": "traditional-tasting-platter-3-people",
+          "desc": "Min 2 people, $16/head. Prawn rice paper roll, crispy calamari, pork & mushroom fried spring roll, steamed pork & prawn shumai dumplings.",
+          "price": 48.0,
+          "tags": [
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Traditional Tasting Platter (4 people)",
+          "dishId": "traditional-tasting-platter-4-people",
+          "desc": "Min 2 people, $16/head. Prawn rice paper roll, crispy calamari, pork & mushroom fried spring roll, steamed pork & prawn shumai dumplings.",
+          "price": 64.0,
+          "tags": [
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Traditional Tasting Platter (5 people)",
+          "dishId": "traditional-tasting-platter-5-people",
+          "desc": "Min 2 people, $16/head. Prawn rice paper roll, crispy calamari, pork & mushroom fried spring roll, steamed pork & prawn shumai dumplings.",
+          "price": 80.0,
+          "tags": [
+            "df",
+            "contains-peanuts",
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Vegan Tasting Platter (2 people)",
+          "dishId": "vegan-tasting-platter-2-people",
+          "desc": "Min 2 people, $16 per person. Tofu rice paper roll, crispy pillow dumpling, vegetables fried spring roll, mushroom & bamboo dumplings.",
+          "price": 32.0,
+          "tags": [
+            "vg",
+            "df",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Vegan Tasting Platter (3 people)",
+          "dishId": "vegan-tasting-platter-3-people",
+          "desc": "Min 2 people, $16 per person. Tofu rice paper roll, crispy pillow dumpling, vegetables fried spring roll, mushroom & bamboo dumplings.",
+          "price": 48.0,
+          "tags": [
+            "vg",
+            "df",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Vegan Tasting Platter (4 people)",
+          "dishId": "vegan-tasting-platter-4-people",
+          "desc": "Min 2 people, $16 per person. Tofu rice paper roll, crispy pillow dumpling, vegetables fried spring roll, mushroom & bamboo dumplings.",
+          "price": 64.0,
+          "tags": [
+            "vg",
+            "df",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Vegan Tasting Platter (5 people)",
+          "dishId": "vegan-tasting-platter-5-people",
+          "desc": "Min 2 people, $16 per person. Tofu rice paper roll, crispy pillow dumpling, vegetables fried spring roll, mushroom & bamboo dumplings.",
+          "price": 80.0,
+          "tags": [
+            "vg",
+            "df",
+            "contains-sesame",
+            "contains-soy",
+            "contains-gluten",
+            "contains-peanuts"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Big Flavours",
+      "sectionId": "big-flavours",
+      "note": "Beloved favorites that keep our customers coming back!",
+      "items": [
+        {
+          "name": "Crispy Vietnamese Pancake",
+          "dishId": "crispy-vietnamese-pancake",
+          "desc": "Lacy thin, crispy crepe-like pancake made from rice flour, coconut milk & turmeric. Stuffed with tofu, mushroom and stir-fried seasonal vegetables.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "vg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Braised Five-spice Pork Belly",
+          "dishId": "braised-five-spice-pork-belly",
+          "desc": "With soft-boiled egg, fresh Granny Smith apple salad & pork crackling. Best enjoyed with a side of jasmine rice, coconut rice, or roti.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Salt & Pepper Prawn",
+          "dishId": "salt-pepper-prawn",
+          "desc": "8 king prawns stir-fried with capsicum, carrot, onion, seasonal vegetables. Best enjoyed with a side of jasmine rice, coconut rice, or roti.",
+          "price": 36.0,
+          "tags": [
+            "df",
+            "gf-option",
+            "contains-egg",
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Yin & Yang Pan-fried Salmon",
+          "dishId": "yin-yang-pan-fried-salmon",
+          "desc": "Marinated with ginger, turmeric & lemongrass. Served with coriander pesto (yin), golden kumara puree (yang) & stir-fried Asian greens. Best enjoyed with a side of jasmine rice, coconut rice, or roti.",
+          "price": 41.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Chilli Lemongrass Chicken",
+          "dishId": "chilli-lemongrass-chicken",
+          "desc": "With stir-fried seasonal Asian greens & classic dipping sauce. Best enjoyed with a side of jasmine rice, coconut rice, or roti.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Sizzling Shaking Beef",
+          "dishId": "sizzling-shaking-beef",
+          "desc": "Wok-fried medium-rare beef sirloin slices, pineapple, capsicum, tomato & soy pepper garlic sauce. Best enjoyed with a side of jasmine rice, coconut rice, or roti.",
+          "price": 33.0,
+          "tags": [
+            "gf",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Stuffed Tofu Delights",
+          "dishId": "stuffed-tofu-delights",
+          "desc": "Crispy tofu skin wraps around tender portobello mushrooms stuffed with savoury tofu, served with stir-fried Asian greens.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "vg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Curries",
+      "sectionId": "curries",
+      "note": "Rich, aromatic, and soul-warming — best enjoyed with a side of steamed rice, coconut rice, or warm roti to soak up every drop. All curries contain peanuts and cannot be removed.",
+      "items": [
+        {
+          "name": "Chicken Curry",
+          "dishId": "chicken-curry",
+          "desc": "Yellow lemongrass coconut curry with kumara, potato, onion, carrot & seasonal veggies. Best enjoyed with a side of jasmine rice, coconut rice, or roti.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Tofu & Mushroom Curry",
+          "dishId": "tofu-mushroom-curry",
+          "desc": "Yellow lemongrass curry, white button mushroom, broccoli, cauliflower, kumara, potato, carrot & seasonal veggies. Best enjoyed with a side of jasmine rice, coconut rice, or roti.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "vg",
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Kaffir Lime Seafood Curry",
+          "dishId": "kaffir-lime-seafood-curry",
+          "desc": "Grilled tarakihi, king prawns & tender squid in a kaffir lime coconut sauce & seasonal vegetables.",
+          "price": 32.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts",
+            "contains-shellfish"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Noodles & Salad",
+      "sectionId": "noodles-salad",
+      "items": [
+        {
+          "name": "Stir-fried Tamarind Noodles",
+          "dishId": "stir-fried-tamarind-noodles",
+          "desc": "Stir-fried with sweet & tangy tamarind sauce, tofu, mushroom, seasonal vegetables, fresh coriander, crushed peanuts.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "vg",
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Hue Spicy Beef Noodle Soup",
+          "dishId": "hue-spicy-beef-noodle-soup",
+          "desc": "Sliced medium-rare beef sirloin & Vietnamese pork ham in a fragrant lemongrass chilli beef broth with rice noodle, fresh herbs & coriander. Mild to hot spicy.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Vermicelli Noodles",
+          "dishId": "vermicelli-noodles",
+          "desc": "With fried spring roll, thin rice noodle, lettuce, crushed peanut, herbs & Vietnamese traditional dressing. Choose pork or chicken.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Soy-Glazed Tofu Noodles",
+          "dishId": "soy-glazed-tofu-noodles",
+          "desc": "With crispy vegetable spring roll, lettuce, fresh herbs, pickled carrot, crushed peanuts & Vietnamese soy dressing.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "vg",
+            "contains-soy",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Chicken Salad",
+          "dishId": "chicken-salad",
+          "desc": "Orange, Asian slaw, mango, fresh herbs, coriander, fried shallot, crushed peanut & Vietnamese classic dressing.",
+          "price": 29.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-peanuts"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sides",
+      "sectionId": "sides",
+      "items": [
+        {
+          "name": "Jasmine Rice",
+          "dishId": "jasmine-rice",
+          "desc": null,
+          "price": 3.0,
+          "tags": [
+            "gf",
+            "vg"
+          ]
+        },
+        {
+          "name": "Coconut Rice",
+          "dishId": "coconut-rice",
+          "desc": null,
+          "price": 6.0,
+          "tags": [
+            "gf",
+            "vg"
+          ]
+        },
+        {
+          "name": "Rice Noodles",
+          "dishId": "rice-noodles",
+          "desc": null,
+          "price": 3.0,
+          "tags": [
+            "gf",
+            "vg"
+          ]
+        },
+        {
+          "name": "Roti Bread",
+          "dishId": "roti-bread",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "vg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Peanut Sauce",
+          "dishId": "peanut-sauce",
+          "desc": null,
+          "price": 2.0,
+          "tags": [
+            "vg",
+            "gf",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Stir-fried Garlic Bok Choy",
+          "dishId": "stir-fried-garlic-bok-choy",
+          "desc": null,
+          "price": 14.0,
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Vietnamese Traditional Sauce",
+          "dishId": "vietnamese-traditional-sauce",
+          "desc": "A classic Vietnamese dipping sauce made from fish sauce, lemon juice, and sugar, infused with garlic and chilli for a balance of sweet, sour, and savoury.",
+          "price": 1.5,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Fresh Chilli",
+          "dishId": "fresh-chilli",
+          "desc": null,
+          "price": 1.5,
+          "tags": [
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Rock Yard's Chilli Sauce",
+          "dishId": "rock-yard-s-chilli-sauce",
+          "desc": null,
+          "price": 1.5,
+          "tags": [
+            "gf",
+            "vg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "sectionId": "desserts",
+      "note": "Traditional Vietnamese sweets with a modern twist.",
+      "items": [
+        {
+          "name": "Pandan Cheesecake",
+          "dishId": "pandan-cheesecake",
+          "desc": "Smooth & creamy pandan cheesecake with subtle hints of kaffir lime, served with raspberry puree.",
+          "price": 13.0,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Coconut Creme Caramel",
+          "dishId": "coconut-creme-caramel",
+          "desc": "A Vietnamese twist on the classic French custard, with flaky toasted coconut chips.",
+          "price": 7.0,
+          "tags": [
+            "vg",
+            "gf"
+          ]
+        }
+      ]
+    }
+  ],
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "official-site"
 }
