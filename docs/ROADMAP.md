@@ -1822,19 +1822,15 @@ substantive match — Wellington Kebab Grill, 19 of 104 dishes carrying falafel 
 is already described by its existing `Turkish` + `Mediterranean` + `Kebabs`.
 **So the gap is real and cannot be closed from data we already hold.**
 
-- [ ] 🎯 **Which places, and on whose say-so** `[S][data][owner]`. Closing this
-  means *adding venues*, and Faves is a hand-picked guide to places the owner
-  actually likes — "our favourite kai". A Mexican restaurant nobody here has
-  eaten at is not the same object as the rest of the collection, so **which
-  places go in is the owner's call, not a completeness exercise**. Two ways to
-  unblock: he names them, or he approves a source to draw candidates from (the
-  Airbnb guidebook worked exactly this way — Theme 21). Once named, intake is
-  routine and already proven: address and pin from OpenStreetMap, stub status,
-  `detailsVerifiedBy: "third-party"`, menu to follow.
-- [ ] **Never a guessed address** — carried over from Theme 21, because it will
-  bite the same way here: three guidebook places are still unadded for exactly
-  this reason. A wrong pin sends someone to the wrong door, which is worse than
-  an absent venue.
+🎯 **RULED 2026-08-16 (Mike): leave the gap — coverage is not a goal.**
+Offered three ways forward — we source candidates and he prunes, he names the
+places, or leave it — he chose to leave it. That is an answer about what the
+collection *is*, not a deferral: Faves is places he likes, so a cuisine arrives
+when a place arrives, and "we hold no Mexican" is not a defect to close.
+**Do not re-propose filling this by sourcing venues.** A future session reading
+the missing-cuisine list above would otherwise read it as a worklist; the only
+route in is the owner naming a place. Nothing is owed here, which is why this
+theme carries no open item.
 
 ## Theme 21 — from the owner's Airbnb guidebook (2026-08-16)
 
