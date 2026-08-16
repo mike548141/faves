@@ -135,9 +135,28 @@ export function verification(record) {
  * optional — a record with no `detailsVerified` has simply never had its
  * details checked as a distinct act, which is the honest majority case and
  * what the UI must then decline to claim (ADR 0037).
+ *
+ * PER-BRANCH when a `branch` is given. Details belong to a *place*, not to a
+ * chain: Pandan's Melling address, phone and hours all come from Pandan's own
+ * site, while Press Hall's hours are its landlord's statement about its own
+ * building. One venue-level field has to read as weakly as its weakest input,
+ * which throws away the truth about the stronger branches. So a branch that
+ * carries its own `detailsVerified` wins, and one that doesn't falls back to
+ * the venue's — the same default-and-override shape `timezone` already uses
+ * (place.js `venueTimezone`).
+ *
+ * The pair is taken WHOLE from one level or the other. A branch date paired
+ * with the venue's method would describe a reading nobody ever did.
+ *
+ * `scope` says which level answered, so the caller can name the branch rather
+ * than let a branch-specific claim read as the whole chain's.
  */
-export function detailsVerification(record) {
-  return reading(record?.detailsVerified, record?.detailsVerifiedBy);
+export function detailsVerification(record, branch = null) {
+  const ownsIt = isDate(branch?.detailsVerified);
+  const r = ownsIt
+    ? reading(branch.detailsVerified, branch.detailsVerifiedBy)
+    : reading(record?.detailsVerified, record?.detailsVerifiedBy);
+  return r && { ...r, scope: ownsIt ? "branch" : "venue" };
 }
 
 /** The shared shape behind both readings above. */
