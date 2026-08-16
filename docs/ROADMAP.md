@@ -770,7 +770,22 @@ like *char kway teow*; worth confirming against the shop before touching. `[S]`
   line "dish ratings curated", now marked superseded there; left unmarked it
   would have re-proposed itself. The live-Google-rating edge function below is a **separate,
   owner-gated** item (billing) — out of scope for this change.
-- **See public ratings / reviews** `[M]` ⚑ **owner decided 2026-07-08:
+- **See public ratings / reviews** `[M]` 🎯 **RULED 2026-08-16: build it, and
+  cache the ratings into the repo.** This is what he was asking for all along
+  (see the withdrawn curated rating above).
+  🛑 **BLOCKED ON A BRIEFING, NOT ON A DECISION — do not build yet.** Caching
+  into this repo means **permanent storage in public git history**, and both
+  candidate providers restrict exactly that: Google's Places terms permit
+  caching place *ids* but not the content around them beyond a short window,
+  and Yelp's Fusion terms are stricter again on storage and re-display. That is
+  a licence question on a **public** repo, so it needs re-putting with the
+  current terms in front of him — the informed-confirmation floor in
+  `CLAUDE.md`. Options to re-put: **(a)** on-demand edge proxy caching at the
+  edge only, nothing committed (the original 2026-07-08 shape); **(b)** cache
+  only what the terms allow (place ids), fetch the number live; **(c)**
+  link-out only — zero cost, zero exposure; **(d)** repo-cache as a knowingly
+  accepted risk, which is his to accept but must be accepted with the terms in
+  hand. **Original: owner decided 2026-07-08:
   show the number when online, link-out when offline.** The honest read: a
   static site can't fetch a live Google rating (the Places API is keyed,
   billed, and its ToS govern display + caching; a public site can't hold the
@@ -1420,8 +1435,21 @@ bars:
 | **B** | **Inline in the primary flow**, where it helps the eat-tonight decision — the owner's example: *coffee is $6 from tomorrow* | Must earn its pixels against the core job. If it doesn't change what you order, it doesn't belong on the card | <!-- datescan:allow: owner's verbatim example of the feature ("$6 from tomorrow") — quoted product vocabulary, not a dated claim -->
 
 
-⚑ **Owner's call, deliberately deferred: when there is enough data to be worth
-using, and which surface goes first.** Baseline at adoption (2026-08-08):
+🛑 **RULED 2026-08-16 — THERE IS NO SURFACE. Not "not yet": not ever.** Owner,
+verbatim, noting he has said this repeatedly: *"The trends data will never be
+shown in the faves app as I've told you a couple of times before in other
+sessions. It is for analysis etc outside of the faves app, faves is just what
+builds up the data over time."*
+`data/history/prices/` and `data/history/dishes/` keep accruing exactly as ADR
+0047 describes — that machinery is **wanted, correct and already shipped**. Out
+of scope permanently: a trends screen, a "was $X" chip on a dish, any in-app
+rendering of `data/history/*`. The analysis happens outside Faves.
+⚠️ **Why this keeps being re-proposed, which is the useful part:** the wording
+below reads as a *sequencing* gate ("not enough data yet"), and the
+1-venue-of-31 stat invites "revisit when it grows". Read cold, it looks like it
+is waiting. **It is not waiting.** Kept only as the record of what was measured.
+~~⚑ Owner's call, deliberately deferred: when there is enough data to be worth
+using, and which surface goes first.~~ Baseline at adoption (2026-08-08):
 **1 venue of 31** has more than one price reading (Churton, 174 dishes), and
 only **2 of 31** carry a `verified` date at all. So: not yet, by a distance.
 
@@ -4281,47 +4309,42 @@ What *is* honest, and is the recommendation:
   batter volume and **shown as estimates** — but that is a labelling decision he
   should take deliberately, not one to slip into a public dataset.
 
-### 36d — the timer's missing half `[M][design]` ⚠️
+### 36d — the timer's alarm ✅ RULED 2026-08-16
 
-The timer shipped today is silent. It counts correctly through a sleeping phone,
-and cook mode holds the screen awake so it is visible — but a phone face-down on
-the bench while you do something else will not tell you the bell has gone.
-A real alarm needs either audio (an asset, and autoplay policy) or a
-notification (a permission prompt, and a service-worker path). Both are new
-trust surfaces on a site that currently asks for nothing. Worth doing, worth
-deciding deliberately.
+Owner ruled the shape in full, going further than the recommendation:
 
-🔎 **Challenge to the above, with evidence — there is a third option, and it
-costs no trust surface at all (2026-08-16).** Measured:
-`grep -rn 'AudioContext|Notification|speechSynthesis|vibrate' site/` returns
-**nothing** — the shipped site uses no audio or notification API whatsoever, so
-the "new trust surface" reading is correct about *today* and wrong about the
-*only* ways forward. A **WebAudio `OscillatorNode`** generates a tone in code:
+- **A tone on every timer.** Generated in code (Web Audio `OscillatorNode`) —
+  no asset, no precache entry, no network, and no permission. The tap that
+  starts the timer is the gesture that unlocks the `AudioContext`, so autoplay
+  policy is satisfied without asking for anything.
+- **Vibration on every timer.** `navigator.vibrate`, also permission-free.
+  ⚠️ **iOS Safari ignores it entirely**, so this half does nothing on the
+  owner's own phone — an Android-only benefit. He was told and chose it anyway;
+  recorded so it is not later read as an oversight.
+- **A notification as well, for timers over 15 minutes.** This is the posture
+  change: it needs `Notification.requestPermission()` — the **first permission
+  prompt Faves has ever shown** — plus a service-worker path. Accepted
+  knowingly.
+  🚩 **Ask at the moment a long timer starts, never at page load.** A cold
+  prompt on arrival is what trains people to refuse. And degrade silently: no
+  permission means no notification, with tone and vibration still firing.
 
-| | asset? | CDN? | permission prompt? | network? |
-|---|---|---|---|---|
-| Audio file | ✅ yes, and a precache entry | no | no | no |
-| Web Notification | no | no | ✅ **yes** | ✅ for push |
-| **Generated tone** | **no** | **no** | **no** | **no** |
+Write the ADR when built — first permission prompt, first audio, first
+vibration, three firsts in one feature.
 
-Autoplay policy is satisfied for free: **the tap that starts the timer is the
-user gesture that unlocks the `AudioContext`**, so there is no autoplay case to
-handle. And cook mode already holds `navigator.wakeLock` (ADR 0034), so the
-page is foregrounded and visible for exactly the window the alarm must cover.
+### 36a/36c — estimates DO drive timers ✅ RULED 2026-08-16
 
-⚠️ **The honest limit, which is the same one the item already asks us to state:**
-a generated tone is reliable **while the page is foregrounded**, and iOS
-suspends the `AudioContext` when the app is backgrounded or the phone locks. So
-this delivers "the bell rings while you are cooking with the app open", which is
-the scenario cook mode *creates*, and it does not deliver "the bell rings while
-you are in another app". That is a smaller promise honestly kept, rather than a
-larger one that needs a permission prompt to attempt.
+Put to him because two sessions had independently built the cautious version:
+estimates as text, only stated times driving countdowns, on the reasoning that
+an estimated "simmer 20 min" on chicken is a food-safety failure rather than a
+disappointing dinner. **He ruled the other way**, with that argument in front of
+him and a middle option (split on risk, not on source) also offered.
 
-🎯 **For the owner:** this is a `[S]`, needs nothing new from you, and asks the
-user for nothing. It does not close 36d — a background alarm still needs the
-notification path and its prompt — but it turns "the timer is silent" into "the
-timer rings while you are looking at it", which is most of the value. Say the
-word and it ships; say no and it stays recorded here as considered and declined.
+**Every step with a duration gets a countdown; an estimated one is marked as an
+estimate ON THE TIMER FACE**, not merely in the step text — a countdown that
+looks identical whether the number was read or guessed is not "clearly marked".
+So `timerSafe` is not a function of `stated` vs `estimated`; any gate asserting
+that inverts.
 
 ### 36e — one place to look, not two `[M][ux]`
 
