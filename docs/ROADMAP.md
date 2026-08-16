@@ -2723,11 +2723,35 @@ them the unfixable class. That is a scanner whose output can still be read.
   atelier, so a child running the scanner exits 2 — and the child-side,
   pin-aware `source=` resolution is atelier's open ST3, already queued in its
   own roadmap (D2 residue). Nothing to deliver upstream. When ST3 lands,
-  adopt the markers here. Until then the check is by hand: **re-verified
-  2026-08-15** at the `atelier@bde4928` bump — `git diff 5c16a59..bde4928` over
-  the four canonical floor files (`00-APEX`, `CONCURRENCY`, `RECORD`,
-  `ECONOMICS`) returns empty, so the source of our inlined copy did not move
-  and the copy has not drifted. (First verified 2026-08-09.)
+  adopt the markers here. Until then the check is by hand.
+  ⚠️ **Re-verified 2026-08-16 at the `atelier@1408d98` pin, and this time the
+  source DID move** — `git diff bde4928..1408d98` over the four canonical floor
+  files: `00-APEX` −42/+30, `CONCURRENCY` −5/+18, `RECORD` −21/+30, `ECONOMICS`
+  unchanged. So the earlier all-clears were reporting "source unchanged", which
+  is only the same thing as "copy has not drifted" while the source is still.
+  **The check that matters is copy-versus-source, not source-versus-itself.**
+  Done properly this time, clause by clause:
+  - `00-APEX`'s two real changes — *the principal's authority is **absolute**,
+    with the informed condition moved off the authority and onto the **ruling***,
+    and *surface a genuine dilemma, never silently resolve it* — are **both
+    already in our inlined block**, correctly. They arrived with the `1408d98`
+    pin bump. No drift.
+  - The Laws section was **removed** from `00-APEX`; we never inlined it. No
+    drift.
+  - 🔎 **`CONCURRENCY` gained a rule we do NOT carry, and a session hit the gap
+    the same day.** Claiming at a *dirty primary checkout*: if the stranger's
+    uncommitted edits don't touch the queue file, you stage and commit the claim
+    line alone — explicitly the one sanctioned touch inside another session's
+    tree. Our compressed copy said only "never work around or absorb them", so
+    the session that found a foreign stage in the main checkout on 2026-08-16
+    read it conservatively, declined to commit its claim there at all, and its
+    claims went unpublished for the rest of the run while four sessions were
+    live. **Compression dropped the one clause that tells you what you MAY do.**
+    Now inlined.
+  🚩 **The generalisable failure:** a hand-check whose recorded evidence is
+  "the source did not move" degrades to nothing the moment the source moves —
+  it never says whether the *copy* is right, only whether the question was easy.
+  (First verified 2026-08-09; re-verified 2026-08-15 at `bde4928`.)
 
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**

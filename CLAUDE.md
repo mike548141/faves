@@ -29,7 +29,13 @@ in atelier and is read on demand — never wholesale.
   proof you're alone. `git pull --rebase --autostash` at session start; push
   after each commit. Take a worktree by default for write-heavy or multi-commit
   work; uncommitted changes this session didn't make are positive proof ⇒ move
-  to a worktree — never work around or absorb them (`CONCURRENCY.md`). Name
+  to a worktree — never work around or absorb them (`CONCURRENCY.md`). **A
+  claim still lands on `main` from the primary checkout even when that checkout
+  is dirty:** if the stranger's edits don't touch the queue file, stage and
+  commit *the claim line alone* — the one sanctioned touch inside another
+  session's tree, safe because it stages only your own hunk. If `ROADMAP.md`
+  itself is dirty, that is proof the other session is queue-active: sync, take
+  the next open item, touch nothing. Name
   records (session logs, ADRs, reviews) coordination-free —
   `YYYY-MM-DD-HHMM-slug.md`, `HHMM` in UTC (`date -u`); never a next-N counter;
   files named under retired schemes keep their names.
