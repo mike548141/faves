@@ -37,10 +37,11 @@
 // in, and callers must put it on the element. That is the whole reason
 // `renderings()` returns `{ text, lang }` pairs and never a bare string.
 
+import { HOME_LANGUAGE } from "./home.js";
 import { settings } from "./settings.js";
 
 /** The collection's own language — what a record that says nothing is in. */
-export const HOME_LANGUAGE = "en-NZ";
+export { HOME_LANGUAGE } from "./home.js";
 
 /** The BCP-47 tag a venue's canonical `name`/`desc`/`section` strings are in. */
 export function venueLanguage(r) {

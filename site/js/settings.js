@@ -21,8 +21,9 @@
 // value can't break ranking. Pure/DOM-free and unit-tested.
 
 import { profileScopedStorage } from "./profiles.js";
-import { FAR_KM, FAV_BOOST_KM } from "./ranking.js";
+import { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
 import { UNITS, DEFAULT_UNITS } from "./units.js";
+import { localLanguage, localUnits } from "./locale.js";
 
 const KEY = "faves.settings.v1";
 
@@ -55,6 +56,17 @@ const ALLERGEN_KEYS = new Set(ALLERGEN_PREFS.map((p) => p.key));
 // dependency on the presentation layer and the value is sanitised on read.
 export const LANGS = ["en", "mi"];
 
+// The three localisation settings — language, units, currency — each accept
+// this in place of a concrete value: "show me what people here use" (ADR 0045).
+// It is STORED as "local" and resolved on every read, so a phone that flies to
+// London starts answering differently without anyone touching a setting.
+export const LOCAL = "local";
+
+// Show prices the way the place charges them — no conversion at all. Kept
+// distinct from a concrete currency because it is not a preference for NZD or
+// anything else: it is a preference for the shop's own number.
+export const AS_CHARGED = "as-charged";
+
 // Which maps app opens when you tap a venue's address (geo.js). "auto" follows
 // the device (Apple Maps on Apple hardware, Google elsewhere); the rest force a
 // provider on every platform. The web can't read the OS default-maps-app
@@ -77,9 +89,14 @@ export const DEFAULTS = {
   favBoostKm: FAV_BOOST_KM,
   farKm: FAR_KM,
   diet: { dietary: [], avoid: [] },
-  lang: "en",
+  // All three localisation settings default to LOCAL. For a reader at home
+  // that resolves to exactly what they had before — English, metric, NZD — so
+  // the default costs nobody a change; for a reader abroad it is the answer
+  // they would have had to go and set by hand.
+  lang: LOCAL,
   mapsApp: "auto",
-  units: DEFAULT_UNITS,
+  units: LOCAL,
+  currency: LOCAL,
 };
 
 // [min, max] accepted for each; values outside are clamped in, non-numbers
@@ -118,14 +135,43 @@ export function sanitiseDiet(d) {
   };
 }
 
+// A currency preference is LOCAL, AS_CHARGED, or an ISO 4217 code. The code is
+// shape-checked only: which codes are actually offered depends on the rate
+// table the app loaded (fx.js), and a store must not fail closed because a rate
+// file was slow — it would silently reset a viewer's choice.
+const CURRENCY_RE = /^[A-Z]{3}$/;
+const validCurrency = (v) => v === LOCAL || v === AS_CHARGED || (typeof v === "string" && CURRENCY_RE.test(v));
+
 function sanitise(obj) {
   return {
     favBoostKm: clampField(obj?.favBoostKm, "favBoostKm"),
     farKm: clampField(obj?.farKm, "farKm"),
     diet: sanitiseDiet(obj?.diet),
-    lang: LANGS.includes(obj?.lang) ? obj.lang : DEFAULTS.lang,
+    lang: obj?.lang === LOCAL || LANGS.includes(obj?.lang) ? obj.lang : DEFAULTS.lang,
     mapsApp: MAPS_APP_KEYS.has(obj?.mapsApp) ? obj.mapsApp : DEFAULTS.mapsApp,
-    units: UNITS.includes(obj?.units) ? obj.units : DEFAULTS.units,
+    units: obj?.units === LOCAL || UNITS.includes(obj?.units) ? obj.units : DEFAULTS.units,
+    currency: validCurrency(obj?.currency) ? obj.currency : DEFAULTS.currency,
+  };
+}
+
+/**
+ * The stored settings with every LOCAL resolved to a concrete value.
+ *
+ * This is what `get()` returns, so no consumer anywhere has to know that
+ * "local" exists — `settings.get().units` is always "metric" or "imperial",
+ * exactly as it has always been. The settings SCREEN wants the unresolved
+ * value (to show which option is ticked), and calls `raw()` for it.
+ *
+ * Currency is deliberately NOT resolved here. It cannot be: the answer depends
+ * on the venue whose price is being rendered and on which rates loaded, neither
+ * of which the store knows about. `place.js` resolves it per price.
+ */
+function resolveLocals(state) {
+  if (state.lang !== LOCAL && state.units !== LOCAL) return state;
+  return {
+    ...state,
+    lang: state.lang === LOCAL ? localLanguage(LANGS) : state.lang,
+    units: state.units === LOCAL ? localUnits() : state.units,
   };
 }
 
@@ -141,6 +187,9 @@ export function createSettings(storage) {
   }
 
   let state = read();
+  // Resolution is recomputed on every read rather than cached: a device that
+  // changes timezone mid-session (a phone landing, or a laptop waking in a new
+  // country) must start answering differently without a reload.
 
   function commit() {
     try {
@@ -152,7 +201,9 @@ export function createSettings(storage) {
   }
 
   return {
-    get: () => state,
+    get: () => resolveLocals(state),
+    /** The stored preference, LOCALs unresolved — for the settings screen. */
+    raw: () => state,
     /** Merge a partial change ({favBoostKm} and/or {farKm}); values clamped. */
     set(patch) {
       state = sanitise({ ...state, ...patch });

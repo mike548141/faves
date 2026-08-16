@@ -14,7 +14,7 @@
 //     openStatus/groupWeek are pure functions of (hours, now) so they're
 //     fully unit-testable.
 
-import { HOME_TIMEZONE } from "./place.js";
+import { HOME_TIMEZONE } from "./home.js";
 
 const DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]; // JS getDay() order
 const DAY_LABEL = { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat" };

@@ -7,6 +7,7 @@
   ],
   "area": "Courtenay Place",
   "city": "Wellington",
+  "currency": "NZD",
   "address": "39A Courtenay Place, Te Aro, Wellington 6011",
   "lat": -41.29378,
   "lng": 174.78175,
@@ -17,17 +18,58 @@
   "phone": "+64 4 385 8980",
   "website": "https://www.kccafeandtakeaway.co.nz",
   "ordering": [
-    { "platform": "Order on our site", "url": "https://www.kccafeandtakeaway.co.nz/menu" },
-    { "platform": "Delivereasy", "url": "https://www.delivereasy.co.nz/kc-cafe-wellington-chinese-delivery" }
+    {
+      "platform": "Order on our site",
+      "url": "https://www.kccafeandtakeaway.co.nz/menu"
+    },
+    {
+      "platform": "Delivereasy",
+      "url": "https://www.delivereasy.co.nz/kc-cafe-wellington-chinese-delivery"
+    }
   ],
   "hours": {
-    "mon": [["11:00", "22:00"]],
-    "tue": [["11:00", "22:00"]],
-    "wed": [["11:00", "22:00"]],
-    "thu": [["11:00", "22:00"]],
-    "fri": [["11:00", "22:00"]],
-    "sat": [["11:00", "22:00"]],
-    "sun": [["11:00", "22:00"]]
+    "mon": [
+      [
+        "11:00",
+        "22:00"
+      ]
+    ],
+    "tue": [
+      [
+        "11:00",
+        "22:00"
+      ]
+    ],
+    "wed": [
+      [
+        "11:00",
+        "22:00"
+      ]
+    ],
+    "thu": [
+      [
+        "11:00",
+        "22:00"
+      ]
+    ],
+    "fri": [
+      [
+        "11:00",
+        "22:00"
+      ]
+    ],
+    "sat": [
+      [
+        "11:00",
+        "22:00"
+      ]
+    ],
+    "sun": [
+      [
+        "11:00",
+        "22:00"
+      ]
+    ]
   },
   "vibe": [],
   "picks": [],
@@ -40,210 +82,1369 @@
     {
       "section": "Entree",
       "items": [
-        { "name": "Chicken Curry on Rice", "code": "1", "desc": null, "price": 21.7, "tags": [] },
-        { "name": "Chicken Satay Kebab (6 Pcs)", "code": "2", "desc": null, "price": 19.4, "tags": ["contains-peanuts", "contains-soy"] },
-        { "name": "Nasi Goreng", "code": "3", "desc": null, "price": 21.7, "tags": [] },
-        { "name": "BBQ Pork & Chicken on Rice", "code": "4", "desc": null, "price": 23.4, "tags": [] },
-        { "name": "Grill Pork Dumpling (6 Pcs)", "code": "5", "desc": null, "price": 16.7, "tags": ["contains-gluten"] },
-        { "name": "Seafood Udon", "code": "6", "desc": null, "price": 24.5, "tags": ["contains-shellfish", "contains-gluten"] },
-        { "name": "Curry Laksa", "code": "7", "desc": null, "price": 24.0, "tags": ["contains-shellfish"] },
-        { "name": "Mee Goreng", "code": "8", "desc": null, "price": 22.3, "tags": ["contains-gluten"] },
-        { "name": "Roti Chanai", "code": "9", "desc": null, "price": 19.5, "tags": ["contains-gluten"] },
-        { "name": "Chow Kueh Teow (BBQ Pork with Stir Fried Rice Noodle)", "code": "10", "desc": null, "price": 24.0, "tags": [] },
-        { "name": "Roast Duck or BBQ Pork with Rice Noodle or Egg Noodle Soup", "code": "11", "desc": null, "price": 25.1, "tags": ["contains-gluten", "contains-egg"] },
-        { "name": "BBQ Pork Wonton Noodle Soup", "code": "12", "desc": null, "price": 24.0, "tags": ["contains-gluten"] }
+        {
+          "name": "Chicken Curry on Rice",
+          "code": "1",
+          "desc": null,
+          "price": 21.7,
+          "tags": []
+        },
+        {
+          "name": "Chicken Satay Kebab (6 Pcs)",
+          "code": "2",
+          "desc": null,
+          "price": 19.4,
+          "tags": [
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Nasi Goreng",
+          "code": "3",
+          "desc": null,
+          "price": 21.7,
+          "tags": []
+        },
+        {
+          "name": "BBQ Pork & Chicken on Rice",
+          "code": "4",
+          "desc": null,
+          "price": 23.4,
+          "tags": []
+        },
+        {
+          "name": "Grill Pork Dumpling (6 Pcs)",
+          "code": "5",
+          "desc": null,
+          "price": 16.7,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Seafood Udon",
+          "code": "6",
+          "desc": null,
+          "price": 24.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Curry Laksa",
+          "code": "7",
+          "desc": null,
+          "price": 24.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Mee Goreng",
+          "code": "8",
+          "desc": null,
+          "price": 22.3,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Roti Chanai",
+          "code": "9",
+          "desc": null,
+          "price": 19.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chow Kueh Teow (BBQ Pork with Stir Fried Rice Noodle)",
+          "code": "10",
+          "desc": null,
+          "price": 24.0,
+          "tags": []
+        },
+        {
+          "name": "Roast Duck or BBQ Pork with Rice Noodle or Egg Noodle Soup",
+          "code": "11",
+          "desc": null,
+          "price": 25.1,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "BBQ Pork Wonton Noodle Soup",
+          "code": "12",
+          "desc": null,
+          "price": 24.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
       ]
     },
     {
       "section": "BBQ Meat Dishes",
       "items": [
-        { "name": "Soya Chicken on Rice", "code": "13", "desc": null, "price": 23.4, "tags": ["contains-soy"] },
-        { "name": "Honey BBQ Pork Ribs on Rice", "code": "14", "desc": null, "price": 23.4, "tags": [] },
-        { "name": "Two Combination BBQ Meat on Rice", "code": "15", "desc": null, "price": 26.8, "tags": [] },
-        { "name": "Three Combination BBQ Meat on Rice", "code": "16", "desc": null, "price": 30.7, "tags": [] },
-        { "name": "Roast Duck on Rice", "code": "17", "desc": null, "price": 24.0, "tags": [] },
-        { "name": "Crispy Roast Pork on Rice", "code": "19", "desc": null, "price": 24.0, "tags": [] },
-        { "name": "Prawn Wonton Soup", "code": "20", "desc": null, "price": 18.2, "tags": ["contains-shellfish", "contains-gluten"] },
-        { "name": "Prawn Wonton Noodle Soup or Noodle Dry", "code": "21", "desc": null, "price": 21.0, "tags": ["contains-shellfish", "contains-gluten"] },
-        { "name": "Honey BBQ Pork Wontons Noodle Soup or Noodle Dry", "code": "22", "desc": null, "price": 24.0, "tags": ["contains-gluten"] },
-        { "name": "Roast Duck or Crispy Roast Pork or BBQ Pork Noodle Dry", "code": "23", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Soya Chicken or BBQ Pork Ribs Noodle Dry", "code": "24", "desc": null, "price": 24.5, "tags": ["contains-soy"] },
-        { "name": "Beef Brisket Noodle Soup or Noodle Dry", "code": "25", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Hot & Spicy Mix OX Combination Noodle Soup or Noodle Dry", "code": "26", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Braised Pork Noodle Soup or Noodle Dry", "code": "27", "desc": null, "price": 23.4, "tags": [] },
-        { "name": "Vietnamese Style Beef Noodle Soup", "code": "28", "desc": null, "price": 23.6, "tags": [] },
-        { "name": "Shredded Duck Meat Lai Fen Noodle Soup", "code": "29", "desc": null, "price": 25.1, "tags": [] }
+        {
+          "name": "Soya Chicken on Rice",
+          "code": "13",
+          "desc": null,
+          "price": 23.4,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Honey BBQ Pork Ribs on Rice",
+          "code": "14",
+          "desc": null,
+          "price": 23.4,
+          "tags": []
+        },
+        {
+          "name": "Two Combination BBQ Meat on Rice",
+          "code": "15",
+          "desc": null,
+          "price": 26.8,
+          "tags": []
+        },
+        {
+          "name": "Three Combination BBQ Meat on Rice",
+          "code": "16",
+          "desc": null,
+          "price": 30.7,
+          "tags": []
+        },
+        {
+          "name": "Roast Duck on Rice",
+          "code": "17",
+          "desc": null,
+          "price": 24.0,
+          "tags": []
+        },
+        {
+          "name": "Crispy Roast Pork on Rice",
+          "code": "19",
+          "desc": null,
+          "price": 24.0,
+          "tags": []
+        },
+        {
+          "name": "Prawn Wonton Soup",
+          "code": "20",
+          "desc": null,
+          "price": 18.2,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Prawn Wonton Noodle Soup or Noodle Dry",
+          "code": "21",
+          "desc": null,
+          "price": 21.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Honey BBQ Pork Wontons Noodle Soup or Noodle Dry",
+          "code": "22",
+          "desc": null,
+          "price": 24.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Roast Duck or Crispy Roast Pork or BBQ Pork Noodle Dry",
+          "code": "23",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Soya Chicken or BBQ Pork Ribs Noodle Dry",
+          "code": "24",
+          "desc": null,
+          "price": 24.5,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Beef Brisket Noodle Soup or Noodle Dry",
+          "code": "25",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Mix OX Combination Noodle Soup or Noodle Dry",
+          "code": "26",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Braised Pork Noodle Soup or Noodle Dry",
+          "code": "27",
+          "desc": null,
+          "price": 23.4,
+          "tags": []
+        },
+        {
+          "name": "Vietnamese Style Beef Noodle Soup",
+          "code": "28",
+          "desc": null,
+          "price": 23.6,
+          "tags": []
+        },
+        {
+          "name": "Shredded Duck Meat Lai Fen Noodle Soup",
+          "code": "29",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        }
       ]
     },
     {
       "section": "Soup, Starters & Congee",
       "items": [
-        { "name": "Chicken Sweet Corn Soup", "code": "30", "desc": null, "price": 11.2, "tags": [] },
-        { "name": "Mince Beef and Egg Soup", "code": "31", "desc": null, "price": 11.2, "tags": ["contains-egg"] },
-        { "name": "Hot & Sour Soup", "code": "32", "desc": null, "price": 13.4, "tags": [] },
-        { "name": "Tofu & Vegetable Soup", "code": "33", "desc": null, "price": 10.6, "tags": ["contains-soy"] },
-        { "name": "Shredded Duck Meat Soup", "code": "34", "desc": null, "price": 15.6, "tags": [] },
-        { "name": "Hot & Sour Wonton Soup", "code": "35", "desc": null, "price": 19.5, "tags": ["contains-gluten"] },
-        { "name": "Chinese Pork Dumpling Soup", "code": "36", "desc": null, "price": 19.5, "tags": ["contains-gluten"] },
-        { "name": "Chicken Feet and Mushroom Soup", "code": "37", "desc": null, "price": 18.7, "tags": [] },
-        { "name": "Roast Duck, Gai Choy and Tofu Soup", "code": "38", "desc": null, "price": 17.3, "tags": ["contains-soy"] },
-        { "name": "Seaweed, Pork and Egg Soup", "code": "39", "desc": null, "price": 14.5, "tags": ["contains-egg"] },
-        { "name": "Chicken Salad", "code": "40", "desc": null, "price": 13.3, "tags": [] },
-        { "name": "Pig Ears with Chilli Sauce", "code": "41", "desc": null, "price": 15.1, "tags": [] },
-        { "name": "Duck Feet with Chilli Sauce", "code": "42", "desc": null, "price": 15.8, "tags": [] },
-        { "name": "Duck Wing with Chilli Sauce", "code": "43", "desc": null, "price": 10.0, "tags": [] },
-        { "name": "Duck Chin with Salt and Pepper or Garlic", "code": "44", "desc": null, "price": 15.7, "tags": [] },
-        { "name": "Wu Xi Pork Ribs", "code": "45", "desc": null, "price": 14.5, "tags": [] },
-        { "name": "BBQ Pork Bun", "code": "46", "desc": null, "price": 5.6, "tags": ["contains-gluten"] },
-        { "name": "Deep Fried Chicken Wing", "code": "47", "desc": null, "price": 4.3, "tags": [] },
-        { "name": "Deep Fried Spring Roll", "code": "48", "desc": null, "price": 4.2, "tags": ["contains-gluten"] },
-        { "name": "Deep Fried Wonton", "code": "49", "desc": null, "price": 1.5, "tags": ["contains-gluten"] },
-        { "name": "Deep Fried Squid", "code": "50", "desc": null, "price": 21.2, "tags": ["contains-shellfish"] },
-        { "name": "Pork and Preserved Egg Congee", "code": "51", "desc": null, "price": 14.0, "tags": ["contains-egg"] },
-        { "name": "Fish Congee", "code": "52", "desc": null, "price": 14.0, "tags": [] },
-        { "name": "Seafood Congee", "code": "53", "desc": null, "price": 14.0, "tags": ["contains-shellfish"] }
+        {
+          "name": "Chicken Sweet Corn Soup",
+          "code": "30",
+          "desc": null,
+          "price": 11.2,
+          "tags": []
+        },
+        {
+          "name": "Mince Beef and Egg Soup",
+          "code": "31",
+          "desc": null,
+          "price": 11.2,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Hot & Sour Soup",
+          "code": "32",
+          "desc": null,
+          "price": 13.4,
+          "tags": []
+        },
+        {
+          "name": "Tofu & Vegetable Soup",
+          "code": "33",
+          "desc": null,
+          "price": 10.6,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Shredded Duck Meat Soup",
+          "code": "34",
+          "desc": null,
+          "price": 15.6,
+          "tags": []
+        },
+        {
+          "name": "Hot & Sour Wonton Soup",
+          "code": "35",
+          "desc": null,
+          "price": 19.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chinese Pork Dumpling Soup",
+          "code": "36",
+          "desc": null,
+          "price": 19.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Feet and Mushroom Soup",
+          "code": "37",
+          "desc": null,
+          "price": 18.7,
+          "tags": []
+        },
+        {
+          "name": "Roast Duck, Gai Choy and Tofu Soup",
+          "code": "38",
+          "desc": null,
+          "price": 17.3,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Seaweed, Pork and Egg Soup",
+          "code": "39",
+          "desc": null,
+          "price": 14.5,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken Salad",
+          "code": "40",
+          "desc": null,
+          "price": 13.3,
+          "tags": []
+        },
+        {
+          "name": "Pig Ears with Chilli Sauce",
+          "code": "41",
+          "desc": null,
+          "price": 15.1,
+          "tags": []
+        },
+        {
+          "name": "Duck Feet with Chilli Sauce",
+          "code": "42",
+          "desc": null,
+          "price": 15.8,
+          "tags": []
+        },
+        {
+          "name": "Duck Wing with Chilli Sauce",
+          "code": "43",
+          "desc": null,
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Duck Chin with Salt and Pepper or Garlic",
+          "code": "44",
+          "desc": null,
+          "price": 15.7,
+          "tags": []
+        },
+        {
+          "name": "Wu Xi Pork Ribs",
+          "code": "45",
+          "desc": null,
+          "price": 14.5,
+          "tags": []
+        },
+        {
+          "name": "BBQ Pork Bun",
+          "code": "46",
+          "desc": null,
+          "price": 5.6,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Deep Fried Chicken Wing",
+          "code": "47",
+          "desc": null,
+          "price": 4.3,
+          "tags": []
+        },
+        {
+          "name": "Deep Fried Spring Roll",
+          "code": "48",
+          "desc": null,
+          "price": 4.2,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Deep Fried Wonton",
+          "code": "49",
+          "desc": null,
+          "price": 1.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Deep Fried Squid",
+          "code": "50",
+          "desc": null,
+          "price": 21.2,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Pork and Preserved Egg Congee",
+          "code": "51",
+          "desc": null,
+          "price": 14.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Fish Congee",
+          "code": "52",
+          "desc": null,
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Seafood Congee",
+          "code": "53",
+          "desc": null,
+          "price": 14.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        }
       ]
     },
     {
       "section": "Claypot Dishes",
       "items": [
-        { "name": "Eggplant with Salted Fish & Pork Mince", "code": "54", "desc": null, "price": 27.3, "tags": [] },
-        { "name": "Roast Pork with Tofu & Vegetable", "code": "55", "desc": null, "price": 24.5, "tags": ["contains-soy"] },
-        { "name": "Groper Wing with Tofu & Roast Pork", "code": "56", "desc": null, "price": 26.8, "tags": ["contains-soy"] },
-        { "name": "Pork Maw with Pepper & Vegetable Pickle", "code": "57", "desc": null, "price": 26.2, "tags": [] },
-        { "name": "Braised Pork with Dried Vegetable or Taro", "code": "58", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Chicken Wing with Chinese Mushroom", "code": "59", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Chicken Feet with Pork Spare Ribs", "code": "60", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Bitter Melon with Pork Spare Ribs", "code": "61", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Hot & Spicy Chicken", "code": "62", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Salted Fish & Chicken with Tofu", "code": "63", "desc": null, "price": 26.1, "tags": ["contains-soy"] },
-        { "name": "Chicken with Wine Soup", "code": "64", "desc": null, "price": 27.9, "tags": [] },
-        { "name": "Chicken with Soya and Oyster Sauce", "code": "65", "desc": null, "price": 25.1, "tags": ["contains-shellfish", "contains-soy"] },
-        { "name": "Lamb Flap with Oyster Sauce", "code": "66", "desc": null, "price": 27.3, "tags": ["contains-shellfish", "contains-soy"] },
-        { "name": "Lamb Flap with Taro in Coconut Cream", "code": "67", "desc": null, "price": 27.3, "tags": [] },
-        { "name": "Beef Brisket", "code": "68", "desc": null, "price": 27.3, "tags": [] },
-        { "name": "Hot & Spicy Tendon", "code": "69", "desc": null, "price": 28.0, "tags": [] },
-        { "name": "Hot & Spicy Beef Tripe", "code": "70", "desc": null, "price": 26.2, "tags": [] },
-        { "name": "Beef & Vegetable with Satay Sauce", "code": "71", "desc": null, "price": 25.6, "tags": ["contains-peanuts", "contains-soy"] },
-        { "name": "Duck with Garlic and Oyster Sauce", "code": "72", "desc": null, "price": 26.2, "tags": ["contains-shellfish", "contains-soy"] },
-        { "name": "Seafood with Japanese Style Tofu", "code": "73", "desc": null, "price": 28.0, "tags": ["contains-shellfish", "contains-soy"] },
-        { "name": "Mix Vegetable with Vermicelli", "code": "74", "desc": null, "price": 24.5, "tags": [] }
+        {
+          "name": "Eggplant with Salted Fish & Pork Mince",
+          "code": "54",
+          "desc": null,
+          "price": 27.3,
+          "tags": []
+        },
+        {
+          "name": "Roast Pork with Tofu & Vegetable",
+          "code": "55",
+          "desc": null,
+          "price": 24.5,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Groper Wing with Tofu & Roast Pork",
+          "code": "56",
+          "desc": null,
+          "price": 26.8,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Pork Maw with Pepper & Vegetable Pickle",
+          "code": "57",
+          "desc": null,
+          "price": 26.2,
+          "tags": []
+        },
+        {
+          "name": "Braised Pork with Dried Vegetable or Taro",
+          "code": "58",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Chicken Wing with Chinese Mushroom",
+          "code": "59",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Chicken Feet with Pork Spare Ribs",
+          "code": "60",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Bitter Melon with Pork Spare Ribs",
+          "code": "61",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Chicken",
+          "code": "62",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Salted Fish & Chicken with Tofu",
+          "code": "63",
+          "desc": null,
+          "price": 26.1,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chicken with Wine Soup",
+          "code": "64",
+          "desc": null,
+          "price": 27.9,
+          "tags": []
+        },
+        {
+          "name": "Chicken with Soya and Oyster Sauce",
+          "code": "65",
+          "desc": null,
+          "price": 25.1,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Lamb Flap with Oyster Sauce",
+          "code": "66",
+          "desc": null,
+          "price": 27.3,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Lamb Flap with Taro in Coconut Cream",
+          "code": "67",
+          "desc": null,
+          "price": 27.3,
+          "tags": []
+        },
+        {
+          "name": "Beef Brisket",
+          "code": "68",
+          "desc": null,
+          "price": 27.3,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Tendon",
+          "code": "69",
+          "desc": null,
+          "price": 28.0,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Beef Tripe",
+          "code": "70",
+          "desc": null,
+          "price": 26.2,
+          "tags": []
+        },
+        {
+          "name": "Beef & Vegetable with Satay Sauce",
+          "code": "71",
+          "desc": null,
+          "price": 25.6,
+          "tags": [
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Duck with Garlic and Oyster Sauce",
+          "code": "72",
+          "desc": null,
+          "price": 26.2,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Seafood with Japanese Style Tofu",
+          "code": "73",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Mix Vegetable with Vermicelli",
+          "code": "74",
+          "desc": null,
+          "price": 24.5,
+          "tags": []
+        }
       ]
     },
     {
       "section": "Stir Fried Dishes",
       "items": [
-        { "name": "Mapo Tofu (Tofu with Pork Mince)", "code": "75", "desc": null, "price": 24.3, "tags": ["contains-soy"] },
-        { "name": "Tofu, Vegetable & Pork with Oyster Sauce", "code": "76", "desc": null, "price": 24.9, "tags": ["contains-shellfish", "contains-soy"] },
-        { "name": "Homestyle Tofu with Pork", "code": "77", "desc": null, "price": 25.6, "tags": ["contains-soy"] },
-        { "name": "Belly Pork with Chilli Sauce", "code": "78", "desc": null, "price": 26.1, "tags": [] },
-        { "name": "Belly Pork with Bean Sauce", "code": "79", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Belly Pork with Chef's Special Sauce", "code": "80", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Mao's Braised Pork with Chilli", "code": "81", "desc": null, "price": 26.1, "tags": [] },
-        { "name": "Pork with Chilli Sauce", "code": "82", "desc": null, "price": 24.9, "tags": [] },
-        { "name": "Pork with Peking Sauce", "code": "83", "desc": null, "price": 24.9, "tags": [] },
-        { "name": "Pork with Chinese Black Mushroom", "code": "84", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Fried Beans with Pork Mince and Chilli", "code": "85", "desc": null, "price": 26.1, "tags": [] },
-        { "name": "Fried Beans with Pork Mince in XO Sauce", "code": "86", "desc": null, "price": 26.1, "tags": ["contains-shellfish"] },
-        { "name": "KC Homemade Tofu with Pork Mince", "code": "87", "desc": null, "price": 26.8, "tags": ["contains-soy"] },
-        { "name": "Salt & Pepper Pork Spare Ribs", "code": "88", "desc": null, "price": 25.3, "tags": [] },
-        { "name": "Pork Maw with Vegetable and Pickle", "code": "89", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Seasonal Vegetable with Chinese Sausage and Pork", "code": "90", "desc": null, "price": 30.7, "tags": [] },
-        { "name": "Chinese Sausage with Dried Tofu and Vegetable", "code": "91", "desc": null, "price": 26.8, "tags": ["contains-soy"] },
-        { "name": "Sweet & Sour Pork with Pineapple", "code": "92", "desc": null, "price": 26.2, "tags": [] },
-        { "name": "Chicken Hot Pepper Sauce", "code": "93", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Sichuan Chicken", "code": "94", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Hot and Sour Chicken", "code": "95", "desc": null, "price": 24.3, "tags": [] },
-        { "name": "Stir Fried Chicken with Fresh Chilli and Ginger", "code": "96", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Deep Fried Chilli Chicken", "code": "97", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Xinjiang Chicken with Fresh Chilli and Ginger", "code": "98", "desc": null, "price": 24.9, "tags": [] },
-        { "name": "Salt and Pepper Chicken Ribs", "code": "99", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Sichuan Fish with Spicy & Soya Sauce", "code": "100", "desc": null, "price": 25.4, "tags": ["contains-gluten", "contains-soy"] },
-        { "name": "Pickle Cabbage with Fish Fillet", "code": "101", "desc": null, "price": 26.2, "tags": [] },
-        { "name": "Hot & Spicy Beef Soup", "code": "102", "desc": null, "price": 28.4, "tags": [] },
-        { "name": "Korean Style Chilli Beef", "code": "103", "desc": null, "price": 28.5, "tags": [] },
-        { "name": "Stir Fried Beef with Chilli Bean Paste", "code": "104", "desc": null, "price": 28.5, "tags": [] },
-        { "name": "Beef and Vegetable in Teriyaki Sauce", "code": "105", "desc": null, "price": 29.8, "tags": ["contains-gluten", "contains-soy"] },
-        { "name": "Orange Beef or Chicken", "code": "106", "desc": null, "price": 27.3, "tags": [] },
-        { "name": "KC Clear Soup Beef Brisket with Vegetable", "code": "107", "desc": null, "price": 27.3, "tags": [] },
-        { "name": "Stir Fried Lamb with Spicy Sauce", "code": "108", "desc": null, "price": 27.3, "tags": [] },
-        { "name": "Sambal King Prawns", "code": "109", "desc": null, "price": 25.9, "tags": ["contains-shellfish"] },
-        { "name": "Salt and Pepper King Prawns", "code": "110", "desc": null, "price": 25.9, "tags": ["contains-shellfish"] },
-        { "name": "Stir Fried King Prawn with Chilli Bean Paste", "code": "111", "desc": null, "price": 25.9, "tags": ["contains-shellfish"] },
-        { "name": "Salt & Pepper Squid", "code": "112", "desc": null, "price": 26.1, "tags": ["contains-shellfish"] },
-        { "name": "Stir Fried Squid with Shrimp Paste", "code": "113", "desc": null, "price": 26.1, "tags": ["contains-shellfish"] },
-        { "name": "Stir Fried Squid with Chinese Satay Sauce", "code": "114", "desc": null, "price": 26.1, "tags": ["contains-shellfish", "contains-peanuts", "contains-soy"] },
-        { "name": "Stir Fried Fish with Fish Flavour Sauce", "code": "115", "desc": null, "price": 25.3, "tags": [] },
-        { "name": "Stir Fried Beans with Dace Fish", "code": "116", "desc": null, "price": 26.1, "tags": [] },
-        { "name": "Tora Tora in Black Bean Sauce", "code": "117", "desc": null, "price": 27.3, "tags": ["contains-soy"] },
-        { "name": "Tora Tora in Chef's Special Sauce", "code": "118", "desc": null, "price": 27.3, "tags": [] },
-        { "name": "Plum Sauce Duck with Pickle", "code": "119", "desc": null, "price": 26.8, "tags": [] },
-        { "name": "KC Chef's Stir Fried Special", "code": "120", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Lemon Chicken", "code": "121", "desc": null, "price": 26.8, "tags": [] }
+        {
+          "name": "Mapo Tofu (Tofu with Pork Mince)",
+          "code": "75",
+          "desc": null,
+          "price": 24.3,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Tofu, Vegetable & Pork with Oyster Sauce",
+          "code": "76",
+          "desc": null,
+          "price": 24.9,
+          "tags": [
+            "contains-shellfish",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Homestyle Tofu with Pork",
+          "code": "77",
+          "desc": null,
+          "price": 25.6,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Belly Pork with Chilli Sauce",
+          "code": "78",
+          "desc": null,
+          "price": 26.1,
+          "tags": []
+        },
+        {
+          "name": "Belly Pork with Bean Sauce",
+          "code": "79",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Belly Pork with Chef's Special Sauce",
+          "code": "80",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Mao's Braised Pork with Chilli",
+          "code": "81",
+          "desc": null,
+          "price": 26.1,
+          "tags": []
+        },
+        {
+          "name": "Pork with Chilli Sauce",
+          "code": "82",
+          "desc": null,
+          "price": 24.9,
+          "tags": []
+        },
+        {
+          "name": "Pork with Peking Sauce",
+          "code": "83",
+          "desc": null,
+          "price": 24.9,
+          "tags": []
+        },
+        {
+          "name": "Pork with Chinese Black Mushroom",
+          "code": "84",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Fried Beans with Pork Mince and Chilli",
+          "code": "85",
+          "desc": null,
+          "price": 26.1,
+          "tags": []
+        },
+        {
+          "name": "Fried Beans with Pork Mince in XO Sauce",
+          "code": "86",
+          "desc": null,
+          "price": 26.1,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "KC Homemade Tofu with Pork Mince",
+          "code": "87",
+          "desc": null,
+          "price": 26.8,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Salt & Pepper Pork Spare Ribs",
+          "code": "88",
+          "desc": null,
+          "price": 25.3,
+          "tags": []
+        },
+        {
+          "name": "Pork Maw with Vegetable and Pickle",
+          "code": "89",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Seasonal Vegetable with Chinese Sausage and Pork",
+          "code": "90",
+          "desc": null,
+          "price": 30.7,
+          "tags": []
+        },
+        {
+          "name": "Chinese Sausage with Dried Tofu and Vegetable",
+          "code": "91",
+          "desc": null,
+          "price": 26.8,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Sweet & Sour Pork with Pineapple",
+          "code": "92",
+          "desc": null,
+          "price": 26.2,
+          "tags": []
+        },
+        {
+          "name": "Chicken Hot Pepper Sauce",
+          "code": "93",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Sichuan Chicken",
+          "code": "94",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Hot and Sour Chicken",
+          "code": "95",
+          "desc": null,
+          "price": 24.3,
+          "tags": []
+        },
+        {
+          "name": "Stir Fried Chicken with Fresh Chilli and Ginger",
+          "code": "96",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Deep Fried Chilli Chicken",
+          "code": "97",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Xinjiang Chicken with Fresh Chilli and Ginger",
+          "code": "98",
+          "desc": null,
+          "price": 24.9,
+          "tags": []
+        },
+        {
+          "name": "Salt and Pepper Chicken Ribs",
+          "code": "99",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Sichuan Fish with Spicy & Soya Sauce",
+          "code": "100",
+          "desc": null,
+          "price": 25.4,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Pickle Cabbage with Fish Fillet",
+          "code": "101",
+          "desc": null,
+          "price": 26.2,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Beef Soup",
+          "code": "102",
+          "desc": null,
+          "price": 28.4,
+          "tags": []
+        },
+        {
+          "name": "Korean Style Chilli Beef",
+          "code": "103",
+          "desc": null,
+          "price": 28.5,
+          "tags": []
+        },
+        {
+          "name": "Stir Fried Beef with Chilli Bean Paste",
+          "code": "104",
+          "desc": null,
+          "price": 28.5,
+          "tags": []
+        },
+        {
+          "name": "Beef and Vegetable in Teriyaki Sauce",
+          "code": "105",
+          "desc": null,
+          "price": 29.8,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Orange Beef or Chicken",
+          "code": "106",
+          "desc": null,
+          "price": 27.3,
+          "tags": []
+        },
+        {
+          "name": "KC Clear Soup Beef Brisket with Vegetable",
+          "code": "107",
+          "desc": null,
+          "price": 27.3,
+          "tags": []
+        },
+        {
+          "name": "Stir Fried Lamb with Spicy Sauce",
+          "code": "108",
+          "desc": null,
+          "price": 27.3,
+          "tags": []
+        },
+        {
+          "name": "Sambal King Prawns",
+          "code": "109",
+          "desc": null,
+          "price": 25.9,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Salt and Pepper King Prawns",
+          "code": "110",
+          "desc": null,
+          "price": 25.9,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Stir Fried King Prawn with Chilli Bean Paste",
+          "code": "111",
+          "desc": null,
+          "price": 25.9,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Salt & Pepper Squid",
+          "code": "112",
+          "desc": null,
+          "price": 26.1,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Stir Fried Squid with Shrimp Paste",
+          "code": "113",
+          "desc": null,
+          "price": 26.1,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Stir Fried Squid with Chinese Satay Sauce",
+          "code": "114",
+          "desc": null,
+          "price": 26.1,
+          "tags": [
+            "contains-shellfish",
+            "contains-peanuts",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Stir Fried Fish with Fish Flavour Sauce",
+          "code": "115",
+          "desc": null,
+          "price": 25.3,
+          "tags": []
+        },
+        {
+          "name": "Stir Fried Beans with Dace Fish",
+          "code": "116",
+          "desc": null,
+          "price": 26.1,
+          "tags": []
+        },
+        {
+          "name": "Tora Tora in Black Bean Sauce",
+          "code": "117",
+          "desc": null,
+          "price": 27.3,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Tora Tora in Chef's Special Sauce",
+          "code": "118",
+          "desc": null,
+          "price": 27.3,
+          "tags": []
+        },
+        {
+          "name": "Plum Sauce Duck with Pickle",
+          "code": "119",
+          "desc": null,
+          "price": 26.8,
+          "tags": []
+        },
+        {
+          "name": "KC Chef's Stir Fried Special",
+          "code": "120",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Lemon Chicken",
+          "code": "121",
+          "desc": null,
+          "price": 26.8,
+          "tags": []
+        }
       ]
     },
     {
       "section": "Steamboat Dishes",
       "items": [
-        { "name": "Hot & Spicy Fish Fillet with Pickles", "code": "122", "desc": null, "price": 32.3, "tags": [] },
-        { "name": "Hot & Spicy Beef Brisket with Bean Curd", "code": "123", "desc": null, "price": 32.9, "tags": [] },
-        { "name": "Tender Beef in Hot & Sour Soup", "code": "124", "desc": null, "price": 34.0, "tags": [] },
-        { "name": "Hot & Spicy Beef with Tofu and Bean Curd", "code": "125", "desc": null, "price": 34.0, "tags": ["contains-soy"] },
-        { "name": "Hot & Spicy Lamb with Tofu and Bean Curd", "code": "126", "desc": null, "price": 34.0, "tags": ["contains-soy"] },
-        { "name": "Hot & Spicy Lamb Rib", "code": "127", "desc": null, "price": 34.0, "tags": [] },
-        { "name": "Hot & Spicy Lamb with Cold Tofu", "code": "128", "desc": null, "price": 34.0, "tags": ["contains-soy"] },
-        { "name": "Chicken and Potato in Hot & Spicy Sauce", "code": "129", "desc": null, "price": 32.3, "tags": [] },
-        { "name": "Pork Maw and Chicken with Black Pepper", "code": "130", "desc": null, "price": 34.0, "tags": [] },
-        { "name": "Beef Tripe and Mix Mushroom in Hot & Spicy Sauce", "code": "131", "desc": null, "price": 34.0, "tags": [] },
-        { "name": "Hot & Spicy Tora Tora", "code": "132", "desc": null, "price": 34.0, "tags": [] },
-        { "name": "KC Chicken, Pork Duck and Seafood Hot Wok", "code": "133", "desc": null, "price": 32.3, "tags": ["contains-shellfish"] }
+        {
+          "name": "Hot & Spicy Fish Fillet with Pickles",
+          "code": "122",
+          "desc": null,
+          "price": 32.3,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Beef Brisket with Bean Curd",
+          "code": "123",
+          "desc": null,
+          "price": 32.9,
+          "tags": []
+        },
+        {
+          "name": "Tender Beef in Hot & Sour Soup",
+          "code": "124",
+          "desc": null,
+          "price": 34.0,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Beef with Tofu and Bean Curd",
+          "code": "125",
+          "desc": null,
+          "price": 34.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Hot & Spicy Lamb with Tofu and Bean Curd",
+          "code": "126",
+          "desc": null,
+          "price": 34.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Hot & Spicy Lamb Rib",
+          "code": "127",
+          "desc": null,
+          "price": 34.0,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Lamb with Cold Tofu",
+          "code": "128",
+          "desc": null,
+          "price": 34.0,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chicken and Potato in Hot & Spicy Sauce",
+          "code": "129",
+          "desc": null,
+          "price": 32.3,
+          "tags": []
+        },
+        {
+          "name": "Pork Maw and Chicken with Black Pepper",
+          "code": "130",
+          "desc": null,
+          "price": 34.0,
+          "tags": []
+        },
+        {
+          "name": "Beef Tripe and Mix Mushroom in Hot & Spicy Sauce",
+          "code": "131",
+          "desc": null,
+          "price": 34.0,
+          "tags": []
+        },
+        {
+          "name": "Hot & Spicy Tora Tora",
+          "code": "132",
+          "desc": null,
+          "price": 34.0,
+          "tags": []
+        },
+        {
+          "name": "KC Chicken, Pork Duck and Seafood Hot Wok",
+          "code": "133",
+          "desc": null,
+          "price": 32.3,
+          "tags": [
+            "contains-shellfish"
+          ]
+        }
       ]
     },
     {
       "section": "Noodle & Rice",
       "items": [
-        { "name": "Shanghai Style Fried Noodle with BBQ Pork & Bok Choy", "code": "134", "desc": null, "price": 22.9, "tags": [] },
-        { "name": "Beef Brisket Stirred Noodle or Fried Noodle", "code": "135", "desc": null, "price": 26.8, "tags": [] },
-        { "name": "Stir Fried Udon with Black Pepper and Beef", "code": "136", "desc": null, "price": 25.6, "tags": ["contains-gluten"] },
-        { "name": "Chow Mein Noodle with Chicken / Beef / BBQ Pork", "code": "137", "desc": null, "price": 25.6, "tags": ["contains-gluten"] },
-        { "name": "Chow Kueh Teow with Beef or Black Bean Sauce", "code": "138", "desc": null, "price": 25.6, "tags": ["contains-soy"] },
-        { "name": "Seafood Soft Egg on Rice Noodle", "code": "139", "desc": null, "price": 26.2, "tags": ["contains-shellfish", "contains-egg"] },
-        { "name": "Singapore Fried Noodle with BBQ Pork and Shrimp", "code": "140", "desc": null, "price": 23.4, "tags": ["contains-shellfish"] },
-        { "name": "Shredded Duck Meat with Vermicelli", "code": "141", "desc": null, "price": 24.0, "tags": [] },
-        { "name": "Pad Thai with Chicken / Beef / Vegetarian", "code": "142", "desc": null, "price": 22.9, "tags": ["contains-peanuts"] },
-        { "name": "Hot and Sour Noodle Soup with Pork Mince and Pickle", "code": "143", "desc": null, "price": 23.4, "tags": [] },
-        { "name": "Hainanese Chicken with Rice", "code": "144", "desc": null, "price": 25.6, "tags": [] },
-        { "name": "Salted Fish and Chicken Fried Rice", "code": "145", "desc": null, "price": 24.1, "tags": [] },
-        { "name": "Fried Rice with Chinese Pork & Vegetable", "code": "146", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Young Chow Fried Rice with Shrimp and BBQ Pork", "code": "147", "desc": null, "price": 22.9, "tags": ["contains-shellfish"] },
-        { "name": "Hokkien Fried Rice or Noodle", "code": "148", "desc": null, "price": 25.6, "tags": ["contains-gluten"] },
-        { "name": "Roast Pork Fried Rice with Shrimp Paste", "code": "149", "desc": null, "price": 22.9, "tags": ["contains-shellfish"] },
-        { "name": "Pork Chop with Lemon Grass or Black Pepper", "code": "150", "desc": null, "price": 22.9, "tags": [] },
-        { "name": "Salted Chicken on Rice", "code": "151", "desc": null, "price": 22.3, "tags": [] },
-        { "name": "Deep Fried Garlic Chicken on Rice", "code": "152", "desc": null, "price": 23.4, "tags": [] },
-        { "name": "Shredded Duck Meat Fried Rice", "code": "153", "desc": null, "price": 24.0, "tags": [] },
-        { "name": "Bitter Melon & Beef on Rice", "code": "154", "desc": null, "price": 22.9, "tags": [] },
-        { "name": "Beef & Vegetable on Rice", "code": "155", "desc": null, "price": 22.9, "tags": [] },
-        { "name": "Beef Brisket on Rice", "code": "156", "desc": null, "price": 24.3, "tags": [] },
-        { "name": "Curry Beef or Lamb Flap Brisket on Rice", "code": "157", "desc": null, "price": 25.1, "tags": [] },
-        { "name": "Beef or Shrimp Soft Egg on Rice", "code": "158", "desc": null, "price": 23.4, "tags": ["contains-shellfish", "contains-egg"] },
-        { "name": "Beef Tomato Egg on Rice", "code": "159", "desc": null, "price": 23.4, "tags": ["contains-egg"] },
-        { "name": "Sweet Corn with Soft Egg and Fish Fillet on Rice", "code": "160", "desc": null, "price": 22.3, "tags": ["contains-egg"] }
+        {
+          "name": "Shanghai Style Fried Noodle with BBQ Pork & Bok Choy",
+          "code": "134",
+          "desc": null,
+          "price": 22.9,
+          "tags": []
+        },
+        {
+          "name": "Beef Brisket Stirred Noodle or Fried Noodle",
+          "code": "135",
+          "desc": null,
+          "price": 26.8,
+          "tags": []
+        },
+        {
+          "name": "Stir Fried Udon with Black Pepper and Beef",
+          "code": "136",
+          "desc": null,
+          "price": 25.6,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chow Mein Noodle with Chicken / Beef / BBQ Pork",
+          "code": "137",
+          "desc": null,
+          "price": 25.6,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chow Kueh Teow with Beef or Black Bean Sauce",
+          "code": "138",
+          "desc": null,
+          "price": 25.6,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Seafood Soft Egg on Rice Noodle",
+          "code": "139",
+          "desc": null,
+          "price": 26.2,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Singapore Fried Noodle with BBQ Pork and Shrimp",
+          "code": "140",
+          "desc": null,
+          "price": 23.4,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Shredded Duck Meat with Vermicelli",
+          "code": "141",
+          "desc": null,
+          "price": 24.0,
+          "tags": []
+        },
+        {
+          "name": "Pad Thai with Chicken / Beef / Vegetarian",
+          "code": "142",
+          "desc": null,
+          "price": 22.9,
+          "tags": [
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Hot and Sour Noodle Soup with Pork Mince and Pickle",
+          "code": "143",
+          "desc": null,
+          "price": 23.4,
+          "tags": []
+        },
+        {
+          "name": "Hainanese Chicken with Rice",
+          "code": "144",
+          "desc": null,
+          "price": 25.6,
+          "tags": []
+        },
+        {
+          "name": "Salted Fish and Chicken Fried Rice",
+          "code": "145",
+          "desc": null,
+          "price": 24.1,
+          "tags": []
+        },
+        {
+          "name": "Fried Rice with Chinese Pork & Vegetable",
+          "code": "146",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Young Chow Fried Rice with Shrimp and BBQ Pork",
+          "code": "147",
+          "desc": null,
+          "price": 22.9,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Hokkien Fried Rice or Noodle",
+          "code": "148",
+          "desc": null,
+          "price": 25.6,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Roast Pork Fried Rice with Shrimp Paste",
+          "code": "149",
+          "desc": null,
+          "price": 22.9,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Pork Chop with Lemon Grass or Black Pepper",
+          "code": "150",
+          "desc": null,
+          "price": 22.9,
+          "tags": []
+        },
+        {
+          "name": "Salted Chicken on Rice",
+          "code": "151",
+          "desc": null,
+          "price": 22.3,
+          "tags": []
+        },
+        {
+          "name": "Deep Fried Garlic Chicken on Rice",
+          "code": "152",
+          "desc": null,
+          "price": 23.4,
+          "tags": []
+        },
+        {
+          "name": "Shredded Duck Meat Fried Rice",
+          "code": "153",
+          "desc": null,
+          "price": 24.0,
+          "tags": []
+        },
+        {
+          "name": "Bitter Melon & Beef on Rice",
+          "code": "154",
+          "desc": null,
+          "price": 22.9,
+          "tags": []
+        },
+        {
+          "name": "Beef & Vegetable on Rice",
+          "code": "155",
+          "desc": null,
+          "price": 22.9,
+          "tags": []
+        },
+        {
+          "name": "Beef Brisket on Rice",
+          "code": "156",
+          "desc": null,
+          "price": 24.3,
+          "tags": []
+        },
+        {
+          "name": "Curry Beef or Lamb Flap Brisket on Rice",
+          "code": "157",
+          "desc": null,
+          "price": 25.1,
+          "tags": []
+        },
+        {
+          "name": "Beef or Shrimp Soft Egg on Rice",
+          "code": "158",
+          "desc": null,
+          "price": 23.4,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Beef Tomato Egg on Rice",
+          "code": "159",
+          "desc": null,
+          "price": 23.4,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sweet Corn with Soft Egg and Fish Fillet on Rice",
+          "code": "160",
+          "desc": null,
+          "price": 22.3,
+          "tags": [
+            "contains-egg"
+          ]
+        }
       ]
     },
     {
       "section": "Drinks & Desserts",
       "items": [
-        { "name": "Hong Kong Style Milk Tea", "desc": null, "price": 7.2, "tags": ["contains-dairy"] },
-        { "name": "Hong Kong Style Coffee", "desc": null, "price": 7.2, "tags": [] },
-        { "name": "Lemon Tea", "desc": null, "price": 7.2, "tags": [] },
-        { "name": "Lemon & Honey Tea", "desc": null, "price": 7.2, "tags": [] },
-        { "name": "Lemon and Coke", "desc": null, "price": 7.2, "tags": [] },
-        { "name": "Soya Milk", "desc": null, "price": 6.7, "tags": ["contains-soy"] },
-        { "name": "Chinese Tea", "desc": null, "price": 5.0, "tags": [] },
-        { "name": "Deep Fried Banana with Ice Cream", "desc": null, "price": 14.5, "tags": ["contains-dairy"] },
-        { "name": "Tofu Far", "desc": null, "price": 6.1, "tags": ["contains-soy"] },
-        { "name": "Deep Fried Milk Cube", "desc": null, "price": 15.6, "tags": ["contains-dairy"] }
+        {
+          "name": "Hong Kong Style Milk Tea",
+          "desc": null,
+          "price": 7.2,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hong Kong Style Coffee",
+          "desc": null,
+          "price": 7.2,
+          "tags": []
+        },
+        {
+          "name": "Lemon Tea",
+          "desc": null,
+          "price": 7.2,
+          "tags": []
+        },
+        {
+          "name": "Lemon & Honey Tea",
+          "desc": null,
+          "price": 7.2,
+          "tags": []
+        },
+        {
+          "name": "Lemon and Coke",
+          "desc": null,
+          "price": 7.2,
+          "tags": []
+        },
+        {
+          "name": "Soya Milk",
+          "desc": null,
+          "price": 6.7,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chinese Tea",
+          "desc": null,
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Deep Fried Banana with Ice Cream",
+          "desc": null,
+          "price": 14.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Tofu Far",
+          "desc": null,
+          "price": 6.1,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Deep Fried Milk Cube",
+          "desc": null,
+          "price": 15.6,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
       ]
     }
   ]

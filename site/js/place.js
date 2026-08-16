@@ -14,16 +14,17 @@
 // (ADR 0001) is why we format money with `Intl.NumberFormat` rather than ship a
 // currency table.
 
+import { HOME_CURRENCY, HOME_TIMEZONE } from "./home.js";
 import { nearestBranch } from "./locations.js";
+import { canConvert, convert, fxCurrencies } from "./fx.js";
+import { localCurrency } from "./locale.js";
+import { AS_CHARGED, LOCAL, settings } from "./settings.js";
 
-// The collection's home. A record that says nothing about where it is gets
-// these — NOT because an unstated venue is presumed to be in New Zealand as a
-// fact about the world, but because every venue held when this shipped was, and
-// a silent default that matches the existing data migrates 38 files by changing
-// none of them. A venue anywhere else states its own; `validate.py` warns when a
-// record's city looks foreign and it hasn't.
-export const HOME_TIMEZONE = "Pacific/Auckland";
-export const HOME_CURRENCY = "NZD";
+// The collection's home lives in `home.js` — a leaf module, because `locale.js`
+// needs the currency and `place.js` needs `locale.js`, which is a cycle if
+// either one owns the constants. Re-exported here so every existing importer of
+// `place.js` is unaffected.
+export { HOME_CURRENCY, HOME_TIMEZONE } from "./home.js";
 
 /**
  * The IANA timezone whose clock decides this venue's open/closed status.
@@ -45,12 +46,68 @@ export function branchTimezone(r, branch) {
 }
 
 /**
- * The ISO 4217 code the venue's own menu prices are in. Venue-level, not
- * per-branch: a menu is one document with one currency, and a chain that
- * genuinely prices in two currencies has two menus, so it is two records.
+ * The ISO 4217 code the venue's own menu prices are in — what the shop will
+ * actually charge. Venue-level, not per-branch: a menu is one document with one
+ * currency, and a chain that genuinely prices in two currencies has two menus,
+ * so it is two records. An individual price may still override it (`item.currency`)
+ * for the rare menu that quotes one line in another currency.
+ *
+ * `validate.py` now REQUIRES `currency` on every record (ADR 0045), so the
+ * fallback here is a boot-order safety net, not a schema default: every price
+ * in the data states the currency it is in, which is what makes conversion
+ * possible at all.
  */
 export function venueCurrency(r) {
   return r?.currency || HOME_CURRENCY;
+}
+
+/** The currency of one price: its own override, else the venue's. */
+export function priceCurrency(item, record) {
+  return item?.currency || venueCurrency(record);
+}
+
+// —————————————————— What currency to SHOW a price in ——————————————————
+
+/**
+ * The currency this reader wants prices in, given the venue's own.
+ *
+ * Falls back to the venue's own currency whenever we cannot honestly convert —
+ * no rate table yet, no rate for either side, or the reader asked for the
+ * shop's own numbers. That fallback is not a degraded mode: the shop's price is
+ * always a correct answer, which is why it is also what a failure returns.
+ */
+export function displayCurrency(record, item = null) {
+  const native = priceCurrency(item, record);
+  let want;
+  try {
+    want = settings.get().currency;
+  } catch {
+    return native;
+  }
+  if (want === AS_CHARGED) return native;
+  if (want === LOCAL) want = localCurrency(fxCurrencies());
+  if (!want || want === native) return native;
+  return canConvert(native, want) ? want : native;
+}
+
+/**
+ * A price ready to render: `{ amount, currency, native, nativeCurrency, converted }`.
+ *
+ * `converted` is false in the overwhelmingly common case — the reader's
+ * currency IS the shop's — and that is what keeps the interface quiet. Nothing
+ * downstream adds a currency code, a badge or a note unless this says true.
+ */
+export function displayPrice(amount, record, item = null) {
+  const nativeCurrency = priceCurrency(item, record);
+  const currency = displayCurrency(record, item);
+  if (currency === nativeCurrency || typeof amount !== "number") {
+    return { amount, currency: nativeCurrency, native: amount, nativeCurrency, converted: false };
+  }
+  const converted = convert(amount, nativeCurrency, currency);
+  if (converted === null) {
+    return { amount, currency: nativeCurrency, native: amount, nativeCurrency, converted: false };
+  }
+  return { amount: converted, currency, native: amount, nativeCurrency, converted: true };
 }
 
 /**

@@ -1,9 +1,12 @@
 {
   "id": "the-borough-tawa",
   "name": "The Borough",
-  "cuisine": ["Gastropub"],
+  "cuisine": [
+    "Gastropub"
+  ],
   "area": "Tawa",
   "city": "Wellington",
+  "currency": "NZD",
   "address": "166 Main Road, Tawa, Wellington 5028",
   "lat": -41.17079,
   "lng": 174.82511,
@@ -13,17 +16,61 @@
   },
   "website": "https://www.theboroughtawa.co.nz",
   "ordering": [],
-  "services": ["dine-in", "takeaway"],
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
   "hours": {
-    "mon": [["10:00", null]],
-    "tue": [["10:00", null]],
-    "wed": [["10:00", null]],
-    "thu": [["10:00", null]],
-    "fri": [["09:30", null]],
-    "sat": [["09:30", null]],
-    "sun": [["09:30", null]]
+    "mon": [
+      [
+        "10:00",
+        null
+      ]
+    ],
+    "tue": [
+      [
+        "10:00",
+        null
+      ]
+    ],
+    "wed": [
+      [
+        "10:00",
+        null
+      ]
+    ],
+    "thu": [
+      [
+        "10:00",
+        null
+      ]
+    ],
+    "fri": [
+      [
+        "09:30",
+        null
+      ]
+    ],
+    "sat": [
+      [
+        "09:30",
+        null
+      ]
+    ],
+    "sun": [
+      [
+        "09:30",
+        null
+      ]
+    ]
   },
-  "vibe": ["garden bar", "live sport", "dog friendly", "family friendly", "quiz night"],
+  "vibe": [
+    "garden bar",
+    "live sport",
+    "dog friendly",
+    "family friendly",
+    "quiz night"
+  ],
   "picks": [],
   "priceBand": "$$",
   "pricePerPerson": 24,
@@ -45,7 +92,11 @@
           "name": "The Aegean Melt",
           "desc": "Beef patty with mozzarella, feta yoghurt spread, red pepper salsa and iceberg lettuce in a Pōneke Bakery milk bun, served with fries and tzatziki. Gluten-free possible. Available lunch & dinner; takeaway available.",
           "price": 29.0,
-          "tags": ["gf-option", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         }
       ]
     },
@@ -56,49 +107,78 @@
           "name": "Garlic Pizza Bread",
           "desc": "Confit garlic butter, toasted rosemary.",
           "price": 14.0,
-          "tags": ["v", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Korean-Fried Cauliflower",
           "desc": "Korean BBQ sauce, spring onion, pickles.",
           "price": 20.0,
-          "tags": ["v", "gf-option"]
+          "tags": [
+            "v",
+            "gf-option"
+          ]
         },
         {
           "name": "Salt & Pepper Squid",
           "desc": "Lemon garlic aioli, seasonal leaves, fresh lemon.",
           "price": 22.5,
-          "tags": ["contains-egg", "contains-shellfish"]
+          "tags": [
+            "contains-egg",
+            "contains-shellfish"
+          ]
         },
         {
           "name": "Sticky Pork Belly Bites",
           "desc": "Gochujang BBQ glaze, chilli, sesame seeds.",
           "price": 24.0,
-          "tags": ["contains-sesame", "spicy-1"]
+          "tags": [
+            "contains-sesame",
+            "spicy-1"
+          ]
         },
         {
           "name": "Loaded Fries",
           "desc": "BBQ brisket, cheesy sauce, chipotle mayo, pickles, green onion.",
           "price": 25.5,
-          "tags": ["contains-dairy", "contains-egg"]
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
         },
         {
           "name": "Buttermilk Fried Chicken",
           "desc": "Peri peri spiced chicken thigh, ranch, garden pickles, chilli herbs.",
           "price": 24.5,
-          "tags": ["contains-dairy", "contains-gluten", "spicy-1"]
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "spicy-1"
+          ]
         },
         {
           "name": "Fries",
           "desc": "Confit garlic aioli & tomato sauce.",
           "price": 13.0,
-          "tags": ["v", "contains-egg"]
+          "tags": [
+            "v",
+            "contains-egg"
+          ]
         },
         {
           "name": "Tools Down Platter",
           "desc": "Sticky pork belly bites, buttermilk fried chicken, Korean fried cauliflower, salt & pepper squid, seasonal leaves, garlic flat bread, home made dipping sauces.",
           "price": 69.0,
-          "tags": ["contains-gluten", "contains-dairy", "contains-sesame", "contains-egg", "contains-shellfish"]
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-sesame",
+            "contains-egg",
+            "contains-shellfish"
+          ]
         }
       ]
     },
@@ -109,37 +189,58 @@
           "name": "Chicken Schnitty",
           "desc": "Crumbed chicken breast, Caesar salad, gravy, choice of fries or mash.",
           "price": 29.5,
-          "tags": ["contains-gluten", "contains-egg"]
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
         },
         {
           "name": "Fish & Chips",
           "desc": "Beer-battered daily catch, house fries, green herb slaw, tartare sauce.",
           "price": 29.5,
-          "tags": ["contains-gluten", "contains-egg"]
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
         },
         {
           "name": "Twice Cooked Pork Belly",
           "desc": "Potato gratin, seasonal greens, pear & fig relish, cider jus. No gluten added.",
           "price": 38.0,
-          "tags": ["gf", "contains-dairy"]
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Fettuccine Carbonara",
           "desc": "Creamy carbonara sauce, chicken, bacon, Grana Padano.",
           "price": 29.5,
-          "tags": ["gf-option", "contains-gluten", "contains-dairy", "contains-egg"]
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
         },
         {
           "name": "Classic Caesar",
           "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow. Add grilled chicken +$6.",
           "price": 24.0,
-          "tags": ["contains-gluten", "contains-egg", "contains-dairy"]
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Butcher's Cut Steak",
           "desc": "Rotating cut of premium NZ beef, fries, café de Paris butter, red wine jus, charred seasonal greens.",
           "price": 38.0,
-          "tags": ["gf-option", "contains-dairy"]
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
         }
       ]
     },
@@ -150,19 +251,32 @@
           "name": "Cheeseburger",
           "desc": "150g brisket patty, American cheese, special sauce, ketchup, sweet & spicy pickles, lettuce, milk bun, fries. No gluten added bun +$2.50 or lettuce bun available.",
           "price": 27.0,
-          "tags": ["gf-option", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "The Cluckerson",
           "desc": "Crispy-fried chicken, American cheese, chipotle mayo, sweet & spicy pickles, lettuce, milk bun, fries.",
           "price": 29.5,
-          "tags": ["contains-gluten", "contains-dairy", "contains-egg"]
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
         },
         {
           "name": "The Halloumitarian",
           "desc": "Grilled halloumi, house-made vegan patty, American cheese, special sauce, sweet & spicy pickles, ranch, red onion, milk bun, fries.",
           "price": 29.5,
-          "tags": ["v", "gf-option", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         }
       ]
     },
@@ -173,31 +287,54 @@
           "name": "Margherita",
           "desc": "Cherry tomato, mozzarella, basil. No gluten added base +$2.50; dairy free mozzarella available.",
           "price": 27.0,
-          "tags": ["v", "gf-option", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "BBQ",
           "desc": "Brisket, pork belly, pepperoni, mozzarella, smoky IPA BBQ sauce.",
           "price": 29.0,
-          "tags": ["gf-option", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Bianca",
           "desc": "Mushrooms, white sauce, mozzarella, ricotta, kale, parmesan.",
           "price": 29.0,
-          "tags": ["v", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Chicken & Chorizo",
           "desc": "Red onion, fire-roasted peppers, jalapeños.",
           "price": 29.0,
-          "tags": ["gf-option", "contains-gluten", "contains-dairy", "spicy-1"]
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "spicy-1"
+          ]
         },
         {
           "name": "Pepperoni",
           "desc": "Crispy pepperoni, mozzarella, hot honey, chilli flakes.",
           "price": 29.0,
-          "tags": ["gf-option", "contains-gluten", "contains-dairy", "spicy-1"]
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "spicy-1"
+          ]
         }
       ]
     },
@@ -208,63 +345,164 @@
           "name": "Rosti Benedict",
           "desc": "House-made rosti, poached eggs, hollandaise. Choose bacon, hot-smoked salmon, or kale & mushrooms. No gluten added.",
           "price": 27.5,
-          "tags": ["gf", "contains-egg", "contains-dairy"]
+          "tags": [
+            "gf",
+            "contains-egg",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Eggs Your Way",
           "desc": "Toasted sourdough.",
           "price": 16.5,
-          "tags": ["v", "gf-option", "contains-egg", "contains-gluten"]
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-egg",
+            "contains-gluten"
+          ]
         },
         {
           "name": "Avocado on Toast",
           "desc": "Toasted sourdough, smashed avocado, poached egg, blistered tomato, seasonal leaves, parmesan.",
           "price": 27.0,
-          "tags": ["v", "gf-option", "contains-egg", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Breakfast Burger",
           "desc": "Fried egg, bacon, cheddar cheese, onion relish, seasonal leaves. Choose fries or rosti.",
           "price": 27.5,
-          "tags": ["gf-option", "contains-egg", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "gf-option",
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Mushroom on Toast",
           "desc": "Creamy mushroom selection, sourdough, chives, poached free-range eggs, parmesan.",
           "price": 27.5,
-          "tags": ["v", "gf-option", "contains-egg", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Chicken Waffles",
           "desc": "Buttermilk fried chicken, bacon, maple syrup, lemon mascarpone.",
           "price": 27.0,
-          "tags": ["contains-gluten", "contains-dairy", "contains-egg"]
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
         },
         {
           "name": "Sweet Waffles",
           "desc": "Mixed berry compote, lemon mascarpone, maple syrup.",
           "price": 23.0,
-          "tags": ["v", "contains-gluten", "contains-dairy", "contains-egg"]
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
         },
         {
           "name": "The Borough Big Breakfast",
           "desc": "Bacon, house sausage, rosti, creamy mushrooms, charred tomatoes, eggs your way, buttered sourdough.",
           "price": 31.0,
-          "tags": ["contains-egg", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         }
       ]
     },
     {
       "section": "Brunch Add-Ons",
       "items": [
-        { "name": "Eggs (2)", "desc": null, "price": 7.0, "tags": ["v", "contains-egg"] },
-        { "name": "Bacon", "desc": null, "price": 7.0, "tags": [] },
-        { "name": "Rosti", "desc": null, "price": 6.0, "tags": ["v"] },
-        { "name": "Halloumi", "desc": null, "price": 8.0, "tags": ["v", "contains-dairy"] },
-        { "name": "Creamy Mushrooms", "desc": null, "price": 8.0, "tags": ["v", "contains-dairy"] },
-        { "name": "Hollandaise", "desc": null, "price": 5.0, "tags": ["v", "contains-egg", "contains-dairy"] },
-        { "name": "NGA bread", "desc": "No gluten added bread.", "price": 3.0, "tags": ["v", "gf"] },
-        { "name": "Buttered sourdough", "desc": null, "price": 5.0, "tags": ["v", "contains-gluten", "contains-dairy"] }
+        {
+          "name": "Eggs (2)",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Bacon",
+          "desc": null,
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Rosti",
+          "desc": null,
+          "price": 6.0,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Halloumi",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Creamy Mushrooms",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hollandaise",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "NGA bread",
+          "desc": "No gluten added bread.",
+          "price": 3.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Buttered sourdough",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
       ]
     },
     {
@@ -274,19 +512,34 @@
           "name": "American Chocolate Brownie Sundae",
           "desc": "Warm chocolate brownie, vanilla ice cream whip, cookie crumble, chocolate sauce, honeycomb crumble, chocolate shards.",
           "price": 17.0,
-          "tags": ["v", "gf-option", "contains-gluten", "contains-dairy", "contains-egg"]
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
         },
         {
           "name": "Baked Cheesecake",
           "desc": "Chocolate crackle, raspberry gel, sherbet.",
           "price": 14.0,
-          "tags": ["v", "contains-dairy", "contains-gluten"]
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-gluten"
+          ]
         },
         {
           "name": "Sticky Date Pudding",
           "desc": "Butterscotch sauce, vanilla bean ice cream, honeycomb crunch.",
           "price": 14.0,
-          "tags": ["v", "contains-dairy", "contains-gluten", "contains-egg"]
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
         }
       ]
     },
@@ -297,43 +550,64 @@
           "name": "Mini Beast Burger",
           "desc": "Beef patty, melted cheese, ketchup and a toasted bun, served with fries. Free sundae included with every kids' meal.",
           "price": 15.0,
-          "tags": ["gf-option", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Chook & Chips",
           "desc": "Crispy chicken bites served with fries and ketchup. Free sundae included with every kids' meal.",
           "price": 15.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Lil' Fish & Chips",
           "desc": "Crispy fish bites served with fries and ketchup. Free sundae included with every kids' meal.",
           "price": 15.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Mini VIP Pizza",
           "desc": "Mozzarella cheese and pizza sauce on a crispy base. Add your favourite toppings: pepperoni, pineapple (V) or chicken. Free sundae included with every kids' meal.",
           "price": 15.0,
-          "tags": ["v", "contains-gluten", "contains-dairy"]
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Kids' Loaded Fries",
           "desc": "Golden fries topped with cheese sauce, bacon bits and gravy. Free sundae included with every kids' meal.",
           "price": 15.0,
-          "tags": ["gf-option", "contains-dairy"]
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Kid's Hot Chocolate",
           "desc": null,
           "price": 4.5,
-          "tags": ["v", "contains-dairy"]
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Kid's Fluffy",
           "desc": null,
           "price": 2.0,
-          "tags": ["v", "contains-dairy"]
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
         }
       ]
     },
@@ -344,80 +618,120 @@
           "name": "Thickshake",
           "desc": "Chocolate, banana, caramel, strawberry, vanilla, or cookies & cream.",
           "price": 14.0,
-          "tags": ["v", "contains-dairy", "contains-gluten"]
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-gluten"
+          ]
         },
         {
           "name": "Smoothie",
           "desc": "Mixed berry or mango.",
           "price": 12.0,
-          "tags": ["v"]
+          "tags": [
+            "v"
+          ]
         }
       ]
     },
     {
       "section": "Beer & Cider — on tap",
       "items": [
-        { "name": "Heineken", "desc": "5%.", "price": 15.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Heineken",
+          "desc": "5%.",
+          "price": 15.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
         {
           "name": "Heineken Silver Low Carb",
           "desc": "4%.",
           "price": 15.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
-        { "name": "Tiger", "desc": "5%.", "price": 15.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Tiger",
+          "desc": "5%.",
+          "price": 15.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
         {
           "name": "Murphy's Irish Stout",
           "desc": "4%.",
           "price": 14.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Export Ultra Low Carb Lager",
           "desc": "4.2%. Larger pour $22.00; the menu doesn't label the size.",
           "price": 11.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Tuatara Hazy Pale Ale",
           "desc": "5.5%. Larger pour $28.00; the menu doesn't label the size.",
           "price": 14.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Tuatara Adapt APA",
           "desc": "5%. Larger pour $28.00; the menu doesn't label the size.",
           "price": 14.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Tuatara Interstellar IPA",
           "desc": "6%. Larger pour $28.00; the menu doesn't label the size.",
           "price": 14.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Monteith's Wayfarer Pilsner",
           "desc": "4.9%. Larger pour $22.00; the menu doesn't label the size.",
           "price": 11.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Monteith's Original Ale",
           "desc": "4%. Larger pour $22.00; the menu doesn't label the size.",
           "price": 11.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Monteith's West Coast Hazy IPA",
           "desc": "5.5%. Larger pour $24.00; the menu doesn't label the size.",
           "price": 12.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Monteith's Golden Lager",
           "desc": "2.5%. Larger pour $22.00; the menu doesn't label the size.",
           "price": 11.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Monteith's Crushed Apple Cider",
@@ -442,27 +756,52 @@
     {
       "section": "Beer & Cider — bottles & cans",
       "items": [
-        { "name": "Heineken", "desc": "5%.", "price": 11.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Heineken",
+          "desc": "5%.",
+          "price": 11.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
         {
           "name": "Heineken Silver Low Carb",
           "desc": "4%.",
           "price": 11.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Tiger Crystal Ultra Low Carb",
           "desc": "4.2%.",
           "price": 11.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
-        { "name": "Sol", "desc": "4.2%.", "price": 11.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Sol",
+          "desc": "4.2%.",
+          "price": 11.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
         {
           "name": "Behemoth Something Hoppy IPA",
           "desc": "5.9%.",
           "price": 12.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
-        { "name": "Orchard Thieves Berry", "desc": "4%.", "price": 11.0, "tags": [] },
+        {
+          "name": "Orchard Thieves Berry",
+          "desc": "4%.",
+          "price": 11.0,
+          "tags": []
+        },
         {
           "name": "Odd Company",
           "desc": "Ask staff for today's flavours.",
@@ -480,18 +819,29 @@
     {
       "section": "Beer — low and no",
       "items": [
-        { "name": "Heineken 0.0", "desc": null, "price": 10.0, "tags": ["contains-gluten"] },
+        {
+          "name": "Heineken 0.0",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
         {
           "name": "Garage Project Tiny Hazy IPA",
           "desc": "0.5%.",
           "price": 12.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Choice Bros Hold Me Closer Session Hazy",
           "desc": "2.2%.",
           "price": 12.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         }
       ]
     },
@@ -562,7 +912,9 @@
           "name": "Bloody Mary",
           "desc": "Vodka, tomato juice, lemon juice, Worcestershire sauce, Tabasco, cracked black pepper, celery salt.",
           "price": 16.0,
-          "tags": ["spicy-1"]
+          "tags": [
+            "spicy-1"
+          ]
         }
       ]
     },
@@ -712,81 +1064,227 @@
           "name": "Coca-Cola / Coke Zero Sugar",
           "desc": null,
           "price": 6.5,
-          "tags": ["v", "vg"]
+          "tags": [
+            "v",
+            "vg"
+          ]
         },
-        { "name": "Schweppes Soda Water", "desc": null, "price": 3.5, "tags": ["v", "vg"] },
+        {
+          "name": "Schweppes Soda Water",
+          "desc": null,
+          "price": 3.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
         {
           "name": "Schweppes",
           "desc": "Dry lemonade, lemon lime & bitters, tonic water, or ginger ale.",
           "price": 6.5,
-          "tags": ["v"]
+          "tags": [
+            "v"
+          ]
         },
         {
           "name": "Red Bull / Red Bull Sugarfree",
           "desc": null,
           "price": 7.0,
-          "tags": ["v"]
+          "tags": [
+            "v"
+          ]
         },
         {
           "name": "Red Bull Coconut Edition Sugarfree",
           "desc": null,
           "price": 7.0,
-          "tags": ["v"]
+          "tags": [
+            "v"
+          ]
         },
         {
           "name": "Voyage Water",
           "desc": "Sparkling or still.",
           "price": 10.0,
-          "tags": ["v", "vg"]
+          "tags": [
+            "v",
+            "vg"
+          ]
         },
         {
           "name": "Juice",
           "desc": "Apple, pineapple, orange, cranberry or tomato.",
           "price": 7.0,
-          "tags": ["v", "vg"]
+          "tags": [
+            "v",
+            "vg"
+          ]
         }
       ]
     },
     {
       "section": "Coffee & tea",
       "items": [
-        { "name": "Short Black", "desc": null, "price": 5.0, "tags": ["v", "vg"] },
-        { "name": "Long Black", "desc": null, "price": 5.0, "tags": ["v", "vg"] },
-        { "name": "Americano", "desc": null, "price": 5.0, "tags": ["v", "vg"] },
-        { "name": "Flat White", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
-        { "name": "Latte", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
-        { "name": "Cappuccino", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
-        { "name": "Chai Latte", "desc": null, "price": 5.5, "tags": ["v", "contains-dairy"] },
-        { "name": "Mochaccino", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
+        {
+          "name": "Short Black",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Long Black",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Americano",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Flat White",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Latte",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cappuccino",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chai Latte",
+          "desc": null,
+          "price": 5.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mochaccino",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
         {
           "name": "Short Macchiato",
           "desc": null,
           "price": 5.0,
-          "tags": ["v", "contains-dairy"]
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Long Macchiato",
           "desc": null,
           "price": 5.5,
-          "tags": ["v", "contains-dairy"]
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
         },
-        { "name": "Matcha Latte", "desc": null, "price": 5.5, "tags": ["v", "contains-dairy"] },
-        { "name": "Hot Chocolate", "desc": null, "price": 5.0, "tags": ["v", "contains-dairy"] },
-        { "name": "Lemon, Honey & Ginger", "desc": null, "price": 5.0, "tags": ["v"] },
+        {
+          "name": "Matcha Latte",
+          "desc": null,
+          "price": 5.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hot Chocolate",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Lemon, Honey & Ginger",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v"
+          ]
+        },
         {
           "name": "Tea",
           "desc": "English breakfast, Earl Grey, peppermint, chamomile, green jasmine or berrylicious.",
           "price": 5.0,
-          "tags": ["v", "vg"]
+          "tags": [
+            "v",
+            "vg"
+          ]
         },
-        { "name": "Iced Americano", "desc": null, "price": 6.0, "tags": ["v", "vg"] },
-        { "name": "Iced Latte", "desc": null, "price": 6.5, "tags": ["v", "contains-dairy"] },
-        { "name": "Iced Matcha Latte", "desc": null, "price": 7.0, "tags": ["v", "contains-dairy"] },
+        {
+          "name": "Iced Americano",
+          "desc": null,
+          "price": 6.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Iced Latte",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Iced Matcha Latte",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
         {
           "name": "Iced Coffee / Mocha / Chocolate",
           "desc": null,
           "price": 9.0,
-          "tags": ["v", "contains-dairy"]
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
         }
       ]
     }

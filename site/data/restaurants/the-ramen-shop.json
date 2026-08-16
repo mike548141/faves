@@ -7,6 +7,7 @@
   ],
   "area": "Johnsonville",
   "city": "Wellington",
+  "currency": "NZD",
   "address": "109 Johnsonville Road, Johnsonville, Wellington 6037",
   "lat": -41.22515,
   "lng": 174.80748,
@@ -17,16 +18,54 @@
   "phone": "+64 4 213 9076",
   "website": "https://theramenshop.co.nz",
   "ordering": [
-    { "platform": "DoorDash", "url": "https://www.doordash.com/en-NZ/store/the-ramen-shop-wellington-26094347/" }
+    {
+      "platform": "DoorDash",
+      "url": "https://www.doordash.com/en-NZ/store/the-ramen-shop-wellington-26094347/"
+    }
   ],
   "hours": {
-    "mon": [["11:30", "21:00"]],
-    "tue": [["11:30", "21:00"]],
-    "wed": [["11:30", "21:00"]],
-    "thu": [["11:30", "21:00"]],
-    "fri": [["11:30", "21:00"]],
-    "sat": [["11:30", "21:00"]],
-    "sun": [["11:30", "21:00"]]
+    "mon": [
+      [
+        "11:30",
+        "21:00"
+      ]
+    ],
+    "tue": [
+      [
+        "11:30",
+        "21:00"
+      ]
+    ],
+    "wed": [
+      [
+        "11:30",
+        "21:00"
+      ]
+    ],
+    "thu": [
+      [
+        "11:30",
+        "21:00"
+      ]
+    ],
+    "fri": [
+      [
+        "11:30",
+        "21:00"
+      ]
+    ],
+    "sat": [
+      [
+        "11:30",
+        "21:00"
+      ]
+    ],
+    "sun": [
+      [
+        "11:30",
+        "21:00"
+      ]
+    ]
   },
   "vibe": [
     "counter-order"
@@ -48,81 +87,507 @@
     {
       "section": "Entrée",
       "items": [
-        { "name": "Steamed bao buns", "desc": "2 pieces. Pork, chicken or tofu.", "price": 12, "tags": ["v-option", "contains-gluten", "contains-soy"] },
-        { "name": "Dumplings", "desc": "6 pieces. Housemade pork and chive dumplings.", "price": 12, "tags": ["contains-gluten"] },
-        { "name": "Karaage", "desc": "Japanese fried chicken with kewpie mayo.", "price": 12, "tags": ["contains-egg"] },
-        { "name": "Takoyaki", "desc": "6 pieces. Deep fried savoury balls with octopus, served with mayo, tonkatsu sauce and katsuobushi.", "price": 10, "tags": ["contains-egg"] },
-        { "name": "Ebi katsu", "desc": "5 pieces. Deep fried prawn katsu served with tonkatsu sauce and mayo.", "price": 15, "tags": ["contains-shellfish", "contains-gluten", "contains-egg"] },
-        { "name": "Okonomiyaki", "desc": "2 pieces. Deep fried savoury Japanese pancake served with mayo, tonkatsu sauce, seaweed and katsuobushi.", "price": 12, "tags": ["contains-gluten", "contains-egg"] },
-        { "name": "Potato croquette", "desc": "3 pieces. Deep fried potato croquettes served with tonkatsu sauce.", "price": 12, "tags": ["v", "vg"] },
-        { "name": "Kimchi", "desc": "Housemade vegan kimchi.", "price": 9, "tags": ["v", "vg"] },
-        { "name": "Seaweed salad", "desc": "Wakame seaweed seasoned in a sesame vinaigrette.", "price": 9, "tags": ["v", "vg", "contains-sesame"] },
-        { "name": "Kinoko salad", "desc": "Kinoko mushrooms seasoned in a sesame vinaigrette.", "price": 9, "tags": ["v", "vg", "contains-sesame"] },
-        { "name": "Edamame", "desc": "Salted soybeans.", "price": 9, "tags": ["v", "vg", "contains-soy"] },
-        { "name": "Korean shake shake fries", "desc": "Fries shaken in special seasoning served with spicy mayo.", "price": 7, "tags": ["spicy-1", "contains-egg"] }
+        {
+          "name": "Steamed bao buns",
+          "desc": "2 pieces. Pork, chicken or tofu.",
+          "price": 12,
+          "tags": [
+            "v-option",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Dumplings",
+          "desc": "6 pieces. Housemade pork and chive dumplings.",
+          "price": 12,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Karaage",
+          "desc": "Japanese fried chicken with kewpie mayo.",
+          "price": 12,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Takoyaki",
+          "desc": "6 pieces. Deep fried savoury balls with octopus, served with mayo, tonkatsu sauce and katsuobushi.",
+          "price": 10,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Ebi katsu",
+          "desc": "5 pieces. Deep fried prawn katsu served with tonkatsu sauce and mayo.",
+          "price": 15,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Okonomiyaki",
+          "desc": "2 pieces. Deep fried savoury Japanese pancake served with mayo, tonkatsu sauce, seaweed and katsuobushi.",
+          "price": 12,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Potato croquette",
+          "desc": "3 pieces. Deep fried potato croquettes served with tonkatsu sauce.",
+          "price": 12,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Kimchi",
+          "desc": "Housemade vegan kimchi.",
+          "price": 9,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Seaweed salad",
+          "desc": "Wakame seaweed seasoned in a sesame vinaigrette.",
+          "price": 9,
+          "tags": [
+            "v",
+            "vg",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Kinoko salad",
+          "desc": "Kinoko mushrooms seasoned in a sesame vinaigrette.",
+          "price": 9,
+          "tags": [
+            "v",
+            "vg",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Edamame",
+          "desc": "Salted soybeans.",
+          "price": 9,
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Korean shake shake fries",
+          "desc": "Fries shaken in special seasoning served with spicy mayo.",
+          "price": 7,
+          "tags": [
+            "spicy-1",
+            "contains-egg"
+          ]
+        }
       ]
     },
     {
       "section": "Rice bowl",
       "items": [
-        { "name": "Pork rice bowl", "desc": "Braised pork and kimchi topped with mesclun and sesame.", "price": 21, "tags": ["contains-sesame"] },
-        { "name": "Chicken rice bowl", "desc": "Spicy chicken mince, egg and BBQ sauce topped with mesclun.", "price": 21, "tags": ["contains-egg", "spicy-1"] },
-        { "name": "Karaage rice bowl", "desc": "Karaage chicken and mayo topped with mesclun.", "price": 21, "tags": ["contains-egg"] },
-        { "name": "Curry rice bowl", "desc": "Curry sauce, potatoes, carrots and onions topped with spring onion and sesame. Choice of beef, chicken, potato croquette or ebi.", "price": 21, "tags": ["contains-sesame"] },
-        { "name": "Unagi rice bowl", "desc": "Grilled unagi, teriyaki sauce, spring onion and Japanese sanshō pepper.", "price": 26, "tags": ["contains-gluten", "contains-soy"] },
-        { "name": "Yakiniku beef rice bowl", "desc": "Japanese style BBQ beef, fried onions and egg topped with spring onion and sesame.", "price": 21, "tags": ["contains-egg", "contains-sesame"] },
-        { "name": "Tofu rice bowl", "desc": "Tofu, mixed mushrooms, eggplant and mapo sauce topped with spring onion and sesame.", "price": 21, "tags": ["v", "vg", "contains-soy", "contains-sesame"] }
+        {
+          "name": "Pork rice bowl",
+          "desc": "Braised pork and kimchi topped with mesclun and sesame.",
+          "price": 21,
+          "tags": [
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Chicken rice bowl",
+          "desc": "Spicy chicken mince, egg and BBQ sauce topped with mesclun.",
+          "price": 21,
+          "tags": [
+            "contains-egg",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Karaage rice bowl",
+          "desc": "Karaage chicken and mayo topped with mesclun.",
+          "price": 21,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Curry rice bowl",
+          "desc": "Curry sauce, potatoes, carrots and onions topped with spring onion and sesame. Choice of beef, chicken, potato croquette or ebi.",
+          "price": 21,
+          "tags": [
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Unagi rice bowl",
+          "desc": "Grilled unagi, teriyaki sauce, spring onion and Japanese sanshō pepper.",
+          "price": 26,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Yakiniku beef rice bowl",
+          "desc": "Japanese style BBQ beef, fried onions and egg topped with spring onion and sesame.",
+          "price": 21,
+          "tags": [
+            "contains-egg",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Tofu rice bowl",
+          "desc": "Tofu, mixed mushrooms, eggplant and mapo sauce topped with spring onion and sesame.",
+          "price": 21,
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy",
+            "contains-sesame"
+          ]
+        }
       ]
     },
     {
       "section": "Ramen",
       "items": [
-        { "name": "Tonkotsu", "desc": "Pork broth, double pork belly, sprouts, nori, corn, pickled cucumber and fried onion.", "price": 22, "tags": [] },
-        { "name": "Spicy tonkotsu", "desc": "Pork broth, double pork belly, spring onion, egg, corn and chilli threads.", "price": 22, "tags": ["contains-egg", "spicy-2"] },
-        { "name": "Black garlic tonkotsu", "desc": "Pork broth, double pork belly, bamboo shoots, black fungus, spring onion, fried garlic and mayu.", "price": 22, "tags": [] },
-        { "name": "Tokyo chicken", "desc": "Chicken broth, karaage, teriyaki sauce, sprouts, spring onion, nori and pickled cucumber.", "price": 22, "tags": ["contains-gluten", "contains-soy"] },
-        { "name": "Spicy chicken", "desc": "Chicken broth, spicy chicken mince, spring onion, corn, capsicum and coriander.", "price": 22, "tags": ["spicy-2"] },
-        { "name": "Dan dan chicken", "desc": "Chicken broth, peanut sesame sauce, spicy chicken mince, spring onion, fried onion and corn.", "price": 22, "tags": ["contains-peanuts", "contains-sesame", "spicy-2"] },
-        { "name": "Mala chicken", "desc": "Chicken broth, soy peanut sesame sauce, mala oil, spicy chicken mince, spring onion, black fungus and corn.", "price": 22, "tags": ["contains-peanuts", "contains-sesame", "contains-soy", "spicy-2"] },
-        { "name": "Paitan ramen", "desc": "Chicken broth, chicken chashu, corn, spring onion, black fungus and sesame.", "price": 22, "tags": ["contains-sesame", "contains-gluten"] },
-        { "name": "Gyu ramen", "desc": "Chicken broth, Japanese BBQ beef, sautéed onion, corn, spring onion, black fungus and sesame.", "price": 22, "tags": ["contains-sesame", "contains-gluten"] },
-        { "name": "Spicy ebi ramen", "desc": "Spicy soup, ebi katsu, corn, spring onion and nori.", "price": 22, "tags": ["contains-shellfish", "spicy-2", "contains-gluten"] },
-        { "name": "Miso ramen", "desc": "Miso broth, kinoko mushrooms, nori, corn and marinated tofu.", "price": 21, "tags": ["v", "vg", "contains-soy", "contains-gluten"] },
-        { "name": "Spicy miso", "desc": "Spicy miso broth, fried veges, bamboo shoots, corn, spring onion, nori and chilli threads.", "price": 21, "tags": ["v", "vg", "contains-soy", "spicy-2"] },
-        { "name": "Kids ramen", "desc": "Choice of teriyaki pork, teriyaki chicken or marinated tofu with teriyaki sauce, all served with corn.", "price": 12, "tags": ["v-option", "contains-gluten", "contains-soy"] },
-        { "name": "Yakisoba", "desc": "Choice of chicken or pork, stir fried noodle with mixed veges topped with spring onion, katsuobushi, tonkatsu sauce and mayo.", "price": 22, "tags": ["contains-egg"] },
-        { "name": "Pork abura ramen", "desc": "Brothless. Double pork belly, tonkotsu sauce, bamboo shoots, fried onion, egg, nori and furikake.", "price": 22, "tags": ["contains-egg", "contains-gluten"] }
+        {
+          "name": "Tonkotsu",
+          "desc": "Pork broth, double pork belly, sprouts, nori, corn, pickled cucumber and fried onion.",
+          "price": 22,
+          "tags": []
+        },
+        {
+          "name": "Spicy tonkotsu",
+          "desc": "Pork broth, double pork belly, spring onion, egg, corn and chilli threads.",
+          "price": 22,
+          "tags": [
+            "contains-egg",
+            "spicy-2"
+          ]
+        },
+        {
+          "name": "Black garlic tonkotsu",
+          "desc": "Pork broth, double pork belly, bamboo shoots, black fungus, spring onion, fried garlic and mayu.",
+          "price": 22,
+          "tags": []
+        },
+        {
+          "name": "Tokyo chicken",
+          "desc": "Chicken broth, karaage, teriyaki sauce, sprouts, spring onion, nori and pickled cucumber.",
+          "price": 22,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Spicy chicken",
+          "desc": "Chicken broth, spicy chicken mince, spring onion, corn, capsicum and coriander.",
+          "price": 22,
+          "tags": [
+            "spicy-2"
+          ]
+        },
+        {
+          "name": "Dan dan chicken",
+          "desc": "Chicken broth, peanut sesame sauce, spicy chicken mince, spring onion, fried onion and corn.",
+          "price": 22,
+          "tags": [
+            "contains-peanuts",
+            "contains-sesame",
+            "spicy-2"
+          ]
+        },
+        {
+          "name": "Mala chicken",
+          "desc": "Chicken broth, soy peanut sesame sauce, mala oil, spicy chicken mince, spring onion, black fungus and corn.",
+          "price": 22,
+          "tags": [
+            "contains-peanuts",
+            "contains-sesame",
+            "contains-soy",
+            "spicy-2"
+          ]
+        },
+        {
+          "name": "Paitan ramen",
+          "desc": "Chicken broth, chicken chashu, corn, spring onion, black fungus and sesame.",
+          "price": 22,
+          "tags": [
+            "contains-sesame",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Gyu ramen",
+          "desc": "Chicken broth, Japanese BBQ beef, sautéed onion, corn, spring onion, black fungus and sesame.",
+          "price": 22,
+          "tags": [
+            "contains-sesame",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Spicy ebi ramen",
+          "desc": "Spicy soup, ebi katsu, corn, spring onion and nori.",
+          "price": 22,
+          "tags": [
+            "contains-shellfish",
+            "spicy-2",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Miso ramen",
+          "desc": "Miso broth, kinoko mushrooms, nori, corn and marinated tofu.",
+          "price": 21,
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Spicy miso",
+          "desc": "Spicy miso broth, fried veges, bamboo shoots, corn, spring onion, nori and chilli threads.",
+          "price": 21,
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy",
+            "spicy-2"
+          ]
+        },
+        {
+          "name": "Kids ramen",
+          "desc": "Choice of teriyaki pork, teriyaki chicken or marinated tofu with teriyaki sauce, all served with corn.",
+          "price": 12,
+          "tags": [
+            "v-option",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Yakisoba",
+          "desc": "Choice of chicken or pork, stir fried noodle with mixed veges topped with spring onion, katsuobushi, tonkatsu sauce and mayo.",
+          "price": 22,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Pork abura ramen",
+          "desc": "Brothless. Double pork belly, tonkotsu sauce, bamboo shoots, fried onion, egg, nori and furikake.",
+          "price": 22,
+          "tags": [
+            "contains-egg",
+            "contains-gluten"
+          ]
+        }
       ]
     },
     {
       "section": "Extras",
       "items": [
-        { "name": "Pork belly", "desc": null, "price": 4.5, "tags": [] },
-        { "name": "Ebi katsu (extra)", "desc": null, "price": 5, "tags": ["contains-shellfish", "contains-gluten"] },
-        { "name": "Chicken chashu", "desc": null, "price": 4.5, "tags": [] },
-        { "name": "Slow cooked egg", "desc": null, "price": 3.5, "tags": ["contains-egg"] },
-        { "name": "Marinated tofu", "desc": "2 pieces.", "price": 4.5, "tags": ["v", "vg", "contains-soy"] },
-        { "name": "Pickled cucumber", "desc": null, "price": 2.5, "tags": ["v", "vg"] },
-        { "name": "Bamboo shoots", "desc": null, "price": 2.5, "tags": ["v", "vg"] },
-        { "name": "Spring onion", "desc": null, "price": 2.5, "tags": ["v", "vg"] },
-        { "name": "Sprouts", "desc": null, "price": 2.5, "tags": ["v", "vg"] },
-        { "name": "Corn", "desc": null, "price": 2.5, "tags": ["v", "vg"] },
-        { "name": "Nori", "desc": "Seaweed.", "price": 2.5, "tags": ["v", "vg"] },
-        { "name": "Black fungus", "desc": null, "price": 2.5, "tags": ["v", "vg"] },
-        { "name": "Fried garlic", "desc": null, "price": 1.5, "tags": ["v", "vg"] },
-        { "name": "Mayu", "desc": "Black oil.", "price": 2.5, "tags": ["v", "vg"] },
-        { "name": "Chilli oil", "desc": null, "price": 2.5, "tags": ["v", "vg", "spicy-1"] },
-        { "name": "Kewpie mayo", "desc": null, "price": 2, "tags": ["contains-egg"] },
-        { "name": "Extra noodles", "desc": null, "price": 4.5, "tags": [] },
-        { "name": "Extra broth", "desc": null, "price": 4.5, "tags": [] },
-        { "name": "Steamed rice", "desc": null, "price": 3.5, "tags": ["v", "vg"] },
-        { "name": "Gluten free noodles", "desc": null, "price": 3, "tags": ["gf"] }
+        {
+          "name": "Pork belly",
+          "desc": null,
+          "price": 4.5,
+          "tags": []
+        },
+        {
+          "name": "Ebi katsu (extra)",
+          "desc": null,
+          "price": 5,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken chashu",
+          "desc": null,
+          "price": 4.5,
+          "tags": []
+        },
+        {
+          "name": "Slow cooked egg",
+          "desc": null,
+          "price": 3.5,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Marinated tofu",
+          "desc": "2 pieces.",
+          "price": 4.5,
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Pickled cucumber",
+          "desc": null,
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Bamboo shoots",
+          "desc": null,
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Spring onion",
+          "desc": null,
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Sprouts",
+          "desc": null,
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Corn",
+          "desc": null,
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Nori",
+          "desc": "Seaweed.",
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Black fungus",
+          "desc": null,
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Fried garlic",
+          "desc": null,
+          "price": 1.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Mayu",
+          "desc": "Black oil.",
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Chilli oil",
+          "desc": null,
+          "price": 2.5,
+          "tags": [
+            "v",
+            "vg",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Kewpie mayo",
+          "desc": null,
+          "price": 2,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Extra noodles",
+          "desc": null,
+          "price": 4.5,
+          "tags": []
+        },
+        {
+          "name": "Extra broth",
+          "desc": null,
+          "price": 4.5,
+          "tags": []
+        },
+        {
+          "name": "Steamed rice",
+          "desc": null,
+          "price": 3.5,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Gluten free noodles",
+          "desc": null,
+          "price": 3,
+          "tags": [
+            "gf"
+          ]
+        }
       ]
     },
     {
       "section": "Deals",
       "items": [
-        { "name": "Two mains & one entrée", "desc": "Weekend only.", "price": 48, "tags": [] }
+        {
+          "name": "Two mains & one entrée",
+          "desc": "Weekend only.",
+          "price": 48,
+          "tags": []
+        }
       ]
     }
   ]

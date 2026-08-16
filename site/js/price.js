@@ -14,39 +14,42 @@
 // Either can be set alone. `curated` in the result tells the UI to caption it
 // as our call rather than "estimated from the menu".
 
-import { formatMoney, venueCurrency } from "./place.js";
+import { convert } from "./fx.js";
+import { displayPrice, formatMoney, venueCurrency } from "./place.js";
 
 // Fewer than this many priced items → not a meaningful signal on its own.
 const MIN_ITEMS = 3;
 
-// Band thresholds are a CALIBRATION, not a conversion — "$" means cheap *here*,
-// which is a fact about local prices, not about an exchange rate (ADR 0043).
-// So they are keyed by currency, and a currency we have not calibrated gets NO
-// derived band at all: a curated one still shows, and otherwise the venue
-// simply carries no price chip.
+// One calibration, in one currency, reached from any other by conversion
+// (ADR 0045). "$" means cheap for a casual eatery — takeaways to gastropubs —
+// and these two numbers were chosen against Wellington menus in 2026.
 //
-// That is deliberately a gap rather than a guess. Running NZD's numbers through
-// today's FX would produce a confident band nobody measured, and this repo has
-// already had to correct one invented threshold (ADR 0036). Adding a currency
-// means sitting with that country's menus and choosing its two numbers.
-// Upper bound is inclusive: perPerson <= max.
-const BANDS_BY_CURRENCY = {
-  // Casual-eatery context (takeaways → gastropubs), Wellington 2026.
-  NZD: [
-    { max: 15, band: "$" },
-    { max: 30, band: "$$" },
-    { max: Infinity, band: "$$$" },
-  ],
-};
+// ADR 0043 refused to convert them, on the grounds that a band is a judgement
+// about local prices rather than an exchange rate. That was right while there
+// were no rates at all: the alternative then was a confident band nobody had
+// measured. With rates shipped as data it is the wrong trade — a Tokyo venue
+// showing no band at all tells a reader less than one placed against the same
+// yardstick as everywhere else, and the yardstick is at least stated.
+//
+// What conversion cannot fix is that cheap in Wellington is not cheap in Hanoi.
+// So the band is a comparison *within this collection*, not a claim about local
+// affordability — which is exactly what it always was for a reader scrolling
+// one list. Upper bound is inclusive: perPerson <= max.
+const BAND_CURRENCY = "NZD";
+const BANDS = [
+  { max: 15, band: "$" },
+  { max: 30, band: "$$" },
+  { max: Infinity, band: "$$$" },
+];
 
 const BAND_LETTERS = new Set(["$", "$$", "$$$"]);
 
-/** Bands for a currency, or null when we have not calibrated it. */
-function bandsFor(currency) {
-  return BANDS_BY_CURRENCY[currency] || null;
-}
+const bandOf = (perPersonInBandCurrency) =>
+  BANDS.find((b) => perPersonInBandCurrency <= b.max).band;
 
-const bandOf = (perPerson, bands) => bands.find((b) => perPerson <= b.max).band;
+/** A figure in `currency`, expressed in the band currency, or null. */
+const toBandCurrency = (amount, currency) =>
+  currency === BAND_CURRENCY ? amount : convert(amount, currency, BAND_CURRENCY);
 
 /** Every positive numeric price across a record's menu sections. */
 export function pricedItems(record) {
@@ -77,7 +80,6 @@ function median(nums) {
 export function priceBand(record) {
   if (record?.kind === "recipes") return null; // cooking, not spending
   const currency = venueCurrency(record);
-  const bands = bandsFor(currency);
 
   const curatedBand = BAND_LETTERS.has(record?.priceBand) ? record.priceBand : null;
   const curatedPP =
@@ -88,21 +90,24 @@ export function priceBand(record) {
       : null;
 
   const prices = pricedItems(record);
-  // No calibration for this currency → no *derived* signal. A curated band is
-  // still someone's judgement about this venue and survives.
-  const derived = bands && prices.length >= MIN_ITEMS ? median(prices) : null;
+  const derived = prices.length >= MIN_ITEMS ? median(prices) : null;
   if (!curatedBand && !curatedPP && derived === null) return null;
 
-  // Band: curated wins; else from a curated figure; else from the median —
-  // the last two both need a calibration to read a number as a band.
-  const band = curatedBand || (bands ? bandOf(curatedPP ?? derived, bands) : null);
-  if (!band) return null; // a curated figure in an uncalibrated currency says nothing yet
+  // Band: curated wins; else read a figure against the calibration, which means
+  // converting it first. Without a rate there is no honest band — a curated one
+  // still stands, because that is someone's judgement rather than arithmetic.
+  const figureForBand = toBandCurrency(curatedPP ?? derived, currency);
+  const band = curatedBand || (figureForBand === null ? null : bandOf(figureForBand));
+  if (!band) return null;
 
   // Per-person: curated wins; else the median, but only when it agrees with
   // the band (so an overridden band never carries a contradictory figure).
+  // Kept in the VENUE's currency — the caller converts it for display, so the
+  // figure and the price it sits beside are always in the same money.
   let perPerson = curatedPP;
-  if (perPerson === null && derived !== null && bandOf(derived, bands) === band) {
-    perPerson = derived;
+  if (perPerson === null && derived !== null) {
+    const derivedInBand = toBandCurrency(derived, currency);
+    if (derivedInBand !== null && bandOf(derivedInBand) === band) perPerson = derived;
   }
 
   return {
@@ -118,9 +123,9 @@ export function priceBand(record) {
 export function priceLabel(record) {
   const p = priceBand(record);
   if (!p) return null;
-  return p.perPerson === null
-    ? p.band
-    : `${p.band} · ~${formatMoney(p.perPerson, p.currency)}pp`;
+  if (p.perPerson === null) return p.band;
+  const shown = displayPrice(p.perPerson, record);
+  return `${p.band} · ~${formatMoney(shown.amount, shown.currency)}pp`;
 }
 
 /**

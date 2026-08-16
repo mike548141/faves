@@ -36,8 +36,10 @@
 // Everything writes straight to the store; the home list re-ranks live via
 // app.js's own subscription, and each menu reads the preferences on load.
 
-import { settings, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS } from "./settings.js";
+import { settings, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS, AS_CHARGED, LOCAL } from "./settings.js";
 import { UNIT_OPTIONS, dialSpec, dialValue, dialKm, formatDial } from "./units.js";
+import { fxAsOf, fxCurrencies } from "./fx.js";
+import { localCurrency } from "./locale.js";
 import { profiles, deviceStorage } from "./profiles.js";
 import {
   collectPersonalData,
@@ -499,6 +501,53 @@ function refreshResetSection() {
   };
 }
 
+
+// Currency names for the picker. Only codes fx.json carries a rate for can be
+// offered — anything else would be a choice that changes nothing. `Intl` names
+// the currency, so this list stays a list of codes rather than a second table
+// of names to keep in step.
+function currencyOptions() {
+  const codes = [...fxCurrencies()].sort();
+  const name = (code) => {
+    try {
+      const parts = new Intl.NumberFormat("en-NZ", {
+        style: "currency",
+        currency: code,
+        currencyDisplay: "name",
+      }).formatToParts(1);
+      const n = parts.find((p) => p.type === "currency")?.value;
+      return n ? `${n.charAt(0).toUpperCase()}${n.slice(1)} (${code})` : code;
+    } catch {
+      return code;
+    }
+  };
+  return [
+    { key: LOCAL, label: "Local — match where I am" },
+    { key: AS_CHARGED, label: "As each place charges" },
+    ...codes.map((code) => ({ key: code, label: name(code) })),
+  ];
+}
+
+// What the Language & units row says it is currently on. A resolved "Local"
+// shows what it resolved TO — "Local (NZD)" — because "Local" alone leaves the
+// reader to guess, and the guess is the whole thing they came here to check.
+function localeSummary(raw, resolved) {
+  const langLabel = resolved.lang === "mi" ? "Te Reo Māori" : "English";
+  const unitLabel = UNIT_OPTIONS.find((o) => o.key === resolved.units)?.label ?? "";
+  const cur =
+    raw.currency === AS_CHARGED
+      ? "as charged"
+      : raw.currency === LOCAL
+        ? localCurrency(fxCurrencies())
+        : raw.currency;
+  const mark = (isLocal, text) => (isLocal ? `${text} (local)` : text);
+  return [
+    mark(raw.lang === LOCAL, langLabel),
+    mark(raw.units === LOCAL, unitLabel),
+    mark(raw.currency === LOCAL, cur),
+  ].join(" · ");
+}
+
 export function initSettingsUI() {
   const btn = document.getElementById("settings-btn");
   if (!btn || document.querySelector(".settings-sheet")) return;
@@ -507,16 +556,27 @@ export function initSettingsUI() {
   const people = peopleSection();
   const data = dataSection();
   const storage = refreshResetSection();
+  // "Local" heads all three localisation lists: it is the default, and it is
+  // the answer most readers want without knowing they want it (ADR 0045).
+  const localOption = { key: LOCAL, label: "Local — match where I am" };
   const lang = selectControl({
     ariaLabel: "Language",
     // A language is always named in its own tongue, whatever the UI language is.
-    options: [{ key: "en", label: "English" }, { key: "mi", label: "Te Reo Māori" }],
+    options: [localOption, { key: "en", label: "English" }, { key: "mi", label: "Te Reo Māori" }],
     onChange: (v) => settings.set({ lang: v }),
   });
   const units = selectControl({
     ariaLabel: "Units for distances and temperatures",
-    options: UNIT_OPTIONS,
+    options: [localOption, ...UNIT_OPTIONS],
     onChange: (v) => settings.set({ units: v }),
+  });
+  // Options are built from the rate table, not hard-coded: a currency with no
+  // rate would be a choice that silently does nothing. Rebuilt when the table
+  // arrives (fx.json is fetched, so it can land after this dialog is built).
+  const currency = selectControl({
+    ariaLabel: "Currency to show prices in",
+    options: currencyOptions(),
+    onChange: (v) => settings.set({ currency: v }),
   });
   const maps = selectControl({
     ariaLabel: "Which maps app opens on an address",
@@ -610,7 +670,26 @@ export function initSettingsUI() {
   // you to a place. Splitting each into its own row made the index longer to
   // read without making any single choice clearer (owner, 2026-08-16). Each half
   // keeps its own sub-heading inside, so nothing lost its label.
+  // How old the rates are, stated where the choice is made. A converted price
+  // is only as good as its rate, and a reader who can see the date can decide
+  // for themselves whether to trust it — which is the whole of the honesty we
+  // can offer for a number we did not get from the shop.
+  const fxNote = el("p", { className: "settings-note settings-note-quiet" });
+  function syncFxNote() {
+    const asOf = fxAsOf();
+    fxNote.textContent = asOf
+      ? `Exchange rates from ${asOf}. They update about once a day, and work offline.`
+      : "Exchange rates haven’t loaded yet, so prices show as each place charges them.";
+  }
+  syncFxNote();
+
   const localePanel = el("div", { className: "settings-panel" }, [
+    el("p", {
+      className: "settings-note",
+      textContent:
+        "Three ways of asking the same thing: how should this look, for someone here? " +
+        "Each can follow where you are — set it to Local and it changes when you travel.",
+    }),
     el("p", { className: "settings-sub", textContent: "Language" }),
     el("p", {
       className: "settings-note",
@@ -629,6 +708,15 @@ export function initSettingsUI() {
         "How distances and oven temperatures are shown. Prices always stay in each place’s own currency.",
     }),
     units.group,
+    el("p", { className: "settings-sub", textContent: "Currency" }),
+    el("p", {
+      className: "settings-note",
+      textContent:
+        "Prices are shown in this currency wherever we have a rate. Each place still " +
+        "charges in its own — a menu says which, and by how much, when the two differ.",
+    }),
+    currency.group,
+    fxNote,
   ]);
   const placesPanel = el("div", { className: "settings-panel" }, [
     el("p", { className: "settings-sub", textContent: "How far you’ll go" }),
@@ -671,10 +759,7 @@ export function initSettingsUI() {
       title: "Language & units",
       i18n: "settings.localeTitle",
       panel: localePanel,
-      summary: (s) =>
-        `${s.lang === "mi" ? "Te Reo Māori" : "English"} · ${
-          UNIT_OPTIONS.find((o) => o.key === s.units)?.label ?? ""
-        }`,
+      summary: (s) => localeSummary(settings.raw(), s),
     },
     { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save a copy, bring it back, or hand it to another device" },
     { key: "refreshReset", title: "Refresh & reset", i18n: "settings.refreshResetTitle", panel: storage.panel, summary: () => "Refresh the offline copy, or reset your preferences" },
@@ -795,9 +880,24 @@ export function initSettingsUI() {
 
   function sync() {
     const s = settings.get();
-    lang.select.value = s.lang;
+    // The SELECTS show the stored preference (so "Local" stays ticked); every
+    // other consumer here reads the resolved values off `s`.
+    const stored = settings.raw();
+    lang.select.value = stored.lang;
     maps.select.value = s.mapsApp;
-    units.select.value = s.units;
+    units.select.value = stored.units;
+    // fx.json is fetched, so the rate table can land after this dialog was
+    // built. Rebuild the currency list when its contents have changed rather
+    // than leaving a picker that offers nothing but "Local".
+    const codes = fxCurrencies();
+    if (codes.size !== currency.select.options.length - 2) {
+      currency.select.replaceChildren();
+      for (const { key, label } of currencyOptions()) {
+        currency.select.append(el("option", { value: key, textContent: label }));
+      }
+      syncFxNote();
+    }
+    currency.select.value = stored.currency;
     const dietarySet = new Set(s.diet.dietary);
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
     const avoidSet = new Set(s.diet.avoid);

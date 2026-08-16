@@ -7,6 +7,7 @@
   ],
   "area": "Te Aro",
   "city": "Wellington",
+  "currency": "NZD",
   "services": [
     "takeaway",
     "dine-in"
@@ -59,72 +60,256 @@
     {
       "section": "Burgers",
       "items": [
-        { "name": "Big Mac", "price": null, "tags": [] },
-        { "name": "Quarter Pounder", "price": null, "tags": [] },
-        { "name": "Double Quarter Pounder", "price": null, "tags": [] },
-        { "name": "Cheeseburger", "price": null, "tags": [] },
-        { "name": "Double Cheeseburger", "price": null, "tags": [] },
-        { "name": "Hamburger", "price": null, "tags": [] },
-        { "name": "Big Arch", "price": null, "tags": [] }
+        {
+          "name": "Big Mac",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Quarter Pounder",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Double Quarter Pounder",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Cheeseburger",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Double Cheeseburger",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Hamburger",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Big Arch",
+          "price": null,
+          "tags": []
+        }
       ]
     },
     {
       "section": "Chicken & Fish",
       "items": [
-        { "name": "McChicken", "price": null, "tags": [] },
-        { "name": "McCrispy", "price": null, "tags": [] },
-        { "name": "Double McCrispy", "price": null, "tags": [] },
-        { "name": "McCrispy Bacon Deluxe", "price": null, "tags": [] },
-        { "name": "Chicken McNuggets (6 pack)", "price": null, "tags": [] },
-        { "name": "Chicken McNuggets (10 pack)", "price": null, "tags": [] },
-        { "name": "Chicken McNuggets (20 pack)", "price": null, "tags": [] },
-        { "name": "Filet-O-Fish", "price": null, "tags": [] }
+        {
+          "name": "McChicken",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "McCrispy",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Double McCrispy",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "McCrispy Bacon Deluxe",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Chicken McNuggets (6 pack)",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Chicken McNuggets (10 pack)",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Chicken McNuggets (20 pack)",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Filet-O-Fish",
+          "price": null,
+          "tags": []
+        }
       ]
     },
     {
       "section": "Sides",
       "items": [
-        { "name": "Fries (Small)", "price": null, "tags": [] },
-        { "name": "Fries (Medium)", "price": null, "tags": [] },
-        { "name": "Fries (Large)", "price": null, "tags": [] },
-        { "name": "Hash Brown", "price": null, "tags": [] }
+        {
+          "name": "Fries (Small)",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Fries (Medium)",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Fries (Large)",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Hash Brown",
+          "price": null,
+          "tags": []
+        }
       ]
     },
     {
       "section": "Breakfast",
       "items": [
-        { "name": "Bacon & Egg McMuffin", "price": null, "tags": ["contains-egg"] },
-        { "name": "Sausage & Egg McMuffin", "price": null, "tags": ["contains-egg"] },
-        { "name": "Sausage McMuffin", "price": null, "tags": [] },
-        { "name": "Chicken McMuffin", "price": null, "tags": [] },
-        { "name": "Massive McMuffin", "price": null, "tags": [] },
-        { "name": "Hotcakes", "price": null, "tags": [] },
-        { "name": "Big Brekkie Burger", "price": null, "tags": ["contains-gluten"] }
+        {
+          "name": "Bacon & Egg McMuffin",
+          "price": null,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sausage & Egg McMuffin",
+          "price": null,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sausage McMuffin",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Chicken McMuffin",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Massive McMuffin",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Hotcakes",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Big Brekkie Burger",
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
       ]
     },
     {
       "section": "McCafé",
       "items": [
-        { "name": "Flat White", "price": null, "tags": ["contains-dairy"] },
-        { "name": "Latte", "price": null, "tags": ["contains-dairy"] },
-        { "name": "Cappuccino", "price": null, "tags": ["contains-dairy"] },
-        { "name": "Mocha", "price": null, "tags": ["contains-dairy"] },
-        { "name": "Long Black", "price": null, "tags": [] },
-        { "name": "Hot Chocolate", "price": null, "tags": [] },
-        { "name": "Iced Latte", "price": null, "tags": ["contains-dairy"] },
-        { "name": "Iced Mocha", "price": null, "tags": ["contains-dairy"] },
-        { "name": "Iced Chocolate", "price": null, "tags": [] }
+        {
+          "name": "Flat White",
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Latte",
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cappuccino",
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mocha",
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Long Black",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Hot Chocolate",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Iced Latte",
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Iced Mocha",
+          "price": null,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Iced Chocolate",
+          "price": null,
+          "tags": []
+        }
       ]
     },
     {
       "section": "Desserts & Shakes",
       "items": [
-        { "name": "Hot Apple Pie", "price": null, "tags": ["contains-gluten"] },
-        { "name": "Soft Serve Cone", "price": null, "tags": [] },
-        { "name": "Hot Fudge Sundae", "price": null, "tags": [] },
-        { "name": "McFlurry", "price": null, "tags": [] },
-        { "name": "Thickshake", "price": null, "tags": [] },
-        { "name": "Frozen Coke", "price": null, "tags": [] }
+        {
+          "name": "Hot Apple Pie",
+          "price": null,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Soft Serve Cone",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Hot Fudge Sundae",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "McFlurry",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Thickshake",
+          "price": null,
+          "tags": []
+        },
+        {
+          "name": "Frozen Coke",
+          "price": null,
+          "tags": []
+        }
       ]
     }
   ]

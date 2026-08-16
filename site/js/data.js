@@ -5,6 +5,7 @@
 import { resolveRecord, todayIn } from "./temporal.js";
 import { venueHemisphere, venueTimezone } from "./place.js";
 import { canonicalVenueId } from "./renames.js";
+import { loadFx } from "./fx.js";
 
 const INDEX_URL = "data/index.json";
 const restaurantUrl = (id) => `data/restaurants/${id}.json`;
@@ -57,7 +58,11 @@ const load = (raw) =>
 
 /** Load every restaurant, in display order. Throws if the index fails. */
 export async function loadRestaurants() {
-  const ids = await fetchJson(INDEX_URL);
+  // Rates ride along with the index, not after it: a price rendered before the
+  // table lands would show in the shop's currency and then silently change
+  // under the reader when it arrived. Failure is fine and quiet — fx.js falls
+  // back to no conversion, which is always a correct answer.
+  const [ids] = await Promise.all([fetchJson(INDEX_URL), loadFx(fetchJson)]);
   const results = await Promise.all(
     ids.map(async (id) => {
       try {
@@ -79,5 +84,9 @@ export async function loadRestaurants() {
  * in somebody's messages, not a missing feature (renames.js).
  */
 export async function loadRestaurant(id) {
-  return load(await fetchJson(restaurantUrl(canonicalVenueId(id))));
+  const [raw] = await Promise.all([
+    fetchJson(restaurantUrl(canonicalVenueId(id))),
+    loadFx(fetchJson),
+  ]);
+  return load(raw);
 }

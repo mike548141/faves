@@ -31,7 +31,7 @@ import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initTransferReceive } from "./personal-io-ui.js";
 import { initBackToTop } from "./to-top.js";
-import { formatMoney, venueTimezone, zoneLabel } from "./place.js";
+import { displayPrice, formatMoney, venueTimezone, zoneLabel } from "./place.js";
 import { priceBand } from "./price.js";
 import { initReo, t } from "./reo.js";
 import { el } from "./dom.js";
@@ -61,26 +61,30 @@ function priceChip(r) {
   const p = priceBand(r);
   if (!p) return null;
   const hasFigure = p.perPerson !== null;
+  // In the reader's currency, with no code beside it — the menu page's ⓘ and
+  // its one-line note are where conversion is explained (ADR 0045).
+  const shown = hasFigure ? displayPrice(p.perPerson, r) : null;
+  const pp = shown ? formatMoney(shown.amount, shown.currency) : "";
   const chip = el("span", { className: "chip chip-price" }, [
     el("span", { className: "price-band", textContent: p.band }),
-    ...(hasFigure ? [` ~${formatMoney(p.perPerson, p.currency)}pp`] : []),
+    ...(hasFigure ? [` ~${pp}pp`] : []),
   ]);
   // Curated band = our call; derived band = estimated from the menu prices.
   if (p.curated) {
     chip.title = hasFigure
-      ? `About ${formatMoney(p.perPerson, p.currency)} per person — our estimate for this place`
+      ? `About ${pp} per person — our estimate for this place`
       : `Typical price band for this place`;
     chip.setAttribute(
       "aria-label",
       hasFigure
-        ? `Around ${formatMoney(p.perPerson, p.currency)} per person`
+        ? `Around ${pp} per person`
         : `Price band ${p.band.length} of 3`
     );
   } else {
-    chip.title = `About ${formatMoney(p.perPerson, p.currency)} per person — estimated from ${p.count} menu prices`;
+    chip.title = `About ${pp} per person — estimated from ${p.count} menu prices`;
     chip.setAttribute(
       "aria-label",
-      `Around ${formatMoney(p.perPerson, p.currency)} per person, estimated from the menu`
+      `Around ${pp} per person, estimated from the menu`
     );
   }
   return chip;

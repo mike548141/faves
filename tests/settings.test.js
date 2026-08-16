@@ -4,7 +4,13 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createSettings, DEFAULTS, BOUNDS } from "../site/js/settings.js";
+import { createSettings, DEFAULTS, BOUNDS, LOCAL, AS_CHARGED } from "../site/js/settings.js";
+
+// `get()` returns settings with every LOCAL already resolved to a concrete
+// value, which is what every consumer wants and what makes "local" invisible to
+// them (ADR 0045). `raw()` is the stored preference. So a test about DEFAULTS —
+// which now hold LOCAL — compares against raw(); a test about behaviour reads
+// get().
 
 function fakeStorage(initial = null) {
   const m = new Map();
@@ -18,7 +24,7 @@ function fakeStorage(initial = null) {
 
 test("defaults when storage is empty", () => {
   const s = createSettings(fakeStorage());
-  assert.deepEqual(s.get(), DEFAULTS);
+  assert.deepEqual(s.raw(), DEFAULTS);
 });
 
 test("set merges a partial patch and persists", () => {
@@ -41,19 +47,19 @@ test("values are clamped into bounds", () => {
 test("non-numeric values fall back to the default", () => {
   const s = createSettings(fakeStorage());
   s.set({ favBoostKm: "lots", farKm: NaN });
-  assert.deepEqual(s.get(), DEFAULTS);
+  assert.deepEqual(s.raw(), DEFAULTS);
 });
 
 test("reset restores defaults", () => {
   const s = createSettings(fakeStorage());
   s.set({ favBoostKm: 0, farKm: 200 });
   s.reset();
-  assert.deepEqual(s.get(), DEFAULTS);
+  assert.deepEqual(s.raw(), DEFAULTS);
 });
 
 test("corrupt stored payload → defaults", () => {
   const s = createSettings(fakeStorage("{ broken"));
-  assert.deepEqual(s.get(), DEFAULTS);
+  assert.deepEqual(s.raw(), DEFAULTS);
 });
 
 test("lang: defaults to English, keeps a known language, rejects an unknown one", () => {
@@ -141,4 +147,57 @@ test("subscribe fires on change; unsubscribe stops it", () => {
   off();
   s.set({ farKm: 30 });
   assert.equal(calls, 1);
+});
+
+// ——————————————————— "Local" and currency (ADR 0045) ———————————————————
+
+test("the three localisation settings default to local, and resolve away", () => {
+  const s = createSettings(fakeStorage());
+  assert.equal(s.raw().lang, LOCAL);
+  assert.equal(s.raw().units, LOCAL);
+  assert.equal(s.raw().currency, LOCAL);
+  // No consumer should ever see the word "local" in a resolved value...
+  assert.notEqual(s.get().lang, LOCAL);
+  assert.ok(["metric", "imperial"].includes(s.get().units));
+  // ...except currency, which cannot be resolved without knowing WHICH venue's
+  // price is being rendered and which rates loaded. place.js does that per price.
+  assert.equal(s.get().currency, LOCAL);
+});
+
+test("an explicit choice survives resolution untouched", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ lang: "mi", units: "imperial", currency: "GBP" });
+  assert.equal(s.get().lang, "mi");
+  assert.equal(s.get().units, "imperial");
+  assert.equal(s.get().currency, "GBP");
+  assert.deepEqual(s.raw(), { ...s.raw(), lang: "mi", units: "imperial", currency: "GBP" });
+});
+
+test("currency accepts local, as-charged, and any ISO-shaped code", () => {
+  const s = createSettings(fakeStorage());
+  for (const v of [LOCAL, AS_CHARGED, "GBP", "JPY", "XPF"]) {
+    s.set({ currency: v });
+    assert.equal(s.raw().currency, v, `${v} should be accepted`);
+  }
+});
+
+test("a junk currency falls back rather than persisting", () => {
+  // Shape-checked only: WHICH codes are offered depends on the rate table that
+  // loaded, and a store must not silently reset a viewer's choice because a
+  // data file was slow.
+  const s = createSettings(fakeStorage());
+  for (const v of ["gbp", "pounds", "", 42, null, "GBPX"]) {
+    s.set({ currency: v });
+    assert.equal(s.raw().currency, DEFAULTS.currency, `${JSON.stringify(v)} should be rejected`);
+  }
+});
+
+test("a stored setting from before local existed still loads", () => {
+  // Someone who set "metric" and "en" by hand last week keeps them.
+  const storage = fakeStorage();
+  storage.setItem("faves.settings.v1", JSON.stringify({ lang: "mi", units: "imperial" }));
+  const s = createSettings(storage);
+  assert.equal(s.raw().lang, "mi");
+  assert.equal(s.raw().units, "imperial");
+  assert.equal(s.raw().currency, LOCAL, "and gains the new setting's default");
 });
