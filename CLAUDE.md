@@ -173,6 +173,13 @@ node tools/addon_check.mjs    # add-on composition in headless Chrome (ADR 0048)
 node tools/branch_check.mjs   # the branch picker in headless Chrome (ADR 0054)
 node tools/to_top_check.mjs   # the back-to-top button gets out of the way (Theme 29)
 node tools/filter_row_check.mjs # filters inline when wide, in the sheet when narrow
+node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part of
+                              # LINE IDENTITY, so the sheet can show the same dish
+                              # twice differing only by its note — and the ± control
+                              # operated the WRONG one until the stepper was made
+                              # note-aware, which no unit test can see. Also checks
+                              # the note is rendered as characters, not parsed: it
+                              # is the first free text a person types on this screen
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
                               # ⚠️ Currently ABORTS before its last three assertions
                               # on an overflow-menu race — a wall of PASS lines

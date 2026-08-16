@@ -12,7 +12,12 @@
     "dine-in"
   ],
   "website": "https://www.gongcha.co.nz/",
-  "ordering": [],
+  "ordering": [
+    {
+      "platform": "Order on our site",
+      "url": "https://gong-cha.appropo.io/order"
+    }
+  ],
   "locations": [
     {
       "label": "Manners Street",
@@ -68,10 +73,2060 @@
   ],
   "vibe": [],
   "picks": [],
-  "verified": null,
+  "verified": "2026-08-16",
+  "verifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-07-08"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "size",
+      "name": "Size",
+      "select": "one",
+      "options": [
+        {
+          "name": "Regular",
+          "price": 0,
+          "tags": []
+        },
+        {
+          "name": "Large",
+          "price": 1.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "toppings-classic-1",
+      "name": "Toppings",
+      "select": "many",
+      "max": 1,
+      "options": [
+        {
+          "name": "Herbal Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Pudding Jelly",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Aiyu Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Pearl",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Coconut Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Milk Foam",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Oreo",
+          "price": 1.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Aloe Vera",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "White Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Azuki",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Mango Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Lychee Pearl",
+          "price": 1.3,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "toppings-classic-2",
+      "name": "Toppings",
+      "select": "many",
+      "max": 2,
+      "options": [
+        {
+          "name": "Herbal Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Pudding Jelly",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Aiyu Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Pearl",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Coconut Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Milk Foam",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Oreo",
+          "price": 1.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Aloe Vera",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "White Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Azuki",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Mango Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Lychee Pearl",
+          "price": 1.3,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "toppings-classic-3",
+      "name": "Toppings",
+      "select": "many",
+      "max": 3,
+      "options": [
+        {
+          "name": "Herbal Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Pudding Jelly",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Aiyu Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Pearl",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Coconut Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Milk Foam",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Oreo",
+          "price": 1.0,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Aloe Vera",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "White Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Azuki",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Mango Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Lychee Pearl",
+          "price": 1.3,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "toppings-simple-1",
+      "name": "Toppings",
+      "select": "many",
+      "max": 1,
+      "options": [
+        {
+          "name": "Pearl",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Coconut Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Milk Foam",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "White Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Azuki",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Mango Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Lychee Pearl",
+          "price": 1.3,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "toppings-simple-2",
+      "name": "Toppings",
+      "select": "many",
+      "max": 2,
+      "options": [
+        {
+          "name": "Pearl",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Coconut Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Milk Foam",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "White Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Azuki",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Mango Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Lychee Pearl",
+          "price": 1.3,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "toppings-simple-3",
+      "name": "Toppings",
+      "select": "many",
+      "max": 3,
+      "options": [
+        {
+          "name": "Pearl",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Coconut Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Milk Foam",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "White Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Azuki",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Mango Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Lychee Pearl",
+          "price": 1.3,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "toppings-powder-1",
+      "name": "Toppings",
+      "select": "many",
+      "max": 1,
+      "options": [
+        {
+          "name": "Pearl",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "Coconut Jelly",
+          "price": 1.0,
+          "tags": []
+        },
+        {
+          "name": "White Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Aloe Vera",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Mango Pearl",
+          "price": 1.3,
+          "tags": []
+        },
+        {
+          "name": "Lychee Pearl",
+          "price": 1.3,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "COLD Seasonal Drinks",
+      "sectionId": "cold-seasonal-drinks",
+      "items": [
+        {
+          "name": "Patronus Powder Lime Black Tea",
+          "dishId": "patronus-powder-lime-black-tea",
+          "desc": null,
+          "price": 12.9,
+          "tags": []
+        },
+        {
+          "name": "Patronus Powder Lime Green Tea",
+          "dishId": "patronus-powder-lime-green-tea",
+          "desc": null,
+          "price": 12.9,
+          "tags": []
+        },
+        {
+          "name": "Winter Powered Mango",
+          "dishId": "winter-powered-mango",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "toppings-powder-1"
+          ]
+        },
+        {
+          "name": "Winter Powered Passionfruit",
+          "dishId": "winter-powered-passionfruit",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "toppings-powder-1"
+          ]
+        },
+        {
+          "name": "Mango Greek Yogurt",
+          "dishId": "mango-greek-yogurt",
+          "desc": null,
+          "price": 10.9,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Strawberry Greek Yogurt",
+          "dishId": "strawberry-greek-yogurt",
+          "desc": null,
+          "price": 10.9,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Peach Greek Yogurt",
+          "dishId": "peach-greek-yogurt",
+          "desc": null,
+          "price": 10.9,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Powered Lychee Original",
+          "dishId": "powered-lychee-original",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "toppings-powder-1"
+          ]
+        },
+        {
+          "name": "Powered Lychee Sugar Free",
+          "dishId": "powered-lychee-sugar-free",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "toppings-powder-1"
+          ]
+        },
+        {
+          "name": "Powered Grape Original",
+          "dishId": "powered-grape-original",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "toppings-powder-1"
+          ]
+        },
+        {
+          "name": "Powered Grape Sugar Free",
+          "dishId": "powered-grape-sugar-free",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "toppings-powder-1"
+          ]
+        },
+        {
+          "name": "Powered Grapefruit Original",
+          "dishId": "powered-grapefruit-original",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "toppings-powder-1"
+          ]
+        },
+        {
+          "name": "Powered Grapefruit Sugar Free",
+          "dishId": "powered-grapefruit-sugar-free",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "toppings-powder-1"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Waffle & Popcorn",
+      "sectionId": "waffle-popcorn",
+      "items": [
+        {
+          "name": "Strawberry Oreo Waffle",
+          "dishId": "strawberry-oreo-waffle",
+          "desc": null,
+          "price": 15.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Milkfoam Caramel Waffle",
+          "dishId": "milkfoam-caramel-waffle",
+          "desc": null,
+          "price": 15.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "QQ Passionfruit Eggette Waffle",
+          "dishId": "qq-passionfruit-eggette-waffle",
+          "desc": null,
+          "price": 15.0,
+          "tags": [
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Eureka Caramel Popcorn",
+          "dishId": "eureka-caramel-popcorn",
+          "desc": null,
+          "price": 7.9,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Eureka BBQ Popcorn",
+          "dishId": "eureka-bbq-popcorn",
+          "desc": null,
+          "price": 7.9,
+          "tags": []
+        },
+        {
+          "name": "Eureka Cheese Popcorn",
+          "dishId": "eureka-cheese-popcorn",
+          "desc": null,
+          "price": 7.9,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Eureka Sour Cream & Onion Popcorn",
+          "dishId": "eureka-sour-cream-onion-popcorn",
+          "desc": null,
+          "price": 7.9,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Eureka Wasabi Popcorn",
+          "dishId": "eureka-wasabi-popcorn",
+          "desc": null,
+          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Marked out of stock on the venue's own ordering site at time of reading; price not shown.",
+              "since": "2026-08-16"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "section": "COLD Milk Foam Series",
+      "sectionId": "cold-milk-foam-series",
+      "items": [
+        {
+          "name": "Milk Foam Black Tea",
+          "dishId": "milk-foam-black-tea",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Milk Foam Green Tea",
+          "dishId": "milk-foam-green-tea",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Milk Foam Oolong Tea",
+          "dishId": "milk-foam-oolong-tea",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Milk Foam Earl Grey Tea",
+          "dishId": "milk-foam-earl-grey-tea",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Milk Foam Wintermelon Drink",
+          "dishId": "milk-foam-wintermelon-drink",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Dirtea Fresh Milk",
+          "dishId": "dirtea-fresh-milk",
+          "desc": null,
+          "price": 10.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size"
+          ]
+        },
+        {
+          "name": "Dirtea Fresh Milk Black Tea",
+          "dishId": "dirtea-fresh-milk-black-tea",
+          "desc": null,
+          "price": 10.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "HOT Milk Foam Series",
+      "sectionId": "hot-milk-foam-series",
+      "items": [
+        {
+          "name": "Milk Foam Black Tea (Hot)",
+          "dishId": "milk-foam-black-tea-hot",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-2"
+          ]
+        },
+        {
+          "name": "Milk Foam Green Tea (Hot)",
+          "dishId": "milk-foam-green-tea-hot",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-2"
+          ]
+        },
+        {
+          "name": "Milk Foam Oolong Tea (Hot)",
+          "dishId": "milk-foam-oolong-tea-hot",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-2"
+          ]
+        },
+        {
+          "name": "Milk Foam Earl Grey Tea (Hot)",
+          "dishId": "milk-foam-earl-grey-tea-hot",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-2"
+          ]
+        },
+        {
+          "name": "Milk Foam Wintermelon (Hot)",
+          "dishId": "milk-foam-wintermelon-hot",
+          "desc": null,
+          "price": 7.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-2"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "COLD Brewed Tea Series",
+      "sectionId": "cold-brewed-tea-series",
+      "items": [
+        {
+          "name": "Black Tea",
+          "dishId": "black-tea",
+          "desc": null,
+          "price": 6.8,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Green Tea",
+          "dishId": "green-tea",
+          "desc": null,
+          "price": 6.8,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Oolong Tea",
+          "dishId": "oolong-tea",
+          "desc": null,
+          "price": 6.8,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Earl Grey Tea",
+          "dishId": "earl-grey-tea",
+          "desc": null,
+          "price": 6.8,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "HOT Brewed Tea Series",
+      "sectionId": "hot-brewed-tea-series",
+      "items": [
+        {
+          "name": "Black Tea (Hot)",
+          "dishId": "black-tea-hot",
+          "desc": null,
+          "price": 6.8,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Green Tea (Hot)",
+          "dishId": "green-tea-hot",
+          "desc": null,
+          "price": 6.8,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Oolong Tea (Hot)",
+          "dishId": "oolong-tea-hot",
+          "desc": null,
+          "price": 6.8,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Earl Grey Tea (Hot)",
+          "dishId": "earl-grey-tea-hot",
+          "desc": null,
+          "price": 6.8,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "COLD Refreshing Series (Non-Caff)",
+      "sectionId": "cold-refreshing-series-non-caff",
+      "items": [
+        {
+          "name": "Honey Drink",
+          "dishId": "honey-drink",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Wintermelon Drink",
+          "dishId": "wintermelon-drink",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Honey Lemon Drink",
+          "dishId": "honey-lemon-drink",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "White Pearl and Ai-Yu Special",
+          "dishId": "white-pearl-and-ai-yu-special",
+          "desc": null,
+          "price": 8.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-1"
+          ]
+        },
+        {
+          "name": "Lemon Wintermelon Drink",
+          "dishId": "lemon-wintermelon-drink",
+          "desc": null,
+          "price": 8.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Lychee Honey Drink w AloeVera",
+          "dishId": "lychee-honey-drink-w-aloevera",
+          "desc": null,
+          "price": 8.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "HOT Refreshing Series (Non-Caff)",
+      "sectionId": "hot-refreshing-series-non-caff",
+      "items": [
+        {
+          "name": "Honey Drink (Hot)",
+          "dishId": "honey-drink-hot",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Wintermelon Drink (Hot)",
+          "dishId": "wintermelon-drink-hot",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Honey Lemon Drink (Hot)",
+          "dishId": "honey-lemon-drink-hot",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Lemon Wintermelon Drink (Hot)",
+          "dishId": "lemon-wintermelon-drink-hot",
+          "desc": null,
+          "price": 8.0,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-2"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "COLD Refreshing Series (Caffeinated)",
+      "sectionId": "cold-refreshing-series-caffeinated",
+      "items": [
+        {
+          "name": "Wintermelon Green Tea",
+          "dishId": "wintermelon-green-tea",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Honey Green Tea",
+          "dishId": "honey-green-tea",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Lemon Green Tea",
+          "dishId": "lemon-green-tea",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Grapefruit Green Tea",
+          "dishId": "grapefruit-green-tea",
+          "desc": null,
+          "price": 7.5,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Peach Green Tea",
+          "dishId": "peach-green-tea",
+          "desc": null,
+          "price": 7.5,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Lychee Green Tea",
+          "dishId": "lychee-green-tea",
+          "desc": null,
+          "price": 7.5,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Grape Green Tea",
+          "dishId": "grape-green-tea",
+          "desc": null,
+          "price": 7.5,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Mango Green Tea",
+          "dishId": "mango-green-tea",
+          "desc": null,
+          "price": 7.9,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Peach Lychee Green Tea",
+          "dishId": "peach-lychee-green-tea",
+          "desc": null,
+          "price": 7.9,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "QQ Passionfruit Green Tea",
+          "dishId": "qq-passionfruit-green-tea",
+          "desc": null,
+          "price": 8.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-1"
+          ]
+        },
+        {
+          "name": "QQ Grape Passionfruit Green Tea",
+          "dishId": "qq-grape-passionfruit-green-tea",
+          "desc": null,
+          "price": 8.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-1"
+          ]
+        },
+        {
+          "name": "Grapefruit Green Tea w White Pearl & Aiyu",
+          "dishId": "grapefruit-green-tea-w-white-pearl-aiyu",
+          "desc": null,
+          "price": 8.3,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-1"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "HOT Refreshing Series (Caffeinated)",
+      "sectionId": "hot-refreshing-series-caffeinated",
+      "items": [
+        {
+          "name": "Wintermelon Green Tea (Hot)",
+          "dishId": "wintermelon-green-tea-hot",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Honey Green Tea (Hot)",
+          "dishId": "honey-green-tea-hot",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Lemon Green Tea (Hot)",
+          "dishId": "lemon-green-tea-hot",
+          "desc": null,
+          "price": 7.0,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Mango Green Tea (Hot)",
+          "dishId": "mango-green-tea-hot",
+          "desc": null,
+          "price": 7.9,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "QQ Passionfruit Green Tea (Hot)",
+          "dishId": "qq-passionfruit-green-tea-hot",
+          "desc": null,
+          "price": 8.0,
+          "tags": [],
+          "addOns": [
+            "toppings-simple-1"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "COLD Milk Tea Series",
+      "sectionId": "cold-milk-tea-series",
+      "items": [
+        {
+          "name": "Milk Tea",
+          "dishId": "milk-tea",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Honey Milk Tea",
+          "dishId": "honey-milk-tea",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Chocolate Milk Drink",
+          "dishId": "chocolate-milk-drink",
+          "desc": null,
+          "price": 7.4,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Pearl Milk Tea",
+          "dishId": "pearl-milk-tea",
+          "desc": null,
+          "price": 7.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Milk Tea w Coconut Jelly",
+          "dishId": "milk-tea-w-coconut-jelly",
+          "desc": null,
+          "price": 7.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Oolong Milk Tea w Herbal Jelly",
+          "dishId": "oolong-milk-tea-w-herbal-jelly",
+          "desc": null,
+          "price": 7.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Japanese Matcha Milk Drink",
+          "dishId": "japanese-matcha-milk-drink",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Brown Sugar Milk Tea",
+          "dishId": "brown-sugar-milk-tea",
+          "desc": null,
+          "price": 8.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Caramel Milk Tea",
+          "dishId": "caramel-milk-tea",
+          "desc": null,
+          "price": 8.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Milk Tea w Pudding & Pearl",
+          "dishId": "milk-tea-w-pudding-pearl",
+          "desc": null,
+          "price": 8.4,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-1"
+          ]
+        },
+        {
+          "name": "Earl Grey Milk Tea w 3J",
+          "dishId": "earl-grey-milk-tea-w-3j",
+          "desc": null,
+          "price": 8.4,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size"
+          ]
+        },
+        {
+          "name": "Oreo Chocolate Milk Tea",
+          "dishId": "oreo-chocolate-milk-tea",
+          "desc": null,
+          "price": 8.4,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Strawberry Green Milk Tea",
+          "dishId": "strawberry-green-milk-tea",
+          "desc": null,
+          "price": 8.4,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Honeydew Milk Drink",
+          "dishId": "honeydew-milk-drink",
+          "desc": null,
+          "price": 8.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Strawberry Chocolate",
+          "dishId": "strawberry-chocolate",
+          "desc": null,
+          "price": 8.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Honeydew Green Milk Tea",
+          "dishId": "honeydew-green-milk-tea",
+          "desc": null,
+          "price": 9.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Mango Green Milk Tea",
+          "dishId": "mango-green-milk-tea",
+          "desc": null,
+          "price": 9.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Taro Milk Drink",
+          "dishId": "taro-milk-drink",
+          "desc": null,
+          "price": 9.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "HOT Milk Tea Series",
+      "sectionId": "hot-milk-tea-series",
+      "items": [
+        {
+          "name": "Milk Tea (Hot)",
+          "dishId": "milk-tea-hot",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Honey Milk Tea (Hot)",
+          "dishId": "honey-milk-tea-hot",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Chocolate Milk Drink (Hot)",
+          "dishId": "chocolate-milk-drink-hot",
+          "desc": null,
+          "price": 7.4,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Pearl Milk Tea (Hot)",
+          "dishId": "pearl-milk-tea-hot",
+          "desc": null,
+          "price": 7.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-2"
+          ]
+        },
+        {
+          "name": "Milk Tea w Coconut Jelly (Hot)",
+          "dishId": "milk-tea-w-coconut-jelly-hot",
+          "desc": null,
+          "price": 7.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-2"
+          ]
+        },
+        {
+          "name": "Japanese Matcha Milk Drink (Hot)",
+          "dishId": "japanese-matcha-milk-drink-hot",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Brown Sugar Milk Tea (Hot)",
+          "dishId": "brown-sugar-milk-tea-hot",
+          "desc": null,
+          "price": 8.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Caramel Milk Tea (Hot)",
+          "dishId": "caramel-milk-tea-hot",
+          "desc": null,
+          "price": 8.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Taro Milk Drink (Hot)",
+          "dishId": "taro-milk-drink-hot",
+          "desc": null,
+          "price": 9.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "COLD Fresh Milk Series",
+      "sectionId": "cold-fresh-milk-series",
+      "items": [
+        {
+          "name": "Fresh Milk Black Tea",
+          "dishId": "fresh-milk-black-tea",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Green Tea",
+          "dishId": "fresh-milk-green-tea",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Oolong Tea",
+          "dishId": "fresh-milk-oolong-tea",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Earl Grey Tea",
+          "dishId": "fresh-milk-earl-grey-tea",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Wintermelon",
+          "dishId": "fresh-milk-wintermelon",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk w Azuki & Pudding",
+          "dishId": "fresh-milk-w-azuki-pudding",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ],
+          "addOns": [
+            "size"
+          ]
+        },
+        {
+          "name": "Fresh Milk w Herbal Jelly & Pearl",
+          "dishId": "fresh-milk-w-herbal-jelly-pearl",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size"
+          ]
+        },
+        {
+          "name": "Fresh Milk Japanese Matcha",
+          "dishId": "fresh-milk-japanese-matcha",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Mango Matcha w Mango Pearl",
+          "dishId": "mango-matcha-w-mango-pearl",
+          "desc": null,
+          "price": 9.9,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "HOT Fresh Milk Series",
+      "sectionId": "hot-fresh-milk-series",
+      "items": [
+        {
+          "name": "Fresh Milk Black Tea (Hot)",
+          "dishId": "fresh-milk-black-tea-hot",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Green Tea (Hot)",
+          "dishId": "fresh-milk-green-tea-hot",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Oolong Tea (Hot)",
+          "dishId": "fresh-milk-oolong-tea-hot",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Earl Grey Tea (Hot)",
+          "dishId": "fresh-milk-earl-grey-tea-hot",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Wintermelon (Hot)",
+          "dishId": "fresh-milk-wintermelon-hot",
+          "desc": null,
+          "price": 7.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        },
+        {
+          "name": "Fresh Milk Japanese Matcha (Hot)",
+          "dishId": "fresh-milk-japanese-matcha-hot",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "toppings-simple-3"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Yogurt Drink Series",
+      "sectionId": "yogurt-drink-series",
+      "items": [
+        {
+          "name": "Green Tea Yogurt",
+          "dishId": "green-tea-yogurt",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Grapefruit Yogurt Drink",
+          "dishId": "grapefruit-yogurt-drink",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Peach Yogurt Drink",
+          "dishId": "peach-yogurt-drink",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Lemon Yogurt Drink",
+          "dishId": "lemon-yogurt-drink",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Grape Yogurt Drink",
+          "dishId": "grape-yogurt-drink",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Mango Yogurt Drink",
+          "dishId": "mango-yogurt-drink",
+          "desc": null,
+          "price": 8.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Strawberry Yogurt Drink",
+          "dishId": "strawberry-yogurt-drink",
+          "desc": null,
+          "price": 8.3,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Slushie Series",
+      "sectionId": "slushie-series",
+      "items": [
+        {
+          "name": "Lychee Slushie",
+          "dishId": "lychee-slushie",
+          "desc": null,
+          "price": 7.5,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Passion Fruit Slushie w Coconut Jelly",
+          "dishId": "passion-fruit-slushie-w-coconut-jelly",
+          "desc": null,
+          "price": 7.9,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Mango Slushie",
+          "dishId": "mango-slushie",
+          "desc": null,
+          "price": 8.9,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Mango Yogurt Slushie",
+          "dishId": "mango-yogurt-slushie",
+          "desc": null,
+          "price": 9.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Peach Yogurt Slushie w Coconut Jelly",
+          "dishId": "peach-yogurt-slushie-w-coconut-jelly",
+          "desc": null,
+          "price": 9.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-2"
+          ]
+        },
+        {
+          "name": "Taro Slushie",
+          "dishId": "taro-slushie",
+          "desc": null,
+          "price": 9.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Honeydew Slushie",
+          "dishId": "honeydew-slushie",
+          "desc": null,
+          "price": 9.2,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Japanese Macha Slushie",
+          "dishId": "japanese-macha-slushie",
+          "desc": null,
+          "price": 9.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Oreo Chocolate Slushie",
+          "dishId": "oreo-chocolate-slushie",
+          "desc": null,
+          "price": 9.5,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Azuki Slushie",
+          "dishId": "azuki-slushie",
+          "desc": null,
+          "price": 11.0,
+          "tags": [],
+          "addOns": [
+            "size",
+            "toppings-simple-2"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "COLD Coffee Series",
+      "sectionId": "cold-coffee-series",
+      "items": [
+        {
+          "name": "Gong cha Milk Coffee",
+          "dishId": "gong-cha-milk-coffee",
+          "desc": null,
+          "price": 8.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Coffee Milk Tea",
+          "dishId": "coffee-milk-tea",
+          "desc": null,
+          "price": 8.7,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Caramel Milk Coffee",
+          "dishId": "caramel-milk-coffee",
+          "desc": null,
+          "price": 9.5,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size",
+            "toppings-classic-3"
+          ]
+        },
+        {
+          "name": "Dirtea Coffee Milk Tea",
+          "dishId": "dirtea-coffee-milk-tea",
+          "desc": null,
+          "price": 11.2,
+          "tags": [
+            "contains-dairy"
+          ],
+          "addOns": [
+            "size"
+          ]
+        }
+      ]
+    }
+  ]
 }

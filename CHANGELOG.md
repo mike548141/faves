@@ -9,6 +9,21 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Order it the way you eat it — a note on any line of your order.** "No
+  tomato", "sauce on the side": tap *Add a note* on a line in the order sheet
+  and it goes with that dish, reads out in collect mode, and travels with a
+  shared order to whoever is doing the ordering. Ordering the same dish twice
+  with different notes gives you two lines, because they are two different
+  things to ask for; clear a note and the line folds back in with the plain
+  one. Up to 80 characters.
+- **Nothing on the home screen is unreachable without JavaScript any more.**
+  Ten venues with finished menus were showing as "menu coming soon" on the
+  fail-soft home list, and a reader whose JavaScript had not run could not open
+  them. Fixed, and now checked automatically so it cannot drift again.
+- **Seven more menus, 850 dishes.** The Catch Sushi Bar, Satay Kingdom Cafe,
+  Charley Noble, Regal Chinese, Rock Yard Vietnamese, Pizza Pomodoro and Gong
+  Cha have gone from "menu coming soon" to full menus, every price read from
+  the venue's own site or its own menu PDF — never a delivery app.
 - **A recipe made of parts now says so.** Recipes with a base and an icing, or a
   pudding and its sauce, show each component under its own heading instead of
   repeating "Sauce:" at the front of every line. Your ticks carry over — nothing

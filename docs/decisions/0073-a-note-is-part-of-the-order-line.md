@@ -1,9 +1,4 @@
-<!-- DRAFT — take the number from `ls docs/decisions/` in the SAME MINUTE as the
-     final commit, rename the file, set the heading, and add the index entry in
-     that one commit. Numbers allocate at merge, not at write: three collisions
-     happened in one afternoon on 2026-08-16 doing it the other way. -->
-
-# NNNN — A note is part of the order line, and a dropped note is not a safe failure
+# 0073 — A note is part of the order line, and a dropped note is not a safe failure
 
 **Status:** accepted
 **Date:** 2026-08-16

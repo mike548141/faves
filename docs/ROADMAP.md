@@ -476,6 +476,36 @@ delivery app.** Clear one by bringing back the fact.
       that is not a `stub`**. Encoding the link rule is the point — it is what
       stops the next reader re-measuring this wrong.
 
+      > 🚩 **"Publishes a website" is NOT "publishes a menu" — measured
+      > 2026-08-16, and it halves this item.** The parenthetical below reads a
+      > website as *"a fetchable first-party source"*. It is not one. Of the
+      > 14 remaining website-publishing venues, **four publish a site with no
+      > menu on it anywhere**: `new-chapter-cafe` (its own menu page says
+      > "Coming Soon" on all three categories, and the template still carries
+      > its own `<!-- TODO -->`), `kaffee-eis` (a Squarespace site whose
+      > "Our Gelato" page says *"we make more than 45 flavours"* and names
+      > none), `babaili-malatang` (an 8-page site with no menu entry in its own
+      > nav), and `caffiend` (Facebook only, menu tab login-gated). Each was
+      > checked exhaustively — sitemap, soft-404 detection by MD5, platform
+      > JSON endpoints, guessed paths, own social accounts — and each is a
+      > **decision, not an oversight**: only a photo or an in-store visit
+      > clears them, exactly like the fourteen that publish nothing. 🔑 **So the
+      > `stub` count splits three ways, not two: publishes nothing · publishes
+      > a site but no menu · publishes a menu.** The middle group is invisible
+      > to the reproducer below, which is why it was miscounted.
+      > 🔎 **And two "blocked" findings were REFUTED by going back to check.**
+      > `subway` was recorded hard-blocked on a click-only widget: its menu
+      > pages are in fact server-rendered and readable, and it publishes a
+      > first-party **NZ Allergen Web Guide (May 2026)** — but it publishes
+      > **no price anywhere**, first-party, by design (franchise pricing), so
+      > every price is legitimately `null`. `pizza-hut`'s 9.8 KB homepage is a
+      > Nuxt shell, and one level in, `/order/<category>/delivery` serves a
+      > complete price-bearing first-party menu. `the-victoria-tavern`'s
+      > HTTP 000 is **not a dead domain**: it is a live server with a
+      > self-signed Plesk placeholder certificate issued 2026-08-03, and its
+      > real menu PDFs are current (mains dated 2025-11-24). 🔑 **A prior
+      > session's "blocked" is a hypothesis, not a fact** — three of four
+      > survived only until someone re-tested them.
       > 🔎 **The title understates the gap by five times — measured 2026-08-16.**
       > Counted across all 55 venue records: **32 carry zero dishes**, not six.
       > Of those, **18 publish a website** (a fetchable first-party source) and

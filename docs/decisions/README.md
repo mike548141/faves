@@ -575,6 +575,21 @@ deliberation those compact docs omit.
   requires the marker **on the timer face**, not only in the step text: a clock
   that looks the same whether its number was read or guessed is not "clearly
   marked". No UI built here.
+- [0073](0073-a-note-is-part-of-the-order-line.md) — **a note is part of the
+  order line, and a dropped note is not a safe failure.** Theme 14c's "no
+  tomato": the note joins `lineKey` as a fourth component, which is
+  [0048](0048-an-add-on-is-part-of-the-dish-you-are-ordering.md) §4 applied
+  consistently — two notes are two things to make, exactly as two add-on
+  selections are. 🚩 The codec's written justification for appending a slot
+  rather than bumping `CODEC_VERSION` is a **safety** argument — *"dropping an
+  add-on can never put something extra on a plate"* — and it does **not**
+  transfer: a note is characteristically a REMOVAL, so dropping one leaves the
+  unwanted thing on the plate. Carried anyway, because not carrying it fails
+  for everyone every time while carrying it fails only against a decoder older
+  than the slot. Two things the design got wrong and the code corrected:
+  `setNote` needs the note **twice** (the old one locates the line, since the
+  note is the identity), and the ± stepper was operating the wrong line when
+  two lines differed only by a note — `tools/note_check.mjs` exists for that.
 - [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
   — **a guard is decorative when its output is the same whether or not the thing
   it guards is broken.** Ten instances across two repos, three of them found on
