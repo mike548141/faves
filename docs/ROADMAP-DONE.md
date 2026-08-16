@@ -1533,3 +1533,49 @@ the CSS root font size grows every `rem` box but does **not** move `rem`-based
       timetable, via a subscription that currently writes to *that row*. Fold
       the panel in and the subscription must drive the combined row's summary or
       be torn down — never left writing to a detached element.
+
+## Scanner inflation from live worktrees — closed 2026-08-16 on measurement, not on the upstream fix
+
+> ✅ **Closed 2026-08-16 by the faves-cook session, and closed for a *different
+> reason than the one the item was waiting for*.** The item said to re-run the
+> sweep and delete it "when E9 lands upstream". E9 has **not** landed
+> (`atelier@1408d98`, zero drift at close). The local symptom went anyway,
+> because **worktrees moved out of the tree**.
+
+**What the item claimed.** Sessions take worktrees at `.claude/worktrees/<name>/`
+— gitignored, but a full second checkout — and the scanners walk it. So a bare
+`plainscan .` counted 2000 where the tree had 623, `pathscan .` counted 4 where
+2 were real, and `leakscan .` reported **101 findings, commit blocked**, whenever
+a sibling session had a worktree live. Standing advice: never a bare `.`; scope
+the sweep by passing paths.
+
+**What was measured, in the exact condition the claim requires.** Five sessions
+were live at once (faves-recipe, faves-ranking, faves-allergens, faves-cook,
+faves-menus), from a clean primary checkout:
+
+| Bare run | Item predicts | Measured 2026-08-16 |
+|---|---|---|
+| `leakscan .` | 101 findings, commit blocked | ✅ **clean** — 45 allow-marker, 60 files by `.leakscanignore` |
+| `plainscan .` | roughly 3× the true count | 652, heaviest `docs/ROADMAP.md ×402` — the real files, no doubling |
+| `pathscan .` | 4 where 2 are real | clean (separately, on the hook plane) |
+
+**Why it changed.** `git worktree list` puts all five at `~/worktrees/<name>`,
+which atelier's own `CONCURRENCY.md:16` prescribes — *"worktrees live outside
+iCloud (`~/worktrees/…`)"*. That path is **outside the repo**, so `.` no longer
+contains a second checkout. `.claude/worktrees/` still exists here and is empty.
+
+🔑 **Worth keeping, and it is the general lesson, not this item's detail.** The
+finding was true when written and false when read, and **nothing about it
+changed** — no code, no glob, no scanner. What moved was a *convention in a
+neighbouring repo* that the finding never named as a premise. A recorded
+measurement carries its conditions implicitly; when a condition is a convention
+rather than a fact about the tree, it can move without anyone touching the
+record. Same family as *"a permission granted by an old ADR is not evidence
+about today's code"* (Theme 36) and *"a hand-check whose evidence is 'the source
+did not move' degrades to nothing the moment the source moves"* (Theme 21) —
+three sightings now of one shape: **a record's premise expiring silently.**
+
+🚩 **It comes back if anyone takes a worktree inside the tree.** The mechanism is
+untouched; only the location saved us. And **upstream E9 stays valid** — it is
+about scanners walking nested checkouts, which is still true wherever they are
+nested. Nothing was delivered upstream and nothing should be withdrawn there.

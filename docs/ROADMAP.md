@@ -2910,27 +2910,14 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
   own header; an unwired `waitQuiet()` MutationObserver helper sits in
   `openDevice()` as an untested starting point. Owner is `overflow-ui.js` /
   `menu.js`, not the sync engine.
-- [ ] 🚩 **Whole-repo scanner runs here are inflated by every live worktree**
-  `[S][docs]` — found 2026-08-15, **queued upstream as atelier Track E item E9**
-  (`atelier@72cf216`) under the queue-never-deliver rule; no fix was written
-  there. Sessions take worktrees at `.claude/worktrees/<name>/`, which is
-  gitignored but is a **full second checkout of this repo**, and the scanners
-  walk it. So an ad-hoc `plainscan .` counted **2000** where the tree had 623,
-  and `pathscan .` counted 4 where 2 were real.
-  **Two consequences that actually bite here:**
-  - **A wrong number gets quoted into the record as fact.** This session nearly
-    filed a fabricated upstream defect off the inflated count, and caught it
-    only by re-running the scanner *the way the floor invokes it*. Treat any
-    figure from a bare `scanner.py .` as unverified.
-  - **Our `.leakscanignore` globs are root-relative, so they cannot reach
-    inside the nested copy.** `leakscan .` reports **101 findings — commit
-    blocked** whenever a sibling session has a worktree live. Every one is a
-    venue address or phone already allowed by `site/data/*`. **This tree is
-    clean**; nothing is wrong with our data or our globs.
-  Nothing to fix locally: the pre-commit hook scans staged files and the floor
-  passes explicit paths, so neither plane is affected. **When E9 lands upstream,
-  re-run the close-of-session sweep and delete this item.** Until then, scope
-  the sweep by hand — pass the paths, never a bare `.`.
+> ✅ **Closed 2026-08-16** — whole-repo scanner runs inflated by live worktrees.
+> **Stale, and re-measured with five worktrees live**: `leakscan .` clean (not
+> 101-and-blocked), `plainscan .` 652 with no doubling. Worktrees moved to
+> `~/worktrees/`, outside the tree, so `.` no longer holds a second checkout —
+> the item's premise was a *neighbouring repo's convention*, and it moved.
+> Bare sweeps are safe here again. 🚩 Returns if a worktree is ever taken inside
+> the tree; upstream atelier E9 stays valid and untouched. Detail →
+> [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 ✅ **Two accepted ADRs both numbered 0025 — ruled 2026-08-15.**
 `0025-settings-index-and-panels.md` (2026-08-08) and
