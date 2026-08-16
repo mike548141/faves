@@ -774,6 +774,26 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   deliberately not synced. **Nothing imports it yet** — the Worker and KV store
   are unbuilt and are the owner's go.
 
+- **Sync's encryption and its code** (no key of their own): `sync-crypto.js` +
+  `sync-code.js`, specified by **ADR 0061**. The sync code is a 65-bit
+  Crockford-base32 bearer secret with a mod-29 check symbol, minted from
+  `crypto.getRandomValues`. It is used directly as neither name nor key:
+  HKDF-SHA-256 under two different labels derives a 128-bit `blobId` (which the
+  server is told) and a non-extractable AES-GCM key (which never leaves the
+  device), so the two are independent. Blob wire shape is
+  `[version][12-byte IV][ciphertext‖tag]`, fresh IV per seal; `openBlob` returns
+  `null` rather than throwing for a wrong key, altered bytes or a truncated
+  read. **Nothing imports either yet.**
+- **`worker/`** — the Cloudflare Worker + KV blob store (ADR 0017, authorised by
+  the owner 2026-08-16). Outside `site/`, so it is not shipped, not precached and
+  not covered by the zero-dependency rule, which governs the served artefact. It
+  is a dumb ciphertext store: `GET`/`PUT /v1/blob/<blobId>`, strict id
+  validation, a 256 KiB streamed body cap, a 180-day TTL refreshed on write,
+  `If-Match` compare-and-swap, an origin allowlist, and no logging of anything.
+  🚩 **Built, tested and NOT deployed** — this machine has no `wrangler` and no
+  Cloudflare credential; `worker/README.md` holds the steps and the
+  least-privilege token scope.
+
 A `storage` event keeps other tabs in step (favourites/settings keys are now
 namespaced by the active profile; a registry change re-points them). Recipes
 (Cook at Home) can be

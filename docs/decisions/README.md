@@ -486,3 +486,16 @@ deliberation those compact docs omit.
   — a transfer link that destroyed the "follow me" localisation preference, and
   a merge import that silently dropped `units` and `currency`. Tombstones,
   per-entry timestamps and reusing `applyPersonalData` all lost.
+- [0061](0061-the-sync-code-is-split-into-a-name-and-a-key.md) — **the sync code
+  is split into a name and a key.** Implements ADR 0017's bearer code. The code
+  does two jobs — claim (which the server must be told) and encryption (which it
+  must never see) — so it is used directly as neither: HKDF-SHA-256 under two
+  different `info` labels yields an independent 128-bit `blobId` and a
+  non-extractable AES-GCM key. 65 bits from `crypto.getRandomValues`, Crockford
+  base32, mod-29 check symbol. **The word-list ADR 0017 suggested lost** to the
+  precache budget; **mod-37 lost** because its remainders reach punctuation;
+  **PBKDF2/Argon2 lost** because a machine-generated code has nothing to slow a
+  guesser down for — contingent on 0017's rejection of a user passphrase.
+  🔎 The test for the split **passed with both labels identical** — i.e. with the
+  server holding the key — because it asserted the wrong thing; the labels are
+  now exported so the property can be observed at all.

@@ -1082,13 +1082,18 @@ choose (Theme 10), rather than being trapped in one browser's storage.
   bugs fell out of the same read and are fixed: a transfer link that destroyed
   the "follow me" localisation preference, and a merge import that silently
   dropped `units` and `currency`.
-  **CLAIMED 2026-08-16 11:32 UTC (wt: faves-sync-crypto)** — the **E2E crypto,
-  the bearer sync-code, and the Worker source + config**, now that the owner has
-  authorised the backend (ADR 0060 addendum). 🚩 **The Worker cannot be deployed
-  from this machine** — no `wrangler`, no Cloudflare credential — so this claim
-  builds and tests its source and stops short of publishing it.
-  **Still open, and NOT claimed:** the push/pull/debounce client; the pairing
-  UI; the base-snapshot store the merge needs; and the deploy itself.
+  ✅ **Also built 2026-08-16, claim released:** the **E2E crypto and the bearer
+  sync-code** (`sync-crypto.js`, `sync-code.js`, **ADR 0061** — the code is split
+  by HKDF into a blob id the server may hold and a key it must never see), and
+  the **Worker source, config and README** (`worker/`, 19 tests against a fake
+  KV). The owner authorised the backend (ADR 0060 addendum).
+  🚩 **The Worker is NOT deployed** — this machine has no `wrangler` and no
+  Cloudflare credential, and installing one is the owner's call. Everything
+  needed is in `worker/README.md`, including the least-privilege token scope.
+  **Still open, and NOT claimed:** the **deploy**; the push/pull/debounce
+  client; the pairing UI; and the base-snapshot store the merge needs — that
+  last one is the only remaining piece of the *offline* half, and without it the
+  merge silently degrades to the additive behaviour ADR 0060 exists to replace.
   🚩 **Two gates before any of it
   ships:** the Reset-propagation wording (owner's ruling, Theme 32 — and ADR
   0060's last consequence shows that ruling cannot be met as stated, because an
