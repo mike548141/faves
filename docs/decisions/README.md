@@ -688,3 +688,22 @@ deliberation those compact docs omit.
   code, not necessarily of a runtime that fetches its voices. `cook_check.mjs`
   42 → 57 assertions, and all fifteen new ones were seen to fail under a
   targeted break.
+- [0073](0073-a-backup-carries-only-what-it-can-put-back.md) — **a backup
+  carries only what the import path can put back usefully.** ROADMAP 36g, the
+  owner's *"if it isn't restored, it shouldn't be exported."* Supersedes **the
+  final clause of [0067]'s decision 4 only** — that record justified keeping
+  cook-mode ticks out of `SCOPED_BASE_KEYS` partly on the grounds that
+  `collectPersonalData`'s catch-all *"still carries the raw key through a
+  backup, so nothing is silently lost"*. Measured false: the sweep exported
+  them and the import wrote them back under the **exporting** device's profile
+  id, twelve-hour expiry and all — restored uselessly, or onto the wrong
+  person. `sync.js` was shipping them between devices for `sync-merge.js` to
+  discard. 🛑 The fix the roadmap specified — add the base key to `EXCLUDED` —
+  would have excluded **nothing at all while looking exactly right**, because
+  `profileScopedStorage()` makes the real key `faves.p.<id>.checklist.v1`;
+  matching moved to a suffix test that also catches profiles orphaned from the
+  registry. `spare` now separates *excluded from a backup* from *exempt from a
+  replace wipe*, which the origin is and a tick is not. Proved by four tests
+  seen failing first, three of them again under a deliberate revert.
+
+[0067]: 0067-a-tick-is-keyed-on-the-line-not-its-place.md
