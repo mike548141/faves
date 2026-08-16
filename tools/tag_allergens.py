@@ -26,6 +26,31 @@ Three guards keep it honest:
   • Paid add-ons are not ingredients — "add prawns +$7" doesn't make a garden
     salad shellfish.
 
+SECTION NOTES COUNT AS THE MENU (added 2026-08-17, item 37n). A qualifier
+printed once above a run of dishes — "All burgers served with … on a sesame
+bun" — is the menu naming an allergen for every dish under it, and reading only
+`name`/`desc` missed all three of Thorndon's burgers. A note is read clause by
+clause and each clause is sorted into one of three buckets, because most notes
+are not ingredient statements at all:
+
+  APPLIES   an unambiguous, section-wide statement about what you are served —
+            "All burgers served with … on a sesame bun", "Our pizza bases
+            contain dairy". Tagged onto every dish in the section.
+  REVIEW    an *alternative* ("dairy free cheese available", "vegan aioli
+            available on request") or a cross-contamination statement ("all our
+            fried food is cooked in the same deep fryer"). Neither says what the
+            dish as served contains, so neither may be tagged from — but both
+            are printed for a human, because "dairy free cheese available" is
+            strong evidence the default cheese is dairy and only a person can
+            make that call.
+  IGNORED   everything else — hours, prices, "12 and under".
+
+WHAT THE EXIT CODE MEANS. A dry run always exits 0: reporting untagged dishes
+is its whole job, so a non-zero there would fire forever and be ignored. An
+`--apply` run exits **1** if any record it wanted to write could not be written.
+That case used to exit 0 (see `patch_tags`), which is how six venues went
+unswept behind a green run.
+
     python3 tools/tag_allergens.py               # report (default)
     python3 tools/tag_allergens.py --tier DERIVED  # just the inferences
     python3 tools/tag_allergens.py --apply       # write them
@@ -183,6 +208,124 @@ COMPILED = [
 ADD_ON = re.compile(r"\badd(?:s|ed|ing)?\b", re.I)
 ADD_ON_PRICE = re.compile(r"\+\s*\$")
 
+# --- section notes ---------------------------------------------------------
+# The three tests below are applied to each clause of a `section.note`, in this
+# order, and the order is the whole safety argument. Every pattern was written
+# against the sixteen notes actually in the corpus, not imagined.
+
+# 1. A statement about the kitchen, not about the food. "All our fried food is
+#    cooked in the same deep fryer" is a warning a coeliac needs to read, but it
+#    is not an ingredient — tagging from it would put contains-gluten on a bowl
+#    of chips because the fryer next to it battered a fish. Reported, never
+#    tagged. Checked FIRST because these clauses are often phrased universally
+#    ("all our…") and would otherwise sail through test 3.
+CROSS_CONTACT = re.compile(
+    r"\b(cooked|fried|prepared|made)\s+(in|on)\s+the\s+same\b|\bsame\s+(deep\s+)?"
+    r"(fryer|oil|grill|kitchen|equipment|surface)\b|\btraces?\s+of\b|"
+    r"\bcross[- ]contamination\b|\bcannot\s+guarantee\b|\bshared\s+(fryer|kitchen|equipment)\b",
+    re.I,
+)
+
+# 2. An alternative you can ask for, not what arrives by default. This is the
+#    trap the whole feature turns on: "Gluten free bases available", "dairy free
+#    cheese available", "Vegan cheese also available — just ask" all contain the
+#    allergen word, and a substring match reads every one of them backwards. The
+#    honest reading is the opposite one — that an alternative is offered implies
+#    the default has the allergen — but "implies" is not ADR 0025's "high
+#    confidence", and the dish it attaches to is unknowable from the note (an
+#    aioli clause under a Sharing heading says nothing about the chips). So:
+#    reported for a human, never tagged.
+AVAILABILITY = re.compile(
+    r"\bavailable\b|\bon\s+request\b|\bjust\s+ask\b|\bask\s+(us|your|the|for)\b|"
+    r"\bswap\b|\binstead\s+of\b|\bupgrade\b|\boptional\b|\bon\s+the\s+side\s+if\b|"
+    r"\bif\s+you\s+(want|prefer|like|ask)\b|\bcan\s+be\s+made\b|\bwe\s+can\s+make\b",
+    re.I,
+)
+
+# 3. Does the clause speak for the whole section? A note only reaches a dish if
+#    it claims to cover every dish under the heading. "All burgers served with
+#    …", "Our pizza bases contain dairy", "each comes with…" do; "Try the
+#    aioli" does not, and neither does a price or an opening time.
+UNIVERSAL = re.compile(r"\b(all|every|each|our)\b|\b(served|comes?|come)\s+with\b", re.I)
+
+# A venue stating an allergen in its own words. Only read inside a note, and
+# only in a clause that also says "contain" — the corpus-wide rules deliberately
+# don't match a bare "dairy"/"gluten", because in a dish description those words
+# appear far more often inside "dairy free" than inside "contains dairy".
+NOTE_DECLARES = re.compile(r"\bcontains?\b", re.I)
+NOTE_ALLERGENS = [
+    ("contains-dairy", r"\bdairy\b"),
+    ("contains-gluten", r"\b(gluten|wheat)\b"),
+    ("contains-nuts", r"\b(tree\s?nuts?|nuts?)\b"),
+    ("contains-peanuts", r"\bpeanuts?\b"),
+    ("contains-egg", r"\beggs?\b"),
+    ("contains-soy", r"\b(soy|soya)\b"),
+    ("contains-sesame", r"\bsesame\b"),
+    ("contains-shellfish", r"\b(shellfish|crustaceans?|molluscs?)\b"),
+]
+# "gluten free" is the negation of the word beside it, and must never be read as
+# a declaration. Belt and braces: AVAILABILITY catches nearly every real
+# instance first, but a note could say "our bases are gluten free" with no offer
+# in it at all.
+NOTE_FREE = re.compile(r"[- ]?free\b", re.I)
+
+
+def read_section_note(note):
+    """Sort a `section.note` into (applies, review).
+
+    `applies` is [(tag, tier, why)] — section-wide facts safe to put on every
+    dish under the heading. `review` is [(clause, reason, [tag])] — clauses that
+    mention an allergen but cannot honestly be tagged from, for a human to rule
+    on. Returns two empty lists for the notes that are just opening hours.
+    """
+    applies, review, seen = [], [], set()
+    for clause in re.split(r"[.;]", note or ""):
+        clause = clause.strip()
+        if not clause:
+            continue
+        hits = [(tag, tier, f"{why} ({m.group(0).lower()})")
+                for tag, tier, why, pattern, exclude in COMPILED
+                if not (exclude and exclude.search(clause))
+                for m in [pattern.search(clause)] if m]
+        if NOTE_DECLARES.search(clause):
+            for tag, word in NOTE_ALLERGENS:
+                m = re.search(word, clause, re.I)
+                if m and not NOTE_FREE.match(clause[m.end():]):
+                    hits.append((tag, "STATED", f"the note says it contains {m.group(0).lower()}"))
+        if not hits:
+            continue
+        tags_seen = sorted({tag for tag, _, _ in hits})
+        if CROSS_CONTACT.search(clause):
+            review.append((clause, "cross-contamination, not an ingredient", tags_seen))
+        elif AVAILABILITY.search(clause) or (ADD_ON.search(clause) and ADD_ON_PRICE.search(clause)):
+            review.append((clause, "an alternative offered, not what is served", tags_seen))
+        elif not UNIVERSAL.search(clause):
+            review.append((clause, "does not say it covers the whole section", tags_seen))
+        else:
+            for tag, tier, why in hits:
+                if tag not in seen:
+                    seen.add(tag)
+                    applies.append((tag, tier, f'section note "{clause}" — {why}'))
+    return applies, review
+
+
+def review_notes(record):
+    """Yield (section, clause, reason, tags) for note clauses a human must rule on.
+
+    Filtered to clauses whose tag is actually missing from at least one dish in
+    the section: a "gluten free bases available" line above pizzas that are all
+    already tagged is a question nobody needs to answer twice, and a report full
+    of settled questions is a report nobody reads.
+    """
+    for section in record.get("menu", []):
+        _, review = read_section_note(section.get("note"))
+        items = section.get("items", [])
+        for clause, reason, tags in review:
+            outstanding = [t for t in tags
+                           if any(t not in (it.get("tags") or []) for it in items)]
+            if outstanding:
+                yield section, clause, reason, outstanding
+
 
 def ingredient_lines(item):
     """A recipe's ingredient lines, flat, whichever way it was written.
@@ -222,62 +365,198 @@ def ingredient_text(item):
 def audit(record, tier=None):
     """Yield (item, tag, tier, why) for every tag this record is missing."""
     for section in record.get("menu", []):
+        # Read the heading's note once, then offer it to every dish under it.
+        note_applies, _ = read_section_note(section.get("note"))
         for item in section["items"]:
             text = ingredient_text(item)
             tags = set(item.get("tags", []))
-            for tag, rule_tier, why, pattern, exclude in COMPILED:
+            # The dish's own words first, so a burger that says "sesame" itself
+            # is reported against its own name rather than against the note.
+            findings = [
+                (tag, rule_tier, f"{why} ({hit.group(0).lower()})")
+                for tag, rule_tier, why, pattern, exclude in COMPILED
+                if not (exclude and exclude.search(text))
+                for hit in [pattern.search(text)] if hit
+            ] + note_applies
+            for tag, rule_tier, why in findings:
                 if tag in tags:
                     continue
                 if tier and rule_tier != tier:
                     continue
                 if tags & CONTRADICTED_BY.get(tag, set()):
                     continue  # curation outranks a pattern
-                if exclude and exclude.search(text):
-                    continue
-                hit = pattern.search(text)
-                if hit:
-                    tags.add(tag)  # one tag per item, whichever rule fires first
-                    yield item, tag, rule_tier, f"{why} ({hit.group(0).lower()})"
+                tags.add(tag)  # one tag per item, whichever rule fires first
+                yield item, tag, rule_tier, why
 
 
 # The data files are hand-maintained in two styles — one item per line in some
 # records, fully expanded in others — so a json.dumps() round-trip would
 # reformat whole files and bury the change. Patch the tags arrays in the raw
-# text instead, and leave every other byte alone.
-TAGS_ARRAY = re.compile(r'"tags"\s*:\s*\[[^\]]*\]')
-
+# text instead, and leave every other byte alone. That property is worth
+# keeping: the diff of a tag sweep is the only review anyone gets of it.
+#
+# What was NOT worth keeping is how the arrays were found. Until 2026-08-17 one
+# regex swept the whole file for `"tags": [...]` and matched the results to
+# dishes BY POSITION. Add-ons (ADR 0048) gave every add-on *option* a required
+# `tags` array of its own, so on the six records that carry `addOnGroups` the
+# count overshot, the file was refused whole, and the run still exited 0 —
+# 232 dishes never swept behind a green line of output.
+#
+# The primitives below walk the document's real structure instead, so a dish's
+# tags array is found INSIDE that dish's own object and nothing outside
+# `menu[].items[]` is ever a candidate. Position stops being the key: the array
+# is located through the object that owns it.
 
 class Unpatchable(Exception):
-    """This record's tags can't be patched positionally — skip it, don't guess."""
+    """This record's tags can't be located safely — skip it, don't guess."""
+
+
+def _skip_ws(raw, i):
+    while i < len(raw) and raw[i] in " \t\r\n":
+        i += 1
+    return i
+
+
+def _end_of_string(raw, i):
+    """Index just past the JSON string starting at raw[i] (which is a quote)."""
+    j = i + 1
+    while j < len(raw):
+        if raw[j] == "\\":  # an escaped quote is not the end of the string
+            j += 2
+            continue
+        if raw[j] == '"':
+            return j + 1
+        j += 1
+    raise Unpatchable("unterminated string")
+
+
+def _end_of_value(raw, i):
+    """Index just past the JSON value starting at raw[i]."""
+    c = raw[i]
+    if c == '"':
+        return _end_of_string(raw, i)
+    if c in "[{":
+        depth, j = 0, i
+        while j < len(raw):
+            c = raw[j]
+            if c == '"':  # brackets inside a string are text, not structure
+                j = _end_of_string(raw, j)
+                continue
+            if c in "[{":
+                depth += 1
+            elif c in "]}":
+                depth -= 1
+                if depth == 0:
+                    return j + 1
+            j += 1
+        raise Unpatchable("unterminated array or object")
+    j = i  # number, true, false, null
+    while j < len(raw) and raw[j] not in ",]} \t\r\n":
+        j += 1
+    return j
+
+
+def _elements(raw, start):
+    """(start, end) of each element of the JSON array at raw[start] == '['."""
+    if raw[start] != "[":
+        raise Unpatchable(f"expected an array at offset {start}")
+    i = _skip_ws(raw, start + 1)
+    while i < len(raw) and raw[i] != "]":
+        if raw[i] == ",":
+            i = _skip_ws(raw, i + 1)
+            continue
+        end = _end_of_value(raw, i)
+        yield i, end
+        i = _skip_ws(raw, end)
+
+
+def _member(raw, start, key):
+    """(start, end) of `key`'s value in the JSON object at raw[start] == '{'.
+
+    Only that object's own keys — a nested object's `tags` is not this one's.
+    """
+    if raw[start] != "{":
+        raise Unpatchable(f"expected an object at offset {start}")
+    i = _skip_ws(raw, start + 1)
+    while i < len(raw) and raw[i] != "}":
+        if raw[i] == ",":
+            i = _skip_ws(raw, i + 1)
+            continue
+        if raw[i] != '"':
+            raise Unpatchable(f"expected a key at offset {i}")
+        key_end = _end_of_string(raw, i)
+        found = json.loads(raw[i:key_end])
+        i = _skip_ws(raw, key_end)
+        if i >= len(raw) or raw[i] != ":":
+            raise Unpatchable(f"expected ':' at offset {i}")
+        i = _skip_ws(raw, i + 1)
+        end = _end_of_value(raw, i)
+        if found == key:
+            return i, end
+        i = _skip_ws(raw, end)
+    return None
+
+
+def item_tag_spans(raw):
+    """(start, end) of every menu item's own `tags` array, in menu order.
+
+    `None` in place of a span for a dish that carries no literal `tags` key —
+    which is patchable for every *other* dish in the file, unlike the old
+    positional scheme where one such dish condemned the whole record.
+    """
+    root = _skip_ws(raw, 0)
+    menu = _member(raw, root, "menu")
+    if menu is None:
+        return []
+    spans = []
+    for sec_start, _ in _elements(raw, menu[0]):
+        items = _member(raw, sec_start, "items")
+        if items is None:
+            continue
+        for item_start, _ in _elements(raw, items[0]):
+            spans.append(_member(raw, item_start, "tags"))
+    return spans
+
+
+# How to lay out an array we are creating from scratch. An existing non-empty
+# array tells us its own style; an empty `[]` tells us nothing, so fall back to
+# whatever the rest of the file does. Both styles are real in the corpus —
+# sprig-and-fern-tawa writes `"tags": ["df", "contains-gluten"]` on one line and
+# `"tags": [\n` a few sections later — and reformatting either one is the diff
+# noise this whole raw-text approach exists to avoid.
+MULTILINE_TAGS = re.compile(r'"tags"\s*:\s*\[\s*\n')
 
 
 def patch_tags(raw, items, additions):
     """Rewrite only the tags arrays that gained a tag, preserving each one's
-    existing layout.
-
-    Refuses to patch a record whose items don't each carry a literal `tags`
-    array — mcdonalds.json omits the key entirely, and a positional patch
-    against a partial list would write tags onto the wrong dishes. Refusing is
-    the only safe answer; the caller reports it and moves on rather than
-    aborting the whole run half-written.
+    existing layout. `additions` is {flat item index: [tag, …]}.
     """
-    spans = list(TAGS_ARRAY.finditer(raw))
+    spans = item_tag_spans(raw)
     if len(spans) != len(items):
-        raise Unpatchable(f"{len(spans)} tags arrays for {len(items)} items")
+        # The scanner and json.loads disagree about how many dishes are here,
+        # so one of them is wrong about the file's shape. Never write on that.
+        raise Unpatchable(f"scanned {len(spans)} dishes, parsed {len(items)}")
+    absent = [i for i in additions if spans[i] is None]
+    if absent:
+        raise Unpatchable(
+            "no literal tags array on " + ", ".join(repr(items[i]["name"]) for i in absent)
+        )
+    multiline = bool(MULTILINE_TAGS.search(raw))
     out, last = [], 0
-    for idx, span in enumerate(spans):
-        if idx not in additions:
-            continue
+    for idx in sorted(additions):
+        start, end = spans[idx]
         tags = list(items[idx].get("tags", [])) + additions[idx]
-        if "\n" in span.group(0):
-            indent = " " * (span.start() - raw.rfind("\n", 0, span.start()) - 1)
+        existing = raw[start:end]
+        line_start = raw.rfind("\n", 0, start) + 1
+        indent = re.match(r"[ \t]*", raw[line_start:]).group(0)
+        if "\n" in existing or (existing == "[]" and multiline):
             inner = f",\n{indent}  ".join(json.dumps(t) for t in tags)
-            replacement = f'"tags": [\n{indent}  {inner}\n{indent}]'
+            replacement = f"[\n{indent}  {inner}\n{indent}]"
         else:
-            replacement = '"tags": [' + ", ".join(json.dumps(t) for t in tags) + "]"
-        out.append(raw[last:span.start()])
+            replacement = "[" + ", ".join(json.dumps(t) for t in tags) + "]"
+        out.append(raw[last:start])
         out.append(replacement)
-        last = span.end()
+        last = end
     out.append(raw[last:])
     return "".join(out)
 
@@ -292,11 +571,18 @@ def main():
     total = {"STATED": 0, "DERIVED": 0}
     by_tag = {}
     skipped = []
+    reviews = []
     for path in sorted(DATA.glob("*.json")):
         raw = path.read_text()
         record = json.loads(raw)
         items = [it for sec in record.get("menu", []) for it in sec["items"]]
         index = {id(it): i for i, it in enumerate(items)}
+
+        for section, clause, reason, tags in review_notes(record):
+            reviews.append(
+                f"{record['id']} / {section.get('section')}: {', '.join(tags)}?"
+                f" — {reason}\n      note: “{clause}”"
+            )
 
         findings = list(audit(record, args.tier))
         if not findings:
@@ -328,6 +614,21 @@ def main():
     # Never silent: a record we couldn't write is reported, not swallowed.
     for s in skipped:
         print(f"  SKIPPED (not written) — {s}")
+
+    if reviews:
+        print(f"\n{len(reviews)} section note(s) need a human — this tool will not tag from them:")
+        for r in [] if args.quiet else reviews:
+            print(f"  • {r}")
+
+    # A dry run reports what is untagged; that is its job, and exiting non-zero
+    # for doing its job is the "check that always fires" this repo keeps having
+    # to switch back on. So only --apply can fail, and it fails on exactly one
+    # thing: it meant to write a record and could not. The run still finishes
+    # first — aborting half-written is worse than finishing and shouting — but
+    # it no longer finishes GREEN, which is how six venues stayed unswept.
+    if skipped:
+        print(f"\n{len(skipped)} record(s) NOT written — the sweep is incomplete.")
+        return 1
     return 0
 
 
