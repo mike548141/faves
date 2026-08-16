@@ -28,6 +28,7 @@
 // the same boundary "Serves 4" and the hours badges already sit behind.
 
 import { el } from "./dom.js";
+import { ingredientKeys } from "./ingredients.js";
 import { translate } from "./reo.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
@@ -113,7 +114,11 @@ export function openCookMode(item, { venueId } = {}) {
   const n = ++seq;
   const ingId = `cook-ing-${n}`;
   const titleId = `cook-title-${n}`;
-  const ingredients = Array.isArray(item.ingredients) ? item.ingredients : [];
+  // The KEYS, not the display text: a grouped line's key is "<component>: <text>"
+  // — the same string cook mode has always been handed, and the same string the
+  // tick is stored against, so neither the step matcher nor a tick shifts under
+  // a recipe that moved to components (ingredients.js, ADR 0070).
+  const ingredients = ingredientKeys(item.ingredients);
 
   let index = 0;
 

@@ -4125,10 +4125,80 @@ body.faves-view .to-top {
 .recipe-detail-page .dish-tags {
   margin-top: var(--space-3);
 }
+/* The ingredients fold (37c). The <summary> CARRIES the h2 rather than
+   replacing it: the page's heading outline must read the same whether the panel
+   is open or shut, so a screen-reader reader navigating by heading never loses
+   "Ingredients" by folding it away. Full width, unlike `.recipe-summary`'s chip,
+   because this one IS the section heading — a chip would demote it. */
+.ingredients-fold {
+  margin-bottom: var(--space-3);
+}
+.ingredients-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+}
+.ingredients-summary::-webkit-details-marker {
+  display: none;
+}
+.ingredients-summary .recipe-head {
+  margin-bottom: 0;
+}
+.ingredients-summary::after {
+  content: "▾";
+  color: var(--ink-soft);
+}
+.ingredients-fold[open] .ingredients-summary::after {
+  content: "▴";
+}
+/* A recipe built from parts names them (37l, ADR 0070). A real h3 under the
+   summary's h2 — the list is navigable by heading, not just bolder text. */
+.ingredient-component {
+  font-size: var(--step-sub);
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+.ingredients-fold-body > .ingredient-component:first-child {
+  margin-top: 0;
+}
 .recipe-body .ingredients {
   display: grid;
   gap: 2px;
   margin-bottom: var(--space-3);
+}
+/* Two columns when two genuinely fit (37d). The owner asked us to *consider*
+   this, and the measure test says yes: an ingredient line runs ~30 characters
+   while the column is held to a reading measure for the METHOD's sake, so half
+   of every ingredient row was empty — and a ticked 14-line list is over 600px
+   of scrolling before the method even starts.
+
+   Three guards, each earning its place:
+   • `column-width`, never a bare `column-count` — a second column appears only
+     where one actually fits, so a phone and a large-text reader are left alone
+     rather than squeezed into columns of four characters.
+   • `:has(li:nth-child(6))` — under six lines a split reads as a broken list
+     rather than a layout. Three-and-two looks like a mistake.
+   • `break-inside: avoid` — a tick box and its line are one control and must
+     never straddle the break.
+   Each <ul> columnises on its own, not the panel, so a component heading stays
+   full width above its own lines instead of being swallowed into a column. */
+@media (min-width: 45rem) {
+  .recipe-body .ingredients:has(li:nth-child(6)) {
+    display: block;
+    columns: 16rem 2;
+    column-gap: var(--space-4);
+  }
+  /* `display: block` drops the grid's row gap, so the rows carry it instead. */
+  .recipe-body .ingredients:has(li:nth-child(6)) li {
+    break-inside: avoid;
+    margin-bottom: 2px;
+  }
 }
 .recipe-body .ingredients li {
   padding-left: 1em;
@@ -4355,16 +4425,34 @@ body.faves-view .to-top {
   text-decoration: line-through;
   color: var(--ink-soft);
 }
-/* The bullet and the box say the same thing; the box says it better. */
+/* The bullet and the box say the same thing; the box says it better.
+   The EMPTY 1.6em gutter is the point (37m), not an accident: the method's rows
+   are `grid-template-columns: 1.6em 1fr` to hold the step number, so an
+   ingredient tick with no gutter sat 1.6em left of every method tick and the two
+   columns could never agree down the page. Dropping the bullet here is what
+   pulled them apart in the first place — a local improvement made while looking
+   at one list, invisible to the person making it. An empty gutter reads as
+   alignment, which is the thing that was asked for. */
 .ingredients li:has(.tick) {
+  display: grid;
+  grid-template-columns: 1.6em 1fr;
+  align-items: start;
   padding-left: 0;
+}
+.ingredients li:has(.tick) .tick {
+  grid-column: 2;
 }
 .ingredients li:has(.tick)::before {
   content: none;
 }
-/* The step number stays — it is how you say "I'm on four" out loud. */
+/* The step number stays — it is how you say "I'm on four" out loud.
+   `start`, NOT `center` (37m): this rule used to say `center`, which overrode
+   the `align-items: start` on `.recipe-body .method li` and put the number
+   halfway down a step that wraps to three lines while the tick box — which is
+   `flex-start` plus a cap-height nudge — stayed up on the first. A one-line
+   step looked right, which is exactly why it survived so long. */
 .recipe-body .method li:has(.tick) {
-  align-items: center;
+  align-items: start;
 }
 /* Cook mode's own tick row, between the timer and the nav. Outside the live
    region, and always present — a control that vanishes while focused drops
