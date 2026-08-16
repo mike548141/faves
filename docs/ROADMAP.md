@@ -1830,6 +1830,16 @@ now holds only "Pick for us" and the order pill, so its label is slightly off.
 > guard is a source test rather than a headless one →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
+- [~] **15z — the desktop filter row is a panel, and it should be a row**
+  `[M][css][design]` — **CLAIMED 2026-08-16 10:57 UTC (wt: faves-filter-row)**.
+  Owner, raw, on seeing 15x shipped: *"truly horrible UI, it wastes a ton of
+  screen space, it makes no sense i.e. not intuitive… There are two clear
+  groups some filters and some sorting controls. And it should only be the
+  height of the Open Now button UI element roughly as a row of UI elements."*
+  15x moved the sheet's controls inline and kept the **sheet's** vertical
+  stacking — group headings, a note, labels above each select, "Clear all" on
+  its own line. That is right in a bottom sheet and wrong on a desktop row.
+
 [ADR 0059]: decisions/0059-the-info-disclosure-is-click-only.md
 
 ## Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)
