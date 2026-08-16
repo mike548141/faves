@@ -1,4 +1,4 @@
-// The timer's alarm (ROADMAP 36d, ADR 0070). Three channels — a tone, a buzz
+// The timer's alarm (ROADMAP 36d, ADR 0071). Three channels — a tone, a buzz
 // and, for a long timer only, a notification — behind one `fire()`.
 //
 // THIS FILE IS THREE FIRSTS FOR FAVES AT ONCE: the first sound, the first
@@ -178,7 +178,7 @@ export function createAlarm({
   }
 
   /**
-   * Ask, once, at the moment a long timer starts (ADR 0070). Call it
+   * Ask, once, at the moment a long timer starts (ADR 0071). Call it
    * synchronously inside the gesture: Chrome requires user activation and
    * rejects a request made after an await.
    *

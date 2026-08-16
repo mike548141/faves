@@ -1292,6 +1292,13 @@ async function run(opts) {
       .find(Boolean);
 
     if (pair) {
+      // Pin the permission where it cannot prompt. The long half of the pair is
+      // over fifteen minutes by construction, so starting it would raise a real
+      // browser prompt — and a prompt this headless browser never answers wedges
+      // the whole run (measured: every later CDP call times out, and the process
+      // hangs rather than failing). A blocked browser still sounds and buzzes,
+      // which is the only thing this scenario is about.
+      await setNotifications("denied");
       await goto(urlFor(pair.item), ".cook-start");
       await openCook();
       const walkTo = async (i) => {
@@ -1317,6 +1324,7 @@ async function run(opts) {
       );
       await press("Escape");
       await closed();
+      await setNotifications("prompt");
     }
 
     if (longTimer) {

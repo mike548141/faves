@@ -220,7 +220,7 @@ export function openCookMode(item, { venueId } = {}) {
     el("div", { className: "cook-timer-track" }, [timerFill]),
   ]);
 
-  // --- The alarm (ROADMAP 36d, ADR 0070) ---------------------------------
+  // --- The alarm (ROADMAP 36d, ADR 0071) ---------------------------------
   // A countdown that ends in silence is a countdown you have to watch, which is
   // the one thing a cook cannot do. Three channels: a tone and a buzz on every
   // timer, and — only for a timer long enough to have walked away from — a
@@ -548,7 +548,7 @@ export function openCookMode(item, { venueId } = {}) {
     // the bell is due 35 minutes later.
     alarm.arm();
     // …and the same tap is the only place the notification permission is ever
-    // asked for, for a timer long enough to walk away from (ADR 0070). A short
+    // asked for, for a timer long enough to walk away from (ADR 0071). A short
     // timer never asks: a prompt is a thing you can spend once per browser.
     if (starting && wantsNotification(t.total)) alarm.requestNotify().then(paintTimer);
     t.toggle();

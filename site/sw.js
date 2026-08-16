@@ -288,7 +288,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// A cook-mode timer's bell, tapped (ROADMAP 36d, ADR 0070). The notification is
+// A cook-mode timer's bell, tapped (ROADMAP 36d, ADR 0071). The notification is
 // raised through `registration.showNotification` because Chrome on Android
 // refuses `new Notification()` outright, and the click for one raised that way
 // arrives HERE — the page that scheduled it may have been closed for half an

@@ -1,4 +1,4 @@
-// Unit tests for site/js/alarm.js — the timer's alarm (ROADMAP 36d, ADR 0070).
+// Unit tests for site/js/alarm.js — the timer's alarm (ROADMAP 36d, ADR 0071).
 // Run: `node --test`.
 //
 // WHAT THIS CAN AND CANNOT PROVE. Every channel is driven through an injected
