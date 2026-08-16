@@ -146,7 +146,7 @@ python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
                               # renamed without breaking every link to it
-python3 tools/test_validate.py # …and that gate still catches things (83 mutations)
+python3 tools/test_validate.py # …and that gate still catches things (93 mutations)
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
@@ -173,6 +173,8 @@ node tools/addon_check.mjs    # add-on composition in headless Chrome (ADR 0048)
 node tools/branch_check.mjs   # the branch picker in headless Chrome (ADR 0054)
 node tools/to_top_check.mjs   # the back-to-top button gets out of the way (Theme 29)
 node tools/filter_row_check.mjs # filters inline when wide, in the sheet when narrow
+node tools/recipe_check.mjs   # the recipe page's ingredient layout (ADR 0070)
+python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
 node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part of
                               # LINE IDENTITY, so the sheet can show the same dish
                               # twice differing only by its note — and the ± control
@@ -237,6 +239,23 @@ the assertion that matters — that **no branch is given a status it has no hour
 to support**. Every assertion is time-independent by design: a check that passes
 at 1pm and fails at 1am gets switched off within a week. Run it after touching
 `locations.js`, the contact card in `menu.js`, or per-branch hours data.
+
+`recipe_check.mjs` is the seventh. The recipe page is now three items' worth of
+layout — a fold that remembers, component headings, two columns above a
+breakpoint, and two tick columns that must agree down the page — none of which a
+unit test can see. It sweeps two widths and three text sizes and asserts the
+tick columns share one left edge to the pixel, that a *wrapped* method step
+(measured, not assumed) keeps its number beside the first line, and that a list
+of under six lines stays one column where a list of eight splits. Each of its 22
+assertions was verified by reintroducing the bug it covers. Run it after
+touching `recipe.js`, `ingredients.js`, `checklist*.js` or the recipe region of
+`app.css`.
+
+🛑 **None of these run in CI.** `.github/workflows/ci.yml` runs `node --test` and
+the Python gates only, so every check in this family runs when a human types it
+and at no other time — which is how `sync_check.mjs` stayed dead through a whole
+refactor. Type them. A roadmap item tracks fixing it; until then the honour
+system IS the mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The
 first sweeps the **whole document** in 37 px steps at two widths and two text

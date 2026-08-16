@@ -1737,3 +1737,170 @@ nested. Nothing was delivered upstream and nothing should be withdrawn there.
   built on it that failed, which is the same lesson this repo already wrote down
   when a peer's measurement and a peer's diagnosis were separated by two greps
   (Theme 36).
+
+## Theme 37 — the recipe-page pass: 37c, 37d, 37e, 37l, 37m (2026-08-16)
+
+**Disposition 2026-08-16: all five DELIVERED**, in merge `cd6d30b` on `main` —
+924 JS tests, 93 validate mutations, `recipe_check.mjs` 22/22, `cook_check`
+60/60, `boot_check` 16/16. The five items below are reproduced verbatim as they
+stood when claimed, with their checkboxes flipped to `[x]`; nothing in them is
+open.
+
+Five owner-raised presentation defects, taken together because all five move the
+same rows. [ADR 0070] holds the schema and the tick-key rule;
+`tools/recipe_check.mjs` (22 assertions) is the guard. Verbatim items as they
+stood when claimed:
+
+- [x] **37c — the ingredients section should collapse** `[S][js][css]`.
+      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page pass.
+      Owner:
+      *"I should be able to collapse or hide the ingredients section"*. Once
+      everything is in the bowl the list is a wall of struck-through text
+      between the reader and the method. Use the house pattern — native
+      `<details>/<summary>`, as `addons-ui.js` already does — open by default.
+      ✅ **RULED 2026-08-16: remember it for ALL recipes** — one profile-scoped
+      preference, not one per recipe. Collapse once and every recipe opens
+      collapsed until you expand one. 🚩 The cost he accepted: opening an
+      *unfamiliar* recipe then hides the ingredients you have not bought yet.
+      If that bites, the fix is per-recipe state, not abandoning persistence.
+
+
+- [x] **37d — two columns for ingredients when there is room** `[S][css]`.
+      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page pass.
+      Owner: *"consider if the ingredients should go into two columns if there
+      is screen space"*. The screenshot that prompted it shows a laptop-width
+      window with the recipe held to a reading measure and most of the viewport
+      empty. CSS multi-column above a breakpoint, `break-inside: avoid` so a
+      tick and its line never split across the fold. **Note it is a
+      *consider*, not an instruction** — if the measure test says a two-column
+      ingredient list reads worse at that width, say so and don't ship it.
+
+
+- [x] **37e — a recipe should carry its attribution as a field** `[S][schema]
+      [js]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page
+      pass. Owner: *"Recipes should be able to be attributed, for example to
+      the Edmunds cookbook"* (the NZ cookbook is spelled **Edmonds**; the data
+      already has it right). Today attribution is buried in free prose — the
+      pudding's `description` reads *"A Clements family dessert since the early
+      1980s — adapted from the Edmonds cookbook"*. A field can be rendered
+      consistently, styled as a credit, and eventually searched; prose cannot.
+      🚩 **ADR 0047 applies**: this adds a field to `site/data/`, which every
+      phone downloads — so the screen that renders it (the recipe page's credit
+      line) ships in the *same* change, never after.
+      🔎 This is squarely inside CLAUDE.md's **Exception 1** — family
+      attributions in home recipes are owner-approved. A *source* credit
+      (a cookbook, a publication) is not personal data at all.
+
+
+- [x] **37l — a recipe with components needs grouped ingredients**
+      `[M][schema][js]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the
+      recipe-page pass. Owner, 2026-08-16: *"Some recipes have multiple
+      components. For example Booth's Ginger Crunch has the base and the icing,
+      look at how we should organise the ingredients to improve this."*
+      🔎 **The corpus is already doing this by hand, and the measurement says
+      so.** Four recipes fake grouping with a `"Component: "` prefix inside the
+      ingredient string itself: **Upside-Down Plum Cake 14 of 14 lines**,
+      Chocolate Self-Saucing Pudding 4 of 12, Sticky Date Pudding 3 of 10,
+      Booth's Ginger Crunch 4 of 9. A convention that four records invented
+      independently is a missing field, not a style choice — and the plum cake,
+      where *every* line carries a prefix, is the proof: the prefix is doing all
+      the structural work and the reader pays for it on every row.
+      **Shape to consider:** `ingredients` becomes either a flat list *or* a
+      list of `{ component, items[] }` groups (the same XOR pattern Theme 30
+      proposes for `menus`/`menu`), so ungrouped recipes are untouched and no
+      migration is forced.
+      🛑 **The trap that must be handled in the SAME change:** a tick is keyed
+      on a hash of the ingredient line's **raw text** ([ADR 0067]). Rewriting
+      `"Sauce: ½ cup brown sugar"` into `{component:"Sauce", text:"½ cup brown
+      sugar"}` changes that text, so **every existing tick on all four recipes
+      silently detaches** — they do not error, they just stop matching. Either
+      hash the component and the line together from the start, or accept the
+      loss knowingly and say so. Do not discover this after the data lands.
+      🔎 Sequence it with **37c/37d** (collapse, two columns): all three are
+      about making a long ingredient list readable, and grouping is the one that
+      makes the other two easier — a two-column list breaks far better on
+      component boundaries than mid-list.
+
+
+- [x] **37m — the tick boxes do not line up, in two different ways**
+      `[XS][css]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the
+      recipe-page pass. Owner, 2026-08-16: *"the ingredients tick boxes are not
+      lined up with the method steps. And the method steps tick boxes are not
+      lined up with the method step numbers."* Two complaints, two separate
+      causes, both found in `app.css` and both cheap.
+      🔎 **Vertical (number vs tick).** `.recipe-body .method li` correctly sets
+      `align-items: start`, and then
+      `.recipe-body .method li:has(.tick) { align-items: center; }` **overrides
+      it**. On a step that wraps to two lines, `center` puts the step number
+      halfway down the whole block while the tick box — `.tick` is
+      `align-items: flex-start` with a `margin-top: 0.28em` cap-height nudge —
+      stays on the first line. A one-line step looks fine, which is why this
+      survived: it only shows on the wrapped ones. **Fix: `start`.**
+      🔎 **Horizontal (ingredient tick vs method tick).** `.recipe-body .method
+      li` is `grid-template-columns: 1.6em 1fr`, so the number's gutter pushes
+      the method's tick 1.6em right. Meanwhile `.ingredients li:has(.tick)` sets
+      `padding-left: 0` (the bullet is dropped once a box is there), so the
+      ingredient tick sits hard against the margin. The two columns can never
+      agree. **Fix: give the ticked ingredients list the same `1.6em` leading
+      column** so both lists share one tick column down the page — an empty
+      gutter on the ingredients reads as alignment, which is the thing asked
+      for.
+      🔑 **Worth keeping: the second bug was introduced by the fix for a first.**
+      `padding-left: 0` and `content: none` were added deliberately, with a good
+      comment (*"The bullet and the box say the same thing; the box says it
+      better"*), and that change is what pulled the ingredient ticks out of line
+      with the method's. A local improvement that breaks a global alignment is
+      invisible to the person making it, because they are looking at one list.
+      🔎 Do this **with 37c/37d/37l**, not before: collapsing, two columns and
+      component grouping all move these same rows, and aligning them twice is
+      the waste.
+
+
+### What the build added to them
+
+🔑 **37l's tick trap dissolved, and the reason is worth more than the fix.** The
+item recorded that splitting `"Sauce: 150g brown sugar"` into a field changes the
+hashed text and detaches every tick, and offered two answers: hash the component
+with the line, or accept the loss knowingly. The right answer turned out not to
+be a compatibility choice at all. **Sticky Date Pudding lists `"60g butter"` in
+the pudding and `"Sauce: 60g butter"` in the sauce.** Drop the component from the
+key and those two lines collide on one hash — tick the butter for the sauce and
+the pudding's butter ticks itself. So the component is part of the line's
+identity on the merits, and keying on `"<component>: <text>"` then happens to
+reproduce the old string byte-for-byte: 0 mismatches across all 24 recipes,
+checked programmatically. **Ask what the identity IS and the migration question
+often stops existing.**
+
+🔎 **Every consumer had to move, and one of them was a validator.** Five places
+read `item.ingredients`: the recipe page, the collection list's expanded body,
+cook mode's per-step panel, and two search haystacks. A sixth was `tools/
+tag_allergens.py`, which `validate.py` imports — so the grouped shape broke the
+*validator* on the first run after the data landed, not the tagger.
+
+🔎 **`cook.js` had already conceded the point.** Its `ingredientTerms` strips a
+leading `"Label: "` with the comment *"a group label, not a thing"* — the code
+was treating the prefix as structure while the schema insisted it was text. Feed
+it the keys and its behaviour and tests are unchanged.
+
+🔎 **37d was a *consider*, and the measure test said yes — with three guards.**
+`column-width` rather than a bare `column-count`, so a second column appears only
+where one genuinely fits; `:has(li:nth-child(6))`, because under six lines a
+split reads as a broken list rather than a layout; and `break-inside: avoid`,
+because a tick box and its line are one control. Proven at 390 px and 1100 px and
+at 16/24/32 px text.
+
+🔎 **37m's second bug was introduced by the fix for its first**, exactly as the
+item predicted: `padding-left: 0` on ticked ingredients was added deliberately,
+with a good comment, and it is what pulled the ingredient ticks 1.6em out of line
+with the method's. A local improvement that breaks a global alignment is
+invisible to the person making it, because they are looking at one list. The
+ticked ingredients now take the method's own `1.6em` gutter and leave it empty —
+an empty gutter reads as alignment, which is the thing that was asked for.
+
+🚩 **37c's cost, accepted by the owner in advance:** the fold is remembered for
+ALL recipes, so opening an unfamiliar one hides the ingredients you have not
+bought yet. If that bites, the fix is per-recipe state, not abandoning the
+memory. The preference rides `faves.settings.v1` rather than a new key, because
+`personal-data.js` sweeps every other `faves.` key into the backup export and
+never restores it — exported-but-unrestorable is a live defect elsewhere in the
+roadmap and one instance of it is enough.

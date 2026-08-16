@@ -3067,7 +3067,7 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
       repo's markdown, and `docs/ROADMAP.md` alone carries 10 of them — all its
       `[ADR 00xx]` links.** So the repo's densest cross-reference surface is the
       one the enforced guard cannot see. **Currently none of them are broken**
-      (the only miss is this session's own `[ADR 0073]`, which resolves when
+      (the only miss is this session's own ADR 0074, which resolves when
       `cook-36` merges), so this is exposure, not damage — say so plainly rather
       than dressing it up.
       🔑 **Why it is worth an item anyway.** `pathscan` does catch these, but
@@ -3153,6 +3153,35 @@ exempting `docs/reviews/` and `CHANGELOG.md`; both apply, both kept.
   every occurrence is `atelier D1`, a doctrine citation.
 The residue is **302 advisory findings, all in live rewritable prose**, none of
 them the unfixable class. That is a scanner whose output can still be read.
+
+- [ ] 🚩 **A passing browser check does not say which tree it ran in** `[S][js]`
+      — the mechanism [ADR 0072] calls for and does not build. A session's shell
+      cwd drifted out of its worktree via one compound command containing a `cd`;
+      its edits used absolute paths and were safe, but its **verification** ran
+      against a tree without the change. Everything green, everything
+      meaningless. It surfaced only because a *passing* run reported 22 where an
+      agent had just reported 25 — nobody interrogates a green run, which is why
+      this wants a mechanism rather than a discipline. **Fix:** every
+      headless-browser harness prints the tree it served and the `SHELL_VERSION`
+      it ran against in its own `OK — N passed` line, so a wrong-tree run is
+      visible in the artefact everyone already reads. `tools/lib/browser.mjs`
+      owns the summary, so it is one place.
+
+- [ ] 🛑 **CI runs none of the eight browser checks** `[M][ops]` — the structural
+      face of [ADR 0072] and the one that undercuts the rest.
+      `.github/workflows/ci.yml` runs `node --test` and the Python gates;
+      `sync_check`, `cook_check`, `device_check`, `boot_check`, `addon_check`,
+      `branch_check`, `to_top_check`, `filter_row_check` and now `recipe_check`
+      run **only when a human types them**. Every guard in this repo written
+      *because* unit tests missed something real is on the honour system, and
+      that is the whole answer to how `sync_check.mjs` stayed dead through an
+      entire refactor. 🔑 **The cheap guards that catch the least are automated;
+      the expensive guards that catch the most are not.** ⚠️ Not free: they need
+      Chrome in the runner and they are slow, and several are flaky under
+      parallel load — two `cook_check` runs on one machine timed out on
+      `Runtime.evaluate` and `Input.dispatchKeyEvent` while a third passed 60/60,
+      which is contention, not a logic fault. So this needs a decision about
+      which subset gates a merge and which run nightly, not just a workflow edit.
 
 - [ ] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
@@ -3328,34 +3357,39 @@ asked on this screen.
   used — and at body size rather than the 0.85rem that made it read as a stray
   footnote. `about-ui.js` + `app.css`.
 
-- **23a — find each block its right home** `[M]` 🎯.
-  **CLAIMED 2026-08-16 14:35 UTC (wt: faves-about)** — with 23c, one job.
-  Work backwards from the
-  trigger, per the owner's steer: for every block in About, name the decision
-  that created it, then ask where a reader would actually look. Strong
-  candidates for moving rather than keeping: the **currency** and **"when we
-  last read this menu"** lines belong on a menu page, where the question
-  occurs — and partly already appear there (ADR 0037's ⓘ, ADR 0036's caveat),
-  so About may be duplicating them. **Version** and **update-ready** are
-  diagnostics, not "about" — they plausibly belong with Settings, or a small
-  footer. **Privacy** and **works offline** are genuinely about the product and
-  probably stay. What remains should be a short, confident statement of what
-  Faves is, not a FAQ. Watch for the failure mode this repo has hit before: do
-  not solve duplication by *adding* a third place.
-
-- **23c — the same outcome answered on two screens** `[S→M]` 🎯.
-  **CLAIMED 2026-08-16 14:35 UTC (wt: faves-about)** — with 23a, one job.
-  Owner's
-  worked example, 2026-08-16: *"We have this feature in settings but the
-  version details sit in the about screen? Makes no sense for UX."* Settings →
-  **Refresh & reset** holds the *action* ("Refresh now"); About → **Version**
-  holds the *evidence* ("App 2026-08-16.8", "An update is ready"). The user's
-  outcome is one thing — **am I up to date, and if not, fix it** — and it is
-  split across two screens reached by two different routes. His standing
-  instruction with it: *"ALWAYS keep front of mind what the user is trying to
-  achieve as an outcome."* So the test for 23a's rehoming is not "is this
-  fact *about* the app" but "which outcome is someone chasing when they need
-  it". Evidence and the action that acts on it belong together.
+- ✅ **23a and 23c — DELIVERED 2026-08-16.** The version stamps and the
+  "an update is ready" state moved out of About into Settings → **Refresh &
+  reset**, beside the *Refresh now* button that acts on them — one outcome
+  ("am I up to date, and if not, fix it") on one screen instead of two. About is
+  now the lede plus *Private by design* and *Works offline*, and fits one screen
+  at 390 px. Opening hours went entirely: `app.js`'s `timezoneNote()` and
+  `menu.js`'s "Hours · NZ time" both state the clock rule, and both state it only
+  when the viewer's clock differs — About told everyone, always, about a
+  situation most readers are not in.
+  🔑 **23a's delete case for Prices was only 29% true, and deleting it as written
+  would have destroyed a fact.** The roadmap said the ⓘ beside a menu's prices
+  already names the currency. It does — **in the blue tone only.** Applying
+  `refreshCaveat`'s own rules to the corpus, **39 of 55 venues sit in the amber
+  tone**, whose text never mentions currency. So for most of the corpus About was
+  the *sole* statement of it. The rehoming was done by closing the amber gap
+  first and only then deleting About's copy, so the fact is now stated in more
+  places than before, not fewer. **A duplication claim is a measurement, not a
+  reading** — this one was checked against the corpus and came back the other way.
+  🎯 **[ADR 0037] §3 now needs superseding.** It decided currency is *"stated
+  twice, in the two places it is asked about — the per-venue ⓘ, and the About
+  dialog."* The build implements *stated once, where it is asked*.
+  `docs/ARCHITECTURE.md` is amended; the ADR is not, because an accepted record
+  is superseded and never edited. **Owner call, recorded in `SESSIONS.md`.**
+  🚩 A once-at-boot read would have been wrong: About built its dialog lazily and
+  asked the service worker when the reader asked, while Settings is built at
+  boot — on a first visit no worker controls the page yet, so the panel would
+  have said *"not yet serving this page"* for the whole session. An `onOpen`
+  hook fixes it and `boot_check` fails without it.
+  🚩 Pre-existing and NOT introduced here: closing About restores focus to
+  `<body>` rather than the opener, because the overflow menu that opened it has
+  already closed. Worth its own item.
+  `boot_check.mjs` now asserts About's group list **by name**, so the sediment
+  this theme is about cannot re-form silently. Original framing below.
 
 - ✅ **23d — the restaurant cards are getting busy — DELIVERED 2026-08-16.**
   The owner returned with a spec rather than leaving it open: drop the
@@ -4762,7 +4796,7 @@ to the owner at close and answered:
   tick never appears in `collectPersonalData()`'s output, proved by breaking it.
 
   ✅ **BUILT 2026-08-16 (wt: faves-cook) — and the analysis above was wrong a
-  THIRD time, in both directions. Recorded as [ADR 0073].**
+  THIRD time, in both directions. Recorded as ADR 0074 (lands with the cook-36 merge).**
   - 🔎 **"Never restored by import" is false.** `parsePersonalData` keeps the
     scoped key in `other` — watched directly, `['faves.p.default.checklist.v1',
     …]` — and `applyPersonalData` writes every `other` entry back. Ticks *were*
@@ -4792,7 +4826,6 @@ to the owner at close and answered:
     fail first is a fix nobody has evidence for** — and note this item had
     already announced itself as *"wrong twice"* and was still wrong.
 
-[ADR 0073]: decisions/0073-a-backup-carries-only-what-it-can-put-back.md
 
 ### 36e — one place to look, not two `[M][ux]`
 
@@ -4859,43 +4892,11 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 > ✅ **Shipped 2026-08-16** — 37b — the timer's whole presentation is wrong. Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [~] **37c — the ingredients section should collapse** `[S][js][css]`.
-      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page pass.
-      Owner:
-      *"I should be able to collapse or hide the ingredients section"*. Once
-      everything is in the bowl the list is a wall of struck-through text
-      between the reader and the method. Use the house pattern — native
-      `<details>/<summary>`, as `addons-ui.js` already does — open by default.
-      ✅ **RULED 2026-08-16: remember it for ALL recipes** — one profile-scoped
-      preference, not one per recipe. Collapse once and every recipe opens
-      collapsed until you expand one. 🚩 The cost he accepted: opening an
-      *unfamiliar* recipe then hides the ingredients you have not bought yet.
-      If that bites, the fix is per-recipe state, not abandoning persistence.
-
-- [~] **37d — two columns for ingredients when there is room** `[S][css]`.
-      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page pass.
-      Owner: *"consider if the ingredients should go into two columns if there
-      is screen space"*. The screenshot that prompted it shows a laptop-width
-      window with the recipe held to a reading measure and most of the viewport
-      empty. CSS multi-column above a breakpoint, `break-inside: avoid` so a
-      tick and its line never split across the fold. **Note it is a
-      *consider*, not an instruction** — if the measure test says a two-column
-      ingredient list reads worse at that width, say so and don't ship it.
-
-- [~] **37e — a recipe should carry its attribution as a field** `[S][schema]
-      [js]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the recipe-page
-      pass. Owner: *"Recipes should be able to be attributed, for example to
-      the Edmunds cookbook"* (the NZ cookbook is spelled **Edmonds**; the data
-      already has it right). Today attribution is buried in free prose — the
-      pudding's `description` reads *"A Clements family dessert since the early
-      1980s — adapted from the Edmonds cookbook"*. A field can be rendered
-      consistently, styled as a credit, and eventually searched; prose cannot.
-      🚩 **ADR 0047 applies**: this adds a field to `site/data/`, which every
-      phone downloads — so the screen that renders it (the recipe page's credit
-      line) ships in the *same* change, never after.
-      🔎 This is squarely inside CLAUDE.md's **Exception 1** — family
-      attributions in home recipes are owner-approved. A *source* credit
-      (a cookbook, a publication) is not personal data at all.
+> ✅ **Shipped 2026-08-16 — 37c, 37d and 37e**, with 37l and 37m below: the
+> recipe-page pass, done together because all five move the same rows. The
+> ingredient list folds and remembers, splits into two columns where two fit,
+> and a recipe carries its source as a field. [ADR 0070] holds the schema.
+> Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 > ✅ **Shipped 2026-08-16** — 37f — "Along a route" is removed whole. Detail →
 > [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
@@ -4927,101 +4928,55 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       Check whether "style" is simply that proposal's `service` axis under
       another name before opening a second front.
 
-- [~] **37l — a recipe with components needs grouped ingredients**
-      `[M][schema][js]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the
-      recipe-page pass. Owner, 2026-08-16: *"Some recipes have multiple
-      components. For example Booth's Ginger Crunch has the base and the icing,
-      look at how we should organise the ingredients to improve this."*
-      🔎 **The corpus is already doing this by hand, and the measurement says
-      so.** Four recipes fake grouping with a `"Component: "` prefix inside the
-      ingredient string itself: **Upside-Down Plum Cake 14 of 14 lines**,
-      Chocolate Self-Saucing Pudding 4 of 12, Sticky Date Pudding 3 of 10,
-      Booth's Ginger Crunch 4 of 9. A convention that four records invented
-      independently is a missing field, not a style choice — and the plum cake,
-      where *every* line carries a prefix, is the proof: the prefix is doing all
-      the structural work and the reader pays for it on every row.
-      **Shape to consider:** `ingredients` becomes either a flat list *or* a
-      list of `{ component, items[] }` groups (the same XOR pattern Theme 30
-      proposes for `menus`/`menu`), so ungrouped recipes are untouched and no
-      migration is forced.
-      🛑 **The trap that must be handled in the SAME change:** a tick is keyed
-      on a hash of the ingredient line's **raw text** ([ADR 0067]). Rewriting
-      `"Sauce: ½ cup brown sugar"` into `{component:"Sauce", text:"½ cup brown
-      sugar"}` changes that text, so **every existing tick on all four recipes
-      silently detaches** — they do not error, they just stop matching. Either
-      hash the component and the line together from the start, or accept the
-      loss knowingly and say so. Do not discover this after the data lands.
-      🔎 Sequence it with **37c/37d** (collapse, two columns): all three are
-      about making a long ingredient list readable, and grouping is the one that
-      makes the other two easier — a two-column list breaks far better on
-      component boundaries than mid-list.
+> ✅ **Shipped 2026-08-16 — 37l and 37m**, with 37c/37d/37e above.
+> 🔑 **37l's stated trap did not happen, and the reason generalises.** Splitting
+> `"Sauce: 150g brown sugar"` into a field was expected to detach every tick on
+> the four affected recipes. It did not — because the question is *correctness*,
+> not compatibility: **Sticky Date Pudding lists "60g butter" in the pudding and
+> again in the sauce**, so the text alone is not an identity and the component
+> belongs in the key. Keying on `"<component>: <text>"` is then byte-identical to
+> what the corpus already held — 0 mismatches across all 24 recipes. **Ask what
+> the identity IS and the migration question often stops existing.**
+> 🔎 **37d was a *consider* and the answer was yes, with three guards** —
+> `column-width` not `column-count`, `:has(li:nth-child(6))` so a short list is
+> never split, and `break-inside: avoid`. Proven at 390/1100 px and 16/24/32 px
+> text by the new `tools/recipe_check.mjs` (22 assertions, each verified by
+> reintroducing its own bug). Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
-- [~] **37m — the tick boxes do not line up, in two different ways**
-      `[XS][css]`. **CLAIMED 2026-08-16 13:55 UTC (wt: faves-recipe)** — the
-      recipe-page pass. Owner, 2026-08-16: *"the ingredients tick boxes are not
-      lined up with the method steps. And the method steps tick boxes are not
-      lined up with the method step numbers."* Two complaints, two separate
-      causes, both found in `app.css` and both cheap.
-      🔎 **Vertical (number vs tick).** `.recipe-body .method li` correctly sets
-      `align-items: start`, and then
-      `.recipe-body .method li:has(.tick) { align-items: center; }` **overrides
-      it**. On a step that wraps to two lines, `center` puts the step number
-      halfway down the whole block while the tick box — `.tick` is
-      `align-items: flex-start` with a `margin-top: 0.28em` cap-height nudge —
-      stays on the first line. A one-line step looks fine, which is why this
-      survived: it only shows on the wrapped ones. **Fix: `start`.**
-      🔎 **Horizontal (ingredient tick vs method tick).** `.recipe-body .method
-      li` is `grid-template-columns: 1.6em 1fr`, so the number's gutter pushes
-      the method's tick 1.6em right. Meanwhile `.ingredients li:has(.tick)` sets
-      `padding-left: 0` (the bullet is dropped once a box is there), so the
-      ingredient tick sits hard against the margin. The two columns can never
-      agree. **Fix: give the ticked ingredients list the same `1.6em` leading
-      column** so both lists share one tick column down the page — an empty
-      gutter on the ingredients reads as alignment, which is the thing asked
-      for.
-      🔑 **Worth keeping: the second bug was introduced by the fix for a first.**
-      `padding-left: 0` and `content: none` were added deliberately, with a good
-      comment (*"The bullet and the box say the same thing; the box says it
-      better"*), and that change is what pulled the ingredient ticks out of line
-      with the method's. A local improvement that breaks a global alignment is
-      invisible to the person making it, because they are looking at one list.
-      🔎 Do this **with 37c/37d/37l**, not before: collapsing, two columns and
-      component grouping all move these same rows, and aligning them twice is
-      the waste.
-
-- [~] 🚩 **37n — the corpus disagrees with itself about allergens, and one dish
-      at a time will never fix it** `[M][data]`.
-      **CLAIMED 2026-08-16 13:55 UTC (wt: faves-allergens)**. Owner-directed 2026-08-16, when
-      he ruled on two `contains-egg` tags: *"add egg, and fix the real
-      problem."* The two dishes are done; this is the problem.
-      🔎 **The evidence that started it.** Seatoun's "Sausages n Fries" now
-      carries `contains-gluten` on the reasoning that NZ sausages standardly
-      contain wheat rusk. **Tawa's "Sausages" and "Cheerio Sausages" carry no
-      such tag**, and nothing distinguishes them — the difference is which
-      session read which menu, not anything about the food. Same class:
-      pizzas tagged `contains-dairy` from a "dairy free cheese available"
-      footer at one venue, untagged at another whose footer says nothing.
-      🔑 **Why this is a real defect and not tidiness.** An allergen tag is only
-      as useful as its consistency. A reader who finds one sausage flagged and
-      an identical one not flagged learns that the absence of a tag means
-      nothing — and once they learn that, every *correct* tag in the corpus stops
-      working too. Inconsistency does not fail safe; it fails **quiet**.
-      **What the work is:** a sweep across all 55 venues for dish *classes*
-      whose tagging disagrees between records — sausages, crumbed/fried items,
-      pizza bases, brioche buns, mayo-based sauces, pesto — resolved to ADR
-      0025's rule (when unsure, tag) rather than to whichever entry happened to
-      be more cautious. Likely a `tools/` report first, since the useful output
-      is *"these N dishes share a class and disagree"*, which no existing tool
-      asks for.
-      🛑 **`tools/tag_allergens.py` cannot do this and must be fixed alongside
-      it**: it writes NOTHING on any record with `addOnGroups` (it patches
-      `tags` positionally and bails on a count mismatch, exiting clean), and it
-      never reads section notes — which is how "on a Sesame Bun", printed once
-      above three burgers, left all three untagged. Both were found the hard way
-      on 2026-08-16. A safety tool that declines silently is worse than no tool,
-      because a green run reads as a clean sweep.
-
----
+- [~] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+      — **TOOLING DELIVERED 2026-08-16, THE DATA SWEEP IS NOT.** The report the
+      item asked for exists: `tools/allergen_disagreements.py` groups dishes into
+      ten declared classes across all 55 venues and names every row whose tagging
+      disagrees with its class. It currently reports **7 class/allergen splits
+      over 58 rows**. Read-only by design — it reports and never writes, because
+      every class is right about the *typical* food and can be wrong about one
+      kitchen. **The sweep itself is the open work**, and it is a human pass over
+      those 58 rows against [ADR 0025], not a tool run.
+      🔑 **`tools/tag_allergens.py`'s silent decline was worse than recorded, and
+      measurement — not reasoning — found it.** The first diagnosis said 6 of 55
+      files, all caused by add-on options inflating the positional `tags` count.
+      A peer measured the corpus and found a **seventh with no add-ons at all**,
+      breaking the count the other way: six of its 87 items carry no `tags` key.
+      **And the two tags the tool identified and failed to write were both on
+      items with no `tags` key** — an item with no tags array is simultaneously
+      the most likely to be missing a tag and the thing that makes the whole file
+      unpatchable. The decline is not spread across the corpus; it concentrates
+      on exactly the records the tool exists to protect. Both causes are fixed
+      (structure-aware patching, section notes read and sorted into
+      tag/report/ignore), `--apply` now exits **non-zero** when it could not
+      write, and `tools/test_tag_allergens.py` pins all of it by putting each bug
+      back. This is face 4 of [ADR 0072].
+      🎯 **Four calls for the owner before the sweep runs** — see the questions
+      recorded with this session in `SESSIONS.md`: the tier a note-derived tag
+      carries; whether *"dairy free cheese available"* should tag or only report;
+      whether `crumbed → contains-egg` (30 of 42 disagree) is a real class or a
+      bad one; and whether add-on options belong in the report at all.
+      🚩 **Two live rule defects found and deliberately not fixed**, because a
+      rules change touches every venue and belongs with the sweep: `\bmuffins?\b`
+      cannot match "McMuffin" (no word boundary between "c" and "M"), so both
+      McDonald's McMuffins can never be found; and the "wheat bakery item" rule
+      fires on `slices`, which tagged *"Black Fungus Slices"* as gluten — a
+      fail-safe tag for a wrong reason, and an EXCLUDE candidate.
 
 ## What the owner wants moved next (asked and answered 2026-08-16)
 
