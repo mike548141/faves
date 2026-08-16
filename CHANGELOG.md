@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Changed
+- **The restaurant cards are quieter.** "Dine-in, Takeaway" is gone — nearly
+  every place offered both, so it separated almost nothing, and service is
+  still a filter and now a search term. The open/closed badge moved up beside
+  the suburb, with its traffic-light dot: green open, amber closing or opening
+  soon, and **red for closed** (it used to be grey, the one state that didn't
+  signal itself). Cuisine and the per-person estimate stay. **For a place with
+  several branches the card now names the branch it's actually describing** —
+  so the hours can no longer be captioned with another branch's suburb.
 - **A place without a menu is no longer a dead end.** All 23 "Menu coming
   soon" venues now open, because we hold real detail for every one of them —
   address, map handoff, phone or hours. **15 of them now show whether they're

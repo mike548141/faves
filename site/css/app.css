@@ -871,8 +871,10 @@ body.faves-view .pick-fab {
 .hours-badge[data-state="opening-soon"] {
   color: var(--amber);
 }
+/* Red, not grey (owner, 2026-08-16): the badge is a traffic light, and grey
+   was the one state that did not signal itself at a glance. */
 .hours-badge[data-state="closed"] {
-  color: var(--ink-soft);
+  color: var(--warn);
 }
 /* Lifecycle closures (temporal.js) reuse the hours badge so the eye reads one
    vocabulary. A refit is amber like "closing soon" — it comes back; gone for
@@ -902,9 +904,8 @@ body.faves-view .pick-fab {
   font-size: 0.85rem;
   color: var(--warn-ink);
 }
-.card-hours {
-  margin-top: var(--space-2);
-}
+/* `.card-hours` (the badge's own line) went 2026-08-16 — the badge moved onto
+   the meta line beside the suburb, so it no longer owns a line of its own. */
 
 /* Card photo: full-bleeds to the card edges (cancels the link padding) and
    reserves its box via aspect-ratio so lazy-loading causes no layout shift. */

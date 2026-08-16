@@ -8,7 +8,7 @@ import { formatDriveTime, estimateDriveMinutes } from "./distance.js";
 import { formatDistance } from "./units.js";
 import { rankVenues, isAvailableNow } from "./ranking.js";
 import { rankByDetour, bestBranchForRoute, areaCentroids } from "./route.js";
-import { branchCoords, branchAsPlace, venueHours } from "./locations.js";
+import { branchCoords, branchAsPlace, venueHours, nearestBranch } from "./locations.js";
 import { rememberOrigin, routeMapsUrl } from "./geo.js";
 import { openStatus, makeClock, viewerOnVenueTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
@@ -37,11 +37,11 @@ import { initReo, t } from "./reo.js";
 import { el } from "./dom.js";
 import { wireSearchClear } from "./search-clear.js";
 
-const SERVICE_LABEL = { "dine-in": "Dine-in", takeaway: "Takeaway" };
-
-function servicesText(services = []) {
-  return services.map((s) => SERVICE_LABEL[s] || s).join(", ");
-}
+// `servicesText` was removed 2026-08-16 with the "Dine-in, Takeaway" line it
+// produced. Service is still a filter in the bottom bar, still on the venue
+// page, and now a search term ("takeaway", "eat in") — it just no longer
+// repeats on every card, where nearly every venue offers both and the words
+// separated almost nothing.
 
 // Lazy, layout-stable card photo (only when the venue has one).
 function cardPhoto(r) {
@@ -97,17 +97,34 @@ function priceChip(r) {
 // "Open now" filter has always used it, and its comment claims the two agree;
 // before this they could disagree for any venue whose branches keep different
 // hours, showing "Closed" on a card the filter had just matched as open.
+// Returns the badge INLINE (a span), because it now sits on the meta line
+// beside the suburb rather than on a line of its own (owner, 2026-08-16) — and
+// a <p> cannot be nested inside the meta <p>.
 function hoursBadge(r, clock, showHours = true, origin = null) {
   const tz = venueTimezone(r, origin);
   const closure = closureBadge(r, todayIn(tz, clock.date));
-  if (closure) return el("p", { className: "card-hours" }, [closure]);
+  if (closure) return closure;
   if (!showHours) return null;
   const st = openStatus(venueHours(r, origin), clock.at(tz));
   if (st.state === "unknown") return null;
   const text = st.detail ? `${st.label} · ${st.detail}` : st.label;
   const badge = el("span", { className: "hours-badge", textContent: text });
   badge.dataset.state = st.state;
-  return el("p", { className: "card-hours" }, [badge]);
+  return badge;
+}
+
+// The suburb of the branch the card is actually talking about. `venueHours`
+// already follows the NEAREST branch, so showing the primary branch's suburb
+// beside it would caption Johnsonville's hours with Porirua's name — the exact
+// mismatch the owner called out (2026-08-16). One branch, one story.
+function cardArea(r, origin) {
+  const { branch } = nearestBranch(r, origin);
+  // A branch has no `area` — it carries a `label` ("Melling", "Press Hall"),
+  // which is precisely the name that tells two branches apart. Single-location
+  // venues have no label and fall through to the venue's own suburb, so their
+  // card is unchanged. Whatever branch drives the hours drives the label: with
+  // no origin that is the primary one, which is still an honest pairing.
+  return branch?.label || r.area || "";
 }
 
 // "+1.2 km detour" (or a warm "On your way" when a venue sits essentially on
@@ -142,6 +159,13 @@ function card(r, clock, routeCtx = null, origin = null) {
   // trip); it takes over the distance slot as the decision-relevant fact.
   const onRoute = routeCtx && r.detourKm != null;
 
+  // The open/closed badge is built before the meta line because it now sits
+  // ON it, beside the suburb. "Dine-in, Takeaway" came off entirely (owner,
+  // 2026-08-16): it was on every card, so it separated almost nothing, and
+  // service is still a filter and now a search term.
+  const badge = !isRecipes ? hoursBadge(r, clock, true, origin) : null;
+  const area = cardArea(r, origin);
+
   let meta;
   if (isRecipes) {
     const n = (r.menu || []).reduce((sum, s) => sum + (s.items?.length || 0), 0);
@@ -162,8 +186,8 @@ function card(r, clock, routeCtx = null, origin = null) {
     meta = el("p", { className: "card-meta" }, [
       detour,
       added,
-      el("span", { className: "card-area", textContent: r.area || "" }),
-      el("span", { textContent: servicesText(r.services) }),
+      el("span", { className: "card-area", textContent: area }),
+      badge,
     ]);
   } else {
     // In "Near me" mode a venue carries distanceKm; show it first, as the
@@ -181,8 +205,8 @@ function card(r, clock, routeCtx = null, origin = null) {
     meta = el("p", { className: "card-meta" }, [
       dist,
       drive,
-      el("span", { className: "card-area", textContent: r.area || "" }),
-      el("span", { textContent: servicesText(r.services) }),
+      el("span", { className: "card-area", textContent: area }),
+      badge,
     ]);
   }
 
@@ -205,14 +229,6 @@ function card(r, clock, routeCtx = null, origin = null) {
     }
   }
 
-  // Every venue gets a live open/closed badge, stub or not (owner,
-  // 2026-08-16). A place whose menu we haven't captured is still a place you
-  // might walk to, and "is it open" is the question that decides that. The
-  // stub suppression here was also redundant: `openStatus` already reports
-  // `unknown` when there are no hours, so a stub without them still shows
-  // nothing — this only reveals the 12 of 23 stubs that DO carry hours.
-  const badge = !isRecipes ? hoursBadge(r, clock, true, origin) : null;
-
   const li = el("li", { className: isRecipes ? "card card-recipes" : "card" });
   li.dataset.status = r.status;
 
@@ -232,13 +248,12 @@ function card(r, clock, routeCtx = null, origin = null) {
   if (r.status === "stub" && !hasDetails) {
     // Nothing behind the name, so nothing to open — a link that leads to a
     // page saying only "menu coming soon" is worse than no link at all.
-    li.append(el("div", { className: "card-body" }, [cardPhoto(r), name, meta, badge, chips]));
+    li.append(el("div", { className: "card-body" }, [cardPhoto(r), name, meta, chips]));
   } else {
     const link = el("a", { className: "card-link", href: `restaurant.html?id=${r.id}` }, [
       cardPhoto(r),
       name,
       meta,
-      badge,
       chips,
     ]);
     // Heart the place straight from the browse card. It sits as a sibling of
