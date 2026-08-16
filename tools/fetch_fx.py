@@ -12,10 +12,23 @@ That makes staleness the honest cost, and the file carries its own `asOf` so the
 app can say how old its rates are rather than implying they're live. See
 ADR 0045 for why a dated approximation beats both a live API and no conversion.
 
-    python3 tools/fetch_fx.py            # fetch and write
+**Run this once per working session on Faves.** That is the whole refresh
+policy, and it is deliberately a human step rather than a scheduled job — see
+ROADMAP "Automating the FX refresh" for the several ways automation turned out
+to be worse than this. The tool guards itself so it cannot become noise:
+
+  • already fetched today  → does nothing
+  • no rate actually moved → does nothing
+  • otherwise              → writes, and `--bump` moves DATA_VERSION with it
+
+So running it on every commit is harmless, and the rates change in the repo at
+most once a day.
+
+    python3 tools/fetch_fx.py            # the session step: fetch if due
+    python3 tools/fetch_fx.py --bump     # ...and bump DATA_VERSION if it wrote
     python3 tools/fetch_fx.py --check    # exit 1 if the file is missing/malformed
     python3 tools/fetch_fx.py --dry-run  # print what would be written
-    python3 tools/fetch_fx.py --force    # write even if no rate moved
+    python3 tools/fetch_fx.py --force    # ignore both guards and write anyway
 
 Stdlib only, no build step. Network is used HERE, at authoring time, never by
 the site.
@@ -115,6 +128,18 @@ def current_as_of():
     return current_doc().get("asOf", "never")
 
 
+def fetched_today():
+    """True when the committed file was already refreshed today.
+
+    The owner's ceiling: the rates move in the repo at most once a day
+    (2026-08-16). Enforcing it in the TOOL rather than in whoever runs it is
+    what makes "run this every session" a safe instruction — a busy day of ten
+    commits still produces at most one rate change, so the guard is what lets
+    the habit be mindless.
+    """
+    return current_doc().get("fetched") == date.today().isoformat()
+
+
 def rates_changed(doc):
     """True when any RATE differs from the committed file.
 
@@ -184,20 +209,26 @@ def main():
     ap.add_argument(
         "--force",
         action="store_true",
-        help="write even when no rate moved. Only for proving the scheduled job can "
-        "actually commit — a routine run must not, or every phone re-downloads the "
-        "data cache for a file whose numbers are identical.",
+        help="ignore both guards (already-fetched-today, and no-rate-moved) and write "
+        "anyway. Rarely wanted: a write with identical numbers costs every installed "
+        "phone a re-download of the data cache for nothing.",
     )
     ap.add_argument(
         "--bump",
         action="store_true",
         help="also bump DATA_VERSION in site/sw.js when the rates actually changed "
-        "(what the daily job uses — see .github/workflows/fx.yml)",
+        "— pair it with a normal run so the two land in one commit",
     )
     args = ap.parse_args()
 
     if args.check:
         return check()
+
+    # Cheapest guard first: skip the network entirely when we already looked
+    # today. This is the one that makes the tool safe to run on every commit.
+    if fetched_today() and not args.force:
+        print(f"already refreshed today ({current_as_of()}) — nothing to do")
+        return 0
 
     doc, missing = build()
     if missing:
@@ -211,7 +242,7 @@ def main():
         return 0
 
     if not rates_changed(doc) and not args.force:
-        # The daily job runs whether or not the rates moved. Rewriting the file
+        # The scheduled job runs whether or not the rates moved. Rewriting the file
         # with only a new `fetched` stamp would produce a commit a day that
         # changes no rate, and every one of those would invalidate the data
         # cache on every installed phone for nothing.

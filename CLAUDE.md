@@ -147,6 +147,14 @@ node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)
 ```
 
+**Refresh the exchange rates once per session** — `python3 tools/fetch_fx.py --bump`
+— then commit the result with your work. Faves converts prices from rates it
+ships (ADR 0045), so they go stale unless someone fetches them, and there is
+deliberately no scheduled job doing it (ROADMAP "Automating the FX refresh" has
+the several reasons automation was worse). Safe to run every time: the tool does
+nothing if it already fetched today or if no rate moved, so the rates change in
+the repo **at most once a day** whatever you do.
+
 Exercise the change in a real browser at mobile width. JSON data must
 validate against the schema in `docs/ARCHITECTURE.md` — malformed menu
 data is the most likely regression.
