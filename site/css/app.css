@@ -4979,3 +4979,33 @@ body.faves-view .to-top {
     transition: none;
   }
 }
+
+/* ---------- Search results: say which field matched (ROADMAP Theme 27b) ----------
+   The haystack behind search is deliberately wide (name, area, cuisine,
+   address, city, service, phone), so a query like "Pub" or "Bar" can return a
+   venue merely NAMED that, not one actually tagged as one. Rather than narrow
+   the haystack — which would lose real finds like "Charley Noble" for
+   "Noble" — the result row now shows its own evidence: the substring that
+   matched, underlined in place. No animation, so prefers-reduced-motion has
+   nothing to opt out of. */
+mark.search-match {
+  /* Background + bold, not colour alone (this file's --personal rule above
+     makes the same call) — a colour-blind reader still sees emphasis, and
+     the bold survives a printed/greyscale screenshot too. */
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-weight: 700;
+  border-radius: 3px;
+  padding: 0 0.15em;
+  box-decoration-break: clone; /* the mark keeps its pill shape if it wraps a line */
+}
+/* A hit whose field the row never displays (address/city/phone/service for a
+   place; description/ingredients/code/diet label for a dish) has nothing to
+   underline, so it states its reason as plain text instead — the same
+   information a sighted reader gets from the highlight above, just carried
+   as words rather than colour, so no reader depends on seeing the mark. */
+.search-row-note {
+  font-size: var(--step-sub);
+  color: var(--ink-soft);
+  font-style: italic;
+}

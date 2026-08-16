@@ -627,6 +627,34 @@ function wireSearch(restaurants) {
   const groupCount = ({ items, total }) =>
     total > items.length ? `${items.length} of ${total}` : total;
 
+  // Theme 27b — "say which field matched". search.js already worked out
+  // WHICH field answered the query (`matchField`) and, when that field is
+  // one the row displays, the literal text to highlight (`matchText`). Here
+  // that's turned into what resultRow needs: a highlight on `name` or `sub`
+  // for a visible field, or a plain-text note for a field the row never
+  // shows at all (address/city/phone/service; a dish's description,
+  // ingredients, order code or diet label) — so a hit is never left with no
+  // stated reason, and never claims a property (like cuisine) it didn't
+  // actually match.
+  const PLACE_NOTE = {
+    address: "Matched: address",
+    city: "Matched: city",
+    phone: "Matched: phone number",
+    service: "Matched: service",
+    details: "Matched: other details",
+  };
+  const DISH_NOTE = { details: "Matched: menu details" };
+
+  function placeMatch(p) {
+    if (p.matchField === "name") return { nameMatch: p.matchText };
+    if (p.matchField === "area" || p.matchField === "cuisine") return { subMatch: p.matchText };
+    return { note: PLACE_NOTE[p.matchField] || PLACE_NOTE.details };
+  }
+  function dishMatch(d) {
+    if (d.matchField === "name") return { nameMatch: d.matchText };
+    return { note: DISH_NOTE.details };
+  }
+
   function renderResults(q) {
     const { places, dishes } = search(index, q);
     groups.replaceChildren();
@@ -648,6 +676,7 @@ function wireSearch(restaurants) {
             name: `${placeIcon(p)} ${p.name}`,
             sub: [p.area, (p.cuisine || []).join(", ")].filter(Boolean).join(" · "),
             href: `restaurant.html?id=${p.id}`,
+            ...placeMatch(p),
           })),
         })
       );
@@ -661,6 +690,7 @@ function wireSearch(restaurants) {
             name: d.name,
             sub: [d.venueName, d.section].filter(Boolean).join(" · "),
             href: d.href,
+            ...dishMatch(d),
           })),
         })
       );

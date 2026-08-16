@@ -86,7 +86,8 @@ function dietLabels(tags) {
  * Build the search index once from the loaded restaurants. Returns
  * { places, dishes }; each entry carries a lowercased `hay` (haystack) and,
  * for dishes, a ready-to-use deep-link `href`.
- *   place: { id, name, area, cuisine[], kind, hay }
+ *   place: { id, name, area, cuisine[], kind, address, city, services[],
+ *            phone, hay }
  *   dish:  { name, venueId, venueName, isRecipe, section, href, hay }
  * Stubs (no menu) contribute a place but no dishes — which is correct: you
  * can still find the venue by name, there just aren't dishes to match yet.
@@ -103,6 +104,13 @@ export function buildIndex(restaurants) {
       area: r.area || "",
       cuisine: r.cuisine || [],
       kind: r.kind,
+      // Kept as their own fields (not just folded into `hay` below) so a
+      // result can later be asked "which of these did the query actually
+      // land on?" (Theme 27b — matchField()/matchText() do that asking).
+      address: r.address || "",
+      city: r.city || "",
+      services: r.services || [],
+      phone: r.phone || "",
       // Address, city, service and phone join name/area/cuisine: people look
       // for a place by the street they remember it on, by "takeaway", or by
       // the number in their call history, not only by its name.
@@ -168,7 +176,79 @@ function score(name, hay, q) {
   return 0;
 }
 
-function rank(entries, forms, limit) {
+// Theme 27b — "say which field matched". The haystack is deliberately wide
+// (name, area, cuisine, address, city, service, phone for a place; name,
+// description, ingredients, code, diet label for a dish) because a narrow
+// one would lose real finds ("Charley Noble" is a fair answer to "Noble").
+// But a wide haystack means a result can carry a property it doesn't
+// actually have — "Pub" finds five places merely NAMED "…Pub", not places
+// tagged as pubs — and the row showing area/cuisine next to every hit lets a
+// reader silently assume a match they never got. The fix here is not to
+// narrow the haystack; it's to say, per result, exactly which field
+// answered the query, so the reader can judge relevance themselves instead
+// of the UI implying a property match that isn't there.
+//
+// `text.toLowerCase()` is length-preserving for every script this corpus
+// uses (English + macronised Māori vowels + the languages under ADR 0044),
+// so an index found in the normalised text is the same index in the
+// original — findForm() can slice the ORIGINAL string and hand back the
+// literal substring a reader would recognise, never the lower-cased form.
+function findForm(text, forms) {
+  if (!text) return null;
+  const t = norm(text);
+  for (const f of forms) {
+    const i = t.indexOf(f);
+    if (i >= 0) return text.slice(i, i + f.length);
+  }
+  return null;
+}
+
+// Where a place hit lives, checked in the order the result row could show
+// it: name (the row's own title), then area/cuisine (the row's "Te Aro ·
+// Malaysian" sub). Only those three are ever visible in the row, so only
+// those three come back with a literal `text` to highlight — a hit that
+// lands in address/city/phone/service is just as real but invisible on
+// screen, so it comes back as a field name with no text, for a caller to
+// turn into a plain-language note instead of a highlight nothing shows.
+// The final "details" is a fallback, not a fourth real field: it exists so a
+// multi-word query that only matches by spanning the space between two
+// adjacent haystack fields (e.g. a query "a b" where field one ends "…a" and
+// field two starts "b…") still reports something rather than nothing —
+// every scored result gets a field, asserted in tests/search.test.js.
+function placeMatchField(p, forms) {
+  const name = findForm(p.name, forms);
+  if (name) return { field: "name", text: name };
+  const area = findForm(p.area, forms);
+  if (area) return { field: "area", text: area };
+  for (const c of p.cuisine || []) {
+    const hit = findForm(c, forms);
+    if (hit) return { field: "cuisine", text: hit };
+  }
+  const address = findForm(p.address, forms);
+  if (address) return { field: "address", text: null };
+  const city = findForm(p.city, forms);
+  if (city) return { field: "city", text: null };
+  if (findForm(p.phone, forms) || findForm(digits(p.phone), forms)) {
+    return { field: "phone", text: null };
+  }
+  for (const s of p.services || []) {
+    if (findForm(s, forms)) return { field: "service", text: null };
+  }
+  return { field: "details", text: null };
+}
+
+// Same idea for a dish: a hit inside the canonical, DISPLAYED name (what the
+// result row actually shows) gets a highlight; a hit in a translation,
+// description, ingredient list, order code or diet label is real (menu.js
+// searches all of them) but the row never shows any of them, so it comes
+// back as the single "details" bucket rather than a false name highlight.
+function dishMatchField(d, forms) {
+  const name = findForm(d.name, forms);
+  if (name) return { field: "name", text: name };
+  return { field: "details", text: null };
+}
+
+function rank(entries, forms, limit, matchField) {
   const scored = [];
   for (const e of entries) {
     // Best form wins, so a synonym never *lowers* a direct hit's rank: typing
@@ -181,7 +261,13 @@ function rank(entries, forms, limit) {
   scored.sort((a, b) => b.s - a.s || a.e.name.localeCompare(b.e.name));
   return {
     total: scored.length,
-    items: scored.slice(0, limit).map((x) => x.e),
+    // matchField/matchText are additive to every entry already returned
+    // here — existing callers that ignore them see exactly what they saw
+    // before.
+    items: scored.slice(0, limit).map((x) => {
+      const { field, text } = matchField(x.e, forms);
+      return { ...x.e, matchField: field, matchText: text };
+    }),
   };
 }
 
@@ -190,6 +276,13 @@ function rank(entries, forms, limit) {
  * { total, items } — `items` capped to the limit, `total` the full count so
  * the UI can say "showing 12 of 30". A query under 2 chars matches nothing
  * (a single letter would match almost everything — noise, not help).
+ *
+ * Every item also carries `matchField` (Theme 27b) — "name"/"area"/"cuisine"
+ * for a place, "name" for a dish, else "details" for a hit that's real but
+ * lives somewhere the result row doesn't show — and `matchText`, the literal
+ * substring that matched, present only when `matchField` names something the
+ * row displays (so a caller can highlight it in place; null otherwise, so a
+ * caller never highlights text that isn't on screen).
  */
 export function search(index, query, { placeLimit = 6, dishLimit = 20 } = {}) {
   const q = norm(query).trim();
@@ -198,7 +291,7 @@ export function search(index, query, { placeLimit = 6, dishLimit = 20 } = {}) {
   }
   const forms = expand(q);
   return {
-    places: rank(index.places, forms, placeLimit),
-    dishes: rank(index.dishes, forms, dishLimit),
+    places: rank(index.places, forms, placeLimit, placeMatchField),
+    dishes: rank(index.dishes, forms, dishLimit, dishMatchField),
   };
 }

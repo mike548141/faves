@@ -276,3 +276,88 @@ test("search: a recipe with an explicit id links by that id", () => {
     "recipe.html?id=cook-at-home&dish=shane-s-ribs",
   );
 });
+
+// ─── Theme 27b: say which field matched ─────────────────────────────────────
+// The haystack stays wide (that's correct — "Charley Noble" is a fair answer
+// to "Noble"), but the result row shouldn't let a name/address coincidence
+// pass as a cuisine or area match. Every scored item carries `matchField`
+// (and `matchText` when that field is one the row displays) so a caller can
+// show the reader the real reason, not an implied one.
+
+test("says a place hit is on its name — the roadmap's own 'Pub' finding", () => {
+  // A venue named "…Pub" but not tagged as one: the field-priority check
+  // must land on "name", never quietly present it as a cuisine match.
+  const idx2 = buildIndex([
+    { id: "local", name: "The Local Pub", area: "Newtown", cuisine: ["Cafe"], menu: [] },
+  ]);
+  const [hitPub] = search(idx2, "pub").places.items;
+  assert.equal(hitPub.matchField, "name");
+  assert.equal(hitPub.matchText, "Pub");
+});
+
+test("says a place hit is on area, not name, when only area carries it", () => {
+  // "tawa" is also a substring of "Sprig + Fern Tawa"'s own name, so use the
+  // WIDE fixture's "The Borough" (area Tawa, name doesn't contain it).
+  const [hitArea] = hit("tawa").places.items;
+  assert.equal(hitArea.matchField, "area");
+  assert.equal(hitArea.matchText, "Tawa");
+});
+
+test("says a place hit is on cuisine, not name", () => {
+  const [hitCuisine] = search(index, "gastropub").places.items;
+  assert.equal(hitCuisine.matchField, "cuisine");
+  assert.equal(hitCuisine.matchText, "Gastropub");
+});
+
+test("says a place hit found by address has no visible field to highlight", () => {
+  const [hitAddress] = hit("cuba").places.items;
+  assert.equal(hitAddress.matchField, "address");
+  assert.equal(hitAddress.matchText, null);
+});
+
+test("says a place hit found by city has no visible field to highlight", () => {
+  const [hitCity] = hit("wellington").places.items;
+  assert.equal(hitCity.matchField, "city");
+  assert.equal(hitCity.matchText, null);
+});
+
+test("says a place hit found by phone has no visible field to highlight", () => {
+  const [hitPhone] = hit("232 1234").places.items; // leakscan:allow:nz-phone: synthetic fixture, not a real line
+  assert.equal(hitPhone.matchField, "phone");
+  assert.equal(hitPhone.matchText, null);
+});
+
+test("says a place hit found by service has no visible field to highlight", () => {
+  const [hitService] = hit("takeaway").places.items;
+  assert.equal(hitService.matchField, "service");
+  assert.equal(hitService.matchText, null);
+});
+
+test("says a dish hit is on its name", () => {
+  const [hitDishName] = search(index, "mee goreng").dishes.items;
+  assert.equal(hitDishName.matchField, "name");
+  assert.equal(hitDishName.matchText, "Mee Goreng");
+});
+
+test("says a dish hit found only via ingredients is not a false name match", () => {
+  const [hitIngredient] = search(index, "lemon").dishes.items;
+  assert.equal(hitIngredient.matchField, "details");
+  assert.equal(hitIngredient.matchText, null);
+});
+
+test("says a dish hit found only via a diet label is not a false name match", () => {
+  const [hitDiet] = hit("vegan").dishes.items;
+  assert.equal(hitDiet.matchField, "details");
+  assert.equal(hitDiet.matchText, null);
+});
+
+test("every scored result carries a matchField — no silent gap", () => {
+  // Invariant, not a spot check: nothing rank() scores should come back
+  // without a stated reason. The "details" fallback exists precisely so a
+  // multi-word query that only matches by spanning the space between two
+  // adjacent haystack fields still reports something rather than undefined.
+  for (const r of [search(index, "sprig"), hit("cuba"), hit("vegan"), hit("tawa")]) {
+    for (const p of r.places.items) assert.ok(p.matchField, `place missing matchField for ${p.name}`);
+    for (const d of r.dishes.items) assert.ok(d.matchField, `dish missing matchField for ${d.name}`);
+  }
+});
