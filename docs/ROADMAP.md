@@ -3088,9 +3088,23 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
       before trusting it.
       🛑 **Why it was left:** the agent proposing it reported the failure as
       **deterministic** — *"`main` still ends at FAILED — 73 passed, 2 failed"*.
-      **Directly contradicted by measurement.** Eight runs of the merged tree:
-      **six × `OK — 75 passed`, one × `73/2`, one × `harness error:
-      Runtime.evaluate timed out after 30s`.** A fix whose premise is disproven
+      **Directly contradicted by measurement, and the agent re-asserted it four
+      times.** ELEVEN runs of the merged tree: **nine × `OK — 75 passed, 0
+      failed`, one × `73/2`, one × `harness error: Runtime.evaluate timed out
+      after 30s`.**
+
+      | Machine state | Runs | Result |
+      |---|---|---|
+      | load 5.9–15.8, integration | 4 | 75/0, **73/2**, 75/0, 75/0 |
+      | load ~4.2–4.6, 26 peer Chromes live | 4 | 75/0, **timeout**, 75/0, 75/0 |
+      | load 2.82, quiet | 3 | 75/0, 75/0, 75/0 |
+
+      🔑 **Both failures fell under contention; none on a quiet machine.** So the
+      permission-ordering mechanism at `:1301`/`:1353` is a credible explanation
+      of *why it fails when it fails*, and **contention is what decides whether
+      it fails at all**. "Deterministic" is wrong; "flaky, with a named
+      mechanism and a candidate fix" is the accurate description.
+      A fix whose premise is disproven
       by six observations is not a fix yet, and shipping an unverified change to
       a *guard* at the tail of a long session is the thing this repo keeps
       writing ADRs about. 🚩 Note also that **26 Chrome processes** were live at
