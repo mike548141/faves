@@ -171,3 +171,35 @@ Both were caught by writing the failing test first; both tests are in the suite.
   stays on the roster forever, so the number is an **upper bound, not a count** —
   a confidently wrong number on a destructive confirmation, which is worse than
   no number. This is raised, not resolved: the shape of the answer is his.
+
+## Addendum — 2026-08-16: the owner ruled on all three things this ADR raised
+
+Put to him at the close of the session that wrote this record, each with its
+impact stated. Recorded here rather than only in `SESSIONS.md`, because two of
+them change what the next session is allowed to do.
+
+1. **The Worker is authorised.** *"Yes — stand it up."* The ⚑ owner's-go that
+   ADR 0017 put on v2 is **discharged**: a Cloudflare Worker plus a KV namespace
+   may be created for the encrypted blob store. He was briefed that this creates
+   a new public HTTPS endpoint on his Cloudflare account — a new trust surface —
+   that it can only ever hold ciphertext neither Cloudflare nor he can read, and
+   that it costs ~$0 on the free tier. 🚩 **It cannot be deployed from this
+   machine**: no `wrangler`, no Cloudflare credential, and no token file. So the
+   Worker's source and config are buildable now and **publishing it is a
+   separate act needing either a token or his own hands in the dashboard.**
+2. **`sync-merge.js` stays precached.** The 5.9 KB was put to him against the
+   alternative of holding the module out of the tree until sync ships; he kept
+   it, on the reasoning that code outside the tree loses the repo's checks.
+   The "reversible in one commit" flag in the Consequences above is **spent** —
+   do not re-propose it.
+3. **The Reset confirmation drops the device count.** This one **amends his own
+   ruling from earlier the same day** (ROADMAP Theme 32's rulings block), which
+   had required the confirmation to *"name the number of devices it will reach"*.
+   The finding in the last consequence above — that an E2E blob with a bearer
+   code cannot count devices, and a roster can only ever be an upper bound —
+   was put to him with three wordings. He chose **name the scope, not a number**:
+   *every device signed in with this sync code*. Always true, never a wrong
+   number on a destructive confirmation. *"Everywhere, always"* is untouched.
+   **Consequence worth having: the device roster is no longer needed at all**,
+   which removes the one piece of per-device state the blob would have had to
+   carry, and with it the age-out guess that state would have needed.

@@ -3817,6 +3817,20 @@ not as argued.**
   confirmation on a propagating reset must **name the number of devices it will
   reach**, and Theme 9 must not ship sync before that wording exists. The
   ruling stands; the guard-rail is ours to build.
+  ⚠️ **The "name the number" half was AMENDED by the owner the same day
+  (2026-08-16, later), on evidence that it could not be met.** *"Everywhere,
+  always"* is untouched and still governs. Building the merge established that
+  an E2E blob **cannot count devices**: every device shares one bearer code, the
+  server holds one opaque ciphertext, and asking the Worker to log arrivals is
+  the tracking ADR 0017 refuses. A roster inside the blob is the only possible
+  home, and a device that syncs once and is never opened again never leaves it —
+  so any number is an **upper bound, not a count**, and a confidently wrong
+  number on a destructive confirmation is worse than none (ADR 0060's last
+  consequence). Put to him with three options; he chose **drop the number, name
+  the scope**: the confirmation says it erases the data on *every device signed
+  in with this sync code*, with no count. **Always true, never a wrong number.**
+  So the gate on Theme 9 is now that *this* wording exists, not a device tally —
+  and the roster the tally would have needed is no longer required at all.
 - 🎯 **Activity history: honest log, no escape hatch.** Nothing can be erased
   short of wiping the whole log — removals appear as removals, and there is no
   per-entry "forget this". ⚠️ **Recommendation included the escape hatch and was
