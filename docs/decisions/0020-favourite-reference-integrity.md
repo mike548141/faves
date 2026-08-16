@@ -1,9 +1,28 @@
 # 0020 — Favourite & rating reference integrity: honest stale-vs-removed handling
 
-**Status**: proposed — design recorded for coordination with ADR 0017 (sync) and
-ROADMAP Theme 10 (cross-person sharing); **build deferred** until that design is
-agreed, so the merge/refresh UX is settled once, together.
-**Date**: 2026-07-23
+**Status**: **accepted — built 2026-08-16** (`85ad322`), invariants 1–4 of 5.
+Invariant 5 (share/merge flags an unknown ref) remains deferred to ROADMAP
+Theme 10, which is owner-gated; nothing else waits on ADR 0017.
+**Date**: 2026-07-23; built 2026-08-16.
+
+> 🔎 **The deferral's stated technical blocker was already discharged, by work
+> that landed for other reasons.** This ADR deferred its build partly for design
+> coordination and partly on a Consequence — *"needs a forced-refresh /
+> cache-bust data path (service-worker cooperation)"*. By 2026-08-16 `sw.js`
+> served everything under `/data/` **network-first** with `cache: "no-cache"`, so
+> while online a plain fetch already **is** the live file. The only gap left was
+> *invisibility*, not staleness: the worker's offline fallback `cache.match(req)`
+> is indistinguishable from a network hit at the page. A **unique query per
+> check** closes it, because `cache.match` honours the query string — the busted
+> URL is in no cache, the fallback misses, the fetch rejects. So a **resolved**
+> response proves the network answered.
+>
+> **The lesson is not about caches.** A deferral records a blocker as it stood on
+> the day it was written, and then goes on reading as current forever. Nobody
+> re-checked this one for three weeks. **Re-verify a deferral's blocker before
+> inheriting it** — the same correction this session had to make to Theme 19's
+> `detailsVerified` item, whose stated reason ("too few records") was also false
+> by the time anyone acted on it.
 
 ## Context
 
@@ -89,5 +108,35 @@ is unresolved, the same "stale vs removed" rules apply.
   favourite can land before its data), and Theme 10 sharing is the other source
   of cross-context refs — the merge/refresh UX is finalised there so it's built
   once. This ADR fixes the **invariants** those builds must honour.
-- Until built, current behaviour stands (favourite renders; tap may 404 to the
-  generic error). No code changes ship under this ADR yet.
+- **Built 2026-08-16.** What the invariants cost in practice, recorded because
+  the wording *is* the feature:
+
+  | State | Row label | Explanation |
+  |---|---|---|
+  | Unresolved (local only) | Not on your current list | This may have been removed, or your list may be out of date. |
+  | Offline | Not on your current list | Can't check while you're offline — this may still be there. |
+  | Reached nothing | Not on your current list | Couldn't reach the site just now, so this is still unchecked. |
+  | **Confirmed removed** | No longer listed / No longer on the menu | Checked just now: this is no longer in the menu data. |
+  | Restored (was stale) | *mark disappears* | toast: Still there — your list was just out of date. |
+
+  Only a **completed live fetch that found nothing** unlocks the word "removed".
+  A 500 is *unreachable*, never absence — asserted by a test, verified by
+  reintroducing the bug.
+- 🔎 **`forceRefresh()` was deliberately not reused**, though it existed. It
+  clears both caches, unregisters the worker and reloads: it re-downloads the
+  whole site to answer "is one dish still there?", destroys the open Favourites
+  panel, and — disqualifying — **a page reload cannot return an answer to the
+  code that asked**. A targeted `recheckReferences()` sits beside it in `data.js`.
+- ⚠️ **The proof needed a counterfactual, and the first attempt at it passed for
+  the wrong reason.** CDP's `Network.emulateNetworkConditions` is scoped to the
+  **page** target, so the service worker kept fetching happily and the busted URL
+  resolved 200 — a green result that proved nothing. Killing the HTTP server
+  outright is the only honest way to take the network away from a worker.
+  Recorded because it would fool the next person too.
+- **Known cost, bounded:** the worker caches each 200 it sees, so a recheck
+  leaves one never-served entry per URL in the data cache, cleared on the next
+  `DATA_VERSION` bump. The permanent fix is one line in `sw.js` — skip
+  `cache.put` when the URL carries `_fresh`.
+- 🚩 **Not covered, and it needs a screen that does not exist:** a dish that was
+  *rated* but never *hearted* has nowhere to appear, so an unresolved rating for
+  it is invisible. Noted in `ratings.js`, not solved.

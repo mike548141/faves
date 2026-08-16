@@ -463,7 +463,37 @@ delivery app.** Clear one by bringing back the fact.
       `NEAR_BRANCH_LIMIT`), so a chain going from 5 to 9 changes how its card
       behaves — worth re-checking `branch_check.mjs` against whichever venue
       grows the most.
-  **CLAIMED 2026-08-16 08:55 UTC (wt: faves-inflight)**
+      ✅ **First pass done 2026-08-16** (`9cae14e`) — **18 branches added across
+      three chains, every one with address, phone AND hours.** BurgerFuel 1→4,
+      **Hell Pizza 1→14**, Kaffee Eis 1→3.
+      🔎 **The sequencing rule was read as "no branches without hours", not "no
+      branches"** — a branch added *with* hours strictly improves the ratio ADR
+      0054 depends on, so a blocked chain does not block a readable one. Three
+      chains were left at 1 branch under exactly that rule: **Gong Cha**
+      (addresses and phones exist first-party, no hours anywhere on the site),
+      **Noodle Canteen** (only a chain-wide blurb, which demonstrably disagrees
+      with the Johnsonville hours we already hold — so it is wrong per-branch,
+      not merely coarse) and **Pizza Hut** (no static store directory; same class
+      as McDonald's).
+      🚩 **Hell Pizza is now the corpus's largest chain and the first venue where
+      "Show all" hides nine branches.** `branch_check.mjs` now drives it by
+      default — its fixture comment had claimed tj-katsu was "the only venue left
+      that still needs the second step", true when written and false the moment a
+      chain grew, with nothing to say so. 33 assertions across three venues.
+      ⚠️ **Two source claims were checked rather than trusted.** BurgerFuel's site
+      renders "Temporarily Closed" on every Wellington store — it is a Webflow
+      `w-condition-invisible` field, hidden by the site's own CSS, that markdown
+      conversion flattened into visible text; it appears identically on a store
+      verified in person the day before. And past-midnight hours use the existing
+      **null-close** convention (ADR 0006), already used by `pizza-hut` and
+      `sprig-and-fern-tawa` with test coverage, rather than a new one.
+      🔎 **Hell Pizza's hours came from its own JSON API**, found by reading the
+      site's `config.js`/`hell_api_service.js` when the store finder turned out to
+      be a JS SPA needing a click. That is the same wall McDonald's and Subway
+      present — and the lesson is that it is worth one look at what the SPA itself
+      calls before declaring a chain unreadable.
+      **Still open:** the three refused chains, and the rest of the region for the
+      chains already in. Claim released.
 
 - [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
       — **10 of the corpus's 22 branches**, measured 2026-08-16. This is now
@@ -1769,51 +1799,22 @@ unaffected; watch the landmark change (`<nav aria-label="Filter restaurants">`
 disappears) and keep the filters adjacent to the `role="status"` result count,
 which is a genuine a11y gain — change a filter, hear the new count.
 
-- [ ] 🎯 **15x — The desktop filter row: the real controls, inline** `[M][css][js]`
-  — **the owner has asked for this twice and it is still not built.** Handed over
-  2026-08-16 by the session that designed it and then closed. Recorded here
-  because it was only ever written in a session log's "owed and open" list, which
-  is not a worklist anybody reads.
-  🔎 **It is *not* a media query, and that is the whole difficulty.** The
-  controls live inside `<dialog id="filter-sheet">`, and **a closed dialog cannot
-  render its children on the page** — no amount of CSS makes them appear inline
-  while the dialog is shut. The settled design: one `<div id="filter-controls">`
-  that lives inline by default, which `filters-ui.js` **moves into the dialog**
-  on narrow and back out on wide. A DOM move (rather than duplicate markup)
-  preserves both state and listeners, so there is never a second copy to keep in
-  step. Watch: focus management across the move, the `role="status"` result count
-  staying adjacent, and the landmark not disappearing at one breakpoint only.
-  **CLAIMED 2026-08-16 09:20 UTC (wt: faves-inflight)**
-
-- [ ] 🚩 **15y — the ⓘ disclosure fails WCAG 2.2 SC 1.4.13 on its hover path**
-  `[S][js][css][a11y]` — found 2026-08-16 while fixing the flicker below it, and
-  **not** fixed in the same pass, because the fix is a design call the owner
-  should make rather than a quiet edit.
-  `disclosure()` (`site/js/disclosure.js`) is shared by the settings allergen
-  caveat and the menu's freshness / "needs a fact" notes. Its **click** path is
-  sound — Escape closes it, an outside click closes it, `aria-expanded` tracks.
-  Its **hover** path is not, and SC 1.4.13 (Level AA — the repo's stated
-  non-negotiable bar) asks for three things:
-  - **Hoverable** ❌ the rule is `.caveat-btn:hover ~ .caveat-note`, keyed on the
-    *button* alone, and `margin-top: var(--space-1)` puts a gap between the two.
-    Move the pointer toward the note to read it and the note disappears. Text you
-    cannot travel to is text a slow reader, a magnifier user or anyone with a
-    tremor cannot finish.
-  - **Dismissible** ❌ `setOpen()` attaches the Escape handler only when the note
-    is *clicked* open, so a hover-revealed note cannot be dismissed without
-    moving the pointer — which matters most for the magnifier user it is covering
-    content for.
-  - **Persistent** ✅ nothing times it out.
-  🎯 **The call for the owner.** The cheap structural fix — close the gap so the
-  button and note form one continuous hover target — changes the note's visible
-  box, i.e. changes a shipped component's look. The zero-visual fix is a
-  transparent bridge (`.caveat-note::before` spanning the gap) plus a hover-path
-  Escape handler in `disclosure.js`: more machinery, no design change. The third
-  option is to drop the hover reveal entirely and make every ⓘ click-only, which
-  is what the settings one now is — one behaviour everywhere, nothing to get
-  wrong, and mouse users lose a nicety they never had on a phone.
-  **Recommend the third**: it is the only one that leaves a single ⓘ behaviour
-  across the whole app, and consistency is the standing Theme 15 goal.
+✅ **15x — The desktop filter row — SHIPPED 2026-08-16** (`f619722`), after
+being asked for twice and living only in a session log's "owed" list. One
+`#filter-controls` section now **moves** between the sheet and an inline host —
+a DOM move, so state and listeners survive and there is never a second copy.
+🔎 **The breakpoint lives in JS only.** A CSS media query carrying a second copy
+of the number could disagree with the move, and that failure mode is a row
+styled as an inline panel while it is actually inside a *closed* dialog.
+🚩 **The quirk that bit was not the predicted one.** Focus surviving the
+narrow→wide re-parent worked first time — Chrome kept it on `#filter-area`
+across a `close()` and a re-parent. The hard case is going wide with the sheet
+**open**: everything outside an open modal `<dialog>` is inert, so it must close
+first — but `close()` parks focus on the very button the move then hides. Capture
+`activeElement` **before** the close, restore **after** the hiding. Breaking that
+one line fails two assertions in `tools/filter_row_check.mjs`.
+⚠️ **Residual, not fixed:** on wide screens `<nav aria-label="Filter places">`
+now holds only "Pick for us" and the order pill, so its label is slightly off.
 
 ## Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)
 
@@ -2385,31 +2386,41 @@ of the tests, including the one that matters most — *nothing moves on day one*
 - ✅ **The "Call to order" button looked cut off** — **fixed 2026-08-16**;
   3px of clearance under a pinned 44px button became 11.5px, measured in a
   real browser. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [ ] **The back-to-top button covers dish content** `[S][css]` — seen in the
-  same screenshot: the floating ↑ sits over the "French fries" row and hides
-  the right-hand end of its price. A fixed control over a scrolling list will
-  always overlap something, so the fix is not "move it" but give the dish list
-  enough end padding, or let the control get out of the way while the list is
-  moving. **Hiding a price is the part that matters** — a decoration overlapping
-  is cosmetic, an unreadable number is not.
-  **CLAIMED 2026-08-16 09:20 UTC (wt: faves-inflight)**
-- [ ] **Audit every fixed/sticky control against the content beneath it**
-  `[S][css]` — the contact bar, the section jump-nav, the order FAB and the
-  back-to-top all float over the menu, and two of the four have now been found
-  wanting by eye rather than by any check. Worth one pass measuring clearance
-  at 390px with the largest supported text size, where the boxes grow but the
-  offsets are guesses.
-  🔎 **Three measurements already exist — cite them, do not re-take them.**
-  Taken in a real browser at 390 px on 2026-08-16 by the session that closed
-  before it could act on them, and handed over rather than lost:
-  - `.to-top` covers **69.4%** of a venue's heart, leaving **14.7 px** of it
-    reachable — under the 44 px target floor, and the heart is a control, not a
-    decoration, so this is the worse of the two overlaps the owner saw by eye.
-  - `a.app-home-link` (the `Faves` wordmark) measures **81.7 × 31.9 px** — the
-    height is under the 44 px floor.
-  - The Order pill floats over the list **and is tappable** on `main`. The
-    untappable version existed only in discarded work, so do not "fix" it.
-  **CLAIMED 2026-08-16 09:20 UTC (wt: faves-inflight)**
+✅ **Both items — SHIPPED 2026-08-16** (`f619722`). Detail →
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+🔎 **Measured properly, it was worse than it looked, and the measurement chose
+the fix.** A full-document sweep in 37 px steps at two widths and two text sizes
+— because a fixed control's victim depends entirely on where you stop, and a
+single sample is what every eyeball report of this had been. The back-to-top
+button owned the tap on a dish price at **100%** of its width, **0 px
+reachable**, at **96 of 547 scroll positions** on one menu; on the home screen it
+covered **94.6%** of a venue's heart at 1280/24px, leaving 2.6 px.
+**The roadmap offered two fixes and only one of them was live.** End padding was
+*already sufficient* — at the document end the button overlapped nothing in all
+eight width × text-size combinations, before and after. Every bit of the damage
+was mid-scroll, which only "let the control get out of the way while the list is
+moving" reaches. It now tucks while you scroll down, returns when you scroll up,
+and **starts tucked**, so a deep link never opens with a button over a price.
+⚠️ **Residual, stated rather than buried:** flick *up* and it returns and still
+overlaps (91.8% worst). Unavoidable for any visible fixed control at 390 px —
+there is nowhere for it to go that is not over the list. It now happens only
+while the page moves upward, never during a downward read and never at rest.
+Also fixed: the `Faves` wordmark was 81.7 × 31.9 px; now 44.
+
+- [ ] 🚩 **The order pill eats a dietary chip's tap at large text** `[S][css]`
+  ⚑ — **found by measurement 2026-08-16 and deliberately NOT fixed.** At 390 px
+  with the browser's *Very large* text setting, the order FAB covers **82.5% of a
+  "Gluten free" diet chip and owns its tap** — 0.0 × 8.3 px reachable. This is
+  **not** the "pill is untappable" report, which was checked and is false: the
+  pill is self-tappable at every combination measured. This is the pill eating
+  *another* control's tap, and the control it eats is a **dietary** one, which is
+  the class of thing this app exists to get right.
+  🎯 **Left for the owner because any fix trades away availability of a primary
+  action** — shrinking, moving or auto-hiding the order pill all make "how do I
+  see my order?" harder in exchange. That is his call, not a quiet edit. Note the
+  interaction: the back-to-top tuck above is one answer, and applying the same
+  treatment to the pill would work — but the pill is a *destination*, not a
+  return-to-top, so "summon it by scrolling up" reads differently.
 
 ## Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)
 
