@@ -2,6 +2,7 @@
 // about and reuse (e.g. the "Pick for us" picker filters the same way).
 
 import { openStatus } from "./hours.js";
+import { kindOf } from "./kinds.js";
 import { isCheapEats } from "./price.js";
 import { venueHours } from "./locations.js";
 import { venueTimezone } from "./place.js";
@@ -11,9 +12,10 @@ export function deriveFacets(restaurants) {
   const areas = new Set();
   const cuisines = new Set();
   for (const r of restaurants) {
-    // The cook-at-home collection isn't a place; keep it out of the
-    // area/cuisine dropdowns so they stay about eating out.
-    if (r.kind === "recipes") continue;
+    // A kind that isn't in the facets stays out of the area/cuisine dropdowns,
+    // so they keep meaning "where to eat out" (ADR 0003; the table is
+    // kinds.js). Cook at Home is the one such record today.
+    if (!kindOf(r).inFacets) continue;
     if (r.area) areas.add(r.area);
     for (const c of r.cuisine || []) cuisines.add(c);
   }

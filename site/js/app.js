@@ -21,6 +21,7 @@ import { rankByDetour, bestBranchForRoute, areaCentroids } from "./route.js";
 import { branchCoords, branchAsPlace, venueHours, nearestBranch } from "./locations.js";
 import { rememberOrigin, routeMapsUrl } from "./geo.js";
 import { openStatus, makeClock, viewerOnVenueTime } from "./hours.js";
+import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 import { closureBadge } from "./closure-ui.js";
 import { todayIn } from "./temporal.js";
 import { initPicker } from "./picker.js";
@@ -168,7 +169,8 @@ function timezoneNote(restaurants) {
 }
 
 function card(r, clock, routeCtx = null, origin = null) {
-  const isRecipes = r.kind === "recipes";
+  const kind = kindOf(r);
+  const labels = labelsOf(r);
   const units = settings.get().units;
   const name = el("h3", { className: "card-name", textContent: r.name });
   // Route mode: the venue carries a detourKm (least added distance to your
@@ -179,15 +181,19 @@ function card(r, clock, routeCtx = null, origin = null) {
   // ON it, beside the suburb. "Dine-in, Takeaway" came off entirely (owner,
   // 2026-08-16): it was on every card, so it separated almost nothing, and
   // service is still a filter and now a search term.
-  const badge = !isRecipes ? hoursBadge(r, clock, true, origin) : null;
+  const badge = kind.hasHours ? hoursBadge(r, clock, true, origin) : null;
   const area = cardArea(r, origin);
 
   let meta;
-  if (isRecipes) {
+  // A kind that names itself says what it is and how much of it there is; one
+  // that doesn't is placed by its suburb and its distance from you.
+  if (labels.browseLabel) {
     const n = (r.menu || []).reduce((sum, s) => sum + (s.items?.length || 0), 0);
     meta = el("p", { className: "card-meta" }, [
-      el("span", { className: "card-area", textContent: "Cook at home" }),
-      el("span", { textContent: n ? `${n} recipe${n === 1 ? "" : "s"}` : "Recipes coming soon" }),
+      el("span", { className: "card-area", textContent: labels.browseLabel }),
+      el("span", {
+        textContent: n ? `${n} ${labels.itemNoun}${n === 1 ? "" : "s"}` : labels.stubChip,
+      }),
     ]);
   } else if (onRoute) {
     // Detour is a STRAIGHT-LINE estimate (route.js), never road distance — shown
@@ -232,11 +238,14 @@ function card(r, clock, routeCtx = null, origin = null) {
     // will never serve again is worse than saying nothing. The closure badge
     // below carries the real news.
     if (r.closure?.state !== "closed-permanently") {
-      const label = isRecipes ? "Recipes coming soon" : "Menu coming soon";
-      chips.append(el("span", { className: "chip chip-status", textContent: label }));
+      chips.append(el("span", { className: "chip chip-status", textContent: labels.stubChip }));
     }
-  } else if (isRecipes) {
-    chips.append(el("span", { className: "chip chip-recipes", textContent: "🏠 Recipes" }));
+  } else if (labels.chip) {
+    // A kind with a chip of its own wears that instead of a price band and
+    // cuisines — neither of which it has.
+    chips.append(
+      el("span", { className: `chip ${labels.chip.className}`, textContent: labels.chip.text })
+    );
   } else {
     const pc = priceChip(r);
     if (pc) chips.append(pc);
@@ -245,7 +254,7 @@ function card(r, clock, routeCtx = null, origin = null) {
     }
   }
 
-  const li = el("li", { className: isRecipes ? "card card-recipes" : "card" });
+  const li = el("li", { className: labels.cardModifier ? `card ${labels.cardModifier}` : "card" });
   li.dataset.status = r.status;
 
   // A stub is only a dead end if we hold nothing but its name. Where we have
@@ -276,7 +285,8 @@ function card(r, clock, routeCtx = null, origin = null) {
     // the link (never nested — a button inside an <a> is invalid and untappable)
     // and floats top-right over the card via absolute positioning.
     const heart = heartButton(
-      { type: "venue", venueId: r.id, venueName: r.name, isRecipe: isRecipes },
+      // Stored on the heart — identity, not capability (kinds.isRecipeKind).
+      { type: "venue", venueId: r.id, venueName: r.name, isRecipe: isRecipeKind(r) },
       r.name
     );
     heart.classList.add("card-heart");
@@ -630,7 +640,9 @@ function wireSearch(restaurants) {
   const index = buildIndex(restaurants);
 
   // A tab-hint icon precedes the venue name so the two groups read at a glance.
-  const placeIcon = (p) => (p.kind === "recipes" ? "🏠" : "🍽️");
+  // The index entry carries `kind` for exactly this — each kind names its own
+  // icon, so a third one never needs a third branch here.
+  const placeIcon = (p) => labelsOf(p).icon;
 
   const groupCount = ({ items, total }) =>
     total > items.length ? `${items.length} of ${total}` : total;
@@ -1221,7 +1233,7 @@ function fillDest(destSel, restaurants) {
     destSel.append(og);
   }
   const places = restaurants.filter(
-    (r) => r.kind !== "recipes" && typeof r.lat === "number" && typeof r.lng === "number"
+    (r) => kindOf(r).hasLocation && typeof r.lat === "number" && typeof r.lng === "number"
   );
   if (places.length) {
     const og = el("optgroup", { label: "Places" });
