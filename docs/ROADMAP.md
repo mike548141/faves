@@ -4177,6 +4177,38 @@ notification (a permission prompt, and a service-worker path). Both are new
 trust surfaces on a site that currently asks for nothing. Worth doing, worth
 deciding deliberately.
 
+🔎 **Challenge to the above, with evidence — there is a third option, and it
+costs no trust surface at all (2026-08-16).** Measured:
+`grep -rn 'AudioContext|Notification|speechSynthesis|vibrate' site/` returns
+**nothing** — the shipped site uses no audio or notification API whatsoever, so
+the "new trust surface" reading is correct about *today* and wrong about the
+*only* ways forward. A **WebAudio `OscillatorNode`** generates a tone in code:
+
+| | asset? | CDN? | permission prompt? | network? |
+|---|---|---|---|---|
+| Audio file | ✅ yes, and a precache entry | no | no | no |
+| Web Notification | no | no | ✅ **yes** | ✅ for push |
+| **Generated tone** | **no** | **no** | **no** | **no** |
+
+Autoplay policy is satisfied for free: **the tap that starts the timer is the
+user gesture that unlocks the `AudioContext`**, so there is no autoplay case to
+handle. And cook mode already holds `navigator.wakeLock` (ADR 0034), so the
+page is foregrounded and visible for exactly the window the alarm must cover.
+
+⚠️ **The honest limit, which is the same one the item already asks us to state:**
+a generated tone is reliable **while the page is foregrounded**, and iOS
+suspends the `AudioContext` when the app is backgrounded or the phone locks. So
+this delivers "the bell rings while you are cooking with the app open", which is
+the scenario cook mode *creates*, and it does not deliver "the bell rings while
+you are in another app". That is a smaller promise honestly kept, rather than a
+larger one that needs a permission prompt to attempt.
+
+🎯 **For the owner:** this is a `[S]`, needs nothing new from you, and asks the
+user for nothing. It does not close 36d — a background alarm still needs the
+notification path and its prompt — but it turns "the timer is silent" into "the
+timer rings while you are looking at it", which is most of the value. Say the
+word and it ships; say no and it stays recorded here as considered and declined.
+
 ### 36e — one place to look, not two `[M][ux]`
 
 A recipe currently renders **twice**, through two code paths: expanded inside
