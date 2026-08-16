@@ -1,0 +1,48 @@
+# Config for the Faves sync Worker (ADR 0017 v2 / ADR 0060 addendum).
+# See worker/README.md for what to create in the Cloudflare dashboard/CLI
+# before any of the placeholders below can be filled in, and the exact
+# commands to deploy once they are.
+#
+# This file is NOT read by anything under site/ and is NOT part of the
+# zero-dependency shipped site (ADR 0001) — it's deploy-time config for a
+# separate, optional backend component. `wrangler` itself is an npm tool;
+# installing it is a decision for the owner, not something a session does
+# unasked (see README).
+
+name = "faves-sync"
+main = "sync-worker.js"
+
+# Wrangler refuses a compatibility_date in the future relative to the real
+# calendar (not this repo's in-story "current date", which may run ahead of
+# real-world today). Pinned to a date already well in the past in every
+# timeline so `wrangler deploy` never rejects it; bump forward deliberately
+# if a future Workers runtime feature is needed, per Cloudflare's
+# compatibility-date docs.
+compatibility_date = "2024-11-01"
+
+# PLACEHOLDER — replace with the real Cloudflare account id before deploying.
+# Find it: Cloudflare dashboard -> Workers & Pages -> right-hand sidebar on
+# any Worker/Pages page ("Account ID"), or `wrangler whoami` once logged in.
+# Not a secret (it names an account, not a credential) but also not a real
+# value to invent — leave the placeholder until it's filled from the
+# dashboard.
+account_id = "REPLACE_WITH_CLOUDFLARE_ACCOUNT_ID"
+
+# One KV namespace: the blob store itself. `id` (production) and
+# `preview_id` (used by `wrangler dev`) are both PLACEHOLDERS — created by
+# `wrangler kv namespace create SYNC_BLOBS` (and `--preview` for the second),
+# which prints the ids to paste in here. See README step-by-step.
+kv_namespaces = [
+  { binding = "SYNC_BLOBS", id = "REPLACE_WITH_KV_NAMESPACE_ID", preview_id = "REPLACE_WITH_PREVIEW_KV_NAMESPACE_ID" }
+]
+
+# CORS allowlist read by sync-worker.js (env.ALLOWED_ORIGINS, comma-
+# separated, parsed by parseAllowedOrigins()). A configured constant, never
+# "*" — see the CORS comment in sync-worker.js for why a wildcard origin is
+# a real hole here, not just sloppiness. Both of Faves' live origins are
+# listed; a Pages *branch preview* (a random "<hash>.faves.pages.dev"
+# subdomain) is deliberately NOT included, so preview deploys can't reach
+# sync — add it here by hand if a preview build ever needs to exercise sync
+# end-to-end.
+[vars]
+ALLOWED_ORIGINS = "https://lets-eat.myspot.nz,https://faves.pages.dev"
