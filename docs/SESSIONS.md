@@ -5952,3 +5952,32 @@ how a half-built one ships — the same call 36d got on 2026-08-16, for the same
 reason. The design is ratified and the next session has four decisions, a named
 constant to add, and a pure test file to pin it with before any of it reaches a
 browser.
+
+### Owner rulings taken at the close
+
+Three questions were put to him rather than resolved quietly, and all three
+changed something:
+
+- **Little Sprig Seatoun's menu date → the conservative read** (2025-10-01, not
+  the 2026-06-29 export). The stale-menu caveat now fires on that venue. 🔑 His
+  reasoning generalises: **a caveat that fires wrongly costs less than one that
+  stays silent on a ten-month-old price.**
+- **The two declined `contains-egg` tags → added.** They were declined on the
+  grounds that the split is genuine (set cheesecakes carry no egg; egg is in
+  most croquette breading but not all). That was the agent's judgement quietly
+  overriding [ADR 0025], whose rule is that the burden falls on *not* tagging.
+  🔑 **He overturned it, and the lesson is about where the override happened:**
+  the reasoning was sound and it still wasn't the agent's call to make. An
+  accepted ADR is not a default to be weighed against a good argument — it is
+  the answer until it is superseded in writing.
+- **And he redirected the question**: *"add egg, and fix the real problem."* The
+  real problem is 37n — the corpus disagrees with itself, and the disagreement
+  tracks which session read which menu rather than anything about the food.
+  Seatoun's sausages are tagged for gluten and Tawa's identical ones are not.
+  🔑 **Inconsistency does not fail safe; it fails quiet.** A reader who finds one
+  sausage flagged and an identical one not learns that an absent tag means
+  nothing — and every correct tag in the corpus stops working with it.
+
+**Next session, by his pick:** the ranking rebuild (ADR 0068) and the remaining
+14 venue menus. The recipe-page pass and the timer alarm stay queued.
+

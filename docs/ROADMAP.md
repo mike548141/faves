@@ -4761,3 +4761,52 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       🔎 Do this **with 37c/37d/37l**, not before: collapsing, two columns and
       component grouping all move these same rows, and aligning them twice is
       the waste.
+
+- [ ] 🚩 **37n — the corpus disagrees with itself about allergens, and one dish
+      at a time will never fix it** `[M][data]`. Owner-directed 2026-08-16, when
+      he ruled on two `contains-egg` tags: *"add egg, and fix the real
+      problem."* The two dishes are done; this is the problem.
+      🔎 **The evidence that started it.** Seatoun's "Sausages n Fries" now
+      carries `contains-gluten` on the reasoning that NZ sausages standardly
+      contain wheat rusk. **Tawa's "Sausages" and "Cheerio Sausages" carry no
+      such tag**, and nothing distinguishes them — the difference is which
+      session read which menu, not anything about the food. Same class:
+      pizzas tagged `contains-dairy` from a "dairy free cheese available"
+      footer at one venue, untagged at another whose footer says nothing.
+      🔑 **Why this is a real defect and not tidiness.** An allergen tag is only
+      as useful as its consistency. A reader who finds one sausage flagged and
+      an identical one not flagged learns that the absence of a tag means
+      nothing — and once they learn that, every *correct* tag in the corpus stops
+      working too. Inconsistency does not fail safe; it fails **quiet**.
+      **What the work is:** a sweep across all 55 venues for dish *classes*
+      whose tagging disagrees between records — sausages, crumbed/fried items,
+      pizza bases, brioche buns, mayo-based sauces, pesto — resolved to ADR
+      0025's rule (when unsure, tag) rather than to whichever entry happened to
+      be more cautious. Likely a `tools/` report first, since the useful output
+      is *"these N dishes share a class and disagree"*, which no existing tool
+      asks for.
+      🛑 **`tools/tag_allergens.py` cannot do this and must be fixed alongside
+      it**: it writes NOTHING on any record with `addOnGroups` (it patches
+      `tags` positionally and bails on a count mismatch, exiting clean), and it
+      never reads section notes — which is how "on a Sesame Bun", printed once
+      above three burgers, left all three untagged. Both were found the hard way
+      on 2026-08-16. A safety tool that declines silently is worse than no tool,
+      because a green run reads as a clean sweep.
+
+---
+
+## What the owner wants moved next (asked and answered 2026-08-16)
+
+Given more queued than one session holds, he picked **two**:
+
+1. 🎯 **The ranking rebuild — [ADR 0068], item 37g.** The biggest visible change
+   to the home screen and the thing he was most exercised about. Design is
+   ratified and the traps are written down; it needs a **fresh** session because
+   of the permission prompt.
+2. 🎯 **The remaining 14 venue menus** (the fetch item above). The Sprig + Fern
+   pilot proved the recipe works and wrote it down — including that the allergen
+   pass is irreducibly human, so budget per venue accordingly.
+
+Not chosen for next, still open and specified: the recipe-page pass
+(37c/37d/37e/37l/37m — worth doing together, since all five move the same rows)
+and the timer's alarm (36d).
