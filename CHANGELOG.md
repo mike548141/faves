@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **Ordering, website and pickup links now warn a screen reader before they
+  leave the site.** Every link that opens in a new window — "Order online",
+  the venue's website, and the pickup address's map link — carries a
+  visually-hidden "(opens in a new window)" note, per WCAG technique G201.
+  It names only what the link is certain to do; it never claims a native app
+  will open, because no browser API can confirm that in advance.
 - **A transfer link no longer freezes your language and units to wherever you
   made it.** If you'd left language or units set to follow wherever you are, the
   link was carrying the *resolved* answer — English and kilometres, if you made
