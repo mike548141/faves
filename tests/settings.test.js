@@ -4,7 +4,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createSettings, DEFAULTS, BOUNDS, LOCAL, AS_CHARGED } from "../site/js/settings.js";
+import { createSettings, DEFAULTS, BOUNDS, LANGS, LOCAL, AS_CHARGED } from "../site/js/settings.js";
 
 // `get()` returns settings with every LOCAL already resolved to a concrete
 // value, which is what every consumer wants and what makes "local" invisible to
@@ -62,13 +62,17 @@ test("corrupt stored payload → defaults", () => {
   assert.deepEqual(s.raw(), DEFAULTS);
 });
 
-test("lang: defaults to English, keeps a known language, rejects an unknown one", () => {
+test("lang: defaults to local, keeps a known language, rejects an unknown one", () => {
   const s = createSettings(fakeStorage());
-  assert.equal(s.get().lang, "en");
+  // Same reasoning as units below: the default resolves from the device, so the
+  // stored value is what this can assert. A resolved language is always one
+  // Faves actually speaks, whatever the machine's locale says.
+  assert.equal(s.raw().lang, LOCAL);
+  assert.ok(LANGS.includes(s.get().lang));
   s.set({ lang: "mi" });
   assert.equal(s.get().lang, "mi");
   s.set({ lang: "fr" }); // not in LANGS
-  assert.equal(s.get().lang, "en");
+  assert.equal(s.raw().lang, LOCAL);
 });
 
 test("mapsApp: defaults to auto, keeps a known provider, rejects an unknown one", () => {
@@ -80,15 +84,21 @@ test("mapsApp: defaults to auto, keeps a known provider, rejects an unknown one"
   assert.equal(s.get().mapsApp, "auto");
 });
 
-test("units: defaults to metric, keeps imperial, rejects anything else", () => {
+test("units: defaults to local, keeps imperial, rejects anything else", () => {
   const storage = fakeStorage();
   const s = createSettings(storage);
-  assert.equal(s.get().units, "metric"); // New Zealand first
+  // The DEFAULT is "local" (ADR 0045). What that resolves to depends on the
+  // machine, so this asserts the stored preference and leaves the resolution to
+  // locale.test.js, which feeds it explicit signals. Asserting "metric" here
+  // passed in Wellington and failed on a US-locale CI runner — which was the
+  // resolver working correctly, and the test making a claim it couldn't keep.
+  assert.equal(s.raw().units, LOCAL);
+  assert.ok(["metric", "imperial"].includes(s.get().units), "always resolves to a real system");
   s.set({ units: "imperial" });
   assert.equal(s.get().units, "imperial");
   assert.equal(createSettings(storage).get().units, "imperial"); // persists
   s.set({ units: "furlongs" });
-  assert.equal(s.get().units, "metric");
+  assert.equal(s.raw().units, LOCAL);
 });
 
 test("units: a display choice never touches the stored distances", () => {
