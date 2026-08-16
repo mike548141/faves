@@ -18,6 +18,7 @@ import { cookButton } from "./cook-ui.js";
 import { CHECKLIST_KEY, checklist, recipeId } from "./checklist.js";
 import { syncTicks, tickRow } from "./checklist-ui.js";
 import { ingredientBlocks } from "./ingredients.js";
+import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
 import { el } from "./dom.js";
 // The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
 // a recipe could show CONTAINS GLUTEN chips with no route to the Settings that
@@ -111,7 +112,19 @@ function render(collection, item) {
     ])
   );
 
-  const metaBits = [item.serves ? `Serves ${item.serves}` : null, item.time || null].filter(Boolean);
+  // `serves` restated at the chosen scale (17a). Only 3 of the 24 recipes carry
+  // it, so most read exactly as they always did; where it IS carried, a reader
+  // on 2× is told "Serves 12", not left to double 6 in their head. `time` is
+  // NOT scaled and never will be: a doubled mixture in a deeper dish takes
+  // longer but not twice as long, and for anything meat-based an under-scaled
+  // time is a food-safety failure rather than a disappointing dinner (17a's 🚩).
+  const scaled = scaleServes(item.serves, scaleFor(scaleKey));
+  const servesText = item.serves
+    ? scaled != null && scaleKey !== DEFAULT_SCALE
+      ? `Serves ${scaled}`
+      : `Serves ${item.serves}`
+    : null;
+  const metaBits = [servesText, item.time || null].filter(Boolean);
   if (metaBits.length) parts.push(el("p", { className: "menu-sub", textContent: metaBits.join(" · ") }));
   if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
   // Where it came from, as a field rather than buried in the prose (37e). The
@@ -161,7 +174,53 @@ function render(collection, item) {
     // ruling, and he was told the cost he was accepting: opening an unfamiliar
     // recipe now hides the list you have not shopped for yet. If that bites,
     // the fix is per-recipe state, not abandoning the memory.
+    const scale = scaleFor(scaleKey);
+    // Every line's verdict, computed once so the picker and the list agree.
+    const verdicts = blocks.flatMap((b) => b.lines.map((l) => scaleLineStatus(l.text, scale)));
+    const blocked = verdicts.filter((v) => v.status === "blocked").length;
+
     const body = [];
+    // The scale picker, offered only where it can do something. A recipe of
+    // nothing but "Garlic" and "Herbs" — and the corpus has several — would get
+    // a control that changes nothing on screen, which reads as a broken button
+    // rather than as an honest one.
+    if (verdicts.some((v) => v.status === "scaled")) {
+      const group = el("div", {
+        className: "scale-row", role: "radiogroup", "aria-label": "Scale the ingredients",
+      });
+      for (const s of SCALES) {
+        const on = s.key === scaleKey;
+        const b = el("button", {
+          type: "button", className: on ? "scale-btn is-on" : "scale-btn",
+          textContent: s.label, role: "radio", "aria-checked": String(on),
+        });
+        // Re-render rather than patching the lines in place: the blocked-line
+        // notice, the ticks and `Serves` all move together, and one path that
+        // rebuilds everything cannot drift the way three update paths would.
+        b.addEventListener("click", () => {
+          if (scaleKey === s.key) return;
+          scaleKey = s.key;
+          reRender();
+        });
+        group.append(b);
+      }
+      body.push(group);
+      // 🚩 The honesty line. A recipe where some lines scaled and others could
+      // not is HALF-SCALED, and nothing else on the page would say so — the
+      // reader sees doubled flour beside un-doubled chocolate and no hint that
+      // the second was a refusal rather than a quantity that happens to be
+      // written that way. Counted, not listed: the lines carry their own mark.
+      if (blocked && scaleKey !== DEFAULT_SCALE) {
+        body.push(el("p", {
+          className: "scale-note",
+          textContent:
+            blocked === 1
+              ? "1 line below is marked — it cannot be scaled, so it is shown as written."
+              : `${blocked} lines below are marked — they cannot be scaled, so they are shown as written.`,
+        }));
+      }
+    }
+    let vi = 0;
     for (const b of blocks) {
       // A component heading is h3 under the h2 in the summary — a real heading,
       // so the list is navigable by heading on a screen reader rather than a
@@ -173,7 +232,23 @@ function render(collection, item) {
       // `line.key` carries the component, `line.text` does not: the tick is
       // keyed on the line's full identity while the reader sees the text under
       // its heading, unrepeated (ingredients.js, ADR 0070).
-      for (const line of b.lines) ul.append(el("li", {}, [tickRow(rid, "i", line.key, line.text)]));
+      for (const line of b.lines) {
+        const v = verdicts[vi++];
+        // `line.key` is the RAW line and never the scaled render — checklist.js:
+        // "HASH THE DATA, NEVER THE RENDER". A tick made at 2× is still there at
+        // ½×, by the same mechanism that already survives a metric/imperial
+        // flip. Only the display text moves.
+        const li = el("li", {}, [tickRow(rid, "i", line.key, v.text)]);
+        if (v.status === "blocked" && scaleKey !== DEFAULT_SCALE) {
+          li.classList.add("is-unscaled");
+          // Marked in TEXT as well as in colour: the whole point is that this
+          // line disagrees with the scale the reader chose, and a colour alone
+          // says nothing to a screen reader or to anyone who cannot see it
+          // (WCAG 1.4.1 — never colour as the only carrier of meaning).
+          li.append(el("span", { className: "scale-mark", textContent: "as written" }));
+        }
+        ul.append(li);
+      }
       body.push(ul);
     }
     const fold = el("details", { className: "ingredients-fold", open: !settings.get().ingredientsFolded }, [
@@ -250,6 +325,13 @@ let current = null;
 // (WCAG 2.4.3). `commit()` calls subscribers synchronously, so this flag is
 // only ever raised inside that one call.
 let foldWrite = false;
+
+// The chosen ingredient scale (17a). Deliberately NOT persisted, and not in
+// `settings`: ADR 0034 refused to persist cook mode's step index on the
+// grounds that "where I am" is a position rather than a fact, and a recipe
+// reopened next week at 3× is the same bug wearing the same feature's clothes.
+// It is also per-page rather than per-recipe because a page holds one recipe.
+let scaleKey = DEFAULT_SCALE;
 
 // Re-apply on any settings change — re-reads settings.get().diet.avoid and
 // rebuilds the tags. No-op until the recipe has rendered.

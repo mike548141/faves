@@ -18,6 +18,15 @@
 //   37d  two columns, but only where a second one fits and only on a long list.
 //        Three guards in one CSS rule, each of which is trivially satisfiable
 //        by reading the stylesheet and none of which is proven by reading it.
+//   17a  scaling the ingredients. `quantity.js` is proven to 23 unit tests, but
+//        the two claims that would hurt are both about the DOM: that the number
+//        on screen really changed, and — the one that fails SILENTLY — that a
+//        TICK survives the change. Key the tick on the rendered line instead of
+//        the raw one and every box empties the moment the reader picks 2×;
+//        nothing throws, nothing logs, and they have lost their place in a bowl
+//        they cannot un-pour. Also that a refused line is marked in WORDS, not
+//        only in colour, and that a recipe with nothing to scale is offered no
+//        control at all.
 //
 // So everything below is MEASURED off real rectangles at explicitly-set widths.
 // Nothing is inferred from `getComputedStyle`, because a property can be present
@@ -53,6 +62,14 @@
 //      particular text size. Two sizes are swept because the `column-width`
 //      guard is a claim about text size; that is a claim about layout, not
 //      about reading.
+//   6. 🛑 Whether a scaled quantity is RIGHT. This tool asks `quantity.js` what
+//      the line should become and then checks the page agrees — so a parser
+//      that is confidently wrong passes here every time, in perfect agreement
+//      with itself. The defence against that is not in this file: it is the
+//      round trip inside `scaleLine` (ADR 0076) plus 23 unit tests whose
+//      expectations were hand-checked against the corpus. And no browser can
+//      tell you whether doubling a recipe makes good food — the bake time
+//      deliberately does not scale, and that is a judgement, not a bug.
 //
 //     node tools/recipe_check.mjs            # headless, exit 0 = pass
 //     node tools/recipe_check.mjs -v         # narrate each step
@@ -86,6 +103,7 @@ import {
 // produce. A second copy of either could drift and quietly test nothing.
 import { slug } from "../site/js/slug.js";
 import { ingredientBlocks, ingredientCount } from "../site/js/ingredients.js";
+import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -103,7 +121,7 @@ const HEIGHT = 844;
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 22;
+const EXPECTED_ASSERTIONS = 29;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
@@ -260,6 +278,38 @@ async function run(opts) {
     .filter((i) => ingredientCount(i.ingredients) < 6)[0];
   if (!shortFixture) throw new Error(`no short-list recipe fixture in ${COLLECTION}`);
 
+  // 17a's fixtures, derived the same way. `statuses` is the module's own verdict
+  // on a recipe, so the tool and the page can never disagree about what SHOULD
+  // happen — only about whether it did.
+  const statuses = (i, key) =>
+    ingredientBlocks(i.ingredients)
+      .flatMap((b) => b.lines)
+      .map((l) => scaleLineStatus(l.text, scaleFor(key)).status);
+  const count = (i, key, want) => statuses(i, key).filter((s) => s === want).length;
+
+  // Something to double, and a first line that actually moves — the tick-survival
+  // assertion reads line one, so a fixture whose first line is "Pinch of salt"
+  // would pass it while proving nothing.
+  const scaleFixture = [...items]
+    .filter((i) => statuses(i, "double")[0] === "scaled" && count(i, "double", "scaled") >= 3)
+    .sort(byLines)[0];
+  if (!scaleFixture) throw new Error(`no scalable recipe fixture in ${COLLECTION}`);
+
+  // The half-scaled state: some lines scale and at least one is refused. This is
+  // the shape 17a's safety argument is about, so a corpus that stopped
+  // containing one would make the marking assertions vacuous.
+  const blockedFixture = [...items]
+    .filter((i) => count(i, "half", "blocked") >= 1 && count(i, "half", "scaled") >= 1)
+    .sort((a, b) => count(b, "half", "blocked") - count(a, "half", "blocked"))[0];
+  if (!blockedFixture) throw new Error(`no partly-scalable recipe fixture in ${COLLECTION}`);
+
+  // The counter-example: nothing to scale at all. May legitimately not exist —
+  // handled at the assertion rather than thrown here, so its absence is
+  // reported as unproven instead of aborting a run that is otherwise complete.
+  const unscalableFixture = [...items].find(
+    (i) => ingredientCount(i.ingredients) > 0 && count(i, "double", "scaled") === 0
+  );
+
   const { server, port } = await startServer(opts.port, SITE);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-recipe-check-"));
   let chrome = null;
@@ -273,6 +323,10 @@ async function run(opts) {
       ` ${blocksOf(groupFixture).filter((b) => b.component).length} component(s))`);
     console.log(`  flat     ${flatFixture.name} (${ingredientCount(flatFixture.ingredients)} lines, no components)`);
     console.log(`  short    ${shortFixture.name} (${ingredientCount(shortFixture.ingredients)} lines)`);
+    console.log(`  scaling  ${scaleFixture.name} (${count(scaleFixture, "double", "scaled")} scale at 2×)`);
+    console.log(`  blocked  ${blockedFixture.name} (${count(blockedFixture, "half", "blocked")} refused at ½×,` +
+      ` ${count(blockedFixture, "half", "scaled")} scaled)`);
+    console.log(`  none     ${unscalableFixture ? unscalableFixture.name : "— no fixture in corpus"}`);
     console.log(`  widths   ${NARROW}px and ${WIDE}px, set explicitly`);
     console.log(`  profile  ${profileDir} (fresh — no service worker, no storage)\n`);
 
@@ -578,6 +632,120 @@ async function run(opts) {
       `root ${huge.rootFontSize}: ${long(huge).lines} lines → ${long(huge).cols} column(s) ` +
         `in a ${long(huge).width}px list · document overflow ${huge.docOverflow}px`
     );
+
+    // --- 6. Scaling the ingredients (17a, ADR 0076) -----------------------
+    //
+    // Everything here is a claim a unit test cannot reach. `quantity.js` is
+    // proven to 23 tests, but "the number on screen changed" and above all
+    // "the TICK survived the number changing" are facts about the DOM, and the
+    // tick is the one that would fail silently: a reader who ticks the flour at
+    // 1×, switches to 2× and finds it unticked has lost their place in a bowl
+    // they cannot un-pour.
+    await rootFont(16);
+    await size(NARROW);
+    await goto(url(scaleFixture));
+
+    const scaleUi = await evalPage(`(() => {
+      const btns = [...document.querySelectorAll(".scale-row .scale-btn")];
+      return {
+        n: btns.length,
+        labels: btns.map((b) => b.textContent),
+        on: btns.filter((b) => b.getAttribute("aria-checked") === "true").map((b) => b.textContent),
+        minH: Math.min(...btns.map((b) => Math.round(b.getBoundingClientRect().height))),
+        role: document.querySelector(".scale-row")?.getAttribute("role") || null,
+      };
+    })()`);
+    report.check(
+      "the scale picker offers the four scales, with 1× selected to begin with",
+      scaleUi.n === SCALES.length && scaleUi.on.length === 1 && scaleUi.on[0] === "1×" &&
+        scaleUi.role === "radiogroup",
+      `${scaleUi.n} buttons ${scaleUi.labels.join(" ")} · on=${scaleUi.on.join(",")} · role=${scaleUi.role}`
+    );
+    // Directly above a column of tick boxes, so a mistap rescales a recipe
+    // someone is halfway through measuring (CLAUDE.md: every target ≥ 44px).
+    report.check(
+      "every scale button clears the 44px tap target",
+      scaleUi.minH >= 44,
+      `shortest button ${scaleUi.minH}px`
+    );
+
+    // Tick the first line, THEN scale. The expected text comes from the same
+    // module the page uses — an independently hand-written expectation here
+    // would only prove the two agreed on the day it was typed.
+    const firstLine = ingredientBlocks(scaleFixture.ingredients).flatMap((b) => b.lines)[0];
+    const doubled = scaleLineStatus(firstLine.text, scaleFor("double")).text;
+    await click(".recipe-body .ingredients .tick-box");
+    await click(".scale-row .scale-btn:nth-child(3)"); // 2×
+    await settle();
+    const after = await evalPage(`(() => {
+      const box = document.querySelector(".recipe-body .ingredients .tick-box");
+      return {
+        text: document.querySelector(".recipe-body .ingredients .tick-text")?.textContent ?? null,
+        ticked: !!box?.checked,
+        on: [...document.querySelectorAll(".scale-row .scale-btn")]
+          .filter((b) => b.getAttribute("aria-checked") === "true").map((b) => b.textContent),
+      };
+    })()`);
+    report.check(
+      "picking 2× actually doubles the first line on screen",
+      after.text === doubled && after.on[0] === "2×",
+      `“${firstLine.text}” → “${after.text}” (expected “${doubled}”) · selected ${after.on.join(",")}`
+    );
+    // 🔑 THE ONE THAT MATTERS. `line.key` stays the raw text so the tick hashes
+    // something that never moves (checklist.js: "HASH THE DATA, NEVER THE
+    // RENDER"). Key on the rendered text instead and this box comes back empty.
+    report.check(
+      "a tick made at 1× is STILL TICKED after the recipe is scaled",
+      after.ticked === true,
+      `checkbox checked=${after.ticked} after 1× → 2×`
+    );
+
+    // A line the scaler refused, inside a recipe where other lines DID scale —
+    // the half-scaled state, which is the whole safety problem 17a introduces.
+    await goto(url(blockedFixture));
+    await click(".scale-row .scale-btn:nth-child(1)"); // ½×
+    await settle();
+    const marks = await evalPage(`(() => ({
+      marked: document.querySelectorAll(".recipe-body .ingredients li.is-unscaled").length,
+      words: [...document.querySelectorAll(".scale-mark")].map((s) => s.textContent),
+      note: document.querySelector(".scale-note")?.textContent ?? null,
+    }))()`);
+    const expectBlocked = ingredientBlocks(blockedFixture.ingredients)
+      .flatMap((b) => b.lines)
+      .filter((l) => scaleLineStatus(l.text, scaleFor("half")).status === "blocked").length;
+    report.check(
+      "every line the scaler refused is marked, and the count matches the module",
+      marks.marked === expectBlocked && expectBlocked > 0,
+      `${marks.marked} marked on screen · ${expectBlocked} blocked by quantity.js`
+    );
+    // Colour is not a carrier of meaning on its own (WCAG 1.4.1), and a reader
+    // needs to know WHY the line disagrees with the scale they just chose.
+    report.check(
+      "the refusal is carried in WORDS, not only in colour",
+      marks.words.length === expectBlocked && marks.words.every((w) => /\S/.test(w)) &&
+        (marks.note || "").includes("cannot be scaled"),
+      `${marks.words.length} in-line marks · note: ${marks.note ? `“${marks.note}”` : "MISSING"}`
+    );
+
+    // The counter-example: a recipe whose every line is "Garlic" or "Herbs" has
+    // nothing to scale, and a control that changes nothing on screen reads as
+    // broken rather than as honest. Skipped, loudly, if the corpus has none.
+    if (unscalableFixture) {
+      await goto(url(unscalableFixture));
+      const nonePicker = await evalPage(`document.querySelectorAll(".scale-row").length`);
+      report.check(
+        "a recipe with nothing to scale is offered NO picker",
+        nonePicker === 0,
+        `“${unscalableFixture.name}”: ${nonePicker} picker(s)`
+      );
+    } else {
+      report.check(
+        "a recipe with nothing to scale is offered NO picker",
+        false,
+        "NO FIXTURE — the corpus no longer holds a recipe with zero scalable lines, " +
+          "so this assertion is unproven rather than passing"
+      );
+    }
 
     report.check(
       "no uncaught page exception anywhere in the run",

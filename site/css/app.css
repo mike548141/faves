@@ -4208,6 +4208,54 @@ body.faves-view .to-top {
 .ingredients-fold-body > .ingredient-component:first-child {
   margin-top: 0;
 }
+/* Scaling the ingredients (17a, ADR 0076). A radiogroup of four, each a full
+   44 px target: this sits directly above a list of tick boxes and a mistap
+   would rescale the recipe someone is halfway through measuring. */
+.scale-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+.scale-btn {
+  min-height: 44px;
+  min-width: 56px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.scale-btn.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+.scale-note {
+  font-size: var(--step-sub);
+  color: var(--ink-soft);
+  margin: 0 0 var(--space-2);
+}
+/* A line the scaler refused. Marked in three ways at once — the "as written"
+   words, the rule down the side, and the dimmed weight — because this is the
+   one thing on the page that DISAGREES with the choice the reader just made,
+   and colour alone would carry it to nobody using a screen reader (WCAG
+   1.4.1). The words are the load-bearing half; the rest is emphasis. */
+.recipe-body .ingredients li.is-unscaled {
+  border-left: 3px solid var(--warn);
+  padding-left: var(--space-1);
+}
+.scale-mark {
+  font-size: var(--step-sub);
+  color: var(--ink-soft);
+  font-style: italic;
+  margin-left: var(--space-1);
+  white-space: nowrap;
+}
 .recipe-body .ingredients {
   display: grid;
   gap: 2px;
