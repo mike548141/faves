@@ -139,7 +139,8 @@
           "price": 17.0,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ],
           "addOns": [
             "croquette-filling"
