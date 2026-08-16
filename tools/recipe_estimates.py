@@ -9,6 +9,15 @@ reasoning that produced it, in the repo-only research store rather than in the
 precached payload (ADR 0047). This tool is what stops that record drifting away
 from the recipes it describes.
 
+WHAT IS A WARNING, AND WHY. A recipe recorded here but *absent* from the payload
+is reported and passes. The owner ruled on 2026-08-16 (Theme 11e) that
+family-attributed recipes go private by default, so five of these 24 are due to
+leave `site/data/` — and the record keeps them forever (ADR 0047), which is the
+whole reason the estimates landed here first. A gate that failed on that split
+would be firing on the *correct* change: a check nobody can keep green is a
+check nobody reads, and this repo has been bitten by that nine times. The
+reverse direction — a shipped recipe with no estimate — stays a hard failure.
+
 THE SAFETY INVARIANT, AND WHY IT IS A HARD FAILURE. Stated durations drive the
 per-step timers (`stepDuration` in site/js/cook.js). An *estimated* duration
 must never drive one: an invented "simmer 20 min" on chicken thighs is a
@@ -231,12 +240,12 @@ def check_recipe(errs, dish_id, item, rec):
 
 
 def check(venue_id):
-    """[(is_safety, message)] — empty means clean."""
-    errs = []
+    """([(is_safety, message)], [warning]) — no errors means clean."""
+    errs, warns = [], []
     try:
         data = load_estimates()
     except (OSError, ValueError) as exc:
-        return [(False, f"{ESTIMATES}: {exc}")]
+        return [(False, f"{ESTIMATES}: {exc}")], warns
 
     if not isinstance(data.get("safety"), dict) or not data["safety"].get("rule"):
         errs.append((False, "the file carries no `safety.rule` — the timer rule must travel with the data"))
@@ -244,11 +253,16 @@ def check(venue_id):
     recipes = load_recipes(venue_id)
     records = data.get("recipes")
     if not isinstance(records, dict):
-        return errs + [(False, "`recipes` is not an object keyed by dishId")]
+        return errs + [(False, "`recipes` is not an object keyed by dishId")], warns
 
-    for dish_id in records:
-        if dish_id not in recipes:
-            errs.append((False, f"{dish_id}: no such dish in {venue_id}.json — renamed, or a typo"))
+    # Warning, not failure — see the docstring. Retired and privately-held
+    # recipes both land here, and both are the record doing its job.
+    gone = [d for d in records if d not in recipes]
+    if gone:
+        warns.append(
+            f"{len(gone)} recipe(s) no longer in the shipped payload; estimates retained "
+            f"in the record: {', '.join(sorted(gone))}"
+        )
     for dish_id in recipes:
         if dish_id not in records:
             errs.append((False, f"{dish_id}: in {venue_id}.json with no estimate recorded"))
@@ -256,7 +270,7 @@ def check(venue_id):
     for dish_id, rec in records.items():
         if dish_id in recipes:
             check_recipe(errs, dish_id, recipes[dish_id], rec)
-    return errs
+    return errs, warns
 
 
 def report(venue_id):
@@ -327,16 +341,18 @@ def main():
 
     failed = False
     if args.check:
-        errs = check(args.venue)
+        errs, warns = check(args.venue)
         # Safety first, literally: a breach of the timer rule prints above the
         # structural noise it may be buried in.
         for is_safety, message in sorted(errs, key=lambda e: not e[0]):
             print(("🛑 " if is_safety else "  ") + message, file=sys.stderr)
+        for message in warns:
+            print("⚠️  " + message)
         if errs:
             print(f"\n{len(errs)} failure(s).", file=sys.stderr)
             failed = True
         else:
-            print("estimates check: clean.")
+            print("estimates check: clean." + (f" {len(warns)} warning(s), which do not fail." if warns else ""))
     if args.report:
         report(args.venue)
     return 1 if failed else 0
