@@ -58,7 +58,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 # One food fact, one home. `gf` blocking `contains-gluten` is the same rule here
 # as it is in the tagger, and two copies of it would drift.
-from tag_allergens import CONTRADICTED_BY, section_clauses  # noqa: E402
+from tag_allergens import CONTRADICTED_BY, ingredient_lines, section_clauses  # noqa: E402
 
 DATA = pathlib.Path("site/data/restaurants")
 
@@ -183,7 +183,12 @@ def dish_text(item, section_text):
     heading into a class.
     """
     parts = [item.get("name") or "", item.get("desc") or ""]
-    parts.extend(item.get("ingredients") or [])
+    # `ingredients` entries are strings OR {component, items[]} groups since
+    # ADR 0070 — flattened here rather than read raw, or a grouped recipe hands
+    # a dict to " ".join and the whole report dies on it. A component name is a
+    # label ("Sauce"), never a thing anyone is allergic to, so only its items
+    # reach the match text.
+    parts.extend(ingredient_lines(item))
     parts.append(section_text)
     return " ".join(parts)
 
