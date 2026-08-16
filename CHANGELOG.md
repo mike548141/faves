@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **What a place is like, on the card — and a "style of dining" filter.** Home
+  cards now show what sort of place each one is: *Quick eats*, *Sit-down*,
+  *Fine dining*, *Dog friendly*, *Beer garden*, *BYO*, *Live sport*. And the
+  "Narrow to" row gains a **Style** filter, so you can ask for somewhere to sit
+  down rather than somewhere to grab and go. These tags were in the data all
+  along and **had never been shown on any screen** — your phone has been
+  downloading them since the app launched. Now they earn their keep.
+  Two chips per card, deliberately: a third makes every card in the list taller.
 - **A menu section now says when it is actually served.** Sprig + Fern's Gold
   Card menu, The Borough's brunch, Gold Lining's all-day brunch and 1841's
   brunch each carry their serving hours, shown under the heading the way the

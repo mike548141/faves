@@ -131,3 +131,15 @@ renderer went with the SORT BY group
 A translated string no screen shows is not an asset held in reserve; it is a
 claim that something is covered, and it will read as coverage to whoever counts
 this file next.
+
+## `filter.style` / `filter.allStyles` — the style filter (37k, 2026-08-16)
+
+Drafts, **not reviewed by a speaker**: `filter.style` → *"Tāera kai"*,
+`filter.allStyles` → *"Ngā tāera kai katoa"*. Both render today, on the fourth
+select in the home screen's "Narrow to" row.
+
+Flagged rather than quietly shipped because *tāera* ("style") is doing work here
+it may not carry: the English axis is **style of dining** — how the meal happens,
+from counter-order to fine dining — and a gloss that reads as "style of food"
+would name the cuisine filter sitting beside it. If the right phrase is closer to
+manner-of-eating than to style-of-food, this wants replacing rather than tidying.

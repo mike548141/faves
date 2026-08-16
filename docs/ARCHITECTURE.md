@@ -135,7 +135,7 @@ excluded from both stores, always.
 
   "image": null,                     // optional self-hosted card photo, e.g. "img/kk/hero.jpg"
   "alt": null,                       // required when image is set (a11y)
-  "vibe": ["cheap-and-cheerful"],    // free-form chips shown on cards
+  "vibe": ["quick-eats", "byo"],    // CLOSED vocabulary — site/js/vibes.js (ADR 0082)
   "picks": ["Char kway teow"],       // "our picks" — a dish name or a dishId; must
                                      //   resolve to EXACTLY one dish (ADR 0051)
   "priceBand": null,                 // optional curated "$"|"$$"|"$$$" — overrides the
