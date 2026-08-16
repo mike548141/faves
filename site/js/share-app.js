@@ -10,7 +10,7 @@ import { toast } from "./toast.js";
 import { tryNativeShare, copyText } from "./share-core.js";
 
 const SHARE_TITLE = "Faves";
-const SHARE_TEXT = "Faves — menus for our favourite Wellington places to eat.";
+const SHARE_TEXT = "Faves — menus for our favourite places to eat.";
 
 // The branded public URL (the <link rel=canonical>), falling back to wherever
 // we're actually served so a preview/pages.dev origin still shares something live.

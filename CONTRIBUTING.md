@@ -1,7 +1,7 @@
 # Contributing to Faves
 
 Faves is a small, focused thing: a beautiful, fast, offline-capable menu
-of our favourite Wellington restaurants. Before proposing a change, read
+of our favourite restaurants. Before proposing a change, read
 [`docs/STRATEGY.md`](docs/STRATEGY.md) (what it's for and its non-goals)
 and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (the stack and why),
 so a change doesn't run aground on a deliberate boundary.

@@ -38,7 +38,7 @@ import { settings, LANGS } from "./settings.js";
 // landmark/aria names) belongs here.
 const MI = {
   // Home header
-  "app.sub": "Ā mātou kai tino pai o Pōneke — ngā tahua kai, kotahi te wāhi.", // draft
+  "app.sub": "Ā mātou kai tino pai — ngā tahua kai, kotahi te wāhi.", // draft
   // Search
   "search.ph": "Rapua he wāhi, he kai rānei…",
   "search.clear": "Whakawātea rapu",

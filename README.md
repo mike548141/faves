@@ -9,9 +9,10 @@ in `site/` is the entire product — vanilla HTML, CSS and ES modules,
 served as static files. The menu data is one JSON file per restaurant
 with git as the CMS.
 
-The venues are the ones near us in Wellington, New Zealand, so the data
-is only useful locally — but the app, the schema and the tooling are
-not. Fork it and point it at your own places.
+The venues are simply the ones we like — mostly around Wellington, New
+Zealand, because that is where we live, but the collection is not scoped
+to a city or a country. The data is only useful to us; the app, the
+schema and the tooling are not. Fork it and point it at your own places.
 
 Faves answers two questions:
 

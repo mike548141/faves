@@ -1,7 +1,7 @@
 {
-  "name": "Faves — our favourite Wellington kai",
+  "name": "Faves — our favourite kai",
   "short_name": "Faves",
-  "description": "Menus for our favourite Wellington restaurants and takeaways, in one place.",
+  "description": "Menus for our favourite restaurants and takeaways, in one place.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

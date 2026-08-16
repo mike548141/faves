@@ -18,8 +18,8 @@ exact bold form.
 - **CA** — certificate authority. Used here for the local Python install's
   missing CA certificate bundle, which breaks TLS verification in
   `tools/deploy.py` (see `docs/DEPLOY.md`).
-- **CBD** — central business district. Used as a reference point (Wellington
-  CBD) when describing distance-ranking behaviour.
+- **CBD** — central business district. Used as a reference point when
+  describing distance-ranking behaviour.
 - **CDN** — content delivery network. The site has no CDN dependency in the
   shipped artefact; where a host's own CDN appears, it is the hosting
   platform's edge network, not a third party the site depends on.

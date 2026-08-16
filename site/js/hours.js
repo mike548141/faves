@@ -4,10 +4,14 @@
 // now" idea, plus relative-time and split-hours navigation.
 //
 // Two design decisions (see docs/decisions/0006):
-//  1. Status is computed in the venue's timezone — Pacific/Auckland — not
-//     the viewer's device clock, so a guest browsing from overseas still
-//     sees the right answer for a Wellington venue. Intl does this offline,
-//     no dependency.
+//  1. Status is computed in the venue's timezone, not the viewer's device
+//     clock, so a guest browsing from overseas still sees the right answer.
+//     Intl does this offline, no dependency.
+//     #!#### That timezone is hard-coded to Pacific/Auckland. Correct for
+//     every venue held as at 2026-08-16, and silently wrong for the first
+//     one outside NZ — the collection is no longer scoped to one country
+//     (ADR 0042). Needs a per-venue `timezone` and an ADR superseding
+//     0006 BEFORE a non-NZ venue is added, not after.
 //  2. The clock read (nzNow) is the only impure part; openStatus/groupWeek
 //     are pure functions of (hours, now) so they're fully unit-testable.
 

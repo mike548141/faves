@@ -8,6 +8,13 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **Faves is no longer a Wellington app.** The title, the install name, the
+  About panel, the share text and the te reo subtitle dropped the city: the
+  collection is scoped to what we like, not to where it is, so a place loved
+  anywhere in the world can join it. Venues keep their real areas and
+  addresses — only the framing changed. (ADR 0042)
+
 ### Added
 - **A dish now tells you what we haven't been able to check.** Where a price
   couldn't be read off a label, or a jar's ingredients aren't certain, the dish

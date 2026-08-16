@@ -99,7 +99,7 @@ function buildDialog() {
       el("div", { className: "settings-head" }, [title, close]),
 
       el("p", { className: "about-lede", textContent:
-        "A hand-picked guide to our favourite Wellington places to eat — menus, " +
+        "A hand-picked guide to our favourite places to eat — menus, " +
         "prices and allergen info, gathered in one place so deciding what’s for " +
         "dinner is quick." }),
 

@@ -38,9 +38,9 @@ import { isTrading } from "./temporal.js";
 
 // Product defaults, also the source of truth for settings.js DEFAULTS.
 // FAR_KM: straight-line km beyond which a venue is "another town" — 50 km
-// keeps the whole Wellington region reachable while catching a Queenstown/
-// Auckland favourite. FAV_BOOST_KM: how much nearer a favourite is treated
-// as being. Both only apply when we know the viewer's location.
+// keeps a whole metropolitan region reachable while catching a favourite in
+// another city or country. FAV_BOOST_KM: how much nearer a favourite is
+// treated as being. Both only apply when we know the viewer's location.
 export const FAR_KM = 50;
 export const FAV_BOOST_KM = 10;
 

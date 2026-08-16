@@ -48,8 +48,11 @@ export function endOf(d) {
   return `${d}-${String(last).padStart(2, "0")}`;
 }
 
-// NZ seasons by month number (1-12) — the southern hemisphere, deliberately:
-// this app is Wellington's. A "summer menu" here means Dec–Feb.
+// Seasons by month number (1-12) — the southern hemisphere: a "summer menu"
+// here means Dec–Feb.
+// #!### Hard-coded, and it inverts for a northern-hemisphere venue. Same
+// root as the timezone assumption in hours.js: the collection is no longer
+// scoped to one country, so a venue's hemisphere has to come from its data.
 const SEASON_MONTHS = {
   summer: [12, 1, 2],
   autumn: [3, 4, 5],
@@ -221,8 +224,9 @@ export function refreshCaveat(record, asOf = todayNZ()) {
 /**
  * Today in Pacific/Auckland as "YYYY-MM-DD". The venue's clock, not the
  * viewer's — same call as hours.js makes, for the same reason: a guest
- * browsing from overseas must still see the right answer for a Wellington
- * venue. en-CA is the locale whose date format *is* ISO 8601.
+ * browsing from overseas must still see the right answer. Carries the same
+ * hard-coded-NZ caveat; see hours.js. en-CA is the locale whose date
+ * format *is* ISO 8601.
  * The single impure function here; pass its result into everything else.
  */
 export function todayNZ(date = new Date()) {
