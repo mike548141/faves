@@ -51,12 +51,21 @@ import { Cdp, Report, createDriver, launchChrome, startServer, stopChrome, until
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
 
-// Two shapes, both real, chosen because they fail differently.
-//   tj-katsu   7 branches, ALL with hours → exercises the openness rule and is
-//              the only venue left that still needs the second step.
+// Three shapes, all real, chosen because they fail differently.
+//   tj-katsu   7 branches, ALL with hours → exercises the openness rule.
 //   mcdonalds  5 branches, NONE with hours → exercises the honesty rule, and is
 //              the venue in the screenshot that prompted the redesign.
-const VENUES = ["tj-katsu", "mcdonalds"];
+//   hell-pizza 14 branches, all with hours → the corpus's largest chain since
+//              the 2026-08-16 Wellington sweep, and the reason this line is no
+//              longer two ids. The comment above used to call tj-katsu "the
+//              only venue left that still needs the second step"; that stopped
+//              being true the moment a chain grew, and nothing would have said
+//              so. A fixture list justified by a corpus fact goes stale exactly
+//              when the corpus changes — which is when the check matters most.
+//              At 14 it is also the only venue where "Show all" hides NINE
+//              branches rather than one or two, so a mistake in the remainder
+//              arithmetic is visible here and nowhere else.
+const VENUES = ["tj-katsu", "mcdonalds", "hell-pizza"];
 const NEAR_LIMIT = 4; // must match locations.NEAR_BRANCH_LIMIT
 
 const HELP = `Faves branch check — verify the branch picker in a real browser.
