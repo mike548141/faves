@@ -239,6 +239,7 @@
   "menu": [
     {
       "section": "Grass fed beef",
+      "sectionId": "grass-fed-beef",
       "items": [
         {
           "name": "American Muscle",
@@ -317,6 +318,7 @@
     },
     {
       "section": "Free range chicken",
+      "sectionId": "free-range-chicken",
       "items": [
         {
           "name": "Drift Chick",
@@ -370,6 +372,7 @@
     },
     {
       "section": "Plant-powered",
+      "sectionId": "plant-powered",
       "items": [
         {
           "name": "VTEC",
@@ -395,6 +398,7 @@
     },
     {
       "section": "Lightweights",
+      "sectionId": "lightweights",
       "items": [
         {
           "name": "Hamburgini",
@@ -457,6 +461,7 @@
     },
     {
       "section": "Specials",
+      "sectionId": "specials",
       "note": "limited time",
       "items": [
         {
@@ -495,6 +500,7 @@
     },
     {
       "section": "Kids Ink meals",
+      "sectionId": "kids-ink-meals",
       "items": [
         {
           "name": "Cheeseburger meal",
@@ -516,6 +522,7 @@
     },
     {
       "section": "Gourmet sides",
+      "sectionId": "gourmet-sides",
       "items": [
         {
           "name": "Spud fries",
@@ -569,6 +576,7 @@
     },
     {
       "section": "Thickshakes & drinks",
+      "sectionId": "thickshakes-drinks",
       "items": [
         {
           "name": "Thickshake",
@@ -614,6 +622,7 @@
     },
     {
       "section": "Bun swaps",
+      "sectionId": "bun-swaps",
       "items": [
         {
           "name": "Gluten friendly bun",

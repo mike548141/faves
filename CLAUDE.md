@@ -143,7 +143,10 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
 python3 tools/serve.py        # laptop + phone (same Wi-Fi); prints both URLs
 python3 tools/validate.py     # data validates against the schema
 python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051)
-python3 tools/test_validate.py # …and that gate still catches things (76 mutations)
+python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
+                              # the anchor comes from the id, so a heading can be
+                              # renamed without breaking every link to it
+python3 tools/test_validate.py # …and that gate still catches things (79 mutations)
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network

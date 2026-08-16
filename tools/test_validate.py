@@ -442,6 +442,14 @@ SOURCE_CASES = {
             lambda s: s.replace('"sectionId": "brunch",', '"sectionId": "Brunch Time",', 1),
             "error",
         ),
+        # Required since the last of 235 sections was seeded. Without this the
+        # field is optional in practice, `menu.js`'s fail-soft slug quietly
+        # takes over, and the anchor is derived from the heading again — which
+        # is the entire thing ADR 0058 exists to stop.
+        "a section with no id at all": (
+            lambda s: s.replace('      "sectionId": "brunch",\n', "", 1),
+            "error",
+        ),
     },
 }
 

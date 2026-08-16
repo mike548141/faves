@@ -739,6 +739,7 @@
   "menu": [
     {
       "section": "'96 Originals",
+      "sectionId": "96-originals",
       "items": [
         {
           "name": "Lust",
@@ -801,6 +802,7 @@
     },
     {
       "section": "Gourmet Pizza",
+      "sectionId": "gourmet-pizza",
       "items": [
         {
           "name": "Pandemonium",
@@ -926,6 +928,7 @@
     },
     {
       "section": "Super Gourmet Pizza",
+      "sectionId": "super-gourmet-pizza",
       "items": [
         {
           "name": "Lamb Bazaar",
@@ -967,6 +970,7 @@
     },
     {
       "section": "Vegetarian Pizza",
+      "sectionId": "vegetarian-pizza",
       "items": [
         {
           "name": "Purgatory",
@@ -1093,6 +1097,7 @@
     },
     {
       "section": "Plant-Based Pizza",
+      "sectionId": "plant-based-pizza",
       "items": [
         {
           "name": "Plant-Based Pride",
@@ -1181,6 +1186,7 @@
     },
     {
       "section": "Sides",
+      "sectionId": "sides",
       "items": [
         {
           "name": "Broken Wings 6 Pack",
@@ -1347,6 +1353,7 @@
     },
     {
       "section": "Anti Pizza",
+      "sectionId": "anti-pizza",
       "items": [
         {
           "name": "NZ BBQ Pork Ribs",
@@ -1399,6 +1406,7 @@
     },
     {
       "section": "Salads",
+      "sectionId": "salads",
       "items": [
         {
           "name": "Chicken Salad",
@@ -1440,6 +1448,7 @@
     },
     {
       "section": "Kids",
+      "sectionId": "kids",
       "items": [
         {
           "name": "333 - Hellthy Kids Pizza",
@@ -1487,6 +1496,7 @@
     },
     {
       "section": "Dessert",
+      "sectionId": "dessert",
       "items": [
         {
           "name": "Unholy Donut",
@@ -1574,6 +1584,7 @@
     },
     {
       "section": "Drinks",
+      "sectionId": "drinks",
       "items": [
         {
           "name": "Coke",

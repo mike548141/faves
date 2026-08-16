@@ -108,6 +108,7 @@
   "menu": [
     {
       "section": "Noodles",
+      "sectionId": "noodles",
       "items": [
         {
           "name": "Satay chicken",
@@ -346,6 +347,7 @@
     },
     {
       "section": "Vegetarian",
+      "sectionId": "vegetarian",
       "items": [
         {
           "name": "Vegetarian soy noodles",
@@ -402,6 +404,7 @@
     },
     {
       "section": "Soups",
+      "sectionId": "soups",
       "items": [
         {
           "name": "Combination soup",
@@ -442,6 +445,7 @@
     },
     {
       "section": "Fried rice",
+      "sectionId": "fried-rice",
       "items": [
         {
           "name": "Special fried rice",
@@ -495,6 +499,7 @@
     },
     {
       "section": "Additional menu",
+      "sectionId": "additional-menu",
       "items": [
         {
           "name": "Canteen noodle",

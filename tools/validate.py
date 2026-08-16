@@ -318,20 +318,21 @@ def check_section_ids(rid, menu):
     `id` attribute is valid HTML that `querySelector` simply resolves to the
     first match.
 
-    Presence is NOT gated here yet. The corpus is mid-seed while a parallel
-    session holds six venue files open, and a required field that 25 sections
-    cannot yet satisfy would turn this gate red on `main` for everyone. It
-    becomes required in the commit that seeds the last file — see
-    `tools/seed_section_ids.py --check`, which is what reports the gap until
-    then."""
+    Presence became REQUIRED on 2026-08-16, once the last of 235 sections was
+    seeded. It was deliberately ungated for the few hours in between: a parallel
+    session held six venue files open, and a required field that 25 sections
+    could not yet satisfy would have turned this gate red on `main` for
+    everyone. `tools/seed_section_ids.py --check` reported the gap meanwhile."""
     seen = {}
     for section in menu:
         if not isinstance(section, dict):
             continue
         sid = section.get("sectionId")
-        if sid is None:
-            continue
         where = f"section {section.get('section')!r}"
+        if sid is None:
+            err(rid, f"{where}: no sectionId — run tools/seed_section_ids.py. "
+                     "An anchor derived from the heading is not an identity (ADR 0058)")
+            continue
         if not isinstance(sid, str) or not sid.strip():
             err(rid, f"{where}: sectionId must be a non-empty string, got {sid!r}")
             continue

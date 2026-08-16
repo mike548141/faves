@@ -72,11 +72,13 @@ the id is a minute's work and happens once.
 
 ### Presence is gated in two steps, on purpose
 
-`sectionId` is not yet *required* by `validate.py`. A parallel session held six
-venue files open while this landed, and a mechanical sweep across a file
-someone else has uncommitted is how work disappears. So the sweep covered 210
-of 235 sections, `seed_section_ids.py --check` reports the 25 that remain, and
-the field becomes required in the commit that seeds the last file.
+`sectionId` was landed *ungated for presence*, then made required a few hours
+later once the last section was seeded. A parallel session held six venue files
+open while this landed, and a mechanical sweep across a file someone else has
+uncommitted is how work disappears. So the first sweep covered 210 of 235
+sections and `seed_section_ids.py --check` reported the 25 that remained; when
+those six files landed the seed finished the job and `validate.py` was flipped
+to **required** in the same commit. All 235 sections carry their own id.
 
 **A partial sweep is stated, never silent** — the tool prints `skipped by
 request (6): …`, because a run that quietly covered less than the corpus reads

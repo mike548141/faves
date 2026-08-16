@@ -2513,16 +2513,12 @@ contain shellfish.
   being derived from the heading and became a stored `sectionId`. Full write-up,
   including the owner ruling that went against the recommendation, in
   [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [ ] **28g-tail — seed the last 25 sections and make the field required**
-  `[XS][schema]` — six venue files (`burgerfuel`, `gong-cha`, `hell-pizza`,
-  `kaffee-eis`, `noodle-canteen`, `pizza-hut`) were held open by a parallel
-  session's chain sweep, and sweeping a file someone else has uncommitted is
-  how work disappears. Run `python3 tools/seed_section_ids.py` once they land,
-  then flip `check_section_ids` from "gated if present" to required and add
-  `seed_section_ids.py --check` to the CLAUDE.md verify list. The tool prints
-  `skipped by request (6): …` rather than reporting a full sweep, so the gap
-  is visible until it closes.
-
+- ✅ **28g-tail — the last 25 sections, and the field made required** —
+  **done 2026-08-16.** The six files landed (`9cae14e`), the seed finished the
+  job — burgerfuel 9, hell-pizza 11, noodle-canteen 5 — and `validate.py` now
+  **requires** `sectionId`. All 235 sections carry their own id;
+  `seed_section_ids.py --check` is in the CLAUDE.md verify list. Proved by
+  breaking it: a section with its id removed is refused (79 mutations).
 
 - [ ] **28e — eligibility is unstated** `[S][design]` — "Gold Card" and "12 and
   under" are rules about *who may order*, recorded only inside a heading
