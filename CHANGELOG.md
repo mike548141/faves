@@ -9,6 +9,20 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Search finds far more than a name.** The one box on the home screen now
+  also matches a venue's **address, city, service** (`takeaway`, `dine in`) and
+  **phone number** — typed however you punctuate it — and a dish by the **diet**
+  it satisfies, so "vegan" finds what the data stores as `vg`. A small set of
+  phrases people actually type is mapped onto what the data calls things:
+  "plant based", "coeliac", "eat in", "takeout". Deliberately *not* mapped:
+  anything that would assert an allergen is **absent** — Faves records what a
+  shop claims, never that something is free of an allergen we simply did not
+  see.
+- **The search box tells you what it can find.** Its placeholder cycles through
+  examples — a dish, a place, an ingredient, a diet, a cuisine, a street, a
+  service, a phone number — because a box that says "Search…" teaches nothing.
+  It stops the moment you focus or type, and never starts at all under
+  *reduce motion*.
 - **Seven more places from the Cuba St guidebook** — Golding's Free Dive,
   Dragonfly, Dirty Little Secret, Garage Project Leeds Street, Abrakebabra,
   Wellington Sourdough and Hotel Bristol. Findable by name and on the map;

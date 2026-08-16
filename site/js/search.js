@@ -8,8 +8,78 @@
 
 import { slug } from "./slug.js";
 import { searchableText, venueLanguage } from "./lang.js";
+import { DIET_FILTERS } from "./dietary.js";
 
 const norm = (s) => (s || "").toLowerCase();
+
+// Digits only, so a number written with spaces, with hyphens, or run together
+// is one thing to search. Phone numbers are the one field people retype from
+// memory in a different shape every time.
+const digits = (s) => (s || "").replace(/\D+/g, "");
+
+// What people type versus what the data calls it. Kept deliberately small and
+// one-directional: each entry maps a phrase a person would actually type onto
+// words already in the haystack. It is NOT a general thesaurus — a wrong
+// expansion here silently changes what a search means.
+//
+// Two rules bound it. First, only *positive* claims a venue itself makes: the
+// data has `gf` because a shop said gluten free, so "coeliac" may find it,
+// while "nut free" is not here at all — this repo does not assert an absence
+// of an allergen, and a search that appears to would be a safety claim we have
+// no basis for (see the allergen doctrine in ADR 0025). Second, no cuisine
+// synonyms: cuisine is already free text in the haystack, and "Italian"
+// matching "pizza" is the kind of guess that makes results feel arbitrary.
+// Each value is a list of ALTERNATIVE forms, not a phrase: the haystack's
+// word order is an accident of how dietary.js lists its filters, so
+// "plant based" must try "vegan" and "vegetarian" separately rather than
+// hunting for the two adjacent.
+const SYNONYMS = {
+  "plant based": ["vegan", "vegetarian"],
+  "plantbased": ["vegan", "vegetarian"],
+  "plant-based": ["vegan", "vegetarian"],
+  "veggie": ["vegetarian"],
+  "veg": ["vegetarian"],
+  "coeliac": ["gluten free"],
+  "celiac": ["gluten free"],
+  "no gluten": ["gluten free"],
+  "no dairy": ["dairy free"],
+  "take away": ["takeaway"],
+  "takeout": ["takeaway"],
+  "take out": ["takeaway"],
+  "eat in": ["dine-in"],
+  "dine in": ["dine-in"],
+  "sit down": ["dine-in"],
+  "sit-down": ["dine-in"],
+  "eat here": ["dine-in"],
+};
+
+/**
+ * Every form of a query worth matching: the query itself, its digits-only
+ * form when it looks like a phone number, and any synonym expansion.
+ * Exported for the unit tests, which assert the map does not grow teeth.
+ */
+export function expand(q) {
+  const out = [q];
+  const syn = SYNONYMS[q];
+  if (syn) out.push(...syn);
+  const d = digits(q);
+  // Three digits is the shortest fragment worth treating as a number; below
+  // that it is a false-positive machine against prices and order codes.
+  if (d.length >= 3 && d !== q) out.push(d);
+  return out;
+}
+
+// The label a person would type for a dietary tag ("vegan"), not the code the
+// data stores ("vg"). dietary.js already owns that mapping for the filter
+// chips, so this reads it rather than restating it — one closed set, one
+// place to extend.
+function dietLabels(tags) {
+  if (!tags || !tags.length) return "";
+  const has = new Set(tags);
+  return DIET_FILTERS.filter((f) => f.satisfies.some((t) => has.has(t)))
+    .map((f) => f.label)
+    .join(" ");
+}
 
 /**
  * Build the search index once from the loaded restaurants. Returns
@@ -32,7 +102,21 @@ export function buildIndex(restaurants) {
       area: r.area || "",
       cuisine: r.cuisine || [],
       kind: r.kind,
-      hay: norm([r.name, r.area, ...(r.cuisine || [])].join(" ")),
+      // Address, city, service and phone join name/area/cuisine: people look
+      // for a place by the street they remember it on, by "takeaway", or by
+      // the number in their call history, not only by its name.
+      hay: norm(
+        [
+          r.name,
+          r.area,
+          ...(r.cuisine || []),
+          r.address,
+          r.city,
+          ...(r.services || []),
+          r.phone,
+          digits(r.phone),
+        ].join(" ")
+      ),
     });
     for (const section of r.menu || []) {
       for (const item of section.items || []) {
@@ -59,6 +143,8 @@ export function buildIndex(restaurants) {
               ...searchableText(item, "desc", venueLang),
               ingredients,
               item.code,
+              // "vegan" finds the dish the data tags `vg`.
+              dietLabels(item.tags),
             ].join(" ")
           ),
         });
@@ -81,10 +167,14 @@ function score(name, hay, q) {
   return 0;
 }
 
-function rank(entries, q, limit) {
+function rank(entries, forms, limit) {
   const scored = [];
   for (const e of entries) {
-    const s = score(e.name, e.hay, q);
+    // Best form wins, so a synonym never *lowers* a direct hit's rank: typing
+    // "veg" still puts a dish actually called "Veg Samosa" above one merely
+    // tagged vegetarian.
+    let s = 0;
+    for (const f of forms) s = Math.max(s, score(e.name, e.hay, f));
     if (s > 0) scored.push({ e, s });
   }
   scored.sort((a, b) => b.s - a.s || a.e.name.localeCompare(b.e.name));
@@ -105,8 +195,9 @@ export function search(index, query, { placeLimit = 6, dishLimit = 20 } = {}) {
   if (q.length < 2) {
     return { places: { total: 0, items: [] }, dishes: { total: 0, items: [] } };
   }
+  const forms = expand(q);
   return {
-    places: rank(index.places, q, placeLimit),
-    dishes: rank(index.dishes, q, dishLimit),
+    places: rank(index.places, forms, placeLimit),
+    dishes: rank(index.dishes, forms, dishLimit),
   };
 }
