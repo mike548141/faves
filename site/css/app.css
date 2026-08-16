@@ -2609,6 +2609,38 @@ body.faves-view .to-top {
   display: none; /* no reserved gap before the first download */
 }
 
+/* "Refresh & reset" panel — the version stamps, which sat in the About dialog
+   until 2026-08-17 (ROADMAP 23c). A two-column grid rather than a flex row per
+   pair, so the values line up with each other however long the labels get in
+   te reo. */
+.settings-versions {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-1) 0 var(--space-2);
+  font-size: var(--step-sub);
+}
+.settings-version-key {
+  color: var(--ink-soft);
+}
+.settings-version-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* Intro prose for the stamps, not a caption under them, so it sits tight to
+   the numbers it introduces rather than to the paragraph above. */
+.settings-version-note {
+  margin-top: var(--space-2);
+}
+/* "An update is ready" (ROADMAP 16f, ADR 0031) — reuses the accent colour the
+   update notice button uses, so the two read as the same signal; both are
+   token-driven so contrast holds in dark mode without a separate rule. */
+.settings-version-waiting {
+  font-weight: 600;
+  color: var(--accent);
+}
+
 /* Sub-headings inside a panel ("Your dietary needs", "Allergens to flag",
    "Start over"): full-contrast and
    body-sized so they read as real headings, a clear step below the bold
@@ -4903,10 +4935,19 @@ body.faves-view .to-top {
 
 /* About dialog. Reuses .settings-sheet for the sheet/backdrop/head; these
    style only its prose. */
+/* The two lede paragraphs are one statement — what Faves is, and the limit
+   that follows from it — so they sit a paragraph apart and the group gap goes
+   on the wrapper. A wrapper rather than a :has() or a negative margin: the gap
+   belongs to the block, not to whichever paragraph happens to be last. */
+.about-intro {
+  margin-bottom: var(--space-4);
+}
 .about-lede {
   color: var(--ink);
   line-height: 1.55;
-  margin-bottom: var(--space-4);
+}
+.about-lede + .about-lede {
+  margin-top: var(--space-2);
 }
 .about-group {
   margin-bottom: var(--space-4);
@@ -4919,35 +4960,6 @@ body.faves-view .to-top {
 .about-text {
   color: var(--ink-soft);
   line-height: 1.55;
-}
-/* Version rows: a two-column grid rather than a flex row per pair, so the
-   values line up with each other however long the labels get in te reo. */
-.about-versions {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-1) var(--space-3);
-  margin-bottom: var(--space-1);
-}
-.about-version-key {
-  color: var(--ink-soft);
-}
-.about-version-value {
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-}
-/* Intro prose for the Version group, not a caption under it — so it reads at
-   the same size as every other group's body text (owner, 2026-08-16). The
-   0.85rem it used to carry was what made it look like a stray footnote. */
-.about-version-note {
-  margin-bottom: var(--space-2);
-}
-/* "An update is ready" (ROADMAP 16f, ADR 0031) — reuses the accent colour the
-   update notice button uses, so the two reads as the same signal; both are
-   token-driven so contrast holds in dark mode without a separate rule. */
-.about-version-waiting {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent);
 }
 .about-made {
   margin-top: var(--space-4);

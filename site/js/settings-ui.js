@@ -27,11 +27,14 @@
 //     tested entirely in sync-ui.js/sync.js; this file only places its panel as
 //     a section of "Your data". It had a top-level row of its own until the
 //     owner moved it in here on 2026-08-16.
-//   • Refresh & reset — force a full refresh of the stored menus and app
-//     code, or reset this profile's preferences. Split from "Your data"
-//     (Theme 15): its one-line summary had grown to naming five actions
-//     across two things that don't share a data model — see the panel
-//     builders below for why they're paired with each other instead.
+//   • Refresh & reset — which version of the menus and app this device is
+//     running, a full refresh of them, or a reset of this profile's
+//     preferences. Split from "Your data" (Theme 15): its one-line summary
+//     had grown to naming five actions across two things that don't share a
+//     data model — see the panel builders below for why they're paired with
+//     each other instead. The version stamps moved in from About on
+//     2026-08-17 (ROADMAP 23c): evidence belongs beside the action it is
+//     evidence for.
 // The profile *switcher* itself stays on the index (and moves into the People
 // panel while that's open) because switching is one tap and it's the context
 // every other setting sits inside — nobody should browse under someone else's
@@ -53,6 +56,7 @@ import {
   summarisePersonalData,
 } from "./personal-data.js";
 import { forceRefresh } from "./cache-refresh.js";
+import { currentVersions } from "./versions.js";
 import { importControls } from "./personal-io-ui.js";
 import { syncControls } from "./sync-ui.js";
 import { disclosure } from "./disclosure.js";
@@ -425,6 +429,89 @@ function refreshResetSection() {
   });
 
   const refreshHead = el("p", { className: "settings-sub", textContent: "Refresh menus and app" });
+
+  // --- The version evidence, beside the action it is evidence for (23c) ----
+  // This lived in the About dialog until 2026-08-17. The owner's objection:
+  // *"We have this feature in settings but the version details sit in the
+  // about screen? Makes no sense for UX."* The reader's outcome is one thing —
+  // "am I up to date, and if not, fix it" — and it was split across two
+  // screens reached by two different routes. It is one screen now; About no
+  // longer carries a version block.
+  //
+  // The app ships as two independently versioned halves (ADR 0015), and the
+  // question people actually ask — "have I got the new menus?" — can only be
+  // answered by the *device*. `currentVersions()` (ROADMAP 16f / ADR 0032)
+  // asks the *controlling* worker directly rather than inferring from cache
+  // names, so this can never show a version newer than what the page is
+  // actually running.
+  const shellValue = el("dd", { className: "settings-version-value", textContent: "…" });
+  const dataValue = el("dd", { className: "settings-version-value", textContent: "…" });
+  const versionNote = el("p", { className: "settings-hint settings-version-note" });
+  // Hidden until a waiting worker is confirmed — most sessions never see this,
+  // and an empty aria-live region is the standard way to keep it silent until
+  // it has something true to announce. Unhidden *before* the text lands: a
+  // hidden live region announces nothing.
+  const waitingNote = el("p", {
+    className: "settings-hint settings-version-waiting",
+    role: "status",
+    "aria-live": "polite",
+    hidden: true,
+  });
+  const versions = el("dl", { className: "settings-versions" }, [
+    el("dt", { className: "settings-version-key", textContent: "App" }),
+    shellValue,
+    el("dt", { className: "settings-version-key", textContent: "Menus & prices" }),
+    dataValue,
+  ]);
+
+  // Re-read on every open of this panel, which About never had to do: About
+  // built its dialog lazily on first open, so it asked the worker at the
+  // moment the reader asked. This dialog is built at boot, and on a first
+  // visit no worker controls the page yet — a block filled in once, then,
+  // would say "not yet serving this page" for the rest of the session.
+  function readVersions() {
+    versionNote.textContent = "The version this page is currently running.";
+    shellValue.textContent = "…";
+    dataValue.textContent = "…";
+    waitingNote.hidden = true;
+    waitingNote.textContent = "";
+    currentVersions().then(({ shell, data, controlling, waiting }) => {
+      // No caches yet = a first visit, or a browser with no offline storage.
+      // Say so plainly instead of showing a blank or an invented number.
+      shellValue.textContent = shell || "not stored yet";
+      dataValue.textContent = data || "not stored yet";
+
+      if (!shell && !data) {
+        versionNote.textContent =
+          "The offline copy hasn’t been stored on this device yet.";
+      } else if (!controlling) {
+        // True and distinct from "not stored": something is cached, but no
+        // worker has taken over serving this page yet (first load, still
+        // installing) — showing the numbers without this caveat would claim a
+        // version the page isn't actually running.
+        versionNote.textContent =
+          "Stored on this device, but not yet serving this page.";
+      }
+      // else: the default note holds — this is the controller's own report.
+
+      if (waiting) {
+        waitingNote.hidden = false;
+        // "Refresh from the notice to switch" was true in About, where no
+        // refresh control was in reach. Here the button is the next thing on
+        // the screen, so the line points at it — and says the cheap path
+        // first, because the waiting worker lands by itself on the next cold
+        // start without re-downloading anything (ADR 0027).
+        waitingNote.textContent =
+          waiting.shell || waiting.data
+            ? `An update is ready — App ${waiting.shell ?? "…"}, ` +
+              `Menus ${waiting.data ?? "…"}. It arrives next time you open ` +
+              `Faves, or refresh below to switch to it now.`
+            : "An update is ready. It arrives next time you open Faves, or " +
+              "refresh below to switch to it now.";
+      }
+    });
+  }
+
   const refreshNote = el("p", {
     className: "settings-hint",
     textContent:
@@ -609,13 +696,18 @@ function refreshResetSection() {
     resetBtn.focus();
   });
 
+  // Evidence, then news, then what the button does, then the button — the
+  // order the reader's one question resolves in ("am I up to date, and if not,
+  // fix it"), rather than the order the two features were built in.
   const panel = el("div", { className: "settings-panel" }, [
     intro,
-    refreshHead, refreshNote, refreshBtn, refreshConfirm, refreshStatus,
+    refreshHead, versionNote, versions, waitingNote,
+    refreshNote, refreshBtn, refreshConfirm, refreshStatus,
     resetHead, resetNote, resetBtn, resetConfirm, resetStatus,
   ]);
   return {
     panel,
+    refresh: readVersions,
     close: () => {
       resetConfirm.hidden = true;
       refreshConfirm.hidden = true;
@@ -899,7 +991,9 @@ export function initSettingsUI() {
       summary: (s) => localeSummary(settings.raw(), s),
     },
     { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save a copy, bring one back, or sync your devices" },
-    { key: "refreshReset", title: "Refresh & reset", i18n: "settings.refreshResetTitle", panel: storage.panel, summary: () => "Refresh the offline copy, or reset your preferences" },
+    // `onOpen` re-reads the version stamps each time the panel is shown — see
+    // readVersions() for why a once-at-boot read would go stale on a first visit.
+    { key: "refreshReset", title: "Refresh & reset", i18n: "settings.refreshResetTitle", panel: storage.panel, summary: () => "Refresh the offline copy, or reset your preferences", onOpen: storage.refresh },
   ];
 
   const rows = el("ul", { className: "settings-rows" });
@@ -988,6 +1082,9 @@ export function initSettingsUI() {
     // The switcher belongs to whichever view is showing: the index for a one-tap
     // hand-off, the People panel so you can see who Rename/Delete will hit.
     if (topic.key === "people") people.listSlot.append(people.list);
+    // After the panel is visible, so a live region inside it can announce what
+    // the read turns up — a hidden one announces nothing.
+    topic.onOpen?.();
     renderTitle();
     back.hidden = false;
     returnFocus = fromRow;

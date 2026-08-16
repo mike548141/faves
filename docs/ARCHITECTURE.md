@@ -473,8 +473,11 @@ showing it only on bad news made its absence ambiguous, and "we checked" and
 "no comment" are not the same fact. `--info` and `--warn` sit 1.06:1 apart in
 luminance, so the **glyph and the accessible name** carry the distinction and
 colour only reinforces it; `--info` is deliberately not `--ok`, which already
-means "open right now". The blue note is also where the **currency** is stated
-(the About dialog carries the same fact) — never appended to individual prices.
+means "open right now". **Both** notes state the **currency** — never appended
+to individual prices, and no longer in About as well (ROADMAP 23a, 2026-08-17:
+39 of 55 venues were in the amber tone, which said nothing about currency, so
+About was carrying the fact for most of the corpus from a screen nobody asks it
+on). Amending ADR 0037's "stated twice" to *stated once, where it is asked*.
 
 **A dish is never deleted when it leaves the menu** — it keeps its record and
 gains `available.offBy` (or `to`). A hard delete destroys every date attached to

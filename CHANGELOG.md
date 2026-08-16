@@ -66,6 +66,20 @@ content freshness separately from this file.
     before, it just works with no prompt at all — and if you have blocked it, the
     app now says so plainly instead of quietly doing nothing forever.
 
+- **About says what Faves is, and stops there.** It had grown a block for every
+  question anyone had ever needed somewhere to put — prices, currency, opening
+  hours, versions — none of them questions you'd think to ask on that screen.
+  What's left is what Faves is, that it's private, and that it works offline.
+  The facts that went are all still on the screens where you'd actually want
+  them, and one of them is now stated *more* often than before: the ⓘ beside a
+  venue's prices names the currency whichever tone it's in, where it used to
+  name it only on menus we'd read recently.
+- **The version you're running now sits with the button that updates it.** Which
+  version of the app and menus this device has, and whether an update is ready,
+  used to be in *About* while *Refresh now* was in Settings — so answering one
+  question ("am I up to date, and if not, how do I fix it?") meant two screens.
+  Both are in Settings → *Refresh & reset* now, and About no longer carries a
+  version at all.
 - **Sync now lives inside Settings → *Your data*.** It used to be a row of its
   own, one below it. Saving a copy of your data, bringing one back, and keeping
   your devices in step are three answers to the same question — "how do I not

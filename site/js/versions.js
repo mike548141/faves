@@ -10,9 +10,11 @@
 //     constants — "what is this page actually running". The two can differ
 //     for as long as a newer worker sits in `waiting` (ADR 0027): the cache
 //     names already show the newer version while the page is still served by
-//     the old one, which `installedVersions()` alone can't tell apart. About
-//     (about-ui.js) uses `currentVersions()`; `report-ui.js` still wants the
-//     cache-name answer for its bug-report envelope.
+//     the old one, which `installedVersions()` alone can't tell apart. Settings
+//     → Refresh & reset (settings-ui.js) uses `currentVersions()` — it was
+//     About until ROADMAP 23c moved the stamps beside the refresh button on
+//     2026-08-17; `report-ui.js` still wants the cache-name answer for its
+//     bug-report envelope.
 // A stale PWA showing an old stamp is a useful, honest answer either way, not
 // a bug in this module (see ROADMAP Theme 16).
 
@@ -54,8 +56,8 @@ export function parseCacheVersions(names) {
 /**
  * What this device has cached. Resolves to `{ shell, data }` with null entries
  * when the app hasn't been stored offline yet (a first visit, a browser without
- * CacheStorage, or an insecure context) — About renders that state rather than
- * failing, because "not installed yet" is a true and useful answer.
+ * CacheStorage, or an insecure context) — Settings renders that state rather
+ * than failing, because "not installed yet" is a true and useful answer.
  *
  * Kept deliberately unchanged by ROADMAP 16f: `report-ui.js` still wants "what's
  * stored" for its bug-report envelope, and `currentVersions()` below reuses it
@@ -160,7 +162,7 @@ async function waitingWorker(container) {
 }
 
 /**
- * The honest version stamp for the About screen (ROADMAP 16f): the
+ * The honest version stamp for Settings → Refresh & reset (ROADMAP 16f): the
  * *controlling* worker's own version, asked directly, plus the *waiting*
  * worker's version reported separately when one exists — never merged into
  * one number the way `installedVersions()` used to. Resolves
