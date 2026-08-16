@@ -8,6 +8,17 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **The ⓘ beside "Allergens to flag" no longer flickers when you point at it.**
+  On a mouse, hovering that ⓘ opened its note, which grew the centred Settings
+  sheet, which slid the ⓘ 54px up out from under a pointer that had not
+  moved — closing the note, shrinking the sheet, and putting the ⓘ back under
+  the pointer to start again. Inside Settings the note sits in the page flow
+  (it was moved there so the sheet's scroll box could not clip it), and a hover
+  reveal that shifts the layout under the pointer can only oscillate. That ⓘ is
+  now click-only, which is what touch and keyboard already used. The ⓘ notes on
+  a menu page are unaffected — those float over the page and move nothing.
+
 ### Changed
 - **A section's serving time is subtext, not part of its heading.** "Brunch
   (served till 2pm)" put a 24-character chip in the jump-nav strip you scroll

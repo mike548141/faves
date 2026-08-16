@@ -4218,10 +4218,27 @@ body.faves-view .to-top {
 .caveat-note.is-open {
   display: block;
 }
-/* Mouse users get a hover reveal too; touch/keyboard use the click toggle. */
+/* Mouse users get a hover reveal too; touch/keyboard use the click toggle.
+   Safe HERE because .caveat-note is out of flow (position: absolute above): it
+   overlays the page, so revealing it moves nothing. */
 @media (hover: hover) and (pointer: fine) {
   .caveat-btn:hover ~ .caveat-note {
     display: block;
+  }
+  /* …and switched OFF wherever the note sits IN FLOW. In the settings dialog it
+     does (`.settings-sub-row .caveat-note` is position: static, so the note
+     can't be clipped by the sheet's scroll box). There, revealing it grows the
+     sheet — and the sheet is centred (`.settings-sheet` margin: auto), so it
+     grows in BOTH directions and the ⓘ slides UP out from under a pointer that
+     never moved. That un-hovers it, which hides the note, which shrinks the
+     sheet, which puts the ⓘ back under the pointer, which re-hovers: an
+     infinite flicker, measured at 54px of travel per cycle (owner, 2026-08-16;
+     the mobile sheet has the same geometry from `margin: auto auto 0`).
+     THE RULE, not just this fix: a hover reveal must never move the thing being
+     hovered. Reveal out of flow, or make it click-only. `:not(.is-open)` keeps
+     the click toggle — which is the documented touch/keyboard path — working. */
+  .settings-sub-row .caveat-btn:hover ~ .caveat-note:not(.is-open) {
+    display: none;
   }
 }
 @media (prefers-color-scheme: dark) {
