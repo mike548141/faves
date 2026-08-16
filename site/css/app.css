@@ -2920,10 +2920,25 @@ body.faves-view .to-top {
   color: var(--ink);
   max-width: 24rem;
 }
+/* Day and times as two left-aligned columns, not a justified pair.
+   `space-between` threw the times to the far edge of whatever the container
+   happened to be — fine in a narrow phone card, absurd in the desktop sidebar,
+   where "Mon" and "4:30pm–9pm" ended up at opposite ends of a 300px gap with
+   nothing between them. It also let the day cell shrink, so "Tue–Sun" broke
+   across two lines and stopped reading as one range.
+
+   So: the day column is sized to hold the longest label we generate
+   (`Mon–Sun`) and never wraps; the times sit immediately beside it and wrap
+   within their own column, between intervals, where a break is meaningful. */
 .hours-list li {
   display: flex;
-  justify-content: space-between;
-  gap: var(--space-3);
+  align-items: baseline;
+  gap: var(--space-2);
+}
+.hours-days {
+  flex: 0 0 auto;
+  min-width: 4.75rem;
+  white-space: nowrap;
 }
 .hours-list li.is-today {
   font-weight: 700;
