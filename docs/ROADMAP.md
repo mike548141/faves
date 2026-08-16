@@ -3744,11 +3744,39 @@ rich*.
   per-person price and course sequence, a kids menu changes legally-required
   calorie footer text in England. Closed set, extended when a real venue needs
   a value — never invented ahead of one (owner's 2026-08-16 scope ruling).
-- 🛑 **30d's premise does not survive measurement — DO NOT BUILD IT AS WRITTEN.**
-  Checked 2026-08-16 (wt: faves-schema30). The owner greenlit *"`channel` on a
-  price record in `data/`"* as a cheap independent piece. Three facts say it
-  would ship a field nothing exercises — **the exact failure he ruled against
-  for 30a in the same breath**:
+- ⚠️ **CORRECTION, same session, 2026-08-16 (wt: faves-schema30). The block
+  immediately below said the channel dimension is exercised by nothing. That is
+  WRONG and it is corrected here rather than rewritten away.** It was arrived at
+  by looking only at the record store, which is where the owner's greenlight
+  pointed. Re-testing a *different* stale premise — Theme 28's *"there are no
+  discounts in the corpus at all"*, measured at 48 records and now 55 — turned
+  this up on the way past:
+  🔑 **`pizza-pomodoro` sells the same pizza at two prices, right now, in the
+  payload.** `Margherita - Large` is **$29.00**; `Large Margherita (Online Deal)`
+  is **$17.00**, desc *"Large size only. Online ordering special price."* Same
+  for Marinara. **A 41% spread on identical ingredients, in the same section of
+  the same file**, distinguished only by a parenthetical in the dish NAME and a
+  sentence of prose — which is precisely the pattern ADR 0057 spent a whole
+  theme pulling out of section headings. `pizza-hut` has the same disease in a
+  second form: five `Meal Deals` rows whose names end *"Delivered"*.
+  So the honest statement is: **the channel dimension IS live, and it is live in
+  `site/data/`, not in `data/`.** That is a different dilemma from the one below,
+  not the absence of one — and it is sharper, because ADR 0047 says the payload
+  ships only what it renders, and no screen renders a channel today. The two
+  rows are also a Theme 25 case: `large-margherita-online-deal` and
+  `margherita-large` are two `dishId`s for one dish in two channels.
+  🚩 **And Theme 28's "no discounts" claim needs re-reading, not deleting.** On
+  its own stated word list it is still true — no "% off", no "happy hour", no
+  "senior". In substance it is not: `satay-kingdom-cafe` prints *"(Save $2.50)"*
+  on two combo rows, and the Online Deal rows above are a channel discount by
+  another name. The Gold Card rows remain correctly analysed as portions, not
+  discounts. **A word-list measurement expires when the corpus grows; the
+  finding was sound and its scope was not restated when 7 venues landed.**
+- 🛑 **The part of the finding below that STANDS.** Checked 2026-08-16
+  (wt: faves-schema30). The owner greenlit *"`channel` on a price record in
+  `data/`"*. Three facts say that *specific* placement would ship a field
+  nothing exercises — the correction above moves the need into the payload, it
+  does not create one in the record store:
   - **Only 2 venues have any price history at all** — `takeaway-at-churton`
     (174 rows) and `thai-tara-express` (38 rows). Every one of those 212 entries
     is a paper menu or a 2019 scan. **None is delivery-sourced.**
