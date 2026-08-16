@@ -1,0 +1,26 @@
+{
+  "id": "hotel-bristol",
+  "name": "Hotel Bristol",
+  "cuisine": [
+    "Pub"
+  ],
+  "area": "Te Aro",
+  "city": "Wellington",
+  "address": "Cuba Mall, Te Aro, Wellington 6011",
+  "lat": -41.29296,
+  "lng": 174.77606,
+  "services": [
+    "dine-in"
+  ],
+  "phone": null,
+  "website": null,
+  "ordering": [],
+  "hours": null,
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "third-party",
+  "lifecycle": {
+    "added": "2026-08-16"
+  },
+  "status": "stub",
+  "menu": []
+}

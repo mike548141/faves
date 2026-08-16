@@ -1754,6 +1754,39 @@ Two consequences recorded rather than buried:
 
 ---
 
+## Theme 21 — from the owner's Airbnb guidebook (2026-08-16)
+
+Source: the host guidebook for the Cuba St apartment, "Food scene" section — 22
+entries, 13 of which Faves already held. Owner's ask: add any that were missed.
+
+✅ **Seven added 2026-08-16** as stubs — Golding's Free Dive, Dragonfly, Dirty
+Little Secret, Garage Project Leeds Street, Abrakebabra, Wellington Sourdough and
+Hotel Bristol. Address and pin from OpenStreetMap, so each carries
+`detailsVerifiedBy: "third-party"` — the weakest honest label, because nobody has
+stood in the shop.
+
+- [ ] **Three guidebook places have no findable address** `[S][data]` — **Chilly
+  Pot** (build-your-own malatang), **Crepes A Go Go** and **COSMIC Vape & Coffee**.
+  OpenStreetMap has no entry for any of them under several spellings, and the
+  guidebook gives no street address (Airbnb strips links). Deliberately NOT added
+  with a guessed address: a wrong pin sends someone to the wrong door, which is
+  worse than an absent venue. Each needs one street number, most cheaply read off
+  the door next time someone is on Cuba St.
+- [ ] **The seven new stubs have no hours, phone or menu** `[M][data]` — they are
+  findable by name and pin only. Hours and phone are a web-research pass; the
+  menus want an in-store or official-site read (ADR 0036's trusted four).
+- [ ] **Bars and a bakery stretch the "cuisine" vocabulary** `[S][data]` — four of
+  the seven are drinking places, tagged `Bar`/`Pub`, and one is a `Bakery`. Faves
+  has always been an eating app; whether a bar belongs in the same list as a
+  takeaway, or wants its own filter, is a product question the owner should rule
+  on before more arrive.
+
+**Deliberately not added.** *Moore Wilson's* is in the guidebook's Shopping
+section — a delicatessen and wholesaler, not a place you eat. The rest of the
+guidebook (parking, gyms, the zoo, the cable car) is out of scope for a menu app.
+
+---
+
 ## Theme 20 — Places from anywhere (owner-raised 2026-08-16)
 
 Owner's intent, stated 2026-08-16: the collection is **not** scoped to

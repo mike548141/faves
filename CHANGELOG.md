@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Seven more places from the Cuba St guidebook** — Golding's Free Dive,
+  Dragonfly, Dirty Little Secret, Garage Project Leeds Street, Abrakebabra,
+  Wellington Sourdough and Hotel Bristol. Findable by name and on the map;
+  menus to come.
 - **A menu can be written in another language.** A dish can carry its name and
   description in as many languages as the record holds — so the heading reads in
   yours while the script from the wall sits just beneath it, ready to point at.
