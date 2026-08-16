@@ -277,6 +277,101 @@ export function createTimer(totalSeconds, now = () => Date.now()) {
   };
 }
 
+// --- Reading the step out loud (ROADMAP 17e) ------------------------------
+//
+// `speechSynthesis` is in the browser already, so this adds no dependency to a
+// repo that ships without any (ADR 0001). It is genuinely the right feature for
+// the screen: hands in a bowl, phone propped against it, eyes on the food.
+//
+// 🚩 WHAT "NO DEPENDENCY" DOES AND DOES NOT MEAN. It is true of the CODE and
+// not necessarily of the RUNTIME. Several platforms serve their better voices
+// from a server — Chrome's non-local voices are fetched, and iOS downloads
+// enhanced voices on demand — so a phone in flight mode may fall back to a
+// local voice, or say nothing at all. Faves precaches everything else and works
+// offline; this one control may not, and nothing here can promise otherwise. It
+// is therefore an offer, never a substitute for the text on screen, which stays
+// exactly where it was.
+//
+// THE LEAK IS THE WAKE LOCK'S LEAK, IN ANOTHER COAT. Speech outlives the page
+// that started it: `speechSynthesis` belongs to the browser, not to the
+// document, so an utterance left running when cook mode closes keeps talking at
+// someone reading something else. ADR 0034 learned this the hard way about a
+// sentinel nobody released. Every exit path therefore cancels — closing, a step
+// change, a second tap, and the page going away.
+
+/**
+ * A speaker with one utterance at a time. Everything is injected so the
+ * lifecycle is provable under `node --test` against a fake synthesiser — but
+ * note what that proves and what it cannot: the calls, never the sound.
+ *
+ * @param {object} deps
+ * @param {SpeechSynthesis} [deps.synth] the API, or undefined where the browser
+ *        has none — treated as "unsupported", which must show as NO CONTROL AT
+ *        ALL rather than as a button that does nothing.
+ * @param {Function} [deps.Utterance] the SpeechSynthesisUtterance constructor.
+ * @param {() => void} [deps.onIdle] called when speech stops of its own accord,
+ *        so the UI can put its button back.
+ */
+export function createSpeaker({
+  synth = globalThis.speechSynthesis,
+  Utterance = globalThis.SpeechSynthesisUtterance,
+  onIdle = () => {},
+} = {}) {
+  let speaking = false;
+
+  const supported = () =>
+    !!synth && typeof synth.speak === "function" && typeof Utterance === "function";
+
+  function settle() {
+    if (!speaking) return;
+    speaking = false;
+    onIdle();
+  }
+
+  function stop() {
+    speaking = false;
+    if (!supported()) return { ok: false, reason: "unsupported" };
+    try {
+      // Cancels what is speaking AND empties the queue. Both matter: a queued
+      // utterance nobody can see would start talking after the step changed.
+      synth.cancel();
+    } catch {
+      /* a browser tearing the page down — nothing left for us to hand back */
+    }
+    return { ok: true, reason: "stopped" };
+  }
+
+  /** Speak `text`, replacing anything already speaking. Never queues. */
+  function speak(text, { lang = "en-NZ" } = {}) {
+    const words = String(text ?? "").trim();
+    if (!supported()) return { ok: false, reason: "unsupported" };
+    if (!words) return { ok: false, reason: "empty" };
+    stop(); // a second tap replaces, never stacks
+    let u;
+    try {
+      u = new Utterance(words);
+    } catch {
+      return { ok: false, reason: "denied" };
+    }
+    u.lang = lang;
+    // `end` also fires on a cancel, and `error` fires on a platform with the
+    // API but no usable voice — headless browsers and some Linux desktops.
+    // Both mean "not speaking any more", which is all the button needs to know.
+    u.onend = settle;
+    u.onerror = settle;
+    speaking = true;
+    try {
+      synth.speak(u);
+    } catch {
+      speaking = false;
+      return { ok: false, reason: "denied" };
+    }
+    return { ok: true, reason: "speaking" };
+  }
+
+  return { supported, speaking: () => speaking, speak, stop };
+}
+
 /** Keep an index inside [0, count-1]; an empty recipe pins at 0. */
 export function clampIndex(index, count) {
   const n = Number.isFinite(index) ? Math.trunc(index) : 0;

@@ -14,6 +14,7 @@ import {
   advance,
   canCook,
   clampIndex,
+  createSpeaker,
   createTimer,
   createWakeLock,
   formatDuration,
@@ -410,4 +411,111 @@ test("a backgrounded phone comes back with the right number, not a frozen one", 
   assert.equal(t.remaining(), 0);
   assert.equal(t.done(), true);
   assert.equal(t.running(), false); // finished is not running
+});
+
+// --- Reading the step aloud (ROADMAP 17e) ---------------------------------
+//
+// Driven through an injected fake shaped like `speechSynthesis`, which proves
+// the LIFECYCLE — one utterance at a time, cancelled on every exit, silent
+// where the API is absent. What it cannot prove is that any sound comes out,
+// which voice says it, or whether that voice was fetched over the network. The
+// last of those is the honest limitation recorded in cook.js.
+
+function fakeSynth() {
+  const calls = { speak: [], cancel: 0 };
+  return {
+    calls,
+    synth: {
+      speak: (u) => calls.speak.push(u),
+      cancel: () => {
+        calls.cancel += 1;
+      },
+    },
+    Utterance: class {
+      constructor(text) {
+        this.text = text;
+      }
+    },
+  };
+}
+
+test("no speechSynthesis means unsupported, never an error", () => {
+  const s = createSpeaker({ synth: undefined, Utterance: undefined });
+  assert.equal(s.supported(), false);
+  assert.deepEqual(s.speak("hello"), { ok: false, reason: "unsupported" });
+  assert.equal(s.speaking(), false);
+  assert.doesNotThrow(() => s.stop());
+});
+
+test("speaking is user-initiated: nothing is said until speak() is called", () => {
+  const { calls, synth, Utterance } = fakeSynth();
+  const s = createSpeaker({ synth, Utterance });
+  assert.equal(calls.speak.length, 0);
+  s.speak("Step 1 of 9. Preheat the oven.");
+  assert.equal(calls.speak.length, 1);
+  assert.equal(calls.speak[0].text, "Step 1 of 9. Preheat the oven.");
+  assert.equal(s.speaking(), true);
+});
+
+test("a second tap replaces what is speaking — it never stacks up a queue", () => {
+  const { calls, synth, Utterance } = fakeSynth();
+  const s = createSpeaker({ synth, Utterance });
+  s.speak("one");
+  s.speak("two");
+  assert.equal(calls.cancel, 2); // once per speak, before each
+  assert.equal(calls.speak.length, 2);
+});
+
+test("stop() cancels and clears the queue, and says so", () => {
+  const { calls, synth, Utterance } = fakeSynth();
+  const s = createSpeaker({ synth, Utterance });
+  s.speak("one");
+  assert.deepEqual(s.stop(), { ok: true, reason: "stopped" });
+  assert.equal(calls.cancel, 2);
+  assert.equal(s.speaking(), false);
+});
+
+test("nothing to say is not an utterance", () => {
+  const { calls, synth, Utterance } = fakeSynth();
+  const s = createSpeaker({ synth, Utterance });
+  assert.deepEqual(s.speak("   "), { ok: false, reason: "empty" });
+  assert.equal(calls.speak.length, 0);
+});
+
+test("the button is told when speech ends on its own", () => {
+  const { calls, synth, Utterance } = fakeSynth();
+  let idle = 0;
+  const s = createSpeaker({ synth, Utterance, onIdle: () => idle++ });
+  s.speak("one");
+  calls.speak[0].onend();
+  assert.equal(s.speaking(), false);
+  assert.equal(idle, 1);
+  calls.speak[0].onend(); // a late second event must not re-fire
+  assert.equal(idle, 1);
+});
+
+test("a platform with the API but no usable voice settles rather than sticking on", () => {
+  // Headless browsers and bare Linux desktops fire `error`, never `end`. A
+  // button left reading "Stop" forever would be the visible symptom.
+  const { calls, synth, Utterance } = fakeSynth();
+  let idle = 0;
+  const s = createSpeaker({ synth, Utterance, onIdle: () => idle++ });
+  s.speak("one");
+  calls.speak[0].onerror();
+  assert.equal(s.speaking(), false);
+  assert.equal(idle, 1);
+});
+
+test("a synthesiser that throws leaves the control off, not stuck on", () => {
+  const s = createSpeaker({
+    synth: {
+      speak: () => {
+        throw new Error("not allowed");
+      },
+      cancel: () => {},
+    },
+    Utterance: class {},
+  });
+  assert.deepEqual(s.speak("one"), { ok: false, reason: "denied" });
+  assert.equal(s.speaking(), false);
 });

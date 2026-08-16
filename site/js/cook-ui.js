@@ -35,6 +35,7 @@ import { checklist, lineId, recipeId } from "./checklist.js";
 import { clearTicksButton, syncTicks, tickRow } from "./checklist-ui.js";
 import {
   canCook,
+  createSpeaker,
   createTimer,
   createWakeLock,
   formatDuration,
@@ -238,7 +239,30 @@ export function openCookMode(item, { venueId } = {}) {
   stepBox.addEventListener("change", () =>
     checklist.set(rid, lineId("s", steps[index]), stepBox.checked)
   );
-  const tools = el("div", { className: "cook-tools" }, [stepTick, clearTicksButton(rid)]);
+  // Read the step aloud (ROADMAP 17e). Built ONLY where the browser has the
+  // API: no control at all beats a control that does nothing, and this is the
+  // same rule the "Screen stays on" note follows for the wake lock. The honest
+  // caveat is in cook.js — the code needs no network, the VOICE might.
+  const speaker = createSpeaker({ onIdle: () => paintRead() });
+  const readLabels = {
+    read: el("span", { "data-i18n": "cook.read", textContent: "Read aloud" }),
+    stop: el("span", { "data-i18n": "cook.readStop", textContent: "Stop", hidden: true }),
+  };
+  const readBtn = speaker.supported()
+    ? el("button", {
+        type: "button",
+        className: "btn cook-read",
+        "aria-pressed": "false",
+      }, [
+        el("span", { className: "cook-read-ico", textContent: "🔊", "aria-hidden": "true" }),
+        ...Object.values(readLabels),
+      ])
+    : null;
+
+  const tools = el("div", { className: "cook-tools" }, [
+    stepTick,
+    el("div", { className: "cook-tool-btns" }, [readBtn, clearTicksButton(rid)]),
+  ]);
 
   // Two buttons, always the same two, always in the same place. The Ingredients
   // toggle that used to span this row is gone — its content is on screen now —
@@ -283,6 +307,33 @@ export function openCookMode(item, { venueId } = {}) {
         el("li", {}, [tickRow(rid, "i", ing, convertTemperatures(ing, units))])
       )
     );
+  }
+
+  /**
+   * What the step sounds like: the counter, the instruction, and the lines it
+   * needs — the same three things, in the same order, that the live region
+   * announces together, so hearing it and reading it can never disagree. Units
+   * are converted here too, or an imperial reader would be told °C.
+   */
+  function spokenStep() {
+    const s = stepState(index, steps.length);
+    const units = settings.get().units;
+    const needed = ingredientsForStep(steps[s.index], ingredients);
+    const said = [s.label, convertTemperatures(steps[s.index], units)];
+    if (needed.length) {
+      said.push(`What you need: ${needed.map((l) => convertTemperatures(l, units)).join("; ")}`);
+    }
+    return said.join(". ");
+  }
+
+  /** The read control's two states. Absent where the browser has no API. */
+  function paintRead() {
+    if (!readBtn) return;
+    const on = speaker.speaking();
+    readBtn.setAttribute("aria-pressed", String(on));
+    readLabels.read.hidden = on;
+    readLabels.stop.hidden = !on;
+    readBtn.classList.toggle("is-speaking", on);
   }
 
   /** Re-read every box from the store: the step's, and the step's ingredients'. */
@@ -366,6 +417,11 @@ export function openCookMode(item, { venueId } = {}) {
     paintStepIngredients(s.index);
     paintTimer();
     paintTicks();
+    // Never leave the last step still being read out over the new one. Speech
+    // outlives whatever started it, so every change of subject has to cancel —
+    // the wake lock's lesson, applied to a voice (cook.js).
+    speaker.stop();
+    paintRead();
     prevBtn.disabled = s.atFirst;
     nextLabel.hidden = s.atLast;
     doneLabel.hidden = !s.atLast;
@@ -391,6 +447,19 @@ export function openCookMode(item, { venueId } = {}) {
   }
 
   // --- Wiring ------------------------------------------------------------
+  // User-initiated only, always: nothing here ever starts speaking on its own.
+  readBtn?.addEventListener("click", () => {
+    if (speaker.speaking()) speaker.stop();
+    else speaker.speak(spokenStep());
+    paintRead();
+  });
+  // A navigation destroys the document but not the browser's speech queue, so
+  // walking away from an open cook mode would otherwise leave a voice reading
+  // step 4 to whatever page you land on. This is the exact shape of the wake
+  // lock's teardown gap (ADR 0039), and unlike that one it IS ours to close.
+  const stopSpeaking = () => speaker.stop();
+  window.addEventListener("pagehide", stopSpeaking);
+
   close.addEventListener("click", () => dialog.close());
   prevBtn.addEventListener("click", () => goTo(index - 1));
   nextBtn.addEventListener("click", () => {
@@ -424,6 +493,9 @@ export function openCookMode(item, { venueId } = {}) {
     unsubscribeTicks();
     // Never leave the screen pinned awake on a page nobody is reading.
     lock.release();
+    // …and never leave a voice reading a recipe nobody has open.
+    window.removeEventListener("pagehide", stopSpeaking);
+    speaker.stop();
     // Same rule for the countdown: a 1s interval behind a closed sheet is a
     // leak, and cook mode has shipped one of those before (ADR 0034).
     if (tick !== null) {

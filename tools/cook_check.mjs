@@ -25,7 +25,24 @@
 //   · a genuine <dialog>.showModal() — the focus trap, the inert page behind,
 //     and Chrome's close-watcher handling Escape;
 //   · real layout, so a tap target or an overflow can be measured rather than
-//     assumed.
+//     assumed;
+//   · a real localStorage across a real page load, which is the only way to
+//     show that a tick survives a reload rather than a re-render;
+//   · a genuine `speechSynthesis` — headless Chrome has the API and no usable
+//     voice, which is precisely the platform cook.js has to survive.
+//
+// HOW THE CHECKLIST IS OBSERVED (ROADMAP 17e). Nothing is stubbed: the boxes
+// are clicked, the page is reloaded from the server, and the boxes are read
+// again. Two of the assertions are about things that are invisible when they
+// work and expensive when they don't — that ticking mutates NOTHING inside the
+// live region (the stage's markup is compared byte for byte before and after,
+// because the strike-through is CSS), and that rebuilding the ingredient list
+// around a focused box leaves focus inside the dialog rather than on <body>.
+//
+// HOW SPEECH IS OBSERVED. The same technique as the wake lock: a script
+// installed before any page script wraps `speechSynthesis.speak` and `.cancel`
+// to count calls and keep the text, and "is anything still speaking" is read
+// off the platform's own `speaking` flag. Nothing is faked.
 //
 // HOW THE WAKE LOCK IS OBSERVED. A script installed before any page script runs
 // wraps `navigator.wakeLock.request` and `WakeLockSentinel.prototype.release`:
@@ -50,6 +67,21 @@
 //      navigation. The page that held it no longer exists, so nothing can ask
 //      it; the browser's own teardown is what releases it. The checkable half
 //      is that the document you land back on starts clean.
+//   4. That any SOUND comes out, which voice says it, or — the one that
+//      matters — whether that voice came over the NETWORK. Several platforms
+//      serve their better voices from a server, so "no dependency" is true of
+//      the code and not necessarily of the runtime (cook.js says so in full).
+//      A headless browser has the API and no voice, so what is asserted here
+//      is the CALLS: one utterance per tap, cancelled on every exit.
+//   5. That `pagehide` really stops speech when you navigate away mid-sentence.
+//      Same shape as gap 3: the counter dies with the document, and with no
+//      voice in this environment the platform's `speaking` flag is never true
+//      to begin with, so an assertion here would pass whether or not the
+//      listener existed. The listener is in cook-ui.js; only a real phone shows
+//      it working. This is a gap, left as one.
+//   6. That a screen reader does not re-announce the step when a box is ticked.
+//      What IS checked is the cause — that the live region's markup is
+//      unchanged by a tick — because that is the thing a browser can measure.
 //
 // NOT PART OF THE SHIPPED SITE — dev tooling, like tools/serve.py. No npm
 // install, no dependency added to site/ (ADR 0001).
@@ -94,8 +126,9 @@ const HELP = `Faves cook-mode check — verify cook mode in a real browser.
 
 Serves site/ locally, launches Google Chrome headless against a throwaway
 profile, and drives cook mode on a real recipe: opening it, stepping through it,
-the boundaries, the ingredients panel, every exit path, and the wake-lock
-lifecycle — instrumented at the real API, with the page's own sentinels.
+the boundaries, the ingredients panel, the checklist, reading a step aloud,
+every exit path, and the wake-lock lifecycle — instrumented at the real API,
+with the page's own sentinels.
 
 Options:
   --dish <name|slug>  Recipe to cook (default: the one with the most steps).
@@ -143,6 +176,26 @@ const INSTRUMENT = `(() => {
   });
   addEventListener("error", (e) => W.errors.push(String(e.message)));
   addEventListener("unhandledrejection", (e) => W.errors.push("unhandled: " + e.reason));
+  // Speech is instrumented the same way and for the same reason (ROADMAP 17e):
+  // wrap the REAL speechSynthesis, never replace it, so what is counted is what
+  // the platform was actually asked to do. Headless Chrome has the API and no
+  // usable voice, which is exactly the platform cook.js has to survive — and it
+  // means these counts, not audio, are what can be asserted.
+  const S = (window.__cookSpeech = { speaks: 0, cancels: 0, texts: [] });
+  const synth = window.speechSynthesis;
+  if (synth && typeof synth.speak === "function") {
+    const speak = synth.speak.bind(synth);
+    const cancel = synth.cancel.bind(synth);
+    synth.speak = (u) => {
+      S.speaks++;
+      S.texts.push(u && u.text);
+      return speak(u);
+    };
+    synth.cancel = () => {
+      S.cancels++;
+      return cancel();
+    };
+  }
   const api = navigator.wakeLock;
   if (!api || typeof api.request !== "function") return;
   const proto = globalThis.WakeLockSentinel && WakeLockSentinel.prototype;
@@ -169,6 +222,12 @@ const INSTRUMENT = `(() => {
 /** An older browser, reproduced by removing the API rather than by faking one:
  *  Safari had no wakeLock before iOS 16.4 and must still get working cook mode. */
 const NO_WAKE_LOCK = `Object.defineProperty(Navigator.prototype, "wakeLock", {
+  get: () => undefined, configurable: true,
+});`;
+
+/** A browser with no speech at all — removed, not stubbed, for the same reason:
+ *  the requirement is that cook mode then offers NO control, not a dead one. */
+const NO_SPEECH = `Object.defineProperty(window, "speechSynthesis", {
   get: () => undefined, configurable: true,
 });`;
 
@@ -200,6 +259,14 @@ const SNAP = `(() => {
     ),
     pageClear: document.querySelectorAll(".recipe-detail-page .tick-clear").length,
     pageFocus: document.activeElement ? document.activeElement.className : null,
+    // Reading the step aloud (ROADMAP 17e). synthSpeaking is the PLATFORM's own
+    // flag, so "nothing outlived cook mode" is read off the browser rather than
+    // off our own bookkeeping — the same rule the wake lock follows.
+    speaks: (window.__cookSpeech || {}).speaks | 0,
+    cancels: (window.__cookSpeech || {}).cancels | 0,
+    spoken: ((window.__cookSpeech || {}).texts || []).slice(-1)[0] || null,
+    synthSpeaking: !!(window.speechSynthesis && window.speechSynthesis.speaking),
+    hasSpeech: !!window.speechSynthesis,
   };
   const d = document.querySelector("dialog.cook-sheet");
   if (!d) return { ...base, open: false };
@@ -241,6 +308,9 @@ const SNAP = `(() => {
     ingTicks: [...d.querySelectorAll(".cook-ing .tick-box")].map((b) => b.checked),
     ingTickIds: [...d.querySelectorAll(".cook-ing .tick-box")].map((b) => b.dataset.tick),
     tickTaps: [side(q(".cook-step-tick")), side(q(".cook-ing .tick")), side(q(".cook-tools .tick-clear"))],
+    readShown: !!q(".cook-read"),
+    readPressed: q(".cook-read") ? q(".cook-read").getAttribute("aria-pressed") : null,
+    readTap: side(q(".cook-read")),
     ticksNative: [...d.querySelectorAll(".tick-box")].every(
       (b) => b.tagName === "INPUT" && b.type === "checkbox"
     ),
@@ -666,6 +736,45 @@ async function run(opts) {
 
     await press("Home");
 
+    // --- 4c. Reading the step aloud (ROADMAP 17e) -------------------------
+    // An utterance is this feature's wake lock. `speechSynthesis` belongs to
+    // the BROWSER, not to the document, so anything left speaking keeps talking
+    // at whatever the reader opens next — the same shape of leak ADR 0034 paid
+    // for, and the reason every count below is taken off the real API.
+    const quiet = await snap();
+    report.check(
+      "cook mode offers a Read aloud control, and says nothing until it is tapped",
+      quiet.hasSpeech === true && quiet.readShown === true && quiet.readPressed === "false" &&
+        quiet.readTap >= 44 && quiet.speaks === 0,
+      `control shown=${quiet.readShown} at ${quiet.readTap}px, ${quiet.speaks} utterances so far`
+    );
+
+    await click(".cook-read");
+    const said = await snap();
+    report.check(
+      "one tap reads the step that is on screen — its number, its words, its ingredients",
+      said.speaks === 1 &&
+        (said.spoken || "").startsWith(`Step 1 of ${steps.length}. `) &&
+        (said.spoken || "").includes(steps[0]),
+      `“${(said.spoken || "").slice(0, 64)}…”`
+    );
+
+    await press("ArrowRight");
+    const stepped = await snap();
+    report.check(
+      "changing step cancels the utterance rather than talking over the new one",
+      stepped.cancels > said.cancels &&
+        stepped.readPressed === "false" &&
+        stepped.synthSpeaking === false &&
+        stepped.speaks === 1,
+      `${said.cancels} → ${stepped.cancels} cancel() calls on the real API, still ${stepped.speaks} utterance`
+    );
+
+    // Leave it speaking, so the Escape in section 5 has something to cut off.
+    await press("Home");
+    await click(".cook-read");
+    const midSentence = await snap();
+
     // --- 5. Exit one: Escape, with the panel open (ADR 0034 §3) -----------
     await press("Escape");
     const escaped = await closed();
@@ -683,6 +792,11 @@ async function run(opts) {
       "focus returns to the Cook mode button",
       escaped.focusIsStart === true,
       `focus on .cook-start=${escaped.focusIsStart}`
+    );
+    report.check(
+      "closing cook mode mid-sentence leaves nothing speaking",
+      escaped.cancels > midSentence.cancels && escaped.synthSpeaking === false,
+      `${midSentence.cancels} → ${escaped.cancels} cancel() calls, platform speaking=${escaped.synthSpeaking}`
     );
 
     // --- 6. Re-entry ------------------------------------------------------
@@ -850,6 +964,25 @@ async function run(opts) {
       noApi.open && noApi.counter === `Step 2 of ${steps.length}` && noApi.awakeShown === false &&
         noApi.requests === 0 && noApi.errors.length === 0,
       `“${noApi.counter}”, note shown=${noApi.awakeShown}, page errors=${noApi.errors.length}`
+    );
+    await press("Escape");
+    await closed();
+
+    // --- 14b. A browser with no speech at all -----------------------------
+    // Removed, not stubbed. The requirement is that cook mode then offers NO
+    // control — a button that cannot speak is worse than no button, because it
+    // is the reader who has to work out which of the two they are looking at.
+    await cdp.send("Page.addScriptToEvaluateOnNewDocument", { source: NO_SPEECH }, sessionId);
+    await goto(recipeUrl, ".cook-start");
+    await openCook();
+    await click(".cook-next");
+    const noVoice = await snap();
+    report.check(
+      "with no speechSynthesis there is no Read aloud control at all — never a dead button",
+      noVoice.open && noVoice.hasSpeech === false && noVoice.readShown === false &&
+        noVoice.counter === `Step 2 of ${steps.length}` && noVoice.errors.length === 0,
+      `control present=${noVoice.readShown}, cook mode still on “${noVoice.counter}”, ` +
+        `page errors=${noVoice.errors.length}`
     );
     await press("Escape");
     await closed();
