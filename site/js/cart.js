@@ -23,6 +23,23 @@ export const orderTotal = (items) =>
   items.reduce((sum, i) => sum + (i.price || 0) * i.qty, 0);
 
 /**
+ * Order totals split by currency: `[{ currency, total }, …]`, in first-seen
+ * order. An order that spans two countries has no single number — adding NZD to
+ * GBP produces a figure that is not money — so the UI shows one total per
+ * currency rather than a plausible-looking sum nobody can pay (ADR 0043).
+ * A single-currency order (every order today) yields exactly one entry, which
+ * renders identically to the old single total.
+ */
+export function orderTotals(items) {
+  const byCurrency = new Map();
+  for (const i of items) {
+    const c = i.currency || "NZD";
+    byCurrency.set(c, (byCurrency.get(c) || 0) + (i.price || 0) * i.qty);
+  }
+  return [...byCurrency].map(([currency, total]) => ({ currency, total }));
+}
+
+/**
  * Group items by venue, preserving first-seen order. Each group carries its
  * own count, subtotal, phone (for the call handoff) and a `hasUnpriced`
  * flag so the UI can caption an incomplete subtotal honestly.
@@ -35,6 +52,7 @@ export function groupByVenue(items) {
       g = {
         venueId: i.venueId,
         venueName: i.venueName,
+        currency: i.currency || "NZD",
         phone: i.phone || null,
         items: [],
         count: 0,
@@ -70,6 +88,7 @@ export function mergeItems(base, incoming) {
       out.push({
         venueId: inc.venueId,
         venueName: inc.venueName,
+        currency: inc.currency,
         phone: inc.phone || null,
         name: inc.name,
         price: inc.price ?? null,
@@ -128,6 +147,7 @@ export function createOrder(storage) {
         items.push({
           venueId: meta.venueId,
           venueName: meta.venueName,
+          currency: meta.currency || "NZD",
           phone: meta.phone || null,
           name: meta.name,
           price: meta.price ?? null,

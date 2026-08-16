@@ -3,17 +3,18 @@
 // tidy weekly display that shows lunch/dinner splits. Roadmap: the "Open
 // now" idea, plus relative-time and split-hours navigation.
 //
-// Two design decisions (see docs/decisions/0006):
-//  1. Status is computed in the venue's timezone, not the viewer's device
+// Two design decisions (see docs/decisions/0006, amended by 0043):
+//  1. Status is computed in the venue's *own* timezone, not the viewer's device
 //     clock, so a guest browsing from overseas still sees the right answer.
-//     Intl does this offline, no dependency.
-//     #!#### That timezone is hard-coded to Pacific/Auckland. Correct for
-//     every venue held as at 2026-08-16, and silently wrong for the first
-//     one outside NZ — the collection is no longer scoped to one country
-//     (ADR 0042). Needs a per-venue `timezone` and an ADR superseding
-//     0006 BEFORE a non-NZ venue is added, not after.
-//  2. The clock read (nzNow) is the only impure part; openStatus/groupWeek
-//     are pure functions of (hours, now) so they're fully unit-testable.
+//     Intl does this offline, no dependency. That zone comes off the record
+//     (place.js) — it was hard-coded to Pacific/Auckland until 2026-08-16,
+//     which was right while every venue was in NZ and would have been a
+//     confident wrong answer for the first one that wasn't.
+//  2. The clock read (nowIn / makeClock) is the only impure part;
+//     openStatus/groupWeek are pure functions of (hours, now) so they're
+//     fully unit-testable.
+
+import { HOME_TIMEZONE } from "./place.js";
 
 const DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]; // JS getDay() order
 const DAY_LABEL = { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat" };
@@ -22,17 +23,18 @@ const WEEK = 7 * 24 * 60; // minutes in a week
 const CLOSING_SOON = 60; // minutes: "closing soon" / "opens soon" window
 
 /**
- * True when the viewer's device is on the same wall-clock as NZ right now,
- * so displayed venue hours need no "NZ time" qualifier. We store hours as
- * venue-local time (NOT UTC — a fixed UTC instant would drift across NZ's
- * DST switch); status is always computed correctly in the venue's zone, so
- * this is only about disambiguating the *displayed* clock for a viewer
- * whose device sits in a different timezone.
+ * True when the viewer's device is on the same wall-clock as `tz` right now, so
+ * displayed hours need no timezone qualifier. We store hours as venue-local
+ * time (NOT UTC — a fixed UTC instant would drift across a DST switch); status
+ * is always computed correctly in the venue's zone, so this is only about
+ * disambiguating the *displayed* clock for a viewer whose device sits
+ * elsewhere. A local reading their local's hours (the common case) sees no
+ * redundant "NZ time" — and now neither does a Londoner reading a London one.
  */
-export function viewerOnNzTime(date = new Date()) {
-  const nz = nzNow(date);
+export function viewerOnVenueTime(tz = HOME_TIMEZONE, date = new Date()) {
+  const there = nowIn(tz, date);
   const local = date.getHours() * 60 + date.getMinutes();
-  const diff = Math.abs(local - nz.minutes);
+  const diff = Math.abs(local - there.minutes);
   return Math.min(diff, 1440 - diff) <= 1;
 }
 
@@ -53,22 +55,60 @@ export function formatTime(min) {
   return m === 0 ? `${h12}${ampm}` : `${h12}:${String(m).padStart(2, "0")}${ampm}`;
 }
 
+// One formatter per zone, built once. Constructing an Intl.DateTimeFormat is
+// the expensive part, and a render reads the clock for every venue on screen —
+// nearly all of which share a zone.
+const zoneFormatters = new Map();
+
+function zoneFormatter(tz) {
+  let f = zoneFormatters.get(tz);
+  if (!f) {
+    const opts = { weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" };
+    try {
+      f = new Intl.DateTimeFormat("en-NZ", { ...opts, timeZone: tz });
+    } catch {
+      // A malformed zone in the data would otherwise throw mid-render and blank
+      // the page. Fall back to home rather than to the *viewer's* clock: home is
+      // wrong for that one venue in a knowable way, where the device clock is
+      // wrong differently for every reader and looks right to whoever is testing.
+      f = new Intl.DateTimeFormat("en-NZ", { ...opts, timeZone: HOME_TIMEZONE });
+    }
+    zoneFormatters.set(tz, f);
+  }
+  return f;
+}
+
 /**
- * Current moment in Pacific/Auckland as { dow: 0-6 (Sun=0), minutes: 0-1439 }.
+ * Current moment in `tz` as { dow: 0-6 (Sun=0), minutes: 0-1439 }.
  * The single impure function here — pass its result to openStatus().
  */
-export function nzNow(date = new Date()) {
-  const parts = new Intl.DateTimeFormat("en-NZ", {
-    timeZone: "Pacific/Auckland",
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(date);
+export function nowIn(tz = HOME_TIMEZONE, date = new Date()) {
+  const parts = zoneFormatter(tz).formatToParts(date);
   const get = (t) => parts.find((p) => p.type === t)?.value;
   const dow = DAYS.indexOf((get("weekday") || "").slice(0, 3).toLowerCase());
   const minutes = Number(get("hour")) * 60 + Number(get("minute"));
   return { dow, minutes };
+}
+
+/**
+ * A clock frozen at one instant that can be read in any zone, memoised per zone.
+ *
+ * This is what let per-venue timezones land without making the ranker impure or
+ * the render O(venues) in Intl constructions. A render takes ONE clock and asks
+ * it for each venue's zone; every venue sharing a zone shares the answer, and
+ * the whole list is still ranked against a single instant — two venues can't
+ * disagree about what time it is because the render took a moment to run.
+ * Tests pass a fixed `date`, or a stub with the same `at(tz)` shape.
+ */
+export function makeClock(date = new Date()) {
+  const cache = new Map();
+  return {
+    date,
+    at(tz = HOME_TIMEZONE) {
+      if (!cache.has(tz)) cache.set(tz, nowIn(tz, date));
+      return cache.get(tz);
+    },
+  };
 }
 
 // Expand the week into absolute open segments (minutes from Sun 00:00).

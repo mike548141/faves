@@ -1,6 +1,6 @@
 // Unit tests for the opening-hours engine (site/js/hours.js). openStatus /
 // groupWeek / formatters are pure functions of (hours, now), so we drive
-// them with fixed `now` values — no clock, no timezone flakiness. nzNow()
+// them with fixed `now` values — no clock, no timezone flakiness. nowIn()
 // (the one impure bit) is exercised only for shape. Run: `node --test`.
 
 import { test } from "node:test";
@@ -11,8 +11,9 @@ import {
   formatDay,
   groupWeek,
   openStatus,
-  nzNow,
-  viewerOnNzTime,
+  nowIn,
+  makeClock,
+  viewerOnVenueTime,
 } from "../site/js/hours.js";
 
 // dow: Sun=0 … Sat=6. minutes = hours*60+mins.
@@ -125,14 +126,68 @@ test("groupWeek merges identical consecutive days into ranges (with dows)", () =
   ]);
 });
 
-test("nzNow returns a plausible shape (dow 0-6, minutes 0-1439)", () => {
-  const now = nzNow();
+test("nowIn returns a plausible shape (dow 0-6, minutes 0-1439)", () => {
+  const now = nowIn();
   assert.ok(now.dow >= 0 && now.dow <= 6);
   assert.ok(now.minutes >= 0 && now.minutes < 1440);
 });
 
-test("viewerOnNzTime returns a boolean (value depends on the runner's tz)", () => {
+test("viewerOnVenueTime returns a boolean (value depends on the runner's tz)", () => {
   // Deterministic value would require stubbing the process timezone, so we
   // only assert the shape here; the display qualifier it gates is cosmetic.
-  assert.equal(typeof viewerOnNzTime(), "boolean");
+  assert.equal(typeof viewerOnVenueTime(), "boolean");
+});
+
+// ——————————————————— Per-venue timezones (ADR 0043) ———————————————————
+// The bug these exist to stop: a venue outside NZ reading its open/closed
+// status off Wellington's clock and saying nothing about it.
+
+test("nowIn reads a real instant in the zone it is handed, not the default", () => {
+  // 2026-08-16T13:00:00Z — already Monday 1am in Auckland, still Sunday 2pm in
+  // London. Different DAY and different hour, so neither can pass by luck.
+  const t = new Date("2026-08-16T13:00:00Z");
+  const akl = nowIn("Pacific/Auckland", t);
+  const ldn = nowIn("Europe/London", t);
+  assert.equal(akl.dow, 1); // Monday
+  assert.equal(akl.minutes, 60);
+  assert.equal(ldn.dow, 0); // Sunday
+  assert.equal(ldn.minutes, 14 * 60);
+});
+
+test("nowIn falls back to home for a malformed zone rather than throwing", () => {
+  const t = new Date("2026-08-16T13:00:00Z");
+  assert.deepEqual(nowIn("Not/AZone", t), nowIn("Pacific/Auckland", t));
+});
+
+test("a venue's open status follows ITS zone, not the collection's", () => {
+  const week = { mon: [], tue: [], wed: [], thu: [], fri: [], sat: [], sun: [["09:00", "17:00"]] };
+  const t = new Date("2026-08-16T13:00:00Z");
+  // Monday 1am in Auckland → closed (Sunday's window has passed there);
+  // Sunday 2pm in London → open. Same instant, opposite answers.
+  assert.equal(openStatus(week, nowIn("Pacific/Auckland", t)).state, "closed");
+  assert.equal(openStatus(week, nowIn("Europe/London", t)).state, "open");
+});
+
+test("makeClock freezes one instant and reads it in any zone, memoised", () => {
+  const t = new Date("2026-08-16T13:00:00Z");
+  const clock = makeClock(t);
+  assert.deepEqual(clock.at("Pacific/Auckland"), nowIn("Pacific/Auckland", t));
+  assert.deepEqual(clock.at("Europe/London"), nowIn("Europe/London", t));
+  // Same object back on a second read — that memo is what keeps a render from
+  // constructing one Intl formatter per venue.
+  assert.strictEqual(clock.at("Europe/London"), clock.at("Europe/London"));
+  assert.strictEqual(clock.date, t);
+});
+
+test("makeClock defaults to home when asked for no zone", () => {
+  const t = new Date("2026-08-16T13:00:00Z");
+  assert.deepEqual(makeClock(t).at(), nowIn("Pacific/Auckland", t));
+});
+
+test("viewerOnVenueTime is about the VENUE's zone, not New Zealand's", () => {
+  // A device on UTC: on London time (within an hour of it in summer), not on NZ's.
+  const t = new Date("2026-08-16T00:30:00Z");
+  const utcish = { getHours: () => 0, getMinutes: () => 30, valueOf: () => t.valueOf() };
+  Object.setPrototypeOf(utcish, Date.prototype);
+  assert.equal(viewerOnVenueTime("Pacific/Auckland", utcish), false);
 });

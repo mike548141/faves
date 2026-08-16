@@ -71,6 +71,13 @@ reversible in an afternoon.
   "area": "Te Aro",                  // suburb-level grouping for filters
   "city": "Wellington",
   "address": "Ghuznee St, Wellington",
+  "timezone": null,                  // optional IANA zone, e.g. "Europe/London".
+                                     //   Absent = the collection's home,
+                                     //   Pacific/Auckland. May also sit on a
+                                     //   branch. Decides open/closed (ADR 0043)
+  "currency": null,                  // optional ISO 4217, e.g. "GBP". Absent =
+                                     //   NZD. Venue-level: one menu, one currency
+                                     //   (hemisphere is DERIVED from lat, never stored)
   "lat": -41.29310,                  // optional decimal degrees (WGS84); both or neither
   "lng": 174.77551,                  // feeds the native-maps handoff + (later) distance sort
   "phone": "+64 4 ...",              // tel: link for ordering. address/phone may
@@ -460,7 +467,9 @@ UI must never present absence of an allergen tag as "allergen-free".
   meaning open-ended ("late"). `close`, when given, must be after `open`
   — past-midnight is expressed with a `null` close, never a wrap. The
   hours engine (`site/js/hours.js`) computes a live open/closed status
-  from this in **Pacific/Auckland** time (not the viewer's clock), and a
+  from this in the **venue's own timezone** (not the viewer's clock) — its
+  `timezone`, or the branch's, or `Pacific/Auckland` if neither says
+  (ADR 0043) — and a
   grouped weekly display; see ADR 0006. That status also drives the home
   list ordering (`site/js/ranking.js`), whose **primary key depends on mode**:
   the **default order** (no location) is reachable → availability →

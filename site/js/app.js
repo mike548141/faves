@@ -10,9 +10,9 @@ import { rankVenues, isAvailableNow } from "./ranking.js";
 import { rankByDetour, bestBranchForRoute, areaCentroids } from "./route.js";
 import { branchCoords, branchAsPlace, venueHours } from "./locations.js";
 import { rememberOrigin, routeMapsUrl } from "./geo.js";
-import { openStatus, nzNow, viewerOnNzTime } from "./hours.js";
+import { openStatus, makeClock, viewerOnVenueTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
-import { todayNZ } from "./temporal.js";
+import { todayIn } from "./temporal.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
 import { initOrderUI } from "./cart-ui.js";
@@ -61,24 +61,24 @@ function priceChip(r) {
   const hasFigure = p.perPerson !== null;
   const chip = el("span", { className: "chip chip-price" }, [
     el("span", { className: "price-band", textContent: p.band }),
-    ...(hasFigure ? [` ~$${p.perPerson}pp`] : []),
+    ...(hasFigure ? [` ~${formatMoney(p.perPerson, p.currency)}pp`] : []),
   ]);
   // Curated band = our call; derived band = estimated from the menu prices.
   if (p.curated) {
     chip.title = hasFigure
-      ? `About $${p.perPerson} per person — our estimate for this place`
+      ? `About ${formatMoney(p.perPerson, p.currency)} per person — our estimate for this place`
       : `Typical price band for this place`;
     chip.setAttribute(
       "aria-label",
       hasFigure
-        ? `Around ${p.perPerson} dollars per person`
+        ? `Around ${formatMoney(p.perPerson, p.currency)} per person`
         : `Price band ${p.band.length} of 3`
     );
   } else {
-    chip.title = `About $${p.perPerson} per person — estimated from ${p.count} menu prices`;
+    chip.title = `About ${formatMoney(p.perPerson, p.currency)} per person — estimated from ${p.count} menu prices`;
     chip.setAttribute(
       "aria-label",
-      `Around ${p.perPerson} dollars per person, estimated from the menu`
+      `Around ${formatMoney(p.perPerson, p.currency)} per person, estimated from the menu`
     );
   }
   return chip;
@@ -95,11 +95,12 @@ function priceChip(r) {
 // "Open now" filter has always used it, and its comment claims the two agree;
 // before this they could disagree for any venue whose branches keep different
 // hours, showing "Closed" on a card the filter had just matched as open.
-function hoursBadge(r, now, showHours = true, origin = null) {
-  const closure = closureBadge(r, todayNZ());
+function hoursBadge(r, clock, showHours = true, origin = null) {
+  const tz = venueTimezone(r, origin);
+  const closure = closureBadge(r, todayIn(tz, clock.date));
   if (closure) return el("p", { className: "card-hours" }, [closure]);
   if (!showHours) return null;
-  const st = openStatus(venueHours(r, origin), now);
+  const st = openStatus(venueHours(r, origin), clock.at(tz));
   if (st.state === "unknown") return null;
   const text = st.detail ? `${st.label} · ${st.detail}` : st.label;
   const badge = el("span", { className: "hours-badge", textContent: text });
@@ -116,7 +117,22 @@ function detourText(km, units) {
   return `+${formatDistance(km, units)} ${t("route.detour", "detour")}`;
 }
 
-function card(r, now, routeCtx = null, origin = null) {
+const zonesOf = (restaurants) => new Set(restaurants.map((r) => venueTimezone(r)));
+
+// The sentence under the filter bar explaining whose clock the badges are on,
+// or null when every venue happens to keep the viewer's own wall-clock and the
+// note would be noise. One venue in another zone is enough to earn it — the
+// badges are venue-local, and a reader who assumes otherwise plans around the
+// wrong hour.
+function timezoneNote(restaurants) {
+  const zones = [...zonesOf(restaurants)];
+  if (zones.every((tz) => viewerOnVenueTime(tz))) return null;
+  return zones.length === 1
+    ? `Open/closed times are ${zoneLabel(zones[0])}.`
+    : "Open/closed times are each place’s own local time.";
+}
+
+function card(r, clock, routeCtx = null, origin = null) {
   const isRecipes = r.kind === "recipes";
   const units = settings.get().units;
   const name = el("h3", { className: "card-name", textContent: r.name });
@@ -190,7 +206,7 @@ function card(r, now, routeCtx = null, origin = null) {
   // A venue (not a stub, not recipes) gets a live open/closed badge — but a
   // CLOSURE shows on a stub too, since that is the one thing worth knowing
   // about a place whose menu we never captured.
-  const badge = !isRecipes ? hoursBadge(r, now, r.status !== "stub", origin) : null;
+  const badge = !isRecipes ? hoursBadge(r, clock, r.status !== "stub", origin) : null;
 
   const li = el("li", { className: isRecipes ? "card card-recipes" : "card" });
   li.dataset.status = r.status;
@@ -275,15 +291,18 @@ function init(restaurants) {
   const favouriteVenueIds = () => new Set(favourites.items().map((e) => e.venueId));
 
   function render() {
-    const now = nzNow(); // one clock read per render: filter, rank and cards
-    let shown = applyFilters(restaurants, state, now);
+    // One clock per render, read per venue in that venue's own zone (ADR 0043):
+    // the whole list is ranked against a single instant, so two venues can never
+    // disagree about what time it is because the render took a moment to run.
+    const clock = makeClock();
+    let shown = applyFilters(restaurants, state, clock);
     const { favBoostKm, farKm } = settings.get();
     // "Along a route" (origin + a destination): rank by least detour, and hand
     // each card the origin/dest so it can offer a real routed maps handoff.
     const onRoute = !!(state.origin && state.dest);
     if (onRoute) {
       shown = rankByDetour(shown, {
-        now,
+        clock,
         origin: state.origin,
         dest: state.dest,
         favouriteIds: favouriteVenueIds(),
@@ -293,7 +312,7 @@ function init(restaurants) {
       // closed/faraway ones; distance refines it once "Near me" gives an origin.
       // The favourite pull + reachable radius are the viewer's own dials.
       shown = rankVenues(shown, {
-        now,
+        clock,
         origin: state.origin,
         favouriteIds: favouriteVenueIds(),
         favBoostKm,
@@ -301,7 +320,7 @@ function init(restaurants) {
       });
     }
     const routeCtx = onRoute ? { origin: state.origin, dest: state.dest } : null;
-    listEl.replaceChildren(...shown.map((r) => card(r, now, routeCtx, state.origin)));
+    listEl.replaceChildren(...shown.map((r) => card(r, clock, routeCtx, state.origin)));
     emptyEl.hidden = shown.length !== 0;
     const n = shown.length;
     const total = restaurants.length;
@@ -332,10 +351,21 @@ function init(restaurants) {
 
   wireLocation(state, render, restaurants);
 
-  // Only a viewer off NZ time needs telling the badges are NZ time.
-  if (!viewerOnNzTime()) {
+  // Only a viewer whose device clock differs from the venues' needs telling the
+  // badges are venue-local. The note names the zone when the whole list shares
+  // one, and stops naming any once it doesn't — "New Zealand time" on a list
+  // holding a London venue would be a confident wrong answer about half of it.
+  const tzNote = timezoneNote(restaurants);
+  if (tzNote) {
     const note = document.getElementById("tz-note");
-    if (note) note.hidden = false;
+    if (note) {
+      note.textContent = tzNote;
+      // The reo translation is for the single-zone wording it was written
+      // against; a mixed-zone list gets the English sentence rather than a
+      // translation that says something narrower than the English does.
+      if (zonesOf(restaurants).size > 1) note.removeAttribute("data-i18n");
+      note.hidden = false;
+    }
   }
 
   wireOpenNow(state, render);
@@ -360,11 +390,11 @@ function init(restaurants) {
   // opening soon, and within your reach radius if we know where you are); it
   // falls back to the whole filtered set if none are available, never dead-ends.
   initPicker(() => {
-    const now = nzNow();
+    const clock = makeClock();
     // Respects the whole filter bar, Cheap eats and Open now included.
-    const filtered = applyFilters(restaurants, state, now);
+    const filtered = applyFilters(restaurants, state, clock);
     const { farKm } = settings.get();
-    const available = filtered.filter((r) => isAvailableNow(r, { now, origin: state.origin, farKm }));
+    const available = filtered.filter((r) => isAvailableNow(r, { clock, origin: state.origin, farKm }));
     return available.length ? available : filtered;
   }, (r) => favouriteVenueIds().has(r.id));
   initOrderUI();

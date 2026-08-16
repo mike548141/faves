@@ -4,6 +4,7 @@
 import { openStatus } from "./hours.js";
 import { isCheapEats } from "./price.js";
 import { venueHours } from "./locations.js";
+import { venueTimezone } from "./place.js";
 
 /** Unique, sorted areas and cuisines present in the data. */
 export function deriveFacets(restaurants) {
@@ -34,11 +35,12 @@ export const DEFAULT_FILTERS = {
 };
 
 /**
- * Apply combinable filters. Every clause is AND-ed. `now` ({dow, minutes})
- * is required only for the openNow clause; a venue whose hours are unknown
+ * Apply combinable filters. Every clause is AND-ed. `clock` (hours.js
+ * makeClock) is required only for the openNow clause, which reads it in each
+ * venue's own timezone; a venue whose hours are unknown
  * (or a recipe, which has none) is treated as not-open, so it drops out.
  */
-export function applyFilters(restaurants, state, now = null) {
+export function applyFilters(restaurants, state, clock = null) {
   return restaurants.filter((r) => {
     if (state.service !== "all" && !(r.services || []).includes(state.service)) {
       return false;
@@ -47,11 +49,12 @@ export function applyFilters(restaurants, state, now = null) {
     if (state.cuisine !== "all" && !(r.cuisine || []).includes(state.cuisine)) {
       return false;
     }
-    if (state.openNow && now) {
+    if (state.openNow && clock) {
       // For a multi-location venue this reads the branch that drives its card:
       // the nearest one when we know the viewer's location (state.origin), else
       // the primary — so "Open now" and the card badge always agree.
-      const st = openStatus(venueHours(r, state.origin ?? null), now).state;
+      const origin = state.origin ?? null;
+      const st = openStatus(venueHours(r, origin), clock.at(venueTimezone(r, origin))).state;
       if (st !== "open" && st !== "closing-soon") return false;
     }
     // "Cheap eats" — only the $ band (see price.isCheapEats). A venue we can't

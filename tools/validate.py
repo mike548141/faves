@@ -9,6 +9,7 @@ Exit code 0 = all good; 1 = one or more errors. Warnings never fail the
 build but are printed so gaps (e.g. missing picks) stay visible.
 """
 
+from zoneinfo import ZoneInfo
 import json
 import re
 import subprocess
@@ -51,6 +52,25 @@ DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
 errors = []
 warnings = []
+
+CURRENCY_RE = re.compile(r"^[A-Z]{3}$")
+
+# Currencies price.js has band thresholds for. Kept in step by hand — a short
+# list that changes when someone sits down with a country's menus and chooses
+# its two numbers, which is not something a script can derive.
+PRICE_BANDED_CURRENCIES = {"NZD"}
+
+
+def valid_timezone(tz):
+    """True when `tz` is an IANA zone. Uses the stdlib's own tz database rather
+    than a hand-kept list — the same source the browser's Intl consults, so a
+    zone that passes here is one the app can actually format in."""
+    try:
+        ZoneInfo(tz)
+        return True
+    except Exception:
+        return False
+
 # {id: set(dish names)} for the whole dataset — populated before checks so
 # cross-record `goesWith` ("id#Dish") references can be resolved.
 ALL_NAMES = {}
@@ -540,6 +560,43 @@ def check_restaurant(path):
         if not check_coords(rid, data, "card") and not is_recipes:
             warn(rid, "no coordinates (lat/lng) set — maps opens by address only")
         check_hours(rid, data.get("hours"), "card")
+
+    # timezone / currency: where the venue IS, as the two facts the app cannot
+    # guess (ADR 0043). Both optional — absent means the collection's home,
+    # New Zealand, which is what every record held when this landed. A venue
+    # elsewhere MUST state them, because the failure mode is not a blank but a
+    # confident wrong answer: a London venue with no `timezone` renders its
+    # open/closed status against Wellington's clock and says nothing about it.
+    # Hemisphere is deliberately absent: it is derived from `lat`.
+    for field, where in [("timezone", "card")] + [
+        ("timezone", f"locations[{i}]") for i in range(len(locations or []))
+    ]:
+        obj = data if where == "card" else locations[int(where[10:-1])]
+        if not isinstance(obj, dict):
+            continue
+        tz = obj.get(field)
+        if tz is None:
+            continue
+        if not isinstance(tz, str) or not tz.strip():
+            err(rid, f"{where}: timezone must be a non-empty string or absent")
+        elif not valid_timezone(tz):
+            err(rid, f"{where}: timezone {tz!r} is not an IANA zone this machine knows")
+
+    currency = data.get("currency")
+    if currency is not None:
+        if not isinstance(currency, str) or not CURRENCY_RE.match(currency):
+            err(rid, "currency must be a 3-letter ISO 4217 code (e.g. 'GBP') or absent")
+        elif currency not in PRICE_BANDED_CURRENCIES:
+            # Not an error: the venue is still correct and its prices still
+            # render in its own currency. But price.js will show no derived
+            # $/$$/$$$ chip, because a band is a calibration against local
+            # prices and nobody has made one — worth saying out loud rather
+            # than leaving someone to wonder where the chip went.
+            warn(
+                rid,
+                f"currency {currency!r} has no price-band calibration in site/js/price.js — "
+                "the venue will show no derived price band (a curated `priceBand` still works)",
+            )
 
     # image / alt: optional self-hosted card photo; alt required when set.
     check_image(rid, data, "card image")

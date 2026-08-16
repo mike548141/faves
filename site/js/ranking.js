@@ -34,6 +34,7 @@
 
 import { openStatus } from "./hours.js";
 import { nearestBranch, venueDistanceKm, venueHours } from "./locations.js";
+import { venueTimezone } from "./place.js";
 import { isTrading } from "./temporal.js";
 
 // Product defaults, also the source of truth for settings.js DEFAULTS.
@@ -76,12 +77,12 @@ export function tierFromHours(hours, now) {
  * is known, else the primary branch's (venueHours) — the honest read, since we
  * can't say "nearest" without a location.
  */
-export function availabilityTier(r, now, origin = null) {
+export function availabilityTier(r, clock, origin = null) {
   if (r.kind === "recipes") return 0; // always an option
   // A venue shut for a refit (or for good) is closed whatever its posted hours
   // say — the lifecycle outranks the weekly timetable (temporal.js, ADR 0023).
   if (!isTrading(r)) return 3;
-  return tierFromHours(venueHours(r, origin), now);
+  return tierFromHours(venueHours(r, origin), clock.at(venueTimezone(r, origin)));
 }
 
 /**
@@ -91,9 +92,9 @@ export function availabilityTier(r, now, origin = null) {
  * Distance is measured to the nearest branch; a coordless venue (Infinity) is
  * never demoted for reach — we only exclude a *known* too-far distance.
  */
-export function isAvailableNow(r, { now, origin = null, farKm = FAR_KM } = {}) {
+export function isAvailableNow(r, { clock, origin = null, farKm = FAR_KM } = {}) {
   if (isStub(r)) return false; // nothing to order from a "menu coming soon" stub
-  if (availabilityTier(r, now, origin) === 3) return false;
+  if (availabilityTier(r, clock, origin) === 3) return false;
   const dist = origin ? venueDistanceKm(r, origin) : Infinity;
   if (dist !== Infinity && dist > farKm) return false;
   return true;
@@ -124,7 +125,7 @@ export function isAvailableNow(r, { now, origin = null, farKm = FAR_KM } = {}) {
  */
 export function rankVenues(
   restaurants,
-  { now, origin = null, favouriteIds = null, favBoostKm = FAV_BOOST_KM, farKm = FAR_KM } = {}
+  { clock, origin = null, favouriteIds = null, favBoostKm = FAV_BOOST_KM, farKm = FAR_KM } = {}
 ) {
   const keyed = restaurants.map((r, i) => {
     // Resolve the nearest branch once: its distance and its hours both feed the
@@ -147,7 +148,8 @@ export function rankVenues(
     // meaningless — and worse, "unknown hours" (tier 2) would beat "known
     // closed" (tier 3), so a nearer closed stub sank below a farther unknown
     // one. Zero it for stubs so they order by distance instead.
-    const tier = stub || r.kind === "recipes" ? 0 : tierFromHours(hours, now);
+    const tier =
+      stub || r.kind === "recipes" ? 0 : tierFromHours(hours, clock.at(venueTimezone(r, origin)));
     return {
       r, i, effective, dist, hours, far, tier, stub,
       pinned: r.kind === "recipes" ? 0 : 1, // Cook at Home always anchors the top

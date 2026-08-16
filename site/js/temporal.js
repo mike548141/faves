@@ -19,13 +19,15 @@
 //   5. Derivation       how a reading was obtained, beside when (ADR 0031)
 //
 // Pure: every function takes `asOf` (an ISO date string) rather than reading a
-// clock, so it is fully unit-testable. `todayNZ()` is the only impure part.
+// clock, so it is fully unit-testable. `todayIn()` is the only impure part.
 
 // Dates are ISO 8601, and MAY be reduced precision: "2019", "2019-05" and
 // "2019-05-21" are all valid. That is not slackness — it is the honest record
 // of a menu scan dated only by its year, and §9's "unknown is not none" applied
 // to precision rather than presence. Comparisons always widen a partial date to
 // its full interval, so a partial never accidentally reads as 1 January.
+import { HOME_TIMEZONE } from "./place.js";
+
 const DATE_RE = /^\d{4}(-\d{2}(-\d{2})?)?$/;
 const isDate = (s) => typeof s === "string" && DATE_RE.test(s);
 
@@ -48,18 +50,31 @@ export function endOf(d) {
   return `${d}-${String(last).padStart(2, "0")}`;
 }
 
-// Seasons by month number (1-12) — the southern hemisphere: a "summer menu"
-// here means Dec–Feb.
-// #!### Hard-coded, and it inverts for a northern-hemisphere venue. Same
-// root as the timezone assumption in hours.js: the collection is no longer
-// scoped to one country, so a venue's hemisphere has to come from its data.
+// Seasons by month number (1-12). Southern hemisphere on the left, because
+// that is where the collection started and it keeps the existing data reading
+// the same; a venue north of the equator gets the other column, six months
+// offset (ADR 0043). `venueHemisphere` derives which from the venue's latitude
+// — a coordinate already answers the question, so nothing is stored.
 const SEASON_MONTHS = {
-  summer: [12, 1, 2],
-  autumn: [3, 4, 5],
-  winter: [6, 7, 8],
-  spring: [9, 10, 11],
+  south: {
+    summer: [12, 1, 2],
+    autumn: [3, 4, 5],
+    winter: [6, 7, 8],
+    spring: [9, 10, 11],
+  },
+  north: {
+    summer: [6, 7, 8],
+    autumn: [9, 10, 11],
+    winter: [12, 1, 2],
+    spring: [3, 4, 5],
+  },
 };
-export const SEASONS = Object.keys(SEASON_MONTHS);
+export const SEASONS = Object.keys(SEASON_MONTHS.south);
+
+/** Months (1-12) a season covers in a hemisphere. Unknown hemisphere → south. */
+export function seasonMonths(season, hemisphere = "south") {
+  return (SEASON_MONTHS[hemisphere] || SEASON_MONTHS.south)[season] || null;
+}
 
 // Lifecycle event types. Transitions with dates, not a boolean: a flag loses
 // *when*, cannot express a reopening, and rewrites history as it flips.
@@ -202,7 +217,7 @@ function minusMonths(iso, n) {
  * validate.py warns on the shape — so this is the safe default for one that
  * appears, not a class of thing we are papering over.
  */
-export function refreshCaveat(record, asOf = todayNZ()) {
+export function refreshCaveat(record, asOf = todayIn()) {
   const v = verification(record);
   if (!v) return { show: true, reason: "never", method: null, date: null };
   if (!v.method) return { show: true, reason: "unknown-method", method: null, date: v.date };
@@ -221,21 +236,28 @@ export function refreshCaveat(record, asOf = todayNZ()) {
   };
 }
 
+// One formatter per zone; see the same pattern (and reasoning) in hours.js.
+const dateFormatters = new Map();
+
 /**
- * Today in Pacific/Auckland as "YYYY-MM-DD". The venue's clock, not the
- * viewer's — same call as hours.js makes, for the same reason: a guest
- * browsing from overseas must still see the right answer. Carries the same
- * hard-coded-NZ caveat; see hours.js. en-CA is the locale whose date
- * format *is* ISO 8601.
+ * Today in `tz` as "YYYY-MM-DD". The venue's clock, not the viewer's — same
+ * reason hours.js reads it there: a guest browsing from overseas must still see
+ * the right answer, and a closure that lifts "on the 3rd" lifts on the venue's
+ * 3rd. en-CA is the locale whose date format *is* ISO 8601.
  * The single impure function here; pass its result into everything else.
  */
-export function todayNZ(date = new Date()) {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Pacific/Auckland",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(date);
+export function todayIn(tz = HOME_TIMEZONE, date = new Date()) {
+  let f = dateFormatters.get(tz);
+  if (!f) {
+    const opts = { year: "numeric", month: "2-digit", day: "2-digit" };
+    try {
+      f = new Intl.DateTimeFormat("en-CA", { ...opts, timeZone: tz });
+    } catch {
+      f = new Intl.DateTimeFormat("en-CA", { ...opts, timeZone: HOME_TIMEZONE });
+    }
+    dateFormatters.set(tz, f);
+  }
+  return f.format(date);
 }
 
 // ————————————————————————————————— 1. Temporal value —————————————————————————
@@ -389,18 +411,26 @@ export function venueState(record, asOf) {
 //           came off is unknowable. `to: absent, offBy: <date>` is the honest
 //           encoding of "it was here, then it wasn't"; inventing a `to` would
 //           be a claim stronger than the evidence.
-//   season  recurring, NZ months — a menu that comes back every winter is one
+//   season  recurring months, read in the VENUE's hemisphere — a menu that
+//           comes back every winter is one
 //           fact, not a row per year
 
-/** True when this section/dish is on the menu on `asOf`. */
-export function isAvailable(obj, asOf) {
+/**
+ * True when this section/dish is on the menu on `asOf`.
+ *
+ * `hemisphere` decides what a recurring `season` means — "summer" is Dec–Feb
+ * for a venue south of the equator and Jun–Aug for one north of it (ADR 0043).
+ * It defaults to south, which is where the collection started and keeps every
+ * existing record reading exactly as it did.
+ */
+export function isAvailable(obj, asOf, hemisphere = "south") {
   const a = obj?.available;
   if (!a || typeof a !== "object") return true;
   if (isDate(a.from) && asOf < startOf(a.from)) return false;
   if (isDate(a.to) && asOf > endOf(a.to)) return false;
   if (isDate(a.offBy) && asOf >= startOf(a.offBy)) return false;
   if (typeof a.season === "string") {
-    const months = SEASON_MONTHS[a.season];
+    const months = seasonMonths(a.season, hemisphere);
     if (!months) return true; // unknown season name: don't hide food over a typo
     if (!months.includes(Number(asOf.slice(5, 7)))) return false;
   }
@@ -451,7 +481,7 @@ function resolveItem(item, asOf, defaultRecorded, defaultMethod) {
  * into the projection: the source JSON keeps every dated fact, and anything
  * wanting full history reads the file rather than the resolved record.
  */
-export function resolveRecord(record, asOf = todayNZ()) {
+export function resolveRecord(record, asOf = todayIn(), hemisphere = "south") {
   if (!record || typeof record !== "object") return record;
   const out = { ...record };
   // The venue's `verified` date is the record time for every undated fact in
@@ -476,11 +506,11 @@ export function resolveRecord(record, asOf = todayNZ()) {
 
   if (Array.isArray(record.menu)) {
     out.menu = record.menu
-      .filter((s) => isAvailable(s, asOf))
+      .filter((s) => isAvailable(s, asOf, hemisphere))
       .map((s) => ({
         ...s,
         items: (s.items || [])
-          .filter((i) => isAvailable(i, asOf))
+          .filter((i) => isAvailable(i, asOf, hemisphere))
           .map((i) => resolveItem(i, asOf, recorded, recordedBy)),
       }))
       // A section whose dishes are all out of season is an empty heading; a

@@ -98,6 +98,21 @@ CASES = {
         "error",
     ),
     # --- derivation, ADR 0031 --------------------------------------------
+    # Where a venue IS (ADR 0043). Both fields are optional, so the gate's job is
+    # to catch a *stated* one that is wrong — a typo'd zone or code would
+    # otherwise render a confident wrong clock or an unlabelled price.
+    "timezone that is not an IANA zone": (
+        lambda d: d.update(timezone="Pacific/Wellington"),  # plausible, and not real
+        "error",
+    ),
+    "timezone as a number": (lambda d: d.update(timezone=12), "error"),
+    "a real IANA zone is legal": (lambda d: d.update(timezone="Europe/London"), "clean"),
+    "absent timezone is legal (means home)": (lambda d: d.pop("timezone", None), "clean"),
+    "currency that is not an ISO 4217 code": (lambda d: d.update(currency="dollars"), "error"),
+    "currency in lower case": (lambda d: d.update(currency="gbp"), "error"),
+    # Legal, but it costs the venue its derived price band — so the gate must
+    # WARN rather than pass in silence (validate.py exits 0 on warnings).
+    "an uncalibrated currency is legal but warns": (lambda d: d.update(currency="GBP"), "clean"),
     "verifiedBy off the closed set": (lambda d: d.update(verifiedBy="vibes"), "error"),
     "verifiedBy names a person": (lambda d: d.update(verifiedBy="owner-mike"), "error"),
     "method with no date": (lambda d: d.update(verified=None), "error"),

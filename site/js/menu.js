@@ -7,9 +7,18 @@ import { mapsUrl, recallOrigin } from "./geo.js";
 import { orderedBranches, isMultiLocation, branchAsPlace, branchesToShow } from "./locations.js";
 import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
-import { openStatus, groupWeek, nzNow, viewerOnNzTime } from "./hours.js";
+import { openStatus, groupWeek, makeClock, nowIn, viewerOnVenueTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
-import { todayNZ, verificationText, refreshCaveat, detailsVerification } from "./temporal.js";
+import { todayIn, verificationText, refreshCaveat, detailsVerification } from "./temporal.js";
+import {
+  HOME_CURRENCY,
+  branchTimezone,
+  currencyName,
+  formatMoney,
+  venueCurrency,
+  venueTimezone,
+  zoneLabel,
+} from "./place.js";
 import { slug } from "./slug.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { heartButton } from "./favourites-ui.js";
@@ -38,8 +47,15 @@ import { cookButton } from "./cook-ui.js";
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
 
-const money = (n) =>
-  n == null ? "" : `$${Number(n).toFixed(2).replace(/\.00$/, "")}`;
+// The currency this page's prices are in, set once from the record in render()
+// before anything is drawn. Module state rather than a threaded parameter
+// because a menu page IS one venue — every price on screen is that venue's, in
+// its currency — and threading it through ~40 render helpers would say the same
+// thing forty times. Reset per render so a re-render (profile switch, settings
+// change) can never inherit the previous venue's currency.
+let pageCurrency = HOME_CURRENCY;
+
+const money = (n) => (n == null ? "" : formatMoney(n, pageCurrency));
 
 // --- Tag vocabulary → display ---------------------------------------
 const DIETARY = {
@@ -137,7 +153,7 @@ function addressRow(place, km) {
 
 // Opening hours: a live "Open · until 9pm" status, then the week grouped into
 // ranges (splits shown as "12pm–3pm, 5pm–9pm"), today highlighted.
-function hoursRow(hours, now) {
+function hoursRow(hours, now, tz) {
   const st = openStatus(hours, now);
   const list = el("ul", { className: "hours-list" });
   for (const wk of groupWeek(hours)) {
@@ -148,14 +164,15 @@ function hoursRow(hours, now) {
     if (wk.dows.includes(now.dow)) li.classList.add("is-today");
     list.append(li);
   }
-  // Label the clock as NZ time only for a viewer whose device isn't on it —
-  // locals (the common case) see no redundant qualifier.
-  const onNz = viewerOnNzTime();
+  // Qualify the clock only for a viewer whose device isn't on the venue's —
+  // locals (the common case) see no redundant label. When it IS needed, name
+  // the venue's own city rather than claiming "NZ time" for a London branch.
+  const onVenueTime = viewerOnVenueTime(tz);
   const text = el("span", { className: "contact-text" }, [
     el("span", {
       className: "contact-label",
-      "data-i18n": onNz ? "menu.hours" : "menu.hoursNz",
-      textContent: onNz ? "Hours" : "Hours · NZ time",
+      "data-i18n": onVenueTime ? "menu.hours" : null,
+      textContent: onVenueTime ? "Hours" : `Hours · ${zoneLabel(tz)}`,
     }),
   ]);
   if (st.state !== "unknown") {
@@ -174,11 +191,16 @@ function hoursRow(hours, now) {
 }
 
 // The call / address / hours rows for one branch, in order (any may be absent).
-function branchRows(r, b, now) {
+function branchRows(r, b, clock) {
   const rows = [];
   if (b.phone) rows.push(callRow(b.phone));
   if (b.address) rows.push(addressRow(branchAsPlace(r, b), b.distanceKm));
-  if (b.hours) rows.push(hoursRow(b.hours, now));
+  // Each branch is read on its OWN clock: a chain spanning two zones is open in
+  // one and shut in the other, and one shared `now` would have said otherwise.
+  if (b.hours) {
+    const tz = branchTimezone(r, b);
+    rows.push(hoursRow(b.hours, clock.at(tz), tz));
+  }
   return rows;
 }
 
@@ -186,7 +208,7 @@ function branchRows(r, b, now) {
 // a fallback name) with a distance chip when we know the viewer's location, then
 // that branch's own call / address / hours rows. A real heading — not a bare
 // row — so a screen-reader user can navigate branch-by-branch.
-function branchBlock(r, b, now) {
+function branchBlock(r, b, clock) {
   const heading = b.label || b.address || r.name;
   const head = el("h3", { className: "branch-head" }, [
     el("span", { className: "branch-name", textContent: heading }),
@@ -196,7 +218,7 @@ function branchBlock(r, b, now) {
   ]);
   return el("section", { className: "contact-branch", "aria-label": `${r.name} — ${heading}` }, [
     head,
-    ...branchRows(r, b, now),
+    ...branchRows(r, b, clock),
   ]);
 }
 
@@ -210,14 +232,14 @@ function branchBlock(r, b, now) {
 // "something wrong here?" belongs at the end of it rather than somewhere else on
 // the page. It is a suggestion to the owner — never an edit (report-ui.js).
 function contactCard(r) {
-  const now = nzNow();
+  const clock = makeClock();
   if (!isMultiLocation(r)) {
     // Pass the origin so the single branch carries its distanceKm — that's what
     // lets addressRow show the mode-aware travel hint (ADR 0021). Ordering is a
     // no-op with one branch; without an origin distanceKm stays Infinity → no
     // hint, which is exactly what we want when Near-me hasn't captured a location.
     return el("div", { className: "contact-card" }, [
-      ...branchRows(r, orderedBranches(r, recallOrigin())[0], now),
+      ...branchRows(r, orderedBranches(r, recallOrigin())[0], clock),
       venueReportRow(r),
     ]);
   }
@@ -229,11 +251,11 @@ function contactCard(r) {
   const { shown, rest } = branchesToShow(branches, settings.get().favBoostKm);
   const card = el("div", { className: "contact-card contact-card-multi" }, [
     el("h2", { className: "contact-branches-head", "data-i18n": "menu.branches", textContent: "Branches" }),
-    ...shown.map((b) => branchBlock(r, b, now)),
+    ...shown.map((b) => branchBlock(r, b, clock)),
   ]);
   if (rest.length) {
     const restWrap = el("div", { className: "contact-branches-rest", hidden: true },
-      rest.map((b) => branchBlock(r, b, now)));
+      rest.map((b) => branchBlock(r, b, clock)));
     const toggle = el("button", { type: "button", className: "contact-branches-more" });
     const collapsedLabel = `Show all ${branches.length} branches`;
     toggle.textContent = collapsedLabel;
@@ -287,6 +309,7 @@ function renderHeader(r) {
       type: "venue",
       venueId: r.id,
       venueName: r.name,
+      currency: venueCurrency(r),
       isRecipe: isRecipes,
       sub: meta,
     },
@@ -308,7 +331,7 @@ function renderHeader(r) {
   const titleRow = el("div", { className: "menu-title-row" }, [titleGroup, venueHeart]);
   // Recipes are ours: there is no shop to have checked with, so no caveat —
   // and equally nothing to reassure anyone about. They keep a bare title.
-  const caveat = isRecipes ? null : refreshCaveat(r, todayNZ());
+  const caveat = isRecipes ? null : refreshCaveat(r, todayIn(venueTimezone(r)));
   if (caveat) {
     const [caveatBtn, caveatNote] = caveatDisclosure(r.id, caveat, r);
     // Button after the title, note absolutely positioned within the group
@@ -322,7 +345,7 @@ function renderHeader(r) {
   // above can hide behind an ⓘ because a stale price costs a dollar; a closed
   // venue costs a wasted trip, so it states itself and carries the venue's own
   // note ("kitchen refit") when we have one.
-  const closure = closureBadge(r, todayNZ());
+  const closure = closureBadge(r, todayIn(venueTimezone(r)));
   if (closure) {
     const banner = el("p", { className: "menu-closure" }, [closure]);
     if (r.closure?.note) {
@@ -517,7 +540,13 @@ function confidenceNote(caveat, record) {
     // Leading space is for the accessibility tree, not the layout: the span is
     // display:block so the space collapses visually, but without it a screen
     // reader runs the two sentences together ("…2026.All prices…").
-    el("span", { className: "caveat-currency", textContent: " All prices are in New Zealand dollars (NZD)." }),
+    el("span", {
+      className: "caveat-currency",
+      // The venue's OWN currency, not the site's — there is no site currency
+      // any more (ADR 0043). This is the sentence a reader looking straight at
+      // the prices needs, which is why it sits here and not only in About.
+      textContent: ` Prices are in ${currencyName(venueCurrency(record))}.`,
+    }),
   ]);
 }
 
@@ -756,6 +785,7 @@ function renderRecipeDetail(item) {
 }
 
 function render(r) {
+  pageCurrency = venueCurrency(r);
   document.title = `${r.name} — Faves`;
   const isRecipes = r.kind === "recipes";
   const allItems = r.menu.flatMap((s) => s.items);
@@ -993,12 +1023,12 @@ function compactContactBar(r) {
   // anything here sees the record, precisely so these consumers stay simple.
   // Open-now status, mirroring the full card's badge (dot + "Open · until 9pm").
   // A lifecycle closure replaces it — the same precedence the card applies.
-  const closure = closureBadge(r, todayNZ());
+  const closure = closureBadge(r, todayIn(venueTimezone(r)));
   if (closure) {
     closure.classList.add("contact-bar-status");
     inner.append(closure);
   } else if (r.hours) {
-    const st = openStatus(r.hours, nzNow());
+    const st = openStatus(r.hours, nowIn(venueTimezone(r)));
     if (st.state !== "unknown") {
       const badge = el("span", {
         className: "hours-badge contact-bar-status",

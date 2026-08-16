@@ -18,6 +18,7 @@
 
 import { haversineKm } from "./distance.js";
 import { branchesOf, branchCoords } from "./locations.js";
+import { venueTimezone } from "./place.js";
 import { tierFromHours } from "./ranking.js";
 
 // Safe numeric compare (Infinity − Infinity is NaN, which would corrupt a
@@ -89,7 +90,7 @@ export function venueDetourKm(r, origin = null, dest = null) {
  */
 export function rankByDetour(
   restaurants,
-  { now, origin = null, dest = null, favouriteIds = null } = {}
+  { clock, origin = null, dest = null, favouriteIds = null } = {}
 ) {
   const keyed = restaurants.map((r, i) => {
     const isRecipes = r.kind === "recipes";
@@ -101,7 +102,7 @@ export function rankByDetour(
     const isFav = !!(favouriteIds && favouriteIds.has(r.id));
     // Availability is meaningless for a stub (nothing to order) and always-on
     // for recipes; zero it so those groups order by detour/curated alone.
-    const tier = stub || isRecipes ? 0 : tierFromHours(hours, now);
+    const tier = stub || isRecipes ? 0 : tierFromHours(hours, clock.at(venueTimezone(r, origin)));
     return {
       r,
       i,

@@ -5,13 +5,16 @@
 // it rides along on the home, menu and recipe screens without duplicating
 // markup. The model lives in cart.js; this is purely presentation + wiring.
 
-import { order, groupByVenue } from "./cart.js";
+import { order, groupByVenue, orderTotals } from "./cart.js";
 import { encodeShare, decodeShare, buildShareUrl, readShareToken } from "./share-codec.js";
 import { favourites, groupForShare } from "./favourites.js";
 import { openShareDialog } from "./share-ui.js";
 import { el } from "./dom.js";
+import { formatMoney } from "./place.js";
 
-const money = (n) => "$" + Number(n).toFixed(2).replace(/\.00$/, "");
+// A line, subtotal or total always carries the currency it is in — an order
+// can span venues in different countries, and an unlabelled number then lies.
+const money = (n, currency) => formatMoney(n, currency);
 const tel = (p) => "tel:" + p.replace(/\s+/g, "");
 const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
 
@@ -181,7 +184,7 @@ export function initOrderUI() {
         el("span", { textContent: plural(g.count, "item") }),
         el("span", {
           className: "order-subtotal-amount",
-          textContent: money(g.subtotal) + (g.hasUnpriced ? "+" : ""),
+          textContent: money(g.subtotal, g.currency) + (g.hasUnpriced ? "+" : ""),
         }),
       ]);
       body.append(el("section", { className: "order-group" }, [head, lines, subtotal]));
@@ -190,7 +193,13 @@ export function initOrderUI() {
 
   function renderTotal() {
     const anyUnpriced = order.groups().some((g) => g.hasUnpriced);
-    totalEl.textContent = money(order.total()) + (anyUnpriced ? "+" : "");
+    // "$42.50", or "$42.50 + £18" once an order spans currencies. Joined rather
+    // than summed: the two are not addable, and the "+" here is the same "+"
+    // that already means "and something unpriced on top".
+    const totals = orderTotals(order.items());
+    totalEl.textContent =
+      (totals.length ? totals.map((x) => money(x.total, x.currency)).join(" + ") : money(0)) +
+      (anyUnpriced ? "+" : "");
   }
 
   function renderFab() {

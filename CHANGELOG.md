@@ -8,7 +8,19 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **A place now keeps its own clock and its own currency.** "Open now" is worked
+  out on the *place's* clock — so a venue in London reads correctly whether
+  you're looking it up from Wellington or from down its own street — and prices
+  show in the currency its own menu uses (`£8.95`, `¥900`), with the ⓘ beside
+  them naming it. An order that spans two countries shows a total per currency
+  rather than an unpayable sum. A "summer menu" now follows the hemisphere the
+  place is actually in. Nothing changes for the places already listed. (ADR 0043)
+
 ### Changed
+- **About no longer claims a single currency for the whole site**, because
+  there isn't one: it states the rule, and each menu names its own. It gained a
+  matching note about whose clock the opening hours are on. (ADR 0043)
 - **Faves is no longer a Wellington app.** The title, the install name, the
   About panel, the share text and the te reo subtitle dropped the city: the
   collection is scoped to what we like, not to where it is, so a place loved

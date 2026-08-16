@@ -17,7 +17,8 @@ import {
   resolveRecord,
   isTrading,
   isGone,
-  todayNZ,
+  todayIn,
+  seasonMonths,
   VERIFY_METHODS,
   TRUSTED_VERIFY_METHODS,
   VERIFY_MAX_AGE_MONTHS,
@@ -343,12 +344,12 @@ test("resolveRecord: survives junk without throwing", () => {
   assert.equal(resolveRecord(undefined, "2026-08-08"), undefined);
 });
 
-test("todayNZ: returns an ISO date in the venue's timezone", () => {
-  assert.match(todayNZ(), /^\d{4}-\d{2}-\d{2}$/);
+test("todayIn: returns an ISO date in the venue's timezone", () => {
+  assert.match(todayIn(), /^\d{4}-\d{2}-\d{2}$/);
   // 09:00 UTC on 1 Jan is already the 1st in NZ (UTC+13 in January).
-  assert.equal(todayNZ(new Date("2026-01-01T09:00:00Z")), "2026-01-01");
+  assert.equal(todayIn("Pacific/Auckland", new Date("2026-01-01T09:00:00Z")), "2026-01-01");
   // 22:00 UTC on 31 Dec is the 1st in NZ but still the 31st in UTC.
-  assert.equal(todayNZ(new Date("2025-12-31T22:00:00Z")), "2026-01-01");
+  assert.equal(todayIn("Pacific/Auckland", new Date("2025-12-31T22:00:00Z")), "2026-01-01");
 });
 
 // ---------- derivation: how we know (ADR 0031) ----------
@@ -537,4 +538,31 @@ test("refreshCaveat: the corpus's own records land where the ruling says", () =>
     false, "TJ Katsu and Sushi Bi — the shop's own site, read two days ago");
   // …and every other record, which has never been read at all.
   assert.equal(refreshCaveat({ verified: null }, asOf).show, true);
+});
+
+// ——————————————————— Hemisphere-aware seasons (ADR 0043) ———————————————————
+
+test("todayIn reads the date in the zone it is handed", () => {
+  // 22:00 UTC on 31 Dec is already New Year's Day in Auckland and still the
+  // old year in London — one instant, two dates.
+  const t = new Date("2025-12-31T22:00:00Z");
+  assert.equal(todayIn("Pacific/Auckland", t), "2026-01-01");
+  assert.equal(todayIn("Europe/London", t), "2025-12-31");
+});
+
+test("todayIn falls back to home for a malformed zone rather than throwing", () => {
+  const t = new Date("2025-12-31T22:00:00Z");
+  assert.equal(todayIn("Not/AZone", t), todayIn("Pacific/Auckland", t));
+});
+
+test("seasonMonths: summer is Dec-Feb in the south and Jun-Aug in the north", () => {
+  assert.deepEqual(seasonMonths("summer", "south"), [12, 1, 2]);
+  assert.deepEqual(seasonMonths("summer", "north"), [6, 7, 8]);
+  assert.deepEqual(seasonMonths("winter", "north"), [12, 1, 2]);
+});
+
+test("seasonMonths: unknown hemisphere falls back to south, unknown season to null", () => {
+  assert.deepEqual(seasonMonths("summer", undefined), [12, 1, 2]);
+  assert.deepEqual(seasonMonths("summer", "sideways"), [12, 1, 2]);
+  assert.equal(seasonMonths("harvest", "south"), null);
 });

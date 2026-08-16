@@ -22,12 +22,18 @@
 // already has a channel to whoever shared Faves with them. The report says to
 // send it to that person.
 //
+import { formatMoney, venueCurrency } from "./place.js";
+
 // The composed text is always English — it's a message to the person who
 // maintains the data, not app chrome (reo.js translates the dialog around it).
 
-/** A price as the app shows it ($18.50, $18) — mirrors menu.js's `money`. */
-export function money(n) {
-  return n == null ? null : `$${Number(n).toFixed(2).replace(/\.00$/, "")}`;
+/**
+ * A price as the app shows it ($18.50, £8.95) — mirrors menu.js's `money`.
+ * Takes the venue's currency because a report quotes a price back to us and an
+ * unlabelled number from a foreign menu is the ambiguity worth avoiding.
+ */
+export function money(n, currency) {
+  return n == null ? null : formatMoney(n, currency);
 }
 
 // What can be reported, and from where. `scopes` is where the entry point lives:
@@ -140,7 +146,7 @@ function whatLine(type, venue, dish) {
 // What the device is showing right now — the whole point of reporting from the
 // dish rather than a blank contact form. Stated as "Faves is showing …" so it
 // reads as our record, not as a claim about the venue.
-function shownLines(type, dish) {
+function shownLines(type, dish, venue) {
   if (!dish) return [];
   const out = [];
   if (type === "allergen") {
@@ -153,7 +159,7 @@ function shownLines(type, dish) {
     );
     return out;
   }
-  const price = money(dish.price);
+  const price = money(dish.price, venueCurrency(venue));
   out.push(price ? `Faves is showing ${price}.` : "Faves has no price recorded for it.");
   return out;
 }
@@ -171,7 +177,7 @@ function detailLines({ type, venue, dish, versions, url }) {
   if (venue?.name) lines.push(["venue", venue.id ? `${venue.name} (${venue.id})` : venue.name]);
   if (dish?.name) lines.push(["dish", dish.name]);
   if (dish?.code) lines.push(["order code", `#${dish.code}`]);
-  if (dish) lines.push(["price shown", money(dish.price) ?? "none recorded"]);
+  if (dish) lines.push(["price shown", money(dish.price, venueCurrency(venue)) ?? "none recorded"]);
   if (dish) lines.push(["tags shown", tagList(dish.tags) || "none recorded"]);
   if (venue?.verified !== undefined && venue?.name) {
     lines.push(["menu last checked", venue.verified || "never"]);
@@ -203,7 +209,7 @@ export function composeReport(ctx = {}) {
   // An app-wide report (feedback, suggest a place) has no venue or dish to name,
   // and the opener already said what it is — a "what" line there would just echo.
   if (venue?.name || dish?.name) {
-    blocks.push([whatLine(type, venue, dish), ...shownLines(type, dish)].join("\n"));
+    blocks.push([whatLine(type, venue, dish), ...shownLines(type, dish, venue)].join("\n"));
   }
 
   const trimmed = typeof note === "string" ? note.trim() : "";

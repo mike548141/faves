@@ -15,6 +15,11 @@ import {
 } from "../site/js/route.js";
 import { routeMapsUrlFor } from "../site/js/geo.js";
 
+// The ranker reads the clock per venue, in that venue's own zone (ADR 0043).
+// These tests are about ordering, not timezones, so they hand it a stub that
+// answers the same fixed moment for every zone — the shape `makeClock` returns.
+const clockAt = (now) => ({ date: new Date(0), at: () => now });
+
 const week = (o, c) =>
   Object.fromEntries(["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((d) => [d, [[o, c]]]));
 const MON_NOON = { dow: 1, minutes: 12 * 60 };
@@ -104,7 +109,7 @@ const wayOff = { id: "way-off", lat: pt(5, 20).lat, lng: pt(5, 20).lng, hours: w
 
 test("rankByDetour: least detour leads", () => {
   const order = rankByDetour([wayOff, beside, onLine], {
-    now: MON_NOON,
+    clock: clockAt(MON_NOON),
     origin: ORIGIN,
     dest: DEST,
   }).map((r) => r.id);
@@ -112,7 +117,7 @@ test("rankByDetour: least detour leads", () => {
 });
 
 test("rankByDetour: attaches a detourKm field for the card", () => {
-  const [first] = rankByDetour([onLine], { now: MON_NOON, origin: ORIGIN, dest: DEST });
+  const [first] = rankByDetour([onLine], { clock: clockAt(MON_NOON), origin: ORIGIN, dest: DEST });
   assert.equal(typeof first.detourKm, "number");
   assert.ok(first.detourKm < 0.01);
 });
@@ -124,7 +129,7 @@ test("rankByDetour: detour leads, availability is only the secondary key", () =>
   const closedOnLine = { id: "closed-on-line", lat: pt(5).lat, lng: pt(5).lng, hours: week("18:00", "22:00") };
   const openWayOff = { id: "open-way-off", lat: pt(5, 20).lat, lng: pt(5, 20).lng, hours: week("09:00", "22:00") };
   const order = rankByDetour([openWayOff, closedOnLine], {
-    now: MON_NOON,
+    clock: clockAt(MON_NOON),
     origin: ORIGIN,
     dest: DEST,
   }).map((r) => r.id);
@@ -136,7 +141,7 @@ test("rankByDetour: among near-equal detours, the open one wins (availability br
   const openHere = { id: "open-here", lat: pt(5).lat, lng: pt(5).lng, hours: week("09:00", "22:00") };
   const closedHere = { id: "closed-here", lat: pt(5).lat, lng: pt(5).lng, hours: week("18:00", "22:00") };
   const order = rankByDetour([closedHere, openHere], {
-    now: MON_NOON,
+    clock: clockAt(MON_NOON),
     origin: ORIGIN,
     dest: DEST,
   }).map((r) => r.id);
@@ -146,7 +151,7 @@ test("rankByDetour: among near-equal detours, the open one wins (availability br
 test("rankByDetour: recipes pinned to the very top despite Infinity detour", () => {
   const recipes = { id: "cook-at-home", name: "Cook at Home", kind: "recipes" };
   const order = rankByDetour([onLine, recipes], {
-    now: MON_NOON,
+    clock: clockAt(MON_NOON),
     origin: ORIGIN,
     dest: DEST,
   }).map((r) => r.id);
@@ -155,14 +160,14 @@ test("rankByDetour: recipes pinned to the very top despite Infinity detour", () 
 
 test("rankByDetour: menu-less stubs sink below everything orderable", () => {
   const stub = { id: "stub", status: "stub", lat: pt(5).lat, lng: pt(5).lng, hours: week("09:00", "22:00") };
-  const order = rankByDetour([stub, wayOff], { now: MON_NOON, origin: ORIGIN, dest: DEST }).map((r) => r.id);
+  const order = rankByDetour([stub, wayOff], { clock: clockAt(MON_NOON), origin: ORIGIN, dest: DEST }).map((r) => r.id);
   // Even though the stub is dead on the line, it can't be ordered from → below.
   assert.deepEqual(order, ["way-off", "stub"]);
 });
 
 test("rankByDetour: coordless venues sink to the bottom", () => {
   const noPin = { id: "no-pin", name: "No Pin", address: "unknown", hours: week("09:00", "22:00") };
-  const order = rankByDetour([noPin, onLine], { now: MON_NOON, origin: ORIGIN, dest: DEST }).map((r) => r.id);
+  const order = rankByDetour([noPin, onLine], { clock: clockAt(MON_NOON), origin: ORIGIN, dest: DEST }).map((r) => r.id);
   assert.deepEqual(order, ["on-line", "no-pin"]);
 });
 
@@ -170,7 +175,7 @@ test("rankByDetour: favourite is only a tiebreak (no distance boost off-route)",
   // A hearted way-off venue must NOT jump an on-line plain one — a favourite
   // off your route isn't 'on the way'.
   const order = rankByDetour([wayOff, onLine], {
-    now: MON_NOON,
+    clock: clockAt(MON_NOON),
     origin: ORIGIN,
     dest: DEST,
     favouriteIds: new Set(["way-off"]),
@@ -179,7 +184,7 @@ test("rankByDetour: favourite is only a tiebreak (no distance boost off-route)",
 });
 
 test("rankByDetour: multi-location venue ranks on its best branch", () => {
-  const [out] = rankByDetour([twoBranch], { now: MON_NOON, origin: ORIGIN, dest: DEST });
+  const [out] = rankByDetour([twoBranch], { clock: clockAt(MON_NOON), origin: ORIGIN, dest: DEST });
   assert.ok(out.detourKm < 0.01); // branch B (on the line) chosen
   // Card hours come from that branch (B, closed at noon).
   assert.deepEqual(out.hours, week("18:00", "22:00"));
@@ -188,7 +193,7 @@ test("rankByDetour: multi-location venue ranks on its best branch", () => {
 test("rankByDetour does not mutate its input", () => {
   const input = [wayOff, onLine];
   const snap = JSON.stringify(input);
-  rankByDetour(input, { now: MON_NOON, origin: ORIGIN, dest: DEST });
+  rankByDetour(input, { clock: clockAt(MON_NOON), origin: ORIGIN, dest: DEST });
   assert.equal(JSON.stringify(input), snap);
 });
 

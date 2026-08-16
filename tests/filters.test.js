@@ -16,6 +16,11 @@ import {
   DEFAULT_FILTERS,
 } from "../site/js/filters.js";
 
+// The ranker reads the clock per venue, in that venue's own zone (ADR 0043).
+// These tests are about ordering, not timezones, so they hand it a stub that
+// answers the same fixed moment for every zone — the shape `makeClock` returns.
+const clockAt = (now) => ({ date: new Date(0), at: () => now });
+
 // A small fixture that mirrors the real record shape (see ARCHITECTURE.md).
 const FIXTURE = [
   { id: "cook", kind: "recipes", area: null, cuisine: [], services: [] },
@@ -126,12 +131,12 @@ const OPEN_FIXTURE = [
 const MON_NOON = { dow: 1, minutes: 12 * 60 };
 
 test("openNow: keeps only currently-open venues; unknown-hours + recipes drop", () => {
-  const shown = applyFilters(OPEN_FIXTURE, { ...DEFAULT_FILTERS, openNow: true }, MON_NOON);
+  const shown = applyFilters(OPEN_FIXTURE, { ...DEFAULT_FILTERS, openNow: true }, clockAt(MON_NOON));
   assert.deepEqual(shown.map((r) => r.id), ["open"]);
 });
 
 test("openNow off (the default) keeps everything regardless of hours", () => {
-  const shown = applyFilters(OPEN_FIXTURE, DEFAULT_FILTERS, MON_NOON);
+  const shown = applyFilters(OPEN_FIXTURE, DEFAULT_FILTERS, clockAt(MON_NOON));
   assert.equal(shown.length, 4);
 });
 

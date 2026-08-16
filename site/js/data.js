@@ -2,7 +2,8 @@
 // per restaurant. Small enough (~50 KB total) to load all on the home
 // screen; the service worker precaches it for offline (Phase 5).
 
-import { resolveRecord } from "./temporal.js";
+import { resolveRecord, todayIn } from "./temporal.js";
+import { venueHemisphere, venueTimezone } from "./place.js";
 
 const INDEX_URL = "data/index.json";
 const restaurantUrl = (id) => `data/restaurants/${id}.json`;
@@ -43,7 +44,15 @@ function normaliseVenue(r) {
 // itself be a dated series, so it has to collapse to today's value before
 // normaliseVenue lifts it to the top level. This pair is the only place the
 // app crosses from "the record, with all its history" to "the record, today".
-const load = (raw) => normaliseVenue(resolveRecord(raw));
+// Each record is resolved on ITS OWN clock and in ITS OWN hemisphere (ADR
+// 0043): "what is on the menu today" is a question about the venue's today, and
+// a "summer menu" runs Dec–Feb or Jun–Aug depending on which side of the
+// equator the venue sits. Hemisphere comes off the venue's latitude; with no
+// coordinate we keep the collection's own (south) rather than guess.
+const load = (raw) =>
+  normaliseVenue(
+    resolveRecord(raw, todayIn(venueTimezone(raw)), venueHemisphere(raw) ?? "south")
+  );
 
 /** Load every restaurant, in display order. Throws if the index fails. */
 export async function loadRestaurants() {
