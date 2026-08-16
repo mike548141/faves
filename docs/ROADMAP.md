@@ -1725,12 +1725,27 @@ wrong.
 - ✅ **14e — Order-tally knock-ons** — **shipped 2026-08-16**. Line identity is
   now `(venueId, name, selectionKey)`; the share codec deliberately did *not*
   bump. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
-- [ ] **14b — The content sweep** `[M][content]` — retro-fitting the corpus is
+- [~] **14b — The content sweep** `[M][content]` — **the TOOL half CLAIMED
+  2026-08-16 22:40 UTC (wt: faves-schema30)**; the conversion half stays open,
+  because converting a row is a judgement and the tool deliberately refuses to
+  make it. Retro-fitting the corpus is
   the bulk of the work, not the code. Pattern-match `Add …$` / `+$` in every
   `desc` and convert; keep the prose only where it isn't an orderable choice.
   Model it on `tools/tag_allergens.py` (ADR 0024): a re-runnable script plus a
   `validate.py` warning, because a hand sweep across 31 venues is exactly how
   the allergen inconsistency got created in the first place.
+  🔎 **Measured 2026-08-16, and it changes the shape of the tool: 14b and 28b
+  are reading the same field with no shared classifier.** 152 dish descs carry a
+  `$`; only ~24 are add-ons. The rest are size ladders (~101), per-head prices,
+  discounts and priced pairings — **an 84% false-positive rate on a bare `$`
+  match**. The two themes were sized independently off overlapping counts. So
+  the tool classifies every prose offer and *routes* it to its theme (14b add-on
+  · 28b size · 14f combo · 14c customisation) rather than pattern-matching for
+  add-ons alone. ⚠️ **And the note above about `tag_allergens.py` writing
+  nothing on a record with `addOnGroups` is now HISTORICAL** — `e42b343` made
+  the scanner structure-aware; a dry run reports 0 missing and 0 skipped today.
+  The bail is still there and is now a correct guard rather than a silent
+  refusal.
 - ✅ **14c — Customise / omit — SHIPPED 2026-08-16** ([ADR 0073]) as the
   recommended half: a free-text note per order line, part of line identity.
   The **components** half stays unbuilt and is still the right answer *if* a
@@ -2809,10 +2824,19 @@ contain shellfish.
   shape must express "size unknown, price known", and Hell's 13 drink rows
   state two volumes at ONE price. A required price-per-size would force
   inventing prices the menu does not state.
-- [ ] **28c — A section's time window is unreadable prose** `[M][schema]` 🔎 —
+- [~] **28c — A section's time window is unreadable prose** `[M][schema]` 🔎 —
+  **CLAIMED 2026-08-16 22:40 UTC (wt: faves-schema30)**.
   the one clean, self-contained defect here. `available` accepts dates and
-  seasons only, so "Mon–Fri 11:30–17:30" is **inexpressible**; six sections
-  cram a time window into the section NAME and exactly one section in the
+  seasons only, so "Mon–Fri 11:30–17:30" is **inexpressible**.
+  ⚠️ **The next clause was stale and is corrected here: ZERO sections cram a
+  time window into the section NAME.** ADR 0057 moved every one of them into
+  `note` on 2026-08-16 — eleven lines below this item, 28d/28f are marked done
+  for doing exactly that. The real figure is **5 sections in 4 venues carrying a
+  window as prose in `section.note`** (`1841-bar-restaurant` mains + brunch,
+  `gold-lining-cafe` all-day-brunch, `sprig-and-fern-tawa` gold-card,
+  `the-borough-tawa` brunch). So 28c adds a field beside `note` and needs no
+  name migration at all — it is smaller than it was written. It remains true
+  that exactly one section in the
   corpus uses `available` at all. `hours.js` already does weekday+interval
   reasoning for the venue's own opening hours — the machinery exists and the
   section schema cannot reach it. Consequence today: nothing checks the clock,
@@ -3720,6 +3744,42 @@ rich*.
   per-person price and course sequence, a kids menu changes legally-required
   calorie footer text in England. Closed set, extended when a real venue needs
   a value — never invented ahead of one (owner's 2026-08-16 scope ruling).
+- 🛑 **30d's premise does not survive measurement — DO NOT BUILD IT AS WRITTEN.**
+  Checked 2026-08-16 (wt: faves-schema30). The owner greenlit *"`channel` on a
+  price record in `data/`"* as a cheap independent piece. Three facts say it
+  would ship a field nothing exercises — **the exact failure he ruled against
+  for 30a in the same breath**:
+  - **Only 2 venues have any price history at all** — `takeaway-at-churton`
+    (174 rows) and `thai-tara-express` (38 rows). Every one of those 212 entries
+    is a paper menu or a 2019 scan. **None is delivery-sourced.**
+  - **KK Malaysian and KC Cafe — the two venues this item exists for — have no
+    price-history rows whatsoever.** The live debt is in their *current* price,
+    not in the record store.
+  - **`delivery-app` already exists as a `verifiedBy` value** (ADR 0031),
+    already renders the "untrusted" caveat — *"These prices came from a delivery
+    app, not the place itself"* — and is already precached. **It is used by zero
+    venues.**
+  🔎 **The real defect is one level down and needs no new field.** KK Malaysian
+  and KC Cafe carry `verified: null` and no `verifiedBy` — no derivation at all
+  — while `docs/STRATEGY.md` records in prose that their prices are
+  Delivereasy's and marked up. **27 of 55 venues have no verification reading**,
+  so the caveat machinery ADR 0037 built cannot fire for half the corpus. Two
+  venues today show marked-up delivery prices with no caveat, using a field that
+  already exists and already renders.
+  🎯 **Owner's call, and it is a real fork** — (a) build `channel` in `data/` as
+  greenlit, on the understanding that it lands on 212 rows that are all the same
+  value and does nothing for KK/KC; (b) spend the same effort setting
+  `verifiedBy: delivery-app` on the venues whose prices came from one, which is
+  visible to readers immediately; or (c) both, in that order. Recommendation:
+  **(b)**. Note (b) needs a `verified` date and `reading()` returns null without
+  one — the git add-date (2026-07-06 for both) is defensible *record time*, but
+  provenance on menu content is owner-directed, so it is asked rather than
+  assumed.
+  ⚠️ **Naming clash to settle before either:** this item spells it `dine_in`,
+  the repo's house style everywhere else is kebab (`SERVICES = {"dine-in",
+  "takeaway"}`, and every `verifiedBy` method). There is also already a venue
+  filter facet called `service` and `docs/decisions/0071-…` already uses the word
+  "channel" for notification channels. Three meanings, one word.
 - **30d — the `channel` dimension** `[M][schema]`. `dine_in` / `takeaway` /
   `delivery`. This is the one with a **live** debt (row 2 above) and it is not
   only commercial: in the UK the same sandwich is 20% VAT eaten in and 0% taken
@@ -3815,6 +3875,25 @@ What the survey says is missing from it, for the analysis he describes:
   month" is not a correlated as-of join every time.
 
 ### Sizing, and the one thing to do first
+
+⚠️ **The sizing below is amended by measurement, 2026-08-16 (wt: faves-schema30).
+The ADR discharging the owner's "write it now" ruling is drafted and committed.**
+Its finding: this theme holds **two halves in opposite evidential states**, and
+the roadmap puts them in one bucket. `menus[]` and the other *containers* are
+exercised by nothing — the hold is right for them. **The pricing primitive is
+exercised by 152 dish rows in 13 venues today**, all carrying a second price
+inside a `desc` string, across at least six distinct context axes. So the reason
+to hold 30a does not reach the pricing work, which belongs to Theme 28b and can
+proceed on its own evidence.
+Two further corrections to this theme's own table: **per-person pricing is
+recorded above as "Not yet" and is in fact here** (`rock-yard-restaurant`, 8
+rows, *"Min 2 people, $16/head"*); and a **seventh axis nobody named** — 19 rows
+in 7 venues price a *dietary substitution* (`No gluten added bun +$2.50`,
+`+$0.50 for oat milk`). 17 of the 19 already carry `gf-option`, which
+`dietary.js` treats as satisfying the gluten-free claim, so the dish shows
+correctly for a reader who needs it — only the option's **price** has nowhere to
+live. Not a safety defect; an accuracy one, aimed at readers with no choice
+about paying it.
 
 The whole theme is `[XL]` and must not be attempted in one go. **30a is the
 keystone** — everything else attaches to a menu entity that does not yet exist.
