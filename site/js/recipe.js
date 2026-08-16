@@ -9,6 +9,7 @@ import { slug } from "./slug.js";
 import { dishId, findDish } from "./dish-id.js";
 import { initOrderUI } from "./cart-ui.js";
 import { initTransferReceive } from "./personal-io-ui.js";
+import { startSync } from "./sync-start.js";
 import { heartButton } from "./favourites-ui.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
@@ -219,6 +220,7 @@ async function main() {
 
 initOrderUI(); // the running order stays reachable from the recipe screen too
 initTransferReceive(); // a transfer link can land on any screen (Theme 9 v1)
+startSync(); // continual sync, if the user turned it on (Theme 9 v2)
 initReo(); // sets <html lang>; the back link is set to the collection name by render()
 
 // The ⋯ menu's dialogs. Settings now lives on this page, so an allergen change

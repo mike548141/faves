@@ -43,6 +43,7 @@ import { initShareApp } from "./share-app.js";
 import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initTransferReceive } from "./personal-io-ui.js";
+import { startSync } from "./sync-start.js";
 import { initBackToTop } from "./to-top.js";
 import { displayPrice, formatMoney, venueTimezone, zoneLabel } from "./place.js";
 import { priceBand } from "./price.js";
@@ -610,6 +611,7 @@ function init(restaurants) {
   // like the group-order receive, because a link from Messages lands wherever
   // the sender's URL pointed.
   initTransferReceive();
+  startSync(); // continual sync, if the user turned it on (Theme 9 v2)
   // After all static chrome, the filled selects and the JS-built dialogs are
   // in the DOM, apply the stored UI language across the lot in one pass (and
   // re-apply live whenever it's toggled in Settings).
