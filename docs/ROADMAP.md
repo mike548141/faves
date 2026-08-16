@@ -5652,7 +5652,56 @@ The released claim only ever covered the owner's original five.
 > reason the inline row could not be one row". `filter_row_check.mjs` is the
 > guard that would fail.
 
-- [ ] **37k — a "style of dining" filter** `[M][schema][design]` ⚑ — 🛑 **CLAIM
+> 🎯 **FOUR OWNER RULINGS, 2026-08-16 23:08 UTC — 37k IS BUILT, and it is bigger
+> than the item as written.** He was shown the case for parking it (the
+> `priceBand` 8-of-55 measurement, the filter-row width cost, the
+> unfalsifiability of a judgement field) and ruled the other way, in full
+> knowledge of it. ⚑ **discharged.**
+> 1. **BUILD IT FULLY. He supplies the values.** Not a vocabulary-only stub, not
+>    "tag nothing yet" — the vocabulary, the filter control and the tagging pass.
+>    🔑 This retires the 8-of-55 objection by removing its premise: the field is
+>    not waiting on curation-in-general, it is waiting on **him**, which is the
+>    same footing as menu content (*"whatever food/dishes I give you are to be
+>    included"*).
+> 2. **It lives INSIDE `vibe` — and VALIDATE ALL OF `vibe`, not just a style
+>    subset.** This is a bigger ruling than the question asked and it is the
+>    better answer. `vibe` has had **no vocabulary check at all** while
+>    `priceBand` has had one; the corpus proved the cost by growing five strings
+>    for one idea (`quick` · `quick-eats` · `quick-lunch` · `grab-and-go` ·
+>    `counter-order`). Closing only the style subset would have left the other 21
+>    taggings free to drift the same way. ⇒ **`vibe` becomes a closed vocabulary
+>    with FACETS** — each value declares its facet (`style` | `amenity` | …); the
+>    filter reads the `style` facet, the chips render all of them.
+>    🚩 **The workflow consequence, stated so nobody is surprised:** a new vibe
+>    value must be added to the vocabulary before it can be used, and
+>    `validate.py` will refuse it otherwise. That is the point, and it is also
+>    friction — the same friction `priceBand` already has.
+> 3. **RENDER THE `vibe` CHIPS ON CARDS, as `ARCHITECTURE.md:138` always said.**
+>    This closes an inherited ADR 0047 breach: `vibe` has been precached to every
+>    phone since the original schema with **zero** references in `site/`. The
+>    design shipped and the render never did — a **built-vs-never-runs** case,
+>    not an abandoned field, which is why deleting it would have been the wrong
+>    cheap answer. 38 taggings across 20 venues start earning their download.
+> 4. **The amenity values are KEPT.** `dog friendly`, `byo`, `garden bar`,
+>    `live sport`, `quiz night`, `Wellington icon` — 21 taggings no other field
+>    holds. They are not swallowed into the style vocabulary; they get their own
+>    facet.
+> ⚠️ **Known consequence he accepted by choosing to render:** the five
+> inconsistent "quick" strings become **visible on a card on day one**, so
+> normalising the corpus is part of this work and not a follow-up.
+> ⚠️ **ADR 0077 is NOT superseded** — its finding (style is not Theme 30's
+> `service` axis, and `service` already means three things) stands unchanged.
+> What these rulings close are the two questions 0077 explicitly left open.
+
+- [~] **37k — a "style of dining" filter** `[M][schema][design]` — **RE-CLAIMED
+      2026-08-16 23:08 UTC (wt: faves-cook2, branch `style-37k`)** on the four
+      rulings above. Files: `site/data/restaurants/*.json` (vibe values only),
+      `tools/validate.py`, `site/js/filters.js`, `site/js/app.js`,
+      `site/index.html`, `site/js/reo.js`, `site/css/app.css`.
+      🚩 **Overlaps everyone**: the venue files and `app.js` are wide surfaces.
+      Shout before touching a venue file's `vibe` array or the home-card chip
+      render. Superseded claim note below.
+- [ ] **37k — SUPERSEDED CLAIM NOTE** ⚑ — 🛑 **CLAIM
       RELEASED 2026-08-16 22:59 UTC. The blocking 🚩 is CLEARED (ADR 0077,
       block above) and the item is now OWNER-BLOCKED on two questions — do NOT
       treat it as open work.** Entering data against an unratified vocabulary
