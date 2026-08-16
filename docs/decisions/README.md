@@ -458,3 +458,15 @@ deliberation those compact docs omit.
   teeth is **uniqueness**: two sections sharing an id is valid HTML that
   silently makes the second unreachable. Presence becomes required in the commit
   that seeds the last of six files a parallel session held open.
+- [0059](0059-the-info-disclosure-is-click-only.md) — **the ⓘ disclosure is
+  click-only, on every input.** The mouse-only hover reveal on `.caveat-note`
+  failed **WCAG 2.2 SC 1.4.13** on two counts — the note vanished as the pointer
+  moved toward it across a margin (not Hoverable) and Escape was wired only on
+  the click path (not Dismissible) — and had separately produced an infinite
+  flicker in Settings, where revealing an in-flow note grew the centred sheet
+  and moved the ⓘ 54px out from under a stationary pointer. Three options went
+  to the owner because going click-only trades a mouse affordance for
+  compliance rather than being the neutral fix; he **accepted the
+  recommendation** and the reveal is deleted. `device_check.mjs` now hovers the
+  ⓘ and asserts nothing appears and nothing moves, because a deletion nothing
+  guards is a deletion waiting to be undone.

@@ -326,6 +326,33 @@ async function run(opts) {
     report.check("Settings opens from the menu page's ⋯ menu", true);
 
     await click(".settings-row", "Food preferences");
+
+    // --- The allergen caveat ⓘ opens on a click (ADR 0059) ----------------
+    // ADR 0059 made every ⓘ click-only. The invariant "no hover reveal exists"
+    // is asserted in tests/disclosure-css.test.js, NOT here: a synthetic
+    // mouseMoved does not reliably raise CSS :hover in this harness — the
+    // deleted rule was put back and a hover assertion here PASSED against it,
+    // which is a check that would have read as coverage while proving nothing.
+    // What a real browser can prove is the half that matters to a user: the
+    // one remaining way in still works.
+    const caveat = ".settings-sub-row .caveat-btn";
+    const caveatShown = () => evalPage(
+      `!!document.querySelector(".settings-sub-row .caveat-note") &&` +
+      ` getComputedStyle(document.querySelector(".settings-sub-row .caveat-note")).display !== "none"`
+    );
+    if (await evalPage(`!!document.querySelector(${JSON.stringify(caveat)})`)) {
+      const before = await caveatShown();
+      await click(caveat);
+      const opened = await caveatShown();
+      await click(caveat);
+      const closed = await caveatShown();
+      report.check(
+        "the allergen ⓘ opens and closes on a click — the one way in, on every input",
+        before === false && opened === true && closed === false,
+        `closed → ${opened ? "open" : "still closed"} → ${closed ? "still open" : "closed"}`
+      );
+    }
+
     await click(`.pref-chips-avoid .pref-chip[data-key="${ALLERGEN.key}"]`);
     const chipOn = await evalPage(
       `document.querySelector('.pref-chips-avoid .pref-chip[data-key="${ALLERGEN.key}"]')` +

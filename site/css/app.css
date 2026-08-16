@@ -4508,29 +4508,22 @@ body.faves-view .to-top {
 .caveat-note.is-open {
   display: block;
 }
-/* Mouse users get a hover reveal too; touch/keyboard use the click toggle.
-   Safe HERE because .caveat-note is out of flow (position: absolute above): it
-   overlays the page, so revealing it moves nothing. */
-@media (hover: hover) and (pointer: fine) {
-  .caveat-btn:hover ~ .caveat-note {
-    display: block;
-  }
-  /* …and switched OFF wherever the note sits IN FLOW. In the settings dialog it
-     does (`.settings-sub-row .caveat-note` is position: static, so the note
-     can't be clipped by the sheet's scroll box). There, revealing it grows the
-     sheet — and the sheet is centred (`.settings-sheet` margin: auto), so it
-     grows in BOTH directions and the ⓘ slides UP out from under a pointer that
-     never moved. That un-hovers it, which hides the note, which shrinks the
-     sheet, which puts the ⓘ back under the pointer, which re-hovers: an
-     infinite flicker, measured at 54px of travel per cycle (owner, 2026-08-16;
-     the mobile sheet has the same geometry from `margin: auto auto 0`).
-     THE RULE, not just this fix: a hover reveal must never move the thing being
-     hovered. Reveal out of flow, or make it click-only. `:not(.is-open)` keeps
-     the click toggle — which is the documented touch/keyboard path — working. */
-  .settings-sub-row .caveat-btn:hover ~ .caveat-note:not(.is-open) {
-    display: none;
-  }
-}
+/* CLICK-ONLY, EVERYWHERE — owner ruling 2026-08-16, ADR 0059.
+   There used to be a hover reveal here for mouse users. It failed WCAG 2.2 SC
+   1.4.13 on two of three counts: the rule was keyed on the button alone with a
+   margin between it and the note, so moving the pointer TOWARDS the note made
+   it vanish (not Hoverable); and `disclosure()` wires Escape only on the click
+   path, so a hover-revealed note could not be dismissed without moving the
+   pointer (not Dismissible). It had also produced an infinite flicker in the
+   settings dialog, where the note sits in flow and revealing it moved the ⓘ
+   54px out from under a stationary pointer.
+   Two fixes were possible and both were rejected in favour of deleting the
+   feature: closing the gap changes a shipped component's visible box, and a
+   transparent ::before bridge plus a hover-path Escape handler is machinery in
+   exchange for a nicety that never existed on a phone. One ⓘ behaviour across
+   the whole app is worth more than the hover.
+   ⚠️ Do not re-add a hover reveal to `.caveat-note` without superseding ADR
+   0059 — it is a WCAG AA regression, and `device_check.mjs` asserts against it. */
 @media (prefers-color-scheme: dark) {
   .caveat-note {
     color: var(--warn);

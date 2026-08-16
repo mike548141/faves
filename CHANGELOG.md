@@ -44,6 +44,13 @@ content freshness separately from this file.
   from the same ⋯ menu the other screens use.
 
 ### Fixed
+- **The ⓘ notes now open the same way everywhere — a tap or a click, never a
+  hover.** Pointing at one used to open it, but the note vanished the moment you
+  moved the mouse toward it to read, and Escape wouldn't close one opened that
+  way. Both are accessibility failures (WCAG 2.2 AA), and they hit hardest the
+  people most likely to need the note: anyone reading slowly, using a screen
+  magnifier, or with an unsteady hand. Every ⓘ now behaves the same on a phone,
+  a mouse and a keyboard.
 - **The back-to-top button no longer sits on top of a price.** It slides out of
   the way while you're scrolling down and comes back when you scroll up. Measured
   rather than eyeballed: it had been covering **the whole width of a dish price**,
