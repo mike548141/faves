@@ -8,7 +8,7 @@
   "city": "Lower Hutt",
   "currency": "NZD",
   "address": "140 Jackson Street, Petone, Lower Hutt 5012",
-  "lat": -41.22420,
+  "lat": -41.2242,
   "lng": 174.87441,
   "services": [
     "dine-in"
@@ -16,12 +16,1444 @@
   "phone": "+64 4 213 9079",
   "website": "https://thevictoriatavern.co.nz/",
   "ordering": [],
+  "vibe": [
+    "sit-down"
+  ],
   "hours": null,
   "detailsVerified": "2026-08-16",
   "detailsVerifiedBy": "third-party",
+  "verified": "2024-10-04",
+  "verifiedBy": "paper-menu",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "grill-sauces",
+      "name": "Sauces & Mustards",
+      "select": "one",
+      "price": 0,
+      "options": [
+        {
+          "name": "Chimichurri",
+          "price": 0,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Garlic butter",
+          "price": 0,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Port jus",
+          "price": 0,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Dijon",
+          "price": 0,
+          "tags": []
+        },
+        {
+          "name": "Hot English",
+          "price": 0,
+          "tags": []
+        },
+        {
+          "name": "Mushroom sauce",
+          "price": 5,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "milk-options",
+      "name": "Milks",
+      "select": "one",
+      "price": 1,
+      "options": [
+        {
+          "name": "Oat",
+          "price": 1,
+          "tags": []
+        },
+        {
+          "name": "Almond",
+          "price": 1,
+          "tags": [
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Coconut",
+          "price": 1,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Oysters",
+      "sectionId": "oysters",
+      "items": [
+        {
+          "name": "Fresh oysters w/ shallot mignonette",
+          "dishId": "fresh-oysters-w-shallot-mignonette",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "df",
+            "gf",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Deep fried in a beer batter w/ chilli & lime mayo",
+          "dishId": "deep-fried-in-a-beer-batter-w-chilli-lime-mayo",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "df",
+            "contains-gluten",
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Small Plates",
+      "sectionId": "small-plates",
+      "items": [
+        {
+          "name": "Warmed ciabatta w/ salted truffle butter",
+          "dishId": "warmed-ciabatta-w-salted-truffle-butter",
+          "desc": null,
+          "price": 14.5,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Moroccan spiced lamb koftas on flatbread w/ spiced tomato & red pepper chilli relish, tahini",
+          "dishId": "moroccan-spiced-lamb-koftas-on-flatbread-w-spiced-tomato-red-pepper-chilli-relish-tahini",
+          "desc": null,
+          "price": 19.5,
+          "tags": [
+            "df",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Roasted beetroot hummus, dukkah, crispy chickpeas, grilled flat bread",
+          "dishId": "roasted-beetroot-hummus-dukkah-crispy-chickpeas-grilled-flat-bread",
+          "desc": null,
+          "price": 14.0,
+          "tags": [
+            "vg",
+            "contains-sesame",
+            "contains-gluten",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Potato dauphine, pecorino & aioli",
+          "dishId": "potato-dauphine-pecorino-aioli",
+          "desc": "Six pieces.",
+          "price": 16.0,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Wagyu meatballs, tomato ragu, parmesan, grilled sourdough",
+          "dishId": "wagyu-meatballs-tomato-ragu-parmesan-grilled-sourdough",
+          "desc": "Five pieces.",
+          "price": 18.0,
+          "tags": [
+            "gf-option",
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deep fried crumbed mozzarella sticks, salsa rosa, basil",
+          "dishId": "deep-fried-crumbed-mozzarella-sticks-salsa-rosa-basil",
+          "desc": "Five pieces.",
+          "price": 16.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Spiced crispy calamari, chilli & lime mayo",
+          "dishId": "spiced-crispy-calamari-chilli-lime-mayo",
+          "desc": null,
+          "price": 17.0,
+          "tags": [
+            "df",
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Garlic & chive fish cake, cos lettuce & tartare slider",
+          "dishId": "garlic-chive-fish-cake-cos-lettuce-tartare-slider",
+          "desc": "Two pieces.",
+          "price": 19.0,
+          "tags": [
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Samoan Oka – raw fish salad w/ tomato, cucumber, shallots, spring onion, vanilla bean, coconut cream and taro wafers",
+          "dishId": "samoan-oka-raw-fish-salad-w-tomato-cucumber-shallots-spring-onion-vanilla-bean-coconut-cream-and-taro-wafers",
+          "desc": null,
+          "price": 19.0,
+          "tags": [
+            "df",
+            "gf"
+          ]
+        },
+        {
+          "name": "Faiai ia – Samoan style braised fish, coconut soubise, chopped hazelnuts, banana chips",
+          "dishId": "faiai-ia-samoan-style-braised-fish-coconut-soubise-chopped-hazelnuts-banana-chips",
+          "desc": null,
+          "price": 19.0,
+          "tags": [
+            "df",
+            "gf",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Chicken liver pate, caramelised onion jam, bread & butter pickles, crostini",
+          "dishId": "chicken-liver-pate-caramelised-onion-jam-bread-butter-pickles-crostini",
+          "desc": null,
+          "price": 19.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Extra crostini",
+          "dishId": "extra-crostini",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Oven baked bruschetta of semi dried tomatoes, burrata, basil pesto",
+          "dishId": "oven-baked-bruschetta-of-semi-dried-tomatoes-burrata-basil-pesto",
+          "desc": null,
+          "price": 17.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Palusami – Samoan coconut & taro leaf gratin, sweet potato crisp",
+          "dishId": "palusami-samoan-coconut-taro-leaf-gratin-sweet-potato-crisp",
+          "desc": null,
+          "price": 17.0,
+          "tags": [
+            "gf",
+            "vg",
+            "df"
+          ]
+        },
+        {
+          "name": "Deep fried pickle spears w/ blue cheese dressing",
+          "dishId": "deep-fried-pickle-spears-w-blue-cheese-dressing",
+          "desc": null,
+          "price": 16.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Salads & Pastas",
+      "sectionId": "salads-pastas",
+      "items": [
+        {
+          "name": "Grilled chicken w/ cos lettuce, Caeser dressing, crispy bacon, croutons, soft egg, parmesan",
+          "dishId": "grilled-chicken-w-cos-lettuce-caeser-dressing-crispy-bacon-croutons-soft-egg-parmesan",
+          "desc": null,
+          "price": 26.5,
+          "tags": [
+            "contains-egg",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Roasted pumpkin, chickpeas, feta, toasted pumpkin & sunflower seed, salad greens, pecorino & rocket mayo",
+          "dishId": "roasted-pumpkin-chickpeas-feta-toasted-pumpkin-sunflower-seed-salad-greens-pecorino-rocket-mayo",
+          "desc": null,
+          "price": 26.5,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "House made potato gnocchi w/ charred red pepper pesto, roasted cherry tomatoes & pecorino",
+          "dishId": "house-made-potato-gnocchi-w-charred-red-pepper-pesto-roasted-cherry-tomatoes-pecorino",
+          "desc": null,
+          "price": 28.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-nuts",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Beef cheek ragu, pappardelle w/ pecorino & gremolata",
+          "dishId": "beef-cheek-ragu-pappardelle-w-pecorino-gremolata",
+          "desc": null,
+          "price": 27.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Beetroot risotto w/ olives, feta, chopped hazelnuts & crispy sage",
+          "dishId": "beetroot-risotto-w-olives-feta-chopped-hazelnuts-crispy-sage",
+          "desc": null,
+          "price": 27.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Smokey pomodoro rigatoni, cherry tomatoes, basil & shaved parmesan",
+          "dishId": "smokey-pomodoro-rigatoni-cherry-tomatoes-basil-shaved-parmesan",
+          "desc": null,
+          "price": 26.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Weekly Specials",
+      "sectionId": "weekly-specials",
+      "items": [
+        {
+          "name": "Slider Special",
+          "dishId": "slider-special",
+          "desc": "Tuesday.",
+          "price": 6.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "$20 Pasta",
+          "dishId": "20-pasta",
+          "desc": "Wednesday. Terms and conditions apply.",
+          "price": 20.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "The Vic Surf & Turf",
+          "dishId": "the-vic-surf-turf",
+          "desc": "Thursday.",
+          "price": 50.0,
+          "tags": [
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Sunday Roast",
+          "dishId": "sunday-roast",
+          "desc": "Sunday. Pork belly with roast vegetable salad, gravy & apple sauce.",
+          "price": 29.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Mains",
+      "sectionId": "mains",
+      "items": [
+        {
+          "name": "Spiced roasted buttercup squash, beetroot labneh w/ quinoa, cherry tomato & cucumber salad, chimichurri",
+          "dishId": "spiced-roasted-buttercup-squash-beetroot-labneh-w-quinoa-cherry-tomato-cucumber-salad-chimichurri",
+          "desc": null,
+          "price": 28.5,
+          "tags": [
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Crispy skinned duck breast, potato pavé, baby carrots, cherry jus",
+          "dishId": "crispy-skinned-duck-breast-potato-pav-baby-carrots-cherry-jus",
+          "desc": null,
+          "price": 42.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "The Vic Cheeseburger – two wagyu beef patties, pickles, smoked cheddar & brioche bun w/ chips & aioli",
+          "dishId": "the-vic-cheeseburger-two-wagyu-beef-patties-pickles-smoked-cheddar-brioche-bun-w-chips-aioli",
+          "desc": "Served pink.",
+          "price": 26.0,
+          "tags": [
+            "gf-option",
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Beer battered fish, chunky chips, house tartare sauce & fennel slaw",
+          "dishId": "beer-battered-fish-chunky-chips-house-tartare-sauce-fennel-slaw",
+          "desc": null,
+          "price": 28.5,
+          "tags": [
+            "df",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Braised beef cheek, mashed maple pumpkin, roasted brussel sprouts, jus",
+          "dishId": "braised-beef-cheek-mashed-maple-pumpkin-roasted-brussel-sprouts-jus",
+          "desc": null,
+          "price": 35.0,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Pan seared snapper w/ asparagus, potato & herb salad, prawn gribiche, roasted cherry tomatoes, lemon oil",
+          "dishId": "pan-seared-snapper-w-asparagus-potato-herb-salad-prawn-gribiche-roasted-cherry-tomatoes-lemon-oil",
+          "desc": null,
+          "price": 42.0,
+          "tags": [
+            "gf",
+            "df",
+            "contains-shellfish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Rolled & roasted pork belly, garlic & herb mash, pork jus, fig & apple compote",
+          "dishId": "rolled-roasted-pork-belly-garlic-herb-mash-pork-jus-fig-apple-compote",
+          "desc": null,
+          "price": 39.0,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Grill Selection",
+      "sectionId": "grill-selection",
+      "note": "Served with Dijon mash & herb oil glazed broccoli.",
+      "addOns": [
+        "grill-sauces"
+      ],
+      "items": [
+        {
+          "name": "250gm Lamb rump, served pink w/ port jus, pickled mint",
+          "dishId": "250gm-lamb-rump-served-pink-w-port-jus-pickled-mint",
+          "desc": null,
+          "price": 39.0,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "300gm Scotch fillet",
+          "dishId": "300gm-scotch-fillet",
+          "desc": "Plus a topping of your choice.",
+          "price": 45.0,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "400gm Pork T-bone",
+          "dishId": "400gm-pork-t-bone",
+          "desc": "Plus a topping of your choice.",
+          "price": 39.5,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mild harissa spiced ½ chicken w/ lemon & garlic yoghurt",
+          "dishId": "mild-harissa-spiced-chicken-w-lemon-garlic-yoghurt",
+          "desc": null,
+          "price": 32.0,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sides",
+      "sectionId": "sides",
+      "items": [
+        {
+          "name": "Onion rings, chilli & lime mayo",
+          "dishId": "onion-rings-chilli-lime-mayo",
+          "desc": null,
+          "price": 11.0,
+          "tags": [
+            "v",
+            "df",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Roasted herb potatoes",
+          "dishId": "roasted-herb-potatoes",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Harrisa carrots, feta, walnuts",
+          "dishId": "harrisa-carrots-feta-walnuts",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "gf",
+            "v",
+            "contains-dairy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Fennel Slaw",
+          "dishId": "fennel-slaw",
+          "desc": null,
+          "price": 11.0,
+          "tags": [
+            "gf",
+            "df",
+            "v"
+          ]
+        },
+        {
+          "name": "Chunky chips w/ aioli & ketchup",
+          "dishId": "chunky-chips-w-aioli-ketchup",
+          "desc": null,
+          "price": 11.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Roasted beetroot, avocado, chilli coconut yoghurt",
+          "dishId": "roasted-beetroot-avocado-chilli-coconut-yoghurt",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Rocket & apple salad w/ avocado vinaigrette & pecorino",
+          "dishId": "rocket-apple-salad-w-avocado-vinaigrette-pecorino",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Salad greens, cherry tomatoes, cucumber, red onion, raspberry vinaigrette",
+          "dishId": "salad-greens-cherry-tomatoes-cucumber-red-onion-raspberry-vinaigrette",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "vg",
+            "gf",
+            "df"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "sectionId": "desserts",
+      "items": [
+        {
+          "name": "Banana panipopo – Samoan bread pudding, almond praline, coconut toffee, vanilla bean ice cream",
+          "dishId": "banana-panipopo-samoan-bread-pudding-almond-praline-coconut-toffee-vanilla-bean-ice-cream",
+          "desc": null,
+          "price": 16.0,
+          "tags": [
+            "contains-gluten",
+            "contains-nuts",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Baked raspberry & lemon cheesecake w/ tropical fruit coulis, candied nuts, dried raspberries",
+          "dishId": "baked-raspberry-lemon-cheesecake-w-tropical-fruit-coulis-candied-nuts-dried-raspberries",
+          "desc": null,
+          "price": 17.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Vanilla bean pannacotta, lemon ricotta donuts, citrus crumble",
+          "dishId": "vanilla-bean-pannacotta-lemon-ricotta-donuts-citrus-crumble",
+          "desc": null,
+          "price": 18.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Dark chocolate & espresso torte, chocolate soil, raspberry sorbet, crushed roasted almonds",
+          "dishId": "dark-chocolate-espresso-torte-chocolate-soil-raspberry-sorbet-crushed-roasted-almonds",
+          "desc": null,
+          "price": 18.0,
+          "tags": [
+            "gf",
+            "vg",
+            "df",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Caramelised bananas, salted caramel ganache, cashew nut praline, vanilla bean ice cream",
+          "dishId": "caramelised-bananas-salted-caramel-ganache-cashew-nut-praline-vanilla-bean-ice-cream",
+          "desc": null,
+          "price": 16.0,
+          "tags": [
+            "gf",
+            "contains-dairy",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Deep fried chocolate filled doughnuts, orange caramel drizzle, vanilla bean ice cream",
+          "dishId": "deep-fried-chocolate-filled-doughnuts-orange-caramel-drizzle-vanilla-bean-ice-cream",
+          "desc": null,
+          "price": 16.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "On Tap",
+      "sectionId": "on-tap",
+      "items": [
+        {
+          "name": "Steinlager Super Cold",
+          "dishId": "steinlager-super-cold",
+          "desc": "425ml $12.00; 570ml $14.00.",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Speight's Gold Medal Ale",
+          "dishId": "speight-s-gold-medal-ale",
+          "desc": "425ml $12.00; 570ml $14.00.",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steinlager Ultra Low Carb",
+          "dishId": "steinlager-ultra-low-carb",
+          "desc": "425ml $12.00; 570ml $14.00.",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Emerson's Pilsner",
+          "dishId": "emerson-s-pilsner",
+          "desc": "425ml $13.00; 570ml $15.00.",
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Panhead Supercharger APA",
+          "dishId": "panhead-supercharger-apa",
+          "desc": "425ml $13.00; 570ml $15.00.",
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Panhead Sandman Hazy Pale Ale",
+          "dishId": "panhead-sandman-hazy-pale-ale",
+          "desc": "425ml $13.00; 570ml $15.00.",
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Panhead Pickup Hazy IPA",
+          "dishId": "panhead-pickup-hazy-ipa",
+          "desc": "425ml $13.00; 570ml $15.00.",
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mac's Cloudy Apple Cider",
+          "dishId": "mac-s-cloudy-apple-cider",
+          "desc": "425ml $12.00; 570ml $14.00.",
+          "price": 7.5,
+          "tags": []
+        },
+        {
+          "name": "Kirin Hyoketsu",
+          "dishId": "kirin-hyoketsu",
+          "desc": "425ml $13.00; 570ml $15.00.",
+          "price": 8.0,
+          "tags": []
+        },
+        {
+          "name": "Mac's Ginger Giant Alcoholic Ginger Beer",
+          "dishId": "mac-s-ginger-giant-alcoholic-ginger-beer",
+          "desc": "425ml $12.00; 570ml $14.00.",
+          "price": 7.5,
+          "tags": []
+        },
+        {
+          "name": "Guinness",
+          "dishId": "guinness",
+          "desc": "560ml $14.00.",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Stella Artois",
+          "dishId": "stella-artois",
+          "desc": "500ml $13.50.",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Bottles & Cans",
+      "sectionId": "bottles-cans",
+      "items": [
+        {
+          "name": "Steinlager Classic",
+          "dishId": "steinlager-classic",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steinlager Pure",
+          "dishId": "steinlager-pure",
+          "desc": null,
+          "price": 12.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Corona",
+          "dishId": "corona",
+          "desc": null,
+          "price": 13.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steinlager Zero",
+          "dishId": "steinlager-zero",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Emerson's Little Bird IPA",
+          "dishId": "emerson-s-little-bird-ipa",
+          "desc": null,
+          "price": 12.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Zeffer Zero Cider",
+          "dishId": "zeffer-zero-cider",
+          "desc": null,
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Steinlager Light",
+          "dishId": "steinlager-light",
+          "desc": null,
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Zeffer Peach & Berry Cider",
+          "dishId": "zeffer-peach-berry-cider",
+          "desc": null,
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Zeffer Passionfruit Cider",
+          "dishId": "zeffer-passionfruit-cider",
+          "desc": null,
+          "price": 12.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Bubbly",
+      "sectionId": "bubbly",
+      "items": [
+        {
+          "name": "Lindauer Prosecco",
+          "dishId": "lindauer-prosecco",
+          "desc": "Italy. Bottle $45.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Lindauer Prosecco Rosé",
+          "dishId": "lindauer-prosecco-ros",
+          "desc": "Italy. Bottle $45.00.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Daniel Le Brun NV Brut",
+          "dishId": "daniel-le-brun-nv-brut",
+          "desc": "Marlborough. Bottle $65.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Collet Art Deco NV Brut",
+          "dishId": "collet-art-deco-nv-brut",
+          "desc": "AY Champagne, France. Bottle $100.00.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Taittinger NV",
+          "dishId": "taittinger-nv",
+          "desc": "Reims, Champagne, France. Bottle only.",
+          "price": 125.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "White",
+      "sectionId": "white",
+      "items": [
+        {
+          "name": "Vavasour Pinot Gris",
+          "dishId": "vavasour-pinot-gris",
+          "desc": "Marlborough. Large glass $19.00; bottle $50.00.",
+          "price": 11.0,
+          "tags": []
+        },
+        {
+          "name": "Mt Difficulty Pinot Gris",
+          "dishId": "mt-difficulty-pinot-gris",
+          "desc": "Central Otago. Large glass $21.00; bottle $60.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Heaphy Chardonnay",
+          "dishId": "heaphy-chardonnay",
+          "desc": "Moutere. Large glass $21.00; bottle $60.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Bogle Chardonnay",
+          "dishId": "bogle-chardonnay",
+          "desc": "California. Large glass $23.00; bottle $70.00.",
+          "price": 15.0,
+          "tags": []
+        },
+        {
+          "name": "Palliser Estate Chardonnay",
+          "dishId": "palliser-estate-chardonnay",
+          "desc": "Martinborough. Bottle only.",
+          "price": 75.0,
+          "tags": []
+        },
+        {
+          "name": "Mt Difficulty 'Target Gully' Riesling",
+          "dishId": "mt-difficulty-target-gully-riesling",
+          "desc": "Central Otago. Large glass $21.00; bottle $60.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Martinborough Vineyard 'Te Tera' Sauvignon Blanc",
+          "dishId": "martinborough-vineyard-te-tera-sauvignon-blanc",
+          "desc": "Martinborough. Large glass $19.00; bottle $50.00.",
+          "price": 11.0,
+          "tags": []
+        },
+        {
+          "name": "Mt Difficulty Sauvignon Blanc",
+          "dishId": "mt-difficulty-sauvignon-blanc",
+          "desc": "Central Otago. Bottle only.",
+          "price": 60.0,
+          "tags": []
+        },
+        {
+          "name": "Nautilus Estate Sauvignon Blanc",
+          "dishId": "nautilus-estate-sauvignon-blanc",
+          "desc": "Marlborough. Large glass $21.00; bottle $65.00.",
+          "price": 13.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Rosé",
+      "sectionId": "ros",
+      "items": [
+        {
+          "name": "Saddleback Pinot Noir",
+          "dishId": "saddleback-pinot-noir",
+          "desc": "Central Otago. Bottle only.",
+          "price": 55.0,
+          "tags": []
+        },
+        {
+          "name": "Palliser Estate Pinot Noir",
+          "dishId": "palliser-estate-pinot-noir",
+          "desc": "Martinborough. Bottle only.",
+          "price": 55.0,
+          "tags": []
+        },
+        {
+          "name": "Mt Difficulty Pinot Noir",
+          "dishId": "mt-difficulty-pinot-noir",
+          "desc": "Central Otago, rosé style. Large glass $22.00; bottle $65.00.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Red",
+      "sectionId": "red",
+      "items": [
+        {
+          "name": "El Ternero Tempranillo",
+          "dishId": "el-ternero-tempranillo",
+          "desc": "Rioja. Bottle only.",
+          "price": 55.0,
+          "tags": []
+        },
+        {
+          "name": "Frankland Estate 'Rocky Gully' Cabernets",
+          "dishId": "frankland-estate-rocky-gully-cabernets",
+          "desc": "Western Australia. Large glass $20.00; bottle $55.00.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Yalumba 'The Cigar' Cabernet Sauvignon",
+          "dishId": "yalumba-the-cigar-cabernet-sauvignon",
+          "desc": "Coonawarra. Bottle only.",
+          "price": 60.0,
+          "tags": []
+        },
+        {
+          "name": "Yalumba Shiraz",
+          "dishId": "yalumba-shiraz",
+          "desc": "Barossa. Bottle only.",
+          "price": 55.0,
+          "tags": []
+        },
+        {
+          "name": "The Nessus Shiraz",
+          "dishId": "the-nessus-shiraz",
+          "desc": "McLaren Vale. Large glass $20.00; bottle $55.00.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Kalleske 'Moppa' Shiraz",
+          "dishId": "kalleske-moppa-shiraz",
+          "desc": "Barossa. Bottle only.",
+          "price": 65.0,
+          "tags": []
+        },
+        {
+          "name": "Craggy Range Syrah",
+          "dishId": "craggy-range-syrah",
+          "desc": "Hawke's Bay. Bottle only.",
+          "price": 68.0,
+          "tags": []
+        },
+        {
+          "name": "Bodega Catena Zapata Malbec",
+          "dishId": "bodega-catena-zapata-malbec",
+          "desc": "Argentina. Large glass $21.00; bottle $60.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Stoneweaver Pinot Noir",
+          "dishId": "stoneweaver-pinot-noir",
+          "desc": "Marlborough. Large glass $21.00; bottle $60.00.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Mt Difficulty Pinot Noir",
+          "dishId": "mt-difficulty-pinot-noir-red",
+          "desc": "Central Otago, red style. Large glass $26.00; bottle $75.00.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Mt Edward Pinot Noir",
+          "dishId": "mt-edward-pinot-noir",
+          "desc": "Central Otago. Bottle only.",
+          "price": 85.0,
+          "tags": []
+        },
+        {
+          "name": "Peregrine Pinot Noir",
+          "dishId": "peregrine-pinot-noir",
+          "desc": "Central Otago. Bottle only.",
+          "price": 95.0,
+          "tags": []
+        },
+        {
+          "name": "Te Kairanga 'John Martin' Pinot Noir",
+          "dishId": "te-kairanga-john-martin-pinot-noir",
+          "desc": "Martinborough. Bottle only.",
+          "price": 95.0,
+          "tags": []
+        },
+        {
+          "name": "Felton Road 'Bannockburn' Pinot Noir",
+          "dishId": "felton-road-bannockburn-pinot-noir",
+          "desc": "Central Otago. Bottle only.",
+          "price": 110.0,
+          "tags": []
+        },
+        {
+          "name": "Felton Road 'Calvert' Pinot Noir",
+          "dishId": "felton-road-calvert-pinot-noir",
+          "desc": "Central Otago. Bottle only.",
+          "price": 150.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Port",
+      "sectionId": "port",
+      "items": [
+        {
+          "name": "Churchills Reserve",
+          "dishId": "churchills-reserve",
+          "desc": "Oporto, Portugal. 75ml.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Dessert Wine",
+      "sectionId": "dessert-wine",
+      "items": [
+        {
+          "name": "The Ned Noble Sauvignon Blanc",
+          "dishId": "the-ned-noble-sauvignon-blanc",
+          "desc": "Marlborough.",
+          "price": 12.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Cocktails",
+      "sectionId": "cocktails",
+      "items": [
+        {
+          "name": "Pornstar Martini",
+          "dishId": "pornstar-martini",
+          "desc": "Vanilla vodka, passionfruit, lime, simple syrup, egg white, prosecco.",
+          "price": 18.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Rosebud",
+          "dishId": "rosebud",
+          "desc": "Vanilla vodka, cranberry, pineapple, lemon, passionfruit.",
+          "price": 16.0,
+          "tags": []
+        },
+        {
+          "name": "Cadillac Margarita",
+          "dishId": "cadillac-margarita",
+          "desc": "Jose Cuervo Tradicional Reposado tequila, Cointreau, agave syrup, lime. Flavour options: lime, pomegranate, spiced passionfruit.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "Bloody Floradora",
+          "dishId": "bloody-floradora",
+          "desc": "Four Pillars Bloody Shiraz gin, lime, raspberry, ginger beer.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "Paloma",
+          "dishId": "paloma",
+          "desc": "Gracias a Dios Mezcal, grapefruit, lime, agave syrup.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "Lavender Haze",
+          "dishId": "lavender-haze",
+          "desc": "Reid + Reid Native Gin, lemon, hibiscus syrup, lavender, honey & rose syrup.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "Tutti Fruity",
+          "dishId": "tutti-fruity",
+          "desc": "Appleton's rum, orange, raspberry syrup, lime.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Grand Loretto",
+          "dishId": "grand-loretto",
+          "desc": "Makers Mark, Grand Marnier, elderflower syrup, orange, egg white.",
+          "price": 18.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "After Dinner Delight",
+          "dishId": "after-dinner-delight",
+          "desc": "Vanilla vodka, crème de menthe, chocolate syrup, cream.",
+          "price": 17.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Aperitifs",
+      "sectionId": "aperitifs",
+      "items": [
+        {
+          "name": "Negroni",
+          "dishId": "negroni",
+          "desc": "Four Pillars Negroni gin, Campari, sweet vermouth.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "House Martini",
+          "dishId": "house-martini",
+          "desc": "Four Pillars Olive Leaf gin, vermouth, olive.",
+          "price": 18.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Spritz",
+      "sectionId": "spritz",
+      "items": [
+        {
+          "name": "Spritz",
+          "dishId": "spritz",
+          "desc": "Prosecco, soda and garnish, with a choice of Aperol, Campari, Chinola (passionfruit), limoncello or Kir Royale. Chinola, limoncello and Kir Royale are served without soda.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Non-Alcoholic Cocktails",
+      "sectionId": "non-alcoholic-cocktails",
+      "items": [
+        {
+          "name": "Pink No-Jito",
+          "dishId": "pink-no-jito",
+          "desc": "Six Barrel hibiscus, lemonade, Tahitian lime & mint. Served tall on the rocks.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Ruby Ruby",
+          "dishId": "ruby-ruby",
+          "desc": "Virgin Rosebud.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "The Orchid",
+          "dishId": "the-orchid",
+          "desc": "Kiwifruit juice, strawberry, feijoa.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Lend a Sour",
+          "dishId": "lend-a-sour",
+          "desc": "Apple, grapefruit, agave, lime, Peychaud bitters.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Chocolate Ripple",
+          "dishId": "chocolate-ripple",
+          "desc": "Espresso, chocolate, raspberry purée, cream.",
+          "price": 14.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Non-Alcoholic",
+      "sectionId": "non-alcoholic",
+      "items": [
+        {
+          "name": "Juice",
+          "dishId": "juice",
+          "desc": "Orange, pineapple, apple, cranberry, tomato or grapefruit. Large $6.50.",
+          "price": 4.5,
+          "tags": []
+        },
+        {
+          "name": "Six Barrel Soda Co.",
+          "dishId": "six-barrel-soda-co",
+          "desc": "Raspberry & lemon, ginger ale or cola.",
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Good Buzz Kombucha",
+          "dishId": "good-buzz-kombucha",
+          "desc": "Feijoa, pineapple mango or raspberry lemon.",
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Fever Tree Tonic",
+          "dishId": "fever-tree-tonic",
+          "desc": "Indian, Mediterranean or Light.",
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Strangelove Yuzu",
+          "dishId": "strangelove-yuzu",
+          "desc": "From Japan. Low calorie.",
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Strangelove Very Mandarin",
+          "dishId": "strangelove-very-mandarin",
+          "desc": "Low calorie.",
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Mac's Ginger Beer",
+          "dishId": "mac-s-ginger-beer",
+          "desc": "Non-alcoholic.",
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Antipodes Sparkling Water",
+          "dishId": "antipodes-sparkling-water",
+          "desc": "1000ml.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Soft drinks",
+          "dishId": "soft-drinks",
+          "desc": "Large $5.00.",
+          "price": 4.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Tea & Coffee",
+      "sectionId": "tea-coffee",
+      "addOns": [
+        "milk-options"
+      ],
+      "items": [
+        {
+          "name": "Lucky's Coffee Espresso",
+          "dishId": "lucky-s-coffee-espresso",
+          "desc": "Black $3.50; white (with milk) $4.50.",
+          "price": 3.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chai Latte",
+          "dishId": "chai-latte",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hot Chocolate",
+          "dishId": "hot-chocolate",
+          "desc": null,
+          "price": 4.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Lemon, honey & ginger",
+          "dishId": "lemon-honey-ginger",
+          "desc": null,
+          "price": 4.5,
+          "tags": []
+        },
+        {
+          "name": "Libertine Organic Tea",
+          "dishId": "libertine-organic-tea",
+          "desc": "Roxy Black, Luxe Grey, Lightning Green (low caffeine), Runaway Rose (non-caffeine), Minty Ohm (non-caffeine) or Kapow (non-caffeine).",
+          "price": 3.5,
+          "tags": []
+        }
+      ]
+    }
+  ]
 }
