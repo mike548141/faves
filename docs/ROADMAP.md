@@ -75,8 +75,11 @@ verbatim design records → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   maps-handoff. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
   **Still open:** Kaffee Eis + Gong Cha's **second branches** — need real
   addresses + a dev-time geocode; a content session appends them, no code change.
-- [~] **McDonald's — finish the flesh-out** `[M][content]` (part (a) ✅ done
-  2026-08-09; b/c/d stay open) — added 2026-07-23 as
+- [~] **McDonald's — finish the flesh-out** `[M][content]` (parts (a) ✅ done
+  2026-08-09 and **(b) ✅ done 2026-08-16** — all 41 dishes now carry McDonald's
+  own NZ product photography, ADR 0053, provenance in `data/images/`; **c/d stay
+  open**: the record still has no allergen or dietary tags and no prices) —
+  added 2026-07-23 as
   a 5-branch listing with the enduring menu (items only; **prices "varies"** —
   not published per-store, so null, no fabrication). Remaining, all content (no
   code): (a) ✅ **dev-time geocode the branches** — **done 2026-08-09**
@@ -381,8 +384,24 @@ delivery app.** Clear one by bringing back the fact.
       precedent, 2026-08-15). The venue publishes only an email. One glance
       at a receipt or the door clears it — or the per-branch provenance pair
       that Theme 13 already owes would.
-- [ ] **`picks` are empty on most venues** `[S][content]` — including the two
-      newly menu-complete ones (Gold Lining, Takeaway @ Churton). `picks`
+- [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
+      — **10 of the corpus's 22 branches**, measured 2026-08-16. This is now
+      load-bearing rather than cosmetic: [ADR 0054](decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
+      picks the branch that leads a chain's contact card by *"nearest, and
+      open"*, and with no hours anywhere on those two chains the openness half
+      of the rule can never fire for them. The three-state design means the card
+      degrades honestly — no branch is labelled open or closed on a guess — but
+      the feature the owner asked for is only half-alive until the hours land.
+      Both chains publish per-store hours on their own store-finder pages.
+      Capturing them makes ADR 0054 real and lets `branch_check.mjs` exercise
+      tier 1 on a venue that has more than one state.
+
+- [ ] **`picks` are empty on most venues** `[S][content]` — **44 of 55**
+      (measured 2026-08-16). ⚠️ One of the two venues this line named was never
+      true: Takeaway @ Churton has carried three picks since the commit that
+      transcribed it, *before* this line was written — a transcription error at
+      write time, not staleness, and it has been misdirecting the worklist ever
+      since. Gold Lining is genuinely still empty. `picks`
       drives the "our picks" surface and `validate.py` warns on each empty
       one, so the warnings are the worklist. Owner-supplied only: these are
       *our* favourites, not a guess from the menu.
@@ -1711,6 +1730,7 @@ and moved one of them to the top.
 
 🚩 **The data is the blocker, not the code.** Verified 2026-08-09 across the 24
 recipes: **`serves` is set on 3** (Liège Waffles, the pudding, Tiramisu) and
+<!-- count re-measured 2026-08-16: `time` is now 9, not 8. Conclusion unchanged. -->
 **`time` on 8**. Every item below renders nothing until those fields exist, and
 they can only come from the owner — the same shape as the empty `picks`
 problem. Sequence the content with the build or the feature ships blank.
@@ -1810,11 +1830,16 @@ problem. Sequence the content with the build or the feature ships blank.
       test cannot have. That is the argument for the guard existing, made by
       the guard itself within an hour of being written.
 - [ ] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
-  ordered by how well they fit a zero-dependency offline app:
+  ordered by how well they fit a zero-dependency offline app. ✅ **Ingredient-
+  first search is delivered** and was struck from the list below on 2026-08-16
+  by audit: `search.js buildIndex()` folds `item.ingredients` into the haystack
+  (*"so 'lemon' finds the pasta"*), mirroring the menu screen, covered by
+  `tests/search.test.js`, and reaching all 24 ingredient-bearing dishes:
   - **Tick off ingredients and steps as you go** — a checklist with state that
     survives a phone call. Cheap, and every app tested has it.
-  - **Ingredient-first search** — "what can I make with mince and a lemon?".
-    Faves already has a search index; recipes just aren't in it by ingredient.
+  - ~~**Ingredient-first search** — "what can I make with mince and a lemon?".
+    Faves already has a search index; recipes just aren't in it by
+    ingredient.~~ ✅ **Shipped** — see the note above the list.
   - **Shopping list from a recipe** — and note it is the same machinery as the
     order tally (`cart.js`), which already gathers, groups and totals. Build it
     as the tally's cook-at-home twin rather than a second list.
@@ -2193,7 +2218,14 @@ contain shellfish.
 **What that leaves.**
 
 - [ ] **28a — Nothing to do about "one dish or three": they are three dishes**
-  `[design]` — the evidence says a size variant needs its own desc, tags,
+  `[design]` — ✅ **its stated blocker is discharged**: Theme 25 landed
+  2026-08-16 (ADR 0051) with exactly the two preconditions this item named — one
+  id per **row**, and same-named rows **not** merged (the 22 colliding rows were
+  disambiguated, the first of each group keeping the bare slug). The design
+  conclusion still stands and the work is still open; only the "Blocked on
+  Theme 25" clause below is now false. The same correction applies to the
+  "Depends on Theme 25" preamble above 26a/26b/26c and 14f. — the evidence
+  says a size variant needs its own desc, tags,
   section, availability and `addOns`, and once it needs all five it *is* a
   dish. The relationship is worth expressing, but as an optional **link
   between dish ids** ("also available as…"), not by merging records. Blocked on
@@ -2326,28 +2358,18 @@ as at 2026-08-16 and silently wrong for the first one outside NZ** — the failu
 mode is a confident wrong answer, not a blank. Each is marked at the source
 (`#!####` / `#!###`).
 
-- [ ] 🚩 **Venue timezone — blocking, do before the first non-NZ venue**
-  `[M][schema]` — `hours.js` computes open/closed in `Pacific/Auckland` and
-  `temporal.js` reads the current date the same way (ADR 0006). A London venue
-  would render open/closed against Wellington's clock, off by roughly half a
-  day, with nothing on screen saying so. Needs an optional per-venue `timezone`
-  (IANA) defaulting to `Pacific/Auckland`, `nzNow`/`todayNZ` taking a zone, an
-  ADR superseding 0006, and the two visible strings that hard-code the claim —
-  `Hours · NZ time` and *"Open/closed times are New Zealand time"* — becoming
-  the venue's own zone. `viewerOnNzTime` generalises to a per-venue comparison.
-- [ ] **Currency is NZD by construction** `[S][schema]` — About states it once
-  for the whole site rather than per price (ADR 0037), and `price.js`'s `$`/`$$`
-  bands are calibrated to NZD amounts. A venue priced in another currency needs
-  the statement to move down to the venue, and the bands to stop being global.
-- [ ] **Seasons assume the southern hemisphere** `[XS][js]` — `temporal.js` maps
-  `summer` to Dec–Feb, which inverts north of the equator. Smallest of the
-  three, and it falls out of the timezone work: a zone implies a hemisphere.
-
----
-
----
-
-## Also parked (small)
+✅ **Three items ticked 2026-08-16 by a staleness audit** — all three were
+fully delivered as side effects of other work and nobody ticked the box.
+**Venue timezone** (ADR 0043): per-branch/per-venue IANA resolution, `nowIn(tz)`
+/`todayIn(tz)`, `viewerOnVenueTime`, the zone named on screen, validated at both
+levels — residue is data, not code, since all 55 records are in New Zealand.
+**Currency is NZD by construction**: `currency` is now *required* on every
+non-recipe record and About no longer claims a site currency; the second half —
+"the bands stop being global" — was **answered by ruling, not built**, since ADR
+0045 chose one NZD calibration reached by conversion. **Seasons assume the
+southern hemisphere**: `venueHemisphere()` derives it from latitude and
+`data.js` passes it on every load. Detail, and the honest residue in each →
+[`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
 - [ ] 🚩 **Whole-repo scanner runs here are inflated by every live worktree**
   `[S][docs]` — found 2026-08-15, **queued upstream as atelier Track E item E9**
@@ -2660,6 +2682,347 @@ asked on this screen.
   the **te reo** strings live: the rotating search hints landed on 2026-08-16
   untranslated by design, so `search.hint.*` is owed against the owner's
   nominated dictionary. Keep the guide short enough that it gets read.
+
+## Theme 30 — a venue has *menus*, plural (owner-raised 2026-08-16)
+
+> *"I think we need to allow for a restaurant (irrespective of single location
+> or branches) having multiple menus. They could be seasonal (summer vs winter)
+> or time of day (lunch vs dinner) where one finishes another starts. But they
+> could also be over lapping e.g. a brunch menu that runs all day, or different
+> menus for dine-in vs takeaway, or different areas of the restaurant that you
+> can use. Lets at least ensure the data model supports all that … Again this is
+> ensuring that future needs don't break the data model, and some of those needs
+> might be things outside Faves core purpose, like keeping the historical
+> pricing data, and permanently closed restaurants as historical/analytical/
+> trend data to analyse outside of Faves."*
+
+The ask is explicitly **model-first**: make the shape able to hold this, build
+screens later. What follows is the answer to that, grounded in a survey of how
+the industry actually does it rather than in invention.
+
+### What the survey found — three convergences
+
+Every serious commercial menu schema (Square, Toast, Uber Eats, Deliveroo,
+DoorDash, Oracle Simphony, Lightspeed, Google's menu feed, schema.org) lands on
+the same three decisions, and **all three are ones our tree cannot make.**
+
+1. **Flat entity pools joined by id, not nested containment.** Deliveroo tells
+   partners outright to *avoid duplicating categories, items and modifiers
+   across mealtimes* and to reuse one item id. Containment forces duplication;
+   the duplicate then drifts. 🎯 **We are already halfway there** — ADR 0051's
+   `dishId` landed today, and it is precisely the primitive that makes this
+   possible. A dish becomes an entity in the venue's catalogue and a menu
+   becomes an *ordered list of references*.
+2. **Price is a resolution over context, not a scalar on a dish.** Toast's
+   `pricingStrategy` enum is the best real enumeration of why:
+   `BASE_PRICE`, `MENU_SPECIFIC_PRICE` (*"an entree might cost $10 from the
+   Lunch menu but $15 from the Dinner menu"*), `TIME_SPECIFIC_PRICE`,
+   `SIZE_PRICE`, `SEQUENCE_PRICE` (1st topping vs 2nd), `SIZE_SEQUENCE_PRICE`,
+   `GROUP_PRICE`, `OPEN_PRICE` (market price). Uber Eats and Deliveroo both
+   name the field `price_info.overrides[]` with a `context_type`.
+3. **Availability is a rule set with a conflict rule, not a boolean.** And here
+   the survey settled the owner's hardest case for us — see below.
+
+### The owner's "overlapping brunch menu" is the case that breaks the field
+
+Deliveroo forbids overlap: mealtime schedules *"must not overlap"*, no gaps,
+one active at a time. That is tenable only for a delivery-only catalogue.
+Simphony — 30 years of real hospitality — allows overlap and resolves it by
+**explicit priority, first match wins**: a "Free Drinks" rule at priority 1
+beats "Early Bird" at priority 2 in the hour they share. Its documented
+resolution order is Serving Period > Auto Menu Level > revenue-centre default >
+fallback.
+
+🎯 **So the owner's instinct is right and the tidier model is the wrong one.**
+An all-day brunch menu genuinely does run alongside lunch. We should carry
+`priority` on every availability rule and document first-match-wins, rather than
+validating overlap away.
+
+### "Different areas of the restaurant" already has an industry name
+
+Simphony's **`Revenue Center`**: bar, dining room, garden bar, room service are
+separate RVCs sharing enterprise-level dishes but carrying **their own prices,
+their own serving periods and their own tax rates**. Lightspeed does the same
+by binding a menu to a POS device. A `venue → menu` model cannot say "the same
+Negroni is $18 in the dining room and $14 in the garden bar", which is ordinary.
+
+### What our current model cannot represent — ranked, with our own evidence
+
+`site/data/restaurants/<id>.json` is `venue → menu[] (sections) → items[]`, one
+`price` per item, one `available` window per section or dish.
+
+| # | Cannot represent | Already biting us? |
+|---|---|---|
+| 1 | One dish on two menus at two prices | Not yet — but Theme 28 found **81 rows carrying a second price inside a `desc` string**, 153 price points. That is this problem, already here, encoded as prose. |
+| 2 | Dine-in vs takeaway vs delivery price for one dish | **Yes.** Phase 1 notes KK Malaysian and KC Cafe prices are *delivery/online-ordering, marked up*, with "prefer in-store" as an unresolved caveat. We have two prices and one field. |
+| 3 | Per-branch price and per-branch existence | **Yes, latent.** 5 chains, 22 branches. McDonald's NZ franchisees set their own prices; the same is true of Subway. |
+| 4 | Overlapping active menus needing priority | Not yet — no venue has two menus at all. |
+| 5 | Menus/prices bounded by absolute dates (LTO, seasonal, Ramadan) | Partly — `available.from/to/season` exists on sections and dishes, but not on a *menu*, because there is no menu entity. |
+| 6 | A dish's section membership being many-to-many | **Yes.** ADR 0049 exists because a row offered as an add-on was being printed twice; that is the many-to-many problem solved once, narrowly. |
+| 7 | Price bands shared by many dishes (dim sum 小點/中點/大點) | Not yet — but it is how a whole cuisine prices itself, and we hold no dim sum venue *yet*. |
+| 8 | Per-person / per-table pricing (tasting menus, thali, iftar) | Not yet. `pricePerPerson` exists but is a *curated estimate*, not a price. |
+| 9 | Included, unpriced accompaniments (Korean banchan, bread with menú del día) | Not yet — and note a schema **requiring** a price per dish cannot show banchan at all. Ours allows `null`, so we are accidentally fine. |
+| 10 | Non-dish charges that must appear on the menu (Italian *coperto*, Portuguese *couvert*, Japanese *otoshi*) | Not yet. All three are legally required to be printed on the menu in their jurisdictions. |
+
+### The proposed shape — staged, backward-compatible, and ADR 0047-bounded
+
+The governing constraint is **ADR 0047: the app ships only what it renders.**
+`site/data/` is precached by every phone. So the staging below is not
+gold-plating deferred — it is *the payload staying small while the record gets
+rich*.
+
+- **30a — `menus[]` as an optional layer above `menu[]`** `[L][schema]`. Today's
+  `menu: [section, …]` becomes sugar for "one unnamed menu". A venue with more
+  says:
+  ```jsonc
+  "menus": [
+    { "id": "lunch", "name": "Lunch", "kind": "lunch",
+      "available": [{ "days": ["mon","tue","wed","thu","fri"],
+                      "from": "11:00", "to": "15:00", "priority": 2 }],
+      "sections": [ … ] },
+    { "id": "all-day", "name": "All day", "kind": "all_day",
+      "available": [{ "priority": 5 }], "sections": [ … ] }
+  ]
+  ```
+  Sections keep their present shape. **Backward compatible**: absent `menus`
+  means today's behaviour exactly. `validate.py` rejects a record carrying both.
+- **30b — a dish reference, not a dish copy** `[M][schema]` 🔗 **rests on ADR
+  0051.** Where the same dish appears on two menus, the second carries
+  `{ "dishId": "…", "price": … }` rather than a duplicated object. This is the
+  single decision that stops two copies of one dish drifting apart, and it is
+  only possible because `dishId` is now required and immutable.
+- **30c — `kind` on a menu, driving optional schema** `[S][schema]`. Not a
+  label: a wine list needs vintage/producer/format, a set menu needs a
+  per-person price and course sequence, a kids menu changes legally-required
+  calorie footer text in England. Closed set, extended when a real venue needs
+  a value — never invented ahead of one (owner's 2026-08-16 scope ruling).
+- **30d — the `channel` dimension** `[M][schema]`. `dine_in` / `takeaway` /
+  `delivery`. This is the one with a **live** debt (row 2 above) and it is not
+  only commercial: in the UK the same sandwich is 20% VAT eaten in and 0% taken
+  away cold, so the *tax rate* is a function of (item × channel).
+- **30e — per-branch overrides** `[M][schema]`. Square's shape is the one to
+  copy, including its two modes: `present_at_all_locations` **plus**
+  `absent_at_location_ids` (the "everywhere except these three" form), because
+  a per-branch allow-list does not scale to a 400-store chain. We have 22
+  branches, so this can wait — but the shape should be decided before a chain
+  with a per-branch menu arrives.
+- **30f — non-dish charges** `[S][schema]`. `charges[]` at venue or menu level:
+  `{kind, amount|percent, basis: per_person|per_table|per_bill, mandatory,
+  refusable, disclosure}`. Needed the day a non-NZ venue lands. Italy's Lazio
+  region *bans* a line labelled `coperto`, so venues charge `pane` instead —
+  which is exactly why `kind` must be data, not a hard-coded word.
+
+### Metadata, reference data, and hierarchy-vs-ontology
+
+The owner asked this explicitly. The survey's answers, and what we already do
+right:
+
+- ✅ **Already right.** ISO 8601 with **reduced precision** (`"2019"`,
+  `"2019-05"`) — ADR 0023. Two clocks, world time vs record time, never
+  collapsed — this *is* bitemporality (valid time vs transaction time,
+  SQL:2011), arrived at independently. Dated lifecycle events rather than a
+  `closed: true` flag — which is exactly what OpenStreetMap's lifecycle prefixes
+  and Wikidata's `P576` + `replaced by` achieve. IANA timezones per venue and
+  per branch (ADR 0043). ISO 4217 currency (ADR 0045). BCP-47 language tags
+  including `th-Latn` (ADR 0044). Provenance with a *method* (`verifiedBy`) and
+  a separate clock for details (ADR 0037). **This model is in better shape than
+  the ask implies.**
+- 🔎 **Cuisine is our one genuine ontology weakness.** `cuisine: []` is a flat
+  multi-valued list, and it mixes *origin* ("Malaysian") with *dish form*
+  ("Burgers") — the identical flaw OSM documents in its own `cuisine=` key and
+  is trying to replace. The fix is cheap and worth doing before the corpus
+  grows: give each value an **axis** (`origin` / `dish_form` / `service`).
+  Yelp's model is a **DAG, not a tree** (`parent_aliases` is a list) and is
+  **country-scoped**; Overture split "cognitively basic category" from the deep
+  hierarchy. `[M][schema]`
+- 🚩 **The null-vs-missing problem is a safety issue here, not a style one.**
+  "No peanut declared" and "declared peanut-free" are different facts and our
+  schema says both with an absent tag. ADR 0025's rule ("no tag = not stated")
+  is the right *convention* but it is only a convention. HL7 FHIR's
+  `dataAbsentReason` vocabulary is the mature answer (`unknown`, `asked-unknown`,
+  `not-asked`, `asked-declined`, `not-applicable`, `masked`). We already have a
+  partial version — ADR 0041's `needs[]` — which is genuinely the same idea.
+  Extending `needs` to allergens would close it. `[M][schema]`
+- 🔎 **Allergen lists differ by jurisdiction and ours is NZ-shaped.** AU/NZ PEAL
+  (in force 2026-02-25) requires **each tree nut named individually** — almond,
+  Brazil, cashew, hazelnut, macadamia, pecan, pine nut, pistachio, walnut — and
+  has **no celery and no mustard**; the EU's 14 groups nuts and adds both, plus
+  a numeric sulphites threshold (>10 mg/kg); the US has 9 and added sesame in
+  2023; Japan mandates buckwheat, which nobody else does. *"Contains tree nuts"
+  is a legal statement in the US and an illegal one in Australia.* Implication:
+  tag at the **granular substance** level and derive the jurisdiction view —
+  which is what `contains-peanuts` already does. Our vocabulary is closer to
+  right than it looks; what is missing is the **regime** it is being read under.
+  `[M][schema]` — matters the day a non-NZ venue lands.
+- 💡 **`premises` as an entity distinct from `venue`** `[M][schema]`. The
+  single highest-value structural idea in the survey for the owner's
+  *"historical/analytical"* ask: *"what has operated at this address since 1998"*
+  is unanswerable in a venue-only model. It is the join key when one address
+  churns through six tenants, and it distinguishes four relations that a single
+  `formerIds` cannot: same entity moved · same entity rebranded · **different
+  business, same premises** · merged/split.
+- **Certification is an assertion, not a property** `[S][schema]`. Halal and
+  kosher are claims by a named body with a certificate number, a **scope**
+  (whole premises vs specific products) and an **expiry** — so a lapsed claim
+  can auto-demote to unknown. Google's own menu enum lumps `HALAL` and `KOSHER`
+  in with `VEGAN`, conflating a certified legal claim with a self-declaration.
+  Don't copy that.
+
+### The out-of-scope-for-Faves half, which the owner named
+
+*"…outside of Faves … keeping the historical pricing data, and permanently
+closed restaurants as historical/analytical/trend data."*
+
+✅ **This is already the architecture.** ADR 0047 split the two stores exactly
+here: `site/data/` is the payload, `data/` is the record kept forever, and
+`tools/split_data.py --check` proves the two still reconstruct the corpus. A
+price that moves appends to `data/history/prices/`; a departed dish moves whole
+to `data/history/dishes/`. So the owner's "outside Faves" store **exists**.
+What the survey says is missing from it, for the analysis he describes:
+
+- **`channel` and `tax_status` on a price observation.** Delivery menus run
+  15–30% above dine-in; without the flag, any price trend silently mixes them
+  and the series is worthless. This is the strongest single argument for 30d.
+- **Decimal-as-string for money.** Floats corrode over a multi-decade series.
+- **A `corrected` event distinct from a `price_changed` event** — we already
+  make this distinction in prose ("did the shop change it, or did we?"); the
+  record should make it in data.
+- **Monthly snapshots derived from the event stream**, so "median main price by
+  month" is not a correlated as-of join every time.
+
+### Sizing, and the one thing to do first
+
+The whole theme is `[XL]` and must not be attempted in one go. **30a is the
+keystone** — everything else attaches to a menu entity that does not yet exist.
+But the honest sequencing note is that **no venue in the corpus has two menus
+today**, so 30a would ship a schema nothing exercises, which this repo has
+learned to distrust.
+
+> 🎯 **Owner decision:** do we (a) build 30a now against a venue you know has
+> two menus and can supply — the shape then earns its keep immediately; or
+> (b) hold 30a until such a venue arrives and meanwhile land the cheap,
+> independently-useful pieces (the cuisine axis, the allergen regime field,
+> `channel` on a price record in `data/`)? **Recommendation: (b) plus one
+> exception** — write the ADR for 30a's *shape* now, while the survey is fresh,
+> so the decision is recorded before a rushed venue forces it.
+
+**Sources for the survey**: Square `Catalog` (`CatalogItemVariation`,
+`location_overrides`, `present_at_location_ids`, `CatalogPricingRule`,
+`CatalogAvailabilityPeriod`); Toast (`pricingStrategy`, `multiLocationId`,
+`visibility[]`); Deliveroo Menu API (`mealtimes[]`, non-overlap rule, three-state
+availability); Uber Eats (`price_info.overrides[]`, `menu_type`, `suspend_until`,
+kcal *and* kJ); DoorDash (`price`/`base_price`); Oracle Simphony (Revenue
+`Center`s, Menu Levels, Serving Periods, priority-ordered overlap); Lightspeed
+(order profiles → price lists); Google Business Profile FoodMenus; schema.org
+`Menu`/`MenuSection`/`MenuItem`/`Offer`; FoodOn and LanguaL's 14 facets; OSM
+`cuisine=`, `diet:*` and lifecycle prefixes; Wikidata P576/P1366 and redirects;
+Overture GERS and `taxonomy`; FSANZ PEAL, EU 1169/2011 Annex II, FASTER Act,
+Natasha's Law; VITAL 4.0; HL7 FHIR `dataAbsentReason`; W3C PROV-O and DQV;
+Kimball SCD type 2 and durable super-natural keys; EDTF / ISO 8601-2:2019.
+
+---
+
+## Theme 31 — the venue's own ordering app (owner-raised 2026-08-16)
+
+> *"Where there is a specialised app to order from, like McDonalds has, Faves
+> should have a link to open that app the same way we open uber, delivereasy
+> etc"*
+
+🎉 **The research turned this from a feature into a two-line data change, and
+found that a third of it already works.**
+
+**There is no such thing as an "app URL" to store.** The only mechanism safe
+from a static, zero-dependency site is the **universal link / Android App
+Link**: an ordinary `https://` URL that the OS silently routes to the installed
+app, falling back to the website when it is absent. We do not "add an app link"
+— we write `<a href="https://…">` and the OS upgrades it. Everything else was
+checked and rejected:
+
+- **Custom schemes (`mcdonalds://`) are unusable.** With the app absent, Safari
+  shows *"cannot open the page because the address is invalid"* — a dead-end
+  error dialog with a venue's name attached. Chrome doesn't navigate them at
+  all. And Apple states there will never be an API to test one first, *"due to
+  privacy concerns."*
+- **`intent://` with a fallback works but is Android-Chrome-only** and buys
+  nothing over a verified App Link.
+- **We can never detect whether an app is installed.**
+  `navigator.getInstalledRelatedApps()` requires a *mutual, cryptographically
+  verified* relationship between our origin and the app — McDonald's would have
+  to add our domain to their asset links. Safari has never supported it in any
+  version. 🚩 **So no button may ever say "Open in app"**: it would be a claim
+  we cannot back, and wrong for the majority of readers.
+
+✅ **Three of our four aggregators already open their native apps today**, with
+the plain URLs we already ship — verified against Apple's own AASA CDN and
+Google's Digital Asset Links API, not against blog posts:
+
+| Platform | Opens the app from our existing link? |
+|---|---|
+| Uber Eats | ✅ `/??/store/*/*` is claimed, so `/nz/store/…` matches |
+| DoorDash | ✅ `*/store/*` claimed |
+| Delivereasy | ✅ all paths claimed — but use the `www.` host; the apex 502s on `assetlinks.json` |
+| Easy Eats | ❌ their `.well-known` serves an HTML redirect stub, so neither platform can verify |
+
+**Of the chains, only KFC NZ has a clean, verified association** (both iOS and
+Android, all paths but `/_/*`). The rest are worse than absent:
+
+- 🛑 **Subway is actively dangerous.** `www.subway.com` claims **all paths** for
+  the *global* Subway app, but NZ ordering lives in a completely different app
+  (`nz.co.subcard.app`, published by Simplicity Technologies, not Subway). A
+  `subway.com` link may hand an iPhone to the wrong app entirely. `subway.co.nz`
+  does not resolve.
+- ❌ **McDonald's NZ has no association at all** — `mcdonalds.co.nz` returns
+  "Not Found" from Apple's CDN, and the `www.mcdonalds.com` file scopes only US
+  paths to US apps, declaring a package that isn't even the one on the NZ Play
+  listing. **The owner's own example is the one chain where this cannot work
+  today.** Worth telling him plainly.
+- ❌ **Domino's** has store pages on `www.dominos.co.nz/store/<id>` but the
+  association lives only on `order.dominos.co.nz` and has **no `/store/`
+  component** — no verifiable per-store deep link exists.
+- ❌ **Hell Pizza** claims only `/password-reset/*` and `/voucher/*`; its
+  `assetlinks.json` returns SPA HTML. Pizza Hut, Starbucks and BurgerFuel have
+  no association files on any host probed.
+
+### What to actually build
+
+- **31a — a first-party ordering *category*, not a new mechanism** `[S][schema]`.
+  `ordering[]` keeps its `{platform, url}` shape; add an optional
+  `kind: "first-party" | "aggregator" | "app-store"` so the render can group
+  "Order direct" above the aggregators. Where the OS can upgrade the link it
+  silently will; where it can't, the reader gets the ordering site, which is the
+  only thing we promised. **Label by brand and service — "Order from KFC" — not
+  by mechanism.**
+- **31b — the app-only case** `[S][design]`. Starbucks NZ ordering is in-app
+  only, and McDonald's NZ may be (unverified — its site blocks scripted fetches;
+  do not assert either way without checking in a browser). There a store link
+  *is* the real entry point, but it must be worded as one — "Get the Starbucks
+  NZ app" — never as ordering. That is `kind: "app-store"`.
+- **31c — an association re-check** `[S][ci]` 💡. These are plain files on other
+  people's servers and change without notice; two `curl` calls per domain
+  confirm them. A cheap scheduled job in the mould of `fx.yml` would stop a
+  silently-rotted link. Optional, and only worth it once we ship more than one.
+- **31d — accessibility wording** `[XS][a11y]`. WCAG **G201** advises warning
+  before a link opens a new window; there is **no** technique for "may switch to
+  a native app" — the standard predates it. The defensible reading: warn about
+  the guaranteed behaviour (leaving the site), never promise the app switch.
+  Also note both platforms let the user permanently choose "open in browser"
+  (Apple documents that iOS *"examines the user's recent choices"*), so **two
+  people with identical phones can correctly get different behaviour.**
+
+🚩 **Do not publish** any per-store Domino's link, `order.subway.com/en-nz/menu`,
+`subway.co.nz`, `easyeats.nz`, or `hellpizza.com` — none verified or resolving.
+Re-check `kfc.co.nz/find-a-kfc/<slug>` in a real browser first; a scripted fetch
+gets 403 from its bot protection.
+
+⚠️ **One unresolved unknown, flagged rather than papered over.** An installed
+iOS PWA renders out-of-scope links in an in-app browser view, and no
+authoritative Apple documentation says whether a universal link tapped *there*
+still hands off to a third-party app. Community reports conflict and behaviour
+has shifted across iOS versions. **This is the most likely place the feature
+quietly does nothing, and it needs a real-device test on the owner's phone** —
+not a headless check.
+
+---
 
 ## Recommended sequence
 

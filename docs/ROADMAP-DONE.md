@@ -1053,3 +1053,58 @@ carrying forward, because it generalises past this venue:
   after: 3px → 11.5px of clearance, toolbar offset correct in both.
   🔎 The sticky search toolbar had *already* been fixed for the identical
   mistake on its rounded top edge; the same trap, sprung twice.
+
+## Ticked 2026-08-16 by staleness audit (Themes 19–20 residue)
+
+Found by auditing every open roadmap item against the tree rather than against
+its own prose. Kept verbatim, including each item's original text, because the
+value is in seeing what was asked for beside what landed.
+
+- [x] ✅ **Venue timezone — DELIVERED (ADR 0043), ticked 2026-08-16 by audit.**
+  Every named deliverable landed and nobody ticked the box: `place.js`
+  `venueTimezone()`/`branchTimezone()` resolve per branch then venue then
+  `HOME_TIMEZONE`; `hours.nowIn(tz)` and `temporal.todayIn(tz)` replaced
+  `nzNow`/`todayNZ`, which no longer exist; `menu.js` renders
+  `Hours · ${zoneLabel(tz)}`; `app.js` computes the timezone note and **names no
+  zone when the list spans several**; `viewerOnNzTime` became
+  `viewerOnVenueTime(tz)`; `validate.py` checks IANA zones at card and branch
+  level. Residue is **data, not code**: no record carries a `timezone` yet
+  because all 55 are in New Zealand, so the fallback does the work. Original
+  text kept below for the record.
+  🗄 `[M][schema]` — `hours.js` computes open/closed in `Pacific/Auckland` and
+  `temporal.js` reads the current date the same way (ADR 0006). A London venue
+  would render open/closed against Wellington's clock, off by roughly half a
+  day, with nothing on screen saying so. Needs an optional per-venue `timezone`
+  (IANA) defaulting to `Pacific/Auckland`, `nzNow`/`todayNZ` taking a zone, an
+  ADR superseding 0006, and the two visible strings that hard-code the claim —
+  `Hours · NZ time` and *"Open/closed times are New Zealand time"* — becoming
+  the venue's own zone. `viewerOnNzTime` generalises to a per-venue comparison.
+- [x] ✅ **Currency is NZD by construction — DELIVERED, ticked 2026-08-16 by
+  audit.** `about-ui.js` no longer claims a site currency (*"Each place's prices
+  are in its own local currency"*); `place.js` carries `venueCurrency()`,
+  `priceCurrency()` (per-item) and `formatMoney()`; `menu.js`'s caveat names the
+  venue's own currency; and `validate.py` now **requires** `currency` on every
+  non-recipe record with a rate in `fx.json` — all 55 carry it. ⚠️ The second
+  half was **answered by ruling, not built**: `price.js` still holds one
+  `BAND_CURRENCY = "NZD"` calibration and converts into it
+  (`toBandCurrency()`), because [ADR 0045](decisions/0045-prices-convert-and-localisation-can-follow-you.md)
+  deliberately reversed 0043's refusal — *"one calibration, in NZD, reached from
+  any other currency by conversion"*. So "the bands stop being global" is not
+  outstanding work; it is a decision that went the other way.
+- [x] ✅ **Seasons assume the southern hemisphere — DELIVERED, ticked 2026-08-16
+  by audit.** `place.venueHemisphere()` derives north/south from the branch's or
+  venue's latitude (never stored — a coordinate already answers it, and a stored
+  copy can disagree with the pin); `seasonMonths`/`isAvailable`/`resolveRecord`
+  all take a `hemisphere`, and `data.js` passes it on every load. Tested in
+  `tests/place.test.js`. 🔎 One residue worth naming: `venueHemisphere` returns
+  `null` for a coordless venue *so the caller can decline to guess*, and
+  `data.js` then guesses `"south"` anyway. Defensible for an NZ-home collection,
+  dishonest the day it isn't. Original text: `[XS][js]` — `temporal.js` maps
+  `summer` to Dec–Feb, which inverts north of the equator. Smallest of the
+  three, and it falls out of the timezone work: a zone implies a hemisphere.
+
+---
+
+---
+
+## Also parked (small)
