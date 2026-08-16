@@ -251,6 +251,41 @@ async function run(opts) {
         landed.control === facet.text && landed.cards > 0 && / of /.test(landed.count),
         JSON.stringify(landed)
       );
+
+      // The way back out. A reader arriving from a venue link never pressed
+      // anything on this screen, so the undo has to be visible next to the
+      // count — and it has to actually restore the full list, not just look
+      // like it does.
+      const chip = await driver.evalPage(`(() => {
+        const box = document.getElementById("active-filters");
+        const b = box && !box.hidden ? box.querySelector(".active-filter") : null;
+        return b ? { text: b.textContent.trim(), label: b.getAttribute("aria-label") || "" } : null;
+      })()`);
+      report.check(
+        "home: an arriving filter shows a dismissible chip beside the count",
+        !!chip && chip.text.includes(facet.text) && /clear/i.test(chip.label),
+        JSON.stringify(chip)
+      );
+
+      await driver.evalPage(`document.querySelector("#active-filters .active-filter").click()`);
+      await until(
+        () => driver.evalPage(`document.getElementById("active-filters")?.hidden === true`),
+        { label: "home: filter cleared" }
+      );
+      const cleared = await driver.evalPage(`(() => ({
+        count: (document.querySelector("#result-count")?.textContent ?? "").trim(),
+        control: document.getElementById("filter-cuisine")?.value ?? "",
+        search: location.search,
+        focused: document.activeElement?.id ?? "",
+      }))()`);
+      report.check(
+        "home: clearing the chip restores the full list, the control and the URL",
+        !/ of /.test(cleared.count) &&
+          cleared.control === "all" &&
+          !/cuisine=|area=/.test(cleared.search) &&
+          cleared.focused === "result-count",
+        JSON.stringify(cleared)
+      );
     } catch (e) {
       report.check("menu → home: the subheading facet links work", false, String(e.message || e));
     }

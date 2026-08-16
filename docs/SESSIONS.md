@@ -3589,3 +3589,66 @@ belong rather than only here.
   **auto-merges** it, which satisfies the required checks the ordinary way, needs
   no bypass and no unusual git. The owner rejected "open a PR" when it meant
   waiting on him; auto-merge doesn't.
+## 2026-08-16 04:45 UTC — a filtered list that says so, and lets you out
+
+**The report (owner).** The facet link works, *"but I'm left without a clear way
+to get back to a normal Faves experience. Why can't clicking on Malaysian take
+me to the search page the user is used to seeing and using, and has a simple way
+back to home / normal?"*
+
+**The diagnosis is right; the proposed route is not, and the numbers say so.**
+The complaint is real: every other filter on the home screen was pressed *on*
+that screen, so the control you pressed is the control you un-press. A cuisine
+arriving in the URL was chosen on a different page — you land narrowed having
+touched nothing here, and the only undo was a `<select>` in the sticky bar at
+the far end of the page, which reads as furniture rather than as the thing
+currently doing this to the list. The search screen has always had a ✕ on its
+query for exactly this reason. Browse had nothing.
+
+But pointing the links at search would answer a *different question* than the
+link promises. Measured across the whole corpus — every cuisine and every area,
+facet-filter set versus text-search set:
+
+| | |
+|---|---|
+| Facets where the two agree exactly | **45 of 51** |
+| Where they differ | **6** — and search never *misses* a venue, it **adds** |
+
+The additions are name and address matches, not cuisine ones. Search "Bar"
+and you also get 1841 Bar & Restaurant, Charley Noble, Southern Cross and The
+Catch Sushi Bar — four venues whose *name* contains "Bar" and whose cuisine is
+not. "Pub" returns 6 places of which 5 are not pubs. "Cafe" picks up KC Cafe,
+which is Chinese and Malaysian. "Courtenay Place" pulls in three venues that
+merely have it in their address. "Malaysian" happens to agree exactly, which is
+why the route looked sound from the one example that prompted it.
+
+So: keep the facet filter (it answers the question the link makes) and give it
+the affordance search already had.
+
+**What shipped.** An active area/cuisine filter now renders as a dismissible
+chip beside the place count — accented, not the quiet grey of the neighbouring
+toggles, because it is the *reason* the list is short. One tap clears the state,
+the `<select>`, and the URL param together, and focus lands on the count (which
+is `role="status"`, so the restored total is announced) rather than falling to
+`<body>` when the chip it was on is removed from the DOM.
+
+🔎 **Squeezing it into the results head was a regression, caught by looking.**
+As a third flex column at 390 px it stole width from both neighbours: the count
+broke to three lines ("6 of / 48 / places") and the four toggles unstacked into
+a single column — far more height than the chip's own row costs. It now takes a
+full-width row below them on a phone and sits inline beside the count from
+34 rem up, where there is room. Both widths screenshotted.
+
+**The guard held.** `boot_check` gained two more cross-screen assertions (the
+chip appears and names what it does; clearing it restores list, control and URL
+together) — 15/15, up from 13.
+
+**Verification.** `node --test` **655** · `validate.py` 48 files 0 errors ·
+`boot_check` **15/15** · `device_check` 19/19 · `cook_check` 36/36 ·
+`check_versions.py` clean (SHELL_VERSION → 2026-08-16.16) · 390 px and 1200 px
+eyeballed.
+
+⏳ **Left with the owner.** He asked for the search page specifically. This
+delivers the escape he was actually missing while keeping the link honest — but
+if he wants the search route anyway, knowing 6 facets over-match, that is his
+call and it is a small change to make.

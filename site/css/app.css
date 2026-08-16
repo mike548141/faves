@@ -186,11 +186,85 @@ main {
   gap: var(--space-2);
   margin-bottom: var(--space-3);
   min-height: 1.4rem;
+  /* Wraps so the active-filter chips can take a row of their own at phone
+     width — see .active-filters below. */
+  flex-wrap: wrap;
 }
 .result-count {
   color: var(--ink-soft);
   font-size: var(--step-sub);
   font-weight: 600;
+}
+
+/* Active area/cuisine filters, each with its own ✕. Accented rather than the
+   quiet grey of .list-toggle: these are the reason the list is short, so they
+   have to read as *on* at a glance — a reader who arrived here from a venue
+   link never pressed anything on this screen and has to be told what did. */
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+  /* A row of its own on a phone. Squeezed into the head as a third column it
+     stole width from both neighbours — the count broke to three lines ("6 of /
+     48 / places") and the four toggles unstacked into a single column, which
+     costs far more height than the chip's own row does. Order 2 puts it under
+     the count and toggles, which keep the layout they already had. */
+  order: 2;
+  flex-basis: 100%;
+  margin-top: var(--space-2);
+}
+.result-count {
+  order: 0;
+}
+.list-toggles {
+  order: 1;
+}
+@media (min-width: 34rem) {
+  /* Wide enough for all three on one line, where the chip sits right beside
+     the count it explains — the better reading when there is room for it. */
+  .active-filters {
+    order: 0;
+    flex-basis: auto;
+    margin-top: 0;
+  }
+  .list-toggles {
+    order: 2;
+  }
+}
+.active-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  min-height: 44px;
+  padding: 0.3em 0.85em;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-chip);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  cursor: pointer;
+}
+.active-filter-x {
+  font-size: 0.9em;
+  opacity: 0.75;
+}
+@media (hover: hover) {
+  .active-filter:hover {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .active-filter:hover .active-filter-x {
+    opacity: 1;
+  }
+}
+/* The count is only focusable as a landing spot after a chip is removed
+   (see index.html) — it is not an interactive control, so it must not wear an
+   interactive control's ring. */
+.result-count:focus-visible {
+  outline: 2px dashed var(--ink-soft);
+  outline-offset: 3px;
 }
 
 /* Shared pill toggles in the results head: "Open now" (filter) and

@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A filtered list now says so, and hands you the way out.** When an area or
+  cuisine filter is on, it appears as a chip beside the place count — "Malaysian
+  ✕" — and one tap clears it and restores the full list. It matters most when
+  you arrive from a venue's subheading link: the list is narrowed without you
+  having touched anything on that screen, and the only undo used to be a
+  dropdown at the far end of the page.
 - **A venue's cuisines and suburb are now links.** "Asian · Malaysian ·
   Noodles — Johnsonville" under a venue's name used to be a label; tap any
   part of it and you land on the full list filtered to it — every Malaysian

@@ -315,6 +315,7 @@ function init(restaurants) {
   const listEl = document.getElementById("restaurant-list");
   const countEl = document.getElementById("result-count");
   const emptyEl = document.getElementById("empty-state");
+  const activeEl = document.getElementById("active-filters");
   const areaSel = document.getElementById("filter-area");
   const cuisineSel = document.getElementById("filter-cuisine");
   const serviceBtns = [...document.querySelectorAll(".segmented button")];
@@ -350,6 +351,53 @@ function init(restaurants) {
     }
     const q = params.toString();
     history.replaceState(null, "", location.pathname + (q ? `?${q}` : "") + location.hash);
+  }
+
+  // A dismissible chip per active facet, sitting beside the count that says
+  // the list is short. This is the way *out*.
+  //
+  // It exists because of how you get here. Every other filter on this screen
+  // was pressed on this screen, so the control you pressed is the control you
+  // un-press. A cuisine arriving in the URL from a venue's subheading was
+  // chosen on a different page — the reader lands on a narrowed list having
+  // touched nothing here, and the only undo was a <select> in the sticky bar
+  // at the far end of the page, which reads as part of the furniture rather
+  // than as the thing currently doing this to the list. The search screen has
+  // always had a ✕ on its query for exactly this reason; browse had nothing
+  // (owner, 2026-08-16).
+  function renderActiveFilters() {
+    if (!activeEl) return;
+    const chips = [];
+    for (const [kind, value, sel, what] of [
+      ["cuisine", state.cuisine, cuisineSel, "cuisine"],
+      ["area", state.area, areaSel, "area"],
+    ]) {
+      if (value === "all") continue;
+      const chip = el("button", {
+        type: "button",
+        className: "active-filter",
+        // The label carries the whole sentence: what is on, and what pressing
+        // it does. "Malaysian ✕" alone tells a screen-reader user neither.
+        "aria-label": `${value} ${what} filter is on — clear it and show every place`,
+      }, [
+        el("span", { className: "active-filter-name", textContent: value }),
+        el("span", { className: "active-filter-x", "aria-hidden": "true", textContent: "✕" }),
+      ]);
+      chip.addEventListener("click", () => {
+        state[kind] = "all";
+        sel.value = "all";
+        sel.dataset.active = "all";
+        syncQuery();
+        render();
+        // Send focus somewhere that still exists — the chip is about to be
+        // removed from the DOM, and focus on a detached node falls to <body>,
+        // stranding a keyboard user at the top of the document.
+        countEl?.focus?.();
+      });
+      chips.push(chip);
+    }
+    activeEl.replaceChildren(...chips);
+    activeEl.hidden = chips.length === 0;
   }
 
   // Venues you've hearted, or that hold a dish you've hearted — a favourite
@@ -392,6 +440,9 @@ function init(restaurants) {
     const total = restaurants.length;
     countEl.textContent =
       n === total ? `${total} places` : `${n} of ${total} place${n === 1 ? "" : "s"}`;
+    // Redrawn with the count so the chips and the number they explain can
+    // never disagree — including when a filter changes from the dropdowns.
+    renderActiveFilters();
   }
 
   serviceBtns.forEach((btn) => {

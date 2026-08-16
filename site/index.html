@@ -178,7 +178,17 @@
 
       <div class="results-head browse-only">
         <h2 class="sr-only">Places</h2>
-        <p id="result-count" class="result-count" role="status" aria-live="polite"></p>
+        <!-- tabindex="-1" so clearing a filter can park focus here: the chip
+             that had focus is removed from the DOM by that very click, and
+             focus on a detached node falls to <body>. Not in the tab order. -->
+        <p id="result-count" class="result-count" role="status" aria-live="polite" tabindex="-1"></p>
+        <!-- Active area/cuisine filters, each with its own ✕ (app.js fills
+             this). Arriving from a venue's subheading link narrows the list
+             without the reader having chosen anything on this screen, so the
+             way out has to be next to the count that says it is narrowed —
+             not only in a dropdown at the far end of the page (owner,
+             2026-08-16). Empty and hidden whenever no facet is active. -->
+        <div id="active-filters" class="active-filters" hidden></div>
         <div class="list-toggles">
           <button type="button" id="open-now" class="list-toggle" aria-pressed="false">
             <span aria-hidden="true">🟢</span> <span data-i18n="toggle.openNow">Open now</span>
