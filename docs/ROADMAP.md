@@ -318,9 +318,9 @@ delivery app.** Clear one by bringing back the fact.
       the glass" without naming or pricing one. Nothing to transcribe until a
       photo of the bar list or the tap board exists — `intake/` pipeline.
 - [~] **Other venues with drinks nobody has captured** `[M][content]` —
-      **the derivation CLAIMED 2026-08-16 11:22 UTC (wt: faves-content-growth)**;
+      ✅ **the derivation is done 2026-08-16** (`tools/drinks_gap.py`);
       transcribing what it finds stays open and owner-gated.
-      **Derived, don't re-typed** (same fix as ADR 0041 gave dish-level gaps):
+      **Derived, not re-typed** (same fix as ADR 0041 gave dish-level gaps):
       `python3 tools/drinks_gap.py --gaps` reads `cuisine`/`vibe`/name against
       each record's own section-heading vocabulary (no naive "Beer"/"Wine"
       string match — see the tool's docstring for the 175-heading harvest
@@ -334,12 +334,21 @@ delivery app.** Clear one by bringing back the fact.
       with `--price-effect`: of the 11 venues that already mix food and
       drink rows, **5 (45%)** get a cheaper blended median than their
       food-only median (never the other way), and 2 of those 5
-      (BurgerFuel, Hell Pizza) currently ship the cheaper blended band with
+      (BurgerFuel, Hell Pizza) shipped the cheaper blended band with
       **no curation** — a pre-existing mislabel this item didn't cause but
-      did surface. Curate the band from the food-only median, as the two
-      2026-08-15 pubs (Southern Cross, The Borough) plus Khandallah Trading
-      Company now do. Detail →
+      did surface, and ✅ **fixed 2026-08-16**: both now carry a curated
+      `priceBand: "$$"` and `pricePerPerson` taken from the food-only
+      median (15.75 and 23.50 against a `$`/`$$` boundary of 15), matching
+      the two 2026-08-15 pubs (Southern Cross, The Borough) plus Khandallah
+      Trading Company. All five flippers are now curated; `--price-effect`
+      is the regression check. Detail →
       [`ROADMAP-DONE.md`](ROADMAP-DONE.md), Theme 4.
+      🔑 **Worth keeping:** the mislabel was invisible to every existing
+      gate — `validate.py` passes a record with no `priceBand` because the
+      field is optional and the app derives one. It took a tool built to
+      answer a *different* question (which venues lack drinks?) to surface
+      it, which is the argument for deriving worklists rather than eyeballing
+      them.
 - [ ] **1841 — kids menu not transcribed** `[S][content]`. It is a separate
       PDF (`Kids-Menu-2023.pdf`) and is dated **2023** by its own filename,
       two years older than the main menu. Worth a fresh copy rather than a
