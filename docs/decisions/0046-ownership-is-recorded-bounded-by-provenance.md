@@ -50,7 +50,7 @@ that cannot say where it came from; it does not warn. A permission whose bound
 is only written down is not bounded — the check is what makes the ruling real.
 
 **It lives in `data/`, never in `site/`** — the research store of
-[ADR 0045](0045-the-app-ships-only-what-it-renders.md). None of it is served,
+[ADR 0047](0047-the-app-ships-only-what-it-renders.md). None of it is served,
 precached, or reachable from the app, and no file under `site/` refers to it.
 The graph keys on the venue `id` from the record side only, so the payload gains
 nothing and needs no migration.

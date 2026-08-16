@@ -61,7 +61,7 @@ reversible in an afternoon.
 
 ## Data model
 
-**Two stores, cut on rendered / not rendered (ADR 0045).** `site/data/` is a
+**Two stores, cut on rendered / not rendered (ADR 0047).** `site/data/` is a
 **payload** — the service worker precaches every venue file, so a field added
 there is downloaded by every phone whether a screen reads it or not. It holds
 exactly what a screen can show. `data/` at the repo root is the **record** —
@@ -390,7 +390,7 @@ it, including that it ever existed.
 **This is the rule the whole time dimension depends on.** A refresh is a dated
 *reading* of the menu, not a replacement of what we knew.
 
-**Where the append lands changed with ADR 0045.** The payload keeps *one*
+**Where the append lands changed with ADR 0047.** The payload keeps *one*
 price entry per dish — the current one, with its `recorded` date and
 derivation, because the app renders how old a price is. The superseded entry
 is appended to `data/history/prices/<venue>.json` in the record store, and a

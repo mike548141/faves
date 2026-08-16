@@ -115,7 +115,7 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
     `tools/registry.py` errors without one. Never served, never
     precached, never referenced from `site/`. Still never a person's
     home address, date of birth, or health.
-- **The app ships only what it renders (ADR 0045).** `site/data/` is a
+- **The app ships only what it renders (ADR 0047).** `site/data/` is a
   precached payload: a field added there is downloaded by every phone
   whether a screen reads it or not. Data no screen shows — superseded
   prices, departed dishes — lives in `data/`, the repo-only research
@@ -223,7 +223,7 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
     in `site/data/index.json` + a fallback `<li>`; then `validate.py`.
   - **Refreshing a menu = append, never overwrite — but the append lands
-    in the record, not the payload (ADR 0045).** A changed price replaces
+    in the record, not the payload (ADR 0047).** A changed price replaces
     the dish's single entry in `site/data/` *and* appends the superseded
     one to `data/history/prices/<venue>.json`; a departed dish moves whole
     to `data/history/dishes/<venue>.json` rather than being deleted; a

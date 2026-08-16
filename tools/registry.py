@@ -20,7 +20,7 @@ the field list says *which* facts. Both have to pass.
     python3 tools/registry.py --selftest   # the checker's own unit checks
 
 Stdlib only, no build step, and nothing here is ever served: `data/` sits
-outside `site/`, so the service worker cannot reach it (ADR 0045).
+outside `site/`, so the service worker cannot reach it (ADR 0047).
 """
 
 import argparse
@@ -223,7 +223,7 @@ def validate(errors):
         if re.search(r"""["'`][^"'`]*\.\./data/|["'`]/?data/(entities|people|history)/""", text):
             err(errors, str(f.relative_to(ROOT)),
                 "references the research store — `data/` is never served "
-                "and must never be fetched by the app (ADR 0045)")
+                "and must never be fetched by the app (ADR 0047)")
 
     return entities, people, edges
 

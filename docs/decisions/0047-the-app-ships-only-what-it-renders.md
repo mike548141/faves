@@ -1,7 +1,17 @@
-# 0045 — The app ships only what it renders
+# 0047 — The app ships only what it renders
 
 **Status:** accepted
 **Date:** 2026-08-16
+**Numbered 0047 on 2026-08-16**, having been accepted as 0045 hours earlier.
+The FX/localisation decision took the same number from a parallel branch —
+both sessions allocated at merge, as the rule requires, and both found 0045
+free when they checked; the branches merged minutes apart. The owner ruled
+this one moves, because the other is a shipped user-facing feature with its
+number already in nine `site/js` comments. **Commit messages from 2026-08-16
+call this record "ADR 0045" — they mean this file.** Contrast with `0025`,
+which is permanently duplicated: that one was found weeks later with 24
+inbound references, so renumbering cost more than the ambiguity. Found within
+the hour, it cost eleven references and one commit.
 **Amends:** [0023](0023-time-dimension-in-the-data.md) — a refresh still
 appends, but the appended history lands in the research store rather than the
 payload · [0015](0015-split-precache-versioning.md) — the data cache now
