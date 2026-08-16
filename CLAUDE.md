@@ -145,6 +145,7 @@ python3 tools/check_versions.py # sw.js versions bumped in lockstep with site/
 node --test                   # JS unit tests (pure logic); no npm install needed
 node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)
+node tools/addon_check.mjs    # add-on composition in headless Chrome (ADR 0048)
 ```
 
 **The exchange rates refresh themselves weekly** — `.github/workflows/fx.yml`
@@ -178,6 +179,15 @@ and **570 unit tests, `device_check` 19/19 and `cook_check` 36/36 were all
 green** — the first two drive a menu page, and the fallback made the wreck look
 like a working list of places. Run it after touching any module on a page's
 import graph, which in practice means most changes under `site/js/`.
+
+`addon_check.mjs` is the third of the family (ADR 0048). Configuring a dish can
+make it unsafe — satay on a kebab is peanuts — so it drives the real picker at
+390 px and asserts the venue's cap refuses a fourth sauce, the warning names
+the option and the allergen live, the flagged treatment follows the
+*configuration* rather than the dish, and a configured dish becomes its own
+order line. Run it after touching `addons.js`, `addons-ui.js`, `cart.js`,
+`cart-ui.js` or the dish render. Its header names what a green run cannot show
+you — above all that no browser can check whether the tagging is *true*.
 
 `cook_check.mjs` is its sibling for cook mode (ADR 0039), on the same
 harness (`tools/lib/browser.mjs`): it opens a real recipe, steps through

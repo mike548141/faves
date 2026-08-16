@@ -9,6 +9,24 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Order a dish the way you actually eat it.** Where a venue offers extras,
+  the dish now carries them as real choices instead of a sentence in the
+  description — Wellington Kebab Grill's twelve sauces (choose up to three,
+  free), toasted or fresh, and its five paid extras; Sprig & Fern's brunch
+  sides, the gravy on the fries, the "chicken, halloumi, prawns or beef" on a
+  salad. The shop's own rules are kept: a cap of three refuses a fourth.
+- **Adding something can change what a dish contains, and the app now says so
+  as you choose.** Put satay on a kebab and it tells you the plate contains
+  peanuts — before you add it to the order, not after. If it is an allergen you
+  have flagged in Settings, the whole dish lights up. Dietary claims work the
+  other way: a dairy-free dish stops claiming dairy-free once you add halloumi,
+  and a vegan dish stops claiming vegan once you add chicken — with the reason
+  spelled out, because "Halloumi contains dairy" and "we can't say whether
+  Mushrooms is dairy free" are different things to be told.
+- **The same dish, configured two ways, is two lines on the order sheet** — at
+  its own price, and read out at the counter with what you asked for
+  ("2× Iskender with Mild chilli, Garlic yogurt"). Shared group orders carry
+  the configuration too; links sent before this still work.
 - **A filtered list now says so, and hands you the way out.** When an area or
   cuisine filter is on, it appears as a chip beside the place count — "Malaysian
   ✕" — and one tap clears it and restores the full list. It matters most when

@@ -1291,16 +1291,15 @@ $7 and friends) that is really an add-on group for every brunch dish, not a set
 of things you'd order alone. The information is captured; only the *shape* is
 wrong.
 
-- [~] **14a — Structured add-ons** `[L][schema][content]` —
-  CLAIMED 2026-08-16 04:50 UTC (wt: faves-addons) — optional `addOns` on
-  a dish (`{ name, price, tags }`) plus a **reusable group** defined once per
-  section or venue that dishes reference, so "brunch sides" attaches to eight
-  brunch dishes without being written eight times. Design calls: single-select vs
-  multi-select per group (the Garden Salad's "chicken, halloumi, prawns **or**
-  beef" is a pick-one; brunch sides are pick-many); whether an add-on may itself
-  be an existing menu item by id (the brunch sides *are* menu items) or is always
-  a standalone record. Record in `ARCHITECTURE.md` + enforce in `validate.py`
-  when it lands.
+- ✅ **14a — Structured add-ons** — **shipped 2026-08-16** (ADR 0048):
+  venue-level `addOnGroups`, `select: one|many` + `max`, group price default,
+  required per-option `tags`. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+- ✅ **14d — an add-on carries its own tags** — **shipped with 14a**, as it
+  insisted. Allergens union, dietary claims intersect. Detail →
+  [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+- ✅ **14e — Order-tally knock-ons** — **shipped 2026-08-16**. Line identity is
+  now `(venueId, name, selectionKey)`; the share codec deliberately did *not*
+  bump. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [ ] **14b — The content sweep** `[M][content]` — retro-fitting the corpus is
   the bulk of the work, not the code. Pattern-match `Add …$` / `+$` in every
   `desc` and convert; keep the prose only where it isn't an orderable choice.
@@ -1315,21 +1314,6 @@ wrong.
   per dish (structured and safe, but it's the whole ingredient-transcription
   problem for 31 venues). Recommend the note now; components only if a venue's
   data ever justifies it.
-- [~] **14d — Safety: an add-on carries its own tags** `[M]` 🚩 —
-  CLAIMED 2026-08-16 04:50 UTC (wt: faves-addons) — **the
-  load-bearing point.** Adding halloumi to a dairy-free dish makes it not
-  dairy-free; a satay add-on makes a dish contain peanuts. So `dietary.js`'s
-  `dishFlagged` / `dishSatisfiesDiet` must evaluate **dish + selected add-ons**,
-  not the dish alone, and the order line must show the resulting warning — a
-  dish that was safe when you tapped it can stop being safe when you configure
-  it. This is not optional polish on 14a; it ships with it.
-- [~] **14e — Order-tally knock-ons** `[M]` —
-  CLAIMED 2026-08-16 04:50 UTC (wt: faves-addons) — a dish added twice with different
-  add-ons is **two lines, not a quantity of 2**; the subtotal maths takes add-on
-  prices; and the group-order share codec (ADR 0009) has to carry the
-  configuration, which means a **versioned codec bump** and a receive-side path
-  for links minted before it. Audit these together before building 14a, not after.
-
 - [ ] **14f — Combos: several dishes ordered as one** `[M][schema][design]`
   (owner-raised 2026-08-16) — *"the concept of Combo's e.g. coffee and scone,
   where multiple dishes are combined to make a dish to order them together with
@@ -1382,10 +1366,35 @@ Three things this one card settles that the theme had left open:
   configures into an anaphylaxis risk, silently. **No add-on UI ships before
   `dishFlagged`/`dishSatisfiesDiet` evaluate dish + selections.**
 
-⏳ The sauce list is recorded here, not in `site/data/`, deliberately: ADR 0047
-says the payload ships only what a screen renders, and no screen renders add-ons
-yet. It moves into the venue file as part of 14a, in whatever shape 14a settles
-on — this paragraph is the input to that design, not a substitute for it.
+✅ **The sauce list moved into `site/data/restaurants/wellington-kebab-grill.json`
+on 2026-08-16**, discharging the ⏳ above exactly as it said it would: a screen
+renders add-ons now, so ADR 0047 lets the payload carry them. The paragraph
+stays as the design input it was.
+
+**Three things 14a left open, named rather than hidden.**
+- 🚩 **A group has a `max` but no `min`.** "Choose your kebab toasted or fresh"
+  is not optional at the counter — you will be asked — and a pick-one group
+  left unanswered produces a line the shop cannot fill without asking. That is
+  the same class of defect as exceeding a cap, and `max` alone does not catch
+  it. Left out of v1 deliberately to keep the shape small.
+- 🚩 **A preparation-only option has to fake its tags.** "Toasted" adds no
+  ingredient, but under the intersection rule an empty `tags` would strip `gf`
+  off a gluten-free kebab for choosing it. The pilot data works around this by
+  writing vacuously-true claims (`vg, gf, df`) on both options. It is fail-safe
+  either way, but the honest fix is a group-level marker saying the group
+  changes method rather than contents, so composition can skip it.
+- 🚩 **Converted rows now exist twice** — Wellington Kebab Grill's five
+  `Extras` and Sprig & Fern's twelve `Brunch Sides` are each both an orderable
+  dish and an add-on option. Deliberate: deleting the dish rows would break
+  stored hearts, ratings and any shared link naming them. It stays structural
+  until Theme 25 settles whether an option may reference a dish by id.
+
+**Sizing for 14b, measured 2026-08-16 rather than estimated.** Across the 48
+records: **28** dish descriptions carry a priced add-on in prose, **63** carry
+an unpriced choice, **17** dishes *are* add-ons wearing a dish's clothes, and
+**11 sections across 9 venues** (92 rows) are add-on groups rather than things
+you would order alone. Four of those venues are one pub group with near-
+identical prose, so one modelling decision covers them all.
 
 ## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
 
@@ -1949,6 +1958,41 @@ remember, and nothing checks it. An id makes it mechanical.
 🎯 **Approved by the owner 2026-08-16 — and explicitly for a NEW session.** Not
 started here, deliberately: it is a personal-data migration on every family
 device, and it wants a session that is only doing this. Its own ADR.
+
+🔎 **This is not hypothetical — the corpus already breaks it, today.** Found
+while building Theme 14 on 2026-08-16, verified by measurement rather than
+reasoning. `slug(name)` is **not unique within a venue**: 22 dish rows across 3
+venues collide on 10 distinct names, and **every collision is at a different
+price**. Sprig & Fern is the worst — `Cheeseburger` appears in Mains ($28),
+Kids ($15) and Gold Card ($21); `Fish and Chips` likewise; five more names
+appear twice. Southern Cross and The Borough each have a `Heineken` on tap and
+in bottles at different prices.
+
+All four jobs in the table above are already failing on that data:
+
+- **URL anchor** — three elements share `id="dish-cheeseburger"`. Invalid HTML,
+  and `#dish-cheeseburger` can only ever reach the first one, so the Gold Card
+  price is unlinkable.
+- **Stored heart / rating** — keyed `d:<venueId> <name>`, so hearting the kids'
+  fish and chips hearts all three.
+- **Pick reference** — a `picks` entry naming one of these resolves to whichever
+  comes first.
+- **The order tally overcharges.** `cart.js` matches a line on `(venueId, name)`
+  and increments, so adding the $21 Gold Card Cheeseburger to a tally already
+  holding the $28 Mains one produces **2× Cheeseburger at $28 = $56** instead of
+  $49. Reproduced against the real module, not inferred:
+
+```
+lines: 1 [["Cheeseburger",28,2]]
+total charged: 56  — correct would be: 49
+```
+
+  🚩 **A $7 error on a real venue, silently.** Deliberately **not fixed** in the
+  Theme 14 session that found it — this is dish identity, which the owner
+  reserved for a session of its own, and a partial fix here would have made the
+  migration harder. Theme 14's own widening of the cart key (adding the add-on
+  selection) neither helps nor worsens it: both Cheeseburgers carry an empty
+  selection, so they still collide.
 
 **Where a fresh session should start:** the four jobs table above is the brief;
 `site/js/renames.js` is the working precedent to copy (single resolver, canonical

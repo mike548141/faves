@@ -987,3 +987,57 @@ carrying forward, because it generalises past this venue:
 - **The laksa carries no item code.** It appears only on the leaflet, whose
   numbering the rule discards; the card's S3 is already the wonton soup. A dish
   with no number is honest, a dish with a borrowed number is not.
+
+## Theme 14 — add-ons & customisation (14a, 14d, 14e)
+
+> ✅ **Shipped 2026-08-16** (ADR 0048). The verbatim records, moved out of
+> ROADMAP.md on completion. 14b, 14c and 14f remain open there.
+
+- [x] ✅ **14a — Structured add-ons** — **shipped 2026-08-16** (ADR 0048):
+  venue-level `addOnGroups` referenced by id from a section or a dish,
+  `select: one|many` with a `max` cap, group-level price default, required
+  per-option `tags`. `site/js/addons.js` (resolver + composition, 25 unit
+  tests) and `site/js/addons-ui.js` (the picker). Enforced in `validate.py`,
+  including unknown-key rejection — `"prive": 2.5` inside a group defaulting
+  to `0` would otherwise validate clean and sell the extra free. Two design
+  calls deviate from the notes below and are recorded in the ADR: **free is
+  written `0`, not implied by an absent price**, and **options are standalone
+  records, not references to menu items** (that is Theme 25's question).
+  Original note: optional `addOns` on
+  a dish (`{ name, price, tags }`) plus a **reusable group** defined once per
+  section or venue that dishes reference, so "brunch sides" attaches to eight
+  brunch dishes without being written eight times. Design calls: single-select vs
+  multi-select per group (the Garden Salad's "chicken, halloumi, prawns **or**
+  beef" is a pick-one; brunch sides are pick-many); whether an add-on may itself
+  be an existing menu item by id (the brunch sides *are* menu items) or is always
+  a standalone record. Record in `ARCHITECTURE.md` + enforce in `validate.py`
+  when it lands.
+
+- [x] ✅ **14d — Safety: an add-on carries its own tags** — **shipped
+  2026-08-16 with 14a**, as this item insisted. Composition rule: **allergens
+  union, dietary claims intersect**. 🔎 The intersection half is the finding —
+  a contradiction-only rule (drop `vg` only when an option states a clashing
+  allergen) handles satay perfectly and **misses grilled chicken entirely**,
+  because meat carries no `contains-*` at all, leaving a vegan dish plus
+  chicken still reading vegan. The satay example alone could never have taught
+  that. `tools/addon_check.mjs` asserts the whole path in a real browser.
+  Original note: **the
+  load-bearing point.** Adding halloumi to a dairy-free dish makes it not
+  dairy-free; a satay add-on makes a dish contain peanuts. So `dietary.js`'s
+  `dishFlagged` / `dishSatisfiesDiet` must evaluate **dish + selected add-ons**,
+  not the dish alone, and the order line must show the resulting warning — a
+  dish that was safe when you tapped it can stop being safe when you configure
+  it. This is not optional polish on 14a; it ships with it.
+- [x] ✅ **14e — Order-tally knock-ons** — **shipped 2026-08-16**. Line
+  identity widened to `(venueId, name, selectionKey)`; a line's `price` is now
+  the *configured* unit price, which is why the totals maths needed no change.
+  🔎 **The codec did NOT bump, against this item's expectation.** Measured:
+  `CODEC_VERSION` is shared by orders, shortlists *and* personal transfers and
+  checked with a strict `!==`, so bumping it would invalidate every outstanding
+  link of all three kinds for a change two of them never use. The selection is
+  appended as a fourth positional slot, which every existing decoder ignores by
+  construction. Original note: a dish added twice with different
+  add-ons is **two lines, not a quantity of 2**; the subtotal maths takes add-on
+  prices; and the group-order share codec (ADR 0009) has to carry the
+  configuration, which means a **versioned codec bump** and a receive-side path
+  for links minted before it. Audit these together before building 14a, not after.
