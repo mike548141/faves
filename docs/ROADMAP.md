@@ -395,20 +395,49 @@ delivery app.** Clear one by bringing back the fact.
 - [ ] 🎯 **Owner calls the menu fetch left owing** `[XS][decision]` — three
       questions the batch raised and refused to settle alone, kept together
       because each one changes what a *future* intake does, not just a record.
+      **One of the three is now ruled; two remain.**
       🔑 **The fetch recorded its own gaps rather than losing them** — as of
       2026-08-17 `python3 tools/needs.py --count` reports **188 open dish-level
       gaps across 6 venues** (Subway 162, Regal Chinese 14, Charley Noble 7,
       Gold Lining 3, Gong Cha 1, Southern Cross 1). Derive that list, never
-      re-type it. Question 1 below is most of it.
-      1. 🎯 **Is an unpriced row a record or noise?** Subway keeps **141**
-         unpriced rows (it publishes no price anywhere, by franchise design);
-         The Victoria Tavern's agent **dropped ~40 unpriced spirits** on the
-         corpus convention that unpriced lines are omitted — checked against
-         `southern-cross` and `the-borough-tawa`, neither of which carries a
-         null-price row. Both defensible, and they are opposite. The dropped
-         rows are recoverable from the drinks PDF at any time. **This settles
-         every future spirits/specials list**, which is why it wants one rule
-         rather than a per-venue judgement.
+      re-type it. Question 1 below was most of it.
+      1. ✅ **RULED 2026-08-17 — an unpriced row is a RECORD. Always keep it,
+         flagged as a gap.** Never drop a menu row for lacking a price: keep it
+         and mark `needs: price`, so the row is simultaneously the record of
+         what the venue sells and an entry on the derived worklist
+         (`tools/needs.py`). 🔑 **The reasoning that decided it: dropping is
+         lossy and keeping is not.** A dropped row destroys the fact that the
+         venue sells the thing, permanently and invisibly; a kept row costs one
+         field and *reports itself* until someone prices it. The two halves of
+         the split were never really a disagreement about value — Subway
+         publishes no price anywhere by franchise design (so dropping would
+         have deleted its entire 141-row menu), while The Victoria Tavern's
+         ~40 spirits were dropped on a corpus convention read from
+         `southern-cross` and `the-borough-tawa`. **That convention is now
+         overruled**; those two venues are not evidence of a rule, they are
+         venues that happened to have no unpriced lines.
+         **This binds every future intake** — spirits lists, specials boards,
+         market-price seafood, anything a venue lists without a number.
+         ✅ **Nothing has to be built to obey it, and two sessions nearly
+         re-derived that.** `needs` is not a new field: **166 dishes already
+         carry it**, `price` is already in its vocabulary, `validate.py`
+         already errors if a row claims `needs.what='price'` while holding a
+         price, and the screen that renders it already exists —
+         `site/js/needs.js` `priceUnknown()` drives `menu.js`, which prints
+         **`?`** in class `dish-price is-unknown` where a bare missing price
+         prints `—`. So [ADR 0047]'s *name the screen that renders it* is
+         satisfied by a screen that has been shipping for some time, and the
+         ruling is a **convention change, not a schema change**.
+- [ ] **Restore The Victoria Tavern's dropped spirits** `[S][data]` — the
+      direct consequence of the ruling above. Roughly **40 unpriced spirits**
+      were dropped from `the-victoria-tavern` during the fetch on the
+      now-overruled convention; they are recoverable from the venue's own
+      drinks PDF, which the fetch session confirmed is reachable (the HTTP 000
+      is a self-signed Plesk placeholder certificate, not a dead domain — its
+      mains PDF is dated 2025-11-24). Restore each row with
+      `needs: [{what: "price", note: …, since: …}]` and it renders `?` rather
+      than vanishing. Run `tag_allergens.py`, `seed_dish_ids.py` and
+      `validate.py` after, per the fetch recipe.
       2. ⚠️ **Pizza Hut's prices may not be Johnsonville's.** Its order pages
          quote prices without ever asking for an address, and the store page's
          "View menu" is a Vue handler with no `href`, so the branch flow could
@@ -2798,9 +2827,16 @@ contain shellfish.
 - ✅ **28g-tail — the last 25 sections, and the field made required** —
   **done 2026-08-16.** The six files landed (`9cae14e`), the seed finished the
   job — burgerfuel 9, hell-pizza 11, noodle-canteen 5 — and `validate.py` now
-  **requires** `sectionId`. All 235 sections carry their own id;
+  **requires** `sectionId`. Every section carries its own id;
   `seed_section_ids.py --check` is in the CLAUDE.md verify list. Proved by
   breaking it: a section with its id removed is refused (79 mutations).
+  ⚠️ **This line said "All 235 sections" until 2026-08-17, when the corpus held
+  374** — the menu fetch added 139 sections and the hand-typed tally did not
+  follow. The number is **removed rather than corrected**, because the claim
+  that matters ("every section, no exceptions") is the one the gate actually
+  enforces, and a count re-typed here goes stale on the next intake exactly as
+  this one did. Derive it if you need it — the same lesson as the stub count,
+  which went stale three times before its heading dropped its number too.
 
 - [ ] **28e — eligibility is unstated** `[S][design]` — "Gold Card" and "12 and
   under" are rules about *who may order*, recorded only inside a heading
@@ -3367,6 +3403,23 @@ great, fast"*.
 is*; 22b settles *what the screen is*. Doing 22b first means moving the same
 share button twice — so 22c's model call comes first, or at least alongside.
 22a is independent and can go any time.
+
+✅ **RULED 2026-08-17 — 22b and 22c are ONE piece of work, not a sequence.**
+The owner was offered all three shapes (22c first · 22b first · both together)
+and took **both together**: the Favourites screen is designed *against* the new
+personal-data model in a single pass. This **supersedes the paragraph above** —
+"22c first, or at least alongside" was written here and never ratified, and the
+ruling picks the "alongside" half of it and makes it binding.
+🔑 **What the ruling buys, and what it costs.** It buys zero rework: no control
+gets placed under today's model and moved under tomorrow's, which is the exact
+waste the paragraph above was worried about. It costs **shipping latency** —
+22c is `[L]`, so the Favourites screen goes on stranding people for the whole
+duration rather than getting a cheap early fix. The owner was told that plainly
+and chose it anyway, so **do not "helpfully" ship a 22b patch first**: a partial
+fix is the one outcome the ruling rejects.
+🚩 **Consequence for whoever takes it:** this is now a single `[L]` item, not an
+`[M]` plus an `[L]`, and it does not fit a short session. Claim it as one unit
+or leave it. 22a is untouched by the ruling and remains independent.
 
 - **22a — search jumps to a setting or an action** `[M]`. The searchable
   surface was widened on 2026-08-16 (streets, services, phones, diets, plus a
