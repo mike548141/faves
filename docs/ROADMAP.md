@@ -1754,6 +1754,51 @@ Two consequences recorded rather than buried:
 
 ---
 
+## Theme 22 — Should a dish have an id? (owner-raised 2026-08-16)
+
+Owner, on reading ADR 0044's "a dish's `name` is its identity": *"that is fine
+but does a dish need a unique ID as well so it is referenceable when a name
+changes, as menus tend to?"*
+
+**The answer is yes, and the reason is sharper than it first looks.** A dish's
+name is doing four jobs at once today:
+
+| Job | Where | What a rename breaks |
+|---|---|---|
+| URL anchor | `#dish-<slug(name)>` | every link anyone has shared to that dish |
+| Pick reference | `picks: ["Bastard"]` | the pick silently stops matching (validate.py catches this one) |
+| Stored heart | `d:<venueId> <name>` | the heart detaches, on every family phone |
+| Stored rating | `d:<venueId> <name>` | same |
+
+Three of those four fail **silently**, which is the same shape of problem
+`renames.js` was written for at the venue level (ADR 0042's consequences) — and
+that is the precedent to follow, not reinvent.
+
+There is a second reason the venue level didn't have: **a menu refresh is
+append-only** (ADR 0023). A renamed dish is supposed to *carry its history over*
+— its price series, its revisions, its `verified` dates. With the name as the
+only identity, "carry it over" is a manual instruction a transcriber has to
+remember, and nothing checks it. An id makes it mechanical.
+
+**Recommended shape** — deliberately mirroring what already worked for venues:
+
+- `dishId`, kebab-case, unique within the venue, **optional at first**. Absent =
+  `slug(name)`, which is what every existing anchor already resolves to, so
+  nothing moves on the day it lands.
+- `formerNames: []` beside it, holding what the dish used to be called — the
+  dish-level twin of `formerIds`, and the thing that lets an old shared link and
+  an old stored heart still find it.
+- One resolver module, the way `renames.js` is the single place a venue id is
+  canonicalised, so no consumer learns two ways to identify a dish.
+- `validate.py` enforces uniqueness within a venue and that `picks` resolve
+  through the same path.
+
+**Not started.** It is a personal-data migration on every family device, and it
+wants doing once, carefully, rather than folded into a session already carrying
+FX and localisation. Its own ADR.
+
+---
+
 ## Theme 21 — from the owner's Airbnb guidebook (2026-08-16)
 
 Source: the host guidebook for the Cuba St apartment, "Food scene" section — 22
