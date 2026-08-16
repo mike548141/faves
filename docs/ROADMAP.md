@@ -1941,10 +1941,18 @@ now holds only "Pick for us" and the order pill, so its label is slightly off.
 > dropped. Three defects only measurement found, the guards that now catch each
 > (`filter_row_check` 18 → 22, every new one proved to fail on the reintroduced
 > defect), and the rejected alternatives → [ADR 0062].
-> 🎯 **One question left with the owner:** the Service filter returns **81% of
-> the list for "Takeaway" and 79% for "Dine-in"** (Theme 15c's own measurement).
-> Dropping it would free 160 px and simplify the row further, but removing a
-> filter is a product call, not a layout one — so it was raised, not taken.
+> ✅ **Both open questions ruled by the owner, 2026-08-16, at the close of the
+> session that built it. Recorded so neither is re-proposed:**
+> 1. 🎯 **The Service filter stays exactly as it is.** He was shown Theme 15c's
+>    own measurement — it returns **81% of the list for "Takeaway" and 79% for
+>    "Dine-in"**, so it barely narrows anything — and was offered *drop it*
+>    (freeing 160 px of a 928 px row), *keep it*, or *sheet-only*. **He kept
+>    it.** Do not re-open this on the "it barely filters" argument; that argument
+>    has been made, with numbers, and declined. The 160 px is spent deliberately.
+> 2. 🎯 **Both control-shape changes stand**, and he was told plainly that
+>    neither was asked for: Service segmented → `<select>`, and the two location
+>    toggles → one "Sort by" `<select>`. Offered the revert of either and took
+>    neither.
 
 [ADR 0062]: decisions/0062-a-toolbar-is-not-a-sheet-lying-down.md
 
