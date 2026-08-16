@@ -110,3 +110,23 @@ and not a quote, and which amount is actually owed. Assembling that from a
 handful of looked-up headwords would be a claim considerably stronger than the
 evidence supports, and wrong in precisely the way that matters. **Recommend the
 reviewer compose this one as a whole sentence** rather than receive parts.
+
+## Queue: undrafted keys the app is shipping in English
+
+Not drafts awaiting correction — these have **no te reo at all**. `translate()`
+captures the English on its first pass, so each falls back safely and reads in
+English whichever language the toggle is on. Listed here so the gap is a queue
+item rather than a silence.
+
+| Key | English | Why it is undrafted |
+|---|---|---|
+| `geo.use` | **Use my location** | Opened deliberately on 2026-08-17, with the owner asked and agreeing, against his own 2026-08-16 parking of this queue. It first shipped as `toggle.nearMe` ("E tata ana") specifically to open nothing — he overrode that. This is the only button in Faves whose tap raises a browser permission prompt, and "Near me" names the *result* where "Use my location" names the *action*; a reader surprised by a permission prompt taps Block, which is sticky ([ADR 0069](decisions/0069-the-location-ask-is-primed-not-sprung.md)). 🚩 For the reviewer: this is an **imperative offered to the reader**, not a label — closer to a "let us…" than to a noun phrase, and it should not read as a claim that the app already has the location. |
+| `menu.opensNewWindow` | *(the WCAG G201 new-window warning)* | Appended by `menu.js` to every off-site link (ROADMAP 31d). |
+
+🔎 **`toggle.nearMe` / "E tata ana" was retired 2026-08-17, not re-queued.** The
+pill, then the "Sort by" select's second option, then nothing — its last
+renderer went with the SORT BY group
+([ADR 0068](decisions/0068-the-home-list-ranks-on-one-blend.md)).
+A translated string no screen shows is not an asset held in reserve; it is a
+claim that something is covered, and it will read as coverage to whoever counts
+this file next.

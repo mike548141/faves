@@ -212,15 +212,20 @@
            ONLY thing in this app that raises a browser prompt; nothing is
            sprung on load. Both are 0 px until app.js says otherwise. -->
       <div id="geo-row" class="geo-row browse-only">
-        <!-- Keeps `toggle.nearMe`, the key this app's own "Near me" pill carried
-             before 15z made it a select option. The reo queue is parked (owner
-             ruled 2026-08-16, "do not open new [reo] items without asking"), so
-             a new key here would open an item for a string we already have
-             drafted. `sort.usual` — the one string the retired select added, and
-             one of the two English-only keys reo.js listed as owed — goes with
-             the select, so the owed list is shorter than before this change. -->
+        <!-- `geo.use` is a NEW key, and the owner authorised it on 2026-08-17
+             against his own parked-queue rule ("do not open new [reo] items
+             without asking" — he was asked). It first shipped as `toggle.nearMe`
+             / "Near me", the key this app's own pill carried before 15z, chosen
+             precisely to open nothing. He overrode that, and the reason is the
+             one thing this button is not like any other control in Faves:
+             tapping it is the ONLY action in the app that makes a browser show a
+             permission prompt. "Near me" names the *result*; "Use my location"
+             names the *action*, and someone who is surprised by a permission
+             prompt is someone who taps Block — which is sticky, and far harder
+             to undo than an ungranted permission ([ADR 0069]). Clarity here buys
+             a permission that survives, which is worth one queue item. -->
         <button type="button" id="geo-ask" class="list-toggle geo-ask" hidden>
-          <span aria-hidden="true">📍</span> <span data-i18n="toggle.nearMe">Near me</span>
+          <span aria-hidden="true">📍</span> <span data-i18n="geo.use">Use my location</span>
         </button>
         <p id="geo-status" class="geo-status" role="status" aria-live="polite" hidden></p>
       </div>

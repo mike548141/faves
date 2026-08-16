@@ -38,6 +38,9 @@ content freshness separately from this file.
     another one roughly as close by — not above the shop next door when it is
     across town. (It used to be worth 10 km on paper, which is why it never got
     to run.)
+  - The button says **📍 Use my location**, not "Near me" — it is the one thing
+    in Faves that makes your browser ask a permission question, so it says what
+    tapping it does rather than what you get.
   - **Faves does not ask for your location out of the blue.** Nothing prompts
     you until you tap the button. If you have already given Faves your location
     before, it just works with no prompt at all — and if you have blocked it, the

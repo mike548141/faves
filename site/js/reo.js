@@ -61,20 +61,25 @@ const MI = {
   // Home list toggles
   "toggle.openNow": "E tuwhera ana",
   "toggle.cheapEats": "Kai utu-iti",
-  // A pill toggle, then an <option> of the "Sort by" select (15z), and since
-  // ADR 0068 the #geo-ask button — one key through all three, on purpose. The
-  // queue is parked (owner ruled 2026-08-16, "do not open new [reo] items
-  // without asking"), so the button reuses the string this app already had
-  // drafted rather than opening an item for a fourth spelling of "near me".
-  // `sort.usual` ("Our usual order") went with the select, so the English-only
-  // debt is SHORTER after that change, not longer: menu.opensNewWindow (the
-  // WCAG G201 new-window warning menu.js appends to every off-site link, 31d)
-  // is now the only key owed. It falls back safely — translate() captures the
-  // English on its first pass before mi() can miss.
-  // ⚠ Not translated, and not a reo item: the #geo-status sentences are set
+  // The location ask (#geo-ask, ADR 0069). `toggle.nearMe` / "E tata ana" — the
+  // key the "Near me" pill carried, then the retired "Sort by" select's second
+  // option — is GONE with the last thing that rendered it. A translated string
+  // no screen shows is not an asset; it is a claim that something is covered.
+  //
+  // 🚩 `geo.use` is English-only and IS a new queue item, opened deliberately.
+  // The owner authorised it on 2026-08-17, having been asked, against his own
+  // 2026-08-16 parking of this queue: "Near me" names the result, "Use my
+  // location" names the action, and this is the one button in Faves whose tap
+  // raises a browser permission prompt. A reader surprised by that prompt taps
+  // Block, which is sticky and far harder to undo than an ungranted permission.
+  //
+  // English-only keys now owed, both falling back safely (translate() captures
+  // the English on its first pass before mi() can miss): `geo.use`, and
+  // `menu.opensNewWindow` (the WCAG G201 new-window warning menu.js appends to
+  // every off-site link, 31d). `sort.usual` left the list with its select.
+  // ⚠ Not on that list and not a reo item: the #geo-status sentences are set
   // from app.js by textContent, like every other JS-composed status string in
   // this app. They are English wherever they appear, which is the honest state.
-  "toggle.nearMe": "E tata ana",
   // Service segmented control
   // Re-glossed 2026-08-17 with the English (ROADMAP 37j). It read "Everywhere"
   // / "Ngā wāhi katoa" — a PLACE word on a control that picks dine-in vs
