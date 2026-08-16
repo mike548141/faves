@@ -1826,6 +1826,19 @@ now holds only "Pick for us" and the order pill, so its label is slightly off.
   `SESSIONS.md`. **A harvest must move `[x]` items and nothing else** — an open
   item adjacent to a closed one is the easiest thing in this file to lose, and
   an unfixed accessibility failure is the worst thing to lose quietly.
+  🔎 **And a guard for exactly this already exists and did not fire.** Atelier's
+  `harvestscan` opens by naming this failure in as many words — *"an item REMOVED
+  from ROADMAP.md that arrives nowhere… a roadmap item that vanishes means the
+  work does not get done"* — but it is gated on a commit shedding **50+ net
+  lines** from `ROADMAP.md` (`NET_BULK_DELETE_LINES`, ruled 2026-07-29 from the
+  185-line incident that prompted it). `caa588d` was **+82 −71, net +11**, so the
+  guard never ran. It is also wired **warn-only** here, so even in scope it could
+  not have blocked.
+  🎯 **This is an atelier question, not a faves one, and the threshold is the
+  owner's own ruling** — so it is raised rather than changed. The shape is the
+  familiar one: a guard whose scope excludes the failure its docstring names. A
+  bulk deletion is the *loudest* case, not the only one, and a single open item
+  lost inside a net-positive commit is the quietest and the hardest to notice.
   `disclosure()` (`site/js/disclosure.js`) is shared by the settings allergen
   caveat and the menu's freshness / "needs a fact" notes. Its **click** path is
   sound — Escape closes it, an outside click closes it, `aria-expanded` tracks.
