@@ -9,6 +9,17 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Changed
+- **A dish photo is a thumbnail beside the dish, and opens full-size on a tap.**
+  Photos shipped full-bleed and put roughly one dish on a phone screen, which
+  turned a menu into a gallery you scrolled past to read. The picture now sits
+  to the **left of the dish name**, top-aligned with it, at a size that grows
+  with the window (88–136px); the name, rating, description and tags stack
+  beside it and the heart, report and Add row clears underneath. Tap it for the
+  full-size view — backdrop, Escape, ✕ or a tap on the picture all close it.
+  The cutouts sit on a **white mat in both light and dark mode**: they were shot
+  on white and read as photographs on it, where on a dark surface they floated
+  in a void. Owner-confirmed on his own phone and laptop, 2026-08-16, after
+  three passes.
 - **Picking a branch now costs one tap, and the one you're offered is open.**
   A chain's menu page used to show its two nearest branches fully expanded and
   hide the rest behind "Show all N". Now a single branch leads — the nearest one
