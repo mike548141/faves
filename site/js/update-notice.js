@@ -66,11 +66,12 @@ export function showUpdateNotice(onRefresh) {
   setTimeout(() => {
     if (refresh.disabled) return; // already tapped; leave "Refreshing…" alone
     text.dataset.i18n = "update.ready";
-    // Says what the reader *gets*, not what the software is. "A newer version
-    // is ready" names the mechanism and leaves them to infer the benefit;
-    // owner, 2026-08-16. Matches the About dialog's "An update is ready", so
-    // the two places that mention updates use one phrase.
-    text.textContent = "An update is ready, with the latest menus and prices.";
+    // Faves is about food, so the one prompt that interrupts you sounds like
+    // it (owner's wording, 2026-08-16). It still says what the reader *gets* —
+    // "a newer version is ready" named the mechanism and left them to infer
+    // the benefit. Kept to one short line because it sits beside two buttons
+    // at 390 px.
+    text.textContent = "Get it while it’s hot! Update for the latest menus and prices.";
     translate(node);
   }, 0);
   return node;

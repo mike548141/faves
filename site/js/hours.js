@@ -152,7 +152,11 @@ export function openStatus(hours, now) {
     if (current.closeMin == null) return { state: "open", label: "Open", detail: "" };
     const left = current.end - at;
     if (left <= CLOSING_SOON) {
-      return { state: "closing-soon", label: "Closing soon", detail: `closes in ${left} min` };
+      // One phrase, not two. The card renders `label · detail`, so a "Closing
+      // soon" label beside a "closes in 12 min" detail said the same thing
+      // twice and spent a line doing it (owner, 2026-08-16). The *number* is
+      // the useful half; "soon" is already carried by the amber dot.
+      return { state: "closing-soon", label: `Closes in ${left} min`, detail: "" };
     }
     return { state: "open", label: "Open", detail: `until ${formatTime(current.closeMin)}` };
   }
@@ -170,17 +174,19 @@ export function openStatus(hours, now) {
   if (!nextSeg) return { state: "closed", label: "Closed", detail: "" };
 
   const opensToday = nextSeg.dow === now.dow && nextSeg.start > at;
-  const when =
-    best <= CLOSING_SOON
-      ? `opens in ${best} min`
-      : opensToday
-        ? `opens ${formatTime(nextSeg.openMin)}` // e.g. after the lunch–dinner gap
-        : `opens ${DAY_LABEL[DAYS[nextSeg.dow]]} ${formatTime(nextSeg.openMin)}`;
-  return {
-    state: best <= CLOSING_SOON ? "opening-soon" : "closed",
-    label: best <= CLOSING_SOON ? "Opens soon" : "Closed",
-    detail: when,
-  };
+
+  // Opening within the hour reads as ONE phrase — "Opens in 14 min" — for the
+  // same reason as closing-soon above: "Opens soon · opens in 14 min" was the
+  // word "soon" and the number that makes it precise, competing. Further out,
+  // label and detail genuinely differ ("Closed" is the state, "opens Mon
+  // 9:30am" is the fact), so both are kept.
+  if (best <= CLOSING_SOON) {
+    return { state: "opening-soon", label: `Opens in ${best} min`, detail: "" };
+  }
+  const when = opensToday
+    ? `opens ${formatTime(nextSeg.openMin)}` // e.g. after the lunch–dinner gap
+    : `opens ${DAY_LABEL[DAYS[nextSeg.dow]]} ${formatTime(nextSeg.openMin)}`;
+  return { state: "closed", label: "Closed", detail: when };
 }
 
 /** One-line human intervals for a day: "11:30am–2pm, 5–9pm" or "Closed". */

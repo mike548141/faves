@@ -1754,7 +1754,12 @@ Two consequences recorded rather than buried:
 
 ---
 
-## Theme 22 — Should a dish have an id? (owner-raised 2026-08-16)
+## Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)
+
+<!-- Numbered 25, not 22: two other live sessions had already taken 22, 23 and
+     24 while this branch was open. The note on Theme 19 says to check
+     `grep '^## Theme' ROADMAP.md` before adding one — it is there because this
+     keeps happening, and it happened again here. -->
 
 Owner, on reading ADR 0044's "a dish's `name` is its identity": *"that is fine
 but does a dish need a unique ID as well so it is referenceable when a name
@@ -1798,6 +1803,38 @@ wants doing once, carefully, rather than folded into a session already carrying
 FX and localisation. Its own ADR.
 
 ---
+## Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)
+
+Searching "mexican" returns nothing. Not a search defect — `cuisine` has always
+been indexed — but a **coverage** one: the 38 cuisines held run Asian, Bakery,
+Bar … Vietnamese, Yum cha, with **no Mexican, Spanish, Korean, Greek, Ethiopian
+or Mexican-adjacent** entry at all. The owner asked to fill it.
+
+✅ **Checked first, and it changes the answer: no re-tagging is justified.**
+Before adding anything, every venue's menu text was audited against
+cuisine-signature dishes to see whether a cuisine we already serve was simply
+untagged. Seven venues matched, and **all but one are a single dish**:
+"Korean-Fried Cauliflower" appears at Khandallah Trading Company (1 of 72
+dishes), Southern Cross (1 of 141) and The Borough (1 of 132); KC Cafe has one
+"Korean Style Chilli Beef" in 169. Tagging any of them *Korean* would be
+straightforwardly false and would make the search worse, not better. The one
+substantive match — Wellington Kebab Grill, 19 of 104 dishes carrying falafel —
+is already described by its existing `Turkish` + `Mediterranean` + `Kebabs`.
+**So the gap is real and cannot be closed from data we already hold.**
+
+- [ ] 🎯 **Which places, and on whose say-so** `[S][data][owner]`. Closing this
+  means *adding venues*, and Faves is a hand-picked guide to places the owner
+  actually likes — "our favourite kai". A Mexican restaurant nobody here has
+  eaten at is not the same object as the rest of the collection, so **which
+  places go in is the owner's call, not a completeness exercise**. Two ways to
+  unblock: he names them, or he approves a source to draw candidates from (the
+  Airbnb guidebook worked exactly this way — Theme 21). Once named, intake is
+  routine and already proven: address and pin from OpenStreetMap, stub status,
+  `detailsVerifiedBy: "third-party"`, menu to follow.
+- [ ] **Never a guessed address** — carried over from Theme 21, because it will
+  bite the same way here: three guidebook places are still unadded for exactly
+  this reason. A wrong pin sends someone to the wrong door, which is worse than
+  an absent venue.
 
 ## Theme 21 — from the owner's Airbnb guidebook (2026-08-16)
 

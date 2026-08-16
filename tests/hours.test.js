@@ -47,11 +47,14 @@ test("open with plenty of time → Open · until close", () => {
   assert.equal(s.detail, "until 10pm");
 });
 
-test("open within the hour → Closing soon · relative minutes", () => {
+// The badge renders `label · detail`, so a "soon" state must put its whole
+// phrase in the label and leave detail empty — otherwise it reads "Closing
+// soon · closes in 30 min", the same fact twice (owner, 2026-08-16).
+test("open within the hour → one phrase, with the number", () => {
   const s = openStatus(DAILY, at(MON, 21, 30));
   assert.equal(s.state, "closing-soon");
-  assert.equal(s.label, "Closing soon");
-  assert.equal(s.detail, "closes in 30 min");
+  assert.equal(s.label, "Closes in 30 min");
+  assert.equal(s.detail, "", "no detail, or the badge repeats itself");
 });
 
 test("closed, opens later today → Closed · opens <time>", () => {
@@ -60,11 +63,19 @@ test("closed, opens later today → Closed · opens <time>", () => {
   assert.equal(s.detail, "opens 11am");
 });
 
-test("closed, opening within the hour → Opens soon", () => {
+test("closed, opening within the hour → one phrase, with the number", () => {
   const s = openStatus(DAILY, at(MON, 10, 30));
   assert.equal(s.state, "opening-soon");
-  assert.equal(s.label, "Opens soon");
-  assert.equal(s.detail, "opens in 30 min");
+  assert.equal(s.label, "Opens in 30 min");
+  assert.equal(s.detail, "", "no detail, or the badge repeats itself");
+});
+
+// Further out the two halves say different things, so both survive: "Closed"
+// is the state, "opens 11am" is the fact you act on.
+test("closed well before opening keeps state and fact apart", () => {
+  const s = openStatus(DAILY, at(MON, 9));
+  assert.equal(s.label, "Closed");
+  assert.equal(s.detail, "opens 11am");
 });
 
 test("after close → Closed · opens next open day", () => {
