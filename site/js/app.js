@@ -15,6 +15,7 @@ import { closureBadge } from "./closure-ui.js";
 import { todayIn } from "./temporal.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
+import { rotateHints, defaultHints } from "./search-hints.js";
 import { initOrderUI } from "./cart-ui.js";
 import { favourites, favHref, groupForShare } from "./favourites.js";
 import { heartButton } from "./favourites-ui.js";
@@ -423,6 +424,11 @@ function wireSearch(restaurants) {
   const summary = document.getElementById("search-summary");
   const groups = document.getElementById("search-groups");
   if (!form || !input) return;
+
+  // The box advertises what it can find, one example at a time. The list is
+  // built here, next to the index it describes, so a hint cannot outlive the
+  // capability it promises (search-hints.js explains why that matters).
+  rotateHints(input, defaultHints(t));
 
   form.hidden = false;
   const index = buildIndex(restaurants);

@@ -123,7 +123,12 @@
            Favourites moved to the header overflow menu. -->
       <div class="home-tools">
         <form class="search-field" role="search" id="search-form" hidden>
-          <label class="sr-only" for="search-input">Search places and dishes</label>
+          <!-- The accessible name is the authority, not the placeholder: the
+               placeholder rotates through examples (search-hints.js) and must
+               never be what a screen reader announces the field as. -->
+          <label class="sr-only" for="search-input">
+            Search places, dishes, ingredients, diets, areas and phone numbers
+          </label>
           <span class="search-icon" aria-hidden="true">🔍</span>
           <input
             type="search"

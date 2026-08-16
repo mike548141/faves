@@ -132,3 +132,97 @@ test("search: dish limit caps items but total reflects the full count", () => {
   assert.equal(dishes.total, 25);
   assert.equal(dishes.items.length, 20);
 });
+
+// ─── The widened searchable surface (owner steer, 2026-08-16) ───────────────
+// The box should find a place by the street you remember it on, by "takeaway",
+// or by the number in your call history — and a dish by the diet it satisfies,
+// not only by the code the data stores it under.
+
+const WIDE = [
+  {
+    id: "borough-tawa",
+    name: "The Borough",
+    area: "Tawa",
+    city: "Wellington",
+    cuisine: ["Cafe"],
+    address: "5 Cuba Street, Tawa", // leakscan:allow:nz-address: synthetic fixture; no such venue
+    phone: "04 232 1234", // leakscan:allow:nz-phone: synthetic test fixture, not a real line
+    services: ["takeaway", "dine-in"],
+    menu: [
+      {
+        section: "Brunch",
+        items: [
+          { name: "Kumara Hash", tags: ["vg", "gf"] },
+          { name: "Bacon Butty", tags: ["contains-gluten"] },
+        ],
+      },
+    ],
+  },
+];
+
+const wide = buildIndex(WIDE);
+const hit = (q) => search(wide, q);
+
+test("finds a place by a fragment of its address", () => {
+  assert.equal(hit("cuba").places.total, 1);
+  assert.equal(hit("cuba").places.items[0].name, "The Borough");
+});
+
+test("finds a place by city", () => {
+  assert.equal(hit("wellington").places.total, 1);
+});
+
+test("finds a place by phone number, however it is punctuated", () => {
+  assert.equal(hit("232 1234").places.total, 1, "as written"); // leakscan:allow:nz-phone: synthetic fixture
+  assert.equal(hit("042321234").places.total, 1, "run together"); // leakscan:allow:nz-phone: synthetic fixture
+  assert.equal(hit("04-232-1234").places.total, 1, "hyphenated"); // leakscan:allow:nz-phone: synthetic fixture
+});
+
+test("finds a place by service", () => {
+  assert.equal(hit("takeaway").places.total, 1);
+  assert.equal(hit("dine in").places.total, 1, "typed as two words");
+  assert.equal(hit("eat in").places.total, 1, "and by synonym");
+});
+
+test("finds a dish by the diet it satisfies, not the stored code", () => {
+  assert.equal(hit("vegan").dishes.total, 1);
+  assert.equal(hit("vegan").dishes.items[0].name, "Kumara Hash");
+  assert.equal(hit("gluten free").dishes.total, 1);
+});
+
+test("'plant based' finds vegan and vegetarian dishes", () => {
+  assert.equal(hit("plant based").dishes.total, 1);
+  assert.equal(hit("plant based").dishes.items[0].name, "Kumara Hash");
+});
+
+test("'coeliac' finds gluten free", () => {
+  assert.equal(hit("coeliac").dishes.total, 1);
+});
+
+test("no synonym asserts the ABSENCE of an allergen", () => {
+  // The data records what a shop claims (gf), never that something is free of
+  // an allergen we merely failed to see. A search that appeared to answer
+  // "nut free" would be a safety claim with nothing behind it.
+  assert.equal(hit("nut free").dishes.total, 0);
+  assert.equal(hit("peanut free").dishes.total, 0);
+});
+
+test("a direct name hit still outranks a synonym hit", () => {
+  const idx = buildIndex([
+    {
+      id: "x",
+      name: "X",
+      cuisine: [],
+      menu: [
+        {
+          section: "S",
+          items: [
+            { name: "Vegetarian Pie", tags: [] },
+            { name: "Kumara Hash", tags: ["vg"] },
+          ],
+        },
+      ],
+    },
+  ]);
+  assert.equal(search(idx, "veg").dishes.items[0].name, "Vegetarian Pie");
+});

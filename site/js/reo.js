@@ -41,6 +41,13 @@ const MI = {
   "app.sub": "Ā mātou kai tino pai — ngā tahua kai, kotahi te wāhi.", // draft
   // Search
   "search.ph": "Rapua he wāhi, he kai rānei…",
+  // The rotating search hints (search-hints.js, 2026-08-16) are NOT translated
+  // yet, so `t` falls back to their English. Deliberately left rather than
+  // guessed: these are eight full sentences, and te reo here is checked
+  // against the owner's nominated dictionary, not improvised. Untranslated
+  // reads as English; invented reads as wrong, and only one of those is
+  // recoverable. Keys owed: search.hint.dish/place/ingredient/diet/cuisine/
+  // area/service/phone.
   "search.clear": "Whakawātea rapu",
   "nav.backToTop": "Hoki ki runga",
   // Home list toggles
