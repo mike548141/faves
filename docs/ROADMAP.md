@@ -2011,6 +2011,28 @@ share button twice — so 22c's model call comes first, or at least alongside.
   then does 22b know whether Favourites owns a share control at all.
   ⚑ Touches the first standing backend, which is the owner's go (Theme 9 v2).
 
+  🎯 **Owner's verdict on the current answer, 2026-08-16 — the tech is fine,
+  the UX is not.** On Settings → Your data: *"is 'Transfer to another device'
+  really a good answer for UX or is this a dumping ground of features scattered
+  in the app. We definitely want to be able to do this… but this is not a
+  natural way to use or implement it. i.e. the tech is probably ok, the UX is
+  bad."* That is a **scope ruling**, and it is the most useful sentence in this
+  theme: ADR 0030's transfer link, the file export and the file import are not
+  to be rebuilt — they are to be **re-fronted**. The panel presents three
+  *mechanisms* ("Download my data", "Bring data back in", "Make a transfer
+  link") where a person has one *intention*: **I want my stuff on my other
+  device.** Nobody sets out to make a transfer link. The same panel also mixes
+  in backup, which is a different intention again, under one heading.
+  So 22c's deliverable sharpens: express the intentions, not the plumbing —
+  something closer to *"Use Faves on another device"* and *"Keep a copy"* as
+  two clearly separate jobs, with the link, the file and (later) continual sync
+  as **implementations chosen for the user**, not menu items they must
+  understand to pick between. Theme 9 v2's continual sync should then slot in
+  underneath the *same* front, not arrive as a fourth button — which is exactly
+  the trap this item exists to avoid. The vocabulary work above is what stops
+  "transfer", "share", "export", "backup" and "sync" all meaning slightly
+  different things on different screens.
+
 ## Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)
 
 Owner, on the About dialog: *"looks like a dumping ground of information. Look
