@@ -1301,3 +1301,72 @@ the value is in seeing what was asked for beside what landed.
   refuses a duplicate (valid HTML that silently makes the second section
   unreachable) and a non-slug id; `tools/seed_section_ids.py` seeded 210 of 235
   sections with nothing moving on the day it ran.
+
+---
+
+## Theme 29 + Theme 15x — the floating controls (shipped 2026-08-16)
+
+- [x] ✅ **The back-to-top button covered dish content** (`f619722`). Original
+  text: *"the floating ↑ sits over the 'French fries' row and hides the
+  right-hand end of its price. A fixed control over a scrolling list will always
+  overlap something, so the fix is not 'move it' but give the dish list enough
+  end padding, or let the control get out of the way while the list is moving.
+  Hiding a price is the part that matters."*
+  🔎 **The method is the finding.** A **full-document sweep in 37 px steps** at
+  two widths × two text sizes, 547–859 positions per menu — because a fixed
+  control's victim depends entirely on where you stop scrolling, and a single
+  sample is exactly what every eyeball report of this bug had been.
+
+  | Control × content | Width/text | Worst overlap | Reachable | Positions it owned the tap |
+  |---|---|---|---|---|
+  | `.to-top` × `.dish-price` | 390 / 16px | **100%** | **0 px** | 96 / 547 |
+  | `.to-top` × `.heart` (home) | 1280 / 24px | **94.6%** | 2.6 px | 34 / 125 |
+  | `.to-top` × anything | 1280 / 16 & 24px | none | — | 0 |
+
+  **The roadmap offered two fixes and only one was live.** End padding was
+  *already* sufficient: at the document end the button overlapped nothing in all
+  eight combinations, before *and* after. All the damage was mid-scroll.
+  **Implementation notes worth keeping.** Tucked with `opacity` + `transform`,
+  deliberately **not** `visibility`, `pointer-events: none` or `[hidden]` — all
+  three remove it from the tab order and the a11y tree. It stays focusable
+  off-screen on the skip-link pattern and refuses to tuck while it holds focus.
+  An **idle re-tuck was rejected on measurement**: it would also clear the page
+  at rest, but takes the control away between the reader deciding to tap and
+  reaching it. And the thing that was verified rather than reasoned about: a
+  `position: fixed` element parked below the viewport adds **no** scrollable
+  overflow (`scrollWidth 390 === innerWidth 390`), now asserted permanently.
+- [x] ✅ **The fixed/sticky audit** (`f619722`). `a.app-home-link` was
+  **81.7 × 31.9 px**, under the 44 px floor — now 44. The pinned contact bar,
+  toolbar and section titles occlude scrolling content **by design** (opaque
+  pinned headers) and are not defects; jump-nav landing clearance was measured at
+  **+5.5 px** (390/16px) and **+8.4 px** (390/24px) — passing, but thin.
+  `a.menu-sub-link` at 31.1 × 22.8 px was left alone: it is an already-documented
+  WCAG 2.5.8 *inline* exception, and the CSS comment says so.
+  ⚠️ One measurement was **not** acted on and is now its own open item: the order
+  pill eating a "Gluten free" chip's tap at *Very large* text.
+- [x] ✅ **15x — the desktop filter row** (`f619722`), asked for twice and never
+  built because it looks like a media query and is not: the controls live inside
+  a `<dialog>`, and **a closed dialog cannot render its children**. One
+  `#filter-controls` section now moves between the sheet and an inline host — a
+  DOM move, so state and listeners survive and there is never a second copy to
+  keep in step. The breakpoint lives in **JS only**; a CSS media query carrying a
+  second copy of the number could disagree with the move, and that failure mode
+  is a row styled as an inline panel while it is actually inside a closed dialog.
+  🚩 **The quirk that bit was not the predicted one.** Focus surviving the
+  narrow→wide re-parent worked first time. Going wide with the sheet **open** is
+  the hard case: everything outside an open modal `<dialog>` is inert, so it must
+  close first — but `close()` parks focus on the very button the move then hides.
+  Capture `activeElement` **before** the close, restore **after** the hiding.
+
+**What a headless run at 390 px could not show, stated so nobody reads the green
+as a phone test:** iOS Safari rubber-banding produces momentary negative `dy` at
+the ends of a fling, and the 6 px jitter threshold guarding against it is a guess
+until someone holds an iPhone; every scroll in the rig is an instant jump, so
+momentum is untested; `env(safe-area-inset-*)` resolves to 0 in headless Chrome,
+so every bottom offset measured is inset-free; nothing here says anything about
+WebKit's `<dialog>` inertness or focus restoration, which the filter row leans on
+hardest; and 🔎 **the 24 px text emulation is only half the real thing** — setting
+the CSS root font size grows every `rem` box but does **not** move `rem`-based
+*media queries*, which resolve against the browser's default. A real reader on
+*Very large* gets both, so the 60 rem breakpoint measured at 960 px here would be
+1440 px on a real device.
