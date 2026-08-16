@@ -486,3 +486,22 @@ deliberation those compact docs omit.
   — a transfer link that destroyed the "follow me" localisation preference, and
   a merge import that silently dropped `units` and `currency`. Tombstones,
   per-entry timestamps and reusing `applyPersonalData` all lost.
+- [0061](0061-a-toolbar-is-not-a-sheet-lying-down.md) — **a toolbar is not a
+  sheet lying down.** Theme 15x's DOM move was right; what it moved onto the
+  page was the sheet's vertical stacking, and that measured **284 px in five
+  bands** beside a 44 px chip — **63.9% of a 960 × 800 viewport was chrome
+  before the first card, against 25.1% on the phone the sheet was written for.**
+  The owner called it "truly horrible" and set a numeric brief: two visible
+  groups, one row, one control tall. Inline, every label and heading goes
+  visually hidden (they still name their controls for assistive tech) and only
+  "Sort by" survives, beside a rule. **Service becomes a `<select>`** — the same
+  one-of-three as Area and Cuisine, costing 256 px of a 928 px row to say so in
+  a different shape — and **the two location toggles become one "Sort by"
+  select**, which is what `app.js`'s own comment always called them ("mutually
+  exclusive sort modes"); `aria-pressed` had been promising two independent
+  switches. 67 px, one band, nothing removed. Three defects found only by
+  measuring: wrap breaks on flex-*basis* so it had to be scoped to the routing
+  state; a 107 px select renders "All cuisi…"; and the destination bar rendered
+  **on top of** three controls that stayed visible and non-zero-sized, which
+  only `elementFromPoint` sees. Dropping the near-useless Service filter
+  entirely was **left to the owner** — that is a product call, not a layout one.
