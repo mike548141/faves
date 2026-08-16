@@ -388,8 +388,20 @@ it, including that it ever existed.
 #### Refreshing a menu — append, never overwrite
 
 **This is the rule the whole time dimension depends on.** A refresh is a dated
-*reading* of the menu, not a replacement of what we knew. When you transcribe a
-new menu for a venue that already has one:
+*reading* of the menu, not a replacement of what we knew.
+
+**Where the append lands changed with ADR 0045.** The payload keeps *one*
+price entry per dish — the current one, with its `recorded` date and
+derivation, because the app renders how old a price is. The superseded entry
+is appended to `data/history/prices/<venue>.json` in the record store, and a
+dish confirmed off the menu moves whole to `data/history/dishes/<venue>.json`
+instead of staying in the payload behind an `available.offBy` marker no screen
+reads. Nothing is lost and nothing is deleted; it simply stops being
+downloaded. `tools/split_data.py` performs the move, and `--check` proves the
+two stores still reconstruct the pre-split corpus between them — run it after
+any refresh.
+
+When you transcribe a new menu for a venue that already has one:
 
 1. **A price that changed** → make it a series (or add an entry to the existing
    one): keep the old value, add the new with `recorded` set to the day you read

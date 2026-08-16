@@ -221,13 +221,19 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
     `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
     in `site/data/index.json` + a fallback `<li>`; then `validate.py`.
-  - **Refreshing a menu = append, never overwrite.** A changed price gains a
-    dated entry beside the old one; a departed dish gains `available.offBy`
-    rather than being deleted; a renamed dish carries its history over. But a
-    *correction* (we recorded it wrong) overwrites and adds nothing — the test
-    is *did the shop change it, or did we?* Full rules: ARCHITECTURE.md
-    "Refreshing a menu". This is how the price history accrues at zero cost;
-    a refresh done the old way silently destroys it (ADR 0023).
+  - **Refreshing a menu = append, never overwrite — but the append lands
+    in the record, not the payload (ADR 0045).** A changed price replaces
+    the dish's single entry in `site/data/` *and* appends the superseded
+    one to `data/history/prices/<venue>.json`; a departed dish moves whole
+    to `data/history/dishes/<venue>.json` rather than being deleted; a
+    renamed dish carries its history over. But a *correction* (we recorded
+    it wrong) overwrites and adds nothing, in both stores — the test is
+    *did the shop change it, or did we?* Full rules: ARCHITECTURE.md
+    "Refreshing a menu". This is how the price history accrues at zero
+    cost to the phone; a refresh done the old way silently destroys it
+    (ADR 0023). Run `python3 tools/split_data.py --check` after: the two
+    stores must still reconstruct the corpus between them, which is what
+    stops a relocation quietly becoming a deletion.
 
 There is no `man` page: faves ships a website, not a CLI. The `tools/`
 scripts are the only command surface — keep their `--help`/argparse and

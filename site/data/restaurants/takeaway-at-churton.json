@@ -76,16 +76,13 @@
           "desc": null,
           "price": [
             {
-              "value": 10.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 17.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "1"
         },
         {
@@ -93,27 +90,19 @@
           "desc": null,
           "price": [
             {
-              "value": 11.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 18.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "2"
         },
         {
           "name": "Chicken Sweet Corn Soup",
           "desc": null,
           "price": [
-            {
-              "value": 8.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 14.8,
               "recorded": "2026-08-08"
@@ -132,11 +121,6 @@
           "desc": null,
           "price": [
             {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 19.5,
               "recorded": "2026-08-08"
             }
@@ -148,11 +132,6 @@
           "name": "Pork Fried Rice",
           "desc": null,
           "price": [
-            {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 19.5,
               "recorded": "2026-08-08"
@@ -166,11 +145,6 @@
           "desc": null,
           "price": [
             {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 19.8,
               "recorded": "2026-08-08"
             }
@@ -183,11 +157,6 @@
           "desc": null,
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.5,
               "recorded": "2026-08-08"
             }
@@ -199,11 +168,6 @@
           "name": "Vegetarian Fried Rice",
           "desc": null,
           "price": [
-            {
-              "value": 10.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 17.9,
               "recorded": "2026-08-08"
@@ -219,11 +183,6 @@
           "desc": null,
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
@@ -235,11 +194,6 @@
           "name": "Shrimp Fried Rice",
           "desc": null,
           "price": [
-            {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 20.9,
               "recorded": "2026-08-08"
@@ -254,11 +208,6 @@
           "name": "Prawn Fried Rice",
           "desc": null,
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 22.9,
               "recorded": "2026-08-08"
@@ -279,11 +228,6 @@
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.5,
               "recorded": "2026-08-08"
             }
@@ -295,11 +239,6 @@
           "name": "Pork Curry on Rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
-            {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 20.5,
               "recorded": "2026-08-08"
@@ -313,11 +252,6 @@
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.5,
               "recorded": "2026-08-08"
             }
@@ -330,11 +264,6 @@
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.5,
               "recorded": "2026-08-08"
             }
@@ -346,11 +275,6 @@
           "name": "Vegetarian Curry on Rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
-            {
-              "value": 12.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 18.5,
               "recorded": "2026-08-08"
@@ -366,11 +290,6 @@
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.5,
               "recorded": "2026-08-08"
             }
@@ -384,11 +303,6 @@
           "name": "Prawn Curry on Rice",
           "desc": "Curry with vegetables, on steamed rice.",
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 22.5,
               "recorded": "2026-08-08"
@@ -409,11 +323,6 @@
           "desc": null,
           "price": [
             {
-              "value": 4.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 8.5,
               "recorded": "2026-08-08"
             }
@@ -426,11 +335,6 @@
           "desc": null,
           "price": [
             {
-              "value": 6.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 11.5,
               "recorded": "2026-08-08"
             }
@@ -442,11 +346,6 @@
           "name": "Steamed Rice - Large",
           "desc": null,
           "price": [
-            {
-              "value": 8.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 13.8,
               "recorded": "2026-08-08"
@@ -465,16 +364,13 @@
           "desc": null,
           "price": [
             {
-              "value": 12.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg"],
+          "tags": [
+            "contains-egg"
+          ],
           "code": "22"
         },
         {
@@ -482,16 +378,13 @@
           "desc": null,
           "price": [
             {
-              "value": 12.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg"],
+          "tags": [
+            "contains-egg"
+          ],
           "code": "23"
         },
         {
@@ -499,16 +392,13 @@
           "desc": null,
           "price": [
             {
-              "value": 12.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg"],
+          "tags": [
+            "contains-egg"
+          ],
           "code": "24"
         },
         {
@@ -516,27 +406,19 @@
           "desc": null,
           "price": [
             {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 22.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg"],
+          "tags": [
+            "contains-egg"
+          ],
           "code": "25"
         },
         {
           "name": "Vegetarian Egg Fu Young",
           "desc": null,
           "price": [
-            {
-              "value": 12.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 20.5,
               "recorded": "2026-08-08"
@@ -553,27 +435,19 @@
           "desc": null,
           "price": [
             {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 22.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg"],
+          "tags": [
+            "contains-egg"
+          ],
           "code": "27"
         },
         {
           "name": "Shrimp Egg Fu Young",
           "desc": null,
           "price": [
-            {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 22.5,
               "recorded": "2026-08-08"
@@ -589,11 +463,6 @@
           "name": "Prawn Egg Fu Young",
           "desc": null,
           "price": [
-            {
-              "value": 18.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -615,16 +484,13 @@
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 19.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "30"
         },
         {
@@ -632,16 +498,13 @@
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 19.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "31"
         },
         {
@@ -649,16 +512,13 @@
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 19.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "32"
         },
         {
@@ -666,27 +526,19 @@
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "33"
         },
         {
           "name": "Vegetarian Chow Mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
-            {
-              "value": 10.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 17.9,
               "recorded": "2026-08-08"
@@ -703,27 +555,19 @@
           "desc": "Stir-fried with soft noodles.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "35"
         },
         {
           "name": "Shrimp Chow Mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
-            {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 20.9,
               "recorded": "2026-08-08"
@@ -739,11 +583,6 @@
           "name": "Prawn Chow Mein",
           "desc": "Stir-fried with soft noodles.",
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 22.9,
               "recorded": "2026-08-08"
@@ -765,11 +604,6 @@
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 19.5,
               "recorded": "2026-08-08"
             }
@@ -781,11 +615,6 @@
           "name": "Pork Chop Suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
-            {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 19.5,
               "recorded": "2026-08-08"
@@ -799,11 +628,6 @@
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
-              "value": 11.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 19.8,
               "recorded": "2026-08-08"
             }
@@ -816,11 +640,6 @@
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
@@ -832,11 +651,6 @@
           "name": "Vegetarian Chop Suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
-            {
-              "value": 10.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 17.9,
               "recorded": "2026-08-08"
@@ -852,11 +666,6 @@
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
@@ -868,11 +677,6 @@
           "name": "Shrimp Chop Suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
-            {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 20.9,
               "recorded": "2026-08-08"
@@ -887,11 +691,6 @@
           "name": "Prawn Chop Suey",
           "desc": "Stir-fried with vegetables — no noodles.",
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 22.9,
               "recorded": "2026-08-08"
@@ -912,11 +711,6 @@
           "desc": null,
           "price": [
             {
-              "value": 15.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 22.9,
               "recorded": "2026-08-08"
             }
@@ -928,11 +722,6 @@
           "name": "Sweet and Sour Chicken",
           "desc": null,
           "price": [
-            {
-              "value": 15.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 22.9,
               "recorded": "2026-08-08"
@@ -946,11 +735,6 @@
           "desc": null,
           "price": [
             {
-              "value": 15.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 22.9,
               "recorded": "2026-08-08"
             }
@@ -963,27 +747,19 @@
           "desc": null,
           "price": [
             {
-              "value": 10.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 18.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "49"
         },
         {
           "name": "Lemon Chicken",
           "desc": null,
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -996,11 +772,6 @@
           "name": "Honey Chicken",
           "desc": null,
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -1026,16 +797,13 @@
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-soy"],
+          "tags": [
+            "contains-soy"
+          ],
           "code": "52"
         },
         {
@@ -1043,16 +811,13 @@
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-soy"],
+          "tags": [
+            "contains-soy"
+          ],
           "code": "53"
         },
         {
@@ -1060,16 +825,13 @@
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-soy"],
+          "tags": [
+            "contains-soy"
+          ],
           "code": "54"
         },
         {
@@ -1077,27 +839,19 @@
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-soy"],
+          "tags": [
+            "contains-soy"
+          ],
           "code": "55"
         },
         {
           "name": "Shrimp Black Bean on Rice",
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
-            {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 21.9,
               "recorded": "2026-08-08"
@@ -1113,11 +867,6 @@
           "name": "Prawn Black Bean on Rice",
           "desc": "In black bean sauce with vegetables, on steamed rice.",
           "price": [
-            {
-              "value": 18.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -1139,11 +888,6 @@
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
@@ -1158,11 +902,6 @@
           "name": "Pork Satay on Rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
-            {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 20.9,
               "recorded": "2026-08-08"
@@ -1179,11 +918,6 @@
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 13.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.9,
               "recorded": "2026-08-08"
             }
@@ -1198,11 +932,6 @@
           "name": "Combination Satay on Rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
-            {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 21.9,
               "recorded": "2026-08-08"
@@ -1219,11 +948,6 @@
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
             {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.9,
               "recorded": "2026-08-08"
             }
@@ -1239,11 +963,6 @@
           "name": "Prawn Satay on Rice",
           "desc": "In satay sauce with vegetables, on steamed rice.",
           "price": [
-            {
-              "value": 18.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -1266,11 +985,6 @@
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 23.5,
               "recorded": "2026-08-08"
             }
@@ -1284,11 +998,6 @@
           "name": "Pork with Pineapple and Cashew Nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.5,
               "recorded": "2026-08-08"
@@ -1304,11 +1013,6 @@
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 23.5,
               "recorded": "2026-08-08"
             }
@@ -1322,11 +1026,6 @@
           "name": "Combination with Pineapple and Cashew Nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
-            {
-              "value": 17.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 24.5,
               "recorded": "2026-08-08"
@@ -1342,11 +1041,6 @@
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
             {
-              "value": 17.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 24.5,
               "recorded": "2026-08-08"
             }
@@ -1361,11 +1055,6 @@
           "name": "Prawn with Pineapple and Cashew Nuts",
           "desc": "Stir-fried with pineapple, cashew nuts and vegetables.",
           "price": [
-            {
-              "value": 18.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 24.9,
               "recorded": "2026-08-08"
@@ -1387,11 +1076,6 @@
           "desc": null,
           "price": [
             {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.5,
               "recorded": "2026-08-08"
             }
@@ -1404,27 +1088,19 @@
           "desc": null,
           "price": [
             {
-              "value": 14.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 21.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"],
+          "tags": [
+            "contains-gluten"
+          ],
           "code": "71"
         },
         {
           "name": "Hot Spicy Chicken with Cashew and Vegetables",
           "desc": null,
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -1439,11 +1115,6 @@
           "name": "Hot Spicy Beef with Cashew and Vegetables",
           "desc": null,
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -1464,11 +1135,6 @@
           "desc": null,
           "price": [
             {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 23.9,
               "recorded": "2026-08-08"
             }
@@ -1480,11 +1146,6 @@
           "name": "Combination Chilly Noodles",
           "desc": null,
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -1498,27 +1159,20 @@
           "desc": null,
           "price": [
             {
-              "value": 15.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 22.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten", "contains-egg"],
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ],
           "code": "76"
         },
         {
           "name": "Combination Seafood",
           "desc": "Choose from fried rice, chow mein or egg fu young.",
           "price": [
-            {
-              "value": 18.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 26.0,
               "recorded": "2026-08-08"
@@ -1535,11 +1189,6 @@
           "name": "Steak Tomato Onion on Rice",
           "desc": null,
           "price": [
-            {
-              "value": 16.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 23.9,
               "recorded": "2026-08-08"
@@ -1574,11 +1223,6 @@
           "desc": null,
           "price": [
             {
-              "value": 4.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.8,
               "recorded": "2026-08-08"
             }
@@ -1590,11 +1234,6 @@
           "name": "Extra Seafood",
           "desc": null,
           "price": [
-            {
-              "value": 4.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 5.2,
               "recorded": "2026-08-08"
@@ -1610,11 +1249,6 @@
           "desc": null,
           "price": [
             {
-              "value": 4.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 5.2,
               "recorded": "2026-08-08"
             }
@@ -1628,11 +1262,6 @@
           "name": "Extra Tomato, Pineapple or Mushrooms",
           "desc": null,
           "price": [
-            {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 3.5,
               "recorded": "2026-08-08"
@@ -1651,74 +1280,57 @@
           "desc": null,
           "price": [
             {
-              "value": 3.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 5.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Fish - Crumbed",
           "desc": null,
           "price": [
             {
-              "value": 4.4,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 6.3,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Fish Fillet - Battered",
           "desc": null,
           "price": [
             {
-              "value": 9.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 16.2,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Fish Fillet - Crumbed",
           "desc": null,
           "price": [
             {
-              "value": 9.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 16.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Fish Fillet - Grilled",
           "desc": null,
           "price": [
-            {
-              "value": 9.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 15.5,
               "recorded": "2026-08-08"
@@ -1731,11 +1343,6 @@
           "desc": null,
           "price": [
             {
-              "value": 4.4,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 6.5,
               "recorded": "2026-08-08"
             }
@@ -1746,11 +1353,6 @@
           "name": "Chips - One Scoop",
           "desc": null,
           "price": [
-            {
-              "value": 3.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 5.9,
               "recorded": "2026-08-08"
@@ -1763,11 +1365,6 @@
           "desc": null,
           "price": [
             {
-              "value": 2.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.3,
               "recorded": "2026-08-08"
             }
@@ -1779,11 +1376,6 @@
           "desc": null,
           "price": [
             {
-              "value": 5.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 8.6,
               "recorded": "2026-08-08"
             }
@@ -1794,11 +1386,6 @@
           "name": "Criss-Cut Fries",
           "desc": null,
           "price": [
-            {
-              "value": 5.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 8.6,
               "recorded": "2026-08-08"
@@ -1817,11 +1404,6 @@
           "desc": null,
           "price": [
             {
-              "value": 4.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 7.5,
               "recorded": "2026-08-08"
             }
@@ -1832,11 +1414,6 @@
           "name": "Potato Fritters",
           "desc": null,
           "price": [
-            {
-              "value": 1.2,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 2.0,
               "recorded": "2026-08-08"
@@ -1849,26 +1426,18 @@
           "desc": null,
           "price": [
             {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Hot Dog on Stick",
           "desc": null,
           "price": [
-            {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 4.5,
               "recorded": "2026-08-08"
@@ -1881,11 +1450,6 @@
           "desc": null,
           "price": [
             {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.5,
               "recorded": "2026-08-08"
             }
@@ -1897,26 +1461,18 @@
           "desc": null,
           "price": [
             {
-              "value": 3.2,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Prawn Cutlet",
           "desc": null,
           "price": [
-            {
-              "value": 1.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 3.0,
               "recorded": "2026-08-08"
@@ -1931,11 +1487,6 @@
           "desc": null,
           "price": [
             {
-              "value": 1.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 3.5,
               "recorded": "2026-08-08"
             }
@@ -1949,11 +1500,6 @@
           "desc": null,
           "price": [
             {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.8,
               "recorded": "2026-08-08"
             }
@@ -1965,26 +1511,18 @@
           "desc": null,
           "price": [
             {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Curry Roll",
           "desc": null,
           "price": [
-            {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 4.5,
               "recorded": "2026-08-08"
@@ -1996,11 +1534,6 @@
           "name": "Vege Roll",
           "desc": null,
           "price": [
-            {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 4.5,
               "recorded": "2026-08-08"
@@ -2015,11 +1548,6 @@
           "desc": null,
           "price": [
             {
-              "value": 3.2,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.8,
               "recorded": "2026-08-08"
             }
@@ -2031,26 +1559,18 @@
           "desc": null,
           "price": [
             {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Meat Pattie",
           "desc": null,
           "price": [
-            {
-              "value": 3.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 5.3,
               "recorded": "2026-08-08"
@@ -2062,11 +1582,6 @@
           "name": "Paua Fritter 100%",
           "desc": null,
           "price": [
-            {
-              "value": 8.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 15.0,
               "recorded": "2026-08-08"
@@ -2080,17 +1595,14 @@
           "name": "Mini Spring Rolls",
           "desc": null,
           "price": 1.6,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Corn Fritter",
           "desc": null,
           "price": [
-            {
-              "value": 4.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 6.8,
               "recorded": "2026-08-08"
@@ -2102,11 +1614,6 @@
           "name": "Mussel Fritter",
           "desc": null,
           "price": [
-            {
-              "value": 4.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 8.8,
               "recorded": "2026-08-08"
@@ -2121,11 +1628,6 @@
           "desc": null,
           "price": [
             {
-              "value": 2.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.2,
               "recorded": "2026-08-08"
             }
@@ -2136,11 +1638,6 @@
           "name": "Banana Fritter",
           "desc": null,
           "price": [
-            {
-              "value": 2.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 4.2,
               "recorded": "2026-08-08"
@@ -2153,11 +1650,6 @@
           "desc": null,
           "price": [
             {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.0,
               "recorded": "2026-08-08"
             }
@@ -2169,26 +1661,18 @@
           "desc": null,
           "price": [
             {
-              "value": 2.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 3.2,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Jam Rap",
           "desc": null,
           "price": [
-            {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 4.2,
               "recorded": "2026-08-08"
@@ -2201,11 +1685,6 @@
           "desc": null,
           "price": [
             {
-              "value": 2.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 3.8,
               "recorded": "2026-08-08"
             }
@@ -2216,11 +1695,6 @@
           "name": "Stuffed Mushroom",
           "desc": null,
           "price": [
-            {
-              "value": 2.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 4.0,
               "recorded": "2026-08-08"
@@ -2233,26 +1707,18 @@
           "desc": null,
           "price": [
             {
-              "value": 4.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 5.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Chicken Nugget (each)",
           "desc": null,
           "price": [
-            {
-              "value": 0.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 1.8,
               "recorded": "2026-08-08"
@@ -2264,11 +1730,6 @@
           "name": "Calamari Ring (each)",
           "desc": null,
           "price": [
-            {
-              "value": 1.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 2.0,
               "recorded": "2026-08-08"
@@ -2283,11 +1744,6 @@
           "desc": null,
           "price": [
             {
-              "value": 1.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 2.2,
               "recorded": "2026-08-08"
             }
@@ -2301,11 +1757,6 @@
           "name": "Scallop (each)",
           "desc": null,
           "price": [
-            {
-              "value": 2.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 4.0,
               "recorded": "2026-08-08"
@@ -2336,11 +1787,6 @@
           "desc": null,
           "price": [
             {
-              "value": 4.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 8.4,
               "recorded": "2026-08-08"
             }
@@ -2352,74 +1798,57 @@
           "desc": null,
           "price": [
             {
-              "value": 5.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 8.4,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Dim Sim (each)",
           "desc": null,
           "price": [
             {
-              "value": 1.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 2.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Pork Bun",
           "desc": null,
           "price": [
             {
-              "value": 2.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 4.2,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Plain Roti",
           "desc": null,
           "price": [
             {
-              "value": 2.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 3.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Vegetarian Pattie",
           "desc": null,
           "price": [
-            {
-              "value": 3.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 7.5,
               "recorded": "2026-08-08"
@@ -2434,26 +1863,18 @@
           "desc": null,
           "price": [
             {
-              "value": 6.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 9.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Vegetarian Dumplings (6)",
           "desc": null,
           "price": [
-            {
-              "value": 6.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 9.5,
               "recorded": "2026-08-08"
@@ -2469,88 +1890,6 @@
           "desc": null,
           "price": 8.8,
           "tags": []
-        },
-        {
-          "name": "Sweet Potato Wedges",
-          "desc": null,
-          "tags": [],
-          "price": [
-            {
-              "value": 6.2,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            }
-          ],
-          "available": {
-            "offBy": "2026-08-08",
-            "note": "not on the 2026-08-08 printed menu"
-          }
-        },
-        {
-          "name": "Seafood Fritter",
-          "desc": null,
-          "tags": ["contains-shellfish"],
-          "price": [
-            {
-              "value": 4.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            }
-          ],
-          "available": {
-            "offBy": "2026-08-08",
-            "note": "not on the 2026-08-08 printed menu"
-          }
-        },
-        {
-          "name": "Bacon Fritter",
-          "desc": null,
-          "tags": [],
-          "price": [
-            {
-              "value": 4.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            }
-          ],
-          "available": {
-            "offBy": "2026-08-08",
-            "note": "not on the 2026-08-08 printed menu"
-          }
-        },
-        {
-          "name": "Chocolate Rap",
-          "desc": null,
-          "tags": [],
-          "price": [
-            {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            }
-          ],
-          "available": {
-            "offBy": "2026-08-08",
-            "note": "not on the 2026-08-08 printed menu"
-          }
-        },
-        {
-          "name": "Pacific Oyster",
-          "desc": null,
-          "tags": [
-            "contains-shellfish"
-          ],
-          "price": [
-            {
-              "value": 2.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            }
-          ],
-          "available": {
-            "offBy": "2026-08-08",
-            "note": "not on the 2026-08-08 printed menu"
-          }
         }
       ]
     },
@@ -2562,218 +1901,177 @@
           "desc": null,
           "price": [
             {
-              "value": 4.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 6.3,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Kids Beef Burger (no salad)",
           "desc": null,
           "price": [
             {
-              "value": 5.9,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 8.0,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Kids Fish Burger (no salad)",
           "desc": null,
           "price": [
             {
-              "value": 5.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 7.0,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Kids Chicken Burger (no salad)",
           "desc": null,
           "price": [
             {
-              "value": 5.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 8.0,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Ham Burger",
           "desc": null,
           "price": [
             {
-              "value": 4.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 7.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Cheese Burger",
           "desc": null,
           "price": [
             {
-              "value": 6.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 9.3,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten", "contains-dairy"]
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Egg Burger",
           "desc": null,
           "price": [
             {
-              "value": 6.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 9.3,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten", "contains-egg"]
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
         },
         {
           "name": "Mushroom Burger",
           "desc": null,
           "price": [
             {
-              "value": 6.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 9.3,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Hawaiian Burger",
           "desc": null,
           "price": [
             {
-              "value": 6.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 9.3,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Chicken Burger",
           "desc": null,
           "price": [
             {
-              "value": 7.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 10.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Fish Burger",
           "desc": null,
           "price": [
             {
-              "value": 6.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 9.3,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Crumb Fish Burger",
           "desc": null,
           "price": [
             {
-              "value": 6.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 9.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Bacon Egg Burger",
           "desc": "With meat pattie.",
           "price": [
             {
-              "value": 7.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 11.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten", "contains-egg"]
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
         },
         {
           "name": "Vegetarian Burger",
           "desc": null,
           "price": [
-            {
-              "value": 5.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 8.5,
               "recorded": "2026-08-08"
@@ -2789,16 +2087,15 @@
           "desc": "2 meat patties, bacon, cheese, egg.",
           "price": [
             {
-              "value": 9.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 15.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten", "contains-dairy", "contains-egg"]
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
         }
       ]
     },
@@ -2810,90 +2107,70 @@
           "desc": null,
           "price": [
             {
-              "value": 8.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 11.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Beef & Egg",
           "desc": null,
           "price": [
             {
-              "value": 9.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 12.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg"]
+          "tags": [
+            "contains-egg"
+          ]
         },
         {
           "name": "Beef & Cheese",
           "desc": null,
           "price": [
             {
-              "value": 9.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 12.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-dairy"]
+          "tags": [
+            "contains-dairy"
+          ]
         },
         {
           "name": "Beef Cheese & Chilli",
           "desc": null,
           "price": [
             {
-              "value": 9.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 13.0,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-dairy"]
+          "tags": [
+            "contains-dairy"
+          ]
         },
         {
           "name": "Beef, Bacon & Egg",
           "desc": null,
           "price": [
             {
-              "value": 10.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 13.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg"]
+          "tags": [
+            "contains-egg"
+          ]
         },
         {
           "name": "Crumb Chicken Fillet",
           "desc": null,
           "price": [
-            {
-              "value": 8.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 12.8,
               "recorded": "2026-08-08"
@@ -2906,26 +2183,18 @@
           "desc": null,
           "price": [
             {
-              "value": 9.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 13.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-dairy"]
+          "tags": [
+            "contains-dairy"
+          ]
         },
         {
           "name": "Gourmet Vegetarian Burger",
           "desc": null,
           "price": [
-            {
-              "value": 8.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 11.8,
               "recorded": "2026-08-08"
@@ -2941,42 +2210,31 @@
           "desc": null,
           "price": [
             {
-              "value": 8.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 11.8,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Lamb Burger",
           "desc": null,
           "price": [
             {
-              "value": 8.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 12.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Chicken Bacon & Avo",
           "desc": null,
           "price": [
-            {
-              "value": 10.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 15.3,
               "recorded": "2026-08-08"
@@ -2989,11 +2247,6 @@
           "desc": null,
           "price": [
             {
-              "value": 10.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 15.3,
               "recorded": "2026-08-08"
             }
@@ -3005,42 +2258,31 @@
           "desc": null,
           "price": [
             {
-              "value": 9.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 13.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-dairy"]
+          "tags": [
+            "contains-dairy"
+          ]
         },
         {
           "name": "Beef & Blue Cheese",
           "desc": null,
           "price": [
             {
-              "value": 9.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 13.9,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-dairy"]
+          "tags": [
+            "contains-dairy"
+          ]
         },
         {
           "name": "Fillet of the Day",
           "desc": null,
           "price": [
-            {
-              "value": 10.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 17.5,
               "recorded": "2026-08-08"
@@ -3053,16 +2295,13 @@
           "desc": null,
           "price": [
             {
-              "value": 10.8,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 15.3,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-dairy"]
+          "tags": [
+            "contains-dairy"
+          ]
         },
         {
           "name": "Churton Whopper",
@@ -3080,32 +2319,29 @@
           "desc": "With hummus, salad, mayo.",
           "price": [
             {
-              "value": 9.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 15.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg", "contains-sesame"]
+          "tags": [
+            "contains-egg",
+            "contains-sesame"
+          ]
         },
         {
           "name": "Chicken Schnitzel & Bacon Wrap",
           "desc": "With hummus, salad, mayo.",
           "price": [
             {
-              "value": 9.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 15.5,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-gluten", "contains-egg", "contains-sesame"]
+          "tags": [
+            "contains-gluten",
+            "contains-egg",
+            "contains-sesame"
+          ]
         }
       ]
     },
@@ -3116,11 +2352,6 @@
           "name": "Single Filling",
           "desc": null,
           "price": [
-            {
-              "value": 3.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 4.8,
               "recorded": "2026-08-08"
@@ -3133,11 +2364,6 @@
           "desc": null,
           "price": [
             {
-              "value": 3.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 6.5,
               "recorded": "2026-08-08"
             }
@@ -3149,16 +2375,13 @@
           "desc": null,
           "price": [
             {
-              "value": 4.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 7.0,
               "recorded": "2026-08-08"
             }
           ],
-          "tags": ["contains-egg"]
+          "tags": [
+            "contains-egg"
+          ]
         }
       ]
     },
@@ -3169,11 +2392,6 @@
           "name": "Family Pack 1",
           "desc": "3 fish, 3 hotdogs, 3 crab sticks, 2 chips.",
           "price": [
-            {
-              "value": 28.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 42.5,
               "recorded": "2026-08-08"
@@ -3188,11 +2406,6 @@
           "desc": "5 fish, 5 potato fritters, 2 chips.",
           "price": [
             {
-              "value": 28.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 42.5,
               "recorded": "2026-08-08"
             }
@@ -3203,11 +2416,6 @@
           "name": "Family Pack 3",
           "desc": "4 fish, 2 hotdogs, 2 crab sticks, 2 sausages, 2 potato fritters, 2 chips.",
           "price": [
-            {
-              "value": 35.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 52.5,
               "recorded": "2026-08-08"
@@ -3222,11 +2430,6 @@
           "desc": "Fish fillet, chips, lemon, lettuce, tartare sauce.",
           "price": [
             {
-              "value": 12.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 22.5,
               "recorded": "2026-08-08"
             }
@@ -3237,11 +2440,6 @@
           "name": "Seafood Pack",
           "desc": "2 fish, 4 calamari rings, 2 crab sticks, 2 mussels, 2 prawn cutlets, 2 scallops, chips & sauce.",
           "price": [
-            {
-              "value": 28.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 42.5,
               "recorded": "2026-08-08"
@@ -3256,11 +2454,6 @@
           "desc": "10 calamari, chips & sauce.",
           "price": [
             {
-              "value": 12.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
-            {
               "value": 20.5,
               "recorded": "2026-08-08"
             }
@@ -3273,11 +2466,6 @@
           "name": "Fish Burger Pack",
           "desc": "Fish burger (standard), 1 crab stick, chips.",
           "price": [
-            {
-              "value": 8.5,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 13.0,
               "recorded": "2026-08-08"
@@ -3292,17 +2480,14 @@
           "name": "Pack 4",
           "desc": "1 fish, 1 hotdog & chips with 6 nuggets, 6 onion rings or 6 mini spring rolls.",
           "price": 21.0,
-          "tags": ["contains-gluten"]
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Kids Packs",
           "desc": "4 chicken nuggets, 4 fish bites or 2 mini hotdogs, with chips & sauce.",
           "price": [
-            {
-              "value": 6.0,
-              "recorded": "2019",
-              "note": "2019 menu scan"
-            },
             {
               "value": 9.5,
               "recorded": "2026-08-08"

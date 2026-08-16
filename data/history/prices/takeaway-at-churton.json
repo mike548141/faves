@@ -1,0 +1,2442 @@
+{
+  "venue": "takeaway-at-churton",
+  "note": "Price entries superseded by a later reading. Appended, never rewritten (ADR 0023); moved out of the payload by ADR 0045 because no screen renders them. The current price stays on the dish in site/data/.",
+  "rows": [
+    {
+      "key": {
+        "section": "Soup",
+        "name": "Wonton Soup",
+        "code": "1"
+      },
+      "superseded": [
+        {
+          "value": 10.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup",
+        "name": "Wonton Noodle Soup",
+        "code": "2"
+      },
+      "superseded": [
+        {
+          "value": 11.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup",
+        "name": "Chicken Sweet Corn Soup",
+        "code": "3"
+      },
+      "superseded": [
+        {
+          "value": 8.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried Rice",
+        "name": "Chicken Fried Rice",
+        "code": "4"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried Rice",
+        "name": "Pork Fried Rice",
+        "code": "5"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried Rice",
+        "name": "Steak Fried Rice",
+        "code": "6"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried Rice",
+        "name": "Combination Fried Rice",
+        "code": "7"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried Rice",
+        "name": "Vegetarian Fried Rice",
+        "code": "8"
+      },
+      "superseded": [
+        {
+          "value": 10.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried Rice",
+        "name": "Bacon Fried Rice",
+        "code": "9"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried Rice",
+        "name": "Shrimp Fried Rice",
+        "code": "10"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Fried Rice",
+        "name": "Prawn Fried Rice",
+        "code": "11"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Curry on Rice",
+        "name": "Chicken Curry on Rice",
+        "code": "12"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Curry on Rice",
+        "name": "Pork Curry on Rice",
+        "code": "13"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Curry on Rice",
+        "name": "Steak Curry on Rice",
+        "code": "14"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Curry on Rice",
+        "name": "Combination Curry on Rice",
+        "code": "15"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Curry on Rice",
+        "name": "Vegetarian Curry on Rice",
+        "code": "16"
+      },
+      "superseded": [
+        {
+          "value": 12.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Curry on Rice",
+        "name": "Shrimp Curry on Rice",
+        "code": "17"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Curry on Rice",
+        "name": "Prawn Curry on Rice",
+        "code": "18"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Steamed Rice",
+        "name": "Steamed Rice - Small",
+        "code": "19"
+      },
+      "superseded": [
+        {
+          "value": 4.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Steamed Rice",
+        "name": "Steamed Rice - Medium",
+        "code": "20"
+      },
+      "superseded": [
+        {
+          "value": 6.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Steamed Rice",
+        "name": "Steamed Rice - Large",
+        "code": "21"
+      },
+      "superseded": [
+        {
+          "value": 8.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Egg Fu Young",
+        "name": "Chicken Egg Fu Young",
+        "code": "22"
+      },
+      "superseded": [
+        {
+          "value": 12.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Egg Fu Young",
+        "name": "Pork Egg Fu Young",
+        "code": "23"
+      },
+      "superseded": [
+        {
+          "value": 12.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Egg Fu Young",
+        "name": "Steak Egg Fu Young",
+        "code": "24"
+      },
+      "superseded": [
+        {
+          "value": 12.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Egg Fu Young",
+        "name": "Combination Egg Fu Young",
+        "code": "25"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Egg Fu Young",
+        "name": "Vegetarian Egg Fu Young",
+        "code": "26"
+      },
+      "superseded": [
+        {
+          "value": 12.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Egg Fu Young",
+        "name": "Bacon Egg Fu Young",
+        "code": "27"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Egg Fu Young",
+        "name": "Shrimp Egg Fu Young",
+        "code": "28"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Egg Fu Young",
+        "name": "Prawn Egg Fu Young",
+        "code": "29"
+      },
+      "superseded": [
+        {
+          "value": 18.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chow Mein",
+        "name": "Chicken Chow Mein",
+        "code": "30"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chow Mein",
+        "name": "Pork Chow Mein",
+        "code": "31"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chow Mein",
+        "name": "Steak Chow Mein",
+        "code": "32"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chow Mein",
+        "name": "Combination Chow Mein",
+        "code": "33"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chow Mein",
+        "name": "Vegetarian Chow Mein",
+        "code": "34"
+      },
+      "superseded": [
+        {
+          "value": 10.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chow Mein",
+        "name": "Bacon Chow Mein",
+        "code": "35"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chow Mein",
+        "name": "Shrimp Chow Mein",
+        "code": "36"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chow Mein",
+        "name": "Prawn Chow Mein",
+        "code": "37"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chop Suey",
+        "name": "Chicken Chop Suey",
+        "code": "38"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chop Suey",
+        "name": "Pork Chop Suey",
+        "code": "39"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chop Suey",
+        "name": "Steak Chop Suey",
+        "code": "40"
+      },
+      "superseded": [
+        {
+          "value": 11.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chop Suey",
+        "name": "Combination Chop Suey",
+        "code": "41"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chop Suey",
+        "name": "Vegetarian Chop Suey",
+        "code": "42"
+      },
+      "superseded": [
+        {
+          "value": 10.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chop Suey",
+        "name": "Bacon Chop Suey",
+        "code": "43"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chop Suey",
+        "name": "Shrimp Chop Suey",
+        "code": "44"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Chop Suey",
+        "name": "Prawn Chop Suey",
+        "code": "45"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Sweet and Sour Sauce",
+        "name": "Sweet and Sour Pork",
+        "code": "46"
+      },
+      "superseded": [
+        {
+          "value": 15.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Sweet and Sour Sauce",
+        "name": "Sweet and Sour Chicken",
+        "code": "47"
+      },
+      "superseded": [
+        {
+          "value": 15.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Sweet and Sour Sauce",
+        "name": "Sweet and Sour Fish",
+        "code": "48"
+      },
+      "superseded": [
+        {
+          "value": 15.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Sweet and Sour Sauce",
+        "name": "Sweet and Sour Wontons (12)",
+        "code": "49"
+      },
+      "superseded": [
+        {
+          "value": 10.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Sweet and Sour Sauce",
+        "name": "Lemon Chicken",
+        "code": "50"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Sweet and Sour Sauce",
+        "name": "Honey Chicken",
+        "code": "51"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Black Bean Dishes",
+        "name": "Chicken Black Bean on Rice",
+        "code": "52"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Black Bean Dishes",
+        "name": "Pork Black Bean on Rice",
+        "code": "53"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Black Bean Dishes",
+        "name": "Steak Black Bean on Rice",
+        "code": "54"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Black Bean Dishes",
+        "name": "Combination Black Bean on Rice",
+        "code": "55"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Black Bean Dishes",
+        "name": "Shrimp Black Bean on Rice",
+        "code": "56"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Black Bean Dishes",
+        "name": "Prawn Black Bean on Rice",
+        "code": "57"
+      },
+      "superseded": [
+        {
+          "value": 18.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Satay Dishes",
+        "name": "Chicken Satay on Rice",
+        "code": "58"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Satay Dishes",
+        "name": "Pork Satay on Rice",
+        "code": "59"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Satay Dishes",
+        "name": "Steak Satay on Rice",
+        "code": "60"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Satay Dishes",
+        "name": "Combination Satay on Rice",
+        "code": "61"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Satay Dishes",
+        "name": "Shrimp Satay on Rice",
+        "code": "62"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Satay Dishes",
+        "name": "Prawn Satay on Rice",
+        "code": "63"
+      },
+      "superseded": [
+        {
+          "value": 18.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Pineapple & Cashew Dishes",
+        "name": "Chicken with Pineapple and Cashew Nuts",
+        "code": "64"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Pineapple & Cashew Dishes",
+        "name": "Pork with Pineapple and Cashew Nuts",
+        "code": "65"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Pineapple & Cashew Dishes",
+        "name": "Steak with Pineapple and Cashew Nuts",
+        "code": "66"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Pineapple & Cashew Dishes",
+        "name": "Combination with Pineapple and Cashew Nuts",
+        "code": "67"
+      },
+      "superseded": [
+        {
+          "value": 17.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Pineapple & Cashew Dishes",
+        "name": "Shrimp with Pineapple and Cashew Nuts",
+        "code": "68"
+      },
+      "superseded": [
+        {
+          "value": 17.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Pineapple & Cashew Dishes",
+        "name": "Prawn with Pineapple and Cashew Nuts",
+        "code": "69"
+      },
+      "superseded": [
+        {
+          "value": 18.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Hot Dishes",
+        "name": "Nasi Goreng (Rice)",
+        "code": "70"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Hot Dishes",
+        "name": "Bami Goreng (Noodles)",
+        "code": "71"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Hot Dishes",
+        "name": "Hot Spicy Chicken with Cashew and Vegetables",
+        "code": "72"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Hot Dishes",
+        "name": "Hot Spicy Beef with Cashew and Vegetables",
+        "code": "73"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Special Dishes",
+        "name": "Combination Fried Noodles",
+        "code": "74"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Special Dishes",
+        "name": "Combination Chilly Noodles",
+        "code": "75"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Special Dishes",
+        "name": "Combination Egg Noodles",
+        "code": "76"
+      },
+      "superseded": [
+        {
+          "value": 15.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Special Dishes",
+        "name": "Combination Seafood",
+        "code": "77"
+      },
+      "superseded": [
+        {
+          "value": 18.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Special Dishes",
+        "name": "Steak Tomato Onion on Rice",
+        "code": "78"
+      },
+      "superseded": [
+        {
+          "value": 16.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Extras",
+        "name": "Extra Meat",
+        "code": "79"
+      },
+      "superseded": [
+        {
+          "value": 4.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Extras",
+        "name": "Extra Seafood",
+        "code": "80"
+      },
+      "superseded": [
+        {
+          "value": 4.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Extras",
+        "name": "Extra Cashew Nuts",
+        "code": "81"
+      },
+      "superseded": [
+        {
+          "value": 4.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Extras",
+        "name": "Extra Tomato, Pineapple or Mushrooms",
+        "code": "82"
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Fish - Battered",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Fish - Crumbed",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.4,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Fish Fillet - Battered",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Fish Fillet - Crumbed",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Fish Fillet - Grilled",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Fish - Grilled",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.4,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Chips - One Scoop",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Small Chips",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Wedges",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 5.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Criss-Cut Fries",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 5.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Homemade Chunkies",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Potato Fritters",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 1.2,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Battered Sav",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Hot Dog on Stick",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Sausages",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Battered Sausage",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.2,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Prawn Cutlet",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 1.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Crab Stick",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 1.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Fish Cake",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Spring Roll",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Curry Roll",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Vege Roll",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Steak & Onion Roll",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.2,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Lasagne Square",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Meat Pattie",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Paua Fritter 100%",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 8.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Corn Fritter",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Mussel Fritter",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Pineapple Fritter",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Banana Fritter",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Mars Bar",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Cinnamon Donut",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Jam Rap",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Hash Brown",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Stuffed Mushroom",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Chicken Schnitzel",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Chicken Nugget (each)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 0.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Calamari Ring (each)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 1.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Battered Mussel (each)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 1.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Scallop (each)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Onion Rings (6)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Wontons (6)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 5.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Dim Sim (each)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 1.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Pork Bun",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Plain Roti",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 2.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Vegetarian Pattie",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Chicken Dumplings (6)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Deep Fried",
+        "name": "Vegetarian Dumplings (6)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Kids Ham Burger (no salad)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Kids Beef Burger (no salad)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 5.9,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Kids Fish Burger (no salad)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 5.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Kids Chicken Burger (no salad)",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 5.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Ham Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Cheese Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Egg Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Mushroom Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Hawaiian Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Chicken Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 7.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Fish Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Crumb Fish Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Bacon Egg Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 7.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Vegetarian Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 5.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Burgers (Standard)",
+        "name": "Works Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Gourmet Beef Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 8.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Beef & Egg",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Beef & Cheese",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Beef Cheese & Chilli",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Beef, Bacon & Egg",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 10.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Crumb Chicken Fillet",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 8.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Cheesy Chicken",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Gourmet Vegetarian Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 8.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Gourmet Fish Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 8.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Lamb Burger",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 8.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Chicken Bacon & Avo",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 10.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Beef Bacon & Avo",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 10.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Beef & Camembert",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Beef & Blue Cheese",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Fillet of the Day",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 10.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Gourmet Burgers",
+        "name": "Chicken Apricot Cream Cheese & Chilli",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 10.8,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Wraps",
+        "name": "Grilled Chicken & Bacon Wrap",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Wraps",
+        "name": "Chicken Schnitzel & Bacon Wrap",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 9.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Toasted Sandwiches",
+        "name": "Single Filling",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Toasted Sandwiches",
+        "name": "Double Filling",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 3.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Toasted Sandwiches",
+        "name": "Bacon & Egg",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 4.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Family Packs & Deals",
+        "name": "Family Pack 1",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 28.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Family Packs & Deals",
+        "name": "Family Pack 2",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 28.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Family Packs & Deals",
+        "name": "Family Pack 3",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 35.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Family Packs & Deals",
+        "name": "Fish Dinner",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Family Packs & Deals",
+        "name": "Seafood Pack",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 28.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Family Packs & Deals",
+        "name": "Calamari Pack",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 12.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Family Packs & Deals",
+        "name": "Fish Burger Pack",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 8.5,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Family Packs & Deals",
+        "name": "Kids Packs",
+        "code": null
+      },
+      "superseded": [
+        {
+          "value": 6.0,
+          "recorded": "2019",
+          "note": "2019 menu scan"
+        }
+      ]
+    }
+  ]
+}

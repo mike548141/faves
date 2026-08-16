@@ -1,0 +1,162 @@
+{
+  "venue": "thai-tara-express",
+  "note": "Dishes confirmed off the menu (`available.offBy`). The whole item is kept so it can be restored verbatim if it returns.",
+  "rows": [
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Prawn spring rolls",
+        "code": null
+      },
+      "item": {
+        "name": "Prawn spring rolls",
+        "desc": "Deep fried whole prawn wrapped with rice paper. Served with sweet & sour sauce.",
+        "price": 6.5,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": [
+          "contains-shellfish"
+        ]
+      }
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Spicy mince chicken",
+        "code": null
+      },
+      "item": {
+        "name": "Spicy mince chicken",
+        "desc": "Deep fried spicy minced chicken balls. Served with Thai sweet chilli sauce.",
+        "price": 8,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": []
+      }
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Dim sums",
+        "code": null
+      },
+      "item": {
+        "name": "Dim sums",
+        "desc": "A mixture of prawn and pork wrapped with wonton wrapper. Served with sweet black soy sauce.",
+        "price": 10,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": [
+          "contains-shellfish",
+          "contains-gluten",
+          "contains-soy"
+        ]
+      }
+    },
+    {
+      "key": {
+        "section": "Appetisers",
+        "name": "Angel wing",
+        "code": null
+      },
+      "item": {
+        "name": "Angel wing",
+        "desc": "2 chicken wings stuffed with carrots, cabbage, onion and glass noodles. Served with sweet and sour sauce.",
+        "price": 10,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": []
+      }
+    },
+    {
+      "key": {
+        "section": "Fried rice",
+        "name": "Pineapple fried rice",
+        "code": null
+      },
+      "item": {
+        "name": "Pineapple fried rice",
+        "desc": "Fried rice with curry powder, egg and raisins. Topped with cashew nuts.",
+        "price": 15,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": [
+          "contains-nuts",
+          "contains-egg"
+        ]
+      }
+    },
+    {
+      "key": {
+        "section": "Thai curry",
+        "name": "Choo chee salmon",
+        "code": null
+      },
+      "item": {
+        "name": "Choo chee salmon",
+        "desc": "2 pieces of grilled salmon on stir fried mixed vegetables. Topped with Thai special choo chee curry sauce.",
+        "price": 17.5,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": []
+      }
+    },
+    {
+      "key": {
+        "section": "Thai salad",
+        "name": "Thai grilled salad",
+        "code": null
+      },
+      "item": {
+        "name": "Thai grilled salad",
+        "desc": "A tangy Thai style spicy salad with a selection of meat, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs.",
+        "price": 16,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": []
+      }
+    },
+    {
+      "key": {
+        "section": "On rice",
+        "name": "Grilled chicken on rice",
+        "code": null
+      },
+      "item": {
+        "name": "Grilled chicken on rice",
+        "desc": "Sliced boneless grilled chicken thigh served with steamed vegetables and satay sauce.",
+        "price": 14.5,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": [
+          "contains-peanuts",
+          "contains-soy"
+        ]
+      }
+    },
+    {
+      "key": {
+        "section": "Stir fry",
+        "name": "Sweet Thai chilli stir fry",
+        "code": null
+      },
+      "item": {
+        "name": "Sweet Thai chilli stir fry",
+        "desc": "Sweet Thai chilli sauce stir fried with a selection of meat, mixed seasonal vegetables, pineapple, capsicum and onion.",
+        "price": 14.5,
+        "available": {
+          "offBy": "2026-08-15"
+        },
+        "tags": []
+      }
+    }
+  ]
+}
