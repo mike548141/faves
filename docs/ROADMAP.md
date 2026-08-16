@@ -3068,6 +3068,39 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
       Flakiness remains the failure mode that defeats our summary-line rule,
       because a flaky run's summary line *is* present and the correct response is
       indistinguishable from the wrong one: run it again.
+
+      ✅ **THE TWO FAILING ASSERTIONS ARE NOW NAMED**, which the first filing
+      could not do. They are the granted-notification pair:
+      *"a granted long timer raises ONE notification through the service
+      worker"* (`0 showNotification() call(s)`) and *"the notification carries
+      the recipe it has to reopen, and a tag so it cannot stack"*.
+      🔑 **The product is not implicated.** In the same failing scenario the bell
+      itself rings — `3 oscillator(s), 1 vibrate() call(s)` passes. `notify()`
+      correctly declines when the permission is not `granted`. **The check
+      poisons its own permission state**: `tools/cook_check.mjs:1301` pins the
+      origin to `denied` for the two-timer block (to stop a real prompt wedging
+      the run), and the later granted block at `:1353` calls
+      `setNotifications("granted")` on an origin already denied.
+      🎯 **Candidate fix, ONE line and DELIBERATELY NOT APPLIED:** `:1301`
+      `"denied"` → `"granted"` (a granted browser also never prompts, which was
+      the only reason for pinning), or move the `pair` block after the
+      `longTimer` scenarios. Verify by running to the summary line several times
+      before trusting it.
+      🛑 **Why it was left:** the agent proposing it reported the failure as
+      **deterministic** — *"`main` still ends at FAILED — 73 passed, 2 failed"*.
+      **Directly contradicted by measurement.** Eight runs of the merged tree:
+      **six × `OK — 75 passed`, one × `73/2`, one × `harness error:
+      Runtime.evaluate timed out after 30s`.** A fix whose premise is disproven
+      by six observations is not a fix yet, and shipping an unverified change to
+      a *guard* at the tail of a long session is the thing this repo keeps
+      writing ADRs about. 🚩 Note also that **26 Chrome processes** were live at
+      measurement time from peer sessions' own browser checks — the ordering
+      theory may still be right and merely intermittent under contention.
+      ⚠️ **So this agent was wrong three times about one check** — "my product
+      change broke it", then "the machine cannot run it", then "it fails
+      deterministically" — while being **right every time about the narrower
+      fact it had actually measured**. Separate a report's measurement from its
+      diagnosis; the measurements were all sound.
       Original filing follows.
 
 - [ ] 🚩 **`cook_check.mjs` is FLAKY under machine load, and flakiness is the
