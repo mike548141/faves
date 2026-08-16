@@ -5328,12 +5328,19 @@ radii on one token. Write scope is only acceptable because of ADR 0061: whoever
 holds this can replace the Worker or delete ciphertext, and cannot read one
 user's data.
 
-🎯 **A trap found in our own `.gitignore`.** It lists `tools/.cf-token`, which
-*invites* putting a Cloudflare token in this public repo's tree — the precise
-thing the owner just barred. Recorded in the estate registry so the next session
-reads it as a trap rather than a convention. **Not changed here**: the line is
-harmless in itself and the fix belongs with whoever owns repo hygiene, but it
-should not survive long.
+⚠️ **A claim I made here and then retracted, in the same session.** I recorded
+our `.gitignore` line `tools/.cf-token` as a *trap* inviting a Cloudflare token
+into this public tree. **Wrong, and retracted.** Re-reading it, the comment
+directly above reads *"the Cloudflare token lives in the environment, never in
+the repo"*, and the entries (`.env`, `*.token`, `tools/.cf-token`) are a
+defensive net for exactly that. **Deleting them would make an accidental commit
+more likely, not less.** Left alone deliberately.
+🔎 Worth keeping rather than quietly fixing, because of *how* it nearly went
+wrong: I read the ignore list without reading the four words of comment above
+it, and wrote a confident finding into two repos' permanent records. A session
+acting on it would have removed a working safeguard in the name of security.
+**A finding about a file is not final until you have read what the file says
+about itself.**
 
 ### Verified live, not inferred
 
