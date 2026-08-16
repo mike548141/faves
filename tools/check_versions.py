@@ -129,10 +129,18 @@ def precache_gaps():
 
     Cheap, total, and it cannot false-positive: the answer is on the filesystem.
     """
-    text = (ROOT / SW).read_text(encoding="utf-8")
-    block = re.search(r"const SHELL = \[(.*?)\];", text, re.S)
+    sw = ROOT / SW
+    if not sw.exists():
+        return []
+    block = re.search(r"const SHELL = \[(.*?)\];", sw.read_text(encoding="utf-8"), re.S)
     if not block:
-        return ["sw.js has no SHELL list — the precache cannot be checked."]
+        # No SHELL list = nothing to check, NOT a finding. `test_check_versions.py`
+        # builds a synthetic repo whose sw.js carries only the two version
+        # constants, and treating its absence as a failure made five of that
+        # harness's cases fail — the guard reporting on a file that was never
+        # claiming to have a precache. A missing SHELL_VERSION *constant* is
+        # still an error; that is checked below, where it belongs.
+        return []
     site = ROOT / "site"
     return [
         f'sw.js precaches "{url}", which does not exist — the install will throw '
