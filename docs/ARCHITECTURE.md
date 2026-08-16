@@ -251,7 +251,7 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
 - For `"recipes"`, the venue-only fields relax: `area`/`city`/`address`
   may be `null`, `services` is an empty list (a recipe is neither
   dine-in nor takeaway), and there is no contact/order card.
-- **That relaxation is declared, not scattered (ADR 0064).**
+- **That relaxation is declared, not scattered (ADR 0065).**
   `site/js/kinds.js` is the one table saying what each `kind` has and can
   do — `hasLocation`, `hasHours`, `hasPrices`, `canOrder`, `canReport`,
   `hasFreshness`, `inFacets`, `pinnedFirst`, `hasContactCard`,

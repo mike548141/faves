@@ -1,4 +1,4 @@
-# 0064 — a `kind` declares what it can do
+# 0065 — a `kind` declares what it can do
 
 **Status**: accepted • **Date**: 2026-08-16
 
@@ -86,12 +86,15 @@ or may no longer exist. It cannot be re-derived at read time, so it cannot
 become a capability lookup. Its doc comment says so, and says not to reach for
 it to answer a capability question.
 
-**It made a live defect nameable, which was the point.** `rankVenues` sorts on
-`pinnedFirst` as its first key in *every* mode, including "Nearest first" —
-which the owner ruled (2026-07-23) is pure distance. So the one record that
-answers `hasLocation: false` leads the distance sort. The refactor preserves
-that behaviour exactly rather than quietly fixing it; the bug is raised as its
-own item, because a refactor that also changes behaviour can prove neither.
+**It makes a standing tension askable, which was the point.** `rankVenues`
+sorts on `pinnedFirst` as its first key in *every* mode, including "Nearest
+first" — which the owner ruled (2026-07-23) is pure distance. So the one record
+answering `hasLocation: false` leads the distance sort. That pinning is a
+deliberate decision, not a defect, and the refactor preserves it exactly. What
+changes is that the two facts now sit side by side as declared properties, so
+the question "should something with no location lead a distance sort?" can be
+put to the owner from the table rather than reverse-engineered from the absence
+of a branch.
 
 `site/js/kinds.js` joins `sw.js`'s `SHELL` precache list — caught by
 `tests/sw-versioning.test.js`, which exists because `js/dietary.js` shipped

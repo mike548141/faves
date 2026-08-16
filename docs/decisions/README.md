@@ -541,7 +541,7 @@ deliberation those compact docs omit.
   Per-kind ageing — a separate decay limit for hours against phone and address —
   is **explicitly not built**: the shape is ruled, the numbers still cannot come
   from a corpus whose every date sits in one 48-hour window.
-- [0064](0064-a-kind-declares-what-it-can-do.md) — **a `kind` declares what it
+- [0065](0065-a-kind-declares-what-it-can-do.md) — **a `kind` declares what it
   can do.** ~40 scattered `kind === "recipes"` conditionals across eight
   modules become one capability table in `site/js/kinds.js`, so a screen asks
   "does this have hours?" instead of "is this a recipe?". **Implements
@@ -554,4 +554,4 @@ deliberation those compact docs omit.
   already paid for that confusion. One identity survivor,
   `isRecipeKind()`, because the answer is **persisted** in hearts, ratings and
   share URLs and cannot be re-derived. Rendered DOM byte-identical before and
-  after; it made a live ranking defect nameable rather than fixing it silently.
+  after, measured from headless Chrome across five screens.
