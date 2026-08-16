@@ -679,16 +679,16 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
   const nameEl =
     isRecipes && collectionId
       ? el("h3", { className: "dish-name", lang: lead.lang }, [
-          codeBadge,
           el("a", {
             className: "dish-name-link",
             href: `recipe.html?id=${collectionId}&dish=${slug(item.name)}`,
             textContent: lead.text,
           }),
+          codeBadge,
         ].filter(Boolean))
       : el("h3", { className: "dish-name", lang: lead.lang }, [
-          codeBadge,
           el("span", { className: "dish-name-text", textContent: lead.text }),
+          codeBadge,
         ].filter(Boolean));
 
   // The name as the menu on the wall writes it, so you can point at it. A

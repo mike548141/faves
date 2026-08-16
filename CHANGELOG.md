@@ -9,6 +9,21 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **The allergen ⓘ in Settings is legible again.** Its halo was a filled block
+  the size of the 44 px tap target sitting off-centre beside a small glyph — it
+  is now a circle around the glyph itself, and the tap target is unchanged. The
+  note it opens no longer runs past the edge of the settings dialog and get
+  clipped: inside Settings it sits in the flow and pushes the chips down. Its
+  wording is plainer and shorter, with the two things that must not be misread
+  in bold — **ask the place if you have an allergy**, and **no tag means we
+  don't know, not that it's safe**.
+- **The order number sits after the dish name**, not before it. Leading with
+  the code made every row start on a number, so the eye had to step over it to
+  reach the dish — and a screen reader read "#1 Wonton Soup" instead of
+  "Wonton Soup #1".
+- **The update prompt says what you get.** "A newer version of Faves is ready"
+  → "An update is ready, with the latest menus and prices" — the same phrase
+  About already uses.
 - **The search hints hold longer, and cross-fade instead of snapping.** They
   changed every 4 seconds, which read as restless — a hint is a whole sentence
   and needs to survive a glance. Now roughly 7 seconds, with the placeholder

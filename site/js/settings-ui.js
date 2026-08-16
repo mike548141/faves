@@ -538,13 +538,18 @@ export function initSettingsUI() {
     label: "About allergen flagging",
     text: (() => {
       const frag = document.createDocumentFragment();
+      // Plain words, short sentences, and the two things that must not be
+      // misread carried in bold (owner, 2026-08-16 — the previous copy said
+      // all of this, but at 60 words of hedged prose nobody finishes it).
+      // Every safety point survives the trim: ask the place, some tags are
+      // ours not theirs, we over-tag on purpose, and no tag is not a
+      // clearance. Do not shorten past that last sentence.
       frag.append(
-        el("strong", { textContent: "Always confirm for allergies. " }),
-        "Some tags come from the place. Most we work out from the dish itself " +
-          "where it's near-certain — satay means peanuts, a schnitzel means " +
-          "wheat — because menus rarely say. We flag generously on purpose. " +
-          "No tag still means not stated, never that a dish is free of it. " +
-          "This highlights and filters; it isn't a guarantee."
+        el("strong", { textContent: "If you have an allergy, always ask the place. " }),
+        "Some tags come from their menu. Most we work out ourselves — satay " +
+          "means peanuts, schnitzel means wheat — because menus rarely say. " +
+          "We tag more rather than less, on purpose. ",
+        el("strong", { textContent: "No tag means we don’t know, not that it’s safe." })
       );
       return frag;
     })(),

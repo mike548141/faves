@@ -130,7 +130,10 @@ const MI = {
   // Update notice (a newer app version is waiting). "whakahou" = renew /
   // refresh / update and "putanga" = issue, edition, both per
   // maoridictionary.co.nz; "ā muri ake" = later, afterwards.
-  "update.ready": "Kua rite he putanga hou o Faves.", // draft
+  // The English gained "with the latest menus and prices" (2026-08-16); this
+  // draft still reads "a new version of Faves is ready" and is owed a redraft
+  // against the owner's nominated dictionary — see ROADMAP Theme 23b.
+  "update.ready": "Kua rite he putanga hou o Faves.", // draft, now understated
   "update.refresh": "Whakahoutia", // draft
   "update.refreshing": "E whakahou ana…", // draft
   "update.later": "Ā muri ake", // draft

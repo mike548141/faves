@@ -2122,9 +2122,21 @@ body.faves-view .to-top {
 .settings-sub-row {
   position: relative;
   display: flex;
+  flex-wrap: wrap; /* lets the caveat note take a line of its own — see below */
   align-items: center;
   gap: var(--space-1);
   margin: var(--space-3) 0 var(--space-2);
+}
+/* Inside the settings dialog the note is a normal block, not a popover. As an
+   absolutely-positioned popover it was clipped by the dialog's own scroll box
+   and ran past its edge, so the last line was unreadable (owner, 2026-08-16).
+   In flow it simply pushes the chips down and can never overflow. */
+.settings-sub-row .caveat-note {
+  position: static;
+  flex: 1 0 100%;
+  width: auto;
+  max-width: 100%;
+  box-shadow: none;
 }
 .settings-sub-row .settings-sub {
   margin: 0;
@@ -2133,11 +2145,15 @@ body.faves-view .to-top {
    heading beside it (the menu's larger 1.45rem ⓘ sits by a big venue name);
    left-aligned so it hugs the heading rather than floating mid-box. */
 .settings-sub-row .caveat-btn {
-  justify-content: flex-start;
+  /* Centred, so the halo circle is concentric with the glyph. The negative
+     margin claws back the empty half of the 44px box so the ⓘ still sits
+     against the heading — the tap target is unchanged, only where it appears
+     to sit. */
+  justify-content: center;
   width: 44px;
   height: 44px;
-  margin: 0;
-  padding-left: 0.1em;
+  margin: 0 0 0 -0.5rem;
+  padding: 0;
   font-size: 1.05rem;
 }
 .pref-chips {
@@ -3070,10 +3086,13 @@ body.faves-view .to-top {
   line-height: 1.25;
 }
 /* The venue's order-number badge — muted, monospace-numeric, kept visually
-   separate from the dish title (it's a code, not part of the name). */
+   separate from the dish title (it's a code, not part of the name). It sits
+   AFTER the name (owner, 2026-08-16): leading with it made every row start on
+   a number, so the eye had to step over the code to reach the dish, and the
+   accessible name read "#1 Wonton Soup" rather than "Wonton Soup #1". */
 .dish-code {
   display: inline-block;
-  margin-right: var(--space-2);
+  margin-left: var(--space-2);
   padding: 0.05em 0.4em;
   border-radius: 6px;
   background: var(--surface-2);
@@ -3584,10 +3603,41 @@ body.faves-view .to-top {
   border-radius: var(--radius-chip);
   cursor: pointer;
 }
+/* The halo is a circle around the GLYPH, not a filled block the size of the
+   tap target. Painting the whole 44px button drew a large disc beside a small
+   ⓘ — and where the glyph is not centred in that button it sat visibly
+   off-axis too (owner, 2026-08-16). The button keeps its 44px for touch; only
+   what you can see shrinks. z-index -1 with `isolation` keeps the circle
+   behind the glyph without escaping into an ancestor's background. */
+.caveat-btn {
+  position: relative;
+  isolation: isolate;
+}
+.caveat-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: 1.85em;
+  height: 1.85em;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color 140ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .caveat-btn::before {
+    transition: none;
+  }
+}
 .caveat-btn:hover,
 .caveat-btn[aria-expanded="true"] {
   color: var(--warn);
-  background: var(--warn-bg); /* a soft halo on hover/open, so it reads as active */
+}
+.caveat-btn:hover::before,
+.caveat-btn[aria-expanded="true"]::before {
+  background: var(--warn-bg);
 }
 .caveat-note {
   display: none;
@@ -3631,6 +3681,9 @@ body.faves-view .to-top {
 .caveat-btn.is-info:hover,
 .caveat-btn.is-info[aria-expanded="true"] {
   color: var(--info);
+}
+.caveat-btn.is-info:hover::before,
+.caveat-btn.is-info[aria-expanded="true"]::before {
   background: var(--info-bg);
 }
 .caveat-note.is-info {

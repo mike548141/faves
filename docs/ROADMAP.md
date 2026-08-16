@@ -2071,6 +2071,32 @@ asked on this screen.
   Faves is, not a FAQ. Watch for the failure mode this repo has hit before: do
   not solve duplication by *adding* a third place.
 
+- **23c — the same outcome answered on two screens** `[S→M]` 🎯. Owner's
+  worked example, 2026-08-16: *"We have this feature in settings but the
+  version details sit in the about screen? Makes no sense for UX."* Settings →
+  **Refresh & reset** holds the *action* ("Refresh now"); About → **Version**
+  holds the *evidence* ("App 2026-08-16.8", "An update is ready"). The user's
+  outcome is one thing — **am I up to date, and if not, fix it** — and it is
+  split across two screens reached by two different routes. His standing
+  instruction with it: *"ALWAYS keep front of mind what the user is trying to
+  achieve as an outcome."* So the test for 23a's rehoming is not "is this
+  fact *about* the app" but "which outcome is someone chasing when they need
+  it". Evidence and the action that acts on it belong together.
+
+- **23d — the restaurant cards are getting busy** `[M]` 🎯. Owner, 2026-08-16:
+  each listing now carries name, suburb, services, open state and closing
+  time, price band, per-person estimate and up to three cuisines — *"consider
+  what is valuable to show on this page and what should be scaled based on
+  screen size to hide or show info."* Two questions, and they are different:
+  **which facts earn a place at all** (is `$$` *and* `~$16pp` two answers to
+  one question? do three cuisine chips help, or would one plus the count?),
+  and **which survive a narrow screen**. Note the existing responsive load —
+  at 390 px the cards are already one column, so the busyness is per-card, not
+  layout. Anything hidden at small sizes must still be **findable**: the
+  searchable surface now indexes services and cuisine (2026-08-16), so hiding
+  a chip no longer hides the fact. Judge against the card's job — *choose
+  somewhere to eat* — not against completeness.
+
 - **23b — one voice, written down** `[S→M]` 🎯. There is no tone guide, so the
   voice drifts between blocks — some prose addresses "you", some describes the
   system, some is caption-shaped. Write the guide (plain New Zealand English,

@@ -66,7 +66,11 @@ export function showUpdateNotice(onRefresh) {
   setTimeout(() => {
     if (refresh.disabled) return; // already tapped; leave "Refreshing…" alone
     text.dataset.i18n = "update.ready";
-    text.textContent = "A newer version of Faves is ready.";
+    // Says what the reader *gets*, not what the software is. "A newer version
+    // is ready" names the mechanism and leaves them to infer the benefit;
+    // owner, 2026-08-16. Matches the About dialog's "An update is ready", so
+    // the two places that mention updates use one phrase.
+    text.textContent = "An update is ready, with the latest menus and prices.";
     translate(node);
   }, 0);
   return node;
