@@ -521,6 +521,26 @@ async function run(opts) {
     const { evalPage, settle, click, press } = createDriver(cdp, sessionId, (m) => report.step(m));
     const snap = () => evalPage(SNAP);
 
+    /** Set the browser's real notification permission for our origin — the
+     *  browser's own state machine, not a stub the page could see through. */
+    const setNotifications = (setting) =>
+      cdp.send("Browser.setPermission", {
+        origin: base,
+        permission: { name: "notifications" },
+        setting,
+      });
+    // Pinned before anything is driven, and NOT merely tidiness. Measured while
+    // proving the alarm's guards by breaking them: a page that calls
+    // `Notification.requestPermission()` inside a real click, on an origin with
+    // no CDP permission override, raises a prompt this headless browser never
+    // answers — and every subsequent `Runtime.evaluate` times out, so the run
+    // dies as a HARNESS error 40 assertions before the thing it was proving.
+    // Under an override the request resolves and the run continues. The check
+    // therefore states the starting permission rather than inheriting whatever
+    // the profile happened to have, which is also what makes section 13b's
+    // granted/denied scenarios mean anything.
+    await setNotifications("prompt");
+
     const goto = async (url, waitFor) => {
       await cdp.send("Page.navigate", { url }, sessionId);
       await until(async () => await evalPage(`!!document.querySelector(${JSON.stringify(waitFor)})`), {
@@ -1171,14 +1191,6 @@ async function run(opts) {
     const longTimer = findTimed((d) => d > NOTIFY_OVER_SECONDS);
     const urlFor = (item) => `${base}/recipe.html?id=${COLLECTION}&dish=${slug(item.name)}`;
 
-    /** Set the browser's real notification permission for our origin. */
-    const setNotifications = (setting) =>
-      cdp.send("Browser.setPermission", {
-        origin: base,
-        permission: { name: "notifications" },
-        setting,
-      });
-
     /** Open `item`, walk to its timed step, and start the countdown there. */
     const startTimerOn = async ({ item, index }) => {
       await goto(urlFor(item), ".cook-start");
@@ -1256,6 +1268,55 @@ async function run(opts) {
         shut.alarm.closes >= 1,
         `${shut.alarm.closes} AudioContext.close() call(s) — the wake lock's lesson, third coat`
       );
+    }
+
+    // TWO TIMERS, ONE CLOCK — and the assertion that actually proves the bell
+    // rings once. Found by breaking it: with the ring-once guard deleted, a
+    // single-timer scenario still passed, because the tick that rings the last
+    // running timer is also the tick that stops the interval. The guard only
+    // bites while ANOTHER timer keeps the clock alive — which is the real
+    // kitchen case (the sauce and the bake are both on) and the one where a
+    // missing guard rings a bell every second for the rest of the recipe.
+    const pair = [recipe, ...items]
+      .map((it) => {
+        const timed = (it.steps || [])
+          .map((s, i) => [i, stepDuration(s)])
+          .filter(([, d]) => d != null)
+          .sort((a, b) => a[1] - b[1]);
+        if (timed.length < 2) return null;
+        const [short, long] = [timed[0], timed[timed.length - 1]];
+        // Enough daylight between them that winding past the short one cannot
+        // land on the long one as well.
+        return long[1] > short[1] + 60 ? { item: it, short, long } : null;
+      })
+      .find(Boolean);
+
+    if (pair) {
+      await goto(urlFor(pair.item), ".cook-start");
+      await openCook();
+      const walkTo = async (i) => {
+        await press("Home");
+        for (let n = 0; n < i; n++) await click(".cook-next");
+      };
+      await walkTo(pair.long[0]);
+      await click(".cook-timer-toggle");
+      await walkTo(pair.short[0]);
+      await click(".cook-timer-toggle");
+      await evalPage(`window.__cookClock.skew = ${(pair.short[1] + 5) * 1000}`);
+      await settleUntil(snap, (s) => s.alarm.oscillators > 0, { timeout: 8000 });
+      // Four more seconds of interval with the long timer still counting: a
+      // bell with no guard would have rung four more times by now.
+      await sleep(4000);
+      const once = await snap();
+      report.check(
+        "a bell rings ONCE, even while a second timer keeps the clock ticking",
+        once.alarm.oscillators === 3 && once.alarm.vibrations === 1,
+        `${pair.short[1]}s bell rung beside a ${pair.long[1]}s timer, then 4s of further ticks: ` +
+          `${once.alarm.oscillators} oscillator(s), ${once.alarm.vibrations} buzz(es) ` +
+          `(unguarded, this is one bell per second)`
+      );
+      await press("Escape");
+      await closed();
     }
 
     if (longTimer) {
