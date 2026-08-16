@@ -4672,23 +4672,10 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
       begun at the tail of a session is how a half-built one ships — the same
       call 36d got, for the same reason.
 
-- [ ] **37h — remove "Transfer to another device"** `[S][js]`. Owner: *"Remove
-      the 'Transfer to another device' feature all together as we already have
-      a data backup and restore and a sync feature."*
-      🚩 **Worth recording, not arguing:** transfer is the only one of the three
-      that needs **neither a file nor the backend** — backup/restore needs a
-      file, sync needs the Worker. He has weighed that. If it turns out sync
-      reuses transfer's codec or its receive path, that is a finding to bring
-      back, not a reason to keep the button.
-
-- [ ] **37i — Sync lives inside "Your data"** `[S][js][ux]`. Owner: *"In
-      settings the 'Sync across your devices' settings should be in the 'Your
-      data' section."* Today they are two sibling rows in `settings-ui.js`'s
-      `TOPICS`. 🚩 **The trap:** sync's row updates on the engine's own
-      timetable, via a subscription that currently writes to *that row*. Fold
-      the panel in and the subscription must drive the combined row's summary or
-      be torn down — never left writing to a detached element.
-
+> ✅ **Shipped 2026-08-16** — 37h — remove "Transfer to another device". Detail →
+> [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
+> ✅ **Shipped 2026-08-16** — 37i — Sync lives inside "Your data". Detail →
+> [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 - [ ] **37j — "Everywhere" is a place word on a service filter** `[XS][ux]`.
       Owner: *"Everywhere does not make sense for a drop down to select dine-in
       vs takeaway."* He is right and it is one string: `site/index.html`'s

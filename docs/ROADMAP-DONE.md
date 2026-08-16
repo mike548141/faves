@@ -1516,3 +1516,20 @@ the CSS root font size grows every `rem` box but does **not** move `rem`-based
       which maps providers honour a waypoint parameter and which silently drop
       it, and the real feature will need exactly that.
 
+- ✅ **37h — remove "Transfer to another device"** `[S][js]` — **done
+      2026-08-16**; [ADR 0030]'s transfer half retired with it. Owner: *"Remove
+      the 'Transfer to another device' feature all together as we already have
+      a data backup and restore and a sync feature."*
+      🚩 **Worth recording, not arguing:** transfer is the only one of the three
+      that needs **neither a file nor the backend** — backup/restore needs a
+      file, sync needs the Worker. He has weighed that. If it turns out sync
+      reuses transfer's codec or its receive path, that is a finding to bring
+      back, not a reason to keep the button.
+- ✅ **37i — Sync lives inside "Your data"** `[S][js][ux]` — **done
+      2026-08-16**. Owner: *"In
+      settings the 'Sync across your devices' settings should be in the 'Your
+      data' section."* Today they are two sibling rows in `settings-ui.js`'s
+      `TOPICS`. 🚩 **The trap:** sync's row updates on the engine's own
+      timetable, via a subscription that currently writes to *that row*. Fold
+      the panel in and the subscription must drive the combined row's summary or
+      be torn down — never left writing to a detached element.

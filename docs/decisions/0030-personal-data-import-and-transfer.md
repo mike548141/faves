@@ -1,6 +1,30 @@
 # 0030 — Importing your data, and transferring it to another device
 
-**Status**: proposed — owner to ratify • **Date**: 2026-08-09
+**Status**: **transfer half RETIRED 2026-08-16** by owner ruling; the import
+half stands • **Date**: 2026-08-09
+
+> 🛑 **The "transferring it to another device" half of this record describes a
+> feature that no longer exists.** Owner, 2026-08-16: *"Remove the 'Transfer to
+> another device' feature all together as we already have a data backup and
+> restore and a sync feature."* Retired rather than superseded — nothing
+> replaced it; the ground it stood on was taken by two neighbours that arrived
+> later. Download/restore covers "keep a copy" and
+> [ADR 0017](0017-cross-device-sync-encrypted-blob-bearer-code.md)'s sync
+> covers "keep two devices the same", and between them the one-off link had no
+> question left to answer.
+> 🚩 **What genuinely went with it, recorded because it is the cost:** transfer
+> was the only one of the three needing **neither a file nor the backend**.
+> Download/restore needs somewhere to put a file; sync needs the Worker. If a
+> future need appears for handing your picks to a second device with no file and
+> no network round-trip, this record is the design — do not re-derive it.
+> 🔎 **Checked before removing, not assumed:** sync does **not** reuse the
+> transfer codec or its receive path. `sync.js` reaches for
+> `collectPersonalData` plus its own merge/crypto/code modules and never touches
+> `share-codec.js`, which survives intact for orders and shortlists. The
+> `allowReplace` parameter this record justified is also gone — with transfer
+> retired it was constant-`true`, and a parameter with one value tells a reader
+> nothing.
+> **The import half of this record is unaffected and still current.**
 
 These are the design calls [Theme 12b] and [Theme 9 v1] deliberately left open
 for the build session. They are recorded here because each rejects a plausible
