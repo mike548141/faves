@@ -27,6 +27,9 @@
 // to precision rather than presence. Comparisons always widen a partial date to
 // its full interval, so a partial never accidentally reads as 1 January.
 import { HOME_TIMEZONE } from "./home.js";
+// The dish resolver, for the `picks` gate in resolveRecord. dish-id.js pulls in
+// only slug.js, so this cannot close a cycle back to here.
+import { findDish } from "./dish-id.js";
 
 const DATE_RE = /^\d{4}(-\d{2}(-\d{2})?)?$/;
 const isDate = (s) => typeof s === "string" && DATE_RE.test(s);
@@ -522,9 +525,15 @@ export function resolveRecord(record, asOf = todayIn(), hemisphere = "south") {
   // A pick pointing at an out-of-season dish would dangle — the reference is
   // still valid in the source (validated against the full menu), just not
   // orderable today.
+  //
+  // Asked of the ONE resolver, not of a Set of live dish names: a pick is a
+  // dish reference and may be written as an id or a formerId as well as a name
+  // (ADR 0051), and a name-only gate deleted the other two silently, on a dish
+  // sitting right there on the menu. `findDish` takes the already-filtered
+  // `out`, so a dish that has genuinely gone still resolves to null and the
+  // pick still drops — which is the behaviour this gate exists for.
   if (Array.isArray(record.picks) && Array.isArray(out.menu)) {
-    const live = new Set(out.menu.flatMap((s) => s.items.map((i) => i.name)));
-    out.picks = record.picks.filter((p) => live.has(p));
+    out.picks = record.picks.filter((p) => findDish(out, p));
   }
 
   out.closure = venueState(record, asOf);

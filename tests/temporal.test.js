@@ -298,6 +298,57 @@ test("resolveRecord: picks never dangle on an unavailable dish", () => {
   assert.deepEqual(resolveRecord(record, "2026-12-20").picks, ["Wonton Soup", "Iced Coffee"]);
 });
 
+// A pick may be written as a dishId, not only a name (ADR 0051) — `dishId` is
+// the identity, and the whole point of it is that a rename doesn't move it. The
+// gate that drops picks whose dish is out of season must therefore ask the one
+// resolver, not intersect against a set of live NAMES: the latter deletes an
+// id-written pick silently, on a dish that is right there on the menu.
+const idPickRecord = {
+  id: "y",
+  name: "Y",
+  verified: "2026-08-08",
+  // Three references, one per way a pick can legally be written: an id, a name,
+  // and a formerId. All three point at dishes that are on the menu today.
+  picks: ["cheeseburger-gold-card", "Wonton Soup", "old-broth-id"],
+  menu: [
+    {
+      section: "Mains",
+      items: [
+        { name: "Cheeseburger", dishId: "cheeseburger" },
+        { name: "Cheeseburger", dishId: "cheeseburger-gold-card" },
+        { name: "Wonton Soup", dishId: "wonton-soup" },
+        { name: "House Broth", dishId: "house-broth", formerIds: ["old-broth-id"] },
+      ],
+    },
+    {
+      section: "Summer drinks",
+      available: { season: "summer" },
+      items: [{ name: "Iced Coffee", dishId: "iced-coffee" }],
+    },
+  ],
+};
+
+test("resolveRecord: a pick written as a dishId survives the availability gate", () => {
+  const out = resolveRecord(idPickRecord, "2026-08-08"); // NZ winter
+  assert.deepEqual(out.picks, ["cheeseburger-gold-card", "Wonton Soup", "old-broth-id"]);
+});
+
+test("resolveRecord: the gate still drops a pick whose dish has genuinely gone", () => {
+  const r = {
+    ...idPickRecord,
+    picks: ["iced-coffee", "wonton-soup", "no-such-dish", "Iced Coffee"],
+  };
+  // August: the summer section is filtered out, so both the id-written and the
+  // name-written pick at it must go — and so must a reference to nothing.
+  assert.deepEqual(resolveRecord(r, "2026-08-08").picks, ["wonton-soup"]);
+  // December: it is back, and both spellings of it resolve again.
+  assert.deepEqual(resolveRecord(r, "2026-12-20").picks, [
+    "iced-coffee",
+    "wonton-soup",
+    "Iced Coffee",
+  ]);
+});
+
 test("resolveRecord: history rides along only where it has a named use", () => {
   const now = resolveRecord(record, "2026-08-08");
   const soup = now.menu[0].items[0];
