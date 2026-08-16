@@ -141,6 +141,7 @@ python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
 python3 tools/check_visibility.py # the visibility bullet above is still true
+python3 tools/check_versions.py # sw.js versions bumped in lockstep with site/
 node --test                   # JS unit tests (pure logic); no npm install needed
 node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)
@@ -214,6 +215,10 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
 - **Lockstep rules** (change these together, in one commit):
   - Bump the right version constant in `site/sw.js` — it's what tells
     installed phones to refetch; stale = offline visitors keep old menus.
+    **Now enforced** by `tools/check_versions.py` (CI + the verify list):
+    an unchanged constant makes the install step *skip* that cache, so the
+    old files serve forever with CI green — it shipped that way on
+    2026-08-16 and was only caught on the owner's own phone.
     Data-only change under `site/data/` → bump `DATA_VERSION`; any other
     change under `site/` → bump `SHELL_VERSION`; a change touching both →
     bump both. Split caches so a menu edit no longer re-downloads the
