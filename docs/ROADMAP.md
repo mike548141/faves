@@ -383,10 +383,28 @@ delivery app.** Clear one by bringing back the fact.
 - [~] **Menus still owed on six venues — and where each one lives**
       `[M][content]`. Researched 2026-08-16 and written down here so a fresh
       session can start rather than repeat it.
-      ✅ **7 of the 14 DONE 2026-08-16 (wt: faves-menus) — 850 dishes.**
+      ✅ **8 of the 14 DONE 2026-08-16 (wt: faves-menus) — 983 dishes.**
       The Catch Sushi Bar 87 · Satay Kingdom 53 · Charley Noble 125 · Regal
-      Chinese 264 · Rock Yard Vietnamese 58 · Pizza Pomodoro 83 · Gong Cha 131.
-      Every price from the venue's own site or its own menu PDF.
+      Chinese 264 · Rock Yard Vietnamese 58 · Pizza Pomodoro 83 · Gong Cha 131 ·
+      Pizza Hut 133. Every price from the venue's own site or its own menu PDF.
+      🎯 **Pizza Hut raised a policy question its agent refused to settle alone,
+      and it will recur on every PDF-sourced venue.** Its first-party allergen
+      PDF grades each allergen `P` (present) or `T` (*"stored or used to
+      manufacture other items at the site"* — trace/cross-contact). `T` is
+      near-universal across the whole pizza line for tree-nuts, peanuts, sesame
+      and shellfish. Only `P` was tagged. [ADR 0025]'s *"when unsure, tag"*
+      points the other way — **but this is not uncertainty, it is the venue's own
+      graded signal**, and collapsing `T` into `contains-*` would fire those
+      tags on every pizza, which is a warning that carries no information.
+      The vocabulary has no *"may contain traces"* tier to hold it faithfully.
+      ⚑ **Owner's call, and it wants to be a batch-wide rule rather than a
+      per-venue one.** Same family as the `contains-fish` gap under Theme 5.
+      ⚠️ **And its prices may not be Johnsonville's.** The order pages show
+      prices without ever asking for an address, and the store page's "View
+      menu" button carries no href (a Vue handler), so the address flow could
+      not be driven. These are Pizza Hut NZ's default online prices; whether
+      they equal this branch's is unestablished. One in-store or phone check
+      clears it.
       **The other 7 are accounted for, not abandoned** — see the two findings
       below: 4 publish a site with **no menu on it**, and 3 need an owner call
       (`pizza-hut` transcribable and in progress at close · `subway` publishes

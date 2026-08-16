@@ -6129,10 +6129,16 @@ more orphaned claims from the same 11:22 UTC cohort; they are still open.
 
 ### Shipped
 
-- **Seven venues from stub to menu-complete: 850 dishes.** The Catch Sushi Bar
+- **Eight venues from stub to menu-complete: 983 dishes.** The Catch Sushi Bar
   (87), Satay Kingdom (53), Charley Noble (125), Regal Chinese (264), Rock Yard
-  Vietnamese (58), Pizza Pomodoro (83), Gong Cha (131). Every price from the
-  venue's own site or its own menu PDF; no delivery app touched.
+  Vietnamese (58), Pizza Pomodoro (83), Gong Cha (131), Pizza Hut (133). Every
+  price from the venue's own site or its own menu PDF; no delivery app touched.
+  🎯 **Pizza Hut's allergen PDF grades P (present) vs T (trace), and only P was
+  tagged.** [ADR 0025] says "when unsure, tag" — but this is not uncertainty,
+  it is the venue's own graded signal, and `T` is near-universal across the
+  pizza line, so collapsing it would fire nut/sesame/shellfish warnings on every
+  pizza. The vocabulary has no "may contain traces" tier. Surfaced, not settled;
+  it will recur on every PDF-sourced venue.
 - **Theme 14c — a free-text note per order line** ([ADR 0073]), 938 tests
   green, plus `tools/note_check.mjs`, the seventh headless check.
 - **`tools/check_fallback.py`** — gates the no-JS `<ul>` against `index.json`,
