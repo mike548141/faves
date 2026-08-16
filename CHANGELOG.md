@@ -9,6 +9,16 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Dish photos, on every McDonald's item.** All 41 dishes now carry a
+  photograph — the first use of dish photos anywhere in the app. They are
+  McDonald's own New Zealand product images, so a named, trademarked product is
+  shown as the product and not as a generic burger from a stock library; open
+  alternatives were checked dish by dish and lost on accuracy, not on licence
+  (the record is in `data/images/mcdonalds.json`). Each is a transparent cutout
+  trimmed to the food and re-centred in one frame, so the set is framed
+  identically and takes the card's own colour in light and dark mode. They
+  lazy-load and are cached on demand, never precached: 1.17 MB across 41 images
+  (29 KB each) that costs a first visit nothing.
 - **Four more Sprig + Fern taverns, and they are their own places.** Petone,
   Berhampore, Thorndon and Little Sprig Seatoun each have their own address,
   hours, phone and map pin. They are not listed as branches of one venue,

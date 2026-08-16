@@ -765,13 +765,22 @@ function pairingLinks(refs, r) {
 // Lazy-loaded, layout-stable dish photo (only when the item has one).
 function dishPhoto(item) {
   if (!item.image) return null;
-  return el("img", {
+  const img = el("img", {
     className: "dish-photo",
     src: item.image,
     alt: item.alt || "",
     loading: "lazy",
     decoding: "async",
   });
+  // A photo that fails to load leaves a broken-image icon and the alt text
+  // sprawling inside a 269 px empty box — measurably uglier than no photo at
+  // all. And this is not the rare case: dish photos are runtime-cached, never
+  // precached (ADR 0047 — they are excluded from the 300 KB first-visit budget
+  // *because* they lazy-load), so the first offline visit to a menu hits it on
+  // every row. Removing the element degrades to exactly the layout every menu
+  // had before photos existed, which is a good layout.
+  img.addEventListener("error", () => img.remove(), { once: true });
+  return img;
 }
 
 function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, section = null) {

@@ -395,3 +395,14 @@ deliberation those compact docs omit.
   convert, and localisation can follow you.** Shipped exchange rates, refreshed
   weekly by a scheduled workflow that opens an auto-merging PR, so conversion
   works offline and the app still has no runtime dependency on a network call.
+- [0053](0053-a-photo-of-a-named-product-must-be-that-product.md) — **a photo
+  of a named product must be that product.** `image`/`alt` had been in the
+  schema since early on and no dish had ever set them; McDonald's is the first.
+  The owner ruled openly-licensed photos where they look great, the venue's own
+  otherwise — and applied per dish, that came out at zero open images, losing on
+  **accuracy, not licence**: the public-domain fries carton is Canadian, the
+  public-domain apple pie is the US baked one, and the opaque studio shots read
+  as a bug beside 40 transparent cutouts. A generic burger captioned "Big Mac"
+  is not merely worse-looking, it is a false depiction of a named product, which
+  on a menu app is worse than no photo. Provenance and a removal recipe live in
+  `data/images/`, never served (ADR 0047).
