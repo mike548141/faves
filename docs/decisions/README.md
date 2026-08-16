@@ -592,10 +592,24 @@ deliberation those compact docs omit.
   `setNote` needs the note **twice** (the old one locates the line, since the
   note is the identity), and the ± stepper was operating the wrong line when
   two lines differed only by a note — `tools/note_check.mjs` exists for that.
--
-[0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
+- [0075](0075-currency-is-stated-once-where-it-is-asked.md) — **currency is
+  stated once, on the screen where the question occurs.** Supersedes **§3 only**
+  of [0037](0037-confidence-reads-both-ways.md), which chose two homes — the
+  per-venue ⓘ and the About dialog — and was right at the time, because the ⓘ
+  said it in one of its two tones only. ROADMAP 23a proposed deleting About's
+  copy as a duplicate. 🔑 **Checking that claim is the record: it was false.**
+  Applying `refreshCaveat`'s own rules across the corpus, **39 of 55 venues
+  render in the amber tone**, which never mentioned currency — so for 71% of
+  venues About was the *sole* statement of it, and deleting as proposed would
+  have destroyed the fact with every gate still green. **A duplication claim is
+  a measurement, not a reading.** Resolved by closing the amber gap FIRST and
+  deleting second, so the fact is stated on 55 venues rather than 16 while
+  appearing on one screen rather than two. `boot_check` guards it
+  tone-agnostically, and guards About's group list by name so the sediment
+  cannot re-form.
+- [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
   — **a guard is decorative when its output is the same whether or not the thing
-  it guards is broken.** Ten faces, most of them surfaced in one day of parallel
+  it guards is broken.** Twelve faces, most of them surfaced in one day of parallel
   work by sessions that only discovered they overlapped because a fourth noticed
   they had answered the same broadcast. Among them: a guard that always fires (a
   drift baseline 31 commits stale); one that
