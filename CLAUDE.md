@@ -162,6 +162,8 @@ node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)
 node tools/addon_check.mjs    # add-on composition in headless Chrome (ADR 0048)
 node tools/branch_check.mjs   # the branch picker in headless Chrome (ADR 0054)
+node tools/to_top_check.mjs   # the back-to-top button gets out of the way (Theme 29)
+node tools/filter_row_check.mjs # filters inline when wide, in the sheet when narrow
 ```
 
 **The exchange rates refresh themselves weekly** — `.github/workflows/fx.yml`
@@ -214,6 +216,19 @@ the assertion that matters — that **no branch is given a status it has no hour
 to support**. Every assertion is time-independent by design: a check that passes
 at 1pm and fails at 1am gets switched off within a week. Run it after touching
 `locations.js`, the contact card in `menu.js`, or per-branch hours data.
+
+`to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The
+first sweeps the **whole document** in 37 px steps at two widths and two text
+sizes, because a fixed control's victim depends entirely on where you stop
+scrolling — a single sample proves nothing, and a single sample is what every
+eyeball report of this bug had been. It caught the back-to-top button owning the
+tap on a dish price at **100%** of its width, mid-scroll, at 96 of 547 scroll
+positions. The second drives the filter row across the 60rem breakpoint in both
+directions and asserts focus survives the DOM move; its hardest assertion is
+that a `position: fixed` control parked below the viewport adds **no scrollable
+overflow**, which was measured rather than reasoned about. Run them after
+touching `to-top.js`, `filters-ui.js`, `index.html`'s filter markup, or any
+fixed/sticky rule in `app.css`.
 
 `cook_check.mjs` is its sibling for cook mode (ADR 0039), on the same
 harness (`tools/lib/browser.mjs`): it opens a real recipe, steps through

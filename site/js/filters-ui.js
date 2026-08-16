@@ -28,6 +28,26 @@
 // without opening a dialog. A closed <dialog> keeps its children, so this costs
 // nothing but the markup.
 //
+// THE DESKTOP ROW IS A DOM MOVE, NOT A MEDIA QUERY (Theme 15x — asked for
+// twice). A sheet is the right answer at 390 px and the wrong one at 1280,
+// where there is room to simply show the controls. But a *closed* <dialog>
+// cannot render its children on the page — `display: none` is not negotiable
+// from CSS — so no media query can put the sheet's controls inline. What can:
+// move `#filter-controls` out of the dialog and into `#filter-controls-inline`
+// in <main>. One element, moved; never a duplicate, because a duplicate is two
+// sets of listeners and two sources of truth for what "Cuisine: Thai" means.
+//
+// THE BREAKPOINT LIVES IN JS, NOT CSS. `place()` sets `body.filters-inline`
+// and every inline style rule keys off that class. If CSS carried its own
+// `@media (min-width: …)` the two could disagree, and the failure mode is
+// grim — a row styled as an inline panel while it is actually sitting inside a
+// closed dialog, i.e. invisible controls that CSS insists are fine.
+//
+// `matchMedia().addEventListener("change")` rather than a resize listener: it
+// fires on breakpoint crossings only, so there is nothing to debounce, and
+// `place()` early-returns when the controls are already in the right host, so
+// a spurious call costs nothing.
+//
 // NO APPLY BUTTON, ever (DESIGN.md: "Filters are instant, no apply button").
 // The footer's primary is a *dismiss* that names what is already true.
 
@@ -56,12 +76,78 @@ export function initFiltersUI({ onClearAll } = {}) {
   const nearBtn = document.getElementById("near-me");
   const routeBtn = document.getElementById("along-route");
 
+  // ---- The desktop row: one element, two homes (see the header note) -------
+  const controls = document.getElementById("filter-controls");
+  const inlineHost = document.getElementById("filter-controls-inline");
+  const sheetHost = document.getElementById("filter-sheet-body");
+  const foot = sheet.querySelector(".filter-foot");
+  // 60rem = the content column's own max width, so the row goes inline exactly
+  // when the page stops being one narrow column. `rem` in a media query
+  // resolves against the browser's default font size, not the CSS root size —
+  // so a reader who has turned their browser text up gets the sheet for longer,
+  // which is right: the same controls need more room at 24 px than at 16.
+  const wide = matchMedia("(min-width: 60rem)");
+
+  function place(isWide) {
+    if (!controls || !inlineHost || !sheetHost) return;
+    const host = isWide ? inlineHost : sheetHost;
+    if (controls.parentElement !== host) {
+      // Capture BEFORE anything moves or closes: sheet.close() below runs the
+      // close handler, which parks focus on `btn` — and `btn` is about to be
+      // hidden. Reading activeElement after that would restore the wrong thing.
+      const active = document.activeElement;
+      const hadFocus = !!active && controls.contains(active);
+      // Everything outside an OPEN modal <dialog> is inert. Moving the controls
+      // inline while the sheet is open would render them on the page and then
+      // refuse every click on them, which looks like a broken row rather than a
+      // modal. Close first; the reader is getting the controls either way.
+      if (isWide && sheet.open) sheet.close();
+      host.append(controls);
+      // "Clear all" travels too, so it is not a phone-only affordance. It is
+      // the same button moved, not a second one — the sheet's footer keeps the
+      // dismiss, which is all it needs when the controls are elsewhere.
+      if (clearBtn) {
+        if (isWide) controls.append(clearBtn);
+        else foot?.insertBefore(clearBtn, doneBtn ?? null);
+      }
+      inlineHost.hidden = !isWide;
+      btn.hidden = isWide; // an entry point to an emptied sheet is a dead end
+      document.body.classList.toggle("filters-inline", isWide);
+      // Last, after the hiding above — a focus restore before it would be
+      // undone by hiding whatever we just focused.
+      if (hadFocus) {
+        // Chrome drops focus to <body> when a focused node's ancestor is moved.
+        // Going wide the element is on the page and can simply take it back;
+        // going narrow it has just landed inside a CLOSED dialog, where nothing
+        // is focusable, so the button that now stands for the controls gets it.
+        if (isWide && active.isConnected) active.focus();
+        else btn.focus();
+      }
+      return;
+    }
+    inlineHost.hidden = !isWide;
+    btn.hidden = isWide;
+    document.body.classList.toggle("filters-inline", isWide);
+  }
+
+  place(wide.matches);
+  wide.addEventListener("change", (e) => place(e.matches));
+
   // Who to hand focus back to. A modal <dialog> restores focus itself, but the
   // element that opened it may be a "+2 more" chip that this very interaction
   // removes from the DOM — and focus on a detached node falls to <body>. So
   // remember the opener, and fall back to the bar button, which always exists.
   let opener = null;
   function open(from) {
+    // Inline, the sheet has no body to show. app.js's "+2 more" chip calls this
+    // to reveal the filters it could not fit — so send the reader to the row
+    // that already holds them rather than to an empty modal.
+    if (wide.matches && controls?.isConnected) {
+      controls.scrollIntoView({ block: "nearest" });
+      const first = controls.querySelector("select, button:not([hidden])");
+      (first ?? controls).focus?.();
+      return;
+    }
     opener = from || btn;
     sheet.showModal();
   }

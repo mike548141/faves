@@ -370,10 +370,25 @@ main {
 }
 
 /* "Faves" wordmark doubles as a home button. */
+/* Measured 2026-08-16 in headless Chrome at 390 px and at 1280 px, root 16 px:
+   81.7 × 31.9 px — the height under the repo's 44 px floor, in the one control
+   nobody thinks of as a control because it looks like a title. The wordmark's
+   own type is 1.9rem/1.05 = 31.9 px, so the miss is all in the box, not the
+   glyphs: min-height sets the floor and the symmetric padding centres the text
+   inside it, which keeps the wordmark optically where it was.
+   `display` stays `inline-block`, deliberately: `.app-title::first-letter`
+   paints the "F" accent, and ::first-letter does not descend into a child whose
+   display makes it an atomic inline of a different kind. Nothing here changes
+   which box it applies to.
+   The header is not sticky, so the ~12 px this adds scrolls away with it and
+   costs nothing permanent. At the largest text size the link already measured
+   over 44 px, so this rule is a no-op there. */
 .app-home-link {
   color: inherit;
   text-decoration: none;
   display: inline-block;
+  min-height: 44px;
+  padding-block: 6px;
   transition: color 0.15s ease, transform 0.15s ease;
 }
 /* Hover cue that it's the way home: the wordmark warms to the accent (the
@@ -1393,6 +1408,78 @@ body:not(.menu-page).bar-compact {
   cursor: pointer;
 }
 
+/* ---------- The desktop filter row (Theme 15x) ----------
+   Not a breakpoint of its own: `body.filters-inline` is set by filters-ui.js,
+   which owns the single `matchMedia("(min-width: 60rem)")` that decides where
+   #filter-controls lives. CSS must never carry a second copy of that number —
+   a media query that disagreed with the move would style a row that is still
+   sitting inside a closed <dialog>, i.e. invisible controls that look fine to
+   every check. Every rule below is therefore keyed on the class, not a width.
+   The sheet's own rules are untouched: on a phone this whole block is inert. */
+.filter-inline {
+  margin-bottom: var(--space-3);
+}
+/* One panel, one group per row: "Narrow to" reads across, then "Sort by". Grid
+   rather than a single wrapping flex row, so the two groups can never interleave
+   — the taxonomy (narrow vs reorder, ADR 0014) is the point of the headings. */
+body.filters-inline #filter-controls {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+body.filters-inline .filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  /* The selects carry a label above them and the pill toggles do not, so their
+     boxes differ in height by that label. Bottom-align, and the controls
+     themselves line up instead of floating at three different heights. */
+  align-items: flex-end;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: 0;
+}
+body.filters-inline .filter-group-title,
+body.filters-inline .filter-group-note {
+  margin: 0;
+  flex: 0 0 auto;
+  align-self: center;
+}
+body.filters-inline .filter-field {
+  margin-bottom: 0;
+  /* Shrinkable, capped: an unusually long area name must not let one select eat
+     the row, and three controls plus two toggles have to survive 60rem. */
+  flex: 1 1 10rem;
+  min-width: 8rem;
+  max-width: 15rem;
+}
+/* The segmented Service control holds three labels, so it needs more than a
+   select and must not be squeezed to the same cap. */
+body.filters-inline #filter-service-field {
+  flex: 0 0 auto;
+  max-width: none;
+}
+body.filters-inline #filter-service-field .segmented {
+  width: auto;
+}
+body.filters-inline .route-bar {
+  flex: 1 1 100%;
+  margin-bottom: 0;
+}
+/* Moved here from the sheet's footer by filters-ui.js — the same button, not a
+   second one. Trailing, so it reads as the way out of the panel rather than
+   another filter. */
+body.filters-inline #filters-clear {
+  justify-self: end;
+}
+/* Belt and braces. The sheet is never opened while the controls are inline
+   (filters-ui.js's `open` sends the reader to the row instead), but if it ever
+   were, a footer holding only the dismiss should not leave it stranded left. */
+body.filters-inline .filter-foot {
+  justify-content: flex-end;
+}
+
 .picker {
   width: min(100% - 2rem, 24rem);
   border: 1px solid var(--line);
@@ -1766,7 +1853,10 @@ body:not(.menu-page).bar-compact {
   line-height: 1;
   box-shadow: var(--shadow-lift);
   cursor: pointer;
-  transition: transform 0.12s ease, color 0.16s ease, border-color 0.16s ease;
+  /* opacity is in the list because of `.is-tucked` below — without it the
+     button would blink in and out instead of sliding. */
+  transition: transform 0.16s ease, opacity 0.16s ease, color 0.16s ease,
+    border-color 0.16s ease;
 }
 /* The roomy tablet/desktop layout dwarfs a mobile-sized circle, so scale it up
    past the mobile breakpoint to sit in proportion with the rest of the UI. */
@@ -1785,6 +1875,30 @@ body:not(.menu-page).bar-compact {
 }
 .to-top:active {
   transform: scale(0.94);
+}
+/* TUCKED — off the bottom edge while the reader is scrolling DOWN. The whole
+   reasoning, and the measurements that forced it, are in the header of
+   `js/to-top.js`; the short version is that at 390 px this button covered a
+   dish price at 17.6 % of a real menu's scroll positions, worst case 100 % of
+   "$8". After `.to-top:active` on purpose: the two have equal specificity, and
+   a tucked button is never the one being pressed.
+   NOT `visibility: hidden`, NOT `pointer-events: none`, NOT the [hidden]
+   attribute: each of those takes the button out of the tab order and out of the
+   accessibility tree, so a keyboard reader would lose it altogether. Opacity +
+   transform keeps it focusable off-screen (the skip-link pattern), and the rule
+   below brings it back the instant it is focused.
+   The translate is its own height plus the tallest bottom offset any consumer
+   sets (--bar-h-tall on the home list, --space-3 on a menu page), so it clears
+   the viewport edge in both places without a second rule. */
+.to-top.is-tucked {
+  opacity: 0;
+  transform: translateY(
+    calc(100% + var(--bar-h-tall) + env(safe-area-inset-bottom) + var(--space-3))
+  );
+}
+.to-top.is-tucked:focus-visible {
+  opacity: 1;
+  transform: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .to-top {

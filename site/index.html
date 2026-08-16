@@ -176,6 +176,16 @@
         <div id="favourites-groups"></div>
       </section>
 
+      <!-- Where #filter-controls lands on a wide screen (Theme 15x). Empty and
+           hidden until filters-ui.js moves the controls in, and hidden again
+           the moment they go back to the sheet — an empty landmark host is
+           noise. Deliberately immediately BEFORE .results-head: #result-count
+           is the role="status" that announces "6 of 51 places", and a filter
+           you change has to be next to the number that answers it. `browse-only`
+           for the same reason .results-head is: the search and favourites views
+           are not the filtered list. -->
+      <div id="filter-controls-inline" class="filter-inline browse-only" hidden></div>
+
       <div class="results-head browse-only">
         <h2 class="sr-only">Places</h2>
         <!-- tabindex="-1" so clearing a filter can park focus here: the chip
@@ -671,10 +681,24 @@
             ✕
           </button>
         </div>
-        <div class="order-body">
+        <div class="order-body" id="filter-sheet-body">
+          <!-- THE ONE COPY OF THE CONTROLS (Theme 15x). On a phone this sits
+               inside the sheet, exactly as before. Past the wide breakpoint,
+               filters-ui.js MOVES this element — the element, not a duplicate —
+               into #filter-controls-inline up in <main>, so a desktop reader
+               works the real controls without opening anything. A move rather
+               than a second copy of the markup is the whole design: state,
+               listeners and the selects' current values travel with it, so
+               there is never a second copy to keep in step.
+               It is a NAMED <section>, so it is a landmark ("region") wherever
+               it lives — the label travels with the controls instead of
+               existing at one breakpoint and not the other. Inside the closed
+               dialog it is not exposed, which is correct: neither are the
+               controls it names. -->
+          <section id="filter-controls" aria-label="Filters and sorting">
           <section class="filter-group" aria-labelledby="filter-narrow-title">
             <h3 id="filter-narrow-title" class="filter-group-title" data-i18n="filter.narrow">Narrow to</h3>
-            <div class="filter-field">
+            <div class="filter-field" id="filter-service-field">
               <span class="filter-label" id="filter-service-label" data-i18n="filter.service">Service</span>
               <div class="segmented" role="group" aria-labelledby="filter-service-label">
                 <button type="button" data-service="all" aria-pressed="true" data-i18n="service.all">Everywhere</button>
@@ -735,6 +759,10 @@
               <button type="button" id="route-clear" class="route-clear" data-i18n="route.clear">Done</button>
             </div>
           </section>
+          </section>
+          <!-- #filters-clear is moved in here beside the controls when they go
+               inline (filters-ui.js), so "Clear all" is not a phone-only
+               affordance. It lives in .filter-foot below the rest of the time. -->
         </div>
         <!-- Never an Apply button: filters are instant (DESIGN.md). "Show 6
              places" is a dismiss that names what is already true — and it is
