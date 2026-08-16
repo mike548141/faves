@@ -430,10 +430,26 @@ delivery app.** Clear one by bringing back the fact.
       that is true lets ensure that we at least have all their locations in the
       Wellington region added to Faves."* This is a standing instruction, not a
       one-off: a chain added later arrives with the same obligation.
-      **Where we stand today** (measured 2026-08-16): 5 records carry a
-      `locations` array — McDonald's 5, Subway 5, TJ Katsu 7, Sushi Bi 3,
-      Pandan 2 — and the five Sprig + Fern taverns are separate records rather
-      than branches, per the split that landed with ADR 0051.
+      ⚠️ **The "5 records / 22 branches" figure this item used to carry was
+      wrong, and wrong in the direction that hides work.** Re-derived
+      2026-08-16 across all 55 records: **12** records carry a `locations`
+      array, holding **29** branches — 19 with hours, 26 with a pin. The
+      earlier count saw only the five *multi*-branch records (McDonald's 5,
+      Subway 5, TJ Katsu 7, Sushi Bi 3, Pandan 2 = 22) and silently dropped
+      every record whose `locations` array holds exactly **one** entry. Those
+      seven are the point of this item, not a rounding error:
+      **BurgerFuel, Gong Cha, Hell Pizza, Kaffee Eis, Noodle Canteen, Pizza
+      Hut** and Sprig + Fern Tawa. Six of the seven are national chains with
+      several Wellington-region branches each, all sitting in the corpus today
+      as a single site. So the sweep is **eight chains, not two**, and the
+      hidden six are the ones nothing has ever looked at. The five Sprig + Fern
+      taverns remain separate records rather than branches, per the split that
+      landed with ADR 0051.
+      🔎 **The lesson is the measurement, not the number.** A count derived from
+      "records with more than one branch" answers a different question from
+      "records that are a chain", and reads identically in prose. Derive this
+      one from `len(locations) >= 1` and re-derive it rather than quoting it —
+      the same trap this file's `stub` count fell into three times.
       **What has to be true for each branch, or it is worse than absent:**
       `address`, `lat`/`lng` (geocoded from the address with the OSM tool —
       never invented; a wrong pin beats no pin only in the sense that both are
