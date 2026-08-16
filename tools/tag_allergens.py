@@ -184,6 +184,23 @@ ADD_ON = re.compile(r"\badd(?:s|ed|ing)?\b", re.I)
 ADD_ON_PRICE = re.compile(r"\+\s*\$")
 
 
+def ingredient_lines(item):
+    """A recipe's ingredient lines, flat, whichever way it was written.
+
+    Since ADR 0070 an `ingredients` entry is either a plain string or a group
+    `{"component": ..., "items": [...]}`. Allergen matching wants the words, not
+    the structure — and the component itself is a label ("Sauce", "Topping"),
+    never a thing you can be allergic to, so only its items come through.
+    """
+    out = []
+    for entry in item.get("ingredients") or []:
+        if isinstance(entry, str):
+            out.append(entry)
+        elif isinstance(entry, dict):
+            out.extend(x for x in entry.get("items") or [] if isinstance(x, str))
+    return out
+
+
 def ingredient_text(item):
     """Name + the parts of the description describing what you actually get.
 
@@ -198,7 +215,7 @@ def ingredient_text(item):
         if ADD_ON.search(clause) and ADD_ON_PRICE.search(clause):
             continue
         kept.append(clause)
-    kept.extend(item.get("ingredients") or [])
+    kept.extend(ingredient_lines(item))
     return " ".join(kept)
 
 

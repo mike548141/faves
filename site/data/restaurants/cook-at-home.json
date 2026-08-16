@@ -82,10 +82,15 @@
             "3 cups plain flour",
             "2 tsp baking powder",
             "4 tsp ginger",
-            "Ginger icing: 225g butter",
-            "Ginger icing: 2¼ cups icing sugar",
-            "Ginger icing: 6 tablespoons golden syrup",
-            "Ginger icing: 9 teaspoons ginger"
+            {
+              "component": "Ginger icing",
+              "items": [
+                "225g butter",
+                "2¼ cups icing sugar",
+                "6 tablespoons golden syrup",
+                "9 teaspoons ginger"
+              ]
+            }
           ],
           "steps": [],
           "tags": [
@@ -270,20 +275,30 @@
           "dishId": "upside-down-plum-cake",
           "desc": null,
           "ingredients": [
-            "Topping: 2 tablespoons butter, melted",
-            "Topping: 2 tablespoons brown sugar",
-            "Topping: ½ teaspoon fresh lime juice",
-            "Topping: 4 prune plums, not peeled, cut into 6 wedges each",
-            "Batter: 1⅔ cups plain flour, sifted",
-            "Batter: ¾ teaspoon baking soda",
-            "Batter: ½ teaspoon baking powder",
-            "Batter: ¼ teaspoon salt",
-            "Batter: pinch of freshly grated nutmeg",
-            "Batter: ½ teaspoon cinnamon",
-            "Batter: ½ cup butter, at room temperature",
-            "Batter: 1 cup sugar",
-            "Batter: 2 eggs",
-            "Batter: ¾ cup milk"
+            {
+              "component": "Topping",
+              "items": [
+                "2 tablespoons butter, melted",
+                "2 tablespoons brown sugar",
+                "½ teaspoon fresh lime juice",
+                "4 prune plums, not peeled, cut into 6 wedges each"
+              ]
+            },
+            {
+              "component": "Batter",
+              "items": [
+                "1⅔ cups plain flour, sifted",
+                "¾ teaspoon baking soda",
+                "½ teaspoon baking powder",
+                "¼ teaspoon salt",
+                "pinch of freshly grated nutmeg",
+                "½ teaspoon cinnamon",
+                "½ cup butter, at room temperature",
+                "1 cup sugar",
+                "2 eggs",
+                "¾ cup milk"
+              ]
+            }
           ],
           "steps": [
             "Preheat the oven to 175°C.",
@@ -548,9 +563,14 @@
             "185g flour",
             "1 tsp baking powder",
             "1 tsp vanilla",
-            "Sauce: 150g brown sugar",
-            "Sauce: 60g butter",
-            "Sauce: 150ml cream"
+            {
+              "component": "Sauce",
+              "items": [
+                "150g brown sugar",
+                "60g butter",
+                "150ml cream"
+              ]
+            }
           ],
           "steps": [
             "Cook the dates in the water.",
@@ -580,10 +600,15 @@
             "2 tsp (10 ml) baking powder",
             "1 tbsp (15 ml) cocoa",
             "Water or milk, as required for a thick batter",
-            "Sauce: ½ cup (125 ml) brown sugar",
-            "Sauce: ¼ cup (60 ml) cocoa",
-            "Sauce: 1 tbsp (15 ml) cornflour",
-            "Sauce: 2 cups (500 ml) boiling water"
+            {
+              "component": "Sauce",
+              "items": [
+                "½ cup (125 ml) brown sugar",
+                "¼ cup (60 ml) cocoa",
+                "1 tbsp (15 ml) cornflour",
+                "2 cups (500 ml) boiling water"
+              ]
+            }
           ],
           "steps": [
             "Preheat the oven to 180°C and line a 1.5–2L ovenproof dish with baking paper, or grease it.",
