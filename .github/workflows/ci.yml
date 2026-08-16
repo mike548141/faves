@@ -1,7 +1,17 @@
-# CI for Faves. The site ships build-less, so this is a correctness gate,
-# not a build: it proves the menu data validates against the schema
-# before anything reaches `main` (and `main` auto-deploys to Cloudflare
-# Pages). stdlib-only Python — nothing to install.
+# CI for Faves. The site ships build-less, so this is a correctness gate, not
+# a build: it proves the menu data validates against the schema, and that every
+# screen still runs at all, when a change reaches `main` (which auto-deploys to
+# Cloudflare Pages) and on every PR. Python here is stdlib-only, and the one
+# browser job installs nothing — nothing to install anywhere.
+#
+# Build-less is also WHY a browser belongs in this file: with no bundler and no
+# type checker, nothing but a running page can tell you a module forgot an
+# import. See the `boot` job.
+#
+# ⚠ It REPORTS; it does not reliably BLOCK. `protect-main` requires four of
+# these contexts, but repository admins bypass it always — and the last 100
+# rule evaluations on `main` were 100 bypasses. Read a red run as "the deploy
+# that just went out is broken", not as "the deploy was stopped".
 name: CI
 
 on:
@@ -125,3 +135,60 @@ jobs:
       # the rest.
       - name: Run the unit tests
         run: node --test
+
+  # THE ONE BROWSER CHECK CI RUNS — owner's ruling, 2026-08-16.
+  #
+  # Eight real-browser guards live in tools/. Seven stay on CLAUDE.md's manual
+  # list; this one is wired up because it is the only one that is both cheap and
+  # unconditional — it makes no timing assumptions, and it catches the worst
+  # failure class there is: a screen whose JavaScript does not run at all.
+  # On 2026-08-16 `app.js` called `venueTimezone` without importing it, `init()`
+  # threw, the home screen silently served its no-JS fallback `<ul>`, and 570
+  # unit tests, `device_check` 19/19 and `cook_check` 36/36 were all green. The
+  # fallback is what hid it — the wreck looked like a working list of places.
+  # Running the whole family, and a nightly run, were both costed and declined:
+  # `cook_check` is measurably contention-flaky and `sync_check` drives two
+  # browsers for minutes, and a flaky required check trains everyone to hit
+  # re-run, which is worse than no check.
+  #
+  # WHAT IT CANNOT DO — read this before calling it a gate. The `protect-main`
+  # ruleset lets a repository admin bypass required status checks
+  # (`bypass_mode: always`), and the last 100 rule evaluations on `main` were
+  # 100 bypasses. So on this repo's normal path — a direct push to `main`, which
+  # IS the Cloudflare Pages deploy — the red arrives *after* the site is live.
+  # Nor is this job in the ruleset's required list, so it does not block a PR
+  # merge either. What it buys is that the check runs at all without a human
+  # remembering to type it, which is exactly how `sync_check` sat dead through a
+  # whole settings refactor with CI green throughout.
+  boot:
+    name: every screen boots
+    runs-on: ubuntu-latest
+    env:
+      # tools/lib/browser.mjs defaults to the macOS Chrome path and takes this
+      # override; it is the only hook, and the tool is not edited for CI.
+      FAVES_CHROME: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      # The runner image already ships Google Chrome (151.0.7922.108, measured
+      # here 2026-08-16) — so no marketplace action, no download, and no new
+      # trust surface in a public repo's workflow. Measured too: headless Chrome
+      # launches clean as the unprivileged `runner` user, so none of the usual
+      # `--no-sandbox` / `--disable-dev-shm-usage` folklore is needed.
+      # This step exists so that an image which stops shipping Chrome reads as
+      # "the runner lost its browser" rather than "a screen failed to boot". A
+      # guard whose failure names the wrong thing teaches people to ignore red.
+      - name: Confirm the runner still ships the browser this needs
+        run: |
+          if [ ! -x "$FAVES_CHROME" ]; then
+            echo "::error::No Chrome at $FAVES_CHROME — the runner image changed. This is an environment failure, NOT a failing screen: re-point FAVES_CHROME at the browser the image ships."
+            exit 1
+          fi
+          "$FAVES_CHROME" --version
+      # Loads the home screen, four menu screens, the facet round-trip, Settings
+      # and About on a fresh profile, and asserts each was drawn by its own
+      # JavaScript rather than by the fail-soft markup standing in for it.
+      - name: Assert every screen is drawn by its own JavaScript
+        run: node tools/boot_check.mjs
