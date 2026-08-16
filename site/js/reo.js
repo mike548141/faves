@@ -68,7 +68,10 @@ const MI = {
   // gain. The select's third option, "Our usual order", is the one genuinely
   // new string and is deliberately NOT drafted here — `sort.usual` falls back
   // to the captured English, which is the documented partial state, not an
-  // oversight. Key owed: sort.usual.
+  // oversight. Keys owed, both English-only for the same reason:
+  // sort.usual, and menu.opensNewWindow (the WCAG G201 new-window warning
+  // menu.js appends to every off-site link, 31d). Both fall back safely —
+  // translate() captures the English on its first pass before mi() can miss.
   "toggle.nearMe": "E tata ana",
   "toggle.alongRoute": "I te ara", // draft — "on the way / along the route"
   // "Along a route" destination picker + card labels (neutral chrome; the
