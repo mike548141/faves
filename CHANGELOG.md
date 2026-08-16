@@ -17,7 +17,18 @@ content freshness separately from this file.
   rather than an unpayable sum. A "summer menu" now follows the hemisphere the
   place is actually in. Nothing changes for the places already listed. (ADR 0043)
 
+### Fixed
+- **The home screen was quietly serving its no-JavaScript fallback.** A missing
+  import took `app.js` down on load, so the list of places rendered without
+  filters, "Pick for us", the shuffle or any live open/closed badge — and looked
+  almost normal while doing it. Fixed, and `tools/boot_check.mjs` now fails the
+  build if any screen stops running its own JavaScript.
+
 ### Changed
+- **Settings is six groups instead of eight.** Language and units are one
+  question — how the app talks to you — and distance and the maps app are the
+  other: how it gets you to a place. Each half keeps its own sub-heading, and
+  the index now leads with who's using Faves.
 - **About no longer claims a single currency for the whole site**, because
   there isn't one: it states the rule, and each menu names its own. It gained a
   matching note about whose clock the opening hours are on. (ADR 0043)

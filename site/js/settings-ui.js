@@ -600,28 +600,77 @@ export function initSettingsUI() {
     far.row,
     fav.row,
   ]);
-  const unitsPanel = el("div", { className: "settings-panel" }, [
-    el("p", { className: "settings-note", textContent: "How distances and oven temperatures are shown. Menu prices stay in New Zealand dollars." }),
+  // Two panels rather than four. Language and units are one question — how the
+  // app talks to you — and distance and the maps app are the other: how it gets
+  // you to a place. Splitting each into its own row made the index longer to
+  // read without making any single choice clearer (owner, 2026-08-16). Each half
+  // keeps its own sub-heading inside, so nothing lost its label.
+  const localePanel = el("div", { className: "settings-panel" }, [
+    el("p", { className: "settings-sub", textContent: "Language" }),
+    el("p", {
+      className: "settings-note",
+      textContent:
+        "The language of the app’s buttons and labels. Menus stay as each place wrote them.",
+    }),
+    lang.group,
+    el("p", { className: "settings-sub", textContent: "Units" }),
+    el("p", {
+      className: "settings-note",
+      // Was "Menu prices stay in New Zealand dollars", which stopped being true
+      // when a place gained its own currency (ADR 0043). Prices are not a unit
+      // preference at all — you pay the menu price, in the menu's currency —
+      // so this says what it does cover and points at where the rest is said.
+      textContent:
+        "How distances and oven temperatures are shown. Prices always stay in each place’s own currency.",
+    }),
     units.group,
   ]);
-  const mapsPanel = el("div", { className: "settings-panel" }, [
-    el("p", { className: "settings-note", textContent: "Which app opens when you tap a place’s address." }),
+  const placesPanel = el("div", { className: "settings-panel" }, [
+    el("p", { className: "settings-sub", textContent: "How far you’ll go" }),
+    el("p", {
+      className: "settings-note",
+      textContent: "How far you’ll go, and how many branches of one place you see.",
+    }),
+    far.row,
+    fav.row,
+    el("p", { className: "settings-sub", textContent: "Directions" }),
+    el("p", {
+      className: "settings-note",
+      textContent: "Which app opens when you tap a place’s address.",
+    }),
     maps.group,
   ]);
-  const langPanel = el("div", { className: "settings-panel" }, [
-    el("p", { className: "settings-note", textContent: "The language of the app’s buttons and labels. Menus stay as each place wrote them." }),
-    lang.group,
-  ]);
 
-  // The index, in order: safety first, then how-far, then the rest. `summary`
-  // is re-run by sync() on every store change, so a row always reads true.
+  // The index, grouped by the question each row answers, and ordered by how
+  // often it gets asked: who is this (a hand-off between two people is the most
+  // common reason to open Settings), what can they eat, then how the app finds
+  // and shows things, then housekeeping. `summary` is re-run by sync() on every
+  // store change, so a row always reads true.
   const TOPICS = [
-    { key: "diet", title: "Food preferences", i18n: null, panel: dietPanel, summary: (s) => dietSummary(s) },
-    { key: "distance", title: "Distance", i18n: null, panel: distancePanel, summary: (s) => `Hide places past ${formatDial(s.farKm, "farKm", s.units)}` },
-    { key: "units", title: "Units", i18n: "settings.unitsTitle", panel: unitsPanel, summary: (s) => UNIT_OPTIONS.find((o) => o.key === s.units)?.label ?? "" },
-    { key: "maps", title: "Maps app", i18n: null, panel: mapsPanel, summary: (s) => MAPS_APPS.find((m) => m.key === s.mapsApp)?.label ?? "" },
-    { key: "lang", title: "Language", i18n: "settings.langTitle", panel: langPanel, summary: (s) => (s.lang === "mi" ? "Te Reo Māori" : "English") },
     { key: "people", title: "Who’s using Faves?", i18n: "profile.title", panel: people.panel, summary: peopleSummary },
+    { key: "diet", title: "Food preferences", i18n: null, panel: dietPanel, summary: (s) => dietSummary(s) },
+    {
+      key: "places",
+      title: "Distance & directions",
+      i18n: "settings.placesTitle",
+      panel: placesPanel,
+      // Both halves in one line, in panel order, so the row still says what
+      // each setting is currently on.
+      summary: (s) =>
+        `Hide places past ${formatDial(s.farKm, "farKm", s.units)} · ${
+          MAPS_APPS.find((m) => m.key === s.mapsApp)?.label ?? ""
+        }`,
+    },
+    {
+      key: "locale",
+      title: "Language & units",
+      i18n: "settings.localeTitle",
+      panel: localePanel,
+      summary: (s) =>
+        `${s.lang === "mi" ? "Te Reo Māori" : "English"} · ${
+          UNIT_OPTIONS.find((o) => o.key === s.units)?.label ?? ""
+        }`,
+    },
     { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save a copy, bring it back, or hand it to another device" },
     { key: "refreshReset", title: "Refresh & reset", i18n: "settings.refreshResetTitle", panel: storage.panel, summary: () => "Refresh the offline copy, or reset your preferences" },
   ];

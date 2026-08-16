@@ -115,7 +115,11 @@ const MI = {
   "footer.about": "Mō tēnei me te tūmataiti", // draft
   // Settings dialog
   "settings.title": "Ngā Tautuhinga",
-  "settings.langTitle": "Te Reo",
+  // Language and units share one row now, so the two old keys
+  // ("settings.langTitle" = "Te Reo", "settings.unitsTitle" = "Ngā Waeine")
+  // are recombined rather than replaced — no new vocabulary, so nothing here
+  // needs a fluent speaker to have judged a word we invented.
+  "settings.localeTitle": "Te Reo me ngā Waeine", // draft
   // Update notice (a newer app version is waiting). "whakahou" = renew /
   // refresh / update and "putanga" = issue, edition, both per
   // maoridictionary.co.nz; "ā muri ake" = later, afterwards.
@@ -123,7 +127,10 @@ const MI = {
   "update.refresh": "Whakahoutia", // draft
   "update.refreshing": "E whakahou ana…", // draft
   "update.later": "Ā muri ake", // draft
-  "settings.unitsTitle": "Ngā Waeine", // draft — "the units of measurement"
+  // Distance and the maps app share a row. "mamao" = distance and "aratohu" =
+  // to guide/direct, both per maoridictionary.co.nz; "ngā aratohu" reads as
+  // "the directions". Flagged for the fluent-speaker queue like the rest.
+  "settings.placesTitle": "Te Mamao me ngā Aratohu", // draft
   // "Your data" — save a copy, bring one back, hand one to your other device
   // (draft). Only the neutral chrome is swapped: the import review itself
   // stays English, because most of it is interpolated counts and the rest is
@@ -139,7 +146,7 @@ const MI = {
   "data.transferButton": "Hangaia he hono whakawhiti", // draft — "make a transfer link"
   // Row title for the panel Theme 15 split "Your data" into: refresh the
   // app's cached menus/code, or reset this profile's preferences. Paired
-  // with "settings.langTitle"/"settings.unitsTitle" above, not "data.*" —
+  // with "settings.localeTitle"/"settings.placesTitle" above, not "data.*" —
   // it's an index-row title, not part of the personal-data-blob group.
   // whakahou = renew/refresh/update (per maoridictionary.co.nz, used already
   // for "update.refresh" above); tautuhi = to set/specify, the same root as

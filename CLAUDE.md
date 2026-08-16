@@ -134,6 +134,17 @@ warnings, hearts and ratings re-apply live with no reload. It is dev
 tooling only; nothing it needs ships in `site/`. Run it after touching
 `menu.js`, `dietary.js`, `settings*.js` or `profiles.js`.
 
+`boot_check.mjs` answers the dullest question the other two never asked: does
+each screen's JavaScript actually *run*? It loads the home screen and a menu
+page on a fresh profile, watches the console, and asserts the page was drawn by
+`app.js`/`menu.js` rather than by the fail-soft no-JS `<ul>` standing in for it.
+It exists because on 2026-08-16 `app.js` called `venueTimezone` without
+importing it, `init()` threw, the home screen silently served the static list,
+and **570 unit tests, `device_check` 19/19 and `cook_check` 36/36 were all
+green** — the first two drive a menu page, and the fallback made the wreck look
+like a working list of places. Run it after touching any module on a page's
+import graph, which in practice means most changes under `site/js/`.
+
 `cook_check.mjs` is its sibling for cook mode (ADR 0039), on the same
 harness (`tools/lib/browser.mjs`): it opens a real recipe, steps through
 it, works every exit path, and watches the **real** `navigator.wakeLock`
