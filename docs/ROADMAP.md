@@ -3394,6 +3394,137 @@ them the unfixable class. That is a scanner whose output can still be read.
   "the source did not move" degrades to nothing the moment the source moves —
   it never says whether the *copy* is right, only whether the question was easy.
   (First verified 2026-08-09; re-verified 2026-08-15 at `bde4928`.)
+  ⚠️ **Re-checked 2026-08-17 at `atelier@1408d98` — pin CLEAN, copy is NOT.**
+  Drift check run independently: `HEAD == main == origin/main == 1408d98`, so
+  the stale-checkout confound was excluded before the range was believed, and
+  `1408d98..origin/main` is genuinely empty. **The source did not move; the
+  copy was still wrong** — which is the point the item exists to make, now
+  demonstrated rather than asserted.
+  🔑 **The comparison was being made against the wrong artefact.** The
+  canonical thing a stamped copy copies is not the four method docs — it is the
+  **floor region in `PROPAGATION.md`**, shipped between `floor:begin` /
+  `floor:end` markers and the exact text `stampscan` would diff us against.
+  Read that way the block splits three ways, and only the middle group is ours:
+  - **Faithful to the region:** the floor stop-list, the informed-confirmation
+    triple, the principal's-authority-is-absolute wording (the 2026-08-15
+    correction), record naming, estate-resources, visibility. No drift.
+  - 🚩 **Ours, and diverging from the region — three places.** (1) The apex
+    bullet substitutes three `00-APEX` practice clauses for the region's
+    *ordering rationale* ("adaptation runs on evidence, and honesty is what
+    makes the evidence trustworthy"). Richer, not wrong — but it is a fork, and
+    `stampscan` will red on it the day ST3 lands. (2) The
+    **dirty-primary-checkout passage is not in the region at all** — we inlined
+    it from `CONCURRENCY.md`'s body on 2026-08-16. (3) `Source & drift`
+    rewrites the region's command.
+  - **Absent from the region too, so inherited faithfully and owed UPSTREAM,
+    not here:** `RECORD`'s *boundary is the balance* (a mid-sequence pause
+    carries no close-obligation), `RECORD`'s *bulk deletion from a record store
+    is show-first regardless of who made the mess*, `ECONOMICS` item 1 (*a task
+    is a coherent line of work*). All three are dropped-MAY clauses; none is
+    our fault.
+  🛑 **The dirty-checkout rule DEADLOCKED THREE SESSIONS AT ONCE on
+  2026-08-17 — and the defect is UPSTREAM, not in our copy.** Atelier's rule
+  keys on the **item's file**: *"If the item's file itself is dirty: that is
+  positive proof the other session is queue-active — sync, take the next open
+  item, touch nothing."* This board is **monolithic** — `docs/ROADMAP.md`,
+  5,402 lines, 53 claimable items, one file, no `docs/roadmap/`, no
+  `board.py` — so the item's file simply **is** `ROADMAP.md`, and our inlined
+  line is a *faithful* application. **The yield branch is what does not
+  generalise:** "take the next open item, touch nothing" silently assumes the
+  next open item lives in a *different* file, which is true on a split board
+  and false on ours. So both halves point at one file and the rule collapses —
+  *take the next open item* names the file *touch nothing* just forbade, and a
+  session can claim nothing at all while any peer holds the queue file, which
+  is most of the time at five live sessions.
+  🔑 **An initial reading of this as "we mistranslated it" was WRONG and was
+  corrected by a peer who went and read the source rather than taking the
+  claim on trust.** Atelier's parenthetical — *"(the item's file, and **on a
+  split board** the generated index with it)"* — is a conditional that
+  contemplates both board shapes; it never completes the thought for the
+  monolithic one. **Getting the attribution right is the whole practical
+  difference:** filed as a local wording bug it sends the fix to the wrong
+  file and leaves every other monolithic-board adopter in the same trap.
+  🔎 **The strongest form of the argument is that atelier is internally
+  inconsistent, not merely silent.** Its *first* branch already sanctions
+  hunk granularity in as many words — *"stage and commit the claim alone,
+  nothing else … safe because it stages only your own hunks"* — and its rebase
+  guidance is line-granular (*"put the `[~]` on the item's checkbox line so a
+  same-item collision always fires on one line"*). The yield branch is the one
+  place the passage jumps to **file** granularity. ⚠️ That checkbox-line
+  sentence is about *rebase-collision granularity*, not about whether a dirty
+  file bars a write — it is evidence that the unit is coherent, not a
+  statement of the yield rule. Say so when putting it up; it is an
+  extrapolation, and a good one, but not a quotation.
+  🔎 **Empirical, from the same day, and it cuts BOTH ways — neither half may
+  be dropped.** *For* the line-level unit: a peer did exactly this, twice,
+  writing four claim releases into `ROADMAP.md` while another session's hunks
+  sat in the same file, staging its own alone via
+  `git apply --cached --unidiff-zero`; the stranger's work was untouched and
+  `78bd39e` landed clean. **Against it:** an index collision happened *anyway*
+  — for about a minute the index held both sessions' work sets, and
+  hunk-staging did not prevent it. What caught it was
+  `git diff --cached -U0 | grep '^@@'`, and nothing else; `git status` looked
+  normal throughout.
+  🛑 **So the honest proposal is CONDITIONAL and weaker than "the line is the
+  unit": the relaxation is safe only if a pre-commit index check ships WITH
+  it.** The file-level rule was accidentally doing that protective work —
+  crudely, by keeping everyone out. Relax it without making the index check
+  compulsory and five sessions will land each other's half-written hunks under
+  the wrong commit message. And make the test **mechanical, not spatial**:
+  `git diff -U0 docs/ROADMAP.md`, then check whether any hunk header's line
+  range intersects your item's line range. "Nowhere near" degrades as the file
+  grows and gives different readers different answers; an intersection test
+  gives every reader the same one, which is the property the current clause
+  lacks.
+  🤔 **And the framing to put to the owner honestly: the monolith is the root
+  cause.** Every claim collision, the `SHELL_VERSION` collisions, the
+  ADR-number collisions and this deadlock are one shape — a shared mutable
+  file with no per-item granularity. A line-level patch makes the monolith
+  *survivable*; it does not fix the rule. The split board is the fix atelier
+  already has.
+  🔎 **We also inlined half of `RECORD`'s CI rule.** Our close clause ("the
+  all-clear cites the pushed CI result, or flags it pending") is beyond the
+  region and faithful — but it drops the sub-rule that makes it work: *a
+  cancelled run is not a result, and a concurrent session cancels yours as a
+  matter of routine*. Under five parallel sessions that is the routine case,
+  not the exotic one, so the clause we kept can be satisfied by evidence the
+  source explicitly rejects. Enriching past the region means owning the whole
+  clause.
+  ✅ **`00-APEX`: no drift.** Both 2026-08-15 changes are correctly carried,
+  and the removed Laws section left no residue (grepped: zero hits).
+  🎯 **Three decisions, all the owner's — raised 2026-08-17, none actioned.**
+  (a) Re-word the dirty-checkout clause for a monolithic board so claiming
+  stays possible; the honest reading is that the *item's line* is the unit, not
+  the file — which matches atelier's own instruction to put the `[~]` on the
+  item's checkbox line. (b) Add the cancelled-run sub-clause, or drop our CI
+  clause back to the region's wording. (c) Decide whether we keep forking the
+  apex and `Source & drift` wording deliberately (and record why) or
+  re-converge before ST3 lands and `stampscan` starts reding it.
+  🚩 **ST3 is still OPEN** — re-checked 2026-08-17: atelier's own roadmap
+  carries it as `- [ ]` (D2 residue), corroborated by its own tool
+  documentation ("that is ST3, still open") and its changelog. Markers still
+  cannot be adopted here; the hand-check remains the only mechanism.
+  🛑 **And the documented drift command is INOPERABLE from a worktree, which is
+  this repo's default mode for all write-heavy work.** `git -C "../atelier"`
+  resolves to `/Users/mike/.pets/atelier` from the primary checkout and to
+  `/Users/mike/worktrees/atelier` — which does not exist — from any worktree.
+  It fails **loudly** (`fatal:`, rc=128) rather than silently, so it is not a
+  textbook decorative guard; but **both** readings of its output are wrong.
+  Read as stdout only — the commit list the instruction tells you to read — it
+  is *empty*, byte-identical to a genuine clean run. Read as all output, the
+  `fatal:` line trips the stated rule that *"any output means the house
+  doctrine moved"*, a false positive. Worktrees live at `~/worktrees/`,
+  outside the tree, by deliberate decision. Nothing automates this: there is no
+  pin or drift script in `tools/` at all.
+  🚩 **Three findings owed upstream to atelier** (queue-never-deliver; nothing
+  to fix here), handed to the live atelier session 2026-08-17: the region's own
+  `Source & drift` command is `git -C <path> log --oneline <SHA>..HEAD` — **no
+  fetch, and `HEAD` not `origin/main`** — so every child on the floor ships the
+  exact stale-checkout silent-pass this repo diagnosed and fixed locally on
+  2026-08-09; the region's *"Everything recoverable — commit/push/PR included —
+  just proceed"* sits against `RECORD.md`'s *"Recoverability of bytes is the
+  wrong test for a record store"* with no boundary drawn between them; and CF3
+  itself may want an explicit monolithic-board branch.
 
 ✅ **Done** — **"Open now"** live status + filter (2026-07-08, ADR 0006);
 **shareable group shortlist links** (2026-07-10, ADR 0009); the **te reo Māori**
