@@ -2083,7 +2083,21 @@ asked on this screen.
   fact *about* the app" but "which outcome is someone chasing when they need
   it". Evidence and the action that acts on it belong together.
 
-- **23d — the restaurant cards are getting busy** `[M]` 🎯. Owner, 2026-08-16:
+- ✅ **23d — the restaurant cards are getting busy — DELIVERED 2026-08-16.**
+  The owner returned with a spec rather than leaving it open: drop the
+  service line, move the open/closed badge up beside the suburb with a
+  traffic-light dot, keep cuisine and the per-person estimate, and show the
+  *nearest* branch for a multi-branch venue with that branch's own hours. All
+  shipped. The branch half was the substantive one — `venueHours` already
+  followed the nearest branch while the suburb came from the venue's top
+  level, so one branch's hours could sit under another's name. Branches carry
+  `label`, not `area`; reading `area` was a silent no-op caught only by
+  checking the real corpus. What remains open from the original framing is the
+  narrower question below, kept because it was never answered: whether `$$`
+  *and* `~$16pp` are two answers to one question, and whether three cuisine
+  chips beat one plus a count.
+
+  Original framing, kept for the open part. Owner, 2026-08-16:
   each listing now carries name, suburb, services, open state and closing
   time, price band, per-person estimate and up to three cuisines — *"consider
   what is valuable to show on this page and what should be scaled based on
