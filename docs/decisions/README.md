@@ -623,6 +623,21 @@ deliberation those compact docs omit.
   recipe looks finished. Measured 204/204 byte-identical at 1×; 20 of 24
   recipes double clean, 14 halve. Times never scale — under-scaling a meat
   time is a food-safety failure, not a bad dinner.
+- [0082](0082-vibe-is-a-closed-vocabulary-with-facets.md) — **`vibe` is a
+  closed vocabulary with facets, and every value is rendered.** Four owner
+  rulings on 37k, taken after he was shown the strongest case AGAINST building
+  it (`priceBand`, the only comparable curated-judgement field, sits at 8 of
+  55). 🔑 That objection is answered by removing its premise: the field waits on
+  **him**, the same footing menu content already has. Two rulings were broader
+  than the questions asked — **validate ALL of `vibe`, not a style subset**
+  (it had grown five strings for one idea while `priceBand` had a check and it
+  had none), and **render the chips**, closing an inherited ADR 0047 breach
+  where `vibe` had been precached to every phone with **zero** references in
+  `site/`. A **built-vs-never-runs** case, not an abandoned field — which is
+  why deleting it would have been the wrong cheap answer. Three facets, and
+  `amenity` exists so the style vocabulary cannot swallow `dog friendly` or
+  `byo` (21 of 38 taggings). Vocabulary stated once in `site/js/vibes.js`;
+  `validate.py` **reads that file** and dies loudly on a zero-key parse.
 - [0077](0077-style-of-dining-is-not-the-cuisine-axis-work.md) — **"style of
   dining" is not Theme 30's cuisine-axis work.** Clears 37k's blocking 🚩 and
   nothing else. They sit at different levels: Theme 30's `service` is metadata
