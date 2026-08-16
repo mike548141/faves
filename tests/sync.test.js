@@ -345,3 +345,38 @@ test("a blob that will not decrypt is refused rather than overwritten", async ()
   assert.equal(server.puts, before, "overwriting an unreadable blob would destroy whatever it really is");
   assert.ok(code);
 });
+
+// --- the half that only exists in a browser -------------------------------
+
+test("a pull re-points the live stores, not just localStorage", async () => {
+  // The bug this pins: writeSnapshot changes localStorage, but the live
+  // favourites/ratings/settings singletons hold their state IN MEMORY. Without
+  // an onApplied hook the synced data is correct on disk and every open screen
+  // keeps rendering what it read at load — a heart arrives and nothing moves.
+  // Invisible to every other test in this file, because they all read storage
+  // directly. It took a real browser to find, and this is what keeps it found.
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  let repointed = 0;
+  const s = mk(a, server, { onApplied: () => { repointed += 1; } });
+  await s.enable();
+  assert.equal(repointed, 1, "a successful sync must re-point the live stores");
+});
+
+test("a failed sync does not claim to have re-pointed anything", async () => {
+  const a = device({ favs: [venue("kk")] });
+  let repointed = 0;
+  const dead = { fetch: async () => { throw new Error("offline"); } };
+  const s = mk(a, dead, { onApplied: () => { repointed += 1; } });
+  a.setItem(SYNC_KEY, JSON.stringify({ code: "K7F29DMX4QRA" }));
+  await s.syncNow();
+  assert.equal(repointed, 0);
+});
+
+test("a screen that throws while repainting does not fail the sync", async () => {
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  const s = mk(a, server, { onApplied: () => { throw new Error("render blew up"); } });
+  const res = await s.enable();
+  assert.notEqual(res.ok, false, "a repaint fault must not lose a completed sync");
+});

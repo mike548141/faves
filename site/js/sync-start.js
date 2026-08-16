@@ -18,6 +18,7 @@
 import { favourites } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { settings } from "./settings.js";
+import { reloadProfileStores } from "./profiles.js";
 import { sync } from "./sync.js";
 
 /**
@@ -30,7 +31,16 @@ import { sync } from "./sync.js";
  */
 export function startSync() {
   try {
-    return sync.start({ stores: [favourites, ratings, settings] });
+    return sync.start({
+      stores: [favourites, ratings, settings],
+      // The half that only exists in a browser: a pull rewrites localStorage,
+      // and these three singletons hold their state in memory. Without this the
+      // synced data is correct on disk and every open screen keeps rendering
+      // what it read at load — a heart arrives and nothing moves until reload.
+      // Order is load-bearing inside reloadProfileStores (settings last, so the
+      // allergen repaint runs after the data it reads is in place).
+      onApplied: () => reloadProfileStores({ favourites, ratings, settings }),
+    });
   } catch {
     // A fault in an optional backend feature must never take a screen down
     // with it — the menu, the hearts and the order tally all work offline and

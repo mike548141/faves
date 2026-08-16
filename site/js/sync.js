@@ -179,6 +179,12 @@ export function createSync({
   debounceMs = DEBOUNCE_MS,
   setTimer = globalThis.setTimeout?.bind(globalThis),
   clearTimer = globalThis.clearTimeout?.bind(globalThis),
+  // Called after a pull has been written to storage. `writeSnapshot` changes
+  // localStorage, and the live favourites/ratings/settings singletons hold
+  // their state IN MEMORY — so without this the data is correct on disk and
+  // every screen keeps showing what it read at load. Injected rather than
+  // imported so the engine stays free of the live stores (see sync-start.js).
+  onApplied = () => {},
 } = {}) {
   const subs = new Set();
   let state = OFF;
@@ -187,6 +193,7 @@ export function createSync({
   let timer = null;
   let inFlight = null;
   let started = false;
+  let applied = onApplied;
 
   const readConfig = () => parse(storage.getItem(SYNC_KEY)) || {};
   const writeConfig = (patch) => {
@@ -310,6 +317,13 @@ export function createSync({
 
         // 4. only now is this an agreement: apply locally and record the base.
         writeSnapshot(storage, merged);
+        // Before the base, deliberately: if re-pointing the live stores throws,
+        // the base must not claim an agreement whose local half never landed.
+        try {
+          applied(merged);
+        } catch {
+          /* a screen that failed to repaint is not a reason to fail the sync */
+        }
         writeBase(merged);
         writeConfig({ lastSyncedAt: now() });
         setState(IDLE);
@@ -414,7 +428,11 @@ export function createSync({
      * called them. Idempotent, because three page entry points call it and a
      * tab can be shown and hidden repeatedly.
      */
-    start({ stores = [], doc = globalThis.document } = {}) {
+    start({ stores = [], doc = globalThis.document, onApplied: hook } = {}) {
+      // Set even on a repeat call: the first screen to start wins the listeners,
+      // but every screen needs its OWN stores re-pointed after a pull, and a
+      // silently-ignored hook here is how a pull lands on disk and on no screen.
+      if (typeof hook === "function") applied = hook;
       if (started) return () => {};
       started = true;
       const offs = [];
