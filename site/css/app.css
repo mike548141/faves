@@ -4935,10 +4935,19 @@ body.faves-view .to-top {
 
 /* About dialog. Reuses .settings-sheet for the sheet/backdrop/head; these
    style only its prose. */
+/* The two lede paragraphs are one statement — what Faves is, and the limit
+   that follows from it — so they sit a paragraph apart and the group gap goes
+   on the wrapper. A wrapper rather than a :has() or a negative margin: the gap
+   belongs to the block, not to whichever paragraph happens to be last. */
+.about-intro {
+  margin-bottom: var(--space-4);
+}
 .about-lede {
   color: var(--ink);
   line-height: 1.55;
-  margin-bottom: var(--space-4);
+}
+.about-lede + .about-lede {
+  margin-top: var(--space-2);
 }
 .about-group {
   margin-bottom: var(--space-4);

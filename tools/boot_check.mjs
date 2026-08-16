@@ -173,7 +173,7 @@ const SETTINGS_DATA_SECTIONS = ["Bring data back in", "Sync across your devices"
 // About is a dialog nothing else opens, and it has twice now accumulated a
 // block because some item needed somewhere to put one (ROADMAP Theme 23). A
 // block added here without a decision fails this list.
-const ABOUT_GROUPS = ["Private by design", "Prices", "Opening hours", "Works offline"];
+const ABOUT_GROUPS = ["Private by design", "Works offline"];
 
 async function bootScreen(cdp, sessionId, driver, report, base, screen, venueId) {
   const errors = [];
