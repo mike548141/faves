@@ -383,6 +383,9 @@ delivery app.** Clear one by bringing back the fact.
 - [~] **Menus still owed on six venues — and where each one lives**
       `[M][content]`. Researched 2026-08-16 and written down here so a fresh
       session can start rather than repeat it.
+      **CLAIMED 2026-08-16 15:05 UTC (wt: faves-menus2)** — Subway and The
+      Victoria Tavern, both under owner rulings taken at the close of the
+      previous worktree (below).
       ✅ **8 of the 14 DONE 2026-08-16 (wt: faves-menus) — 983 dishes.**
       The Catch Sushi Bar 87 · Satay Kingdom 53 · Charley Noble 125 · Regal
       Chinese 264 · Rock Yard Vietnamese 58 · Pizza Pomodoro 83 · Gong Cha 131 ·
