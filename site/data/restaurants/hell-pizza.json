@@ -729,6 +729,8 @@
   "ordering": [],
   "vibe": [],
   "picks": [],
+  "priceBand": "$$",
+  "pricePerPerson": 24,
   "verified": null,
   "detailsVerified": "2026-08-16",
   "detailsVerifiedBy": "official-site",

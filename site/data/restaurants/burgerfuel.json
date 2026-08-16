@@ -228,6 +228,8 @@
     "V-Rod",
     "Kūmara fries"
   ],
+  "priceBand": "$$",
+  "pricePerPerson": 16,
   "verified": "2026-08-15",
   "verifiedBy": "in-store",
   "detailsVerified": "2026-08-16",
