@@ -22,6 +22,38 @@ export function deriveFacets(restaurants) {
 }
 
 /**
+ * The two facets a URL can carry into the home list: `index.html?cuisine=
+ * Malaysian`, `?area=Johnsonville`. A venue's subheading links its own
+ * cuisines and area this way (menu.js), so "Malaysian · Johnsonville" on a
+ * menu page is a route back to every other Malaysian place, not just a label.
+ * Both ends read the names from here so they cannot drift apart.
+ */
+export function filterHref(facet, value, page = "index.html") {
+  return `${page}?${facet}=${encodeURIComponent(value)}`;
+}
+
+/**
+ * Read those facets back out of a query string, keeping only values the data
+ * actually has — `facets` is deriveFacets' output. An unknown value ("?cuisine=
+ * Klingon", or a cuisine we've since renamed) becomes "all" rather than being
+ * trusted: a <select> handed a value with no matching <option> silently falls
+ * back to its first one, so the control would read "All cuisines" while the
+ * state filtered on Klingon and the list came back empty. Better to show the
+ * whole list than a blank one under a control claiming nothing is wrong.
+ */
+export function filtersFromQuery(search, facets) {
+  const params = new URLSearchParams(search || "");
+  const pick = (key, allowed) => {
+    const v = params.get(key);
+    return v && allowed.includes(v) ? v : "all";
+  };
+  return {
+    area: pick("area", facets.areas || []),
+    cuisine: pick("cuisine", facets.cuisines || []),
+  };
+}
+
+/**
  * Filter state shape:
  * { service: 'all'|'takeaway'|'dine-in', area, cuisine, openNow: bool,
  *   cheap: bool }.

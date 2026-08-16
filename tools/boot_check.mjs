@@ -201,6 +201,60 @@ async function run(opts) {
       await bootScreen(cdp, sessionId, driver, report, base, screen, venueId);
     }
 
+    // The subheading facets are a route, not a label: tapping "Malaysian" on a
+    // menu page has to land on a home list genuinely filtered to Malaysian,
+    // with the dropdown above it saying the same. The unit tests cover each
+    // end's URL helper in isolation; only a browser can show the two screens
+    // agreeing across a real navigation — which is exactly where this would
+    // break (a renamed class, a param one side stopped reading).
+    try {
+      await cdp.send(
+        "Page.navigate",
+        { url: `${base}/restaurant.html?id=${encodeURIComponent(venueId)}` },
+        sessionId
+      );
+      await until(() => driver.evalPage(`!!document.querySelector(".menu-sub-link")`), {
+        label: "menu: the subheading facets rendered",
+      });
+      const facet = await driver.evalPage(`(() => {
+        const a = document.querySelector(".menu-sub-link");
+        return {
+          href: a.getAttribute("href") || "",
+          text: a.textContent.trim(),
+          label: a.getAttribute("aria-label") || "",
+        };
+      })()`);
+      report.check(
+        "menu: a subheading facet is a link into the filtered list",
+        /^index\.html\?(cuisine|area)=/.test(facet.href) && facet.label.length > facet.text.length,
+        JSON.stringify(facet)
+      );
+
+      await cdp.send("Page.navigate", { url: `${base}/${facet.href}` }, sessionId);
+      await until(
+        () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
+        { label: "home: arrived with a facet filter" }
+      );
+      const landed = await driver.evalPage(`(() => {
+        const key = new URLSearchParams(location.search).has("area") ? "filter-area" : "filter-cuisine";
+        return {
+          count: (document.querySelector("#result-count")?.textContent ?? "").trim(),
+          control: document.getElementById(key)?.value ?? "",
+          cards: document.querySelectorAll("#restaurant-list > *").length,
+        };
+      })()`);
+      // "n of N places" (not the bare "N places") is what proves the filter
+      // actually bit — a control set to Malaysian over the untouched full list
+      // is the exact half-wired failure worth catching.
+      report.check(
+        "home: arriving with a facet filters the list and the control agrees",
+        landed.control === facet.text && landed.cards > 0 && / of /.test(landed.count),
+        JSON.stringify(landed)
+      );
+    } catch (e) {
+      report.check("menu → home: the subheading facet links work", false, String(e.message || e));
+    }
+
     // Back to the home screen for the Settings index. Wrapped because a home
     // screen that never booted cannot open a dialog either — one failure, not
     // an unhandled rejection that buries the diagnosis printed above it.

@@ -2634,6 +2634,33 @@ body.faves-view .to-top {
 .menu-sub {
   color: var(--ink-soft);
   margin-top: var(--space-1);
+  /* Roomier than a normal line so the link rows don't crowd each other once
+     the subheading wraps to two lines on a phone. */
+  line-height: 1.7;
+}
+/* Each cuisine and the area are links into the filtered list. They have to
+   read as tappable without turning a quiet caption into a row of blue —
+   hence a dotted underline (a "there's more here" signal, not a shout) that
+   goes solid and accented on hover/focus. Inline links inside a sentence are
+   the documented exception to the 44 px target rule (WCAG 2.2 SC 2.5.8), so
+   these stay text-sized; the padding just buys a little slack for thumbs. */
+.menu-sub-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  padding: 0.15em 0;
+}
+.menu-sub-link:focus-visible {
+  color: var(--accent);
+  text-decoration-style: solid;
+}
+@media (hover: hover) {
+  .menu-sub-link:hover {
+    color: var(--accent);
+    text-decoration-style: solid;
+  }
 }
 .btn {
   display: inline-flex;

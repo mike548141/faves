@@ -2144,6 +2144,22 @@ asked on this screen.
   a chip no longer hides the fact. Judge against the card's job — *choose
   somewhere to eat* — not against completeness.
 
+- ✅ **23e — the venue subheading was a dead end — DELIVERED 2026-08-16.**
+  Owner, raw: *"In the sub heading that says 'Asian · Malaysian · Noodles —
+  Johnsonville' I should be able to click on things like the word Malaysian or
+  Johnsonville and jump to a search/filtered list of the restaurants that meet
+  that criteria."* Every facet in that line is now a link into the home list
+  filtered to it, carried as `index.html?cuisine=…` / `?area=…`; the dropdowns
+  are set from the URL and the URL is rewritten as they change, so control and
+  list can't disagree, and a filtered list is shareable. `filters.js` owns both
+  ends (`filterHref` / `filtersFromQuery`), and an unknown value falls back to
+  "all" rather than silently emptying the list under a control saying otherwise.
+  🔎 **The adjacent one that doesn't work the same way** — the *cards* on the
+  home screen carry cuisine chips too, but each card is already one big `<a>`,
+  and a link inside a link is invalid HTML. Making those chips filter needs the
+  card's hit area restructured (23d territory), so it is left for whoever takes
+  23d rather than bolted on here.
+
 - **23b — one voice, written down** `[S→M]` 🎯. There is no tone guide, so the
   voice drifts between blocks — some prose addresses "you", some describes the
   system, some is caption-shaped. Write the guide (plain New Zealand English,

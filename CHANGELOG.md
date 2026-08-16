@@ -8,6 +8,15 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **A venue's cuisines and suburb are now links.** "Asian · Malaysian ·
+  Noodles — Johnsonville" under a venue's name used to be a label; tap any
+  part of it and you land on the full list filtered to it — every Malaysian
+  place, or everything in Johnsonville — with the dropdown up top set to
+  match, so it's obvious why the list is short and one tap to widen again.
+  The address bar carries the filter (`?cuisine=Malaysian`), so a filtered
+  list is a link you can share or bookmark.
+
 ### Changed
 - **The restaurant cards are quieter.** "Dine-in, Takeaway" is gone — nearly
   every place offered both, so it separated almost nothing, and service is
