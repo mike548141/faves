@@ -106,6 +106,7 @@ const SHELL = [
   "js/slug.js",
   "js/sync-code.js",
   "js/sync-start.js",
+  "js/sync-ui.js",
   "js/sync-crypto.js",
   "js/sync-merge.js",
   "js/sync.js",

@@ -3128,6 +3128,46 @@ body.faves-view .to-top {
   font-weight: 600;
 }
 
+/* --- Sync across your devices (ADR 0017, ADR 0060) -----------------------
+   The Settings topic for continual cross-device sync (sync-ui.js). It reuses
+   share-qr/share-qr-canvas (the QR), import-q/import-q-safety/import-choice/
+   import-radio (the allergen-conflict question — ADR 0060 deliberately reuses
+   ADR 0030's three-way import choice, so it looks like the same question),
+   the profile-btn family, settings-reset and settings-note/-hint/-sub for
+   everything else. Only the sync code itself — the bearer secret a person
+   reads off one screen and types into another — needed anything new. */
+.sync-code-display {
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* clamp(), not a fixed size: "big" at a 390px dialog width still has to fit
+     "K7F29-DMX4Q-RA37B" without wrapping mid-group. */
+  font-size: clamp(1.15rem, 5vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  word-break: break-all;
+  user-select: all; /* one tap/click selects the whole code — never make someone drag-select a secret */
+}
+.sync-code-block {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-2) 0;
+}
+/* A visual break between two unrelated actions inside one panel view (today:
+   the "off" screen's primary "Turn on sync" vs. its secondary "I already
+   have a code" path) — the same border-plus-space treatment import-block/
+   transfer-block use to separate "save a copy" from "bring one back". */
+.sync-divider {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.001ms !important;

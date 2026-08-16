@@ -112,6 +112,9 @@ const SETTINGS_ROWS = [
   "Distance & directions",
   "Language & units",
   "Your data",
+  // Theme 9 v2. Sits next to "Your data" on purpose: both are about where a
+  // person's own data goes, and the two are easy to confuse if separated.
+  "Sync across your devices",
   "Refresh & reset",
 ];
 

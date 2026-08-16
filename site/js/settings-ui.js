@@ -23,6 +23,10 @@
 //   • People — the device-local profile roster (add / rename / delete).
 //   • Your data — export everything, import a backup, or transfer one person
 //     to another device. All three move the personal data blob itself.
+//   • Sync across your devices — continual cross-device sync (ADR 0017, ADR
+//     0060), built and tested entirely in sync-ui.js/sync.js; this file only
+//     places its row and panel. A one-off transfer (above) copies a moment in
+//     time; sync keeps two devices the same going forward.
 //   • Refresh & reset — force a full refresh of the stored menus and app
 //     code, or reset this profile's preferences. Split from "Your data"
 //     (Theme 15): its one-line summary had grown to naming five actions
@@ -50,6 +54,7 @@ import {
 } from "./personal-data.js";
 import { forceRefresh } from "./cache-refresh.js";
 import { importControls, transferControls } from "./personal-io-ui.js";
+import { syncControls } from "./sync-ui.js";
 import { disclosure } from "./disclosure.js";
 import { el } from "./dom.js";
 import { closeButton, wireDialog } from "./dialog.js";
@@ -650,6 +655,7 @@ export function initSettingsUI() {
 
   const people = peopleSection();
   const data = dataSection();
+  const syncCtl = syncControls();
   const storage = refreshResetSection();
   // "Local" heads all three localisation lists: it is the default, and it is
   // the answer most readers want without knowing they want it (ADR 0045).
@@ -869,6 +875,7 @@ export function initSettingsUI() {
       summary: (s) => localeSummary(settings.raw(), s),
     },
     { key: "data", title: "Your data", i18n: "data.title", panel: data.panel, summary: () => "Save a copy, bring it back, or hand it to another device" },
+    { key: "sync", title: "Sync across your devices", i18n: null, panel: syncCtl.panel, summary: () => syncCtl.summary() },
     { key: "refreshReset", title: "Refresh & reset", i18n: "settings.refreshResetTitle", panel: storage.panel, summary: () => "Refresh the offline copy, or reset your preferences" },
   ];
 
@@ -885,6 +892,11 @@ export function initSettingsUI() {
     topic.row = row;
     topic.value = value;
     rows.append(el("li", {}, [row]));
+    // Sync's row has to update on the engine's own timetable (a background
+    // sync completing, another device's conflict arriving), not only when
+    // this dialog's settings()/profiles() subscriptions happen to fire — see
+    // sync-ui.js's bindRow().
+    if (topic.key === "sync") syncCtl.bindRow(value);
   }
 
   // The profile switcher sits above the rows so a hand-off between two people is
@@ -957,6 +969,7 @@ export function initSettingsUI() {
     switcherSlot.append(people.list);
     people.hidePanels(false);
     data.close();
+    syncCtl.close();
     storage.close();
     index.hidden = false;
     renderTitle();
