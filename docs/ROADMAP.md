@@ -3294,13 +3294,26 @@ printing `FAIL <assertion>` with exit 1. Detail →
       questions, not one.
       🎯 **Owner's call, and it is genuinely two decisions** — both repo
       settings, both his:
-      **(a) Promote `service-worker version lockstep` and `every screen boots`
-      to required.** Cost: a push with an unbumped version constant, or a screen
-      whose JS throws on load, starts failing instead of warning. That is the
-      intent. Do **not** extend it to `cook_check`/`sync_check` — both are
-      measurably contention-flaky and a flaky required check trains everyone to
-      hit re-run, which is worse than no check.
-      **(b) Decide whether admin bypass should stay `always`.** It is defensible
+      ✅ **(a) RULED AND DONE 2026-08-16 — required checks went 4 → 6.** Both
+      `service-worker version lockstep` and `every screen boots` are now in
+      `protect-main`'s required list; verified directly against the ruleset API,
+      not taken on report. Do **not** extend it to `cook_check`/`sync_check` —
+      both are measurably contention-flaky and a flaky required check trains
+      everyone to hit re-run, which is worse than no check.
+      ⚠️ **And the honest limit, which must stay attached to (a) wherever it is
+      quoted: the practical effect today is NIL.** `bypass_actors` is unchanged,
+      so pushes from the owner's machine still bypass all six. (a) takes effect
+      only if (b) moves. A session first reported this change as *"closing the
+      stale-menu hole"* and had to correct itself to the owner — on its own it
+      does not.
+      🔑 **What moved this, worth reusing:** the abstract argument about guard
+      layers had been in front of him for a while and did not land. What landed
+      was the concrete pairing — *the gate written because an unbumped
+      `SHELL_VERSION` shipped stale files to his own phone is the specific one
+      that cannot stop it happening again*, on a repo where a push is a deploy.
+      **A named past incident beat a principle.**
+      ⏳ **(b) Decide whether admin bypass should stay `always`** — deliberately
+      deferred by the owner, not overlooked. It is defensible
       — a solo owner locking himself out of his own default branch is a real
       cost, and the doctrine floor names lockout-class changes as
       stop-and-confirm. But while it stands, *every* required check on this repo
