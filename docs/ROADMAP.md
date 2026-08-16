@@ -1955,6 +1955,9 @@ PR at all).
 
 ## Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)
 
+- [~] **CLAIMED 2026-08-16 05:27 UTC (wt: faves-dish-ids)** — the whole theme.
+  Leave it alone until this claim clears.
+
 <!-- Numbered 25, not 22: two other live sessions had already taken 22, 23 and
      24 while this branch was open. The note on Theme 19 says to check
      `grep '^## Theme' ROADMAP.md` before adding one — it is there because this
