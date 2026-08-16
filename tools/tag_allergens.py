@@ -270,6 +270,29 @@ NOTE_ALLERGENS = [
 NOTE_FREE = re.compile(r"[- ]?free\b", re.I)
 
 
+def section_clauses(note):
+    """Yield (clause, verdict) for each clause of a section note.
+
+    `verdict` is None when the clause describes what every dish in the section
+    is actually served with, and otherwise the reason it does not. Split out so
+    `allergen_disagreements.py` can decide class membership on the same reading
+    — a "vegan aioli available on request" line must not sweep twelve sharing
+    plates into the mayonnaise class any more than it may tag them.
+    """
+    for clause in re.split(r"[.;]", note or ""):
+        clause = clause.strip()
+        if not clause:
+            continue
+        if CROSS_CONTACT.search(clause):
+            yield clause, "cross-contamination, not an ingredient"
+        elif AVAILABILITY.search(clause) or (ADD_ON.search(clause) and ADD_ON_PRICE.search(clause)):
+            yield clause, "an alternative offered, not what is served"
+        elif not UNIVERSAL.search(clause):
+            yield clause, "does not say it covers the whole section"
+        else:
+            yield clause, None
+
+
 def read_section_note(note):
     """Sort a `section.note` into (applies, review).
 
@@ -279,10 +302,7 @@ def read_section_note(note):
     on. Returns two empty lists for the notes that are just opening hours.
     """
     applies, review, seen = [], [], set()
-    for clause in re.split(r"[.;]", note or ""):
-        clause = clause.strip()
-        if not clause:
-            continue
+    for clause, verdict in section_clauses(note):
         hits = [(tag, tier, f"{why} ({m.group(0).lower()})")
                 for tag, tier, why, pattern, exclude in COMPILED
                 if not (exclude and exclude.search(clause))
@@ -294,13 +314,8 @@ def read_section_note(note):
                     hits.append((tag, "STATED", f"the note says it contains {m.group(0).lower()}"))
         if not hits:
             continue
-        tags_seen = sorted({tag for tag, _, _ in hits})
-        if CROSS_CONTACT.search(clause):
-            review.append((clause, "cross-contamination, not an ingredient", tags_seen))
-        elif AVAILABILITY.search(clause) or (ADD_ON.search(clause) and ADD_ON_PRICE.search(clause)):
-            review.append((clause, "an alternative offered, not what is served", tags_seen))
-        elif not UNIVERSAL.search(clause):
-            review.append((clause, "does not say it covers the whole section", tags_seen))
+        if verdict:
+            review.append((clause, verdict, sorted({tag for tag, _, _ in hits})))
         else:
             for tag, tier, why in hits:
                 if tag not in seen:
