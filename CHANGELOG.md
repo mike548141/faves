@@ -9,6 +9,18 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A shortlist you share now opens on the dish you meant.** Where a venue has
+  two dishes with the same name at different prices — Sprig & Fern Tawa lists
+  *Cheeseburger* three times, at $28, $21 and $15 — a shared shortlist arrived
+  at whichever one came first, so a friend could open your $21 Gold Card pick
+  and see $28. The share code now carries each dish's own identity alongside its
+  name. **Codes you shared before this still work exactly as they did**, and a
+  phone that has not updated yet can still open a new code.
+- **A place's "our picks" can no longer disappear silently.** A pick recorded by
+  a dish's identity rather than its name was being dropped before the page drew
+  it, with nothing to show it had gone. Nothing in the app was written that way
+  yet — this closes it before the first one is.
+
 - **The ⓘ beside "Allergens to flag" no longer flickers when you point at it.**
   On a mouse, hovering that ⓘ opened its note, which grew the centred Settings
   sheet, which slid the ⓘ 54px up out from under a pointer that had not
@@ -20,6 +32,14 @@ content freshness separately from this file.
   a menu page are unaffected — those float over the page and move nothing.
 
 ### Changed
+- **Search results now show you *why* they matched.** Searching "Bar" returned
+  1841 Bar & Restaurant and The Catch Sushi Bar alongside places that genuinely
+  are bars, with nothing to tell the two apart — a wide search is right (you
+  should find "Charley Noble" by typing "Noble"), but you could not see whether
+  a result was a real match or a spelling coincidence. The matching word is now
+  highlighted where you can see it, and where the match was on something the row
+  doesn't show — an address, a phone number, a dish description — the row says
+  so: *"Matched: address"*.
 - **A section's serving time is subtext, not part of its heading.** "Brunch
   (served till 2pm)" put a 24-character chip in the jump-nav strip you scroll
   with a thumb, and Sprig & Fern's Gold Card heading was **53 characters** —
