@@ -5890,7 +5890,7 @@ The released claim only ever covered the owner's original five.
 > What these rulings close are the two questions 0077 explicitly left open.
 
 > ✅ **37k BUILT AND SHIPPED 2026-08-16** (wt: faves-cook2, `9aa6071`…`62546b4`).
-> Recorded as **ADR 0082**. `site/js/vibes.js` is new — 17 keys in three facets.
+> Recorded as **ADR 0083**. `site/js/vibes.js` is new — 17 keys in three facets.
 > **The build is done; only the TAGGING is owed, and it is his.**
 > 🔑 **The vocabulary is stated ONCE and `tools/validate.py` READS that file**
 > rather than holding a Python copy — two copies would drift silently. The parse
