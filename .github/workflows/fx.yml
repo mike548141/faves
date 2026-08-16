@@ -18,13 +18,20 @@ name: FX rates
 
 on:
   schedule:
-    # 19:10 UTC — after the source's own daily roll (it restamps around 00:0x
-    # UTC) and comfortably outside NZ waking hours, so a deploy lands when
-    # nobody is mid-order. GitHub runs cron on UTC and may delay a scheduled
-    # job under load; a missed day is harmless here, which is why this is a
+    # Weekly, Sunday 14:10 UTC — Monday ~2am in New Zealand, so the deploy this
+    # triggers lands when nobody is mid-order. Weekly rather than daily on the
+    # owner's call (2026-08-16): a menu price is read off a wall months apart,
+    # so a rate a few days old is nowhere near the biggest approximation in the
+    # figure a reader sees. GitHub runs cron on UTC and may delay a scheduled
+    # job under load; a missed week is harmless, which is why this is a
     # schedule and not an alarm.
-    - cron: "10 19 * * *"
+    - cron: "10 14 * * 0"
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Write and commit even if no rate moved (for testing the pipeline)"
+        type: boolean
+        default: false
 
 # Least privilege: this job writes one data file and one version constant.
 permissions:
@@ -46,7 +53,7 @@ jobs:
           python-version: "3.12"
 
       - name: Fetch the latest rates
-        run: python3 tools/fetch_fx.py --bump
+        run: python3 tools/fetch_fx.py --bump ${{ inputs.force && '--force' || '' }}
 
       # The tool is a no-op when no rate moved, so an unchanged tree is the
       # normal outcome most days, not a failure.

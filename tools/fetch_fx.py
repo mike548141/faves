@@ -15,6 +15,7 @@ ADR 0045 for why a dated approximation beats both a live API and no conversion.
     python3 tools/fetch_fx.py            # fetch and write
     python3 tools/fetch_fx.py --check    # exit 1 if the file is missing/malformed
     python3 tools/fetch_fx.py --dry-run  # print what would be written
+    python3 tools/fetch_fx.py --force    # write even if no rate moved
 
 Stdlib only, no build step. Network is used HERE, at authoring time, never by
 the site.
@@ -181,6 +182,13 @@ def main():
     ap.add_argument("--check", action="store_true", help="validate the committed file; no network")
     ap.add_argument("--dry-run", action="store_true", help="fetch and print, but don't write")
     ap.add_argument(
+        "--force",
+        action="store_true",
+        help="write even when no rate moved. Only for proving the scheduled job can "
+        "actually commit — a routine run must not, or every phone re-downloads the "
+        "data cache for a file whose numbers are identical.",
+    )
+    ap.add_argument(
         "--bump",
         action="store_true",
         help="also bump DATA_VERSION in site/sw.js when the rates actually changed "
@@ -202,7 +210,7 @@ def main():
         print(text)
         return 0
 
-    if not rates_changed(doc):
+    if not rates_changed(doc) and not args.force:
         # The daily job runs whether or not the rates moved. Rewriting the file
         # with only a new `fetched` stamp would produce a commit a day that
         # changes no rate, and every one of those would invalidate the data
