@@ -138,6 +138,15 @@ whole theme removing from section headings. Note also that this makes it a
 `dishId` question — `large-margherita-online-deal` and `margherita-large` are two
 ids for one dish in two channels.
 
+⚖️ **And the negative result, checked rather than assumed, because the obvious
+next worry is wrong:** the duplicate rows do **not** distort the venue's price
+band. `price.js` takes the median of priced items, and `pizza-pomodoro`'s median
+is **$14.50 with the two Online Deal rows and $14.50 without** — 83 rows versus
+81, and a median is robust to two. So this is a *modelling* defect, not a live
+reader-facing one, and it must not be argued as if a reader is currently being
+misled. What a reader sees today is two plausible menu rows for one pizza, which
+is untidy and true.
+
 The general form. The
 candidate shape may not be built until a **real venue in the corpus exercises the
 container being built**, and the session that builds it must re-derive the shape
