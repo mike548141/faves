@@ -400,11 +400,23 @@ delivery app.** Clear one by bringing back the fact.
       > ```sh
       > python3 -c "import json,glob;[print(json.load(open(f))['id']) for f in sorted(glob.glob('site/data/restaurants/*.json')) if not sum(len(s.get('items',[])) for s in (json.load(open(f)).get('menu') or []))]"
       > ```
-      > ⚑ **The six below are not a worklist, they are the six somebody looked
-      > at.** Whether any of the 18 fetchable ones get fetched is the owner's
-      > call under CLAUDE.md's standing rule — *"if I don't give them to you or
-      > tell you to fetch them they are not"* — and naming a URL here is not
-      > that instruction. 🎯 Sitting with him.
+      > ✅ **RULED 2026-08-16: fetch all 18.** Asked under CLAUDE.md's standing
+      > rule (*"if I don't give them to you or tell you to fetch them they are
+      > not"*), because naming a URL in a roadmap is not that instruction. He
+      > gave it. **This is the fetch authorisation** — cite this line, and note
+      > it covers exactly the 18 venues that publish their own menu, not the 14
+      > that publish nothing.
+      > 🚩 **Scope discipline when you take it:** it is 18 venues, not the six
+      > this item's title names — derive the list from the reproducer above,
+      > never from the prose. Prices come from the venue's **own** published
+      > menu, never a delivery app. Run `python3 tools/tag_allergens.py` and
+      > `python3 tools/validate.py` after each, curate `priceBand` from the
+      > **food-only** median (`tools/drinks_gap.py --price-effect`), and append
+      > rather than overwrite per ADR 0023/0047.
+      > ⚠️ **A fetched PDF is as old as its document, not as fresh as the day
+      > you read it** — the `paper-menu` weakness ADR 0031 names, and the reason
+      > 1841's March-2025 menu still reads as current. Record the document's own
+      > date, not today's.
       - **Four Sprig + Fern taverns**, all `stub`: `sprig-and-fern-petone`,
         `sprig-and-fern-berhampore`, `sprig-and-fern-thorndon`,
         `little-sprig-seatoun`. Each publishes **its own** food menu PDF at
@@ -4213,9 +4225,21 @@ diagnosis reversed a deliberate decision, and two greps (the source comment, the
 done-record) separated them. Verify a report before you build on it — the same
 lesson [ADR 0017]'s merge rule taught this repo from the other direction.
 
-Plus one cheap open question regardless of which is chosen: **`area: "Home"`** —
-null it per ADR 0003, or keep it and name the screen that reads it. `[XS][data]`
-(`currency` is settled and stays — owner ruling above.)
+✅ **`area: "Home"` — SETTLED, owner ruling 2026-08-16: it stays.** The item
+asked to null it per ADR 0003 *or* keep it and **name the screen that reads it**.
+The screen was found by measuring rather than reasoning: the **global search
+result** for Cook at Home renders `Home · Home cooking` — `search.js` copies
+`r.area` onto each place entry and `app.js` joins `[p.area, cuisine]` into the
+result row's subtitle. Nulling it would have made that row read "Home cooking".
+Everything else that touches `area` is inert for this record (`cardArea()` is
+overwritten by "Cook at home"; the facet is never selectable; `areaCentroids`
+and `picker.js` skip recipes).
+🔑 **Worth keeping: ADR 0003 permitted `null` on the assumption that nothing
+rendered the field, and that assumption had quietly stopped being true.** A
+permission granted by an old ADR is not evidence about today's code — check what
+actually reads a field before acting on a record's licence to drop it. Same
+family as *"an ADR is a design, not evidence"*. (`currency` likewise stays —
+owner ruling above.)
 
 🎯 **Recommend 1** — **CLAIMED 2026-08-16 11:22 UTC (wt: faves-kind-capabilities)**,
 together with the `area: "Home"` question above. Files: new `site/js/kinds.js`,
@@ -4268,6 +4292,17 @@ the same sand.
 > minute" (×3) and "marinate for at least an hour". 28 is the **digits-only**
 > count, which is exactly what `cook.js`'s regex can see. Calling those four
 > "estimates" would have mislabelled the data to match a tool's limitation.
+>
+> ✅ **Both ANSWERED by the owner, 2026-08-16 — and the weak-estimate question
+> with them:**
+> - **`serves` vs yield → SHOW BOTH, LABELLED** (e.g. *"Makes 12 waffles ·
+>   serves 4"*). The record already keeps them apart, so this is a render job,
+>   not a data one. `[S][ux]` and now unblocked.
+> - **The nine weak estimates → SHIP AS THEY ARE.** He declined to supply his
+>   own numbers, and the reasoning holds: every one is labelled an estimate and
+>   carries its **working** in prose, so nothing is presented as fact. Do NOT
+>   re-open this by asking him per recipe. The weak ones stay weaker, visibly.
+> - **The five bake-only `time` values remain open** — see the question below.
 >
 > 🚩 **Two findings that need an owner call, neither resolved here:**
 > - **`serves` and yield are conflated in the payload today.** Liège Waffles'
