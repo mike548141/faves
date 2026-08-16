@@ -167,6 +167,11 @@ node tools/addon_check.mjs    # add-on composition in headless Chrome (ADR 0048)
 node tools/branch_check.mjs   # the branch picker in headless Chrome (ADR 0054)
 node tools/to_top_check.mjs   # the back-to-top button gets out of the way (Theme 29)
 node tools/filter_row_check.mjs # filters inline when wide, in the sheet when narrow
+node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
+                              # ⚠️ Currently ABORTS before its last three assertions
+                              # on an overflow-menu race — a wall of PASS lines
+                              # followed by "harness error" is NOT a pass. Check it
+                              # reached its own "OK — N passed" summary line.
 ```
 
 **The exchange rates refresh themselves weekly** — `.github/workflows/fx.yml`

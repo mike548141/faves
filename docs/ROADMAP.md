@@ -2878,6 +2878,24 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
 `data.js` passes it on every load. Detail, and the honest residue in each →
 [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
+- [ ] 🚩 **`sync_check.mjs` aborts before its last three assertions** `[S][js]` —
+  the two-device sync check (Theme 9 v2) passes every sync assertion including
+  the headline one (a removed heart is removed on the other device, not
+  re-added), then **aborts on an overflow-menu interaction**, so
+  rating-replace, sync-off-leaves-data-intact and server-unreachable are
+  *written and never observed*. 🔎 **The trace points at a real product hazard,
+  not just a flaky check:** after a rating slider takes focus deep in a menu,
+  the header scrolls off; the check compensates, and it was still observed
+  failing — scroll snapping back to 879px on its own, and the ⋯ button's own
+  handler reporting **two** open/close cycles from **one** click. The suspect is
+  `menu.js`'s `reapply()` (`settings.subscribe(reapply)`, wrapped in
+  capture/restoreUiState), which a completed sync now triggers on every device
+  via `sync-start.js`'s `onApplied` hook and which is asynchronous relative to
+  the panel saying "Last synced…". **So a real person acting fast right after
+  their device finishes syncing may hit it.** Full evidence is in the check's
+  own header; an unwired `waitQuiet()` MutationObserver helper sits in
+  `openDevice()` as an untested starting point. Owner is `overflow-ui.js` /
+  `menu.js`, not the sync engine.
 - [ ] 🚩 **Whole-repo scanner runs here are inflated by every live worktree**
   `[S][docs]` — found 2026-08-15, **queued upstream as atelier Track E item E9**
   (`atelier@72cf216`) under the queue-never-deliver rule; no fix was written
