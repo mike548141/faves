@@ -21,43 +21,43 @@
         "mon": [
           [
             "11:00",
-            "23:00"
+            "22:00"
           ]
         ],
         "tue": [
           [
             "11:00",
-            "23:00"
+            "22:00"
           ]
         ],
         "wed": [
           [
             "11:00",
-            "23:00"
+            "22:00"
           ]
         ],
         "thu": [
           [
             "11:00",
-            "23:00"
+            "22:00"
           ]
         ],
         "fri": [
           [
             "11:00",
-            null
+            "23:00"
           ]
         ],
         "sat": [
           [
             "11:00",
-            null
+            "23:00"
           ]
         ],
         "sun": [
           [
             "11:00",
-            "23:00"
+            "22:00"
           ]
         ]
       }
@@ -67,13 +67,1527 @@
     "takeaway"
   ],
   "website": "https://www.pizzahut.co.nz",
-  "ordering": [],
-  "vibe": [],
+  "ordering": [
+    {
+      "platform": "Pizza Hut NZ",
+      "url": "https://www.pizzahut.co.nz/order/pizzas/delivery"
+    }
+  ],
+  "vibe": [
+    "quick-eats"
+  ],
   "picks": [],
-  "verified": null,
+  "verified": "2026-08-16",
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-08-16",
+  "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-07-08"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Pizzas",
+      "sectionId": "pizzas",
+      "items": [
+        {
+          "name": "Pepperoni with Mozzarella Stuffed Crust",
+          "dishId": "pepperoni-with-mozzarella-stuffed-crust",
+          "desc": "Pepperoni pizza with a Mozzarella Stuffed Crust. The world's only original Stuffed Crust.",
+          "price": 13.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Classic Cheese with Pepperoni Stuffed Crust",
+          "dishId": "classic-cheese-with-pepperoni-stuffed-crust",
+          "desc": "Classic Cheese pizza with a Pepperoni & Mozzarella Stuffed Crust. The world's only original Stuffed Crust.",
+          "price": 12.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Pepperoni with Pepperoni Stuffed Crust",
+          "dishId": "pepperoni-with-pepperoni-stuffed-crust",
+          "desc": "Pepperoni pizza with a Pepperoni & Mozzarella Stuffed Crust. The world's only original Stuffed Crust.",
+          "price": 13.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Classic Cheese with Mozzarella Stuffed Crust",
+          "dishId": "classic-cheese-with-mozzarella-stuffed-crust",
+          "desc": "Classic Cheese pizza with a Mozzarella Stuffed Crust. The world's only original Stuffed Crust.",
+          "price": 12.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Hot & Spicy Paneer",
+          "dishId": "hot-spicy-paneer",
+          "desc": "Paneer with attitude - paneer, mozzarella, jalapeños, tomato, and fiery chilli flakes bring the heat.",
+          "price": 12.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-2"
+          ]
+        },
+        {
+          "name": "Tikka Paneer",
+          "dishId": "tikka-paneer",
+          "desc": "Creamy paneer and punchy tikka sauce, topped with mozzarella, tomato, red onion, and green capsicum.",
+          "price": 13.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Veg Peri Peri Paneer",
+          "dishId": "veg-peri-peri-paneer",
+          "desc": "A veggie-packed combo of paneer, mozzarella, mushroom, red onion, tomato, and green capsicum on a classic tomato base, topped off with a mildly spicy Peri Peri mayo.",
+          "price": 13.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Chicken Tikka",
+          "dishId": "chicken-tikka",
+          "desc": "Tender chicken with a rich tikka base, topped with mozzarella, red onion, tomato, and green capsicum.",
+          "price": 14.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Roast Veggie & Caramelised Onion with Vegan Cheese",
+          "dishId": "roast-veggie-caramelised-onion-with-vegan-cheese",
+          "desc": "Vegan cheese, roasted red onion, sliced mushrooms & diced tomato, drizzled with caramelized onion relish, and a light sprinkle of garlic & oregano.",
+          "price": 17.99,
+          "tags": [
+            "contains-gluten",
+            "contains-soy",
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Margherita",
+          "dishId": "margherita",
+          "desc": "Cheese, chopped tomatoes and pesto.",
+          "price": 15.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Beef, Bacon & Caramelized Onion",
+          "dishId": "beef-bacon-caramelized-onion",
+          "desc": "On our light, crispy and tasty sourdough base....",
+          "price": 15.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Meat Lovers",
+          "dishId": "meat-lovers",
+          "desc": "The original Meat Lovers pizza!",
+          "price": 16.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Super Supreme",
+          "dishId": "super-supreme",
+          "desc": "LEGENDARY Pizza Hut pizza supremely stacked!",
+          "price": 17.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Loaded Pepperoni With Double Toppings",
+          "dishId": "loaded-pepperoni-with-double-toppings",
+          "desc": "Pepperoni pizza loaded with double toppings!",
+          "price": 17.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Loaded Hawaiian With Double Toppings",
+          "dishId": "loaded-hawaiian-with-double-toppings",
+          "desc": "Hawaiian pizza loaded with double toppings!",
+          "price": 17.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "BBQ Beef & Onion",
+          "dishId": "bbq-beef-onion",
+          "desc": "BBQ beef topped with a drizzle of creamy mayo.",
+          "price": 15.49,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "BBQ Bacon & Mushroom",
+          "dishId": "bbq-bacon-mushroom",
+          "desc": "With a drizzle of smoky BBQ sauce.",
+          "price": 15.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Italian Lovers",
+          "dishId": "italian-lovers",
+          "desc": "The original Italian blend of veg and pepperoni.",
+          "price": 17.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Hot & Spicy Veggie",
+          "dishId": "hot-spicy-veggie",
+          "desc": "Our mouth-tingling blend of spicy jalapenos, green capsicum, red onion and melted mozzarella cheese. Topped off with chilli flakes for extra spice.",
+          "price": 15.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Veggie Lovers",
+          "dishId": "veggie-lovers",
+          "desc": "A feast of super-fresh flavours topped with pesto.",
+          "price": 17.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Chicken Cranberry",
+          "dishId": "chicken-cranberry",
+          "desc": "Slices of chicken breast, cheesy mozzarella with cranberry sauce and creamy mayo.",
+          "price": 21.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Buffalo Chicken",
+          "dishId": "buffalo-chicken",
+          "desc": "Loaded with our epic Buffalo sauce, a spicy hit of jalapeños, Southern-style fried chicken bites, lashings of mozzarella, finished with a creamy ranch drizzle. This one's got just the right amount of heat.",
+          "price": 19.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Peri Peri Chicken",
+          "dishId": "peri-peri-chicken",
+          "desc": "Juicy slices of 100% whole chicken breast, freshly chopped red onion, green capsicum, tomato and spicy jalapenos, mozzarella cheese, topped off with a mildly spicy Peri Peri mayo.",
+          "price": 21.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Apricot Chicken Deluxe",
+          "dishId": "apricot-chicken-deluxe",
+          "desc": "100% chicken breast, veggies and apricot sauce.",
+          "price": 20.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Garlic Shrimp Deluxe",
+          "dishId": "garlic-shrimp-deluxe",
+          "desc": "Shrimp drizzled with Aioli and Basil pesto swirl",
+          "price": 21.49,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-shellfish",
+            "contains-soy",
+            "gf-option",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Mega Meat Lovers",
+          "dishId": "mega-meat-lovers",
+          "desc": "100% chicken breast, pepperoni, Italian sausage, ham, ground beef and bacon.",
+          "price": 21.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Chicken Deluxe",
+          "dishId": "chicken-deluxe",
+          "desc": "Succulent slices of chicken breast, a drizzle of aioli, a sprinkling of toasted Parmesan, sliced mushrooms, red onion, and stringy, stretchy mozzarella cheese – Pizza Hut's supreme chicken recipe.",
+          "price": 20.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "BBQ Chicken & Bacon Deluxe",
+          "dishId": "bbq-chicken-bacon-deluxe",
+          "desc": "Chicken & Bacon drizzled with smoky BBQ sauce.",
+          "price": 20.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Big New Yorker",
+          "dishId": "big-new-yorker",
+          "desc": "The original big pan pizza from New York.",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Big BBQ Bacon",
+          "dishId": "big-bbq-bacon",
+          "desc": "On our extra-large base with bacon and smoky BBQ sauce.",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Big Triple Cheese",
+          "dishId": "big-triple-cheese",
+          "desc": "On our extra-large base, with mozzarella, Parmesan, and more mozzarella!",
+          "price": 17.48,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Classic Cheese",
+          "dishId": "classic-cheese",
+          "desc": "For when cheese is all you need.",
+          "price": 10.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Americano",
+          "dishId": "americano",
+          "desc": "Topped with mildly spiced pepperoni, olives, freshly chopped mushroom, and oozing mozzarella cheese.",
+          "price": 12.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Ham & Cheese",
+          "dishId": "ham-cheese",
+          "desc": "Chunks of ham on melted cheese. Simply delicious.",
+          "price": 10.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Classic Veggie",
+          "dishId": "classic-veggie",
+          "desc": "Veggies and cheese, yes please!",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Bacon & Aioli",
+          "dishId": "bacon-aioli",
+          "desc": "Smoky bacon, drizzled with creamy aioli with a heap of melting mozzarella cheese.",
+          "price": 12.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Pepperoni",
+          "dishId": "pepperoni",
+          "desc": "The original pepperoni pizza for purists.",
+          "price": 11.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Hawaiian",
+          "dishId": "hawaiian",
+          "desc": "A real Kiwi classic with juicy pineapple and ham.",
+          "price": 11.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Cheesy Garlic",
+          "dishId": "cheesy-garlic",
+          "desc": "Cheesy garlicky goodness.",
+          "price": 12.49,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Beef & Onion",
+          "dishId": "beef-onion",
+          "desc": "Beef. Onion. Cheese. Amazing.",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Hot Honey, Chorizo & Pepperoni",
+          "dishId": "hot-honey-chorizo-pepperoni",
+          "desc": "Mildly spicy chorizo, pepperoni & mozzarella with a hot honey drizzle.",
+          "price": 12.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Hot Honey, Chicken, Green Capsicum & Jalapeño",
+          "dishId": "hot-honey-chicken-green-capsicum-jalape-o",
+          "desc": "Fresh green capsicum & jalapeno with juicy chicken and a hot honey drizzle. All atop a Handcrafted Sourdough base with melting mozzarella and our marinara sauce.",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chorizo, Chicken & Green Capsicum",
+          "dishId": "chorizo-chicken-green-capsicum",
+          "desc": "Mildly spicy chorizo, juicy chicken and fresh capsicum atop our Handcrafted Sourdough base with melting mozzarella and our marinara sauce.",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Classic Veggie with Hot Honey",
+          "dishId": "classic-veggie-with-hot-honey",
+          "desc": "Classic Veggie with Hot Honey drizzled atop our Handcrafted Sourdough base.",
+          "price": 15.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Hot & Spicy Vege with Hot Honey",
+          "dishId": "hot-spicy-vege-with-hot-honey",
+          "desc": "Hot & Spicy Veggie with Hot Honey drizzled atop our Handcrafted Sourdough base.",
+          "price": 13.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-2"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Meal Deals",
+      "sectionId": "meal-deals",
+      "items": [
+        {
+          "name": "Limo - Delivered",
+          "dishId": "limo-delivered",
+          "desc": "Choose 3 delicious flavours & 2 Sides* served in a metre box",
+          "price": 44.99,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Double Value Deal Delivered",
+          "dishId": "double-value-deal-delivered",
+          "desc": "2 large pizzas & 2 Sides*",
+          "price": 35.99,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken, Fries & a Drink Lunch Deal",
+          "dishId": "chicken-fries-a-drink-lunch-deal",
+          "desc": "The perfect lunch! 3 Chicken Wings or Tenders, Fries and 330ml Drink",
+          "price": 10.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "$25 Favourites Deal Delivered",
+          "dishId": "25-favourites-deal-delivered",
+          "desc": "1 Large Favourites Pizza and 2 Sides delivered for $25",
+          "price": 25.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "3 Pizzas Delivered",
+          "dishId": "3-pizzas-delivered",
+          "desc": "3 Large Classic Value Pizzas, Upgrade to a Favourites or Deluxe pizza,",
+          "price": 34.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "The One Box",
+          "dishId": "the-one-box",
+          "desc": "1 regular pizza* & small Fries",
+          "price": 8.49,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "The One Box + Drink",
+          "dishId": "the-one-box-drink",
+          "desc": "1 regular pizza*, small Fries & 330ml Can Drink",
+          "price": 10.49,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "3 Pizzas & 3 Sides - Delivered",
+          "dishId": "3-pizzas-3-sides-delivered",
+          "desc": "3 Large Classic Value Pizzas & 3 Sides* (online only).",
+          "price": 47.99,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Triple Value Deal - Delivered",
+          "dishId": "triple-value-deal-delivered",
+          "desc": "3 large pizzas & 2 Sides*",
+          "price": 43.99,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mega Value Deal - Delivered",
+          "dishId": "mega-value-deal-delivered",
+          "desc": "4 large pizzas & 2 Sides*",
+          "price": 52.99,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Lovers Combo - Delivered",
+          "dishId": "chicken-lovers-combo-delivered",
+          "desc": "1 large Chicken pizza, Southern Style Chicken Bites with Ranch Sauce & Garlic Bread",
+          "price": 30.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Wingstreet",
+      "sectionId": "wingstreet",
+      "items": [
+        {
+          "name": "5 Buffalo Chicken Wings",
+          "dishId": "5-buffalo-chicken-wings",
+          "desc": "5 seasoned chicken wings drizzled with a spicy buffalo sauce",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "5 Hot Honey Chicken Wings",
+          "dishId": "5-hot-honey-chicken-wings",
+          "desc": "5 seasoned chicken wings drizzled with a Hot Honey sauce",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "5 BBQ Chicken Wings",
+          "dishId": "5-bbq-chicken-wings",
+          "desc": "5 seasoned chicken wings drizzled with a sweet and smokey BBQ sauce.",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "5 Peri Peri Chicken Wings",
+          "dishId": "5-peri-peri-chicken-wings",
+          "desc": "5 seasoned chicken wings drizzled with a mild and creamy Peri Peri sauce",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "5 Seasoned Chicken Wings",
+          "dishId": "5-seasoned-chicken-wings",
+          "desc": "5 chicken wings, mixed with flavourful spices and cooked until golden.",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "5 Buffalo Chicken Tenders",
+          "dishId": "5-buffalo-chicken-tenders",
+          "desc": "5 southern style chicken tenders drizzled with a spicy buffalo sauce",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "5 BBQ Chicken Tenders",
+          "dishId": "5-bbq-chicken-tenders",
+          "desc": "5 southern style chicken tenders drizzled with a sweet and smokey BBQ sauce.",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "5 Hot Honey Chicken Tenders",
+          "dishId": "5-hot-honey-chicken-tenders",
+          "desc": "5 seasoned chicken tenders drizzled with a Hot Honey sauce",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "5 Peri Peri Chicken Tenders",
+          "dishId": "5-peri-peri-chicken-tenders",
+          "desc": "5 southern style chicken tenders drizzled with a mild and creamy Peri Peri sauce",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "5 Seasoned Chicken Tenders",
+          "dishId": "5-seasoned-chicken-tenders",
+          "desc": "5 southern style chicken tenders, mixed with flavourful spices and cooked until golden.",
+          "price": 11.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "8 Buffalo Chicken Wings",
+          "dishId": "8-buffalo-chicken-wings",
+          "desc": "8 seasoned chicken wings drizzled with a spicy buffalo sauce",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "8 BBQ Chicken Wings",
+          "dishId": "8-bbq-chicken-wings",
+          "desc": "8 seasoned chicken wings drizzled with a sweet and smokey BBQ sauce.",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "8 Peri Peri Chicken Wings",
+          "dishId": "8-peri-peri-chicken-wings",
+          "desc": "8 seasoned chicken wings drizzled with a mild and creamy Peri Peri sauce",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "8 Hot Honey Chicken Wings",
+          "dishId": "8-hot-honey-chicken-wings",
+          "desc": "8 seasoned chicken wings drizzled with a Hot Honey sauce",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "8 Seasoned Chicken Wings",
+          "dishId": "8-seasoned-chicken-wings",
+          "desc": "8 chicken wings, mixed with flavourful spices and cooked until golden.",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "8 Buffalo Chicken Tenders",
+          "dishId": "8-buffalo-chicken-tenders",
+          "desc": "8 southern style chicken tenders drizzled with a spicy buffalo sauce",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "8 BBQ Chicken Tenders",
+          "dishId": "8-bbq-chicken-tenders",
+          "desc": "8 southern style chicken tenders drizzled with a sweet and smokey BBQ sauce.",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "8 Peri Peri Chicken Tenders",
+          "dishId": "8-peri-peri-chicken-tenders",
+          "desc": "8 southern style chicken tenders drizzled with a mild and creamy Peri Peri sauce",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "8 Seasoned Chicken Tenders",
+          "dishId": "8-seasoned-chicken-tenders",
+          "desc": "8 southern style chicken tenders, mixed with flavourful spices and cooked until golden.",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "8 Hot Honey Chicken Tenders",
+          "dishId": "8-hot-honey-chicken-tenders",
+          "desc": "8 seasoned chicken tenders drizzled with a Hot Honey sauce",
+          "price": 16.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "16 Buffalo Chicken Wings",
+          "dishId": "16-buffalo-chicken-wings",
+          "desc": "16 seasoned chicken wings drizzled with a spicy buffalo sauce",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "16 BBQ Chicken Wings",
+          "dishId": "16-bbq-chicken-wings",
+          "desc": "16 seasoned chicken wings drizzled with a sweet and smokey BBQ sauce.",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "16 Peri Peri Chicken Wings",
+          "dishId": "16-peri-peri-chicken-wings",
+          "desc": "16 seasoned chicken wings drizzled with a mild and creamy Peri Peri sauce",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "16 Seasoned Chicken Wings",
+          "dishId": "16-seasoned-chicken-wings",
+          "desc": "16 chicken wings, mixed with flavourful spices and cooked until golden.",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "16 BBQ Chicken Tenders",
+          "dishId": "16-bbq-chicken-tenders",
+          "desc": "16 southern style chicken tenders drizzled with a sweet and smokey BBQ sauce.",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "16 Hot Honey Chicken Wings",
+          "dishId": "16-hot-honey-chicken-wings",
+          "desc": "16 seasoned chicken wings drizzled with a Hot Honey sauce",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "16 Peri Peri Chicken Tenders",
+          "dishId": "16-peri-peri-chicken-tenders",
+          "desc": "16 southern style chicken tenders drizzled with a mild and creamy Peri Peri sauce",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "16 Seasoned Chicken Tenders",
+          "dishId": "16-seasoned-chicken-tenders",
+          "desc": "16 southern style chicken tenders, mixed with flavourful spices and cooked until golden.",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "16 Mixed Chicken Wings - Delivery",
+          "dishId": "16-mixed-chicken-wings-delivery",
+          "desc": "16 chicken wings and your choice of two sauces",
+          "price": 27.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "16 Mixed Chicken Tenders - Delivery",
+          "dishId": "16-mixed-chicken-tenders-delivery",
+          "desc": "16 southern style chicken tenders and your choice of two sauces",
+          "price": 27.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "16 Hot Honey Chicken Tenders",
+          "dishId": "16-hot-honey-chicken-tenders",
+          "desc": "16 seasoned chicken tenders drizzled with a Hot Honey sauce",
+          "price": 29.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sides",
+      "sectionId": "sides",
+      "items": [
+        {
+          "name": "The Dipper",
+          "dishId": "the-dipper",
+          "desc": "Get your dip on with The Dipper! The perfect combo of three irresistible Pizza Hut dips – Aioli, Marinara and BBQ.",
+          "price": 3.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cheesy Garlic Bread with Dip",
+          "dishId": "cheesy-garlic-bread-with-dip",
+          "desc": "A pizza base covered in Garlic Aioli, Cheese and Oregano, served with dip.",
+          "price": 6.49,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Cheesy Garlic Tear and Share Delivered",
+          "dishId": "cheesy-garlic-tear-and-share-delivered",
+          "desc": "A delicious folded pizza bread filled with cheese and garlic aioli, cut into strips.",
+          "price": 6.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Buffalo Tear and Share Delivered",
+          "dishId": "buffalo-tear-and-share-delivered",
+          "desc": "A delicious folded Pizza bread filled with Cheese and Buffalo Sauce, cut into strips.",
+          "price": 6.99,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Cheesy Garlic Tear & Share with The Dipper",
+          "dishId": "cheesy-garlic-tear-share-with-the-dipper",
+          "desc": "Cheesy Garlic Tear & Share with The Dipper",
+          "price": 10.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Buffalo Tear & Share with The Dipper",
+          "dishId": "buffalo-tear-share-with-the-dipper",
+          "desc": "Buffalo Tear & Share with The Dipper",
+          "price": 10.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Southern Style Chicken Bites",
+          "dishId": "southern-style-chicken-bites",
+          "desc": "Southern style mini chicken bites with ranch sauce.",
+          "price": 8.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Jalapeño Poppers",
+          "dishId": "jalape-o-poppers",
+          "desc": "6 spicy poppers filled with cheese, corn and chopped Jalapeños.",
+          "price": 8.49,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Seasoned Wedges",
+          "dishId": "seasoned-wedges",
+          "desc": "Seasoned Wedges, dip into sauce for 50 cents more.",
+          "price": 7.29,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Garlic Bread",
+          "dishId": "garlic-bread",
+          "desc": "Buttery and garlicky, scattered with parsley, hot from the oven.",
+          "price": 5.99,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Onion Rings",
+          "dishId": "onion-rings",
+          "desc": "Sweetly and soft on the inside, with a crispy crunchy coating.",
+          "price": 7.49,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Large Crinkle Cut Fries",
+          "dishId": "large-crinkle-cut-fries",
+          "desc": "Lightly golden, crinkle-cut and seasoned to perfection.",
+          "price": 6.49,
+          "tags": [
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Marinara Dip",
+          "dishId": "marinara-dip",
+          "desc": "A delicious tomato and herb sauce, perfect for dipping.",
+          "price": 0.8,
+          "tags": []
+        },
+        {
+          "name": "Ranch Sauce",
+          "dishId": "ranch-sauce",
+          "desc": "Creamy, tangy dipping sauce.",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Sweet Chilli Sauce",
+          "dishId": "sweet-chilli-sauce",
+          "desc": "A delicious sweet and spicy dipping sauce.",
+          "price": 0.59,
+          "tags": [
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "BBQ Sauce",
+          "dishId": "bbq-sauce",
+          "desc": "Thick smokey BBQ sauce with a hint of tang.",
+          "price": 0.59,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Buffalo Sauce",
+          "dishId": "buffalo-sauce",
+          "desc": "Classic spicy, creamy Buffalo sauce.",
+          "price": 1.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Tomato Sauce",
+          "dishId": "tomato-sauce",
+          "desc": "All the flavour of a classic tomato sauce.",
+          "price": 0.59,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Aioli Sauce",
+          "dishId": "aioli-sauce",
+          "desc": "A creamy aioli with a kick of garlic.",
+          "price": 0.59,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "sectionId": "desserts",
+      "items": [
+        {
+          "name": "Choc Fudge Brownie - Pint (473ml)",
+          "dishId": "choc-fudge-brownie-pint-473ml",
+          "desc": "Fudgy chunks of brownie goodness mixed into dark and rich chocolate ice cream.",
+          "price": 16.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Half Baked - Pint (473ml)",
+          "dishId": "half-baked-pint-473ml",
+          "desc": "Chocolate & Vanilla Ice Creams Mixed with Chunks of Chocolate Chip Cookie Dough & Fudge Brownies",
+          "price": 16.49,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Choc Chip Cookie Dough - Pint (473ml)",
+          "dishId": "choc-chip-cookie-dough-pint-473ml",
+          "desc": "Big delicious chunks of chocolate chip cookie dough surrounded by creamy vanilla ice cream.",
+          "price": 16.49,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Choc Fudge Brownie - Mini Tub (100ml)",
+          "dishId": "choc-fudge-brownie-mini-tub-100ml",
+          "desc": "Fudgy chunks of brownie goodness mixed into dark and rich chocolate ice cream.",
+          "price": 6.0,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Choc Chip Cookie Dough - Mini Tub (100ml)",
+          "dishId": "choc-chip-cookie-dough-mini-tub-100ml",
+          "desc": "Big delicious chunks of chocolate chip cookie dough surrounded by creamy vanilla ice cream.",
+          "price": 6.0,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "The Ultimate Chocolate Chip Cookie",
+          "dishId": "the-ultimate-chocolate-chip-cookie",
+          "desc": "A giant chocolate chip cookie full of rich chocolate chips.",
+          "price": 10.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chocolate Mousse",
+          "dishId": "chocolate-mousse",
+          "desc": "A decadent, creamy swirl of chocolate mousse.",
+          "price": 7.49,
+          "tags": [
+            "contains-dairy",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Chocolate Lava Cake",
+          "dishId": "chocolate-lava-cake",
+          "desc": "Delicious chocolate cake with a warm, rich gooey centre, dusted with icing sugar.",
+          "price": 6.99,
+          "tags": [
+            "contains-dairy",
+            "contains-egg",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Strawberry Cheesecake..",
+          "dishId": "strawberry-cheesecake",
+          "desc": "Velvety strawberry cheesecake on a sweet biscuit base.",
+          "price": 5.49,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "sectionId": "drinks",
+      "items": [
+        {
+          "name": "Coca Cola 1.5L",
+          "dishId": "coca-cola-1-5l",
+          "desc": null,
+          "price": 5.99,
+          "tags": []
+        },
+        {
+          "name": "Coke Zero Sugar 1.5L",
+          "dishId": "coke-zero-sugar-1-5l",
+          "desc": null,
+          "price": 5.99,
+          "tags": []
+        },
+        {
+          "name": "Sprite Zero Sugar 1.5L",
+          "dishId": "sprite-zero-sugar-1-5l",
+          "desc": null,
+          "price": 5.99,
+          "tags": []
+        },
+        {
+          "name": "Fanta 1.5L",
+          "dishId": "fanta-1-5l",
+          "desc": null,
+          "price": 5.99,
+          "tags": []
+        },
+        {
+          "name": "Lemon and Paeroa 1.5L",
+          "dishId": "lemon-and-paeroa-1-5l",
+          "desc": null,
+          "price": 5.99,
+          "tags": []
+        },
+        {
+          "name": "Kiwi Blue Still Water 1.5L",
+          "dishId": "kiwi-blue-still-water-1-5l",
+          "desc": null,
+          "price": 5.99,
+          "tags": []
+        },
+        {
+          "name": "Coca Cola 600ml",
+          "dishId": "coca-cola-600ml",
+          "desc": null,
+          "price": 3.99,
+          "tags": []
+        },
+        {
+          "name": "Coke Zero Sugar 600ml",
+          "dishId": "coke-zero-sugar-600ml",
+          "desc": null,
+          "price": 3.99,
+          "tags": []
+        },
+        {
+          "name": "Pump 750ml",
+          "dishId": "pump-750ml",
+          "desc": null,
+          "price": 3.99,
+          "tags": []
+        },
+        {
+          "name": "Keri Orange Juice 350ml",
+          "dishId": "keri-orange-juice-350ml",
+          "desc": null,
+          "price": 3.99,
+          "tags": []
+        },
+        {
+          "name": "Keri Apple Juice 350ml",
+          "dishId": "keri-apple-juice-350ml",
+          "desc": null,
+          "price": 3.99,
+          "tags": []
+        },
+        {
+          "name": "Coca Cola 330ml Can",
+          "dishId": "coca-cola-330ml-can",
+          "desc": null,
+          "price": 2.99,
+          "tags": []
+        },
+        {
+          "name": "Coke Zero Sugar 330ml Can",
+          "dishId": "coke-zero-sugar-330ml-can",
+          "desc": null,
+          "price": 2.99,
+          "tags": []
+        },
+        {
+          "name": "Fanta 330ml Can",
+          "dishId": "fanta-330ml-can",
+          "desc": null,
+          "price": 2.99,
+          "tags": []
+        },
+        {
+          "name": "Sprite Zero Sugar 330ml Can",
+          "dishId": "sprite-zero-sugar-330ml-can",
+          "desc": null,
+          "price": 2.99,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Catering",
+      "sectionId": "catering",
+      "items": [
+        {
+          "name": "Feed 15",
+          "dishId": "feed-15",
+          "desc": "Choose any 3 Favourites Pizzas & any 4 Classic Value Pizzas with 4 Garlic Breads. Fee applies on delivery orders.",
+          "price": 95.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Feed 25",
+          "dishId": "feed-25",
+          "desc": "Choose any 6 Favourites Pizzas & any 6 Classic Value Pizzas with 6 Garlic Breads. Fee applies on delivery orders.",
+          "price": 135.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Feed 30",
+          "dishId": "feed-30",
+          "desc": "Choose any 7 Favourites Pizzas & any 7 Classic Value Pizzas with 8 Garlic Breads. Fee applies on delivery orders.",
+          "price": 160.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
+      ]
+    }
+  ]
 }
