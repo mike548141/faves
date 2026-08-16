@@ -8,6 +8,36 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Four more Sprig + Fern taverns, and they are their own places.** Petone,
+  Berhampore, Thorndon and Little Sprig Seatoun each have their own address,
+  hours, phone and map pin. They are not listed as branches of one venue,
+  because they are not: each is a separate franchise with its own kitchen and
+  its own menu, and showing one tavern's menu — and its allergen tags — against
+  four kitchens that don't cook that food would be a claim about the wrong
+  kitchen. Their menus are read in later; the Tawa menu stays on Tawa.
+- **Three more Petone places** — The Victoria Tavern, Caffiend and Baylands
+  Brewery — findable by name, area and pin. **Baylands has its full food menu**,
+  26 dishes read from the brewery's own PDF, with allergens tagged. The other
+  two have no menu yet, and deliberately so: one venue's site is currently
+  serving a broken security certificate and the other's domain no longer
+  resolves, so there is no source we would trust.
+
+### Fixed
+- **The order tally could overcharge you, and no longer can.** A place that
+  prints the same dish twice at different prices — Sprig + Fern lists
+  *Cheeseburger* three times, at $28, $21 and $15 — was one dish as far as the
+  tally was concerned. Adding the $21 one to a tally already holding the $28
+  one gave "2 × Cheeseburger" at **$56 instead of $49**. Every dish now carries
+  its own identity, so they are three separate lines at three separate prices.
+- **Hearts, ratings and shared links stop pointing at the wrong dish.** Same
+  cause: hearting the kids' fish and chips hearted all three fish and chips, a
+  link to the Gold Card price could never reach it, and choosing a sauce on one
+  dish silently cleared it on the same-named dish further down the page. A
+  dish's identity is now written down rather than worked out from its name, so
+  a shop renaming a dish no longer quietly detaches every heart and rating on
+  every family phone.
+
 ### Changed
 - **The home screen is mostly places again.** Every filter and sort now lives in
   one sheet behind a single `Filters` button in a slim bottom bar, grouped and

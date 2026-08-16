@@ -1,0 +1,344 @@
+{
+  "venue": "mcdonalds",
+  "note": "Provenance for the dish photographs shipped under site/img/mcdonalds/. Repo-only record (ADR 0047): no screen renders any of this, and nothing under site/ refers to it.",
+  "retrieved": "2026-08-16",
+  "rights": {
+    "holder": "McDonald's Corporation / McDonald's Restaurants (New Zealand) Ltd",
+    "licence": "none — all rights reserved",
+    "basis": "The venue's own product photography, taken from the public New Zealand menu pages at mcdonalds.co.nz / mcdonalds.com/nz, and used to depict that venue's own named products on its own menu listing. Not openly licensed. The owner authorised this route on 2026-08-16: 'If you can get open licensed photos that look great then lets do that, otherwise go ahead with the mcdonalds photos.'",
+    "attributionRequired": false,
+    "ifChallenged": "Remove the files under site/img/mcdonalds/ and the image/alt fields from site/data/restaurants/mcdonalds.json. The dish rows render without a photo."
+  },
+  "whyNotOpenlyLicensed": "Wikimedia Commons was searched per dish. Public-domain studio photographs do exist for some items (Evan-Amos: Big Mac, McChicken, Filet-O-Fish, Egg and Sausage & Egg McMuffin, Quarter Pounder, apple pie; Chris Woodrich: fries, 10-piece nuggets). They were rejected on three specific grounds rather than on principle: (1) they are opaque photographs on their own white background, whereas every shipped image is a transparent cutout that takes the card's colour in light and dark mode — one opaque tile among them reads as a fault; (2) several depict a different country's product or packaging (the PD fries carton carries the Canadian maple-leaf arches; the PD apple pie is the US baked pie shown split open, not the NZ sleeve); (3) the remaining candidates for NZ-only items are all CC BY or CC BY-SA, requiring visible attribution, and none is a product shot — the only NZ Big Arch photo on Commons is a whole meal tray, the only McCafé flat white is a Hong Kong cup beside a ciabatta. No NZ-only item (Big Brekkie Burger, Massive McMuffin, Thickshake, Frozen Coke, Hot Fudge Sundae) has any usable Commons image at all.",
+  "processing": "Fetched once at authoring time as 800px transparent PNG (Scene7 fmt=png-alpha), then trimmed to the product's alpha bounding box and re-centred on a 720x540 frame at 86% fill, so all 41 are framed identically; encoded as WebP q0.82 via a canvas, which also drops every metadata segment (no EXIF, no GPS). 720x540 is 2x the 358x268.5 CSS box measured in a real browser at 390px, and matches the 4/3 aspect-ratio .dish-photo already declares. There is no build step: these files are the shipped artefact.",
+  "images": [
+    {
+      "dishId": "big-mac",
+      "dish": "Big Mac",
+      "file": "site/img/mcdonalds/big-mac.webp",
+      "bytes": 48422,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/big-mac-12?fmt=png-alpha&wid=800",
+      "sourceAsset": "big-mac-12"
+    },
+    {
+      "dishId": "quarter-pounder",
+      "dish": "Quarter Pounder",
+      "file": "site/img/mcdonalds/quarter-pounder.webp",
+      "bytes": 34962,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/quarter-pounder-10?fmt=png-alpha&wid=800",
+      "sourceAsset": "quarter-pounder-10"
+    },
+    {
+      "dishId": "double-quarter-pounder",
+      "dish": "Double Quarter Pounder",
+      "file": "site/img/mcdonalds/double-quarter-pounder.webp",
+      "bytes": 46186,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/dbl-quarter-pounder-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "dbl-quarter-pounder-1"
+    },
+    {
+      "dishId": "cheeseburger",
+      "dish": "Cheeseburger",
+      "file": "site/img/mcdonalds/cheeseburger.webp",
+      "bytes": 31406,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/cheeseburger-7?fmt=png-alpha&wid=800",
+      "sourceAsset": "cheeseburger-7"
+    },
+    {
+      "dishId": "double-cheeseburger",
+      "dish": "Double Cheeseburger",
+      "file": "site/img/mcdonalds/double-cheeseburger.webp",
+      "bytes": 39162,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/dbl-cheeseburger-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "dbl-cheeseburger-1"
+    },
+    {
+      "dishId": "hamburger",
+      "dish": "Hamburger",
+      "file": "site/img/mcdonalds/hamburger.webp",
+      "bytes": 33976,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/hamburger-8?fmt=png-alpha&wid=800",
+      "sourceAsset": "hamburger-8"
+    },
+    {
+      "dishId": "big-arch",
+      "dish": "Big Arch",
+      "file": "site/img/mcdonalds/big-arch.webp",
+      "bytes": 39416,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/big-arch-2?fmt=png-alpha&wid=800",
+      "sourceAsset": "big-arch-2"
+    },
+    {
+      "dishId": "mcchicken",
+      "dish": "McChicken",
+      "file": "site/img/mcdonalds/mcchicken.webp",
+      "bytes": 38568,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/mcchicken-15?fmt=png-alpha&wid=800",
+      "sourceAsset": "mcchicken-15"
+    },
+    {
+      "dishId": "mccrispy",
+      "dish": "McCrispy",
+      "file": "site/img/mcdonalds/mccrispy.webp",
+      "bytes": 39270,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/mccrispy-4?fmt=png-alpha&wid=800",
+      "sourceAsset": "mccrispy-4"
+    },
+    {
+      "dishId": "double-mccrispy",
+      "dish": "Double McCrispy",
+      "file": "site/img/mcdonalds/double-mccrispy.webp",
+      "bytes": 46070,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/double-mccrispy?fmt=png-alpha&wid=800",
+      "sourceAsset": "double-mccrispy"
+    },
+    {
+      "dishId": "mccrispy-bacon-deluxe",
+      "dish": "McCrispy Bacon Deluxe",
+      "file": "site/img/mcdonalds/mccrispy-bacon-deluxe.webp",
+      "bytes": 48852,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/mccrispy-bacon-deluxe?fmt=png-alpha&wid=800",
+      "sourceAsset": "mccrispy-bacon-deluxe"
+    },
+    {
+      "dishId": "chicken-mcnuggets-6-pack",
+      "dish": "Chicken McNuggets (6 pack)",
+      "file": "site/img/mcdonalds/chicken-mcnuggets-6-pack.webp",
+      "bytes": 22304,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/6-chicken-nuggets-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "6-chicken-nuggets-1"
+    },
+    {
+      "dishId": "chicken-mcnuggets-10-pack",
+      "dish": "Chicken McNuggets (10 pack)",
+      "file": "site/img/mcdonalds/chicken-mcnuggets-10-pack.webp",
+      "bytes": 37580,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/10-chicken-nuggets-2?fmt=png-alpha&wid=800",
+      "sourceAsset": "10-chicken-nuggets-2"
+    },
+    {
+      "dishId": "chicken-mcnuggets-20-pack",
+      "dish": "Chicken McNuggets (20 pack)",
+      "file": "site/img/mcdonalds/chicken-mcnuggets-20-pack.webp",
+      "bytes": 24250,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/20-chicken-nuggets-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "20-chicken-nuggets-1"
+    },
+    {
+      "dishId": "filet-o-fish",
+      "dish": "Filet-O-Fish",
+      "file": "site/img/mcdonalds/filet-o-fish.webp",
+      "bytes": 32586,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/filet-o-fish-8?fmt=png-alpha&wid=800",
+      "sourceAsset": "filet-o-fish-8"
+    },
+    {
+      "dishId": "fries-small",
+      "dish": "Fries (Small)",
+      "file": "site/img/mcdonalds/fries-small.webp",
+      "bytes": 18446,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/sml-fries-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "sml-fries-1"
+    },
+    {
+      "dishId": "fries-medium",
+      "dish": "Fries (Medium)",
+      "file": "site/img/mcdonalds/fries-medium.webp",
+      "bytes": 27708,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/med-fries-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "med-fries-1"
+    },
+    {
+      "dishId": "fries-large",
+      "dish": "Fries (Large)",
+      "file": "site/img/mcdonalds/fries-large.webp",
+      "bytes": 25440,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/lrg-fries-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "lrg-fries-1"
+    },
+    {
+      "dishId": "hash-brown",
+      "dish": "Hash Brown",
+      "file": "site/img/mcdonalds/hash-brown.webp",
+      "bytes": 19710,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/hashbrown-5?fmt=png-alpha&wid=800",
+      "sourceAsset": "hashbrown-5"
+    },
+    {
+      "dishId": "bacon-egg-mcmuffin",
+      "dish": "Bacon & Egg McMuffin",
+      "file": "site/img/mcdonalds/bacon-egg-mcmuffin.webp",
+      "bytes": 33544,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/bacon-egg-muffin-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "bacon-egg-muffin-1"
+    },
+    {
+      "dishId": "sausage-egg-mcmuffin",
+      "dish": "Sausage & Egg McMuffin",
+      "file": "site/img/mcdonalds/sausage-egg-mcmuffin.webp",
+      "bytes": 42138,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/sausage-egg-muffin-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "sausage-egg-muffin-1"
+    },
+    {
+      "dishId": "sausage-mcmuffin",
+      "dish": "Sausage McMuffin",
+      "file": "site/img/mcdonalds/sausage-mcmuffin.webp",
+      "bytes": 33520,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/sausage-muffin-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "sausage-muffin-1"
+    },
+    {
+      "dishId": "chicken-mcmuffin",
+      "dish": "Chicken McMuffin",
+      "file": "site/img/mcdonalds/chicken-mcmuffin.webp",
+      "bytes": 36666,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/chicken-muffin-3?fmt=png-alpha&wid=800",
+      "sourceAsset": "chicken-muffin-3"
+    },
+    {
+      "dishId": "massive-mcmuffin",
+      "dish": "Massive McMuffin",
+      "file": "site/img/mcdonalds/massive-mcmuffin.webp",
+      "bytes": 45962,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/massive-mcmuffin?fmt=png-alpha&wid=800",
+      "sourceAsset": "massive-mcmuffin"
+    },
+    {
+      "dishId": "hotcakes",
+      "dish": "Hotcakes",
+      "file": "site/img/mcdonalds/hotcakes.webp",
+      "bytes": 21254,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/hotcakes-mid-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "hotcakes-mid-1"
+    },
+    {
+      "dishId": "big-brekkie-burger",
+      "dish": "Big Brekkie Burger",
+      "file": "site/img/mcdonalds/big-brekkie-burger.webp",
+      "bytes": 47954,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/big-brekkie-burger-beef?fmt=png-alpha&wid=800",
+      "sourceAsset": "big-brekkie-burger-beef"
+    },
+    {
+      "dishId": "flat-white",
+      "dish": "Flat White",
+      "file": "site/img/mcdonalds/flat-white.webp",
+      "bytes": 15044,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/flat-white-small-2?fmt=png-alpha&wid=800",
+      "sourceAsset": "flat-white-small-2"
+    },
+    {
+      "dishId": "latte",
+      "dish": "Latte",
+      "file": "site/img/mcdonalds/latte.webp",
+      "bytes": 13440,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/latte-med-2?fmt=png-alpha&wid=800",
+      "sourceAsset": "latte-med-2"
+    },
+    {
+      "dishId": "cappuccino",
+      "dish": "Cappuccino",
+      "file": "site/img/mcdonalds/cappuccino.webp",
+      "bytes": 13590,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/cappuccino-med-4?fmt=png-alpha&wid=800",
+      "sourceAsset": "cappuccino-med-4"
+    },
+    {
+      "dishId": "mocha",
+      "dish": "Mocha",
+      "file": "site/img/mcdonalds/mocha.webp",
+      "bytes": 14124,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/mocha-med-2?fmt=png-alpha&wid=800",
+      "sourceAsset": "mocha-med-2"
+    },
+    {
+      "dishId": "long-black",
+      "dish": "Long Black",
+      "file": "site/img/mcdonalds/long-black.webp",
+      "bytes": 11880,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/long-black-med-2?fmt=png-alpha&wid=800",
+      "sourceAsset": "long-black-med-2"
+    },
+    {
+      "dishId": "hot-chocolate",
+      "dish": "Hot Chocolate",
+      "file": "site/img/mcdonalds/hot-chocolate.webp",
+      "bytes": 14456,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/hot-chocolate-med-3?fmt=png-alpha&wid=800",
+      "sourceAsset": "hot-chocolate-med-3"
+    },
+    {
+      "dishId": "iced-latte",
+      "dish": "Iced Latte",
+      "file": "site/img/mcdonalds/iced-latte.webp",
+      "bytes": 22684,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/iced-latte-med-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "iced-latte-med-1"
+    },
+    {
+      "dishId": "iced-mocha",
+      "dish": "Iced Mocha",
+      "file": "site/img/mcdonalds/iced-mocha.webp",
+      "bytes": 18552,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/iced-mocha-med-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "iced-mocha-med-1"
+    },
+    {
+      "dishId": "iced-chocolate",
+      "dish": "Iced Chocolate",
+      "file": "site/img/mcdonalds/iced-chocolate.webp",
+      "bytes": 22130,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/iced-chocolate-med-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "iced-chocolate-med-1"
+    },
+    {
+      "dishId": "hot-apple-pie",
+      "dish": "Hot Apple Pie",
+      "file": "site/img/mcdonalds/hot-apple-pie.webp",
+      "bytes": 24048,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/hot-apple-pie-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "hot-apple-pie-1"
+    },
+    {
+      "dishId": "soft-serve-cone",
+      "dish": "Soft Serve Cone",
+      "file": "site/img/mcdonalds/soft-serve-cone.webp",
+      "bytes": 13766,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/plain-cone-2?fmt=png-alpha&wid=800",
+      "sourceAsset": "plain-cone-2"
+    },
+    {
+      "dishId": "hot-fudge-sundae",
+      "dish": "Hot Fudge Sundae",
+      "file": "site/img/mcdonalds/hot-fudge-sundae.webp",
+      "bytes": 24870,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/hot-fudge-sundae-small-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "hot-fudge-sundae-small-1"
+    },
+    {
+      "dishId": "mcflurry",
+      "dish": "McFlurry",
+      "file": "site/img/mcdonalds/mcflurry.webp",
+      "bytes": 39090,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/oreo-cookies-mcflurry-2?fmt=png-alpha&wid=800",
+      "sourceAsset": "oreo-cookies-mcflurry-2"
+    },
+    {
+      "dishId": "thickshake",
+      "dish": "Thickshake",
+      "file": "site/img/mcdonalds/thickshake.webp",
+      "bytes": 13252,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/chocolate-shake-med?fmt=png-alpha&wid=800",
+      "sourceAsset": "chocolate-shake-med"
+    },
+    {
+      "dishId": "frozen-coke",
+      "dish": "Frozen Coke",
+      "file": "site/img/mcdonalds/frozen-coke.webp",
+      "bytes": 17008,
+      "sourceUrl": "https://s7d1.scene7.com/is/image/mcdonalds/frozen-coke-medium-1?fmt=png-alpha&wid=800",
+      "sourceAsset": "frozen-coke-medium-1"
+    }
+  ]
+}

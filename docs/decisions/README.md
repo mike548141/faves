@@ -365,3 +365,33 @@ deliberation those compact docs omit.
   31.9%, cards 3 → 4. Two live defects went with it: 40 px segmented buttons
   against a 44 px hard constraint, and a floating "Pick for us" covering 63% of
   a venue's heart.
+- [0023](0023-time-dimension-in-the-data.md) — **the data carries its time
+  dimension; the UI does not.** Prices, menus and venues change, and git dates
+  our *edits*, never the world. Optional dated primitives in the data plus one
+  pure resolver (`temporal.js`) run in `data.js`, so every screen stays
+  time-blind and the dinner-choosing UX is untouched. This is the rule that
+  makes a menu refresh **append, never overwrite** — done the old way a refresh
+  destroys a free, honest reading, which is what happened to Takeaway @
+  Churton's 2019 prices, recoverable only because git held them.
+- [0042](0042-the-collection-is-not-scoped-to-a-city.md) — **the collection is
+  not scoped to a city.** Title, install name and About stopped naming
+  Wellington, and the data model stopped assuming one place. Its consequences
+  produced `site/js/renames.js`: five records carried a suburb in a national
+  chain's name, the suburb belongs in `locations[].label`, and a venue id that
+  is simply *replaced* breaks every shared link and detaches every stored heart.
+- [0043](0043-a-venue-carries-its-own-clock-and-currency.md) — **a venue
+  carries its own clock and currency.** "Open now" resolves on the venue's own
+  timezone, not the reader's, so a place still reads correctly when looked up
+  from another country; and there is no site-wide currency, because a price
+  belongs to a venue. Adding NZD to GBP produces a figure that is not money, so
+  an order spanning two countries shows one total per currency rather than a
+  plausible-looking sum nobody can pay.
+- [0044](0044-a-menu-can-be-written-in-another-language.md) — **a menu can be
+  written in another language.** A record names the language its own strings are
+  in, and `translations` is an additive sidecar. The canonical `name` stayed a
+  plain string because it was the dish's identity — a claim [0051] has since
+  narrowed to display only.
+- [0045](0045-prices-convert-and-localisation-can-follow-you.md) — **prices
+  convert, and localisation can follow you.** Shipped exchange rates, refreshed
+  weekly by a scheduled workflow that opens an auto-merging PR, so conversion
+  works offline and the app still has no runtime dependency on a network call.

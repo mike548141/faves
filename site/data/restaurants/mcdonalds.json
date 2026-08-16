@@ -64,7 +64,7 @@
           "name": "Big Mac",
           "dishId": "big-mac",
           "price": null,
-          "image": "img/mcdonalds/big-mac.jpg",
+          "image": "img/mcdonalds/big-mac.webp",
           "alt": "A Big Mac: two beef patties, lettuce, cheese, pickles and sauce in a three-layer sesame seed bun",
           "tags": []
         },
@@ -72,36 +72,48 @@
           "name": "Quarter Pounder",
           "dishId": "quarter-pounder",
           "price": null,
+          "image": "img/mcdonalds/quarter-pounder.webp",
+          "alt": "A Quarter Pounder: a thick beef patty with melted cheese, onion and pickles in a sesame seed bun",
           "tags": []
         },
         {
           "name": "Double Quarter Pounder",
           "dishId": "double-quarter-pounder",
           "price": null,
+          "image": "img/mcdonalds/double-quarter-pounder.webp",
+          "alt": "A Double Quarter Pounder: two thick beef patties with melted cheese, onion and pickles in a sesame seed bun",
           "tags": []
         },
         {
           "name": "Cheeseburger",
           "dishId": "cheeseburger",
           "price": null,
+          "image": "img/mcdonalds/cheeseburger.webp",
+          "alt": "A cheeseburger: a beef patty with a slice of melted cheese, onion, pickle, ketchup and mustard in a soft bun",
           "tags": []
         },
         {
           "name": "Double Cheeseburger",
           "dishId": "double-cheeseburger",
           "price": null,
+          "image": "img/mcdonalds/double-cheeseburger.webp",
+          "alt": "A double cheeseburger: two beef patties with two slices of melted cheese, onion and pickle in a soft bun",
           "tags": []
         },
         {
           "name": "Hamburger",
           "dishId": "hamburger",
           "price": null,
+          "image": "img/mcdonalds/hamburger.webp",
+          "alt": "A hamburger: a beef patty with onion, pickle, ketchup and mustard in a soft bun",
           "tags": []
         },
         {
           "name": "Big Arch",
           "dishId": "big-arch",
           "price": null,
+          "image": "img/mcdonalds/big-arch.webp",
+          "alt": "A Big Arch: two beef patties with cheese, crispy onions, pickles and sauce in a large sesame seed bun",
           "tags": []
         }
       ]
@@ -113,49 +125,63 @@
           "name": "McChicken",
           "dishId": "mcchicken",
           "price": null,
+          "image": "img/mcdonalds/mcchicken.webp",
+          "alt": "A McChicken: a crumbed chicken patty with lettuce and mayonnaise in a sesame seed bun",
           "tags": []
         },
         {
           "name": "McCrispy",
           "dishId": "mccrispy",
           "price": null,
+          "image": "img/mcdonalds/mccrispy.webp",
+          "alt": "A McCrispy: a crispy chicken fillet with pickles in a toasted potato bun",
           "tags": []
         },
         {
           "name": "Double McCrispy",
           "dishId": "double-mccrispy",
           "price": null,
+          "image": "img/mcdonalds/double-mccrispy.webp",
+          "alt": "A Double McCrispy: two crispy chicken fillets with pickles in a toasted potato bun",
           "tags": []
         },
         {
           "name": "McCrispy Bacon Deluxe",
           "dishId": "mccrispy-bacon-deluxe",
           "price": null,
+          "image": "img/mcdonalds/mccrispy-bacon-deluxe.webp",
+          "alt": "A McCrispy Bacon Deluxe: a crispy chicken fillet with bacon, lettuce, tomato and sauce in a toasted potato bun",
           "tags": []
         },
         {
           "name": "Chicken McNuggets (6 pack)",
           "dishId": "chicken-mcnuggets-6-pack",
           "price": null,
+          "image": "img/mcdonalds/chicken-mcnuggets-6-pack.webp",
+          "alt": "Six Chicken McNuggets, golden crumbed chicken pieces",
           "tags": []
         },
         {
           "name": "Chicken McNuggets (10 pack)",
           "dishId": "chicken-mcnuggets-10-pack",
           "price": null,
+          "image": "img/mcdonalds/chicken-mcnuggets-10-pack.webp",
+          "alt": "Ten Chicken McNuggets in a box, golden crumbed chicken pieces",
           "tags": []
         },
         {
           "name": "Chicken McNuggets (20 pack)",
           "dishId": "chicken-mcnuggets-20-pack",
           "price": null,
+          "image": "img/mcdonalds/chicken-mcnuggets-20-pack.webp",
+          "alt": "Twenty Chicken McNuggets in a share box, golden crumbed chicken pieces",
           "tags": []
         },
         {
           "name": "Filet-O-Fish",
           "dishId": "filet-o-fish",
           "price": null,
-          "image": "img/mcdonalds/filet-o-fish.jpg",
+          "image": "img/mcdonalds/filet-o-fish.webp",
           "alt": "A Filet-O-Fish: a crumbed fish patty with melting cheese and tartare sauce in a soft steamed bun",
           "tags": []
         }
@@ -168,24 +194,32 @@
           "name": "Fries (Small)",
           "dishId": "fries-small",
           "price": null,
+          "image": "img/mcdonalds/fries-small.webp",
+          "alt": "A small carton of McDonald's fries",
           "tags": []
         },
         {
           "name": "Fries (Medium)",
           "dishId": "fries-medium",
           "price": null,
+          "image": "img/mcdonalds/fries-medium.webp",
+          "alt": "A medium carton of McDonald's fries",
           "tags": []
         },
         {
           "name": "Fries (Large)",
           "dishId": "fries-large",
           "price": null,
+          "image": "img/mcdonalds/fries-large.webp",
+          "alt": "A large carton of McDonald's fries",
           "tags": []
         },
         {
           "name": "Hash Brown",
           "dishId": "hash-brown",
           "price": null,
+          "image": "img/mcdonalds/hash-brown.webp",
+          "alt": "A hash brown: a golden, deep-fried potato patty",
           "tags": []
         }
       ]
@@ -197,6 +231,8 @@
           "name": "Bacon & Egg McMuffin",
           "dishId": "bacon-egg-mcmuffin",
           "price": null,
+          "image": "img/mcdonalds/bacon-egg-mcmuffin.webp",
+          "alt": "A Bacon & Egg McMuffin: bacon, a round egg and melted cheese in a toasted English muffin",
           "tags": [
             "contains-egg"
           ]
@@ -205,6 +241,8 @@
           "name": "Sausage & Egg McMuffin",
           "dishId": "sausage-egg-mcmuffin",
           "price": null,
+          "image": "img/mcdonalds/sausage-egg-mcmuffin.webp",
+          "alt": "A Sausage & Egg McMuffin: a sausage patty, a round egg and melted cheese in a toasted English muffin",
           "tags": [
             "contains-egg"
           ]
@@ -213,30 +251,40 @@
           "name": "Sausage McMuffin",
           "dishId": "sausage-mcmuffin",
           "price": null,
+          "image": "img/mcdonalds/sausage-mcmuffin.webp",
+          "alt": "A Sausage McMuffin: a sausage patty with melted cheese in a toasted English muffin",
           "tags": []
         },
         {
           "name": "Chicken McMuffin",
           "dishId": "chicken-mcmuffin",
           "price": null,
+          "image": "img/mcdonalds/chicken-mcmuffin.webp",
+          "alt": "A Chicken McMuffin: a crumbed chicken patty with melted cheese in a toasted English muffin",
           "tags": []
         },
         {
           "name": "Massive McMuffin",
           "dishId": "massive-mcmuffin",
           "price": null,
+          "image": "img/mcdonalds/massive-mcmuffin.webp",
+          "alt": "A Massive McMuffin: bacon, sausage, egg and cheese stacked in a toasted English muffin",
           "tags": []
         },
         {
           "name": "Hotcakes",
           "dishId": "hotcakes",
           "price": null,
+          "image": "img/mcdonalds/hotcakes.webp",
+          "alt": "Hotcakes: a stack of pancakes with butter and syrup",
           "tags": []
         },
         {
           "name": "Big Brekkie Burger",
           "dishId": "big-brekkie-burger",
           "price": null,
+          "image": "img/mcdonalds/big-brekkie-burger.webp",
+          "alt": "A Big Brekkie Burger: a beef patty, bacon, egg, hash brown and cheese in a toasted bun",
           "tags": [
             "contains-gluten"
           ]
@@ -250,6 +298,8 @@
           "name": "Flat White",
           "dishId": "flat-white",
           "price": null,
+          "image": "img/mcdonalds/flat-white.webp",
+          "alt": "A McCafé flat white in a takeaway cup",
           "tags": [
             "contains-dairy"
           ]
@@ -258,6 +308,8 @@
           "name": "Latte",
           "dishId": "latte",
           "price": null,
+          "image": "img/mcdonalds/latte.webp",
+          "alt": "A McCafé latte in a takeaway cup",
           "tags": [
             "contains-dairy"
           ]
@@ -266,6 +318,8 @@
           "name": "Cappuccino",
           "dishId": "cappuccino",
           "price": null,
+          "image": "img/mcdonalds/cappuccino.webp",
+          "alt": "A McCafé cappuccino in a takeaway cup",
           "tags": [
             "contains-dairy"
           ]
@@ -274,6 +328,8 @@
           "name": "Mocha",
           "dishId": "mocha",
           "price": null,
+          "image": "img/mcdonalds/mocha.webp",
+          "alt": "A McCafé mocha in a takeaway cup",
           "tags": [
             "contains-dairy"
           ]
@@ -282,18 +338,24 @@
           "name": "Long Black",
           "dishId": "long-black",
           "price": null,
+          "image": "img/mcdonalds/long-black.webp",
+          "alt": "A McCafé long black in a takeaway cup",
           "tags": []
         },
         {
           "name": "Hot Chocolate",
           "dishId": "hot-chocolate",
           "price": null,
+          "image": "img/mcdonalds/hot-chocolate.webp",
+          "alt": "A McCafé hot chocolate in a takeaway cup",
           "tags": []
         },
         {
           "name": "Iced Latte",
           "dishId": "iced-latte",
           "price": null,
+          "image": "img/mcdonalds/iced-latte.webp",
+          "alt": "A McCafé iced latte in a clear cup with ice",
           "tags": [
             "contains-dairy"
           ]
@@ -302,6 +364,8 @@
           "name": "Iced Mocha",
           "dishId": "iced-mocha",
           "price": null,
+          "image": "img/mcdonalds/iced-mocha.webp",
+          "alt": "A McCafé iced mocha in a clear cup with ice and cream",
           "tags": [
             "contains-dairy"
           ]
@@ -310,6 +374,8 @@
           "name": "Iced Chocolate",
           "dishId": "iced-chocolate",
           "price": null,
+          "image": "img/mcdonalds/iced-chocolate.webp",
+          "alt": "A McCafé iced chocolate in a clear cup with ice and cream",
           "tags": []
         }
       ]
@@ -321,6 +387,8 @@
           "name": "Hot Apple Pie",
           "dishId": "hot-apple-pie",
           "price": null,
+          "image": "img/mcdonalds/hot-apple-pie.webp",
+          "alt": "A hot apple pie in its cardboard sleeve",
           "tags": [
             "contains-gluten"
           ]
@@ -329,30 +397,40 @@
           "name": "Soft Serve Cone",
           "dishId": "soft-serve-cone",
           "price": null,
+          "image": "img/mcdonalds/soft-serve-cone.webp",
+          "alt": "A soft serve ice cream in a wafer cone",
           "tags": []
         },
         {
           "name": "Hot Fudge Sundae",
           "dishId": "hot-fudge-sundae",
           "price": null,
+          "image": "img/mcdonalds/hot-fudge-sundae.webp",
+          "alt": "A hot fudge sundae: soft serve in a cup under chocolate fudge sauce",
           "tags": []
         },
         {
           "name": "McFlurry",
           "dishId": "mcflurry",
           "price": null,
+          "image": "img/mcdonalds/mcflurry.webp",
+          "alt": "A McFlurry: soft serve in a cup mixed with crushed biscuit pieces",
           "tags": []
         },
         {
           "name": "Thickshake",
           "dishId": "thickshake",
           "price": null,
+          "image": "img/mcdonalds/thickshake.webp",
+          "alt": "A thickshake in a takeaway cup with a straw",
           "tags": []
         },
         {
           "name": "Frozen Coke",
           "dishId": "frozen-coke",
           "price": null,
+          "image": "img/mcdonalds/frozen-coke.webp",
+          "alt": "A Frozen Coke in a clear cup with a straw",
           "tags": []
         }
       ]

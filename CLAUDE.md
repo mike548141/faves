@@ -142,7 +142,15 @@ python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
 python3 tools/check_visibility.py # the visibility bullet above is still true
-python3 tools/check_versions.py # sw.js versions bumped in lockstep with site/
+python3 tools/check_decisions.py # every ADR is in the decisions index (it's the
+                              # allocator — an unindexed record is how a number
+                              # gets reused; seven were missing on 2026-08-16)
+python3 tools/check_versions.py --range origin/main..HEAD # sw.js versions bumped
+                              # in lockstep with site/. Use the RANGE form to check
+                              # finished work: bare, it reads only *staged* changes,
+                              # so on a clean tree it says "not in scope" and proves
+                              # nothing. Two sessions have now collided on a version
+                              # that the bare form called clean.
 node --test                   # JS unit tests (pure logic); no npm install needed
 node tools/device_check.mjs   # live-safety check in headless Chrome (see below)
 node tools/cook_check.mjs     # cook mode in headless Chrome (ADR 0039, below)

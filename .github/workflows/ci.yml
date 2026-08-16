@@ -54,6 +54,14 @@ jobs:
         run: >-
           python3 tools/check_visibility.py
           --actual ${{ github.event.repository.private && 'private' || 'public' }}
+      # docs/decisions/README.md is the ALLOCATOR, not a table of contents: the
+      # next session reads it to pick a number. An unindexed record is invisible
+      # to it, which is how a duplicate 0025 survived. An audit on 2026-08-16
+      # found seven records missing — including a contiguous 0042–0045 run, the
+      # shape most likely to cause a reuse. A guard that fails silently seven
+      # times is not a guard, so it is a gate now.
+      - name: Assert every decision record is indexed
+        run: python3 tools/check_decisions.py
 
   versions:
     name: service-worker version lockstep
