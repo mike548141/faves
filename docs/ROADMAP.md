@@ -380,9 +380,11 @@ delivery app.** Clear one by bringing back the fact.
       dated photo of the actual board clears it, and it starts going stale the
       moment it is taken. Same reasoning as the 1841 drinks item above, one step
       stronger.
-- [ ] **Menus still owed on six venues — and where each one lives**
+- [~] **Menus still owed on six venues — and where each one lives**
       `[M][content]`. Researched 2026-08-16 and written down here so a fresh
       session can start rather than repeat it.
+      **CLAIMED 2026-08-16 12:14 UTC (wt: faves-menu-18)** — the fetch of the 18
+      first-party-fetchable venues, under the owner ruling below.
 
       > 🔎 **The title understates the gap by five times — measured 2026-08-16.**
       > Counted across all 55 venue records: **32 carry zero dishes**, not six.
