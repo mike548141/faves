@@ -17,6 +17,7 @@ import { openStatus, groupWeek, makeClock, nowIn, viewerOnVenueTime } from "./ho
 import { closureBadge } from "./closure-ui.js";
 import { fxAsOf } from "./fx.js";
 import { alternates, preferred, venueLanguage } from "./lang.js";
+import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 // `verificationText` is deliberately NOT imported any more — the header line it
 // fed was removed 2026-08-16 as a duplicate of the ⓘ note. It stays exported
 // and tested in temporal.js because it is the canonical phrasing of "how we
@@ -467,10 +468,11 @@ function subFacets(r) {
 }
 
 function renderHeader(r) {
-  const isRecipes = r.kind === "recipes";
-  const meta = isRecipes
-    ? "Recipes for the nights you'd rather stay in"
-    : [r.cuisine?.join(" · "), r.area].filter(Boolean).join(" — ");
+  const kind = kindOf(r);
+  // A kind with a tagline of its own says what it is; one without is described
+  // by its facets, because those are the words its data actually holds.
+  const meta =
+    labelsOf(r).tagline ?? [r.cuisine?.join(" · "), r.area].filter(Boolean).join(" — ");
   // Title row carries a ♥ to favourite the whole venue (or collection).
   const venueHeart = heartButton(
     {
@@ -478,7 +480,8 @@ function renderHeader(r) {
       venueId: r.id,
       venueName: r.name,
       currency: venueCurrency(r),
-      isRecipe: isRecipes,
+      // Stored, so identity rather than capability — see kinds.isRecipeKind.
+      isRecipe: isRecipeKind(r),
       sub: meta,
     },
     r.name
@@ -499,7 +502,7 @@ function renderHeader(r) {
   const titleRow = el("div", { className: "menu-title-row" }, [titleGroup, venueHeart]);
   // Recipes are ours: there is no shop to have checked with, so no caveat —
   // and equally nothing to reassure anyone about. They keep a bare title.
-  const caveat = isRecipes ? null : refreshCaveat(r, todayIn(venueTimezone(r)));
+  const caveat = kind.hasFreshness ? refreshCaveat(r, todayIn(venueTimezone(r))) : null;
   if (caveat) {
     // The same branch `venueTimezone` and `venueHours` pick — nearest when the
     // home screen captured a location this session, else the primary. The note
@@ -511,12 +514,12 @@ function renderHeader(r) {
     titleGroup.append(caveatBtn, caveatNote);
   }
 
-  // The recipe collection's subheading is a sentence, not facets — nothing in
-  // it is a filter, so it stays plain text. `meta` (the same line as a string)
-  // still feeds the heart's caption, which is stored, not rendered.
-  const sub = isRecipes
-    ? el("p", { className: "menu-sub", textContent: meta })
-    : el("p", { className: "menu-sub" }, subFacets(r));
+  // A kind that isn't in the facets gets a plain-text subheading — nothing in
+  // it is a filter, so a link would lead nowhere. `meta` (the same line as a
+  // string) still feeds the heart's caption, which is stored, not rendered.
+  const sub = kind.inFacets
+    ? el("p", { className: "menu-sub" }, subFacets(r))
+    : el("p", { className: "menu-sub", textContent: meta });
   const bits = [titleRow, sub];
 
   // A closure gets a banner, not a disclosure. The "needs a refresh" caveat
@@ -542,7 +545,7 @@ function renderHeader(r) {
   // interactive personal rating, which is styled distinctly as their unverified
   // mark (ratings-ui.js). Grouped on their own row so the header title reads clean.
   const venueRating = ratingControl(
-    { type: "venue", venueId: r.id, venueName: r.name, isRecipe: isRecipes },
+    { type: "venue", venueId: r.id, venueName: r.name, isRecipe: isRecipeKind(r) },
     r.name
   );
   bits.push(
@@ -960,15 +963,19 @@ function dishPhoto(item) {
   return button;
 }
 
-function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, section = null) {
+// `r` carries the kind, so the row no longer needs to be TOLD what it is
+// rendering — the old `isRecipes` boolean was a second copy of a fact already
+// in the arguments, and a second copy is a thing that can disagree.
+function renderDish(item, r = null, avoid = EMPTY_SET, section = null) {
+  const kind = kindOf(r);
   const collectionId = r?.id ?? null;
   // The price slot doubles as a recipe meta chip (serves · time).
-  const recipeMeta = isRecipes
+  const recipeMeta = kind.itemsHaveRecipeFields
     ? [item.serves ? `Serves ${item.serves}` : null, item.time || null]
         .filter(Boolean)
         .join(" · ")
     : "";
-  const aside = isRecipes
+  const aside = !kind.hasPrices
     ? recipeMeta
       ? el("span", { className: "dish-meta", textContent: recipeMeta })
       : null
@@ -1007,11 +1014,11 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
   // rules. The link carries the dish's id, never a translated rendering —
   // identity is one string per dish and recipe.js resolves the same one.
   const nameEl =
-    isRecipes && collectionId
+    kind.itemPage && collectionId
       ? el("h3", { className: "dish-name", lang: lead.lang }, [
           el("a", {
             className: "dish-name-link",
-            href: `recipe.html?id=${collectionId}&dish=${dishId(item)}`,
+            href: `${kind.itemPage}?id=${collectionId}&dish=${dishId(item)}`,
             textContent: lead.text,
           }),
           codeBadge,
@@ -1052,7 +1059,8 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
         // what the favourites view prints; without the id, three dishes called
         // "Cheeseburger" shared one heart between them.
         dishId: dishId(item),
-        isRecipe: isRecipes,
+        // Stored on the heart and the rating — identity, not capability.
+        isRecipe: isRecipeKind(r),
       }
     : null;
   if (dishEntry) {
@@ -1082,7 +1090,7 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
     for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid));
     children.push(tags);
   }
-  if (isRecipes && (item.ingredients?.length || item.steps?.length)) {
+  if (kind.itemsHaveRecipeFields && (item.ingredients?.length || item.steps?.length)) {
     children.push(renderRecipeDetail(item));
   }
   if (item.goesWith?.length) {
@@ -1097,10 +1105,10 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
     // dishes only: a recipe has no price or venue to correct, and its feedback
     // route is the ⋯ menu (ADR 0028).
     const actions = el("div", { className: "dish-actions" }, [
-      isRecipes ? null : dishReportButton(r, item),
+      kind.canReport ? dishReportButton(r, item) : null,
       heartButton(dishEntry, item.name),
     ]);
-    if (!isRecipes) {
+    if (kind.canOrder) {
       actions.append(
         dishStepper({
           venueId: r.id,
@@ -1121,8 +1129,9 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
   // predicate the live re-apply uses (dietary.js), so a settings change can't
   // leave a stale highlight behind.
   const hasFlagged = dishFlagged(item.tags, avoid);
+  const itemModifier = labelsOf(r).itemModifier;
   const cls =
-    (isRecipes ? "dish recipe" : "dish") + (hasFlagged ? " dish-flagged" : "");
+    (itemModifier ? `dish ${itemModifier}` : "dish") + (hasFlagged ? " dish-flagged" : "");
   const li = el("li", { className: cls, id: `dish-${dishId(item)}` });
   // Two fields, two jobs. `data-name` is the haystack the in-menu text filter
   // matches against — the reader typed a name, not an id — and stays lowercased
@@ -1145,7 +1154,7 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
   // because applyView() re-reads dataset.tags for the live diet filter — a dish
   // configured out of "vegan" must dim with the rest of them, not linger
   // looking like a match (ADR 0048 §3).
-  if (r && !isRecipes) {
+  if (r && kind.canOrder) {
     const picker = dishAddOns(r, section, item, (tags) => {
       li.dataset.tags = tags.join(" ");
       li.classList.toggle("dish-flagged", dishFlagged(tags, avoid));
@@ -1189,7 +1198,7 @@ function renderRecipeDetail(item) {
 function render(r) {
   pageRecord = r;
   document.title = `${r.name} — Faves`;
-  const isRecipes = r.kind === "recipes";
+  const kind = kindOf(r);
   const allItems = r.menu.flatMap((s) => s.items);
 
   root.replaceChildren();
@@ -1202,7 +1211,7 @@ function render(r) {
 
   // Contact + order info. Its own column on wide screens; stacked under the
   // header on a phone. Recipe collections have no contact/order.
-  const aside = isRecipes ? null : renderAside(r);
+  const aside = kind.hasContactCard ? renderAside(r) : null;
   if (aside) root.append(aside);
 
   // Mobile: pin a compact call/status bar once the full card scrolls away.
@@ -1229,8 +1238,11 @@ function render(r) {
   // single-column — there's no menu to sit beside the info column.
   if (allItems.length === 0) {
     // Whole-string i18n keys per variant — the engine swaps complete strings.
-    const [key, note] = isRecipes
-      ? ["recipe.stub", "Recipes coming soon."]
+    // A kind with a note of its own wins; otherwise the venue wording, which
+    // turns on whether we hold a number to call rather than on the kind.
+    const own = labelsOf(r).emptyMenuNote;
+    const [key, note] = own
+      ? [own.key, own.text]
       : r.phone
         ? ["menu.stubCall", "Full menu coming soon — call ahead to order in the meantime."]
         : ["menu.stub", "Full menu coming soon."];
@@ -1249,10 +1261,10 @@ function render(r) {
   const search = el("input", {
     type: "search",
     className: "menu-search",
-    placeholder: isRecipes ? "Search recipes…" : "Search this menu…",
+    placeholder: labelsOf(r).searchPlaceholder.text,
     autocomplete: "off",
     "aria-label": "Search this menu",
-    "data-i18n-ph": isRecipes ? "menu.search.recipes.ph" : "menu.search.ph",
+    "data-i18n-ph": labelsOf(r).searchPlaceholder.key,
     "data-i18n-aria": "menu.search.aria",
   });
   // Custom clear ✕, same as the home search (the native type=search clear is
@@ -1333,7 +1345,7 @@ function render(r) {
       el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
     );
     const dishes = el("ul", { className: "dish-list" });
-    for (const item of section.items) dishes.append(renderDish(item, isRecipes, r, avoid, section));
+    for (const item of section.items) dishes.append(renderDish(item, r, avoid, section));
     // Subtext under the heading, never inside it (ADR 0057). The heading string
     // is also the jump-nav chip, so "Brunch (served till 2pm)" costs 24 chars of
     // a horizontal strip the reader scrolls with a thumb; the qualifier belongs
