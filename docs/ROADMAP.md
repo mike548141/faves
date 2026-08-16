@@ -5251,6 +5251,16 @@ the checklist and the recipe data are all sound underneath. **CLAIMED
 
 ### 37n's owner rulings — taken 2026-08-16, all four, before the sweep runs
 
+✅ **`contains-fish`, `vg-option` and `df-option` are ALL ADOPTED.** The two
+option tags were ruled in a parallel session, alongside the fish tag and for the
+same sweep, so taking them together is nearly free. 🚩 **`vgo` is NOT
+`v-option`** — vegan-optional and vegetarian-optional are different claims, and
+mapping one to the other misrepresents the venue. Data already found and
+currently discarded at intake: **Gong Cha** (free soy/oat swap on 15 drinks),
+**Rock Yard** ("Vegan Optional" on Vermicelli Noodles and Roti Rolls, "DF
+optional" on Sizzling Shaking Beef), **The Victoria Tavern** (its own `vgo` and
+`dfo` markers on 8+ dishes).
+
 ✅ **`contains-fish` is ADOPTED.** The vocabulary gains it. Three agents in a peer
 session hit the gap independently: fish sauce runs through a dozen Rock Yard
 dishes, that venue prints its own badge as literally "Fish", and anchovy is on
@@ -5270,11 +5280,25 @@ is near-universal across its pizza line for nuts, peanuts, sesame and shellfish 
 so collapsing the two tiers would fire four warnings on every pizza, which is a
 warning carrying no information. **What ships is unchanged: only `P` becomes a
 `contains-*` tag.** What changes is that the record can now hold the distinction
-instead of discarding it. 🚩 **ADR 0047 decides where it lives**: a per-tag tier
-on every dish is a field precached to every phone that no screen renders, so the
-trace grade belongs in the repo-only research store `data/`, not in
-`site/data/` — unless and until a screen is designed for it. That is the design
-question the build must answer first.
+instead of discarding it. ✅ **AND HE RULED WHERE IT LIVES —
+`site/data/`, not the record store.** A peer session recommended the repo-only
+`data/` on ADR 0047's payload rule, and **he overruled the premise**: *"In ruling
+47 I said it only holds data the screen shows, **or may with future features**.
+This is an example of a likely future feature for Faves."* So the trace tier
+ships in the payload.
+🔎 **He is right about his own ADR, and the strict reading was still
+reasonable — which is the interesting part.** ADR 0047's *Context* carries the
+clause verbatim: *"data the app will never render — now or in a future feature —
+must not be in the app's dataset"*. But its **Consequences** state the operative
+rule narrowly (*"the payload can only grow by adding something a screen shows"*)
+and `CLAUDE.md` restates it narrower still (*"Before adding a field to a venue
+file, name the screen that renders it"*). **Two of the three places a builder
+actually looks state the rule without the future clause**, which is why two
+sessions independently read it strictly today.
+🎯 **So this wants a superseding note on 0047 and an amendment to CLAUDE.md's
+restatement.** The accepted text and the owner's intent agree; the two summaries
+of it do not. Left for the owner rather than fixed here — 0047 is accepted, and
+an accepted record is superseded, never edited.
 
 ✅ **`crumbed → contains-egg` SPLITS into two classes.** 30 of 42 disagreed, the
 largest block in the report, and the disagreement is real rather than sloppy: a
