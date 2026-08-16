@@ -23,14 +23,21 @@
 //     file and this device is surfaced and chosen, never silently resolved.
 // The plan proposes and the UI asks; nothing in here touches the DOM.
 //
-// WHAT IS DELIBERATELY NOT COLLECTED. The Near-me origin (`faves.origin.v1`)
-// is the user's own location and lives in sessionStorage, so it never appears
-// here even by accident. The exported file says so, because a backup that
-// silently omitted something would be the dishonest kind of quiet.
+// WHAT IS DELIBERATELY NOT COLLECTED, and the rule behind it: if the import
+// path wouldn't put it back usefully, the export has no business carrying it
+// (owner's ruling, ROADMAP 36g). Two stores qualify — the Near-me origin
+// (`faves.origin.v1`, the user's own whereabouts, sessionStorage anyway) and
+// cook-mode ticks (`faves.checklist.v1`, twelve-hour progress about the meal in
+// front of you). The exported file NAMES both and says why, because a backup
+// that silently omitted something would be the dishonest kind of quiet.
+// See `EXCLUDED` — and note the trap it documents: both of those are matched on
+// more than their bare key, because a per-profile store's real key carries a
+// profile id.
 //
 // Pure and DOM-free (storage is injected), so it unit-tests without a browser.
 
 import { PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseName, sanitiseRegistry, scopeKey } from "./profiles.js";
+import { CHECKLIST_KEY } from "./checklist.js";
 import { createFavourites, favKey } from "./favourites.js";
 import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
@@ -63,11 +70,63 @@ const README =
   "Faves keeps this in your browser only; this file is a copy you asked for, and " +
   "producing it sent nothing anywhere.";
 
+// The stores this module refuses to put in a backup, keyed on the store's own
+// BASE key and carrying the sentence the exported file shows the user. `spare`
+// marks the ones a `replace` import must also leave alone; everything else
+// under `faves.` is wiped by a replace, exclusion or not.
 const EXCLUDED = {
-  "faves.origin.v1":
-    "Your last “Near me” location. Deliberately not exported: it is your " +
-    "whereabouts, and it is session-only anyway.",
+  "faves.origin.v1": {
+    spare: true, // sessionStorage and somebody else's business — never ours to delete
+    why:
+      "Your last “Near me” location. Deliberately not exported: it is your " +
+      "whereabouts, and it is session-only anyway.",
+  },
+  // ROADMAP 36g, owner's ruling: "if it isn't restored, it shouldn't be
+  // exported." Ticks reached the backup through the catch-all sweep below, not
+  // through the named-field path — ADR 0067 kept the checklist out of
+  // `SCOPED_BASE_KEYS` and read the sweep as a free safety net. It wasn't one:
+  // a tick is keyed to the EXPORTING device's profile id and dies after twelve
+  // hours, so restoring it is a no-op at best, and at worst hands a profile
+  // that merely shares an id somebody else's half-cooked recipe. Not spared by
+  // a replace: making the device look like the file means the file's no-ticks.
+  [CHECKLIST_KEY]: {
+    spare: false,
+    why:
+      "Which ingredients and steps you had ticked off while cooking. " +
+      "Deliberately not exported: those ticks are about the meal in front of " +
+      "you, they expire twelve hours after you make them, and restoring them " +
+      "into a different day’s cooking would be worse than losing them.",
+  },
 };
+
+/** What the exported file shows: one plain sentence per store, no internals. */
+const EXCLUDED_NOTES = Object.fromEntries(Object.entries(EXCLUDED).map(([k, e]) => [k, e.why]));
+
+/**
+ * Which EXCLUDED entry a real storage key belongs to, or null.
+ *
+ * WHY THIS ISN'T `key in EXCLUDED`. A per-profile store's key in storage is
+ * never its base key: `profileScopedStorage()` rewrites `faves.checklist.v1`
+ * into `faves.p.<id>.checklist.v1`, one per profile (profiles.js `scopeKey`).
+ * A flat lookup would therefore exclude *nothing at all* for those stores while
+ * looking exactly right. Matching on the suffix instead covers every profile —
+ * including one whose id has left the registry, because the sweep enumerates
+ * real storage rather than the roll of profiles, and an orphaned key is the
+ * case a registry-driven loop would miss. Suffix rather than a parsed
+ * `faves.p.<id>.` because an imported profile id is untrusted text that may
+ * itself contain dots.
+ */
+function excludedEntry(key) {
+  if (key in EXCLUDED) return EXCLUDED[key];
+  if (!key.startsWith("faves.p.")) return null;
+  for (const base of Object.keys(EXCLUDED)) {
+    if (key.endsWith("." + base.replace(/^faves\./, ""))) return EXCLUDED[base];
+  }
+  return null;
+}
+
+/** Is this storage key one the backup refuses to carry, for any profile? */
+const isExcludedKey = (key) => excludedEntry(key) !== null;
 
 function parse(raw) {
   try {
@@ -127,9 +186,14 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
   // module was last touched, or data left by an older version. Carried through
   // verbatim so "everything you put in" stays true without this file having to
   // be updated in lockstep with every new feature.
+  //
+  // `known` alone can't hold the exclusions here: it names exact keys, and a
+  // per-profile store's real keys carry a profile id (see `excludedEntry`). The
+  // filter is still derived from EXCLUDED rather than naming a key, so moving
+  // or renaming a store doesn't quietly reopen the hole.
   const other = {};
   for (const key of listStoredKeys(storage)) {
-    if (!known.has(key)) other[key] = storage.getItem(key);
+    if (!known.has(key) && !isExcludedKey(key)) other[key] = storage.getItem(key);
   }
 
   const data = {
@@ -139,7 +203,7 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
     _readme: README,
     profiles: people,
     order: parse(storage.getItem(ORDER_KEY)) ?? [],
-    excluded: EXCLUDED,
+    excluded: EXCLUDED_NOTES,
   };
   if (Object.keys(other).length) data.other = other;
   return data;
@@ -352,8 +416,10 @@ export function parsePersonalData(input) {
   const other = {};
   if (isObj(raw.other)) {
     for (const [k, v] of Object.entries(raw.other)) {
-      // Never re-import a key this module promises never to export.
-      if (!k.startsWith("faves.") || k in EXCLUDED) continue;
+      // Never re-import a key this module promises never to export — including
+      // from a file written before it made that promise, which is where the
+      // scoped tick keys will still be found.
+      if (!k.startsWith("faves.") || isExcludedKey(k)) continue;
       if (typeof v === "string") other[k] = v;
     }
   }
@@ -583,12 +649,25 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
 
   if (mode === "replace") {
     // Everything under `faves.` goes, bar the keys this module refuses to
-    // handle at all. Best-effort when the backend can't enumerate: purge the
-    // keys we can name from the registry we're about to overwrite.
+    // handle at all — the `spare` ones, which are somebody else's to delete.
+    // Note that is NOT every excluded key: cook-mode ticks are excluded from
+    // the backup and still wiped here, because "make this device look like the
+    // file" cannot mean "and keep the last occupant's half-cooked recipe".
+    // Best-effort when the backend can't enumerate: purge the keys we can name
+    // from the registry we're about to overwrite.
     const listed = listStoredKeys(storage);
     const doomed = listed.length
-      ? listed.filter((k) => !(k in EXCLUDED))
-      : [PROFILES_KEY, ORDER_KEY, ...readRegistry(storage).profiles.flatMap((p) => SCOPED_BASE_KEYS.map((b) => scopeKey(p.id, b)))];
+      ? listed.filter((k) => !excludedEntry(k)?.spare)
+      : // The checklist is deliberately absent from SCOPED_BASE_KEYS (ADR 0067)
+        // but a replace still owes it the same wipe as the enumerable path, so
+        // it is named here rather than surviving only when storage is blocked.
+        [
+          PROFILES_KEY,
+          ORDER_KEY,
+          ...readRegistry(storage).profiles.flatMap((p) =>
+            [...SCOPED_BASE_KEYS, CHECKLIST_KEY].map((b) => scopeKey(p.id, b))
+          ),
+        ];
     for (const k of doomed) removeKey(storage, k);
   }
 
