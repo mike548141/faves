@@ -1853,7 +1853,7 @@ Two consequences recorded rather than buried:
 
 ---
 
-## Automating the FX refresh — parked 2026-08-16
+## Automating the FX refresh — parked 2026-08-16, but WANTED
 
 Faves converts prices from rates it ships (ADR 0045). Those go stale unless
 someone fetches them, so a scheduled GitHub Action was the obvious answer. It was
@@ -1885,12 +1885,29 @@ their work (CLAUDE.md's verify block). The tool enforces the owner's ceiling —
 today or if no rate moved. So the instruction is safe to follow mindlessly,
 which is the only kind that gets followed.
 
-- [ ] **Revisit if the refresh ever actually lapses.** The failure mode is
-  visible rather than silent: the app states its rates' date beside the prices
-  and in Settings, so a stale table announces itself. If that date is ever
-  embarrassing, the honest fix is probably the bypass **plus** the job running
-  the four required checks itself before committing — that version was written
-  and is in the history at `d9a2629` if it is ever wanted.
+- [ ] 🎯 **The owner still wants this automated — weekly is the MINIMUM**
+  `[M][ci]` (ruled 2026-08-16). Parked, not declined: the manual per-session
+  refresh above is a stopgap that happens to cover a repo being worked on daily,
+  and it stops covering anything the moment the repo goes quiet — which is
+  exactly when the rates need it and nobody is watching.
+
+  **What a session picking this up needs to solve**, in order: a scheduled job
+  cannot push to `main` (the evidence is above), so it needs either a ruleset
+  bypass or a way to get the commit checked before it lands. Whatever it chooses
+  has to be *obvious on reading* — the version rejected here worked and was
+  rejected for being clever, so cleverness is a cost, not a tiebreak. Two things
+  already built and worth reusing: `tools/fetch_fx.py` already guards itself
+  (nothing if fetched today, nothing if no rate moved, `--bump` for the lockstep
+  rule), and commit `d9a2629` holds a job that runs the four required checks
+  itself before committing — which is what would make a bypass defensible rather
+  than merely convenient.
+
+  A third option nobody has costed yet, and probably the least surprising of the
+  three: **let the schedule open a PR and auto-merge it**. The owner rejected
+  "open a PR" when it meant waiting on him — auto-merge doesn't, and it satisfies
+  the required checks the ordinary way, with no bypass and no unusual git. It
+  needs "Allow auto-merge" enabled on the repo, and it leaves a PR per refresh in
+  the history.
 
 ---
 
@@ -1938,9 +1955,15 @@ remember, and nothing checks it. An id makes it mechanical.
 - `validate.py` enforces uniqueness within a venue and that `picks` resolve
   through the same path.
 
-**Not started.** It is a personal-data migration on every family device, and it
-wants doing once, carefully, rather than folded into a session already carrying
-FX and localisation. Its own ADR.
+🎯 **Approved by the owner 2026-08-16 — and explicitly for a NEW session.** Not
+started here, deliberately: it is a personal-data migration on every family
+device, and it wants a session that is only doing this. Its own ADR.
+
+**Where a fresh session should start:** the four jobs table above is the brief;
+`site/js/renames.js` is the working precedent to copy (single resolver, canonical
+before the lookup, non-destructive rewrite on read, a `validate.py` gate holding
+the data and the resolver in step); and `tests/renames.test.js` shows the shape
+of the tests, including the one that matters most — *nothing moves on day one*.
 
 ---
 ## Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)
@@ -1985,27 +2008,37 @@ stood in the shop.
 
 ✅ **The three missing addresses — owner supplied them, 2026-08-16.** Crepes A Go
 Go (61 Manners St) and COSMIC Vape & Coffee (99 Cuba St) added, along with <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
-**Moore Wilson's**. Chilly Pot was **not** added — see below.
+**Moore Wilson's**. Chilly Pot was **not** added, and is now confirmed to be a
+venue already held — see below.
 
-- [ ] 🎯 **Is "Chilly Pot" just Babaili Malatang?** `[XS][data]` — the owner
-  suspected so and the evidence agrees: the guidebook's Chilly Pot is at
-  41/47 Dixon St, the Babaili Malatang record already held is at 45 Dixon St, and <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
-  a local food post describes the same shop as *"Ba Bai Li, Malatang Chilli Pot,
-  Dixon Street"* — "chilli pot" being what 麻辣烫 *is*, not a second business.
-  Deliberately NOT added as a second record: a duplicate splits a venue's hearts
-  and ratings between two ids and looks like a data error on a public list.
-  Needs one look at the shopfront. If confirmed, the useful follow-up is an
-  `alsoKnownAs` searchable alias, so the name in the guidebook still finds it.
+✅ **"Chilly Pot" IS Babaili Malatang — owner confirmed 2026-08-16.** One shop,
+already held, so no second record and nothing to add. The evidence agreed
+independently: adjacent numbers on Dixon St, and a local food post describing
+*"Ba Bai Li, Malatang Chilli Pot, Dixon Street"* — "chilli pot" being what
+麻辣烫 *is*, rather than a second business. (Asked twice; the owner had already
+said so the first time. Noted so a third session doesn't ask again.)
+
+- [ ] **A venue could carry the other names people know it by** `[S][js]` — fell
+  out of the above rather than being asked for. Someone who read "Chilly Pot" in
+  the guidebook and types it into Faves finds nothing, because search only knows
+  `name`. An `alsoKnownAs: []` joining the search haystack would fix it for a few
+  lines. Not built: one venue is not an evidence base, and nobody has reported
+  the miss.
 - [ ] **COSMIC Vape & Coffee has no pin** `[XS][data]` — OSM has no entry at
   99 Cuba St for it, so the record carries the street address and no <!-- leakscan:allow: venue business addresses, the same class as site/data — this repo publishes them as its product (ADR 0022 gate 1) -->
   coordinates. Maps opens by address; distance sorting skips it.
-- [ ] 🎯 **Where does Moore Wilson's stop being a place you eat?** `[S][product]`
-  — owner-raised. Its coffee and bakery are in scope; its cleaning aisle plainly
-  is not, and its wholesale grocery half is the grey middle. Added as a stub with
-  cuisine `Deli · Bakery · Coffee` so the question is about what goes in its
-  *menu*, not whether the venue belongs. One record is not an evidence base for a
-  schema change (the same restraint ADR 0037 applied), so no `kind: "food-store"`
-  until a second one arrives.
+✅ **Where Moore Wilson's stops being a place you eat — ruled 2026-08-16, and it
+generalises.** Owner: *"whatever food/dishes I give you are to be included, if I
+don't give them to you or tell you to fetch them they are not."*
+
+So there is no line to draw per venue, because the line was never about the
+venue: **menu content is owner-supplied or owner-directed, full stop.** Nobody
+has to decide whether Moore Wilson's wholesale aisle counts — it isn't in the
+menu unless the owner puts it there. That retires the `kind: "food-store"`
+question too, which was only ever a way of guessing on his behalf.
+
+Recorded as a standing rule in CLAUDE.md, because it governs every intake, not
+this one.
 - [ ] **The seven new stubs have no hours, phone or menu** `[M][data]` — they are
   findable by name and pin only. Hours and phone are a web-research pass; the
   menus want an in-store or official-site read (ADR 0036's trusted four).

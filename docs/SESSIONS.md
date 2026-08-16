@@ -3559,3 +3559,33 @@ session, which is what prompted running it that way) · `boot_check` **13** ·
 shopfront), where Moore Wilson's stops being a place you eat, dish ids
 (Theme 25, analysed with a recommended shape), and the FX automation if the
 refresh ever actually lapses.
+
+### Closing rulings — 2026-08-16
+
+Four owner decisions taken at the end of the session above, recorded where they
+belong rather than only here.
+
+- **"Chilly Pot" is Babaili Malatang.** Confirmed; one shop, already held,
+  nothing to add. Worth noting the process failure rather than just the fact:
+  he had said so when he first raised it, and I asked again anyway. The evidence
+  I gathered only agreed with him. *Read what the owner already told you before
+  putting it back to him as an open question.*
+- **Menu content is owner-supplied or owner-directed.** *"Whatever food/dishes I
+  give you are to be included, if I don't give them to you or tell you to fetch
+  them they are not."* This dissolves rather than answers the Moore Wilson's
+  question — there is no line to draw per venue, so the `kind: "food-store"`
+  idea is retired too. Promoted to a standing rule in CLAUDE.md, because it
+  governs every intake.
+- **Dish ids: approved, for a NEW session.** Theme 25 carries the analysis, the
+  recommended shape and a pointer at `renames.js` as the working precedent to
+  copy. Not started here on purpose — it migrates personal data on every family
+  device and wants a session doing only that.
+- **FX automation is wanted, weekly at minimum.** The per-session manual refresh
+  that shipped is a stopgap, and its weakness is now written down: it covers a
+  repo being worked on and stops covering anything the moment the repo goes
+  quiet, which is exactly when the rates need it. Theme reframed from "revisit if
+  it lapses" to a live want, with the three candidate approaches costed — and a
+  third one added that nobody had considered: a scheduled job that opens a PR and
+  **auto-merges** it, which satisfies the required checks the ordinary way, needs
+  no bypass and no unusual git. The owner rejected "open a PR" when it meant
+  waiting on him; auto-merge doesn't.

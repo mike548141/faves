@@ -235,6 +235,14 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
     `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id
     in `site/data/index.json` + a fallback `<li>`; then `validate.py`.
+  - **Menu content is owner-supplied or owner-directed — never harvested on a
+    hunch.** Owner's ruling, 2026-08-16: *"whatever food/dishes I give you are
+    to be included, if I don't give them to you or tell you to fetch them they
+    are not."* So there is no judgement call about where a venue's menu stops —
+    a delicatessen's coffee counter is in and its cleaning aisle is out because
+    he hands over one and not the other, not because a rule was drawn. This
+    settles scope questions before they start; do not invent a `kind` or a
+    taxonomy to answer one.
   - **Refreshing a menu = append, never overwrite — but the append lands
     in the record, not the payload (ADR 0047).** A changed price replaces
     the dish's single entry in `site/data/` *and* appends the superseded
