@@ -7631,3 +7631,31 @@ rather than copying it, and dies loudly on a zero-key parse · chips on cards ·
 a fourth filter select · ADR **0082**. `node --test` **1051 pass / 0 fail**,
 `validate.py` 55 valid, `test_validate.py` 110 mutations, `boot_check` 24/24,
 `filter_row_check` 25/25, `recipe_check` 29/29.
+
+### Addendum — two corrections after the close
+
+**1. I overstated the defect I asked the owner to rule on.** Putting the KK
+Malaysian / KC Cafe provenance question to him, I said the app *"can't show its
+caveat, and doesn't."* Wrong. With `verified: null`, `refreshCaveat` returns
+reason `"never"`, so the menu screen already showed
+*"⚠ Menu items and prices need a refresh — confirm with the place when you
+order."* Setting `verifiedBy: delivery-app` **replaces a generic caution with an
+accurate one** — *"⚠ These prices came from a delivery app, not the place
+itself"* — it does not introduce a caution where none existed. The change is
+still right, and `menu.js:838` argues it in its own words (*"'we haven't checked'
+and 'someone else checked, and they mark prices up' are different risks"*), but
+**the honest size of it is smaller than I stated, and he decided on my framing.**
+🔑 Checking what the code did *before* a change is part of describing the change,
+not a formality after it.
+
+**2. My staged files were absorbed into two peer commits, and the loss was the
+RECORD, not the content.** `site/data/restaurants/{kk-malaysian,kc-cafe}.json`
+landed inside `437653b` (*"a browser check naming an element by id…"*) and the
+`DATA_VERSION` bump inside a peer's merge — neither message mentions either.
+Verified afterwards that the deploy invariant survived: `check_versions.py` over
+the range reports `DATA_VERSION 2026-08-16.41 → .42`, so installed phones will
+refetch. **Content correct, provenance scrambled.** The correction above existed
+only in the commit message that was never created, which is why it is here
+instead. ⇒ **After a commit, verify it exists and says what you wrote** —
+`git log -1` naming *your* subject, not merely a clean status. A clean status is
+equally consistent with "committed" and "someone else committed it for you".
