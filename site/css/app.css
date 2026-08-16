@@ -3070,6 +3070,22 @@ body.faves-view .to-top {
   color: var(--ink-soft);
   font-size: 0.95rem;
 }
+/* The dish's name in the other languages the record carries (ADR 0044) — the
+   script on the wall, a romanisation. Quieter than the heading it sits under,
+   but NOT as quiet as a caption: this is the line you hold up to point at, so
+   it keeps a legible size and full contrast against the surface. No font-family
+   override — the browser's own script fallback picks a face that has the
+   glyphs, and naming a Latin stack here would hide the very text this exists
+   to show. */
+.dish-name-alt {
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.dish-name-sep {
+  opacity: 0.55;
+}
 .dish-tags {
   display: flex;
   flex-wrap: wrap;

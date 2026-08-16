@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **A menu can be written in another language.** A dish can carry its name and
+  description in as many languages as the record holds — so the heading reads in
+  yours while the script from the wall sits just beneath it, ready to point at.
+  Search finds a dish by any of its spellings. Every rendering is tagged for
+  screen readers (WCAG 2.2 AA 3.1.2), which is why the feature is built this way
+  rather than as plain text. No place uses it yet; the groundwork is in. (ADR 0044)
 - **A place now keeps its own clock and its own currency.** "Open now" is worked
   out on the *place's* clock — so a venue in London reads correctly whether
   you're looking it up from Wellington or from down its own street — and prices

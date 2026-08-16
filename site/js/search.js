@@ -7,6 +7,7 @@
 // Pure, so it's unit-tested directly (tests/search.test.js).
 
 import { slug } from "./slug.js";
+import { searchableText, venueLanguage } from "./lang.js";
 
 const norm = (s) => (s || "").toLowerCase();
 
@@ -24,6 +25,7 @@ export function buildIndex(restaurants) {
   const dishes = [];
   for (const r of restaurants) {
     const isRecipe = r.kind === "recipes";
+    const venueLang = venueLanguage(r);
     places.push({
       id: r.id,
       name: r.name,
@@ -48,7 +50,17 @@ export function buildIndex(restaurants) {
             : `restaurant.html?id=${r.id}#dish-${slug(item.name)}`,
           // The venue's order-number (e.g. "14") joins the haystack so a
           // guest reading "two number 14s" off the board can find it.
-          hay: norm([item.name, item.desc, ingredients, item.code].join(" ")),
+          // Every rendering, not just the canonical one: someone hunting
+          // "ต้มยำ" and someone hunting "tom yam" want the same dish, and only
+          // one of them can type the other (ADR 0044).
+          hay: norm(
+            [
+              ...searchableText(item, "name", venueLang),
+              ...searchableText(item, "desc", venueLang),
+              ingredients,
+              item.code,
+            ].join(" ")
+          ),
         });
       }
     }

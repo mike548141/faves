@@ -70,6 +70,43 @@ def _load_renames():
 
 RENAMED = _load_renames()
 
+
+# BCP-47, loosely: a 2-3 letter primary subtag plus optional script/region/variant
+# subtags. Deliberately a shape check, not a registry lookup — the IANA registry
+# is not in the stdlib, and a shape check catches the realistic error (a language
+# NAME where a tag belongs: "Thai", "Chinese") without pretending to more
+# authority than it has.
+BCP47_RE = re.compile(r"^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$")
+
+
+def check_translations(rid, obj, where, fields):
+    """`translations` on a dish or section: {field: {bcp47: text}} (ADR 0044).
+
+    Additive by design — the canonical `name`/`desc` stays a plain string,
+    because it is the dish's IDENTITY (slugs, picks, stored hearts), not just
+    display text. So this validates the sidecar and never the identity."""
+    tr = obj.get("translations")
+    if tr is None:
+        return
+    if not isinstance(tr, dict):
+        err(rid, f"{where}: translations must be an object")
+        return
+    for field, by_lang in tr.items():
+        if field not in fields:
+            err(rid, f"{where}: translations has no such field {field!r} (allowed: {sorted(fields)})")
+            continue
+        if not isinstance(obj.get(field), str) or not obj[field].strip():
+            err(rid, f"{where}: translations.{field} but the record has no {field} to translate")
+            continue
+        if not isinstance(by_lang, dict) or not by_lang:
+            err(rid, f"{where}: translations.{field} must be a non-empty object keyed by language tag")
+            continue
+        for tag, text in by_lang.items():
+            if not BCP47_RE.match(str(tag)):
+                err(rid, f"{where}: translations.{field} key {tag!r} is not a BCP-47 tag")
+            if not isinstance(text, str) or not text.strip():
+                err(rid, f"{where}: translations.{field}[{tag!r}] must be a non-empty string")
+
 CURRENCY_RE = re.compile(r"^[A-Z]{3}$")
 
 # Currencies price.js has band thresholds for. Kept in step by hand — a short
@@ -634,6 +671,12 @@ def check_restaurant(path):
                         f"{RENAMED.get(old)!r} — an old link would 404",
                     )
 
+    # language: the BCP-47 tag the record's canonical name/desc/section strings
+    # are written in (ADR 0044). Absent = the collection's own, en-NZ.
+    lang = data.get("language")
+    if lang is not None and not (isinstance(lang, str) and BCP47_RE.match(lang)):
+        err(rid, f"language must be a BCP-47 tag like 'th' or 'zh-Hant' (got {lang!r})")
+
     # image / alt: optional self-hosted card photo; alt required when set.
     check_image(rid, data, "card image")
 
@@ -703,12 +746,14 @@ def check_restaurant(path):
             err(rid, "menu section missing 'section' name")
         # A whole section may be seasonal — the winter menu (ADR 0023).
         check_available(rid, section, f"section {section.get('section')!r}")
+        check_translations(rid, section, f"section {section.get('section')!r}", {"section"})
         for item in section.get("items", []):
             name = item.get("name")
             if not isinstance(name, str) or not name.strip():
                 err(rid, "menu item missing a name")
             else:
                 item_names.add(name)
+            check_translations(rid, item, f"item {name!r}", {"name", "desc"})
             # price may be a plain number/null, or a dated series (ADR 0023).
             # Every value in the series is type-checked exactly as a flat price
             # always was: gaining a time dimension must not weaken the schema.

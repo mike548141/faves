@@ -78,6 +78,12 @@ reversible in an afternoon.
   "currency": null,                  // optional ISO 4217, e.g. "GBP". Absent =
                                      //   NZD. Venue-level: one menu, one currency
                                      //   (hemisphere is DERIVED from lat, never stored)
+  "language": null,                  // optional BCP-47 tag the record's own
+                                     //   name/desc/section strings are written in,
+                                     //   e.g. "th-Latn". Absent = "en-NZ" (ADR 0044)
+  "formerIds": [],                   // optional: ids this record used to have.
+                                     //   MUST agree with site/js/renames.js — an
+                                     //   old shared link resolves through it
   "lat": -41.29310,                  // optional decimal degrees (WGS84); both or neither
   "lng": 174.77551,                  // feeds the native-maps handoff + (later) distance sort
   "phone": "+64 4 ...",              // tel: link for ordering. address/phone may

@@ -9,6 +9,7 @@ import { travelHint } from "./distance.js";
 import { formatDistance, convertTemperatures } from "./units.js";
 import { openStatus, groupWeek, makeClock, nowIn, viewerOnVenueTime } from "./hours.js";
 import { closureBadge } from "./closure-ui.js";
+import { alternates, preferred, venueLanguage } from "./lang.js";
 import { todayIn, verificationText, refreshCaveat, detailsVerification } from "./temporal.js";
 import {
   HOME_CURRENCY,
@@ -661,26 +662,52 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
       })
     : null;
 
+  // What to lead with, and what to show beneath it (ADR 0044). For the ~all
+  // records carrying no translations this is exactly `item.name` and an empty
+  // list, and the markup is unchanged from before.
+  const venueLang = venueLanguage(r);
+  const lead = preferred(item, "name", venueLang) ?? { text: item.name, lang: venueLang };
+  const otherNames = alternates(item, "name", venueLang);
+
   // A recipe's name links to its own full page; a restaurant dish is plain
   // text (its detail already lives inline on the menu).
+  //
+  // `lang` on every one of these is a WCAG 2.2 AA 3.1.2 requirement, not a
+  // nicety: unmarked, a screen reader reads Thai with English pronunciation
+  // rules. The link still slugs `item.name` — the CANONICAL string — because
+  // that is the dish's identity and the anchor has to keep matching it.
   const nameEl =
     isRecipes && collectionId
-      ? el("h3", { className: "dish-name" }, [
+      ? el("h3", { className: "dish-name", lang: lead.lang }, [
           codeBadge,
           el("a", {
             className: "dish-name-link",
             href: `recipe.html?id=${collectionId}&dish=${slug(item.name)}`,
-            textContent: item.name,
+            textContent: lead.text,
           }),
         ].filter(Boolean))
-      : el("h3", { className: "dish-name" }, [
+      : el("h3", { className: "dish-name", lang: lead.lang }, [
           codeBadge,
-          el("span", { className: "dish-name-text", textContent: item.name }),
+          el("span", { className: "dish-name-text", textContent: lead.text }),
         ].filter(Boolean));
+
+  // The name as the menu on the wall writes it, so you can point at it. A
+  // separator between renderings, never before the first one.
+  const alsoKnown = otherNames.length
+    ? el(
+        "p",
+        { className: "dish-name-alt" },
+        otherNames.flatMap((n, i) => [
+          i ? el("span", { className: "dish-name-sep", "aria-hidden": "true", textContent: " · " }) : null,
+          el("span", { lang: n.lang, textContent: n.text }),
+        ]).filter(Boolean)
+      )
+    : null;
 
   const head = el("div", { className: "dish-head" }, [nameEl, aside]);
   // Note: li.append() below stringifies null, so only push real nodes.
   const children = [head];
+  if (alsoKnown) children.push(alsoKnown);
   // Your personal rating sits directly under the name — it's an identity mark on
   // the dish, so it reads clearest there and stays clear of the heart/Add action
   // cluster below (side by side the two were mistaken for one control). dishEntry
@@ -694,7 +721,8 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET) {
   const photo = dishPhoto(item);
   if (photo) children.push(photo);
   if (item.desc) {
-    children.push(el("p", { className: "dish-desc", textContent: item.desc }));
+    const d = preferred(item, "desc", venueLang) ?? { text: item.desc, lang: venueLang };
+    children.push(el("p", { className: "dish-desc", lang: d.lang, textContent: d.text }));
   }
   // Above the tags, below the description: it qualifies what we just told you
   // about this dish, so it reads as a footnote to the description rather than
