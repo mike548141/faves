@@ -28,13 +28,15 @@ const kk = { venueId: "kk", venueName: "KK Malaysian", phone: "04 555", name: "M
 const kk2 = { venueId: "kk", venueName: "KK Malaysian", phone: "04 555", name: "Roti", price: 6 };
 const sf = { venueId: "sf", venueName: "Sprig + Fern", name: "Pilsner", price: 12 };
 
+// The lookup API addresses a line by dish id (ADR 0051). A meta with no explicit
+// `dishId` resolves to slug(name), which is what these fixtures rely on.
 test("add: new items, then increment on repeat add", () => {
   const o = createOrder(fakeStorage());
   o.add(kk);
   o.add(kk);
   o.add(kk2);
-  assert.equal(o.qtyOf("kk", "Mee Goreng"), 2);
-  assert.equal(o.qtyOf("kk", "Roti"), 1);
+  assert.equal(o.qtyOf("kk", "mee-goreng"), 2);
+  assert.equal(o.qtyOf("kk", "roti"), 1);
   assert.equal(o.count(), 3);
 });
 
@@ -49,10 +51,10 @@ test("total: sums price × qty; unpriced items count as 0", () => {
 test("setQty: changes quantity; 0 removes the line", () => {
   const o = createOrder(fakeStorage());
   o.add(kk);
-  o.setQty("kk", "Mee Goreng", 5);
-  assert.equal(o.qtyOf("kk", "Mee Goreng"), 5);
-  o.setQty("kk", "Mee Goreng", 0);
-  assert.equal(o.qtyOf("kk", "Mee Goreng"), 0);
+  o.setQty("kk", "mee-goreng", 5);
+  assert.equal(o.qtyOf("kk", "mee-goreng"), 5);
+  o.setQty("kk", "mee-goreng", 0);
+  assert.equal(o.qtyOf("kk", "mee-goreng"), 0);
   assert.equal(o.items().length, 0);
 });
 
@@ -60,7 +62,7 @@ test("remove and clear", () => {
   const o = createOrder(fakeStorage());
   o.add(kk);
   o.add(sf);
-  o.remove("kk", "Mee Goreng");
+  o.remove("kk", "mee-goreng");
   assert.equal(o.count(), 1);
   o.clear();
   assert.equal(o.count(), 0);
@@ -69,9 +71,9 @@ test("remove and clear", () => {
 test("toggleCollected flips the flag", () => {
   const o = createOrder(fakeStorage());
   o.add(kk);
-  o.toggleCollected("kk", "Mee Goreng");
+  o.toggleCollected("kk", "mee-goreng");
   assert.equal(o.items()[0].collected, true);
-  o.toggleCollected("kk", "Mee Goreng");
+  o.toggleCollected("kk", "mee-goreng");
   assert.equal(o.items()[0].collected, false);
 });
 
@@ -101,7 +103,7 @@ test("persistence: writes to storage and re-hydrates in a new store", () => {
   // A fresh store over the same storage sees the saved order.
   const b = createOrder(storage);
   assert.equal(b.count(), 2);
-  assert.equal(b.qtyOf("kk", "Mee Goreng"), 1);
+  assert.equal(b.qtyOf("kk", "mee-goreng"), 1);
 });
 
 test("subscribe fires on mutation and unsubscribe stops it", () => {
@@ -167,9 +169,73 @@ test("order.merge folds a decoded share into the store and persists", () => {
     { venueId: "kk", venueName: "KK Malaysian", phone: "04 555", name: "Mee Goreng", price: 18, qty: 2 },
     { venueId: "sf", venueName: "Sprig + Fern", phone: null, name: "Pilsner", price: 12, qty: 1 },
   ]);
-  assert.equal(o.qtyOf("kk", "Mee Goreng"), 3);
-  assert.equal(o.qtyOf("sf", "Pilsner"), 1);
+  assert.equal(o.qtyOf("kk", "mee-goreng"), 3);
+  assert.equal(o.qtyOf("sf", "pilsner"), 1);
   assert.equal(o.count(), 4);
+});
+
+// --- dish ids: the $56 bug (ADR 0051) -------------------------------------
+// Sprig & Fern prints "Cheeseburger" three times at three prices. While the
+// name was the line's identity, adding the $28 Mains one and the $21 Gold Card
+// one produced ONE line of 2 × $28 and charged $56 for a $49 pair. Ids are
+// passed explicitly here so the test proves the model, not the menu data.
+
+const burger = (over) => ({
+  venueId: "sprig-and-fern", venueName: "Sprig & Fern", name: "Cheeseburger", ...over,
+});
+const mains = burger({ dishId: "cheeseburger", price: 28 });
+const goldCard = burger({ dishId: "cheeseburger-gold-card", price: 21 });
+
+test("two same-named dishes with different ids are two lines at the right total", () => {
+  const o = createOrder(fakeStorage());
+  o.add(mains);
+  o.add(goldCard);
+  assert.equal(o.items().length, 2); // was 1 — the bug
+  assert.equal(o.total(), 49); // was 56 — the money
+  assert.equal(o.qtyOf("sprig-and-fern", "cheeseburger"), 1);
+  assert.equal(o.qtyOf("sprig-and-fern", "cheeseburger-gold-card"), 1);
+});
+
+test("the id, not the name, decides which line a stepper moves", () => {
+  const o = createOrder(fakeStorage());
+  o.add(mains);
+  o.add(goldCard);
+  o.setQty("sprig-and-fern", "cheeseburger-gold-card", 3);
+  assert.equal(o.total(), 28 + 63);
+  o.remove("sprig-and-fern", "cheeseburger");
+  assert.equal(o.items().length, 1);
+  assert.equal(o.items()[0].dishId, "cheeseburger-gold-card");
+});
+
+test("a line records its id, so it survives storage and a fresh store", () => {
+  const storage = fakeStorage();
+  createOrder(storage).add(goldCard);
+  const b = createOrder(storage);
+  assert.equal(b.qtyOf("sprig-and-fern", "cheeseburger-gold-card"), 1);
+  assert.equal(b.qtyOf("sprig-and-fern", "cheeseburger"), 0); // not the other row
+});
+
+test("an id-less line keys exactly as it did before ids existed", () => {
+  // The ADR 0048 §4 property, restated for ids: nothing already in a family's
+  // browser moves, because dishId() falls through to slug(name).
+  const o = createOrder(fakeStorage('[{"venueId":"kk","venueName":"KK","name":"Mee Goreng","price":18,"qty":2,"collected":false}]'));
+  assert.equal(o.qtyOf("kk", "mee-goreng"), 2);
+  o.add(kk); // the same dish, added the new way, still finds the stored line
+  assert.equal(o.items().length, 1);
+  assert.equal(o.qtyOf("kk", "mee-goreng"), 3);
+});
+
+test("mergeItems keeps two same-named incoming lines apart and carries the id", () => {
+  const out = mergeItems([], [
+    { ...mains, qty: 1 },
+    { ...goldCard, qty: 2 },
+  ]);
+  assert.equal(out.length, 2);
+  assert.equal(out[0].dishId, "cheeseburger");
+  assert.equal(out[1].dishId, "cheeseburger-gold-card");
+  // …and an id-less line still merges by name-as-slug, adding no stray field.
+  const plain = mergeItems([], [line({ qty: 1 })]);
+  assert.equal("dishId" in plain[0], false);
 });
 
 test("orderCount / orderTotal helpers are pure", () => {

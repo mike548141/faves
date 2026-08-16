@@ -33,6 +33,7 @@
 
 import { PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseName, sanitiseRegistry, scopeKey } from "./profiles.js";
 import { createFavourites, favKey } from "./favourites.js";
+import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
 import { createSettings, sanitiseDiet } from "./settings.js";
 import { mergeItems } from "./cart.js";
@@ -199,7 +200,15 @@ function sanitiseFavourites(list) {
     if (type === "dish") {
       entry.name = clip(e.name);
       if (!entry.name) continue;
+      // Carried so a heart on a disambiguated row (ADR 0051) survives an
+      // export/import round trip; without it the id would be dropped here and
+      // the restored heart would silently attach to the bare-slug dish.
+      if (e.dishId) entry.dishId = clip(e.dishId);
     }
+    // Deduped by the same key the store uses. Since ADR 0051 that key slugs the
+    // name, so two id-less entries whose names differ only in punctuation
+    // ("Fish & Chips" / "Fish + Chips") now collapse into one — correct, because
+    // the live store never held them as two hearts either.
     const k = favKey(entry);
     if (seen.has(k)) continue;
     seen.add(k);
@@ -209,11 +218,20 @@ function sanitiseFavourites(list) {
   return out;
 }
 
+// Rating keys arrive as strings, and a payload exported by a build that predates
+// dish ids carries them in NAME form — so they are migrated here, on the way in,
+// not left for the live store's own read() to fix later. The difference is
+// visible to the user: without it, an incoming `d:kk Roti Canai` doesn't collide
+// with a device's `d:kk roti-canai`, both get written, and the import report
+// claims a rating it added that the very next read then discards.
+// (Only the dish half. The venue half — `migrateRatingKeys` — is not applied
+// here and never has been; an old venue id still lands intact and is rewritten
+// on the next store read, because renames.js is non-destructive too.)
 function sanitiseRatings(map) {
   const out = {};
   if (!isObj(map)) return out;
   let n = 0;
-  for (const [k, v] of Object.entries(map)) {
+  for (const [k, v] of Object.entries(migrateDishKeys(map))) {
     const key = clip(k);
     const score = clampRating(v); // the same gate ratings.js writes through
     if (!key || !score) continue;
@@ -260,7 +278,10 @@ function sanitiseOrderLines(list) {
     };
     // This whitelist is exhaustive by design, so a field it doesn't name is
     // silently dropped on export — which for an add-on selection would mean a
-    // restored order quietly losing what someone asked for (ADR 0048).
+    // restored order quietly losing what someone asked for (ADR 0048), and for
+    // a dish id would mean a restored order re-merging the $28 Cheeseburger and
+    // the $21 one back into one line at the wrong price (ADR 0051).
+    if (i.dishId) line.dishId = clip(i.dishId);
     const options = sanitiseOptions(i.options);
     if (options.length) line.options = options;
     out.push(line);

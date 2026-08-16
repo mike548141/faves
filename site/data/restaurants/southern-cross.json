@@ -817,6 +817,7 @@
       "items": [
         {
           "name": "Heineken",
+          "dishId": "heineken-bottled",
           "desc": null,
           "price": 11.5,
           "tags": [

@@ -1,11 +1,12 @@
 // Recipe detail screen. Opened by tapping a dish name in the Cook at Home
-// list: recipe.html?id=<collection>&dish=<slug>. Shows the whole recipe on
+// list: recipe.html?id=<collection>&dish=<dish id>. Shows the whole recipe on
 // its own focused, shareable page — meta, photo, ingredients, method, and
 // "goes well with" links to the other recipes. Self-contained helpers, in
 // keeping with the other screen modules.
 
 import { loadRestaurant } from "./data.js";
 import { slug } from "./slug.js";
+import { dishId, findDish } from "./dish-id.js";
 import { initOrderUI } from "./cart-ui.js";
 import { initTransferReceive } from "./personal-io-ui.js";
 import { heartButton } from "./favourites-ui.js";
@@ -52,14 +53,13 @@ function tagChip(t, avoid = EMPTY_SET) {
 // Allergen warnings first (safety), then the rest.
 const tagOrder = (tags) => [...tags].sort((a, b) => Number(isAllergen(b)) - Number(isAllergen(a)));
 
-function findDish(collection, dishSlug) {
-  for (const section of collection.menu || []) {
-    for (const item of section.items || []) {
-      if (slug(item.name) === dishSlug) return item;
-    }
-  }
-  return null;
-}
+// The `?dish=` in the URL, resolved to a recipe. Delegated to the shared
+// resolver (dish-id.js) rather than re-slugging every name here: that hand-
+// rolled loop only ever matched a slugged name, so a recipe given an explicit
+// id — or one whose id has moved on, leaving a `formerIds` trail — would 404 a
+// link that used to work. The shared one also tries former ids last, which is
+// what keeps an already-shared recipe link alive across a rename.
+const recipeByRef = (collection, ref) => findDish(collection, ref)?.item ?? null;
 
 function fail() {
   document.getElementById("recipe-loading").hidden = true;
@@ -76,7 +76,16 @@ function render(collection, item) {
 
   const parts = [];
   const heart = heartButton(
-    { type: "dish", venueId: id, venueName: collection.name, name: item.name, isRecipe: true },
+    {
+      type: "dish",
+      venueId: id,
+      venueName: collection.name,
+      name: item.name,
+      // Same key the collection's list screen hearts with, so the ♥ here and
+      // the ♥ on the menu row are one heart, not two.
+      dishId: dishId(item),
+      isRecipe: true,
+    },
     item.name
   );
   heart.classList.add("heart-lg");
@@ -138,10 +147,14 @@ function render(collection, item) {
     for (const ref of item.goesWith) {
       const hash = ref.indexOf("#");
       // A same-collection ref opens that recipe's page; a cross-record
-      // "id#Dish" deep-links into that venue's menu.
+      // "id#Dish" deep-links into that venue's menu. Only the first can be
+      // resolved here — the other record isn't loaded, and `slug(name)` is the
+      // id of any dish that hasn't been given one, so it lands where it always
+      // did and the target page resolves the rest.
+      const here = hash === -1 ? findDish(collection, ref)?.item : null;
       const href =
         hash === -1
-          ? `recipe.html?id=${id}&dish=${slug(ref)}`
+          ? `recipe.html?id=${id}&dish=${here ? dishId(here) : slug(ref)}`
           : `restaurant.html?id=${ref.slice(0, hash)}#dish-${slug(ref.slice(hash + 1))}`;
       const name = hash === -1 ? ref : ref.slice(hash + 1);
       wrap.append(el("a", { className: "pair-chip", href, textContent: name }));
@@ -171,11 +184,11 @@ function reRender() {
 async function main() {
   const params = new URLSearchParams(location.search);
   const id = params.get("id");
-  const dishSlug = params.get("dish");
-  if (!id || !dishSlug) return fail();
+  const dishRef = params.get("dish");
+  if (!id || !dishRef) return fail();
   try {
     const collection = await loadRestaurant(id);
-    const item = findDish(collection, dishSlug);
+    const item = recipeByRef(collection, dishRef);
     if (!item) return fail();
     current = { collection, item };
     render(collection, item);

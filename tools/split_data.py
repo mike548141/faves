@@ -45,16 +45,31 @@ def dish_key(section, item):
     this record has to survive years of menu edits. `code` where the shop
     gives one, name otherwise, always scoped by section.
     """
-    return {
+    key = {
         "section": section.get("section"),
         "name": item.get("name"),
         "code": item.get("code"),
     }
+    # An explicit `dishId` (ADR 0051) is the one part of a dish that survives a
+    # rename, so carry it when the data gives one — a renamed dish would
+    # otherwise orphan its own price history. Only when it is explicit: adding
+    # the derived `slug(name)` would say nothing name doesn't already say, and
+    # would rewrite every history file that predates dish ids for no gain.
+    did = item.get("dishId")
+    if isinstance(did, str) and did:
+        key["dishId"] = did
+    return key
 
 
 def same_dish(key, section, item):
-    return (key.get("section") == section.get("section")
-            and key.get("name") == item.get("name")
+    if key.get("section") != section.get("section"):
+        return False
+    # An id on the key decides on its own, because that is what an id is for.
+    # A key written before ids existed carries none and matches the way it
+    # always did — so no existing history row changes meaning.
+    if key.get("dishId"):
+        return key["dishId"] == item.get("dishId")
+    return (key.get("name") == item.get("name")
             and key.get("code") == item.get("code"))
 
 

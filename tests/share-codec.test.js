@@ -15,6 +15,8 @@ import {
   readTransferToken,
   CODEC_VERSION,
 } from "../site/js/share-codec.js";
+import { mergeItems } from "../site/js/cart.js";
+import { favKey } from "../site/js/favourites.js";
 
 // groupByVenue()-shaped input: what the order sheet hands the encoder.
 const groups = [
@@ -216,6 +218,100 @@ test("order and shortlist tokens decode to their own type", () => {
   assert.equal(decodeShare(encodeShortlist({ groups: shortlistGroups })).type, "shortlist");
 });
 
+// --- dish ids on the wire (ADR 0051) --------------------------------------
+// The id rides as an appended positional slot (index 4), which every decoder
+// that predates it ignores by construction — the same trick add-ons used, and
+// for the same reason: CODEC_VERSION is checked with a strict `!==` and is
+// shared by all three payload kinds, so bumping it would break every
+// outstanding link of all three.
+
+const burgerGroups = [
+  {
+    venueId: "sprig-and-fern",
+    venueName: "Sprig & Fern",
+    phone: null,
+    items: [
+      { name: "Cheeseburger", dishId: "cheeseburger", price: 28, qty: 1 },
+      { name: "Cheeseburger", dishId: "cheeseburger-gold-card", price: 21, qty: 1 },
+    ],
+  },
+];
+
+// Read the raw payload back out of a token, to assert what is actually on the
+// wire rather than only what survives the round trip.
+const payloadOf = (token) => JSON.parse(Buffer.from(token, "base64url").toString());
+
+test("an ordinary link carries no id slot — links do not grow", () => {
+  const lines = payloadOf(encodeShare({ groups })).g[0].i;
+  assert.deepEqual(lines[0], ["Mee Goreng", 18, 2]); // three slots, as always
+});
+
+test("an id equal to slug(name) is not emitted either", () => {
+  const g = [{ venueId: "x", venueName: "X", phone: null, items: [{ name: "Roti Canai", dishId: "roti-canai", price: 6, qty: 1 }] }];
+  assert.deepEqual(payloadOf(encodeShare({ groups: g })).g[0].i[0], ["Roti Canai", 6, 1]);
+});
+
+test("a distinguishing id rides in slot 4, with a null options slot before it", () => {
+  const line = payloadOf(encodeShare({ groups: burgerGroups })).g[0].i[1];
+  assert.deepEqual(line, ["Cheeseburger", 21, 1, null, "cheeseburger-gold-card"]);
+});
+
+test("the id round-trips, and two same-named dishes stay two order lines", () => {
+  const decoded = decodeShare(encodeShare({ groups: burgerGroups }));
+  assert.equal(decoded.items.length, 2);
+  assert.equal(decoded.items[0].dishId, undefined); // "cheeseburger" == slug(name)
+  assert.equal(decoded.items[1].dishId, "cheeseburger-gold-card");
+  // The point of the whole exercise: merged into an order they are two lines
+  // at $49, not one at $56.
+  const merged = mergeItems([], decoded.items.map((i) => ({ ...i, qty: i.qty })));
+  assert.equal(merged.length, 2);
+  assert.equal(merged.reduce((s, i) => s + i.price * i.qty, 0), 49);
+});
+
+test("an id and add-ons coexist in their own slots", () => {
+  const g = [{
+    venueId: "x", venueName: "X", phone: null,
+    items: [{ name: "Kebab", dishId: "kebab-large", price: 20, qty: 1, options: [{ group: "Sauce", name: "Satay", price: 1 }] }],
+  }];
+  const decoded = decodeShare(encodeShare({ groups: g }));
+  assert.equal(decoded.items[0].dishId, "kebab-large");
+  assert.deepEqual(decoded.items[0].options, [{ group: "Sauce", name: "Satay", price: 1 }]);
+});
+
+test("a link minted before ids existed decodes to exactly what it always did", () => {
+  // Hand-built at the old three-slot shape — no slot 3, no slot 4.
+  const token = Buffer.from(JSON.stringify({
+    v: CODEC_VERSION, t: "o",
+    g: [{ v: "kk", n: "KK Malaysian", p: "04 555 1234", i: [["Mee Goreng", 18, 2]] }],
+  })).toString("base64url");
+  assert.deepEqual(decodeShare(token).items, [
+    { venueId: "kk", venueName: "KK Malaysian", phone: "04 555 1234", name: "Mee Goreng", price: 18, qty: 2 },
+  ]);
+});
+
+test("a crafted id is clipped and trimmed like every other string off the wire", () => {
+  const craft = (id) => Buffer.from(JSON.stringify({
+    v: CODEC_VERSION, t: "o",
+    g: [{ v: "x", n: "X", p: null, i: [["A", 1, 1, null, id]] }],
+  })).toString("base64url");
+  assert.equal(decodeShare(craft("z".repeat(300))).items[0].dishId.length, 120);
+  assert.equal(decodeShare(craft("  spaced  ")).items[0].dishId, "spaced");
+  assert.equal("dishId" in decodeShare(craft("   ")).items[0], false); // blank → none
+});
+
+test("a shared shortlist still carries dish NAMES, not ids (known limitation)", () => {
+  // Deliberate: `d` is a bare string array and changing its element type is the
+  // one change an old decoder cannot ignore. So a shortlist naming the Gold
+  // Card Cheeseburger arrives as the bare-slug one — what it did before ids
+  // existed, and no worse.
+  const decoded = decodeShare(encodeShortlist({ groups: [
+    { venueId: "sprig-and-fern", venueName: "Sprig & Fern", venueFav: false, dishes: ["Cheeseburger"] },
+  ] }));
+  assert.equal(decoded.items[0].name, "Cheeseburger");
+  assert.equal("dishId" in decoded.items[0], false);
+  assert.equal(favKey(decoded.items[0]), "d:sprig-and-fern cheeseburger");
+});
+
 // --- personal transfer (Theme 9 v1, ADR 0030) -----------------------------
 // One person's own hearts + ratings + settings, handed to their second device.
 // It rides the same base64url wire under its own tag and its own fragment
@@ -256,7 +352,9 @@ test("a transfer round-trips hearts, ratings, settings and who it came from", ()
   );
   // The recipe flag survives, so a received recipe heart deep-links correctly.
   assert.equal(out.favourites[2].isRecipe, true);
-  assert.deepEqual(out.ratings, { "v:kk": 5, "d:kk Roti Canai": 4 });
+  // The dish half of every rating key lands in id form (ADR 0051), whatever
+  // form the sending device wrote it in.
+  assert.deepEqual(out.ratings, { "v:kk": 5, "d:kk roti-canai": 4 });
   assert.deepEqual(out.settings, xferPayload.settings);
 });
 

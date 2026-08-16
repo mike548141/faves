@@ -7,18 +7,25 @@
 //
 // Entries are stored denormalised (venueName, name) so the Favourites view
 // renders from storage alone, without re-resolving against the menu data.
-// The deep-link href is derived at render time from the shared slug, so a
+// The deep-link href is derived at render time from the dish id, so a
 // favourited dish always anchors to the exact row the menu screen builds.
 
 import { profileScopedStorage } from "./profiles.js";
 import { migrateEntries } from "./renames.js";
-import { slug } from "./slug.js";
+import { dishId } from "./dish-id.js";
 
 const KEY = "faves.favourites.v1";
 
-/** Stable identity of a favourite: venue by id, dish by venue + name. */
+/**
+ * Stable identity of a favourite: venue by id, dish by venue + dish id
+ * (ADR 0051). A stored entry saved before dish ids existed carries no `dishId`,
+ * so `dishId()` falls through to `slug(name)` — byte for byte the key it always
+ * had. That is why hearts need no stored migration, and adding one would be
+ * pure motion: they are stored as entry OBJECTS and re-keyed on every read,
+ * unlike ratings, which are stored as key STRINGS and so do migrate.
+ */
 export const favKey = (e) =>
-  e.type === "venue" ? `v:${e.venueId}` : `d:${e.venueId} ${e.name}`;
+  e.type === "venue" ? `v:${e.venueId}` : `d:${e.venueId} ${dishId(e)}`;
 
 /**
  * Group a flat favourites list by venue for sharing (Theme 1b shortlist), in
@@ -49,12 +56,15 @@ export function groupForShare(items) {
   return order.map((id) => byVenue.get(id));
 }
 
-/** Deep link for a favourite — a venue's menu, or a dish's row / recipe. */
+/** Deep link for a favourite — a venue's menu, or a dish's row / recipe.
+ *  Anchored on the dish id, which is what the menu screen renders the row's
+ *  `#dish-…` anchor from; an entry with no id resolves to `slug(name)`, the
+ *  same anchor this built before ids existed. */
 export function favHref(e) {
   if (e.type === "venue") return `restaurant.html?id=${e.venueId}`;
   return e.isRecipe
-    ? `recipe.html?id=${e.venueId}&dish=${slug(e.name)}`
-    : `restaurant.html?id=${e.venueId}#dish-${slug(e.name)}`;
+    ? `recipe.html?id=${e.venueId}&dish=${dishId(e)}`
+    : `restaurant.html?id=${e.venueId}#dish-${dishId(e)}`;
 }
 
 export function createFavourites(storage) {

@@ -3,7 +3,9 @@
 // no I/O), so tested directly. Run: `node --test tests/`.
 //
 // The deep-link href is the load-bearing bit: a dish result must anchor to
-// the exact row menu.js/recipe.js render, so we assert the slug scheme here.
+// the exact row menu.js/recipe.js render, so we assert the id scheme here —
+// including that a dish with no explicit id still anchors to its slugged name,
+// which is what keeps every link shared before ADR 0051 working.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -225,4 +227,52 @@ test("a direct name hit still outranks a synonym hit", () => {
     },
   ]);
   assert.equal(search(idx, "veg").dishes.items[0].name, "Vegetarian Pie");
+});
+
+// ─── Dish identity in the deep link (ADR 0051) ──────────────────────────────
+// A result's href is the only thing that gets the reader to the row they
+// picked. Before dish ids, three "Cheeseburger" rows produced three identical
+// hrefs and the browser could only ever reach the first.
+
+test("search: same-named dishes deep-link to their own rows", () => {
+  const idx = buildIndex([
+    {
+      id: "sprig",
+      name: "Sprig",
+      cuisine: [],
+      menu: [
+        {
+          section: "Mains",
+          items: [{ name: "Cheeseburger", price: 28 }],
+        },
+        {
+          section: "Kids",
+          // The FIRST row keeps the bare slug, so only the ones that were
+          // unreachable move — see dish-id.js on why nothing shifts on day one.
+          items: [{ name: "Cheeseburger", dishId: "cheeseburger-kids", price: 15 }],
+        },
+      ],
+    },
+  ]);
+  const hrefs = search(idx, "cheeseburger").dishes.items.map((d) => d.href).sort();
+  assert.deepEqual(hrefs, [
+    "restaurant.html?id=sprig#dish-cheeseburger",
+    "restaurant.html?id=sprig#dish-cheeseburger-kids",
+  ]);
+});
+
+test("search: a recipe with an explicit id links by that id", () => {
+  const idx = buildIndex([
+    {
+      id: "cook-at-home",
+      kind: "recipes",
+      name: "Cook at Home",
+      cuisine: [],
+      menu: [{ section: "Mains", items: [{ name: "Ribs", dishId: "shane-s-ribs" }] }],
+    },
+  ]);
+  assert.equal(
+    search(idx, "ribs").dishes.items[0].href,
+    "recipe.html?id=cook-at-home&dish=shane-s-ribs",
+  );
 });

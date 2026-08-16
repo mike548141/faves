@@ -832,6 +832,7 @@
         },
         {
           "name": "Cheeseburger",
+          "dishId": "cheeseburger-kids",
           "desc": "Beef patty, cheese, tomato sauce with curly fries and carrot sticks.",
           "price": 15.0,
           "tags": [
@@ -840,6 +841,7 @@
         },
         {
           "name": "Fish and Chips",
+          "dishId": "fish-and-chips-kids",
           "desc": "Battered market catch with curly fries and carrot sticks.",
           "price": 15.0,
           "tags": [
@@ -879,30 +881,35 @@
       "items": [
         {
           "name": "Fish and Chips",
+          "dishId": "fish-and-chips-gold-card",
           "desc": "Gold Card portion.",
           "price": 21.0,
           "tags": ["df", "contains-gluten"]
         },
         {
           "name": "Sirloin",
+          "dishId": "sirloin-gold-card",
           "desc": "150g. Dairy free available.",
           "price": 27.0,
           "tags": ["gf", "contains-dairy"]
         },
         {
           "name": "Chicken Parma",
+          "dishId": "chicken-parma-gold-card",
           "desc": "Gold Card portion.",
           "price": 21.0,
           "tags": ["contains-dairy", "contains-gluten"]
         },
         {
           "name": "Corn Fritters",
+          "dishId": "corn-fritters-gold-card",
           "desc": "Gold Card portion.",
           "price": 21.0,
           "tags": ["v", "gf", "contains-dairy"]
         },
         {
           "name": "Cheeseburger",
+          "dishId": "cheeseburger-gold-card",
           "desc": "Dairy free available.",
           "price": 21.0,
           "tags": ["gf-option", "contains-gluten"],
@@ -912,12 +919,14 @@
         },
         {
           "name": "Pork Loin",
+          "dishId": "pork-loin-gold-card",
           "desc": "Gold Card portion.",
           "price": 26.0,
           "tags": []
         },
         {
           "name": "Summer Salad",
+          "dishId": "summer-salad-gold-card",
           "desc": null,
           "price": 17.0,
           "tags": ["gf-option", "v-option", "contains-egg", "contains-gluten", "contains-sesame"],

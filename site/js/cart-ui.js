@@ -11,6 +11,7 @@ import { favourites, groupForShare } from "./favourites.js";
 import { openShareDialog } from "./share-ui.js";
 import { el } from "./dom.js";
 import { selectionKey, selectionSummary } from "./addons.js";
+import { dishId } from "./dish-id.js";
 import { displayPrice, formatMoney } from "./place.js";
 
 // A line, subtotal or total always carries the currency it is in — an order
@@ -27,7 +28,7 @@ const plural = (n, one, many = one + "s") => `${n} ${n === 1 ? one : many}`;
 /**
  * The + / − / count control for one dish. Bound to the shared order store
  * and self-updating, so the menu row and the dialog line always agree.
- * `meta` = { venueId, venueName, phone, name, price }.
+ * `meta` = { venueId, venueName, phone, name, dishId?, price }.
  */
 export function dishStepper(meta) {
   const wrap = el("div", { className: "stepper" });
@@ -35,6 +36,10 @@ export function dishStepper(meta) {
   // bacon" is a different line from "eggs on toast", so the stepper has to ask
   // about its own selection or it would show — and change — the wrong count.
   const sel = () => selectionKey(meta.options);
+  // …and its own dish, by id: three rows can print "Cheeseburger" at three
+  // prices, and asking by name gave all three steppers the first row's count
+  // (ADR 0051).
+  const id = () => dishId(meta);
   // Spoken labels name the configuration too: two "Add" buttons a thumb apart
   // that differ only in their sauces are indistinguishable to a screen reader.
   const said = () => {
@@ -42,7 +47,7 @@ export function dishStepper(meta) {
     return s ? `${meta.name} with ${s}` : meta.name;
   };
   function render() {
-    const q = order.qtyOf(meta.venueId, meta.name, sel());
+    const q = order.qtyOf(meta.venueId, id(), sel());
     wrap.dataset.qty = q;
     if (q === 0) {
       const add = el("button", {
@@ -56,7 +61,7 @@ export function dishStepper(meta) {
     } else {
       const dec = el("button", { type: "button", className: "stepper-btn", textContent: "−" });
       dec.setAttribute("aria-label", `One fewer ${said()}`);
-      dec.addEventListener("click", () => order.setQty(meta.venueId, meta.name, q - 1, sel()));
+      dec.addEventListener("click", () => order.setQty(meta.venueId, id(), q - 1, sel()));
       const count = el("span", { className: "stepper-count", textContent: String(q) });
       const inc = el("button", { type: "button", className: "stepper-btn", textContent: "＋" });
       inc.setAttribute("aria-label", `One more ${said()}`);
@@ -85,7 +90,7 @@ function lineRow(item, collectMode) {
   if (collectMode) {
     const box = el("input", { type: "checkbox", className: "order-check", checked: item.collected });
     box.addEventListener("change", () =>
-      order.toggleCollected(item.venueId, item.name, selectionKey(item.options)),
+      order.toggleCollected(item.venueId, dishId(item), selectionKey(item.options)),
     );
     const label = el("label", { className: "order-collect-line" }, [
       box,

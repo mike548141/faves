@@ -13,22 +13,33 @@
 import { safeStorage } from "./store.js";
 import { migrateEntries } from "./renames.js";
 import { selectionKey } from "./addons.js";
+import { dishId } from "./dish-id.js";
 
 const KEY = "faves.order.v1";
 
 /**
- * What makes one order line distinct from another (ADR 0048 §4).
+ * What makes one order line distinct from another: venue, DISH ID, add-ons.
  *
- * A dish added twice with different add-ons is two lines, not a quantity of 2 —
- * "eggs on toast with bacon" and "eggs on toast" are different things to make
- * and different money. `selectionKey` sorts its parts, so the same choices in a
- * different order stay one line.
+ * A dish added twice with different add-ons is two lines, not a quantity of 2
+ * (ADR 0048 §4) — "eggs on toast with bacon" and "eggs on toast" are different
+ * things to make and different money. `selectionKey` sorts its parts, so the
+ * same choices in a different order stay one line.
  *
- * A line with no add-ons keys exactly as it did before add-ons existed, so
- * everything already in a family's browser reads back as itself.
+ * The middle component is the dish's id, not its name, because a name is not
+ * unique within a venue and this is the one place that costs money (ADR 0051).
+ * Sprig & Fern prints "Cheeseburger" three times — Mains $28, Gold Card $21,
+ * Kids $15 — and while the name was the key, adding the $28 one and the $21 one
+ * made a single line of 2 × $28 and charged $56 for a $49 pair. Distinct ids
+ * make them distinct lines; the totals maths never changed.
+ *
+ * ADR 0048 §4's property still holds, and now rests on `dishId()`: a line with
+ * no add-ons and no explicit id keys exactly as it did before add-ons existed —
+ * `dishId()` falls through to `slug(name)`, so everything already in a family's
+ * browser reads back as itself. (Only the colliding rows moved, and only their
+ * 2nd and 3rd printings — behaviour that was already wrong.)
  */
 export const lineKey = (i) =>
-  `${i.venueId}\n${i.name}\n${selectionKey(i.options)}`;
+  `${i.venueId}\n${dishId(i)}\n${selectionKey(i.options)}`;
 
 // A line's `price` is the CONFIGURED unit price — the dish plus its selected
 // add-ons. Keeping the total in the field every consumer already reads means
@@ -92,7 +103,7 @@ export function groupByVenue(items) {
 
 /**
  * Merge `incoming` lines into `base`, summing quantities of matching
- * (venueId, name) lines and appending the rest in first-seen order. Returns a
+ * (venueId, dishId, add-ons) lines and appending the rest in first-seen order. Returns a
  * new array and never mutates its inputs — the receive side of group ordering
  * (Theme 1b): a decoded shared order folds into whatever the host already has.
  * `collected` is preserved on existing lines and starts false on new ones.
@@ -106,7 +117,7 @@ export function mergeItems(base, incoming) {
     if (at != null) {
       out[at].qty += inc.qty;
     } else {
-      out.push({
+      const line = {
         venueId: inc.venueId,
         venueName: inc.venueName,
         currency: inc.currency,
@@ -116,7 +127,13 @@ export function mergeItems(base, incoming) {
         options: inc.options || [],
         qty: inc.qty,
         collected: false,
-      });
+      };
+      // Carried only when the incoming line has one, so a line merged from an
+      // older link keeps the exact shape it has always had — and an explicit id
+      // survives, without which a shared order of two same-named dishes would
+      // collapse back into one line the moment it was received.
+      if (inc.dishId) line.dishId = inc.dishId;
+      out.push(line);
       idxOf.set(key, out.length - 1);
     }
   }
@@ -150,27 +167,33 @@ export function createOrder(storage) {
     for (const fn of subs) fn(items);
   }
 
+  // The lookup half of the API addresses a line by (venueId, dishId, sel) — the
+  // three parts of `lineKey`. It took a NAME until ADR 0051; callers holding a
+  // dish record pass `dishId(item)`, and a caller with only a name can still
+  // pass `slug(name)`, which is what the name meant all along.
+  //
   // `sel` is a selectionKey (addons.js) — "" for a dish ordered as it comes,
   // which is what every line stored before add-ons existed reads back as.
-  const find = (venueId, name, sel = "") =>
-    items.find((i) => lineKey(i) === `${venueId}\n${name}\n${sel}`);
+  const find = (venueId, id, sel = "") =>
+    items.find((i) => lineKey(i) === `${venueId}\n${id}\n${sel}`);
 
   return {
     items: () => items,
     count: () => orderCount(items),
     total: () => orderTotal(items),
     groups: () => groupByVenue(items),
-    qtyOf: (venueId, name, sel = "") => find(venueId, name, sel)?.qty || 0,
+    qtyOf: (venueId, id, sel = "") => find(venueId, id, sel)?.qty || 0,
 
     /** Add one of a dish (or increment if already listed). `meta` is
-     *  { venueId, venueName, phone?, name, price?, options? }. `price` is the
-     *  CONFIGURED unit price and `options` the chosen add-ons (ADR 0048). */
+     *  { venueId, venueName, phone?, name, dishId?, price?, options? }. `price`
+     *  is the CONFIGURED unit price and `options` the chosen add-ons (ADR 0048);
+     *  `dishId` is what separates two identically-named rows (ADR 0051). */
     add(meta) {
       const options = meta.options || [];
-      const ex = find(meta.venueId, meta.name, selectionKey(options));
+      const ex = find(meta.venueId, dishId(meta), selectionKey(options));
       if (ex) ex.qty += 1;
-      else
-        items.push({
+      else {
+        const line = {
           venueId: meta.venueId,
           venueName: meta.venueName,
           currency: meta.currency || "NZD",
@@ -180,28 +203,33 @@ export function createOrder(storage) {
           options,
           qty: 1,
           collected: false,
-        });
+        };
+        // Recorded on the line so it survives storage, export and sharing; a
+        // meta without one keeps the shape a line has always had.
+        if (meta.dishId) line.dishId = meta.dishId;
+        items.push(line);
+      }
       commit();
     },
 
     /** Set an exact quantity; 0 (or less) removes the line. */
-    setQty(venueId, name, qty, sel = "") {
-      const ex = find(venueId, name, sel);
+    setQty(venueId, id, qty, sel = "") {
+      const ex = find(venueId, id, sel);
       if (!ex) return;
       if (qty <= 0) items = items.filter((i) => i !== ex);
       else ex.qty = qty;
       commit();
     },
 
-    remove(venueId, name, sel = "") {
-      const target = `${venueId}\n${name}\n${sel}`;
+    remove(venueId, id, sel = "") {
+      const target = `${venueId}\n${id}\n${sel}`;
       items = items.filter((i) => lineKey(i) !== target);
       commit();
     },
 
     /** Collect mode: tick an item off as it's handed over. */
-    toggleCollected(venueId, name, sel = "") {
-      const ex = find(venueId, name, sel);
+    toggleCollected(venueId, id, sel = "") {
+      const ex = find(venueId, id, sel);
       if (ex) {
         ex.collected = !ex.collected;
         commit();

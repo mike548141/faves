@@ -758,6 +758,7 @@
       "items": [
         {
           "name": "Heineken",
+          "dishId": "heineken-bottled",
           "desc": "5%.",
           "price": 11.0,
           "tags": [
@@ -766,6 +767,7 @@
         },
         {
           "name": "Heineken Silver Low Carb",
+          "dishId": "heineken-silver-low-carb-bottled",
           "desc": "4%.",
           "price": 11.0,
           "tags": [

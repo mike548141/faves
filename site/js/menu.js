@@ -27,6 +27,7 @@ import {
   zoneLabel,
 } from "./place.js";
 import { slug } from "./slug.js";
+import { dishId, findDish } from "./dish-id.js";
 import { dishStepper, initOrderUI } from "./cart-ui.js";
 import { dishAddOns } from "./addons-ui.js";
 import { heartButton } from "./favourites-ui.js";
@@ -507,7 +508,11 @@ function needsRow(item, venueId) {
     parts.push(n.fix);
     if (n.since) parts.push(` Noticed ${niceDate(n.since)}.`);
     const [btn, note] = disclosure({
-      noteId: `dish-needs-${venueId}-${slug(item.name)}-${n.what}`,
+      // The dish's id, not its name: two dishes called "Cheeseburger" on one
+      // page used to mint the same noteId, so both disclosures' aria-controls
+      // pointed at the first one's note — the second button announced someone
+      // else's text and toggled nothing.
+      noteId: `dish-needs-${venueId}-${dishId(item)}-${n.what}`,
       // Opens with the visible chip text so the accessible name contains the
       // visible label (WCAG 2.5.3), then says what tapping it gets you.
       label: `${n.label} — what would fix this`,
@@ -694,14 +699,27 @@ function caveatText(caveat) {
   return `⚠ Menu items and prices need a refresh — ${tail}`;
 }
 
-function renderPicks(r, allItems) {
+// A pick is a reference to a dish on this same menu, written as a name today
+// (see dish-id.js). It used to be looked up twice — once by name for the price
+// and rating, once by slug for the anchor — so a pick could show one dish's
+// price and jump to another's row. Both now go through the one resolver, which
+// makes that disagreement impossible to express.
+function renderPicks(r) {
   if (!r.picks?.length) return null;
   const list = el("div", { className: "picks-list" });
-  for (const name of r.picks) {
-    const item = allItems.find((i) => i.name === name);
+  for (const ref of r.picks) {
+    const found = findDish(r, ref);
+    const item = found?.item ?? null;
+    // Unresolvable pick: no price, no rating, and a dead anchor — exactly what
+    // it did before. validate.py is where a dangling pick gets caught; a menu
+    // that has already shipped one still has to render.
+    const href = `#dish-${item ? dishId(item) : slug(ref)}`;
     list.append(
-      el("a", { className: "pick", href: `#dish-${slug(name)}` }, [
-        el("span", { className: "pick-name", textContent: name }),
+      el("a", { className: "pick", href }, [
+        // The dish's own name, so the chip cannot label itself differently from
+        // the row it lands on. Identical to `ref` for every pick written as a
+        // name, which today is all of them.
+        el("span", { className: "pick-name", textContent: item?.name ?? ref }),
         item && item.price != null
           ? el("span", { className: "pick-price", textContent: money(item.price) })
           : null,
@@ -719,14 +737,26 @@ function renderPicks(r, allItems) {
 
 // Deep-link chips for "goes well with": a same-record dish name, or a
 // cross-record "id#Dish Name". Anchors match the dish li ids below.
-function pairingLinks(refs) {
+//
+// Only the same-record half can be resolved: `r` is the one menu this page
+// holds, and fetching another venue's record to resolve a chip would put a
+// network round-trip behind a link. The cross-record half falls back to
+// `slug(name)`, which IS the id of any dish that hasn't been given one — so it
+// lands exactly where it always did, and the target page's own resolver has the
+// last word once you're there.
+function pairingLinks(refs, r) {
   const wrap = el("div", { className: "dish-pairs" }, [
     el("span", { className: "dish-pairs-label", "data-i18n": "menu.goesWith", textContent: "Goes well with" }),
   ]);
   for (const ref of refs) {
     const hash = ref.indexOf("#");
     const [id, name] = hash === -1 ? [null, ref] : [ref.slice(0, hash), ref.slice(hash + 1)];
-    const href = id ? `restaurant.html?id=${id}#dish-${slug(name)}` : `#dish-${slug(name)}`;
+    const here = id ? null : findDish(r, name)?.item;
+    const anchor = here ? dishId(here) : slug(name);
+    const href = id ? `restaurant.html?id=${id}#dish-${anchor}` : `#dish-${anchor}`;
+    // Chip text stays the reference as written: a cross-record ref carries its
+    // own display name after the "#" and there is nothing here to check it
+    // against, so resolving only the local half would read as inconsistent.
     wrap.append(el("a", { className: "pair-chip", href, textContent: name }));
   }
   return wrap;
@@ -788,14 +818,14 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
   //
   // `lang` on every one of these is a WCAG 2.2 AA 3.1.2 requirement, not a
   // nicety: unmarked, a screen reader reads Thai with English pronunciation
-  // rules. The link still slugs `item.name` — the CANONICAL string — because
-  // that is the dish's identity and the anchor has to keep matching it.
+  // rules. The link carries the dish's id, never a translated rendering —
+  // identity is one string per dish and recipe.js resolves the same one.
   const nameEl =
     isRecipes && collectionId
       ? el("h3", { className: "dish-name", lang: lead.lang }, [
           el("a", {
             className: "dish-name-link",
-            href: `recipe.html?id=${collectionId}&dish=${slug(item.name)}`,
+            href: `recipe.html?id=${collectionId}&dish=${dishId(item)}`,
             textContent: lead.text,
           }),
           codeBadge,
@@ -827,7 +857,17 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
   // cluster below (side by side the two were mistaken for one control). dishEntry
   // is shared with the actions row.
   const dishEntry = r
-    ? { type: "dish", venueId: r.id, venueName: r.name, name: item.name, isRecipe: isRecipes }
+    ? {
+        type: "dish",
+        venueId: r.id,
+        venueName: r.name,
+        name: item.name,
+        // What the heart and the rating key off. `name` stays because it is
+        // what the favourites view prints; without the id, three dishes called
+        // "Cheeseburger" shared one heart between them.
+        dishId: dishId(item),
+        isRecipe: isRecipes,
+      }
     : null;
   if (dishEntry) {
     children.push(el("div", { className: "dish-rating" }, [ratingControl(dishEntry, item.name)]));
@@ -852,7 +892,7 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
     children.push(renderRecipeDetail(item));
   }
   if (item.goesWith?.length) {
-    children.push(pairingLinks(item.goesWith));
+    children.push(pairingLinks(item.goesWith, r));
   }
   // Actions: a ♥ on every dish (restaurant + recipe); a quantity stepper on
   // restaurant dishes only — Cook at Home is for cooking, not an order to
@@ -873,6 +913,9 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
           venueName: r.name,
           phone: r.phone,
           name: item.name,
+          // The order line keys on the id; `name` is what the tally reads out
+          // and what gets read down the phone, so both travel.
+          dishId: dishId(item),
           price: item.price ?? null,
         })
       );
@@ -886,8 +929,14 @@ function renderDish(item, isRecipes = false, r = null, avoid = EMPTY_SET, sectio
   const hasFlagged = dishFlagged(item.tags, avoid);
   const cls =
     (isRecipes ? "dish recipe" : "dish") + (hasFlagged ? " dish-flagged" : "");
-  const li = el("li", { className: cls, id: `dish-${slug(item.name)}` });
+  const li = el("li", { className: cls, id: `dish-${dishId(item)}` });
+  // Two fields, two jobs. `data-name` is the haystack the in-menu text filter
+  // matches against — the reader typed a name, not an id — and stays lowercased
+  // for that. `data-dish-id` is the row's identity, the same string as the DOM
+  // id, so anything wanting to address one particular "Cheeseburger" of three
+  // can, without parsing the id off the element.
   li.dataset.name = item.name.toLowerCase();
+  li.dataset.dishId = dishId(item);
   // Include ingredients in the search haystack so "lemon" finds the pasta.
   li.dataset.desc = [item.desc, ...(item.ingredients || [])]
     .filter(Boolean)
@@ -976,7 +1025,7 @@ function render(r) {
   const main = el("div", { className: "menu-main" });
   root.append(main);
 
-  const picks = renderPicks(r, allItems);
+  const picks = renderPicks(r);
   if (picks) main.append(picks);
 
   // Stub / empty menu: show a friendly note instead of empty controls. Stay
@@ -1364,11 +1413,22 @@ function fail() {
 function scrollToHash() {
   const raw = location.hash.slice(1);
   if (!raw) return;
-  let target;
+  let id;
   try {
-    target = document.getElementById(decodeURIComponent(raw));
+    id = decodeURIComponent(raw);
   } catch {
-    target = document.getElementById(raw); // malformed % escape — use as-is
+    id = raw; // malformed % escape — use as-is
+  }
+  let target = document.getElementById(id);
+  // No element by that id, and it looks like a dish anchor: ask the resolver.
+  // This is the half of `formerIds` that faces the outside world — a link
+  // shared before a dish's id moved holds the OLD one, and nothing else on the
+  // page can turn it back into a row. Scroll to whatever the dish is called
+  // now; the address bar keeps the link the reader was sent, which is fine —
+  // it will resolve again next time.
+  if (!target && current && id.startsWith("dish-")) {
+    const found = findDish(current, id.slice("dish-".length));
+    if (found) target = document.getElementById(`dish-${dishId(found.item)}`);
   }
   if (!target) return;
   // Wait out render()'s own rAF (which measures --toolbar-h) so the target's

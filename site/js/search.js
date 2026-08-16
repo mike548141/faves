@@ -1,12 +1,13 @@
 // Global search over places and dishes — pure logic, no DOM. The home
 // screen already loads every restaurant record (menus and all), so this
 // searches entirely in memory: offline-safe, zero-dependency. Deep-links
-// use the shared slug (slug.js) so a dish result anchors to the exact row
-// menu.js/recipe.js render.
+// carry the dish's id (dish-id.js) so a result anchors to the exact row
+// menu.js/recipe.js render — including the second and third dish of the same
+// name, which a slugged name could never reach.
 //
 // Pure, so it's unit-tested directly (tests/search.test.js).
 
-import { slug } from "./slug.js";
+import { dishId } from "./dish-id.js";
 import { searchableText, venueLanguage } from "./lang.js";
 import { DIET_FILTERS } from "./dietary.js";
 
@@ -130,8 +131,8 @@ export function buildIndex(restaurants) {
           isRecipe,
           section: section.section || "",
           href: isRecipe
-            ? `recipe.html?id=${r.id}&dish=${slug(item.name)}`
-            : `restaurant.html?id=${r.id}#dish-${slug(item.name)}`,
+            ? `recipe.html?id=${r.id}&dish=${dishId(item)}`
+            : `restaurant.html?id=${r.id}#dish-${dishId(item)}`,
           // The venue's order-number (e.g. "14") joins the haystack so a
           // guest reading "two number 14s" off the board can find it.
           // Every rendering, not just the canonical one: someone hunting
