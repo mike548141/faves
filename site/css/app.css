@@ -4896,10 +4896,44 @@ body.faves-view .to-top {
 }
 
 /* The two floating controls the bar used to hold. Each carries its own surface
-   and shadow now that nothing sits behind them (owner, 2026-08-16). */
+   and elevation now that nothing sits behind them (owner, 2026-08-16).
+   They float over a scrolling list, so they cannot borrow contrast from a bar
+   any more — they have to look lifted off the page on their own. */
 .filter-bar .bar-btn {
   pointer-events: auto;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 0.35);
+  /* Two shadows, not one: a tight dark contact shadow that separates the pill
+     from whatever card is directly under it, and a wider soft one that reads as
+     height. A single mid-sized shadow does neither job well on a dark theme. */
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.5),
+    0 6px 18px rgb(0 0 0 / 0.45);
+}
+/* Filters was the one disappearing (owner: "both buttons, filters in
+   particular, disappear into the background"). `--surface-2` is a few percent
+   off the page colour, which is right for a card sitting IN the page and wrong
+   for a control floating OVER it. So when it floats it gets a surface of its
+   own — lifted toward the ink, blurred behind, and a border that is actually
+   visible — rather than a brighter accent, which would put it in competition
+   with "Pick for us" for no reason. */
+.filter-bar .bar-filters {
+  background: color-mix(in srgb, var(--surface-2) 82%, var(--ink) 18%);
+  border-color: color-mix(in srgb, var(--line) 40%, var(--ink) 60%);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+/* The lift responds, so the pills read as objects rather than paint. Press is
+   the one everyone feels; hover only exists where there is a pointer. */
+.filter-bar .bar-btn:active {
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.55),
+    0 2px 6px rgb(0 0 0 / 0.4);
+}
+@media (hover: hover) {
+  .filter-bar .bar-btn:hover {
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.5),
+      0 10px 26px rgb(0 0 0 / 0.5);
+  }
 }
 /* "Pick for us" returns to a floating button at the bottom right that gets out
    of the way as you read (owner: "make it hide when you scroll down"). Hidden
