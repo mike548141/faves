@@ -150,7 +150,8 @@
       ]
     },
     {
-      "section": "Tacos (two tacos each)",
+      "section": "Tacos",
+      "note": "two tacos each",
       "items": [
         {
           "name": "Beef Tacos",
@@ -214,7 +215,8 @@
       ]
     },
     {
-      "section": "Burgers (all served with fries)",
+      "section": "Burgers",
+      "note": "all served with fries",
       "items": [
         {
           "name": "Mutha Clucka",
