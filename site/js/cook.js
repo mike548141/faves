@@ -54,7 +54,7 @@ export const canCook = (item) => stepsOf(item).length > 0;
 // an ingredient is used all at once (every case in the current corpus) and
 // overstates it when a recipe divides one line across two steps. Splitting a
 // quantity needs the ingredient/step link in the DATA — a schema change, an
-// ADR, and a pass over all 23 recipes. Recorded as ROADMAP Theme 35b; guessing
+// ADR, and a pass over all 23 recipes. Recorded as ROADMAP Theme 36b; guessing
 // the split here would be inventing a fact about food, which this repo does not
 // do.
 //

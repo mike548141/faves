@@ -21,7 +21,7 @@
 // butter and sugar together") while the quantities sit beside it. Which lines
 // those are is `ingredientsForStep` in cook.js, and it errs towards showing.
 // What is still NOT possible is splitting one line across two steps ("1 of the
-// 2 cups"): nothing in the data ties an ingredient to a step. ROADMAP 35b.
+// 2 cups"): nothing in the data ties an ingredient to a step. ROADMAP 36b.
 //
 // REO. Every button label carries a data-i18n key. The step counter does not:
 // it is interpolated ("Step 3 of 9"), and reo.js swaps whole strings only —

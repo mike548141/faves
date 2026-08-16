@@ -3867,3 +3867,153 @@ the whole run. Two ways out:
 The same treatment on the menu-page search box (`Search this menu…`). One
 animated placeholder is a flourish; two is a tic, and the menu box is used
 mid-task where the home box is used on arrival.
+
+---
+
+## Theme 36 — cooking is not ordering (owner-raised 2026-08-16)
+
+Owner, after a session on the live site: *"review the UX of the whole cook at
+home and recipes because I think it can be better. Think holistically about the
+UX across the app and recognise that cooking recipes is not identical to
+ordering food from a restaurant."*
+
+Four of his specifics shipped the same session (the cook button, the per-step
+ingredients, the per-step timer, the recipe page's top bar — see CHANGELOG).
+What is left is the structural half he was pointing at, plus the two asks that
+turned out to be blocked on data rather than on design.
+
+### 🔎 The finding: a recipe collection is a restaurant with its restaurant-ness subtracted
+
+Cook at Home is a venue file. `site/data/restaurants/cook-at-home.json` carries
+`address: null`, `phone: null`, `website: null`, `hours: null`, `services: []`,
+`ordering: []`, `verified: null`, `city: null` — every one a thing a venue has
+and a recipe box does not — plus `currency: "NZD"` on a collection with no
+prices and `area: "Home"`, a suburb invented so the filter machinery would not
+choke on it.
+
+The code then subtracts what the data asserted: **`kind === "recipes"` is
+special-cased in about twenty places** across `app.js`, `menu.js` and
+`filters.js` — no hours badge, no distance, no contact card, no report button,
+no price, a different search placeholder, a different card class, pinned to the
+top of every ranking. A recipe row is `renderDish()` with an `isRecipes` flag
+threaded through it.
+
+None of that is *wrong* — it shipped a working screen cheaply, and reuse is why
+recipes got favourites, ratings, allergen flagging, offline and search for free.
+But it is why the owner can feel the seam. Every screen starts from "restaurant"
+and reasons its way to "not that", and the leftovers show: the giant orange
+order-style button, the back link that belonged to a menu page, the ⋯ menu that
+was never added because a recipe was not thought of as a destination.
+
+### The design question, stated once
+
+**Is a recipe collection a `kind` of venue, or its own thing?** Three answers,
+and the cheap one may well be right:
+
+1. **Keep the shared shell, name the seam** `[M]`. Replace the twenty scattered
+   `isRecipes` branches with one declared capability set per `kind` (has hours,
+   has a location, has prices, can be ordered, can be reported). Same screens,
+   same reuse, but a screen asks "does this have hours?" instead of "is this a
+   recipe?". Cheapest, and it makes the next `kind` free.
+2. **A parallel screen for collections** `[L]`. `collection.html` beside
+   `restaurant.html`, sharing components but not the venue frame. Most honest,
+   most duplication, and it forks the search/favourites/offline paths that
+   currently come free.
+3. **Leave it and keep patching** `[S]` — what today did. Fine once; the third
+   time is a pattern.
+
+🎯 **Recommend 1.** It is the only one that pays down the cause rather than the
+symptoms, without giving up the reuse that made recipes cheap. Do it before any
+further recipe UX, or the next fix lands on the same sand.
+
+### 36a — what the data says about time, and what it doesn't `[S][data]` 🎯
+
+The owner asked for *"an estimate of time required for each step and each recipe
+as a total"*. Measured across the corpus, 2026-08-16:
+
+| | have it | missing |
+|---|---|---|
+| Steps stating their own duration | **28 of 118** (24%) | 90 |
+| Recipes with a `time` total | **9 of 24** | 15 |
+| Recipes with a `serves` count | **3 of 24** (Liège Waffles 12, Chocolate Self-Saucing Pudding 6, Tiramisu 6) | **21** |
+
+The 28 stated step times now drive the timers, and they are read from the text,
+never guessed. The other 90 steps have **no source**: how long "beat together
+the sugar and butter" takes is not in the data, not on the page, and not
+something this repo may invent — a wrong time on a cake is a burnt cake.
+
+⚠️ **And the sum of stated steps is not a total.** Chocolate Self-Saucing
+Pudding's steps state 35 minutes; its `time` is "~35 min" — but Perfectly Pretty
+Hotcakes states 5 minutes across its steps against a `time` of "~50 min",
+because prep is untimed. Publishing sum-of-steps as a recipe total would
+understate most recipes by most of their length.
+
+🎯 **For the owner — this one only you can close.** Per-step times and the 15
+missing totals need to come from you (or from cooking them). Say the word and
+the field goes in the schema and the screens read it; what will not happen is a
+number being invented to fill a column.
+
+### 36b — the quantity used *at this step* `[L][schema][data]` 🎯
+
+The owner's example: *"lets say a recipe called for 2 cups of sugar in total,
+but only 1 cup is used at this step… show just the 1 cup."*
+
+Shipped today: the step shows the lines it names, at the recipe's **stated**
+quantity. Correct whenever an ingredient is used all at once — which is every
+case in the current corpus — and an overstatement when a recipe splits one line
+across two steps.
+
+**Not shipped, because it does not exist.** `ingredients` is a flat list of
+free-text lines; `steps` is a flat list of sentences; nothing links the two and
+no line records a split. Getting there means `steps` becomes objects carrying
+`uses: [{ ingredient, amount }]`, an ADR for the schema, and a hand pass over
+**all 23 recipes with a method** — the work is the data entry, not the code.
+Note the corpus is already doing this by hand and badly: Chocolate Self-Saucing
+Pudding has `"1 tbsp cocoa"` and `"Sauce: ¼ cup cocoa"` as two lines, and
+Upside-Down Plum Cake prefixes every line `Topping:` or `Batter:`. The `"Sauce:"`
+convention *is* a per-step grouping, invented by whoever typed it in. That is
+the strongest argument that the model wants the structure.
+
+### 36c — serving sizes `[M][data]` 🎯 ⚠️ **not researchable**
+
+The owner asked me to research estimated serving sizes. **21 of 24 recipes have
+none, and for most of them no source exists**: "Booth's Ginger Crunch",
+"Shane's Ribs", "B's Dope-As Brownie", "Jesse's Garlic Chicken Thighs" and
+"Famous Brade Green Chicken Curry" are family recipes. A few are adaptations of
+published ones (the Edmonds cookbook is credited on the pudding), but a serving
+count taken from a published recipe is a claim about *that* recipe, not this
+variant of it — and this dataset is public.
+
+What *is* honest, and is the recommendation:
+- **Two are already stated in the data and simply not read**: Queen Cakes' step
+  says "(makes 21)", and the pudding's "1.5–2L ovenproof dish" bounds it.
+  Surface a yield where the text already carries one — no new facts.
+- **Everything else comes from the owner.** He has cooked them.
+- If he wants estimates rather than facts, they can be derived from tin size and
+  batter volume and **shown as estimates** — but that is a labelling decision he
+  should take deliberately, not one to slip into a public dataset.
+
+### 36d — the timer's missing half `[M][design]` ⚠️
+
+The timer shipped today is silent. It counts correctly through a sleeping phone,
+and cook mode holds the screen awake so it is visible — but a phone face-down on
+the bench while you do something else will not tell you the bell has gone.
+A real alarm needs either audio (an asset, and autoplay policy) or a
+notification (a permission prompt, and a service-worker path). Both are new
+trust surfaces on a site that currently asks for nothing. Worth doing, worth
+deciding deliberately.
+
+### 36e — one place to look, not two `[M][ux]`
+
+A recipe currently renders **twice**, through two code paths: expanded inside
+the Cook at Home list (`menu.js` `<details>`) and on its own page (`recipe.js`).
+The owner's screenshots show near-identical content in both. That is why the
+cook button had to be fixed in two places, and why it had to be given two
+weights. Decide what the list row is *for* — a preview that makes you choose, or
+the whole recipe — and let the other path be the one that owns the detail.
+
+### Sizing
+
+36a and 36c are small in code and blocked on the owner. 36b is the big one and
+is mostly data entry. The structural call above (1/2/3) should be taken before
+36e, because 36e is a symptom of it.
