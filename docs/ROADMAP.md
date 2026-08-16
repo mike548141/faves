@@ -3422,6 +3422,37 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
       lands, the honest local mitigation is to prefer inline `[text](path.md)`
       over reference-style in new records.
 
+      ✅ **QUEUED UPSTREAM 2026-08-17 and ACCEPTED — atelier item `020/320`.**
+      Handed to the live atelier session with the reproducer, the affected
+      syntax forms and the suggested definitions-not-usages fix shape; it
+      **re-reproduced the fault from its own probe rather than take ours on
+      trust** before filing, and wrote the item itself on the ground that it is
+      accountable for what lands in its tree. Nothing further is owed from here
+      and nothing is to be fixed here. It also placed it as the first instance
+      of a *vacuity* class already on its board: not silence, but **an
+      affirmative claim naming the property it did not check**.
+      🔎 **Measured here, beyond the original filing:** the blind spot covers
+      **all** reference forms — full `[text][ref]`, collapsed `[ref][]`,
+      shortcut `[ref]` — plus the **image** form `![alt][ref]`, and it swallows
+      **both** finding kinds, `missing-file` *and* `missing-anchor`. Exposure
+      re-measured 2026-08-17: **36 reference-style definitions repo-wide, 11 in
+      `docs/ROADMAP.md`** (up from 26/10 the day before), all of them its
+      `[ADR 00xx]` pointers — the densest cross-reference surface we have is the
+      one the enforced guard cannot see. **Zero are broken.** Exposure, not
+      damage; say it that way and do not dress it up.
+      🛑 **CORRECTION, and it makes this WORSE: `pathscan` does not fully
+      compensate.** This item recorded that `pathscan` catches these and is
+      merely warn-only. Atelier probed it and found the cover is **partial** — a
+      reference definition whose destination carries a slash is flagged, and one
+      that is a bare filename is **missed**. It verified the control first (a
+      bare path mentioned in prose fired correctly), so the silence is a real
+      miss and not the probe sitting outside its scope. So the compensating
+      guard is itself holed, in the same syntax class, *and* warn-only. **Two
+      guards whose union was assumed complete are both partial** — which is a
+      sharper version of this item's own point than the version it was filed
+      with, and it was found only because a third party probed a claim nobody
+      had reason to doubt.
+
 > ✅ **Closed 2026-08-16** — whole-repo scanner runs inflated by live worktrees.
 > **Stale, and re-measured with five worktrees live**: `leakscan .` clean (not
 > 101-and-blocked), `plainscan .` 652 with no doubling. Worktrees moved to
