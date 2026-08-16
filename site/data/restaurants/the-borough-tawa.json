@@ -362,7 +362,8 @@
       ]
     },
     {
-      "section": "Brunch (served till 2pm)",
+      "section": "Brunch",
+      "note": "served till 2pm",
       "items": [
         {
           "name": "Rosti Benedict",

@@ -305,7 +305,8 @@
       ]
     },
     {
-      "section": "Specials (limited time)",
+      "section": "Specials",
+      "note": "limited time",
       "items": [
         {
           "name": "Parmageddon",

@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Changed
+- **A section's serving time is subtext, not part of its heading.** "Brunch
+  (served till 2pm)" put a 24-character chip in the jump-nav strip you scroll
+  with a thumb, and Sprig & Fern's Gold Card heading was **53 characters** —
+  wider than a phone screen. The heading is now just the name ("Brunch", "Gold
+  Card"), with the venue's own qualifier printed under it in the menu. Six
+  sections across four venues moved. One consequence worth knowing: a link
+  shared to one of those sections (`#section-brunch-served-till-2pm`) now lands
+  at the top of the menu instead of the section.
 - **A dish photo is a thumbnail beside the dish, and opens full-size on a tap.**
   Photos shipped full-bleed and put roughly one dish on a phone screen, which
   turned a menu into a gallery you scrolled past to read. The picture now sits

@@ -170,6 +170,13 @@ excluded from both stores, always.
   "menu": [
     {
       "section": "Noodles",
+      "note": null,                  // optional subtext under the heading: the
+                                     //   qualifier the venue prints beside it
+                                     //   ("served till 2pm"). NEVER inside the
+                                     //   name — the name is also the jump-nav
+                                     //   chip (ADR 0057). Prose, because the
+                                     //   machine-readable window is ROADMAP 28c
+                                     //   and doesn't exist yet
       "available": null,             // optional window/season for a WHOLE section
       "addOns": [],                  // optional add-on group ids, offered on every
                                      //   dish in this section (ADR 0048)

@@ -435,3 +435,15 @@ deliberation those compact docs omit.
   revalidates everything precached. Reproduced end to end before it was touched.
   The sharp part: **every check in the tree was green**, because they all launch
   a fresh profile — nothing tested an *upgrade*.
+- [0057](0057-a-section-heading-is-a-name-not-a-sentence.md) — **a section
+  heading is a name, not a sentence.** The owner hit `Brunch (served till 2pm)`
+  in the jump-nav strip on his phone; Sprig & Fern's `Gold Card (Mon–Fri
+  11:30–17:30, weekends 10:00–17:30)` is a **53-character chip**, wider than a
+  390 px screen. The heading was doing two jobs that want opposite lengths, so
+  the qualifier moves to a sibling `note` and the chip and anchor are built from
+  the name alone. `available.note` lost: `check_available` refuses a note-only
+  window, and `available` is a *filter* object — a presentational string in it
+  would make a section's visibility look conditional. Prose on purpose, because
+  a weekday+interval rule is inexpressible until ROADMAP 28c. The finding it
+  fired: **a section's anchor is derived from its display name**, so any rename
+  invalidates links to it — ADR 0051's fault, one level up.

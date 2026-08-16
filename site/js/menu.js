@@ -1278,8 +1278,21 @@ function render(r) {
     );
     const dishes = el("ul", { className: "dish-list" });
     for (const item of section.items) dishes.append(renderDish(item, isRecipes, r, avoid, section));
+    // Subtext under the heading, never inside it (ADR 0057). The heading string
+    // is also the jump-nav chip, so "Brunch (served till 2pm)" costs 24 chars of
+    // a horizontal strip the reader scrolls with a thumb; the qualifier belongs
+    // where it is read once, not where it is scanned.
+    // The two notes stack rather than being joined: they are separate facts from
+    // separate sources — `section.note` is what the venue prints beside the
+    // heading, `available.note` is why the section is on the menu at all
+    // ("The Borough's entry in Burger Wellington"). Joining them with a
+    // separator would assert they are one statement. No venue carries both yet.
+    const notes = [section.note, section.available?.note]
+      .filter((n) => typeof n === "string" && n.trim())
+      .map((n) => el("p", { className: "section-note", textContent: n.trim() }));
     const sec = el("section", { className: "menu-section", id }, [
       el("h2", { className: "section-title", textContent: section.section }),
+      ...notes,
       dishes,
     ]);
     sectionEls.push(sec);

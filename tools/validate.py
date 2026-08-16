@@ -304,6 +304,29 @@ def check_available(rid, obj, where):
         err(rid, f"{where}: available must state at least one of from/to/offBy/season")
 
 
+def check_section_note(rid, section):
+    """`section.note`: the qualifier a venue prints beside its heading — "served
+    till 2pm", "12 and under" (ADR 0057). Prose, deliberately: the machine-
+    readable weekday+interval window is ROADMAP 28c and does not exist yet, and
+    a note is the honest encoding of "we have the words, not the structure".
+
+    Distinct from `available.note`, which says why a section is on the menu at
+    all. The gate below is the one that matters: the point of the field is that
+    the qualifier LEFT the heading, so a note still embedded in the section name
+    means the split was started and not finished — the heading is long again,
+    and the reader sees the same phrase twice."""
+    note = section.get("note")
+    if note is None:
+        return
+    where = f"section {section.get('section')!r}"
+    if not isinstance(note, str) or not note.strip():
+        err(rid, f"{where}: note must be a non-empty string, got {note!r}")
+        return
+    name = section.get("section")
+    if isinstance(name, str) and note.strip().lower() in name.lower():
+        err(rid, f"{where}: note {note!r} is still inside the section name — take it out of the heading")
+
+
 def check_revisions(rid, obj, where):
     """Optional dated log of what changed about a dish — the muffin that went
     vegan (ADR 0023). `date` is world time (when it changed), `recorded` is
@@ -1043,6 +1066,7 @@ def check_restaurant(path):
             err(rid, "menu section missing 'section' name")
         # A whole section may be seasonal — the winter menu (ADR 0023).
         check_available(rid, section, f"section {section.get('section')!r}")
+        check_section_note(rid, section)
         check_translations(rid, section, f"section {section.get('section')!r}", {"section"})
         add_on_refs += collect_add_on_refs(rid, section, f"section {section.get('section')!r}")
         check_add_ons_only(rid, section, add_on_defs)

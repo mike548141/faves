@@ -412,6 +412,21 @@ SOURCE_CASES = {
             "error",
         ),
     },
+    # ADR 0057: `section.note` exists because the qualifier LEFT the heading. A
+    # split started and not finished — note added, heading not shortened — is
+    # the failure mode with no symptom: the data looks migrated, the jump-nav
+    # chip is as long as it ever was, and the reader is told "served till 2pm"
+    # twice. Only a mutation of the real record can show the gate fires.
+    "site/data/restaurants/the-borough-tawa.json": {
+        "a section note put back inside its own heading": (
+            lambda s: s.replace('"section": "Brunch",', '"section": "Brunch (served till 2pm)",', 1),
+            "error",
+        ),
+        "a section note emptied to a blank string": (
+            lambda s: s.replace('"note": "served till 2pm"', '"note": "   "', 1),
+            "error",
+        ),
+    },
 }
 
 

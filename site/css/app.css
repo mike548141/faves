@@ -3523,6 +3523,15 @@ body.faves-view .to-top {
   font-weight: 700;
   letter-spacing: -0.01em;
 }
+.section-note {
+  /* The venue's own qualifier ("served till 2pm"), lifted out of the heading so
+     the jump-nav chip stays short. Deliberately NOT sticky: it is read once on
+     arrival, and a two-line sticky block would eat the top of a 390 px screen
+     for every section that has one. */
+  margin: 0 0 var(--space-2);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
 .dish-list {
   display: grid;
   gap: var(--space-1);

@@ -287,7 +287,8 @@
       ]
     },
     {
-      "section": "Mains (Monday to Sunday, open till late)",
+      "section": "Mains",
+      "note": "Monday to Sunday, open till late",
       "items": [
         {
           "name": "Link Road Lasagne",
@@ -562,7 +563,8 @@
       ]
     },
     {
-      "section": "Brunch (Monday to Sunday, open till 3pm)",
+      "section": "Brunch",
+      "note": "Monday to Sunday, open till 3pm",
       "items": [
         {
           "name": "1841 Brekkie",

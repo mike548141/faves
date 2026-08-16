@@ -62,7 +62,8 @@
   "status": "menu-complete",
   "menu": [
     {
-      "section": "All Day Brunch (7.30am–2.30pm)",
+      "section": "All Day Brunch",
+      "note": "7.30am–2.30pm",
       "items": [
         {
           "name": "Eggs on Toast",

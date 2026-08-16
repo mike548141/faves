@@ -931,7 +931,8 @@
       ]
     },
     {
-      "section": "Gold Card (Mon–Fri 11:30–17:30, weekends 10:00–17:30)",
+      "section": "Gold Card",
+      "note": "Mon–Fri 11:30–17:30, weekends 10:00–17:30",
       "items": [
         {
           "name": "Fish and Chips",
