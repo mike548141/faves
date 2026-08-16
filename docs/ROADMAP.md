@@ -393,6 +393,9 @@ delivery app.** Clear one by bringing back the fact.
       departed festival dishes move whole to `data/history/dishes/baylands.json`
       (ADR 0023 / ADR 0047), because a festival menu is exactly the kind of
       thing the history store exists to keep.
+      <!-- pathscan:allow: the history file is created BY this item, when the
+           festival menu comes down — naming it before it exists is the point -->
+
 - [ ] 🚩 **Baylands has no drinks, and that is deliberate** `[content]`. The
       brewery advertises **"30+ taps"** and publishes no tap list anywhere. A
       board that rotates cannot be captured accurately, and a wrong beer on a

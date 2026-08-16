@@ -3033,6 +3033,9 @@ here landed as one small commit on a clean tree, pushed immediately.
 (`72cf216..eef38be`); the 16 newer ones are cold-pass reviews, board items and
 session records that touch no file under `docs/method/`. Ten method documents
 moved, but only three carry text this repo inlines.
+<!-- pathscan:allow: atelier cross-repo path — docs/method/ exists in atelier,
+     not in this repo's tree; same allowance CLAUDE.md already carries -->
+
 
 The check as written would not have found any of it much longer. It read the
 atelier checkout's `HEAD`, and that checkout was **16 commits behind its own
