@@ -85,6 +85,52 @@ const SCREENS = [
         }))()`,
         assert: (v) => (v.title && v.prices > 0 ? null : `title=${JSON.stringify(v.title)} priced=${v.prices}`),
       },
+      {
+        // The currency must be findable from the prices themselves, in EITHER
+        // tone of the ⓘ (ROADMAP 23a — About used to be its second home and no
+        // longer carries it). Deliberately tone-agnostic: which tone a venue is
+        // in depends on when its menu was last read, so asserting one of them
+        // would be a check that changes its answer with the calendar.
+        what: "the caveat ⓘ names the currency whichever tone it is in",
+        expr: `(() => {
+          const note = document.querySelector(".caveat-note");
+          return {
+            tone: document.querySelector(".caveat-btn")?.classList.contains("is-info") ? "info" : "warn",
+            currency: (note?.querySelector(".caveat-currency")?.textContent ?? "").trim(),
+          };
+        })()`,
+        assert: (v) => (/dollar|euro|pound|yen|\(\w{3}\)/i.test(v.currency) ? null : `${v.tone} tone says ${JSON.stringify(v.currency)}`),
+      },
+    ],
+  },
+  {
+    // The AMBER tone of the same control. The default venue above happens to
+    // be in the blue tone, so without a second venue the caution path would go
+    // unexercised — which is how it carried no currency line for as long as it
+    // did (ROADMAP 23a). Pinned to a venue whose menu we have never read: that
+    // is the one state that cannot age back into the blue tone, so this stays
+    // a caution check without depending on the calendar. If someone reads this
+    // menu in store, move the pin rather than dropping the check.
+    name: "menu we have never read",
+    url: () => `/restaurant.html?id=kk-malaysian`,
+    ready: `!!document.querySelector(".menu-title")`,
+    checks: [
+      {
+        what: "the caution tone names the currency too",
+        expr: `(() => {
+          const btn = document.querySelector(".caveat-btn");
+          return {
+            tone: btn?.classList.contains("is-info") ? "info" : "warn",
+            currency: (document.querySelector(".caveat-note .caveat-currency")?.textContent ?? "").trim(),
+          };
+        })()`,
+        assert: (v) =>
+          v.tone !== "warn"
+            ? `this venue is no longer in the caution tone — re-pin the check`
+            : /dollar|euro|pound|yen|\(\w{3}\)/i.test(v.currency)
+              ? null
+              : `caution tone says ${JSON.stringify(v.currency)}`,
+      },
     ],
   },
   {

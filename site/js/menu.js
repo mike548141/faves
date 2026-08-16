@@ -706,16 +706,24 @@ function convertedNote(record) {
 // a later sibling of the button for the hover reveal to work.
 //
 // Two tones off one control (ADR 0037). The amber one is a caution and says
-// so; the blue one reports what was checked and when, and is also where the
-// currency is stated — a reader wondering "is this NZD?" is looking at the
-// prices, which is exactly where this sits. (The About dialog carries the
-// same fact for anyone who looks there first.)
+// so; the blue one reports what was checked and when. BOTH state the currency
+// — a reader wondering "is this NZD?" is looking at the prices, which is
+// exactly where this sits.
+//
+// Both, since 2026-08-17. ADR 0037 stated the currency in two places, this
+// control's blue tone and the About dialog, and in the amber tone in neither —
+// so a venue whose menu needed a refresh named its currency nowhere on its own
+// page. That was 39 of the 55 venues on the day it was measured. ROADMAP 23a
+// took the fact out of About, where nobody was asking it; the way to do that
+// without losing it was to close the amber gap rather than keep a second home
+// open. Whether we re-read the menu recently has nothing to do with what the
+// shop prices it in.
 function caveatDisclosure(id, caveat, record, branch) {
   const warn = caveat.show;
   const [btn, note] = disclosure({
     noteId: `menu-caveat-${id}`,
     label: warn ? "Why this menu needs a refresh" : "When we last checked this menu",
-    text: warn ? caveatText(caveat) : confidenceNote(caveat, record, branch),
+    text: warn ? cautionNote(caveat, record) : confidenceNote(caveat, record, branch),
     // Shape first, colour second — see disclosure.js.
     glyph: warn ? "⚠" : "ⓘ",
   });
@@ -831,6 +839,20 @@ function caveatText(caveat) {
   // "never" and "unknown-method" — nothing we can stand behind either way, and
   // the wording the screen has always shown.
   return `⚠ Menu items and prices need a refresh — ${tail}`;
+}
+
+/**
+ * The amber note: the caution, then the currency. Built as a node for the same
+ * reason `confidenceNote` is — the currency belongs on its own line rather than
+ * run onto the end of a warning, and `currencyLine`'s leading space keeps the
+ * two sentences apart in the accessibility tree where the block collapses it.
+ * The caution's own wording is untouched (ADR 0036: one sentence per reason).
+ */
+function cautionNote(caveat, record) {
+  return el("span", {}, [
+    caveatText(caveat),
+    el("span", { className: "caveat-currency", textContent: currencyLine(record) }),
+  ]);
 }
 
 // A pick is a reference to a dish on this same menu, written as a name today
