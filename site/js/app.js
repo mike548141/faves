@@ -30,6 +30,7 @@ import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
 import { initTransferReceive } from "./personal-io-ui.js";
 import { initBackToTop } from "./to-top.js";
+import { formatMoney, venueTimezone, zoneLabel } from "./place.js";
 import { priceBand } from "./price.js";
 import { initReo, t } from "./reo.js";
 import { el } from "./dom.js";
