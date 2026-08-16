@@ -54,7 +54,14 @@
   --radius-chip: 999px;
   --shadow: 0 1px 2px rgba(43, 36, 32, 0.06), 0 6px 18px rgba(43, 36, 32, 0.07);
   --shadow-lift: 0 2px 6px rgba(43, 36, 32, 0.1), 0 14px 32px rgba(43, 36, 32, 0.13);
+  /* --bar-h is the bar's height RIGHT NOW; --bar-h-tall is the height it can
+     ever reach. They differ only on the home screen, whose bar shrinks on
+     scroll — everywhere else the two are the same number, so the rules that read
+     them behave exactly as they did before the split. Anything that must never
+     be covered reserves --bar-h-tall; anything that should sit ON the bar
+     follows --bar-h. */
   --bar-h: 4.6rem;
+  --bar-h-tall: var(--bar-h);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -176,8 +183,14 @@ img {
 }
 
 /* ---------- Main / results ---------- */
+/* --bar-h-tall, not --bar-h: the home bar now SHRINKS on scroll, and the runway
+   under the content has to reserve the TALLEST state or the last card would be
+   reachable only while scrolled — stranded the moment the bar expanded again.
+   Anchoring the runway to a constant also kills the oscillation a varying one
+   would cause: if the shrink changed the document height, a reader parked on the
+   threshold would flip the bar between states forever. */
 main {
-  padding-bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-4));
+  padding-bottom: calc(var(--bar-h-tall) + env(safe-area-inset-bottom) + var(--space-4));
 }
 .results-head {
   display: flex;
@@ -1033,20 +1046,36 @@ body.faves-view .filter-bar {
   align-items: center;
   padding: var(--space-2) var(--space-3);
   padding-bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  border-top: 1px solid var(--line);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* NO BAR (owner, 2026-08-16: "I dont like the bar"). Two floating buttons,
+     nothing behind them — the chrome was costing a strip of screen and reading
+     as a toolbar for two controls. The container stays fixed and full-width
+     purely to position them at opposite ends; it paints nothing and, being
+     `pointer-events: none`, does not swallow taps on the card underneath. */
+  background: none;
+  border-top: 0;
+  pointer-events: none;
+  /* Only the tightening is animated; the labels themselves go instantly (you
+     cannot transition `display`). 140 ms so the bar reads as settling rather
+     than sliding. */
+  transition: padding-block 0.14s ease;
 }
 .app-ready .filter-bar {
   display: flex;
 }
 .filter-bar-inner {
-  width: min(100% - 2 * var(--space-3), 60rem);
+  /* min(100%, …), NOT `.wrap`'s `100% - 2 * --space-3`: the bar already applies
+     that gutter as its own padding, so carrying it here too inset the controls
+     32 px at 390 px while the cards above them sit at 16 px — a misalignment
+     and 32 px of a 358 px row spent twice. With a third control in the row that
+     was the difference between "Pick for us" fitting and being ellipsed. */
+  width: min(100%, 60rem);
   margin-inline: auto;
   display: flex;
   gap: var(--space-2);
   align-items: center;
+  /* Re-enable taps on the buttons themselves; the strip around them stays
+     transparent to the list behind it. */
+  pointer-events: none;
   /* Filters left, "Pick for us" right — one row, no wrap, at every width. The
      bar used to wrap to two rows below 34rem (the service toggle took a row of
      its own), which is what made --bar-h 7.6rem = 122.2 px of permanent screen. */
@@ -1056,26 +1085,96 @@ body.faves-view .filter-bar {
    = 69.8 px. 4.4rem (70.4) reserves it with a whisker to spare. The safe-area
    inset is added SEPARATELY by the bar's own padding and by every consumer of
    --bar-h, so this figure stays inset-free on purpose.
-   Six rules read --bar-h: main's padding-bottom, .order-fab, .to-top, .toast,
-   .update-notice — and, until this redesign, .pick-fab, which no longer floats. */
+   Five rules read --bar-h/-tall: main's padding-bottom (tall), .order-fab,
+   .to-top (current), .toast and .update-notice (tall). */
 body:not(.menu-page) {
-  --bar-h: 4.4rem;
+  --bar-h-tall: 4.4rem;
+  --bar-h: var(--bar-h-tall);
 }
 
-/* The two bar controls. 48 px, not 44: they are the only two controls on the
-   screen that are always reachable, and the bar has the room. */
+/* ---- Shrunk on scroll ----------------------------------------------------
+   The owner's ruling, 2026-08-16, after living with the redesigned bar on his
+   iPhone: at 69.8 px fixed it is never off the screen, so the bottom 70 px of
+   the viewport can be scrolled TO but never seen uncovered. The old floating
+   FAB used to tuck away and give that band back; the FAB is not coming back
+   (measured, it covered 63 % of a venue's ♥ — ADR 0052), so the bar itself
+   gives the band back instead. He was offered tuck-the-bar vs shrink-the-bar
+   and chose shrink, because both controls stay reachable at every scroll depth,
+   which a tuck cannot promise.
+   The bar loses its labels and its padding, NOT its touch targets: 44 px is the
+   repo's floor and the buttons stop exactly there. 44 + 2 × 2 px + the 1 px
+   border = 49 px; 3.2rem (51.2) reserves it.
+   The labels survive as visually-hidden text rather than being deleted, so the
+   accessible name of each control is unchanged in both states — the icon-only
+   state must not make ADR 0052's admitted discoverability risk into a
+   nameless-button accessibility one. */
+body:not(.menu-page).bar-compact {
+  --bar-h: 3.2rem;
+}
+.bar-compact .filter-bar {
+  padding-block: 2px;
+  padding-bottom: calc(2px + env(safe-area-inset-bottom));
+}
+/* padding, not padding-inline: the order pill's icon + count is 27.6 px of
+   content, so its 0.6em padding-block was holding the shrunk bar at 51.8 px
+   instead of 49. min-width as well as min-height — an icon-only ⚙ is only
+   35.6 px wide on its own, which is a 44 px rule breached in the state the
+   rule is hardest to see breached in. */
+.bar-compact .bar-btn,
+.bar-compact .filter-bar .order-fab {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 0.75em;
+}
+/* Visually hidden, not gone: same technique as .sr-only, applied by state.
+   Screen readers still announce "Filters" / "Order" / "Pick for us".
+   The order pill's label is hidden in the bar at EVERY scroll depth, not just
+   when shrunk: measured at 390 px, "⚙ Filters" (102.7) + "🧾 Order 3" (140.4) +
+   "🎲 Pick for us" (143.8) + two gaps needs 407.7 px of a 358 px row, and what
+   gave way was the Filters button — squashed to 37.2 px, under the 44 px floor.
+   The count badge and the pill's aria-label ("Your order — 3 items") both
+   survive, so nothing about it is less legible; only the word "Order" goes,
+   next to a receipt icon and an accented tally. */
+.bar-compact .bar-label,
+.filter-bar .order-fab .bar-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .filter-bar,
+  .bar-btn,
+  .filter-bar .order-fab {
+    transition: none;
+  }
+}
+
+/* The bar controls. 48 px, not 44: they are the only controls on the screen
+   that are always reachable, and the full-height bar has the room. */
 .bar-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45em;
   min-height: 48px;
-  padding: 0.6em 1.1em;
+  /* A hard floor, in the axis nobody audits. Three controls in a 358 px row is
+     tight in English and tighter in te reo ("Whiriwhiria mā mātou"), and flex
+     will happily shrink a button to nothing to make a row fit. Under-width is
+     the same rule broken as under-height. */
+  min-width: 44px;
+  /* 0.9em, down from 1.1: three controls at 390 px need the 19 px back, and
+     min-height (not padding) is what sets the button's size anyway. */
+  padding: 0.6em 0.9em;
   border-radius: var(--radius-chip);
   font-size: var(--step-body);
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
+  transition: min-height 0.14s ease, padding 0.14s ease;
 }
 .bar-btn:active {
   transform: scale(0.96);
@@ -1089,9 +1188,27 @@ body:not(.menu-page) {
   border: 1px solid var(--line);
   background: var(--surface-2);
   color: var(--ink);
-  /* Give up width before the accented "Pick for us" does — the shuffle's label
-     is fixed, this one only ever grows by a badge. */
+  /* This used to be `min-width: 0` — "give up width before the accented Pick
+     for us does". That was right with two controls and wrong with three: with
+     an order pill in the row, the first thing to give simply hits the floor,
+     and measured at 390 px it was this button at 37.2 px. Filters is also the
+     one carrying ADR 0052's rule that a filter which is on is never invisible,
+     so it is the last thing that should narrow. The shuffle gives instead —
+     its label truncates (below), which is recoverable; a 37 px target is not. */
+  flex: 0 0 auto;
+}
+/* The one label allowed to lose characters rather than the row lose its
+   targets. English never reaches it at 390 px (13.7 px to spare, measured);
+   te reo does. An ellipsis is ugly and honest; the accessible name is the full
+   string either way, because only the *rendering* is clipped. */
+.bar-pick {
+  flex: 0 1 auto;
+  overflow: hidden;
+}
+.bar-pick .bar-label {
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 /* Something is on: the entry point itself has to say so, because it is now the
    only control on screen and a reader must never meet a short list with no
@@ -1565,8 +1682,10 @@ body:not(.menu-page) {
   }
 }
 
-/* The floating order button. Bottom-left so it clears the pick FAB (right)
-   and, on the home screen, sits above the filter bar like the pick FAB. */
+/* The order button. On a MENU page it still floats (there is no bar there to
+   put it in, and the owner was offered a wider rethink and declined it). On the
+   HOME screen it is a third control inside the bar — see `.filter-bar
+   .order-fab` below for why. */
 .order-fab {
   position: fixed;
   left: var(--space-3);
@@ -1591,6 +1710,35 @@ body:not(.menu-page) {
 }
 .order-fab:active {
   transform: scale(0.96);
+}
+/* In the bar, not over the list. Measured on the home screen at 390 px with
+   three items in the order: as a fixed pill it covered 138.4 × 36.4 px of the
+   first card (elementFromPoint returned the pill — it ate the tap and sliced
+   the venue name), and at the bottom of the document it covered 40.3 px of the
+   44 px "About & privacy" button, leaving 3.7 px reachable. That is the same
+   defect class ADR 0052 was written to fix: `main`'s padding reserves the BAR's
+   band, and nothing reserves a floating pill's.
+   Neutral, not --ink: the bar carries exactly one accent action ("Pick for
+   us"), and a black pill beside an orange one reads as two primaries. The
+   accent count badge is the tell that something is in the order, and the accent
+   border matches how .bar-filters says "something is on". */
+.filter-bar .order-fab {
+  position: static;
+  flex: 0 0 auto;
+  min-height: 48px;
+  min-width: 44px;
+  padding: 0.6em 0.9em; /* match .bar-btn — it is one of the row now */
+  border: 1px solid var(--accent);
+  background: var(--surface-2);
+  color: var(--ink);
+  box-shadow: none;
+  transition: min-height 0.14s ease, padding 0.14s ease;
+}
+/* The slot keeps DOM order = visual order (Filters · Order · Pick), so the tab
+   order matches the reading order without a CSS `order` shuffle. It is empty
+   and zero-width whenever the order is, which is most of the time. */
+.bar-order-slot {
+  display: contents;
 }
 
 /* Back-to-top for long menus: bottom-right, opposite the bottom-left order FAB.
@@ -1647,7 +1795,10 @@ body:not(.menu-page) {
    add was headroom for the "Pick for us" pill that floated bottom-right above
    the bar; the pill is in the bar now, so the back-to-top drops back down to
    sit directly on it — closer to the thumb, and nothing between them to dodge.
-   Suppressed in search / favourites, which drop the bar. */
+   Suppressed in search / favourites, which drop the bar.
+   --bar-h (current), not --bar-h-tall: this one is MEANT to hug the bar, and it
+   only ever appears past 600 px of scroll — by which point the bar has already
+   shrunk — so the reader never sees it move. */
 body:not(.menu-page) .to-top {
   bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3));
 }
@@ -4263,11 +4414,14 @@ body.faves-view .to-top {
 }
 
 /* Transient status toast (toast.js) — bottom-centre, sits clear of the filter
-   bar, fades in/out. Reduced motion keeps the fade but drops the slide. */
+   bar, fades in/out. Reduced motion keeps the fade but drops the slide.
+   --bar-h-tall, not --bar-h: a toast is already on screen when the home bar
+   shrinks, and a message that hops 21 px mid-read is worse than one sitting a
+   little high. Clearing the tallest state clears both. */
 .toast {
   position: fixed;
   left: 50%;
-  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-4));
+  bottom: calc(var(--bar-h-tall) + env(safe-area-inset-bottom) + var(--space-4));
   transform: translate(-50%, 0.75rem);
   z-index: 20;
   max-width: min(90vw, 30rem);
@@ -4297,11 +4451,13 @@ body.faves-view .to-top {
 /* "A newer version is ready" notice (update-notice.js, ADR 0027). Sits where
    the toast sits, but it is a surface with actions rather than a message: no
    timeout, no pointer-events: none, and it reads as a card so the two buttons
-   are obviously tappable. Both are 44 px+ per the mobile target rule. */
+   are obviously tappable. Both are 44 px+ per the mobile target rule.
+   --bar-h-tall for the same reason as the toast: it carries a decision, it has
+   no timeout, and it must not move under a thumb reaching for "Reload". */
 .update-notice {
   position: fixed;
   left: 50%;
-  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom) + var(--space-3));
+  bottom: calc(var(--bar-h-tall) + env(safe-area-inset-bottom) + var(--space-3));
   transform: translateX(-50%);
   z-index: 21; /* above the toast: a toast must never cover a decision */
   width: min(92vw, 30rem);
@@ -4735,6 +4891,31 @@ body.faves-view .to-top {
 }
 @media (prefers-reduced-motion: reduce) {
   .reset-type-input {
+    transition: none;
+  }
+}
+
+/* The two floating controls the bar used to hold. Each carries its own surface
+   and shadow now that nothing sits behind them (owner, 2026-08-16). */
+.filter-bar .bar-btn {
+  pointer-events: auto;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.35);
+}
+/* "Pick for us" returns to a floating button at the bottom right that gets out
+   of the way as you read (owner: "make it hide when you scroll down"). Hidden
+   by a class app.js toggles, not by :hover or a media query, so the same rule
+   serves the scroll case and the not-on-this-page case. */
+.bar-pick {
+  margin-inline-start: auto;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+.bar-pick.is-tucked {
+  opacity: 0;
+  transform: translateY(140%);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar-pick {
     transition: none;
   }
 }

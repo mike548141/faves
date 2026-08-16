@@ -69,9 +69,36 @@ function chips(r) {
  * excluding the rest.
  */
 export function initPicker(getCandidates, isFavourite = () => false) {
-  const pickBtn = document.getElementById("pick-btn"); // in the bottom bar since the FAB was retired
+  const pickBtn = document.getElementById("pick-btn"); // floats bottom-right again (owner, 2026-08-16)
   const dialog = document.getElementById("picker");
   if (!pickBtn || !dialog || typeof dialog.showModal !== "function") return;
+
+  // Tuck the button away as you scroll DOWN, bring it back as you scroll up.
+  // Owner, 2026-08-16: "make it hide when you scroll down". Direction, not
+  // depth — a button that vanishes past a fixed offset is gone exactly when a
+  // long list makes it most useful, whereas one that returns on the way back up
+  // is there the moment you stop reading and start choosing.
+  //
+  // rAF-throttled like to-top.js, so a fast flick coalesces to one read+write
+  // per frame. The 8px deadband stops the elastic overscroll at the top of iOS
+  // from flapping it.
+  let lastY = window.scrollY;
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      ticking = false;
+      const y = window.scrollY;
+      const dy = y - lastY;
+      if (Math.abs(dy) < 8) return;
+      lastY = y;
+      // Never tuck it near the top: that is where someone who has just landed
+      // and wants a suggestion actually is.
+      pickBtn.classList.toggle("is-tucked", dy > 0 && y > 120);
+    });
+  }
+  addEventListener("scroll", onScroll, { passive: true });
 
   const inner = dialog.querySelector(".picker-inner");
   const dice = document.getElementById("picker-dice");
@@ -174,5 +201,12 @@ export function initPicker(getCandidates, isFavourite = () => false) {
   // It also takes a bug class with it: `.is-tucked` was only ever cleared by a
   // scroll event, so leaving search could restore the FAB still translated
   // off-screen, and a MutationObserver on body's class had to be added to fix
-  // it. Nothing here should tuck the bar — that would re-open the same hole.
+  // it. Nothing here should tuck the bar.
+  //
+  // The bar DOES now shrink on scroll — owner's ruling 2026-08-16, after living
+  // with a bar that was 69.8 px at every scroll depth, and having been offered a
+  // tuck instead. That lives in `bar-shrink.js`, not here: it is a property of
+  // the bar, not of the shuffle, and it never hides a control, so the hole above
+  // stays shut. Read that module's header before touching it — it explains how
+  // it avoids the stranded-state trap rather than papering over it.
 }
