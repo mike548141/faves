@@ -3028,6 +3028,36 @@ southern hemisphere**: `venueHemisphere()` derives it from latitude and
 >   refactor breaks one line loudly.
 > Detail in the tool's own header and → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
 
+- [ ] 🚩 **`cook_check.mjs` is FLAKY under machine load, and flakiness is the
+      failure mode that defeats every other guard rule we have** `[S][js]` —
+      measured 2026-08-16 while integrating 36d. Four completed runs of the same
+      commit: **75/0, 73/2, 75/0, 75/0.** One run in four failed two assertions;
+      the tree did not change between them.
+      🔎 **Load is the best explanation and it is not proven.** Six sessions
+      were live; 1-minute load average ran 5.9–15.8 across the runs, and the
+      failing run was at the high end. The building agent independently hit a
+      harder version of this — **seven consecutive runs stalling** in the
+      *pre-existing* section 4b, ~30 assertions before its own new code, with
+      the audio path disabled and a different fixture, and only five lines of
+      *comment* changed since the last green run. It could not get its
+      replacement ring-once assertion observed at all; it passed here, later,
+      on a quieter machine.
+      🛑 **Why this outranks its size.** This repo's whole guard discipline is
+      *"a wall of PASS then an error is not a pass — check the summary line"*.
+      Flakiness defeats that rule specifically, because the summary line **is**
+      there and it says FAILED, and the correct response looks identical to the
+      wrong one: run it again. **I ran it again. It went green. That is exactly
+      the behaviour that trains a session to re-run until green**, and it is why
+      this is written down instead of quietly enjoyed. ⚠️ **The two failing
+      assertions were not captured** — the failing run predated the run that
+      tee'd its output, and I chose not to burn a load-generating reproduction
+      attempt to recover them. That is a real gap in this evidence, not a
+      rounding error.
+      🔑 **Sequence it with the CI item below, not separately.** They are the
+      same decision from two sides: a check too flaky to gate is also a check
+      too flaky to *trust when typed by hand*, and "leave them manual" quietly
+      assumes the manual runs are believed.
+
 - [ ] 🚩 **CI runs NONE of the browser checks** `[M][docs]` — found 2026-08-16
       while closing the item above, and it is the reason that one could sit dead
       through a whole settings refactor. `.github/workflows/ci.yml` runs
@@ -4675,10 +4705,30 @@ What *is* honest, and is the recommendation:
   batter volume and **shown as estimates** — but that is a labelling decision he
   should take deliberately, not one to slip into a public dataset.
 
-### 36d — the timer's alarm ✅ RULED 2026-08-16
+### 36d — the timer's alarm ✅ SHIPPED 2026-08-16
 
-**CLAIMED 2026-08-16 13:59 UTC (wt: faves-cook)** — the fresh session it was
-held for. It lives in `cook.js`/`cook-ui.js`/a new `alarm.js`/`sw.js`.
+> ✅ **BUILT AND MERGED 2026-08-16 (wt: faves-cook, merge `42b1a7a`)** — all
+> three channels, exactly as ruled. Recorded as **ADR 0071**. `site/js/alarm.js`
+> is new; `cook-ui.js` arms the audio context and raises the ask inside the
+> start tap; `sw.js` answers `notificationclick`. 25 unit tests, 15 new
+> `cook_check` assertions, **`cook_check` OK — 75 passed**.
+> 🔎 **Three of the new assertions were proved by breaking them** — inverting
+> the 15-minute guard failed exactly the two notification assertions, dropping
+> the vibrate call failed exactly the five vibration ones and left the tone
+> green. 🛑 **And one new assertion was found to be decorative and replaced:**
+> the ring-once guard could not bite, because the tick that rings the last timer
+> also stops the interval — so deleting the guard failed nothing. Replaced with
+> a two-timer scenario. *An assertion nobody has watched fail is not yet a
+> guard*, and this one was written in the same session that was hunting
+> decorative guards elsewhere.
+> ⚠️ **Three things a green run does not show, and the ADR says so:** no real
+> speaker was heard, no real motor was felt, and iOS ignores `navigator.vibrate`
+> entirely — so on the owner's own phone this feature is tone plus notification,
+> never a buzz. He was told and chose it anyway.
+> 🎯 **Three left for the owner** — see the questions at the end of this block.
+
+**Ruling as given, for the record.** It lives in
+`cook.js`/`cook-ui.js`/a new `alarm.js`/`sw.js`.
 
 ⚠️ **This claim originally asserted file-disjointness from the live peers, and
 that sentence was false within the hour.** It read *"none of which 37c/d/e/j/l/m
@@ -4717,6 +4767,32 @@ Owner ruled the shape in full, going further than the recommendation:
 
 Write the ADR when built — first permission prompt, first audio, first
 vibration, three firsts in one feature.
+⚠️ **"First permission prompt" was not written into ADR 0071, deliberately.**
+ADR 0069 (the location ask, wt: faves-ranking) claims the same superlative, and
+the two were built **concurrently in different worktrees on the same day**.
+🔑 **A superlative is a claim about every other change, including ones being
+written in parallel that the author cannot see** — it is unverifiable from
+inside the repo and it decays without anyone touching the file it sits in. 0071
+says the two were concurrent and that merge order settles nothing worth
+asserting. Peer sessions carried this into ADR 0072 as a face of the same
+family.
+
+**🎯 Three questions for the owner, left open rather than decided quietly:**
+1. **A notification fires even when you are looking at the page.** The ruling
+   conditions it on duration and nothing else; adding a "only if the tab is
+   hidden" rule would be inventing one. Recorded as a rejected option in 0071.
+2. **No visible cue at all.** A timer that ends for a step you are not looking
+   at has sound, buzz and notification — and nothing on screen. The `denied`
+   line reuses `.cook-awake`. Both want `app.css`, which live peer sessions held
+   all session, so nothing was written there.
+3. **`cook.notifyBlocked` has no te reo string.** `reo.js` was held by a peer;
+   it falls back to English safely. Belongs in the reo review queue.
+
+⚠️ **Vibration is NOT gated on `prefers-reduced-motion`, and that was a
+judgement call worth challenging.** `settings.js` has no quiet/haptics
+precedent, and the preference is usually set for vestibular reasons — silencing
+the buzz could leave a reader who cannot hear the tone with no perceivable
+alarm at all. Recorded as a rejection in 0071 rather than taken silently.
 
 ### 36a/36c — estimates DO drive timers ✅ RULED 2026-08-16
 
