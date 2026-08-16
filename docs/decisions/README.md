@@ -637,6 +637,26 @@ deliberation those compact docs omit.
   field, no vocabulary, no data**: two owner questions remain open, including
   that `priceBand`, the app's only curated judgement field, is filled on **8 of
   55** — the measurement that predicts this feature never gets populated.
+- [0078](0078-a-harness-owns-its-own-lifecycle-and-a-transport-failure-is-not-a-test-failure.md)
+  — **a harness owns its own lifecycle, and a transport failure is not a test
+  failure.** The ten browser checks share `tools/lib/browser.mjs`; three faults
+  surfaced in one day and only look separate. It leaked its Chrome on every
+  abnormal exit (orphans push load past 100, at which point a check *stalls*
+  rather than fails — a wall of PASS with no verdict, which is what made a
+  five-arm bisect uniformly confident and meaningless). It leaked 189 profile
+  directories, and **178 of those on the HAPPY path** — three tools never
+  removed theirs at all. It could not say which tree it had measured, so a
+  session whose cwd drifted verified a tree without its change, green and
+  meaningless. And a 30-second CDP timeout rendered as `FAIL <assertion name>`
+  with exit 1, byte-indistinguishable from a regression (measured: `boot_check`
+  2 of 4, `recipe_check` 4 of 8 on a loaded machine). **Rejects** per-tool
+  fixes, a bare error subclass (the tools catch broadly and discard the type), a
+  bounded transport retry (**CDP calls are not idempotent** — re-issuing
+  `Page.navigate` reloads, so the retry changes what the assertion measures),
+  and a sweep that only ever spares (proven to *discriminate* instead: same
+  directory kept while held, removed once unheld). 🛑 `SIGKILL` still orphans
+  both and always will. One more face of [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md),
+  whose cure generalises: **make the all-clear carry a denominator.**
 - [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
   — **a guard is decorative when its output is the same whether or not the thing
   it guards is broken.** Twelve faces, most of them surfaced in one day of parallel
