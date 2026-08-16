@@ -3476,6 +3476,27 @@ them the unfixable class. That is a scanner whose output can still be read.
   grows and gives different readers different answers; an intersection test
   gives every reader the same one, which is the property the current clause
   lacks.
+  🔑 **The generalisation that matters more upstream than our instance does.**
+  The yield branch's hidden assumption is not *"split board"* — it is *"the
+  next open item lives in a different file"*. Read the first way it sounds like
+  a niche gap; read the second it is universal, because an adopter comparing
+  itself against the words "split board" may not recognise itself. 🚩 **And the
+  timing is the trap:** a repo is most likely to be monolithic **early**, when
+  it has one file, few items and one session — exactly when the rule looks
+  theoretical and costs nothing to adopt. It bites when they scale to parallel
+  work, the worst possible moment to find the concurrency rule does not close.
+  This repo is that story: the clause was inlined 2026-08-16 and deadlocked
+  three sessions the next morning, its first day under real parallel load.
+  🔑 **Two method failures from the same episode, recorded because they are
+  about how corroboration broke rather than about CF3.** (1) *Two sessions
+  agreeing is not corroboration when the second never opened the source.* The
+  mistranslation claim was asserted by one session, backed with fresh evidence
+  by a second, and refuted by a third that actually read `CONCURRENCY.md`.
+  Two-of-three agreement felt like confirmation and was one unread claim with
+  an echo. (2) *A symptom count locates a fault's existence, never its site.*
+  "Three independent readers all stalled on this clause" is strong evidence the
+  deadlock is **real** — and no evidence at all about **which file** the defect
+  lives in. It was offered, and received, as settling both.
   🤔 **And the framing to put to the owner honestly: the monolith is the root
   cause.** Every claim collision, the `SHELL_VERSION` collisions, the
   ADR-number collisions and this deadlock are one shape — a shared mutable
