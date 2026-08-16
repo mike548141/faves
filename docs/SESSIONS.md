@@ -4353,7 +4353,7 @@ harness still has to call it correctly.
 
 ---
 
-## 2026-08-16 08:20 UTC — the owner's afternoon on his own phone, and an outage I caused
+## 2026-08-16 08:31 UTC — the owner's afternoon on his own phone, and an outage I caused
 
 Second half of the branch-picker session. The owner spent it using the live site
 and reporting what he found, so the work is a long run of small fixes against
