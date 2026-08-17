@@ -283,6 +283,12 @@ test("visibilitychange on an unsupported browser stays silent", async () => {
 // a blemish, hiding one that is needed is a ruined dish. Every case below that
 // asserts a HIDE is a step that genuinely names nothing from the list.
 
+// Chocolate Self-Saucing Pudding's real list, ALL of it. The sauce's cocoa was
+// missing from this fixture until 2026-08-17, and its absence is what let the
+// ambiguity rule look correct here while hiding the cocoa line on the actual
+// recipe: with one cocoa the word is unique and usable, with two it is neither.
+// A guard whose fixture excludes the failing case agrees with its author rather
+// than with the corpus, so the line is now here and pinned by the test below.
 const PUDDING = [
   "¾ cup (190 ml) white sugar",
   "100g butter, softened",
@@ -293,6 +299,8 @@ const PUDDING = [
   "1 tbsp (15 ml) cocoa",
   "Water or milk, as required for a thick batter",
   "Sauce: ½ cup (125 ml) brown sugar",
+  "Sauce: ¼ cup (60 ml) cocoa",
+  "Sauce: 1 tbsp (15 ml) cornflour",
   "Sauce: 2 cups (500 ml) boiling water",
 ];
 
@@ -327,6 +335,32 @@ test("a step lists only what it names, not the whole recipe", () => {
   ]);
   // Emphatically NOT the sauce, the flour or the baking powder.
   assert.ok(!got.some((l) => l.startsWith("Sauce:")));
+});
+
+test("a shared word the step names shows EVERY line that carries it", () => {
+  // The bug the cold review found on three real recipes. This pudding lists
+  // cocoa twice, so "cocoa" tells the two lines apart for nobody — and the rule
+  // used to answer that by showing NEITHER, on a step whose only ingredient is
+  // cocoa. Both is the honest answer to "I can't tell which"; none is the bias
+  // inverted, and the reader is at the bench.
+  const got = ingredientsForStep("Sprinkle over the brown sugar, cocoa and cornflour.", PUDDING);
+  assert.ok(got.includes("1 tbsp (15 ml) cocoa"));
+  assert.ok(got.includes("Sauce: ¼ cup (60 ml) cocoa"));
+  // …and the phrase-matched lines beside them are unaffected.
+  assert.ok(got.includes("Sauce: ½ cup (125 ml) brown sugar"));
+  assert.ok(got.includes("Sauce: 1 tbsp (15 ml) cornflour"));
+  assert.ok(!got.includes("¾ cup (190 ml) white sugar"), "brown sugar is not white sugar");
+});
+
+test("a step that names the specific line does NOT drag its namesakes in", () => {
+  // The guard that keeps the fallback above honest: "white sugar" answers
+  // "sugar" for this step, so the sauce's brown sugar has no claim on it. It is
+  // the step's own specificity that decides, never a count.
+  const got = ingredientsForStep("Beat together the white sugar, softened butter, egg and vanilla.", PUDDING);
+  assert.ok(got.includes("¾ cup (190 ml) white sugar"));
+  assert.ok(!got.some((l) => l.startsWith("Sauce:")));
+  // "white" is shared with the flour, and the flour is not in this step.
+  assert.ok(!got.includes("1¼ cups (310 ml) white flour"));
 });
 
 test("plural ingredient vs singular instruction still matches", () => {

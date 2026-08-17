@@ -8,6 +8,16 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **A step no longer hides the ingredient it is asking for.** Where a recipe
+  lists the same thing twice — Upside-Down Plum Cake's butter, Chocolate
+  Self-Saucing Pudding's cocoa, Easy Pad Thai's peanuts — a step that named it
+  showed **neither** line, because neither one could be told from the other. It
+  now shows both, which is the honest answer to "I can't tell which of these you
+  mean". Where the step is specific ("the white sugar"), the sauce's brown sugar
+  still stays out of it. 18 more ingredient lines are on screen across the
+  corpus, and no line that used to show has stopped showing.
+
 ### Changed
 - **The search box now sits above "If it's your first time, try…"** on every
   menu, instead of below it. Search is what a returning reader came for, and it

@@ -59,10 +59,23 @@ export const canCook = (item) => stepsOf(item).length > 0;
 // do.
 //
 // THE BIAS IS DELIBERATE AND ONE-WAY: when in doubt, SHOW the line. A missing
-// ingredient mid-cook is a real failure; a redundant one is a blemish. Every
-// rule below only ever *fails to hide*, and a recipe whose ingredients cannot
-// be parsed at all shows its whole list on every step, exactly as the old
-// button did.
+// ingredient mid-cook is a real failure; a redundant one is a blemish. A recipe
+// whose ingredients cannot be parsed at all shows its whole list on every step,
+// exactly as the old button did.
+//
+// 🚩 THIS PARAGRAPH USED TO CLAIM "every rule below only ever *fails to hide*",
+// AND THAT WAS FALSE — measured, not argued. The ambiguity rule below hid the
+// line the step was asking for on three real recipes: Upside-Down Plum Cake's
+// butter (topping and batter both list one), Chocolate Self-Saucing Pudding's
+// cocoa (pudding and sauce both list one) and Easy Pad Thai's peanuts (the oil
+// and the roasted nuts). A corpus sweep found 23 such (step, line) pairs. The
+// rule is fixed rather than the sentence — see `ingredientsForStep` — because
+// the bias IS the design, and a rule that hides what a step names is not a
+// blemish, it is the failure the bias exists to prevent. What the sentence can
+// honestly say now: no rule below hides a line whose own words the step uses.
+// It still cannot promise the converse — a step naming an ingredient in words
+// the line never uses ("the dry ingredients", a synonym) matches nothing, and
+// nothing here can know it should.
 
 // Measurements, packaging and size words — they appear in ingredient lines and
 // in instructions alike ("2 cups flour" / "spoon into the dish"), so matching on
@@ -171,9 +184,32 @@ export function ingredientsForStep(step, ingredients) {
     for (const t of new Set(terms)) seen.set(t, (seen.get(t) || 0) + 1);
   }
   const usable = (t) => t.includes(" ") || seen.get(t) === 1;
-  return list.filter((line) =>
-    termsOf.get(line).some((t) => usable(t) && haystack.includes(` ${t} `))
+  const named = (t) => haystack.includes(` ${t} `);
+  const shown = new Set(
+    list.filter((line) => termsOf.get(line).some((t) => usable(t) && named(t)))
   );
+
+  // …AND WHEN THE SHARED WORD IS ALL THE STEP SAYS, SHOW EVERY LINE THAT CARRIES
+  // IT. The pass above is only half the answer: "Cream the butter and sugar"
+  // names butter and nothing more specific, so on a recipe listing butter twice
+  // it settled nothing and the step showed NO butter at all. That is the bias
+  // inverted — the reader is at the bench being told this step needs nothing,
+  // about the one ingredient it names. Three real recipes did it (see the
+  // header). So an ambiguous word the step uses falls back to showing all of its
+  // lines, which is the honest answer to "I can't tell which one": both.
+  //
+  // The guard is what keeps the "brown sugar" case working. A fallback fires
+  // only when NOTHING the word belongs to was already matched — "Beat together
+  // the white sugar…" matches that line on its phrase, so "sugar" has been
+  // answered and the sauce's brown sugar stays out. It is the step's own
+  // specificity that decides, never a count.
+  for (const [t, count] of seen) {
+    if (count < 2 || t.includes(" ") || !named(t)) continue;
+    const carriers = list.filter((line) => termsOf.get(line).includes(t));
+    if (carriers.some((line) => shown.has(line))) continue;
+    for (const line of carriers) shown.add(line);
+  }
+  return list.filter((line) => shown.has(line));
 }
 
 /** Whether this step needs anything at all — `ingredientsForStep`, as a test. */
