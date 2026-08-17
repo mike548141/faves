@@ -26,13 +26,38 @@ repo's own measurements and applications.
   ultra` is a billed multi-agent cloud review — run it on a focused
   branch/diff before launch, not speculatively.
 
-## Fixed per-session overhead (measured 2026-07-08)
+## Fixed per-session overhead (measured 2026-08-17, was 2026-07-08)
 
-A session following `CLAUDE.md` loads: system prompt + tools (~17k
-tokens), both CLAUDE.md files (~2.6k), the memory index (~0.1k), then the
-required doc read path — STRATEGY (~1.1k) + ARCHITECTURE (~2.2k) + DESIGN
-(~0.8k) + WORKPLAN (~2.5k) + the SESSIONS tail (~0.7k). Roughly **27k
-tokens before any work happens**.
+The 2026-07-08 figure below was **re-measured on 2026-08-17 and found
+about 2× low** — found by the three-day cold review, checked here by
+re-deriving it rather than copying either number. Byte counts are real
+(`wc -c`), converted at this file's own 4 chars ≈ 1 token:
+
+| Component | 2026-07-08 | 2026-08-17 |
+|---|---:|---:|
+| system prompt + tools | ~17k | ~17k (not independently re-measured here) |
+| both CLAUDE.md files | ~2.6k | **~11.6k** (repo 9.5k + global 2.1k) |
+| memory index | ~0.1k | **~2.1k** (8.5 KB) |
+| STRATEGY.md | ~1.1k | ~1.1k (4.6 KB) |
+| ARCHITECTURE.md | ~2.2k | **~16.0k** (64.1 KB) |
+| DESIGN.md | ~0.8k | ~1.3k (5.3 KB) |
+| WORKPLAN.md | ~2.5k | ~2.9k (11.5 KB) |
+| SESSIONS.md tail | ~0.7k | ~0.7k (a tail read, not the 130k-token whole file) |
+| **Total** | **~27k** | **~53k** |
+
+The growth is not mostly `ARCHITECTURE.md` as the headline "2×" framing
+suggests in isolation — that file alone accounts for +13.8k of the +26k
+move, with the two `CLAUDE.md` files (+9k) and the memory index (+2k)
+making up most of the rest. All three grow by accretion every session, so
+**this number has the same shelf life this repo's own ADRs keep finding
+in their measurements** ([0068](decisions/0068-the-home-list-ranks-on-one-blend.md),
+[0080](decisions/0080-a-venue-has-menus-plural.md)): re-run it, don't cite
+it forward.
+
+A session following `CLAUDE.md` loads: system prompt + tools, both
+CLAUDE.md files, the memory index, then the required doc read path —
+STRATEGY + ARCHITECTURE + DESIGN + WORKPLAN + the SESSIONS tail. Roughly
+**53k tokens before any work happens.**
 
 Keep it that way. Bulk must not accumulate in the every-session read
 path: session narrative goes to `docs/SESSIONS.md` (append-only,

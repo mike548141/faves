@@ -106,8 +106,10 @@ excluded from both stores, always.
                                      //   old shared link resolves through it
   "lat": -41.29310,                  // optional decimal degrees (WGS84); both or neither
   "lng": 174.77551,                  // feeds the native-maps handoff + (later) distance sort
-  "phone": "+64 4 ...",              // tel: link for ordering. address/phone may
-                                     //   also be a dated series — see "Time" below
+  "phone": "+64 4 ...",              // tel: link for ordering. String or null
+                                     //   only — unlike `price`, `phone` and
+                                     //   `address` do NOT take a dated series
+                                     //   (checked: validate.py rejects it)
   "lifecycle": {                     // REQUIRED. The venue's dated life (ADR 0023)
     "opened": null,                  //   world time: business started; absent = unknown
     "added": "2026-07-06",           //   record time: entered Faves (required)
@@ -347,9 +349,12 @@ Dates are ISO 8601 and **may be reduced precision**: `"2019"`, `"2019-05"` and
 reads as 1 January by accident. Rounding an unknown day up to a precise one
 would be inventing evidence.
 
-1. **Temporal value** — `price`, `address` and `phone` (top level and per
-   branch) are either the plain value, or a dated series written **oldest
-   first**:
+1. **Temporal value** — `price` (top level and per dish) is either the plain
+   value, or a dated series written **oldest first**. `address` and `phone`
+   are **not** temporal: `validate.py` requires a plain string or null on
+   both, top level and per branch — a dated series there is refused, not
+   silently accepted, and this correction (2026-08-17) is what makes the two
+   things agree:
    ```jsonc
    "price": [
      { "value": 10.5, "recorded": "2019", "note": "2019 menu scan" },

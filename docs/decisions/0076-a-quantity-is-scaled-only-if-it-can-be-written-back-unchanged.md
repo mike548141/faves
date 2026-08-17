@@ -123,6 +123,14 @@ the same feature's clothes.
 | 2× and 3× | 158 | 42 | **4** |
 | ½× | 146 | 42 | **16** |
 
+**Correction (added 2026-08-17):** the `CONJOINED_QTY` guard shipped after
+this table was measured (added by this repo's own 2026-08-17 cold review —
+see the comment beside it in `quantity.js`), and it moves one line from
+scaled to blocked: *"1 can coconut cream and 1 can coconut milk"*. Re-run
+against the corpus at 2× and 3×, the row is now **157 / 42 / 5**; ½× is
+**145 / 42 / 17**. Verified directly against `site/js/quantity.js` and
+`site/data/restaurants/cook-at-home.json`, 204 lines total either way.
+
 20 of 24 recipes double with nothing blocked; 14 of 24 halve. **Halving is where
 the difficulty lives** — doubling is nearly free, because doubling a fraction
 usually leaves a fraction a kitchen owns and halving usually does not.

@@ -3,6 +3,10 @@
 **Status:** Accepted. Supersedes **item 4 only** of
 [0068](0068-the-home-list-ranks-on-one-blend.md); items 1–3 of that record stand
 untouched.
+**Superseded in part (added 2026-08-17):** the surface half (the inline pill)
+is superseded by [0083](0083-the-location-ask-explains-itself.md); this
+record's core protection — never spring the browser's own prompt — is kept
+whole and restated there.
 
 **Date:** 2026-08-17
 

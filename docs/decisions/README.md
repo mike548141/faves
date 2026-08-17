@@ -46,6 +46,16 @@ collide, **move whichever record has FEWER inbound references**, not whichever
 landed second: this file's own objection to renumbering is the cost of breaking
 references, so cheapest-repair beats precedence — especially while `main` is red.
 
+🕳️ **`0079` is also a hole, found by the 2026-08-17 cold review.** Unlike
+`0082` above, no session's commit history, PR or record explains it — the
+index simply has nothing between `0078` and `0080`. Grep across the whole
+repo (`docs/`, `tools/`, `site/`) finds `0079` nowhere except the review
+that found the gap. Documented rather than chased further, on the same
+reasoning as `0082`: `check_decisions.py` counts records, not contiguity,
+so the gap costs nothing, and a session that later "fills" it would be
+guessing at a number that was never claimed rather than recovering one
+that was. Left vacant.
+
 **Add the index entry in the same commit as the record.** The collision above
 survived because `0025-infer-allergens-by-default.md` was never indexed here,
 and this index is the one place a duplicate number is visible. An unindexed ADR
