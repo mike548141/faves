@@ -112,11 +112,14 @@ const COUNTRY_CURRENCY = {
   BE: "EUR", AT: "EUR", PT: "EUR", GR: "EUR", FI: "EUR",
 };
 
-// Countries that measure road distance in miles. Everywhere else is metric —
+// Countries whose KITCHEN is imperial. This one setting drives both road
+// distance and recipe units — cups, ounces and °F ovens — so the test is the
+// kitchen, not the road sign. Until 2026-08-17 GB was listed too, for its
+// miles, and every oven temperature on a London phone read in °F; UK ovens
+// are °C (owner ruling, 2026-08-17: GB → metric). Everywhere else is metric —
 // the short list IS the exception list, which is why it is stated this way
-// round. (Liberia and Myanmar are the other textbook non-metric countries, but
-// neither uses miles for road signs, so neither belongs here.)
-const IMPERIAL_COUNTRIES = new Set(["US", "GB"]);
+// round. Anyone who wants imperial can still choose it in Settings.
+const IMPERIAL_COUNTRIES = new Set(["US"]);
 
 /** The device's IANA timezone, or null when the browser won't say. */
 export function deviceTimezone() {

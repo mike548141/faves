@@ -27,7 +27,8 @@ test("the timezone wins, because it is the one that travels", () => {
   // The whole point, in one assertion: a NZ phone that has landed in London.
   assert.equal(deviceCountry(AT("Europe/London", "en-NZ")), "GB");
   assert.equal(localCurrency(null, AT("Europe/London", "en-NZ")), "GBP");
-  assert.equal(localUnits(AT("Europe/London", "en-NZ")), "imperial");
+  // …and a New York one, for the units half (GB is metric in the kitchen).
+  assert.equal(localUnits(AT("America/New_York", "en-NZ")), "imperial");
 });
 
 test("the locale region answers when the timezone is one we don't map", () => {
@@ -54,9 +55,11 @@ test("a currency with no rate loaded is not offered, even when we know the count
   assert.equal(localCurrency(available, AT("Australia/Sydney", "en-AU")), "AUD");
 });
 
-test("units are metric everywhere except the two countries that aren't", () => {
+test("units are metric everywhere except the one country whose kitchen isn't", () => {
   assert.equal(localUnits(AT("America/New_York", "en-US")), "imperial");
-  assert.equal(localUnits(AT("Europe/London", "en-GB")), "imperial");
+  // GB drives on miles and bakes at °C; the setting drives ovens, so metric
+  // (owner ruling 2026-08-17 — before it, a London phone read every oven in °F).
+  assert.equal(localUnits(AT("Europe/London", "en-GB")), "metric");
   assert.equal(localUnits(AT("Pacific/Auckland", "en-NZ")), "metric");
   assert.equal(localUnits(AT("Europe/Paris", "fr-FR")), "metric");
   assert.equal(localUnits(AT(null)), "metric", "and metric when we can't tell");
