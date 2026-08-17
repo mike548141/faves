@@ -368,7 +368,12 @@ def ingredient_text(item):
     self-saucing pudding reads as allergen-free, because nothing in its *name*
     implies flour, butter or egg.
     """
-    kept = [item["name"]]
+    # `.get`, not `[...]`. This runs inside validate.py's sweep, over records
+    # that have ALREADY failed its shape checks — a dish with no `name` is one
+    # of the things it is there to report. Subscripting raised KeyError from
+    # inside the sweep, which killed validate.py before it printed a single
+    # line: exit 1 with no message, indistinguishable from the gate working.
+    kept = [item.get("name") or ""]
     for clause in re.split(r"[.;]", item.get("desc") or ""):
         if ADD_ON.search(clause) and ADD_ON_PRICE.search(clause):
             continue
@@ -379,10 +384,14 @@ def ingredient_text(item):
 
 def audit(record, tier=None):
     """Yield (item, tag, tier, why) for every tag this record is missing."""
-    for section in record.get("menu", []):
+    for section in record.get("menu", []) or []:
+        if not isinstance(section, dict):
+            continue
         # Read the heading's note once, then offer it to every dish under it.
         note_applies, _ = read_section_note(section.get("note"))
-        for item in section["items"]:
+        for item in section.get("items") or []:
+            if not isinstance(item, dict):
+                continue
             text = ingredient_text(item)
             tags = set(item.get("tags", []))
             # The dish's own words first, so a burger that says "sesame" itself

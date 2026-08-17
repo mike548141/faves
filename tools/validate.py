@@ -56,6 +56,91 @@ ADD_ON_OPTION_KEYS = {"name", "price", "tags"}
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
+# The four key sets the record is built from, mirroring the jsonc block under
+# "Data model" in docs/ARCHITECTURE.md. Every nested object in this file already
+# refused an unknown key — `available`, `revisions`, `needs`, `lifecycle`, each
+# add-on group and option — and these four, the ones a transcriber actually
+# types into, did not. The failure they let through is silent by construction:
+# `"cusine": ["Thai"]` sits in the payload, ships to every phone (ADR 0047),
+# renders nowhere, and the venue simply has no cuisine. Nothing said so.
+#
+# `served` is in ITEM_KEYS on purpose even though a dish may not carry one: the
+# menu loop has a SPECIFIC message for it ("served is a section field, not a
+# dish field"), and a generic "unknown key" here would replace a message that
+# explains the rule with one that only reports a violation.
+VENUE_KEYS = {
+    "id", "kind", "name", "cuisine", "area", "city", "address",
+    "timezone", "currency", "language", "formerIds", "lat", "lng", "phone",
+    "lifecycle", "website", "ordering", "services", "hours", "locations",
+    "image", "alt", "vibe", "picks", "priceBand", "pricePerPerson",
+    "verified", "verifiedBy", "detailsVerified", "detailsVerifiedBy",
+    "rating", "status", "addOnGroups", "menu",
+}
+SECTION_KEYS = {
+    "section", "sectionId", "note", "served", "available",
+    "addOns", "addOnsOnly", "items", "translations",
+}
+ITEM_KEYS = {
+    "name", "dishId", "formerIds", "code", "desc", "price", "available",
+    "revisions", "needs", "tags", "image", "alt", "rating", "goesWith",
+    "addOns", "served", "translations",
+    # Recipe-only fields (kind: "recipes"), all optional and all validated
+    # above whether or not the record is a recipe collection.
+    "steps", "ingredients", "serves", "time", "attribution",
+}
+BRANCH_KEYS = {
+    "label", "address", "lat", "lng", "phone", "hours",
+    "timezone", "detailsVerified", "detailsVerifiedBy",
+}
+
+
+def check_keys(rid, obj, allowed, where):
+    """Refuse a key the schema does not define, on one of the four objects a
+    transcriber writes by hand. Suggests the nearest legal key when there is an
+    obvious one — a typo is the realistic cause, and naming the intended key is
+    what turns the complaint into a fix."""
+    if not isinstance(obj, dict):
+        return
+    for k in obj:
+        if k in allowed:
+            continue
+        near = [a for a in sorted(allowed) if a.lower() == str(k).lower()
+                or sorted(a.lower()) == sorted(str(k).lower())]
+        hint = f" — did you mean {near[0]!r}?" if near else ""
+        err(rid, f"{where}: unknown key {k!r}{hint} (see the schema in "
+                 f"docs/ARCHITECTURE.md). A key no screen reads ships to every "
+                 f"phone and renders nothing")
+
+
+def overlapping(intervals):
+    """The first pair of intervals in one day's list that overlap, or None.
+
+    A day is a list of [open, close] pairs; `hours` allows a null close ("till
+    late") and `served` also allows a null open ("from opening"), so an open end
+    widens to the edge of the day rather than being skipped — two open-ended
+    windows on one day DO overlap, and skipping them would be the decorative
+    read of this check. Malformed pairs are ignored: the shape checks beside the
+    call site already complain about those, and complaining twice about one
+    fault buries the message that explains it."""
+    spans = []
+    for iv in intervals:
+        if not (isinstance(iv, list) and len(iv) == 2):
+            continue
+        o, c = iv
+        if o is not None and not (isinstance(o, str) and TIME_RE.match(o)):
+            continue
+        if c is not None and not (isinstance(c, str) and TIME_RE.match(c)):
+            continue
+        spans.append((o or "00:00", c or "24:00", iv))
+    spans.sort(key=lambda s: (s[0], s[1]))
+    for a, b in zip(spans, spans[1:]):
+        # Strict overlap only. Two windows that merely ABUT ("07:00–14:00" then
+        # "14:00–21:00") describe one continuous service written in two lines —
+        # redundant, not contradictory, and the app renders it correctly.
+        if b[0] < a[1]:
+            return a[2], b[2]
+    return None
+
 errors = []
 warnings = []
 
@@ -305,8 +390,8 @@ def check_coords(rid, obj, where):
     for field, val, lo, hi in (("lat", lat, -90, 90), ("lng", lng, -180, 180)):
         if val is None:
             continue
-        if isinstance(val, bool) or not isinstance(val, (int, float)):
-            err(rid, f"{where}: {field} must be a number")
+        if not finite(val):
+            err(rid, f"{where}: {field} must be a finite number")
         elif not (lo <= val <= hi):
             err(rid, f"{where}: {field} {val} out of range [{lo}, {hi}]")
     if (lat is None) != (lng is None):
@@ -448,6 +533,10 @@ def check_served(rid, section, hours, where):
                 err(rid, f"{where}: served[{day}] close {c} must be after open {o}")
             if o_ok and c_ok and not (o is None and c is None):
                 any_window = True
+        clash = overlapping(intervals) if isinstance(intervals, list) else None
+        if clash:
+            err(rid, f"{where}: served[{day}] {clash[0]!r} and {clash[1]!r} "
+                     f"overlap — one day, one set of windows")
     if not any_window:
         err(rid, f"{where}: served has no window on any day — omit the field instead")
 
@@ -996,6 +1085,13 @@ def check_hours(rid, hours, where):
                 and c <= o
             ):
                 err(rid, f"{where}: hours[{day}] close {c} must be after open {o}")
+        # Two windows that overlap are two readings of the same day that
+        # disagree, and hours.js resolves "open now" by taking the FIRST match —
+        # so the second window silently decides nothing while looking like data.
+        clash = overlapping(intervals)
+        if clash:
+            err(rid, f"{where}: hours[{day}] {clash[0]!r} and {clash[1]!r} "
+                     f"overlap — one day, one set of windows")
 
 
 def slug(s):
@@ -1054,12 +1150,62 @@ def find_dish(dishes, ref):
     return None, []
 
 
+def _no_constants(token):
+    """Refuse JSON's three non-standard number tokens.
+
+    Python's `json` accepts `NaN`, `Infinity` and `-Infinity` by default; the
+    JSON spec does not have them and **`JSON.parse` in the browser throws on
+    sight**. So a venue file carrying one validates clean here and then fails to
+    load in the app entirely — not a wrong price, a missing restaurant. That is
+    the opposite of what a data gate is for, and it is why this is a parse-time
+    refusal rather than a value check: by the time a value check sees `nan` the
+    file has already been declared parseable."""
+    raise ValueError(f"{token} is not valid JSON — JSON.parse() in the browser "
+                     f"refuses it and the whole record would fail to load")
+
+
+def finite(v):
+    """True when `v` is a real number the app can render. Bools are numbers to
+    Python and are never a value here, so they are excluded at the same gate."""
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
+_unreadable = set()
+
+
+def load_record(path):
+    """Parse one venue file, or return None having already errored.
+
+    Every sweep below goes through this rather than a bare `json.loads`. A file
+    the parser refuses used to reach the later sweeps anyway and raise there,
+    and a validator that raises prints NOTHING — not the fault it found, and not
+    the seventy findings it had already gathered about the other 54 files. The
+    exit code still says 1, so it looks like the gate worked.
+
+    Reported ONCE per file however many sweeps ask for it: five identical lines
+    saying the same file will not parse reads as five faults."""
+    try:
+        return json.loads(path.read_text(encoding="utf-8"),
+                          parse_constant=_no_constants)
+    except json.JSONDecodeError as e:
+        problem = f"invalid JSON: {e}"
+    except ValueError as e:  # _no_constants; JSONDecodeError is caught above
+        problem = f"invalid JSON: {e}"
+    except OSError as e:
+        problem = f"cannot be read: {e}"
+    if path not in _unreadable:
+        _unreadable.add(path)
+        err(path.stem, problem)
+    return None
+
+
 def check_restaurant(path):
     rid = path.stem
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        err(rid, f"invalid JSON: {e}")
+    data = load_record(path)
+    if data is None:
+        return None
+    if not isinstance(data, dict):
+        err(rid, f"the record must be a JSON object, got {type(data).__name__}")
         return None
 
     # id matches filename
@@ -1074,6 +1220,8 @@ def check_restaurant(path):
     if kind not in KINDS:
         err(rid, f"kind {kind!r} not in {sorted(KINDS)}")
     is_recipes = kind == "recipes"
+
+    check_keys(rid, data, VENUE_KEYS, "card")
 
     # A venue may carry a `locations` array (multiple branches sharing one
     # name/menu/cuisine — see ADR 0011). When present, per-branch fields
@@ -1101,10 +1249,19 @@ def check_restaurant(path):
             if v is not None and not isinstance(v, str):
                 err(rid, f"{field} must be a string or null")
 
-    # cuisine
+    # cuisine — 1..n strings (ARCHITECTURE's "Data model"). An empty list is not
+    # "no cuisine recorded", it is a venue that vanishes from the cuisine facet
+    # and from every cuisine filter while still looking complete: the record has
+    # the field, so nothing reads as missing. If a cuisine genuinely is not
+    # known, that is a `needs`-shaped gap, not an empty array.
     cuisine = data.get("cuisine")
     if not isinstance(cuisine, list) or not all(isinstance(c, str) for c in cuisine):
         err(rid, "cuisine must be a list of strings")
+    elif not cuisine:
+        err(rid, "cuisine must name at least one cuisine — an empty list drops "
+                 "the venue out of the cuisine facet and says nothing")
+    elif any(not c.strip() for c in cuisine):
+        err(rid, "cuisine entries must be non-empty strings")
 
     # services — a non-empty subset of SERVICES for venues; recipes carry
     # none (they're neither dine-in nor takeaway), so an empty list is fine.
@@ -1143,6 +1300,7 @@ def check_restaurant(path):
             if not isinstance(b, dict):
                 err(rid, f"{where} must be an object")
                 continue
+            check_keys(rid, b, BRANCH_KEYS, where)
             addr = b.get("address")
             if not (isinstance(addr, str) and addr.strip()):
                 err(rid, f"{where}: address must be a non-empty string")
@@ -1266,9 +1424,7 @@ def check_restaurant(path):
     if price_band is not None and price_band not in PRICE_BANDS:
         err(rid, f"priceBand {price_band!r} not in {sorted(PRICE_BANDS)}")
     price_pp = data.get("pricePerPerson")
-    if price_pp is not None and not (
-        isinstance(price_pp, (int, float)) and not isinstance(price_pp, bool) and price_pp > 0
-    ):
+    if price_pp is not None and not (finite(price_pp) and price_pp > 0):
         err(rid, f"pricePerPerson must be a positive number, got {price_pp!r}")
 
     # vibe: a closed vocabulary since ROADMAP 37k (owner-ruled 2026-08-16), read
@@ -1351,6 +1507,7 @@ def check_restaurant(path):
             continue
         if not isinstance(section.get("section"), str):
             err(rid, "menu section missing 'section' name")
+        check_keys(rid, section, SECTION_KEYS, f"section {section.get('section')!r}")
         # A whole section may be seasonal — the winter menu (ADR 0023).
         check_available(rid, section, f"section {section.get('section')!r}")
         check_served(rid, section, section_hours, f"section {section.get('section')!r}")
@@ -1360,11 +1517,15 @@ def check_restaurant(path):
         check_add_ons_only(rid, section, add_on_defs)
         sec_name = section.get("section")
         for item in section.get("items", []):
+            if not isinstance(item, dict):
+                err(rid, f"section {sec_name!r}: menu item malformed: {item!r}")
+                continue
             name = item.get("name")
             if not isinstance(name, str) or not name.strip():
                 err(rid, "menu item missing a name")
             else:
                 item_names.add(name)
+            check_keys(rid, item, ITEM_KEYS, f"item {name!r}")
             dishes.append((sec_name, item))
             check_translations(rid, item, f"item {name!r}", {"name", "desc"})
             add_on_refs += collect_add_on_refs(rid, item, f"item {name!r}")
@@ -1384,6 +1545,13 @@ def check_restaurant(path):
                 # which already means "no price recorded" — a different fact.
                 elif isinstance(price, (int, float)) and price < 0:
                     err(rid, f"price for {name!r} must not be negative, got {price!r}")
+                # `1e400` is spec-legal JSON that both Python and JSON.parse
+                # widen to infinity, so the NaN/Infinity token gate above never
+                # sees it. It would render as "$Infinity" and sort to the end of
+                # every price list. The add-on price check has always been
+                # finite-checked and this one never was.
+                elif isinstance(price, (int, float)) and not math.isfinite(price):
+                    err(rid, f"price for {name!r} must be a finite number, got {price!r}")
             check_available(rid, item, f"item {name!r}")
             # `served` is a SECTION field only, for now. No dish in the corpus
             # is served on a different timetable from its section, and this repo
@@ -1661,7 +1829,9 @@ def check_allergen_tags():
     except ImportError:  # tool removed or renamed — not worth failing validation
         return
     for path in sorted((DATA / "restaurants").glob("*.json")):
-        record = json.loads(path.read_text())
+        record = load_record(path)
+        if not isinstance(record, dict):
+            continue
         for item, tag, tier, why in audit(record):
             warn(record.get("id", path.stem), f"{item['name']}: missing {tag} ({tier} — {why}) — run tools/tag_allergens.py")
 
@@ -1686,7 +1856,9 @@ def check_twin_allergens():
     saying out loud.
     """
     for path in sorted((DATA / "restaurants").glob("*.json")):
-        record = json.loads(path.read_text())
+        record = load_record(path)
+        if not isinstance(record, dict):
+            continue
         rid = record.get("id", path.stem)
         by_name = {}
         for section in record.get("menu", []):
@@ -1731,7 +1903,9 @@ def check_self_contradicting_claims():
     if not CONTRADICTS:
         return  # check_contradiction_tables() reports the missing table
     for path in sorted((DATA / "restaurants").glob("*.json")):
-        record = json.loads(path.read_text())
+        record = load_record(path)
+        if not isinstance(record, dict):
+            continue
         rid = record.get("id", path.stem)
         for section in record.get("menu", []):
             if not isinstance(section, dict):
@@ -1812,7 +1986,9 @@ def check_prose_addons():
     except ImportError:  # tool removed or renamed — not worth failing validation
         return
     for path in sorted((DATA / "restaurants").glob("*.json")):
-        record = json.loads(path.read_text(encoding="utf-8"))
+        record = load_record(path)
+        if not isinstance(record, dict):
+            continue
         for dish, clause in priced_addon_prose(record):
             warn(record.get("id", path.stem),
                  f"{dish}: a priced extra is still prose — “{clause}” — see "
@@ -1840,16 +2016,22 @@ def main():
             warn("index", f"file {fid}.json is not listed in index.json")
 
     # Pre-pass: collect every dish name per id so cross-record `goesWith`
-    # references can be resolved during the checks below.
+    # references can be resolved during the checks below. Deliberately SILENT
+    # about a file it cannot parse — check_restaurant reads the same file a few
+    # lines down and says so there. Reporting it here as well would print the
+    # same fault twice and imply two.
     for path in files:
         try:
-            d = json.loads(path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
+            d = json.loads(path.read_text(encoding="utf-8"),
+                           parse_constant=_no_constants)
+        except (ValueError, OSError):  # JSONDecodeError is a ValueError
+            continue
+        if not isinstance(d, dict):
             continue
         names = set()
         for section in d.get("menu", []) or []:
             for item in (section.get("items", []) if isinstance(section, dict) else []):
-                n = item.get("name")
+                n = item.get("name") if isinstance(item, dict) else None
                 if isinstance(n, str):
                     names.add(n)
         ALL_NAMES[path.stem] = names
