@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A cook-mode timer no longer dies when you close the sheet.** Tapping ✕,
+  tapping *Done* on the last step, reloading the page or having the browser
+  discard the tab all used to throw away a running countdown and its bell
+  without a word — and on 10 of the 24 recipes the timer is on the last step,
+  whose button is *Done*, so the most likely tap at the moment a timer mattered
+  was the one that destroyed it. The countdown is now remembered and comes back
+  still counting. A bell that fell due while you were away rings on the way back
+  in; one that fell due more than an hour ago is quietly dropped, because a
+  kitchen timer going off about yesterday's dinner is not news.
 - **A step no longer hides the ingredient it is asking for.** Where a recipe
   lists the same thing twice — Upside-Down Plum Cake's butter, Chocolate
   Self-Saucing Pudding's cocoa, Easy Pad Thai's peanuts — a step that named it

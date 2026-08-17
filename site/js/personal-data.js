@@ -25,11 +25,12 @@
 //
 // WHAT IS DELIBERATELY NOT COLLECTED, and the rule behind it: if the import
 // path wouldn't put it back usefully, the export has no business carrying it
-// (owner's ruling, ROADMAP 36g). Two stores qualify — the Near-me origin
-// (`faves.origin.v1`, the user's own whereabouts, sessionStorage anyway) and
+// (owner's ruling, ROADMAP 36g). Three stores qualify — the Near-me origin
+// (`faves.origin.v1`, the user's own whereabouts, sessionStorage anyway),
 // cook-mode ticks (`faves.checklist.v1`, twelve-hour progress about the meal in
-// front of you). The exported file NAMES both and says why, because a backup
-// that silently omitted something would be the dishonest kind of quiet.
+// front of you) and a running cook-mode timer (`faves.timers.v1`, a wall clock
+// about that same meal). The exported file NAMES each and says why, because a
+// backup that silently omitted something would be the dishonest kind of quiet.
 // See `EXCLUDED` — and note the trap it documents: both of those are matched on
 // more than their bare key, because a per-profile store's real key carries a
 // profile id.
@@ -38,6 +39,7 @@
 
 import { PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseName, sanitiseRegistry, scopeKey } from "./profiles.js";
 import { CHECKLIST_KEY } from "./checklist.js";
+import { TIMERS_KEY } from "./cook.js";
 import { createFavourites, favKey } from "./favourites.js";
 import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
@@ -96,6 +98,22 @@ const EXCLUDED = {
       "Deliberately not exported: those ticks are about the meal in front of " +
       "you, they expire twelve hours after you make them, and restoring them " +
       "into a different day’s cooking would be worse than losing them.",
+  },
+  // A cook-mode timer that is still running (cook.js `TIMERS_KEY`). Same ruling
+  // as the ticks — if the import path wouldn't put it back usefully, the export
+  // has no business carrying it — and here it is stronger than that: a record is
+  // a wall clock, so restoring one onto another device (or onto this one an hour
+  // later) either says nothing at all, because it has already expired, or claims
+  // that something is in an oven that isn't. It is also what stops the sync blob
+  // carrying it, which is the case that would actually mislead: the other phone
+  // is not in this kitchen. Not spared by a replace — a bell nobody set is worse
+  // than a bell lost.
+  [TIMERS_KEY]: {
+    spare: false,
+    why:
+      "Any cook-mode timer still counting down on this device. Deliberately not " +
+      "exported: it is a clock about the food in front of you right now, and it " +
+      "expires an hour after it finishes.",
   },
   // The sync pairing (Theme 9 v2). `faves.sync.v1` holds the sync CODE — a
   // bearer credential to the group's encrypted blob (sync-code.js) — and
