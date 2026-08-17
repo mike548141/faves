@@ -7804,3 +7804,67 @@ stating no claim is dropped correctly by the intersection rule). Latent, not
 live: zero of 155 options trigger it today. **A bug report that cannot be
 reproduced is a lead, not a finding** — and the control case that separates the
 two is worth more than the report.
+
+## 2026-08-17-0530 — the board split: one 6,233-line file becomes 102
+
+Taken on a direct instruction from the owner, on the ruling he made 2026-08-16
+and on its own stated precondition. Two commits — the store (`672ad17`), then
+the doctrine that store makes true (`d57e359`) — plus [ADR 0086].
+
+🎯 **The precondition was checked, not assumed.** The ruling names one: *no other
+session holds a claim in the monolith*. Measured before anything moved — zero
+`CLAIMED` lines on any item, one worktree, one branch, every peer session closed
+and its branches deleted. Two earlier sessions had declined this work at the tail
+of a long run rather than do it badly; this one was taken for it.
+
+✅ **What landed.** 6,233 lines → 48 sections, 54 item files, a 271-line
+generated index. The session-start read drops **96%**. The `board` floor check —
+wired since the day it was written and reporting *"not in scope"* on every commit
+since — is live for the first time.
+
+🔑 **The cut was the monolith's own grammar, which is why it needed no
+judgement.** An item is a column-0 checkbox line plus the indented continuations
+beneath it; that is how the file was already written, so nothing decided where an
+item's prose stops. Losslessness was verified as a **multiset over every
+non-heading source line**, not by eye — a line moved between files is fine, a
+line lost is not, and the check cannot tell the difference between "I read it
+carefully" and "I read it carelessly", which is the point of using it.
+
+🔎 **The links were the real work, and the first pass was wrong in a way that
+looked right.** Every link in `ROADMAP.md` was written relative to `docs/`;
+moving two directories deeper broke all of them. The first repointer used a
+negative lookbehind for a backtick before `](`, to skip prose *about* a link —
+and 62 of 102 links are written ``[`ROADMAP-DONE.md`](ROADMAP-DONE.md)``, where
+the character before `]` is the closing backtick of the link **text**. It
+repointed 40 and reported success. `linkscan` (enforced) is what caught it. 🔑
+**A guard on the wrong side of a delimiter passes silently and looks like a clean
+run** — the fix was to match the whole link and test *both* sides for a code
+span.
+
+🚩 **Three things the split forced, each a hole in a boundary, each reasoned in
+the file that opens it.** `.wrapscanignore` and `.pathscanignore` for the
+generated index (its banner is 115 columns; its link *text* is path-shaped and
+produced 49 false pathscan findings per commit), and a `tools/board.py` **shim —
+explicitly not a copy**, because children do not vendor the floor's scanners but
+the generated banner names `python3 tools/board.py rebuild`, which is true in
+atelier and false in every child. 🔑 **A generated file that instructs the reader
+must name a path that exists in the repo it was generated into** — otherwise the
+one instruction at the top of a file nobody may hand-edit is wrong.
+
+⏳ **Owed upstream to atelier**, all three from the same root — the generator was
+written for the repo it lives in: the rebuild banner hard-codes `tools/board.py`;
+that banner is 115 columns where the house limit is 85; and the index renders
+link text as a path-shaped string. `ros` (5,213-line board) and `shed` (3,125)
+will hit all three when the fleet rollout reaches them.
+
+⚖️ **The one judgement call, made narrowly.** The two structural owner rulings
+became item files because their prose already carried explicit state
+(*"STATE: OWNER-RULED · UNCLAIMED · BLOCKED ON QUIESCENCE"*), so a checkbox
+asserts nothing new. Every **other** `###` subsection carrying work — 32a, 33b,
+36e and their neighbours — stayed narrative. Those are unmistakably work, with
+sizes and surface tags, and it was tempting to lift them; but the monolith never
+gave them a state, and assigning one would be a claim stronger than its evidence.
+Which of them become items is a later, deliberate pass, and it is now a cheap
+one.
+
+[ADR 0086]: decisions/0086-the-board-is-one-file-per-item.md
