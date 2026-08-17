@@ -102,11 +102,15 @@ export function initPicker(getCandidates, isFavourite = () => false) {
       if (Math.abs(dy) < 8) return;
       lastY = y;
       // Never tuck it near the top: that is where someone who has just landed
-      // and wants a suggestion actually is.
-      pickBtn.classList.toggle("is-tucked", dy > 0 && y > 120);
+      // and wants a suggestion actually is. Never while it holds focus either:
+      // a tucked button is still in the tab order, and a keyboard user must
+      // not be left pressing Enter on something they cannot see (to-top.js
+      // does the same; `.bar-pick.is-tucked:focus-visible` is the CSS half).
+      if (document.activeElement !== pickBtn) pickBtn.classList.toggle("is-tucked", dy > 0 && y > 120);
     });
   }
   addEventListener("scroll", onScroll, { passive: true });
+  pickBtn.addEventListener("focus", () => pickBtn.classList.remove("is-tucked"));
 
   const inner = dialog.querySelector(".picker-inner");
   const dice = document.getElementById("picker-dice");
@@ -199,22 +203,19 @@ export function initPicker(getCandidates, isFavourite = () => false) {
   // ✕ + backdrop (a click outside .picker-inner) close; Escape is native.
   wireDialog(dialog, { closeBtn, inner });
 
-  // The scroll-tuck that used to live here is gone with the FAB it hid. "Pick
-  // for us" is a control in the bottom bar now, and `main`'s padding-bottom
-  // reserves the bar's band, so it can no longer cover the list — which is what
-  // the tuck existed to undo. Measured before removing it: as a FAB it covered
-  // 48 × 30.3 px of a venue's heart on the landing screen, 63 % of a 48 px
-  // control, and the tuck did not fire until scrollY > 160.
+  // History of the tuck, because it has been in and out twice. It first hid a
+  // floating FAB, was removed when "Pick for us" moved INTO a bottom bar (the
+  // FAB had covered 63 % of a venue's heart on the landing screen; a bar
+  // reserved its own band and could not), and came back on 2026-08-16 when
+  // the owner ruled the bar out and the two controls floating again — the
+  // direction-based tuck at the top of this function. A `bar-shrink.js` that
+  // an earlier version of this comment pointed at was never written; the bar
+  // it would have shrunk no longer exists.
   //
-  // It also takes a bug class with it: `.is-tucked` was only ever cleared by a
-  // scroll event, so leaving search could restore the FAB still translated
-  // off-screen, and a MutationObserver on body's class had to be added to fix
-  // it. Nothing here should tuck the bar.
-  //
-  // The bar DOES now shrink on scroll — owner's ruling 2026-08-16, after living
-  // with a bar that was 69.8 px at every scroll depth, and having been offered a
-  // tuck instead. That lives in `bar-shrink.js`, not here: it is a property of
-  // the bar, not of the shuffle, and it never hides a control, so the hole above
-  // stays shut. Read that module's header before touching it — it explains how
-  // it avoids the stranded-state trap rather than papering over it.
+  // The bug class the first removal took with it is the one to remember:
+  // `.is-tucked` cleared only by a scroll event, so leaving search could
+  // restore the button still translated off-screen. The current tuck is
+  // direction-based and re-evaluates on every scroll, and it never applies
+  // while the button holds focus, so neither the stranded state nor the
+  // invisible-but-focusable state can recur.
 }

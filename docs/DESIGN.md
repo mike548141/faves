@@ -20,8 +20,9 @@ guest."** People should *enjoy* opening it.
 
 - Design at 390 px first; enhance for tablet (grid of cards, two-column
   menus) and desktop. Never a desktop layout squeezed down.
-- One-thumb reachable: primary actions in the bottom half; sticky
-  bottom filter bar on the list screen; back/section controls within
+- One-thumb reachable: primary actions in the bottom half; the list
+  screen's two controls (`Filters`, `Pick for us`) float bottom-right, no
+  bar behind them (owner, 2026-08-16); back/section controls within
   thumb reach on menus.
 - Tap targets ≥ 44 px; no hover-dependent affordances.
 - `100dvh`-safe layouts; safe-area insets respected (iPhone notch/home
@@ -34,7 +35,8 @@ guest."** People should *enjoy* opening it.
 
 - Restaurant cards: name, cuisine chips, area, services (takeaway /
   dine-in), status ("menu coming soon" for stubs).
-- Sticky filter bar, **collapsed to one control**: a `Filters (n)` button
+- **One filter control**: a `Filters (n)` button (floating bottom-right;
+  inline in the row above the list from 60rem up — `filter_row_check`)
   opening a sheet that holds every filter, under the one heading **Narrow
   to** (service, area, cuisine, open now, cheap eats). Filters are
   instant, no apply button — the sheet's footer button is a dismiss that
@@ -42,25 +44,31 @@ guest."** People should *enjoy* opening it.
   count keep an active filter visible while its control is hidden.
   *(Amended 2026-08-16: the bar itself, and this section, used to name
   three controls in the bar. At 390 px they wrapped to two rows and the
-  screen was 50.7 % chrome, measured. The sticky-bottom-bar rule above is
-  unchanged and still honoured. Amended again 2026-08-17: the **Sort by**
+  screen was 50.7 % chrome, measured. The bar itself went the same day
+  (owner: "I dont like the bar… two floating buttons"), which the
+  one-thumb rule above now reflects. Amended again 2026-08-17: the **Sort by**
   group is gone — one ranking, distance inside it, ADR 0068 — so the sheet
   holds filters only. Sorting was never a filter: it reordered the list
   and never shortened it, which is why it needed a heading of its own and
   why nothing is left behind when it goes.)*
-- **The location ask** sits above the list, not in the sheet: a
-  `📍 Use my location` button that is the only thing in Faves able to
-  raise a browser permission prompt (ADR 0069). It is offered where the
-  permission state is `prompt`, absent where it is already `granted`, and
-  replaced by a line saying so where it is `denied`. A permission is not a
-  facet. 🔑 It is labelled by its **action**, not its result ("Near me",
-  which it shipped as for an hour on 2026-08-17) — owner ruling: a reader
-  surprised by a permission prompt taps Block, and Block is sticky.
+- **The location ask** is a dialog that opens *after* the list has
+  rendered — never in the sheet, never a pill above the list (the
+  `📍 Use my location` pill of ADR 0069 was removed by owner ruling,
+  ADR 0083). It explains that the location never leaves the device, offers
+  Allow / Not now and a "don't ask me again" tickbox whose promise binds
+  both surfaces; declining without ticking demotes the ask to a quiet
+  banner. Absent where the permission is already `granted`; where it is
+  `denied` neither surface appears, only a status line saying so. A
+  permission is not a facet. 🔑 The Allow button is labelled by its
+  **action**, not its result — owner ruling: a reader surprised by a
+  permission prompt taps Block, and Block is sticky. `geo_check` pins the
+  pill's absence and the tickbox's promise.
 - **"Pick for us"** button: shuffles through the filtered set with a
   short playful animation, lands on one, offers "again" and "that's the
-  one". This is the party trick — make it delightful. It sits **in the
-  bar** beside `Filters`, not floating over the list: as a FAB it was
-  measured covering 63 % of a venue's heart on the landing screen.
+  one". This is the party trick — make it delightful. It floats
+  bottom-right and **tucks away as you scroll down** (owner, 2026-08-16),
+  which is what answers the earlier finding that a fixed FAB covered 63 %
+  of a venue's heart on the landing screen; a keyboard focus brings it back.
 
 ### 2. Menu — one restaurant
 

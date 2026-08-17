@@ -15,7 +15,7 @@
 // build or runtime dependency (ADR 0001) — hence the raw WebSocket rather than
 // puppeteer, and nothing to npm install.
 //
-// WHAT IT OWNS ON BEHALF OF ALL TEN CHECKS, added 2026-08-17 — each of these is
+// WHAT IT OWNS ON BEHALF OF EVERY CHECK (twelve at 2026-08-17), added 2026-08-17 — each of these is
 // here rather than in the tools because each is a way a check can lie, and a
 // tool that can forget to guard against it will:
 //   · reaping its own Chrome and profile directory on abnormal exit, and
@@ -111,7 +111,7 @@ export function startServer(port, siteDir) {
 // each of them wraps its risky sections in.
 //
 // So the classification is made HERE and enforced in `Report.check`, which is
-// the one funnel every assertion in all ten tools passes through.
+// the one funnel every assertion in every check tool passes through.
 
 /** Latched, not passed: the tools catch broadly by design, so the fact that the
  *  transport died has to survive being caught and discarded. */
@@ -636,7 +636,7 @@ export class Report {
     if (this.#verbose) console.log(`   · ${msg}`);
   }
   check(name, ok, detail = "") {
-    // The funnel. Every assertion in all ten tools comes through here, so this
+    // The funnel. Every assertion in every check tool comes through here, so this
     // is the only place that can stop a dead browser being written down as a
     // broken page. Once the transport has gone, nothing after it measures
     // anything — so stop, say plainly what happened, and exit 2 (harness error)
@@ -672,7 +672,7 @@ export class Report {
    * sync_check, and a grep-based reader elsewhere may lean on it. The new
    * information therefore goes BELOW, indented, and never inside that line.
    *
-   * WHY IT LIVES HERE. Until 2026-08-17 all ten checks hand-rolled this line
+   * WHY IT LIVES HERE. Until 2026-08-17 every check hand-rolled this line
    * and the roadmap's claim that "browser.mjs owns the summary" was simply
    * false. It is true now, which is what makes the identity impossible to add
    * to nine places and miss in the tenth.

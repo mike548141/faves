@@ -5728,6 +5728,15 @@ body.faves-view .to-top {
   transform: translateY(140%);
   pointer-events: none;
 }
+/* Tucked is not gone: the button stays in the tab order, so a keyboard user
+   who Tabs onto it must be able to SEE it (WCAG 2.4.7/2.4.11). Same shape as
+   `.to-top.is-tucked:focus-visible`; picker.js also clears the class on focus
+   and never re-tucks while it holds focus. Cold review, 2026-08-17. */
+.bar-pick.is-tucked:focus-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
 @media (prefers-reduced-motion: reduce) {
   .bar-pick {
     transition: none;

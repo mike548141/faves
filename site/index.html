@@ -645,16 +645,14 @@
       </footer>
     </main>
 
-    <!-- The sticky bottom bar DESIGN.md mandates, now one row of up to three
-         controls — Filters · Order · Pick for us — which shrinks to icon-only
-         once you scroll (bar-shrink.js).
-         It used to hold the service toggle and both selects, which wrapped to
-         two rows at 390 px: 122.2 px of permanently fixed screen, measured, at
-         every scroll depth. The filters collapse into one button whose badge
-         counts what is on; "Pick for us" moves in beside it, off the floating
-         FAB that was measured covering 63 % of a venue's heart on the landing
-         screen. Nothing floats over the list any more — `main`'s padding-bottom
-         reserves this bar's band, which a fixed FAB could never do. -->
+    <!-- NOT a bar any more (owner, 2026-08-16: "I dont like the bar… two
+         floating buttons"). The element keeps its class names for the CSS and
+         JS that address it, but `.filter-bar` paints nothing and passes
+         pointer events through; its two controls — Filters, and Pick for us,
+         which tucks away as you scroll down — float bottom-right. It used to
+         be a sticky bar holding the service toggle and both selects, which
+         wrapped to two rows at 390 px: 122.2 px of permanently fixed screen,
+         measured; then one row; then gone. -->
     <nav class="filter-bar" aria-label="Filter places">
       <div class="filter-bar-inner">
         <!-- aria-label is composed in JS ("Filters — 2 on") so the badge count

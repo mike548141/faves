@@ -152,7 +152,7 @@ python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
                               # renamed without breaking every link to it
-python3 tools/test_validate.py # …and that gate still catches things (110 mutations)
+python3 tools/test_validate.py # …and that gate still catches things (113 mutations)
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
@@ -381,7 +381,7 @@ family runs when a human types it and at no other time, which is how
 `sync_check.mjs` stayed dead through a whole refactor. Type them. And note that
 even the automated one cannot stop a bad deploy: admins bypass `protect-main`,
 so its red lands **after** the push it is describing (see the fuller note above
-the check descriptions). For the other nine, the honour system IS still the
+the check descriptions). For the other eleven, the honour system IS still the
 mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The

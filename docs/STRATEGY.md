@@ -41,8 +41,8 @@ Two very different readers, one menu:
 
 Household, friends, and guests — real people on phones, often several
 huddled around one screen, often hungry and impatient. Public URL, no
-accounts, no logins. The *repo* is private (curation is ours); the
-*site* is public so a guest can be sent a link.
+accounts, no logins. The *repo* has been public since 2026-08-09 (Theme 8;
+curation is still ours); the *site* is public so a guest can be sent a link.
 
 ## What "amazing" means (success measures)
 

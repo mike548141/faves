@@ -122,5 +122,5 @@ exact bold form.
 - **WGS84** — World Geodetic System 1984, the coordinate reference frame
   behind ordinary `lat`/`lng` decimal-degree pairs. Named explicitly on
   venue records so a future reader knows which frame the numbers use.
-- **XS** — the smallest effort size in `ROADMAP.md`'s legend (XS/S/M/L),
+- **XS** — the smallest effort size in the board legend (`docs/roadmap/README.md`; XS/S/M/L),
   for an item that is one edit or one fact. Sits below **S**.

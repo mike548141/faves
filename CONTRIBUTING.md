@@ -63,7 +63,7 @@ recipe and Cook at Home screens that offer cook mode.
   ≥ 44 px; WCAG 2.2 AA in both colour schemes; allergen/dietary info by
   text + icon, never colour alone.
 - **Data validates.** Menu JSON must pass `tools/validate.py` (schema in
-  `ARCHITECTURE.md`). `picks` must name a real menu item exactly. Never
+  `ARCHITECTURE.md`). `picks` must name a real menu item (by id or exact name). Never
   invent facts — unconfirmed fields stay `null`; **no tag ≠ allergen-free**.
 - **Tests before behaviour for pure logic.** New pure functions (like
   those in `site/js/filters.js`) ship with a `tests/*.test.js` unit test.

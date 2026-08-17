@@ -672,7 +672,7 @@ precached payload nothing on any screen can reach (ADR 0047).
 
 - `site/data/index.json` is the display order (an array of ids).
 - Every id in `index.json` has a matching file; every `picks` entry
-  matches a menu item `name` exactly.
+  names a menu item — by `dishId` (ADR 0051) or by exact `name`.
 - Prices are numbers (NZD) or null — never strings.
 - `status` gates UI: `stub` restaurants render as "menu coming soon"
   cards, never as empty menus.
@@ -731,8 +731,10 @@ precached payload nothing on any screen can reach (ADR 0047).
   key deliberately outside the backup export, because the promise is about this
   device. A `denied` state raises neither surface, only the status line.
   **Settings → Location is the only route back** once suppressed, which makes it
-  load-bearing rather than a convenience. Nothing in Faves raises a browser
-  permission prompt except a press on one of those two Allow buttons.
+  load-bearing rather than a convenience. Only a press on one of those two Allow
+  buttons or Settings' own "Use my location" raises the location prompt; the
+  one other browser prompt in Faves is Notifications, asked when a long
+  cook-mode timer starts (ADR 0071).
 - `image` (venue card photo, or a menu item's dish photo) is an optional
   **self-hosted** path — no hotlinking (offline / no-external-request
   rule); store under `site/img/`. Photos are excluded from the transfer
@@ -818,8 +820,8 @@ the ephemeral Near-me origin. `migrate()` folds pre-profiles data into a default
 profile on upgrade (copies, doesn't move, so a briefly-cached old asset still
 works; idempotent). The switcher lives in the ⚙ Settings dialog; the menu/recipe
 screens `location.reload()` on a cross-tab profile change so a stale allergen
-filter can't linger. No accounts, no sync — cross-device is a separate app
-(Theme 6). The feature stores:
+filter can't linger. No accounts; cross-device sync is opt-in through a
+bearer sync code (Theme 9 v2, below). The feature stores:
 
 - **Order tally** (`faves.order.v1`): `cart.js` — pure grouping/total maths
   (`groupByVenue`, `orderTotal`) + a thin injectable store; `cart-ui.js`
@@ -890,8 +892,7 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   because both devices run the same merge and anything asymmetric never settles.
   Diet conflicts block and carry a union provisional so a pending question never
   leaves a device un-warned; the order tally and which-profile-is-active are
-  deliberately not synced. **Nothing imports it yet** — the Worker and KV store
-  are unbuilt and are the owner's go.
+  deliberately not synced. Imported by `sync.js` (the engine below).
 
 - **Cross-device sync, the engine** (`faves.sync.v1`, `faves.sync.base.v1`):
   `sync.js` + `sync-start.js` + `sync-ui.js` — the modules that *run* the parts
@@ -917,16 +918,17 @@ filter can't linger. No accounts, no sync — cross-device is a separate app
   device), so the two are independent. Blob wire shape is
   `[version][12-byte IV][ciphertext‖tag]`, fresh IV per seal; `openBlob` returns
   `null` rather than throwing for a wrong key, altered bytes or a truncated
-  read. **Nothing imports either yet.**
+  read. Both imported by `sync.js`.
 - **`worker/`** — the Cloudflare Worker + KV blob store (ADR 0017, authorised by
   the owner 2026-08-16). Outside `site/`, so it is not shipped, not precached and
   not covered by the zero-dependency rule, which governs the served artefact. It
   is a dumb ciphertext store: `GET`/`PUT /v1/blob/<blobId>`, strict id
   validation, a 256 KiB streamed body cap, a 180-day TTL refreshed on write,
   `If-Match` compare-and-swap, an origin allowlist, and no logging of anything.
-  🚩 **Built, tested and NOT deployed** — this machine has no `wrangler` and no
-  Cloudflare credential; `worker/README.md` holds the steps and the
-  least-privilege token scope.
+  **Deployed 2026-08-16** at the endpoint `sync.js` names; the deploy
+  credential and ids live in the estate root, never here — `worker/README.md`
+  holds the steps and `wrangler.toml` keeps placeholders on purpose. A redeploy
+  is one `wrangler deploy` from a config filled outside the tree.
 
 A `storage` event keeps other tabs in step (favourites/settings keys are now
 namespaced by the active profile; a registry change re-points them). Recipes
@@ -938,7 +940,7 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
 ## Service worker strategy
 
 - **Precache** on install, split into two independently-versioned caches
-  (ADR 0015): a **shell cache** (`SHELL_VERSION` → both HTML shells, CSS,
+  (ADR 0015): a **shell cache** (`SHELL_VERSION` → the three HTML shells, CSS,
   JS, `site.webmanifest`, icons) and a **data cache** (`DATA_VERSION` →
   `index.json` + every restaurant JSON). Bumping one constant rebuilds
   only that cache on the next install; the other survives untouched, so a

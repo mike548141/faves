@@ -8,7 +8,7 @@
 # type checker, nothing but a running page can tell you a module forgot an
 # import. See the `boot` job.
 #
-# ⚠ It REPORTS; it does not reliably BLOCK. `protect-main` requires four of
+# ⚠ It REPORTS; it does not reliably BLOCK. `protect-main` requires six of
 # these contexts, but repository admins bypass it always — and the last 100
 # rule evaluations on `main` were 100 bypasses. Read a red run as "the deploy
 # that just went out is broken", not as "the deploy was stopped".
@@ -33,7 +33,7 @@ jobs:
         run: python3 tools/validate.py
       # A validator's failure mode is silence — a check that never fires looks
       # exactly like data that is always clean. This breaks a real record in
-      # 14 specific ways and asserts the gate notices. It found a real hole on
+      # 113 specific ways (test_validate.py) and asserts the gate notices. It found a real hole on
       # its first run: a negative price validated clean.
       - name: Prove the data gate actually catches things
         run: python3 tools/test_validate.py
@@ -138,9 +138,9 @@ jobs:
 
   # THE ONE BROWSER CHECK CI RUNS — owner's ruling, 2026-08-16.
   #
-  # TEN real-browser guards live in tools/ (count them: `ls tools/*_check.mjs`,
+  # TWELVE real-browser guards live in tools/ (count them: `ls tools/*_check.mjs`,
   # and note the roadmap item that authorised this still says eight — the family
-  # grew under it). Nine stay on CLAUDE.md's manual list; this one is wired up
+  # grew under it). Eleven stay on CLAUDE.md's manual list; this one is wired up
   # because it is the only one that is both cheap and
   # unconditional — it makes no timing assumptions, and it catches the worst
   # failure class there is: a screen whose JavaScript does not run at all.

@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **"Dairy-free on request" and "vegan on request" are now things a dish can
+  say.** Faves could already mark a dish gluten-free-on-request or
+  vegetarian-on-request; the other two of the four claims had no such form, so a
+  dairy-free reader was shown nothing to filter on where a cafe offers oat milk
+  for 50 cents more. Twenty-one dishes now carry one, each from words the venue
+  actually wrote, and the Dairy free and Vegan filters count them.
 - **What a place is like, on the card — and a "style of dining" filter.** Home
   cards now show what sort of place each one is: *Quick eats*, *Sit-down*,
   *Fine dining*, *Dog friendly*, *Beer garden*, *BYO*, *Live sport*. And the
@@ -124,20 +130,21 @@ content freshness separately from this file.
   counts.** There used to be a *Sort by* control with two orders in it. There is
   now one: places you can actually order from right now come first, then the
   nearest of those, and a heart breaks the tie between two that are much the
-  same distance away. Tap **📍 Use my location** above the list to let Faves use
-  your location; without it the list stays in the order it has always been in,
-  and nothing nags you about it.
+  same distance away. Let Faves use your location when it asks (see *Added*
+  above); without it the list stays in the order it has always been in, and
+  nothing nags you about it.
   - **A heart is a tiebreak, not a shove.** A favourite lifts a place above
     another one roughly as close by — not above the shop next door when it is
     across town. (It used to be worth 10 km on paper, which is why it never got
     to run.)
-  - The button says **📍 Use my location**, not "Near me" — it is the one thing
-    in Faves that makes your browser ask a permission question, so it says what
-    tapping it does rather than what you get.
-  - **Faves does not ask for your location out of the blue.** Nothing prompts
-    you until you tap the button. If you have already given Faves your location
-    before, it just works with no prompt at all — and if you have blocked it, the
-    app now says so plainly instead of quietly doing nothing forever.
+  - The Allow button says what tapping it does rather than what you get —
+    it is the thing that makes your browser ask a permission question. (For a
+    day this was a **📍 Use my location** pill above the list; the owner asked
+    for the pill to go, and the explaining message above replaced it.)
+  - **Your browser is never asked without you choosing.** If you have already
+    given Faves your location before, it just works with no prompt at all —
+    and if you have blocked it, the app now says so plainly instead of quietly
+    doing nothing forever.
 
 - **About says what Faves is, and stops there.** It had grown a block for every
   question anyone had ever needed somewhere to put — prices, currency, opening
