@@ -8,6 +8,15 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **A venue that has closed down no longer floats to the top of the home list,
+  nor answers "Open now".** Both read the posted weekly hours and neither read
+  whether the shop had shut its doors, so a place closed for a refit — or for
+  good — could lead the list on the strength of a timetable it no longer keeps,
+  wearing a "Permanently closed" badge while it did. The card badge and the
+  "Pick for us" dice already knew; now all four surfaces agree. No venue in the
+  collection carries a closure today, so nothing on screen changes yet.
+
 ### Changed
 - **A home-screen link can now carry the takeaway/dine-in filter**, under
   `?order-mode=takeaway`. The filter's internal name changed from `service` to

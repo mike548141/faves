@@ -84,26 +84,47 @@ function tierFromHours(hours, now) {
   return 3;
 }
 
+// The whole tier rule, taking hours already resolved for the right branch.
+//
+// It lives here rather than inside `availabilityTier` because `rankVenues` had
+// its OWN copy of it and the copy was missing the lifecycle clause: the dice
+// (via availabilityTier) refused a shut-down venue while the ranking floated it
+// to the top of the list on its posted hours, and the card beside it wore a
+// "Permanently closed" badge. Three surfaces, one venue, three answers. Two
+// call sites reading one function is the only version of this that cannot drift
+// again — which is why `rankVenues` does not simply call `availabilityTier`
+// (that would re-resolve the nearest branch it has already computed, and the
+// cheaper inline copy is exactly how the drift started).
+function tierOf(r, kind, hours, now) {
+  // Nothing with no opening hours can be ranked by them. Cook at Home answers
+  // this the way it does because your own kitchen has no timetable, not
+  // because of what it is called.
+  if (!kind.hasHours) return 0; // always an option
+  // A venue shut for a refit (or for good) is closed whatever its posted hours
+  // say — the lifecycle outranks the weekly timetable (temporal.js, ADR 0023).
+  // Both closures land on tier 3 rather than a tier of their own: "you cannot
+  // eat there tonight" is the question this scale answers, and it has the same
+  // answer for a refit, a permanent closure and a shop shut until 6pm. Whether
+  // a permanent closure should sink below even those — or leave the list
+  // entirely — is a product call nobody has made; it is deliberately NOT made
+  // here, because the list is also how someone learns the place has gone.
+  if (!isTrading(r)) return 3;
+  return tierFromHours(hours, now);
+}
+
 /**
  * Availability tier — lower is more useful right now:
  *   0  open (incl. "closing soon" — still serving) OR a Cook-at-Home
  *      collection (you can always cook), so these anchor the top
  *   1  opening within the hour
  *   2  hours unknown — can't rule it out, so above definitely-closed
- *   3  closed (opens later today or another day)
+ *   3  closed (shut for the night, or shut down — see tierOf)
  * For a multi-location venue the hours are the *nearest* branch's when `origin`
  * is known, else the primary branch's (venueHours) — the honest read, since we
  * can't say "nearest" without a location.
  */
 export function availabilityTier(r, clock, origin = null) {
-  // Nothing with no opening hours can be ranked by them. Cook at Home answers
-  // this the way it does because your own kitchen has no timetable, not
-  // because of what it is called.
-  if (!kindOf(r).hasHours) return 0; // always an option
-  // A venue shut for a refit (or for good) is closed whatever its posted hours
-  // say — the lifecycle outranks the weekly timetable (temporal.js, ADR 0023).
-  if (!isTrading(r)) return 3;
-  return tierFromHours(venueHours(r, origin), clock.at(venueTimezone(r, origin)));
+  return tierOf(r, kindOf(r), venueHours(r, origin), clock.at(venueTimezone(r, origin)));
 }
 
 /**
@@ -177,8 +198,11 @@ export function rankVenues(
     // meaningless — and worse, "unknown hours" (tier 2) would beat "known
     // closed" (tier 3), so a nearer closed stub sank below a farther unknown
     // one. Zero it for stubs so they order by distance instead.
-    const tier =
-      stub || !kind.hasHours ? 0 : tierFromHours(hours, clock.at(venueTimezone(r, origin)));
+    //
+    // `hours` is `nearestBranch(r, origin).branch.hours ?? null`, which is what
+    // `venueHours(r, origin)` returns — so this and `availabilityTier` feed
+    // `tierOf` the identical hours and cannot disagree.
+    const tier = stub ? 0 : tierOf(r, kind, hours, clock.at(venueTimezone(r, origin)));
     return {
       r, i, dist, bucket: distanceBucket(dist), hours, far, tier, stub,
       pinned: kind.pinnedFirst ? 0 : 1, // Cook at Home always anchors the top

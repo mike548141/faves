@@ -18,6 +18,8 @@ import {
   filterHref,
   filtersFromQuery,
 } from "../site/js/filters.js";
+// The closure fixture below is built through the REAL fold, not hand-written.
+import { resolveRecord } from "../site/js/temporal.js";
 
 // The ranker reads the clock per venue, in that venue's own zone (ADR 0043).
 // These tests are about ordering, not timezones, so they hand it a stub that
@@ -258,6 +260,47 @@ test("openNow off (the default) keeps everything regardless of hours", () => {
 test("openNow with no `now` is a safe no-op", () => {
   const shown = applyFilters(OPEN_FIXTURE, { ...DEFAULT_FILTERS, openNow: true });
   assert.equal(shown.length, 4);
+});
+
+// "Open now" vs a venue that has SHUT DOWN (lifecycle closure, ADR 0023).
+//
+// LATENT: no venue in `site/data/` carries a closure event today, so this is
+// unobservable in the app. The fixture goes through the real `resolveRecord`
+// fold rather than hand-writing the `closure` object, so it cannot pass against
+// a shape the app never emits.
+const shutDown = (id, type) =>
+  resolveRecord(
+    {
+      id,
+      services: ["takeaway"],
+      cuisine: [],
+      hours: dailyHours("09:00", "22:00"), // the posted week still says open
+      lifecycle: { added: "2026-07-06", events: [{ type, date: "2026-06-01" }] },
+    },
+    "2026-08-17"
+  );
+
+const CLOSURE_FIXTURE = [
+  { id: "open", services: ["takeaway"], cuisine: [], hours: dailyHours("09:00", "22:00") },
+  shutDown("gone", "closed-permanently"),
+  shutDown("refit", "closed-temporarily"),
+];
+
+test("openNow: a shut-down venue drops out whatever its posted hours say", () => {
+  const shown = applyFilters(
+    CLOSURE_FIXTURE,
+    { ...DEFAULT_FILTERS, openNow: true },
+    clockAt(MON_NOON)
+  );
+  assert.deepEqual(shown.map((r) => r.id), ["open"]);
+});
+
+test("openNow off: a shut-down venue is STILL LISTED, wearing its badge", () => {
+  // Closure demotes and disqualifies; it never hides. The card says
+  // "Permanently closed" (closure-ui.js) and that news is the point of keeping
+  // the venue on the list at all.
+  const shown = applyFilters(CLOSURE_FIXTURE, DEFAULT_FILTERS, clockAt(MON_NOON));
+  assert.deepEqual(shown.map((r) => r.id), ["open", "gone", "refit"]);
 });
 
 // "Cheap eats" filter — needs priced menus (see price.isCheapEats: $ band only).
