@@ -226,6 +226,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [🚩 A browser check that names an element by id is only as durable as](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/070-a-browser-check-that-names-an-element-by-id-is.md)
 - [ ] [The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
 - [ ] [The decision records have drifted from the decisions](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/090-the-decision-records-have-drifted-from-the-decisions.md)
+- [ ] [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 

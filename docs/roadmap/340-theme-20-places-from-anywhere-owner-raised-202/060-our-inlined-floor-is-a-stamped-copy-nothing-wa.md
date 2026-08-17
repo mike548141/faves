@@ -239,6 +239,31 @@ decisions the same day:**
   so the inherited rule is correct *as written* and needs no local re-wording —
   which is what the owner ruled when he chose the structure over the reword.
 
+✅ **Second bump, `0af3006` → `e2fddc5`, 2026-08-18 (`8d38afc`) — re-inline in
+the same commit, as this item instructs.** 18 commits; three touch
+`docs/method/`, one binds. **BS1** (atelier `431f1f7`) corrects the very clause
+(a) was raised about, and the correction runs *opposite* to the direction this
+item argued for: not "the line is the unit, relax it", but **"a dirty item state
+line anywhere under `docs/roadmap/` stops claiming from that checkout"**. The
+reason is one our own analysis missed — a claim on a split board is never the
+claim line alone, it carries the regenerated index, and `board.py rebuild` reads
+the *worktree*, so a sibling's uncommitted state line is absorbed into the index
+you commit and published under your name. 🔑 **The `board` hook check cannot see
+it, because worktree and index agree** — which is precisely the conditional
+index check this item proposed as the price of relaxation, shown to be
+insufficient at the plane it runs on. Verified the seam is ours and not
+inherited prose: `.githooks/pre-commit` runs atelier's `floor.py --plane hook`,
+so faves gets exactly the check BS1 describes.
+🚩 **The other two method changes are NOT inlined, deliberately** — `GUARDS.md`'s
+fourth requirement (*every guard declares whether it makes the failure cheap or
+forbids the act*) and `PRINCIPLES.md` §10 *Posture*. Atelier queued its own
+board pass rather than sweeping in the sitting that wrote the rule; the same
+holds here, and this repo has ~20 guards on the verify list plus
+[ADR 0072](../../decisions/0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
+already standing next to the question. Queued as its own item, not smuggled into
+a pin bump. **Neither is in the canonical floor region**, so this is not new
+drift in the stamped copy — it is inherited doctrine owed a local application.
+
 ⏳ **The debt as it stood (2026-08-17), kept because the shape is the lesson:**
 atelier added a clause to the **canonical floor region** at
 `46dd5a0`, so this repo's inlined block gains **three sentences** the next time
