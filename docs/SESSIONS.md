@@ -8164,3 +8164,44 @@ cheapest possible way to send a future session to a file that was never there.
 region's fetchless drift command; recoverable-bytes vs the record store; CF3's
 monolithic-board branch) and the fourth (a present-but-bypassed ruleset reads
 GREEN to a presence check) all stand as previously recorded.
+
+### Addendum 3 — the close audit, and the trap I fell into while warning others about it
+
+🛑 **I stashed a peer's uncommitted work, in the primary checkout, using the
+exact command this repo's record warns about — hours after telling two separate
+sessions not to leave work there.** A session nine minutes old had search-by-vibe
+staged in `/Users/mike/.pets/faves`; my `git pull --rebase --autostash` took it,
+the rebase replayed, and re-applying conflicted on `site/sw.js`.
+
+🔑 **What made it recoverable was stopping instead of resolving.** The rule this
+repo already carried — *uncommitted work in the shared tree resolves by asking,
+not by acting* — held: I backed the stash out to a patch file before touching
+anything, confirmed all six files were back in the working tree, left
+`stash@{0}` in place, and told the owner rather than absorbing or dropping it.
+**One thing did not come back: their index.** Content survives an autostash round
+trip; staging does not. That is worth knowing before it happens to someone else,
+because it is invisible — the files are all there and only the `git add` is
+gone.
+
+⚠️ **And the `sw.js` resolution was already done when I looked, by neither me nor
+git as far as I can tell** — `SHELL .117 / DATA .47`, which is the correct
+max-of-each-field answer. I reported it as *"verify this, I did not make it and
+cannot tell you who did"* rather than as a fact. In a shared checkout with an
+active session, a state you did not create is not evidence of anything.
+
+🎯 **The transferable part is not "use a worktree" — everyone here already knows
+that.** It is that **I had verified the primary checkout clean minutes earlier**
+and treated that reading as current. Same shelf-life failure as the line count
+corrected earlier in this record and as the ADR number taken twice: *a
+measurement of a shared mutable thing expires, and the interval is minutes when
+five sessions are live.* Three instances in one session, three different shared
+things — a counter, a file's length, a working tree.
+
+📋 **The close audit itself, so the claim is checkable rather than asserted.**
+Eleven commits verified as ancestors of `origin/main` by
+`git merge-base --is-ancestor`, not by having watched them push. No worktree or
+branch of mine remains in either repo. CI and floor green on `main`. The board
+stands at **48 sections / 88 item files**. The primary checkout is dirty with
+another session's live work, which is theirs and correct. One debt is dated
+rather than done: the next atelier pin bump owes a re-inline of the floor block,
+recorded on the item whose subject is that this copy drifts silently.
