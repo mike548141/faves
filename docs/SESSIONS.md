@@ -7760,3 +7760,47 @@ a worktree another session created is indistinguishable from one you created,
 and an empty `git branch --show-current` means *detached or mid-rebase*, not
 "no output, fine" — this checkout was briefly `UU docs/SESSIONS.md` mid-rebase
 during the same window.
+
+### Addendum 2 — the tail of the session, and a process failure
+
+Four owner rulings arrived after the block was closed, so the session ran on.
+
+- 🎯 **App/delivery pricing is a stopgop, never a feature** — [ADR 0085](decisions/0085-a-delivery-price-fills-a-hole-it-is-not-a-feature.md),
+  superseding the channel half of my own ADR 0080 four hours after writing it.
+  He answered none of the four options put to him and restated the goal instead:
+  *"a way to fill a hole in the data not a feature."* 🔑 **The evidence in 0080
+  was sound and the inference from it was wrong — a duplicated row is a
+  data-collection gap wearing the clothes of a modelling gap.** Pizza Pomodoro's
+  two Online Deal rows withdrawn to `data/withdrawn/` (deliberately *not*
+  `history/dishes/`, which means "the shop stopped selling it" and would break
+  `split_data --check`'s round trip).
+- 🎯 **A delivery price as a SERVICE FEE** — his own better framing, filed as
+  **30g**. Measured before filing: 12 channel-marked rows, 2 venues, and the
+  pairing test returns **zero true pairs** — every Pizza Hut *"…Delivered"* row
+  is a delivery-only bundle with no in-store twin. **The idea has no instance**,
+  so by his own 30a logic it waits.
+- 🎯 **Faves may ask who the reader is.** 28e unblocked, moved to Theme 22. One
+  concern raised and not acted on: **collect the entitlement, not the
+  attribute** — a stored age rots, a flag does not.
+- 🎯 **`df-option`, and audit the vocabulary** — shipped with `vg-option`, 21
+  rows, 6 declaration sites, 113 validator mutations.
+
+🚩 **The process failure, kept because it cost real time.** I put the
+`df-option` question to the owner **without grepping the roadmap first**. He had
+already adopted it that same day — and the file said so **twice, in opposite
+directions, 5,200 lines apart**: *"`vg-option` and `df-option` were NOT ruled
+on"* at one end and *"`contains-fish`, `vg-option` and `df-option` are ALL
+ADOPTED"* at the other. ⇒ **Grep the board before asking the principal anything.**
+A question he has already answered spends his attention twice and teaches him the
+session isn't reading. This is the monolithic board at its quietest — not a
+collision, just two sentences that never met.
+
+🔑 **And the finding that came out of doing the work rather than the question:**
+`composeTags` checks a vegan claim against the wrong contradiction list, so a
+dish can carry a vegan label beside `contains-dairy`. **Reproduced twice** — the
+first reproduction handed to me did not reproduce, and chasing that is what found
+the real precondition (the option must *state* the claim and contradict it; one
+stating no claim is dropped correctly by the intersection rule). Latent, not
+live: zero of 155 options trigger it today. **A bug report that cannot be
+reproduced is a lead, not a finding** — and the control case that separates the
+two is worth more than the report.
