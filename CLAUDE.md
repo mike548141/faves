@@ -33,9 +33,15 @@ in atelier and is read on demand — never wholesale.
   claim still lands on `main` from the primary checkout even when that checkout
   is dirty:** if the stranger's edits don't touch the queue file, stage and
   commit *the claim line alone* — the one sanctioned touch inside another
-  session's tree, safe because it stages only your own hunk. If `ROADMAP.md`
-  itself is dirty, that is proof the other session is queue-active: sync, take
-  the next open item, touch nothing. Name
+  session's tree, safe because it stages only your own hunk. If **the item's own
+  file** under `docs/roadmap/` is dirty, that is proof the other session is
+  queue-active on *that item*: take the next open one, touch nothing. (Until
+  2026-08-17 this read "if `ROADMAP.md` is dirty" — with one 5,300-line file
+  holding every claimable item, "the next item" lived inside the file "touch
+  nothing" had just forbidden, so read literally nobody could claim anything;
+  three sessions were blocked simultaneously on 2026-08-16. The owner's ruling
+  was to adopt atelier's split board rather than reword the rule, and the split
+  is what makes this sentence true as written.) Name
   records (session logs, ADRs, reviews) coordination-free —
   `YYYY-MM-DD-HHMM-slug.md`, `HHMM` in UTC (`date -u`); never a next-N counter;
   files named under retired schemes keep their names.
@@ -160,6 +166,13 @@ python3 tools/check_fallback.py # the no-JS <ul> in site/index.html still mirror
 python3 tools/check_decisions.py # every ADR is in the decisions index (it's the
                               # allocator — an unindexed record is how a number
                               # gets reused; seven were missing on 2026-08-16)
+python3 tools/board.py        # docs/ROADMAP.md is GENERATED from docs/roadmap/ —
+                              # one file per item (owner-ruled 2026-08-16). Edit the
+                              # ITEM, never the index, then `board.py rebuild` in the
+                              # same commit; the floor blocks a stale index, and after
+                              # a merge conflict on the index rebuilding IS the
+                              # resolution. This file is a shim: the tool is atelier's,
+                              # children don't vendor the floor's scanners
 python3 tools/check_versions.py --range origin/main..HEAD # sw.js versions bumped
                               # in lockstep with site/. Use the RANGE form to check
                               # finished work: bare, it reads only *staged* changes,

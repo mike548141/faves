@@ -8,6 +8,9 @@ Board doctrine and the checkbox legend: [roadmap/README.md](roadmap/README.md). 
 
 *Narrative: [010-two-structural-owner-rulings-2026-08-16-23-15/README.md](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/README.md)*
 
+- [ ] [service is renamed to order-mode, INCLUDING the shipped filter](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/010-service-is-renamed-to-order-mode-including-the.md) 🛑
+- ✅ [The roadmap is SPLIT — one file per item](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/020-the-roadmap-is-split-one-file-per-item.md) 🛑
+
 ## Theme 1 — From *decided* to *ordered*: the Order tally ★ flagship
 
 *Narrative: [020-theme-1-from-decided-to-ordered-the-order-tall/README.md](roadmap/020-theme-1-from-decided-to-ordered-the-order-tall/README.md)*

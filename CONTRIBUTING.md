@@ -89,12 +89,19 @@ recipe and Cook at Home screens that offer cook mode.
   is that a roadmap theme is a more inviting read than a decision record
   — newer, narrative, full of measurements, and silent about the older
   document that already closed the question.
-- **A roadmap harvest moves `[x]` items and nothing else.** Closing a
-  theme means moving *done* items to `ROADMAP-DONE.md` and leaving a
-  pointer. An open `- [ ]` item sitting next to a closed one is the
-  easiest thing in that file to delete by accident — it happened on
-  2026-08-16 to an unfixed WCAG AA failure, which then existed only as
-  prose in a session log. Diff the harvest before committing it.
+- **There is no roadmap harvest any more, and that is the point.** Since
+  2026-08-17 the board is one file per item under `docs/roadmap/`: a done
+  item flips to `[x]` **in its own file**, in the commit that finishes the
+  work, and nothing moves. `ROADMAP-DONE.md` is frozen as the pre-split
+  archive. The retired step is worth remembering for why it went — a
+  harvest edited a block of one huge file, and an open `- [ ]` item
+  sitting next to a closed one was the easiest thing in there to delete by
+  accident. It happened on 2026-08-16 to an unfixed WCAG AA failure, which
+  then existed only as prose in a session log. Per-item files remove the
+  operation that could do that.
+- **Edit the item, never `docs/ROADMAP.md`.** The index is generated; the
+  `board` floor check blocks a commit whose index is stale. Run
+  `python3 tools/board.py rebuild` in the same commit as the item edit.
 
 ## Committing
 

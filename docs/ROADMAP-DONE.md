@@ -1,5 +1,13 @@
 # Roadmap — resolved detail (archive)
 
+🛑 **FROZEN 2026-08-17 — nothing is added to this file again.** It is the
+verbatim record of everything harvested while the roadmap was one file. The
+board is now one file per item under [`roadmap/`](roadmap/README.md), and a done
+item simply stays in its own file as `[x]`, carrying its own `git log` as
+provenance — so the harvest step, and the half-landed window it opened between
+finishing work and recording it, are both retired. Read this for the *why*
+behind anything resolved before the split; write nothing into it.
+
 Verbatim design records for the roadmap items that are **resolved** — shipped,
 decided-against, or owner-parked — moved out of [`ROADMAP.md`](ROADMAP.md) on
 2026-07-18 to keep the always-loaded roadmap to what's *open*. Each block is the

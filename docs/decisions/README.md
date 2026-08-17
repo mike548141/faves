@@ -641,6 +641,17 @@ deliberation those compact docs omit.
   recipe looks finished. Measured 204/204 byte-identical at 1×; 20 of 24
   recipes double clean, 14 halve. Times never scale — under-scaling a meat
   time is a food-safety failure, not a bad dinner.
+- [0086](0086-the-board-is-one-file-per-item.md) — **the board is one file
+  per item; `ROADMAP.md` is generated.** The claiming rule this repo inherited
+  was *unsatisfiable as written* — "if `ROADMAP.md` is dirty, take the next open
+  item, touch nothing", where the next item lives in the file just forbidden;
+  three sessions were blocked simultaneously on 2026-08-16. Offered the cheap
+  reword and the owner **ruled the other way: adopt atelier's split board**, so
+  the inherited sentence becomes true rather than reworded. 6,233 lines → 48
+  sections, 54 item files, a 271-line index. The harvest step goes with it (a
+  deletion on a shared file that ate an open WCAG item), and the `board` check
+  stops being a **latent** guard — passing since birth on a subject that did not
+  exist.
 - [0085](0085-a-delivery-price-fills-a-hole-it-is-not-a-feature.md) — **a
   delivery-app price fills a hole in the data; it is not a feature.** Supersedes
   the **channel half only** of [0080](0080-a-venue-has-menus-plural.md). 0080
