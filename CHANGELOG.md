@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Changed
+- **A home-screen link can now carry the takeaway/dine-in filter**, under
+  `?order-mode=takeaway`. The filter's internal name changed from `service` to
+  `order-mode` (one word had come to mean three different things), and a link
+  written under the old `?service=` spelling is still honoured — it filters the
+  list exactly as it did before, rather than quietly widening to every place.
+  Nothing on screen is worded differently.
 - **The search box now sits above "If it's your first time, try…"** on every
   menu, instead of below it. Search is what a returning reader came for, and it
   was parked underneath a block of suggestions written for a first-time one.

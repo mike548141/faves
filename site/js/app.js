@@ -12,6 +12,8 @@ import {
   activeFilters,
   DEFAULT_FILTERS,
   filtersFromQuery,
+  ORDER_MODE_KEY,
+  LEGACY_ORDER_MODE_KEY,
 } from "./filters.js";
 import { initFiltersUI } from "./filters-ui.js";
 import { formatDriveTime } from "./distance.js";
@@ -52,10 +54,10 @@ import { el } from "./dom.js";
 import { wireSearchClear } from "./search-clear.js";
 
 // `servicesText` was removed 2026-08-16 with the "Dine-in, Takeaway" line it
-// produced. Service is still a filter in the bottom bar, still on the venue
-// page, and now a search term ("takeaway", "eat in") — it just no longer
-// repeats on every card, where nearly every venue offers both and the words
-// separated almost nothing.
+// produced. Order mode (`service` until the 2026-08-16 rename) is still a filter
+// in the bottom bar, still on the venue page, and now a search term ("takeaway",
+// "eat in") — it just no longer repeats on every card, where nearly every venue
+// offers both and the words separated almost nothing.
 
 // Lazy, layout-stable card photo (only when the venue has one).
 function cardPhoto(r) {
@@ -194,7 +196,7 @@ function card(r, clock, origin = null) {
   // The open/closed badge is built before the meta line because it now sits
   // ON it, beside the suburb. "Dine-in, Takeaway" came off entirely (owner,
   // 2026-08-16): it was on every card, so it separated almost nothing, and
-  // service is still a filter and now a search term.
+  // order mode is still a filter and now a search term.
   const badge = kind.hasHours ? hoursBadge(r, clock, true, origin) : null;
   const area = cardArea(r, origin);
 
@@ -333,7 +335,7 @@ function init(restaurants) {
   const activeEl = document.getElementById("active-filters");
   const areaSel = document.getElementById("filter-area");
   const cuisineSel = document.getElementById("filter-cuisine");
-  const serviceSel = document.getElementById("filter-service");
+  const orderModeSel = document.getElementById("filter-order-mode");
   const styleSel = document.getElementById("filter-style");
 
   const { areas, cuisines, styles } = deriveFacets(restaurants);
@@ -347,6 +349,10 @@ function init(restaurants) {
   // `?cuisine=…` / `?area=…` (filters.js owns the names, and drops any value
   // the data doesn't have). The controls are set from it too, so the list and
   // the dropdown above it never disagree about why it's short.
+  //
+  // It also carries the order-mode compatibility path: nothing here writes that
+  // key, but a URL is allowed to hand one in under either its current spelling
+  // or the `service` it retired on 2026-08-16 (filters.js orderModeFromQuery).
   const fromUrl = filtersFromQuery(location.search, { areas, cuisines, styles });
   // `origin` is the viewer's {lat,lng}, and it is seeded from the location this
   // browsing session already captured — sessionStorage, same key the menu screen
@@ -364,7 +370,7 @@ function init(restaurants) {
   for (const [sel, value] of [
     [areaSel, state.area],
     [cuisineSel, state.cuisine],
-    [serviceSel, state.service],
+    [orderModeSel, state.orderMode],
     [styleSel, state.style],
   ]) {
     if (!sel) continue;
@@ -395,6 +401,24 @@ function init(restaurants) {
     history.replaceState(null, "", location.pathname + (q ? `?${q}` : "") + location.hash);
   }
 
+  // Order mode is READ from the URL and never written to it (see the listener
+  // below and filters.js ORDER_MODE_KEY). That asymmetry has one sharp edge: an
+  // arriving `?order-mode=takeaway` that the reader then changes or clears would
+  // sit in the bar contradicting the control, and come back on the next reload
+  // to re-filter a list they had just widened — the exact fault syncQuery exists
+  // to prevent for the other three. So once they touch the control, the inbound
+  // value has been superseded and the key goes. Both spellings are dropped: a
+  // link written before the 2026-08-16 rename carries the old one, and leaving
+  // it behind would resurrect the filter under its retired name.
+  function dropOrderModeQuery() {
+    const params = new URLSearchParams(location.search);
+    if (!params.has(ORDER_MODE_KEY) && !params.has(LEGACY_ORDER_MODE_KEY)) return;
+    params.delete(ORDER_MODE_KEY);
+    params.delete(LEGACY_ORDER_MODE_KEY);
+    const q = params.toString();
+    history.replaceState(null, "", location.pathname + (q ? `?${q}` : "") + location.hash);
+  }
+
   // Turn one filter off and put its control back to neutral. The control now
   // lives inside the sheet, so this is the only place that knows how to undo
   // each kind — the chips, "Clear all" and the sheet all route through it.
@@ -402,7 +426,12 @@ function init(restaurants) {
     cuisine: "cuisine",
     area: "area",
     style: "style",
-    service: "service",
+    // The kind is `orderMode`; the word here is the one printed on the control
+    // it undoes. This string ends up inside an aria-label ("Takeaway service
+    // filter is on — clear it…"), so it has to match what a sighted reader sees
+    // beside it, and the visible label is still "Service" — the 2026-08-16
+    // ruling renamed the code's axis, not the screen's wording.
+    orderMode: "service",
     openNow: "Open now",
     cheap: "Cheap eats",
   };
@@ -417,12 +446,13 @@ function init(restaurants) {
         sel.dataset.active = "all";
       }
       syncQuery();
-    } else if (kind === "service") {
-      state.service = "all";
-      if (serviceSel) {
-        serviceSel.value = "all";
-        serviceSel.dataset.active = "all";
+    } else if (kind === "orderMode") {
+      state.orderMode = "all";
+      if (orderModeSel) {
+        orderModeSel.value = "all";
+        orderModeSel.dataset.active = "all";
       }
+      dropOrderModeQuery();
     } else {
       state[kind] = false;
       document
@@ -546,13 +576,17 @@ function init(restaurants) {
     filtersUI.sync({ active, shown: n, total });
   }
 
-  // Service is a pick-one-of-three like Area and Cuisine, so since 15z it is a
-  // <select> like them. It is deliberately NOT in syncQuery: `?service=` was
-  // never a shareable facet (ADR 0050 carries area and cuisine only), and
-  // adding it here would change what a shared link means.
-  serviceSel?.addEventListener("change", () => {
-    state.service = serviceSel.value;
-    serviceSel.dataset.active = serviceSel.value;
+  // Order mode is a pick-one-of-three like Area and Cuisine, so since 15z it is
+  // a <select> like them. It is deliberately NOT in syncQuery: this axis was
+  // never a shareable facet (ADR 0050 carries area and cuisine only; 37k added
+  // style), and writing it would change what a shared link means — a link sent
+  // by someone who happened to have "Takeaway" set would arrive filtered.
+  // Reading it is the other direction and is safe, which is why the rename's
+  // compatibility path lives in filtersFromQuery and stops there.
+  orderModeSel?.addEventListener("change", () => {
+    state.orderMode = orderModeSel.value;
+    orderModeSel.dataset.active = orderModeSel.value;
+    dropOrderModeQuery();
     render();
   });
 

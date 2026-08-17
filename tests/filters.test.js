@@ -151,13 +151,13 @@ test("applyFilters: defaults return everything, including recipes", () => {
   assert.equal(shown.length, FIXTURE.length);
 });
 
-test("applyFilters: service=takeaway keeps only takeaway venues, drops recipes", () => {
-  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, service: "takeaway" });
+test("applyFilters: orderMode=takeaway keeps only takeaway venues, drops recipes", () => {
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode: "takeaway" });
   assert.deepEqual(shown.map((r) => r.id).sort(), ["churton", "kk", "rs"]);
 });
 
-test("applyFilters: service=dine-in", () => {
-  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, service: "dine-in" });
+test("applyFilters: orderMode=dine-in", () => {
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode: "dine-in" });
   assert.deepEqual(shown.map((r) => r.id).sort(), ["kk", "ktc", "rs"]);
 });
 
@@ -211,13 +211,13 @@ test("applyFilters: style 'all' (the default) keeps every venue, tagged or not",
 test("applyFilters: a state with no style key at all is a safe no-op", () => {
   // Callers that predate this axis (and the older tests below) hand in a state
   // object without `style`. It must not filter everything out.
-  const shown = applyFilters(FIXTURE, { service: "all", area: "all", cuisine: "all" });
+  const shown = applyFilters(FIXTURE, { orderMode: "all", area: "all", cuisine: "all" });
   assert.equal(shown.length, FIXTURE.length);
 });
 
 test("applyFilters: clauses are AND-ed together", () => {
   const shown = applyFilters(FIXTURE, {
-    service: "takeaway",
+    orderMode: "takeaway",
     area: "Te Aro",
     cuisine: "Malaysian",
   });
@@ -303,7 +303,12 @@ test("filterHref escapes values that would otherwise break the URL", () => {
 
 test("filtersFromQuery reads a known area and cuisine back out", () => {
   const got = filtersFromQuery("?cuisine=Malaysian&area=Johnsonville", FACETS);
-  assert.deepEqual(got, { area: "Johnsonville", cuisine: "Malaysian", style: "all" });
+  assert.deepEqual(got, {
+    area: "Johnsonville",
+    cuisine: "Malaysian",
+    style: "all",
+    orderMode: "all",
+  });
 });
 
 test("filtersFromQuery reads a style KEY, and only a key", () => {
@@ -336,6 +341,7 @@ test("filtersFromQuery drops a value the data doesn't have", () => {
     area: "all",
     cuisine: "all",
     style: "all",
+    orderMode: "all",
   });
 });
 
@@ -345,7 +351,12 @@ test("filtersFromQuery is case- and whitespace-exact, not fuzzy", () => {
 
 test("filtersFromQuery: no query, empty query, or foreign params → defaults", () => {
   for (const q of ["", "?", "?utm_source=x", undefined]) {
-    assert.deepEqual(filtersFromQuery(q, FACETS), { area: "all", cuisine: "all", style: "all" });
+    assert.deepEqual(filtersFromQuery(q, FACETS), {
+      area: "all",
+      cuisine: "all",
+      style: "all",
+      orderMode: "all",
+    });
   }
 });
 
@@ -354,7 +365,62 @@ test("filtersFromQuery survives facets with no areas, cuisines or styles", () =>
     area: "all",
     cuisine: "all",
     style: "all",
+    orderMode: "all",
   });
+});
+
+// ---------------------------------------------------------------------------
+// The order-mode rename's compatibility path (owner-ruled 2026-08-16).
+//
+// The axis was `service`. The ruling's condition on renaming it was that a URL
+// written under the old key keep working — "read the old key, write only the new
+// one" — because a link that silently loses its filter shows no error at all,
+// just a different set of venues than the sender saw.
+//
+// ⚠️ Honest about what these guard: the ruling states the filter is "in URLs",
+// and it is not — no version of filtersFromQuery has ever read this axis, and
+// app.js's syncQuery deliberately never writes it (ADR 0050). So the legacy
+// branch protects a link that cannot exist yet rather than one already out
+// there. The assertions below are still real assertions about real behaviour —
+// each one fails if the branch it names is removed (ADR 0072) — and the day this
+// axis becomes shareable they are the reason the old spelling still lands.
+// ---------------------------------------------------------------------------
+
+test("filtersFromQuery reads the order-mode axis under its current key", () => {
+  assert.equal(filtersFromQuery("?order-mode=takeaway", FACETS).orderMode, "takeaway");
+  assert.equal(filtersFromQuery("?order-mode=dine-in", FACETS).orderMode, "dine-in");
+});
+
+test("filtersFromQuery: a URL written before the rename still filters (?service=)", () => {
+  // THE compatibility assertion. Without the legacy branch this returns "all",
+  // and an old link quietly widens to every venue with nothing on screen saying
+  // the filter was dropped.
+  assert.equal(filtersFromQuery("?service=takeaway", FACETS).orderMode, "takeaway");
+  assert.equal(filtersFromQuery("?service=dine-in", FACETS).orderMode, "dine-in");
+});
+
+test("an old-key URL narrows the actual list, not just the state", () => {
+  // The state value is only half the promise: end to end over the real fixture,
+  // an old link must come back with the venues its sender saw.
+  const { orderMode } = filtersFromQuery("?service=dine-in", FACETS);
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode });
+  assert.deepEqual(shown.map((r) => r.id).sort(), ["kk", "ktc", "rs"]);
+  assert.ok(shown.length < FIXTURE.length, "an honoured old link still shortens the list");
+});
+
+test("the new key wins when a URL somehow carries both spellings", () => {
+  assert.equal(
+    filtersFromQuery("?service=takeaway&order-mode=dine-in", FACETS).orderMode,
+    "dine-in"
+  );
+});
+
+test("order mode is validated against its vocabulary under either key", () => {
+  // Same rule as the facets: a value no <option> carries means "all", never a
+  // control reading "Any service" over a list filtered on something else.
+  for (const q of ["?order-mode=delivery", "?service=delivery", "?order-mode=Takeaway"]) {
+    assert.equal(filtersFromQuery(q, FACETS).orderMode, "all", q);
+  }
 });
 
 test("a filterHref value always filters to venues that actually carry it", () => {
@@ -382,7 +448,7 @@ test("nothing on: no filters to name, and no badge", () => {
 
 test("every kind of filter is named — none can be on and invisible", () => {
   const all = activeFilters({
-    service: "takeaway",
+    orderMode: "takeaway",
     area: "Johnsonville",
     cuisine: "Malaysian",
     style: "fine-dining",
@@ -392,7 +458,7 @@ test("every kind of filter is named — none can be on and invisible", () => {
   assert.equal(all.length, 6);
   assert.deepEqual(
     all.map((f) => f.kind).sort(),
-    ["area", "cheap", "cuisine", "openNow", "service", "style"]
+    ["area", "cheap", "cuisine", "openNow", "orderMode", "style"]
   );
   // Every entry can be shown to a person and cleared by its kind.
   for (const f of all) {
@@ -405,7 +471,7 @@ test("the two facets a URL can carry come first, so neither is ever the one fold
   // ADR 0050: arriving from a venue's subheading narrows the list without the
   // reader touching this screen, so its escape must survive the chip row's cap.
   const kinds = activeFilters({
-    service: "dine-in",
+    orderMode: "dine-in",
     area: "Te Aro",
     cuisine: "Malaysian",
     style: "sit-down",
@@ -428,7 +494,7 @@ test("an active style is named by its LABEL, never by its stored key", () => {
 
 test("style 'all' is the absence of a filter, and so is a missing style key", () => {
   assert.deepEqual(activeFilters({ ...DEFAULT_FILTERS, style: "all" }), []);
-  assert.deepEqual(activeFilters({ service: "all", openNow: false, cheap: false }), []);
+  assert.deepEqual(activeFilters({ orderMode: "all", openNow: false, cheap: false }), []);
 });
 
 test("a sort mode is not a filter — it reorders, it never shortens (ADR 0014)", () => {
@@ -436,10 +502,10 @@ test("a sort mode is not a filter — it reorders, it never shortens (ADR 0014)"
   assert.deepEqual(activeFilters(state), []);
 });
 
-test("service 'all' is the absence of a filter, not a filter set to everything", () => {
-  assert.deepEqual(activeFilters({ ...DEFAULT_FILTERS, service: "all" }), []);
+test("order mode 'all' is the absence of a filter, not a filter set to everything", () => {
+  assert.deepEqual(activeFilters({ ...DEFAULT_FILTERS, orderMode: "all" }), []);
   assert.deepEqual(
-    activeFilters({ ...DEFAULT_FILTERS, service: "dine-in" }).map((f) => f.label),
+    activeFilters({ ...DEFAULT_FILTERS, orderMode: "dine-in" }).map((f) => f.label),
     ["Dine-in"]
   );
 });
@@ -451,7 +517,7 @@ test("the count matches what applyFilters actually did — badge and list agree"
   for (const state of [
     { ...DEFAULT_FILTERS },
     { ...DEFAULT_FILTERS, cuisine: facets.cuisines[0] },
-    { ...DEFAULT_FILTERS, service: "takeaway" },
+    { ...DEFAULT_FILTERS, orderMode: "takeaway" },
     { ...DEFAULT_FILTERS, style: facets.styles[0].key },
     { ...DEFAULT_FILTERS, cheap: true },
   ]) {
@@ -465,7 +531,7 @@ test("the count matches what applyFilters actually did — badge and list agree"
 test("a te reo key rides along for the filters that have one; facet values don't get invented ones", () => {
   const byKind = Object.fromEntries(
     activeFilters({
-      service: "takeaway",
+      orderMode: "takeaway",
       area: "Johnsonville",
       cuisine: "Malaysian",
       style: "fine-dining",
@@ -474,7 +540,7 @@ test("a te reo key rides along for the filters that have one; facet values don't
     }).map((f) => [f.kind, f])
   );
   // Chrome strings are translatable…
-  assert.equal(byKind.service.key, "service.takeaway");
+  assert.equal(byKind.orderMode.key, "orderMode.takeaway");
   assert.equal(byKind.openNow.key, "toggle.openNow");
   assert.equal(byKind.cheap.key, "toggle.cheapEats");
   // …place and cuisine names are content, and are shown as the venues wrote them.
