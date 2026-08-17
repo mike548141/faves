@@ -226,6 +226,17 @@ async function run(opts) {
       s.checked.length === group.max,
       `ticked: ${s.checked.join(", ")}`,
     );
+    // The refused tap must not cost the reader the peanut sentence: Satay is
+    // still ticked, so the warning that names it must still be there, with the
+    // cap message ADDED to it. Until 2026-08-17 the cap message replaced the
+    // whole warning, and the flagged allergen went silent on exactly the tap
+    // that was refused.
+    report.check(
+      "a refused fourth sauce adds the cap message and keeps the allergen warning",
+      !s.warnHidden && s.warnText.includes(PEANUT_OPTION) && /peanuts/i.test(s.warnText) &&
+        /choose up to/i.test(s.warnText) && s.warnFlagged,
+      JSON.stringify(s.warnText),
+    );
 
     // --- (e) a configured dish is its own line --------------------------
     await driver.click(".addon-stepper .stepper-add");

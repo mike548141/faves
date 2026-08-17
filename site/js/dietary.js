@@ -45,20 +45,19 @@ export const DIET_FILTERS = [
 // shows all of them either way. The choice is currently about meaning, not
 // about what anyone sees.
 //
-// Second — and this is what decided it — a tag in two lists resolves
-// AMBIGUOUSLY in addons.js `composeTags`, which maps a claim tag back to its
-// filter key with `DIET_KEYS.find(...)` and so takes whichever key is listed
-// first. `vg` is the one tag that is already in two lists, and it is the one
-// tag that misbehaves there: a `vg` dish resolves to key `v`, is checked
-// against CONTRADICTS.v (shellfish) instead of CONTRADICTS.vg (dairy, egg,
-// shellfish), and keeps its vegan claim when dairy is added to it. Putting
-// `vg-option` in two lists would extend that fault to a second tag rather
-// than leave it contained. Keeping it in one keeps the rule every other tag
-// already obeys: an `-option` tag names exactly ONE claim.
+// Second — and this is what decided it at the time — a tag in two lists
+// resolved AMBIGUOUSLY in addons.js `composeTags`, which mapped a claim tag
+// back to its filter key by first list membership: a `vg` dish resolved to
+// key `v`, was checked against CONTRADICTS.v (shellfish) instead of
+// CONTRADICTS.vg (dairy, egg, shellfish), and kept its vegan claim when dairy
+// was added to it. FIXED 2026-08-17: composeTags now reads the claim off the
+// tag's own name (`vg-option` → `vg`), so list membership no longer decides
+// which contradictions apply, and a tag in two lists is no longer a hazard.
 //
-// So this is a deliberate stop, not an oversight. If the ambiguous resolution
-// in composeTags is fixed, the vegetarian question is worth reopening on its
-// merits — it would then be a free choice again.
+// So this is a deliberate stop, not an oversight — and with the hazard gone
+// the vegetarian question is a free choice again, to be reopened on its
+// merits (does "we can make it vegan" entail "vegetarian version exists"?)
+// rather than forced either way by the machinery.
 
 /**
  * Does `tags` carry an allergen the viewer flagged to avoid? `avoid` is a Set of

@@ -123,6 +123,40 @@ test("composeTags: composition never invents a claim an option has and the dish 
   assert.deepEqual(out.dropped, []);
 });
 
+// --- a claim is judged against ITS OWN contradiction list -------------
+// `vg` also sits in `v`'s satisfies list (every vegan dish is vegetarian). Until
+// 2026-08-17 composeTags resolved a claim tag to the FIRST filter list holding
+// it, so a `vg` dish was checked against CONTRADICTS.v (shellfish only) and
+// kept its vegan claim beside contains-dairy. The pair below is the control
+// the board asked for: the `gf` line shows the machinery, the `vg` line shows
+// the fault — and an option stating NO claim is not the case, because the
+// intersection rule drops it correctly for the wrong reason (`not-stated`).
+test("composeTags: cheese that STATES vegan and contains dairy still costs a vegan dish its claim", () => {
+  const cheese = { group: "extras", name: "Cheese", price: 2, tags: ["vg", "contains-dairy"] };
+  const out = composeTags(["vg"], [cheese]);
+  assert.ok(!out.tags.includes("vg"), `vg survived beside dairy: ${out.tags}`);
+  assert.deepEqual(out.dropped, [{ tag: "vg", from: "Cheese", reason: "contradicted", allergen: "contains-dairy" }]);
+  assert.equal(dishSatisfiesDiet(out.tags, new Set(["vg"])), false);
+  // The paired control: the same shape on `gf` has always worked.
+  const bun = { group: "extras", name: "Bun", price: 0, tags: ["gf", "contains-gluten"] };
+  assert.equal(composeTags(["gf"], [bun]).dropped[0].reason, "contradicted");
+});
+
+test("composeTags: halloumi on a vegan salad is CONTRADICTED by dairy, not merely unstated", () => {
+  // Live in the corpus (Sprig & Fern Tawa, Garden Salad + Halloumi): the
+  // reader must be told the dairy is why, not that we cannot say.
+  const halloumi = { group: "salad-protein", name: "Halloumi", price: 5, tags: ["contains-dairy"] };
+  const out = composeTags(["vg"], [halloumi]);
+  assert.equal(out.dropped[0].reason, "contradicted");
+  assert.equal(out.dropped[0].allergen, "contains-dairy");
+});
+
+test("composeTags: a vegetarian option on a vegan dish is not-stated; a vegan option on a vegetarian dish is fine", () => {
+  const vegOnly = { group: "sauces", name: "Aioli", price: 0, tags: ["v"] };
+  assert.equal(composeTags(["vg"], [vegOnly]).dropped[0].reason, "not-stated");
+  assert.deepEqual(composeTags(["v"], [MUSHROOMS]).dropped, []);
+});
+
 test("CONTRADICTS: peanuts, nuts, soy and sesame contradict no dietary claim", () => {
   const all = Object.values(CONTRADICTS).flat();
   for (const t of ["contains-peanuts", "contains-nuts", "contains-soy", "contains-sesame"]) {

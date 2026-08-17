@@ -167,7 +167,14 @@ export function composeTags(dishTags, selection) {
   const dropped = [];
   const surviving = [];
   for (const tag of claimTagsOf(base)) {
-    const key = DIET_KEYS.find((k) => CLAIM_TAGS.get(k).includes(tag));
+    // The claim a tag MAKES is its own name (`vg`, `gf-option` → `gf`), never
+    // the first filter list it happens to satisfy. `vg` sits in `v`'s
+    // satisfies list too (every vegan dish is vegetarian), and a lookup by
+    // list membership resolved it to `v` — so a vegan dish was checked
+    // against CONTRADICTS.v (shellfish) and kept its vegan claim when dairy
+    // was added to it. Latent in the corpus, live the moment one option is
+    // written as ["vg", "contains-dairy"] (board, Theme 14; fixed 2026-08-17).
+    const key = tag.replace(/-option$/, "");
     const clashes = CONTRADICTS[key] || [];
     let kill = null;
     for (const opt of chosen) {

@@ -94,7 +94,12 @@ export function dishAddOns(record, section, item, onCompose) {
     };
   }
 
-  function refresh() {
+  // `notice` is a one-off line appended AFTER the allergen text — the refused
+  // fourth sauce used to overwrite the whole warning, so "Satay contains
+  // peanuts — you asked to avoid it" vanished on the tap that was refused,
+  // with Satay still ticked. The cap message is added to the warning, never
+  // put in its place.
+  function refresh(notice) {
     const { tags, added, dropped } = composeTags(item.tags, selection);
     onCompose?.(tags);
 
@@ -121,6 +126,7 @@ export function dishAddOns(record, section, item, onCompose) {
       );
     }
 
+    if (notice) lines.push(notice);
     warn.hidden = lines.length === 0;
     warn.classList.toggle("is-flagged", hit.length > 0 || dishFlagged(tags, avoidSet));
     warn.textContent = lines.join(" ");
@@ -199,8 +205,7 @@ export function dishAddOns(record, section, item, onCompose) {
             // the tick rather than silently letting the order sheet ask for
             // something the shop will not make.
             input.checked = false;
-            warn.hidden = false;
-            warn.textContent = `${group.name}: ${rule.toLowerCase()}.`;
+            refresh(`${group.name}: ${rule.toLowerCase()}.`);
             return;
           }
         }
