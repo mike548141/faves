@@ -205,7 +205,9 @@ deliberation those compact docs omit.
   step text — one number, nearest 5°F, computed every time. Nearest-25°F dial
   stops rejected: it can serve a 170°C bake at 350°F. Storing converted values,
   guessing from the browser locale, and a whole-of-app "locale" switch (prices
-  stay NZD) all rejected too.
+  stay NZD) all rejected too. **The one-word preference is superseded by
+  [0087](0087-units-resolve-as-region-x-usage-not-one-word.md);** the rest
+  stands.
 - [0030](0030-personal-data-import-and-transfer.md) — **importing your data, and
   transferring it to another device** (Theme 12b + Theme 9 v1). One applier
   behind both doors: merge by default, replace behind a named confirm, your own
@@ -905,3 +907,23 @@ deliberation those compact docs omit.
   decision table stays green.
 
 [0083]: 0083-the-location-ask-explains-itself.md
+
+- [0087](0087-units-resolve-as-region-x-usage-not-one-word.md) — **units
+  resolve as region × usage, not one word.** Supersedes the one-word half of
+  [0029](0029-unit-display-preference.md). A device resolving to GB got
+  `imperial`, and `imperial` rewrites every recipe temperature to °F — so a
+  London phone read `355°F` for a 180°C bake. 🔑 **The word is the fault:**
+  CLDR models units as region × usage and marks its own metric/US/UK flag
+  deprecated, because Britain is not a point on a dial — miles and yards on the
+  road, °C in the oven. `localUnits()` now returns `{distance, oven}` and the
+  formatters read the field they need; every call site is unchanged, because
+  they already took a `units` argument. **Zero new settings** (owner-ruled: no
+  control per kind of measure), `imperial` relabelled *"US customary (miles,
+  °F)"*, and **"UK" is something Local DOES, never an option on the picker** —
+  offered as one, a reader in Britain picks it and gets the bug back by hand.
+  Retires the interim GB → metric of `f253812`, which bought the °C oven by
+  taking away the miles. ⚠️ Names its own cost: a reader whose region is
+  inferred wrongly — travelling, a VPN, a timezone spanning countries — has no
+  way to say so, and this ruling removes the setting that would have let them.
+  `Intl`'s `usage` option (TC39 Stage 2), a `uk` picker entry, geolocation as
+  the signal, and special-casing GB inside `convertTemperatures` all rejected.
