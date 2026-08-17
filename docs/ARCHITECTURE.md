@@ -711,12 +711,21 @@ precached payload nothing on any screen can reach (ADR 0047).
   written in one place, the sort control's own handler, so distance had never
   once participated in the default order in the project's history.
 
-  The origin arrives from `#geo-ask` on the home screen (`app.js`), which is
-  **primed, never sprung** (ADR 0069): the app reads
+  The origin arrives from the location ask on the home screen (`app.js` +
+  `geo-consent.js`), which is **primed, never sprung** (ADR 0069, surface
+  superseded by ADR 0083): the app reads
   `navigator.permissions.query({name:"geolocation"})` — which prompts nobody —
-  then uses an existing grant silently, offers a one-tap button where the state
-  is `prompt`, and says so in place where it is `denied`. Nothing in Faves
-  raises a browser permission prompt except a tap on that button.
+  then uses an existing grant silently, and where the state is `prompt` it
+  explains the ask before raising it. The `#geo-ask` pill that used to do this
+  is **gone** (owner, 2026-08-17). What replaced it: the list renders first,
+  then `#geo-dialog` explains what location buys and that it never leaves the
+  device; declining without ticking "don't ask again" leaves `#geo-banner`;
+  ticking it suppresses **both**, permanently, via `faves.geo.consent.v1` — a
+  key deliberately outside the backup export, because the promise is about this
+  device. A `denied` state raises neither surface, only the status line.
+  **Settings → Location is the only route back** once suppressed, which makes it
+  load-bearing rather than a convenience. Nothing in Faves raises a browser
+  permission prompt except a press on one of those two Allow buttons.
 - `image` (venue card photo, or a menu item's dish photo) is an optional
   **self-hosted** path — no hotlinking (offline / no-external-request
   rule); store under `site/img/`. Photos are excluded from the transfer

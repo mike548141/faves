@@ -295,9 +295,10 @@ main {
 }
 
 /* Shared pill toggles, inside the filter sheet's "Narrow to" group: "Open
-   now" / "Cheap eats". The location ask (#geo-ask, ADR 0069) reuses the
-   single-chip `.list-toggle` look but lives in `.geo-row` above the venue
-   list, not in this container — it is a permission, not a filter. */
+   now" / "Cheap eats". The location ask no longer borrows this look at all:
+   ADR 0083 removed the #geo-ask pill and moved the ask to #geo-dialog and
+   #geo-banner, which carry `.geo-btn` precisely so a permission never reads as
+   a filter you can flip back off. */
 .list-toggles {
   display: flex;
   flex-wrap: wrap;

@@ -831,9 +831,13 @@
           <!-- THE SORT BY GROUP IS GONE (ADR 0068). There is one ranking now and
                distance is inside it, so there is no mode to choose between and
                nothing for a "Sort by" control to say. The location that feeds
-               that ranking is asked for by #geo-ask, up beside the list, because
-               it is a permission and not a filter — burying a browser prompt
-               behind a sheet is the opposite of asking plainly. -->
+               that ranking is asked for by #geo-dialog and #geo-banner, not from
+               in here, because it is a permission and not a filter — burying a
+               browser prompt behind a sheet is the opposite of asking plainly.
+               (This named #geo-ask until ADR 0083 removed that pill; the comment
+               outlived the element by a few hours, which is the same fault the
+               roadmap's id-durability sweep is about — a reference to something
+               deleted, in the one place no gate looks.) -->
           </section>
           <!-- #filters-clear is moved in here beside the controls when they go
                inline (filters-ui.js), so "Clear all" is not a phone-only
