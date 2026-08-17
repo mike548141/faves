@@ -26,16 +26,20 @@ most once a day — whether it is you running it or the schedule.
 
     python3 tools/fetch_fx.py            # fetch if due
     python3 tools/fetch_fx.py --bump     # ...and bump DATA_VERSION if it wrote
-    python3 tools/fetch_fx.py --check    # exit 1 if the file is missing/malformed
+    python3 tools/fetch_fx.py --check    # exit 1 if the file is missing, malformed,
+                                         #   short a WANTED currency, or holding a
+                                         #   rate outside its plausibility band
     python3 tools/fetch_fx.py --dry-run  # print what would be written
-    python3 tools/fetch_fx.py --force    # ignore both guards and write anyway
+    python3 tools/fetch_fx.py --force    # ignore the guards and write anyway
 
 Stdlib only, no build step. Network is used HERE, at authoring time, never by
-the site.
+the site — and NEVER by `--check`, which reads the committed file and nothing
+else, so it is the same check in flight mode, in CI and on a dead link.
 """
 
 import argparse
 import json
+import math
 import re
 import sys
 import urllib.request
@@ -63,6 +67,78 @@ WANTED = [
     "CHF", "SEK", "NOK", "DKK", "PLN", "CZK", "MXN", "BRL", "ZAR",
     "AED", "TRY", "ILS", "WST", "TOP", "PGK", "XPF",
 ]
+
+# Roughly what one NZD bought on 2026-08-16, to 3 significant figures. These
+# are ANCHORS, not expected values: a rate is checked against a band a factor
+# of BAND_FACTOR wide either side of its anchor, which is far too loose to
+# police the market and exactly tight enough to catch the ways this file
+# actually goes wrong — a decimal slip, a source that starts quoting the
+# inverse (JPY would fall from 93 to 0.011), a base currency swapped out from
+# under us, or a placeholder written where a number belongs.
+#
+# WHY FOUR. A band that tracked the market would fire on ordinary movement, and
+# a check that cries wolf is switched off within a week; this repo has written
+# that down more than once. Four was measured against the failures, not chosen
+# for roundness: a misplaced decimal point is a factor of TEN, so a ×10 band
+# lands the slip exactly on its own edge and passes it — probed, and it did.
+# Four refuses that while leaving a 30% move (or a doubling) untouched.
+#
+# THE COST, stated: a currency that genuinely loses three quarters of its value
+# against the dollar — a hyperinflating one over several years — will eventually
+# fall out of its band and fail this check. That is the right failure. The fix
+# is a human re-anchoring the entry with a new date, which reads like the
+# decision it is, and the message says so rather than leaving it to be guessed.
+#
+# WHAT THIS CANNOT DO is tell you whether the anchors themselves were right on
+# 2026-08-16. They came from the file they now guard, so they inherit whatever
+# it held that day. The band catches DRIFT away from a known-good snapshot; it
+# is not an independent valuation.
+BAND_FACTOR = 4
+ANCHORS = {
+    "NZD": 1.0,
+    "AED": 2.16, "AUD": 0.831, "BRL": 3.05, "CAD": 0.817, "CHF": 0.478,
+    "CNY": 3.96, "CZK": 12.3, "DKK": 3.80, "EUR": 0.509, "FJD": 1.30,
+    "GBP": 0.435, "HKD": 4.62, "IDR": 10500.0, "ILS": 1.74, "INR": 56.2,
+    "JPY": 93.7, "KRW": 832.0, "MXN": 10.0, "MYR": 2.40, "NOK": 5.56,
+    "PGK": 2.58, "PHP": 36.2, "PLN": 2.19, "SEK": 5.60, "SGD": 0.752,
+    "THB": 19.5, "TOP": 1.40, "TRY": 28.2, "TWD": 18.8, "USD": 0.589,
+    "VND": 15200.0, "WST": 1.57, "XPF": 60.7, "ZAR": 9.52,
+}
+
+
+def rate_problems(rates):
+    """Every complaint about a `{code: rate}` table, as a list of strings.
+
+    Shared by `--check` (the committed file) and the write path (a freshly
+    fetched one), because a bad rate is equally bad in both places and the
+    write path is the cheaper of the two to catch it in — nothing has shipped
+    yet. Pure: no network, no git, no clock.
+    """
+    problems = []
+    for code in WANTED:
+        if code not in rates:
+            problems.append(
+                f"{code} is in WANTED but has no rate. A currency the source "
+                f"quietly stops publishing used to vanish from the settings "
+                f"list with nothing said — if it is genuinely gone, take it "
+                f"out of WANTED in tools/fetch_fx.py and say why")
+    for code, v in sorted(rates.items()):
+        if not (isinstance(v, (int, float)) and not isinstance(v, bool)
+                and math.isfinite(v) and v > 0):
+            problems.append(f"rate for {code} is {v!r} — not a positive finite number")
+            continue
+        anchor = ANCHORS.get(code)
+        if anchor is None:
+            problems.append(
+                f"{code} has a rate but no anchor in ANCHORS — a rate nothing "
+                f"bounds is a rate no check can refuse")
+        elif not (anchor / BAND_FACTOR <= v <= anchor * BAND_FACTOR):
+            problems.append(
+                f"rate for {code} is {v} — outside the plausibility band "
+                f"[{anchor / BAND_FACTOR:g}, {anchor * BAND_FACTOR:g}] around "
+                f"its {anchor:g} anchor. Either the source is wrong or the "
+                f"anchor in tools/fetch_fx.py has aged out; decide which")
+    return problems
 
 
 def fetch(url):
@@ -188,17 +264,19 @@ def check():
     if doc.get("base") != BASE:
         problems.append(f"base is {doc.get('base')!r}, expected {BASE!r}")
     if doc.get("rates", {}).get(BASE) != 1.0:
-        problems.append(f"the base currency's own rate must be exactly 1.0")
-    for code, v in (doc.get("rates") or {}).items():
-        if not (isinstance(v, (int, float)) and v > 0):
-            problems.append(f"rate for {code} is {v!r}")
+        problems.append("the base currency's own rate must be exactly 1.0")
+    problems += rate_problems(doc.get("rates") or {})
     if not isinstance(doc.get("asOf"), str):
         problems.append("asOf must be an ISO date — the app tells readers how old the rates are")
     if problems:
         for p in problems:
             print(f"fx.json: {p}", file=sys.stderr)
         return 1
-    print(f"fx.json OK — {len(doc['rates'])} rates, base {doc['base']}, as at {doc['asOf']}")
+    # Say the POPULATION, not just the verdict: "35 rates" is only reassuring
+    # beside the number wanted, and a rate the source stopped publishing used
+    # to show up here as a smaller number nobody was comparing against anything.
+    print(f"fx.json OK — {len(doc['rates'])} of {len(WANTED)} wanted rates, all "
+          f"inside a ×{BAND_FACTOR} band, base {doc['base']}, as at {doc['asOf']}")
     return 0
 
 
@@ -209,9 +287,10 @@ def main():
     ap.add_argument(
         "--force",
         action="store_true",
-        help="ignore both guards (already-fetched-today, and no-rate-moved) and write "
-        "anyway. Rarely wanted: a write with identical numbers costs every installed "
-        "phone a re-download of the data cache for nothing.",
+        help="ignore the two NOISE guards (already-fetched-today, and no-rate-moved) "
+        "and write anyway. Rarely wanted: a write with identical numbers costs every "
+        "installed phone a re-download of the data cache for nothing. It does NOT "
+        "bypass the plausibility band — that one is about correctness, not noise.",
     )
     ap.add_argument(
         "--bump",
@@ -232,10 +311,25 @@ def main():
 
     doc, missing = build()
     if missing:
-        # Not fatal: a currency the source doesn't carry simply isn't offered.
-        # Saying so is the point — a silently absent rate becomes a currency the
-        # settings list quietly drops with no explanation.
         print(f"warning: source has no rate for {', '.join(missing)} — omitted", file=sys.stderr)
+    # The band applies to what we are about to WRITE, not only to what is
+    # already committed. Catching it here costs nothing and catches it before
+    # it ships; catching it in --check catches it after. Previously a missing
+    # currency was a stderr warning nobody reads in a scheduled job's log, and
+    # the file was written without it.
+    # NOT bypassed by --force, deliberately. --force exists to defeat the two
+    # NOISE guards (fetched-today, no-rate-moved); this is a CORRECTNESS guard,
+    # and a flag whose stated purpose is "write anyway" must not double as a
+    # licence to ship a corrupt rate. When an anchor has genuinely aged out the
+    # escape is to re-anchor it in ANCHORS above — an edit a reviewer can see,
+    # which is the point.
+    bad = rate_problems(doc.get("rates") or {})
+    if bad:
+        for p in bad:
+            print(f"refusing to write fx.json: {p}", file=sys.stderr)
+        print("\nNothing was written. The committed rates stay as they are, "
+              "which is the safe side of this: stale beats wrong.", file=sys.stderr)
+        return 1
     text = json.dumps(doc, ensure_ascii=False, indent=2) + "\n"
     if args.dry_run:
         print(text)
