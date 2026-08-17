@@ -7708,3 +7708,33 @@ bumped anyway, deliberately, because an unbumped pin makes the next session
 re-read six commits already read. 🔑 **Run the drift check at CLOSE as well as
 at open** — it was clean at 09:30 and six commits behind by 12:30, and the ones
 that moved it were ours.
+
+### Postscript — asked to prove the session was ready to close, and it was not
+
+Two closes were declared before this one. The first was wrong (main went red
+under an ADR collision and a swept peer file); the second was wrong in a quieter
+way, and only a direct challenge found it.
+
+🔎 **A `grep` for the removed element's id found three live references, none of
+them code.** `app.css` still described the ask as reusing `.list-toggle` — the
+exact borrowing [ADR 0083] deliberately stopped, because a permission must not
+read as a filter you can flip back off. An `index.html` comment still pointed at
+the pill. And **`docs/ARCHITECTURE.md`, the compact current-truth document,
+still described the entire location flow in terms of a button that no longer
+exists** — every clause of that paragraph false, in the file CLAUDE.md
+specifically requires updating when the architecture changes. I had skipped it.
+
+🔑 **Why no gate could have caught any of it.** `linkscan` reads links,
+`pathscan` reads paths, `plainscan` reads prose style. **Nothing reads an
+element id or a CSS selector mentioned inside a comment.** So a comment naming a
+deleted element is invisible to every enforced check while sitting directly
+beside the code it misdescribes — which is exactly where the next reader trusts
+it most. The id-durability item filed earlier today was widened to cover
+comments and docs, not just assertions, on this evidence.
+
+🎯 **The transferable bit: "verified" has to mean the thing the reader will
+next rely on, not the thing I happened to change.** Every test and all twelve
+browser checks were green through both premature closes, and they still are —
+they exercise behaviour, and none of these three faults is behavioural. A green
+suite is evidence about the code and says nothing whatever about whether the
+prose beside it is still true.

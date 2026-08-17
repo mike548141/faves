@@ -3999,6 +3999,25 @@ loanword "supper" — unfortunate on a food app, though context resolves it).
       rather than deleted. Where the question died with the element, delete the
       assertion — a check kept for an intent nobody holds any more is the same
       fault from the other end.
+      🚩 **WIDEN IT TO COMMENTS AND PROSE — measured 2026-08-17, hours after
+      this item was filed.** Asked to prove the session was ready to close, a
+      sweep for `geo-ask` found **three** live references to the deleted pill
+      that no gate sees, because none of them is code:
+      `site/css/app.css` still said the ask *"reuses the single-chip
+      `.list-toggle` look"* (the exact thing [ADR 0083] deliberately stopped
+      doing — a permission must not read as a filter you can flip off), an
+      `index.html` comment inside the retired Sort By block still pointed at it,
+      and — the real one — **`docs/ARCHITECTURE.md`, the compact current-truth
+      document, still described the whole location flow in terms of a button
+      that no longer exists.** Every clause of that paragraph was false.
+      🔑 **The gates cannot help here and it is worth being precise about why:**
+      `linkscan` reads links, `pathscan` reads paths, `plainscan` reads prose
+      style. **Nothing reads a CSS selector or an element id mentioned inside a
+      comment**, so a comment naming a deleted element is invisible to every
+      enforced check while sitting directly beside the code it misdescribes —
+      which is where the next reader will trust it most. So the sweep is
+      `grep` for every `#id` and `.class` named in a comment or a doc, not only
+      those named in an assertion.
       ⚑ **Related but distinct, so do not merge them:** the CI item above is
       about which checks *run*; this is about whether a check that runs still
       *refers to anything*. A check can pass both and still be worthless.
