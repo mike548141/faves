@@ -27,11 +27,13 @@ content freshness separately from this file.
   and the currency. The Settings option formerly called "Imperial (miles, °F)"
   is now called **"US customary (miles, °F)"**, which is what it always was;
   anyone who had chosen it sees no change but the name.
-- **A home-screen link can now carry the takeaway/dine-in filter**, under
-  `?order-mode=takeaway`. The filter's internal name changed from `service` to
-  `order-mode` (one word had come to mean three different things), and a link
-  written under the old `?service=` spelling is still honoured — it filters the
-  list exactly as it did before, rather than quietly widening to every place.
+- **A hand-written home-screen link can now carry the takeaway/dine-in filter**,
+  under `?order-mode=takeaway`, and the older `?service=` spelling works too.
+  The filter's internal name changed from `service` to `order-mode` — one word
+  had come to mean three different things. This is a **new** ability rather than
+  a preserved one: neither spelling was read from a link before, so
+  `?service=takeaway` used to be ignored and you got every place. The app still
+  does not put either key into the links it makes, so nothing you share changes.
   Nothing on screen is worded differently.
 - **The search box now sits above "If it's your first time, try…"** on every
   menu, instead of below it. Search is what a returning reader came for, and it
