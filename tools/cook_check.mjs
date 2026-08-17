@@ -758,7 +758,7 @@ async function run(opts) {
       );
 
       // The 1× render of this step, kept for the scale block at the very END of
-      // this run (37p). It is measured here and asserted there on purpose: the
+      // this run. It is measured here and asserted there on purpose: the
       // wake-lock sections between the two count every request and release
       // cumulatively, so an extra open/close in the middle makes three later
       // assertions fail on numbers that were never about it. A check that
@@ -1155,7 +1155,7 @@ async function run(opts) {
       `${listClosed.held} held after close`
     );
 
-    // --- 12b. The scale the reader chose has to come THROUGH (37p) --------
+    // --- 12b. The scale the reader chose has to come THROUGH (17a) --------
     // The owner picked 2× on the recipe page, tapped Start cooking, and the
     // step told him ¾ cup where the page above him said 1½ cups (2026-08-17).
     // Nothing caught it: the picker lives in recipe.js, cook mode had never

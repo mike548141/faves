@@ -1,7 +1,22 @@
 - [ ] **17a — Serves, and scaling it** `[M][schema][design]` — ⚠️ **CLAIM
   RELEASED 2026-08-16 22:59 UTC. The scaling half is SHIPPED (see the block
   above); what is left is the `serves` half and it is OWNER-BLOCKED, not
-  unclaimed work** — `serves` is on 3 of 24 recipes and can only come from him.
+  unclaimed work**
+  🛑 **THE SCALING HALF SHIPPED WITH A HOLE, found by the owner in his own
+  kitchen 2026-08-17 and closed the same day (`5403552`).** The picker was
+  built into `recipe.js`; **cook mode never knew it existed**, so picking 2×
+  and tapping Start cooking gave a step panel reading ¾ cup under a page
+  reading 1½ cups. Nothing caught it — `quantity.js`'s 23 unit tests, the
+  corpus sweep and `recipe_check`'s 7 scaler assertions were all about the
+  *page*, and `cook_check`'s 75 were all about a screen opened at 1×. **Two
+  correct halves, never introduced.** The scale now travels as a getter read at
+  the tap; the panel, the read-aloud text and a "2× mixture" badge all carry it;
+  a refused line keeps its "as written" mark there too. `cook_check` gained four
+  assertions (+ a break-probe: making `shownLine` ignore the scale fails them).
+  🔑 **The generalisable bit for whoever finishes the `serves` half:** a value
+  chosen on one screen and consumed on another has no natural gate, because
+  every test on each side passes. Ask what *else* reads it before calling a
+  picker done. — `serves` is on 3 of 24 recipes and can only come from him.
   🎯 The one piece anyone may take without him: surface the **4 yields already
   stated in prose** (`"Makes 21"`, `"Makes 10–15"`), which invents no facts.
   Former claim (wt: faves-cook2, branch `cook-recipes-17`). Files:

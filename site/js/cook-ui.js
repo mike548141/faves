@@ -126,7 +126,7 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
   // a recipe that moved to components (ingredients.js, ADR 0070).
   const ingredients = ingredientKeys(item.ingredients);
 
-  // ── The scale the reader chose on the page they came from (17a/37p) ───────
+  // ── The scale the reader chose on the page they came from (17a) ───────────
   // The picker lives on the recipe page; cook mode had no idea it existed, so
   // "2×" on the page and "¾ cup" in the step were the same recipe disagreeing
   // with itself while someone stood over a bowl (owner, 2026-08-17).

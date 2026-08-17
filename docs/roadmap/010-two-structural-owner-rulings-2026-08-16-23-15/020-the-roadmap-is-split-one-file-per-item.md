@@ -22,7 +22,15 @@ He was offered the cheap fix — reword the rule so the unit is the item's
 rule becomes correct **as written** instead of correct-once-reworded, and the
 two repos stop diverging.
 
-🛑 **STATE: OWNER-RULED · UNCLAIMED · BLOCKED ON QUIESCENCE.** Those are three
+⚠️ **Everything from here down is the PRE-EXECUTION narrative, superseded
+2026-08-17 when the split landed.** It is kept because the precondition and how
+it was checked are the interesting part, but read it as history: the stop below
+no longer binds anyone, and a reader meeting it as live instruction would stand
+off an item that is finished. Re-verified 2026-08-17 at the close: 48 sections,
+86 item files, the index generated and the `board` floor check green.
+
+🛑 **STATE (as it stood before execution): OWNER-RULED · UNCLAIMED · BLOCKED ON
+QUIESCENCE.** Those are three
 different things and the third is not an invitation — `faves-hygiene` declined
 it deliberately, on the ruling's own precondition, and was right to.
 **Do NOT pick this up as free work.**

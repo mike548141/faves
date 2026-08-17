@@ -4425,7 +4425,7 @@ body.faves-view .to-top {
   border-left: 3px solid var(--warn);
   padding-left: var(--space-1);
 }
-/* The same mark inside cook mode (37p). Its list already indents 1em for the
+/* The same mark inside cook mode (17a). Its list already indents 1em for the
    bullet, so the rule is added to that rather than replacing it — the bullet is
    absolutely positioned against the padding box and stays where it was. Cook
    mode shows a refused line to someone holding the bowl, so if anywhere needs

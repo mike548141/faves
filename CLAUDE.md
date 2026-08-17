@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@19eb0e2`, owner-ratified 2026-07-25, bumped 2026-08-17)
+## Doctrine — inherited from atelier (pinned `atelier@0af3006`, owner-ratified 2026-07-25, bumped 2026-08-17)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -23,7 +23,9 @@ in atelier and is read on demand — never wholesale.
   and the likely impact in plain language first. The principal's authority is
   absolute — never overrule him, even if you believe him uninformed; an approval
   given without that account is open to challenge on the briefing, and the
-  challenge is raised to him by re-briefing (`00-APEX.md`). Everything
+  challenge is raised to him by re-briefing (`00-APEX.md`) — and at *this*
+  floor the re-briefing comes **before** the action, never after it, because
+  what the floor guards cannot be taken back. Everything
   recoverable — commit/push/PR included — just proceed.
 - **Concurrency:** assume another session may be live — a clean tree is not
   proof you're alone. `git pull --rebase --autostash` at session start; push
@@ -44,7 +46,15 @@ in atelier and is read on demand — never wholesale.
   is what makes this sentence true as written.) Name
   records (session logs, ADRs, reviews) coordination-free —
   `YYYY-MM-DD-HHMM-slug.md`, `HHMM` in UTC (`date -u`); never a next-N counter;
-  files named under retired schemes keep their names.
+  files named under retired schemes keep their names. Where sessions can message
+  each other, announce your **file set** on open and answer peers' — a claim says
+  what, never which files. A message reserves nothing; only a pushed artefact
+  does, so check a shared allocator (identifiers, version constants) **after**
+  the push. The shared checkout's index and its mid-rebase state are shared
+  surfaces too: stage explicit paths, and read the staged hunk headers before
+  every commit (`CONCURRENCY.md` § The channel). (That section is *this repo's
+  own* practice promoted to house doctrine at `46dd5a0`, bearing 2026-08-13 to
+  2026-08-17 — so these three sentences come home rather than arrive.)
 - **Session rhythm (points up for the full rule):** claim work you take off the
   shared queue before starting it, and let a live `[~]` claim override a
   standing instruction to take that item; stay in the lane you were given
@@ -53,7 +63,12 @@ in atelier and is read on demand — never wholesale.
   before you declare the work wrapped, do the put-away unprompted and close
   with an evidence-based all-clear that nothing owed is left uncaptured
   (`RECORD.md`) — and when that close pushes, the all-clear cites the pushed CI
-  result (or flags it pending), never just a green local scan.
+  result (or flags it pending), never just a green local scan. **A cancelled run
+  is not a result**, and a concurrent session cancels yours as a matter of
+  routine — so at several live sessions that is the ordinary case, not the
+  exotic one. (Owner-ruled 2026-08-17: this clause enriches past the canonical
+  floor region, and enriching means owning the *whole* clause — without this
+  sentence ours was satisfiable by exactly the evidence the source rejects.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
   session start run `git -C "../atelier" fetch -q && git -C "../atelier" log
   --oneline <pin>..origin/main` using the **pin SHA in the heading above** —
@@ -70,6 +85,19 @@ in atelier and is read on demand — never wholesale.
   are now clean. Deriving the baseline from the pin makes the two incapable of
   diverging; reading it from `origin/main` stops a stale checkout hiding real
   movement.)
+- **Two deliberate forks from the canonical floor region (owner-ruled
+  2026-08-17) — keep them, and here is why.** A stamped copy is meant to match
+  its source; these two do not, on purpose, so the day atelier's `stampscan`
+  starts diffing children the answer is already written rather than argued.
+  (1) **`Source & drift` above is ours, and it is the better text.** The
+  region's own command is `git -C <path> log --oneline <SHA>..HEAD` — no fetch,
+  and bare `HEAD` — which ships the exact stale-checkout silent pass this repo
+  diagnosed and fixed on 2026-08-09. Converging would be adopting a known
+  defect; the finding is queued upstream instead. (2) **The apex bullet
+  substitutes three `00-APEX` practice clauses for the region's ordering
+  rationale.** Richer, not corrective — kept because the practice clauses are
+  what a session can act on at 3am and the rationale is not, and recorded here
+  so nobody "fixes" it back by reflex.
 - **Estate resources — point up, don't re-derive:** providers & account plans,
   financial constraints & plan entitlements, licences, credentials, shared
   estate tooling, and the estate inventory live in the operator's **private

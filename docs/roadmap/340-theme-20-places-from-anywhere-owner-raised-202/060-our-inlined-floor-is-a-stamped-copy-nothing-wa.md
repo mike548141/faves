@@ -217,8 +217,30 @@
   holds.** Evidence is this repo's own state on 2026-08-17, measured by three
   independent sessions, not testimony.
 
-⏳ **A KNOWN, DATED DEBT ON THIS ITEM — the next pin bump owes a re-inline
-(2026-08-17).** atelier added a clause to the **canonical floor region** at
+✅ **THE DEBT BELOW IS DISCHARGED — pin bumped `19eb0e2` → `0af3006` with the
+re-inline in the same commit, 2026-08-17.** The floor region's diff across that
+range was taken directly (`floor:begin`/`floor:end` extracted at both SHAs and
+diffed, rather than reading the method files and hoping), and it is exactly two
+edits: the always-confirm floor gains *re-brief **before** the irreversible
+action, never after*, and the concurrency bullet gains the three channel
+sentences. Both are now inlined verbatim. **And the owner ruled the two open
+decisions the same day:**
+- **(b) the cancelled-run sub-clause: ADDED.** Our close clause enriches past
+  the region, and enriching means owning the whole clause — without it, ours
+  was satisfiable by exactly the evidence the source rejects.
+- **(c) the two forks: KEPT, with the reason recorded in `CLAUDE.md` itself.**
+  `Source & drift` is ours and is the *better* text (the region's command has no
+  fetch and reads bare `HEAD` — the stale-checkout silent pass this repo already
+  diagnosed), so converging would adopt a known defect; the apex substitution is
+  richer rather than corrective and is kept for the same reason it was written.
+  Recorded at the point of use so `stampscan`'s future red has an answer waiting
+  instead of an argument.
+- **(a) the dirty-checkout wording: MOOT.** The split board landed 2026-08-17,
+  so the inherited rule is correct *as written* and needs no local re-wording —
+  which is what the owner ruled when he chose the structure over the reword.
+
+⏳ **The debt as it stood (2026-08-17), kept because the shape is the lesson:**
+atelier added a clause to the **canonical floor region** at
 `46dd5a0`, so this repo's inlined block gains **three sentences** the next time
 the pin moves. Two sessions relayed it independently and both confirmed the same
 thing: **nothing reds a commit today**, because the pin here is `19eb0e2`, which
