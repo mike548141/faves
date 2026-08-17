@@ -4,7 +4,7 @@
 
 Board doctrine and the checkbox legend:
 [roadmap/README.md](roadmap/README.md). One item per file; edit the item,
-then `python3 "$ATELIER_TOOLS"/board.py rebuild`.
+then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebuild`.
 
 ## 🎯 TWO STRUCTURAL OWNER RULINGS — 2026-08-16 23:15 UTC
 

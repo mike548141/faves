@@ -9,10 +9,9 @@ section's narrative lives in that section's `README.md`.
 Edit an item, then rebuild:
 `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebuild`
 — the tool is atelier's and this repo does not vendor a copy of it, so the
-command resolves it the same way `.githooks/pre-commit` does. (The index's own
-banner names `$ATELIER_TOOLS` alone, which is the hook's *first* choice and is
-unset on a machine that uses the git-config spelling; the form above is true
-either way.) The `board` floor check blocks a commit whose index is stale, and
+command resolves it the same way `.githooks/pre-commit` does. It is the same
+line the index's own banner prints, so either one can be pasted.
+The `board` floor check blocks a commit whose index is stale, and
 after a merge conflict on the index **rebuilding _is_ the resolution**. The
 session-start read is the index; open item files on demand.
 
