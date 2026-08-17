@@ -6,10 +6,15 @@ its checkbox line first, detail beneath, its own `git log` as provenance —
 which commit flipped its state, and what work that commit carried. Each
 section's narrative lives in that section's `README.md`.
 [`../ROADMAP.md`](../ROADMAP.md) is the **generated index** — never hand-edited.
-Edit an item, then `python3 tools/board.py rebuild`; the `board` floor check
-blocks a commit whose index is stale, and after a merge conflict on the index
-**rebuilding _is_ the resolution**. The session-start read is the index; open
-item files on demand.
+Edit an item, then rebuild:
+`python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebuild`
+— the tool is atelier's and this repo does not vendor a copy of it, so the
+command resolves it the same way `.githooks/pre-commit` does. (The index's own
+banner names `$ATELIER_TOOLS` alone, which is the hook's *first* choice and is
+unset on a machine that uses the git-config spelling; the form above is true
+either way.) The `board` floor check blocks a commit whose index is stale, and
+after a merge conflict on the index **rebuilding _is_ the resolution**. The
+session-start read is the index; open item files on demand.
 
 The current work plan (Phases 0–7 in [`../WORKPLAN.md`](../WORKPLAN.md)) takes
 us to a launched, installable, offline menu browser. This board is what comes

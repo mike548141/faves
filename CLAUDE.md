@@ -166,13 +166,18 @@ python3 tools/check_fallback.py # the no-JS <ul> in site/index.html still mirror
 python3 tools/check_decisions.py # every ADR is in the decisions index (it's the
                               # allocator — an unindexed record is how a number
                               # gets reused; seven were missing on 2026-08-16)
-python3 tools/board.py        # docs/ROADMAP.md is GENERATED from docs/roadmap/ —
-                              # one file per item (owner-ruled 2026-08-16). Edit the
-                              # ITEM, never the index, then `board.py rebuild` in the
-                              # same commit; the floor blocks a stale index, and after
-                              # a merge conflict on the index rebuilding IS the
-                              # resolution. This file is a shim: the tool is atelier's,
-                              # children don't vendor the floor's scanners
+python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py # docs/ROADMAP.md
+                              # is GENERATED from docs/roadmap/ — one file per item
+                              # (owner-ruled 2026-08-16, ADR 0086). Edit the ITEM, never
+                              # the index, then re-run with `rebuild` IN THE SAME COMMIT;
+                              # the floor blocks a stale index, and after a merge
+                              # conflict on the index rebuilding IS the resolution.
+                              # The long invocation is deliberate: the tool is atelier's
+                              # and children don't vendor the floor's scanners, so this
+                              # resolves it exactly as .githooks/pre-commit does. A
+                              # `tools/board.py` shim existed 2026-08-17 only because the
+                              # generated banner named a file no child has; atelier fixed
+                              # the generator and the shim went the same day
 python3 tools/check_versions.py --range origin/main..HEAD # sw.js versions bumped
                               # in lockstep with site/. Use the RANGE form to check
                               # finished work: bare, it reads only *staged* changes,

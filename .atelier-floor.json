@@ -1,3 +1,18 @@
 {
-  "licence": "Apache-2.0"
+  "licence": "Apache-2.0",
+  "scope": {
+    "pathscan": {
+      "paths": [
+        "docs/roadmap",
+        "docs/decisions",
+        "docs/ARCHITECTURE.md",
+        "docs/WORKPLAN.md",
+        "README.md",
+        "CLAUDE.md",
+        "CONTRIBUTING.md",
+        "tools"
+      ],
+      "why": "Adopted from atelier's PS4 (ruled 2026-07-28): the gateable surface is the live documents, with the RECORD stores named out. A record describes the tree as it stood when it was written and has no time axis, so it can never come clean without markers that would falsify it \u2014 docs/SESSIONS.md carries five references to paths that were true on the day. Forced here on 2026-08-17 when retiring the tools/board.py shim turned four honest session-log mentions of it into permanent findings. Cover given up: a stale path inside a record is not flagged, which is the intended trade."
+    }
+  }
 }

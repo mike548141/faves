@@ -72,6 +72,15 @@ renders add-ons now, so ADR 0047 lets the payload carry them. The paragraph
 stays as the design input it was.
 
 **Three things 14a left open, named rather than hidden.**
+- ✅ **FIXED 2026-08-17 (`8e3b35c`, by the cold-review session).** The key is now
+  the tag minus `-option`, so a claim resolves to its own contradiction list
+  rather than to the first list that mentions it. All three faces reproduced
+  before the fix and asserted after: `vg` + an option *stating* `vg` while
+  carrying dairy now drops; `vg` + a dairy-only option still drops as
+  `not-stated`; `vg` + a `v`-only option still survives. Tests carry the paired
+  `gf` control this item asked for, and `addon_check` gained an assertion that a
+  refused fourth sauce keeps the peanut warning. The account below stands as the
+  finding's record.
 - 🛑 **`composeTags` checks a vegan claim against the WRONG contradiction list —
   latent today, live the moment a venue writes one option.** `[S][js]` Found
   2026-08-16 while adding `vg-option`; **reproduced twice and measured, because

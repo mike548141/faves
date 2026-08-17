@@ -101,7 +101,10 @@ recipe and Cook at Home screens that offer cook mode.
   operation that could do that.
 - **Edit the item, never `docs/ROADMAP.md`.** The index is generated; the
   `board` floor check blocks a commit whose index is stale. Run
-  `python3 tools/board.py rebuild` in the same commit as the item edit.
+  `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebuild`
+  in the same commit as the item edit. The tool is atelier's and this repo
+  does not vendor a copy, so the command resolves it the way the pre-commit
+  hook does.
 
 ## Committing
 

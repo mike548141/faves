@@ -76,10 +76,12 @@ as a multiset over every non-heading source line.
   which of them become items is a later, deliberate pass.
 - **Vendoring `board.py` into `tools/`.** The floor's scanners are atelier's, one
   source; children do not carry a copy (`.githooks/pre-commit`, ADR 0008). What
-  landed instead is a shim that resolves atelier's tool by the hook's own order,
-  because the generated banner names `python3 tools/board.py rebuild` — true in
-  atelier, false in every child, and printed at the top of the one file readers
-  are told not to hand-edit.
+  landed instead was a *shim* resolving atelier's tool by the hook's own order,
+  because the generated banner named a file that existed only in atelier — and
+  it was printed at the top of the one file readers are told not to hand-edit.
+  **Retired 2026-08-17**: atelier fixed the generator (its banner now names no
+  path at all), so the shim's only job was gone and it went. See the
+  Consequences note below.
 
 ## Consequences
 
@@ -93,13 +95,20 @@ as a multiset over every non-heading source line.
 - Items' position *within* a theme's narrative is no longer expressed;
   cross-item prose references degrade to section level. Known cost, accepted
   upstream and inherited here.
-- Two holes were opened in the floor's boundary, each reasoned in the file that
-  opens it: `docs/ROADMAP.md` is exempt from `wrapscan` (the generator's banner
-  is 115 columns and a rebuild overwrites any hand-wrap) and from `pathscan`
-  (the index renders link *text* as a path-shaped string, which produced 49
-  false findings per commit — a warn-only check that always fires is a check
-  nobody reads). `linkscan`, which checks the links themselves, stays enforced
-  over the whole board and passes.
+- ⚠️ **Two holes were opened in the floor's boundary to land this, and BOTH ARE
+  NOW CLOSED (2026-08-17).** `docs/ROADMAP.md` was exempted from `wrapscan` (the
+  banner ran 115 columns and a rebuild overwrote any hand-wrap) and from
+  `pathscan` (the index rendered link *text* as a path-shaped string, 49 false
+  findings per commit). Both were symptoms of the same upstream cause and were
+  reported there rather than lived with: the wrapscan overflow was **not** the
+  file's shape but a trailing eye-flag putting a legal wrap point after an
+  otherwise-exempt unbreakable path token — 13 of 15 findings were exactly the
+  flag-bearing lines. atelier's generator now renders flags *before* the link
+  and emits a short banner, so faves measures **0 wrapscan and 0 pathscan
+  findings on the index with no ignore file present**, verified in a tree with
+  both files deleted. `.wrapscanignore` and `.pathscanignore` are gone with the
+  shim. 🔑 **An exemption written with its reason is one somebody can come back
+  and delete; the reason is what made the round trip possible.**
 - Re-prioritising is a rename: sections and items are numbered by tens.
 - **The deliberate later pass ran the same day** (owner-authorised): 15 lettered
   sub-items in themes 32, 33 and 36 were lifted into item files on a checkable
