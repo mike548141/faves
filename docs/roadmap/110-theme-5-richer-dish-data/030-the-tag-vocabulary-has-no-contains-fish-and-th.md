@@ -1,4 +1,16 @@
-- [ ] 🎯 ⚑ **The tag vocabulary has no `contains-fish`, and three sub-agents
+- [x] ⚠️ **ANSWERED AND SUPERSEDED by `010` in this same section — its ⚑ is
+      discharged and its substance now lives there.** Marked 2026-08-17 by a
+      board sweep. This item ends *"⚑ Owner's call … Recorded, not acted on"*,
+      which was true when written and is not now: `010` records the ruling
+      (**ADD `contains-fish`, land it WITH 37n**) and both smaller holes were
+      adopted and shipped 2026-08-16. **Verified in the tree, not read off the
+      sibling item:** `vg-option` and `df-option` are both in
+      `tools/test_validate.py`'s vocabulary fixture, and `test_validate.py`
+      carries a mutation that drops `df-option` from the vocabulary and expects
+      the gate to catch it. `contains-fish` remains owed and is tracked at `010`,
+      blocked on 37n's report rather than on a decision. Original filing
+      follows —
+      🎯 ⚑ **The tag vocabulary has no `contains-fish`, and three sub-agents
       found it independently on one day** `[S][schema]` (2026-08-16). The closed
       set carries `contains-shellfish` and **nothing for finned fish** — one of
       the major declarable allergens, and the one this corpus meets constantly.

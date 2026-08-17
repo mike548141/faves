@@ -76,7 +76,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - [ ] [RULED 2026-08-16 — ADD contains-fish, and land it WITH 37n.](roadmap/110-theme-5-richer-dish-data/010-ruled-2026-08-16-add-contains-fish-and-land-it.md)
 - [ ] [✅ RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
-- [ ] 🎯 [⚑ The tag vocabulary has no contains-fish, and three sub-agents](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
+- ✅ [⚠️ ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
 
 ## Theme 6 — North star: the health tie-in
 
@@ -159,7 +159,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [17b — Step timings and a tap-to-start timer](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/020-17b-step-timings-and-a-tap-to-start-timer.md)
 - [ ] [17c — Quantities inside the step](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/030-17c-quantities-inside-the-step.md)
 - [~] [17e — The rest of what the research turned up](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/040-17e-the-rest-of-what-the-research-turned-up.md)
-- [ ] [Cook mode ignores the scale the reader chose on the recipe page](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/050-cook-mode-ignores-the-recipe-page-s-scale.md)
+- ✅ [SHIPPED — cook mode carries the reader's scale](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/050-cook-mode-ignores-the-recipe-page-s-scale.md)
 
 ## Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)
 
@@ -217,16 +217,17 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md)*
 
-- [ ] [🚩 ~~cook_check.mjs is~~ THE SHARED HARNESS is FLAKY under machine](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/010-cook-check-mjs-is-the-shared-harness-is-flaky.md)
+- [~] [🚩 PART-DONE, not open — the mechanism half shipped (ecbc82e), the](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/010-cook-check-mjs-is-the-shared-harness-is-flaky.md)
 - [ ] [CI runs NONE of the browser checks](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/020-ci-runs-none-of-the-browser-checks.md)
-- [ ] [Two CI jobs run on every push and cannot block one](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/030-two-ci-jobs-run-on-every-push-and-cannot-block.md)
+- ⏳ [WAITING ON THE OWNER — (a) is shipped, (b) is his alone.](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/030-two-ci-jobs-run-on-every-push-and-cannot-block.md)
 - [~] [🚩 linkscan is blind to reference-style links, and it is an ENFORCED](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/040-linkscan-is-blind-to-reference-style-links-and.md)
-- [ ] 🛑 [CI runs none of the eight browser checks](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/050-ci-runs-none-of-the-eight-browser-checks.md)
+- ✅ [⚠️ SUPERSEDED 2026-08-17 by 020-ci-runs-none-of-the-browser-checks.md](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/050-ci-runs-none-of-the-eight-browser-checks.md)
 - [~] [Our inlined floor is a stamped copy nothing watches](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/060-our-inlined-floor-is-a-stamped-copy-nothing-wa.md)
 - [ ] [🚩 A browser check that names an element by id is only as durable as](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/070-a-browser-check-that-names-an-element-by-id-is.md)
 - [ ] [The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
 - [~] [The decision records have drifted from the decisions](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/090-the-decision-records-have-drifted-from-the-decisions.md)
 - [ ] [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
+- [ ] 🔎 [The board cannot say "decided, and the decision was not to do it"](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 

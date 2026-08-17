@@ -1,4 +1,15 @@
-- [ ] 🚩 **Two CI jobs run on every push and cannot block one** `[S][owner]` —
+- ⏳ **WAITING ON THE OWNER — (a) is shipped, (b) is his alone.** Marked
+      2026-08-17 by a board sweep; the first use of the legend's ⏳ state on this
+      board. (a) *promote the two advisory jobs to required* was **ruled and done
+      2026-08-16**, required checks 4 → 6, verified against the ruleset API. (b)
+      *whether admin bypass stays `always`* is deferred by the owner and the item
+      says it **"must not be changed for him"** — so this is not takeable work and
+      reading it as `[ ]` invites a session to take it. Also still true and
+      unclaimed by anyone: the job displayed as *"zero dependencies"* runs four
+      checks its name does not describe, and the cheap fix is a rename to
+      `repo invariants`. That half IS takeable; it is small enough to ride with
+      whatever next touches the workflow. Original filing follows —
+      🚩 **Two CI jobs run on every push and cannot block one** `[S][owner]` —
       found 2026-08-16 (wt: faves-schema30), verified against the ruleset API,
       not read off the workflow file. `protect-main` (ruleset 20597160, active)
       requires exactly **four** contexts: `floor / scanner floor` ·

@@ -1,4 +1,10 @@
-- [ ] 🚩 **~~`cook_check.mjs` is~~ THE SHARED HARNESS is FLAKY under machine
+- [~] 🚩 **PART-DONE, not open — the mechanism half shipped (`ecbc82e`), the
+      contention half is not repo work.** Marked 2026-08-17 by a board sweep;
+      free to pick up, not claimed. What remains is a loaded laptop, which no
+      commit fixes; what a session *could* still take is capping concurrent
+      browser checks or making the harness wait for a free slot. Original
+      filing follows —
+      🚩 **~~`cook_check.mjs` is~~ THE SHARED HARNESS is FLAKY under machine
       load, and flakiness is the failure mode that defeats every other guard
       rule we have** `[S][js]` — **RE-FILED 2026-08-17: this was never
       `cook_check`'s.**
