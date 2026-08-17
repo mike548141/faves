@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@e2fddc5`, owner-ratified 2026-07-25, bumped 2026-08-18)
+## Doctrine — inherited from atelier (pinned `atelier@e2fddc5`, owner-ratified 2026-07-25, bumped 2026-08-17)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives

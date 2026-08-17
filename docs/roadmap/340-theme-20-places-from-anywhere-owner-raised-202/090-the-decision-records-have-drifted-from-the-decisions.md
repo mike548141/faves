@@ -1,4 +1,5 @@
-- [ ] **The decision records have drifted from the decisions** `[S][docs]` —
+- [~] **The decision records have drifted from the decisions** `[S][docs]`
+      **CLAIMED 2026-08-17 12:35 UTC (wt: record-drift-0817-1235)** —
       found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`). **Five partial supersessions are unmarked**: 0069→0083,
       0080→0085, 0068→0069, 0045→0075, 0017→0074. A reader meeting the
       superseded record has nothing telling them to read on, which is the exact

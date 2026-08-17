@@ -239,7 +239,7 @@ decisions the same day:**
   so the inherited rule is correct *as written* and needs no local re-wording —
   which is what the owner ruled when he chose the structure over the reword.
 
-✅ **Second bump, `0af3006` → `e2fddc5`, 2026-08-18 (`8d38afc`) — re-inline in
+✅ **Second bump, `0af3006` → `e2fddc5`, 2026-08-17 (`8d38afc`) — re-inline in
 the same commit, as this item instructs.** 18 commits; three touch
 `docs/method/`, one binds. **BS1** (atelier `431f1f7`) corrects the very clause
 (a) was raised about, and the correction runs *opposite* to the direction this

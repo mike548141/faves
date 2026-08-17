@@ -1,5 +1,6 @@
-- [ ] 🚩 **Closing the sheet discards every running timer and its bell**
-      `[S][js][design]` — found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`). No warning, no persistence. Three
+- [~] 🚩 **Closing the sheet discards every running timer and its bell**
+      `[S][js][design]`
+      **CLAIMED 2026-08-17 12:35 UTC (wt: cook-fixes-0817-1235)** — found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`). No warning, no persistence. Three
       routes lose a timer: closing the sheet, reloading, and iOS discarding the
       tab. 🔎 **The measurement that makes this urgent rather than tidy: 10 of
       24 recipes carry their timer on the LAST step**, whose primary button is

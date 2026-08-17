@@ -1,5 +1,6 @@
-- [ ] 🛑 **`service` is renamed to `order-mode`, INCLUDING the shipped filter**
-      `[M][js]` — owner-ruled 2026-08-16, unclaimed. Not a rename: a rename
+- [~] 🛑 **`service` is renamed to `order-mode`, INCLUDING the shipped filter**
+      `[M][js]` — owner-ruled 2026-08-16.
+      **CLAIMED 2026-08-17 12:35 UTC (wt: order-mode-0817-1235)**. Not a rename: a rename
       **plus a URL compatibility path**, which is the part that must not be
       skipped. Unblocked since 2026-08-17 (37k landed), and it inherited a
       fourth filter axis while it waited.
