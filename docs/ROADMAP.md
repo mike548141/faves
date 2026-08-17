@@ -36,9 +36,13 @@ that must not be skipped:
   or it is decorative.
 Also in scope: `site/index.html`'s filter markup, `app.js`'s URL sync,
 `reo.js`'s gloss, and `tools/boot_check.mjs` (it reads filter element ids).
-⚠️ **Sequence it AFTER 37k's style filter lands** (wt `faves-cook2`, branch
-`style-37k`) — that work is live in `filters.js`, `app.js` and `index.html`
-right now and the two would conflict line-for-line.
+✅ **The sequencing gate is DISCHARGED 2026-08-17.** This item was held behind
+37k's style filter because that work was live in `filters.js`, `app.js` and
+`index.html`. **37k has landed** (`9aa6071`…`62546b4`, wt removed, claim
+released) — so `order-mode` is now unblocked and takeable. ⚠️ Note what it
+inherited while it waited: `filters.js` gained a **fourth** axis (`style`), so
+the rename touches one more select, one more `DEFAULT_FILTERS` key and one more
+URL parameter than the description above assumed.
 
 ### 2. 🛑 The roadmap is SPLIT — one file per item
 
@@ -2361,7 +2365,7 @@ recipes: **`serves` is set on 3** (Liège Waffles, the pudding, Tiramisu) and
 they can only come from the owner — the same shape as the empty `picks`
 problem. Sequence the content with the build or the feature ships blank.
 
-> ✅ **17a — THE SCALING HALF SHIPPED 2026-08-16** (wt: faves-cook2, `4f8dfb2` +
+> ✅ **17a — THE SCALING HALF SHIPPED 2026-08-16** (wt: faves-cook2, `f4c65e8` +
 > `fe88d20`). Recorded as **ADR 0076**. `site/js/quantity.js` is new; the
 > recipe page carries a ½ · 1× · 2× · 3× radiogroup above the ingredients.
 > 23 unit tests, `recipe_check` **22 → 29 assertions**, `node --test` 995 pass.
@@ -3362,8 +3366,8 @@ printing `FAIL <assertion>` with exit 1. Detail →
       (`boot_check` alone is seconds and catches the worst class); or leaving
       them manual and making the *list* impossible to skip. ⚑ Owner's call on
       whether CI minutes get spent here.
-      ✅ **RULED 2026-08-16: the FAST SUBSET, per push. `[S][tools]`
-      CLAIMED 2026-08-16 22:38 UTC (wt: faves-hygiene).** Wire **`boot_check.mjs` into
+      ✅ **RULED 2026-08-16: the FAST SUBSET, per push. `[S][tools]` — DONE
+      2026-08-17 (`344adfb`), claim discharged.** Wire **`boot_check.mjs` into
       `.github/workflows/ci.yml` on every push**; the other seven stay manual on
       CLAUDE.md's list. The full-CI and nightly options were both put to him with
       their costs and both declined.
@@ -3573,8 +3577,10 @@ printing `FAIL <assertion>` with exit 1. Detail →
 >   is not file-scoped. That cost 101 lines of misattributed work today.
 
 - [~] 🚩 **`linkscan` is blind to reference-style links, and it is an ENFORCED
-      floor guard** `[S][docs]` **CLAIMED 2026-08-16 22:38 UTC
-      (wt: faves-hygiene)** ⏳ **owed upstream to atelier; nothing to fix
+      floor guard** `[S][docs]` — **claim DISCHARGED 2026-08-17: the local half
+      is finished** (queued upstream, accepted as atelier `020/320`). The item
+      stays open **blocked on that upstream fix**, not on anyone here; there is
+      nothing to claim. ⏳ **owed upstream to atelier; nothing to fix
       locally.** Found 2026-08-16 when `pathscan` (warn-only) caught a broken ADR
       link in a commit that `linkscan` (enforced) had just passed.
       🔎 **Isolated with a two-line probe, not inferred.** A file containing both
@@ -3729,8 +3735,10 @@ around it. Detail → [`ROADMAP-DONE.md`](ROADMAP-DONE.md).
       which is contention, not a logic fault. So this needs a decision about
       which subset gates a merge and which run nightly, not just a workflow edit.
 
-- [~] **Our inlined floor is a stamped copy nothing watches** `[S][docs]`
-  **CLAIMED 2026-08-16 22:38 UTC (wt: faves-hygiene)** —
+- [~] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
+  **claim DISCHARGED 2026-08-17: the copy-vs-source check was done properly**
+  (results below). The item stays open on **three owner decisions** and on
+  atelier's ST3, not on a session; there is nothing to claim. —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s
   doctrine block is the sanctioned *stamped copy* shape (it names atelier,
   carries a pin, and compresses without contradicting), but it is stamped in
@@ -5866,7 +5874,8 @@ the checklist and the recipe data are all sound underneath. ✅ **All five are
 SHIPPED** — 37a, 37b and 37c/37d/37e each carry their own ✅ line below (claim
 released 2026-08-17: `wt: faves-tidy` no longer exists).
 ⚠️ **Later items in this theme are a different matter and are NOT covered by
-that release** — 37k is live-claimed by `wt: faves-cook2`, and 37n is open.
+that release** — 37k is **shipped 2026-08-16** (claim released; build complete,
+only the owner's tagging owed), and 37n is open.
 The released claim only ever covered the owner's original five.
 
 > ✅ **Shipped 2026-08-16** — 37a — the Clear ticks button goes. Detail →
