@@ -10,6 +10,7 @@ build but are printed so gaps (e.g. missing picks) stay visible.
 """
 
 from zoneinfo import ZoneInfo
+import difflib
 import json
 import math
 import re
@@ -104,8 +105,11 @@ def check_keys(rid, obj, allowed, where):
     for k in obj:
         if k in allowed:
             continue
-        near = [a for a in sorted(allowed) if a.lower() == str(k).lower()
-                or sorted(a.lower()) == sorted(str(k).lower())]
+        # difflib rather than a hand-rolled rule: the first version here matched
+        # only a case change or an anagram, which missed "adress" for "address"
+        # — a DROPPED LETTER, the commonest typo there is. A near-miss ratio
+        # covers insertion, deletion and transposition without enumerating them.
+        near = difflib.get_close_matches(str(k), sorted(allowed), n=1, cutoff=0.8)
         hint = f" — did you mean {near[0]!r}?" if near else ""
         err(rid, f"{where}: unknown key {k!r}{hint} (see the schema in "
                  f"docs/ARCHITECTURE.md). A key no screen reads ships to every "
