@@ -201,6 +201,9 @@
         {
           "name": "Money bags",
           "dishId": "money-bags",
+          "formerIds": [
+            "money-bag"
+          ],
           "code": "A7",
           "desc": "Crispy parcels filled with minced chicken and vegetables. Served with sweet and sour sauce.",
           "price": [
@@ -744,6 +747,9 @@
         {
           "name": "Duck noodle",
           "dishId": "duck-noodle",
+          "formerIds": [
+            "duck-noodle-soup"
+          ],
           "code": "S4",
           "desc": "Roasted duck in duck stock broth with rice noodles, bean sprouts, bok choy, spring, onion and coriander.",
           "price": [
@@ -785,6 +791,9 @@
         {
           "name": "Tom kha soup",
           "dishId": "tom-kha-soup",
+          "formerIds": [
+            "tom-kha"
+          ],
           "code": "SP1",
           "desc": "Thai coconut milk soup with herbs, tomatoes, carrots, mushrooms, cauliflower, cabbage and a choice of meat.",
           "price": [
@@ -825,6 +834,9 @@
         {
           "name": "Thai chilli",
           "dishId": "thai-chilli",
+          "formerIds": [
+            "thai-chilli-stir-fry"
+          ],
           "code": "F1",
           "desc": "Thai chilli paste stir-fried with a selection of meat, Thai basil, garlic, capsicum, condensed milk, long beans and courgette. Served with rice.",
           "price": [
@@ -847,6 +859,9 @@
         {
           "name": "Thai basil",
           "dishId": "thai-basil",
+          "formerIds": [
+            "gar-paow-basil-stir-fry"
+          ],
           "code": "F2",
           "desc": "Stir-fried basil with a selection of meat, long bean, carrot, bamboo shoot and capsicum. Served with rice.",
           "price": [
@@ -866,6 +881,9 @@
         {
           "name": "The cashew nut",
           "dishId": "the-cashew-nut",
+          "formerIds": [
+            "cashew-nut-stir-fry"
+          ],
           "code": "F3",
           "desc": "Stir-fried cashew nuts with a selection of meat, pineapple, mixed seasonal vegetables, onion, oyster sauce and capsicum. Served with rice.",
           "price": [
@@ -889,6 +907,9 @@
         {
           "name": "Sweet and sour",
           "dishId": "sweet-and-sour",
+          "formerIds": [
+            "sweet-and-sour-stir-fry"
+          ],
           "code": "F4",
           "desc": "Sweet and sour sauce stir-fried with a selection of meat, mixed seasonal vegetables, pineapple, tomatoes, onion and mushrooms. Served with rice.",
           "price": [
@@ -908,6 +929,9 @@
         {
           "name": "Satay sauce",
           "dishId": "satay-sauce",
+          "formerIds": [
+            "satay-sauce-stir-fry"
+          ],
           "code": "F5",
           "desc": "Peanut sauce stir-fried with a selection of meat, seasonal vegetables, onion, capsicum and pineapple. Served with rice.",
           "price": [
@@ -930,6 +954,9 @@
         {
           "name": "Ginger and vegetable",
           "dishId": "ginger-and-vegetable",
+          "formerIds": [
+            "ginger-stir-fry"
+          ],
           "code": "F6",
           "desc": "Fresh ginger stir-fried with a selection of meat and seasonal vegetables. Served with rice.",
           "price": [
@@ -949,6 +976,9 @@
         {
           "name": "Crispy pork stir-fry vegetable",
           "dishId": "crispy-pork-stir-fry-vegetable",
+          "formerIds": [
+            "crispy-pork-with-vegetable-stir-fry"
+          ],
           "code": "F7",
           "desc": "Oyster sauce stir-fried with bok choy and mixed seasonal vegetables. Topped with crispy pork. Served with rice.",
           "price": [

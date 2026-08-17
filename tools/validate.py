@@ -1711,6 +1711,48 @@ def check_twin_allergens():
                     )
 
 
+def check_self_contradicting_claims():
+    """A dish that CLAIMS a diet and is TAGGED with what contradicts it — `gf`
+    beside `contains-gluten`, `vg` beside `contains-dairy` — is two statements
+    about one plate that cannot both be true. The reader sees the GF chip and
+    the "Contains gluten" warning side by side, and the Gluten free FILTER
+    (which reads the claim, not the warning) still passes the dish.
+
+    Found by the 2026-08-17 cold review: Rock Yard's Vietnamese Salad, tagged
+    `gf` from the venue's own label and `contains-gluten` by the sweep. The
+    warning is present, so the direction of the fault is the safe one — which
+    is why this is a WARNING and not an error: the tool cannot know which
+    side is true (the venue's claim or the inference), only that somebody has
+    to decide. `CONTRADICTS` is read out of site/js/addons.js, so the pairs
+    here are the pairs the add-on picker already uses. An `-option` claim is
+    deliberately NOT checked: `gf-option` beside `contains-gluten` is the
+    ordinary shape of "as written it has gluten, ask and they make it
+    without" — 100+ rows say exactly that and every one is right."""
+    if not CONTRADICTS:
+        return  # check_contradiction_tables() reports the missing table
+    for path in sorted((DATA / "restaurants").glob("*.json")):
+        record = json.loads(path.read_text())
+        rid = record.get("id", path.stem)
+        for section in record.get("menu", []):
+            if not isinstance(section, dict):
+                continue
+            for item in section.get("items", []):
+                if not isinstance(item, dict):
+                    continue
+                tags = [str(t) for t in (item.get("tags") or [])]
+                for tag in tags:
+                    if tag.endswith("-option"):
+                        continue
+                    for hit in CONTRADICTS.get(tag, []):
+                        if hit in tags:
+                            warn(
+                                rid,
+                                f"{item.get('name')!r} claims {tag} and is tagged {hit} — "
+                                f"one of them is wrong; the filter believes the claim, "
+                                f"the reader sees both",
+                            )
+
+
 def check_contradiction_tables():
     """`CONTRADICTS` (site/js/addons.js) and `CONTRADICTED_BY`
     (tools/tag_allergens.py) are the same food fact written both ways round, so
@@ -1818,6 +1860,7 @@ def main():
     check_version_bump()
     check_allergen_tags()
     check_twin_allergens()
+    check_self_contradicting_claims()
     check_contradiction_tables()
     check_prose_addons()
 
