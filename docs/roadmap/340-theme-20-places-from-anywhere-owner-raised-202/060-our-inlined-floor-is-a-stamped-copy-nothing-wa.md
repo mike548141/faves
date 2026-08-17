@@ -241,7 +241,7 @@ decisions the same day:**
 
 ✅ **Second bump, `0af3006` → `e2fddc5`, 2026-08-17 (`8d38afc`) — re-inline in
 the same commit, as this item instructs.** 18 commits; three touch
-`docs/method/`, one binds. **BS1** (atelier `431f1f7`) corrects the very clause
+`docs/method/`, one binds. **BS1** (atelier `431f1f7`) corrects the very clause <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
 (a) was raised about, and the correction runs *opposite* to the direction this
 item argued for: not "the line is the unit, relax it", but **"a dirty item state
 line anywhere under `docs/roadmap/` stops claiming from that checkout"**. The

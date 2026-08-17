@@ -62,8 +62,8 @@
   re-ranking in the same sitting, for the reason atelier gave when it queued its
   own: nothing should be re-litigated by the sitting that wrote the rule.
 
-  📎 Source: atelier `docs/method/GUARDS.md` § *The fourth requirement —
-  declared* and `docs/method/PRINCIPLES.md` § *10. Posture*, at pin `e2fddc5`.
+  📎 Source: atelier `docs/method/GUARDS.md` § *The fourth requirement — <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
+  declared* and `docs/method/PRINCIPLES.md` § *10. Posture*, at pin `e2fddc5`. <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
   Neither is in the canonical floor region, so **this is not stamped-copy drift**
   — it is inherited doctrine owed a local application, which is why it is an item
   and not a `CLAUDE.md` edit.

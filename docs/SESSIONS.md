@@ -7703,7 +7703,7 @@ actually happened rather than merely cleared: one DONE, one now blocked
 ✅ **The atelier pin moved to `98316f8`.** The close-time drift check reported
 six commits — four of them this session's own findings, handed up and accepted.
 Verified the **floor itself is untouched** (`git diff 1408d98..98316f8 --
-docs/method/` is empty), so the inlined copy needed no change; the pin was
+docs/method/` is empty), so the inlined copy needed no change; the pin was <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 bumped anyway, deliberately, because an unbumped pin makes the next session
 re-read six commits already read. 🔑 **Run the drift check at CLOSE as well as
 at open** — it was clean at 09:30 and six commits behind by 12:30, and the ones
@@ -7844,15 +7844,15 @@ span.
 🚩 **Three things the split forced, each a hole in a boundary, each reasoned in
 the file that opens it.** `.wrapscanignore` and `.pathscanignore` for the
 generated index (its banner is 115 columns; its link *text* is path-shaped and
-produced 49 false pathscan findings per commit), and a `tools/board.py` **shim —
+produced 49 false pathscan findings per commit), and a `tools/board.py` **shim — <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 explicitly not a copy**, because children do not vendor the floor's scanners but
-the generated banner names `python3 tools/board.py rebuild`, which is true in
+the generated banner names `python3 tools/board.py rebuild`, which is true in <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 atelier and false in every child. 🔑 **A generated file that instructs the reader
 must name a path that exists in the repo it was generated into** — otherwise the
 one instruction at the top of a file nobody may hand-edit is wrong.
 
 ⏳ **Owed upstream to atelier**, all three from the same root — the generator was
-written for the repo it lives in: the rebuild banner hard-codes `tools/board.py`;
+written for the repo it lives in: the rebuild banner hard-codes `tools/board.py`; <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 that banner is 115 columns where the house limit is 85; and the index renders
 link text as a path-shaped string. `ros` (5,213-line board) and `shed` (3,125)
 will hit all three when the fleet rollout reaches them.
@@ -7894,7 +7894,7 @@ same session corrected three of its own figures the same way, including one that
 had faves at 1,853 lines — out by 4,421.
 
 ⏳ **Handed upstream and now filed there**: `060` (the generator hard-codes
-`tools/board.py` into three child-facing strings) and `070` (the generated index
+`tools/board.py` into three child-facing strings) and `070` (the generated index <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 cannot pass `wrapscan` or `pathscan` in a repo without a `scope` block — a
 115-column banner and path-shaped link *text*, 49 false findings a commit).
 Both under atelier's board-store section; `070` is in faves' words at that
@@ -7905,7 +7905,7 @@ filing, so the generator fix is racing two more children paying the same cost.
 
 The split opened two holes in the floor's boundary (`.wrapscanignore` and
 `.pathscanignore` on the generated index) and added a third file, the
-`tools/board.py` shim, to stop the generated banner naming a file no child has.
+`tools/board.py` shim, to stop the generated banner naming a file no child has. <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 **All three are gone as of `f8faabb`, hours later**, because the upstream cause
 was reported rather than lived with and atelier fixed it. Measured with the
 ignore files **deleted**, not in place: `wrapscan` on the index **15 → 0**,
@@ -7944,7 +7944,7 @@ tail of the `CLAUDE.md` verify entry.
 📋 `pathscan` is now scoped away from this repo's record stores
 (`.atelier-floor.json`), adopting atelier's PS4 ruling verbatim. It arrived from
 the opposite direction to PS4's own argument: nothing was ever wrong, but four
-honest session-log mentions of `tools/board.py` became permanent findings **the
+honest session-log mentions of `tools/board.py` became permanent findings **the <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 moment the file was deleted** — the tree moved under a true record.
 
 ## 2026-08-17-0545 — the three-day cold review (Fable), and what it found in sync
@@ -8011,7 +8011,7 @@ who each opened the source. Their reports named 26 more findings than were
 fixed; all recorded, board texts sent to the peer holding the store.
 
 ⏳ **Owed to atelier:** nothing new; pin bumped `98316f8 → 19eb0e2`
-(15 commits, `docs/method/` untouched — measured at commit time, not earlier).
+(15 commits, `docs/method/` untouched — measured at commit time, not earlier). <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 
 ### Addendum — three rulings taken, and units reframed as localisation
 
@@ -8116,7 +8116,7 @@ recommendation and wait on his word.
 ### The pin, and the debt it was carrying
 
 Bumped `19eb0e2 → 0af3006` (`cde2fa1`). **18 commits, and this time SEVEN
-`docs/method/` files had moved** — so the bump was a re-inline, which is exactly
+`docs/method/` files had moved** — so the bump was a re-inline, which is exactly <!-- pathscan:allow: historic mention of a path that is atelier's or was removed — annotation only, the record's words are unchanged -->
 what the inlined-floor item had been carrying as a dated `⏳` debt. The floor
 region was diffed **directly** (`floor:begin`/`floor:end` extracted at both SHAs
 and diffed) rather than by reading the method docs and judging — two edits, both
