@@ -45,7 +45,7 @@
 
 import { settings, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS, AS_CHARGED, LOCAL } from "./settings.js";
 import { recallOrigin } from "./geo.js";
-import { UNIT_OPTIONS, dialSpec, dialValue, dialKm, formatDial } from "./units.js";
+import { UNIT_OPTIONS, unitsLabel, dialSpec, dialValue, dialKm, formatDial } from "./units.js";
 import { fxAsOf, fxCurrencies } from "./fx.js";
 import { localCurrency } from "./locale.js";
 import { profiles, deviceStorage } from "./profiles.js";
@@ -748,7 +748,10 @@ function currencyOptions() {
 // reader to guess, and the guess is the whole thing they came here to check.
 function localeSummary(raw, resolved) {
   const langLabel = resolved.lang === "mi" ? "Te Reo Māori" : "English";
-  const unitLabel = UNIT_OPTIONS.find((o) => o.key === resolved.units)?.label ?? "";
+  // `resolved.units` is a usage table, never a word (ADR 0087), so the row is
+  // named from the table. A GB reader on Local reads "Miles, °C (local)" —
+  // a combination the picker below deliberately does not offer.
+  const unitLabel = unitsLabel(resolved.units);
   const cur =
     raw.currency === AS_CHARGED
       ? "as charged"

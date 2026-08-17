@@ -10,21 +10,71 @@
 // Pure: no DOM, no storage, no settings import — the caller passes the units
 // it read. That keeps it unit-testable and keeps settings.js free of display
 // concerns.
+//
+// What the caller passes is a USAGE TABLE, not a word (ADR 0087). Each kind of
+// measure answers for itself, because Britain is the case a single word cannot
+// carry: miles on the road, °C in the oven.
 
+// The vocabulary a reader can CHOOSE, and what the store keeps. Two words, and
+// deliberately not three — "UK" is something Local *does*, never an option on
+// this list. The moment it is offered, someone in Britain reads "imperial" as
+// "the British one" and gets a °F oven, which is the bug this replaced.
 export const UNITS = ["metric", "imperial"];
 export const DEFAULT_UNITS = "metric"; // New Zealand first; the data is metric
 
 // Shown in the Settings picker. The parenthetical names the two things that
 // actually change, so the choice is concrete rather than an abstraction.
+// "US customary" rather than "Imperial" because that is what this option has
+// always been: °F ovens are a US usage, not a British one.
 export const UNIT_OPTIONS = [
   { key: "metric", label: "Metric (km, °C)" },
-  { key: "imperial", label: "Imperial (miles, °F)" },
+  { key: "imperial", label: "US customary (miles, °F)" },
 ];
+
+// One entry per KIND of measure Faves shows. Frozen because these are shared
+// constants handed out by `unitUsage` — a caller that mutated one would change
+// what every other reader on the page sees.
+export const METRIC_USAGE = Object.freeze({ distance: "metric", oven: "metric" });
+export const IMPERIAL_USAGE = Object.freeze({ distance: "imperial", oven: "imperial" });
 
 const KM_PER_MILE = 1.609344; // exact, by international agreement
 const YARDS_PER_MILE = 1760;
 
-const isImperial = (units) => units === "imperial";
+const one = (v) => (v === "imperial" ? "imperial" : "metric");
+
+/**
+ * The usage table for whatever the caller passed: a table (what `localUnits()`
+ * returns), one of the two stored words, or anything else at all. Every
+ * formatter in this file goes through it, so an unrecognised value reads metric
+ * instead of throwing — the same fail-soft the string version had, kept because
+ * a stale saved setting must never take a menu page down.
+ */
+export function unitUsage(units) {
+  if (units && typeof units === "object") {
+    return { distance: one(units.distance), oven: one(units.oven) };
+  }
+  return units === "imperial" ? IMPERIAL_USAGE : METRIC_USAGE;
+}
+
+/**
+ * What to call a usage table on the Settings index row.
+ *
+ * The two chooseable words keep their option label verbatim, so a reader who
+ * picked one sees back exactly what they picked. A MIXED table has no option
+ * that names it — it can only have come from a region, never from the picker —
+ * so it is described rather than given an invented name, which would read as a
+ * third choice the reader could go and select.
+ */
+export function unitsLabel(units) {
+  const u = unitUsage(units);
+  if (u.distance === u.oven) return UNIT_OPTIONS.find((o) => o.key === u.distance)?.label ?? "";
+  const road = u.distance === "imperial" ? "Miles" : "Kilometres";
+  const oven = u.oven === "imperial" ? "°F" : "°C";
+  return `${road}, ${oven}`;
+}
+
+const isImperialDistance = (units) => unitUsage(units).distance === "imperial";
+const isImperialOven = (units) => unitUsage(units).oven === "imperial";
 
 export const kmToMiles = (km) => km / KM_PER_MILE;
 export const milesToKm = (mi) => mi * KM_PER_MILE;
@@ -45,7 +95,7 @@ export const milesToKm = (mi) => mi * KM_PER_MILE;
  */
 export function formatDistance(km, units = DEFAULT_UNITS) {
   if (km == null || Number.isNaN(km)) return "";
-  if (isImperial(units)) {
+  if (isImperialDistance(units)) {
     const mi = kmToMiles(km);
     const yd = Math.max(50, Math.round((mi * YARDS_PER_MILE) / 50) * 50);
     if (yd < 900) return `${yd} yd`;
@@ -77,7 +127,7 @@ export const DIALS = {
 
 /** {min, max, step} for a dial in the reader's units (values in that unit). */
 export function dialSpec(key, units = DEFAULT_UNITS) {
-  return DIALS[key][isImperial(units) ? "imperial" : "metric"];
+  return DIALS[key][isImperialDistance(units) ? "imperial" : "metric"];
 }
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -95,7 +145,7 @@ const tidy = (n) => Math.round(n * 100) / 100;
  */
 export function dialValue(km, key, units = DEFAULT_UNITS) {
   const spec = dialSpec(key, units);
-  const raw = isImperial(units) ? kmToMiles(km) : km;
+  const raw = isImperialDistance(units) ? kmToMiles(km) : km;
   const snapped = spec.min + Math.round((raw - spec.min) / spec.step) * spec.step;
   return tidy(clamp(snapped, spec.min, spec.max));
 }
@@ -108,7 +158,7 @@ export function dialValue(km, key, units = DEFAULT_UNITS) {
 export function dialKm(value, key, units = DEFAULT_UNITS) {
   const spec = dialSpec(key, units);
   const v = clamp(Number(value), spec.min, spec.max);
-  return isImperial(units) ? Math.round(milesToKm(v) * 10) / 10 : v;
+  return isImperialDistance(units) ? Math.round(milesToKm(v) * 10) / 10 : v;
 }
 
 // "20" not "20.0", "0.5" not "0.50" — Number's own formatting already does it.
@@ -117,7 +167,7 @@ const num = (n) => String(n);
 /** The dial's readout: "25 km" / "15 mi". Always agrees with the thumb. */
 export function formatDial(km, key, units = DEFAULT_UNITS) {
   const v = dialValue(km, key, units);
-  return isImperial(units) ? `${num(v)} mi` : `${num(v)} km`;
+  return isImperialDistance(units) ? `${num(v)} mi` : `${num(v)} km`;
 }
 
 // --- Oven temperatures ----------------------------------------------------
@@ -163,6 +213,6 @@ export const ovenFahrenheit = (c) =>
  * two. Metric returns the string untouched.
  */
 export function convertTemperatures(text, units = DEFAULT_UNITS) {
-  if (!isImperial(units) || typeof text !== "string") return text;
+  if (!isImperialOven(units) || typeof text !== "string") return text;
   return text.replace(TEMP_C, (_match, c) => `${ovenFahrenheit(Number(c))}°F`);
 }

@@ -15,6 +15,7 @@ import {
   localLanguage,
   localUnits,
 } from "../site/js/locale.js";
+import { METRIC_USAGE, IMPERIAL_USAGE } from "../site/js/units.js";
 
 // Every case passes both signals explicitly. Nothing here reads the machine
 // running the tests, so the answers are the same in Wellington and on CI.
@@ -27,8 +28,12 @@ test("the timezone wins, because it is the one that travels", () => {
   // The whole point, in one assertion: a NZ phone that has landed in London.
   assert.equal(deviceCountry(AT("Europe/London", "en-NZ")), "GB");
   assert.equal(localCurrency(null, AT("Europe/London", "en-NZ")), "GBP");
-  // …and a New York one, for the units half (GB is metric in the kitchen).
-  assert.equal(localUnits(AT("America/New_York", "en-NZ")), "imperial");
+  // …and the units half: that same phone gets Britain's own usage — miles on
+  // the road, °C in the oven — not New Zealand's metric and not America's °F.
+  assert.deepEqual(localUnits(AT("Europe/London", "en-NZ")), {
+    distance: "imperial",
+    oven: "metric",
+  });
 });
 
 test("the locale region answers when the timezone is one we don't map", () => {
@@ -55,14 +60,32 @@ test("a currency with no rate loaded is not offered, even when we know the count
   assert.equal(localCurrency(available, AT("Australia/Sydney", "en-AU")), "AUD");
 });
 
-test("units are metric everywhere except the one country whose kitchen isn't", () => {
-  assert.equal(localUnits(AT("America/New_York", "en-US")), "imperial");
-  // GB drives on miles and bakes at °C; the setting drives ovens, so metric
-  // (owner ruling 2026-08-17 — before it, a London phone read every oven in °F).
-  assert.equal(localUnits(AT("Europe/London", "en-GB")), "metric");
-  assert.equal(localUnits(AT("Pacific/Auckland", "en-NZ")), "metric");
-  assert.equal(localUnits(AT("Europe/Paris", "fr-FR")), "metric");
-  assert.equal(localUnits(AT(null)), "metric", "and metric when we can't tell");
+test("units resolve per KIND of measure, not to one word", () => {
+  // The case the whole design exists for. Britain is neither column: miles and
+  // yards on the road, °C in the oven. Fold GB back in with the US and the
+  // first of these two lines is what fails — a London phone reading 350°F for
+  // a 180°C bake, which is the bug that was shipped.
+  assert.equal(localUnits(AT("Europe/London", "en-GB")).distance, "imperial");
+  assert.equal(localUnits(AT("Europe/London", "en-GB")).oven, "metric");
+
+  // The US is imperial in both, which is what the picker's one word means.
+  assert.deepEqual(localUnits(AT("America/New_York", "en-US")), IMPERIAL_USAGE);
+
+  // Everywhere else, and the no-signal case, are metric throughout.
+  assert.deepEqual(localUnits(AT("Pacific/Auckland", "en-NZ")), METRIC_USAGE);
+  assert.deepEqual(localUnits(AT("Europe/Paris", "fr-FR")), METRIC_USAGE);
+  assert.deepEqual(localUnits(AT(null)), METRIC_USAGE, "metric when we can't tell");
+});
+
+test("a resolved usage table cannot be mutated by whoever received it", () => {
+  // These are shared constants handed to every caller on the page, so a
+  // caller that wrote to one would change what every other reader sees.
+  const gb = localUnits(AT("Europe/London", "en-GB"));
+  assert.throws(() => {
+    "use strict";
+    gb.oven = "imperial";
+  });
+  assert.equal(localUnits(AT("Europe/London", "en-GB")).oven, "metric");
 });
 
 test("the euro is one country per line, and they all agree", () => {
