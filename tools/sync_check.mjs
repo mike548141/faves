@@ -289,7 +289,18 @@ function startFakeBlobServer(port) {
         const body = Buffer.concat(chunks);
         const ifMatch = req.headers["if-match"];
         const entry = blobs.get(id);
-        if (ifMatch && (!entry || entry.etag !== ifMatch)) {
+        // As strict as the real Worker (sync-worker.js handlePut): a blob that
+        // exists is overwritten ONLY with a matching If-Match. A missing one
+        // is refused too — that is what a client that could not read the ETag
+        // sends, and until 2026-08-17 this fake accepted it, so a browser that
+        // never saw the header still looked synced here while the deployed
+        // Worker answered every second write with 412.
+        if (entry && (!ifMatch || entry.etag !== ifMatch)) {
+          res.writeHead(412);
+          res.end();
+          return;
+        }
+        if (!entry && ifMatch) {
           res.writeHead(412);
           res.end();
           return;

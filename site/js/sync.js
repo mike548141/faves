@@ -143,6 +143,41 @@ export function writeSnapshot(storage, snapshot) {
 }
 
 /**
+ * The same personal data, or not — ignoring what a device may honestly differ
+ * on. `active` is which profile THIS device shows and is never synced
+ * (sync-merge.js), so two devices' snapshots of one identical group differ on
+ * it forever; a null store and an empty one are the same absence. Keys are
+ * sorted so producer order (collect vs merge) cannot manufacture a difference.
+ * Used to skip a write the server does not need, and to notice a change made
+ * on this device while a cycle was in flight.
+ */
+export function sameSnapshot(a, b) {
+  const canon = (v) => {
+    if (Array.isArray(v)) return v.map(canon);
+    if (v && typeof v === "object") {
+      return Object.fromEntries(Object.keys(v).sort().map((k) => [k, canon(v[k])]));
+    }
+    return v;
+  };
+  const shape = (snap) =>
+    JSON.stringify(
+      canon(
+        (Array.isArray(snap?.profiles) ? snap.profiles : []).map((p) => ({
+          id: p?.id ?? "",
+          name: p?.name ?? "",
+          favourites: Array.isArray(p?.favourites) ? p.favourites : [],
+          ratings: p?.ratings && typeof p.ratings === "object" ? p.ratings : {},
+          settings:
+            p?.settings && typeof p.settings === "object" && Object.keys(p.settings).length
+              ? p.settings
+              : null,
+        }))
+      )
+    );
+  return shape(a) === shape(b);
+}
+
+/**
  * Apply the user's answer to a blocked allergen conflict, in place.
  *
  * `mergePersonal` resolves a two-sided diet change to the **union** and reports
@@ -194,6 +229,12 @@ export function createSync({
   let inFlight = null;
   let started = false;
   let applied = onApplied;
+  // True while a pull is being re-pointed into the live stores. Their
+  // subscribers fire on reload exactly as they do on a tap, and until
+  // 2026-08-17 that re-armed the debounce, so every successful sync scheduled
+  // the next one: one KV write every ~20 s per open tab, forever, and a full
+  // menu repaint each time. A change the ENGINE made is not a change to sync.
+  let quiet = false;
 
   const readConfig = () => parse(storage.getItem(SYNC_KEY)) || {};
   const writeConfig = (patch) => {
@@ -297,37 +338,60 @@ export function createSync({
 
         // 3. write it back BEFORE touching local storage, so a rejected write
         //    never leaves this device holding a state the pair never agreed on.
-        const sealed = await sealBlob(key, merged);
-        const put = await fetchImpl(url(blobId), {
-          method: "PUT",
-          body: sealed,
-          headers: etag ? { "If-Match": etag } : {},
-        });
+        //    Skipped when the server already holds exactly this — a pull that
+        //    changed nothing is not a write, and writing it anyway is what
+        //    turned every visibility change into a KV write.
+        if (!(theirs && sameSnapshot(merged, theirs))) {
+          const sealed = await sealBlob(key, merged);
+          const put = await fetchImpl(url(blobId), {
+            method: "PUT",
+            body: sealed,
+            headers: etag ? { "If-Match": etag } : {},
+          });
 
-        if (put.status === 412) {
-          // Someone else wrote between our read and our write. Not an error —
-          // the correct response is to go round again against the newer blob.
-          setState(IDLE);
-          return { ok: false, retry: true, error: "raced" };
-        }
-        if (put.status !== 204) {
-          setState(ERROR, "Couldn’t save to sync just now. Your data is safe on this device.");
-          return { ok: false, error: "sync-write-failed" };
+          if (put.status === 412) {
+            // Someone else wrote between our read and our write. Not an error —
+            // the correct response is to go round again against the newer blob.
+            setState(IDLE);
+            return { ok: false, retry: true, error: "raced" };
+          }
+          if (put.status !== 204) {
+            setState(ERROR, "Couldn’t save to sync just now. Your data is safe on this device.");
+            return { ok: false, error: "sync-write-failed" };
+          }
         }
 
-        // 4. only now is this an agreement: apply locally and record the base.
-        writeSnapshot(storage, merged);
-        // Before the base, deliberately: if re-pointing the live stores throws,
-        // the base must not claim an agreement whose local half never landed.
-        try {
-          applied(merged);
-        } catch {
-          /* a screen that failed to repaint is not a reason to fail the sync */
+        // 4. only now is this an agreement. The server holds `merged`, so it is
+        //    the base whatever happens next — but the LOCAL half is applied only
+        //    if nothing here moved while the round trip was in flight. A heart
+        //    or an allergen flag tapped during it lives in storage and not in
+        //    `mine`; writing `merged` over it would erase the tap, and the next
+        //    cycle would then collect the erased store and push the loss to
+        //    every device (found by the 2026-08-17 cold review — an allergen
+        //    flag is the worst thing this can lose). Instead the tap stays, the
+        //    base becomes `merged`, and the cycle it already scheduled carries
+        //    the tap out as a change against that base.
+        const localMoved = !sameSnapshot(mine, collectPersonalData(storage, { exportedAt: now() }));
+        if (!localMoved && !sameSnapshot(merged, mine)) {
+          writeSnapshot(storage, merged);
+          // Before the base, deliberately: if re-pointing the live stores
+          // throws, the base must not claim an agreement whose local half
+          // never landed. Quiet, so the stores' own reload notifications do
+          // not re-arm the debounce.
+          quiet = true;
+          try {
+            applied(merged);
+          } catch {
+            /* a screen that failed to repaint is not a reason to fail the sync */
+          } finally {
+            quiet = false;
+          }
         }
         writeBase(merged);
         writeConfig({ lastSyncedAt: now() });
         setState(IDLE);
-        return { ok: true, changes };
+        if (localMoved) schedule();
+        return { ok: true, changes, deferredLocal: localMoved };
       } catch {
         // Offline is the overwhelmingly common cause and is not a fault.
         setState(ERROR, "Couldn’t reach sync just now. Your data is safe on this device.");
@@ -341,7 +405,7 @@ export function createSync({
 
   /** Debounced trigger — what a heart or a rating change calls. */
   function schedule() {
-    if (!readConfig().code || !setTimer) return;
+    if (quiet || !readConfig().code || !setTimer) return;
     if (timer) clearTimer(timer);
     timer = setTimer(() => {
       timer = null;

@@ -234,6 +234,41 @@ test("a profile deleted on this device is not resurrected by the other", () => {
   assert.deepEqual(out.merged.profiles.map((p) => p.id), ["default"]);
 });
 
+test("a profile deleted on the OTHER device is gone here too — not kept with its allergens wiped", () => {
+  // The other direction of the test above. Until 2026-08-17 the mine-side
+  // branch ignored base and merged the profile against an empty "theirs":
+  // every heart read as removed-there, every setting as unset-there, and
+  // Ruth survived with `settings: {}` — the allergen list gone while her
+  // name still showed — then went back to the blob and re-appeared, empty,
+  // on the device that had deleted her. Reproduced by the cold review.
+  const ruth = {
+    id: "p2", name: "Ruth", active: false,
+    favourites: [venue("kk")], ratings: { "v:kk": 4 },
+    settings: { diet: { dietary: [], avoid: ["contains-nuts"] } },
+  };
+  const two = { ...snap({}), profiles: [...snap({}).profiles, ruth] };
+  const out = mergePersonal(two, two, snap({})); // base had two, THEIRS now has one
+  assert.deepEqual(out.merged.profiles.map((p) => p.id), ["default"]);
+  // And symmetric with the mine-side deletion.
+  const ab = mergePersonal(two, two, snap({})).merged.profiles.map((p) => p.id);
+  const ba = mergePersonal(two, snap({}), two).merged.profiles.map((p) => p.id);
+  assert.deepEqual(ab, ba);
+});
+
+test("a profile NEW on this device keeps its hearts and its allergens on the way out", () => {
+  // No base, theirs lacks it: an addition here, merged against nothing.
+  const ruth = {
+    id: "p2", name: "Ruth", active: false,
+    favourites: [venue("kk")], ratings: { "v:kk": 4 },
+    settings: { diet: { dietary: [], avoid: ["contains-nuts"] } },
+  };
+  const two = { ...snap({}), profiles: [...snap({}).profiles, ruth] };
+  const p2 = mergePersonal(null, two, snap({})).merged.profiles.find((p) => p.id === "p2");
+  assert.ok(p2, "the new profile travels");
+  assert.deepEqual(p2.favourites.map(favKey), ["v:kk"]);
+  assert.deepEqual(p2.settings.diet.avoid, ["contains-nuts"]);
+});
+
 test('two unpaired devices both minting profile "default" is reported, never assumed', () => {
   // profiles.js mints the first profile as `default` on EVERY device, so an id
   // match across two devices that never synced is guaranteed, not evidence.

@@ -14,6 +14,13 @@ import assert from "node:assert/strict";
 import { createSync, writeSnapshot, applyDietDecision, SYNC_KEY, SYNC_BASE_KEY } from "../site/js/sync.js";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { favKey } from "../site/js/favourites.js";
+import { mintSyncCode } from "../site/js/sync-code.js";
+
+// A REAL code for the tests that seed one by hand. Until 2026-08-17 they used
+// "K7F29DMX4QRA" — 12 characters, which normaliseSyncCode rejects — so
+// deriveSyncKeys threw before any fetch and three tests about a refusing or
+// dead server passed without ever reaching it (ADR 0072's shape).
+const A_CODE = mintSyncCode();
 
 function fakeStorage(initial = {}) {
   const m = new Map(Object.entries(initial));
@@ -150,22 +157,26 @@ test("no base is recorded until the server has accepted the write", async () => 
   const server = fakeServer();
   const a = device({ favs: [venue("kk")] });
   // A server that reads fine but refuses every write.
-  const refusing = { fetch: async (u, i) => ((i?.method || "GET") === "PUT" ? { status: 500, headers: { get: () => null } } : server.fetch(u, i)) };
+  let refused = 0;
+  const refusing = { fetch: async (u, i) => ((i?.method || "GET") === "PUT" ? (refused++, { status: 500, headers: { get: () => null } }) : server.fetch(u, i)) };
   const s = mk(a, refusing);
-  a.setItem(SYNC_KEY, JSON.stringify({ code: "K7F29DMX4QRA" }));
+  a.setItem(SYNC_KEY, JSON.stringify({ code: A_CODE }));
 
   const res = await s.syncNow();
+  assert.equal(refused, 1, "the write must actually have been attempted and refused");
   assert.equal(res.ok, false);
   assert.equal(a.getItem(SYNC_BASE_KEY), null, "a base here would claim an agreement that never happened");
 });
 
 test("a failed sync leaves this device's own data untouched", async () => {
   const a = device({ favs: [venue("kk")] });
-  const dead = { fetch: async () => { throw new Error("offline"); } };
+  let reached = 0;
+  const dead = { fetch: async () => { reached++; throw new Error("offline"); } };
   const s = mk(a, dead);
-  a.setItem(SYNC_KEY, JSON.stringify({ code: "K7F29DMX4QRA" }));
+  a.setItem(SYNC_KEY, JSON.stringify({ code: A_CODE }));
 
   const res = await s.syncNow();
+  assert.equal(reached, 1, "the dead server must actually have been reached");
   assert.equal(res.ok, false);
   assert.deepEqual(favsOf(a), ["v:kk"]);
   assert.match(s.status().error, /safe on this device/);
@@ -291,8 +302,14 @@ test("a burst of changes debounces into one write, and a flush sends it early", 
   await s.enable();
   const after = server.puts;
 
+  // Three real changes, not three bare schedule() calls: a cycle whose merge
+  // equals what the server holds writes nothing (see below), so a burst that
+  // changed nothing would be a burst of zero writes and prove nothing.
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk")]));
   s.schedule();
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("pandan")]));
   s.schedule();
+  a.setItem(scopeKey("default", "faves.favourites.v1"), JSON.stringify([venue("kk"), venue("pandan"), venue("roti")]));
   s.schedule();
   assert.equal(server.puts, after, "nothing should have been written yet");
   assert.equal(s._pendingWrite(), true);
@@ -300,6 +317,77 @@ test("a burst of changes debounces into one write, and a flush sends it early", 
   s.flush();
   await new Promise((r) => setTimeout(r, 30));
   assert.equal(server.puts, after + 1, "three changes must cost exactly one write");
+});
+
+// --- the engine's own writes are not changes ------------------------------
+
+test("a pull that changed nothing writes nothing — and a successful sync does not re-arm itself", async () => {
+  // Found by the 2026-08-17 cold review: `applied()` reloads the live stores,
+  // their subscribers fire exactly as on a tap, and that scheduled the next
+  // sync — one KV write every debounce forever, per open tab.
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")] });
+  // A store shaped like favourites.js: reload() notifies its subscribers.
+  // One per device, as in life — a shared one would let B's reload schedule A.
+  const liveStore = () => {
+    const subs = new Set();
+    return { subscribe: (fn) => (subs.add(fn), () => subs.delete(fn)), reload: () => subs.forEach((fn) => fn()) };
+  };
+  const storeA = liveStore();
+  const s = mk(a, server, { debounceMs: 5000, onApplied: () => storeA.reload() });
+  s.start({ stores: [storeA], doc: null });
+  await s.enable();
+  assert.equal(server.puts, 1, "the first cycle writes once");
+  assert.equal(s._pendingWrite(), false, "a successful sync must not schedule another");
+
+  // A second device pulls A's blob (a real local change here → applied → reload).
+  const b = device({ favs: [] });
+  const storeB = liveStore();
+  const sb = mk(b, server, { debounceMs: 5000, onApplied: () => storeB.reload() });
+  sb.start({ stores: [storeB], doc: null });
+  const before = server.puts;
+  await sb.join(s.status().code);
+  assert.deepEqual(favsOf(b), ["v:kk"], "B received the heart");
+  assert.equal(server.puts, before, "B had nothing the server lacked, so B wrote nothing");
+  assert.equal(sb._pendingWrite(), false, "the reload B's pull caused is not a change to sync");
+  assert.equal(s._pendingWrite(), false);
+
+  // A cycle with nothing new anywhere: no PUT, no re-arm.
+  const puts = server.puts;
+  await s.syncNow();
+  assert.equal(server.puts, puts, "nothing changed, nothing written");
+  assert.equal(s._pendingWrite(), false);
+});
+
+test("a change made while a cycle is in flight is kept, not overwritten by the pull", async () => {
+  // Safety-class: an allergen flag tapped during the round trip lived in
+  // storage but not in the `mine` the cycle had collected; writing `merged`
+  // over it erased the tap, and the next cycle pushed the erasure everywhere.
+  const server = fakeServer();
+  const a = device({ favs: [venue("kk")], settings: { diet: { dietary: [], avoid: [] } } });
+  // A server whose PUT lands a tap on the device mid-flight.
+  const orig = server.fetch;
+  let tapped = false;
+  server.fetch = async (url, init = {}) => {
+    if ((init.method || "GET") === "PUT" && !tapped) {
+      tapped = true;
+      a.setItem(scopeKey("default", "faves.settings.v1"), JSON.stringify({ diet: { dietary: [], avoid: ["contains-nuts"] } }));
+    }
+    return orig(url, init);
+  };
+  const s = mk(a, server, { debounceMs: 5000 });
+  const res = await s.enable();
+  assert.equal(res.ok, true);
+  assert.equal(res.deferredLocal, true, "the engine noticed the device moved under it");
+  const diet = JSON.parse(a.getItem(scopeKey("default", "faves.settings.v1"))).diet;
+  assert.deepEqual(diet.avoid, ["contains-nuts"], "the flag tapped mid-flight must survive the pull");
+  assert.equal(s._pendingWrite(), true, "…and a follow-up cycle is scheduled to carry it out");
+  // The follow-up carries the flag to the server.
+  s.flush();
+  await new Promise((r) => setTimeout(r, 30));
+  const b = device({ favs: [] });
+  await mk(b, server).join(s.status().code);
+  assert.deepEqual(JSON.parse(b.getItem(scopeKey("default", "faves.settings.v1"))).diet.avoid, ["contains-nuts"]);
 });
 
 // --- turning it off --------------------------------------------------------
@@ -357,10 +445,20 @@ test("a pull re-points the live stores, not just localStorage", async () => {
   // directly. It took a real browser to find, and this is what keeps it found.
   const server = fakeServer();
   const a = device({ favs: [venue("kk")] });
-  let repointed = 0;
-  const s = mk(a, server, { onApplied: () => { repointed += 1; } });
+  const s = mk(a, server);
   await s.enable();
-  assert.equal(repointed, 1, "a successful sync must re-point the live stores");
+  // B pulls A's heart: its storage changes, so its live stores must follow.
+  const b = device({ favs: [] });
+  let repointed = 0;
+  const sb = mk(b, server, { onApplied: () => { repointed += 1; } });
+  await sb.join(s.status().code);
+  assert.deepEqual(favsOf(b), ["v:kk"]);
+  assert.equal(repointed, 1, "a pull that changed storage must re-point the live stores");
+  // A cycle that changes nothing on this device re-points nothing: the
+  // repaint it would cause is the whole menu, and it would run on every
+  // visibility change for no reason (2026-08-17).
+  await sb.syncNow();
+  assert.equal(repointed, 1, "nothing new here, nothing to re-point");
 });
 
 test("a failed sync does not claim to have re-pointed anything", async () => {
@@ -368,7 +466,7 @@ test("a failed sync does not claim to have re-pointed anything", async () => {
   let repointed = 0;
   const dead = { fetch: async () => { throw new Error("offline"); } };
   const s = mk(a, dead, { onApplied: () => { repointed += 1; } });
-  a.setItem(SYNC_KEY, JSON.stringify({ code: "K7F29DMX4QRA" }));
+  a.setItem(SYNC_KEY, JSON.stringify({ code: A_CODE }));
   await s.syncNow();
   assert.equal(repointed, 0);
 });

@@ -264,6 +264,31 @@ test("CORS never reflects an origin outside the allowlist — no ACAO, never *",
   assert.notEqual(res.headers.get("Access-Control-Allow-Origin"), "*");
 });
 
+test("the ETag is EXPOSED on the actual GET and PUT responses, not only on the preflight", async () => {
+  // A cross-origin fetch() may read only the safelisted response headers
+  // unless the actual response names more; ETag is not safelisted, and the
+  // preflight's list exposes nothing for the request that follows it. With
+  // this header on the preflight alone the browser client read `etag` as
+  // null, sent every PUT without If-Match, and was refused with 412 forever
+  // once a blob existed — while every Node-side check stayed green, because
+  // Node's fetch does not filter response headers by CORS. Cold review,
+  // 2026-08-17; the deployed Worker had exactly this fault.
+  const e = env();
+  const put = await worker.fetch(
+    req(`/v1/blob/${VALID_ID}`, { method: "PUT", headers: { Origin: ORIGIN }, body: new Uint8Array([1]) }),
+    e,
+  );
+  assert.equal(put.status, 204);
+  assert.match(put.headers.get("Access-Control-Expose-Headers") || "", /\bETag\b/i);
+  const get = await worker.fetch(req(`/v1/blob/${VALID_ID}`, { headers: { Origin: ORIGIN } }), e);
+  assert.equal(get.status, 200);
+  assert.match(get.headers.get("Access-Control-Expose-Headers") || "", /\bETag\b/i);
+  // And on the refusals a client has to be able to read too.
+  const missing = await worker.fetch(req(`/v1/blob/${"0".repeat(32)}`, { headers: { Origin: ORIGIN } }), e);
+  assert.equal(missing.status, 404);
+  assert.match(missing.headers.get("Access-Control-Expose-Headers") || "", /\bETag\b/i);
+});
+
 test("security headers are present on a normal response", async () => {
   const e = env();
   const res = await worker.fetch(req(`/v1/blob/${VALID_ID}`, { headers: { Origin: ORIGIN } }), e);

@@ -478,10 +478,17 @@ export function syncControls() {
       tabIndex: -1,
       textContent: "Your devices disagree on allergen settings",
     });
+    // Says what is TRUE while the question is open. The merged union ADR 0060
+    // describes exists only in the engine's memory until the answer is
+    // written; nothing on this device renders it. Until 2026-08-17 this line
+    // promised warnings for "every allergen flagged on either device", and a
+    // reader whose other device had flagged nuts was under-warned by exactly
+    // the sentence meant to reassure them (cold review, 2026-08-17).
     const explain = el("p", {
       className: "settings-note",
       textContent:
-        "Until you choose, Faves warns about every allergen flagged on either device — the safer direction.",
+        "Until you choose, this device keeps warning about the allergens flagged here. " +
+        "Nothing from the other device is applied — in either direction — before you decide.",
     });
     const blocks = conflicts.map((c) =>
       el("div", { className: "import-q import-q-safety" }, [

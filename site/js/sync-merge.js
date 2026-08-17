@@ -324,7 +324,17 @@ export function mergePersonal(base, mine, theirs) {
     handled.add(key);
     const t = theirsProfiles.get(key);
     if (!t) {
-      merged.push(mergeOne(baseProfiles.get(key), m, null));
+      // A profile that exists here and not there: added on this device, or
+      // deleted on the other. Base tells them apart — the mirror of the loop
+      // below. Until 2026-08-17 this branch kept the profile whatever base
+      // said and merged it against an EMPTY "theirs", which read every heart
+      // as removed-there and every setting as unset-there: the profile
+      // survived with its allergen list wiped, was written back to the blob,
+      // and the device that had deleted it got it back, empty. Deletion now
+      // propagates in both directions, and a profile new here is merged
+      // against nothing (its stores are additions).
+      if (baseProfiles.has(key)) continue;
+      merged.push(mergeOne(null, m, null));
       continue;
     }
     if (!baseProfiles.has(key) && !sameName(m, t)) {

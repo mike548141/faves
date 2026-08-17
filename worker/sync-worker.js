@@ -187,6 +187,17 @@ export async function readBodyCapped(stream, maxBytes) {
 function baseHeaders(corsHeaders) {
   return {
     ...corsHeaders,
+    // On EVERY response, not only the preflight. Per Fetch, a cross-origin
+    // page may read only the CORS-safelisted response headers unless the
+    // ACTUAL response names more — ETag is not safelisted, and the preflight
+    // exposes nothing for the request that follows it. Until 2026-08-17 this
+    // header lived in preflight() alone, so the browser client read `etag`
+    // as null on every GET, sent every PUT without If-Match, and — once a
+    // blob existed — was refused with 412 forever: sync was live and could
+    // not write twice. Every Node-side check passed, because undici does not
+    // filter response headers by CORS. Found by the 2026-08-17 cold review;
+    // verified against the deployed Worker with curl before the change.
+    "Access-Control-Expose-Headers": "ETag",
     "Cache-Control": "no-store",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "no-referrer",
@@ -216,7 +227,6 @@ function preflight(corsHeaders) {
       ...baseHeaders(corsHeaders),
       "Access-Control-Allow-Methods": "GET, PUT, OPTIONS",
       "Access-Control-Allow-Headers": "If-Match, Content-Type",
-      "Access-Control-Expose-Headers": "ETag",
       // Cached by the browser only (never an intermediary — this is a
       // preflight response, not the blob itself) so a sync-heavy session
       // doesn't round-trip an OPTIONS before every GET/PUT.

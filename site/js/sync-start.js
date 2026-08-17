@@ -18,7 +18,7 @@
 import { favourites } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { settings } from "./settings.js";
-import { reloadProfileStores } from "./profiles.js";
+import { profiles, reloadProfileStores } from "./profiles.js";
 import { sync } from "./sync.js";
 
 /**
@@ -39,7 +39,19 @@ export function startSync() {
       // what it read at load — a heart arrives and nothing moves until reload.
       // Order is load-bearing inside reloadProfileStores (settings last, so the
       // allergen repaint runs after the data it reads is in place).
-      onApplied: () => reloadProfileStores({ favourites, ratings, settings }),
+      // The REGISTRY first: a pull can add a profile, or remove the one this
+      // device is showing (writeSnapshot then moves activeId in storage). The
+      // profiles singleton holds the registry in memory and only re-read it
+      // on a cross-tab `storage` event — which never fires in the tab that
+      // wrote — so until 2026-08-17 a profile synced in did not appear in
+      // People, the next rename/switch here committed the stale registry back
+      // over it (deleting it for everyone), and a remotely-deleted ACTIVE
+      // profile left the scoped stores reading a purged key: the old name
+      // still on screen, no allergens flagged. Cold review, 2026-08-17.
+      onApplied: () => {
+        profiles.reload();
+        reloadProfileStores({ favourites, ratings, settings });
+      },
     });
   } catch {
     // A fault in an optional backend feature must never take a screen down
