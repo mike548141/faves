@@ -12,6 +12,7 @@ import { ingredientKeys } from "./ingredients.js";
 import { isRecipeKind, kindOf } from "./kinds.js";
 import { searchableText, venueLanguage } from "./lang.js";
 import { DIET_FILTERS } from "./dietary.js";
+import { vibesFor } from "./vibes.js";
 
 // Lower-cased AND macron-folded, so "kumara" finds "kūmara" and "kūmara"
 // finds "kumara": the corpus writes both (Kūmara ×5, kumara ×7 on 2026-08-17)
@@ -68,6 +69,23 @@ const SYNONYMS = {
   "sit down": ["dine-in"],
   "sit-down": ["dine-in"],
   "eat here": ["dine-in"],
+  // The `vibe` vocabulary (vibes.js) is searchable by label and by key, so most
+  // of it needs nothing here. These are the phrases people type for a value
+  // whose label they would not guess. Each maps onto exactly one vocabulary
+  // LABEL — the same bound as the rest of this map, and the reason there is no
+  // entry for "fast food": it names a segment of the industry, not one of the
+  // five styles, and choosing which style it meant would be a guess.
+  "silver service": ["fine dining"], // the owner's own phrase for it (37k)
+  "grab and go": ["quick eats"], // one of four former spellings of quick-eats
+  "grab-and-go": ["quick eats"],
+  "quick lunch": ["quick eats"],
+  "quick bite": ["quick eats"],
+  "pub quiz": ["quiz night"],
+  dogs: ["dog friendly"], // "dog" already lands inside the label; "dogs" can't
+  kids: ["family friendly"],
+  "kid friendly": ["family friendly"],
+  "child friendly": ["family friendly"],
+  "children": ["family friendly"],
 };
 
 /**
@@ -103,7 +121,7 @@ function dietLabels(tags) {
  * { places, dishes }; each entry carries a lowercased `hay` (haystack) and,
  * for dishes, a ready-to-use deep-link `href`.
  *   place: { id, name, area, cuisine[], kind, address, city, services[],
- *            phone, hay }
+ *            phone, vibes[], hay }
  *   dish:  { name, venueId, venueName, isRecipe, section, href, hay }
  * Stubs (no menu) contribute a place but no dishes — which is correct: you
  * can still find the venue by name, there just aren't dishes to match yet.
@@ -118,6 +136,14 @@ export function buildIndex(restaurants) {
     const isRecipe = isRecipeKind(r);
     const itemPage = kindOf(r).itemPage;
     const venueLang = venueLanguage(r);
+    // What a place is LIKE — "quick eats", "dog friendly", "craft beer". The
+    // style facet has a filter of its own (filters.js), but nothing could
+    // reach the other two facets at all: 21 of the corpus's taggings are
+    // amenities and character, no screen offers a control for them, and a
+    // person hunting a beer garden had no way to ask. Resolved through
+    // `vibesFor` rather than read raw, so an unknown value in the data cannot
+    // become a searchable term the vocabulary has never heard of.
+    const vibes = vibesFor(r.vibe);
     places.push({
       id: r.id,
       name: r.name,
@@ -131,9 +157,11 @@ export function buildIndex(restaurants) {
       city: r.city || "",
       services: r.services || [],
       phone: r.phone || "",
-      // Address, city, service and phone join name/area/cuisine: people look
-      // for a place by the street they remember it on, by "takeaway", or by
-      // the number in their call history, not only by its name.
+      vibes,
+      // Address, city, service, phone and vibe join name/area/cuisine: people
+      // look for a place by the street they remember it on, by "takeaway", by
+      // the number in their call history, or by what the place is like — not
+      // only by its name.
       hay: norm(
         [
           r.name,
@@ -144,6 +172,11 @@ export function buildIndex(restaurants) {
           ...(r.services || []),
           r.phone,
           digits(r.phone),
+          // Both forms of every vibe: the LABEL is what a person types ("dog
+          // friendly"), the KEY is what a URL, a filter chip and a screenshot
+          // of one carry ("dog-friendly"). Indexing only the label would make
+          // the app's own stored vocabulary unsearchable.
+          ...vibes.flatMap((v) => [v.label, v.key]),
         ].join(" ")
       ),
     });
@@ -228,8 +261,9 @@ function findForm(text, forms) {
 
 // Where a place hit lives, checked in the order the result row could show
 // it: name (the row's own title), then area/cuisine (the row's "Te Aro ·
-// Malaysian" sub). Only those three are ever visible in the row, so only
-// those three come back with a literal `text` to highlight — a hit that
+// Malaysian" sub), then vibe (which the row grows a fourth part for when, and
+// only when, that is what matched). Only those are visible in the row, so only
+// those come back with a literal `text` to highlight — a hit that
 // lands in address/city/phone/service is just as real but invisible on
 // screen, so it comes back as a field name with no text, for a caller to
 // turn into a plain-language note instead of a highlight nothing shows.
@@ -246,6 +280,18 @@ function placeMatchField(p, forms) {
   for (const c of p.cuisine || []) {
     const hit = findForm(c, forms);
     if (hit) return { field: "cuisine", text: hit };
+  }
+  // A vibe is the one field that is invisible in the row *until it matches*:
+  // the caller appends the label to the sub-line for exactly the rows that hit
+  // it (app.js), because "why is this here?" and "what you were looking for"
+  // are the same fact in this case. So `text` is the WHOLE label rather than
+  // the matched slice — the row is showing a chip's worth of vocabulary, not
+  // highlighting a fragment of text that was already on screen. It still obeys
+  // the rule above: text comes back only where the row will display it.
+  for (const v of p.vibes || []) {
+    if (findForm(v.label, forms) || findForm(v.key, forms)) {
+      return { field: "vibe", text: v.label };
+    }
   }
   const address = findForm(p.address, forms);
   if (address) return { field: "address", text: null };
@@ -300,8 +346,8 @@ function rank(entries, forms, limit, matchField) {
  * the UI can say "showing 12 of 30". A query under 2 chars matches nothing
  * (a single letter would match almost everything — noise, not help).
  *
- * Every item also carries `matchField` (Theme 27b) — "name"/"area"/"cuisine"
- * for a place, "name" for a dish, else "details" for a hit that's real but
+ * Every item also carries `matchField` (Theme 27b) — "name"/"area"/"cuisine"/
+ * "vibe" for a place, "name" for a dish, else "details" for a hit that's real but
  * lives somewhere the result row doesn't show — and `matchText`, the literal
  * substring that matched, present only when `matchField` names something the
  * row displays (so a caller can highlight it in place; null otherwise, so a

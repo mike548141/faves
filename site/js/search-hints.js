@@ -161,6 +161,11 @@ export function defaultHints(t) {
     t("search.hint.ingredient", "Search an ingredient — “lemongrass”…"),
     t("search.hint.diet", "Search a diet — “vegan”, “gluten free”…"),
     t("search.hint.cuisine", "Search a cuisine — “Thai”, “Malaysian”…"),
+    // The least guessable line on this list, and the reason it earns a slot:
+    // `vibe`'s amenity and character facets have no filter, no chip control
+    // and no other way in — the placeholder is the only thing that will ever
+    // tell a reader they can ask for a beer garden.
+    t("search.hint.vibe", "Search a vibe — “dog friendly”, “quick eats”…"),
     t("search.hint.area", "Search an area or street — “Cuba St”…"),
     t("search.hint.service", "Search “takeaway” or “dine in”…"),
     t("search.hint.phone", "Search a phone number you half remember…"),

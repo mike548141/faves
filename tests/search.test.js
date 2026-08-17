@@ -373,6 +373,104 @@ test("says a dish hit found only via a diet label is not a false name match", ()
   assert.equal(hitDiet.matchText, null);
 });
 
+// ─── Vibes are searchable (owner request, 2026-08-17) ───────────────────────
+// "Quick eats" and "dog friendly" were typed at the box and found nothing: the
+// `vibe` vocabulary was in the data and on the cards, but not in the index.
+// The style facet at least had a filter; the amenity and character facets —
+// 21 of the corpus's 38 taggings — had no way in at all.
+
+const VIBEY = [
+  {
+    id: "goldings",
+    name: "Goldings Free Dive",
+    area: "Te Aro",
+    cuisine: ["Bar"],
+    vibe: ["dog-friendly", "craft-beer", "wellington-icon"],
+    menu: [],
+  },
+  {
+    id: "marigold",
+    name: "Marigold Takeaway",
+    area: "Churton Park",
+    cuisine: ["Fish and chips"],
+    vibe: ["quick-eats", "family-friendly"],
+    menu: [],
+  },
+  {
+    id: "posh",
+    name: "The Tasting Room",
+    area: "Thorndon",
+    cuisine: ["European"],
+    vibe: ["fine-dining", "quiz-night"],
+    menu: [],
+  },
+];
+const vibey = buildIndex(VIBEY);
+const vhit = (q) => search(vibey, q);
+
+test("finds a place by a vibe, typed the way it is LABELLED", () => {
+  assert.deepEqual(vhit("dog friendly").places.items.map((p) => p.id), ["goldings"]);
+  assert.deepEqual(vhit("quick eats").places.items.map((p) => p.id), ["marigold"]);
+  assert.deepEqual(vhit("craft beer").places.items.map((p) => p.id), ["goldings"]);
+  assert.deepEqual(vhit("quiz night").places.items.map((p) => p.id), ["posh"]);
+});
+
+test("…and typed the way it is STORED — the kebab key a filter URL carries", () => {
+  assert.deepEqual(vhit("dog-friendly").places.items.map((p) => p.id), ["goldings"]);
+  assert.deepEqual(vhit("wellington-icon").places.items.map((p) => p.id), ["goldings"]);
+});
+
+test("a fragment of a vibe finds it — nobody types the whole label", () => {
+  assert.deepEqual(vhit("dog").places.items.map((p) => p.id), ["goldings"]);
+  assert.deepEqual(vhit("fine din").places.items.map((p) => p.id), ["posh"]);
+});
+
+test("the vibe synonyms map onto exactly one vocabulary label", () => {
+  assert.deepEqual(vhit("silver service").places.items.map((p) => p.id), ["posh"], "37k's own phrase");
+  assert.deepEqual(vhit("grab and go").places.items.map((p) => p.id), ["marigold"]);
+  assert.deepEqual(vhit("quick lunch").places.items.map((p) => p.id), ["marigold"], "a former key's words");
+  assert.deepEqual(vhit("pub quiz").places.items.map((p) => p.id), ["posh"]);
+  assert.deepEqual(vhit("kids").places.items.map((p) => p.id), ["marigold"]);
+  assert.deepEqual(vhit("dogs").places.items.map((p) => p.id), ["goldings"], "the plural can't substring-match");
+});
+
+test("'fast food' is NOT a synonym — it names a segment, not one of the styles", () => {
+  // Deliberate omission, asserted so nobody adds it as an obvious oversight:
+  // it would have to pick between quick-eats and counter-order, and picking is
+  // guessing. The same bound the rest of SYNONYMS is held to.
+  assert.equal(vhit("fast food").places.total, 0);
+});
+
+test("a value outside the vocabulary is not searchable", () => {
+  // vibesFor() resolves through vibes.js, so data that slipped past
+  // validate.py cannot invent a search term. `quick-lunch` is a FORMER key:
+  // it must find nothing as a stored value, even though its WORDS are a
+  // synonym for the value that replaced it.
+  const rogue = buildIndex([{ id: "r", name: "R", cuisine: [], vibe: ["quick-lunch", "speakeasy"], menu: [] }]);
+  assert.equal(search(rogue, "speakeasy").places.total, 0);
+  assert.equal(search(rogue, "quick-lunch").places.total, 0);
+});
+
+test("a vibe hit reports the WHOLE label, so the row can show what matched", () => {
+  // Unlike area/cuisine — already on screen, so a slice is enough to
+  // highlight — a vibe is not in the row until it matches. app.js appends
+  // `matchText` to the sub-line, so it has to be the full label, not the
+  // fragment that was typed.
+  const [g] = vhit("dog").places.items;
+  assert.equal(g.matchField, "vibe");
+  assert.equal(g.matchText, "Dog friendly");
+  const [m] = vhit("grab and go").places.items;
+  assert.equal(m.matchField, "vibe");
+  assert.equal(m.matchText, "Quick eats", "a synonym reports the vocabulary's word, not the typed one");
+});
+
+test("a name or cuisine hit still wins over a vibe hit on the same place", () => {
+  // Field priority, not score: "Marigold" is a name, and the row must not
+  // claim a vibe answered a query its name did.
+  assert.equal(vhit("marigold").places.items[0].matchField, "name");
+  assert.equal(vhit("european").places.items[0].matchField, "cuisine");
+});
+
 test("every scored result carries a matchField — no silent gap", () => {
   // Invariant, not a spot check: nothing rank() scores should come back
   // without a stated reason. The "details" fallback exists precisely so a

@@ -55,7 +55,7 @@ const MI = {
   // against the owner's nominated dictionary, not improvised. Untranslated
   // reads as English; invented reads as wrong, and only one of those is
   // recoverable. Keys owed: search.hint.dish/place/ingredient/diet/cuisine/
-  // area/service/phone.
+  // vibe/area/service/phone.
   "search.clear": "Whakawātea rapu",
   "nav.backToTop": "Hoki ki runga",
   // Home list toggles

@@ -685,9 +685,27 @@ function wireSearch(restaurants) {
 
   function placeMatch(p) {
     if (p.matchField === "name") return { nameMatch: p.matchText };
-    if (p.matchField === "area" || p.matchField === "cuisine") return { subMatch: p.matchText };
+    if (p.matchField === "area" || p.matchField === "cuisine" || p.matchField === "vibe") {
+      return { subMatch: p.matchText };
+    }
     return { note: PLACE_NOTE[p.matchField] || PLACE_NOTE.details };
   }
+
+  // "Te Aro · Malaysian", plus the matched vibe when a vibe is what answered
+  // the query. The sub-line grows a part rather than the row carrying a
+  // "Matched: vibe" note, because for this field the reason and the answer are
+  // the same thing: someone who typed "dog friendly" wants to READ "Dog
+  // friendly" on the row, not be told a field name they never see. Rows that
+  // matched some other way are unchanged — a vibe is not a fact the row
+  // volunteers, or every card's sub would grow chips nobody asked about.
+  const placeSub = (p) =>
+    [
+      p.area,
+      (p.cuisine || []).join(", "),
+      p.matchField === "vibe" ? p.matchText : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
   function dishMatch(d) {
     if (d.matchField === "name") return { nameMatch: d.matchText };
     return { note: DISH_NOTE.details };
@@ -712,7 +730,7 @@ function wireSearch(restaurants) {
           count: groupCount(places),
           rows: places.items.map((p) => ({
             name: `${placeIcon(p)} ${p.name}`,
-            sub: [p.area, (p.cuisine || []).join(", ")].filter(Boolean).join(" · "),
+            sub: placeSub(p),
             href: `restaurant.html?id=${p.id}`,
             ...placeMatch(p),
           })),
