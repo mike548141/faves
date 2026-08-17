@@ -272,7 +272,8 @@ CASES = {
           "tags": [
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "df-option"
           ]""",
           """          "desc": "Prosciutto, rocket, basil.",
           "price": 24.0,
