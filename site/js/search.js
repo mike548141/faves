@@ -13,7 +13,21 @@ import { isRecipeKind, kindOf } from "./kinds.js";
 import { searchableText, venueLanguage } from "./lang.js";
 import { DIET_FILTERS } from "./dietary.js";
 
-const norm = (s) => (s || "").toLowerCase();
+// Lower-cased AND macron-folded, so "kumara" finds "kūmara" and "kūmara"
+// finds "kumara": the corpus writes both (Kūmara ×5, kumara ×7 on 2026-08-17)
+// and an iOS keyboard needs a long-press for ū, so before this the two
+// spellings found two different sets of dishes and neither found all of them.
+// Folded by a per-character map of the PRECOMPOSED macron vowels — never
+// NFD + strip — because the fold must stay length-preserving: findForm()
+// below slices the ORIGINAL text at an index found in the normalised text.
+// The corpus stores macrons precomposed (validate.py, ADR 0044's language
+// rules), so this map is complete for what is searched.
+const FOLD = { ā: "a", ē: "e", ī: "i", ō: "o", ū: "u", Ā: "a", Ē: "e", Ī: "i", Ō: "o", Ū: "u" };
+const norm = (s) => (s || "").toLowerCase().replace(/[āēīōūĀĒĪŌŪ]/g, (c) => FOLD[c]);
+/** The same fold for anyone else matching typed text against menu text — the
+ *  menu page's in-menu filter uses it, so "kumara" narrows to "Kūmara fries"
+ *  there too, and the two search boxes cannot drift apart on this. */
+export const foldSearchText = norm;
 
 // Digits only, so a number written with spaces, with hyphens, or run together
 // is one thing to search. Phone numbers are the one field people retype from
@@ -196,11 +210,12 @@ function score(name, hay, q) {
 // answered the query, so the reader can judge relevance themselves instead
 // of the UI implying a property match that isn't there.
 //
-// `text.toLowerCase()` is length-preserving for every script this corpus
-// uses (English + macronised Māori vowels + the languages under ADR 0044),
-// so an index found in the normalised text is the same index in the
-// original — findForm() can slice the ORIGINAL string and hand back the
-// literal substring a reader would recognise, never the lower-cased form.
+// `norm()` is length-preserving for every script this corpus uses (English
+// + macronised Māori vowels, folded one precomposed character to one plain
+// one + the languages under ADR 0044), so an index found in the normalised
+// text is the same index in the original — findForm() can slice the ORIGINAL
+// string and hand back the literal substring a reader would recognise, never
+// the lower-cased or folded form.
 function findForm(text, forms) {
   if (!text) return null;
   const t = norm(text);

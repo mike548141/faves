@@ -121,6 +121,11 @@ export function createAlarm({
   function tone() {
     if (!armed()) return { ok: false, reason: ctx ? "closed" : "not-armed" };
     try {
+      // iOS may leave an armed context "interrupted"/suspended after the phone
+      // was locked through a long timer; a beep scheduled onto that context is
+      // silent and this still reports played. resume() is the documented way
+      // back and a no-op on a running one — the same line arm() uses.
+      if (ctx.state !== "running") ctx.resume?.()?.catch?.(() => {});
       // A small lead so the first beep is scheduled rather than fired late by
       // the audio thread, which clips its attack.
       const start0 = ctx.currentTime + 0.03;

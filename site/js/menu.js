@@ -64,6 +64,7 @@ import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
 import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
 import { wireSearchClear } from "./search-clear.js";
+import { foldSearchText } from "./search.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { dishReportButton, venueReportRow, initReportEntry } from "./report-ui.js";
@@ -1173,13 +1174,14 @@ function renderDish(item, r = null, avoid = EMPTY_SET, section = null) {
   // for that. `data-dish-id` is the row's identity, the same string as the DOM
   // id, so anything wanting to address one particular "Cheeseburger" of three
   // can, without parsing the id off the element.
-  li.dataset.name = item.name.toLowerCase();
+  // Lower-cased AND macron-folded (search.js), so "kumara" narrows to
+  // "Kūmara fries" here as it does in the home search.
+  li.dataset.name = foldSearchText(item.name);
   li.dataset.dishId = dishId(item);
   // Include ingredients in the search haystack so "lemon" finds the pasta.
-  li.dataset.desc = [item.desc, ...ingredientKeys(item.ingredients)]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
+  li.dataset.desc = foldSearchText(
+    [item.desc, ...ingredientKeys(item.ingredients)].filter(Boolean).join(" ")
+  );
   li.dataset.tags = (item.tags || []).join(" ");
   li.append(...children);
 
@@ -1458,7 +1460,7 @@ function render(r) {
 
   // --- View logic: search hides, dietary dims -----------------------
   function applyView() {
-    const q = search.value.trim().toLowerCase();
+    const q = foldSearchText(search.value.trim());
     searchClear.hidden = search.value.length === 0;
     let visibleTotal = 0;
     for (const sec of sectionEls) {

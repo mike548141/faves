@@ -32,8 +32,13 @@ const FIXTURE = [
     name: "Sprig + Fern Tawa",
     area: "Tawa",
     cuisine: ["Gastropub"],
-    menu: [{ section: "Beer", items: [{ name: "Pilsner" }] }],
+    menu: [
+      { section: "Beer", items: [{ name: "Pilsner" }] },
+      // Both spellings, as the corpus really has them (Kūmara ×5, kumara ×7).
+      { section: "Sides", items: [{ name: "Kūmara fries", desc: "With aioli" }, { name: "Kumara wedges" }] },
+    ],
   },
+  { id: "pauatahanui-inn", name: "Pāuatahanui Inn", area: "Pāuatahanui", cuisine: ["Pub"] },
   {
     id: "cook-at-home",
     kind: "recipes",
@@ -55,8 +60,8 @@ const FIXTURE = [
 const index = buildIndex(FIXTURE);
 
 test("buildIndex: one place per venue, one dish per menu item", () => {
-  assert.equal(index.places.length, 4);
-  assert.equal(index.dishes.length, 4); // 2 + 1 + 1; stub contributes none
+  assert.equal(index.places.length, 5);
+  assert.equal(index.dishes.length, 6); // 2 + 3 + 1; the two stubs contribute none
 });
 
 test("search: matches a place by name", () => {
@@ -79,6 +84,23 @@ test("search: matches a dish by name and deep-links with the shared slug", () =>
   assert.equal(dishes.items[0].name, "Mee Goreng");
   assert.equal(dishes.items[0].href, "restaurant.html?id=kk-malaysian#dish-mee-goreng");
   assert.equal(dishes.items[0].venueName, "KK Malaysian");
+});
+
+test("search: macrons fold both ways — kumara finds kūmara and kūmara finds kumara", () => {
+  // The corpus writes both spellings; an iOS keyboard needs a long-press for
+  // ū. Before 2026-08-17 `norm` was toLowerCase() alone, so "kumara" found
+  // 7 dishes and "kūmara" 3 different ones, and "pauatahanui" found nothing.
+  for (const q of ["kumara", "kūmara", "KŪMARA"]) {
+    const { dishes } = search(index, q);
+    assert.deepEqual(dishes.items.map((d) => d.name).sort(), ["Kumara wedges", "Kūmara fries"], q);
+  }
+  const { places } = search(index, "pauatahanui");
+  assert.equal(places.items[0]?.name, "Pāuatahanui Inn");
+  // And the literal form handed back is sliced from the ORIGINAL text — the
+  // reader sees the venue's own spelling, macron and all, never the fold.
+  const hit = search(index, "kumara").dishes.items.find((d) => d.name === "Kūmara fries");
+  assert.equal(hit.matchField, "name");
+  assert.equal(hit.matchText, "Kūmara");
 });
 
 test("search: a recipe dish deep-links to the recipe page", () => {
