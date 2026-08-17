@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@0af3006`, owner-ratified 2026-07-25, bumped 2026-08-17)
+## Doctrine — inherited from atelier (pinned `atelier@e2fddc5`, owner-ratified 2026-07-25, bumped 2026-08-18)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -35,15 +35,24 @@ in atelier and is read on demand — never wholesale.
   claim still lands on `main` from the primary checkout even when that checkout
   is dirty:** if the stranger's edits don't touch the queue file, stage and
   commit *the claim line alone* — the one sanctioned touch inside another
-  session's tree, safe because it stages only your own hunk. If **the item's own
-  file** under `docs/roadmap/` is dirty, that is proof the other session is
-  queue-active on *that item*: take the next open one, touch nothing. (Until
-  2026-08-17 this read "if `ROADMAP.md` is dirty" — with one 5,300-line file
-  holding every claimable item, "the next item" lived inside the file "touch
-  nothing" had just forbidden, so read literally nobody could claim anything;
-  three sessions were blocked simultaneously on 2026-08-16. The owner's ruling
-  was to adopt atelier's split board rather than reword the rule, and the split
-  is what makes this sentence true as written.) Name
+  session's tree, safe because it stages only your own hunk. **But a claim here
+  is never the claim line alone** — it also carries the regenerated
+  `docs/ROADMAP.md`, and `board.py rebuild` reads the *worktree*, so **any**
+  dirty item state line under `docs/roadmap/` — yours or a sibling item's —
+  gets absorbed into the index you are about to commit, publishing another
+  session's uncommitted claim under your name. The hook cannot see it: its
+  `board` check compares worktree to index and they agree. So **a dirty item
+  state line anywhere under `docs/roadmap/` is a stop for claiming from that
+  checkout** — take a worktree, don't pick a different item (BS1, owner-ruled in
+  atelier 2026-08-17, until the staged-plane check lands). (Until 2026-08-17
+  this read "if `ROADMAP.md` is dirty" — with one 5,300-line file holding every
+  claimable item, "the next item" lived inside the file "touch nothing" had just
+  forbidden, so read literally nobody could claim anything; three sessions were
+  blocked simultaneously on 2026-08-16. The owner's ruling was to adopt
+  atelier's split board rather than reword the rule. The split fixed *that*
+  deadlock and opened this one: it made "take the next open one" sayable, and
+  BS1 is the finding that taking it from a dirty checkout still forges a
+  sibling's claim.) Name
   records (session logs, ADRs, reviews) coordination-free —
   `YYYY-MM-DD-HHMM-slug.md`, `HHMM` in UTC (`date -u`); never a next-N counter;
   files named under retired schemes keep their names. Where sessions can message
