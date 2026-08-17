@@ -121,9 +121,18 @@ export const NEAR_BRANCH_LIMIT = 4;
  * `branches` must already be nearest-first (orderedBranches). Pure.
  */
 export function leadBranch(branches, openStateOf = () => "unknown") {
+  // hours.js `openStatus` answers in FIVE states; the rule reads three. The
+  // transitional pair fold in here rather than at every caller: "closing-soon"
+  // IS open (a branch closing in 30 minutes is the one whose chip says so, and
+  // it still leads over a farther one), "opening-soon" IS closed. Until
+  // 2026-08-17 menu.js passed the raw state through, so at 8:30pm the nearest
+  // branch closing at 9pm lost the lead to a farther one open till 11pm —
+  // ranking.js already folds the pair this way for the home list.
+  const isOpen = (s) => s === "open" || s === "closing-soon";
+  const isClosed = (s) => s === "closed" || s === "opening-soon";
   return (
-    branches.find((b) => openStateOf(b) === "open") ??
-    branches.find((b) => openStateOf(b) !== "closed") ??
+    branches.find((b) => isOpen(openStateOf(b))) ??
+    branches.find((b) => !isClosed(openStateOf(b))) ??
     branches[0]
   );
 }

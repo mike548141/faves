@@ -302,6 +302,85 @@ async function run(opts) {
       denied.statusText || "(no status line)"
     );
 
+    // ── 8. ALLOW is not a decline ──────────────────────────────────────────
+    // The dialog's `close` event fires on every close, including the one the
+    // Allow path performs itself, as a queued task. Until 2026-08-17 that
+    // listener recorded a DECLINE after Allow and, when the browser then
+    // denied, re-showed the banner over the "blocked" line — a second ask for
+    // a permission the browser will not grant. Both are asserted here from the
+    // real dialog, because the wiring is where this promise breaks.
+    //
+    // The browser's answer is STUBBED on the page rather than set through CDP:
+    // Browser.setPermission fires perm.onchange, whose own handler fetches and
+    // closes the dialog before any click lands, so the app's Allow path — the
+    // thing under test — would never run. A stub answers only what the tap
+    // asked, and answers it the same way every run.
+    const stubGeo = (answer) => driver.evalPage(`(() => {
+      navigator.geolocation.getCurrentPosition = (ok, err) => {
+        ${answer === "ok"
+          ? "setTimeout(() => ok({ coords: { latitude: -41.2247, longitude: 174.8079 } }), 0);"
+          : "setTimeout(() => err({ code: 1, PERMISSION_DENIED: 1, message: 'denied' }), 0);"}
+      };
+      return true;
+    })()`);
+    const settledState = () => driver.evalPage(`(() => {
+      const c = JSON.parse(localStorage.getItem("faves.geo.consent.v1") || "null");
+      const banner = document.getElementById("geo-banner");
+      return {
+        declined: c?.declined === true,
+        dialogOpen: document.getElementById("geo-dialog")?.open === true,
+        bannerShown: !!banner && !banner.hidden,
+        statusText: (document.getElementById("geo-status")?.textContent || "").trim(),
+      };
+    })()`);
+
+    await setPermission(cdp, origin, "prompt");
+    await driver.evalPage(`localStorage.removeItem("faves.geo.consent.v1")`);
+    await openHome(cdp, driver, sessionId, port);
+    const askAgain = await waitForAsk(driver);
+    report.check(
+      "(setup) a fresh consent record brings the dialog back",
+      askAgain.dialogOpen === true,
+      `dialog open: ${askAgain.dialogOpen}`
+    );
+    await stubGeo("ok");
+    await driver.click("#geo-dialog-allow");
+    await until(async () => !(await settledState()).dialogOpen, { label: "dialog closed after Allow" });
+    await sleep(300); // the queued `close` task has landed
+    const allowedState = await settledState();
+    report.check(
+      "tapping Allow does not record a decline",
+      allowedState.declined === false,
+      `consent.declined = ${allowedState.declined}`
+    );
+    report.check(
+      "…and leaves no banner behind once the location is in",
+      allowedState.bannerShown === false && /near you/i.test(allowedState.statusText),
+      `banner: ${allowedState.bannerShown}, status: "${allowedState.statusText}"`
+    );
+
+    // ── 9. Allow, then the BROWSER says no → blocked line, no banner ───────
+    // Scenario 8 left a remembered origin in sessionStorage; with one in hand
+    // the app rightly asks nothing, so it goes too.
+    await driver.evalPage(`(localStorage.removeItem("faves.geo.consent.v1"), sessionStorage.removeItem("faves.origin.v1"), true)`);
+    await openHome(cdp, driver, sessionId, port);
+    const askThird = await waitForAsk(driver);
+    report.check(
+      "(setup) the dialog is back for the browser-denies case",
+      askThird.dialogOpen === true,
+      `dialog open: ${askThird.dialogOpen}`
+    );
+    await stubGeo("denied");
+    await driver.click("#geo-dialog-allow");
+    await until(async () => !(await settledState()).dialogOpen, { label: "dialog closed after Allow-then-denied" });
+    await sleep(300);
+    const blockedState = await settledState();
+    report.check(
+      "Allow met by a browser denial shows the blocked line and NO banner",
+      blockedState.bannerShown === false && /blocked/i.test(blockedState.statusText),
+      `banner: ${blockedState.bannerShown}, status: "${blockedState.statusText}"`
+    );
+
     console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
     return report.failed === 0;
   } finally {

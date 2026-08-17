@@ -168,6 +168,18 @@ const RANGE_AFTER_QTY = /^\s*(?:[-–—]|to\s+\d)/;
 // and a reader following the bracket halves the recipe without knowing.
 const ALTERNATIVE = /\(\s*or\b[^)]*\d/i;
 
+// A SECOND AMOUNT JOINED ON. "1 can coconut cream and 1 can coconut milk" —
+// the head parser scales the cream and leaves the milk, and the line reads
+// "2 cans coconut cream and 1 can coconut milk", status scaled, nothing on
+// screen to say half of it moved. Found by this repo's 2026-08-17 cold review
+// on a real corpus line (Famous Brade, Green Chicken Curry); the ranged and
+// bracketed shapes above were caught and this one, a conjunction, was not.
+// Only a quantity INTRODUCED BY a joining word is refused: "4 plums, cut into
+// 6 wedges each" carries a second number that is not an amount to scale, and
+// "1 x 9-inch pie crust" scales correctly as it is. Tested with brackets
+// removed, so the conversion bracket keeps its own rule below.
+const CONJOINED_QTY = /\b(?:and|or|plus|with|&)\s+(?:\d|[½⅓¼¾⅔⅛⅜⅝⅞])/i;
+
 // --- Countables: the egg problem -------------------------------------------
 
 // Things a recipe counts rather than measures. Halving these is where scaling
@@ -245,6 +257,7 @@ export function scaleLineStatus(text, scale) {
 
   if (RANGE_AFTER_QTY.test(rest)) return blocked;
   if (ALTERNATIVE.test(text)) return blocked;
+  if (CONJOINED_QTY.test(rest.replace(/\([^)]*\)/g, ""))) return blocked;
 
   // The round trip, on the head quantity: could we have written what we read?
   // One tolerated difference: "1 ½" is written back as "1½", so compare with

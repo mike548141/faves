@@ -1176,26 +1176,40 @@ function wireLocation(state, render) {
   // backdrop. Someone who ticks the box and then presses Escape has told us the
   // same thing as someone who ticks it and taps "Not now"; reading the tick only
   // on one path would quietly break the promise on the others.
-  function leaveDialog({ allowed }) {
+  //
+  // 🚩 The `close` event fires on EVERY close, including the one fetchOrigin
+  // performs after Allow — as a queued task, so it lands after the Allow
+  // path has already written its own outcome. Until 2026-08-17 that listener
+  // called leaveDialog({ allowed: false }) unconditionally, so tapping Allow
+  // recorded a DECLINE, and Allow-then-browser-denies re-showed the banner
+  // over the "location is blocked" line — a second ask for a permission the
+  // browser will not grant, which is the one thing ADR 0083 says is worse
+  // than silence. So the dialog remembers whether Allow was chosen, and each
+  // opening settles exactly once, whichever exit fires first.
+  let allowed = false;
+  let settled = false;
+  function leaveDialog() {
+    if (settled) return;
+    settled = true;
     if (never?.checked) suppressAsk();
     else if (!allowed) declineAsk();
     closeDialog();
     // The banner is the consequence of declining WITHOUT ticking. askSurface()
-    // owns that decision rather than this branch re-deriving it.
+    // owns that decision rather than this branch re-deriving it. After Allow
+    // the fetch callbacks own the banner (blocked → gone; transient → shown).
     if (!allowed) {
       showBanner(askSurface("prompt", readConsent(), Boolean(state.origin)) === "banner");
     }
   }
 
   document.getElementById("geo-dialog-allow")?.addEventListener("click", () => {
+    allowed = true;
     if (never?.checked) suppressAsk(); // they may still never want asking again
     fetchOrigin({ silent: false });
   });
-  document.getElementById("geo-dialog-skip")?.addEventListener("click", () =>
-    leaveDialog({ allowed: false })
-  );
+  document.getElementById("geo-dialog-skip")?.addEventListener("click", () => leaveDialog());
   // Esc and backdrop dismissal both fire "close" without firing any click.
-  dialog?.addEventListener("close", () => leaveDialog({ allowed: false }));
+  dialog?.addEventListener("close", () => leaveDialog());
 
   document.getElementById("geo-banner-allow")?.addEventListener("click", () =>
     fetchOrigin({ silent: false })
@@ -1249,6 +1263,8 @@ function wireLocation(state, render) {
           showBanner(true);
           return;
         }
+        allowed = false; // a fresh opening settles afresh
+        settled = false;
         dialog.showModal();
       }, 900))
     );

@@ -119,6 +119,21 @@ test("only the LEADING quantity moves, never a later number", () => {
   assert.equal(scaleLine("1 x 9-inch pie crust", TWO), "2 x 9-inch pie crust");
 });
 
+test("a second amount JOINED ON by a conjunction is refused, not half-scaled", () => {
+  // CORPUS (Famous Brade, Green Chicken Curry). Until 2026-08-17 this line
+  // doubled to "2 cans coconut cream and 1 can coconut milk", status scaled —
+  // half the line moved and nothing on screen said so, which is the exact
+  // outcome "blocked" exists to prevent. The wedges and pie-crust lines above
+  // are the control: a later number that is NOT an amount still scales.
+  const s = scaleLineStatus("1 can coconut cream and 1 can coconut milk", TWO);
+  assert.equal(s.status, "blocked");
+  assert.equal(s.text, "1 can coconut cream and 1 can coconut milk");
+  assert.equal(scaleLineStatus("1 tsp salt or 2 tsp flakes", TWO).status, "blocked");
+  assert.equal(scaleLineStatus("2 tbsp butter, plus 1 tbsp for the tin", TWO).status, "blocked");
+  // A conversion bracket followed by prose with no amount is still fine.
+  assert.equal(scaleLine("1 cup flour (125 g) and a pinch of salt", TWO), "2 cups flour (250 g) and a pinch of salt");
+});
+
 test("a parenthetical metric conversion scales with its primary", () => {
   // CORPUS — Chocolate Self-Saucing Pudding writes all nine lines this way.
   assert.equal(scaleLine("¾ cup (190 ml) white sugar", TWO), "1½ cups (380 ml) white sugar");

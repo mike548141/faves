@@ -162,6 +162,19 @@ test("leadBranch: the nearest OPEN branch leads, not simply the nearest", () => 
   assert.equal(lead.label, "b");
 });
 
+test("leadBranch: a branch closing SOON is still open, and an opening-soon one is still closed", () => {
+  // openStatus has five states; the rule has three. At 8:30pm the nearest
+  // branch closing at 9pm reported "closing-soon", was not === "open", and
+  // lost the lead to a farther branch open till 11pm — while its own chip
+  // read "Closes in 30 min". Found by the 2026-08-17 cold review.
+  const branches = [b("a", 1), b("b", 3), b("c", 8)];
+  assert.equal(leadBranch(branches, states({ a: "closing-soon", b: "open", c: "open" })).label, "a");
+  // Opening-soon is closed for this purpose: an unknown branch outranks it,
+  // and a known-open one certainly does.
+  assert.equal(leadBranch(branches, states({ a: "opening-soon", b: "unknown", c: "closed" })).label, "b");
+  assert.equal(leadBranch(branches, states({ a: "opening-soon", b: "closed", c: "open" })).label, "c");
+});
+
 test("leadBranch: unknown hours beat known-closed — absence of evidence is not evidence", () => {
   // The McDonald's case: no branch carries hours, so nothing is known open.
   const branches = [b("a", 1), b("b", 3)];
