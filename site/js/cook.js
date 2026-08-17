@@ -59,10 +59,23 @@ export const canCook = (item) => stepsOf(item).length > 0;
 // do.
 //
 // THE BIAS IS DELIBERATE AND ONE-WAY: when in doubt, SHOW the line. A missing
-// ingredient mid-cook is a real failure; a redundant one is a blemish. Every
-// rule below only ever *fails to hide*, and a recipe whose ingredients cannot
-// be parsed at all shows its whole list on every step, exactly as the old
-// button did.
+// ingredient mid-cook is a real failure; a redundant one is a blemish. A recipe
+// whose ingredients cannot be parsed at all shows its whole list on every step,
+// exactly as the old button did.
+//
+// 🚩 THIS PARAGRAPH USED TO CLAIM "every rule below only ever *fails to hide*",
+// AND THAT WAS FALSE — measured, not argued. The ambiguity rule below hid the
+// line the step was asking for on three real recipes: Upside-Down Plum Cake's
+// butter (topping and batter both list one), Chocolate Self-Saucing Pudding's
+// cocoa (pudding and sauce both list one) and Easy Pad Thai's peanuts (the oil
+// and the roasted nuts). A corpus sweep found 23 such (step, line) pairs. The
+// rule is fixed rather than the sentence — see `ingredientsForStep` — because
+// the bias IS the design, and a rule that hides what a step names is not a
+// blemish, it is the failure the bias exists to prevent. What the sentence can
+// honestly say now: no rule below hides a line whose own words the step uses.
+// It still cannot promise the converse — a step naming an ingredient in words
+// the line never uses ("the dry ingredients", a synonym) matches nothing, and
+// nothing here can know it should.
 
 // Measurements, packaging and size words — they appear in ingredient lines and
 // in instructions alike ("2 cups flour" / "spoon into the dish"), so matching on
@@ -171,9 +184,32 @@ export function ingredientsForStep(step, ingredients) {
     for (const t of new Set(terms)) seen.set(t, (seen.get(t) || 0) + 1);
   }
   const usable = (t) => t.includes(" ") || seen.get(t) === 1;
-  return list.filter((line) =>
-    termsOf.get(line).some((t) => usable(t) && haystack.includes(` ${t} `))
+  const named = (t) => haystack.includes(` ${t} `);
+  const shown = new Set(
+    list.filter((line) => termsOf.get(line).some((t) => usable(t) && named(t)))
   );
+
+  // …AND WHEN THE SHARED WORD IS ALL THE STEP SAYS, SHOW EVERY LINE THAT CARRIES
+  // IT. The pass above is only half the answer: "Cream the butter and sugar"
+  // names butter and nothing more specific, so on a recipe listing butter twice
+  // it settled nothing and the step showed NO butter at all. That is the bias
+  // inverted — the reader is at the bench being told this step needs nothing,
+  // about the one ingredient it names. Three real recipes did it (see the
+  // header). So an ambiguous word the step uses falls back to showing all of its
+  // lines, which is the honest answer to "I can't tell which one": both.
+  //
+  // The guard is what keeps the "brown sugar" case working. A fallback fires
+  // only when NOTHING the word belongs to was already matched — "Beat together
+  // the white sugar…" matches that line on its phrase, so "sugar" has been
+  // answered and the sauce's brown sugar stays out. It is the step's own
+  // specificity that decides, never a count.
+  for (const [t, count] of seen) {
+    if (count < 2 || t.includes(" ") || !named(t)) continue;
+    const carriers = list.filter((line) => termsOf.get(line).includes(t));
+    if (carriers.some((line) => shown.has(line))) continue;
+    for (const line of carriers) shown.add(line);
+  }
+  return list.filter((line) => shown.has(line));
 }
 
 /** Whether this step needs anything at all — `ingredientsForStep`, as a test. */
@@ -241,11 +277,26 @@ export function formatDuration(seconds) {
  * without waiting 35 real minutes.
  *
  * One tap starts it, one tap pauses it, and reset() puts it back to the top.
+ * Hand it `{ endsAt }` and it comes back already running — see below.
  */
-export function createTimer(totalSeconds, now = () => Date.now()) {
+export function createTimer(totalSeconds, now = () => Date.now(), { endsAt: resumeAt = null } = {}) {
   const total = Math.max(0, Math.round(Number(totalSeconds) || 0));
   let endsAt = null; // set while running
   let left = total; // authoritative while paused
+
+  // Handed a wall clock, this timer is already running — it was started before
+  // the sheet was closed or the page reloaded (see `createTimerStore`). Capped
+  // at a full countdown from now because the step's stated time is the only
+  // total we have: if the recipe data has since been edited to a SHORTER time,
+  // an uncapped record would sit above 100% of its own bar and count down
+  // through a full track that no longer matches it.
+  // `!= null` before the numeric check, and not merely for tidiness: Number(null)
+  // is 0, which is finite, so a plain isFinite() reads "no saved timer" as a
+  // timer that ended at the epoch — every countdown in the app would open
+  // already at 00:00. Caught by the unit test, not by reading it.
+  if (resumeAt != null && Number.isFinite(Number(resumeAt)) && total > 0) {
+    endsAt = Math.min(Number(resumeAt), now() + total * 1000);
+  }
 
   const remaining = () =>
     endsAt === null ? left : Math.max(0, Math.round((endsAt - now()) / 1000));
@@ -253,6 +304,8 @@ export function createTimer(totalSeconds, now = () => Date.now()) {
   return {
     total,
     remaining,
+    /** The wall clock this ends at, or null while paused — what gets stored. */
+    endsAt: () => endsAt,
     running: () => endsAt !== null && remaining() > 0,
     done: () => remaining() === 0 && (endsAt !== null || left !== total),
     /** Start, or resume from where a pause left it. No-op when already running. */
@@ -273,6 +326,134 @@ export function createTimer(totalSeconds, now = () => Date.now()) {
     reset() {
       endsAt = null;
       left = total;
+    },
+  };
+}
+
+// --- A running timer outlives the sheet (Theme 36, cold review 2026-08-17) --
+//
+// THE FAILURE THIS FIXES, in the reviewer's measurement: 10 of the 24 recipes
+// carry their timer on the LAST step, whose primary button is *Done* — and Done
+// closes the sheet. So on those recipes the single most likely tap at the moment
+// a timer matters was the one that destroyed it, silently, along with its bell.
+// Reloading and iOS discarding the tab did the same.
+//
+// PERSIST, DON'T CONFIRM. The other repair is a "you have a timer running —
+// close anyway?" dialog, and it was rejected in the item itself: a confirmation
+// asks the reader to think at exactly the moment they are holding a hot tray.
+// A timer that simply survives asks nothing of anyone.
+//
+// 🚩 WHAT THIS DOES NOT BUY, said plainly. The bell cannot ring while the sheet
+// is closed: cook mode's one interval is cleared on close (a 1s interval behind
+// a closed sheet is the leak class ADR 0034 exists about), and a closed tab has
+// no interval at all. There is no scheduled-notification API to lean on. So a
+// timer that falls due while you are elsewhere announces itself when you come
+// back — the countdown is wall-clock, so what it says on return is the truth and
+// not a counter that lost time.
+//
+// …AND WHY A RECORD EXPIRES RATHER THAN WAITING. A bell that fell due while you
+// were away is news if you can still act on it — the oven is on, the tray is in
+// there. Three days later it is not news, it is a jump scare about a meal that
+// was eaten or thrown out, and cook mode has no way to tell the difference
+// except the clock. So a record is dropped once its own end is more than an hour
+// behind: long enough that a timer finished while you took a phone call is still
+// waiting for you, short enough that nothing rings at breakfast about dinner.
+//
+// A RECORD IS ALSO SPENT THE MOMENT ITS BELL RINGS, and that is not tidiness.
+// Kept, it would hold the countdown at 00:00 with its toggle DISABLED (the face
+// is "Time's up" and there is nothing left to start), so every reopen inside the
+// hour would hand the reader a dead control on a recipe they have come back to
+// cook again. Measured here: leaving it in place broke four of `cook_check`'s
+// existing alarm assertions, because the next scenario could no longer start the
+// timer at all. Clearing on the ring is what makes "a bell rings once" true and
+// leaves a fresh countdown behind it.
+
+/** Where a running timer is remembered. Device-level, not per-profile: the oven
+ *  belongs to the kitchen, not to whoever is signed in on the phone. */
+export const TIMERS_KEY = "faves.timers.v1";
+
+/** How long past its own end a finished timer stays worth telling you about. */
+export const TIMER_GRACE_MS = 60 * 60 * 1000;
+
+/** Above this a record is not a timer we wrote — `stepDuration` caps at a day. */
+const TIMER_MAX_MS = 24 * 60 * 60 * 1000;
+
+/** One timer's handle: which recipe (ADR 0051's identity) and which step. */
+export const timerKey = (rid, step) => `${rid}|${step}`;
+
+/**
+ * Coerce whatever is on disk into `{ "<rid>|<step>": { endsAt } }`, dropping
+ * anything expired, absurd or unreadable. Same fail-soft contract as the
+ * checklist's: a hand-edited or corrupt file costs a forgotten timer and never
+ * an exception in a kitchen.
+ */
+export function sanitiseTimers(raw, { now = Date.now(), graceMs = TIMER_GRACE_MS } = {}) {
+  const out = {};
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return out;
+  for (const [key, rec] of Object.entries(raw)) {
+    if (!key || !rec || typeof rec !== "object") continue;
+    const endsAt = Number(rec.endsAt);
+    if (!Number.isFinite(endsAt)) continue;
+    if (now - endsAt > graceMs) continue; // finished, and finished too long ago
+    if (endsAt - now > TIMER_MAX_MS) continue; // a clock that jumped, or a hand edit
+    out[key] = { endsAt };
+  }
+  return out;
+}
+
+/**
+ * The store. `storage` and `now` are injected so the whole lifecycle — expiry
+ * included — is provable under `node --test` without a browser or a clock.
+ *
+ * Expiry is evaluated ON READ, and every method re-reads: another tab (or the
+ * same recipe open twice) may have started or stopped a timer since, and the
+ * cost of getting that wrong is a bell that doesn't ring.
+ */
+export function createTimerStore(storage, now = () => Date.now()) {
+  function read() {
+    try {
+      return sanitiseTimers(JSON.parse(storage.getItem(TIMERS_KEY) || "null"), { now: now() });
+    } catch {
+      return {};
+    }
+  }
+
+  function write(all) {
+    try {
+      // Nothing running and nothing recently rung ⇒ take the key away rather
+      // than leave an empty object behind.
+      if (Object.keys(all).length) storage.setItem(TIMERS_KEY, JSON.stringify(all));
+      else storage.removeItem(TIMERS_KEY);
+    } catch {
+      /* blocked or over quota — the timer still runs for this session */
+    }
+  }
+
+  return {
+    /** This step's saved timer, or null. Never throws. */
+    get(rid, step) {
+      return read()[timerKey(rid, step)] ?? null;
+    },
+    /** Which steps of this recipe have a saved timer — what a reopen rehydrates. */
+    steps(rid) {
+      const prefix = `${rid}|`;
+      return Object.keys(read())
+        .filter((k) => k.startsWith(prefix))
+        .map((k) => Number(k.slice(prefix.length)))
+        .filter((n) => Number.isInteger(n) && n >= 0);
+    },
+    /** Remember a running timer. */
+    start(rid, step, endsAt) {
+      const all = read();
+      all[timerKey(rid, step)] = { endsAt: Number(endsAt) };
+      write(all);
+    },
+    /** Rung, paused, reset — no longer a fact about food in an oven. */
+    clear(rid, step) {
+      const all = read();
+      if (!(timerKey(rid, step) in all)) return;
+      delete all[timerKey(rid, step)];
+      write(all);
     },
   };
 }

@@ -16,6 +16,7 @@ import {
   clampIndex,
   createSpeaker,
   createTimer,
+  createTimerStore,
   createWakeLock,
   formatDuration,
   ingredientTerms,
@@ -26,6 +27,10 @@ import {
   stepState,
   stepUsesIngredients,
   stepsOf,
+  sanitiseTimers,
+  timerKey,
+  TIMER_GRACE_MS,
+  TIMERS_KEY,
 } from "../site/js/cook.js";
 
 // --- Which recipes can be cooked from -------------------------------------
@@ -283,6 +288,12 @@ test("visibilitychange on an unsupported browser stays silent", async () => {
 // a blemish, hiding one that is needed is a ruined dish. Every case below that
 // asserts a HIDE is a step that genuinely names nothing from the list.
 
+// Chocolate Self-Saucing Pudding's real list, ALL of it. The sauce's cocoa was
+// missing from this fixture until 2026-08-17, and its absence is what let the
+// ambiguity rule look correct here while hiding the cocoa line on the actual
+// recipe: with one cocoa the word is unique and usable, with two it is neither.
+// A guard whose fixture excludes the failing case agrees with its author rather
+// than with the corpus, so the line is now here and pinned by the test below.
 const PUDDING = [
   "¾ cup (190 ml) white sugar",
   "100g butter, softened",
@@ -293,6 +304,8 @@ const PUDDING = [
   "1 tbsp (15 ml) cocoa",
   "Water or milk, as required for a thick batter",
   "Sauce: ½ cup (125 ml) brown sugar",
+  "Sauce: ¼ cup (60 ml) cocoa",
+  "Sauce: 1 tbsp (15 ml) cornflour",
   "Sauce: 2 cups (500 ml) boiling water",
 ];
 
@@ -327,6 +340,32 @@ test("a step lists only what it names, not the whole recipe", () => {
   ]);
   // Emphatically NOT the sauce, the flour or the baking powder.
   assert.ok(!got.some((l) => l.startsWith("Sauce:")));
+});
+
+test("a shared word the step names shows EVERY line that carries it", () => {
+  // The bug the cold review found on three real recipes. This pudding lists
+  // cocoa twice, so "cocoa" tells the two lines apart for nobody — and the rule
+  // used to answer that by showing NEITHER, on a step whose only ingredient is
+  // cocoa. Both is the honest answer to "I can't tell which"; none is the bias
+  // inverted, and the reader is at the bench.
+  const got = ingredientsForStep("Sprinkle over the brown sugar, cocoa and cornflour.", PUDDING);
+  assert.ok(got.includes("1 tbsp (15 ml) cocoa"));
+  assert.ok(got.includes("Sauce: ¼ cup (60 ml) cocoa"));
+  // …and the phrase-matched lines beside them are unaffected.
+  assert.ok(got.includes("Sauce: ½ cup (125 ml) brown sugar"));
+  assert.ok(got.includes("Sauce: 1 tbsp (15 ml) cornflour"));
+  assert.ok(!got.includes("¾ cup (190 ml) white sugar"), "brown sugar is not white sugar");
+});
+
+test("a step that names the specific line does NOT drag its namesakes in", () => {
+  // The guard that keeps the fallback above honest: "white sugar" answers
+  // "sugar" for this step, so the sauce's brown sugar has no claim on it. It is
+  // the step's own specificity that decides, never a count.
+  const got = ingredientsForStep("Beat together the white sugar, softened butter, egg and vanilla.", PUDDING);
+  assert.ok(got.includes("¾ cup (190 ml) white sugar"));
+  assert.ok(!got.some((l) => l.startsWith("Sauce:")));
+  // "white" is shared with the flour, and the flour is not in this step.
+  assert.ok(!got.includes("1¼ cups (310 ml) white flour"));
 });
 
 test("plural ingredient vs singular instruction still matches", () => {
@@ -411,6 +450,131 @@ test("a backgrounded phone comes back with the right number, not a frozen one", 
   assert.equal(t.remaining(), 0);
   assert.equal(t.done(), true);
   assert.equal(t.running(), false); // finished is not running
+});
+
+// --- A running timer outlives the sheet (Theme 36) ------------------------
+//
+// What these prove: the RECORD — written on the tap, read back as a running
+// countdown, expired once it is stale. What they cannot prove is the thing the
+// item is actually about, that a timer survives a real sheet close and a real
+// reload; that is a browser fact and it is asserted in tools/cook_check.mjs.
+
+/** localStorage's shape, with no browser. */
+function fakeStorage(seed = {}) {
+  const mem = new Map(Object.entries(seed));
+  return {
+    getItem: (k) => (mem.has(k) ? mem.get(k) : null),
+    setItem: (k, v) => mem.set(k, String(v)),
+    removeItem: (k) => mem.delete(k),
+    _mem: mem,
+  };
+}
+
+test("a timer handed a stored end time comes back RUNNING", () => {
+  let now = 1_000_000;
+  const t = createTimer(600, () => now, { endsAt: now + 200_000 });
+  assert.equal(t.running(), true);
+  assert.equal(t.remaining(), 200);
+  now += 100_000;
+  assert.equal(t.remaining(), 100);
+});
+
+test("a stored end time already past comes back DONE, not restarted", () => {
+  const now = 5_000_000;
+  const t = createTimer(600, () => now, { endsAt: now - 30_000 });
+  assert.equal(t.remaining(), 0);
+  assert.equal(t.done(), true);
+  assert.equal(t.running(), false);
+});
+
+test("a stored end time beyond the step's own length is capped, not painted past 100%", () => {
+  // The recipe data said 35 minutes when the timer started and says 10 now.
+  const now = 2_000_000;
+  const t = createTimer(600, () => now, { endsAt: now + 35 * 60_000 });
+  assert.equal(t.remaining(), 600);
+  assert.ok(t.remaining() <= t.total);
+});
+
+test("no stored end time leaves the timer exactly as it always was", () => {
+  const t = createTimer(600, () => 0);
+  assert.equal(t.running(), false);
+  assert.equal(t.endsAt(), null);
+  assert.equal(t.remaining(), 600);
+});
+
+test("the store remembers a running timer per recipe and step", () => {
+  let now = 10_000_000;
+  const store = createTimerStore(fakeStorage(), () => now);
+  store.start("cook-at-home pudding", 5, now + 600_000);
+  assert.deepEqual(store.get("cook-at-home pudding", 5), { endsAt: now + 600_000 });
+  // Another step of the same recipe, and the same step of another recipe, are
+  // different timers — the key carries both.
+  assert.equal(store.get("cook-at-home pudding", 4), null);
+  assert.equal(store.get("cook-at-home ribs", 5), null);
+  assert.deepEqual(store.steps("cook-at-home pudding"), [5]);
+  store.clear("cook-at-home pudding", 5);
+  assert.equal(store.get("cook-at-home pudding", 5), null);
+  assert.deepEqual(store.steps("cook-at-home pudding"), []);
+});
+
+test("a timer whose bell has long gone does not ring on a return three days later", () => {
+  let now = 10_000_000;
+  const storage = fakeStorage();
+  const store = createTimerStore(storage, () => now);
+  store.start("r", 1, now + 60_000);
+  now += 60_000 + TIMER_GRACE_MS - 1;
+  assert.ok(store.get("r", 1), "inside the hour it is still waiting for you");
+  now += 2;
+  assert.equal(store.get("r", 1), null, "past the hour it is gone");
+});
+
+test("a record carries a wall clock and nothing else", () => {
+  // Nothing about whether the bell has gone: cook-ui clears the record AS it
+  // rings, because a stored countdown at 00:00 comes back with its toggle
+  // disabled and hands the reader a dead control.
+  const now = 10_000_000;
+  const store = createTimerStore(fakeStorage(), () => now);
+  store.start("r", 2, now + 1000);
+  assert.deepEqual(store.get("r", 2), { endsAt: now + 1000 });
+  assert.deepEqual(sanitiseTimers({ "r|2": { endsAt: now + 1000, rung: true } }, { now }), {
+    "r|2": { endsAt: now + 1000 },
+  });
+});
+
+test("the store never throws on nonsense, and drops what it can't read", () => {
+  const now = 1_000_000;
+  assert.deepEqual(sanitiseTimers(null, { now }), {});
+  assert.deepEqual(sanitiseTimers([1, 2], { now }), {});
+  assert.deepEqual(sanitiseTimers({ "r|0": { endsAt: "soon" } }, { now }), {});
+  // A clock that jumped, or a hand-edited file: no step states more than a day.
+  assert.deepEqual(sanitiseTimers({ "r|0": { endsAt: now + 8 * 86_400_000 } }, { now }), {});
+  const store = createTimerStore(fakeStorage({ [TIMERS_KEY]: "{not json" }), () => now);
+  assert.equal(store.get("r", 0), null);
+  assert.deepEqual(store.steps("r"), []);
+});
+
+test("the key is stable and the last timer takes the key away with it", () => {
+  const now = 1_000_000;
+  const storage = fakeStorage();
+  const store = createTimerStore(storage, () => now);
+  assert.equal(timerKey("venue dish", 3), "venue dish|3");
+  store.start("venue dish", 3, now + 1000);
+  assert.ok(storage._mem.has(TIMERS_KEY));
+  store.clear("venue dish", 3);
+  assert.equal(storage._mem.has(TIMERS_KEY), false, "no empty object left behind");
+});
+
+test("a blocked storage costs the timer, never an exception", () => {
+  const blocked = {
+    getItem: () => { throw new Error("denied"); },
+    setItem: () => { throw new Error("denied"); },
+    removeItem: () => { throw new Error("denied"); },
+  };
+  const store = createTimerStore(blocked, () => 0);
+  assert.equal(store.get("r", 0), null);
+  assert.doesNotThrow(() => store.start("r", 0, 1000));
+  assert.doesNotThrow(() => store.clear("r", 0));
+  assert.doesNotThrow(() => store.steps("r"));
 });
 
 // --- Reading the step aloud (ROADMAP 17e) ---------------------------------

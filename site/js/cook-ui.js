@@ -39,6 +39,7 @@ import {
   canCook,
   createSpeaker,
   createTimer,
+  createTimerStore,
   createWakeLock,
   formatDuration,
   ingredientsForStep,
@@ -48,6 +49,13 @@ import {
   stepsOf,
 } from "./cook.js";
 import { createAlarm, wantsNotification } from "./alarm.js";
+import { safeStorage } from "./store.js";
+
+// A running timer is remembered across a close, a reload and a discarded tab
+// (cook.js, Theme 36). DEVICE-level like the order tally, not per-profile like
+// the ticks: a tick is what YOU put in the bowl, whereas a timer is what the
+// oven is doing, and switching profile mid-bake must not take the bell with it.
+const timerStore = createTimerStore(safeStorage());
 
 // Ids must be unique across however many dialogs a session opens and discards.
 let seq = 0;
@@ -207,14 +215,25 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
   // One timer per step, kept in a Map so walking Back and Next doesn't restart
   // a bake you have already begun. They tick off the wall clock, so a phone
   // that sleeps mid-bake comes back with the right number.
+  //
+  // …and a timer that was running when the sheet last closed comes back running.
+  // `timerStore` holds the wall clock it ends at, keyed by this recipe and step;
+  // handing that to createTimer is the whole of the rehydration (cook.js).
   const timers = new Map();
   const timerFor = (i) => {
     if (!timers.has(i)) {
       const secs = stepDuration(steps[i]);
-      timers.set(i, secs == null ? null : createTimer(secs));
+      const saved = secs == null ? null : timerStore.get(rid, i);
+      timers.set(i, secs == null ? null : createTimer(secs, undefined, { endsAt: saved?.endsAt }));
     }
     return timers.get(i);
   };
+  /** Whatever this timer now is, on disk: running ⇒ its clock, otherwise gone. */
+  function saveTimer(i, t) {
+    const endsAt = t?.endsAt();
+    if (endsAt == null) timerStore.clear(rid, i);
+    else timerStore.start(rid, i, endsAt);
+  }
 
   const timerTime = el("span", { className: "cook-timer-time" });
   // `role="timer"` carries an implicit `aria-live: off`, and that is the POINT
@@ -545,9 +564,14 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
    * (reo.js). The rest is interpolated and therefore stays English, exactly as
    * "Step 3 of 9" already does.
    */
-  function ringFor(i) {
+  function ringFor(i, { notify = true } = {}) {
     if (alarmed.has(i)) return;
     alarmed.add(i);
+    // The record has done its job the moment the bell rings, and keeping it
+    // would be worse than useless: a stored countdown at 00:00 comes back with
+    // its toggle disabled, so the next open of a recipe you have returned to
+    // cook hands you a dead control (cook.js says this at length).
+    timerStore.clear(rid, i);
     const t = timers.get(i);
     const s = stepState(i, steps.length);
     const over = timerLabels.done.textContent;
@@ -564,7 +588,12 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
       url: location.href,
       // One live notification per timer, replaced rather than stacked.
       tag: `faves-timer:${rid}:${i}`,
-      notify: wantsNotification(t?.total),
+      // A bell that fell due while the sheet was CLOSED is caught up on the way
+      // back in, and the reader is by definition looking at cook mode when that
+      // happens — so it keeps the tone, the buzz and the announcement and drops
+      // the notification, which would be a system alert about the screen you are
+      // already reading.
+      notify: notify && wantsNotification(t?.total),
     });
   }
 
@@ -575,10 +604,10 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
    * correct however late it is called — which matters, because a backgrounded
    * tab's interval is throttled to roughly once a minute.
    */
-  function checkAlarms() {
+  function checkAlarms({ notify = true } = {}) {
     for (const [i, t] of timers) {
       if (!t) continue;
-      if (t.done()) ringFor(i);
+      if (t.done()) ringFor(i, { notify });
       else alarmed.delete(i); // a reset re-arms the bell
     }
   }
@@ -620,6 +649,9 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
     // timer never asks: a prompt is a thing you can spend once per browser.
     if (starting && wantsNotification(t.total)) alarm.requestNotify().then(paintTimer);
     t.toggle();
+    // Written on the tap, not on the close: the tab may never GET a close (iOS
+    // discards it), which is one of the three routes this item exists to fix.
+    saveTimer(index, t);
     paintTimer();
     syncTicking();
   });
@@ -627,6 +659,7 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
     timerFor(index)?.reset();
     // Re-arm this step's bell, and clear an announcement it has already made.
     alarmed.delete(index);
+    timerStore.clear(rid, index);
     timerAlert.textContent = "";
     paintTimer();
     syncTicking();
@@ -754,12 +787,33 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
     }
   });
 
+  // EVERY saved step, not just the one about to be painted. A timer is normally
+  // left behind on the step that started it while the reader walks on (or taps
+  // Done, which is where 10 of the 24 recipes put their only timer), so priming
+  // just the current step would rehydrate the countdown nobody was waiting for
+  // and drop the one they were. `checkAlarms` and `syncTicking` both walk this
+  // same Map, so filling it here is what puts a due bell and a live interval
+  // back in one move.
+  for (const i of timerStore.steps(rid)) {
+    if (i < steps.length) timerFor(i);
+  }
   paintStepIngredients(index);
   paint();
   document.body.append(dialog);
   translate(dialog); // pick up the stored language before the first frame
   dialog.showModal();
   stage.focus();
+
+  // A bell that fell due while the sheet was closed rings now, on the way back
+  // in, and without a notification (see ringFor). AFTER showModal on purpose: a
+  // role="alert" region announces a CHANGE made while it is in the document, so
+  // writing it before the dialog was shown would ring silently for exactly the
+  // reader who cannot see the face flip to "Time's up".
+  checkAlarms({ notify: false });
+  paintTimer();
+  // …and a timer still counting needs the interval back, or nothing repaints
+  // and nothing rings when it does reach zero.
+  syncTicking();
 
   lock.acquire().then(showAwake);
   return dialog;

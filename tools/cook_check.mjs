@@ -1295,12 +1295,22 @@ async function run(opts) {
     const longTimer = findTimed((d) => d > NOTIFY_OVER_SECONDS);
     const urlFor = (item) => `${base}/recipe.html?id=${COLLECTION}&dish=${slug(item.name)}`;
 
-    /** Open `item`, walk to its timed step, and start the countdown there. */
+    /** Open `item`, walk to its timed step, and start the countdown there.
+     *
+     *  The Reset tap is not decoration and it is not a workaround. A running
+     *  timer now SURVIVES the sheet (Theme 36, section 15b), so a scenario that
+     *  simply tapped the toggle would be toggling whatever the previous scenario
+     *  left behind — pausing a live countdown instead of starting one. Reset is
+     *  the reader's own way back to a known state, and it is a no-op on an
+     *  untouched timer, so every scenario below starts from the top whichever
+     *  order they run in. Found by this check: without it, four alarm assertions
+     *  went red because the bell they were waiting for was never armed. */
     const startTimerOn = async ({ item, index }) => {
       await goto(urlFor(item), ".cook-start");
       await openCook();
       await press("Home");
       for (let i = 0; i < index; i++) await click(".cook-next");
+      await click(".cook-timer-reset");
       const before = await snap();
       await click(".cook-timer-toggle");
       return before;
@@ -1465,6 +1475,11 @@ async function run(opts) {
       await openCook();
       await press("Home");
       for (let i = 0; i < longTimer.index; i++) await click(".cook-next");
+      // Reset first, for the reason `startTimerOn` spells out: scenario (a) above
+      // left this very timer RUNNING, and since Theme 36 a running timer survives
+      // the sheet — so an unreset toggle here PAUSES it and the bell never rings.
+      // Measured: three assertions below went red on exactly that.
+      await click(".cook-timer-reset");
       await click(".cook-timer-toggle");
       const rung = await ringOut(longTimer.seconds);
       const raised = rung.alarm.sw[0];
@@ -1614,6 +1629,119 @@ async function run(opts) {
       survived.length === 2,
       `${survived.length} lines still ticked on a document rebuilt from storage`
     );
+
+    // --- 15b. A running timer outlives the sheet (Theme 36) ----------------
+    // Three routes used to destroy a running countdown and its bell without a
+    // word: closing the sheet, reloading, and iOS discarding the tab. The
+    // measurement that made it urgent rather than tidy — 10 of the 24 recipes
+    // carry their timer on the LAST step, whose primary button is *Done*, and
+    // Done closes the sheet. So the single most likely tap at the moment a timer
+    // mattered was the one that destroyed it.
+    //
+    // NONE OF THIS IS VISIBLE TO A UNIT TEST. cook.js's store is proved there;
+    // what cannot be is that the UI writes the record on the tap, that a real
+    // <dialog> close leaves it alone, and that a document rebuilt from
+    // localStorage comes back counting. The clock is wound only where a bell is
+    // due; "it kept counting" is measured in real seconds, so a timer that had
+    // silently restarted could not pass as one that survived.
+    // Open cook mode and walk to `index`, on the document that is already
+    // loaded. Every scenario below gets a document of its OWN (see `returnTo`):
+    // reopening the sheet four times on one long-lived document was measured
+    // here at five aborts in six runs, on three different CDP calls — the
+    // signature of a browser running out of patience, not of a failed
+    // assertion. A fresh document per scenario is also how section 13b works,
+    // and 13b does not abort.
+    const stepInto = async (index) => {
+      await openCook();
+      await press("Home");
+      for (let i = 0; i < index; i++) await click(".cook-next");
+      return snap();
+    };
+    /** Come back to a recipe as a reader would: a new page, then cook mode.
+     *  `skew` winds the wall clock BEFORE the sheet opens, which is the only
+     *  way to be away while a bell falls due — a closed sheet has no interval. */
+    const returnTo = async ({ item, index }, { skew = 0 } = {}) => {
+      await goto(urlFor(item), ".cook-start");
+      if (skew) await evalPage(`window.__cookClock.skew = ${skew}`);
+      return stepInto(index);
+    };
+    if (shortTimer) {
+      const total = formatDuration(shortTimer.seconds);
+      await startTimerOn(shortTimer);
+      // Real seconds, deliberately: a timer that was rebuilt from scratch shows
+      // exactly `total`, so anything less is proof it carried its own clock.
+      await sleep(2500);
+      await press("Escape");
+      await closed();
+      const reopened = await stepInto(shortTimer.index);
+      report.check(
+        "a timer still counting is still counting after the sheet is closed and reopened",
+        reopened.timerRunning === true && reopened.timerTime !== total,
+        `${reopened.timerTime} of ${total}, running=${reopened.timerRunning}`
+      );
+      // The reload route, and the strongest of the three: a brand new document,
+      // with nothing but localStorage to rebuild the countdown from.
+      const rebuilt = await returnTo(shortTimer);
+      report.check(
+        "…and after a full page reload, rebuilt from storage alone",
+        rebuilt.timerRunning === true && rebuilt.timerTime !== total,
+        `${rebuilt.timerTime} of ${total}, running=${rebuilt.timerRunning}`
+      );
+      // Wound past the end while the sheet is CLOSED — precisely when no
+      // interval is running and nothing on the page can ring. The bell is caught
+      // up on the way back in; it cannot be rung any earlier than that, and
+      // cook.js says so rather than pretending otherwise.
+      const caught = await returnTo(shortTimer, { skew: (shortTimer.seconds + 5) * 1000 });
+      report.check(
+        "a bell that fell due behind a closed sheet announces itself on the way back in",
+        caught.timerDone === true &&
+          typeof caught.timerAlert === "string" &&
+          caught.timerAlert.includes("Step ") &&
+          caught.timerAlert.includes(shortTimer.item.name),
+        `done=${caught.timerDone}, role="alert" says “${(caught.timerAlert || "").slice(0, 60)}”`
+      );
+      // …and exactly once. The record is spent as it rings, so coming back again
+      // — with the clock wound just as far — offers a fresh countdown rather
+      // than a second bell, and rather than a stored 00:00 whose toggle is
+      // disabled, which is the shape that turns a rescue into a dead control on
+      // a recipe you came back to cook again.
+      const again = await returnTo(shortTimer, { skew: (shortTimer.seconds + 5) * 1000 });
+      report.check(
+        "…and rings ONCE: the record is spent, and the next return offers a fresh countdown",
+        again.timerDone === false &&
+          again.timerTime === total &&
+          again.timerAlert === "" &&
+          again.alarm.vibrations === 0,
+        `back at ${again.timerTime} (done=${again.timerDone}), alert “${again.timerAlert}”, ` +
+          `${again.alarm.vibrations} buzz(es) on the return`
+      );
+      await press("Escape");
+      await closed();
+    }
+    if (longTimer) {
+      // The one channel a caught-up bell must NOT use. The reader is by
+      // definition looking at cook mode when this fires, so a system
+      // notification would be an alert about the screen in their hand.
+      await setNotifications("granted");
+      await startTimerOn(longTimer);
+      await press("Escape");
+      await closed();
+      const back = await returnTo(longTimer, { skew: (longTimer.seconds + 5) * 1000 });
+      report.check(
+        "a caught-up bell raises NO notification about the screen you are already reading",
+        back.timerDone === true &&
+          back.notifyPermission === "granted" &&
+          back.alarm.sw.length === 0 &&
+          back.alarm.page.length === 0 &&
+          typeof back.timerAlert === "string" && back.timerAlert.includes("Step "),
+        `permission=${back.notifyPermission}, ${back.alarm.sw.length} sw + ` +
+          `${back.alarm.page.length} page notification(s), alert says ` +
+          `“${(back.timerAlert || "").slice(0, 40)}”`
+      );
+      await press("Escape");
+      await closed();
+      await setNotifications("prompt");
+    }
 
     report.check(
       "no uncaught page exception anywhere in the run",

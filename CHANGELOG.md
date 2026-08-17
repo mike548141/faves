@@ -16,6 +16,23 @@ content freshness separately from this file.
   wearing a "Permanently closed" badge while it did. The card badge and the
   "Pick for us" dice already knew; now all four surfaces agree. No venue in the
   collection carries a closure today, so nothing on screen changes yet.
+- **A cook-mode timer no longer dies when you close the sheet.** Tapping ✕,
+  tapping *Done* on the last step, reloading the page or having the browser
+  discard the tab all used to throw away a running countdown and its bell
+  without a word — and on 10 of the 24 recipes the timer is on the last step,
+  whose button is *Done*, so the most likely tap at the moment a timer mattered
+  was the one that destroyed it. The countdown is now remembered and comes back
+  still counting. A bell that fell due while you were away rings on the way back
+  in; one that fell due more than an hour ago is quietly dropped, because a
+  kitchen timer going off about yesterday's dinner is not news.
+- **A step no longer hides the ingredient it is asking for.** Where a recipe
+  lists the same thing twice — Upside-Down Plum Cake's butter, Chocolate
+  Self-Saucing Pudding's cocoa, Easy Pad Thai's peanuts — a step that named it
+  showed **neither** line, because neither one could be told from the other. It
+  now shows both, which is the honest answer to "I can't tell which of these you
+  mean". Where the step is specific ("the white sugar"), the sauce's brown sugar
+  still stays out of it. 18 more ingredient lines are on screen across the
+  corpus, and no line that used to show has stopped showing.
 
 ### Changed
 - **Units now follow how a place actually measures, one kind of measure at a
