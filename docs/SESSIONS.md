@@ -7659,3 +7659,52 @@ only in the commit message that was never created, which is why it is here
 instead. ⇒ **After a commit, verify it exists and says what you wrote** —
 `git log -1` naming *your* subject, not merely a clean status. A clean status is
 equally consistent with "committed" and "someone else committed it for you".
+
+### Coda — four things that happened after the record above was written
+
+The entry above was written at what looked like the end. It was not, and the
+gap is itself worth recording: **a session record written before the session
+stops is a snapshot, not a close.**
+
+✅ **The required-checks list went 4 → 6** (owner-authorised, made by a peer):
+`every screen boots` and `service-worker version lockstep` joined the four.
+🔑 The boot job had to *exist* before it could be required, so the CI wiring
+above is what made the addition possible. 🛑 **But `bypass_actors` is unchanged
+(`RepositoryRole 5 → always`), so it closes nothing in practice today** — the
+peer nearly overstated that and corrected itself, and that correction is
+preserved in all three places that had said "not in the required list" rather
+than being rounded up into a win. The resting state is **required-but-
+bypassable**: better than advisory, not the same as enforced, and it takes
+effect the moment the bypass is narrowed — a separate decision the owner has
+not taken.
+
+✅ **`FX_TOKEN` was minted by the owner and registered in the estate root**,
+with its permissions and expiry **read from the console** rather than
+transcribed. ⚠️ **A correction went in with it, and it nearly did not.** The
+first reading was that expiry would silently revert to the weekly approval
+click, because `fx.yml` reads `${{ secrets.FX_TOKEN || secrets.GITHUB_TOKEN }}`.
+**That is wrong: an expired token's secret is still a non-empty string, so the
+`||` never fires** — the dead value is used and the run dies 401 under
+`set -euo pipefail`. Loud, which is the good outcome, and the opposite of what
+the code reads like. Checked against the workflow before it was written into a
+credential registry, where a wrong note would have outlived everyone.
+
+🛑 **THREE OF THIS SESSION'S OWN CLAIM LINES WERE LEFT ORPHANED, and only a
+close-readiness audit found them.** The worktree was gone, so
+`CLAIMED … (wt: faves-hygiene)` on three items would have blocked the queue
+permanently — the exact failure this repo documented on 2026-08-16, and that
+**this session warned a peer about by message earlier the same day**. Being the
+one who knows the rule is not the same as being the one who follows it at the
+end of a long
+run; the put-away is where it fails, not the middle. Discharged with what
+actually happened rather than merely cleared: one DONE, one now blocked
+*upstream* rather than on a session, one standing on owner decisions.
+
+✅ **The atelier pin moved to `98316f8`.** The close-time drift check reported
+six commits — four of them this session's own findings, handed up and accepted.
+Verified the **floor itself is untouched** (`git diff 1408d98..98316f8 --
+docs/method/` is empty), so the inlined copy needed no change; the pin was
+bumped anyway, deliberately, because an unbumped pin makes the next session
+re-read six commits already read. 🔑 **Run the drift check at CLOSE as well as
+at open** — it was clean at 09:30 and six commits behind by 12:30, and the ones
+that moved it were ours.
