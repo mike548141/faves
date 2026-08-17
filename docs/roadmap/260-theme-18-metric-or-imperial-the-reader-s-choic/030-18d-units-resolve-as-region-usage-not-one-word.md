@@ -1,4 +1,5 @@
-- [ ] **18d — units resolve as region × usage, not one word** `[S][js][design]`
+- [~] **18d — units resolve as region × usage, not one word** `[S][js][design]`
+      **CLAIMED 2026-08-17 14:40 UTC (wt: units-region-0817-1440)**
       — ✅ **OWNER-RULED 2026-08-17: *"I agree."*** The whole shape below is
       approved: region × usage, **zero new settings**, `local` → a usage table,
       `imperial` relabelled *"US customary (miles, °F)"*, **UK an outcome and

@@ -168,7 +168,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - [ ] [18b — Recipe quantities](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/010-18b-recipe-quantities.md)
 - [ ] [⚑ GB → imperial rewrites oven temperatures to °F, and UK ovens are](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/020-gb-imperial-rewrites-oven-temperatures-to-f.md)
-- [ ] [18d — units resolve as region × usage, not one word](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/030-18d-units-resolve-as-region-usage-not-one-word.md)
+- [~] [18d — units resolve as region × usage, not one word](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/030-18d-units-resolve-as-region-usage-not-one-word.md)
 
 ## Theme 19 — from the 2026-08-15 Johnsonville intake
 
