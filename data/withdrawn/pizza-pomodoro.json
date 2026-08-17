@@ -1,0 +1,38 @@
+{
+  "venue": "pizza-pomodoro",
+  "note": "Rows WITHDRAWN FROM THE PAYLOAD BY POLICY, not by the shop. The venue still sells these; Faves stopped showing them. Owner ruled 2026-08-16 (ADR 0085) that the app shows ONE price per dish — the in-store price — and never an app/online price beside it: 'a way to fill a hole in the data not a feature'. These duplicated an in-store row at an online-only price. Kept verbatim so they can be restored if the ruling changes. NOT in data/history/dishes/, because that store means 'confirmed off the menu' and these are not — and because split_data.py --check reconstructs from it.",
+  "withdrawn": "2026-08-16",
+  "reason": "policy-adr-0085",
+  "rows": [
+    {
+      "section": "Pizze Rosse",
+      "sectionId": "pizze-rosse",
+      "item": {
+        "name": "Large Margherita (Online Deal)",
+        "dishId": "large-margherita-online-deal",
+        "desc": "Tomato sauce, mozzarella, basil, parmesan, and extra virgin olive oil. Large size only. Online ordering special price.",
+        "price": 17.0,
+        "tags": [
+          "v",
+          "contains-gluten",
+          "contains-dairy"
+        ]
+      }
+    },
+    {
+      "section": "Pizze Rosse",
+      "sectionId": "pizze-rosse",
+      "item": {
+        "name": "Large Marinara (Online Deal)",
+        "dishId": "large-marinara-online-deal",
+        "desc": "Tomato sauce, garlic, oregano, basil, extra virgin olive oil. No cheese. Large size only. Online ordering special price.",
+        "price": 17.0,
+        "tags": [
+          "v",
+          "df",
+          "contains-gluten"
+        ]
+      }
+    }
+  ]
+}

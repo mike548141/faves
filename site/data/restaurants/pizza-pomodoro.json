@@ -116,28 +116,6 @@
       "sectionId": "pizze-rosse",
       "items": [
         {
-          "name": "Large Margherita (Online Deal)",
-          "dishId": "large-margherita-online-deal",
-          "desc": "Tomato sauce, mozzarella, basil, parmesan, and extra virgin olive oil. Large size only. Online ordering special price.",
-          "price": 17.0,
-          "tags": [
-            "v",
-            "contains-gluten",
-            "contains-dairy"
-          ]
-        },
-        {
-          "name": "Large Marinara (Online Deal)",
-          "dishId": "large-marinara-online-deal",
-          "desc": "Tomato sauce, garlic, oregano, basil, extra virgin olive oil. No cheese. Large size only. Online ordering special price.",
-          "price": 17.0,
-          "tags": [
-            "v",
-            "df",
-            "contains-gluten"
-          ]
-        },
-        {
           "name": "Siciliana - Small",
           "dishId": "siciliana-small",
           "desc": "Tomato sauce, mozzarella, eggplants, salami, chillis and ricotta. Gluten free (on request)",
