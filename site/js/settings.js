@@ -109,6 +109,15 @@ export const DEFAULTS = {
   // instance of it is enough. Deliberately NOT on the settings screen: it is
   // set by folding the panel, which is where anyone would look for it.
   ingredientsFolded: false,
+  // Venue ids whose "If it's your first time, try…" block the viewer has closed
+  // with its ✕ (menu.js). PER VENUE, deliberately, and not the one global flag
+  // `ingredientsFolded` is: an ingredient fold reopens in a tap on the page it
+  // was closed on, whereas this block does not come back — so one ✕ silencing
+  // the suggestions on all 50-odd places would be an unrecoverable answer to a
+  // question that was only ever asked about one. Rides the settings store for
+  // the same reason ingredientsFolded does (a new `faves.` key is swept into
+  // the backup export and then never restored).
+  picksClosed: [],
 };
 
 // [min, max] accepted for each; values outside are clamped in, non-numbers
@@ -134,6 +143,29 @@ function cleanKeys(arr, allowed) {
     }
   }
   return out;
+}
+
+// A venue id as `site/data/index.json` writes them — the same shape `slug()`
+// produces. Shape-checked rather than checked against the corpus: the store is
+// pure and must not need the menu index to sanitise itself, and an id for a
+// venue that has since been renamed costs one stale entry, not a broken read.
+const VENUE_ID_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+// Capped well above the corpus (~50 places) so an ordinary reader can never
+// reach it, and low enough that a corrupt or hostile import can't grow the
+// settings blob without bound — this list is the only unbounded field here.
+const PICKS_CLOSED_MAX = 500;
+
+/** Ids only, deduped, in first-seen order, capped. Same fail-soft contract as
+ *  `cleanKeys`: anything unrecognisable is dropped rather than throwing, so a
+ *  hand-edited file costs a forgotten dismissal and nothing else. */
+function cleanVenueIds(arr) {
+  if (!Array.isArray(arr)) return [];
+  const seen = new Set();
+  for (const x of arr) {
+    if (typeof x === "string" && VENUE_ID_RE.test(x)) seen.add(x);
+    if (seen.size >= PICKS_CLOSED_MAX) break;
+  }
+  return [...seen];
 }
 
 /** Exported because import (personal-data.js) has to *compare* two diet
@@ -164,6 +196,7 @@ function sanitise(obj) {
     units: obj?.units === LOCAL || UNITS.includes(obj?.units) ? obj.units : DEFAULTS.units,
     currency: validCurrency(obj?.currency) ? obj.currency : DEFAULTS.currency,
     ingredientsFolded: obj?.ingredientsFolded === true,
+    picksClosed: cleanVenueIds(obj?.picksClosed),
   };
 }
 

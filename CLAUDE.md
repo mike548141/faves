@@ -253,6 +253,17 @@ node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part 
                               # note-aware, which no unit test can see. Also checks
                               # the note is rendered as characters, not parsed: it
                               # is the first free text a person types on this screen
+node tools/picks_check.mjs    # where the "If it's your first time, try…" block sits,
+                              # and its ✕. TWO claims a unit test cannot see: an
+                              # ORDER between two elements built in different halves
+                              # of render() (asserted in document order AND in paint,
+                              # because sticky and grid can disagree), and a close
+                              # that is remembered PER VENUE — a global flag passes
+                              # every "it stayed closed" assertion while silencing
+                              # all 55 places, so a second venue is opened to prove
+                              # it did not. Also pins where focus lands when the
+                              # button under it is removed: <body> means a keyboard
+                              # reader is back at the top of the document
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
                               # Reaches its end: "OK — 16 passed, 0 failed". Check the
                               # summary line is there AND that N is still 16 — a
@@ -293,13 +304,13 @@ still orphans both — nothing can catch it** — so if a run was `kill -9`ed, r
 you. Orphans do not make a check fail; they make it **stall silently** with a
 wall of PASS and no summary line.
 
-🛑 **CI runs ONE of the TWELVE browser checks — `boot_check`, and only since
+🛑 **CI runs ONE of the THIRTEEN browser checks — `boot_check`, and only since
 2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
 boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
 **not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
-`note_check` · `served_check` · `geo_check` — **eleven** guards, every one written
+`note_check` · `served_check` · `geo_check` · `picks_check` — **twelve** guards, every one written
 precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through
 a whole settings refactor with CI green the entire time: nothing was calling it.
@@ -403,13 +414,30 @@ sort of claim that quietly stops being true one addition at a time. Run it after
 touching `recipe.js`, `ingredients.js`, `quantity.js`, `checklist*.js` or the
 recipe region of `app.css`.
 
+`picks_check.mjs` is the newest (2026-08-17, both owner asks in one sitting). It
+carries no ordinal on purpose — the numbering in this section already stopped
+being maintained at "the seventh", and a count that lies is worse than none.
+What it guards is a shape the others do not: a claim about the ORDER of two
+elements that are built in different halves of `render()` and appended in a
+third place, which reads as correct in a diff and is wrong on screen the moment
+a sticky toolbar, a grid or an early return is involved — so document order and
+painted position are asserted separately, at 390 px and at 1200 px. Its second
+half is the ✕: closing is REMEMBERED and it is remembered PER VENUE, and those
+two halves fail independently (a global flag passes every "it stayed closed"
+assertion while emptying the block on all 55 places; a session-only flag passes
+every "it closed" assertion and forgets on reload). Both were verified by
+reintroducing the bug — the old order fails 5 assertions and nothing else, and
+dropping the `settings.set` fails 2. The focus assertion was not break-probed.
+Run it after touching `renderPicks`/the append order in `menu.js`, `.picks*` in
+`app.css`, or `picksClosed` in `settings.js`.
+
 🛑 **Only `boot_check` runs in CI.** `.github/workflows/ci.yml` runs `node
 --test`, the Python gates and `boot_check` — so every *other* check in this
 family runs when a human types it and at no other time, which is how
 `sync_check.mjs` stayed dead through a whole refactor. Type them. And note that
 even the automated one cannot stop a bad deploy: admins bypass `protect-main`,
 so its red lands **after** the push it is describing (see the fuller note above
-the check descriptions). For the other eleven, the honour system IS still the
+the check descriptions). For the other twelve, the honour system IS still the
 mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The

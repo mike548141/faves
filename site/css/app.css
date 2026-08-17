@@ -3717,11 +3717,59 @@ body.faves-view .to-top {
   background: var(--accent-soft);
   border-radius: var(--radius);
 }
+/* Heading + its ✕. The gap is the row's, not the heading's: the button is
+   44 px tall and the heading is not, so a margin under the heading would show
+   as a lopsided row. align-items: flex-start keeps the ✕ level with the first
+   line when a long heading wraps at a large text size. */
+.picks-headrow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
 .picks-head {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--accent);
-  margin-bottom: var(--space-2);
+}
+/* Same 44 px target and same restraint as .rating-clear — a dismissal is not a
+   control anyone should be drawn to. The negative margins claw back the tap
+   target's padding so the ✕ still lines up with the block's own edge. */
+.picks-close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin: -0.5rem -0.5rem -0.5rem 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.14s ease, color 0.14s ease, background 0.14s ease;
+}
+@media (hover: hover) {
+  .picks-close:hover {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+  }
+}
+.picks-close:active {
+  transform: scale(0.88);
+}
+@media (prefers-reduced-motion: reduce) {
+  .picks-close {
+    transition: none;
+  }
+  .picks-close:active {
+    transform: none;
+  }
 }
 .picks-list {
   display: flex;

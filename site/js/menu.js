@@ -64,6 +64,7 @@ import { initBackToTop } from "./to-top.js";
 import { el } from "./dom.js";
 import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
 import { wireSearchClear } from "./search-clear.js";
+import { toast } from "./toast.js";
 import { foldSearchText } from "./search.js";
 import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
@@ -875,6 +876,11 @@ function cautionNote(caveat, record) {
 // makes that disagreement impossible to express.
 function renderPicks(r) {
   if (!r.picks?.length) return null;
+  // Closed here before, by this viewer, with the ✕ below. Read through the same
+  // store the dietary prefs come from, so the whole block is simply absent from
+  // the render rather than hidden by a class — nothing to un-hide, and no dead
+  // headings left in the accessibility tree.
+  if (settings.get().picksClosed.includes(r.id)) return null;
   const list = el("div", { className: "picks-list" });
   for (const ref of r.picks) {
     const found = findDish(r, ref);
@@ -898,10 +904,56 @@ function renderPicks(r) {
       ])
     );
   }
-  return el("section", { className: "picks", "aria-label": "Our picks", "data-i18n-aria": "menu.picksAria" }, [
-    el("h2", { className: "picks-head", "data-i18n": "menu.picksHead", textContent: "If it’s your first time, try…" }),
+  const close = el(
+    "button",
+    {
+      type: "button",
+      className: "picks-close",
+      "aria-label": "Hide these suggestions",
+      "data-i18n-aria": "menu.picksClose",
+    },
+    [el("span", { "aria-hidden": "true", textContent: "✕" })]
+  );
+  const section = el("section", { className: "picks", "aria-label": "Our picks", "data-i18n-aria": "menu.picksAria" }, [
+    el("div", { className: "picks-headrow" }, [
+      el("h2", { className: "picks-head", "data-i18n": "menu.picksHead", textContent: "If it’s your first time, try…" }),
+      close,
+    ]),
     list,
   ]);
+  close.addEventListener("click", () => closePicks(r.id, section));
+  return section;
+}
+
+// Closing the block is remembered, so it writes to settings — and every
+// settings write re-renders the whole menu (`reapply`, which is how an allergen
+// change re-treats every dish live). Rebuilding the page under the reader's
+// thumb to remove one block that has already gone is motion nobody asked for,
+// so the removal is done here and the write is bracketed by a flag `reapply`
+// honours — the same shape recipe.js uses for the ingredients fold.
+let picksWrite = false;
+function closePicks(venueId, section) {
+  // Focus is standing on a button that is about to stop existing, and the
+  // browser's answer to that is <body> — i.e. back to the top of the document
+  // for anyone on a keyboard or a screen reader. Park it on whatever the block
+  // was sitting above (the menu itself) so reading carries on from here.
+  const after = section.nextElementSibling ?? section.parentElement;
+  section.remove();
+  if (after) {
+    after.tabIndex = -1;
+    after.focus();
+  }
+  const next = new Set(settings.get().picksClosed);
+  next.add(venueId);
+  picksWrite = true;
+  try {
+    settings.set({ picksClosed: [...next] });
+  } finally {
+    picksWrite = false;
+  }
+  // Says WHAT was closed and HOW FAR it reaches. Without it the ✕ is a control
+  // whose scope you can only learn by opening another place and checking.
+  toast("Suggestions hidden for this place.");
 }
 
 // Deep-link chips for "goes well with": a same-record dish name, or a
@@ -1286,12 +1338,18 @@ function render(r) {
   const main = el("div", { className: "menu-main" });
   root.append(main);
 
+  // Built here, appended below the controls (owner ruling, 2026-08-17: the
+  // search field goes above this block on every page that has both). Search is
+  // the thing a returning reader came for and it was sitting under a block of
+  // suggestions aimed at a first-time one.
   const picks = renderPicks(r);
-  if (picks) main.append(picks);
 
   // Stub / empty menu: show a friendly note instead of empty controls. Stay
   // single-column — there's no menu to sit beside the info column.
   if (allItems.length === 0) {
+    // No toolbar is built on this path at all, so the picks go straight under
+    // the header — there is nothing for them to sit below.
+    if (picks) main.append(picks);
     // Whole-string i18n keys per variant — the engine swaps complete strings.
     // A kind with a note of its own wins; otherwise the venue wording, which
     // turns on whether we hold a number to call rather than on the kind.
@@ -1380,6 +1438,11 @@ function render(r) {
   const toolbar = el("div", { className: "menu-toolbar" }, [searchField, nav]);
   main.append(toolbar);
   if (dietRow) main.append(dietRow);
+  // After the chips, not between them and the toolbar: search, jump-nav and
+  // dietary chips are one block of controls over the menu, and the picks are
+  // content. Splitting the controls to slot content into the middle of them is
+  // what made the search hard to find in the first place.
+  if (picks) main.append(picks);
 
   const menuWrap = el("div", { className: "menu-sections" });
   const sectionEls = [];
@@ -1671,6 +1734,10 @@ let current = null;
 // the whole point.
 function reapply() {
   if (!current) return;
+  // Our own write (closePicks): the DOM is already in the state this re-render
+  // would produce, and re-rendering would only throw away the focus it just
+  // placed. Every other settings change falls through as before.
+  if (picksWrite) return;
   const ui = captureUiState(root);
   render(current);
   translate(root); // re-apply the stored UI language to the freshly built menu

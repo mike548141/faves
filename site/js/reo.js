@@ -248,6 +248,8 @@ const MI = {
   "menu.orderOnline": "Ōta ā-ipurangi", // draft
   "menu.picksHead": "He wā tuatahi nōu? Whakamātauria…", // draft
   "menu.picksAria": "Ā mātou kōwhiringa", // draft
+  // "huna" = hide/conceal (maoridictionary.co.nz). The ✕ on the picks block.
+  "menu.picksClose": "Hunaia ēnei kōwhiringa", // draft
   "menu.goesWith": "He pai i te taha o", // draft
   "rating.our": "Tā mātou whakatauranga", // draft — curated household rating label
   "menu.search.ph": "Rapua tēnei tahua kai…",

@@ -8,7 +8,16 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **The search box now sits above "If it's your first time, try…"** on every
+  menu, instead of below it. Search is what a returning reader came for, and it
+  was parked underneath a block of suggestions written for a first-time one.
+
 ### Added
+- **You can close the "If it's your first time, try…" block.** A ✕ on the block
+  puts it away, and it stays away next time you open that place. It is closed
+  **per place**, not everywhere — the suggestions on every other menu are
+  untouched. Note there is no way to bring it back yet.
 - **The search box now finds a place by what it is like.** Type "dog friendly",
   "quick eats", "beer garden", "craft beer" or "BYO" on the home screen and the
   places tagged that way come back, with the matching label shown on the row.

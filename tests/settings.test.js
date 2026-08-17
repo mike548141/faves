@@ -211,3 +211,35 @@ test("a stored setting from before local existed still loads", () => {
   assert.equal(s.raw().units, "imperial");
   assert.equal(s.raw().currency, LOCAL, "and gains the new setting's default");
 });
+
+test("picksClosed: defaults to empty, keeps ids, dedupes, persists", () => {
+  const storage = fakeStorage();
+  const s = createSettings(storage);
+  assert.deepEqual(s.get().picksClosed, []);
+  s.set({ picksClosed: ["cook-at-home", "tj-katsu", "cook-at-home"] });
+  assert.deepEqual(s.get().picksClosed, ["cook-at-home", "tj-katsu"]);
+  assert.deepEqual(createSettings(storage).get().picksClosed, ["cook-at-home", "tj-katsu"]);
+});
+
+test("picksClosed: anything that isn't an id shape is dropped, never thrown on", () => {
+  // Fail-soft, like cleanKeys: a hand-edited or imported file costs a forgotten
+  // dismissal, not a store that won't load.
+  const s = createSettings(fakeStorage());
+  s.set({ picksClosed: ["ok-id", "Has Caps", "-leading", "sp ace", "", 42, null, {}, "x".repeat(65)] });
+  assert.deepEqual(s.get().picksClosed, ["ok-id"]);
+  s.set({ picksClosed: "cook-at-home" });
+  assert.deepEqual(s.get().picksClosed, [], "a bare string is not a list of ids");
+});
+
+test("picksClosed: a corrupt payload can't grow the store without bound", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ picksClosed: Array.from({ length: 900 }, (_, i) => `venue-${i}`) });
+  assert.equal(s.get().picksClosed.length, 500);
+});
+
+test("picksClosed: a distance-only patch leaves the closed list intact", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ picksClosed: ["cook-at-home"] });
+  s.set({ farKm: 12 });
+  assert.deepEqual(s.get().picksClosed, ["cook-at-home"]);
+});
