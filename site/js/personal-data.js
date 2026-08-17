@@ -42,7 +42,7 @@ import { createFavourites, favKey } from "./favourites.js";
 import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
 import { createSettings, sanitiseDiet, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
-import { mergeItems } from "./cart.js";
+import { mergeItems, normaliseNote } from "./cart.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -96,6 +96,32 @@ const EXCLUDED = {
       "Deliberately not exported: those ticks are about the meal in front of " +
       "you, they expire twelve hours after you make them, and restoring them " +
       "into a different day’s cooking would be worse than losing them.",
+  },
+  // The sync pairing (Theme 9 v2). `faves.sync.v1` holds the sync CODE — a
+  // bearer credential to the group's encrypted blob (sync-code.js) — and
+  // `faves.sync.base.v1` the last-agreed snapshot the three-way merge reads
+  // from. Neither is personal data; both are THIS DEVICE's standing with a
+  // sync group. Found by the 2026-08-17 cold review: sync landed after ADR
+  // 0074's sweep was written, so the catch-all carried the code into the
+  // plaintext backup file, and an import wrote it back — silently pairing the
+  // importing device to the exporter's group, with no report line saying so.
+  // A credential is turned on in Settings, never restored from a file. Spared
+  // by a replace: the pairing is a fact about the device, and the restored
+  // content is what it will sync out next.
+  // Named as literals rather than imported from sync.js: sync.js imports this
+  // module (collectPersonalData is what it syncs), and this table is built at
+  // load, so the import would be circular and empty. tests/personal-data.test.js
+  // pins the literals to sync.js's own SYNC_KEY / SYNC_BASE_KEY.
+  "faves.sync.v1": {
+    spare: true,
+    why:
+      "Your sync code and pairing. Deliberately not exported: it is a key to " +
+      "your synced data, not the data — turn sync on in Settings on the other " +
+      "device instead of copying it about in a file.",
+  },
+  "faves.sync.base.v1": {
+    spare: true,
+    why: "Sync’s own last-agreed snapshot. Internal to syncing on this device.",
   },
 };
 
@@ -358,6 +384,17 @@ function sanitiseOrderLines(list) {
     if (i.dishId) line.dishId = clip(i.dishId);
     const options = sanitiseOptions(i.options);
     if (options.length) line.options = options;
+    // The note is part of LINE IDENTITY (cart.js lineKey, Theme 14c) and the
+    // currency is what the sheet totals by (ADR 0043). Both were added to the
+    // line after this whitelist was last extended, and the whitelist did what
+    // it is built to do — dropped them — so a restored order re-merged two
+    // lines that differed only by their note, and lost what the person had
+    // typed. Cold review, 2026-08-17. Cap matches cart-ui's MAX_NOTE_LEN.
+    if (typeof i.note === "string") {
+      const note = normaliseNote(clip(i.note, 80));
+      if (note) line.note = note;
+    }
+    if (typeof i.currency === "string" && /^[A-Z]{3}$/.test(i.currency)) line.currency = i.currency;
     out.push(line);
     if (out.length >= MAX_ITEMS) break;
   }

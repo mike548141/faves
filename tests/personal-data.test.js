@@ -10,6 +10,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { CHECKLIST_KEY } from "../site/js/checklist.js";
+import { SYNC_KEY, SYNC_BASE_KEY } from "../site/js/sync.js";
 import {
   FORMAT,
   FORMAT_VERSION,
@@ -650,6 +651,30 @@ test("an order line's dish id survives the export/import round trip", () => {
   assert.equal(lines.reduce((s, l) => s + l.price * l.qty, 0), 49);
 });
 
+test("an order line's note and currency survive the round trip — two lines differing only by note stay two", () => {
+  // The note is part of line identity (Theme 14c). Until 2026-08-17 the
+  // whitelist dropped it, so a restore folded "Doner (no onion)" and "Doner"
+  // into one line of qty 2 and threw the note away — the exact wrong-at-the-
+  // counter outcome cart.js's lineKey exists to prevent.
+  const store = device();
+  const data = file({
+    order: [
+      { venueId: "fixture-venue", venueName: "Fixture Venue", name: "Doner", dishId: "doner", price: 14, qty: 1, note: "  no   onion ", currency: "NZD" },
+      { venueId: "fixture-venue", venueName: "Fixture Venue", name: "Doner", dishId: "doner", price: 14, qty: 1, currency: "NZD" },
+      { venueId: "fixture-venue", venueName: "Fixture Venue", name: "Pie", dishId: "pie", price: 9, qty: 1, currency: "not-a-code", note: 42 },
+    ],
+  });
+  const decisions = { [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "new" } };
+  applyPersonalData(store, data, { decisions });
+  const lines = read(store, ORDER_KEY);
+  assert.equal(lines.length, 3, "the noted and un-noted Doner collapsed into one line");
+  assert.equal(lines[0].note, "no onion"); // normalised as cart.js would
+  assert.equal(lines[0].currency, "NZD");
+  assert.equal("note" in lines[1], false);
+  assert.equal("note" in lines[2], false); // a non-string note is not a note
+  assert.equal("currency" in lines[2], false); // a currency must be a code
+});
+
 test("a heart's dish id survives too, and keys the entry", () => {
   const r = parsePersonalData({
     v: 1,
@@ -831,4 +856,53 @@ test("a replace still wipes the ticks it refuses to restore", () => {
   store.setItem(scopeKey("default", CHECKLIST_KEY), ticks("i:previous-occupant"));
   applyPersonalData(store, file(), { mode: "replace" });
   assert.equal(store.getItem(scopeKey("default", CHECKLIST_KEY)), null);
+});
+
+// =========================================================================
+// THE SYNC PAIRING IS NOT PART OF A BACKUP (cold review, 2026-08-17)
+// =========================================================================
+// `faves.sync.v1` holds the sync CODE — a bearer credential to the group's
+// blob. Sync landed after the export sweep was written, so the catch-all put
+// the code into the plaintext backup file, and an import wrote it back:
+// the importing device was silently paired to the exporter's group. A
+// credential is turned on in Settings, never restored from a file.
+
+const PAIRING = JSON.stringify({ code: "ABCD-EFGH-JKLM-NP", etag: "\"1\"", lastSyncedAt: AT });
+
+test("personal-data names sync's keys by the same literals sync.js exports", () => {
+  // The two are literals here because sync.js imports this module; this is
+  // what stops a renamed key in sync.js quietly re-opening the leak.
+  const data = collectPersonalData(seeded(), { exportedAt: AT });
+  assert.ok(SYNC_KEY in data.excluded, `${SYNC_KEY} is not in the excluded table`);
+  assert.ok(SYNC_BASE_KEY in data.excluded, `${SYNC_BASE_KEY} is not in the excluded table`);
+});
+
+test("the sync code never reaches the export", () => {
+  const storage = seeded();
+  storage.setItem(SYNC_KEY, PAIRING);
+  storage.setItem(SYNC_BASE_KEY, JSON.stringify({ profiles: [] }));
+  const data = collectPersonalData(storage, { exportedAt: AT });
+  const json = personalDataJson(data);
+  assert.equal(json.includes("ABCD-EFGH"), false, "the sync code is in the file");
+  assert.equal("other" in data, false);
+  assert.match(data.excluded[SYNC_KEY], /sync code/i);
+});
+
+test("an older backup carrying a sync code does not pair the device on import", () => {
+  const r = parsePersonalData(file({ other: { [SYNC_KEY]: PAIRING, "faves.recipes.v1": "[]" } }));
+  assert.equal(r.ok, true);
+  assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
+  const store = device();
+  applyPersonalData(store, r.data, { mode: "merge", decisions: {} });
+  assert.equal(store.getItem(SYNC_KEY), null, "import wrote the exporter's sync code");
+});
+
+test("a replace import leaves this device's own sync pairing alone", () => {
+  // The pairing is a fact about the device, not content: after a replace,
+  // the restored content is simply what this device syncs out next.
+  const store = device();
+  store.setItem(SYNC_KEY, PAIRING);
+  const r = parsePersonalData(file());
+  applyPersonalData(store, r.data, { mode: "replace", decisions: {} });
+  assert.equal(store.getItem(SYNC_KEY), PAIRING);
 });
