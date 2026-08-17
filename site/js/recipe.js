@@ -156,7 +156,12 @@ function render(collection, item) {
   // Cook mode sits above the recipe, not below it: someone who opened this page
   // to cook from should not have to scroll past the method to find it. Absent on
   // the one recipe with no steps (cook-ui returns null) — nothing to step through.
-  const cook = cookButton(item, { venueId: id });
+  // The scale goes through as a GETTER, read at the tap: this page rebuilds on
+  // a scale change so a plain value would work today, but cook mode showing 1×
+  // quantities beside a 2× page is a silent wrong number in a kitchen (owner,
+  // 2026-08-17), and that is not a bug to leave one refactor away from
+  // returning.
+  const cook = cookButton(item, { venueId: id, scale: () => scaleKey });
   if (cook) parts.push(el("div", { className: "cook-start-row" }, [cook]));
 
   // Ticking off what you have already done (ROADMAP 17e). Every ingredient and

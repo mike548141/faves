@@ -4425,6 +4425,15 @@ body.faves-view .to-top {
   border-left: 3px solid var(--warn);
   padding-left: var(--space-1);
 }
+/* The same mark inside cook mode (37p). Its list already indents 1em for the
+   bullet, so the rule is added to that rather than replacing it — the bullet is
+   absolutely positioned against the padding box and stays where it was. Cook
+   mode shows a refused line to someone holding the bowl, so if anywhere needs
+   the mark it is here. */
+.cook-ing .ingredients li.is-unscaled {
+  border-left: 3px solid var(--warn);
+  padding-left: calc(1em + var(--space-1));
+}
 .scale-mark {
   font-size: var(--step-sub);
   color: var(--ink-soft);
@@ -4576,6 +4585,14 @@ body.faves-view .to-top {
   color: var(--ink-soft);
   font-size: var(--step-sub);
 }
+/* "2× mixture" beside the recipe name. Reuses `.cook-awake`'s soft-note shape
+   so the header keeps one voice, with the multiplier itself in the accent and
+   tabular figures — it is a number the cook checks at a glance, not prose. */
+.cook-scale-mark {
+  color: var(--accent);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
 .cook-awake-ico {
   color: var(--amber);
 }
@@ -4718,6 +4735,25 @@ body.faves-view .to-top {
    step looked right, which is exactly why it survived so long. */
 .recipe-body .method li:has(.tick) {
   align-items: start;
+}
+/* …and `start` alone is not level (owner, 2026-08-17: *"level / centred"*).
+   `align-items: start` lines up the two grid items' BOXES, but column 2 is the
+   `.tick`, which carries `padding: 0.35em 0` for its 44 px target — so the
+   step's first line of text begins 0.35em below the row while the number
+   begins at the row. Same font, same line-height, different starting y: the
+   number floated above the tick box and the text it belongs to, on every step.
+   Repeating the tick's own top padding here is what puts the two line boxes —
+   and therefore the two baselines — on the same line. It is stated as the same
+   value deliberately: if the tick's padding changes, this must change with it.
+
+   MARGIN, not padding. Padding here would also grow the numeral's own line box,
+   which measures as "moved down 5.6px AND 5.6px taller" — its midline then
+   lands 3px BELOW the text's, i.e. it swaps one misalignment for a smaller one.
+   A margin moves the box and leaves its height alone, so the two line boxes are
+   the same size at the same y and the type on them is genuinely level
+   (recipe_check.mjs measures this midline-to-midline). */
+.recipe-body .method li:has(.tick)::before {
+  margin-top: 0.35em;
 }
 /* Cook mode's own tick row, between the timer and the nav. Outside the live
    region, and always present — a control that vanishes while focused drops

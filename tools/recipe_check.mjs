@@ -225,6 +225,32 @@ const LAYOUT = `(() => {
         // measures boxes.
         alignItems: getComputedStyle(li).alignItems,
         tickTop: t ? round(t.top) : null,
+        // The FIRST LINE of the step's words, measured with a Range rather than
+        // taken from the tick's box — they are not the same y. The .tick rule
+        // carries 0.35em of top padding for its 44px target, so its box top
+        // sits above the text inside it, and a numeral aligned to the box is a
+        // floating above the sentence (owner, 2026-08-17: "level / centred").
+        // This is the line the reader actually sees the number beside.
+        textTop: (() => {
+          const text = li.querySelector(".tick-text") || tick;
+          if (!text) return null;
+          const node = document.createTreeWalker(text, NodeFilter.SHOW_TEXT).nextNode();
+          if (!node) return null;
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          const first = range.getClientRects()[0];
+          return first ? round(first.top) : null;
+        })(),
+        textHeight: (() => {
+          const text = li.querySelector(".tick-text") || tick;
+          if (!text) return null;
+          const node = document.createTreeWalker(text, NodeFilter.SHOW_TEXT).nextNode();
+          if (!node) return null;
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          const first = range.getClientRects()[0];
+          return first ? round(first.height) : null;
+        })(),
       };
     }),
   };
@@ -526,14 +552,34 @@ async function run(opts) {
     // Page coordinates from the protocol; viewport ones from the page. Offset
     // one by the scroll so the two are the same origin.
     const tickTopPage = tallest.tickTop + m.scrollY;
+    const textTopPage = tallest.textTop + m.scrollY;
     const rowTopPage = tallest.top + m.scrollY;
     const rowCentre = rowTopPage + tallest.height / 2;
+    // 🚩 This used to compare the numeral against the TICK'S BOX, and passed at
+    // 0.00px while the number sat visibly above the words on every step — the
+    // owner reported it as "not aligned … level / centred" on 2026-08-17. The
+    // box was never the thing: `.tick` has `padding: 0.35em 0`, so its box top
+    // is 5.6px above the first line of text it contains, and a check anchored
+    // to it certified the gap it existed to catch. It is anchored to the first
+    // line of the STEP'S OWN WORDS now — the only y a reader can see.
+    // Compared MIDLINE to MIDLINE, not top to top, and that is not a fudge: the
+    // numeral's box from the protocol is its LINE box (leading included), while
+    // a Range over the words hands back the tight INLINE box (no leading). Two
+    // boxes of different heights have different tops even when the type on them
+    // is perfectly level, so tops would fail a page that is right and pass one
+    // that is wrong. Their centres are the thing the eye is actually judging —
+    // "level / centred", in the owner's words.
+    const numeralMid = numeral ? numeral.top + numeral.height / 2 : null;
+    const textMid = tallest.textTop != null ? textTopPage + tallest.textHeight / 2 : null;
     report.check(
-      `${NARROW}px: the step number's own box starts beside the tick, not below it`,
-      numeral != null && Math.abs(numeral.top - tickTopPage) <= 2,
-      numeral
-        ? `::before top ${numeral.top.toFixed(1)}px vs tick top ${tickTopPage.toFixed(1)}px ` +
-          `(${Math.abs(numeral.top - tickTopPage).toFixed(1)}px apart; align-items: ${tallest.alignItems})`
+      `${NARROW}px: the step number sits level with the FIRST LINE OF TEXT, not with the tick's box`,
+      numeralMid != null && textMid != null && Math.abs(numeralMid - textMid) <= 2,
+      numeralMid != null && textMid != null
+        ? `numeral midline ${numeralMid.toFixed(1)}px vs first-line midline ${textMid.toFixed(1)}px ` +
+          `(${Math.abs(numeralMid - textMid).toFixed(1)}px apart) · the tick's BOX top ` +
+          `${tickTopPage.toFixed(1)}px is ${Math.abs(textTopPage - tickTopPage).toFixed(1)}px above ` +
+          `the words it holds, which is the gap this used to certify; ` +
+          `align-items: ${tallest.alignItems}`
         : "no ::before box on that step — the numeral is not being rendered at all"
     );
     // The half that names the ACTUAL bug: centred, the numeral lands in the

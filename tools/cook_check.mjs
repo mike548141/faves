@@ -116,6 +116,17 @@ import {
 // Same rule for the alarm: the fifteen-minute line is asserted against the
 // constant the app reads, never against a "900" typed a second time here.
 import { NOTIFY_OVER_SECONDS, wantsNotification } from "../site/js/alarm.js";
+// And the scaler, for the same reason: the expected doubled line is COMPUTED
+// from the app's own rules here, never typed out as a literal, so this cannot
+// pass by agreeing with a wrong copy of the arithmetic.
+import { ingredientBlocks } from "../site/js/ingredients.js";
+import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
+
+// The scale this check drives, taken from the app's own list rather than named
+// twice. `scaleFor` falls back to 1× for a key it doesn't know, silently — so a
+// hand-typed "two" (the key is "double") would have made every expectation the
+// 1× text and the check would have failed the CORRECT render. It did, once.
+const TWO = SCALES.find((s) => s.label === "2×");
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -399,6 +410,8 @@ const SNAP = `(() => {
     ingOpen: ing ? !ing.hidden : null,
     ingItems: d.querySelectorAll(".cook-ing .ingredients li").length,
     ingText: [...d.querySelectorAll(".cook-ing .ingredients li")].map((li) => li.textContent),
+    // "2× mixture", or null at 1× where the badge must not appear at all.
+    scaleBadge: q(".cook-scale") ? q(".cook-scale").textContent : null,
     timerShown: shown(q(".cook-timer")),
     timerTime: q(".cook-timer-time") ? q(".cook-timer-time").textContent : null,
     timerLabel: q(".cook-timer-state")
@@ -720,6 +733,8 @@ async function run(opts) {
     // step numbers: the corpus is edited constantly, and a check pinned to
     // "step 4" would start asserting something else the first time a recipe
     // gained a line.
+    // Filled in below and read by the scale block at the end of the run.
+    let oneXStep = null;
     const idxNeeding = steps.findIndex((t) => stepUsesIngredients(t, recipe.ingredients || []));
     const idxIdle = steps.findIndex((t) => !stepUsesIngredients(t, recipe.ingredients || []));
     const idxTimed = steps.findIndex((t) => stepDuration(t) != null);
@@ -741,6 +756,15 @@ async function run(opts) {
         needs.overflow <= 0,
         `scrollWidth − clientWidth = ${needs.overflow}px`
       );
+
+      // The 1× render of this step, kept for the scale block at the very END of
+      // this run (37p). It is measured here and asserted there on purpose: the
+      // wake-lock sections between the two count every request and release
+      // cumulatively, so an extra open/close in the middle makes three later
+      // assertions fail on numbers that were never about it. A check that
+      // cannot be reordered without breaking is worth knowing about; this one
+      // is, so the reordering is done once, here, in a comment.
+      oneXStep = { index: idxNeeding, keys: expected, lines: needs.ingText.slice() };
     }
 
     if (idxIdle >= 0) {
@@ -1130,6 +1154,86 @@ async function run(opts) {
       listClosed.open === false && listClosed.held === 0,
       `${listClosed.held} held after close`
     );
+
+    // --- 12b. The scale the reader chose has to come THROUGH (37p) --------
+    // The owner picked 2× on the recipe page, tapped Start cooking, and the
+    // step told him ¾ cup where the page above him said 1½ cups (2026-08-17).
+    // Nothing caught it: the picker lives in recipe.js, cook mode had never
+    // heard of it, and all 75 assertions in this file were about a screen it
+    // had opened at 1×. Only a browser can see this one — the pure rules on
+    // both sides were each correct and had simply never been introduced.
+    //
+    // Last in the run deliberately: it opens and closes cook mode an extra
+    // time, and §7–§10 above assert on CUMULATIVE wake-lock request counts.
+    if (oneXStep) {
+      await goto(recipeUrl, ".cook-start");
+      const hasPicker = await evalPage(`!!document.querySelector(".scale-btn")`);
+      if (!hasPicker) {
+        // Logged, never silent: a skipped assertion reads exactly like a
+        // passing one in a wall of PASS (CLAUDE.md, "no silent caps").
+        report.step(`SKIPPED the scale assertions — “${recipe.name}” offers no scale picker`);
+      } else {
+        await click(".scale-btn", TWO.label);
+        await openCook();
+        await press("Home");
+        for (let i = 0; i < oneXStep.index; i++) await click(".cook-next");
+        const twoX = await snap();
+        // What those lines SHOULD read — computed from the app's own scaler
+        // over the app's own block structure, never typed out here, so this
+        // cannot pass by agreeing with a second copy of the arithmetic.
+        const lineOf = new Map(
+          ingredientBlocks(recipe.ingredients).flatMap((b) =>
+            b.lines.map((l) => [l.key, { text: l.text, component: b.component }])
+          )
+        );
+        const two = scaleFor(TWO.key);
+        const want = oneXStep.keys.map((key) => {
+          const line = lineOf.get(key) || { text: key, component: null };
+          const t = scaleLineStatus(line.text, two).text;
+          return line.component ? `${line.component}: ${t}` : t;
+        });
+        // The "as written" mark is a separate span in the same <li>; strip it
+        // before comparing text, and assert it separately below.
+        const got = twoX.ingText.map((s) => s.replace(/\s*as written\s*$/, "").trim());
+        const firstDiff = want.findIndex((w, i) => got[i] !== w);
+        report.check(
+          "a step's ingredients are shown at the scale the reader picked, not at 1×",
+          got.length === want.length && firstDiff < 0,
+          firstDiff < 0
+            ? `${got.length} line(s) match the scaler exactly, e.g. “${got[0]}”`
+            : `line ${firstDiff + 1}: got “${got[firstDiff]}” · want “${want[firstDiff]}”`
+        );
+        report.check(
+          "…and at least one of them really did change — a step that cannot scale proves nothing",
+          got.some((g, i) => g !== oneXStep.lines[i]),
+          `${got.filter((g, i) => g !== oneXStep.lines[i]).length} of ${got.length} line(s) differ ` +
+            `from the 1× render of the same step`
+        );
+        // A line the scaler REFUSED must still say so here. Cook mode is where
+        // a half-scaled list does its damage: the reader is at the bench with
+        // the bowl, not comparing the page against itself.
+        const blocked = oneXStep.keys.filter((key) => {
+          const line = lineOf.get(key) || { text: key, component: null };
+          return scaleLineStatus(line.text, two).status === "blocked";
+        }).length;
+        const marked = twoX.ingText.filter((s) => /as written\s*$/.test(s)).length;
+        report.check(
+          "a line the scaler refused is marked “as written” in cook mode too",
+          marked === blocked,
+          `${marked} marked on screen · ${blocked} refused by quantity.js`
+        );
+        // The badge, because a full-screen mode hides the picker that set it.
+        report.check(
+          "cook mode says WHICH mixture you are making once it is not 1×",
+          twoX.scaleBadge != null && twoX.scaleBadge.includes(TWO.label),
+          twoX.scaleBadge == null
+            ? "no .cook-scale badge in the header"
+            : `badge reads “${twoX.scaleBadge}”`
+        );
+        await press("Escape");
+        await closed();
+      }
+    }
 
     // --- 13. A recipe with no method --------------------------------------
     if (noMethod) {

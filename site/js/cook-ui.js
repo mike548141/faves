@@ -28,7 +28,8 @@
 // the same boundary "Serves 4" and the hours badges already sit behind.
 
 import { el } from "./dom.js";
-import { ingredientKeys } from "./ingredients.js";
+import { ingredientBlocks, ingredientKeys } from "./ingredients.js";
+import { DEFAULT_SCALE, SCALES, scaleFor, scaleLineStatus } from "./quantity.js";
 import { translate } from "./reo.js";
 import { settings } from "./settings.js";
 import { convertTemperatures } from "./units.js";
@@ -79,7 +80,7 @@ const canModal =
  * The label says what happens next rather than naming a mode the app happens to
  * have — nobody wants to enter Cook Mode, they want to start cooking.
  */
-export function cookButton(item, { quiet = false, venueId } = {}) {
+export function cookButton(item, { quiet = false, venueId, scale } = {}) {
   if (!canCook(item) || !canModal) return null;
   const btn = el("button", {
     type: "button",
@@ -90,7 +91,11 @@ export function cookButton(item, { quiet = false, venueId } = {}) {
     // must open cook mode, never navigate away from it.
     e.preventDefault();
     e.stopPropagation();
-    openCookMode(item, { venueId });
+    // `scale` is read HERE, at the tap, not when the button was built: the
+    // recipe page rebuilds itself on a scale change today, but a caller that
+    // patched its lines in place instead would have handed cook mode a stale
+    // number, and the failure would be silent quantities in a kitchen.
+    openCookMode(item, { venueId, scaleKey: typeof scale === "function" ? scale() : scale });
   });
   return btn;
 }
@@ -107,7 +112,7 @@ export function cookButton(item, { quiet = false, venueId } = {}) {
 const pageVenueId = () => new URLSearchParams(location.search).get("id") || "";
 
 /** Open the full-screen view for `item`. Assumes canCook(item). */
-export function openCookMode(item, { venueId } = {}) {
+export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
   const steps = stepsOf(item);
   if (!steps.length || !canModal) return null;
   const rid = recipeId(venueId ?? pageVenueId(), item);
@@ -121,10 +126,60 @@ export function openCookMode(item, { venueId } = {}) {
   // a recipe that moved to components (ingredients.js, ADR 0070).
   const ingredients = ingredientKeys(item.ingredients);
 
+  // ── The scale the reader chose on the page they came from (17a/37p) ───────
+  // The picker lives on the recipe page; cook mode had no idea it existed, so
+  // "2×" on the page and "¾ cup" in the step were the same recipe disagreeing
+  // with itself while someone stood over a bowl (owner, 2026-08-17).
+  //
+  // 🚩 The KEY is not what gets scaled. A grouped line's key is
+  // "Sauce: 1 cup brown sugar", and `readQuantity` reads the amount at the HEAD
+  // of the string — so scaling the key would find no quantity, report "none",
+  // and leave every component-grouped line silently at 1× beside doubled ones.
+  // That is the half-scaled recipe quantity.js exists to prevent. So the TEXT
+  // is scaled and the component re-prefixed for display, while the key — which
+  // the tick hashes and the step matcher reads — is never touched.
+  const scale = scaleFor(scaleKey);
+  const scaled = scaleKey !== DEFAULT_SCALE;
+  const scaleLabel = SCALES.find((s) => s.key === scaleKey)?.label ?? "";
+  const lineOf = new Map(
+    ingredientBlocks(item.ingredients).flatMap((b) =>
+      b.lines.map((l) => [l.key, { text: l.text, component: b.component }])
+    )
+  );
+
+  /**
+   * What one ingredient line looks like on screen: scaled, unit-converted, and
+   * carrying the same "as written" refusal the recipe page shows — a line that
+   * could not be scaled must say so HERE too, or the doubled flour beside the
+   * un-doubled chocolate reads as finished (quantity.js's "blocked" doctrine).
+   */
+  function shownLine(key, units) {
+    const line = lineOf.get(key) || { text: key, component: null };
+    const v = scaleLineStatus(line.text, scale);
+    const text = line.component ? `${line.component}: ${v.text}` : v.text;
+    return { text: convertTemperatures(text, units), blocked: scaled && v.status === "blocked" };
+  }
+
   let index = 0;
 
   // --- Chrome ------------------------------------------------------------
   const title = el("h2", { className: "cook-title", id: titleId, textContent: item.name });
+  // Which mixture you are making, stated where you cannot miss it. Cook mode is
+  // full-screen: the picker that set this is behind it, and a cook who opened
+  // the page an hour ago has no way to check without leaving the step they are
+  // on. It sits BESIDE the title rather than inside it — `.cook-title` is
+  // `nowrap` + ellipsis, so a long recipe name would have eaten the badge on
+  // exactly the narrow screen that needs it. Absent at 1×, where it would be
+  // noise on every recipe.
+  const scaleBadge = scaled
+    ? el("p", { className: "cook-awake cook-scale" }, [
+        el("span", { className: "cook-scale-mark", textContent: scaleLabel }),
+        // The space is IN the text, not only in the flex gap: a gap is a
+        // picture, and the accessible name is built from characters — without
+        // it a screen reader is handed "2×mixture" as one word.
+        el("span", { textContent: " mixture" }),
+      ])
+    : null;
   // Shown only on a lock we actually hold. On iOS before 16.4, or a refusal,
   // it simply never appears — no dead switch, no apology.
   const awake = el("p", { className: "cook-awake", hidden: true }, [
@@ -353,7 +408,7 @@ export function openCookMode(item, { venueId } = {}) {
   const dialog = el("dialog", { className: "cook-sheet", "aria-labelledby": titleId }, [
     el("div", { className: "cook-inner" }, [
       el("div", { className: "cook-top" }, [
-        el("div", { className: "cook-heading" }, [title, awake]),
+        el("div", { className: "cook-heading" }, [title, scaleBadge, awake]),
         close,
       ]),
       progress,
@@ -383,12 +438,22 @@ export function openCookMode(item, { venueId } = {}) {
     // do (ADR 0039).
     if (ingList.contains(document.activeElement)) nextBtn.focus();
     ingPanel.hidden = needed.length === 0;
-    // The tick is keyed on the RAW line; the reader sees the converted one, so
-    // flipping to imperial re-labels the box without losing what it recorded.
+    // The tick is keyed on the RAW line; the reader sees the converted and
+    // scaled one, so flipping to imperial — or doubling the mixture — re-labels
+    // the box without losing what it recorded.
     ingList.replaceChildren(
-      ...needed.map((ing) =>
-        el("li", {}, [tickRow(rid, "i", ing, convertTemperatures(ing, units))])
-      )
+      ...needed.map((ing) => {
+        const { text, blocked } = shownLine(ing, units);
+        const li = el("li", {}, [tickRow(rid, "i", ing, text)]);
+        if (blocked) {
+          li.classList.add("is-unscaled");
+          // In words, not only in colour — the same rule and the same two
+          // elements as the recipe page, so the mark means one thing in both
+          // places (WCAG 1.4.1).
+          li.append(el("span", { className: "scale-mark", textContent: "as written" }));
+        }
+        return li;
+      })
     );
   }
 
@@ -404,7 +469,10 @@ export function openCookMode(item, { venueId } = {}) {
     const needed = ingredientsForStep(steps[s.index], ingredients);
     const said = [s.label, convertTemperatures(steps[s.index], units)];
     if (needed.length) {
-      said.push(`What you need: ${needed.map((l) => convertTemperatures(l, units)).join("; ")}`);
+      // The SAME text the panel draws, scale and all: read aloud is the one
+      // path where a reader cannot glance at the screen to check, so a spoken
+      // "¾ cup" over a written "1½ cups" would be the worst version of this bug.
+      said.push(`What you need: ${needed.map((l) => shownLine(l, units).text).join("; ")}`);
     }
     return said.join(". ");
   }
