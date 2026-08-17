@@ -12,6 +12,44 @@ add-ons, priced) and **what you ask for** (customisation, usually a removal and
 usually free). Both end in the same place — an order line that says what you'll
 actually say at the counter.
 
+🎯 **Owner ruling 2026-08-17 — scope, stated once for the whole theme.** *"The
+same feature should work for many scenarios. It could be sauces to put on it,
+things to remove from the dish, to use a different milk in a coffee, to upsize
+something, to get sides on a breakfast, to get a combo etc… essentially the
+ability to customise or add to a dish."*
+
+So this theme is **one mechanism**, not a family of similar ones, and its name
+is *customise or add to a dish*. Six scenarios were named; here is where each
+one stands against what is built, which is the point of writing them down:
+
+| The scenario he named | What exists today | Gap |
+|---|---|---|
+| Sauces to put on it | 14a add-on groups, `select: many` + `max` | ✅ built |
+| Sides on a breakfast | The same 14a shape (Sprig & Fern's brunch sides) | ✅ built, 14b has to convert the prose |
+| Things to remove from the dish | 14c shipped as **free text**, not structure | ⚠️ works, but it is not the same mechanism |
+| A different milk in a coffee | Nothing. A **substitution** — swap one component for another, sometimes priced | 🛑 unmodelled |
+| Upsize something | Nothing here. Sizes are **Theme 28** (portions) | 🛑 two themes now claim it |
+| A combo | 14f, designed not built | 🛑 unbuilt |
+
+🚩 **Three consequences worth naming before anyone builds to this ruling, because
+each one is a decision and not a task.**
+- **A removal is now in scope as structure, not just as a note.** 14c shipped
+  the recommended half — free text on the order line — and its notes say the
+  *components* half stays unbuilt until a venue's data justifies it. This ruling
+  says the reader should not be able to tell which of the six they are doing, and
+  a free-text box is visibly a different act from ticking a sauce. That is a
+  reason to reopen 14c's components half, not a defect in what shipped.
+- **"Upsize" straddles Theme 14 and Theme 28.** 28's question is whether a
+  regular and a large are one dish or two; this ruling says upsizing should feel
+  like the same control as adding a sauce. Both can be true — a size can be a
+  pick-one group over one dish's own variants — but somebody has to rule which
+  theme owns the data shape, or the two will model it twice.
+- **A substitution is not an addition.** Oat instead of dairy milk *removes* one
+  component and *adds* another, and it changes the dish's allergen composition in
+  both directions. 14d's `composeTags` unions allergens on the way in; a swap
+  needs the way out as well, which today nothing does. This is the one scenario
+  with a genuinely new safety surface.
+
 **The prose is already there, it's just unstructured.** Verified in
 `sprig-and-fern-tawa.json` 2026-08-09: `"Served with aioli. Add gravy $3."`,
 `"Add chicken, halloumi, prawns or beef +$7."`, `"No gluten added bun +$2.5."`,
