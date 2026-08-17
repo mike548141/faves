@@ -1,6 +1,9 @@
 # 0068 — The home list has one ranking, and distance is in it
 
 **Status:** Accepted — design ratified, **code not written**. See "Not built here".
+**Superseded in part (added 2026-08-17):** item 4 (the on-load prompt) is
+superseded by [0069](0069-the-location-ask-is-primed-not-sprung.md); items 1–3
+stand untouched.
 
 **Date:** 2026-08-16
 

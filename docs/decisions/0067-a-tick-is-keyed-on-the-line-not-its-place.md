@@ -1,6 +1,11 @@
 # 0067 — A tick is keyed on the line's own text, not on where the line sits, and it expires
 
 **Status:** Accepted.
+**Superseded in part (added 2026-08-17):** decision 4's final clause — that
+the catch-all sweep makes leaving the checklist out of `SCOPED_BASE_KEYS`
+free — is superseded by
+[0074](0074-a-backup-carries-only-what-it-can-put-back.md); decision 4's
+conclusion and the other six decisions stand.
 
 **Date:** 2026-08-16
 

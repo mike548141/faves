@@ -2,6 +2,10 @@
 
 **Status:** Accepted. Records a schema shape that is deliberately **not built**.
 Nothing in `site/data/` changes on this record. Supersedes nothing.
+**Superseded in part (added 2026-08-17):** Decision 5 and the admission-test
+result reading *"`channel`'s test is MET"* are superseded by
+[0085](0085-a-delivery-price-fills-a-hole-it-is-not-a-feature.md) — `channel`
+is NOT admitted to `site/data/` after all. The rest of this record stands.
 
 **Date:** 2026-08-16
 

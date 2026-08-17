@@ -1,6 +1,10 @@
 # 0037 — The confidence note reads both ways, and details carry their own date
 
 **Status**: accepted
+**Superseded in part (added 2026-08-17):** §3's second home (the About-dialog
+currency line) is superseded by
+[0075](0075-currency-is-stated-once-where-it-is-asked.md); §3's first home
+(the per-venue ⓘ) and the rest of this record stand.
 **Date**: 2026-08-15
 **Builds on**: [0031](0031-verified-carries-its-derivation.md),
 [0036](0036-refresh-caveat-reads-the-method.md)
