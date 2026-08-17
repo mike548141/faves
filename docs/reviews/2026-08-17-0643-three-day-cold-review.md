@@ -152,3 +152,16 @@ findings were duplicates across slices (composeTags ×2, sync-code-in-backup
 bumps read from `origin/main` in the same minute as each commit; a
 generator change upstream blocked commits twice mid-session, resolved by
 regenerating the index alone.
+
+## Addendum — the three decisions, ruled 2026-08-17
+
+1. **Worker redeployed** (owner-authorised, version `c3bd3522…`; token from the
+   keychain, config filled in scratchpad, nothing in the tree). Verified live:
+   `Access-Control-Expose-Headers: ETag` on the actual 400 and 404 responses;
+   a two-device round trip with the real engine against the live endpoint —
+   enable, join, a **second write** (the If-Match path that used to 412), and
+   a pull that received it. **Sync works end-to-end now.**
+2. **Rock Yard**: keep `gf`, drop `contains-gluten` — a correction, `77726e2`.
+3. **GB → metric** as an interim (`f253812`), and a fuller steer: *units are a
+   localisation question, not metric-vs-imperial, and no setting per kind of
+   measure.* The research and recommendation are in the session record.

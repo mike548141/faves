@@ -8012,3 +8012,41 @@ fixed; all recorded, board texts sent to the peer holding the store.
 
 ⏳ **Owed to atelier:** nothing new; pin bumped `98316f8 → 19eb0e2`
 (15 commits, `docs/method/` untouched — measured at commit time, not earlier).
+
+### Addendum — three rulings taken, and units reframed as localisation
+
+Owner ruled the three decisions the review put to him: **Worker redeployed**
+(authorised; live two-device round trip with the real engine passes, second
+write included — sync works end-to-end now); **Rock Yard keeps `gf`**
+(`77726e2`, a correction); **GB → metric** (`f253812`) — then, minutes later,
+the fuller steer: *"think of it as localisation, not simply imperial vs
+metric… but I don't want endless Settings for each type of measure."*
+
+🔎 **Research (CLDR, TC39), and the recommendation.** CLDR — the locale data
+every browser ships — models this as **region × usage → unit**, and marks its
+own metric/US/UK "measurementSystem" flag *deprecated in the next release,
+replaced by enhanced preferences* (`supplementalData.xml`). Its
+`unitPreferenceData` says, for the three usages Faves has: **length/road** —
+GB miles above 0.5 and yards below; US miles and feet; everywhere else km and
+metres. **temperature** — °F in the US only (weather adds BS BZ KY PR PW); GB
+is °C. **volume/fluid** — US cups/tbsp/tsp; GB imperial pints/fl-oz; metric
+elsewhere — but a recipe's quantities are the author's words and Faves scales
+them without converting (ADR 0076), so this usage stays out of scope. The TC39
+proposal to expose this through `Intl.NumberFormat({ usage })` is Stage 2
+(2026-03) and ships nowhere; and browsers expose no OS "measurement system"
+preference (`navigator.language` almost never carries `-u-ms-`), so region from
+timezone/locale — which `locale.js` already derives — is the best signal there
+is.
+
+🎯 **Recommendation: zero new settings.** The units setting already has three
+values — `local` (default), `metric`, `imperial` — so the *shape* the owner
+wants exists; the flaw is that `local` resolves to one of two WORDS. Make
+`localUnits()` resolve to a **usage table** derived from region — `GB →
+{ distance: mi+yd, oven: °C }`, `US → { distance: mi+ft, oven: °F }`, else
+metric — and have `units.js`'s formatters read the table (they already take a
+`units` argument). Relabel `imperial` as **"US customary (miles, °F)"** so a
+UK reader is never offered a word that would give them °F ovens; "UK" is
+something Auto *does*, never a choice a person has to understand. Someone in
+the UK who wants km picks Metric; someone wanting °F picks US. Effort **S**,
+one ADR superseding 0029's binary. Sent to the peer as a Theme 18 item; the
+interim GB → metric stands until it lands.
