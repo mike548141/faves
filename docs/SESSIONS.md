@@ -7900,3 +7900,49 @@ cannot pass `wrapscan` or `pathscan` in a repo without a `scope` block — a
 Both under atelier's board-store section; `070` is in faves' words at that
 session's request. 🚩 `ros` and `shed` began migrating within minutes of the
 filing, so the generator fix is racing two more children paying the same cost.
+
+### Addendum 2 — the exemptions were deleted the same day they were written
+
+The split opened two holes in the floor's boundary (`.wrapscanignore` and
+`.pathscanignore` on the generated index) and added a third file, the
+`tools/board.py` shim, to stop the generated banner naming a file no child has.
+**All three are gone as of `f8faabb`, hours later**, because the upstream cause
+was reported rather than lived with and atelier fixed it. Measured with the
+ignore files **deleted**, not in place: `wrapscan` on the index **15 → 0**,
+`pathscan` **49 → 0**, raw lines over 85 columns 128 → 78. 🔑 **An exemption
+written with its reason is one somebody can come back and delete** — the reason
+is what made the round trip possible, and neither the count nor the cause would
+have survived a bare `.wrapscanignore` entry with no comment.
+
+🔎 **The cause was not the file's shape, and my report of it was wrong in an
+instructive way.** An item line ends in a store path, so its overflow is a
+single unbreakable token and `wrapscan` exempts it — **unless something follows
+it**. A trailing eye-flag adds a space after the path, the overflow gains a legal
+wrap point, and the exemption lapses. 13 of the 15 findings were exactly the
+flag-bearing lines. I had reported *"every item line is flagged"*, generalising
+from the flagged lines in front of me to a population whose flagless members are
+structurally different. 🎯 **That is the same class this session had named an
+hour earlier — it caught its own author while he was actively holding it in
+mind, which is evidence that attention is the wrong instrument for it.** A rule
+you can only obey by remembering it at the moment of writing will be broken by
+the person best placed to know it.
+
+⏳ **One residual, held deliberately.** Deleting the shim meant the rebuild
+command had to live somewhere true, so `CLAUDE.md` and `CONTRIBUTING.md` carry
+the hook's own resolution order —
+`python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebuild`
+— with a note saying why it differs from the banner the generator emits. The
+generator emits only the **first** branch of that chain, and `ATELIER_TOOLS` is
+unset on this machine, so its banner expands to `python3 /board.py`. 🔑 **A
+fallback chain is one fact; emitting its first branch is a partial truth that
+reads as a whole one** — the same defect as naming a file only atelier has, one
+layer in, and it fails at the moment the check fails and a reader is least able
+to guess. Fixed upstream in atelier's PR #24; **when that merges, rebuild the
+index and delete the note** — three lines in `docs/roadmap/README.md` and the
+tail of the `CLAUDE.md` verify entry.
+
+📋 `pathscan` is now scoped away from this repo's record stores
+(`.atelier-floor.json`), adopting atelier's PS4 ruling verbatim. It arrived from
+the opposite direction to PS4's own argument: nothing was ever wrong, but four
+honest session-log mentions of `tools/board.py` became permanent findings **the
+moment the file was deleted** — the tree moved under a true record.
