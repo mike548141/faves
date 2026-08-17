@@ -647,7 +647,7 @@ deliberation those compact docs omit.
   item, touch nothing", where the next item lives in the file just forbidden;
   three sessions were blocked simultaneously on 2026-08-16. Offered the cheap
   reword and the owner **ruled the other way: adopt atelier's split board**, so
-  the inherited sentence becomes true rather than reworded. 6,233 lines → 48
+  the inherited sentence becomes true rather than reworded. 6,274 lines → 48
   sections, 54 item files, a 271-line index. The harvest step goes with it (a
   deletion on a shared file that ate an open WCAG item), and the `board` check
   stops being a **latent** guard — passing since birth on a subject that did not

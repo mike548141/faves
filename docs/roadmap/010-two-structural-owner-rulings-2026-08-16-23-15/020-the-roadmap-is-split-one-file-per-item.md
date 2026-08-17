@@ -1,5 +1,5 @@
 - [x] 🛑 **The roadmap is SPLIT — one file per item** — owner-ruled 2026-08-16,
-      executed 2026-08-17. 6,233 lines became 48 sections, 54 item files and a
+      executed 2026-08-17. 6,274 lines became 48 sections, 54 item files and a
       268-line generated index; the `board` floor check is live and no longer
       latent. The precondition the ruling named — no session holding a claim in
       the monolith — was verified before the split, not assumed.

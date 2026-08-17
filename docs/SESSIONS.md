@@ -7805,7 +7805,7 @@ live: zero of 155 options trigger it today. **A bug report that cannot be
 reproduced is a lead, not a finding** — and the control case that separates the
 two is worth more than the report.
 
-## 2026-08-17-0530 — the board split: one 6,233-line file becomes 102
+## 2026-08-17-0530 — the board split: one 6,274-line file becomes 102
 
 Taken on a direct instruction from the owner, on the ruling he made 2026-08-16
 and on its own stated precondition. Two commits — the store (`672ad17`), then
@@ -7817,7 +7817,7 @@ session holds a claim in the monolith*. Measured before anything moved — zero
 and its branches deleted. Two earlier sessions had declined this work at the tail
 of a long run rather than do it badly; this one was taken for it.
 
-✅ **What landed.** 6,233 lines → 48 sections, 54 item files, a 271-line
+✅ **What landed.** 6,274 lines → 48 sections, 54 item files, a 271-line
 generated index. The session-start read drops **96%**. The `board` floor check —
 wired since the day it was written and reporting *"not in scope"* on every commit
 since — is live for the first time.
@@ -7868,3 +7868,35 @@ Which of them become items is a later, deliberate pass, and it is now a cheap
 one.
 
 [ADR 0086]: decisions/0086-the-board-is-one-file-per-item.md
+
+### Addendum — the second pass, and a number that had a shelf life
+
+🎯 **The owner authorised the pass ADR 0086 deferred**, so the 15 lettered
+sub-items in themes 32, 33 and 36 became item files. The criterion is checkable
+rather than a judgement — a letter id **and** either a size/surface tag or an
+explicit `✅ SHIPPED` in the heading — and the first run of it was **wrong in
+one direction that matters**: size-tag-alone excluded `36d`, because a shipped
+item loses its size tag when its heading is rewritten to ✅ SHIPPED. It would
+have been the one item present in the narrative and absent from the index, which
+is exactly the drift the split exists to stop. 🔑 **A rule derived from how open
+items are written will systematically miss the closed ones** — closing an item
+changes its shape.
+
+⚠️ **And a figure in the record above was wrong: the pre-split file was 6,274
+lines, not 6,233.** Both readings were honest; 6,233 was taken hours earlier and
+peers added 41 lines to the monolith in between. An atelier session caught it by
+re-measuring at the actual parent commit while writing faves into its own
+rollout record. 🔑 **Cite the revision you measured, not the file you read** —
+`git show 672ad17^:docs/ROADMAP.md | wc -l` cannot go stale, and
+`wc -l docs/ROADMAP.md` was already stale when it was written down. Corrected in
+[ADR 0086], the decisions index, this entry and the split's own item file. The
+same session corrected three of its own figures the same way, including one that
+had faves at 1,853 lines — out by 4,421.
+
+⏳ **Handed upstream and now filed there**: `060` (the generator hard-codes
+`tools/board.py` into three child-facing strings) and `070` (the generated index
+cannot pass `wrapscan` or `pathscan` in a repo without a `scope` block — a
+115-column banner and path-shaped link *text*, 49 false findings a commit).
+Both under atelier's board-store section; `070` is in faves' words at that
+session's request. 🚩 `ros` and `shed` began migrating within minutes of the
+filing, so the generator fix is racing two more children paying the same cost.

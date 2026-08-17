@@ -4,7 +4,7 @@
 
 ## Context
 
-`docs/ROADMAP.md` had grown to 6,233 lines holding 48 themes and 54 claimable
+`docs/ROADMAP.md` had grown to 6,274 lines holding 48 themes and 54 claimable
 items. Three costs, one root — the file was simultaneously the unit of
 contention, the unit of reading, and the unit of truth:
 
@@ -83,7 +83,7 @@ as a multiset over every non-heading source line.
 
 ## Consequences
 
-- The session-start read drops from 6,233 lines to a 271-line index — 96% — with
+- The session-start read drops from 6,274 lines to a 271-line index — 96% — with
   item detail loaded on demand.
 - Parallel sessions editing different items cannot conflict. The one shared write
   surface left is the generated index, whose conflicts resolve deterministically
@@ -101,6 +101,19 @@ as a multiset over every non-heading source line.
   nobody reads). `linkscan`, which checks the links themselves, stays enforced
   over the whole board and passes.
 - Re-prioritising is a rename: sections and items are numbered by tens.
+- **The deliberate later pass ran the same day** (owner-authorised): 15 lettered
+  sub-items in themes 32, 33 and 36 were lifted into item files on a checkable
+  criterion — a letter id **and** either a size/surface tag or an explicit `✅
+  SHIPPED` in the heading. The board now carries **72 item files** and a 291-line
+  index. `36g — four rulings on the cook-mode checklist` has a letter id and no
+  size tag, and stayed narrative, which is the criterion doing its job.
+- ⚠️ **A figure in this record was wrong and is corrected**: the pre-split file
+  was **6,274** lines, not the 6,233 first written here and in the session log.
+  6,233 was a true reading taken hours earlier; peers added 41 lines to the
+  monolith between that reading and the split. Caught by an atelier session
+  re-measuring at the actual parent commit — *a measurement of a shared mutable
+  file has a shelf life, and the fix is to cite the revision you measured*
+  (`git show 672ad17^:docs/ROADMAP.md | wc -l`).
 - ~32 reference-style `[ADR NNNN]` uses had no definition in the monolith's tail
   and rendered as literal text there too. They still do — that is the `linkscan`
   reference-style blindness the board's own item records, and repairing it behind
