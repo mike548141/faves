@@ -6,6 +6,7 @@ import { kindOf } from "./kinds.js";
 import { isCheapEats } from "./price.js";
 import { venueHours } from "./locations.js";
 import { venueTimezone } from "./place.js";
+import { isTrading } from "./temporal.js";
 import { vibeLabel, vibesFor, vibesOf } from "./vibes.js";
 
 /** The style-facet values a venue carries, as keys. Usually one — style is
@@ -262,6 +263,17 @@ export function applyFilters(restaurants, state, clock = null) {
       return false;
     }
     if (state.openNow && clock) {
+      // A venue that has SHUT DOWN fails this whatever its posted week says
+      // (lifecycle, ADR 0023). "Open now" is a time filter and a closure is not
+      // a time of day — but the filter's promise is "somewhere I can eat right
+      // now", and a refit or a permanent closure fails that harder than 3am
+      // does, not more weakly. Deciding otherwise would put a card reading
+      // "Permanently closed" inside a list the reader asked to be open, which
+      // is one card contradicting itself. Note the asymmetry, which is
+      // intended: closure DISQUALIFIES here and DEMOTES in the ranking
+      // (ranking.js tierOf), and it never removes the venue from the unfiltered
+      // list — that list is how someone finds out the place has gone.
+      if (!isTrading(r)) return false;
       // For a multi-location venue this reads the branch that drives its card:
       // the nearest one when we know the viewer's location (state.origin), else
       // the primary — so "Open now" and the card badge always agree.

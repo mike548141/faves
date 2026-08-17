@@ -25,6 +25,8 @@ import {
   FAV_TIE_KM,
   FAV_BOOST_KM,
 } from "../site/js/ranking.js";
+// The closure fixtures below are built through the REAL fold, not hand-written.
+import { resolveRecord } from "../site/js/temporal.js";
 
 // The ranker reads the clock per venue, in that venue's own zone (ADR 0043).
 // These tests are about ordering, not timezones, so they hand it a stub that
@@ -367,6 +369,65 @@ test("isAvailableNow: with a location, a faraway open venue is not available", (
   assert.equal(isAvailableNow(openFar, { clock: clockAt(MON_NOON) }), true); // no origin → can't tell
   assert.equal(isAvailableNow(openFar, { clock: clockAt(MON_NOON), origin: CBD }), false); // too far
   assert.equal(isAvailableNow(openNear, { clock: clockAt(MON_NOON), origin: CBD }), true);
+});
+
+// --- Lifecycle closure: the venue that has shut its doors (ADR 0023) ---
+//
+// LATENT IN THE CORPUS: no venue in `site/data/` carries a closure event today,
+// so this cannot be observed by browsing the app — which is precisely why it is
+// pinned here. The fixture is built by running a raw `lifecycle` block through
+// the real `resolveRecord`, rather than by hand-writing the `closure` object it
+// produces: hand-writing it would test the ranker against a shape nothing in
+// the app actually emits, and would keep passing the day the fold changed.
+const ASOF = "2026-08-17"; // any day after the closure events below
+const shutDown = (id, type, place) =>
+  resolveRecord(
+    {
+      id,
+      name: id,
+      ...place,
+      hours: OPEN, // the posted week still says "open at noon" — that is the trap
+      lifecycle: { added: "2026-07-06", events: [{ type, date: "2026-06-01" }] },
+    },
+    ASOF
+  );
+
+// Both at 200 m; `openMid` below is nine times further away and still trading.
+const gone = shutDown("gone", "closed-permanently", at(0.2));
+const refit = shutDown("refit", "closed-temporarily", at(0.2));
+const openMid = { id: "open-mid", ...at(0.9) };
+
+test("availabilityTier: a shut-down venue is tier 3 whatever its posted hours say", () => {
+  // The control. This already held — the tier function reads the lifecycle;
+  // the two tests below are the surfaces that were not asking it.
+  assert.equal(availabilityTier(gone, clockAt(MON_NOON)), 3);
+  assert.equal(availabilityTier(refit, clockAt(MON_NOON)), 3);
+});
+
+test("rankVenues (origin): a shut-down venue sinks below a trading one nine times further", () => {
+  // Distance must not rescue it: you cannot eat at a locked door 200 m away.
+  assert.deepEqual(rank([gone, openMid], { origin: CBD }), ["open-mid", "gone"]);
+  assert.deepEqual(rank([refit, openMid], { origin: CBD }), ["open-mid", "refit"]);
+});
+
+test("rankVenues (no origin): a shut-down venue sinks below a trading one", () => {
+  // With no origin every distance ties, so the availability tier is the only
+  // key that can separate these two — the case that isolates it from distance.
+  assert.deepEqual(rank([gone, openNear]), ["open-near", "gone"]);
+});
+
+test("rankVenues: a shut-down venue ranks alongside a shut-for-the-night one", () => {
+  // Not below it: "closed" is one tier, and sorting a permanent closure into a
+  // tier of its own is a design question nobody has answered (see the note in
+  // ranking.js). Curated order breaks the tie, so the input order survives.
+  assert.deepEqual(rank([gone, closedNear]), ["gone", "closed-near"]);
+  assert.deepEqual(rank([closedNear, gone]), ["closed-near", "gone"]);
+});
+
+test("isAvailableNow: the dice will not land on a shut-down venue", () => {
+  // Also a control — this surface already read the lifecycle.
+  assert.equal(isAvailableNow(gone, { clock: clockAt(MON_NOON) }), false);
+  assert.equal(isAvailableNow(refit, { clock: clockAt(MON_NOON) }), false);
 });
 
 // --- Multi-location venues (locations[] branches, ADR 0011) ---
