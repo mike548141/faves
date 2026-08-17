@@ -856,9 +856,14 @@ Two streams, deliberately separated because they land in different places:
       "Yin & Yang Pan-fried Salmon"), **Pizza Pomodoro** (anchovy on Romana and
       Inferno), **Regal** (spicy fish sauce), **Subway** (tuna — and 🚩 note it
       must NOT be `contains-shellfish`, which is the wrong-tag trap here).
-      ⚠️ **`vg-option` and `df-option` were NOT ruled on** and stay open below —
-      they are a different, much lower-stakes question and should not ride in
-      on this decision's coat-tails.
+      ⚠️ ~~**`vg-option` and `df-option` were NOT ruled on** and stay open
+      below~~ — **STALE. Both were adopted the same day** (see 37n's rulings
+      further down: *"`contains-fish`, `vg-option` and `df-option` are ALL
+      ADOPTED"*), and both **shipped 2026-08-16**. 🔑 Kept rather than deleted
+      because it cost real time: a session put the `df-option` question to the
+      owner a second time without grepping first, and he answered it the same
+      way. **The roadmap said it twice, in opposite directions, 5,200 lines
+      apart** — which is the monolithic-board problem in its quietest form.
 - [ ] ✅ **RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,
       but keep tagging only PRESENT.** `[M][schema]` Owner's call, and it split
       the question in two rather than answering it as asked.
@@ -1946,6 +1951,42 @@ renders add-ons now, so ADR 0047 lets the payload carry them. The paragraph
 stays as the design input it was.
 
 **Three things 14a left open, named rather than hidden.**
+- 🛑 **`composeTags` checks a vegan claim against the WRONG contradiction list —
+  latent today, live the moment a venue writes one option.** `[S][js]` Found
+  2026-08-16 while adding `vg-option`; **reproduced twice and measured, because
+  the first reproduction handed to me did not reproduce.**
+  `addons.js:170` maps a claim tag back to a filter key with
+  `DIET_KEYS.find(k => CLAIM_TAGS.get(k).includes(tag))` — **first match wins.**
+  `vg` appears in *both* `v`'s satisfies list (`["v","vg","v-option"]`) and its
+  own, so `vg` resolves to key **`v`** and is checked against `CONTRADICTS.v`
+  (shellfish) instead of `CONTRADICTS.vg` (dairy, egg, shellfish).
+  **Measured, with the control that proves it is a real fault and not the
+  intersection rule doing its job:**
+  ```
+  dish ["vg"]  + option tags ["vg","contains-dairy"] -> ["vg","contains-dairy"]  dropped []
+  dish ["gf"]  + option tags ["gf","contains-gluten"] -> ["contains-gluten"]     dropped [gf: contradicted]
+  ```
+  ⇒ **A dish can carry a vegan label beside `contains-dairy`, on the app's own
+  tags.** The `gf` line shows the machinery works for every other claim.
+  ✅ **NOT live today: zero add-on options in the corpus claim `vg` while
+  carrying a contradicting allergen** — checked all 40 groups / 155 options. It
+  needs one option written as `tags: ["vg", "contains-dairy"]` to fire, which is
+  an ordinary thing for an intake to write.
+  ⚠️ **Note what does NOT trigger it, because this is where the first
+  reproduction went wrong:** an option stating *no* claim drops `vg` correctly
+  via the intersection rule (`reason: "not-stated"`). The fault only appears when
+  the option **states the claim and contradicts it** — so a casual test looks
+  clean. That is why this needs the paired control above in whatever test fixes
+  it.
+  🔗 **Do not fix it by adding `vg-option` to two satisfies lists.** ADR-adjacent
+  reasoning is already in a comment at `dietary.js:34`: `vg-option` was
+  deliberately put in **one** list to avoid extending this exact fault to a
+  second tag. Fix the resolution, then reopen that choice.
+  💡 **Adjacent, same file, reported not changed:** `vg` does not satisfy `df`,
+  though a vegan dish is dairy-free by definition and both `addons.js:52` and
+  `tag_allergens.py:70` already encode that fact. One definitional entailment
+  (`vg ⇒ v`) is honoured and its sibling is not. Changing it moves filter results
+  corpus-wide, so it is a decision rather than a fix.
 - 🚩 **A group has a `max` but no `min`.** "Choose your kebab toasted or fresh"
   is not optional at the counter — you will be asked — and a pick-one group
   left unanswered produces a line the shop cannot fill without asking. That is
