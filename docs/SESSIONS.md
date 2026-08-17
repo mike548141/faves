@@ -8205,3 +8205,12 @@ stands at **48 sections / 88 item files**. The primary checkout is dirty with
 another session's live work, which is theirs and correct. One debt is dated
 rather than done: the next atelier pin bump owes a re-inline of the floor block,
 recorded on the item whose subject is that this copy drifts silently.
+
+### Addendum 2 — 18d ruled
+
+Owner, 2026-08-17: **"I agree"** to the units-as-region × usage recommendation
+above (zero new settings; `local` resolves to a usage table; `imperial`
+relabelled "US customary (miles, °F)"; UK is an outcome, never a choice; one
+ADR superseding 0029's binary). 18d is therefore **owner-ruled and open**, not
+a proposal — the board-lane session holds the item; the interim GB → metric
+(`f253812`) stands until it is built.
