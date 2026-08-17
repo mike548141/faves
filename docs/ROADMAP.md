@@ -230,9 +230,20 @@ Board doctrine and the checkbox legend: [roadmap/README.md](roadmap/README.md). 
 
 *Narrative: [390-theme-32-activity-history-what-changed-and-wha/README.md](roadmap/390-theme-32-activity-history-what-changed-and-wha/README.md)*
 
+- [ ] [32a — the recorder](roadmap/390-theme-32-activity-history-what-changed-and-wha/010-32a-the-recorder-m-js.md)
+- [ ] [32b — the screen](roadmap/390-theme-32-activity-history-what-changed-and-wha/020-32b-the-screen-m-design.md)
+- [ ] [32c — system events, wired to what already computes them](roadmap/390-theme-32-activity-history-what-changed-and-wha/030-32c-system-events-wired-to-what-already-comput.md)
+- [ ] [32d — export and wipe](roadmap/390-theme-32-activity-history-what-changed-and-wha/040-32d-export-and-wipe-s-js-depends-on-32a.md)
+- ✅ [32e — undo, deliberately out of scope for now](roadmap/390-theme-32-activity-history-what-changed-and-wha/050-32e-undo-deliberately-out-of-scope-for-now-l-d.md)
+
 ## Theme 33 — reservations (owner-raised 2026-08-16)
 
 *Narrative: [400-theme-33-reservations-owner-raised-2026-08-16/README.md](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/README.md)*
+
+- [ ] [33a — book it: link out, don't build it](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/010-33a-book-it-link-out-don-t-build-it-s-schema.md)
+- [ ] [33b — the reservation note, which is the actual feature](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/020-33b-the-reservation-note-which-is-the-actual-f.md)
+- [ ] [33c — several at once](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/030-33c-several-at-once-s-design-depends-on-33b.md)
+- [ ] [33d — a real integration](roadmap/400-theme-33-reservations-owner-raised-2026-08-16/040-33d-a-real-integration-xl-owner-gated-and-agai.md) 🛑
 
 ## Theme 34 — every section addressable by URL (owner-raised 2026-08-16)
 
@@ -257,6 +268,13 @@ Board doctrine and the checkbox legend: [roadmap/README.md](roadmap/README.md). 
 ## Theme 36 — cooking is not ordering (owner-raised 2026-08-16)
 
 *Narrative: [460-theme-36-cooking-is-not-ordering-owner-raised/README.md](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/README.md)*
+
+- [ ] [36a — what the data says about time, and what it doesn't](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/010-36a-what-the-data-says-about-time-and-what-it.md) 🎯
+- [ ] [36b — the quantity used at this step](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/020-36b-the-quantity-used-at-this-step-l-schema-da.md) 🎯
+- [ ] [36c — serving sizes](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/030-36c-serving-sizes-m-data-not-researchable.md) 🎯
+- ✅ [36d — the timer's alarm](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/040-36d-the-timer-s-alarm-shipped-2026-08-16.md)
+- [ ] [36e — one place to look, not two](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/050-36e-one-place-to-look-not-two-m-ux.md)
+- [ ] [36f — what it costs to make it](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/060-36f-what-it-costs-to-make-it-l-schema-data-own.md)
 
 ## Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)
 
