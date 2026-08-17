@@ -1,7 +1,12 @@
-- [ ] 🎯 **18d — units resolve as region × usage, not one word** `[S][js][design]`
-      — owner steer 2026-08-17: *"localisation, not metric vs imperial; no
-      setting per kind of measure."* Supersedes [ADR 0029]'s binary in design;
-      the interim GB → metric ruling (`020`, `f253812`) stands until this lands.
+- [ ] **18d — units resolve as region × usage, not one word** `[S][js][design]`
+      — ✅ **OWNER-RULED 2026-08-17: *"I agree."*** The whole shape below is
+      approved: region × usage, **zero new settings**, `local` → a usage table,
+      `imperial` relabelled *"US customary (miles, °F)"*, **UK an outcome and
+      never a choice**, one ADR superseding [ADR 0029]. **Open and claimable
+      — the design question is closed and only the build is left.** Ruled from
+      the steer *"localisation, not metric vs imperial; no setting per kind of
+      measure"*; the interim GB → metric (`020`, `f253812`) stands until this
+      lands.
 
 **Why one word cannot carry it.** CLDR — the localisation data every platform
 uses — models units as **region × usage → unit**, and marks its own
