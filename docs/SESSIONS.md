@@ -7738,3 +7738,25 @@ browser checks were green through both premature closes, and they still are —
 they exercise behaviour, and none of these three faults is behavioural. A green
 suite is evidence about the code and says nothing whatever about whether the
 prose beside it is still true.
+
+🚩 **And then the provenance failure at §2 above happened again, in the opposite
+direction.** A peer's `git worktree add` failed (`a branch named 'close-tidy'
+already exists`) while the `cd` in the same compound command *succeeded* — the
+directory existed, because it was this session's. Its `git add -A` staged three
+of its own `docs/ROADMAP.md` hunks into an index this session then committed as
+`1e63080`. So three edits written by someone else — the `4f8dfb2` → `f4c65e8`
+correction on 17a, the `order-mode` sequencing gate's release, and 37k's claim
+release — carry my commit and my message, and `git log -S` attributes them to
+me. **Nothing needs undoing: the content is correct and the peer would have
+pushed it verbatim.** What rescues the record is that the commit *body*
+enumerates my three discharges by name (the CI item at `344adfb`, `linkscan`
+blocked upstream, the stamped copy) — so the six hunks split cleanly on reading
+rather than on trust. The subject alone (*"discharge three orphaned claims"*)
+describes the peer's three almost as well as mine and would have swallowed them
+without a trace. 🔑 **A subject line is a summary; a body that names what it
+changed is the only part of a commit that survives another session's hunks
+landing inside it.** ⚠️ Note also what `git worktree list` does *not* tell you:
+a worktree another session created is indistinguishable from one you created,
+and an empty `git branch --show-current` means *detached or mid-rebase*, not
+"no output, fine" — this checkout was briefly `UU docs/SESSIONS.md` mid-rebase
+during the same window.
