@@ -27,6 +27,7 @@
 // falls back, which is a smaller failure than a confident wrong currency.
 
 import { HOME_CURRENCY } from "./home.js";
+import { METRIC_USAGE, IMPERIAL_USAGE } from "./units.js";
 
 // IANA zone → ISO 3166-1 alpha-2. Only zones whose country has a currency in
 // our table; everywhere else falls through to the locale region, then home.
@@ -112,14 +113,24 @@ const COUNTRY_CURRENCY = {
   BE: "EUR", AT: "EUR", PT: "EUR", GR: "EUR", FI: "EUR",
 };
 
-// Countries whose KITCHEN is imperial. This one setting drives both road
-// distance and recipe units — cups, ounces and °F ovens — so the test is the
-// kitchen, not the road sign. Until 2026-08-17 GB was listed too, for its
-// miles, and every oven temperature on a London phone read in °F; UK ovens
-// are °C (owner ruling, 2026-08-17: GB → metric). Everywhere else is metric —
-// the short list IS the exception list, which is why it is stated this way
-// round. Anyone who wants imperial can still choose it in Settings.
-const IMPERIAL_COUNTRIES = new Set(["US"]);
+// Region → what each KIND of measure reads in (ADR 0087). CLDR — the
+// localisation data every platform ships — models units as region × usage and
+// marks its own metric/US/UK flag deprecated, because Britain is not a point
+// on a dial between the two: road distance is miles and yards, the oven is
+// °C. A single word cannot say that, and the word we had said °F.
+//
+// The short list IS the exception list: anywhere absent is metric throughout,
+// which is why it is stated this way round. Only the two usages Faves
+// actually renders are listed — a table with entries no screen reads would be
+// a claim we never check.
+//
+// Supersedes the interim GB → metric of 2026-08-17 (`f253812`), which fixed
+// the °F oven by giving Britain metres as well. This is the same ruling done
+// once: GB keeps its °C oven AND gets its miles back.
+const REGION_USAGE = {
+  GB: Object.freeze({ distance: "imperial", oven: "metric" }),
+  US: IMPERIAL_USAGE,
+};
 
 /** The device's IANA timezone, or null when the browser won't say. */
 export function deviceTimezone() {
@@ -177,10 +188,19 @@ export function localCurrency(available = null, opts = {}) {
   return code;
 }
 
-/** "metric" | "imperial" for a "local" units setting. */
+/**
+ * The usage table for a "local" units setting: `{distance, oven}`, each
+ * "metric" or "imperial" (units.js reads it; ADR 0087).
+ *
+ * Region is the only signal available. Browsers expose no OS measurement-system
+ * preference, and `Intl`'s `usage` option — which would answer this properly —
+ * is TC39 Stage 2, so it is not shippable under this repo's zero-dependency,
+ * zero-build constraint. Metric everywhere we do not know, which is also the
+ * answer for the whole world bar two entries.
+ */
 export function localUnits(opts = {}) {
   const country = deviceCountry(opts);
-  return country && IMPERIAL_COUNTRIES.has(country) ? "imperial" : "metric";
+  return (country && REGION_USAGE[country]) || METRIC_USAGE;
 }
 
 /**

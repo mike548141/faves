@@ -93,10 +93,16 @@ test("units: defaults to local, keeps imperial, rejects anything else", () => {
   // passed in Wellington and failed on a US-locale CI runner — which was the
   // resolver working correctly, and the test making a claim it couldn't keep.
   assert.equal(s.raw().units, LOCAL);
-  assert.ok(["metric", "imperial"].includes(s.get().units), "always resolves to a real system");
+  // `get().units` is a USAGE TABLE, always, LOCAL or not (ADR 0087) — one
+  // shape for every consumer, so nobody downstream can compare it to a word.
+  assert.deepEqual(Object.keys(s.get().units).sort(), ["distance", "oven"]);
   s.set({ units: "imperial" });
-  assert.equal(s.get().units, "imperial");
-  assert.equal(createSettings(storage).get().units, "imperial"); // persists
+  assert.deepEqual(s.get().units, { distance: "imperial", oven: "imperial" });
+  assert.equal(s.raw().units, "imperial", "the WORD is what gets stored");
+  assert.deepEqual(createSettings(storage).get().units, {
+    distance: "imperial",
+    oven: "imperial",
+  }); // persists
   s.set({ units: "furlongs" });
   assert.equal(s.raw().units, LOCAL);
 });
@@ -168,7 +174,7 @@ test("the three localisation settings default to local, and resolve away", () =>
   assert.equal(s.raw().currency, LOCAL);
   // No consumer should ever see the word "local" in a resolved value...
   assert.notEqual(s.get().lang, LOCAL);
-  assert.ok(["metric", "imperial"].includes(s.get().units));
+  assert.deepEqual(Object.keys(s.get().units).sort(), ["distance", "oven"]);
   // ...except currency, which cannot be resolved without knowing WHICH venue's
   // price is being rendered and which rates loaded. place.js does that per price.
   assert.equal(s.get().currency, LOCAL);
@@ -178,7 +184,9 @@ test("an explicit choice survives resolution untouched", () => {
   const s = createSettings(fakeStorage());
   s.set({ lang: "mi", units: "imperial", currency: "GBP" });
   assert.equal(s.get().lang, "mi");
-  assert.equal(s.get().units, "imperial");
+  // "Untouched" means the CHOICE survives, not its spelling: the resolved
+  // value is the table that word has always meant.
+  assert.deepEqual(s.get().units, { distance: "imperial", oven: "imperial" });
   assert.equal(s.get().currency, "GBP");
   assert.deepEqual(s.raw(), { ...s.raw(), lang: "mi", units: "imperial", currency: "GBP" });
 });

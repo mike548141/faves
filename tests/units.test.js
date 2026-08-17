@@ -1,5 +1,5 @@
-// Unit tests for the metric/imperial display layer (site/js/units.js) —
-// ROADMAP Theme 18a/18c, ADR 0029. Pure functions, no DOM.
+// Unit tests for the units display layer (site/js/units.js) — ROADMAP Theme
+// 18a/18c/18d, ADR 0029 and ADR 0087. Pure functions, no DOM.
 // Run: `node --test`.
 
 import { test } from "node:test";
@@ -10,6 +10,10 @@ import {
   UNITS,
   DEFAULT_UNITS,
   UNIT_OPTIONS,
+  METRIC_USAGE,
+  IMPERIAL_USAGE,
+  unitUsage,
+  unitsLabel,
   kmToMiles,
   milesToKm,
   formatDistance,
@@ -28,6 +32,77 @@ test("metric is the default and both systems are offered", () => {
   assert.equal(DEFAULT_UNITS, "metric");
   assert.deepEqual(UNITS, ["metric", "imperial"]);
   assert.deepEqual(UNIT_OPTIONS.map((o) => o.key), UNITS);
+});
+
+test("the imperial option says US customary, because that is what it is", () => {
+  // ADR 0087. A reader in Britain who sees the word "Imperial" picks it and
+  // gets a °F oven — the exact bug this theme exists to close. The label has
+  // to name the place, and the picker must never grow a third, UK, option:
+  // "UK" is something Local DOES, never a thing a reader chooses.
+  assert.equal(UNIT_OPTIONS.find((o) => o.key === "imperial").label, "US customary (miles, °F)");
+  assert.deepEqual(UNIT_OPTIONS.map((o) => o.key), ["metric", "imperial"]);
+});
+
+// --- The usage table -------------------------------------------------------
+
+test("unitUsage: a word becomes the table it always meant", () => {
+  assert.deepEqual(unitUsage("metric"), METRIC_USAGE);
+  assert.deepEqual(unitUsage("imperial"), IMPERIAL_USAGE);
+});
+
+test("unitUsage: a table passes through, one field at a time", () => {
+  assert.deepEqual(unitUsage({ distance: "imperial", oven: "metric" }), {
+    distance: "imperial",
+    oven: "metric",
+  });
+  assert.deepEqual(unitUsage({ distance: "metric", oven: "imperial" }), {
+    distance: "metric",
+    oven: "imperial",
+  });
+});
+
+test("unitUsage: anything unrecognisable reads metric rather than throwing", () => {
+  // A stale saved setting or a half-written table must never take a menu page
+  // down — the same fail-soft the string version had.
+  assert.deepEqual(unitUsage("furlongs"), METRIC_USAGE);
+  assert.deepEqual(unitUsage(undefined), METRIC_USAGE);
+  assert.deepEqual(unitUsage(null), METRIC_USAGE);
+  assert.deepEqual(unitUsage({}), METRIC_USAGE);
+  assert.deepEqual(unitUsage({ distance: "imperial" }), { distance: "imperial", oven: "metric" });
+});
+
+test("unitsLabel: the two chooseable words read back exactly as chosen", () => {
+  assert.equal(unitsLabel("metric"), "Metric (km, °C)");
+  assert.equal(unitsLabel("imperial"), "US customary (miles, °F)");
+  assert.equal(unitsLabel(METRIC_USAGE), "Metric (km, °C)");
+  assert.equal(unitsLabel(IMPERIAL_USAGE), "US customary (miles, °F)");
+});
+
+test("unitsLabel: a mixed table is described, never given an option's name", () => {
+  // Britain. Naming it with either option's label would tell the reader they
+  // are on a setting they could have picked, and they could not have.
+  assert.equal(unitsLabel({ distance: "imperial", oven: "metric" }), "Miles, °C");
+  assert.equal(unitsLabel({ distance: "metric", oven: "imperial" }), "Kilometres, °F");
+});
+
+test("a GB usage table reads miles on the road AND °C in the oven", () => {
+  // The one case that is the whole reason for the table. Both halves in one
+  // test, because either alone passes under the old single-word behaviour.
+  const gb = { distance: "imperial", oven: "metric" };
+  assert.equal(formatDistance(13.6, gb), "8.5 mi");
+  assert.equal(formatDistance(0.45, gb), "500 yd");
+  assert.equal(convertTemperatures("Bake at 180°C for 2 hours.", gb), "Bake at 180°C for 2 hours.");
+  assert.equal(formatDial(50, "farKm", gb), "30 mi");
+  assert.deepEqual(dialSpec("favBoostKm", gb), { min: 0, max: 20, step: 0.5 });
+});
+
+test("the two halves of a usage table are read independently", () => {
+  // The mirror of GB, which no region uses — it exists to prove the distance
+  // formatter reads `distance` and the oven rewrite reads `oven`, rather than
+  // both reading whichever field happens to be first.
+  const mixed = { distance: "metric", oven: "imperial" };
+  assert.equal(formatDistance(13.6, mixed), "14 km");
+  assert.equal(convertTemperatures("Bake at 180°C for 2 hours.", mixed), "Bake at 355°F for 2 hours.");
 });
 
 test("mile conversion is the exact international mile, both ways", () => {

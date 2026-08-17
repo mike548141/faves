@@ -18,6 +18,15 @@ content freshness separately from this file.
   collection carries a closure today, so nothing on screen changes yet.
 
 ### Changed
+- **Units now follow how a place actually measures, one kind of measure at a
+  time.** A phone in Britain reads distances in miles and yards and recipe
+  temperatures in °C, which is what a British kitchen and a British road sign
+  each do; the old single metric-or-imperial word could only offer both or
+  neither, and offering both had a London reader baking at 355°F. Nothing to
+  set: it follows the same "Local" preference that already picks the language
+  and the currency. The Settings option formerly called "Imperial (miles, °F)"
+  is now called **"US customary (miles, °F)"**, which is what it always was;
+  anyone who had chosen it sees no change but the name.
 - **A home-screen link can now carry the takeaway/dine-in filter**, under
   `?order-mode=takeaway`. The filter's internal name changed from `service` to
   `order-mode` (one word had come to mean three different things), and a link

@@ -1,6 +1,17 @@
 # 0029 — Metric or imperial is a render-time display choice, never a stored one
 
 **Status:** accepted
+**Superseded in part (added 2026-08-17):** the **one-word preference** — that a
+reader's units are `metric` or `imperial` and every surface reads that one word
+— is superseded by
+[0087](0087-units-resolve-as-region-x-usage-not-one-word.md), which resolves
+units as region × usage (`{distance, oven}`) because Britain drives in miles
+and bakes at °C. That record also reverses this one's **"guessing from the
+browser locale"** rejection, which
+[0045](0045-prices-convert-and-localisation-can-follow-you.md) had already
+overtaken. Everything else here stands whole, and 0087 rests on it:
+render-time-only conversion, the yard ladder, the mile dial grid storing
+kilometres, and the swap-not-append oven rewrite at nearest 5°F.
 **Date:** 2026-08-09
 
 ## Context

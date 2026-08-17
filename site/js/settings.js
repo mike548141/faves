@@ -25,7 +25,7 @@
 
 import { profileScopedStorage } from "./profiles.js";
 import { FAR_KM, FAV_BOOST_KM } from "./defaults.js";
-import { UNITS, DEFAULT_UNITS } from "./units.js";
+import { UNITS, DEFAULT_UNITS, unitUsage } from "./units.js";
 import { localLanguage, localUnits } from "./locale.js";
 
 const KEY = "faves.settings.v1";
@@ -204,20 +204,26 @@ function sanitise(obj) {
  * The stored settings with every LOCAL resolved to a concrete value.
  *
  * This is what `get()` returns, so no consumer anywhere has to know that
- * "local" exists — `settings.get().units` is always "metric" or "imperial",
- * exactly as it has always been. The settings SCREEN wants the unresolved
- * value (to show which option is ticked), and calls `raw()` for it.
+ * "local" exists. The settings SCREEN wants the unresolved value (to show
+ * which option is ticked), and calls `raw()` for it.
+ *
+ * `units` resolves to a USAGE TABLE — `{distance, oven}` — whether or not it
+ * was LOCAL, so `settings.get().units` has exactly one shape (ADR 0087). It
+ * used to be the stored word, and letting the word through for a reader who
+ * had picked one would leave a union type flowing across the app: the next
+ * `units === "imperial"` anyone writes would then be silently false for every
+ * reader on Local, which is the whole population by default. `raw().units`
+ * keeps the word, and it is the word that is stored, exported and synced.
  *
  * Currency is deliberately NOT resolved here. It cannot be: the answer depends
  * on the venue whose price is being rendered and on which rates loaded, neither
  * of which the store knows about. `place.js` resolves it per price.
  */
 function resolveLocals(state) {
-  if (state.lang !== LOCAL && state.units !== LOCAL) return state;
   return {
     ...state,
     lang: state.lang === LOCAL ? localLanguage(LANGS) : state.lang,
-    units: state.units === LOCAL ? localUnits() : state.units,
+    units: state.units === LOCAL ? localUnits() : unitUsage(state.units),
   };
 }
 
