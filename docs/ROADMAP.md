@@ -6011,6 +6011,16 @@ The released claim only ever covered the owner's original five.
 > `service` axis, and `service` already means three things) stands unchanged.
 > What these rulings close are the two questions 0077 explicitly left open.
 
+> 🕳️ **Orphan stash, VERIFIED REDUNDANT 2026-08-17 — nobody needs to look at it
+> again.** `stash@{0}` "WIP on faves-content-growth" (2026-08-16 23:31) survived
+> an interrupted session whose worktree no longer exists, and was flagged to two
+> sessions during the day without either taking it. Checked rather than left
+> ambiguous: it holds `priceBand`/`pricePerPerson` for `burgerfuel` and
+> `hell-pizza`, and **`main` already carries identical values** (`$$`/16 and
+> `$$`/24) plus a superseded `sw.js` bump. **No work is lost in it.** Left in
+> place rather than dropped — deleting another session's stash is not this
+> session's call — but recorded so the next reader spends nothing on it.
+
 > ✅ **37k BUILT AND SHIPPED 2026-08-16** (wt: faves-cook2, `9aa6071`…`62546b4`).
 > Recorded as **ADR 0084**. `site/js/vibes.js` is new — 17 keys in three facets.
 > **The build is done; only the TAGGING is owed, and it is his.**

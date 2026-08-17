@@ -179,7 +179,9 @@ node tools/addon_check.mjs    # add-on composition in headless Chrome (ADR 0048)
 node tools/branch_check.mjs   # the branch picker in headless Chrome (ADR 0054)
 node tools/to_top_check.mjs   # the back-to-top button gets out of the way (Theme 29)
 node tools/filter_row_check.mjs # filters inline when wide, in the sheet when narrow
-node tools/recipe_check.mjs   # the recipe page's ingredient layout (ADR 0070)
+node tools/recipe_check.mjs   # the recipe page's ingredient layout (ADR 0070) AND
+                              # the ½/1×/2×/3× scaler (ADR 0076) — including that a
+                              # tick SURVIVES a scale change, which fails silently
 node tools/served_check.mjs   # a section's serving window, on a FROZEN clock (28c).
                               # `served` ANNOTATES, it never filters — so this asserts
                               # the out-of-window section is STILL on the page, its
@@ -342,10 +344,18 @@ breakpoint, and two tick columns that must agree down the page — none of which
 unit test can see. It sweeps two widths and three text sizes and asserts the
 tick columns share one left edge to the pixel, that a *wrapped* method step
 (measured, not assumed) keeps its number beside the first line, and that a list
-of under six lines stays one column where a list of eight splits. Each of its 22
-assertions was verified by reintroducing the bug it covers. Run it after
-touching `recipe.js`, `ingredients.js`, `checklist*.js` or the recipe region of
-`app.css`.
+of under six lines stays one column where a list of eight splits. **29
+assertions.** The original 22 were each verified by reintroducing the bug they
+cover. The 7 added for **17a's scaler** (ADR 0076) rest on `quantity.js`'s own
+23 unit tests plus a corpus sweep, and **two of them were break-probed**: keying
+the tick on the rendered line instead of the raw one fails *"a tick made at 1×
+is STILL TICKED after the recipe is scaled"* and nothing else, and removing the
+"as written" span fails *"the refusal is carried in WORDS, not only in colour"*
+and nothing else. The other five are not individually break-proven — said
+plainly, because "each assertion was verified by reintroducing its bug" is the
+sort of claim that quietly stops being true one addition at a time. Run it after
+touching `recipe.js`, `ingredients.js`, `quantity.js`, `checklist*.js` or the
+recipe region of `app.css`.
 
 🛑 **Only `boot_check` runs in CI.** `.github/workflows/ci.yml` runs `node
 --test`, the Python gates and `boot_check` — so every *other* check in this
