@@ -143,6 +143,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/README.md)*
 
+- [ ] 🎯 [A closed "If it's your first time, try…" block has no way back](roadmap/230-theme-15-ui-consistency-navigation-layout-owne/010-a-closed-picks-block-has-no-way-back.md)
+
 ## Theme 16 — Staying current: PWA updates & a manual refresh (owner-raised 2026-08-09)
 
 *[Narrative](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/README.md)*
