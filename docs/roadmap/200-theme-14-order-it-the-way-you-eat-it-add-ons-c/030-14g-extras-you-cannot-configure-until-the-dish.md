@@ -60,3 +60,23 @@ produces a second line rather than mutating the first.
 ⚠️ **What a green `addon_check` still would not tell you:** whether the fold
 *feels* like progress or like the app hiding your work. That judgement is the
 owner's, and it wants a real thumb on a real phone.
+
+🛑 **READ THIS ITEM AGAINST THE THEME'S OWN RULING, which landed the same day
+and is wider than this design.** The README above now carries the owner's
+2026-08-17 scope ruling: Theme 14 is **one mechanism — *customise or add to a
+dish*** — covering sauces, removals, a different milk, an upsize, sides and
+combos, and *"the reader should not be able to tell which of the six they are
+doing."* This item was written while looking only at the add-on picker, so its
+words are add-on words: *"12 extras available"*, *"Add another"*, a summary
+line listing sauces.
+
+🔑 **The state machine survives that ruling; its vocabulary does not.** Nothing
+in the four states assumes the choice is an *addition* — state 0 is "there are
+choices here you cannot make yet", state 2 is "here is what you chose". But a
+row offering **no tomato** must not say *"12 extras available"*, and a coffee
+offering **oat milk** is a substitution the summary line has no shape for.
+Whoever builds this owes a pass over every string here against the six
+scenarios, and should expect state 0's label to become a count of *choices*
+rather than of extras. Building 14g in add-on language would quietly re-fork
+the theme the ruling just unified — which is the one outcome the ruling was
+written to prevent.
