@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **The search box now finds a place by what it is like.** Type "dog friendly",
+  "quick eats", "beer garden", "craft beer" or "BYO" on the home screen and the
+  places tagged that way come back, with the matching label shown on the row.
+  These tags were on the cards but had never been searchable, and only one of
+  the three kinds had a filter — so a beer garden could not be asked for at all.
+  "Silver service", "grab and go", "pub quiz" and "kids" find the right ones too.
 - **"Dairy-free on request" and "vegan on request" are now things a dish can
   say.** Faves could already mark a dish gluten-free-on-request or
   vegetarian-on-request; the other two of the four claims had no such form, so a
@@ -98,6 +104,14 @@ content freshness separately from this file.
   searching for *Edmonds* finds it.
 
 ### Fixed
+- **Doubling a recipe now reaches cook mode.** Pick 2× on a recipe and tap
+  Start cooking, and the step's "What you need" showed the original quantities —
+  ¾ cup where the page above it said 1½ cups. The scale now travels into cook
+  mode, is read aloud with the step, and a "2× mixture" badge sits under the
+  recipe's name, because a full-screen mode hides the picker that set it. A line
+  the scaler cannot honestly double is marked "as written" there too.
+- **A method step's number now sits level with its first line.** It was floating
+  half a line above the words on every step, on every recipe.
 - **Cook-mode ticks no longer appear in your data export, or travel between your
   devices.** Which ingredients you had ticked off while cooking was being written
   into the backup file and into the sync blob, but it could never be usefully
