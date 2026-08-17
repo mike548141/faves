@@ -15,21 +15,35 @@ classes qualify, both verified against the code rather than assumed:
     render identically.
 
 THE DANGER THIS TOOL CARRIES is that a relocation becomes a deletion. So the
-move is reversible by construction and `--check` proves it: it reconstructs
-each venue from payload + record and compares against the pre-split original
-recorded in `data/history/`. If the two stores no longer reconstruct, the
-check fails — that is the guard, and it is the reason the record keeps whole
-item snapshots rather than diffs.
+move is reversible by construction and `--check` asks four questions of EVERY
+venue file, printing the population it covered before its verdict:
+
+  1. is the payload already split — no superseded price series, no `offBy`
+     dish still shipping to every phone;
+  2. does payload + record round-trip back to the pre-split document;
+  3. does every history row still point at a real dish (a price row's dish
+     live or departed, a departed row's dish NOT also live);
+  4. does the record hold at least as much history as it did at HEAD.
+
+Only (2) existed until 2026-08-17, and it ran on 2 of 55 files: a venue with
+no history file was `continue`d, which is the state a DELETED history file
+leaves behind. Worse, (2) alone cannot see a deleted row at all — it derives
+its expectation from the same file it is checking, so a row removed from the
+record is removed from both sides of its own comparison and passes. (3) and
+(4) are the independent halves. (4) needs the previous state and git is the
+only place that exists, so it catches the commit doing the damage rather than
+damage already committed; that is a real limit, stated rather than papered over.
 
     python3 tools/split_data.py --dry-run   # what would move
     python3 tools/split_data.py             # do it
-    python3 tools/split_data.py --check     # payload + record still reconstruct
+    python3 tools/split_data.py --check     # the four questions above
 
 Stdlib only. Writes only under site/data/restaurants/ and data/history/.
 """
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -151,6 +165,107 @@ def write_history(vid, kind, rows, note):
         ensure_ascii=False) + "\n")
 
 
+def check_orphans(vid, doc, hp, hd):
+    """Complaints about history rows that no longer line up with the payload.
+
+    The round trip below proves the two stores are MUTUALLY CONSISTENT, which
+    is a weaker claim than it looks: it derives its expectation from the very
+    file it is checking, so a row deleted from the record is deleted from both
+    sides of its own comparison and passes. This is the independent half — it
+    asks whether each row still points at something real.
+
+      • a price row whose dish is neither on the menu nor in the departed rows
+        is a dish that was DELETED rather than moved, which is the one failure
+        this tool's docstring says it exists to prevent.
+      • a departed row whose dish is also live is a dish recorded as gone and
+        printed on the menu at the same time — a restoration that left its
+        tombstone behind, so the menu now shows it twice.
+    """
+    problems = []
+    live = [(s, i) for s in doc.get("menu") or []
+            if isinstance(s, dict)
+            for i in s.get("items") or [] if isinstance(i, dict)]
+    for row in hp:
+        key = row.get("key") or {}
+        if any(same_dish(key, s, i) for s, i in live):
+            continue
+        if any(r.get("key") == key for r in hd):
+            continue
+        problems.append(
+            f"{vid}: price history for {key.get('name')!r} in "
+            f"{key.get('section')!r} points at no dish — live nor departed")
+    for row in hd:
+        key = row.get("key") or {}
+        if any(same_dish(key, s, i) for s, i in live):
+            problems.append(
+                f"{vid}: {key.get('name')!r} in {key.get('section')!r} is "
+                f"recorded as departed AND still on the menu")
+    return problems
+
+
+def rows_at_head(vid, kind):
+    """`data/history/<kind>/<vid>.json`'s rows as committed at HEAD, or None
+    when git cannot answer (no checkout, no git, file absent at HEAD).
+
+    None means "no baseline", never "clean" — the caller skips rather than
+    passing, because a check that treats an unavailable baseline as agreement
+    is the decorative shape (ADR 0072)."""
+    rel = f"data/history/{kind}/{vid}.json"
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(ROOT), "show", f"HEAD:{rel}"],
+            capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    try:
+        return json.loads(out.stdout).get("rows", [])
+    except json.JSONDecodeError:
+        return None
+
+
+def weight(rows, kind):
+    """How much history a row list holds: superseded price entries for prices,
+    whole dishes for departed dishes. Counted rather than compared entry by
+    entry, because a CORRECTION legitimately rewrites what a superseded entry
+    says (`did the shop change it, or did we?` — ARCHITECTURE, "Refreshing a
+    menu") while never removing one. Counts separate the two; identities would
+    fail an honest correction."""
+    if kind == "prices":
+        return sum(len(r.get("superseded") or []) for r in rows)
+    return len(rows)
+
+
+def check_append_only(vid):
+    """Complaints where the record holds LESS history than the last commit did.
+
+    ADR 0023's guarantee is that a refresh cannot silently destroy history, and
+    that is a claim about a CHANGE, so it needs the previous state to compare
+    against — git is the only place that state exists. What this therefore
+    catches is the commit doing the damage, not damage already committed; said
+    plainly because the difference decides whether a green run means anything.
+    """
+    problems = []
+    baseline = False
+    hp, hd = read_history(vid)
+    for kind, rows in (("prices", hp), ("dishes", hd)):
+        was = rows_at_head(vid, kind)
+        if was is None:
+            continue
+        baseline = True
+        before, after = weight(was, kind), weight(rows, kind)
+        if after < before:
+            noun = "superseded price entr(y/ies)" if kind == "prices" else "departed dish row(s)"
+            extra = ("" if kind == "prices" else
+                     " (a departed dish genuinely returning is the one legitimate "
+                     "cause — say so in the commit message)")
+            problems.append(
+                f"{vid}: data/history/{kind}/ held {before} {noun} at HEAD and "
+                f"now holds {after} — history was destroyed, not relocated{extra}")
+    return problems, baseline
+
+
 PRICE_NOTE = ("Price entries superseded by a later reading. Appended, never "
               "rewritten (ADR 0023); moved out of the payload by ADR 0047 "
               "because no screen renders them. The current price stays on the "
@@ -169,6 +284,7 @@ def main(argv=None):
 
     files = sorted(VENUES.glob("*.json"))
     moved_p = moved_d = touched = 0
+    checked = with_history = against_head = 0
     failures = []
 
     for f in files:
@@ -176,20 +292,49 @@ def main(argv=None):
         doc = json.loads(f.read_text())
 
         if args.check:
+            # EVERY venue, not only the ones that happen to have a history
+            # file. Until 2026-08-17 this skipped a venue whose record was
+            # empty — 53 of 55 — and an empty record is exactly the state a
+            # deleted history file leaves behind, so the check reported "clean"
+            # over 2 files and said nothing about the other 53. Worse, a venue
+            # never split at all (superseded prices still sitting in the
+            # payload, shipping to every phone) was skipped for the same
+            # reason: no history file, nothing to compare, silence.
+            hp, hd = read_history(vid)
+            payload = json.loads(f.read_text())
+            checked += 1
+            if hp or hd:
+                with_history += 1
+
+            # Is the payload already split? Asked FIRST, because "there are
+            # still superseded prices in site/data/" and "the two stores
+            # disagree" are different faults and the round trip below reports
+            # both with the same words.
+            _, left_p, left_d = split_venue(json.loads(json.dumps(payload)))
+            if left_p or left_d:
+                failures.append(
+                    f"{vid}: payload still holds "
+                    f"{sum(len(r['superseded']) for r in left_p)} superseded "
+                    f"price entr{'y' if sum(len(r['superseded']) for r in left_p) == 1 else 'ies'} "
+                    f"and {len(left_d)} departed dish(es) — run "
+                    f"`python3 tools/split_data.py` (ADR 0047)")
+
             # Reconstruct from what is on disk in both stores, then split it
             # again. A stable round trip means nothing was lost in the move.
-            hp, hd = read_history(vid)
-            if not hp and not hd:
-                continue
-            rebuilt = reconstruct(json.loads(f.read_text()), hp, hd)
+            rebuilt = reconstruct(json.loads(json.dumps(payload)), hp, hd)
             again, p2, d2 = split_venue(json.loads(json.dumps(rebuilt)))
-            if json.loads(f.read_text()) != again:
+            if payload != again:
                 failures.append(f"{vid}: payload does not survive a round trip")
             if len(p2) != len(hp) or len(d2) != len(hd):
                 failures.append(
                     f"{vid}: record has {len(hp)} price row(s)/{len(hd)} dish "
                     f"row(s), round trip yields {len(p2)}/{len(d2)}")
-            touched += 1
+
+            failures += check_orphans(vid, payload, hp, hd)
+            appended, baseline = check_append_only(vid)
+            failures += appended
+            if baseline:
+                against_head += 1
             continue
 
         _, prices, departed = split_venue(json.loads(json.dumps(doc)))
@@ -211,15 +356,23 @@ def main(argv=None):
             write_history(vid, "dishes", departed, DISH_NOTE)
 
     if args.check:
+        # The population, always — before the verdict, and whether it passed or
+        # failed. "Clean" over 2 of 55 files reads identically to "clean" over
+        # 55, and that is how this check spent its life saying nothing (ADR
+        # 0072). A number that shrinks is now visible on the line above the tick.
+        print(f"  scope: {checked} of {len(files)} venue file(s) checked · "
+              f"{with_history} with a history file · {against_head} compared "
+              f"against HEAD for append-only")
         if failures:
-            print(f"✗ split_data: {len(failures)} venue(s) do not reconstruct.")
+            print(f"✗ split_data: {len(failures)} problem(s).")
             for x in failures:
                 print(f"  {x}")
             print("\nThe two stores must rebuild the pre-split corpus between "
                   "them. A venue that cannot is history lost, not relocated.")
             return 1
-        print(f"✓ split_data check clean — {touched} venue(s) with history; "
-              f"payload and record reconstruct exactly.")
+        print(f"✓ split_data check clean — {checked} venue file(s); payload and "
+              f"record reconstruct exactly, no orphaned history rows, nothing "
+              f"shed since HEAD.")
         return 0
 
     verb = "would move" if args.dry_run else "moved"
