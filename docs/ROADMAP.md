@@ -212,6 +212,8 @@ Board doctrine and the checkbox legend: [roadmap/README.md](roadmap/README.md). 
 
 *Narrative: [350-theme-22-the-personal-layer-holistically-owner/README.md](roadmap/350-theme-22-the-personal-layer-holistically-owner/README.md)*
 
+- [ ] [22d — hide what doesn't apply to this reader: dietary tags, allergen](roadmap/350-theme-22-the-personal-layer-holistically-owner/010-22d-hide-what-does-not-apply-to-this-reader.md) 🤔
+
 ## Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)
 
 *Narrative: [360-theme-23-what-the-app-says-and-where-it-says-i/README.md](roadmap/360-theme-23-what-the-app-says-and-where-it-says-i/README.md)*
