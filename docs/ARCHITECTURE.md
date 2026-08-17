@@ -194,6 +194,9 @@ excluded from both stores, always.
                                      //   below; prose is still right for a
                                      //   qualifier that isn't a timetable
                                      //   ("12 and under")
+      "translations": {},            // optional: {field: {bcp47: text}} on the SECTION
+                                     //   too — a heading is read before any dish
+                                     //   under it (ADR 0044)
       "served": null,                // optional: the hours of the day this section
                                      //   is actually served (ROADMAP 28c). EXACTLY
                                      //   a venue's `hours` shape — all 7 day keys,
@@ -259,8 +262,16 @@ excluded from both stores, always.
           "alt": null,               // required when image is set
           "rating": null,            // optional curated household rating, integer 1..5 (ours)
           "goesWith": ["Roti"],      // optional pairings: dish names, or "id#Dish" cross-record
-          "addOns": ["sauces"]       // optional add-on group ids for THIS dish, on
+          "addOns": ["sauces"],      // optional add-on group ids for THIS dish, on
                                      //   top of any its section names (ADR 0048)
+          "attribution": null,       // optional: whose recipe this is, for a dish that
+                                     //   carries one (37e). Free prose, shown on the
+                                     //   recipe page. The ONE place a family name may
+                                     //   appear in the payload — owner-approved
+                                     //   exception 1, see CLAUDE.md
+          "translations": {}         // optional: {field: {bcp47: text}} (ADR 0044). The
+                                     //   field must be one the record actually has, so
+                                     //   a translation can never invent a dish
         }
       ]
     }
