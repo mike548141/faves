@@ -189,7 +189,8 @@
             "gf",
             "df",
             "contains-peanuts",
-            "v-option"
+            "v-option",
+            "vg-option"
           ]
         },
         {
@@ -216,7 +217,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-soy",
-            "v-option"
+            "v-option",
+            "vg-option"
           ]
         }
       ]

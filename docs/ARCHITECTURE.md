@@ -617,7 +617,14 @@ reason. English only, like the refresh caveat, per `reo.js`'s safety boundary.
   `contains-peanuts`, `contains-shellfish`, `contains-egg`,
   `contains-dairy`, `contains-gluten`, `contains-soy`, `contains-sesame`
 - Heat: `spicy-1` … `spicy-3`
-- Options: `gf-option`, `v-option`
+- Options: `gf-option`, `v-option`, `df-option`, `vg-option` — one per dietary
+  claim, so "available on request" is sayable about all four (owner ruling,
+  2026-08-16). An `-option` tag asserts the **venue offers the substitution**;
+  it never says the dish as served meets the claim, and it never suppresses an
+  allergen. `site/js/dietary.js` decides which filter each satisfies:
+  `vg-option` satisfies **vegan only**, deliberately not vegetarian as plain
+  `vg` does — the reasoning is in that file's comment, and it is the one place
+  the four are not perfectly parallel.
 
 Unknown is distinct from safe: **no tag means "not stated"**, and the
 UI must never present absence of an allergen tag as "allergen-free".

@@ -31,7 +31,7 @@ TAGS = {
     "contains-egg", "contains-dairy", "contains-gluten",
     "contains-soy", "contains-sesame",
     "spicy-1", "spicy-2", "spicy-3",
-    "gf-option", "v-option",
+    "gf-option", "v-option", "df-option", "vg-option",
 }
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")

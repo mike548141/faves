@@ -108,6 +108,8 @@ const DIETARY = {
   df: "DF",
   "gf-option": "GF option",
   "v-option": "Veg option",
+  "df-option": "DF option",
+  "vg-option": "Vegan option",
 };
 const ALLERGEN = {
   "contains-nuts": "Contains nuts",

@@ -40,6 +40,7 @@ const EMPTY_SET = new Set();
 const DIETARY = {
   v: "Veg", vg: "Vegan", gf: "GF", df: "DF",
   "gf-option": "GF option", "v-option": "Veg option",
+  "df-option": "DF option", "vg-option": "Vegan option",
 };
 const ALLERGEN = {
   "contains-nuts": "Contains nuts",

@@ -135,6 +135,15 @@ CASES = {
     "price becomes a boolean": (lambda d: _first_item(d).update(price=True), "error"),
     "status set to nonsense": (lambda d: d.update(status="banana"), "error"),
     "bogus dietary tag": (lambda d: _first_item(d).update(tags=["not-a-real-tag"]), "error"),
+    # All four dietary claims have an `-option` form (owner ruling, 2026-08-16).
+    # Asserted as ACCEPTED here and as load-bearing in SOURCE_CASES below: this
+    # case alone would still pass if the tags were legal but nothing used them.
+    "every `-option` tag is legal": (
+        lambda d: _first_item(d).update(
+            tags=["gf-option", "v-option", "df-option", "vg-option"]
+        ),
+        "clean",
+    ),
     # --- values, not just types (the class the first run found a hole in) --
     "negative price": (lambda d: _first_item(d).update(price=-5), "error"),
     "free item is legal": (lambda d: _first_item(d).update(price=0), "clean"),
@@ -514,6 +523,24 @@ CASES = {
 # menu could ever exercise them — and a drift gate that cannot fire is the
 # decorative guard this repo keeps finding. path -> {name: (mutate_text, expect)}.
 SOURCE_CASES = {
+    # The two tags added on 2026-08-17, proved load-bearing the only way that
+    # means anything: take one out of the vocabulary and the REAL corpus must
+    # stop validating. A tag nothing in `site/data/` uses would let both of
+    # these pass while the sweep that was supposed to apply it never happened —
+    # the decorative-guard shape (ADR 0072), and the reason these are here and
+    # not just a "the tag is legal" case up in CASES.
+    "tools/validate.py": {
+        "`df-option` dropped from the vocabulary": (
+            lambda s: s.replace('"gf-option", "v-option", "df-option", "vg-option",',
+                                '"gf-option", "v-option", "vg-option",'),
+            "error",
+        ),
+        "`vg-option` dropped from the vocabulary": (
+            lambda s: s.replace('"gf-option", "v-option", "df-option", "vg-option",',
+                                '"gf-option", "v-option", "df-option",'),
+            "error",
+        ),
+    },
     "site/js/addons.js": {
         # CONTRADICTS and tag_allergens.CONTRADICTED_BY are one food fact,
         # inverted. Give `df` an allergen the Python table doesn't agree with.

@@ -391,7 +391,8 @@
           "price": 17.9,
           "tags": [
             "v",
-            "contains-dairy"
+            "contains-dairy",
+            "vg-option"
           ]
         }
       ]
@@ -454,7 +455,8 @@
           "price": 12.5,
           "tags": [
             "v",
-            "contains-dairy"
+            "contains-dairy",
+            "vg-option"
           ]
         }
       ]
@@ -493,7 +495,8 @@
             "contains-peanuts",
             "contains-soy",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "vg-option"
           ]
         }
       ]
@@ -551,7 +554,8 @@
             "v",
             "contains-dairy",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "vg-option"
           ]
         },
         {

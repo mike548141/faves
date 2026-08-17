@@ -479,7 +479,8 @@
           "price": 39.5,
           "tags": [
             "gf",
-            "contains-dairy"
+            "contains-dairy",
+            "df-option"
           ],
           "addOns": [
             "steak-sauce",
@@ -514,7 +515,8 @@
           "price": 28.0,
           "tags": [
             "gf-option",
-            "contains-gluten"
+            "contains-gluten",
+            "df-option"
           ],
           "addOns": [
             "nga-bun"
@@ -998,7 +1000,7 @@
           "dishId": "sirloin-gold-card",
           "desc": "150g. Dairy free available.",
           "price": 27.0,
-          "tags": ["gf", "contains-dairy"]
+          "tags": ["gf", "contains-dairy", "df-option"]
         },
         {
           "name": "Chicken Parma",
@@ -1019,7 +1021,7 @@
           "dishId": "cheeseburger-gold-card",
           "desc": "Dairy free available.",
           "price": 21.0,
-          "tags": ["gf-option", "contains-gluten"],
+          "tags": ["gf-option", "contains-gluten", "df-option"],
           "addOns": [
             "nga-bun"
           ]

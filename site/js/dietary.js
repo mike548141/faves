@@ -26,10 +26,39 @@
 // here (not menu.js) so the menu render and these predicates read one list.
 export const DIET_FILTERS = [
   { key: "v", label: "Vegetarian", satisfies: ["v", "vg", "v-option"] },
-  { key: "vg", label: "Vegan", satisfies: ["vg"] },
+  { key: "vg", label: "Vegan", satisfies: ["vg", "vg-option"] },
   { key: "gf", label: "Gluten free", satisfies: ["gf", "gf-option"] },
-  { key: "df", label: "Dairy free", satisfies: ["df"] },
+  { key: "df", label: "Dairy free", satisfies: ["df", "df-option"] },
 ];
+
+// WHY `vg-option` IS NOT ALSO IN `v`'s LIST, when plain `vg` is.
+//
+// `vg` sits in `v`'s list because every vegan dish IS vegetarian — an
+// entailment that needs nobody to do anything. The tempting parallel is that
+// `vg-option` should follow it in: if staff will make it vegan, a vegetarian
+// can certainly eat that version. Both readings are defensible and the corpus
+// does not settle it, so two other things did.
+//
+// First, it costs the reader nothing. Every dish the corpus tags `vg-option`
+// already carries `v` or `v-option` (a venue offering to veganise a dish has
+// invariably said the vegetarian version exists), so the vegetarian filter
+// shows all of them either way. The choice is currently about meaning, not
+// about what anyone sees.
+//
+// Second — and this is what decided it — a tag in two lists resolves
+// AMBIGUOUSLY in addons.js `composeTags`, which maps a claim tag back to its
+// filter key with `DIET_KEYS.find(...)` and so takes whichever key is listed
+// first. `vg` is the one tag that is already in two lists, and it is the one
+// tag that misbehaves there: a `vg` dish resolves to key `v`, is checked
+// against CONTRADICTS.v (shellfish) instead of CONTRADICTS.vg (dairy, egg,
+// shellfish), and keeps its vegan claim when dairy is added to it. Putting
+// `vg-option` in two lists would extend that fault to a second tag rather
+// than leave it contained. Keeping it in one keeps the rule every other tag
+// already obeys: an `-option` tag names exactly ONE claim.
+//
+// So this is a deliberate stop, not an oversight. If the ambiguous resolution
+// in composeTags is fixed, the vegetarian question is worth reopening on its
+// merits — it would then be a free choice again.
 
 /**
  * Does `tags` carry an allergen the viewer flagged to avoid? `avoid` is a Set of

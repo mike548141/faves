@@ -42,6 +42,8 @@ const CLAIM_LABEL = {
   df: "dairy free",
   "gf-option": "gluten free",
   "v-option": "vegetarian",
+  "df-option": "dairy free",
+  "vg-option": "vegan",
 };
 
 /** "+$3.00", or nothing at all when the extra is free — the commonest case. */
