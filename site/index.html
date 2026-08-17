@@ -650,7 +650,7 @@
          JS that address it, but `.filter-bar` paints nothing and passes
          pointer events through; its two controls — Filters, and Pick for us,
          which tucks away as you scroll down — float bottom-right. It used to
-         be a sticky bar holding the service toggle and both selects, which
+         be a sticky bar holding the order-mode toggle and both selects, which
          wrapped to two rows at 390 px: 122.2 px of permanently fixed screen,
          measured; then one row; then gone. -->
     <nav class="filter-bar" aria-label="Filter places">
@@ -769,19 +769,25 @@
           <section id="filter-controls" aria-label="Filters and sorting">
           <section class="filter-group filter-narrow-group" aria-labelledby="filter-narrow-title">
             <h3 id="filter-narrow-title" class="filter-group-title" data-i18n="filter.narrow">Narrow to</h3>
-            <!-- Service was a three-button segmented control until 15z. It is a
-                 pick-one-of-three, exactly like Area and Cuisine, and it was
-                 costing 256 px of a 928 px row to say so in a different shape —
-                 the single largest reason the inline row could not be one row.
-                 As a <select> it reads the same, filters the same, and matches
-                 the two controls beside it. -->
-            <div class="filter-field" id="filter-service-field">
-              <label class="filter-label" for="filter-service" data-i18n="filter.service">Service</label>
+            <!-- Order mode was a three-button segmented control until 15z. It
+                 is a pick-one-of-three, exactly like Area and Cuisine, and it
+                 was costing 256 px of a 928 px row to say so in a different
+                 shape — the single largest reason the inline row could not be
+                 one row. As a <select> it reads the same, filters the same, and
+                 matches the two controls beside it.
+
+                 The ids and i18n keys say `order-mode`/`orderMode`; the words a
+                 reader sees still say "Service". The owner's 2026-08-16 ruling
+                 was about the code's overloaded vocabulary, and re-wording the
+                 label would also strand the te reo gloss 37j deliberately
+                 landed on 2026-08-17 (reo.js). Wording is a separate call. -->
+            <div class="filter-field" id="filter-order-mode-field">
+              <label class="filter-label" for="filter-order-mode" data-i18n="filter.orderMode">Service</label>
               <div class="select-field">
-                <select id="filter-service" data-active="all">
-                  <option value="all" data-i18n="service.all">Any service</option>
-                  <option value="takeaway" data-i18n="service.takeaway">Takeaway</option>
-                  <option value="dine-in" data-i18n="service.dineIn">Dine-in</option>
+                <select id="filter-order-mode" data-active="all">
+                  <option value="all" data-i18n="orderMode.all">Any service</option>
+                  <option value="takeaway" data-i18n="orderMode.takeaway">Takeaway</option>
+                  <option value="dine-in" data-i18n="orderMode.dineIn">Dine-in</option>
                 </select>
               </div>
             </div>
@@ -807,8 +813,8 @@
                  a 104 px floor, no horizontal overflow — measured by
                  `tools/filter_row_check.mjs`, 2026-08-17. It fits because
                  the row lost a whole select group when "Sort by" went (ADR
-                 0068) and 256 px of segmented service control when 15z made
-                 Service a <select>. Measure again before a fifth. -->
+                 0068) and 256 px of segmented order-mode control when 15z made
+                 that axis a <select>. Measure again before a fifth. -->
             <div class="filter-field">
               <label class="filter-label" for="filter-style" data-i18n="filter.style">Style</label>
               <div class="select-field">

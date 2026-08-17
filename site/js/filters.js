@@ -71,6 +71,49 @@ export function filterHref(facet, value, page = "index.html") {
   return `${page}?${facet}=${encodeURIComponent(value)}`;
 }
 
+/** The two values the order-mode axis offers. "all" is the absence of a
+ *  filter, so it is not one of them. These are also the values a venue's
+ *  `services` array holds — the record field kept its name (see applyFilters). */
+export const ORDER_MODES = ["takeaway", "dine-in"];
+
+/** The query key this axis is written under, and the one it was shipped under
+ *  before the 2026-08-16 rename. Both ends read them from here so a URL and the
+ *  state can never disagree about the spelling.
+ *
+ *  🔎 Read the note above `orderModeFromQuery` before assuming the legacy key is
+ *  dead weight — and before assuming it is load-bearing either. */
+export const ORDER_MODE_KEY = "order-mode";
+export const LEGACY_ORDER_MODE_KEY = "service";
+
+/**
+ * The order mode a query string asks for, tolerating the key's old spelling.
+ *
+ * The axis was called `service` until the owner's 2026-08-16 ruling renamed it
+ * (`order-mode`), because the one word was doing three unrelated jobs and three
+ * sessions collided with it in a day. The ruling's condition on the rename was a
+ * compatibility path — read the old key, write only the new one — so a link that
+ * predates it keeps filtering instead of silently widening to every venue.
+ *
+ * ⚠️ What that ruling assumed, and what is actually true: it says the filter is
+ * "shipped and in URLs". It is shipped, but it was never *in* a URL — no version
+ * of `filtersFromQuery` has ever read this axis (`git log -S 'get("service")'`
+ * is empty across all history), and `app.js`'s `syncQuery` deliberately does not
+ * write it, because it is not a shareable facet (ADR 0050 carries area and
+ * cuisine, and 37k added style). So the legacy branch here guards a link that
+ * cannot exist yet. It is kept because the ruling is explicit, it costs one
+ * lookup, and the day this axis does become shareable the old spelling is
+ * already handled. Nothing in the app mints either key.
+ *
+ * Unknown values mean "all", the same rule the facets follow below.
+ */
+function orderModeFromQuery(params) {
+  for (const key of [ORDER_MODE_KEY, LEGACY_ORDER_MODE_KEY]) {
+    const v = params.get(key);
+    if (v && ORDER_MODES.includes(v)) return v;
+  }
+  return "all";
+}
+
 /**
  * Read those facets back out of a query string, keeping only values the data
  * actually has — `facets` is deriveFacets' output. An unknown value ("?cuisine=
@@ -96,17 +139,24 @@ export function filtersFromQuery(search, facets) {
     // (vibes.js FORMER_VIBES), which is exactly the case a link shared before
     // the migration would carry.
     style: pick("style", (facets.styles || []).map((s) => s.key)),
+    // Validated against the vocabulary rather than against `facets`: unlike area
+    // and cuisine, this axis's two values are fixed by the schema and are not
+    // derived from whatever the corpus happens to hold today.
+    orderMode: orderModeFromQuery(params),
   };
 }
 
 /**
  * Filter state shape:
- * { service: 'all'|'takeaway'|'dine-in', area, cuisine, style, openNow: bool,
+ * { orderMode: 'all'|'takeaway'|'dine-in', area, cuisine, style, openNow: bool,
  *   cheap: bool }. `style` is a `vibes.js` style KEY ("sit-down"), never a
  * label.
+ *
+ * `orderMode` was `service` until 2026-08-16; the word was doing three unrelated
+ * jobs at once and the owner ruled that it stop being one of them here.
  */
 export const DEFAULT_FILTERS = {
-  service: "all",
+  orderMode: "all",
   area: "all",
   cuisine: "all",
   style: "all",
@@ -114,11 +164,11 @@ export const DEFAULT_FILTERS = {
   cheap: false,
 };
 
-// How a service value reads to a person. Same three words the segmented
-// control shows; "all" is the absence of a filter, so it never appears here.
-const SERVICE_LABEL = {
-  takeaway: { label: "Takeaway", key: "service.takeaway" },
-  "dine-in": { label: "Dine-in", key: "service.dineIn" },
+// How an order mode reads to a person. Same words the <select> shows; "all" is
+// the absence of a filter, so it never appears here.
+const ORDER_MODE_LABEL = {
+  takeaway: { label: "Takeaway", key: "orderMode.takeaway" },
+  "dine-in": { label: "Dine-in", key: "orderMode.dineIn" },
 };
 
 /**
@@ -149,7 +199,7 @@ export function activeFilters(state) {
   if (state.area && state.area !== "all") {
     out.push({ kind: "area", value: state.area, label: state.area, key: null });
   }
-  // Third, ahead of service. A URL can carry `?style=` too, but no venue's
+  // Third, ahead of order mode. A URL can carry `?style=` too, but no venue's
   // subheading links one, so the reason cuisine and area lead — a reader who
   // arrived on a narrowed list having pressed nothing on this screen — does not
   // extend to it, and neither does its claim on the first chip slot.
@@ -161,9 +211,14 @@ export function activeFilters(state) {
   if (state.style && state.style !== "all") {
     out.push({ kind: "style", value: state.style, label: vibeLabel(state.style), key: null });
   }
-  const service = SERVICE_LABEL[state.service];
-  if (service) {
-    out.push({ kind: "service", value: state.service, label: service.label, key: service.key });
+  const orderMode = ORDER_MODE_LABEL[state.orderMode];
+  if (orderMode) {
+    out.push({
+      kind: "orderMode",
+      value: state.orderMode,
+      label: orderMode.label,
+      key: orderMode.key,
+    });
   }
   if (state.openNow) {
     out.push({ kind: "openNow", value: true, label: "Open now", key: "toggle.openNow" });
@@ -182,7 +237,11 @@ export function activeFilters(state) {
  */
 export function applyFilters(restaurants, state, clock = null) {
   return restaurants.filter((r) => {
-    if (state.service !== "all" && !(r.services || []).includes(state.service)) {
+    // 🚩 The state key is `orderMode`; the RECORD field is still `services`.
+    // The 2026-08-16 ruling renamed the filter axis, and renaming the data field
+    // would mean 55 venue files, `validate.py`'s `SERVICES`, and the schema —
+    // which lives in `docs/ARCHITECTURE.md`. Left deliberately, not missed.
+    if (state.orderMode !== "all" && !(r.services || []).includes(state.orderMode)) {
       return false;
     }
     if (state.area !== "all" && r.area !== state.area) return false;

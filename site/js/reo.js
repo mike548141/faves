@@ -95,7 +95,9 @@ const MI = {
   // ⚠ Not on that list and not a reo item: the #geo-status sentences are set
   // from app.js by textContent, like every other JS-composed status string in
   // this app. They are English wherever they appear, which is the honest state.
-  // Service segmented control
+  // Order-mode control (`service.*` until the 2026-08-16 rename — the KEYS moved
+  // on 2026-08-17, the English and the te reo did not; see the note on
+  // "filter.orderMode" below).
   // Re-glossed 2026-08-17 with the English (ROADMAP 37j). It read "Everywhere"
   // / "Ngā wāhi katoa" — a PLACE word on a control that picks dine-in vs
   // takeaway, and in te reo it collided outright with the "All places" of
@@ -103,13 +105,13 @@ const MI = {
   // "Any service" takes the parallel form of its two neighbours in the row,
   // "All areas" and "All cuisines". The te reo follows the same `Ngā … katoa`
   // frame those two already use, over the noun this file already carries for
-  // this exact sense ("filter.service": "Ratonga") — so it is this file's own
+  // this exact sense ("filter.orderMode": "Ratonga") — so it is this file's own
   // established pattern applied, not a fresh translation guessed at. The reo
   // queue is parked (owner ruled 2026-08-16); this CLOSES a queued item rather
   // than opening one, which is why it was in scope.
-  "service.all": "Ngā ratonga katoa",
-  "service.takeaway": "Mau atu",
-  "service.dineIn": "Kai ā-whare",
+  "orderMode.all": "Ngā ratonga katoa",
+  "orderMode.takeaway": "Mau atu",
+  "orderMode.dineIn": "Kai ā-whare",
   // Filter select defaults
   "filter.allAreas": "Ngā rohe katoa",
   "filter.allCuisines": "Ngā momo kai katoa",
@@ -130,7 +132,15 @@ const MI = {
   "filter.sort": "Raupapa mā", // draft — "order by"
   "filter.sortNote": "He whakaraupapa anō i te rārangi. Kāore e whakapoto.", // draft
   "filter.clearAll": "Whakawāteahia katoa", // draft — "clear all"
-  "filter.service": "Ratonga", // draft — "service" (dine-in / takeaway)
+  // 🚩 The KEY is `orderMode` (owner-ruled 2026-08-16: the word `service` was
+  // doing three unrelated jobs in the code). The English label and this gloss
+  // still say "service" on purpose — the ruling was about the code's
+  // vocabulary, and re-wording the control would strand a te reo string 37j
+  // deliberately landed the day before. Re-glossing to a te reo noun for
+  // "order mode" would be inventing one, which the SAFETY BOUNDARY at the top
+  // of this file forbids without a fluent speaker. The wording is an open
+  // owner call; the identifier is not.
+  "filter.orderMode": "Ratonga", // draft — "service" (dine-in / takeaway)
   "filter.area": "Rohe",
   "filter.cuisine": "Momo kai",
   // "Style" — how the meal happens (quick eats → fine dining), the `style`
