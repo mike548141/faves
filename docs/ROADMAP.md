@@ -224,7 +224,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [⚠️ SUPERSEDED 2026-08-17 by 020-ci-runs-none-of-the-browser-checks.md](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/050-ci-runs-none-of-the-eight-browser-checks.md)
 - [~] [Our inlined floor is a stamped copy nothing watches](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/060-our-inlined-floor-is-a-stamped-copy-nothing-wa.md)
 - [ ] [🚩 A browser check that names an element by id is only as durable as](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/070-a-browser-check-that-names-an-element-by-id-is.md)
-- [ ] [The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
+- [~] [The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
 - [~] [The decision records have drifted from the decisions](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/090-the-decision-records-have-drifted-from-the-decisions.md)
 - [ ] [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
 - [ ] 🔎 [The board cannot say "decided, and the decision was not to do it"](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
