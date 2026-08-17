@@ -216,3 +216,25 @@
   was found. **Two bypass layers, each of whose write-ups assumes the other one
   holds.** Evidence is this repo's own state on 2026-08-17, measured by three
   independent sessions, not testimony.
+
+⏳ **A KNOWN, DATED DEBT ON THIS ITEM — the next pin bump owes a re-inline
+(2026-08-17).** atelier added a clause to the **canonical floor region** at
+`46dd5a0`, so this repo's inlined block gains **three sentences** the next time
+the pin moves. Two sessions relayed it independently and both confirmed the same
+thing: **nothing reds a commit today**, because the pin here is `19eb0e2`, which
+predates the clause — verified by atelier in `stampscan` rather than assumed.
+🎯 **Whoever bumps the pin: re-inline and re-stamp in the same commit.** That is
+exactly the failure this item exists to name — a stamped copy drifts silently,
+and a bump that moves the pin without moving the text converts a known debt into
+an invisible one.
+
+🔎 **And the reason the clause exists is this repo's own incident.** faves'
+parallel-session practice is now atelier doctrine (`CONCURRENCY.md` § The
+channel, `46dd5a0`): a message reserves nothing, only a pushed artefact does ·
+the closing check runs **after** the push · a repair is itself a claim and needs
+a tie-break both parties compute identically (fewer inbound references moves —
+cheapest repair, not precedence). It was ratified because the session
+*broadcasting* that rule collided anyway, and then both parties politely
+renumbered to the same next number. **A rule learned by the party already
+following it is worth more than one reasoned out** — and the corollary for this
+item is that our inlined copy is now downstream of doctrine we wrote.

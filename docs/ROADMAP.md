@@ -60,7 +60,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [picks are empty on most venues](roadmap/080-theme-4-content-growth-ongoing-in-parallel/140-picks-are-empty-on-most-venues.md)
 - [ ] [Venues still stub](roadmap/080-theme-4-content-growth-ongoing-in-parallel/150-venues-still-stub.md)
 - [ ] [The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
-- [ ] [⚑ Rock Yard's Vietnamese Salad is tagged both gf and](roadmap/080-theme-4-content-growth-ongoing-in-parallel/170-rock-yard-s-vietnamese-salad-is-tagged-gf-and-contains-gluten.md)
+- ✅ [✅ RULED AND FIXED 2026-08-17 (77726e2): the salad keeps its gf](roadmap/080-theme-4-content-growth-ongoing-in-parallel/170-rock-yard-s-vietnamese-salad-is-tagged-gf-and-contains-gluten.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -95,7 +95,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/150-theme-9-cross-device-preference-sync-owner-app/README.md)*
 
 - [~] [v2 — continual sync (Cloudflare Worker + KV)](roadmap/150-theme-9-cross-device-preference-sync-owner-app/010-v2-continual-sync-cloudflare-worker-kv.md)
-- [ ] 🎯🔥 [OWNER: the Worker must be redeployed before sync works at all](roadmap/150-theme-9-cross-device-preference-sync-owner-app/020-the-worker-needs-redeploying-before-sync-works-at-all.md)
+- ✅ [✅ DONE 2026-08-17 — the Worker is redeployed and sync works end to](roadmap/150-theme-9-cross-device-preference-sync-owner-app/020-the-worker-needs-redeploying-before-sync-works-at-all.md)
 - [ ] [Sync resolves conflicts and tells the reader nothing](roadmap/150-theme-9-cross-device-preference-sync-owner-app/030-sync-tells-the-reader-nothing-when-it-disagrees.md)
 
 ## Theme 10 — Cross-person sharing (ongoing, revocable) — owner-gated
@@ -163,6 +163,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - [ ] [18b — Recipe quantities](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/010-18b-recipe-quantities.md)
 - [ ] [⚑ GB → imperial rewrites oven temperatures to °F, and UK ovens are](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/020-gb-imperial-rewrites-oven-temperatures-to-f.md)
+- [ ] 🎯 [18d — units resolve as region × usage, not one word](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/030-18d-units-resolve-as-region-usage-not-one-word.md)
 
 ## Theme 19 — from the 2026-08-15 Johnsonville intake
 
