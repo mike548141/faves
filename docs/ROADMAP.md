@@ -59,6 +59,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
 - [ ] [picks are empty on most venues](roadmap/080-theme-4-content-growth-ongoing-in-parallel/140-picks-are-empty-on-most-venues.md)
 - [ ] [Venues still stub](roadmap/080-theme-4-content-growth-ongoing-in-parallel/150-venues-still-stub.md)
+- [ ] [The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
+- [ ] [⚑ Rock Yard's Vietnamese Salad is tagged both gf and](roadmap/080-theme-4-content-growth-ongoing-in-parallel/170-rock-yard-s-vietnamese-salad-is-tagged-gf-and-contains-gluten.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -93,6 +95,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/150-theme-9-cross-device-preference-sync-owner-app/README.md)*
 
 - [~] [v2 — continual sync (Cloudflare Worker + KV)](roadmap/150-theme-9-cross-device-preference-sync-owner-app/010-v2-continual-sync-cloudflare-worker-kv.md)
+- [ ] 🎯🔥 [OWNER: the Worker must be redeployed before sync works at all](roadmap/150-theme-9-cross-device-preference-sync-owner-app/020-the-worker-needs-redeploying-before-sync-works-at-all.md)
+- [ ] [Sync resolves conflicts and tells the reader nothing](roadmap/150-theme-9-cross-device-preference-sync-owner-app/030-sync-tells-the-reader-nothing-when-it-disagrees.md)
 
 ## Theme 10 — Cross-person sharing (ongoing, revocable) — owner-gated
 
@@ -122,6 +126,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/README.md)*
 
 - [ ] [27a — Rank a facet match above a text match](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/010-27a-rank-a-facet-match-above-a-text-match.md)
+- [ ] [Settings promises to hide places and nothing hides](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/020-settings-says-hide-when-nothing-hides.md)
+- [ ] [Ranking and "Open now" ignore lifecycle closure](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/030-ranking-and-open-now-ignore-a-closed-venue.md)
 
 ## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
 
@@ -139,6 +145,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/README.md)*
 
+- [ ] [🚩 The service worker's install guard is decorative on Pages, and](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/010-the-service-worker-s-install-guard-is-decorative-on-pages.md)
+
 ## Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)
 
 *[Narrative](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/README.md)*
@@ -147,12 +155,14 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [17b — Step timings and a tap-to-start timer](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/020-17b-step-timings-and-a-tap-to-start-timer.md)
 - [ ] [17c — Quantities inside the step](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/030-17c-quantities-inside-the-step.md)
 - [~] [17e — The rest of what the research turned up](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/040-17e-the-rest-of-what-the-research-turned-up.md)
+- [ ] [Cook mode ignores the scale the reader chose on the recipe page](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/050-cook-mode-ignores-the-recipe-page-s-scale.md)
 
 ## Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)
 
 *[Narrative](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/README.md)*
 
 - [ ] [18b — Recipe quantities](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/010-18b-recipe-quantities.md)
+- [ ] [⚑ GB → imperial rewrites oven temperatures to °F, and UK ovens are](roadmap/260-theme-18-metric-or-imperial-the-reader-s-choic/020-gb-imperial-rewrites-oven-temperatures-to-f.md)
 
 ## Theme 19 — from the 2026-08-15 Johnsonville intake
 
@@ -209,6 +219,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🛑 [CI runs none of the eight browser checks](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/050-ci-runs-none-of-the-eight-browser-checks.md)
 - [~] [Our inlined floor is a stamped copy nothing watches](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/060-our-inlined-floor-is-a-stamped-copy-nothing-wa.md)
 - [ ] [🚩 A browser check that names an element by id is only as durable as](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/070-a-browser-check-that-names-an-element-by-id-is.md)
+- [ ] [The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
+- [ ] [The decision records have drifted from the decisions](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/090-the-decision-records-have-drifted-from-the-decisions.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
@@ -279,6 +291,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [36d — the timer's alarm](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/040-36d-the-timer-s-alarm-shipped-2026-08-16.md)
 - [ ] [36e — one place to look, not two](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/050-36e-one-place-to-look-not-two-m-ux.md)
 - [ ] [36f — what it costs to make it](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/060-36f-what-it-costs-to-make-it-l-schema-data-own.md)
+- [ ] [Closing the sheet discards every running timer and its bell](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/070-closing-the-sheet-discards-every-running-timer.md)
 
 ## Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)
 
@@ -287,6 +300,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [37k — a "style of dining" filter](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/010-37k-a-style-of-dining-filter.md)
 - [ ] 🛑 [37k — SUPERSEDED CLAIM NOTE](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/020-37k-superseded-claim-note.md)
 - [~] [37n — the corpus disagrees with itself about allergens](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/030-37n-the-corpus-disagrees-with-itself-about-all.md)
+- [ ] [🚩 The "ambiguous single word" rule hides the ingredient line the](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/040-the-ambiguous-word-rule-hides-the-line-the-step-uses.md)
 
 ## What the owner wants moved next (asked and answered 2026-08-16) — ✅ BOTH DONE
 
