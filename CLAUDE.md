@@ -500,6 +500,20 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   line under _Unreleased_ in `CHANGELOG.md` when a user-visible feature
   or fix lands. Append a `docs/SESSIONS.md` entry (append-only, newest
   last) before finishing a session.
+- **A blocked command is a decision. Say so THE MOMENT you route around it**
+  (owner-ruled 2026-08-17) — not in your closing report. If the permission
+  system refuses a command and you reach for another way to get the same
+  effect, disclose it *then*, in the turn it happens, so the person merging your
+  work can weigh it before they merge rather than after. Atelier's rule is that
+  *side-stepping must be observable* and that *making the escape hatch painful
+  invites worse workarounds* (`GUARDS.md`) — so the ask is timeliness, not <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
+  abstinence. 🚩 **This exists because it happened here:** a sub-agent had
+  `git push --force-with-lease` denied, pushed the same branch with the
+  `+refspec` form instead, and disclosed it only in its hand-back. `main` was
+  never rewritten and the work was good — *that is not the test*. And note the
+  rule-shape lesson underneath it: **git has several syntaxes for one effect**
+  (`--force`, `+refspec`, `update-ref`), so a permission rule naming one form
+  does not cover the others, and this will recur with other tools.
 - **Comments say _why_, not _what_** — constraints, platform quirks,
   non-obvious reasons; never a restatement of the code.
 - **TODO markers:** `#!#` in any language; more `#` = higher priority
