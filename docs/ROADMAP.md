@@ -12,6 +12,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - [~] 🛑 [service is renamed to order-mode, INCLUDING the shipped filter](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/010-service-is-renamed-to-order-mode-including-the.md)
 - ✅ 🛑 [The roadmap is SPLIT — one file per item](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/020-the-roadmap-is-split-one-file-per-item.md)
+- [ ] [🚩 URL stability is NOT a constraint yet, and the day it becomes one is](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/020-url-stability-becomes-a-constraint-when-there-are-users.md)
 
 ## Theme 1 — From *decided* to *ordered*: the Order tally ★ flagship
 

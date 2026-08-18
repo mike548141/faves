@@ -13,7 +13,6 @@ import {
   DEFAULT_FILTERS,
   filtersFromQuery,
   ORDER_MODE_KEY,
-  LEGACY_ORDER_MODE_KEY,
 } from "./filters.js";
 import { initFiltersUI } from "./filters-ui.js";
 import { formatDriveTime } from "./distance.js";
@@ -407,14 +406,12 @@ function init(restaurants) {
   // sit in the bar contradicting the control, and come back on the next reload
   // to re-filter a list they had just widened — the exact fault syncQuery exists
   // to prevent for the other three. So once they touch the control, the inbound
-  // value has been superseded and the key goes. Both spellings are dropped: a
-  // link written before the 2026-08-16 rename carries the old one, and leaving
-  // it behind would resurrect the filter under its retired name.
+  // value has been superseded and the key goes, so the address bar cannot sit
+  // there contradicting the control and re-applying itself on reload.
   function dropOrderModeQuery() {
     const params = new URLSearchParams(location.search);
-    if (!params.has(ORDER_MODE_KEY) && !params.has(LEGACY_ORDER_MODE_KEY)) return;
+    if (!params.has(ORDER_MODE_KEY)) return;
     params.delete(ORDER_MODE_KEY);
-    params.delete(LEGACY_ORDER_MODE_KEY);
     const q = params.toString();
     history.replaceState(null, "", location.pathname + (q ? `?${q}` : "") + location.hash);
   }

@@ -24,12 +24,29 @@
       [ADR 0050]'s shareable-facet set is unchanged and no link this app mints
       carries either spelling. *"Write only the new one"* holds by writing
       neither.
-      🎯 **Owner's call, and it is small either way: keep the shim or drop it.**
-      Keeping it costs one branch guarding a link that cannot exist yet; dropping
-      it is one commit and two tests. It is genuinely defensible to keep — a
-      person could hand-type or bookmark a URL — but that is not the reason the
-      ruling gives, so it should be decided on the real reason rather than
-      inherited from a wrong one.
+      ✅ **RULED 2026-08-17: DROP THE SHIM** — done, and the ruling came with a
+      correction to this item's own account of him.
+      🛑 **THIS ITEM MIS-RECORDED WHAT HE SAID.** It states the URL compatibility
+      path is *"the part that must not be dropped"*. Shown the evidence that no
+      `?service=` link had ever existed, his answer was:
+      > *"Drop it and thats not what I said. I said its fine to break URL's now
+      > because there are minimal users but ONCE there are lots of users we don't
+      > want to break URL's"*
+      🔑 **A conditional became an absolute in the writing down** — *"not yet, and
+      then yes"* was recorded as *"must not"*. That is the **third** record found
+      today to overstate an owner ruling (see `340/110`'s five-state
+      attribution, and the CHANGELOG entry that told readers the old key used to
+      work). The pattern runs one way: **records get stronger than the thing they
+      record**, never weaker, because a firm sentence is easier to write and
+      easier to quote.
+      **What shipped:** `LEGACY_ORDER_MODE_KEY` and its read are gone from
+      `filters.js`, the delete is gone from `app.js`'s `dropOrderModeQuery`, and
+      the two compatibility tests are **replaced rather than deleted** — they now
+      assert `?service=` is *ignored*, because "we removed it" and "we removed it
+      and something re-added it" look identical in a diff a year from now.
+      📌 **His forward rule is now its own item — [`020`](020-url-stability-becomes-a-constraint-when-there-are-users.md)**
+      — because the permission it grants has a condition nothing in this repo can
+      currently detect.
       ⚠️ **THREE PIECES OF THE RULING'S SPIRIT ARE NOT DONE**, listed so nobody
       reads the ✅ as complete:
       - **The record field is still `services`** across all 55 venue files, plus

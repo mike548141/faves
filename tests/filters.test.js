@@ -434,34 +434,26 @@ test("filtersFromQuery reads the order-mode axis under its current key", () => {
   assert.equal(filtersFromQuery("?order-mode=dine-in", FACETS).orderMode, "dine-in");
 });
 
-test("filtersFromQuery: a URL written before the rename still filters (?service=)", () => {
-  // THE compatibility assertion. Without the legacy branch this returns "all",
-  // and an old link quietly widens to every venue with nothing on screen saying
-  // the filter was dropped.
-  assert.equal(filtersFromQuery("?service=takeaway", FACETS).orderMode, "takeaway");
-  assert.equal(filtersFromQuery("?service=dine-in", FACETS).orderMode, "dine-in");
+test("the retired ?service= spelling is IGNORED, not honoured", () => {
+  // Owner's ruling 2026-08-17: drop the compatibility shim. The premise it was
+  // built on was false — this axis was never read from a URL, so no ?service=
+  // link was ever minted and none can be broken. Asserted rather than deleted
+  // because "we removed it" and "we removed it and something else re-added it"
+  // look identical in a diff a year from now.
+  assert.equal(filtersFromQuery("?service=takeaway", FACETS).orderMode, "all");
+  assert.equal(filtersFromQuery("?service=dine-in", FACETS).orderMode, "all");
 });
 
-test("an old-key URL narrows the actual list, not just the state", () => {
-  // The state value is only half the promise: end to end over the real fixture,
-  // an old link must come back with the venues its sender saw.
+test("a ?service= URL therefore narrows nothing — the whole list comes back", () => {
   const { orderMode } = filtersFromQuery("?service=dine-in", FACETS);
   const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode });
-  assert.deepEqual(shown.map((r) => r.id).sort(), ["kk", "ktc", "rs"]);
-  assert.ok(shown.length < FIXTURE.length, "an honoured old link still shortens the list");
+  assert.equal(shown.length, FIXTURE.length, "a retired key must not filter");
 });
 
-test("the new key wins when a URL somehow carries both spellings", () => {
-  assert.equal(
-    filtersFromQuery("?service=takeaway&order-mode=dine-in", FACETS).orderMode,
-    "dine-in"
-  );
-});
-
-test("order mode is validated against its vocabulary under either key", () => {
+test("order mode is validated against its vocabulary", () => {
   // Same rule as the facets: a value no <option> carries means "all", never a
-  // control reading "Any service" over a list filtered on something else.
-  for (const q of ["?order-mode=delivery", "?service=delivery", "?order-mode=Takeaway"]) {
+  // control reading "Any …" over a list filtered on something else.
+  for (const q of ["?order-mode=delivery", "?order-mode=Takeaway"]) {
     assert.equal(filtersFromQuery(q, FACETS).orderMode, "all", q);
   }
 });

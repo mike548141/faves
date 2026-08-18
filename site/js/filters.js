@@ -77,42 +77,32 @@ export function filterHref(facet, value, page = "index.html") {
  *  `services` array holds — the record field kept its name (see applyFilters). */
 export const ORDER_MODES = ["takeaway", "dine-in"];
 
-/** The query key this axis is written under, and the one it was shipped under
- *  before the 2026-08-16 rename. Both ends read them from here so a URL and the
- *  state can never disagree about the spelling.
- *
- *  🔎 Read the note above `orderModeFromQuery` before assuming the legacy key is
- *  dead weight — and before assuming it is load-bearing either. */
+/** The query key this axis is read under. Both ends read it from here so a URL
+ *  and the state can never disagree about the spelling. */
 export const ORDER_MODE_KEY = "order-mode";
-export const LEGACY_ORDER_MODE_KEY = "service";
 
 /**
- * The order mode a query string asks for, tolerating the key's old spelling.
+ * The order mode a query string asks for.
  *
- * The axis was called `service` until the owner's 2026-08-16 ruling renamed it
- * (`order-mode`), because the one word was doing three unrelated jobs and three
- * sessions collided with it in a day. The ruling's condition on the rename was a
- * compatibility path — read the old key, write only the new one — so a link that
- * predates it keeps filtering instead of silently widening to every venue.
+ * ⚠️ THERE IS NO `?service=` FALLBACK, AND THAT IS THE OWNER'S RULING, NOT AN
+ * OVERSIGHT (2026-08-17). A shim was built with the rename on the recorded
+ * premise that shared `?service=` links would break; the premise was false —
+ * no version of `filtersFromQuery` had ever read this axis at all
+ * (`git log -S 'get("service")'` is empty across all history), so no such link
+ * could exist. Shown the evidence, he corrected the record: *"its fine to break
+ * URL's now because there are minimal users but ONCE there are lots of users we
+ * don't want to break URL's."*
  *
- * ⚠️ What that ruling assumed, and what is actually true: it says the filter is
- * "shipped and in URLs". It is shipped, but it was never *in* a URL — no version
- * of `filtersFromQuery` has ever read this axis (`git log -S 'get("service")'`
- * is empty across all history), and `app.js`'s `syncQuery` deliberately does not
- * write it, because it is not a shareable facet (ADR 0050 carries area and
- * cuisine, and 37k added style). So the legacy branch here guards a link that
- * cannot exist yet. It is kept because the ruling is explicit, it costs one
- * lookup, and the day this axis does become shareable the old spelling is
- * already handled. Nothing in the app mints either key.
+ * 🔑 So the rule is a FORWARD one and it does not bind yet: breaking a URL is
+ * cheap today and stops being cheap the day this site has an audience. Before
+ * retiring or renaming any query key from here on, check that item first —
+ * `docs/roadmap/010-…/020-url-stability-becomes-a-constraint…`.
  *
  * Unknown values mean "all", the same rule the facets follow below.
  */
 function orderModeFromQuery(params) {
-  for (const key of [ORDER_MODE_KEY, LEGACY_ORDER_MODE_KEY]) {
-    const v = params.get(key);
-    if (v && ORDER_MODES.includes(v)) return v;
-  }
-  return "all";
+  const v = params.get(ORDER_MODE_KEY);
+  return v && ORDER_MODES.includes(v) ? v : "all";
 }
 
 /**
