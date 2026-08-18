@@ -35,6 +35,14 @@ content freshness separately from this file.
   corpus, and no line that used to show has stopped showing.
 
 ### Changed
+- **The takeaway/dine-in filter is now called "Dining"**, not "Service". One
+  word was doing three different jobs in the code and "Service" was the vaguest
+  thing on the filter row; "Dining" says what the control actually picks. The
+  choices themselves are unchanged. ⚠️ The te reo gloss still reads *Ratonga*
+  (service) and is knowingly out of step: te reo has no attested abstract noun
+  for "dining" — every dictionary result names a *place* (dining hall, dining
+  room) — and inventing one is not something this project does. It waits for a
+  fluent speaker.
 - **Units now follow how a place actually measures, one kind of measure at a
   time.** A phone in Britain reads distances in miles and yards and recipe
   temperatures in °C, which is what a British kitchen and a British road sign

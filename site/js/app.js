@@ -424,11 +424,12 @@ function init(restaurants) {
     area: "area",
     style: "style",
     // The kind is `orderMode`; the word here is the one printed on the control
-    // it undoes. This string ends up inside an aria-label ("Takeaway service
-    // filter is on — clear it…"), so it has to match what a sighted reader sees
-    // beside it, and the visible label is still "Service" — the 2026-08-16
-    // ruling renamed the code's axis, not the screen's wording.
-    orderMode: "service",
+    // it undoes. This string ends up inside an aria-label ("Takeaway dining
+    // filter is on — clear it…"), so it MUST match what a sighted reader sees
+    // beside it — the visible label is "Dining" (owner's wording, 2026-08-17).
+    // Change one and you must change the other, or the screen reader and the
+    // screen disagree about which control is being cleared.
+    orderMode: "dining",
     openNow: "Open now",
     cheap: "Cheap eats",
   };

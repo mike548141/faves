@@ -102,13 +102,24 @@ const MI = {
   // / "Ngā wāhi katoa" — a PLACE word on a control that picks dine-in vs
   // takeaway, and in te reo it collided outright with the "All places" of
   // "fav.allPlaces"/"nav.allRestaurants", a different job (leave a panel).
-  // "Any service" takes the parallel form of its two neighbours in the row,
-  // "All areas" and "All cuisines". The te reo follows the same `Ngā … katoa`
-  // frame those two already use, over the noun this file already carries for
-  // this exact sense ("filter.orderMode": "Ratonga") — so it is this file's own
-  // established pattern applied, not a fresh translation guessed at. The reo
-  // queue is parked (owner ruled 2026-08-16); this CLOSES a queued item rather
-  // than opening one, which is why it was in scope.
+  // 🛑 THE ENGLISH MOVED ON 2026-08-17 AND THE TE REO COULD NOT FOLLOW. The
+  // owner ruled the label "Dining" / "All dining", replacing "Service" / "Any
+  // service". The gloss below still says *service* (`ratonga`), so the two
+  // languages now name different things on the same control — stated here
+  // rather than papered over, because the alternative was inventing a word.
+  // WHY IT COULD NOT FOLLOW, checked rather than assumed: te reo has no
+  // attested abstract noun for "dining". Every dictionary result is a PLACE —
+  // `wharekai` (dining hall), `taiwhanga kai` (dining area), `rūma kai` (dining
+  // room), `paparahua` (dining table) — and a place word on a control that
+  // picks takeaway from dine-in is the exact fault 37j fixed when it removed
+  // "Ngā wāhi katoa". The obvious head noun `kai` means *food*, which collides
+  // with the cuisine select's "Ngā momo kai katoa" two controls away.
+  // 🎯 SO THIS NEEDS A FLUENT SPEAKER, not another composition. Three ways out,
+  // none of them ours to pick: a speaker supplies a phrase for the sense; the
+  // gloss is dropped so the control falls back to English (a real regression in
+  // reo coverage, but honest); or the English label is reconsidered. Until then
+  // the frame below is left EXACTLY as 37j landed it — a wrong gloss that is
+  // visibly recorded as wrong beats a right-looking one that was guessed.
   "orderMode.all": "Ngā ratonga katoa",
   "orderMode.takeaway": "Mau atu",
   "orderMode.dineIn": "Kai ā-whare",
@@ -140,6 +151,8 @@ const MI = {
   // "order mode" would be inventing one, which the SAFETY BOUNDARY at the top
   // of this file forbids without a fluent speaker. The wording is an open
   // owner call; the identifier is not.
+  // ⚠️ STALE AGAINST THE ENGLISH since 2026-08-17 — the label now reads
+  // "Dining". See the block above `orderMode.all` for why it was not changed.
   "filter.orderMode": "Ratonga", // draft — "service" (dine-in / takeaway)
   "filter.area": "Rohe",
   "filter.cuisine": "Momo kai",

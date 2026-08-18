@@ -776,16 +776,20 @@
                  one row. As a <select> it reads the same, filters the same, and
                  matches the two controls beside it.
 
-                 The ids and i18n keys say `order-mode`/`orderMode`; the words a
-                 reader sees still say "Service". The owner's 2026-08-16 ruling
-                 was about the code's overloaded vocabulary, and re-wording the
-                 label would also strand the te reo gloss 37j deliberately
-                 landed on 2026-08-17 (reo.js). Wording is a separate call. -->
+                 The ids and i18n keys say `order-mode`/`orderMode`; the word a
+                 reader sees is "Dining" — the owner's wording, ruled 2026-08-17
+                 after "Service" was put to him as too vague. It replaced
+                 "Service"/"Any service", which had survived the 2026-08-16 code
+                 rename because that ruling was about the code's vocabulary, not
+                 the screen's. 🚩 Note the neighbour: the `style` select beside
+                 this one is "a style of DINING filter" (37k — quick eats through
+                 fine dining), so two adjacent controls now touch the same word.
+                 Raised with the owner; his wording stands. -->
             <div class="filter-field" id="filter-order-mode-field">
-              <label class="filter-label" for="filter-order-mode" data-i18n="filter.orderMode">Service</label>
+              <label class="filter-label" for="filter-order-mode" data-i18n="filter.orderMode">Dining</label>
               <div class="select-field">
                 <select id="filter-order-mode" data-active="all">
-                  <option value="all" data-i18n="orderMode.all">Any service</option>
+                  <option value="all" data-i18n="orderMode.all">All dining</option>
                   <option value="takeaway" data-i18n="orderMode.takeaway">Takeaway</option>
                   <option value="dine-in" data-i18n="orderMode.dineIn">Dine-in</option>
                 </select>
