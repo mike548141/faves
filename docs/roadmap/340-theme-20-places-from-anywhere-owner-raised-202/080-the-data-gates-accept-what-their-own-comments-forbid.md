@@ -32,7 +32,28 @@
       baseline's lines first and requires each case to match **its own message
       regex**; a no-op mutation and a case with no expectation are now both hard
       failures. 113 → 124 cases.
-      🎯 **Item 5 — which of these belong in CI — is NOT done and is the owner's.**
+      ✅ **Item 5 — RULED AND DONE 2026-08-17 (`3d0d63e`).** The owner took the
+      recommendation in full: `split_data --check`, `test_registry`,
+      `test_find_addons` **and** `test_tag_allergens` are now steps in CI's
+      `guard` job; `fetch_fx --check` was **deliberately excluded** for the
+      reason given below.
+      🔑 **`split_data` gained `--against REF`, and without it the wiring would
+      have been decorative.** The append-only half compares the *working tree*
+      to a git ref. On a developer's machine `HEAD` is right, because the working
+      tree **is** the change. On a clean CI checkout `HEAD`-versus-`HEAD` can
+      only agree — so the step would have run, passed, and proved nothing about
+      the commit that destroyed the rows. CI now passes the state before the
+      push and **verifies the ref resolves first**, because a bad ref degrades to
+      *"0 compared"*, which is honest, visible in the scope line, and not
+      something to let happen quietly. Break-probed: truncating a venue's price
+      history reports *"held 174 superseded price entr(y/ies) at HEAD and now
+      holds 0 — history was destroyed, not relocated"* and exits 1.
+      🚩 **They went into the EXISTING `guard` job on purpose, and the reason is
+      the same fact that blocks the rename below:** `protect-main` matches
+      required contexts **by job name**, so a new job would not be required until
+      the owner edited the ruleset, while a step inside `guard` is required the
+      moment it lands.
+      *The recommendation as it was put to him —*
       The builder's recommendation, recorded and not acted on: **add**
       `split_data --check` (2.9 s, and now the only thing that can see a
       destroyed history row), `test_registry` and `test_find_addons` (pure Python,

@@ -230,6 +230,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
 - [ ] 🔎 [The board cannot say "decided, and the decision was not to do it"](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
 - [ ] 🛑 [cook_check wedges on its DEFAULT recipe, deterministically, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/120-cook-check-wedges-on-its-default-recipe.md)
+- ⏳ [The CI job called "zero dependencies" runs nine checks, and the name](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/130-the-guard-job-name-cannot-be-fixed-alone.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
