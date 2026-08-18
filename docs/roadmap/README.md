@@ -25,9 +25,21 @@ no accounts, no personal data in the repo). Nothing here changes v1 scope.
 
 Effort **XS/S/M/L**. Checkbox states:
 
+🔑 **The bracket is a WORK-OWED TRI-STATE, never a disposition** (Mike's ruling
+in atelier, 2026-07-22, inherited here). It answers exactly one machine-checked
+question — *is work owed?* — and **there is no fourth bracket**. *Delivered*,
+*superseded*, *declined* and *parked* all answer "no", so they are all `[x]`,
+and the **disposition is said in the item's own text as a dated note**. This
+repo's legend dropped that clause until 2026-08-17 and six items sat as `[ ]`
+because a finished ruling had nowhere the reader could see it.
+
 - `- [ ]` **open** — work still owed.
-- `- [x]` **done** — no more work owed. A done item **stays in its own file**;
-  there is no harvest step and nothing moves. The index renders it `✅`.
+- `- [x]` **no more work owed** — delivered, **superseded**, **declined** or
+  **parked**, with which one said in the item's own text as a dated note. A
+  done item **stays in its own file**; there is no harvest step and nothing
+  moves. ⚠️ The index renders every `[x]` as `✅`, which *reads* as "delivered"
+  — so an item closed any other way must say so **in its first line**, where the
+  reader who followed the tick lands.
 - `- [~]` **part-done or claimed**, and the two are told apart by what the item
   says, not by the marker. A **claim** names a date and a worktree
   (`CLAIMED YYYY-MM-DD HH:MM UTC (wt: …)`) — leave that item alone, even if told

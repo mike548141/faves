@@ -1,4 +1,12 @@
-- [ ] 🚩 **The order pill eats a dietary chip's tap at large text** `[S][css]`
+- [x] ⏸️ **RULED NOT TO FIX 2026-08-16 — deliberately deferred, not
+      unnoticed, and NOT delivered.** Re-marked 2026-08-17 under the work-owed
+      tri-state. The measurement stands and the fault is real; the owner ruled
+      *leave it, record it*, because every fix trades away availability of a
+      primary action. ⚠️ **The 🎯 "Left for the owner" paragraph further down
+      PREDATES that ruling and is superseded by it** — the file argued both ways
+      until this line was added, and a reader's verdict depended on how far they
+      read.
+      🚩 **The order pill eats a dietary chip's tap at large text** `[S][css]`
   ✅ **RULED 2026-08-16 (relayed via faves-71, recorded `ed4845f`): leave it,
   record it** — deliberately deferred, not unnoticed. ⚑ discharged.
   — **found by measurement 2026-08-16 and deliberately NOT fixed.** At 390 px

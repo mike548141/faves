@@ -1,4 +1,8 @@
-- [ ] **37k — SUPERSEDED CLAIM NOTE** ⚑ — 🛑 **CLAIM
+- [x] ⏸️ **SUPERSEDED — not delivered, and not open work either.** Re-marked
+      2026-08-17 under the work-owed tri-state; the live residue is two questions
+      for the owner, tracked on `010` beside the build they belong to rather than
+      on a claim note.
+      **37k — SUPERSEDED CLAIM NOTE** ⚑ — 🛑 **CLAIM
       RELEASED 2026-08-16 22:59 UTC. The blocking 🚩 is CLEARED (ADR 0077,
       block above) and the item is now OWNER-BLOCKED on two questions — do NOT
       treat it as open work.** Entering data against an unratified vocabulary

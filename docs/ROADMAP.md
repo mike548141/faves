@@ -191,7 +191,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/README.md)*
 
-- [ ] [The order pill eats a dietary chip's tap at large text](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/010-the-order-pill-eats-a-dietary-chip-s-tap-at-la.md)
+- ✅ [⏸️ RULED NOT TO FIX 2026-08-16 — deliberately deferred, not](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/010-the-order-pill-eats-a-dietary-chip-s-tap-at-la.md)
 
 ## Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)
 
@@ -228,7 +228,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
 - ✅ [The decision records have drifted from the decisions](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/090-the-decision-records-have-drifted-from-the-decisions.md)
 - [ ] [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
-- [ ] 🔎 [The board cannot say "decided, and the decision was not to do it"](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
+- ✅ 🔎 [~~The board cannot say "decided, and the decision was not to do](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
 - [ ] 🛑 [cook_check wedges on its DEFAULT recipe, deterministically, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/120-cook-check-wedges-on-its-default-recipe.md)
 - ⏳ [The CI job called "zero dependencies" runs nine checks, and the name](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/130-the-guard-job-name-cannot-be-fixed-alone.md)
 
@@ -300,15 +300,15 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🎯 [36c — serving sizes](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/030-36c-serving-sizes-m-data-not-researchable.md)
 - ✅ [36d — the timer's alarm](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/040-36d-the-timer-s-alarm-shipped-2026-08-16.md)
 - [ ] [36e — one place to look, not two](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/050-36e-one-place-to-look-not-two-m-ux.md)
-- [ ] [36f — what it costs to make it](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/060-36f-what-it-costs-to-make-it-l-schema-data-own.md)
+- ✅ [⏸️ PARKED 2026-08-16 by the owner — no work owed, and this is not](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/060-36f-what-it-costs-to-make-it-l-schema-data-own.md)
 - ✅ [Closing the sheet discards every running timer and its bell](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/070-closing-the-sheet-discards-every-running-timer.md)
 
 ## Theme 37 — cook mode and the recipe page, as the owner reads them (owner-raised 2026-08-16)
 
 *[Narrative](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/README.md)*
 
-- [ ] [37k — a "style of dining" filter](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/010-37k-a-style-of-dining-filter.md)
-- [ ] 🛑 [37k — SUPERSEDED CLAIM NOTE](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/020-37k-superseded-claim-note.md)
+- ⏳ [WAITING ON THE OWNER — the build is done; what is left is his data](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/010-37k-a-style-of-dining-filter.md)
+- ✅ [SUPERSEDED — not delivered, and not open work either.](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/020-37k-superseded-claim-note.md)
 - [~] [37n — the corpus disagrees with itself about allergens](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/030-37n-the-corpus-disagrees-with-itself-about-all.md)
 - ✅ [🚩 The "ambiguous single word" rule hides the ingredient line the](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/040-the-ambiguous-word-rule-hides-the-line-the-step-uses.md)
 

@@ -1,59 +1,65 @@
-- [ ] 🔎 **The board cannot say "decided, and the decision was not to do it"**
-  `[S][docs]` — found 2026-08-17 by the sweep that flipped four stale items, and
-  it is the reason those four went stale rather than a coincidence of four
-  sessions forgetting.
+- [x] 🔎 **~~The board cannot say "decided, and the decision was not to do
+  it"~~ — IT CAN, AND THIS ITEM ASKED A QUESTION THE OWNER ALREADY ANSWERED**
+  `[S][docs]` — filed 2026-08-17, **corrected and closed the same day.** No new
+  state is owed. Kept rather than deleted because the mistake is the useful part.
 
-  **The legend has four states and none of them fits a live category.** `[ ]`
-  open · `[x]` done · `[~]` part-done-or-claimed · `⏳` waiting on someone. What
-  is missing is **parked / decided-against / standing re-check** — an item where
-  the thinking is finished, the answer was *no* or *not yet*, and no session
-  should take it. Today those are written as `[ ]`, because `[x]` would say the
-  work happened and it did not.
+  🛑 **What this item originally proposed — a `[-]` decided-against state — is
+  the exact proposal Mike himself raised on 2026-07-22 and the exact one the
+  builder counselled against.** Found in atelier's own record (`2cd4730`,
+  *"tri-state legend, five-state question captured"*), which is where the board
+  doctrine lives and where this session had not looked:
 
-  🚩 **The cost is not tidiness — it is that a session takes work the owner
-  already declined.** A cold reader picking from the index sees a checkbox that
-  means *open, takeable*, opens the file, and finds a ruling. That reader has
-  spent the read; the next one spends it again. On a 69-open board this is the
-  single largest source of wasted first reads.
+  > **Extend the checkbox grammar to five states?** (Mike, 2026-07-22,
+  > mid-build) — proposal: add `[-]` declined and `[^]` superseded beside the
+  > tri-state. **Builder's counsel: keep the tri-state** — the bracket answers
+  > the one machine-checked question (is work owed?); declined/superseded both
+  > answer "no" and need a dated note for the *why* regardless, so extra states
+  > are a second copy of one fact (the point-of-use drift class). **Promote to
+  > distinct states only if we find ourselves repeatedly grepping dispositions
+  > apart** (the anti-slop promotion rule). Mike's call; Mike himself flagged
+  > the complication risk.
 
-  **The instances, verified in the item bodies rather than inferred from
-  titles** — six as at 2026-08-17, ~9% of everything the index calls open:
+  🔑 **So the rule already exists and this repo was not applying it.** Atelier's
+  board README states it plainly and faves' did not: *"a **work-owed tri-state**,
+  never a disposition (Mike, 2026-07-22): `[ ]` work still owed · `[x]` **no more
+  work owed** — delivered, superseded, or declined, with the disposition said in
+  the item's own text (a dated note), **never a fourth bracket**."* Our legend
+  said only `[x]` **done** — the disposition clause was dropped in the copy. **A
+  parked item is `[x]`, and always was.**
 
-  | Item | What its own body says |
-  |---|---|
-  | `460/060` 36f `costToMake` | *"✅ RULED 2026-08-16: park `costToMake` … ⚑ discharged"* |
-  | `300/010` the order pill | *"RULED 2026-08-16 … leave it, record it — deliberately deferred, not unnoticed"* |
-  | `470/010` 37k | *"Build complete; what remains is OWNER DATA ENTRY, not open work"* |
-  | `470/020` 37k claim note | superseded by its own title; *"do NOT treat it as open work"* |
-  | `370/010` 30g delivery fee | owner said *"I would consider"*, not build it — and *"NOTHING IN THE CORPUS EXERCISES IT … ZERO true pairs"* |
-  | `270/020` Pandan's pin | *"this stays open as a standing re-check, not as work"* |
+  🔑 **And the promotion bar was already written, which is what makes today's
+  evidence answerable rather than arguable:** *promote only if we find ourselves
+  repeatedly grepping dispositions apart.* Today's fault was **not** that. It
+  was six items left on `[ ]` because the legend a session read had lost the
+  clause that told it what `[x]` covers. **A dropped clause is not a missing
+  state**, and adding one would have shipped a second copy of a fact the dated
+  note already carries — the drift class the counsel names.
 
-  ⚠️ **`300/010` shows the second-order damage: an item with no state for its
-  answer contradicts itself.** Its ruling (*leave it*) sits at the top and an
-  earlier 🎯 *"Left for the owner"* survives further down, so the file argues
-  both ways and a reader's verdict depends on how far they read. That is what
-  happens when the decision has nowhere structural to live and has to be carried
-  in prose.
+  ⚠️ **The six were also not one shape, and the original filing overstated
+  them.** Re-read against the tri-state: `460/060` (costToMake parked) and
+  `300/010` (the order pill, ruled *leave it*) are plainly `[x]`; `470/020`
+  (superseded claim note) is `[x]`; `470/010` (37k, *"what remains is OWNER DATA
+  ENTRY"*) is **⏳ waiting on him**, not declined at all; and `370/010` (30g,
+  no instance in the corpus) and `270/020` (Pandan's pin, a standing re-check)
+  are **genuinely still `[ ]`** — work may yet be owed the day a venue or an OSM
+  house number arrives. So "six items need a new state" was really *three
+  mis-marked, one mis-stated, two correct as they were.*
 
-  🔑 **These are not all one kind, and a single new marker would flatten a
-  distinction worth keeping.** At least three shapes are in the table:
-  *decided-against* (36f, the order pill), *built and waiting on the owner's own
-  data* (37k), and *no instance exists yet* (30g, Pandan). The first is closed
-  unless he reopens it; the second is his to finish; the third reopens by itself
-  the day a venue arrives. 💡 One workable answer is a **`[-]` decided-against**
-  state plus using the ⏳ that already exists for the second, and leaving the
-  third as `[ ]` with the instance-count in the title — but that is a proposal,
-  not a finding.
+  ✅ **What actually shipped instead**, 2026-08-17: faves'
+  [`roadmap/README.md`](../README.md) legend now carries the tri-state rule and
+  the disposition clause verbatim from the source, and names the one real
+  residual — 🚩 **the index renders every `[x]` as `✅`, which reads as
+  "delivered"**, so an item closed any other way must say so in its **first
+  line**, where a reader who followed the tick lands. That residual is the only
+  thing that could ever meet the 2026-07-22 promotion bar, and it does not meet
+  it yet: it is a *rendering* problem with a *wording* remedy, not a state we
+  are grepping apart.
 
-  ✅ **`⏳` is now proven to work end-to-end**, which removes the obvious
-  objection that adding a state means changing the generator. It sat in the
-  legend unused across every item on this board until `340/030` took it on
-  2026-08-17; `board.py rebuild` renders it correctly with no tool change. So the
-  cost of this is a legend edit and six item edits, not a tooling change.
-
-  🎯 **What is owed to the owner is one small decision** — whether to add a
-  decided-against state at all, and if so whether one marker or two. Everything
-  after that is mechanical. Worth raising *with* the instance table above rather
-  than as a principle: this board's own record shows a named incident moves him
-  and an abstract argument does not (`340/030`'s "what moved this, worth
-  reusing").
+  🔑 **The transferable lesson, which outlives the item:** this session proposed
+  a change to inherited doctrine **without reading the inherited doctrine's own
+  record of the same question**. The board rules live in atelier; the session
+  searched only faves and found nothing, and "nothing found here" felt like
+  "never decided". It was decided, weeks earlier, by the owner, with the
+  reasoning written down — and the owner remembered it when the proposal was put
+  to him. **Before proposing a change to a rule, search the repo the rule comes
+  FROM.**

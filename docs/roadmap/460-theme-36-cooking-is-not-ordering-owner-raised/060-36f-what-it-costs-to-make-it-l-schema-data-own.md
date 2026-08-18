@@ -1,4 +1,10 @@
-- [ ] **36f — what it costs to make it** `[L][schema][data]` — owner-signalled 2026-08-16
+- [x] ⏸️ **PARKED 2026-08-16 by the owner — no work owed, and this is not
+      "delivered".** Re-marked 2026-08-17 under the work-owed tri-state (the
+      bracket answers *is work owed?*; the disposition lives here, per the
+      legend). `costToMake` is parked and `currency` stays the placeholder it is;
+      the grocery-source question is **not live** until he unparks it. Reopen by
+      flipping this back to `[ ]` — nothing else is needed.
+      **36f — what it costs to make it** `[L][schema][data]` — owner-signalled 2026-08-16
 
 Raised by the owner while correcting this theme: *"a recipe may in the future
 include the total cost to make that dish."* That is why `currency` sits on the
