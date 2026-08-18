@@ -1,4 +1,45 @@
-- [ ] 🤔 **22d — hide what doesn't apply to this reader: dietary tags, allergen
+- [~] ✅ **RULED AND SHIPPED (first half) 2026-08-17 — the answer is DULL, NOT
+      HIDE.** The owner ruled it from a screenshot of a dish wearing two
+      identical red warnings when only one of them was his:
+      > *"If an allergen is enabled in the users settings … it shoud work
+      > exactly as it does today. If an allergen exists on a dish but the user
+      > has not indicated that they are allergic then the UI element should look
+      > the same as it does today except (a) it should be a duller colour so
+      > that it does not stand out as much … Still visible but not so that it
+      > stands out as a warning and (b) Remove the word Contains … Same thing
+      > for the options like DFO, GFO, Vegetarian, Vegan etc"*
+      🔑 **"Dull, never hide" dissolves question 2 below rather than answering
+      it.** *Absence of a declaration is not absence of an allergy* was the
+      hardest objection on this item — a reader who never opened Settings, a
+      phone handed across a table, someone ordering for a friend. Nothing is
+      removed from the page or from the accessibility tree, so none of them
+      loses information; only the visual weight moves. **That is why this could
+      ship without the escape hatch (question 6) and without resolving the
+      opt-in question.** It also settles question 1 by treating both classes the
+      same way — relevance turns the volume up, irrelevance turns it down, and
+      neither disappears.
+      **Shipped:** `tagChip` in `menu.js` takes the reader's **stored** dietary
+      preference (`settings.diet.dietary`) as well as `avoid` — deliberately the
+      stored setting, not the menu's transient filter chips, because the question
+      is what this reader *needs*, not what they are looking at. `.is-muted` in
+      `app.css` uses `color-mix` toward the surface rather than new tokens, so it
+      tracks the warn/diet colours in both schemes instead of drifting from them.
+      **Break-proven** in `device_check` (20 → 23 assertions): removing the muted
+      class fails 2 and nothing else; leaving "Contains" on a muted chip fails 2
+      and nothing else; restored, 23/23. The muted chips are asserted **visible,
+      non-zero-width and not `aria-hidden`** — a check that only counted the loud
+      ones would pass just as happily if the quiet ones vanished.
+      🎯 **ONE THING FOR THE OWNER, raised rather than resolved: the ⚠ glyph is
+      KEPT on a muted allergen chip.** That is the literal reading of the ruling
+      — *"look the same as it does today except (a) … and (b) …"* enumerates two
+      changes and the glyph is not one of them. But it sits against his stated
+      intent that such a chip *"does not stand out as a warning"*, and a ⚠ is the
+      most warning-shaped thing on it. One-line change either way.
+      ⏳ **STILL OPEN below:** questions 3 (declared vs inferred), 4 (`DFO` as an
+      ordering affordance), 5 (what replaces the space, if anything) and 6 (a
+      "show all tags" switch) are untouched — the ruling made them cheaper, not
+      moot. Original filing follows —
+      🤔 **22d — hide what doesn't apply to this reader: dietary tags, allergen
       chips and the rest** `[M][design]` ⚑ — owner-raised 2026-08-17, **design
       genuinely open**. His framing: *"all the tags on dishes like vegan, DF,
       GF, DFO, peanuts etc are clutter if the user doesn't care about it e.g. no

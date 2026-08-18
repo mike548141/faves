@@ -126,13 +126,46 @@ const ALLERGEN = {
 const isAllergen = (t) => t in ALLERGEN;
 const isSpicy = (t) => /^spicy-[123]$/.test(t);
 
-function tagChip(t, avoid = EMPTY_SET) {
+// Does this dietary/option tag answer a need the reader has actually declared?
+// `dietary` is the viewer's STORED preference (settings `diet.dietary`), not the
+// menu's transient filter chips — the point is what this reader needs, not what
+// they are looking at right now.
+function servesDeclaredDiet(t, dietary) {
+  if (!dietary || dietary.size === 0) return false;
+  return DIET_FILTERS.some((f) => dietary.has(f.key) && f.satisfies.includes(t));
+}
+
+/**
+ * One tag → one chip, at the loudness this reader has earned.
+ *
+ * OWNER'S RULING 2026-08-17, from a screenshot of a dish wearing two identical
+ * red warnings when only one of them was his: a chip a reader has declared a
+ * need for behaves EXACTLY as before; every other chip is **dulled, never
+ * hidden**, and an allergen chip additionally **drops the word "Contains"**.
+ *
+ * 🔑 Dulling rather than hiding is what makes this safe, and it is his answer to
+ * the hardest question on ROADMAP 22d: *absence of a declaration is not absence
+ * of an allergy*. A reader who never opened Settings, a phone handed across the
+ * table, someone ordering for a friend — none of them lose information here,
+ * because nothing is removed from the page or from the accessibility tree. Only
+ * the visual weight moves. Do not "finish" this by hiding the muted chips.
+ *
+ * 🚩 The ⚠ glyph is KEPT on a muted allergen chip, and that is the literal
+ * reading of the ruling ("look the same as it does today except (a) colour and
+ * (b) the word Contains") rather than a judgement. It sits in tension with his
+ * stated intent — that a chip for an allergen you have not declared should not
+ * *read* as a warning — and it is raised at ROADMAP 22d for him, not resolved
+ * here.
+ */
+function tagChip(t, avoid = EMPTY_SET, dietary = EMPTY_SET) {
   if (isAllergen(t)) {
-    // If the viewer flagged this allergen in their preferences, make it shout.
     const flagged = avoid.has(t);
+    // "Contains peanuts" → "peanuts" when it is not this reader's allergen. The
+    // chip is uppercased in CSS, so the source string stays sentence-shaped.
+    const label = flagged ? ALLERGEN[t] : ALLERGEN[t].replace(/^Contains /, "");
     return el("span", {
-      className: flagged ? "tag tag-allergen is-flagged" : "tag tag-allergen",
-      textContent: `⚠ ${ALLERGEN[t]}`,
+      className: flagged ? "tag tag-allergen is-flagged" : "tag tag-allergen is-muted",
+      textContent: `⚠ ${label}`,
     });
   }
   if (isSpicy(t)) {
@@ -143,7 +176,13 @@ function tagChip(t, avoid = EMPTY_SET) {
     });
   }
   if (t in DIETARY) {
-    return el("span", { className: "tag tag-diet", textContent: DIETARY[t] });
+    // Same rule for the positive tags: Vegan/GF/DF-option stay bright for the
+    // reader who declared that need and dull for everyone else.
+    const wanted = servesDeclaredDiet(t, dietary);
+    return el("span", {
+      className: wanted ? "tag tag-diet" : "tag tag-diet is-muted",
+      textContent: DIETARY[t],
+    });
   }
   return el("span", { className: "tag", textContent: t });
 }
@@ -1054,7 +1093,7 @@ function dishPhoto(item) {
 // `r` carries the kind, so the row no longer needs to be TOLD what it is
 // rendering — the old `isRecipes` boolean was a second copy of a fact already
 // in the arguments, and a second copy is a thing that can disagree.
-function renderDish(item, r = null, avoid = EMPTY_SET, section = null) {
+function renderDish(item, r = null, avoid = EMPTY_SET, section = null, dietary = EMPTY_SET) {
   const kind = kindOf(r);
   const collectionId = r?.id ?? null;
   // The price slot doubles as a recipe meta chip (serves · time).
@@ -1175,7 +1214,7 @@ function renderDish(item, r = null, avoid = EMPTY_SET, section = null) {
   if (needs) children.push(needs);
   if (item.tags?.length) {
     const tags = el("div", { className: "dish-tags" });
-    for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid));
+    for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid, dietary));
     children.push(tags);
   }
   if (kind.itemsHaveRecipeFields && (item.ingredients?.length || item.steps?.length)) {
@@ -1474,7 +1513,8 @@ function render(r) {
       el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
     );
     const dishes = el("ul", { className: "dish-list" });
-    for (const item of section.items) dishes.append(renderDish(item, r, avoid, section));
+    for (const item of section.items)
+      dishes.append(renderDish(item, r, avoid, section, preselect));
     // Subtext under the heading, never inside it (ADR 0057). The heading string
     // is also the jump-nav chip, so "Brunch (served till 2pm)" costs 24 chars of
     // a horizontal strip the reader scrolls with a thumb; the qualifier belongs

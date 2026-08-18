@@ -115,6 +115,29 @@ const snapshotExpr = (dishName) => `(() => {
     allergen: dishes.filter((d) => tags(d).includes(${JSON.stringify(ALLERGEN.key)})).map(nameOf),
     flagged: dishes.filter((d) => d.classList.contains("dish-flagged")).map(nameOf),
     flaggedChips: document.querySelectorAll(".tag-allergen.is-flagged").length,
+    // Owner's ruling 2026-08-17: a chip for a need this reader has NOT declared
+    // is DULLED, never hidden, and an allergen chip drops the word "Contains".
+    // Counted here because the whole point is that the muted ones are still on
+    // the page — a check that only counted the loud ones would pass just as
+    // happily if the quiet ones vanished, which is the failure this must catch.
+    mutedAllergenChips: document.querySelectorAll(".tag-allergen.is-muted").length,
+    mutedDietChips: document.querySelectorAll(".tag-diet.is-muted").length,
+    allergenChipsTotal: document.querySelectorAll(".tag-allergen").length,
+    // "CONTAINS" must appear on a flagged chip and on no muted one. Read off
+    // rendered text rather than the source string, because the uppercasing is
+    // CSS and the word we removed is not.
+    saysContainsFlagged: [...document.querySelectorAll(".tag-allergen.is-flagged")]
+      .filter((c) => /contains/i.test(c.textContent)).length,
+    saysContainsMuted: [...document.querySelectorAll(".tag-allergen.is-muted")]
+      .filter((c) => /contains/i.test(c.textContent)).length,
+    // A muted chip that is invisible, zero-sized or removed from the a11y tree
+    // is a HIDDEN chip wearing a different name. Measured, not assumed.
+    mutedChipsVisible: [...document.querySelectorAll(".tag-allergen.is-muted, .tag-diet.is-muted")]
+      .filter((c) => {
+        const s = getComputedStyle(c);
+        return c.getBoundingClientRect().width > 0 && s.visibility !== "hidden" &&
+               s.display !== "none" && Number(s.opacity) > 0 && c.getAttribute("aria-hidden") !== "true";
+      }).length,
     heart: heart ? heart.getAttribute("aria-pressed") : null,
     rating: slider ? slider.getAttribute("aria-valuenow") : null,
     profile: (document.querySelector(".profile-caption-name") || {}).textContent || null,
@@ -225,6 +248,22 @@ async function run(opts) {
       "no dish is flagged before any preference is set",
       first.flagged.length === 0 && first.flaggedChips === 0,
       `${first.flagged.length} flagged rows, ${first.flaggedChips} flagged tag chips`
+    );
+    // --- The chip-loudness rule (owner's ruling 2026-08-17) --------------
+    // Before any preference is set NOTHING is this reader's, so every allergen
+    // chip on the page must be muted — and must still BE on the page.
+    report.check(
+      "with no preferences set, every allergen chip is muted and none is hidden",
+      first.allergenChipsTotal > 0 &&
+        first.mutedAllergenChips === first.allergenChipsTotal &&
+        first.mutedChipsVisible === first.mutedAllergenChips + first.mutedDietChips,
+      `${first.mutedAllergenChips}/${first.allergenChipsTotal} allergen chips muted, ` +
+        `${first.mutedChipsVisible} of ${first.mutedAllergenChips + first.mutedDietChips} muted chips visible`
+    );
+    report.check(
+      'a muted allergen chip drops the word "Contains"',
+      first.saysContainsMuted === 0,
+      `${first.saysContainsMuted} muted chip(s) still say "contains"`
     );
     report.check(
       "seeded heart and rating render for the first profile",
@@ -402,6 +441,19 @@ async function run(opts) {
       flipped.flagged.length > 0 && same(flipped.flagged, flipped.allergen),
       `${flipped.flagged.length} of ${flipped.allergen.length} tagged dishes flagged, ` +
         `${flipped.flaggedChips} tag chips shouting`
+    );
+    // The other half of the ruling: declaring the allergen turns THAT chip loud
+    // and restores its "Contains", while every chip the reader did not declare
+    // stays muted. Both halves in one assertion, because a rule that made
+    // everything loud would pass "the flagged one is loud" perfectly well.
+    report.check(
+      'declaring an allergen makes ONLY that chip shout, and gives it back "Contains"',
+      flipped.flaggedChips > 0 &&
+        flipped.saysContainsFlagged === flipped.flaggedChips &&
+        flipped.saysContainsMuted === 0 &&
+        flipped.mutedAllergenChips === flipped.allergenChipsTotal - flipped.flaggedChips,
+      `${flipped.flaggedChips} loud (all saying "contains"), ` +
+        `${flipped.mutedAllergenChips} still muted of ${flipped.allergenChipsTotal}`
     );
     report.check(
       "no reload or navigation was needed",

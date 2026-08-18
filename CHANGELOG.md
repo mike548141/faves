@@ -35,6 +35,17 @@ content freshness separately from this file.
   corpus, and no line that used to show has stopped showing.
 
 ### Changed
+- **A dish only shouts about the allergens you told us about.** Every
+  `contains-…` chip used to be a red warning on every dish, so a menu full of
+  gluten and soy looked exactly as alarming as the one thing you actually can't
+  eat. Now the allergens you have flagged in Settings look and read exactly as
+  before — **CONTAINS PEANUTS**, filled and loud — and everything else is dulled
+  and drops the word "contains", so it reads as a fact about the food rather
+  than a warning meant for you. The same goes for Vegan, GF, DF and the "on
+  request" tags: bright if you have said you need them, quiet if you have not.
+  🛑 **Nothing is hidden.** Every tag is still on the page, still readable, still
+  there for a screen reader — because not having told us about an allergy is not
+  the same as not having one, and a phone gets handed across a table.
 - **The takeaway/dine-in filter is now called "Dining"**, not "Service". One
   word was doing three different jobs in the code and "Service" was the vaguest
   thing on the filter row; "Dining" says what the control actually picks. The
