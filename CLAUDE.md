@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@e2fddc5`, owner-ratified 2026-07-25, bumped 2026-08-17)
+## Doctrine — inherited from atelier (pinned `atelier@c139260`, owner-ratified 2026-07-25, bumped 2026-08-18)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -60,10 +60,19 @@ in atelier and is read on demand — never wholesale.
   what, never which files. A message reserves nothing; only a pushed artefact
   does, so check a shared allocator (identifiers, version constants) **after**
   the push. The shared checkout's index and its mid-rebase state are shared
-  surfaces too: stage explicit paths, and read the staged hunk headers before
-  every commit (`CONCURRENCY.md` § The channel). (That section is *this repo's
-  own* practice promoted to house doctrine at `46dd5a0`, bearing 2026-08-13 to
-  2026-08-17 — so these three sentences come home rather than arrive.)
+  surfaces too: stage explicit paths, never `git add -A`, and read the **whole
+  staged index** before every commit — `git diff --cached` shows the paths you
+  did not stage as well, which is the half a hunk-by-hunk read misses
+  (`CONCURRENCY.md` § The trigger). (That section is *this repo's own* practice
+  promoted to house doctrine at `46dd5a0`, bearing 2026-08-13 to 2026-08-17 —
+  so these three sentences come home rather than arrive. ⚠️ The sentence above
+  was **wrong here until 2026-08-18**: it said *"read the staged hunk headers"*
+  and pointed at § The channel. Both were corrected upstream on a private
+  child's incident — a session read its own compressed block, concluded the
+  house had a gap it does not have, and wrote a local duplicate. A hunk-by-hunk
+  read only shows what *you* staged; the paths you did **not** stage are the
+  point of the check. An index outlives the ref that fed it, so a stale entry
+  needs no live peer to have put it there.)
 - **Session rhythm (points up for the full rule):** claim work you take off the
   shared queue before starting it, and let a live `[~]` claim override a
   standing instruction to take that item; stay in the lane you were given
