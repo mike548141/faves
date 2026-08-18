@@ -63,6 +63,9 @@
       is advisory for the person who pushes most, and (a) is close to cosmetic
       without it. `evaluate` mode, or bypass on pull-request only, are the
       middle options. **This one is his alone and must not be changed for him.**
+      ✅ **The decorative-label half is FIXED 2026-08-17 (`436041d`): the job is
+      now `repo invariants`, and `protect-main`'s required context moved with it
+      in the same sitting. Detail and the no-gap migration recipe → `130`.**
       🔑 **And a second-order finding worth more than the first, from faves-
       hygiene: this was nearly reported wrong, and the reason generalises.**
       The required list is read **by job name**, and the job displayed as

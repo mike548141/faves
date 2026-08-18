@@ -1,5 +1,18 @@
-- ⏳ **The CI job called "zero dependencies" runs nine checks, and the name
-  cannot be fixed from the workflow alone** `[XS][ops]` — split out 2026-08-17
+- [x] ✅ **DONE 2026-08-17 (`436041d`) — the job is now `repo invariants`, and
+  the ruleset moved with it.** Owner-authorised both halves in one sitting,
+  because they cannot be split safely. **Migrated with no gap, and the recipe is
+  now written into `ci.yml` for whoever renames it next:** (1) add the NEW
+  context to the ruleset while the OLD one is still required — verified against
+  the API, seven contexts held at once; (2) rename the job and push; (3) remove
+  the OLD context once a run has reported under the new name — verified, `repo
+  invariants` reported `success` before `zero dependencies` was dropped. Final
+  state read back from the API: **six required contexts**, `enforcement: active`.
+  ⚠️ **`bypass_actors` is UNCHANGED and deliberately so** — `RepositoryRole 5 →
+  always`, confirmed after the edit. So this makes an **audit** truthful; it does
+  **not** make the gate bite. That is `030`(b), which the owner deferred on its
+  own merits and which nothing here touches.
+  ~~**The CI job called "zero dependencies" runs nine checks, and the name
+  cannot be fixed from the workflow alone**~~ `[XS][ops]` — split out 2026-08-17
   from `030`, which had it as a sub-finding. It is small, it is real, and it is
   **waiting on a repo-settings change only the owner makes** — which is exactly
   why it needed its own line rather than a paragraph inside a closed item.

@@ -9,9 +9,11 @@
 # import. See the `boot` job.
 #
 # ⚠ It REPORTS; it does not reliably BLOCK. `protect-main` requires six of
-# these contexts, but repository admins bypass it always — and the last 100
-# rule evaluations on `main` were 100 bypasses. Read a red run as "the deploy
-# that just went out is broken", not as "the deploy was stopped".
+# these contexts — `floor / scanner floor`, `menu data validates`, `repo
+# invariants`, `JS unit tests`, `service-worker version lockstep`, `every screen
+# boots` — but repository admins bypass it always, and the last 100 rule
+# evaluations on `main` were 100 bypasses. Read a red run as "the deploy that
+# just went out is broken", not as "the deploy was stopped".
 name: CI
 
 on:
