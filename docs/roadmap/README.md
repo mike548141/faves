@@ -26,7 +26,9 @@ no accounts, no personal data in the repo). Nothing here changes v1 scope.
 Effort **XS/S/M/L**. Checkbox states:
 
 🔑 **The bracket is a WORK-OWED TRI-STATE, never a disposition** (Mike's ruling
-in atelier, 2026-07-22, inherited here). It answers exactly one machine-checked
+in atelier, **2026-07-23**, inherited here — he chose *"Keep three"* over
+*"Extend to five"* when it was put to him; 2026-07-22 is when the question was
+captured, not when it was answered). It answers exactly one machine-checked
 question — *is work owed?* — and **there is no fourth bracket**. *Delivered*,
 *superseded*, *declined* and *parked* all answer "no", so they are all `[x]`,
 and the **disposition is said in the item's own text as a dated note**. This

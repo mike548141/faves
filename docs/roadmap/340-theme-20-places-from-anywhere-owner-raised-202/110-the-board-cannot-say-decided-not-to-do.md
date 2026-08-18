@@ -19,6 +19,37 @@
   > apart** (the anti-slop promotion rule). Mike's call; Mike himself flagged
   > the complication risk.
 
+  🛑 **AND THE RECORD ABOVE OVER-ATTRIBUTES IT TO HIM. Read the transcript, not
+  the capture.** Chased into the live sessions at his request and verified in
+  two atelier transcript files, quoted here because the difference is the whole
+  point:
+
+  **What Mike actually wrote** (session `1b189e23`, 2026-07-22 04:31:07 UTC) —
+  in passing, at the end of a paragraph about harvest integrity:
+
+  > *"…anything with `[ ]` should not be in roadmap-done I would think, unless
+  > perhaps it is supersceeded, or no longer required."*
+
+  **That is all of it.** He never typed `[-]`, never typed `[^]`, and never
+  enumerated candidate states. The two brackets were the **assistant's**
+  invention, and its close-out message the same day handed them back to him as
+  *"Your five-state proposal (`[-]` declined, `[^]` superseded)"* — which is
+  what commit `2cd4730` then wrote onto the board as *"(Mike, 2026-07-22,
+  mid-build) — proposal: add…"*. 🔑 **A record that says "Mike proposed X" when
+  Mike said something narrower is worse than a record that says nothing**: it is
+  quoted forward with his authority behind it, and the next reader — this
+  session included — argues against a position he never took.
+
+  ✅ **The RULING is real, and it is dated 2026-07-23, not 07-22.** It was put to
+  him properly as a choice and he took it (session `64f68104`, 2026-07-23
+  02:16:54 UTC): *"① Keep the three checkbox states, or extend to five (add
+  'declined' and 'superseded')?"* → **"Keep three (Recommended)"**. So the
+  tri-state binds; only its provenance was mis-stated.
+
+  📤 **Owed UPSTREAM to atelier, not fixable here:** its board README and the
+  `2cd4730` capture both attribute the five-state proposal to him. The
+  correction is one line in each and the evidence is above.
+
   🔑 **So the rule already exists and this repo was not applying it.** Atelier's
   board README states it plainly and faves' did not: *"a **work-owed tri-state**,
   never a disposition (Mike, 2026-07-22): `[ ]` work still owed · `[x]` **no more
