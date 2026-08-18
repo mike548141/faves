@@ -203,17 +203,24 @@ def check_orphans(vid, doc, hp, hd):
     return problems
 
 
-def rows_at_head(vid, kind):
-    """`data/history/<kind>/<vid>.json`'s rows as committed at HEAD, or None
-    when git cannot answer (no checkout, no git, file absent at HEAD).
+def rows_at_head(vid, kind, ref="HEAD"):
+    """`data/history/<kind>/<vid>.json`'s rows as committed at `ref`, or None
+    when git cannot answer (no checkout, no git, file absent there).
 
     None means "no baseline", never "clean" — the caller skips rather than
     passing, because a check that treats an unavailable baseline as agreement
-    is the decorative shape (ADR 0072)."""
+    is the decorative shape (ADR 0072).
+
+    `ref` defaults to HEAD, which is right for a person about to commit: the
+    working tree is the change. It is WRONG for CI, where the checkout is
+    already clean and HEAD-versus-HEAD can only ever agree — so `--against`
+    lets a runner name the state before the push (the same range trick the
+    version-lockstep job already uses). A guard that cannot fire where it runs
+    is worse than no guard, because the green is read as coverage."""
     rel = f"data/history/{kind}/{vid}.json"
     try:
         out = subprocess.run(
-            ["git", "-C", str(ROOT), "show", f"HEAD:{rel}"],
+            ["git", "-C", str(ROOT), "show", f"{ref}:{rel}"],
             capture_output=True, text=True, timeout=30)
     except (OSError, subprocess.SubprocessError):
         return None
@@ -237,8 +244,8 @@ def weight(rows, kind):
     return len(rows)
 
 
-def check_append_only(vid):
-    """Complaints where the record holds LESS history than the last commit did.
+def check_append_only(vid, ref="HEAD"):
+    """Complaints where the record holds LESS history than `ref` did.
 
     ADR 0023's guarantee is that a refresh cannot silently destroy history, and
     that is a claim about a CHANGE, so it needs the previous state to compare
@@ -250,7 +257,7 @@ def check_append_only(vid):
     baseline = False
     hp, hd = read_history(vid)
     for kind, rows in (("prices", hp), ("dishes", hd)):
-        was = rows_at_head(vid, kind)
+        was = rows_at_head(vid, kind, ref)
         if was is None:
             continue
         baseline = True
@@ -261,7 +268,7 @@ def check_append_only(vid):
                      " (a departed dish genuinely returning is the one legitimate "
                      "cause — say so in the commit message)")
             problems.append(
-                f"{vid}: data/history/{kind}/ held {before} {noun} at HEAD and "
+                f"{vid}: data/history/{kind}/ held {before} {noun} at {ref} and "
                 f"now holds {after} — history was destroyed, not relocated{extra}")
     return problems, baseline
 
@@ -280,6 +287,11 @@ def main(argv=None):
     g.add_argument("--dry-run", action="store_true", help="report, change nothing")
     g.add_argument("--check", action="store_true",
                    help="assert payload + record still reconstruct the original")
+    ap.add_argument("--against", metavar="REF", default="HEAD",
+                    help="git ref to compare history against for the "
+                         "append-only half (default HEAD). A clean CI checkout "
+                         "must pass the state BEFORE the push, or this half "
+                         "compares HEAD to itself and can never fire.")
     args = ap.parse_args(argv)
 
     files = sorted(VENUES.glob("*.json"))
@@ -331,7 +343,7 @@ def main(argv=None):
                     f"row(s), round trip yields {len(p2)}/{len(d2)}")
 
             failures += check_orphans(vid, payload, hp, hd)
-            appended, baseline = check_append_only(vid)
+            appended, baseline = check_append_only(vid, args.against)
             failures += appended
             if baseline:
                 against_head += 1
@@ -362,7 +374,7 @@ def main(argv=None):
         # 0072). A number that shrinks is now visible on the line above the tick.
         print(f"  scope: {checked} of {len(files)} venue file(s) checked · "
               f"{with_history} with a history file · {against_head} compared "
-              f"against HEAD for append-only")
+              f"against {args.against} for append-only")
         if failures:
             print(f"✗ split_data: {len(failures)} problem(s).")
             for x in failures:
@@ -372,7 +384,7 @@ def main(argv=None):
             return 1
         print(f"✓ split_data check clean — {checked} venue file(s); payload and "
               f"record reconstruct exactly, no orphaned history rows, nothing "
-              f"shed since HEAD.")
+              f"shed since {args.against}.")
         return 0
 
     verb = "would move" if args.dry_run else "moved"

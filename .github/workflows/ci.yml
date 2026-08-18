@@ -33,16 +33,33 @@ jobs:
         run: python3 tools/validate.py
       # A validator's failure mode is silence — a check that never fires looks
       # exactly like data that is always clean. This breaks a real record in
-      # 113 specific ways (test_validate.py) and asserts the gate notices. It found a real hole on
-      # its first run: a negative price validated clean.
+      # 124 specific ways (test_validate.py) and asserts the gate notices. It found a real hole on
+      # its first run: a negative price validated clean. Five of its cases were
+      # themselves decorative until 2026-08-17 — they asserted that SOME warning
+      # appeared, against a baseline that already emits seventy.
       - name: Prove the data gate actually catches things
         run: python3 tools/test_validate.py
 
+  # NOTE THE NAME IS NARROWER THAN THE JOB — deliberately, for now. This runs
+  # nine checks and "zero dependencies" describes one of them, which means an
+  # audit by job name reports the ADR-index allocator and the history guarantee
+  # as ungated when they are gated (ROADMAP 340/030 files this as a *decorative
+  # label*: the guard works, the damage lands on the reader). The cheap fix is a
+  # rename to `repo invariants` — and it is NOT safe to do here alone, because
+  # `protect-main` matches required contexts BY JOB NAME, so renaming silently
+  # un-requires this job until the ruleset is edited in the same breath. That is
+  # a repo-settings change and the owner's. Adding steps HERE rather than in a
+  # new job is the other half of the same fact: a new job would not be required
+  # by the ruleset until he added it, and these are required the moment they land.
   guard:
     name: zero dependencies
     runs-on: ubuntu-latest
     steps:
+      # Full history: split_data's append-only half compares the record against
+      # a git ref, and a shallow clone has no earlier state to compare with.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -81,6 +98,48 @@ jobs:
       # coming soon" cards, four of them landed the day before.
       - name: Assert the no-JS fallback mirrors index.json
         run: python3 tools/check_fallback.py
+      # ADR 0023's guarantee is that a menu refresh cannot silently DESTROY
+      # price history — and until 2026-08-17 the check that guards it covered
+      # 2 of 55 venues, because it skipped any venue with no history file, which
+      # is exactly the state a deleted history file leaves behind. It now covers
+      # 55 and prints that number, so a shrinking scope is visible above the tick.
+      #
+      # `--against` is the half that makes this worth running HERE. The check
+      # compares the working tree to a git ref; on a developer's machine HEAD is
+      # right, because the working tree IS the change. On a clean CI checkout
+      # HEAD-versus-HEAD can only agree, so without a base ref this step would
+      # run, pass, and prove nothing about the commit that destroyed the rows.
+      # Same range logic as the version job below, and the ref is verified to
+      # resolve first — a bad ref degrades to "0 compared", which is honest but
+      # is not a reason to let it happen quietly.
+      - name: Assert a refresh appended history rather than destroying it
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="origin/${{ github.base_ref }}"
+          elif [ -n "${{ github.event.before }}" ] && \
+               [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            BASE="${{ github.event.before }}"
+          else
+            BASE="HEAD"
+          fi
+          if ! git rev-parse --verify --quiet "$BASE^{commit}" >/dev/null; then
+            echo "::error::Base ref $BASE does not resolve — the append-only half would silently compare nothing."
+            exit 1
+          fi
+          echo "Comparing history against: $BASE"
+          python3 tools/split_data.py --check --against "$BASE"
+      # Three tool test-suites that ran only when a human typed them (owner's
+      # ruling, 2026-08-17). Pure stdlib Python, no browser, no network, a few
+      # seconds each. `test_tag_allergens` guards the tagger rather than the
+      # shipped data, so its failure means a broken tool and not a wrong
+      # allergen on a phone — added at the owner's call, with that limit stated
+      # so nobody reads it as allergen coverage.
+      - name: Prove the venue registry tool still behaves
+        run: python3 tools/test_registry.py
+      - name: Prove the add-on finder still behaves
+        run: python3 tools/test_find_addons.py
+      - name: Prove the allergen tagger still writes what it finds
+        run: python3 tools/test_tag_allergens.py
 
   versions:
     name: service-worker version lockstep
