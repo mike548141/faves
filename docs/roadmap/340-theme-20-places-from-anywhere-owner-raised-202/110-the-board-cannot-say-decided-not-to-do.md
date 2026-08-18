@@ -1,96 +1,64 @@
-- [x] 🔎 **~~The board cannot say "decided, and the decision was not to do
-  it"~~ — IT CAN, AND THIS ITEM ASKED A QUESTION THE OWNER ALREADY ANSWERED**
-  `[S][docs]` — filed 2026-08-17, **corrected and closed the same day.** No new
-  state is owed. Kept rather than deleted because the mistake is the useful part.
+- [x] 📤 **FILED UPSTREAM — the board's state vocabulary is atelier's, and three
+  findings now sit in its board** `[S][docs]` — closed here 2026-08-18. Nothing
+  further is owed *in this repo*; the work is atelier's to do or decline.
 
-  🛑 **What this item originally proposed — a `[-]` decided-against state — is
-  the exact proposal Mike himself raised on 2026-07-22 and the exact one the
-  builder counselled against.** Found in atelier's own record (`2cd4730`,
-  *"tri-state legend, five-state question captured"*), which is where the board
-  doctrine lives and where this session had not looked:
+  🛑 **THE OWNER'S RULING, 2026-08-18, and it governs this whole class:**
 
-  > **Extend the checkbox grammar to five states?** (Mike, 2026-07-22,
-  > mid-build) — proposal: add `[-]` declined and `[^]` superseded beside the
-  > tri-state. **Builder's counsel: keep the tri-state** — the bracket answers
-  > the one machine-checked question (is work owed?); declined/superseded both
-  > answer "no" and need a dated note for the *why* regardless, so extra states
-  > are a second copy of one fact (the point-of-use drift class). **Promote to
-  > distinct states only if we find ourselves repeatedly grepping dispositions
-  > apart** (the anti-slop promotion rule). Mike's call; Mike himself flagged
-  > the complication risk.
+  > *"changing the standard on the roadmap content is an atelier job, not
+  > something for Faves or any of the child repo's to change or extend. I
+  > support the idea of adding more status for the brackets on a job item to
+  > make indexing them easier to understand the state of work (e.g. not done,
+  > done, claimed, in-flight, declined, supersceeded etc etc) but that is not
+  > something Faves or any child repo should try to fix. Faves and any child
+  > repo can add problems and opportunities like these with solution options for
+  > atelier to consider and remedy as it sees fit or not at all. To be clear
+  > atelier may use or adapt any option a child repo gives it, or create its own
+  > options, or adapt the problem/opportunity."*
 
-  🛑 **AND THE RECORD ABOVE OVER-ATTRIBUTES IT TO HIM. Read the transcript, not
-  the capture.** Chased into the live sessions at his request and verified in
-  two atelier transcript files, quoted here because the difference is the whole
-  point:
+  🔑 **So the "keep the tri-state" counsel is NOT the end of it.** He supports
+  richer states. What he ruled is **where the change is made**, not whether. This
+  item spent two revisions getting that backwards — first proposing a `[-]`
+  bracket locally, then closing itself on the grounds that the question was
+  already settled. Both were the same error wearing opposite conclusions: **a
+  child deciding a house question.**
 
-  **What Mike actually wrote** (session `1b189e23`, 2026-07-22 04:31:07 UTC) —
-  in passing, at the end of a paragraph about harvest integrity:
+  **What is filed in atelier's board, per `PROPAGATION.md` § *Pointing up*** —
+  which landed upstream 2026-08-18 and is the route this should have taken from
+  the start. Its opening check is the one that would have caught the first
+  revision: *read the parent's actual file, never your own inlined summary.*
+  1. **The state vocabulary is too narrow to index work by** — carrying the
+     owner's own list (*not done · done · claimed · in-flight · declined ·
+     superseded*), the measured instance from this board (three items mis-marked
+     because the copy had dropped a clause), and options **offered, not
+     recommended**.
+  2. **`2cd4730` mis-attributes the five-state proposal to him.** He wrote one
+     clause — *"unless perhaps it is supersceeded, or no longer required"*; the
+     `[-]`/`[^]` brackets were the assistant's, handed back as *"your five-state
+     proposal"*. The ruling is real and dated **2026-07-23**; the capture is
+     dated 07-22 and conflates a question captured with a question answered.
+  3. **`board.py` renders every `[x]` as `✅`**, which reads as *delivered*, so a
+     declined or superseded item wears a green tick in the index. Generator and
+     vocabulary are one question, and both are atelier's.
 
-  > *"…anything with `[ ]` should not be in roadmap-done I would think, unless
-  > perhaps it is supersceeded, or no longer required."*
+  ⚠️ **And this repo's own copy diverges on two markers** — `[~]` (used here for
+  part-done *and* claimed, where the parent says don't start one) and `⏳` (used
+  here for *waiting on someone*, where the parent means *review queued* under
+  REVIEW rule 4). **Not repaired locally**, because repairing it either way is a
+  standard change. Flagged in [`../README.md`](../README.md) with a dated
+  pending-upstream line that removes itself at the pin bump carrying the answer.
 
-  **That is all of it.** He never typed `[-]`, never typed `[^]`, and never
-  enumerated candidate states. The two brackets were the **assistant's**
-  invention, and its close-out message the same day handed them back to him as
-  *"Your five-state proposal (`[-]` declined, `[^]` superseded)"* — which is
-  what commit `2cd4730` then wrote onto the board as *"(Mike, 2026-07-22,
-  mid-build) — proposal: add…"*. 🔑 **A record that says "Mike proposed X" when
-  Mike said something narrower is worse than a record that says nothing**: it is
-  quoted forward with his authority behind it, and the next reader — this
-  session included — argues against a position he never took.
+  ✅ **What legitimately stayed local**, because it is applying the standard
+  rather than changing it: three items that had a finished ruling and an open
+  checkbox are now `[x]` with the disposition in their own text — `460/060`
+  (parked), `300/010` (ruled not to fix), `470/020` (superseded). `370/010` and
+  `270/020` stay `[ ]`; work may yet be owed when a venue or an OSM house number
+  arrives.
 
-  ✅ **The RULING is real, and it is dated 2026-07-23, not 07-22.** It was put to
-  him properly as a choice and he took it (session `64f68104`, 2026-07-23
-  02:16:54 UTC): *"① Keep the three checkbox states, or extend to five (add
-  'declined' and 'superseded')?"* → **"Keep three (Recommended)"**. So the
-  tri-state binds; only its provenance was mis-stated.
-
-  📤 **Owed UPSTREAM to atelier, not fixable here:** its board README and the
-  `2cd4730` capture both attribute the five-state proposal to him. The
-  correction is one line in each and the evidence is above.
-
-  🔑 **So the rule already exists and this repo was not applying it.** Atelier's
-  board README states it plainly and faves' did not: *"a **work-owed tri-state**,
-  never a disposition (Mike, 2026-07-22): `[ ]` work still owed · `[x]` **no more
-  work owed** — delivered, superseded, or declined, with the disposition said in
-  the item's own text (a dated note), **never a fourth bracket**."* Our legend
-  said only `[x]` **done** — the disposition clause was dropped in the copy. **A
-  parked item is `[x]`, and always was.**
-
-  🔑 **And the promotion bar was already written, which is what makes today's
-  evidence answerable rather than arguable:** *promote only if we find ourselves
-  repeatedly grepping dispositions apart.* Today's fault was **not** that. It
-  was six items left on `[ ]` because the legend a session read had lost the
-  clause that told it what `[x]` covers. **A dropped clause is not a missing
-  state**, and adding one would have shipped a second copy of a fact the dated
-  note already carries — the drift class the counsel names.
-
-  ⚠️ **The six were also not one shape, and the original filing overstated
-  them.** Re-read against the tri-state: `460/060` (costToMake parked) and
-  `300/010` (the order pill, ruled *leave it*) are plainly `[x]`; `470/020`
-  (superseded claim note) is `[x]`; `470/010` (37k, *"what remains is OWNER DATA
-  ENTRY"*) is **⏳ waiting on him**, not declined at all; and `370/010` (30g,
-  no instance in the corpus) and `270/020` (Pandan's pin, a standing re-check)
-  are **genuinely still `[ ]`** — work may yet be owed the day a venue or an OSM
-  house number arrives. So "six items need a new state" was really *three
-  mis-marked, one mis-stated, two correct as they were.*
-
-  ✅ **What actually shipped instead**, 2026-08-17: faves'
-  [`roadmap/README.md`](../README.md) legend now carries the tri-state rule and
-  the disposition clause verbatim from the source, and names the one real
-  residual — 🚩 **the index renders every `[x]` as `✅`, which reads as
-  "delivered"**, so an item closed any other way must say so in its **first
-  line**, where a reader who followed the tick lands. That residual is the only
-  thing that could ever meet the 2026-07-22 promotion bar, and it does not meet
-  it yet: it is a *rendering* problem with a *wording* remedy, not a state we
-  are grepping apart.
-
-  🔑 **The transferable lesson, which outlives the item:** this session proposed
-  a change to inherited doctrine **without reading the inherited doctrine's own
-  record of the same question**. The board rules live in atelier; the session
-  searched only faves and found nothing, and "nothing found here" felt like
-  "never decided". It was decided, weeks earlier, by the owner, with the
-  reasoning written down — and the owner remembered it when the proposal was put
-  to him. **Before proposing a change to a rule, search the repo the rule comes
-  FROM.**
+  🔑 **The transferable rule, and it is the reason this file is kept rather than
+  deleted: a child repo does not get to decide a house question, in EITHER
+  direction.** Proposing a local fix and closing the question as settled are both
+  the same overreach. The route is: read the parent's file, then file a finding
+  in the parent's board with options, and hold at most one dated, self-removing
+  line locally. And a child's exhaustive
+  search of its **own** transcripts is not evidence about a house rule: the first
+  revision searched faves, found nothing, and read that as *"never decided"*.

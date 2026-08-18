@@ -116,6 +116,24 @@ in atelier and is read on demand — never wholesale.
   rationale.** Richer, not corrective — kept because the practice clauses are
   what a session can act on at 3am and the rationale is not, and recorded here
   so nobody "fixes" it back by reflex.
+- **A house rule is not ours to write, in either direction (owner-ruled
+  2026-08-18).** *"Changing the standard on the roadmap content is an atelier
+  job, not something for Faves or any of the child repo's to change or extend…
+  Faves and any child repo can add problems and opportunities like these with
+  solution options for atelier to consider and remedy as it sees fit or not at
+  all."* This binds beyond the board: **anything that would be true in a repo
+  sharing none of our stack is the house's.** 🛑 **Proposing a local fix and
+  declaring the question already settled are the SAME overreach** — this repo
+  did both, on the same question, within a day. The route is
+  `PROPAGATION.md` § *Pointing up*: (1) **read the parent's actual file, never <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
+  this block's summary of it** — a compression that dropped a qualifier reads
+  exactly like a rule that never had one, and the gap you then "find" is a gap
+  in the summary; (2) if the parent already owns it you have a **findability**
+  defect, which is a different and still valuable finding; (3) otherwise file an
+  item in **atelier's** board carrying the class, the incident and options —
+  offered, never recommended; (4) hold at most **one dated, self-removing
+  pending-upstream line** here, naming the parent item; (5) the incident goes in
+  our session log — a record may be the home of the evidence, never of the rule.
 - **Estate resources — point up, don't re-derive:** providers & account plans,
   financial constraints & plan entitlements, licences, credentials, shared
   estate tooling, and the estate inventory live in the operator's **private

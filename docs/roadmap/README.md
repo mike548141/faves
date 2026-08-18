@@ -25,30 +25,50 @@ no accounts, no personal data in the repo). Nothing here changes v1 scope.
 
 Effort **XS/S/M/L**. Checkbox states:
 
-🔑 **The bracket is a WORK-OWED TRI-STATE, never a disposition** (Mike's ruling
-in atelier, **2026-07-23**, inherited here — he chose *"Keep three"* over
-*"Extend to five"* when it was put to him; 2026-07-22 is when the question was
-captured, not when it was answered). It answers exactly one machine-checked
-question — *is work owed?* — and **there is no fourth bracket**. *Delivered*,
-*superseded*, *declined* and *parked* all answer "no", so they are all `[x]`,
-and the **disposition is said in the item's own text as a dated note**. This
-repo's legend dropped that clause until 2026-08-17 and six items sat as `[ ]`
-because a finished ruling had nowhere the reader could see it.
+🛑 **THIS VOCABULARY IS ATELIER'S, NOT OURS — owner-ruled 2026-08-18.** *"Changing
+the standard on the roadmap content is an atelier job, not something for Faves or
+any of the child repo's to change or extend."* A child raises **problems and
+opportunities, with solution options**; atelier may use them, adapt them, write
+its own, or decline. So the four states below are **quoted from the parent**
+(`../../../atelier/docs/roadmap/README.md`) and are not to be extended, narrowed <!-- pathscan:allow: atelier cross-repo path — exists in atelier's tree, not this repo's -->
+or reinterpreted here. Anything that looks wrong about them goes **up**, by
+`PROPAGATION.md` § *Pointing up*: read the parent's actual file first, then file <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
+an item in **atelier's** board. Three are filed there as at 2026-08-18 —
+`roadmap/310-pointing-up-the-child-to-parent-route/060` (the vocabulary is too
+narrow to index by), `070` (the two divergences below), `080` (a capture that
+mis-attributes a proposal to the owner).
 
-- `- [ ]` **open** — work still owed.
-- `- [x]` **no more work owed** — delivered, **superseded**, **declined** or
-  **parked**, with which one said in the item's own text as a dated note. A
-  done item **stays in its own file**; there is no harvest step and nothing
-  moves. ⚠️ The index renders every `[x]` as `✅`, which *reads* as "delivered"
-  — so an item closed any other way must say so **in its first line**, where the
-  reader who followed the tick lands.
-- `- [~]` **part-done or claimed**, and the two are told apart by what the item
-  says, not by the marker. A **claim** names a date and a worktree
-  (`CLAIMED YYYY-MM-DD HH:MM UTC (wt: …)`) — leave that item alone, even if told
-  to take it. Everything else marked `[~]` is simply partly delivered, with the
-  remaining parts named inline; that one is free to pick up.
-- `- ⏳` **waiting on someone** — the pointer names the delta and the intent
-  record, nothing evaluative.
+**The bracket is a work-owed tri-state, never a disposition** (Mike's ruling in
+atelier, **2026-07-23** — he chose *"Keep three"* over *"Extend to five"* when it
+was put to him; 2026-07-22 is when the question was *captured*). It answers one
+machine-checked question — *is work owed?* — and there is no fourth bracket. The
+**disposition is said in the item's own text as a dated note**.
+
+- `- [ ]` **work still owed.**
+- `- [x]` **no more work owed** — *"delivered, superseded, or declined, with the
+  disposition said in the item's own text (a dated note), never a fourth
+  bracket"*.
+- `- [~]` **claimed** by a live parallel session — *"don't start a `[~]` item;
+  take the next open one"*.
+- `- ⏳` **review queued** for a non-author to take, on the principal-named
+  review tier; *"the pointer is refs only"*.
+
+⚠️ **THIS REPO'S BOARD DIVERGES FROM THAT ON TWO MARKERS, AND THE DIVERGENCE IS
+IN USE RIGHT NOW.** Stated rather than quietly repaired, because repairing it
+either way is a standard change and this repo does not make those.
+- **`[~]`** — items here use it for *part-done* as well as *claimed*, and treat
+  a non-claim `[~]` as free to pick up. The parent says **don't start a `[~]`
+  item**. A session that follows the parent literally will skip work this board
+  believes is available.
+- **`⏳`** — items here use it for *waiting on someone* (the owner, usually). The
+  parent means **review queued under REVIEW.md rule 4**, which this repo does not
+  run. Three items carry the local sense.
+📌 **Until atelier rules, read a `[~]` or `⏳` item's own text before acting on
+its marker** — pending-upstream, dated 2026-08-18, waiting on atelier's
+`310/060` and `310/070`. This line is a **narrowing**, which a child may always
+make; it is dated, addressed and self-removing, and it goes at the pin bump that
+carries the answer (`PROPAGATION.md` § *Pointing up*, step 3). A <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
+pending-upstream line that survives that pin bump is drift.
 
 **Claiming, now that the store is split.** The claim edits **the item's own
 file** on `main` before the worktree, and is pushed immediately. Two sessions on
