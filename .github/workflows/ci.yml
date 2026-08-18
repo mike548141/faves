@@ -40,19 +40,25 @@ jobs:
       - name: Prove the data gate actually catches things
         run: python3 tools/test_validate.py
 
-  # NOTE THE NAME IS NARROWER THAN THE JOB — deliberately, for now. This runs
-  # nine checks and "zero dependencies" describes one of them, which means an
-  # audit by job name reports the ADR-index allocator and the history guarantee
-  # as ungated when they are gated (ROADMAP 340/030 files this as a *decorative
-  # label*: the guard works, the damage lands on the reader). The cheap fix is a
-  # rename to `repo invariants` — and it is NOT safe to do here alone, because
-  # `protect-main` matches required contexts BY JOB NAME, so renaming silently
-  # un-requires this job until the ruleset is edited in the same breath. That is
-  # a repo-settings change and the owner's. Adding steps HERE rather than in a
-  # new job is the other half of the same fact: a new job would not be required
-  # by the ruleset until he added it, and these are required the moment they land.
+  # THE NAME IS THE WHOLE JOB, and it took a ruleset edit to say so. This runs
+  # nine checks; it was displayed as "zero dependencies", which describes one of
+  # them — so an audit by job name reported the ADR-index allocator and ADR
+  # 0023's history guarantee as UNGATED WHEN THEY ARE GATED (ROADMAP 340/130).
+  # Not a decorative guard: the guard works. A decorative LABEL, where the damage
+  # lands on the reader rather than on the code.
+  #
+  # 🛑 RENAMING THIS IS NOT A ONE-FILE CHANGE. `protect-main` matches required
+  # status checks BY JOB NAME, so renaming here alone silently un-requires the
+  # job. The migration that avoids a gap, and the one to repeat if it is ever
+  # renamed again (owner-authorised 2026-08-17):
+  #   1. add the NEW context to the ruleset while the OLD one is still required
+  #   2. rename the job here and push
+  #   3. remove the OLD context once a run has reported under the new name
+  # Adding steps to THIS job rather than making a new one follows from the same
+  # fact: a new job is not required until someone edits the ruleset, while a step
+  # inside an already-required job is required the moment it lands.
   guard:
-    name: zero dependencies
+    name: repo invariants
     runs-on: ubuntu-latest
     steps:
       # Full history: split_data's append-only half compares the record against
