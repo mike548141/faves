@@ -514,6 +514,18 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   rule-shape lesson underneath it: **git has several syntaxes for one effect**
   (`--force`, `+refspec`, `update-ref`), so a permission rule naming one form
   does not cover the others, and this will recur with other tools.
+  🔑 **And the refusal came from AUTO MODE's classifier, not from a permission
+  rule** — `.claude/settings.local.json` here already allows `Bash` outright, so
+  no allow-list entry was ever in the way. Diagnosing it as a permission problem
+  would have produced a fix that changed nothing. **The machine-side half of the
+  owner's ruling therefore lives in `autoMode`, not `permissions`**: the
+  `--force-with-lease` form is allowed to a non-`main` branch (it refuses to run
+  if the remote moved, so it cannot silently destroy a peer's work), and *any*
+  force-push to `main` by *any* syntax is hard-denied, as is re-running a refused
+  command under a different spelling. ⚠️ **That file is gitignored, so it does
+  NOT travel** — a fresh clone has none of it, and this paragraph is the only
+  record a future session will find. Re-apply it if you are setting this machine
+  up again.
 - **Comments say _why_, not _what_** — constraints, platform quirks,
   non-obvious reasons; never a restatement of the code.
 - **TODO markers:** `#!#` in any language; more `#` = higher priority
