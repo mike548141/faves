@@ -8916,7 +8916,19 @@ so it is recorded to *start* the count rather than to skip it. Our use of it
 stands as **practice**, not as a rule. Correct handling, and worth copying: the
 temptation with a good mechanism found once is to install it immediately.
 
-⚠️ **The estate-level observation, which is the honest close to this session.**
+⚠️ **The estate-level observation — and the check on it returned the boring
+answer, which is the point.** Put to the peer, it went and opened
+`REVIEW.md` rather than writing it up, and **the house already owns it**, better
+stated than either of us had it: *"The building model is the worst-placed judge
+of its own work: it shares every blind spot that produced the work"*, and *"the
+review is not a formality tax on good work; it is the thing that lets 'done' mean
+verified rather than looks right."* So **nothing was landed** — it is a worked
+instance of existing doctrine, not a finding, and minting a second original would
+have been the exact defect that started this thread on Monday. 🔑 **Read the
+parent's actual file, find the rule already there, write nothing: that is the
+check succeeding, and it looks identical to not having bothered.** Verified here
+independently — `docs/method/REVIEW.md:10` and `:21`.
+The instance, kept as evidence rather than as a rule:
 The peer volunteered its own ledger for the cycle — an invalid control it built
 itself, a false discriminator proposed with the code in front of it, and a skew
 hypothesis that would have blamed a child's staleness for a real defect. **Two of
