@@ -75,6 +75,25 @@
   `270/020` stay `[ ]`; work may yet be owed when a venue or an OSM house number
   arrives.
 
+  🔑 **THE TWO SHAPES TURNED OUT TO BE ONE MECHANISM** (atelier `4c102d6`,
+  2026-08-18). `080` — the misattribution — **is** a house question closed
+  locally, and *being closed is precisely what made it quotable*. So it is now
+  `090`'s worked example rather than a neighbouring finding. What joined them was
+  correcting `090`'s own claim that a wrongly-closed question *"leaves nothing
+  behind"*: it leaves a **settled answer**, so the next reader does not meet an
+  open question and decline it — they meet a ruling and **cite** it.
+  🔑 **And that is why it survived four weeks and a self-review, where an absence
+  would not have needed to: an absence is merely unnoticed; a wrong artefact is
+  actively DEFENDED by everyone who finds it.** On 2026-08-17 a session of this
+  repo cited the wrong answer back at the owner **as his own position**, and he
+  corrected it from memory. A citable artefact carrying the principal's authority
+  is not a gap in the record — it is the record working exactly as designed,
+  against the truth.
+  📌 The date mechanism is filed upstream as a **fourth candidate** on `080`,
+  deliberately **not promoted**: the house threshold is a third instance and this
+  is the first, so it is recorded to *start* the count. Our adoption of it stands
+  as local **practice**, not as a rule.
+
   🔑 **The transferable rule, and it is the reason this file is kept rather than
   deleted: a child repo does not get to decide a house question, in EITHER
   direction.** Proposing a local fix and closing the question as settled are both
