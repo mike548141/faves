@@ -34,3 +34,29 @@
          prints `—`. So [ADR 0047]'s *name the screen that renders it* is
          satisfied by a screen that has been shipping for some time, and the
          ruling is a **convention change, not a schema change**.
+
+      2. ⚠️ **Pizza Hut's prices may not be Johnsonville's.** Its order pages
+         quote prices without ever asking for an address, and the store page's
+         "View menu" is a Vue handler with no `href`, so the branch flow could
+         not be driven. What we hold is **Pizza Hut NZ's default online
+         pricing**; whether this branch matches is unestablished. One phone
+         call or one in-store look clears it.
+      3. ⚑ **Little Sprig Seatoun's menu date is contested**, left at
+         **2026-06-29**. The PDF's Canva `/Title` says *"Bar Snacks Menu (Oct
+         2025)"* but it was exported 2026-06-29 and the venue's own filename
+         calls it the 2026 menu. The export date is the only full-precision
+         date the document supports; the conservative read is older. It only
+         matters through the staleness caveat — the owner's call whether that
+         is worth aging.
+
+      🔎 **Where these two were until 2026-08-19, and why it matters.** They
+      sat inside `110-restore-the-victoria-tavern-s-dropped-spirits.md`,
+      still numbered `2.` and `3.` from the pre-split single list — an item
+      whose title is a data task about a different venue. So this item, the
+      one carrying the 🎯 that says the ask sits with the owner, announced
+      *"three questions … two remain"* while holding exactly one, and the two
+      that remained were unfindable from it. **The board split scattered a
+      three-part decision and no gate can see that**: every file was
+      well-formed, every link resolved, and the index rebuilt clean. Worth
+      knowing as a class — when a single numbered list is split across
+      files, the numbering survives and the *belonging* does not.
