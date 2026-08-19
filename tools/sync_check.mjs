@@ -46,7 +46,7 @@
 //      the bar and dropping body.contact-bar-open — a layout change landing
 //      between this file's rect read and its mouse dispatch. Instrumented, the
 //      failing click showed `mousedown` and `mouseup` 39 ms apart resolving to
-//      a click on `#menu-page` rather than the ⋯ glyph, while a programmatic
+//      a click on `body.menu-page` rather than the ⋯ glyph, while a programmatic
 //      `.click()` on the same button worked immediately. The button was fine;
 //      the coordinates had gone stale under it.
 //
@@ -464,7 +464,7 @@ async function openSettings(d) {
   // arriving at the top hides the compact bar and drops body.contact-bar-open
   // on a LATER frame — a layout change that lands between the rect read inside
   // d.click() and the mouse event it then dispatches. Measured: without this
-  // wait the click resolved to #menu-page instead of the ⋯ glyph. Waiting for
+  // wait the click resolved to body.menu-page instead of the ⋯ glyph. Waiting for
   // the DOM to go quiet is the honest fix; a fixed sleep would be a wall-clock
   // wait, which this file's TIME-INDEPENDENCE promise rules out.
   await d.waitQuiet();

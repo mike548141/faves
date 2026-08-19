@@ -745,7 +745,11 @@ precached payload nothing on any screen can reach (ADR 0047).
   device; declining without ticking "don't ask again" leaves `#geo-banner`;
   ticking it suppresses **both**, permanently, via `faves.geo.consent.v1` — a
   key deliberately outside the backup export, because the promise is about this
-  device. A `denied` state raises neither surface, only the status line.
+  device. A `denied` state raises neither surface, only the status line. **The
+  dialog is only ever shown to a reader who has not started**: a scroll, pointer
+  or key event before the beat elapses downgrades it to `#geo-banner`, because
+  `showModal()` makes the rest of the page inert and would take it away from
+  someone mid-tap (ADR 0083 decision 6).
   **Settings → Location is the only route back** once suppressed, which makes it
   load-bearing rather than a convenience. Only a press on one of those two Allow
   buttons or Settings' own "Use my location" raises the location prompt; the
