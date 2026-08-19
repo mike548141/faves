@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A chain that has closed down no longer offers you an open branch.** The
+  branch picker was the fifth surface reading a venue's posted hours without
+  ever asking whether the shop had shut: on a chain that had closed, every
+  branch row printed "Open · until 7:30pm" — inside a page whose own header
+  already said "Permanently closed". Each branch heading now carries the
+  closure, no live open/closed chip is printed anywhere on the card, and the
+  branch offered first is no longer one its timetable called open. The week's
+  hours stay on screen; they are the record of when the place traded. No venue
+  in the collection carries a closure today, so nothing on screen changes yet.
 - **A venue that has closed down no longer floats to the top of the home list,
   nor answers "Open now".** Both read the posted weekly hours and neither read
   whether the shop had shut its doors, so a place closed for a refit — or for
