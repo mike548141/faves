@@ -84,3 +84,45 @@
   is stated as exactly that.
 
 [ADR 0072]: ../../decisions/0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md
+
+  ✅ **A THIRD FAULT, FOUND BY THE SECOND — and it was accusing the product of
+  a bug it does not have. Fixed 2026-08-19.** Making the ingredient sections
+  actually run (above) is what surfaced it: with the tool now usable on
+  component-grouped recipes, *Sticky Date Pudding* returned
+  `FAILED — 84 passed, 1 failed` on `the list's way in reaches the SAME
+  checklist, not a second copy`. That sentence reads as **"your ticks are
+  lost depending on how you opened cook mode"** — a data-loss bug in the
+  product. It is not. **Nobody's ticks are lost.**
+
+  **The mechanism, and it is a good one to know.** Section 12 opened the
+  recipe on the Cook at Home list by *substring-matching the recipe's NAME*
+  against each card's `textContent`, with `|| d[0]` behind it. But **`goesWith`
+  prints OTHER dishes' names onto a card** (Theme 4b pairings) — **Shane's Ribs
+  lists `"Sticky Date Pudding"` as a pairing and sits at index 12, five places
+  ahead of the real recipe at 17.** So the match won on the ribs, the tool
+  opened the wrong recipe, started cook mode on it, and then correctly observed
+  that step 1 of *Shane's Ribs* was never ticked. Upside-Down Plum Cake passed
+  the same assertion because its name appears exactly once in the corpus.
+
+  🔑 **Which recipes this hides is decided by the PAIRINGS CORPUS, so it grows
+  silently.** Every `goesWith` entry added is a chance that some other recipe
+  becomes untestable by section 12 — and the failure it produces always
+  accuses the app, never the tool. A wrong fixture that reports a plausible
+  product bug is worse than a crash, because someone will go and "fix" the app.
+
+  **The fix.** Scope by the dish's own `dishId` (`#dish-<id>`, ADR 0051)
+  instead of by its name, for the fold, the count and the cook-mode open. The
+  `|| d[0]` fallback is deleted rather than retargeted, and that half matters
+  more than the selector: **silently falling back to the first recipe on the
+  page is exactly what turned *"this tool cannot find its fixture"* into
+  *"the product loses your ticks"*.** A missing fixture now fails by name
+  through `need()`, at exit 1.
+
+  **Verified:** *Sticky Date Pudding* `OK — 85 passed, 0 failed` (was 84/1, and
+  82/2 before the ingredient fix). Same run on `main@807339c`.
+
+  🚩 **Same class as `070` in this section, from the other end.** That item is
+  about a check naming an element that no longer exists. This is a check naming
+  an element by a string the **data** can duplicate. Both are "the selector is
+  only as stable as what it points at"; only one of them can be found by
+  grepping for ids.

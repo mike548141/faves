@@ -1148,16 +1148,30 @@ async function run(opts) {
 
     // --- 12. The other entry point (ADR 0034 §6) --------------------------
     await goto(`${base}/restaurant.html?id=${COLLECTION}`, ".recipe-detail");
+    // Scope by the dish's OWN id (ADR 0051), never by its NAME. A name match
+    // reads the whole card, and `goesWith` prints OTHER dishes' names onto a
+    // card: Shane's Ribs lists "Sticky Date Pudding" as a pairing and sits
+    // earlier in the list, so it won the match. The check then opened the
+    // WRONG recipe, started cook mode on it, and failed the "same checklist"
+    // assertion below — with a message accusing the APP of keeping a second
+    // copy of your ticks. Measured 2026-08-19: Sticky Date Pudding failed and
+    // Upside-Down Plum Cake passed for exactly this reason, and the pairing
+    // corpus decides which recipes are affected, so it grows silently.
+    //
+    // The old `|| d[0]` fallback went with it, and that half matters more: a
+    // silent retarget to the first recipe on the page is what turned "this
+    // tool cannot find its fixture" into "the product loses your ticks".
+    const listDetail = need(".recipe-detail", need(`#dish-${recipe.dishId}`));
     await evalPage(`(() => {
-      const d = [...document.querySelectorAll(".recipe-detail")];
-      const want = ${JSON.stringify(recipe.name)};
-      const one = d.find((x) => x.closest("li, .dish, article")?.textContent.includes(want)) || d[0];
+      const one = ${listDetail};
       one.open = true;
       one.scrollIntoView({ block: "center" });
     })()`);
     await settle();
-    const listOpen = await evalPage(`document.querySelectorAll(".recipe-detail[open] .cook-start").length`);
-    await openCook(".recipe-detail[open] .cook-start");
+    const listOpen = await evalPage(
+      `document.querySelectorAll("#dish-${recipe.dishId} .recipe-detail[open] .cook-start").length`
+    );
+    await openCook(`#dish-${recipe.dishId} .recipe-detail[open] .cook-start`);
     const fromList = await settleUntil(snap, (s) => s.held === 1);
     report.check(
       "the Cook at Home list is a second way in, and it works the same",
