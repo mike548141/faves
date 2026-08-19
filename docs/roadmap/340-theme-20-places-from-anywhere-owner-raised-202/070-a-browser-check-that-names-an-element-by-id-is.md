@@ -1,4 +1,4 @@
-- [ ] 🚩 **A browser check that names an element by id is only as durable as
+- [~] 🚩 **A browser check that names an element by id is only as durable as
       that element — sweep all twelve** `[M][ci]`. Handed over 2026-08-17 by
       `faves-ea` at its session close, deliberately **flagged rather than
       half-started**, because it is fresh work across twelve tools rather than a

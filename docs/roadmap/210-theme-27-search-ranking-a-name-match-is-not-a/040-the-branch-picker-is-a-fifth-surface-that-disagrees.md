@@ -1,4 +1,4 @@
-- [ ] 🚩 **The branch picker is a FIFTH surface that disagrees about a closed
+- [~] 🚩 **The branch picker is a FIFTH surface that disagrees about a closed
   venue — and the schema cannot answer it yet** `[S][js][schema]` — found
   2026-08-17 while shipping `030`, and deliberately left rather than guessed at.
 
