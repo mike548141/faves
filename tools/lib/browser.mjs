@@ -59,9 +59,32 @@ const MIME = {
   ".txt": "text/plain; charset=utf-8",
 };
 
-export function startServer(port, siteDir) {
+/**
+ * `overlay` is an optional Map of absolute pathname → string body, served
+ * instead of the file at that path (or where no file exists at all).
+ *
+ * It exists so a check can exercise a state the CORPUS DOES NOT HOLD. The
+ * shipped data has no closed venue in it — 55 records, every one trading — so
+ * the branch card's behaviour for a shut-down chain could not be asserted
+ * against any real file. The alternatives were both worse: inventing a closed
+ * venue in `site/data/` ships a fiction to every phone, and stubbing `fetch` in
+ * the page tests a fake instead of the real load path. An overlay keeps the
+ * browser doing exactly what it does in life — one HTTP GET of one venue JSON —
+ * and only the bytes are a fixture. Everything else on the tree is the real
+ * working tree, which is what the second line of the summary reports.
+ */
+export function startServer(port, siteDir, overlay = null) {
   const server = createServer(async (req, res) => {
     const path = decodeURIComponent(new URL(req.url, "http://x").pathname);
+    const stub = overlay?.get(path);
+    if (stub !== undefined) {
+      res.writeHead(200, {
+        "Content-Type": MIME[extname(path)] || "application/octet-stream",
+        "Cache-Control": "no-store, must-revalidate",
+      });
+      res.end(stub);
+      return;
+    }
     let file = normalize(join(siteDir, path));
     if (!file.startsWith(siteDir)) {
       res.writeHead(403).end("forbidden");

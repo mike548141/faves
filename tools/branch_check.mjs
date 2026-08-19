@@ -19,6 +19,24 @@
 //      picking a different branch costs one tap. This asserts a collapsed row
 //      really does open on a single real mouse click, and that what it reveals
 //      is that branch's own phone and address rather than the lead's.
+//   d) the CARD CONTRADICTS ITS OWN PAGE. A venue-level closure is folded once,
+//      for the whole venue (temporal.js `venueState`), and the header banner
+//      renders it. The branch card read only each branch's posted hours, so a
+//      chain that had shut down printed "Open" chips on every branch row
+//      underneath a header saying "Permanently closed" — one screen, two
+//      answers, and the wrong one was the actionable-looking one. Asserted here
+//      because both halves are drawn by the same render and only a browser puts
+//      them on the same page (Theme 27, item 040).
+//
+// A FIXTURE, AND WHY. The shipped corpus holds NO closed venue — measured
+// 2026-08-19: 55 records, all 55 with `lifecycle.added` and not one
+// `lifecycle.events` entry between them. So (d) is a LATENT fault, and no real
+// file can exercise it. It is exercised by serving real chains back with one
+// closure event injected (startServer's `overlay`), under fixture ids so the
+// genuine venues are untouched and still checked as themselves in the same run.
+// The date is a decade old on purpose: a closure that began in the past and
+// never reopened is closed at every hour of every day, which keeps these
+// assertions as time-independent as the rest.
 //
 // It also asserts the second step DISAPPEARS where it should: a five-branch
 // chain now fits in a lead plus four rows, so "Show all 5 branches" — the
@@ -68,6 +86,54 @@ const SITE = join(ROOT, "site");
 const VENUES = ["tj-katsu", "mcdonalds", "hell-pizza"];
 const NEAR_LIMIT = 4; // must match locations.NEAR_BRANCH_LIMIT
 
+// The closed-venue fixtures, and why these two of the three. tj-katsu has hours
+// on all seven branches — it is where a stale "Open" chip would actually be
+// printed. mcdonalds has hours on none, which is the opposite risk: the closure
+// chip is NOT gated on a branch having hours (the venue's closure is a fact
+// about the branch regardless), so this is the venue that proves the closure
+// chip appears where the hours chip correctly never does. hell-pizza would add
+// only run time.
+// Long past, never reopened → shut at every hour of every day. See the header.
+const CLOSED_EVENT = { type: "closed-permanently", date: "2016-04-01", note: "fixture" };
+// Two hours blocks whose state does not depend on the clock. `{}` has no
+// segments at all, which hours.js answers as "closed" (not "unknown" — that
+// needs no `hours` key whatsoever). "00:00"–"24:00" every day ends each
+// segment exactly where the next begins, so there is no minute of the week it
+// is shut. They are the only invented data in this file, and they exist so the
+// lead-branch probe below can be true at 1am as well as 1pm.
+const NEVER_OPEN = {};
+const ALWAYS_OPEN = Object.fromEntries(
+  ["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((d) => [d, [["00:00", "24:00"]]]),
+);
+
+const FIXTURES = [
+  // Hours on all seven branches — where a stale "Open" chip would actually be
+  // printed on a chain that has shut down.
+  { id: "tj-katsu-closed-fixture", from: "tj-katsu" },
+  // Hours on NONE. The opposite risk: the closure chip is not gated on a
+  // branch having hours (the venue's closure is a fact about the branch
+  // whatever its opening times are, or are not), so this is the venue that
+  // proves the closure chip appears where an hours chip correctly never does.
+  // It is also the venue that caught the first fix being half a fix — the LEAD
+  // branch gets no hours row at all, so hanging the badge off the hours row
+  // left the most prominent row on the card silent.
+  { id: "mcdonalds-closed-fixture", from: "mcdonalds" },
+  // The third function's probe. `branchOpenStateOf` feeds locations.leadBranch,
+  // whose tier 1 is "a branch we know is open". With the first branch never
+  // open and the second always open, tier 1 picks the SECOND unless the venue's
+  // closure has silenced the hours — so the lead's identity is the one place a
+  // browser can see that change. Without this the third of the three functions
+  // the item names was measured, on 2026-08-19, to be covered by nothing.
+  { id: "tj-katsu-lead-fixture", from: "tj-katsu", hours: [NEVER_OPEN, ALWAYS_OPEN], leadIsFirst: true },
+];
+
+// The states hours.js can produce. A chip carrying one of these is a claim
+// derived from the branch's posted hours; a chip carrying anything else is a
+// claim derived from the venue's lifecycle. The two are checked differently,
+// which is why they have to be told apart by `data-state` rather than by
+// counting chips.
+const HOURS_STATES = new Set(["open", "closed", "closing-soon", "opening-soon", "unknown"]);
+
 const HELP = `Faves branch check — verify the branch picker in a real browser.
 
   node tools/branch_check.mjs [options]
@@ -79,8 +145,13 @@ exists, that a branch without hours gets no status chip, that a collapsed row
 opens on ONE click and reveals its own contact details, and that the second step
 appears only when there are more branches than the card can hold.
 
+Also serves two of those chains back with a permanent-closure event injected
+(the corpus holds no closed venue) and asserts the branch card says what the
+page header says, rather than offering an "Open" branch of a shut chain.
+
 Options:
-  --id <venue-id>   Check only this venue (default: ${VENUES.join(", ")}).
+  --id <venue-id>   Check only this venue (default: ${VENUES.join(", ")}
+                    plus ${FIXTURES.map((f) => f.id).join(", ")}).
   --port <n>        Port for the local static server (default: an unused one).
   --headed          Show the browser window.
   --keep-profile    Leave the temporary Chrome profile behind, and say where.
@@ -139,17 +210,40 @@ const snapshotExpr = `(() => {
     })),
     hiddenRows: hidden ? hidden.querySelectorAll(".contact-branch-row").length : 0,
     hiddenIsHidden: hidden ? hidden.hidden : null,
+    // EVERY badge anywhere in the card, not just the first one per branch.
+    // The first draft of (d) read one chip per branch via querySelector, which
+    // returns the FIRST in document order — the branch heading's. That silently
+    // exempted the second place a status is printed: the hours row inside the
+    // expanded lead and inside every collapsed panel, which is where the
+    // "Open · until 7:30pm" line actually lived. A probe that removed the
+    // suppression there passed. This also reaches the branches behind "Show
+    // all", which the per-row snapshot deliberately does not.
+    allChips: [...card.querySelectorAll(".hours-badge")].map((b) => ({
+      state: b.dataset.state,
+      text: b.textContent,
+    })),
+    // The other half of assertion (d): what the PAGE HEADER says about this
+    // venue, read from the same DOM in the same instant as the chips above.
+    // Comparing the card against a value this tool computed itself would only
+    // prove the tool agrees with itself.
+    headerClosure: (() => {
+      const b = document.querySelector(".menu-closure .hours-badge");
+      return b ? { state: b.dataset.state, text: b.textContent } : null;
+    })(),
     showAll: (card.querySelector(".contact-branches-more") || {}).textContent || null,
     dialNote: (card.querySelector(".contact-branches-dial") || {}).textContent || null,
     headings: [...card.querySelectorAll("h3")].length,
   };
 })()`;
 
-async function checkVenue(driver, report, id, url) {
-  const venue = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${id}.json`), "utf8"));
+async function checkVenue(driver, report, id, url, venue, spec = null) {
   const branches = venue.locations || [];
   const withHours = branches.filter((b) => b.hours).length;
-  console.log(`\n  ${venue.name} (${id}) — ${branches.length} branches, ${withHours} with hours`);
+  const closed = (venue.lifecycle?.events || []).length > 0;
+  console.log(
+    `\n  ${venue.name} (${id}) — ${branches.length} branches, ${withHours} with hours` +
+      (closed ? " — FIXTURE: permanently closed" : ""),
+  );
 
   await driver.cdpNavigate(url);
   await until(async () => (await driver.evalPage(snapshotExpr)).found, {
@@ -176,7 +270,12 @@ async function checkVenue(driver, report, id, url) {
   // the file must have no chip on screen, whatever the clock says.
   const named = new Map(branches.map((b) => [b.label || b.address, b]));
   const shown = [s.lead, ...s.rows].filter(Boolean);
-  const invented = shown.filter((x) => x.chip && !named.get(x.name)?.hours);
+  // Scoped to HOURS-DERIVED chips. A closure chip on a hoursless branch is not
+  // an invented status — it restates the venue's own lifecycle, which is a fact
+  // about that branch whatever its opening times are (or are not). Without this
+  // scope the rule would have read "a shut McDonald's must stay silent about
+  // being shut", which is the very failure the closure precedence fixes.
+  const invented = shown.filter((x) => x.chip && HOURS_STATES.has(x.chip.state) && !named.get(x.name)?.hours);
   report.check(
     `${id}: no branch is given a status it has no hours to support`,
     invented.length === 0,
@@ -194,6 +293,42 @@ async function checkVenue(driver, report, id, url) {
       ? `lead "${s.lead.name}" is ${s.lead.chip?.state ?? "unknown"}; an open branch is on the card`
       : `nothing on the card is known-open right now — rule not exercised, and that is honest`,
   );
+
+  // --- (d) a venue-level closure outranks every branch's posted hours ----
+  // Only meaningful for a closed venue; for a trading one the two assertions
+  // below would be vacuously true, so they are not printed at all rather than
+  // padding the count with green that proves nothing.
+  if (closed) {
+    if (spec?.leadIsFirst) {
+      report.check(
+        `${id}: a shut chain leads with its nearest branch, not one its posted hours call open`,
+        s.lead?.name === (branches[0].label || branches[0].address),
+        `lead "${s.lead?.name}" — branch 1 is never open, branch 2 always is`,
+      );
+    }
+    const hoursDerived = s.allChips.filter((c) => HOURS_STATES.has(c.state));
+    report.check(
+      `${id}: nowhere on the card is a posted-hours status still printed`,
+      hoursDerived.length === 0,
+      hoursDerived.length === 0
+        ? `${s.allChips.length} badge(s) across the whole card, every one the closure`
+        : `${hoursDerived.map((c) => `${c.state}: ${c.text}`).join(" | ")}`,
+    );
+    // Not "no contradiction" but "the same answer, once per branch". The
+    // weaker form is satisfied by a card that says nothing at all, which is
+    // what the first fix left for a chain with no captured hours: the lead row
+    // — the prominent one — was silent while the header said it was shut.
+    const agree = s.headerClosure !== null &&
+      s.allChips.length === branches.length &&
+      s.allChips.every((c) => c.state === s.headerClosure.state);
+    report.check(
+      `${id}: every branch says exactly what the page header says, the lead included`,
+      agree,
+      `header ${JSON.stringify(s.headerClosure?.text ?? null)} vs ${s.allChips.length} ` +
+        `badge(s) for ${branches.length} branch(es): ` +
+        `${JSON.stringify([...new Set(s.allChips.map((c) => c.text))])}`,
+    );
+  }
 
   // --- the second step appears only when it is needed --------------------
   const needsStep = branches.length - 1 > NEAR_LIMIT;
@@ -261,10 +396,43 @@ async function checkVenue(driver, report, id, url) {
   }
 }
 
+/** The real record for a venue id, or the injected-closure fixture for one of
+ *  the `<id>-closed-fixture` ids. Keyed by the path the page will actually GET,
+ *  so the overlay and the assertions cannot disagree about which bytes ran. */
+async function buildRecords(ids) {
+  const records = new Map();
+  const specs = new Map();
+  const overlay = new Map();
+  for (const id of ids) {
+    const spec = FIXTURES.find((f) => f.id === id) || null;
+    const real = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${spec?.from ?? id}.json`), "utf8"));
+    if (spec === null) {
+      records.set(id, real);
+      continue;
+    }
+    // A shallow clone with the id and lifecycle replaced — everything else is
+    // the genuine venue, so the branches, hours and timezones under test are
+    // the corpus's own rather than a hand-written miniature that could be wrong
+    // in ways the real data never is. `spec.hours` overrides the first few
+    // branches' hours where a fixture needs a clock-independent one.
+    const fixture = { ...real, id, lifecycle: { ...(real.lifecycle || {}), events: [CLOSED_EVENT] } };
+    if (spec.hours) {
+      fixture.locations = (real.locations || []).map((b, i) =>
+        i < spec.hours.length ? { ...b, hours: spec.hours[i] } : b,
+      );
+    }
+    records.set(id, fixture);
+    specs.set(id, spec);
+    overlay.set(`/data/restaurants/${id}.json`, JSON.stringify(fixture));
+  }
+  return { records, specs, overlay };
+}
+
 async function run(opts) {
   const report = new Report(opts.verbose);
-  const ids = opts.ids || VENUES;
-  const { server, port } = await startServer(opts.port, SITE);
+  const ids = opts.ids || [...VENUES, ...FIXTURES.map((f) => f.id)];
+  const { records, specs, overlay } = await buildRecords(ids);
+  const { server, port } = await startServer(opts.port, SITE, overlay);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-branch-check-"));
   let chrome = null;
   let cdp = null;
@@ -290,7 +458,7 @@ async function run(opts) {
 
     for (const id of ids) {
       const url = `http://127.0.0.1:${port}/restaurant.html?id=${encodeURIComponent(id)}`;
-      await checkVenue(driver, report, id, url);
+      await checkVenue(driver, report, id, url, records.get(id), specs.get(id));
     }
 
     return report.summary(SITE) ? 0 : 1;
