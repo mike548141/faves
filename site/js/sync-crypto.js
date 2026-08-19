@@ -115,9 +115,13 @@ export async function deriveSyncKeys(code) {
   const s = subtle();
   const material = await s.importKey("raw", enc.encode(code), "HKDF", false, ["deriveBits", "deriveKey"]);
 
-  // 128 bits of blob id. Far more than needed to avoid collisions, and the
-  // point is not collisions: it is that the keyspace must be far too large to
-  // sweep, because every valid id is somebody's (encrypted) data.
+  // 128 bits WIDE, which is far more than needed to avoid collisions — and
+  // collisions were never the point: every valid id is somebody's (encrypted)
+  // data, so the keyspace must be far too large to sweep. Note what the width
+  // does NOT do: HKDF is deterministic, so the id inherits the CODE's entropy,
+  // 65 bits (ADR 0061), and 65 is the number that resists the sweep. Widening
+  // this to 256 would buy nothing. See worker/sync-worker.js's header, which
+  // named 128 as the security parameter until 2026-08-19.
   const idBits = await s.deriveBits(
     { name: "HKDF", hash: "SHA-256", salt: SALT, info: enc.encode(INFO_BLOB_ID) },
     material,

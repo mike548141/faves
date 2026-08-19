@@ -18,11 +18,10 @@
 // `^[0-9a-f]{32}$`, checked below by BLOB_ID_RE and matched exactly against
 // `deriveSyncKeys()`'s own `toHex(128 bits)` and its test
 // (`tests/sync-crypto.test.js`: `assert.match(blobId, /^[0-9a-f]{32}$/)`).
-// 128 bits keeps blobIds unguessable (this doubles as the only access control
-// this Worker has — see "No authentication beyond entropy" below: the client
-// module's own comment on this is "the point is not collisions: it is that
-// the keyspace must be far too large to sweep"), and hex keeps them trivially
-// safe to use as a KV key and a URL path segment with no escaping. The HKDF
+// 128 bits is the blobId's WIDTH, and width is not entropy — see "No
+// authentication beyond entropy" below for the number that actually holds
+// this up. Hex keeps blobIds trivially safe to use as a KV key and a URL
+// path segment with no escaping. The HKDF
 // `info` string the client uses for blobId (`INFO_BLOB_ID`) differs from the
 // one it uses for the encryption key (`INFO_ENC_KEY`), so the two are
 // cryptographically independent — deriving one does not help recover the
@@ -33,9 +32,21 @@
 // no per-user account record — by design (ADR 0017: bearer sync-code, no
 // accounts). Anyone who can compute a given blobId can read and overwrite
 // that blob. That is intentional and matches the sync-code's own security
-// model: knowledge of the code is the capability. The blobId's 128 bits of
-// entropy is therefore load-bearing security, not just a KV key — it is
-// what stands in for "no one else can guess your address". There is
+// model: knowledge of the code is the capability. Guessing a blobId is
+// therefore load-bearing security, not just a KV key — it is what stands in
+// for "no one else can guess your address".
+//
+// ⚠️ AND THE LOAD-BEARING NUMBER IS 65 BITS, NOT 128. This comment said 128
+// until 2026-08-19, which overstated the guarantee. A blobId is
+// HKDF(sync code), and HKDF is deterministic: it cannot manufacture entropy
+// its input does not have. The sync code is 65 bits (ADR 0061), so the
+// reachable blobId keyspace is 2^65, not 2^128 — an attacker enumerates
+// codes and derives ids rather than sweeping the 128-bit hex space. The
+// CONCLUSION is unchanged and the design is not weakened: 2^65 is about
+// 3.7e19, far beyond sweeping over a network, and ADR 0061 chose 65
+// deliberately against ADR 0017's ~44-bit floor. Only the number was wrong,
+// and a security comment that names the wrong parameter is how the right one
+// stops being defended. There is
 // deliberately no rate limiting in this file beyond the body-size cap
 // below: a per-blobId write throttle would need Durable Objects (state) or
 // a separate Cloudflare rate-limiting rule, and the honest position is that

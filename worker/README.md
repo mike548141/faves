@@ -93,9 +93,14 @@ until evidence, not assumption, justifies the extra machinery.
 ## Other honest limits
 
 - **No rate limiting beyond the body-size cap.** There's no per-`blobId` or
-  per-IP write throttle in this code. The design leans on `blobId`'s 128
-  bits of entropy (nobody can guess or enumerate a blob to target) plus
-  Cloudflare's platform-level abuse mitigation, not an app-layer limiter.
+  per-IP write throttle in this code. The design leans on the sync code's
+  **65 bits** of entropy (nobody can guess or enumerate a blob to target)
+  plus Cloudflare's platform-level abuse mitigation, not an app-layer
+  limiter. ⚠️ This line said *"`blobId`'s 128 bits of entropy"* until
+  2026-08-19. A `blobId` is 128 bits **wide** but is `HKDF(sync code)`, and
+  HKDF cannot manufacture entropy its input lacks — so the keyspace an
+  attacker actually sweeps is 2^65 (ADR 0061), not 2^128. The conclusion
+  holds; the number did not.
   Worth adding (a Durable Object or Cloudflare's Rate Limiting rules
   product) if abuse is ever observed — not implemented speculatively.
 - **`Content-Length` is a fast path, not the real cap.** It's checked first
