@@ -41,6 +41,7 @@ import {
   Report,
   createDriver,
   launchChrome,
+  need,
   startServer,
   stopChrome,
   until,
@@ -375,7 +376,7 @@ async function run(opts) {
         }
       }
     }
-    await evalPage(`document.querySelector(".menu-title-group .caveat-btn").click()`);
+    await evalPage(`${need(".menu-title-group .caveat-btn")}.click()`);
 
     // --- 1c. A multi-location venue shows every branch ----------------------
     // Not a test of hours/phone: `data.js` projects the primary branch up to

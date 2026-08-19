@@ -46,7 +46,7 @@ import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Cdp, Report, createDriver, launchChrome, startServer, stopChrome, until } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, until } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -130,12 +130,12 @@ const snapshotExpr = `(() => {
     rows: rows.map((r) => ({
       name: (r.querySelector(".branch-name") || {}).textContent || null,
       chip: chip(r),
-      expanded: r.querySelector(".branch-toggle").getAttribute("aria-expanded"),
-      controls: r.querySelector(".branch-toggle").getAttribute("aria-controls"),
-      panelHidden: r.querySelector(".branch-detail").hidden,
+      expanded: ${need(".branch-toggle", "r")}.getAttribute("aria-expanded"),
+      controls: ${need(".branch-toggle", "r")}.getAttribute("aria-controls"),
+      panelHidden: ${need(".branch-detail", "r")}.hidden,
       panelPhone: (r.querySelector('.branch-detail a[href^="tel:"]') || {}).getAttribute?.("href") || null,
       // A ≥44px target is the house rule for anything you tap.
-      tapHeight: Math.round(r.querySelector(".branch-toggle").getBoundingClientRect().height),
+      tapHeight: Math.round(${need(".branch-toggle", "r")}.getBoundingClientRect().height),
     })),
     hiddenRows: hidden ? hidden.querySelectorAll(".contact-branch-row").length : 0,
     hiddenIsHidden: hidden ? hidden.hidden : null,

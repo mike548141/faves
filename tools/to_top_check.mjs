@@ -44,6 +44,7 @@ import {
   Report,
   createDriver,
   launchChrome,
+  need,
   startServer,
   stopChrome,
   until,
@@ -230,7 +231,7 @@ async function run(opts) {
         );
 
         // --- Keyboard. Focus must un-tuck it, or Tab lands on nothing. ------
-        await driver.evalPage(`document.querySelector(".to-top").focus()`);
+        await driver.evalPage(`${need(".to-top")}.focus()`);
         await sleep(120);
         const focused = await driver.evalPage(PROBE);
         report.check(
@@ -238,7 +239,7 @@ async function run(opts) {
           focused.shown && focused.top < 844,
           JSON.stringify({ shown: focused.shown, opacity: focused.opacity, top: focused.top })
         );
-        await driver.evalPage(`document.querySelector(".to-top").blur()`);
+        await driver.evalPage(`${need(".to-top")}.blur()`);
 
         // --- Below the threshold it is gone entirely, as it always was. -----
         await scrollTo(driver, 0);

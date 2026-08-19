@@ -36,7 +36,7 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
-import { Cdp, Report, createDriver, launchChrome, startServer, stopChrome, until } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, until } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -277,7 +277,7 @@ async function run(opts) {
         label: "menu: the subheading facets rendered",
       });
       const facet = await driver.evalPage(`(() => {
-        const a = document.querySelector(".menu-sub-link");
+        const a = ${need(".menu-sub-link")};
         return {
           href: a.getAttribute("href") || "",
           text: a.textContent.trim(),
@@ -327,7 +327,7 @@ async function run(opts) {
         JSON.stringify(chip)
       );
 
-      await driver.evalPage(`document.querySelector("#active-filters .active-filter").click()`);
+      await driver.evalPage(`${need("#active-filters .active-filter")}.click()`);
       await until(
         () => driver.evalPage(`document.getElementById("active-filters")?.hidden === true`),
         { label: "home: filter cleared" }
@@ -466,7 +466,7 @@ async function run(opts) {
         // Scoped from the stamps outward, not from ".settings-panel:not([hidden])":
         // panels nest, so the first unhidden one in the document is not
         // necessarily the one that was just opened.
-        const panel = document.querySelector(".settings-versions").closest(".settings-panel");
+        const panel = ${need(".settings-versions")}.closest(".settings-panel");
         return {
           keys: [...panel.querySelectorAll(".settings-version-key")].map((e) => e.textContent.trim()),
           values: [...panel.querySelectorAll(".settings-version-value")].map((e) => e.textContent.trim()),
@@ -507,7 +507,7 @@ async function run(opts) {
       await until(() => driver.evalPage(`!!document.getElementById("about-btn") && !document.getElementById("about-btn").hidden`), {
         label: "about: the ⋯ menu offered About",
       });
-      await driver.evalPage(`document.getElementById("about-btn").click()`);
+      await driver.evalPage(`${need("#about-btn")}.click()`);
       await until(() => driver.evalPage(`!!document.querySelector(".about-sheet[open]")`), {
         label: "about: the dialog opened",
       });

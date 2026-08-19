@@ -159,6 +159,7 @@ import {
   Report,
   createDriver,
   launchChrome,
+  need,
   startServer,
   stopChrome,
   until,
@@ -523,7 +524,7 @@ async function turnOnSync(d, report, label) {
     label: "the sync code to render",
     timeout: 15_000,
   });
-  const code = await d.evalPage(`document.querySelector(".sync-body .sync-code-display").textContent`);
+  const code = await d.evalPage(`${need(".sync-body .sync-code-display")}.textContent`);
   report.check(
     `[${label}] turning on sync mints a well-formed code`,
     isValidSyncCode(code),
@@ -585,7 +586,7 @@ async function joinSync(d, report, label, realCode) {
   await d.insertText(realCode);
   await d.settle();
   const enabled = await d.evalPage(
-    `document.querySelector(".sync-body .profile-btn-primary").disabled === false`
+    `${need(".sync-body .profile-btn-primary")}.disabled === false`
   );
   report.check(`[${label}] the real code from the other device is accepted as well-formed`, enabled);
 
@@ -858,7 +859,7 @@ async function run(opts) {
       async () => B.d.evalPage(`!!document.querySelector(".sync-body .settings-reset")`),
       { label: "B's sync panel to return to the \"off\" view" }
     );
-    const offViewText = await B.d.evalPage(`document.querySelector(".sync-body .settings-reset").textContent`);
+    const offViewText = await B.d.evalPage(`${need(".sync-body .settings-reset")}.textContent`);
     report.check(
       `B's sync panel reads "off" again`,
       offViewText === "Turn on sync",

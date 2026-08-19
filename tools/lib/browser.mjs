@@ -24,7 +24,9 @@
 //     measured against — a session once verified against a tree that did not
 //     contain its change, and the run was green;
 //   · classifying a CDP transport failure as a HARNESS error, so "the browser
-//     stopped answering" can never print as `FAIL <assertion name>`.
+//     stopped answering" can never print as `FAIL <assertion name>`;
+//   · `need()`, so a check that reaches for an element the page no longer has
+//     fails by NAMING it — not as a null TypeError, and never as exit 2.
 
 import { execFileSync, spawn } from "node:child_process";
 import { createServer } from "node:http";
@@ -116,6 +118,56 @@ export function startServer(port, siteDir) {
 /** Latched, not passed: the tools catch broadly by design, so the fact that the
  *  transport died has to survive being caught and discarded. */
 let transportBroken = null;
+
+/**
+ * The sentinel a page-side lookup throws when the element it wanted is not
+ * there. It is a string rather than a class because it has to survive the trip
+ * out of the page: CDP hands back an exception *description*, not an object,
+ * so the only thing that crosses the boundary is text.
+ */
+const MISSING_TAG = "MISSING ELEMENT —";
+
+/**
+ * Raised when a check reached for an element the page does not have.
+ *
+ * WHY THIS IS ITS OWN CLASS. Before it existed, a deleted element produced a
+ * raw `TypeError: Cannot set properties of null` from inside `evalPage`, which
+ * arrived as an unhandled rejection and left through the `uncaughtException`
+ * handler — **exit 2**, this repo's code for "the browser stopped answering,
+ * this says nothing about the site". So a real regression wore a transport
+ * flake's clothes, and CLAUDE.md tells readers to believe the exit code. That
+ * is the wrong way round: a missing element is a statement about the SITE, so
+ * it must read as a failed assertion (exit 1) that names what it wanted.
+ */
+export class MissingElementError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "MissingElementError";
+  }
+}
+
+/**
+ * Build a page-side expression that resolves `selector` or throws a sentence
+ * naming what it wanted. Use it anywhere a check DEREFERENCES a lookup —
+ * `.click()`, `.focus()`, `.hidden = …`, `.textContent` — because those are the
+ * sites where a removed element becomes a null TypeError.
+ *
+ * WHY IT EXISTS. [ADR 0083] removed the `#geo-ask` pill; `filter_row_check`
+ * drove that id directly and died mid-run on a null, with no summary line. The
+ * retarget fixed that one line and left the SHAPE — twenty-odd more
+ * dereferences one deletion away from the same crash. This makes the failure
+ * mode uniform and self-describing instead.
+ *
+ * `root` takes a page-side expression when the lookup is scoped to something
+ * already in hand (a row, a dialog) rather than to the document.
+ */
+export const need = (selector, root = "document") => {
+  const sel = JSON.stringify(selector);
+  const msg = JSON.stringify(
+    `${MISSING_TAG} this check wanted ${selector}, and nothing on the page matches it`
+  );
+  return `(${root}.querySelector(${sel}) ?? (() => { throw new Error(${msg}); })())`;
+};
 
 /**
  * Raised when the browser stopped answering — never when a page is wrong.
@@ -321,6 +373,18 @@ function installReaper() {
     // Exit 2 is this repo's "harness error", distinct from 1 = assertions
     // failed — the tools' own top-level catches already use it.
     if (err instanceof HarnessError) abortAsHarnessError("an unguarded step");
+    // A missing element is the SITE being wrong, so it exits 1 (assertions
+    // failed) and never 2 (harness error) — and it says what it wanted, which
+    // a null TypeError never did.
+    if (err instanceof MissingElementError) {
+      console.log(`\nFAIL  ${err.message}`);
+      console.log(
+        `\nFAILED — the run stopped here; the assertions after this point did not run.` +
+          `\n   Either the element was renamed (retarget this check) or the feature went` +
+          `\n   (delete the assertion) — see the roadmap's id-durability sweep.`
+      );
+      process.exit(1);
+    }
     console.error(err);
     process.exit(2);
   });
@@ -718,7 +782,14 @@ export function createDriver(cdp, sessionId, log = () => {}) {
     );
     if (r.exceptionDetails) {
       const e = r.exceptionDetails;
-      throw new Error(`page eval failed: ${e.exception?.description || e.text}`);
+      const desc = e.exception?.description || e.text || "";
+      // A `need()` lookup that found nothing is a verdict about the site, not a
+      // broken eval — hand it on as itself so the top-level can print it as a
+      // named FAIL rather than a stack.
+      if (desc.includes(MISSING_TAG)) {
+        throw new MissingElementError(desc.slice(desc.indexOf(MISSING_TAG)).split("\n")[0].trim());
+      }
+      throw new Error(`page eval failed: ${desc}`);
     }
     return r.result.value;
   };

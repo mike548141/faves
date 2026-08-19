@@ -44,7 +44,7 @@ import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Cdp, Report, createDriver, launchChrome, startServer, stopChrome, until } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, until } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -102,7 +102,7 @@ const snapshotExpr = `(() => {
   const dish = [...document.querySelectorAll("li.dish")].find((d) => d.querySelector(".dish-addons"));
   if (!dish) return { found: false };
   const box = dish.querySelector(".dish-addons");
-  const warn = box.querySelector(".addon-warning");
+  const warn = ${need(".addon-warning", "box")};
   const legends = [...box.querySelectorAll(".addon-legend")].map((l) => l.textContent);
   return {
     found: true,

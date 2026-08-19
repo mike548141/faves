@@ -28,7 +28,7 @@
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Cdp, Report, createDriver, launchChrome, startServer, stopChrome, until } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, until } from "./lib/browser.mjs";
 
 const SITE = new URL("../site", import.meta.url).pathname;
 
@@ -141,7 +141,7 @@ const run = async () => {
       s.describedBy && s.focused === "order-note-input", `${s.describedBy} · focus=${s.focused}`);
 
     // ---- 3. saving --------------------------------------------------------
-    await d.evalPage(`document.querySelector('dialog[aria-labelledby="order-title"] .order-note-input').value = "  no   tomato "; true`);
+    await d.evalPage(`${need('dialog[aria-labelledby="order-title"] .order-note-input')}.value = "  no   tomato "; true`);
     await d.click('dialog[aria-labelledby="order-title"] .order-note-save');
     s = await d.evalPage(snap);
     report.check("the note is stored normalised, on the line, and nowhere else",
@@ -160,7 +160,7 @@ const run = async () => {
     report.check("a plain line and a noted line are two lines on screen",
       s.lineCount === 2, `${s.lineCount} lines`);
     await d.click(".order-note-btn", "Edit note");
-    await d.evalPage(`document.querySelector('dialog[aria-labelledby="order-title"] .order-note-input').value = ""; true`);
+    await d.evalPage(`${need('dialog[aria-labelledby="order-title"] .order-note-input')}.value = ""; true`);
     await d.click('dialog[aria-labelledby="order-title"] .order-note-save');
     s = await d.evalPage(snap);
     report.check("clearing the note merges into the plain line, quantities summed",
