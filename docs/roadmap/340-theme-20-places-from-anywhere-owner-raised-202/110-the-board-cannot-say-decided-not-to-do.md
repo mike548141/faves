@@ -36,6 +36,27 @@
      `[-]`/`[^]` brackets were the assistant's, handed back as *"your five-state
      proposal"*. The ruling is real and dated **2026-07-23**; the capture is
      dated 07-22 and conflates a question captured with a question answered.
+     ✅ **CONFIRMED AT THE SOURCE by the atelier session** (`ef7f987`), which read
+     the turn itself rather than taking the report — *"no bracket, no
+     enumeration, no proposal to extend the grammar"*.
+     ⚠️ **AND IT NARROWED WHAT WE FILED, correctly.** This item said *"one line
+     in each"* of two places. **There is one.** The five-state wording survives
+     on **no live surface** — it is in the historical commit and in a single
+     `ROADMAP-DONE` line, and **that line is already right**: it credits the
+     tri-state to *"builder's counsel accepted"*, not to him. Frozen history
+     stays untouched under forward-only. `RECORD.md`'s *"harvest integrity
+     (Mike's ruling, 2026-07-22)"* was checked too and is **correct** — the
+     genuine product of the same turn.
+     🔑 **So this repo overstated a finding ABOUT overstatement, in the same
+     direction, inside the same week.** Filed in good faith off a `grep`, without
+     opening the second surface to see whether the wording was actually wrong
+     there. The class the finding names is not a thing other people do.
+     🔑 **The date half gained a MECHANISM worth more than the fix.** Session
+     `64f68104` ran 2026-07-22 12:06 → 2026-07-23 02:20 UTC. A ruling at 02:16:54
+     lands on the **23rd** while the session **opens** on the 22nd, and the
+     legend took the opening date. **Any long session dates its own rulings
+     wrong this way** — so when recording a ruling, take the date from the
+     message's timestamp, never from the session's.
   3. **`board.py` renders every `[x]` as `✅`**, which reads as *delivered*, so a
      declined or superseded item wears a green tick in the index. Generator and
      vocabulary are one question, and both are atelier's.
