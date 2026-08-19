@@ -44,6 +44,7 @@ import {
   Report,
   createDriver,
   launchChrome,
+  need,
   startServer,
   stopChrome,
   until,
@@ -272,7 +273,7 @@ async function run(opts) {
     // --- The controls are wired, not just present. --------------------------
     const before = s.count;
     await driver.evalPage(`(() => {
-      const sel = document.getElementById("filter-cuisine");
+      const sel = ${need("#filter-cuisine")};
       sel.selectedIndex = 2;
       sel.dispatchEvent(new Event("change", { bubbles: true }));
     })()`);
@@ -287,7 +288,7 @@ async function run(opts) {
     // --- Crossing back with focus inside the controls. ----------------------
     // They are about to land inside a CLOSED dialog, where nothing can hold
     // focus. Falling to <body> would strand a keyboard reader mid-page.
-    await driver.evalPage(`document.getElementById("filter-cuisine").focus()`);
+    await driver.evalPage(`${need("#filter-cuisine")}.focus()`);
     await size(390);
     s = await state();
     report.check(
@@ -310,9 +311,9 @@ async function run(opts) {
     // Everything outside an open modal <dialog> is inert, so moving the
     // controls inline without closing it first would paint a row that refuses
     // every click.
-    await driver.evalPage(`document.getElementById("filters-btn").click()`);
+    await driver.evalPage(`${need("#filters-btn")}.click()`);
     await sleep(200);
-    await driver.evalPage(`document.getElementById("filter-area").focus()`);
+    await driver.evalPage(`${need("#filter-area")}.focus()`);
     const opened = await state();
     report.check(
       "the sheet opens at 390px with focus inside it",
@@ -373,7 +374,7 @@ async function run(opts) {
     // have been far worse. The question it asks is unchanged and still live —
     // can something above own the pixels a tap would land on — and the banner
     // is now the control in that region it applies to.
-    await driver.evalPage(`document.getElementById("geo-banner").hidden = false`);
+    await driver.evalPage(`${need("#geo-banner")}.hidden = false`);
     for (const w of [390, 1280]) {
       await size(w);
       s = await state();

@@ -95,6 +95,7 @@ import {
   Report,
   createDriver,
   launchChrome,
+  need,
   settleUntil,
   sleep,
   startServer,
@@ -588,7 +589,7 @@ async function run(opts) {
     // anything at step 1, and it keeps focus inside the dialog. ADR 0034's
     // rejection of focusing the *step* on every change stands untouched.
     // The assertion for that fix is in section 4 below.
-    const focusStage = () => evalPage(`document.querySelector(".cook-stage").focus()`);
+    const focusStage = () => evalPage(`${need(".cook-stage")}.focus()`);
 
     // Hiding the page for real: a second tab takes the foreground, which is what
     // answering a text does to a phone. Measured here — Chrome fires the
@@ -655,10 +656,10 @@ async function run(opts) {
     // must not be able to take focus while the modal is up. Focus is put back
     // on the stage afterwards, because the keyboard checks below need it there.
     const inert = await evalPage(`(() => {
-      const b = document.querySelector(".cook-start");
+      const b = ${need(".cook-start")};
       b.focus();
       const stolen = document.activeElement === b;
-      document.querySelector(".cook-stage").focus();
+      ${need(".cook-stage")}.focus();
       return !stolen;
     })()`);
     report.check("the recipe behind cook mode cannot take focus", inert === true, `inert=${inert}`);
@@ -935,7 +936,7 @@ async function run(opts) {
 
       // The trap: the ingredient list is rebuilt on every step change, so a
       // step taken while a box holds focus destroys the focused node.
-      await evalPage(`document.querySelector(".cook-ing .tick-box").focus()`);
+      await evalPage(`${need(".cook-ing .tick-box")}.focus()`);
       const held = await snap();
       await press("ArrowRight");
       const moved = await snap();
