@@ -97,7 +97,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - [~] [v2 — continual sync (Cloudflare Worker + KV)](roadmap/150-theme-9-cross-device-preference-sync-owner-app/010-v2-continual-sync-cloudflare-worker-kv.md)
 - ✅ [✅ DONE 2026-08-17 — the Worker is redeployed and sync works end to](roadmap/150-theme-9-cross-device-preference-sync-owner-app/020-the-worker-needs-redeploying-before-sync-works-at-all.md)
-- [ ] [Sync resolves conflicts and tells the reader nothing](roadmap/150-theme-9-cross-device-preference-sync-owner-app/030-sync-tells-the-reader-nothing-when-it-disagrees.md)
+- [~] [Sync resolves conflicts and tells the reader nothing](roadmap/150-theme-9-cross-device-preference-sync-owner-app/030-sync-tells-the-reader-nothing-when-it-disagrees.md)
 
 ## Theme 10 — Cross-person sharing (ongoing, revocable) — owner-gated
 

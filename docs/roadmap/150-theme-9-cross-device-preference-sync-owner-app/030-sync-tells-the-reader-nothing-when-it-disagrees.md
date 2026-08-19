@@ -1,4 +1,4 @@
-- [ ] **Sync resolves conflicts and tells the reader nothing** `[M][js]` —
+- [~] **Sync resolves conflicts and tells the reader nothing** `[M][js]` —
       found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`), four findings that share a shape:
       the error view offers no way to **turn sync off**; **rating and setting
       conflicts, and profile-identity mismatches, are reported by the merge and
