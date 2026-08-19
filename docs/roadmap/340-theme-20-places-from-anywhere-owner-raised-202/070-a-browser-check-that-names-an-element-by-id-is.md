@@ -1,4 +1,4 @@
-- [~] 🚩 **A browser check that names an element by id is only as durable as
+- [x] 🚩 **A browser check that names an element by id is only as durable as
       that element — sweep all twelve** `[M][ci]`. Handed over 2026-08-17 by
       `faves-ea` at its session close, deliberately **flagged rather than
       half-started**, because it is fresh work across twelve tools rather than a
@@ -49,3 +49,39 @@
       ⚑ **Related but distinct, so do not merge them:** the CI item above is
       about which checks *run*; this is about whether a check that runs still
       *refers to anything*. A check can pass both and still be worthless.
+
+      ✅ **SWEPT AND CLOSED 2026-08-19 — and ALL FOUR named instances were
+      already repaired.** Reported as refutations, because a findings list is
+      evidence and not a work order: `filter_row_check` already carries a
+      `RETARGETED 2026-08-17` comment and drives `#geo-banner`; `app.css:299`
+      already names ADR 0083's removal; `index.html:845` already marks its
+      mention historical; and `docs/ARCHITECTURE.md` lines 737–753 already
+      describe `#geo-dialog`/`#geo-banner`, every clause checked against ADR
+      0083 and `site/js/app.js` and every clause true. The claim that *"every
+      clause of that paragraph was false"* had stopped being true before anyone
+      acted on it.
+      **The systematic half found nothing stale either:** 124 distinct
+      `#id`/`.class` targets across the 13 tools plus 16 driver selectors,
+      every one tested for a real definition in `site/`. **Zero stale.** Four
+      apparent misses were all legitimate — two deliberate ABSENCE assertions
+      (`#geo-ask` in `geo_check`, `.about-versions` in `boot_check`), one
+      self-injected id, one tolerant OR-list alternative.
+      ✅ **What shipped is the DURABILITY half, and its value was the exit
+      code.** `need()` + `MissingElementError` (`tools/lib/browser.mjs`) now
+      route **26** dereference sites across 9 tools. Measured both ways: a raw
+      dereference of a deleted element gives `TypeError: Cannot set properties
+      of null` at **exit 2** — this repo's code for *"the browser stopped
+      answering, nothing here says anything about the site"* — while `need()`
+      gives `FAIL MISSING ELEMENT — this check wanted #geo-ask, and nothing on
+      the page matches it` at **exit 1**. 🔑 **A real site regression was
+      arriving dressed as a transport flake**, which is the
+      flake-impersonates-a-regression fault running backwards. Break-probed
+      independently before merge on `#geo-banner-DELETED`.
+      🚩 **Residuals are filed as their own items** (`130`, `140`) rather than
+      left in this one: `until()` timeouts still exit 2, and a tolerant OR-list
+      selector can pass with every named target gone. **⚠️ Unverified and said
+      plainly:** the "no stale targets" result rests on regex extraction of
+      selector literals — a selector assembled at runtime from a variable would
+      not have been caught, none was seen, and their absence was not proven.
+      Any future id-existence gate must also read `site/data/`, because
+      `#section-<id>` anchors come from `sectionId` in the venue JSON.
