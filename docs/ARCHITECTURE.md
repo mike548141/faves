@@ -587,9 +587,19 @@ and, where real history exists, `priceSeries`/`priceNext` for the future trend
 view. Time lives in the data and in that one module.
 
 The single exception where time reaches the screen is a **closure**
-(`closure-ui.js`): a badge on the card, a banner on the menu header, and
-`ranking.js` treats a closed venue as unavailable whatever its posted hours
-say. A stale price costs a dollar; a closed venue costs a wasted trip.
+(`closure-ui.js`): a badge on the card, a banner on the menu header, a badge on
+every branch heading in the contact card, and `ranking.js` treats a closed venue
+as unavailable whatever its posted hours say. A stale price costs a dollar; a
+closed venue costs a wasted trip.
+
+**A venue-level closure outranks every branch's posted hours.** The fold is
+venue-wide (`venueState`) and the schema has no per-branch `lifecycle`, so the
+only closure we hold applies to all of a chain's branches: the branch card
+states it once per branch heading and prints no live open/closed chip anywhere,
+and `leadBranch` is told every branch is shut rather than leading with one its
+hours call open. Guarded by `tools/branch_check.mjs`, which has to inject the
+closure itself — no venue in the corpus is closed. Whether closure *should* be
+per-branch is an open question for the owner (Theme 27, item 040).
 
 #### What we still owe a dish — `needs` (ADR 0041)
 
