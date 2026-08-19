@@ -119,7 +119,7 @@ import { NOTIFY_OVER_SECONDS, wantsNotification } from "../site/js/alarm.js";
 // And the scaler, for the same reason: the expected doubled line is COMPUTED
 // from the app's own rules here, never typed out as a literal, so this cannot
 // pass by agreeing with a wrong copy of the arithmetic.
-import { ingredientBlocks } from "../site/js/ingredients.js";
+import { ingredientBlocks, ingredientKeys } from "../site/js/ingredients.js";
 import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
 
 // The scale this check drives, taken from the app's own list rather than named
@@ -492,6 +492,16 @@ async function run(opts) {
   if (!recipe) throw new Error(`no recipe named "${opts.dish}" in ${COLLECTION}`);
   const steps = recipe.steps || [];
   if (steps.length < 3) throw new Error(`"${recipe.name}" has ${steps.length} steps — too few`);
+  // The page NEVER hands the raw `ingredients` array to cook.js: `cook-ui.js`
+  // flattens it with `ingredientKeys` first, because a component-grouped recipe
+  // holds {component, items[]} objects and `ingredientsForStep` keeps only the
+  // strings. Passing the raw array here made this tool disagree with the render
+  // on exactly the recipes that need it most — on Upside-Down Plum Cake, which
+  // is 0 loose lines and 2 groups, every step "needed nothing", `idxNeeding`
+  // was -1, and BOTH ingredient sections skipped in silence while the page
+  // showed all 14 lines. Assert against what the page computes, never against
+  // the shape on disk.
+  const ingredientLines = ingredientKeys(recipe.ingredients);
   // The 1-of-24 with ingredients but no method; it must offer nothing at all.
   const noMethod = items.find((i) => !(i.steps || []).length);
 
@@ -735,21 +745,35 @@ async function run(opts) {
     // gained a line.
     // Filled in below and read by the scale block at the end of the run.
     let oneXStep = null;
-    const idxNeeding = steps.findIndex((t) => stepUsesIngredients(t, recipe.ingredients || []));
-    const idxIdle = steps.findIndex((t) => !stepUsesIngredients(t, recipe.ingredients || []));
+    const idxNeeding = steps.findIndex((t) => stepUsesIngredients(t, ingredientLines));
+    const idxIdle = steps.findIndex((t) => !stepUsesIngredients(t, ingredientLines));
     const idxTimed = steps.findIndex((t) => stepDuration(t) != null);
+
+    // ADR 0072, said out loud: both ingredient sections below are guarded by
+    // `idxNeeding >= 0`, so when the matcher finds nothing they SKIP — and nine
+    // assertions vanish leaving a wall of PASS that reads exactly like a clean
+    // run. A recipe that lists ingredients must have at least one step that
+    // names one; if it does not, either the matcher is broken or this tool has
+    // been handed the wrong shape again, and both deserve a FAIL rather than a
+    // silence.
+    report.check(
+      "at least one step names an ingredient, so the per-step sections actually RUN",
+      ingredientLines.length === 0 || idxNeeding >= 0,
+      `${ingredientLines.length} ingredient line(s); first step needing one = ${idxNeeding}` +
+        ` (-1 would skip both ingredient sections in silence)`
+    );
 
     if (idxNeeding >= 0) {
       await press("Home");
       for (let i = 0; i < idxNeeding; i++) await click(".cook-next");
       const needs = await snap();
-      const expected = ingredientsForStep(steps[idxNeeding], recipe.ingredients || []);
+      const expected = ingredientsForStep(steps[idxNeeding], ingredientLines);
       report.check(
         "a step shows just the ingredients it names — not the whole recipe",
         needs.ingOpen === true &&
           needs.ingItems === expected.length &&
-          needs.ingItems < (recipe.ingredients || []).length,
-        `${needs.ingItems} of ${(recipe.ingredients || []).length} lines on “${needs.counter}”`
+          needs.ingItems < ingredientLines.length,
+        `${needs.ingItems} of ${ingredientLines.length} lines on “${needs.counter}”`
       );
       report.check(
         "no horizontal overflow at 390 px with the step's ingredients shown",
@@ -880,7 +904,7 @@ async function run(opts) {
     // <body> — the exact fault this tool found on the Back button in 2026-08-15
     // and on the timer's Reset the day after.
     if (idxNeeding >= 0) {
-      const needed = ingredientsForStep(steps[idxNeeding], recipe.ingredients || []);
+      const needed = ingredientsForStep(steps[idxNeeding], ingredientLines);
       await press("Home");
       for (let i = 0; i < idxNeeding; i++) await click(".cook-next");
       const t0 = await snap();
@@ -1614,7 +1638,7 @@ async function run(opts) {
     // reads a document built from scratch out of localStorage.
     await goto(recipeUrl, ".recipe-detail-page .tick-box");
     const reloaded = await snap();
-    const lines = (recipe.ingredients || []).length + (recipe.steps || []).length;
+    const lines = ingredientLines.length + (recipe.steps || []).length;
     report.check(
       "the recipe page makes every ingredient and every step tickable",
       reloaded.pageTicks.length === lines &&

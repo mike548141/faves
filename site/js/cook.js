@@ -156,10 +156,14 @@ export function ingredientTerms(line) {
  * per-step panel shows. Empty means the step needs nothing (it preheats, it
  * bakes, it chills), and the panel is then absent rather than empty.
  *
- * Head words are matched whole ("flour" must not fire on "flourish"), and the
- * FIRST word of a multi-word ingredient is deliberately not a term on its own —
- * that is what stops "baking powder" from claiming "line the dish with baking
- * paper", the exact step the owner pointed at.
+ * Head words are matched whole ("flour" must not fire on "flourish").
+ *
+ * `ingredientTerms` adds EVERY kept word as a term of its own, first word
+ * included — so what stops "baking powder" claiming "line the dish with baking
+ * paper" (the exact step the owner pointed at) is that "baking" is in
+ * PREP_WORDS and is therefore never kept at all. This sentence said the
+ * opposite until 2026-08-19; a reader reasoning from it reasoned from a
+ * mechanism that is not here.
  */
 export function ingredientsForStep(step, ingredients) {
   const list = (Array.isArray(ingredients) ? ingredients : []).filter(

@@ -4,49 +4,83 @@
   section (transport flakiness under load), and conflating the two is how it
   stays unfixed.
 
-  **The measurement.** `node tools/cook_check.mjs` reaches **30 PASSes**, always
-  the same 30, ending at *"a step that never says how long gets NO timer"*, then
-  `harness error: Runtime.evaluate timed out after 180s`, **exit 2**. Seven
-  consecutive runs by the building session at 180 s and 240 s CDP budgets; then
-  reproduced by the merging session and **controlled against a throwaway
-  worktree at `origin/main`** carrying none of the changes — **identical wedge,
-  identical point.** So it is not the new code.
+  ⚠️ **THE HEADLINE CLAIM IS REFUTED — 2026-08-19, on byte-identical code.**
+  `git log 5e23592..HEAD -- tools/cook_check.mjs tools/lib/browser.mjs
+  site/js/cook.js site/js/cook-ui.js` returns **nothing**: not one line of the
+  cook path changed between the finding being filed and being re-tested. On
+  that same code, `node tools/cook_check.mjs` (default recipe, no `--dish`) ran
+  **four consecutive times and reached `OK — 84 passed, 0 failed`** every time,
+  at `FAVES_CDP_TIMEOUT_MS=60000` — a **smaller** budget than the 180 s and
+  240 s at which it was recorded wedging. Load average at the time was
+  3.49/5.12/5.29, materially the same as the 3.81 the merging session recorded.
+  `pgrep -f 'user-data-dir=.*faves-'` reported **0** orphaned browsers before
+  the runs.
 
-  🔑 **And the load explanation does not survive the control.** The building
-  session attributed it to heavy swap (12.5 GB of 14.3 GB). At the moment the
-  merging session reproduced it the machine reported **67% memory free and load
-  average 3.81**. A fault that is deterministic at one assertion, at two very
-  different memory pressures, is not the contention signature `010` describes —
-  `010`'s evidence is *intermittent* failure across *several* tools.
+  🔑 **What survives the refutation, and it is worth keeping.** The wedge point
+  was recorded as *"always the same 30, ending at 'a step that never says how
+  long gets NO timer'"*. That assertion is **exactly PASS number 30** in a green
+  run too. So the observation was accurate; the *position* is a property of the
+  script, not of the fault. Two independent sessions then read a shared position
+  as evidence of determinism — which it is not, and that is the transferable
+  lesson: **a fault that always stops at the same place has only shown you
+  where the script's clock runs out, not what stopped it.**
 
-  ✅ **The workaround completes and is the only known good run today:**
-  `node tools/cook_check.mjs --dish "Easy Pad Thai"` → `OK — 83 passed, 0
-  failed`. Verified on the merged tree by the merging session.
+  🛑 **So the "not machine load" conclusion does not hold, but neither does its
+  opposite — the mechanism is still unexplained.** Seven runs plus a control at
+  `origin/main` is real evidence that something was happening on 2026-08-17. It
+  is simply no longer evidence that the cause is *in this code*. The one
+  documented mechanism with this exact signature is already named in the tool's
+  own comment at `setNotifications("prompt")`: a native permission prompt this
+  headless browser never answers makes **every subsequent `Runtime.evaluate`
+  time out**, killing the run tens of assertions before the thing it was
+  proving. That is a hypothesis, **not** a measurement — it was not tested.
 
-  🚩 **Why this outranks its size: `cook_check` is one of the twelve guards CI
-  does not run.** A guard that only a human types, and that now cannot complete
-  on its own default input, is on the honour system *and* broken — and it exits
-  2 with no `FAIL` line, so it does not look like a failure. Anyone who runs it,
-  sees a wall of PASS and moves on has been told nothing. That is the exact
-  shape [ADR 0072] names.
+  🎯 **Owner's call, offered rather than taken:** on this evidence the residual
+  belongs with `010` (transport flakiness), which is precisely the merge this
+  item's opening paragraph forbids. That paragraph was written on the
+  determinism claim that has now failed, but one session's four green runs
+  overturning two sessions' seven red ones is a judgement, not an arithmetic —
+  so the merge is **put to him, not made**. Until he rules, both items stand.
 
-  🔎 **Two smaller faults in the same tool, found by the building session, not
-  fixed:**
-  - `cook_check.mjs` section 4b (line ~883) passes **raw** `recipe.ingredients`
-    to `ingredientsForStep`, where the page always passes `ingredientKeys(...)`.
-    Harmless for the current default recipe, which has flat strings — but on a
-    **component-grouped** recipe it computes `needed = []` and quietly asserts
-    nothing. A check that asserts nothing is worse than no check.
-  - `ingredientsForStep`'s docstring is **wrong about its own mechanism**. It
-    says *"the FIRST word of a multi-word ingredient is deliberately not a term
-    on its own"*; `ingredientTerms` in fact adds **every** kept word, and it is
-    `PREP_WORDS` containing `"baking"` that stops *"baking powder"* claiming
-    *"baking paper"*. Pre-existing. A reader reasoning from that sentence
-    reasons from a mechanism that is not there.
+  ✅ **The workaround is no longer needed and should not be cargo-culted:**
+  `--dish "Easy Pad Thai"` was recorded as *"the only known good run today"*.
+  The default recipe is a good run now.
 
-  **Where to start:** the wedge is in `Runtime.evaluate`, which means the page
-  stopped answering rather than an assertion failing — look at what the default
-  recipe (*Jesse's Garlic Chicken Thighs*) does at the timer step that Easy Pad
-  Thai does not.
+  ✅ **BOTH SMALLER FAULTS ARE FIXED AND SHIPPED — 2026-08-19.** These were
+  real, are code-level, and were verified by measurement rather than by reading.
+
+  - ✅ **The raw-`recipe.ingredients` fault was REAL and SIX TIMES WIDER than
+    filed.** The item named section 4b (line ~883) alone; the same raw array was
+    passed at **seven** sites, including `idxNeeding`/`idxIdle` themselves —
+    which is what made the damage silent rather than local. The page never does
+    this: `cook-ui.js:135` flattens with `ingredientKeys(item.ingredients)`
+    first, because a component-grouped recipe holds `{component, items[]}`
+    objects and `ingredientsForStep` keeps **only strings**.
+    **Measured, not reasoned:** the corpus holds four component-grouped
+    recipes, and *Upside-Down Plum Cake* is **0 loose lines, 2 groups (14
+    lines), 8 steps** — so every step "needed nothing", `idxNeeding` was `-1`,
+    and **both** ingredient sections skipped. Before the fix that recipe ran
+    **73 assertions and FAILED 2** (`"the recipe page makes every ingredient and
+    every step tickable" — 22 of 10 lines`: the tool counted 2 groups where the
+    page rendered 14 lines). After it: **`OK — 85 passed, 0 failed`** — twelve
+    assertions that had never run, now running, and the two failures gone.
+  - ✅ **A guard against the silence itself**, which is the ADR 0072 half. Both
+    ingredient sections are gated on `idxNeeding >= 0`, so when the matcher
+    finds nothing they vanish leaving a wall of PASS that reads exactly like a
+    clean run. A recipe that lists ingredients must have at least one step that
+    names one; if it does not, that is now a **FAIL with a sentence**, not a
+    skip. This is the assertion that would have caught the fault above on the
+    day it was written.
+  - ✅ **`ingredientsForStep`'s docstring described a mechanism that is not
+    there.** It claimed *"the FIRST word of a multi-word ingredient is
+    deliberately not a term on its own"*. `ingredientTerms` (`cook.js:149`) adds
+    **every** kept word, first word included; what actually stops *"baking
+    powder"* claiming *"baking paper"* is that `"baking"` is in `PREP_WORDS`
+    (`cook.js:118`) and is never kept at all. Corrected in place, with the
+    correction dated so the next reader knows the sentence moved.
+
+  **What a green run here still cannot show you:** whether the wedge returns.
+  Four runs on one machine on one day is the evidence this note rests on, and it
+  is stated as exactly that.
 
 [ADR 0072]: ../../decisions/0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md
