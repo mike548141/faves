@@ -73,3 +73,17 @@
 
 [ADR 0023]: ../../decisions/0023-time-dimension-in-the-data.md
 [ADR 0054]: ../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md
+
+  🔎 **Found while independently break-probing the merge, 2026-08-19 — small,
+  and the exact shape this session spent the day on.** Removing the
+  `!isTrading(r)` gate from `branchOpenStateOf` fails **one** assertion and
+  only one, as reported. But the run's TOTAL moved: a clean run is
+  `OK — 72 passed, 0 failed` (72 assertions) and the probed run is
+  `FAILED — 72 passed, 1 failed` (**73**). So at least one assertion in
+  `branch_check` is **conditional on the very state being probed** — it does
+  not run when the lead branch behaves, and does run when it does not.
+  That is not necessarily wrong: a fixture that leads differently can
+  legitimately reach an extra check. It is worth writing down because a guard
+  whose assertion count depends on the outcome cannot be verified by its count,
+  and "N passed" is the one line everybody reads. Nobody has looked at which
+  assertion it is; that is the next step, not a conclusion.
