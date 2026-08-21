@@ -1,4 +1,4 @@
-- [~] 🎯 **A closed "If it's your first time, try…" block has no way back**
+- [x] 🎯 **A closed "If it's your first time, try…" block has no way back**
       `[S][ux]` — **shipped that way deliberately 2026-08-17 (`c573035`), with
       the owner told twice and no answer yet. This item exists so the question
       does not live only in a session log.**
