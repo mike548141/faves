@@ -50,3 +50,24 @@ assertions must survive: the block must still stay closed across a reload, and
 still be remembered **per venue**. The reset is the one thing allowed to bring
 every venue's block back at once — which means the check has to prove the reset
 clears **all** of them, since a global flag would pass a single-venue test.
+
+✅ **SHIPPED 2026-08-22, the same day it was ruled.** Settings → *Refresh & reset*
+carries **"Show suggestions again"**: it states how many places the block is
+closed on, clears `settings.picksClosed` wholesale, and is disabled with a
+different sentence when there is nothing to restore. It sits **above** "Start
+over" and takes **no confirm step** — it restores rather than destroys, and
+dressing it in Reset's red would teach the reader that both are dangerous.
+
+🔑 **Focus was the trap, and it is the fault this item's own tool already guards
+elsewhere.** The button disables itself the instant it works, so focusing it
+afterwards drops a keyboard reader to `<body>`. Focus goes to the status
+sentence instead (`tabIndex: -1`), which also announces what happened.
+
+⚠️ **`picks_check.mjs` grew from 14 to 20 assertions**, and the design point is
+that it now closes a **second** venue first: with only one closed, *"clears
+all"* and *"clears the last one"* are the same observation, and a control that
+quietly fixed only the last would pass every single-venue assertion while
+leaving the other 54 silent. **Break-probed** — making the button clear only the
+last entry fails *"the reset empties the whole list"* and *"cook-at-home's
+suggestions are back"*, while the-ramen-shop's assertion still passes, which is
+exactly the asymmetry that proves the two-venue setup is load-bearing.

@@ -262,6 +262,91 @@ async function run(opts) {
       JSON.stringify({ order: other.searchPrecedesPicks, search: other.searchRect, picks: other.picksRect })
     );
 
+    // --- The way BACK (Theme 15, owner-ruled 2026-08-22) ------------------
+    // The ✕ was shipped with no undo and the owner ruled the undo lives in
+    // Settings, not in the venue's ⋯ menu. Two halves fail independently and
+    // both are asserted here:
+    //   • it must actually reopen — the whole point;
+    //   • it must reopen EVERY venue, because a control that quietly fixed
+    //     only the last one you closed passes every single-venue assertion
+    //     while leaving the other 54 silent. That is why a SECOND venue is
+    //     closed first: with one, "clears all" and "clears the last" are the
+    //     same observation.
+    await driver.click(".picks-close");
+    await driver.settle();
+    const bothClosed = await driver.evalPage(PROBE);
+    report.check(
+      "a second venue can be closed too, so 'clears all' is distinguishable from 'clears the last'",
+      !bothClosed.hasPicks && Array.isArray(bothClosed.stored) && bothClosed.stored.length === 2,
+      `picksClosed = ${JSON.stringify(bothClosed.stored)}`
+    );
+
+    await driver.click("#overflow-btn");
+    await driver.click("#settings-btn");
+    await until(() => driver.evalPage(`!!document.querySelector(".settings-sheet[open], #settings-sheet[open]")`), {
+      label: "the Settings sheet to open",
+    });
+    await driver.click(".settings-row", "Refresh & reset");
+    await driver.settle();
+
+    // The count is read from the store on every open, so it is evidence the
+    // panel is describing THIS device rather than a value baked in at build.
+    const beforeReset = await driver.evalPage(`(() => {
+      const btn = [...document.querySelectorAll(".settings-panel button")]
+        .find((b) => /Show suggestions again/.test(b.textContent || ""));
+      const note = btn?.previousElementSibling;
+      return { found: !!btn, disabled: btn ? btn.disabled : null, note: note ? note.textContent : "" };
+    })()`);
+    report.check(
+      "Settings offers a way back, and says how many places it will affect",
+      beforeReset.found && beforeReset.disabled === false && /\b2 places\b/.test(beforeReset.note),
+      `enabled=${!beforeReset.disabled}, note “${(beforeReset.note || "").slice(0, 72)}…”`
+    );
+
+    await driver.click(".settings-panel button", "Show suggestions again");
+    await driver.settle();
+    const afterReset = await driver.evalPage(`(() => {
+      const btn = [...document.querySelectorAll(".settings-panel button")]
+        .find((b) => /Show suggestions again/.test(b.textContent || ""));
+      let stored = null;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!/^faves\.(p\.[^.]+\.)?settings\./.test(k)) continue;
+        const v = JSON.parse(localStorage.getItem(k) || "{}").picksClosed;
+        if (Array.isArray(v)) stored = v;
+      }
+      return {
+        stored,
+        disabled: btn ? btn.disabled : null,
+        focusTag: (document.activeElement || {}).tagName || "",
+        focusInPanel: !!document.activeElement?.closest?.(".settings-panel"),
+      };
+    })()`);
+    report.check(
+      "the reset empties the whole list, not just the last venue closed",
+      Array.isArray(afterReset.stored) && afterReset.stored.length === 0,
+      `picksClosed = ${JSON.stringify(afterReset.stored)}`
+    );
+    // The button disables itself the instant it works, so focusing it would
+    // drop a keyboard reader to <body> — the same fault this tool already
+    // guards on the venue page's ✕.
+    report.check(
+      "focus stays in the panel after the button that had it disables itself",
+      afterReset.focusInPanel === true && afterReset.focusTag !== "BODY",
+      `focus on <${(afterReset.focusTag || "?").toLowerCase()}>, in the panel=${afterReset.focusInPanel}`
+    );
+
+    // And the claim that matters to a reader: both venues actually show it.
+    for (const id of [venueId, otherId]) {
+      await open(cdp, sessionId, driver, port, id);
+      const back = await driver.evalPage(PROBE);
+      report.check(
+        `${id}'s suggestions are back after the reset`,
+        back.hasPicks && back.headings.includes(HEAD),
+        JSON.stringify({ picks: back.hasPicks, stored: back.stored })
+      );
+    }
+
     return report.summary(SITE);
   } finally {
     cdp?.close();

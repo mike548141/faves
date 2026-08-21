@@ -569,6 +569,62 @@ function refreshResetSection() {
     refreshBtn.focus();
   });
 
+  // --- Bringing the suggestions block back (Theme 15, owner-ruled 2026-08-22)
+  // The ✕ on a venue's "If it's your first time, try…" block closes it for that
+  // venue and remembers it — per venue, and until now for good. Closing being
+  // remembered was decided deliberately; having no way back was not. The owner
+  // was offered a "Show suggestions" entry in the venue's own ⋯ menu and chose
+  // THIS instead, so do not re-propose that: it has been declined on the record.
+  //
+  // ONE action for every venue, not a per-venue picker. A reader who wants the
+  // suggestions back does not remember which of 55 places they dismissed, and a
+  // list of venue names would be a harder question than the one they arrived
+  // with.
+  //
+  // No confirm step, and that is the point of putting it ABOVE "Start over"
+  // rather than inside it: this restores something and destroys nothing. Giving
+  // it the same red confirm as Reset would teach the reader that both are
+  // dangerous, and a warning that cries wolf is discounted when it matters.
+  const picksHead = el("p", { className: "settings-sub", textContent: "Suggestions" });
+  const picksNote = el("p", { className: "settings-hint" });
+  const picksBtn = el("button", {
+    type: "button",
+    className: "settings-reset",
+    textContent: "Show suggestions again",
+  });
+  const picksStatus = el("p", {
+    className: "settings-note settings-data-status",
+    role: "status",
+    "aria-live": "polite",
+    tabIndex: -1,
+  });
+  // Says how many places are affected, because "show suggestions again" without
+  // a number is a button whose effect the reader cannot predict — and when the
+  // answer is none, it says so rather than offering a control that would do
+  // nothing.
+  const syncPicks = () => {
+    const n = settings.get().picksClosed.length;
+    picksBtn.disabled = n === 0;
+    picksNote.textContent =
+      n === 0
+        ? "The “If it’s your first time, try…” block is showing everywhere it can. " +
+          "Close one with its ✕ and you can bring it back from here."
+        : `You’ve closed the “If it’s your first time, try…” block on ${n} ` +
+          `${n === 1 ? "place" : "places"}. This brings it back on all of them.`;
+  };
+  picksBtn.addEventListener("click", () => {
+    const n = settings.get().picksClosed.length;
+    settings.set({ picksClosed: [] });
+    syncPicks();
+    picksStatus.textContent =
+      n === 1 ? "Suggestions are showing again on 1 place." : `Suggestions are showing again on ${n} places.`;
+    // The button disables itself the moment it works, so focusing it would drop
+    // a keyboard reader to <body> — the fault picks_check already guards on the
+    // venue page. Focus lands on the sentence that says what happened instead.
+    picksStatus.focus();
+  });
+  syncPicks();
+
   const resetHead = el("p", { className: "settings-sub", textContent: "Start over" });
   // Two sentences, in the order the reader needs them: what goes, then what
   // stays. The old copy opened with a five-item list of setting names — the
@@ -704,11 +760,17 @@ function refreshResetSection() {
     intro,
     refreshHead, versionNote, versions, waitingNote,
     refreshNote, refreshBtn, refreshConfirm, refreshStatus,
+    picksHead, picksNote, picksBtn, picksStatus,
     resetHead, resetNote, resetBtn, resetConfirm, resetStatus,
   ]);
   return {
     panel,
-    refresh: readVersions,
+    // Re-read on every open: the count changes on the VENUE page, not here, so
+    // a value read once at build time is stale by the time anyone sees it.
+    refresh: () => {
+      readVersions();
+      syncPicks();
+    },
     close: () => {
       resetConfirm.hidden = true;
       refreshConfirm.hidden = true;

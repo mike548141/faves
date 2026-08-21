@@ -8,6 +8,15 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Suggestions you closed can be brought back, from Settings.** The ✕ on a
+  place's "If it's your first time, try…" block closes it for that place and
+  remembers it — which was the point — but until now there was no way back at
+  all, while the ingredient fold beside it reopens in one tap. Settings →
+  Refresh & reset now carries **Show suggestions again**, which says how many
+  places you have closed it on and restores every one of them. It restores
+  rather than deletes, so unlike Reset it asks for no confirmation.
+
 ### Fixed
 - **A chain that has closed down no longer offers you an open branch.** The
   branch picker was the fifth surface reading a venue's posted hours without
