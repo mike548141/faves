@@ -31,3 +31,22 @@ the persistence across a reload precisely so this cannot be undone by accident.
 `restaurant.html`'s `⋯` menu if it is option 1, and `tools/picks_check.mjs`
 needs the reopen path asserted — the check currently proves the block stays
 closed, which is exactly the assertion an undo has to be written around.
+
+✅ **RULED 2026-08-22 — OPTION 2: A RESET IN SETTINGS.** Asked a third time, with
+both options and their costs in front of him, the owner chose the **Settings
+reset** over the `⋯` menu item this item recommended. Recorded plainly: the
+recommendation was **not** taken, and the trade-off it named — *"it puts the undo
+three screens away from the ✕ that caused it"* — was put to him in those terms
+and accepted. Do not re-propose the `⋯` menu; it has now been declined on the
+record.
+
+📋 **What to build.** The Settings panel already has a reset group, so this is a
+control that clears `settings.picksClosed` (the id list) wholesale — one action,
+all venues, not a per-venue picker. Word it so it says what it restores rather
+than what it deletes.
+
+⚠️ **`tools/picks_check.mjs` needs the reopen path asserted**, and its existing
+assertions must survive: the block must still stay closed across a reload, and
+still be remembered **per venue**. The reset is the one thing allowed to bring
+every venue's block back at once — which means the check has to prove the reset
+clears **all** of them, since a global flag would pass a single-venue test.

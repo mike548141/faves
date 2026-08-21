@@ -126,3 +126,22 @@
   an element by a string the **data** can duplicate. Both are "the selector is
   only as stable as what it points at"; only one of them can be found by
   grepping for ids.
+
+  ✅ **RULED 2026-08-22 — THE ITEM STAYS ITS OWN, AND IS NOT FOLDED INTO `010`.**
+  The merge was offered to the owner with the refutation in full — four green
+  runs on byte-identical code, at a smaller budget, under comparable load — and
+  he **declined it**. So this item's opening paragraph stands: `010` is transport
+  flakiness under load, this is not known to be, and conflating them is still how
+  it stays unfixed.
+  🔑 **What that ruling is actually protecting.** Two sessions measured something
+  real on 2026-08-17 and one session could not reproduce it on 2026-08-19. The
+  cheap read is that the second session settled it; the ruling says four green
+  runs are enough to kill the *"deterministic"* claim and **not** enough to kill
+  the *fault*. An open item nobody can currently reproduce is the price of
+  keeping the thread, and it was paid deliberately.
+  📋 **So the item stays open with the two shipped fixes recorded above, and the
+  residual stated as what it is: an unexplained wedge, last seen 2026-08-17, not
+  reproduced 2026-08-19.** If it returns, the untested hypothesis to reach for
+  first is the one already written into the tool — an unanswered native
+  permission prompt makes every subsequent `Runtime.evaluate` time out. Do not
+  record a cause without measuring one.

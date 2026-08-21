@@ -53,3 +53,27 @@ would not be, and is not what (a) asks for.
 🔎 **Why this sits in Theme 14 and not with the allergen items:** the tagging
 target is the **add-on option**, a field only the picker reads. 37n is about the
 corpus disagreeing with itself on *dish* tags and is a different sweep.
+
+✅ **RULED 2026-08-22 — DO (a) THEN (b), THE RECOMMENDED ORDER.** The owner took
+the full fix: **tag the 93 untagged add-on options first**, so the line becomes a
+*fact* the module already words better (*"Bacon is not vegetarian, so this is no
+longer vegetarian"*), **then** collapse whatever is still unknown into one quiet
+sentence per configuration. The wording-only option was declined — so the data
+gap is being closed, not papered over.
+
+📋 **Binding constraints on (a), restated because this is where it can go wrong.**
+- **Model it on `tools/tag_allergens.py` (ADR 0024): a re-runnable script plus a
+  `validate.py` warning.** Never a hand sweep across 31 venues — that is how the
+  allergen inconsistency got made in the first place, and 14b learned it again.
+- 🛑 **Positive claims ONLY.** Tag *Bacon* as containing meat because the
+  option's own name says so. **Do NOT tag *Spinach* "gluten free"** — the repo
+  never asserts the ABSENCE of an allergen (ADR 0025, and `search.js` carries the
+  same line with no "nut free" synonym). Closing the gap means saying what IS
+  present, never what is missing.
+- The target is the **add-on option**, a field only the picker reads. This is not
+  37n, which is about the corpus disagreeing with itself on *dish* tags.
+
+🔑 **Baseline to re-measure against, not to trust:** 155 options, 62 tagged, 93
+not — 40% coverage concentrated in seven venues, giving 807 option × dish
+combinations. Those numbers were taken 2026-08-17. **Re-derive them before and
+after**; a fix whose effect is reported from a stale count proves nothing.
