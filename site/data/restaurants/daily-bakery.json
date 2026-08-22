@@ -1,0 +1,573 @@
+{
+  "id": "daily-bakery",
+  "name": "Daily Bakery",
+  "cuisine": [
+    "Bakery"
+  ],
+  "area": "Hutt Central",
+  "city": "Lower Hutt",
+  "currency": "NZD",
+  "address": "463 High Street, Hutt Central, Lower Hutt 5010",
+  "lat": -41.20545,
+  "lng": 174.91069,
+  "services": [
+    "takeaway"
+  ],
+  "phone": "+64 4 568 2223",
+  "website": null,
+  "ordering": [
+    {
+      "platform": "Uber Eats",
+      "url": "https://www.ubereats.com/nz/store/daily-bakery/EeERW5jkQRuVdZF1v44wzw"
+    },
+    {
+      "platform": "DoorDash",
+      "url": "https://www.doordash.com/en-NZ/store/26093971/"
+    }
+  ],
+  "hours": null,
+  "vibe": [],
+  "picks": [
+    "gourmet-chicken-pie",
+    "blueberry-loaf"
+  ],
+  "verified": "2026-08-22",
+  "verifiedBy": "delivery-app",
+  "lifecycle": {
+    "added": "2026-08-22"
+  },
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Pies",
+      "sectionId": "pies",
+      "items": [
+        {
+          "name": "Steak and Cheese Pie",
+          "dishId": "steak-and-cheese-pie",
+          "desc": "Tender steak and melted cheese in a flaky pastry crust.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mince and Cheese Pie",
+          "dishId": "mince-and-cheese-pie",
+          "desc": "Hearty filling of mince and melted cheese in a flaky pastry crust.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Steak Cheese and Mushroom Pie",
+          "dishId": "steak-cheese-and-mushroom-pie",
+          "desc": "Tender steak, melted cheese and mushrooms in a savoury filling, wrapped in a flaky pastry crust.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Creamy Mushroom Cheese and Bacon Pie",
+          "dishId": "creamy-mushroom-cheese-and-bacon-pie",
+          "desc": "Flaky pastry filled with a rich, creamy mix of mushrooms, melted cheese and bacon.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Gourmet Chicken Pie",
+          "dishId": "gourmet-chicken-pie",
+          "desc": "Tender chicken in a rich, flaky pastry.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Creamy Chicken and Mushroom Pie",
+          "dishId": "creamy-chicken-and-mushroom-pie",
+          "desc": "Tender chicken and mushrooms in a rich creamy filling.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mince Pie",
+          "dishId": "mince-pie",
+          "desc": null,
+          "price": 9.3,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steak and Mushroom Pie",
+          "dishId": "steak-and-mushroom-pie",
+          "desc": "Tender steak and mushrooms in a rich gravy, topped with a flaky pastry crust.",
+          "price": 9.3,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steak Pie",
+          "dishId": "steak-pie",
+          "desc": "Tender beef in a rich filling, topped with a flaky crust.",
+          "price": 9.3,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Double Cheese Steak",
+          "dishId": "double-cheese-steak",
+          "desc": "Tender steak with double melted cheese in a savoury filling, wrapped in a flaky pastry crust.",
+          "price": 11.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Double Cheese Mince",
+          "dishId": "double-cheese-mince",
+          "desc": "Hearty mince with double cheese in a flaky pastry crust.",
+          "price": 11.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Hot Food",
+      "sectionId": "hot-food",
+      "items": [
+        {
+          "name": "Sausage Roll",
+          "dishId": "sausage-roll",
+          "desc": "Flaky pastry filled with savoury sausage.",
+          "price": 6.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Minced Savoury",
+          "dishId": "minced-savoury",
+          "desc": "Savoury minced meat dish.",
+          "price": 5.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chips",
+          "dishId": "chips",
+          "desc": "Served with chicken seasoning.",
+          "price": 6.8,
+          "tags": []
+        },
+        {
+          "name": "English Muffin - Bacon & Egg with Garlic Aioli",
+          "dishId": "english-muffin-bacon-egg-with-garlic-aioli",
+          "desc": "Toasted English muffin topped with crispy bacon, egg and a hint of garlic aioli.",
+          "price": 12.8,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Toasted Sandwich - Bacon, Egg, Cheese, Tomato",
+          "dishId": "toasted-sandwich-bacon-egg-cheese-tomato",
+          "desc": "Bacon, egg, cheese, and tomato on toasted bread.",
+          "price": 12.8,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Filled Rolls",
+      "sectionId": "filled-rolls",
+      "items": [
+        {
+          "name": "Filled Roll - Ham and Cheese",
+          "dishId": "filled-roll-ham-and-cheese",
+          "desc": "Ham and cheese filling in a soft roll.",
+          "price": 12.8,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Roti",
+      "sectionId": "roti",
+      "items": [
+        {
+          "name": "Roti Chicken",
+          "dishId": "roti-chicken",
+          "desc": "Made tender with sweet chilli sauce, cucumber and lettuce. We automatically toast.",
+          "price": 13.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Satay Beef Roti",
+          "dishId": "satay-beef-roti",
+          "desc": "Tender beef strips served with roti.",
+          "price": 13.5,
+          "tags": [
+            "contains-peanuts",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Toasted Panini",
+      "sectionId": "toasted-panini",
+      "items": [
+        {
+          "name": "Panini Chicken with Cranberry and Brie Cheese",
+          "dishId": "panini-chicken-with-cranberry-and-brie-cheese",
+          "desc": "We automatically toast.",
+          "price": 12.8,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Panini Chicken with Basil, Garlic Pesto and Brie",
+          "dishId": "panini-chicken-with-basil-garlic-pesto-and-brie",
+          "desc": "We automatically toast.",
+          "price": 12.8,
+          "tags": [
+            "contains-nuts",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Toasted Ficelle",
+      "sectionId": "toasted-ficelle",
+      "items": [
+        {
+          "name": "Bacon and Egg Ficelle",
+          "dishId": "bacon-and-egg-ficelle",
+          "desc": "Made with bacon, egg and aioli sauce.",
+          "price": 12.8,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken, Basil, Garlic Pesto and Brie Ficelle",
+          "dishId": "chicken-basil-garlic-pesto-and-brie-ficelle",
+          "desc": "We automatically toast.",
+          "price": 12.8,
+          "tags": [
+            "contains-nuts",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Ficelle Chicken with Cranberry and Brie Cheese",
+          "dishId": "ficelle-chicken-with-cranberry-and-brie-cheese",
+          "desc": "Tender chicken, cranberry, and brie cheese on toasted ficelle.",
+          "price": 12.8,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sandwiches",
+      "sectionId": "sandwiches",
+      "items": [
+        {
+          "name": "Salad Sandwich - Roast Chicken with Cranberry, Brie",
+          "dishId": "salad-sandwich-roast-chicken-with-cranberry-brie",
+          "desc": "Tender roast chicken, cranberry, and brie come together in a delightful combination.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Salad Sandwich - Roast Chicken with Avocado & Tomato Relish",
+          "dishId": "salad-sandwich-roast-chicken-with-avocado-tomato-relish",
+          "desc": "Tender roast chicken, avocado, and tomato relish on fresh bread.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Salad Sandwich - Roast Chicken with Egg & Mayo",
+          "dishId": "salad-sandwich-roast-chicken-with-egg-mayo",
+          "desc": "Tender roast chicken, egg, and creamy mayo in a salad sandwich.",
+          "price": 9.8,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Egg & Mayo Plain Sandwich",
+          "dishId": "egg-mayo-plain-sandwich",
+          "desc": "Simple egg and mayonnaise on bread.",
+          "price": 9.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Roasted Chicken & Mayo Plain Sandwich",
+          "dishId": "roasted-chicken-mayo-plain-sandwich",
+          "desc": "Tender roast chicken with mayonnaise on plain bread.",
+          "price": 9.0,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sweets",
+      "sectionId": "sweets",
+      "items": [
+        {
+          "name": "Blueberry loaf",
+          "dishId": "blueberry-loaf",
+          "desc": null,
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "Not on the delivery-app listing; bought in-store 2026-08-21.",
+              "since": "2026-08-22"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Fresh Cream Donut",
+          "dishId": "fresh-cream-donut",
+          "desc": "Soft and fluffy donut filled with a sweet cream.",
+          "price": 6.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Slices",
+          "dishId": "slices",
+          "desc": "Rich layered slice with a smooth top on a chocolate biscuit base, finished with a light cocoa dusting.",
+          "price": 5.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chocolate Mud Cake",
+          "dishId": "chocolate-mud-cake",
+          "desc": "Rich, decadent chocolate cake with a dense, fudgy centre.",
+          "price": 6.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Custard Square",
+          "dishId": "custard-square",
+          "desc": "Rich and creamy square-shaped pastry dessert.",
+          "price": 9.2,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chocolate and Oreo Cream Donut",
+          "dishId": "chocolate-and-oreo-cream-donut",
+          "desc": "Rich, creamy donut filled with chocolate and Oreo cream.",
+          "price": 6.9,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Raspberry Cream Lamington Cake",
+          "dishId": "raspberry-cream-lamington-cake",
+          "desc": "Moist cake filled with raspberry cream.",
+          "price": 5.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chocolate Cream Lamington Cake",
+          "dishId": "chocolate-cream-lamington-cake",
+          "desc": "Rich, moist cake smothered in a decadent chocolate cream.",
+          "price": 5.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Blueberry Muffin",
+          "dishId": "blueberry-muffin",
+          "desc": "Sweet and fruity treat filled with blueberries.",
+          "price": 6.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cream Banana Cake",
+          "dishId": "cream-banana-cake",
+          "desc": "Moist banana cake smothered in a rich cream.",
+          "price": 5.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Caramel Slice",
+          "dishId": "caramel-slice",
+          "desc": "Rich, sweet caramel on a buttery base.",
+          "price": 5.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chocolate Caramel Crunch",
+          "dishId": "chocolate-caramel-crunch",
+          "desc": "Rich, crunchy treat with a sweet caramel centre.",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Salted Caramel Mud Cake",
+          "dishId": "salted-caramel-mud-cake",
+          "desc": "Rich, gooey caramel and velvety mud cake, a decadent treat.",
+          "price": 6.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Gourmet Carrot Cake",
+          "dishId": "gourmet-carrot-cake",
+          "desc": "Moist and flavourful cake made with carrots.",
+          "price": 6.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Apple Slice",
+          "dishId": "apple-slice",
+          "desc": "Thinly sliced fresh apple.",
+          "price": 5.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Custard Fresh Fruit Tarts",
+          "dishId": "custard-fresh-fruit-tarts",
+          "desc": "Sweet pastry filled with a mix of fresh fruit and creamy custard.",
+          "price": 7.8,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Neenish Tarts",
+          "dishId": "neenish-tarts",
+          "desc": "Sweet pastry tarts with a delicate filling.",
+          "price": 5.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Salted Caramel Cream Donut",
+          "dishId": "salted-caramel-cream-donut",
+          "desc": "Soft and fluffy sugar-dusted donut filled with salted caramel cream, finished with a chocolate drizzle.",
+          "price": 6.9,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Beverages",
+      "sectionId": "beverages",
+      "items": [
+        {
+          "name": "Canned Coke Range 330ml",
+          "dishId": "canned-coke-range-330ml",
+          "desc": null,
+          "price": 4.8,
+          "tags": []
+        },
+        {
+          "name": "Canned V Drink 500ml",
+          "dishId": "canned-v-drink-500ml",
+          "desc": null,
+          "price": 8.0,
+          "tags": []
+        },
+        {
+          "name": "Coke Bottle Range 600ml",
+          "dishId": "coke-bottle-range-600ml",
+          "desc": "Choice of flavour.",
+          "price": 7.5,
+          "tags": []
+        }
+      ]
+    }
+  ]
+}

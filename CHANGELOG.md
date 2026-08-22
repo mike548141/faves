@@ -9,6 +9,10 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Daily Bakery, Lower Hutt** joins the list — the owner's find on
+  High Street. Full Uber Eats menu (50 dishes across nine sections,
+  allergen-tagged), with the gourmet chicken pie and blueberry loaf as
+  the picks, plus Uber Eats and DoorDash ordering links.
 - **Suggestions you closed can be brought back, from Settings.** The ✕ on a
   place's "If it's your first time, try…" block closes it for that place and
   remembers it — which was the point — but until now there was no way back at
