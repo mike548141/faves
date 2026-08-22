@@ -27,3 +27,17 @@
       🔑 **And the ranking does not go away.** Sinking distant places was never
       wrong on its own — it is what the list does *within* the limit. This
       ruling adds a cut, it does not replace the sort.
+
+      ✅ **RULED 2026-08-22 on the direct-link question this ruling opened —
+      THE LINK WORKS, AND SAYS WHY.** A link straight to a venue beyond the
+      reader's distance limit **opens normally**, carrying one quiet line
+      naming the limit and offering to widen it. Blocking the link was
+      explicitly rejected: the sender never knew what limit the recipient set,
+      so a blocked link fails for a reason neither party can see.
+      🔑 **The reasoning worth keeping:** the note is not an apology for the
+      filter, it is the one moment the setting becomes legible — a reader
+      wondering why a place was missing from home gets the answer on the page
+      they are already looking at, next to the control that fixes it.
+      📋 **Still open and treated as implementation unless he says otherwise:**
+      the empty state when the limit excludes everything, and whether the list
+      states its count (*"showing 12 of 55"*).

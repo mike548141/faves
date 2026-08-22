@@ -87,3 +87,32 @@
   whose assertion count depends on the outcome cannot be verified by its count,
   and "N passed" is the one line everybody reads. Nobody has looked at which
   assertion it is; that is the next step, not a conclusion.
+
+  ✅ **DECISION 2 RULED 2026-08-22 — CLOSURE BECOMES PER-BRANCH.** The owner
+  took the schema change over the recommendation, which was to leave it
+  venue-level for now on the grounds that no venue in the corpus is closed and
+  the engineering half already stopped anything wrong appearing on screen. He
+  chose the bigger job anyway, and the reason the item gave for it is the one
+  that holds: leaving closure venue-level means **a shut branch can only be
+  recorded by deleting it**, which destroys the record that it ever traded —
+  the exact loss [ADR 0023] exists to prevent.
+
+  📋 **What this now owes, and it is a real piece of work — `[L]`, not `[S]`.**
+  1. A per-branch `lifecycle` (or equivalent) in the venue schema, with
+     `validate.py` teaching, and `docs/ARCHITECTURE.md` updated.
+  2. The three functions changed on 2026-08-19 (`branchOpenStateOf`,
+     `branchSummary`/`branchClosureBadge`, `hoursRow`) re-pointed at the
+     **branch's** answer, **falling back to the venue's** — a venue-level
+     closure must still shut every branch, or this becomes a regression.
+  3. `branch_check` fixtures for the mixed case that is the whole point: one
+     branch shut, the others trading. The current fixtures are all-or-nothing.
+  4. `leadBranch` must never lead with a shut branch while an open one exists.
+  5. ⚑ **It also settles `050`** (a shut chain saying *"Permanently closed"*
+     eight times): once closure is per-branch the repeats stop being repeats,
+     because each row is then saying something the header cannot. Do `050`
+     **after** this, not before.
+
+  🔎 **`isGone` is still dead code with zero callers, and this ruling is what
+  gives it a possible job** — "permanently closed" reading differently from
+  "shut for a refit" is a per-branch distinction now worth making. Decide it
+  **inside** this work rather than as a separate tidy-up.

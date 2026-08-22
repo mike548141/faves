@@ -28,3 +28,22 @@
   present encoding throws that knowledge away. But it is a rename across 13
   tools during a period when several sessions run in parallel, so the cost is
   coordination, not code.
+
+  ✅ **RULED 2026-08-22 — OPTION 2: SPLIT THE WAIT IN TWO.** `untilPresent`
+  becomes a claim about the **site** and fails at exit 1; `untilSettled` stays a
+  claim about **timing** and keeps exit 2. Options 1 and 3 were both declined —
+  so a busy laptop must still never be able to manufacture a regression, and
+  "leave it documented" was not accepted as good enough.
+
+  🔑 **The reasoning the ruling rests on:** every `until` call site already
+  knows which kind it is, because its author knew when they wrote it. The
+  present encoding throws that knowledge away and then asks the reader to guess
+  from an exit code. This does not add information; it stops discarding it.
+
+  📋 **Doing it.** Rename at all `until` call sites across the 13 check tools,
+  one at a time, choosing per site rather than by pattern — **a site whose kind
+  is unclear is a finding, not a coin toss.** The cost here is coordination, not
+  code: it touches every browser check, so take it in a **quiet window with no
+  parallel faves session live**, and land it in one commit so no tool is left
+  half-migrated. `boot_check`'s `until(… "#about-btn" …)` is the worked example
+  in this item's own text.

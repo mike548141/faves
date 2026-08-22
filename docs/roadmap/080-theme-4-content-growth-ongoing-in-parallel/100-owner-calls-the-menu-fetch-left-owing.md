@@ -60,3 +60,21 @@
       well-formed, every link resolved, and the index rebuilt clean. Worth
       knowing as a class — when a single numbered list is split across
       files, the numbering survives and the *belonging* does not.
+
+      ✅ **RULED 2026-08-22 on question 3 — TAKE THE CONSERVATIVE DATE, October
+      2025.** The owner chose the older read over the export date, so the
+      staleness caveat starts warning sooner. The recommendation put to him was
+      the opposite (keep `2026-06-29`, on the grounds that the export date is
+      the only full-precision date the document supports); it was **not** taken.
+      ⚠️ **AND THE ITEM WAS STALE — this was ALREADY DONE on 2026-08-17**, in
+      `60d9bb8` *"data: three owner calls — a conservative date…"*, which
+      changed `verified` from `2026-06-29` to `2025-10-01`. The record still
+      says *"left at 2026-06-29"*, and that stopped being true five days before
+      anyone read it back to him. **So the ruling ratifies shipped behaviour and
+      owes no work.**
+      🔑 **How the staleness survived, said against ourselves.** This paragraph
+      was MOVED into this item earlier on 2026-08-22 to fix a findability
+      defect — and the session that moved it verified the *location* problem
+      and never checked the *content*. Moving a claim is not reading it. A
+      relocation pass should re-verify every factual claim it carries, because
+      relocation is exactly when a reader assumes someone just looked.
