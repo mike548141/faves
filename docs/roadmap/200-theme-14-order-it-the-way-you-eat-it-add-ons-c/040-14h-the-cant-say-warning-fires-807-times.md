@@ -1,5 +1,8 @@
-- [ ] **14h — The "we can't say" warning fires 807 times, and Spinach is one of
-      them** `[S][data]`+`[S][ux]` — **owner-raised 2026-08-17**, looking at
+- [~] **14h — The "we can't say" warning fires 807 times, and Spinach is one of
+      them** `[S][data]`+`[S][ux]` — 🔒 **CLAIMED 2026-09-07 (session faves-24,
+      wt: faves-14h-addon-tags).** Building the owner's 2026-08-22 ruling:
+      (a) tag, then (b) collapse.
+      **owner-raised 2026-08-17**, looking at
       *"We can't say whether Bacon is vegetarian, so we can't say this still is.
       We can't say whether Bacon is gluten free, so we can't say this still is."*
       and asking what value it has. **Answer: almost none, and it costs the

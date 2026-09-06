@@ -1,4 +1,6 @@
-- [ ] ⚑ **Settings promises to *hide* places and nothing hides** `[XS]` —
+- [~] ⚑ **Settings promises to *hide* places and nothing hides** `[XS]` —
+      🔒 **CLAIMED 2026-09-07 (session faves-24, wt: faves-distance-filter).**
+      Building the owner's 2026-08-22 ruling: the control filters.
       found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`). The copy reads *"Hide places further than…"* and *"will
       start hiding places"*. **Nothing is hidden: the ranking sinks them.** A
       reader who sets a distance and still sees a far-away venue concludes the
