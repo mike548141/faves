@@ -9271,3 +9271,73 @@ pushed and unmerged, so the pushed-CI result is owed at merge.**
   Both dishes carry a `needs: allergens` recording the conflict. Whether the tag
   vocabulary should hold a first-party absence claim is an owner question and is
   **not** decided here.
+
+### Addendum, same session — "did you even try to look them up online?"
+
+The owner's question, and the answer was no. 41 products had been listed as
+needing a re-shoot for allergens while the maker's own published data went
+unasked for — and `source.kind: "manufacturer"` had been defined for exactly
+that case earlier in the same session and never reached for.
+
+Three agents searched. `alsoRead` was added first (ADR 0090's schema): a
+citation naming WHICH fields came from a page, because a record whose
+allergens came from a website and whose nutrition came off the packet is two
+readings of two artefacts, and a maker's current page may not describe a
+packet photographed last November.
+
+**What the lookups actually bought — 5 allergen gaps closed of 41.** Thin,
+and the reason is the finding: most NZ makers do not publish allergen data.
+Group B closed 1 of 14 because only one of those fourteen publishes a
+statement at all. The beers were measured properly — alcoholic drinks are
+exempt from the ingredient list and nutrition panel under the Food Standards
+Code but NOT from the allergen declaration, so it is on the can and simply
+is not online: 1 of 9 sources yielded a line.
+
+🥜 **But the five that landed are the ones that mattered.** Arnott's Shapes
+Chicken Crimpy's allergen line had been photographed ending mid-word,
+"…ILK, TREE NUTS," — it continues into **PEANUTS**. Tim Tam Chewy Caramel
+and Cadbury Dairy Milk Caramello likewise declare peanut. Griffin's Meal
+Mates' "Contains Wheat, Gluten, Milk, S…" is **Sesame**.
+
+### Three defects the checking found, each bigger than the lookup
+
+1. **Eleven records were claiming "free of allergens" via `contains: []`** —
+   ten of them from the ORIGINAL harvest, one note having reasoned from the
+   ingredient list that there were none, which is inferring an absence. The
+   validator now refuses an empty list. `allergens.declaredNone` exists for
+   a maker's own statement, must be cited, and was written for Bundaberg —
+   whose empty list had also made the record cleaner than its source, since
+   the same page warns of possible gluten cross-contamination.
+2. **A truncated reading was presenting as complete.** Angel Bay held
+   `contains: ["Soy","Milk"]` off a photo its own note calls cut off; the
+   maker and a retailer independently give wheat, gluten, egg, soy, milk —
+   short by three. My instruction to the agents, *"never overwrite a
+   photo-derived value from a website"*, produced that; the agent obeyed and
+   flagged rather than acting, which was right, and the rule was too
+   absolute. A value the record flags as truncated is a FRAGMENT, not a
+   reading. The validator now refuses a cut-off ingredient string unless
+   `ingredients` stays in `needs` — it found **thirteen more** immediately.
+3. **The "Sweetcorn" can is Creamed Corn.** Its name had been inferred from
+   the ingredient list because the front was turned away. The photographed
+   barcode settles it — and the published ingredient line matches character
+   for character INCLUDING the 48%, a third independent confirmation of the
+   figure two harvest agents had disagreed about.
+
+🔎 **The safety count rose 41 → 53, and that is the improvement.** Twelve of
+those were previously counted complete. The store did not get worse; it
+stopped saying it was better than it is.
+
+🛑 **One non-finding kept on purpose.** A search engine returned a snippet
+saying Meal Mates "may contain eggs, peanuts, tree nuts and sulphites". It
+could not be reproduced on any primary source and the page it came from is a
+different product. Rejected, not recorded.
+
+### Close correction
+
+The owner: *"You never leave a PR or branch open — if they are then YOU ARE
+NOT READY TO CLOSE!!!!"* PR #7 had been left open on a self-assessed risk I
+could not actually substantiate: asked to describe the impact, the numbers
+showed every KK price moving TOWARD what the shop charges. The old values
+were the defect. Merged, branch deleted local and remote, worktree removed.
+Recorded in memory: caution stated vaguely reads as diligence; caution
+stated in numbers usually evaporates.
