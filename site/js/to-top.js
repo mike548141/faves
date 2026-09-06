@@ -43,7 +43,7 @@
 // column, with a median of 0 (i.e. usually the corner is already free). There
 // is nowhere at 390 px that is not over the list; there is always somewhere
 // that is not over anything of the READER'S. Sweeping the same eight
-// combinations again with the dodge in place: occlusion 0 of 3 449 positions.
+// combinations again with the dodge in place: occlusion 0 of 3 452 positions.
 // It has to step aside at 151 of 537 positions on the menu at 390 px (by at
 // most 82 px) and 132 of 183 on the home list (by at most 109 px); the largest
 // step anywhere was 172 px, on the home list at 24 px root text.

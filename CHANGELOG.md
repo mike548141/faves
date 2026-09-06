@@ -17,7 +17,7 @@ content freshness separately from this file.
   way by *moving* instead of vanishing: when a price, a dish name, a venue name
   or a ♥ is underneath it, it steps a little way up the column and returns to
   the corner as soon as the corner is free. Swept over the whole of a real menu
-  and the whole home list, at two widths and two text sizes — 3,454 scroll
+  and the whole home list, at two widths and two text sizes — 3,452 scroll
   positions — it now covers none of them. It covered 27.6% of them on the menu
   and 73.0% on the home list when it was simply left in the corner, worst case
   a price 100% hidden.
