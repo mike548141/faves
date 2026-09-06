@@ -53,7 +53,7 @@ import {
   launchChrome,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
   sleep,
 } from "./lib/browser.mjs";
 
@@ -96,7 +96,7 @@ async function setPermission(cdp, origin, setting) {
 /** Load the home screen and wait for the list to be drawn by app.js. */
 async function openHome(cdp, driver, sessionId, port) {
   await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/index.html` }, sessionId);
-  await until(
+  await untilPresent(
     () => driver.evalPage(`document.querySelectorAll("#restaurant-list .card").length > 3`),
     { label: "home list rendered" }
   );
@@ -345,7 +345,7 @@ async function run(opts) {
     );
     await stubGeo("ok");
     await driver.click("#geo-dialog-allow");
-    await until(async () => !(await settledState()).dialogOpen, { label: "dialog closed after Allow" });
+    await untilPresent(async () => !(await settledState()).dialogOpen, { label: "dialog closed after Allow" });
     await sleep(300); // the queued `close` task has landed
     const allowedState = await settledState();
     report.check(
@@ -372,7 +372,7 @@ async function run(opts) {
     );
     await stubGeo("denied");
     await driver.click("#geo-dialog-allow");
-    await until(async () => !(await settledState()).dialogOpen, { label: "dialog closed after Allow-then-denied" });
+    await untilPresent(async () => !(await settledState()).dialogOpen, { label: "dialog closed after Allow-then-denied" });
     await sleep(300);
     const blockedState = await settledState();
     report.check(

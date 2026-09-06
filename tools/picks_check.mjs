@@ -51,7 +51,7 @@ import {
   launchChrome,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
 } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
@@ -127,7 +127,7 @@ async function open(cdp, sessionId, driver, port, venueId) {
   // restaurant.html's static markup and carries that class, so a wait that
   // accepts it returns before a single line of the menu has been drawn — and
   // every assertion after it then measures a blank page.
-  await until(() => driver.evalPage(`!!document.querySelector(".menu-search")`), {
+  await untilPresent(() => driver.evalPage(`!!document.querySelector(".menu-search")`), {
     label: `${venueId} rendered`,
   });
   await driver.settle();
@@ -283,7 +283,7 @@ async function run(opts) {
 
     await driver.click("#overflow-btn");
     await driver.click("#settings-btn");
-    await until(() => driver.evalPage(`!!document.querySelector(".settings-sheet[open], #settings-sheet[open]")`), {
+    await untilPresent(() => driver.evalPage(`!!document.querySelector(".settings-sheet[open], #settings-sheet[open]")`), {
       label: "the Settings sheet to open",
     });
     await driver.click(".settings-row", "Refresh & reset");

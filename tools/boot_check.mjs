@@ -36,7 +36,7 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
-import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, until } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, untilPresent } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -77,13 +77,43 @@ const SCREENS = [
     ready: `!!document.querySelector(".menu-title")`,
     checks: [
       {
+        // THE TOLERANCE STAYS; THE SILENCE GOES (owner-ruled 2026-09-06,
+        // option 2 of three). This selector is an OR-list ending in a
+        // `[class*='price']` catch-all, so if both NAMED classes were renamed
+        // the catch-all would still match whatever replaced them and the
+        // assertion would keep passing while the thing it names had gone —
+        // ADR 0072's decorative shape, with no missing id for an id sweep to
+        // find. Naming one class outright was declined as too brittle (the
+        // markup legitimately offers two forms) and commenting the tolerance
+        // was declined as leaving the shape in place. So the check now reports
+        // WHICH alternative matched, and fails if only the catch-all did.
+        // Measured the same day: of the seven multi-target selectors across
+        // the check tools, this is the ONLY one with this flaw — the other six
+        // name real alternatives and do fail when all of them go.
         what: "the venue's menu rendered with priced dishes",
-        expr: `(() => ({
-          title: document.querySelector(".menu-title")?.textContent ?? "",
-          prices: [...document.querySelectorAll(".dish-price, .item-price, [class*='price']")]
-            .map((e) => e.textContent.trim()).filter((s) => /\\d/.test(s)).length,
-        }))()`,
-        assert: (v) => (v.title && v.prices > 0 ? null : `title=${JSON.stringify(v.title)} priced=${v.prices}`),
+        expr: `(() => {
+          const priced = (sel) => [...document.querySelectorAll(sel)]
+            .map((e) => e.textContent.trim()).filter((s) => /\\d/.test(s)).length;
+          const named = [".dish-price", ".item-price"];
+          return {
+            title: document.querySelector(".menu-title")?.textContent ?? "",
+            prices: priced(named.join(", ") + ", [class*='price']"),
+            // Carried out rather than repeated in the assertion below: the
+            // failure sentence has to name the classes this check actually
+            // looked for, and a second copy of the list is how the two drift.
+            named,
+            // Which of the names the markup actually uses today. Empty means
+            // only the wildcard matched, which is the silent migration.
+            matchedBy: named.filter((c) => priced(c) > 0),
+          };
+        })()`,
+        assert: (v) =>
+          !v.title || v.prices === 0
+            ? `title=${JSON.stringify(v.title)} priced=${v.prices}`
+            : v.matchedBy.length === 0
+              ? `${v.prices} priced element(s), but NONE of ${v.named.join(" / ")} matched any of them` +
+                ` — only the [class*='price'] catch-all did, so the price class has been renamed under this check`
+              : null,
       },
       {
         // The currency must be findable from the prices themselves, in EITHER
@@ -203,7 +233,7 @@ async function bootScreen(cdp, sessionId, driver, report, base, screen, venueId)
   // thrown timeout would abort the run before they were ever printed.
   let ready = true;
   try {
-    await until(() => driver.evalPage(screen.ready), {
+    await untilPresent(() => driver.evalPage(screen.ready), {
       label: `${screen.name}: page rendered by JS`,
       timeout: 15_000,
     });
@@ -282,7 +312,7 @@ async function run(opts) {
         { url: `${base}/restaurant.html?id=${encodeURIComponent(venueId)}` },
         sessionId
       );
-      await until(() => driver.evalPage(`!!document.querySelector(".menu-sub-link")`), {
+      await untilPresent(() => driver.evalPage(`!!document.querySelector(".menu-sub-link")`), {
         label: "menu: the subheading facets rendered",
       });
       const facet = await driver.evalPage(`(() => {
@@ -300,7 +330,7 @@ async function run(opts) {
       );
 
       await cdp.send("Page.navigate", { url: `${base}/${facet.href}` }, sessionId);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
         { label: "home: arrived with a facet filter" }
       );
@@ -337,7 +367,7 @@ async function run(opts) {
       );
 
       await driver.evalPage(`${need("#active-filters .active-filter")}.click()`);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`document.getElementById("active-filters")?.hidden === true`),
         { label: "home: filter cleared" }
       );
@@ -364,7 +394,7 @@ async function run(opts) {
     // an unhandled rejection that buries the diagnosis printed above it.
     try {
       await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
         { label: "home: back for the Settings check" }
       );
@@ -375,14 +405,14 @@ async function run(opts) {
         const more = [...document.querySelectorAll("button")].find((b) => b.getAttribute("aria-label") === "More");
         if (more) more.click();
       })()`);
-      await until(() => driver.evalPage(`[...document.querySelectorAll("button")].some((b) => /Settings/.test(b.textContent))`), {
+      await untilPresent(() => driver.evalPage(`[...document.querySelectorAll("button")].some((b) => /Settings/.test(b.textContent))`), {
         label: "settings: the ⋯ menu opened",
       });
       await driver.evalPage(`(() => {
         const b = [...document.querySelectorAll("button")].find((x) => /Settings/.test(x.textContent));
         if (b) b.click();
       })()`);
-      await until(() => driver.evalPage(`document.querySelectorAll(".settings-row").length > 0`), {
+      await untilPresent(() => driver.evalPage(`document.querySelectorAll(".settings-row").length > 0`), {
         label: "settings: the index rendered",
       });
       const rows = await driver.evalPage(`({
@@ -410,7 +440,7 @@ async function run(opts) {
           .find((e) => e.textContent.trim() === "Your data");
         if (t) t.closest(".settings-row").click();
       })()`);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`!!document.querySelector(".settings-panel:not([hidden]) .import-block")`),
         { label: "settings: the Your data panel opened" }
       );
@@ -446,7 +476,7 @@ async function run(opts) {
         const b = document.querySelector(".settings-sheet .settings-back");
         if (b) b.click();
       })()`);
-      await until(() => driver.evalPage(`!document.querySelector(".settings-rows")?.closest("[hidden]")`), {
+      await untilPresent(() => driver.evalPage(`!document.querySelector(".settings-rows")?.closest("[hidden]")`), {
         label: "settings: back at the index",
       });
       await driver.evalPage(`(() => {
@@ -454,7 +484,7 @@ async function run(opts) {
           .find((e) => e.textContent.trim() === "Refresh & reset");
         if (t) t.closest(".settings-row").click();
       })()`);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`!!document.querySelector(".settings-panel:not([hidden]) .settings-versions")`),
         { label: "settings: the Refresh & reset panel opened" }
       );
@@ -464,7 +494,7 @@ async function run(opts) {
       // `length === 2` is load-bearing: `every` over an empty list is true, so
       // a selector that matched nothing would satisfy this wait vacuously and
       // report the placeholder as an answer.
-      await until(
+      await untilPresent(
         () => driver.evalPage(`(() => {
           const v = [...document.querySelectorAll(".settings-version-value")];
           return v.length === 2 && v.every((e) => e.textContent.trim() !== "…");
@@ -505,7 +535,7 @@ async function run(opts) {
     // menu, and the version stamps must be GONE from it — moving means moving.
     try {
       await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
         { label: "home: back for the About check" }
       );
@@ -513,11 +543,11 @@ async function run(opts) {
         const more = [...document.querySelectorAll("button")].find((b) => b.getAttribute("aria-label") === "More");
         if (more) more.click();
       })()`);
-      await until(() => driver.evalPage(`!!document.getElementById("about-btn") && !document.getElementById("about-btn").hidden`), {
+      await untilPresent(() => driver.evalPage(`!!document.getElementById("about-btn") && !document.getElementById("about-btn").hidden`), {
         label: "about: the ⋯ menu offered About",
       });
       await driver.evalPage(`${need("#about-btn")}.click()`);
-      await until(() => driver.evalPage(`!!document.querySelector(".about-sheet[open]")`), {
+      await untilPresent(() => driver.evalPage(`!!document.querySelector(".about-sheet[open]")`), {
         label: "about: the dialog opened",
       });
       const about = await driver.evalPage(`(() => {

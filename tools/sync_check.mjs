@@ -158,11 +158,13 @@ import {
   Cdp,
   Report,
   createDriver,
+  exitFromError,
   launchChrome,
   need,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
+  untilStable,
 } from "./lib/browser.mjs";
 // Pure, DOM-free (sync-code.js's own header) — safe to run in Node, the same
 // way tools/cook_check.mjs already imports site/js/slug.js. Read-only reuse of
@@ -456,7 +458,10 @@ async function openSettings(d) {
   await d.evalPage(
     `(() => { document.activeElement?.blur(); window.scrollTo({ top: 0, left: 0, behavior: "instant" }); })()`
   );
-  await until(async () => (await d.evalPage("window.scrollY")) === 0, {
+  // untilStable, not untilPresent: this waits for a SCROLL to come to rest, and
+  // a scroll that has not finished yet is a statement about the machine, never
+  // about the page's markup.
+  await untilStable(async () => (await d.evalPage("window.scrollY")) === 0, {
     label: "the page to actually be back at the top",
   });
   // Landing at the top is not the same as being settled there. menu.js's
@@ -470,7 +475,7 @@ async function openSettings(d) {
   await d.waitQuiet();
   await nav("open the overflow (⋯) menu", NAV.overflowBtn, async () => {
     await d.click(NAV.overflowBtn);
-    await until(
+    await untilPresent(
       async () =>
         d.evalPage(
           `document.querySelector(${JSON.stringify(NAV.overflowBtn)})?.getAttribute("aria-expanded") === "true"`
@@ -480,7 +485,7 @@ async function openSettings(d) {
   });
   await nav("open Settings from the ⋯ menu", NAV.settingsBtn, async () => {
     await d.click(NAV.settingsBtn);
-    await until(async () => d.evalPage(`!!document.querySelector(${JSON.stringify(NAV.sheet)})`), {
+    await untilPresent(async () => d.evalPage(`!!document.querySelector(${JSON.stringify(NAV.sheet)})`), {
       label: "the Settings sheet to open",
     });
   });
@@ -500,14 +505,14 @@ async function openSyncPanel(d) {
   await nav(
     `reach the Sync section inside "${NAV.syncTopic}"`,
     `a visible ${NAV.syncBody}`,
-    () => until(async () => d.evalPage(syncBodyVisibleExpr), { label: "the Sync panel to render" })
+    () => untilPresent(async () => d.evalPage(syncBodyVisibleExpr), { label: "the Sync panel to render" })
   );
 }
 
 async function closeSettings(d) {
   await nav("close the Settings sheet", NAV.closeBtn, async () => {
     await d.click(NAV.closeBtn);
-    await until(
+    await untilPresent(
       async () => !(await d.evalPage(`!!document.querySelector(${JSON.stringify(NAV.sheet)})`)),
       { label: "the Settings sheet to close" }
     );
@@ -520,7 +525,7 @@ async function closeSettings(d) {
 async function turnOnSync(d, report, label) {
   await openSyncPanel(d);
   await d.click(".sync-body .settings-reset", "Turn on sync");
-  await until(async () => d.evalPage(`!!document.querySelector(".sync-body .sync-code-display")`), {
+  await untilPresent(async () => d.evalPage(`!!document.querySelector(".sync-body .sync-code-display")`), {
     label: "the sync code to render",
     timeout: 15_000,
   });
@@ -556,7 +561,7 @@ function malformedCode(validCode) {
 async function joinSync(d, report, label, realCode) {
   await openSyncPanel(d);
   await d.click(".sync-body .profile-btn", "Use an existing code");
-  await until(async () => d.evalPage(`!!document.querySelector("#sync-join-code")`), {
+  await untilPresent(async () => d.evalPage(`!!document.querySelector("#sync-join-code")`), {
     label: "the join input to render",
   });
 
@@ -591,7 +596,7 @@ async function joinSync(d, report, label, realCode) {
   report.check(`[${label}] the real code from the other device is accepted as well-formed`, enabled);
 
   await d.click(".sync-body .profile-btn-primary", "Join");
-  await until(async () => !(await d.evalPage(`!!document.querySelector("#sync-join-code")`)), {
+  await untilPresent(async () => !(await d.evalPage(`!!document.querySelector("#sync-join-code")`)), {
     label: "the join to be accepted",
     timeout: 15_000,
   });
@@ -612,7 +617,10 @@ async function joinSync(d, report, label, realCode) {
 async function syncNowAndWait(d) {
   await openSyncPanel(d);
   await d.click(".sync-body .settings-reset", "Sync now");
-  await until(
+  // untilStable, not untilPresent: the status line is already on the page — what
+  // is being waited for is the engine LEAVING "Syncing…", which is a round trip
+  // whose duration nothing promises. A slow one must never read as a regression.
+  await untilStable(
     async () => {
       const t = await d.evalPage(syncStatusExpr);
       return t !== null && t !== "Syncing…" ? t : null;
@@ -693,7 +701,7 @@ async function openDevice({ label, profileDir, headed, siteUrl, fakeBlobPort, re
 
   const driver = createDriver(cdp, sessionId, (m) => report.step(`[${label}] ${m}`));
   const waitForMenu = (why) =>
-    until(async () => (await driver.evalPage("document.querySelectorAll('li.dish').length")) > 0, {
+    untilPresent(async () => (await driver.evalPage("document.querySelectorAll('li.dish').length")) > 0, {
       label: `[${label}] the menu to render${why ? ` (${why})` : ""}`,
     });
   const d = {
@@ -855,7 +863,7 @@ async function run(opts) {
     await openSyncPanel(B.d);
     await B.d.click(".sync-body .profile-btn", "Turn off sync on this device");
     await B.d.click(".sync-body .profile-btn-primary", "Turn off");
-    await until(
+    await untilPresent(
       async () => B.d.evalPage(`!!document.querySelector(".sync-body .settings-reset")`),
       { label: "B's sync panel to return to the \"off\" view" }
     );
@@ -933,7 +941,9 @@ if (opts.help) {
 try {
   process.exit(await run(opts));
 } catch (err) {
-  // A harness failure is not an app verdict — exit 2 so the two never blur.
-  console.error(`\nharness error: ${err.message}`);
-  process.exit(2);
+  // Classified in ONE place (lib/browser.mjs's exitFromError): a missing element
+  // is the SITE, and exits 1 naming what it wanted; anything else is the harness,
+  // and exits 2 so the two never blur. This used to be decided here, per tool —
+  // which is how the exit-1 verdict was quietly swallowed in eight of fifteen.
+  exitFromError(err);
 }

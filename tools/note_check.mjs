@@ -28,7 +28,7 @@
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, until } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, exitFromError, launchChrome, need, startServer, stopChrome, untilPresent } from "./lib/browser.mjs";
 
 const SITE = new URL("../site", import.meta.url).pathname;
 
@@ -107,12 +107,12 @@ const run = async () => {
 
     const load = async (lines) => {
       await cdp.send("Page.navigate", { url }, sessionId);
-      await until(async () => await d.evalPage("!!document.querySelector('.order-fab')"), { label: "the order UI" });
+      await untilPresent(async () => await d.evalPage("!!document.querySelector('.order-fab')"), { label: "the order UI" });
       await d.evalPage(seed(lines));
       await cdp.send("Page.navigate", { url }, sessionId);
-      await until(async () => await d.evalPage("!!document.querySelector('.order-fab') && !document.querySelector('.order-fab').hidden"), { label: "the order button" });
+      await untilPresent(async () => await d.evalPage("!!document.querySelector('.order-fab') && !document.querySelector('.order-fab').hidden"), { label: "the order button" });
       await d.click(".order-fab");
-      await until(async () => (await d.evalPage(snap)).open, { label: "the order sheet" });
+      await untilPresent(async () => (await d.evalPage(snap)).open, { label: "the order sheet" });
     };
 
     // ---- 1. the affordance ------------------------------------------------
@@ -192,4 +192,6 @@ const run = async () => {
   }
 };
 
-run().then((ok) => process.exit(ok ? 0 : 1)).catch((e) => { console.error(e); process.exit(2); });
+// exitFromError, not a local catch: a missing element is the SITE (exit 1,
+// named), a dead transport is the harness (exit 2) — see lib/browser.mjs.
+run().then((ok) => process.exit(ok ? 0 : 1)).catch(exitFromError);

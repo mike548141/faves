@@ -62,7 +62,7 @@ import {
   need,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
   sleep,
 } from "./lib/browser.mjs";
 
@@ -148,7 +148,7 @@ async function typeQuery(driver, q) {
 
 async function openVenue(driver, cdp, sessionId, port, id) {
   await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/restaurant.html?id=${id}` }, sessionId);
-  await until(() => driver.evalPage(`document.querySelectorAll("li.dish").length > 0`), {
+  await untilPresent(() => driver.evalPage(`document.querySelectorAll("li.dish").length > 0`), {
     label: `${id} menu rendered`,
   });
   await driver.settle();
