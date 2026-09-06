@@ -1,4 +1,4 @@
-- [ ] 🚩 **`until()` timeouts still exit 2, so a deleted element a check WAITS
+- [x] 🚩 **`until()` timeouts still exit 2, so a deleted element a check WAITS
       for still reads as a transport flake** `[S][tools]` — the half `070` did
       not close, filed separately 2026-08-19 rather than left inside a closed
       item.
@@ -70,6 +70,54 @@
   is stale by the time it lands. Re-run
   `grep -c "until(" tools/*.mjs` immediately before starting rather than
   trusting this figure.
+
+  ✅ **DELIVERED 2026-09-07 (session faves-24, merged `85880ee`, ADR 0093).**
+  `untilPresent` throws a `MissingElementError` and exits **1**; `untilStable`
+  keeps exit **2**. `settleUntil` untouched, its 13 call sites unchanged.
+
+  🛑 **AND THE ITEM'S PREMISE WAS INCOMPLETE IN A WAY THAT WOULD HAVE MADE THIS
+  DECORATIVE.** The split alone would have worked in seven of fifteen tools.
+  **Eight tools — `addon`, `branch`, `cook`, `device`, `note`, `recipe`,
+  `served`, `sync` — ended with their own `catch { console.error(…);
+  process.exit(2) }` around `run()`.** A local catch sits *upstream* of the
+  `uncaughtException` handler that does the classifying, so nothing ever reached
+  it. **`need()`'s exit-1 promise from `070` had therefore been void in over
+  half the corpus since the day it shipped**, with all eight green throughout —
+  [ADR 0072]'s decorative-guard pattern applied to ADR 0072's own remedy. The
+  fix is one exported `exitFromError()` called by the handler *and* by every
+  tool's catch: a tool may still catch, it may not classify. Recorded as
+  **ADR 0093** because a future author wrapping `run()` in a `try/catch` is an
+  obvious, locally-correct move that would silently switch it off again.
+
+  🔎 **Population re-counted at execution, and the earlier figures were both
+  wrong.** **56 lowercase `until(` occurrences — 1 definition + 55 call sites**
+  (54 across the fifteen check tools, 1 inside `launchChrome`). Not the 49 first
+  measured, nor the 54 corrected to. `settleUntil` never matches, being
+  capital-U.
+
+  📋 **Classification: 7 → `untilStable`, 48 → `untilPresent`.** The seven
+  timing claims: Chrome writing `DevToolsActivePort`; a scroll coming to rest; the
+  engine leaving "Syncing…"; a tab taking and losing the foreground (two); a
+  service worker registering; and `localStorage` reachable after a navigation.
+  🚩 **Four sites were deliberated rather than pattern-matched, and are named
+  here because "unclear is a finding, not a coin toss":**
+  `boot_check` "the version stamps answered" (a MessageChannel round trip; taken
+  as `untilPresent`, and safe because an enclosing local `try/catch` already
+  turns any throw into a failed `report.check`); `distance_check` "the location
+  has landed" (an either/or predicate, so only a site fault leaves it
+  unsatisfied); `sync_check` "the join to be accepted" (**the one `untilPresent`
+  whose timeout could in principle be manufactured by load rather than by
+  markup** — flagged, not hidden); and `cook_check`'s service-worker
+  registration, taken as `untilStable` conservatively though a broken `sw.js` is
+  arguably a site fault.
+
+  ✅ **Proven by breaking, which is the only evidence that counts here** — the
+  whole ruling is about which exit code a missing element produces. Same tool,
+  same kind of break, only the wrapper differing: renaming `app-ready` under an
+  `untilPresent` gives `FAIL MISSING ELEMENT …` at **exit 1**; renaming
+  `localStorage` under an `untilStable` gives `harness error: timed out …` at
+  **exit 2** with no `FAIL` line. And before/after on one break in `note_check`:
+  **exit 2 at the base commit, a named `FAIL` at exit 1 after.**
 
   ✅ **RULED 2026-09-06 ON THE NAMING FORK — `untilPresent` / `untilStable`.**
   Put to the owner with the collision stated and all three options costed; he

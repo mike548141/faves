@@ -991,3 +991,15 @@ deliberation those compact docs omit.
   from, and **807 does not** — it counted every untagged option against every
   claim-bearing dish at a venue, ignoring which groups attach to which dishes.
   The attachment-respecting figure was 72. 6 new mutations (131 → 137).
+- [0093](0093-one-place-decides-what-a-thrown-error-means.md) — **one place
+  decides what a thrown error means.** Found while building ROADMAP `340/160`:
+  **eight of the fifteen browser checks ended with their own
+  `catch { process.exit(2) }`**, which sits upstream of the `uncaughtException`
+  handler that classifies errors — so `need()`'s exit-1 promise ([ADR 0072])
+  had been **void in over half the corpus since the day it shipped**, with every
+  one of those eight green throughout. The classification now lives in one
+  exported `exitFromError()` called by the handler *and* by every tool's own
+  catch; a tool may still catch, it may not classify. Deleting the eight catches
+  was rejected — it fixes today and re-opens the moment a future author wraps
+  `run()` again. Verified by breaking: the same missing element gives exit 2 at
+  the base commit and a named `FAIL` at exit 1 after.
