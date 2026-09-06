@@ -1,0 +1,69 @@
+{
+  "id": "angel-bay-gourmet-beef-burger-patties-720g",
+  "name": "Gourmet Beef Burger Patties",
+  "brand": "Angel Bay",
+  "manufacturer": {
+    "name": "ANZCO Foods"
+  },
+  "pack": {
+    "size": 720,
+    "unit": "g",
+    "count": 6
+  },
+  "servings": {
+    "perPack": 6,
+    "size": 120,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1000,
+      "protein": 14.6,
+      "fatTotal": 17.2,
+      "fatSaturated": 7.8,
+      "fatTrans": 0.8,
+      "carbohydrate": 6.4,
+      "sugars": 1.4,
+      "dietaryFibre": 1.2,
+      "sodium": 489,
+      "potassium": 323
+    },
+    "perServing": {
+      "energyKj": 1200,
+      "protein": 17.5,
+      "fatTotal": 20.6,
+      "fatSaturated": 9.4,
+      "fatTrans": 1.0,
+      "carbohydrate": 7.7,
+      "sugars": 1.7,
+      "dietaryFibre": 1.4,
+      "sodium": 587,
+      "potassium": 388
+    }
+  },
+  "ingredients": "…Breadcrumb …a oil, salt, acidity …Soy Protein, Salt, …k), Modified …drolysed Maize …Extract. …[cut off]",
+  "allergens": {
+    "contains": [
+      "Soy",
+      "Milk"
+    ]
+  },
+  "category": "frozen",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7302.jpeg",
+      "raw_food_photos/IMG_7303.jpeg"
+    ],
+    "burst": "b044",
+    "captured": "2025-11-28",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "origin",
+    "storage"
+  ],
+  "note": "The whole left column of the back panel — ingredients, the 'Contains' line, origin and the maker's legal name — is chopped off by the LEFT EDGE OF THE FRAME. Only the tail of each line survives, so `ingredients` is fragments, not a list: the ellipses mark words that are on the pack but not in the photo. RE-SHOOT is needed before this record can be trusted for allergen purposes. The allergen line reads only '…, soy, milk.' so there is at least one more allergen ahead of 'soy' that cannot be read — allergens is therefore also in needs. Brand read from the back panel's '…gel Bay' plus the front's 'Bay / BY ANZCO FOODS'. pack.size 720 g derived from 'Serves Per Pack: 6' x 'Serving Size: 120g'. Barcode is on the pack but its digits fall below the bottom of the frame. Origin fragment visible: '…al and imported'. Cooking directions are for cooking FROM FROZEN, hence category frozen."
+}

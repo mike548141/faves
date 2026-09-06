@@ -1,0 +1,74 @@
+{
+  "id": "sanitarium-honey-puffs-425g",
+  "name": "Honey Puffs",
+  "brand": "Sanitarium",
+  "pack": {
+    "size": 425,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 14,
+    "size": 30,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1570,
+      "energyKcal": 375,
+      "protein": 9.5,
+      "fatTotal": 1.0,
+      "fatSaturated": 0.2,
+      "carbohydrate": 77.8,
+      "sugars": 18.2,
+      "dietaryFibre": 5.8,
+      "sodium": 73,
+      "potassium": 246
+    },
+    "perServing": {
+      "energyKj": 471,
+      "energyKcal": 113,
+      "protein": 2.8,
+      "fatTotal": 0.3,
+      "fatSaturated": 0.1,
+      "carbohydrate": 23.3,
+      "sugars": 5.5,
+      "dietaryFibre": 1.7,
+      "sodium": 22,
+      "potassium": 74
+    }
+  },
+  "ingredients": "Puffed wheat (76%), sugar, honey (5%), corn maltodextrin, natural flavour, salt, acid (acetic), natural sweetener (steviol glycosides).",
+  "allergens": {
+    "contains": [
+      "gluten",
+      "wheat"
+    ],
+    "mayContain": [
+      "lupin",
+      "milk",
+      "sesame",
+      "soy",
+      "sulphites",
+      "tree nuts"
+    ]
+  },
+  "storage": "Store in a cool, dry place.",
+  "origin": "Made in New Zealand from imported and local ingredients.",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7189.jpeg",
+      "raw_food_photos/IMG_7190.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin"
+  ],
+  "note": "Cleanest label in the burst — the whole side panel is crisp and fully in frame. Front of pack: 425g, Health Star Rating 4, 'LIGHTLY COATED with REAL NZ HONEY', 'NO ARTIFICIAL COLOURS or FLAVOURS'. May-contain names tree nuts but NOT peanuts. Barcode not photographed."
+}

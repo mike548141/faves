@@ -1,0 +1,31 @@
+{
+  "id": "berocca-performance-15-tablet-tube",
+  "name": "Berocca Performance Effervescent Tablets",
+  "brand": "Berocca",
+  "pack": {
+    "size": 15,
+    "unit": "each",
+    "count": 1
+  },
+  "category": "supplement",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7558.jpeg"
+    ],
+    "burst": "b053",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition",
+    "origin",
+    "servings",
+    "storage"
+  ],
+  "note": "Front of the tube only — one photo, nothing else in frame. This is a SEPARATE product from the 45-tablet carton in the same burst, not a second view of it: different pack (15-tablet tube vs 45-tablet carton) and a different registration number, so its composition must NOT be copied across from the carton even though both read 'Berocca Performance'. Variant is omitted because the flavour word wraps around the curve of the tube and only 'Flavour' is readable. The registration reads 'AUST L 21639' plus one further character that is not legible at native resolution — recorded here as text rather than asserted. Front claims: 'MENTAL SHARPNESS', 'PHYSICAL ENERGY', 'supported by a high dose of B complex vitamins. Plus vitamin C, calcium, magnesium and zinc', '15 effervescent tablets'."
+}

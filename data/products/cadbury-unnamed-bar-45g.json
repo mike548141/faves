@@ -1,0 +1,55 @@
+{
+  "id": "cadbury-unnamed-bar-45g",
+  "name": "Bar",
+  "brand": "Cadbury",
+  "pack": {
+    "size": 45,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 45,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1710,
+      "protein": 2.4,
+      "fatTotal": 8.3,
+      "fatSaturated": 5.0,
+      "carbohydrate": 79.6,
+      "sugars": 57.1,
+      "sodium": 31
+    },
+    "perServing": {
+      "energyKj": 770,
+      "protein": 1.1,
+      "fatTotal": 3.7,
+      "fatSaturated": 2.3,
+      "carbohydrate": 35.8,
+      "sugars": 25.7,
+      "sodium": 14
+    }
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/1/IMG_39AF480D-52E4-4269-BFF2-192551B9A2F9.jpeg"
+    ],
+    "burst": "b046",
+    "captured": "2025-11-28",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "THE PRODUCT NAME IS NOT IN THE PHOTO. One shot of a crumpled yellow wrapper showing the nutrition panel and part of the consumer-enquiries block; the branded face is turned away. `name` is left as the generic 'Bar' rather than guessed — the wrapper colour and the nutrition profile suggest a specific bar, and that suggestion is exactly what must not be written down. `brand` is read from the legible fragment '…DBURY' in the enquiries block, which is Cadbury; nothing else identifies it. Pack size is from the panel's own 'SERVING SIZE: 45g (1 bar)' with 'SERVINGS PER PACKAGE: 1'. No ingredient list and no allergen statement are visible anywhere in frame — this record must not be used for allergen decisions. Other wrapped bars of the same kind are visible out of focus beneath the hand."
+}

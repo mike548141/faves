@@ -1,0 +1,66 @@
+{
+  "id": "pams-value-trim-milk-2l",
+  "name": "Trim Milk",
+  "brand": "Pams",
+  "variant": "Value",
+  "manufacturer": {
+    "name": "Safeway Traders Ltd",
+    "address": "703 Roberts Line, Palmerston North, 4478",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9415077379200"
+  },
+  "pack": {
+    "size": 2,
+    "unit": "l",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 8,
+    "size": 250,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 156,
+      "protein": 4.0,
+      "fatTotal": 0.1,
+      "fatSaturated": 0.1,
+      "carbohydrate": 5.0,
+      "sugars": 5.0,
+      "sodium": 41,
+      "calcium": 133
+    },
+    "perServing": {
+      "energyKj": 390,
+      "protein": 10.0,
+      "fatTotal": 0.3,
+      "fatSaturated": 0.2,
+      "carbohydrate": 12.4,
+      "sugars": 12.4,
+      "sodium": 104,
+      "calcium": 332
+    }
+  },
+  "ingredients": "Low fat milk (100%).",
+  "allergens": {
+    "contains": [
+      "Milk"
+    ]
+  },
+  "storage": "Keep refrigerated at 0-4°C.",
+  "origin": "Product of New Zealand.",
+  "category": "dairy",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/1/IMG_13B557BF-ABDB-4879-A216-9232FBD8F4A8.jpeg"
+    ],
+    "burst": "b018",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "note": "Label also carries '99.8% fat free' and 'This product is not suitable as a complete milk replacement for children under two years.'"
+}

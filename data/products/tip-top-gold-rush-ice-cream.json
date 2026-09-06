@@ -1,0 +1,65 @@
+{
+  "id": "tip-top-gold-rush-ice-cream",
+  "name": "Gold Rush Ice Cream",
+  "brand": "Tip Top",
+  "manufacturer": {
+    "name": "Tip Top Ice Cream",
+    "address": "…[street number cut off] Carbine Road, Mt Wellington",
+    "country": "New Zealand"
+  },
+  "servings": {
+    "perPack": 12,
+    "size": 53,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 967,
+      "energyKcal": 231,
+      "protein": 1.8,
+      "fatTotal": 10.3,
+      "fatSaturated": 6.8,
+      "carbohydrate": 32.5,
+      "sugars": 26.7,
+      "sodium": 54
+    },
+    "perServing": {
+      "energyKj": 513,
+      "energyKcal": 123,
+      "protein": 1.0,
+      "fatTotal": 5.5,
+      "fatSaturated": 3.6,
+      "carbohydrate": 17.2,
+      "sugars": 14.2,
+      "sodium": 29
+    }
+  },
+  "ingredients": "…[the left half of every line is cut off by the frame edge; transcribed line by line, only the legible right-hand fragments] '…(Milk), Milk, Liquid' / '…Maize), Milk Solids,' / '…, Beet Red, Paprika),' / '…401), Emulsifiers (471' / '…hocolate Ripple (14%)' / '…p from Maize), Cocoa' / '…getable Oil, Milk Solids,' / '…Emulsifier (471), Natural' / '…okey Pokey Pieces (8%)' / '…tter, Glucose Syrup (from' / '…[illegible], Water, Soy Lecithin,' / '…, Gelatine, Natural Flavour].' …[cut off]",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Soy"
+    ],
+    "mayContain": [
+      "Peanut",
+      "Tree Nuts"
+    ]
+  },
+  "storage": "Keep frozen. Store below -18°C.",
+  "category": "frozen",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/1/IMG_4CBB1B6C-9EE3-4765-915B-EA608647A68A.jpeg"
+    ],
+    "burst": "b048",
+    "captured": "2025-11-28",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "pack"
+  ],
+  "note": "PEANUT WARNING: the allergen line reads 'Contains Milk, Soy.' followed by '[May be] present: Peanut, Tree Nuts' — the left edge of that line is cut off by the frame but 'Peanut, Tree Nuts' is unambiguous. Only the back of the tub was photographed; the ingredient column runs off the left edge of the frame so roughly half of every line is missing and it is transcribed as fragments, NOT reconstructed. Product name is read from the back-of-pack blurb '…d Rush scoop ice cream' (first letters off-frame) in a sentence beginning 'Yeehaw! …e struck gold with this…'; the front of pack was not photographed. The barcode's leading digits run off the bottom edge of the photograph — only '…14932 385073' is legible, so no gtin is recorded. Serving size printed as '53g (100mL)'. Also printed: 'Contains a maximum of 10% Milk Fat.'"
+}

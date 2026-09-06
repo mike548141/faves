@@ -1,0 +1,65 @@
+{
+  "id": "shott-caramel-coffee-syrup-1l",
+  "name": "Caramel Flavoured Coffee Syrup",
+  "brand": "SHOTT",
+  "variant": "Caramel",
+  "manufacturer": {
+    "name": "SHOTT Beverages Limited",
+    "address": "79 Rotu Drive, Auckland, New Zealand",
+    "country": "New Zealand"
+  },
+  "pack": {
+    "size": 1,
+    "unit": "l",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 50,
+    "size": 20,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 1340,
+      "protein": 0.1,
+      "fatTotal": 0.1,
+      "fatSaturated": 0.0,
+      "carbohydrate": 79.8,
+      "sugars": 77.9,
+      "sodium": 0
+    },
+    "perServing": {
+      "energyKj": 268,
+      "protein": 0.0,
+      "fatTotal": 0.0,
+      "fatSaturated": 0.0,
+      "carbohydrate": 16.0,
+      "sugars": 15.6,
+      "sodium": 0
+    }
+  },
+  "ingredients": "INGREDIENTS: Cane Sugar, Filtered Water, Natural Flavour, Citric Acid (330), Preservative (202).",
+  "allergens": {
+    "contains": [],
+    "mayContain": []
+  },
+  "storage": "SHAKE BEFORE USE",
+  "origin": "MADE IN NEW ZEALAND",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7564.jpeg",
+      "raw_food_photos/IMG_7565.jpeg",
+      "raw_food_photos/IMG_7566.jpeg"
+    ],
+    "burst": "b054",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin"
+  ],
+  "note": "The panel has THREE columns — '20mL Just Syrup', '100mL Just Syrup' and '200mL as Prepared Drink' (20 mL syrup in 180 mL black coffee). per100 and perServing here are both the JUST SYRUP columns; the prepared-drink column (284 kJ, 0.2 g protein, 0.4 g fat, 0.2 g saturated, 16.0 g carbohydrate, 15.6 g sugars, 0 mg sodium) has no place in this schema. Sodium is printed as 0 mg in every column. No allergen statement is printed and the ingredient list names none. The 'MADE IN NEW ZEALAND' line sits right on the bottom frame edge of IMG_7565 but the front label carries a 'NEW ZEALAND MADE' badge as well. Front also prints 'MAKES 10 LITRES / 50 GLASSES'. Distributor addresses for SHOTT Australia and SHOTT Asia are also printed; the NZ maker's is the one recorded. No barcode in frame."
+}

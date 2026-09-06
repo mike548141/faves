@@ -1,0 +1,69 @@
+{
+  "id": "roses-lemon-cordial-720ml",
+  "name": "Lemon Fruit Cordial",
+  "brand": "Rose's",
+  "manufacturer": {
+    "name": "Coca-Cola Europacific Partners N.Z. Ltd.",
+    "address": "19 Carbine Road, Mt Wellington, Auckland",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9414027720000"
+  },
+  "pack": {
+    "size": 720,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 17,
+    "size": 250,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 131,
+      "energyKcal": 31,
+      "protein": 0,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 7.4,
+      "sugars": 7.3,
+      "dietaryFibre": 0,
+      "sodium": 2.3
+    },
+    "perServing": {
+      "energyKj": 327,
+      "energyKcal": 78,
+      "protein": 0,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 19,
+      "sugars": 18,
+      "dietaryFibre": 0,
+      "sodium": 5.8
+    }
+  },
+  "ingredients": "Cordial contains: Water, Sugar, Lemon Juice from Concentrate (19.4%), Food Acid (330), Flavour, Preservative (223) (sulphites).",
+  "allergens": {
+    "contains": [
+      "Sulphites"
+    ]
+  },
+  "storage": "For best before date see top of bottle. Store in a cool place.",
+  "origin": "Made in New Zealand from imported and local ingredients.",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/2/IMG_6358.jpeg",
+      "raw_food_photos/2/IMG_6359.jpeg",
+      "raw_food_photos/3/IMG_6360.jpeg"
+    ],
+    "burst": "b002",
+    "captured": "2025-08-21",
+    "read": "2026-09-06"
+  },
+  "note": "The nutrition panel is stated AS PREPARED, not as sold: the label heads it '(When prepared, using 1 part cordial plus 5 parts water)' with a 250 mL serving. The undiluted cordial figures are not printed. Label also states 'Contains 3.2% Fruit Juice when prepared according to directions.' Health Star Rating 1. Prepared and packed under authority of European Refreshments Unlimited, owner of the trademark 'Rose's'."
+}

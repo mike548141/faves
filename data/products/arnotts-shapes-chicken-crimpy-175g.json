@@ -1,0 +1,59 @@
+{
+  "id": "arnotts-shapes-chicken-crimpy-175g",
+  "name": "Shapes Originals",
+  "brand": "Arnott's",
+  "variant": "Chicken Crimpy",
+  "pack": {
+    "size": 175,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 7,
+    "size": 25,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1970,
+      "protein": 7.5,
+      "fatTotal": 19.6,
+      "fatSaturated": 4.0,
+      "carbohydrate": 64.2,
+      "sugars": 6.9,
+      "dietaryFibre": 3.0,
+      "sodium": 868
+    },
+    "perServing": {
+      "energyKj": 493,
+      "protein": 1.9,
+      "fatTotal": 4.9,
+      "fatSaturated": 1.0,
+      "carbohydrate": 16.1,
+      "sugars": 1.7,
+      "dietaryFibre": 0.8,
+      "sodium": 217
+    }
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7195.jpeg",
+      "raw_food_photos/IMG_7196.jpeg"
+    ],
+    "burst": "b025",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "NO ALLERGEN DATA RECORDED — the panel is not readable. The ingredient panel sits at the LEFT frame edge of IMG_7196 and is cut off mid-line, and the surviving fragment is washed out by flash glare; only 'Oil (Antioxidant', 'ar, Salt, Malt' and 'Baking Powder' can be made out. The allergen lines are visible only as fragments — '…LUTEN, SOY.' and '…ILK, TREE NUTS,' — with both the start of each line and the end of the second cut off, so nothing has been entered in allergens rather than record a list that could be short. This pack must be re-photographed before it is treated as characterised for allergens. Front carries 'Oven Baked not fried', Health Star Rating 2, NET 175 g."
+}

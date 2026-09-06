@@ -1,0 +1,66 @@
+{
+  "id": "cookie-time-original-choc-chunk-bite-size",
+  "name": "The Original Chocolate Chunk Bite Size Cookies",
+  "brand": "Cookie Time",
+  "servings": {
+    "perPack": 11,
+    "size": 21,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1960,
+      "energyKcal": 468,
+      "protein": 6.0,
+      "fatTotal": 20.7,
+      "fatSaturated": 12.9,
+      "carbohydrate": 63.1,
+      "sugars": 38.4,
+      "sodium": 369
+    },
+    "perServing": {
+      "energyKj": 411,
+      "energyKcal": 98,
+      "protein": 1.3,
+      "fatTotal": 4.4,
+      "fatSaturated": 2.7,
+      "carbohydrate": 13.3,
+      "sugars": 8.1,
+      "sodium": 78
+    }
+  },
+  "ingredients": "WHEAT FLOUR, BUTTER (CREAM, SALT), DARK CHOCOLATE 16% (SUGAR, COCOA SOLIDS, MILK SOLIDS, EMULSIFIER (SOY LECITHIN), NATURAL FLAVOUR), BROWN SUGAR, SUGAR, MILK SOLIDS, RAISING AGENT (500), SALT.",
+  "allergens": {
+    "contains": [
+      "Gluten-containing cereal products",
+      "Milk",
+      "Soy"
+    ],
+    "mayContain": [
+      "Egg",
+      "Peanuts",
+      "Tree Nuts",
+      "Sesame Seeds"
+    ]
+  },
+  "storage": "ONCE OPENED, RESEAL THE POUCH OR TRANSFER COOKIES TO AN AIRTIGHT CONTAINER TO KEEP THEM FRESH.",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7173.jpeg",
+      "raw_food_photos/IMG_7174.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "pack"
+  ],
+  "note": "PEANUT WARNING: the pack prints, verbatim, 'MAY BE PRESENT: EGG, PEANUTS, TREE NUTS AND SESAME SEEDS.' Brand attribution: the Cookie Time wordmark/logo is not itself in frame; the brand is taken from the on-pack line 'ANY TIME IS COOKIE TIME!', the Cookie Muncher character and the .co.nz web address. Net weight is not in frame (11 x 21 g is stated but that is arithmetic), so pack is left unrecorded. Ingredients and allergens are crisp and fully in frame."
+}

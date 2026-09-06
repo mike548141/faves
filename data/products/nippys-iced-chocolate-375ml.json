@@ -1,0 +1,64 @@
+{
+  "id": "nippys-iced-chocolate-375ml",
+  "name": "Iced Chocolate Flavoured Milk",
+  "brand": "Nippy's",
+  "manufacturer": {
+    "name": "Knispel Bros Pty. Ltd.",
+    "address": "153 Loxton Drive, Moorook 5332, South Australia",
+    "country": "Australia"
+  },
+  "pack": {
+    "size": 375,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 375,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 302,
+      "protein": 3.5,
+      "fatTotal": 2.2,
+      "fatSaturated": 1.5,
+      "carbohydrate": 9.5,
+      "sugars": 8.7,
+      "sodium": 45,
+      "potassium": 183,
+      "calcium": 120
+    },
+    "perServing": {
+      "energyKj": 1132.5,
+      "protein": 13.1,
+      "fatTotal": 8.2,
+      "fatSaturated": 5.6,
+      "carbohydrate": 35.6,
+      "sugars": 30.4,
+      "sodium": 168.7,
+      "potassium": 686.2,
+      "calcium": 450
+    }
+  },
+  "origin": "Made in Australia from at least 95% Australian ingredients.",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7161.jpeg",
+      "raw_food_photos/IMG_7160.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "storage"
+  ],
+  "note": "Front (1132 kJ badge) and the matching back panel (1132.5 kJ) photographed; the panel face carries packer details and nutrition but no ingredient list. Label anomaly, quoted as printed rather than corrected: sugars read 8.7 g per 100 mL and 30.4 g per 375 mL serving, which do not reconcile (8.7 x 3.75 = 32.6); every other row reconciles exactly. Gluten is listed as 'NOT DETECTED' - not a number, so omitted. Carton is marked 'REDUCED FAT'."
+}

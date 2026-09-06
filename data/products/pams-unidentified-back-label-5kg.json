@@ -1,0 +1,59 @@
+{
+  "id": "pams-unidentified-back-label-5kg",
+  "name": "Unidentified product (back label only)",
+  "brand": "Pams",
+  "manufacturer": {
+    "name": "Pams Products Ltd",
+    "address": "703 Roberts Line, Palmerston North, 4478",
+    "country": "New Zealand"
+  },
+  "pack": {
+    "size": 5,
+    "unit": "kg",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 50,
+    "size": 100,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1520,
+      "protein": 9.0,
+      "fatTotal": 1.0,
+      "fatSaturated": 0.8,
+      "carbohydrate": 78.0,
+      "sugars": 0.0,
+      "sodium": 5
+    },
+    "perServing": {
+      "energyKj": 1520,
+      "protein": 9.0,
+      "fatTotal": 1.0,
+      "fatSaturated": 0.8,
+      "carbohydrate": 78.0,
+      "sugars": 0.0,
+      "sodium": 5
+    }
+  },
+  "storage": "Store in a cool, dry place. Once opened, transfer contents to an airtight container.",
+  "origin": "Product of India.",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_C5F3FE63-F617-4091-AE8E-5867FF46D10C.jpeg"
+    ],
+    "burst": "b007",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients"
+  ],
+  "note": "Only the back of a deep-red 5 kg bag was photographed and it carries no product name and no ingredient list. Deliberately NOT guessed from the panel: the label says only 'Product of India', serving size 100 g (Approx. 1/2 cup), and 'Nutrition information is based on uncooked product'. Per-serving and per-100 g columns are identical because the serving size IS 100 g. 5 kg is derived from 50 servings x 100 g."
+}

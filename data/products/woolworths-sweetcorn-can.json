@@ -1,0 +1,62 @@
+{
+  "id": "woolworths-sweetcorn-can",
+  "name": "Sweetcorn",
+  "brand": "Woolworths",
+  "manufacturer": {
+    "name": "Packed for Woolworths",
+    "address": "1 Woolworths Way, Bella Vista NSW 2153, Australia; 80 Favona Road, Mangere, Auckland",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9300633561482"
+  },
+  "servings": {
+    "perPack": 4,
+    "size": 100,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 258,
+      "energyKcal": 62,
+      "protein": 1.9,
+      "fatTotal": 0.9,
+      "fatSaturated": 0.1,
+      "carbohydrate": 10.7,
+      "sugars": 4.2,
+      "dietaryFibre": 1.2,
+      "sodium": 78
+    },
+    "perServing": {
+      "energyKj": 258,
+      "energyKcal": 62,
+      "protein": 1.9,
+      "fatTotal": 0.9,
+      "fatSaturated": 0.1,
+      "carbohydrate": 10.7,
+      "sugars": 4.2,
+      "dietaryFibre": 1.2,
+      "sodium": 78
+    }
+  },
+  "ingredients": "Sweetcorn (48%), Water, Corn Starch, Sugar, Salt, Acidity Regulator (Citric Acid).",
+  "storage": "Store in a cool, dry place. Once opened, empty contents into an airtight container, refrigerate at 1-5°C and use within 2 days.",
+  "origin": "Product of Thailand",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/1/IMG_7A176EB9-09EB-4AD7-923B-11B1D16F0041.jpeg",
+      "raw_food_photos/1/IMG_4A0A36E4-3F3C-4D17-96E0-FFFE3EC759B1.jpeg"
+    ],
+    "burst": "b020",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "pack"
+  ],
+  "note": "Both photos are the same back panel; the front was not photographed, so the product name is taken from the ingredient list and the brand from the 'Packed for Woolworths' line. Net weight is hidden by the can's curve (only a trailing 'g' visible), so pack size is omitted. Serving size equals 100g, so the two nutrition columns are identical on the label. No allergen declaration appears on the photographed panel."
+}

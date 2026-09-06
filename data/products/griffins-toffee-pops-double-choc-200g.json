@@ -1,0 +1,49 @@
+{
+  "id": "griffins-toffee-pops-double-choc-200g",
+  "name": "Toffee Pops",
+  "brand": "Griffin's",
+  "variant": "Double Choc",
+  "pack": {
+    "size": 200,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 12,
+    "size": 17,
+    "unit": "g"
+  },
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Milk",
+      "Soy",
+      "Gluten"
+    ],
+    "mayContain": [
+      "Sulphites",
+      "Egg",
+      "Sesame"
+    ]
+  },
+  "storage": "Store in a cool, dry place",
+  "origin": "Made in New Zealand",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7181.jpeg",
+      "raw_food_photos/IMG_7182.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition"
+  ],
+  "note": "NUTRITION DELIBERATELY NOT RECORDED. The panel was photographed but is white print on dark navy, out of focus; the digits were re-cropped at native resolution and upscaled and remained mush. A set of plausible, internally-consistent numbers could be produced from it — which is exactly why it is not, since the consistency check would only be validating my own guesses. Servings per package (12) and serving size (1 biscuit approx. 17 g) ARE legible and are independently corroborated by the front-of-pack 200 g net (200/12 = 16.7). The ingredient list runs off the right frame edge on every line and is not transcribable at all. 'allergens' is also in needs: 'CONTAINS WHEAT, MILK, SOY, GLUTEN' is complete, but the 'MAY CONTAIN SULPHITES, EGG, SESAME…' line reaches the frame edge and may continue. Front of pack: 'Made and loved here / NEW ZEALAND MADE', BISCUITS 200g NET. Pack also states percentages for milk chocolate and 27% toffee (the chocolate figure is illegible)."
+}

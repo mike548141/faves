@@ -1,0 +1,57 @@
+{
+  "id": "unbranded-cheese-corn-chips-b015",
+  "name": "Corn Chips",
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1960,
+      "protein": 5.9,
+      "fatTotal": 22.0,
+      "fatSaturated": 1.5,
+      "carbohydrate": 59.4,
+      "sugars": 1.5,
+      "sodium": 584
+    },
+    "perServing": {
+      "energyKj": 587,
+      "protein": 1.8,
+      "fatTotal": 6.6,
+      "fatSaturated": 0.5,
+      "carbohydrate": 17.8,
+      "sugars": 0.5,
+      "sodium": 175
+    }
+  },
+  "servings": {
+    "perPack": 16.7,
+    "size": 30,
+    "unit": "g"
+  },
+  "ingredients": "Corn, Vegetable Oil (Rapeseed or Sunflower), Seasoning (Salt, C…[illegible under glare] Powder (Milk Solids, Cheese (Milk, Salt, Starter Culture, Enzymes), Maltodextrin, Emulsifying Salt (339, 509), Salt, Sugar, Yeast Extract, Acidity Regulator (…[illegible under glare], 330), Vegetable Gum (415), Vegetable Powder (Tomato, Onion, Garlic), Whey Powder (Milk), Sugar, Spice (Chilli, Cumin), Acidity Regulator (262, 270, 327), Anticaking Agent (551), Yeast Extract, Flavour, Hydrolysed Vegetable Protein (Maize), Spice Extract (Colour (160c))).",
+  "allergens": {
+    "contains": [
+      "Milk"
+    ],
+    "mayContain": [
+      "Soy"
+    ]
+  },
+  "origin": "Proudly made in New Zealand from local & imported ingredients.",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/2/IMG_747A0A05-5545-4EDA-9E7A-5BBBBB069B76.jpeg"
+    ],
+    "burst": "b015",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "pack",
+    "storage"
+  ],
+  "note": "Back of pack only; no front photo, so no brand or product name is in frame — 'Corn Chips' is descriptive, from 'MADE FROM NON GMO CORN' and Corn as first ingredient. Two spans of the ingredient list are destroyed by glare on a crease and are marked illegible rather than reconstructed: the seasoning component after '(Salt,' and the first number of an acidity regulator pair ending '330)'. Allergen line reads 'Contains Milk. Made on a line that produces products containing Soy.' Net weight not in frame; the panel gives 16.7 servings of 30 g."
+}

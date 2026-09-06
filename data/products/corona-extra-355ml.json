@@ -1,0 +1,37 @@
+{
+  "id": "corona-extra-355ml",
+  "name": "Extra",
+  "brand": "Corona",
+  "manufacturer": {
+    "name": "Anheuser-Busch InBev Sedrin Brewery Co., Ltd.",
+    "country": "China"
+  },
+  "identifiers": {
+    "gtin": "9416554000181"
+  },
+  "pack": {
+    "size": 355,
+    "unit": "ml",
+    "count": 1
+  },
+  "origin": "BREWED AND MADE IN CHINA UNDER THE LICENCE OF CERVECERIA MODELO",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7158.jpeg",
+      "raw_food_photos/IMG_7159.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "ingredients",
+    "nutrition",
+    "servings",
+    "storage"
+  ],
+  "note": "Front and back both photographed; no nutrition panel and no ingredient list anywhere on the label. The origin line above is transcribed only as far as it stays legible - the rest of that sentence and the brewery street address are printed in low-contrast gold-on-gold and are blurred, so the address is omitted rather than guessed."
+}

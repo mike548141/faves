@@ -90,6 +90,36 @@ def _add_ons(d):
     return group
 
 
+def _channels(d):
+    """Give the subject one declared delivery channel and one dish priced on it.
+
+    ADR 0089's own worked example — KK Malaysian's shape, where the counter
+    price and the Delivereasy price are both true and differ by a quarter — so
+    every case below breaks exactly one thing about a known-good record."""
+    d["priceChannels"] = {
+        "delivery": {
+            "platform": "Delivereasy",
+            "recorded": "2026-07-06",
+            "method": "delivery-app",
+        }
+    }
+    item = _first_item(d)
+    item.setdefault("price", 19)
+    item["prices"] = {"delivery": 24}
+    return d
+
+
+def _channels_then(fn):
+    """Build the good channel shape, then break it one way."""
+
+    def mutate(d):
+        _channels(d)
+        fn(d)
+        return d
+
+    return mutate
+
+
 def _twin(d, dish_id=None):
     """A second copy of the subject's first dish, dropped into a later section.
 
@@ -453,6 +483,35 @@ CASES = {
         "error", "addOnGroups\\[0\\]: id must be a non-empty kebab-case string, got 'Sauces'",
     ),
     "select off the closed set": (_breaks(lambda g, d: g.update(select="several")), "error", r"select must be one of .*got 'several'"),
+    # ── Per-channel prices (ADR 0089) ────────────────────────────────────────
+    # The whole feature exists because a delivery price masqueraded as a counter
+    # price for two months, so the cases that matter are the ones where a second
+    # price could go on being read as the first.
+    "a well-formed channel price is accepted": (_channels, None, None),
+    "a dish prices a channel the venue never declared": (
+        _channels_then(lambda d: _first_item(d).update(prices={"online": 30})),
+        "error", r"prices\.online is not declared in the venue's priceChannels",
+    ),
+    "a channel price with no counter price beside it": (
+        _channels_then(lambda d: _first_item(d).pop("price")),
+        "error", r"has prices for another channel but no counter price",
+    ),
+    "a channel that names no platform": (
+        _channels_then(lambda d: d["priceChannels"]["delivery"].pop("platform")),
+        "error", r"priceChannels\.delivery: platform is required",
+    ),
+    "a channel reading that does not say how it was read": (
+        _channels_then(lambda d: d["priceChannels"]["delivery"].update(method="guessed")),
+        "error", r"priceChannels\.delivery: method must be one of",
+    ),
+    "a channel key off the closed set": (
+        _channels_then(lambda d: d.__setitem__("priceChannels", {"uber": {"platform": "Uber Eats", "recorded": "2026-09-06", "method": "delivery-app"}})),
+        "error", r"priceChannels key 'uber' not in",
+    ),
+    "a channel price written as a string": (
+        _channels_then(lambda d: _first_item(d).update(prices={"delivery": "24.00"})),
+        "error", r"prices\.delivery must be a number, got '24.00'",
+    ),
     "max on a pick-one group": (_breaks(lambda g, d: g.update(select="one")), "error", r"max only means anything when select is 'many'"),
     "max above the number of options": (_breaks(lambda g, d: g.update(max=5)), "error", 'max 5 exceeds the 2 option\\(s\\) in the group'),
     "add-on option with no tags at all": (

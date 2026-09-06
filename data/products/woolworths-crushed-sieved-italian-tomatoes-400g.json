@@ -1,0 +1,56 @@
+{
+  "id": "woolworths-crushed-sieved-italian-tomatoes-400g",
+  "name": "Crushed & Sieved Italian Tomatoes",
+  "brand": "Woolworths",
+  "pack": {
+    "size": 400,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 2,
+    "size": 200,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 104,
+      "energyKcal": 25,
+      "protein": 1.3,
+      "fatTotal": 0.1,
+      "carbohydrate": 4.6,
+      "sugars": 3.6,
+      "sodium": 30
+    },
+    "perServing": {
+      "energyKj": 208,
+      "energyKcal": 50,
+      "protein": 2.6,
+      "fatTotal": 0.2,
+      "carbohydrate": 9.2,
+      "sugars": 7.2,
+      "sodium": 60
+    }
+  },
+  "ingredients": "Crushed & Sieved Tomatoes (100%).",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7209.jpeg",
+      "raw_food_photos/IMG_7210.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "Saturated fat is printed '< 0.1g' in both columns and is OMITTED rather than rounded. The side panel carrying 'Made in …', the packer address and the barcode wraps round the can and is not legible in either photo, so origin, manufacturer and gtin are all unrecorded. Front of pack: 400g, health star rating 4.5, 'Contains 5 serves of vegetables'."
+}

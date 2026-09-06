@@ -1,0 +1,36 @@
+{
+  "id": "garage-project-fugazi-330ml",
+  "name": "Fugazi",
+  "brand": "Garage Project",
+  "pack": {
+    "size": 330,
+    "unit": "ml",
+    "count": 1
+  },
+  "manufacturer": {
+    "name": "Garage Project",
+    "address": "Aro St, Wellington",
+    "country": "New Zealand"
+  },
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_8117.jpeg",
+      "raw_food_photos/IMG_8120.jpeg"
+    ],
+    "burst": "b059",
+    "captured": "2026-01-09",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "nutrition",
+    "origin",
+    "servings",
+    "storage"
+  ],
+  "note": "Front of can only, seen in a wide fridge shot. Legible: 'FUGAZI', '330 ML', '2.2%', 'GARAGE PROJECT ARO ST WELLINGTON'. Alcohol strength has no field in this schema. No panel was photographed. A plain white 'BEER' can from the same brewery sits alongside it with no legible volume and is not recorded."
+}

@@ -1,0 +1,64 @@
+{
+  "id": "schweppes-dry-ginger-ale-250ml",
+  "name": "Dry Ginger Ale",
+  "brand": "Schweppes",
+  "manufacturer": {
+    "name": "Coca-Cola Europacific Partners N.Z. Ltd.",
+    "address": "19 Carbine Road, Mt Wellington, Auckland, New Zealand",
+    "country": "New Zealand"
+  },
+  "pack": {
+    "size": 250,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 250,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 171,
+      "energyKcal": 41,
+      "protein": 0,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 9.8,
+      "sugars": 9.8,
+      "dietaryFibre": 0,
+      "sodium": 5.0
+    },
+    "perServing": {
+      "energyKj": 427,
+      "energyKcal": 102,
+      "protein": 0,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 25,
+      "sugars": 25,
+      "dietaryFibre": 0,
+      "sodium": 12.5
+    }
+  },
+  "ingredients": "Soft Drink Contains: Carbonated Water, Sugar, Food Acid (330), Flavour, Colours (150d, 110), Preservative (202).",
+  "storage": "Store in a cool place.",
+  "origin": "Made in New Zealand from imported and local ingredients.",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7165.jpeg",
+      "raw_food_photos/IMG_7166.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin"
+  ],
+  "note": "Slimline can; the panel is embossed light-on-green and low contrast, so the values were read from a native-resolution crop. The nutrient labels sit one line below their values in the printed layout - the mapping used here is the one that reconciles (171 x 2.5 = 427.5, 9.8 x 2.5 = 24.5, 5.0 x 2.5 = 12.5). No allergen statement; the barcode is not in frame."
+}

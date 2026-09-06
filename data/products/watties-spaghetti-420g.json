@@ -1,0 +1,65 @@
+{
+  "id": "watties-spaghetti-420g",
+  "name": "Spaghetti",
+  "brand": "Wattie's",
+  "manufacturer": {
+    "name": "Heinz Wattie's Ltd.",
+    "address": "513 King Street North, Hastings 4122",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9400547001811"
+  },
+  "pack": {
+    "size": 420,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 2,
+    "size": 210,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 285,
+      "protein": 2.1,
+      "fatTotal": 0.2,
+      "fatSaturated": 0.1,
+      "carbohydrate": 13.8,
+      "sugars": 4.6,
+      "sodium": 300
+    },
+    "perServing": {
+      "energyKj": 600,
+      "protein": 4.4,
+      "fatTotal": 0.4,
+      "fatSaturated": 0.2,
+      "carbohydrate": 29.0,
+      "sugars": 9.7,
+      "sodium": 630
+    }
+  },
+  "ingredients": "Ingredients: Tomato Sauce (50%) [Tomatoes (46%), Sugar, Salt, Cheese Paste (Milk), Flavours (Milk), Spices, Food Acid (330)], Spaghetti (50%) (Water, Wheat Flour).",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Wheat",
+      "Gluten"
+    ]
+  },
+  "storage": "…refrigerate unused contents … non-metallic container. …[cut off]",
+  "origin": "Made in New Zealand from imported and local ingredients",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/1/IMG_130CA822-376F-4B37-A035-4BE23E4102CA.jpeg"
+    ],
+    "burst": "b021",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "note": "Back of can only; the front face with the full product name is turned away, so `name` is the plain 'Spaghetti' rather than a longer marketing name I cannot read — do not assume 'in Tomato Sauce' is on the pack. pack.size 420 g is derived from the printed 'Servings per package: 2' x 'Serving size: 210 g'; the net weight itself is on the front. The storage line runs around the curve of the can and is only partly legible — the ellipses mark text present but unreadable, not omitted words. Front-of-pack claims visible: '99% FAT FREE', 'NO ADDED COLOURS', 'NO PRESERVATIVES', '… SERVES OF VEG PER CAN'."
+}

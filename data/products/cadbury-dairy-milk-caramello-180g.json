@@ -1,0 +1,57 @@
+{
+  "id": "cadbury-dairy-milk-caramello-180g",
+  "name": "Dairy Milk Caramello",
+  "brand": "Cadbury",
+  "variant": "Dairy milk milk chocolate with smooth flowing caramel",
+  "pack": {
+    "size": 180,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 7.2,
+    "size": 25,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2090,
+      "protein": 6.1,
+      "fatTotal": 25.8,
+      "fatSaturated": 15.7,
+      "carbohydrate": 59.9,
+      "sugars": 53.5,
+      "sodium": 129
+    },
+    "perServing": {
+      "energyKj": 522,
+      "protein": 1.5,
+      "fatTotal": 6.4,
+      "fatSaturated": 3.9,
+      "carbohydrate": 15.0,
+      "sugars": 13.4,
+      "sodium": 32
+    }
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7215.jpeg",
+      "raw_food_photos/IMG_7216.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "Front of pack (180g) and the nutrition panel only. The ingredient and allergen block is on a flap that was not photographed — this is a milk chocolate bar and no allergen statement of any kind was read, so nothing is recorded for it. Serving size printed '25g (approx. 4 squares)'. Front also carries 'SUPPORTING SUSTAINABLY SOURCED COCOA'."
+}

@@ -1,0 +1,31 @@
+{
+  "id": "uncle-tobys-oats-strawberry-sachet",
+  "name": "Oats",
+  "brand": "Uncle Tobys",
+  "variant": "Strawberry",
+  "pack": {
+    "count": 1,
+    "unit": "each"
+  },
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7221.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition",
+    "origin",
+    "servings",
+    "storage"
+  ],
+  "note": "Single instant-oats sachet from a multipack, front only — the back was not photographed and the sachet's own net weight is not on the face shown. Front carries 'READY IN [x] SECONDS' and 'NO ARTIFICIAL COLOURS, [FLAV]OURS OR PRESERVATIVES'. Nothing but brand, product and flavour is available; everything else is in needs."
+}

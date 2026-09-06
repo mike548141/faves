@@ -1,0 +1,68 @@
+{
+  "id": "griffins-cameo-cremes-250g",
+  "name": "Cameo Crèmes",
+  "brand": "Griffin's",
+  "pack": {
+    "size": 250,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 16,
+    "size": 16,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2008,
+      "energyKcal": 474,
+      "protein": 7.0,
+      "fatTotal": 18.9,
+      "fatSaturated": 13.8,
+      "carbohydrate": 67.3,
+      "sugars": 31.0,
+      "sodium": 247
+    },
+    "perServing": {
+      "energyKj": 321,
+      "energyKcal": 75,
+      "protein": 1.1,
+      "fatTotal": 3.0,
+      "fatSaturated": 2.2,
+      "carbohydrate": 10.8,
+      "sugars": 5.0,
+      "sodium": 40
+    }
+  },
+  "ingredients": "Ingredients: Wheat Flour, Sugar, Vegetable Fats [Antioxidant …[cut off by frame edge]… Milk Solids, Cocoa Powder, Maize Starch, Desiccated Coconut 2%, Ra…[cut off by frame edge]… Agents (450, Baking Soda), Salt, Emulsifier (Soy Lecithin), Flavours, …[cut off by frame edge]… (110), Citric Acid.",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Milk",
+      "Soy"
+    ],
+    "mayContain": [
+      "Egg"
+    ]
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7179.jpeg",
+      "raw_food_photos/IMG_7180.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "The ingredient block runs off the RIGHT-HAND frame edge on three of its four lines, so the end of each of those lines is missing — this is a framing loss, not a legibility loss, and the transcription above marks each break. Front of pack: 'Griffin's Cameo Crèmes', BISCUITS NET 250 g. Descriptor: 'COCOA FLAVOURED BISCUITS WITH A COCONUT CRÈME …' (also cut). A footnote line under the may-contain statement (a crème percentage) is obscured by glare."
+}

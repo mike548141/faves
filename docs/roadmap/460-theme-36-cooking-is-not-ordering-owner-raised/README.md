@@ -150,7 +150,7 @@ declared property of the `kind`. Option 1 turns the ADR's prose into something
 the code can read. Do it before any further recipe UX, or the next fix lands on
 the same sand.
 
-[ADR 0003]: decisions/0003-recipes-as-kind-not-separate-type.md
+[ADR 0003]: ../../decisions/0003-recipes-as-kind-not-separate-type.md
 
 ### 36a/36c — estimates DO drive timers ✅ RULED 2026-08-16
 

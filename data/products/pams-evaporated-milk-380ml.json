@@ -1,0 +1,64 @@
+{
+  "id": "pams-evaporated-milk-380ml",
+  "name": "Evaporated Milk",
+  "brand": "Pams",
+  "pack": {
+    "size": 380,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 4,
+    "size": 95,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 611,
+      "protein": 6.9,
+      "fatTotal": 8.5,
+      "fatSaturated": 5.8,
+      "carbohydrate": 10.3,
+      "sugars": 10.3,
+      "sodium": 100,
+      "potassium": 358,
+      "calcium": 240
+    },
+    "perServing": {
+      "energyKj": 580,
+      "protein": 6.6,
+      "fatTotal": 8.1,
+      "fatSaturated": 5.5,
+      "carbohydrate": 9.8,
+      "sugars": 9.8,
+      "sodium": 95,
+      "potassium": 340,
+      "calcium": 228
+    }
+  },
+  "ingredients": "Whole milk, stabiliser (339), vitamin D3.",
+  "allergens": {
+    "contains": [
+      "Milk"
+    ]
+  },
+  "storage": "STORE IN A COOL, DRY PLACE. ONCE OPENED, TRANSFER UNUSED CONTENTS TO A NON-METALLIC CONTAINER, KEEP REFRIGERATED AND USE WITHIN 3 DAYS. SEE BASE OF CAN FOR THE BEST BEFORE DATE.",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7211.jpeg",
+      "raw_food_photos/IMG_7212.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin"
+  ],
+  "note": "The label transposes its own labels — it prints 'Servings per package: 95 ml' and 'Serving Size: 4'. Recorded the sensible way round (4 servings of 95 ml), which the arithmetic confirms: 95/100 x 611 kJ = 580 kJ, the printed per-serving figure. Pack size 380 ml is taken from the printed preparation instruction 'Add 1 Can (380 ml) Milk to 475 ml water to obtain 855 ml Whole Milk'. Vitamin D3 (1.1 ug per 100 ml, 1.0 ug per serving) is printed but has no allowed nutrient key, so it is not recorded. Barcode is on the far side of the can and only its edge is in frame."
+}

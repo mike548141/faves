@@ -1,0 +1,67 @@
+{
+  "id": "tegel-take-outs-nashville-chicken-burgers-600g",
+  "name": "Take Outs Nashville Style Free Range Chicken Burgers",
+  "brand": "Tegel",
+  "variant": "Nashville Style",
+  "pack": {
+    "size": 600,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 5,
+    "size": 120,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 836,
+      "protein": 14.3,
+      "fatTotal": 10.0,
+      "fatSaturated": 1.4,
+      "carbohydrate": 13.0,
+      "sugars": 5.0,
+      "sodium": 720
+    },
+    "perServing": {
+      "energyKj": 1000,
+      "protein": 17.2,
+      "fatTotal": 12.0,
+      "fatSaturated": 1.7,
+      "carbohydrate": 15.6,
+      "sugars": 6.0,
+      "sodium": 864
+    }
+  },
+  "ingredients": "…[start of list cut off above the frame edge]… Thickeners (1420, 412, 415), Vegeta…[cut off by frame edge]… (500, 339, 450, 451, 452), Spice Extracts (Chilli, Celery, Pepper), Yeast, Vinegar, Spices (Pepper, Celery Seed), Herbs (Fennel, Rosemary, Thyme, Sage, Oregano), Wheat Gluten, Egg Powder (Non-Free Range), Yeast Extract, Sugar, Natural Flavours.",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Egg"
+    ],
+    "mayContain": [
+      "Soy",
+      "Milk"
+    ]
+  },
+  "category": "frozen",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7567.jpeg",
+      "raw_food_photos/IMG_7568.jpeg"
+    ],
+    "burst": "b055",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "The ingredient list is cut off at the TOP of the frame — everything before 'Thickeners (1420, 412, 415)' is missing, which includes the chicken and the coating. Only the tail is transcribed, with the breaks marked. The allergen statement ('Contains: Wheat, Gluten, Egg. May be present: Soy, Milk.') and the whole nutrition panel are fully in frame and crisp; every per-serving value reconciles with its per-100 g figure at 120 g. Front of pack: NET 600 g, 'READY IN 25 MINUTES', Health Star Rating 3.5, SPCA Animal Welfare Certified, 'MADE WITH 100% CHICKEN BREAST FILLET', 'RAISED IN NEW ZEALAND' (a front-of-pack claim badge, not a country-of-origin statement, so origin is left in needs)."
+}

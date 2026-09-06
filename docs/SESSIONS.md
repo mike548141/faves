@@ -9149,3 +9149,125 @@ here, which is what disjoint file ownership is supposed to buy.
 **Close state:** `main` clean, no worktrees, no branches, no orphaned browsers.
 Nothing owed is uncaptured. Four rulings recorded; three of them carry work that
 was deliberately **not started** at session close rather than half-started.
+
+---
+
+## 2026-09-06-0909 — the menu learns to focus, prices learn which door, and the pantry gets read
+
+**Branch:** `worktree-menu-focus-filters` (pushed, not merged). Six commits.
+
+### What the owner asked for, and what he ruled on the way
+
+Four things in one message: filter a menu down to favourites or a dietary need;
+autocomplete on both search boxes; refresh the data from new menu photos; and
+harvest everything from the new `intake/ingredients/` pantry photographs.
+
+Three rulings, all taken through `AskUserQuestion` with the account first:
+
+1. **Filters focus the list** (ADR 0088). *"It's not about hiding dishes as much
+   as it is about allowing the user to focus on the types of dishes they are
+   interested in."* Allergens still never filter — his line, not an inherited
+   one: *"if one of those dishes that still show when filtered has an allergen
+   then that allergen should still show against the dish the same as it does now"*.
+2. **Search suggests the filter, never becomes it** (ADR 0088).
+3. **Build per-channel pricing now** rather than correcting or appending
+   (ADR 0089), chosen over the two cheaper options with their costs stated.
+
+🛑 **AND ONE CORRECTION FROM HIM THAT IS THE MOST IMPORTANT LINE IN THIS ENTRY.**
+The filtering work was put to him as being in tension with ROADMAP 22d, which he
+had ruled *"dull, never hide"* three weeks earlier. He rejected the framing:
+*"You are confusing different asks… The feature about dimming things like
+dietary or allergen tags on a dish was about reducing the noise on a page."* He
+was right. **22d governs which TAG CHIPS SHOUT ON A DISH — a noise problem. This
+work governs WHICH DISH ROWS ARE IN THE LIST — a finding problem.** A subagent's
+research brief had extended a chip ruling to rows and this session relayed it
+without testing the extension, which is the exact shape of *"records get stronger
+than their source"*. The distinction is now the first paragraph of
+`dish-filters.js` and of ADR 0088, so the next session meets it before it meets
+the code.
+
+He also corrected two other over-escalations, both of which were mine:
+
+- I reported the ingredients harvest as **blocked on two rulings** and then never
+  stated them. Checked at the source, neither was a blocker: he had already
+  settled scope in his opening message, and ADR 0046's provenance vocabulary
+  governs *people and ownership*, not a Wattie's label. A subagent's open
+  questions had been relayed as blockers without being tested.
+- On the Google API key found in `intake/ingredients/ingest_food*.py` he said
+  *"check if its still valid, I am betting it is not in which case you are
+  wasting my time with noise."* Tested: **HTTP 200, live**, full model list
+  returned. Reported as one line and dropped. The right move was to test before
+  raising it, not after.
+
+### Shipped
+
+- **`dish-filters.js` + `suggest.js`** — pure, 25 assertions. The exact-match
+  tier in `termScore` is break-proven: without it "veg" suggests Vegan,
+  contradicting `search.js`'s own `"veg": ["vegetarian"]`, and exactly one test
+  fails.
+- **The menu screen** — ♥ Favourites chip, dietary chips that remove,
+  `Showing N of M · Show all` as `role="status"`, and a WAI-ARIA 1.2 combobox on
+  the menu search.
+- **`tools/focus_check.mjs`** — 27 assertions, and the guard found two
+  **pre-existing** bugs neither unit tests nor the other twelve checks could see:
+  ADR 0048 §3 was documented and never wired, and `closePicks` parked focus on a
+  sibling that could be hidden.
+- **Bambina Pizzeria** — 57th venue, 20 dishes, add-on toppings, geocode
+  corroborating the card's address to within metres of the photo's own EXIF.
+- **Per-channel pricing** (ADR 0089) + **KK Malaysian** refreshed: 30 → 48
+  dishes, counter prices, order numbers, `in-store` for the first time.
+- **`data/products/`** (ADR 0090) — 87 products off 183 pantry photographs, six
+  agents in parallel, `tools/product_bursts.py` + `tools/products.py`.
+- **Atelier pin bumped `f2104f0` → `35912e3`** — deliberately, not
+  mechanically. Two new floor bullets inlined verbatim (**Asking**, **Doctrine
+  problems point up**) and the BS1 rationale corrected: it claimed *"the hook
+  cannot see it"*, which atelier falsified on 2026-08-23. Both declared forks
+  survive; the drift check now reports zero.
+
+### Three findings worth more than the features
+
+1. 🚩 **A platform menu is a SUBSET, not a markup.** KK's record held 30 dishes
+   from Delivereasy; the shop's card numbers 35 and carries a whole beverage
+   block the app does not list. Eighteen dishes existed only in the shop. Every
+   venue whose menu came from a delivery app should be assumed incomplete.
+2. 🚩 **Two agents, same photograph, opposite answers.** On the sweetcorn
+   ingredient percentage one said 48%, one said 62% *"unambiguous at maximum
+   zoom"*. Reading it by hand: **48%** — and the 62 is real, on that label, in
+   the nutrition panel directly above, reading `258kJ (62Cal)`. Confident, and
+   off by one line. Worse, this session had put "48%" into all six briefs as a
+   worked example, so it handed the agents the answer it expected — the failure
+   `dont-hand-a-searching-agent-the-answer` names, committed while writing a
+   rule against exactly that class of error.
+3. 🔎 **`leakscan` caught what two review passes had missed.** Two product notes
+   read *"given the peanut allergy"* — a health fact about a person, in a public
+   repo. The other 32 findings were manufacturers' printed factory addresses, so
+   `data/products/*.json` is exempted from that one rule — and **the guard moved
+   rather than vanished**: `products.py` now refuses a street address anywhere
+   except `manufacturer.address`, and immediately found three more.
+
+### Verified at close
+
+`node --test` 1141/1141 · `test_validate` 131/131 · `validate` 57/57 valid ·
+`products.py` 87/87, 0 errors · all 14 browser checks green (boot 24, device 23,
+addon 12, branch 72, cook 85, filter_row 25, focus 27, geo 22, note 19, picks 20,
+recipe 29, served 55, sync 16, to_top 28) · `split_data --check`,
+`check_fallback`, `check_versions`, `check_decisions`, `check_no_deps`,
+`gen_sbom`, `check_visibility` all clean. **CI not yet cited — the branch is
+pushed and unmerged, so the pushed-CI result is owed at merge.**
+
+### Owed, and deliberately not started
+
+- **R & S Satay Noodle House** is diagnosed (70 dishes at a flat 1.65× the
+  printed price, `verified: null`) and NOT refreshed. The photographs are read
+  and legible; the work is transcription.
+- **Home-screen autocomplete** is designed and not built. The design is *not* a
+  second popup: the home box already renders a live grouped result panel, so a
+  facet suggestion belongs as a group inside it (ADR 0050 + ROADMAP 22a), not as
+  a competing surface.
+- **41 products need a back-of-pack re-shoot** for allergens (`products.py
+  --reshoot`).
+- **A venue's own "nut free" claim has nowhere to live.** Bambina's card prints
+  (NF) on two dishes where `tag_allergens` infers `contains-nuts` from "pesto".
+  Both dishes carry a `needs: allergens` recording the conflict. Whether the tag
+  vocabulary should hold a first-party absence claim is an owner question and is
+  **not** decided here.

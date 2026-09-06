@@ -1,0 +1,53 @@
+{
+  "id": "pascall-fruit-burst-2kg",
+  "name": "Fruit Burst",
+  "brand": "Pascall",
+  "manufacturer": {
+    "name": "Pascall",
+    "address": "323 Canterbury Road, Ringwood Victoria 3134; also 280 Cumberland Street, Dunedin 9016, New Zealand",
+    "country": "Australia"
+  },
+  "pack": {
+    "size": 2,
+    "unit": "kg",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 80,
+    "size": 25,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1590,
+      "fatTotal": 2.7,
+      "carbohydrate": 87.4,
+      "sugars": 65.6,
+      "sodium": 1
+    },
+    "perServing": {
+      "energyKj": 396,
+      "carbohydrate": 21.8,
+      "sugars": 16.4
+    }
+  },
+  "ingredients": "Glucose Syrup, Sugar, Vegetable Oil, Food Acid (330), Fruit Juice Concentrates, Gelatine, Colours (163, 100, 160(c), 141), Flavours.",
+  "origin": "MADE IN THAILAND",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7201.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "storage"
+  ],
+  "note": "Back of pack only. Nutrients printed as '<1.0g' (protein per 100g and per serving; fat total, saturated and sugars per serving; sodium per serving '<1mg') are OMITTED rather than rounded to a number, because '<1.0' is not a value. Per 100g saturated fat is also printed '<1.0g' and omitted. The pack prints a second, New Zealand address as well; both are recorded in manufacturer.address. No allergen statement and no barcode in frame."
+}

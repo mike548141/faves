@@ -1,0 +1,78 @@
+{
+  "id": "arnotts-tiny-teddy-milk-chocolate-200g",
+  "name": "Tiny Teddy Half Coated in Milk Chocolate",
+  "brand": "Arnott's",
+  "variant": "Half Coated in Milk Chocolate",
+  "manufacturer": {
+    "name": "Arnott's Biscuits Limited",
+    "address": "24 George Street, North Strathfield NSW 2137",
+    "country": "Australia"
+  },
+  "pack": {
+    "size": 200,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 8,
+    "size": 25,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1950,
+      "protein": 6.4,
+      "fatTotal": 18.1,
+      "fatSaturated": 10.6,
+      "carbohydrate": 66.4,
+      "sugars": 32.8,
+      "dietaryFibre": 5.1,
+      "sodium": 327
+    },
+    "perServing": {
+      "energyKj": 488,
+      "protein": 1.6,
+      "fatTotal": 4.5,
+      "fatSaturated": 2.6,
+      "carbohydrate": 16.6,
+      "sugars": 8.2,
+      "dietaryFibre": 1.3,
+      "sodium": 82
+    }
+  },
+  "ingredients": "Wheat Flour, Milk Chocolate (25%) (Sugar, Milk Solids, Cocoa Butter, Cocoa Mass, Vegetable Oil, Emulsifiers (Soy Lecithin, E476), Flavour), Sugar, Vegetable Oil (Emulsifier (Soy Lecithin), Antioxidant (E307b From Soy)), Butter (From Milk), Vegetable Fibre, Honey, Salt, Wheat Starch, Golden Syrup, Baking Powder, Emulsifier (Soy Lecithin), Flavour.",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Milk",
+      "Soy"
+    ],
+    "mayContain": [
+      "Egg",
+      "Tree Nuts",
+      "Peanut",
+      "Sesame"
+    ]
+  },
+  "origin": "MADE IN AUSTRALIA",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7169.jpeg",
+      "raw_food_photos/IMG_7170.jpeg",
+      "raw_food_photos/IMG_7455.jpeg",
+      "raw_food_photos/IMG_7456.jpeg"
+    ],
+    "burst": "b023+b051",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "storage"
+  ],
+  "note": "PEANUT: the label carries 'MAY CONTAIN EGG, TREE NUTS, PEANUT, SESAME.' - verified on a native-resolution crop. Serving size is 25 g (9 Biscuits). The pack also carries a caution that the biscuits are small and should not be consumed by children under 3 years."
+}

@@ -1,0 +1,58 @@
+{
+  "id": "fantastic-2-minute-noodles-beef",
+  "name": "2 Minute Noodles",
+  "brand": "Fantastic",
+  "variant": "Beef Flavour",
+  "servings": {
+    "perPack": 1,
+    "size": 585,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 321,
+      "protein": 1.5,
+      "fatTotal": 3.1,
+      "fatSaturated": 1.5,
+      "carbohydrate": 10.6,
+      "dietaryFibre": 0.1,
+      "sodium": 305
+    },
+    "perServing": {
+      "energyKj": 1880,
+      "protein": 8.8,
+      "fatTotal": 18.1,
+      "fatSaturated": 8.8,
+      "carbohydrate": 62.0,
+      "sugars": 0.2,
+      "dietaryFibre": 0.6,
+      "sodium": 1780
+    }
+  },
+  "ingredients": "INGREDIENTS: Noodles: Wheat Flour, Vegetable Oil (… (319)), Modified Starch (1420), …Mineral Salts (501, 500, 451), …Vegetable Gum (412). Flavour Sachet: Flavour Enhancers (621, 631), Flavours (Wheat, Soy), Salt, …Herbs and Spices, Colour …[cut off]",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Soy"
+    ]
+  },
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_CF75D703-F8E7-406A-BA2D-82D4D99E0966.jpeg"
+    ],
+    "burst": "b008",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "pack",
+    "storage"
+  ],
+  "note": "One photo only, of a soft plastic packet curving away from the camera. The ingredient list runs off the left edge and off the bottom of the frame, and the packet's curve hides whole words mid-line; the ellipses in `ingredients` mark text that is present on the pack but NOT legible in this photo — nothing there is reconstructed. Re-shoot flat to complete it. Allergens are taken from the bolded words inside the ingredient list; any 'Contains:' summary line is below the frame, so allergens are also listed in needs. The per-100 g column is per 100 g of the PREPARED product: the panel says 'Serving size: 585g*' and '*when prepared according to directions with broth'. Dry net weight is not visible. Sugars per 100 g is printed '<0.1g', which is not a number, so it is omitted from per100 (the per-serving figure 0.2 g is printed as a number and is recorded)."
+}

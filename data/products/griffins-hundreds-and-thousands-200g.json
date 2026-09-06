@@ -1,0 +1,70 @@
+{
+  "id": "griffins-hundreds-and-thousands-200g",
+  "name": "Hundreds & Thousands",
+  "brand": "Griffin's",
+  "pack": {
+    "size": 200,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 10,
+    "size": 20,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2160,
+      "energyKcal": 516,
+      "protein": 4.4,
+      "fatTotal": 25.0,
+      "fatSaturated": 18.6,
+      "carbohydrate": 67.2,
+      "sugars": 35.4,
+      "sodium": 322
+    },
+    "perServing": {
+      "energyKj": 431,
+      "energyKcal": 103,
+      "protein": 0.9,
+      "fatTotal": 5.0,
+      "fatSaturated": 3.7,
+      "carbohydrate": 13.4,
+      "sugars": 7.1,
+      "sodium": 64
+    }
+  },
+  "ingredients": "Ingredients: Wheat Flour, Pink Icing 2…[cut off by frame edge]… ], Milk Solids, Emulsifier (Soy Lecithin), …[cut off by frame edge]… Antioxidant (307b)], Sugar, Hundreds & Th…[cut off by frame edge]… Maltodextrin, Colours (100, 120, 141, 160b, 162…[cut off by frame edge]… Soda, 450], Invert Syrup, Milk Solids, Salt, E…[cut off by frame edge]… Colour [160b].",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Soy",
+      "Wheat",
+      "Gluten"
+    ],
+    "mayContain": [
+      "Egg",
+      "Sesame",
+      "Sulphites"
+    ]
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7185.jpeg",
+      "raw_food_photos/IMG_7186.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "The ingredient block runs off the RIGHT-HAND frame edge on five of its six lines; the transcription marks each break rather than closing the gaps. The allergen statement and the whole nutrition panel are fully in frame and crisp, and every per-serving value reconciles with its per-100 g figure at 20 g. Descriptor: 'ROUND PLAIN SWEET BISCUITS, TOPPED…' (also cut). Front of pack: BISCUITS NET 200 g."
+}

@@ -1,0 +1,71 @@
+{
+  "id": "griffins-krispie-250g",
+  "name": "Krispie",
+  "brand": "Griffin's",
+  "pack": {
+    "size": 250,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 12.5,
+    "size": 20,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2060,
+      "protein": 5.8,
+      "fatTotal": 20.8,
+      "fatSaturated": 13.9,
+      "carbohydrate": 70.3,
+      "sugars": 32.0,
+      "sodium": 370
+    },
+    "perServing": {
+      "energyKj": 412,
+      "protein": 1.2,
+      "fatTotal": 4.2,
+      "fatSaturated": 2.8,
+      "carbohydrate": 14.1,
+      "sugars": 6.4,
+      "sodium": 74
+    }
+  },
+  "ingredients": "Ingredients: Wheat Flour, Sugar, Vege…[illegible: glare]… Fat [A…[illegible: glare]… (307b:Soy)], Coconut, Whey Powder, Salt, Raising Agent (Baking Soda), Natural Flavours. Contains 11% Coconut.",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Milk",
+      "Soybean"
+    ],
+    "mayContain": [
+      "Other cereals containing gluten",
+      "Sesame Seeds",
+      "Eggs",
+      "Sulphites",
+      "Peanuts",
+      "Tree Nuts"
+    ]
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7177.jpeg",
+      "raw_food_photos/IMG_7178.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "PEANUT WARNING: the pack prints, verbatim, 'CONTAINS WHEAT (GLUTEN), MILK AND SOYBEAN PRODUCTS. MAY CONTAIN OTHER CEREALS CONTAINING GLUTEN, SESAME SEEDS, EGGS AND SULPHITES. MADE IN A BAKERY HANDLING PEANUTS AND TREE NUTS.' Peanuts and tree nuts come from that bakery sentence, not from a may-contain list, but they are listed under mayContain here so a filter cannot miss them. 'ingredients' is in needs because glare obscures two fragments in the first line (the fat and the antioxidant name); '(307b:Soy)', 'Coconut', and 'Contains 11% Coconut' are clearly legible. Front of pack reads 'Deliciously Coconutty Crunch', 250g NET."
+}

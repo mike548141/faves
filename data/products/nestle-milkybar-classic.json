@@ -1,0 +1,63 @@
+{
+  "id": "nestle-milkybar-classic",
+  "name": "Milkybar",
+  "brand": "Nestlé",
+  "variant": "Classic",
+  "servings": {
+    "perPack": 9,
+    "size": 18.9,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2340,
+      "protein": 6.6,
+      "fatTotal": 34.7,
+      "fatSaturated": 20.2,
+      "carbohydrate": 54.6,
+      "sugars": 54.4,
+      "sodium": 80
+    },
+    "perServing": {
+      "energyKj": 470,
+      "protein": 1.2,
+      "fatTotal": 6.6,
+      "fatSaturated": 3.8,
+      "carbohydrate": 10.3,
+      "sugars": 10.3,
+      "sodium": 15
+    }
+  },
+  "ingredients": "Sugar, Vegetable Fat [Emulsifier (Soy Lecithin)], Full Cream Milk Powder (26%), Dried Glucose, Emulsifiers (Soy Lecithin, 476), Flavour.",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Soy"
+    ],
+    "mayContain": [
+      "Tree Nuts",
+      "Wheat",
+      "Other Gluten containing cereals"
+    ]
+  },
+  "storage": "Store cool and dry",
+  "origin": "MADE IN AUSTRALIA",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7217.jpeg",
+      "raw_food_photos/IMG_7218.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "pack"
+  ],
+  "note": "No size in the id: the printed net weight sits in the crimped seal at the bottom of the front photo and could not be read cleanly, so pack is left unrecorded and listed in needs (the panel's 9 servings x 18.9 g implies about 170 g, but that is arithmetic, not a reading). Serving size printed '18.9g (1 row)', with 'KNOW YOUR PORTION: 1 ROW = 1 SERVE'. The '42070316' beside 'JUL 2025' on the end seal is a batch code, not a barcode."
+}

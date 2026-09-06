@@ -3942,6 +3942,107 @@ body.faves-view .to-top {
   border-color: var(--diet);
   color: var(--surface);
 }
+/* The ♥ on the Favourites chip. aria-hidden in the markup, so this is purely
+   visual — and it inherits `color`, which is what makes it legible against the
+   filled background when the chip is pressed. */
+.diet-chip-ico {
+  margin-inline-end: 0.35em;
+  line-height: 1;
+}
+
+/* "$24.00 on Delivereasy — about 26% more" (ADR 0089). Quiet by design: the
+   counter price is the answer and this is a caveat on it, so it must never
+   compete with .dish-price for the eye. Not colour-coded either — a red "more"
+   would editorialise about a channel the reader may have good reasons to use. */
+.dish-channels {
+  margin-top: var(--space-1);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.dish-channel + .dish-channel::before {
+  content: " · ";
+}
+.dish-channel-price {
+  font-weight: 600;
+}
+
+/* The autocomplete popup (suggest-ui.js), shared by both search boxes. It hangs
+   off the field's own positioned wrapper (.search-field / .menu-search-field),
+   so it travels with a sticky toolbar instead of being left behind on the page.
+   z-index clears the sticky .menu-toolbar (6) and the section headings. */
+.suggest-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: var(--space-1);
+  list-style: none;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+}
+.suggest-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  /* 44 px, like every other target on this screen — an autocomplete row is one
+     of the easiest things to accidentally build at 28 px. */
+  min-height: 44px;
+  padding: 0.4em 0.7em;
+  border-radius: var(--radius-chip);
+  cursor: pointer;
+}
+/* Both the pointer hover and the keyboard's active descendant get the SAME
+   treatment: arrowing down must look exactly like hovering, or the keyboard
+   reader is left guessing which row Enter will take. */
+.suggest-row:hover,
+.suggest-row.is-active {
+  background: var(--diet);
+  color: var(--surface);
+}
+.suggest-ico {
+  line-height: 1;
+}
+.suggest-label {
+  font-weight: 600;
+}
+/* The count beside a filter ("4 dishes"), pushed to the far end. Opacity rather
+   than a fixed muted colour so it stays legible on the highlighted row too. */
+.suggest-sub {
+  margin-inline-start: auto;
+  font-size: var(--step-sub);
+  opacity: 0.75;
+}
+
+/* "Showing 12 of 47 dishes  [Show all]" — the honesty line that pays for the
+   filters removing rows rather than dimming them (ADR 0088). It is only in the
+   DOM while something is actually being withheld, so it can never become
+   furniture the reader learns to skip. */
+.menu-count {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.menu-count-clear {
+  min-height: 44px;
+  padding: 0.3em 0.8em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
 
 /* Section jump-nav. Sits inside the sticky .menu-toolbar, which owns the
    pin, background and border — so the nav itself is just the scroll strip. */

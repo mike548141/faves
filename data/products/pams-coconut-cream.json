@@ -1,0 +1,54 @@
+{
+  "id": "pams-coconut-cream",
+  "name": "Coconut Cream",
+  "brand": "Pams",
+  "servings": {
+    "perPack": 7,
+    "size": 60,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 835,
+      "protein": 1.1,
+      "fatTotal": 21.0,
+      "fatSaturated": 17.0,
+      "carbohydrate": 2.3,
+      "sugars": 1.6,
+      "sodium": 16,
+      "potassium": 83
+    },
+    "perServing": {
+      "energyKj": 501,
+      "protein": 0.7,
+      "fatTotal": 12.6,
+      "fatSaturated": 10.2,
+      "carbohydrate": 1.4,
+      "sugars": 1.0,
+      "sodium": 10,
+      "potassium": 50
+    }
+  },
+  "ingredients": "Coconut kernel extract (92%), water, stabilisers (412, 466), emulsifier (435).",
+  "storage": "STORE IN A COOL, DRY PLACE. ONCE OPENED TRANSFER UNUSED CONTENTS INTO A NON-METALLIC CONTAINER AND REFRIGERATE. CONSUME WITHIN 2 DAYS.",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7222.jpeg",
+      "raw_food_photos/IMG_7223.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "manufacturer",
+    "origin",
+    "pack"
+  ],
+  "note": "Servings per pack printed '7 approx.' at 60 mL. No net volume is printed on either photographed face, so pack is unrecorded rather than inferred from 7 x 60. No allergen statement anywhere on the panel — that absence is recorded in needs, not read as 'allergen free'. Front of pack carries 'DAIRY FREE', 'VEGETARIAN & VEGAN FRIENDLY', 'NO ADDED COLOURS OR FLAVOURS'. Barcode is on the far edge of the can and only its bars are in frame."
+}

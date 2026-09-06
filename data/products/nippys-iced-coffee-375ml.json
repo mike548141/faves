@@ -1,0 +1,64 @@
+{
+  "id": "nippys-iced-coffee-375ml",
+  "name": "Iced Coffee Flavoured Milk",
+  "brand": "Nippy's",
+  "manufacturer": {
+    "name": "Knispel Bros Pty. Ltd.",
+    "address": "153 Loxton Drive, Moorook 5332, South Australia",
+    "country": "Australia"
+  },
+  "pack": {
+    "size": 375,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 375,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 266,
+      "protein": 3.1,
+      "fatTotal": 1.8,
+      "fatSaturated": 1.3,
+      "carbohydrate": 8.4,
+      "sugars": 8.0,
+      "sodium": 38,
+      "potassium": 149,
+      "calcium": 108
+    },
+    "perServing": {
+      "energyKj": 997,
+      "protein": 11.6,
+      "fatTotal": 6.7,
+      "fatSaturated": 4.8,
+      "carbohydrate": 31.5,
+      "sugars": 30,
+      "sodium": 142.5,
+      "potassium": 558.7,
+      "calcium": 405
+    }
+  },
+  "origin": "Made in Australia from at least 95% Australian ingredients.",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7162.jpeg",
+      "raw_food_photos/IMG_7163.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "storage"
+  ],
+  "note": "Front (997 kJ badge) and the matching back panel (997 kJ) photographed; the panel face carries packer details and nutrition but no ingredient list. Gluten is listed as 'NOT DETECTED' - not a number, so omitted. Carton is marked 'REDUCED FAT'."
+}

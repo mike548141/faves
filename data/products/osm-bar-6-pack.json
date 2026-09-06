@@ -1,0 +1,83 @@
+{
+  "id": "osm-bar-6-pack",
+  "name": "OSM Bar",
+  "brand": "OSM",
+  "manufacturer": {
+    "name": "Cookie Time Limited",
+    "address": "789 Main South Road, Christchurch",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9415912060812"
+  },
+  "pack": {
+    "size": 516,
+    "unit": "g",
+    "count": 6
+  },
+  "servings": {
+    "perPack": 3,
+    "size": 172,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1680,
+      "energyKcal": 403,
+      "protein": 9.7,
+      "fatTotal": 13.5,
+      "fatSaturated": 4.6,
+      "carbohydrate": 52.5,
+      "sugars": 17.4,
+      "dietaryFibre": 5.8,
+      "sodium": 270,
+      "calcium": 155,
+      "iron": 2.3
+    },
+    "perServing": {
+      "energyKj": 2900,
+      "energyKcal": 694,
+      "protein": 16.7,
+      "fatTotal": 23.3,
+      "fatSaturated": 8.0,
+      "carbohydrate": 90.4,
+      "sugars": 30.0,
+      "dietaryFibre": 10.0,
+      "sodium": 465,
+      "calcium": 267,
+      "iron": 4.0
+    }
+  },
+  "ingredients": "Ingredients: Rolled oats 27%, Dried apricots 12% (contains sulphites), Manuka honey blend (Manuka 5%, Honeydew), Maltodextrin, Rice bran oil, Soy protein isolate, Rice Flour, Humectant (glycerin), Wheat flakes 4% (contains wheat, barley), Raisins 3%, Coconut oil, Maize starch, Vegetable gum (acacia gum), Natural flavours, Salt, Vitamins & Minerals (Calcium, Vitamin C, Magnesium, Zinc, Vitamin A, Vitamin D, Iodine, Niacin, Vitamin B2, Folate), Caramelised sugar syrup, Emulsifier (soy lecithin).",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Sulphites",
+      "Soy"
+    ],
+    "mayContain": [
+      "Egg",
+      "Milk",
+      "Peanut",
+      "Sesame",
+      "Tree Nuts"
+    ]
+  },
+  "storage": "Store in a cool, dry place or freeze until use.",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_A6F5713C-FA5A-454B-913D-069F417298C6.jpeg"
+    ],
+    "burst": "b006",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "origin"
+  ],
+  "note": "MAY CONTAIN PEANUT — the label's 'May be present' line names Peanut. Only the back panel was photographed, so no flavour/variant name is available; do not assume one. pack.size 516 g and count 6 are DERIVED from the printed 'SERVINGS PER PACKAGE: THREE' x 'AVERAGE SERVING SIZE: 172g (2 BARS)' — the net weight is not on the panel photographed. Trans fat is printed as '<0.1g' per serving and per 100 g, which is not a number, so fatTrans is omitted. Label also carries: 'CAUTION: While care has been taken to remove apricot kernel and fragments, some may remain.' and 'OSM is a formulated meal replacement - not to be used as a total diet replacement.'"
+}

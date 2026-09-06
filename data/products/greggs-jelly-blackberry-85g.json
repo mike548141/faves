@@ -1,0 +1,60 @@
+{
+  "id": "greggs-jelly-blackberry-85g",
+  "name": "Jelly",
+  "brand": "Gregg's",
+  "variant": "Blackberry — Flavoured Jelly Crystals",
+  "pack": {
+    "size": 85,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 4,
+    "size": 145,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 242,
+      "energyKcal": 58,
+      "protein": 1.0,
+      "carbohydrate": 13.2,
+      "sugars": 13.2,
+      "sodium": 27
+    },
+    "perServing": {
+      "energyKj": 350,
+      "energyKcal": 84,
+      "protein": 1.5,
+      "carbohydrate": 19.1,
+      "sugars": 19.1,
+      "sodium": 39
+    }
+  },
+  "ingredients": "INGREDIENTS: SUGAR, GELATIN (7%), FOOD ACID (330), ACIDITY REGULATOR (331), FLAVOUR, COLOURS (122, 142), DEXTROSE.",
+  "allergens": {
+    "contains": [
+      "Wheat"
+    ],
+    "mayContain": []
+  },
+  "storage": "STORE IN A COOL, DRY PLACE.",
+  "origin": "BLENDED AND PACKED IN NEW ZEALAND FROM LOCAL AND IMPORTED INGREDIENTS.",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7556.jpeg",
+      "raw_food_photos/IMG_7557.jpeg"
+    ],
+    "burst": "b052",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer"
+  ],
+  "note": "THE NUTRITION PANEL IS FOR THE PREPARED JELLY, NOT THE CRYSTALS — it is headed with an asterisk footnoted '*WHEN MADE FOLLOWING PACKET DIRECTIONS' and the serving size is '1/2 CUP (145g) JELLY*'. So per100 here is 100 g of made-up jelly against an 85 g pack of crystals. Fat total and saturated are printed as 'LESS THAN 1g' in both columns — not numbers, so those keys are omitted rather than guessed. The allergen wording is 'INGREDIENT/S CONTAIN WHEAT PRODUCTS.', recorded as Wheat. No barcode or maker address is on the two faces photographed."
+}

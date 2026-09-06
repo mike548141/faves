@@ -1,0 +1,69 @@
+{
+  "id": "greggs-mousse-rich-chocolate-70g",
+  "name": "Mousse",
+  "brand": "Gregg's",
+  "variant": "Rich Chocolate — Chocolate Flavoured Dessert Mix",
+  "manufacturer": {
+    "name": "Cerebos Gregg's Limited",
+    "address": "2 Nuffield Street, Newmarket, Auckland 1023, New Zealand; also Cerebos (Australia) Limited, 92-96 Station Road, Seven Hills NSW 2147, Australia",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9400574021608"
+  },
+  "pack": {
+    "size": 70,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 4,
+    "size": 17,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1970,
+      "protein": 5.9,
+      "fatTotal": 18.9,
+      "fatSaturated": 18.3,
+      "carbohydrate": 66.1,
+      "sugars": 54.4,
+      "sodium": 205
+    },
+    "perServing": {
+      "energyKj": 335,
+      "protein": 1.0,
+      "fatTotal": 3.2,
+      "fatSaturated": 3.1,
+      "carbohydrate": 11.2,
+      "sugars": 9.2,
+      "sodium": 35
+    }
+  },
+  "ingredients": "Ingredients: Sugar, Foaming Agent [Hydrogenated Vegetable Oil, Glucose Syrup, Emulsifier (472a), Milk Protein], Cocoa (14%), Thickeners (407, 1442), Flavour.",
+  "allergens": {
+    "contains": [
+      "Milk"
+    ],
+    "mayContain": [
+      "Soy"
+    ]
+  },
+  "storage": "STORE IN A COOL, DRY PLACE",
+  "origin": "Packed in New Zealand from imported ingredients",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7553.jpeg",
+      "raw_food_photos/IMG_7554.jpeg",
+      "raw_food_photos/IMG_7555.jpeg"
+    ],
+    "burst": "b052",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "note": "Serving size printed as '17 g dry dessert mix', so the panel is for the powder, not the made-up mousse. Front carries a Health Star Rating of 0.5 (no schema field). The pack also prints a second, Australian contact line for Cerebos (Australia) Limited; both are recorded in manufacturer.address. Ingredient list read from IMG_7555 where the line is complete — in IMG_7554 the right-hand end runs off the frame. Barcode check digit validates."
+}

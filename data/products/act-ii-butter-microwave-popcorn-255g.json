@@ -1,0 +1,67 @@
+{
+  "id": "act-ii-butter-microwave-popcorn-255g",
+  "name": "Butter Flavour Microwave Popcorn",
+  "brand": "Act II",
+  "manufacturer": {
+    "name": "Conagra Foods",
+    "address": "Omaha, Nebraska 68103",
+    "country": "United States of America"
+  },
+  "pack": {
+    "size": 255,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 7.5,
+    "size": 30,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1910,
+      "protein": 10,
+      "fatTotal": 20,
+      "fatSaturated": 9,
+      "fatTrans": 0,
+      "carbohydrate": 53,
+      "sugars": 0,
+      "dietaryFibre": 12,
+      "sodium": 800
+    },
+    "perServing": {
+      "energyKj": 572,
+      "protein": 3,
+      "fatTotal": 6,
+      "fatSaturated": 3,
+      "fatTrans": 0,
+      "carbohydrate": 16,
+      "sugars": 0,
+      "dietaryFibre": 4,
+      "sodium": 240
+    }
+  },
+  "ingredients": "INGREDIENTS: POPPING CORN (81%), VEGETABLE OIL (WITH ANTIOXIDANTS (319, 330)), SALT, NATURAL FLAVOUR (MILK), COLOUR (160b).",
+  "allergens": {
+    "contains": [
+      "Milk"
+    ]
+  },
+  "origin": "Product of the United States of America",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_E0DBE640-BC4B-42BB-8A4B-6BA328240FF3.jpeg"
+    ],
+    "burst": "b006",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "storage"
+  ],
+  "note": "Only the narrow side panel was photographed — the front was not. Brand, net weight, manufacturer and origin are read from the ARABIC block on that panel ('فشار الذرة بطعم الزبدة - ماركة اكت تو' = butter-flavour popcorn, brand Act II; net weight 8.9 oz / 255 g; Conagra Foods, Omaha, Nebraska 68103, product of USA); no Latin-script brand name appears in any photographed panel, so treat brand as a transliteration rather than a quoted label string. Nutrition recorded is the NEW ZEALAND/AUSTRALIA panel, for 30 g popped corn ready to eat. The same panel also carries a separate SOUTH AFRICA panel with different figures (per 100 g: 1996 kJ, protein 9.7 g, glycaemic carbohydrate 65 g, total sugar 0.8 g, total fat 19.5 g, saturated 8.9 g, fibre 12.2 g, sodium 800 mg) and a different ingredient list ('INGREDIENTS: POPPING CORN, VEGETABLE OIL [(PALM FRUIT) (TBHQ AND ACIDITY REGULATOR)], SALT, FLAVOURING, COLOURANT. CONTAINS: MILK.'). Barcode not in frame."
+}

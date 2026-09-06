@@ -1,0 +1,60 @@
+{
+  "id": "jbush-blue-borage-molesworth-honey-1kg",
+  "name": "Honey",
+  "brand": "J Bush & Sons",
+  "variant": "Blue Borage Molesworth",
+  "manufacturer": {
+    "name": "The Bee Station Ltd",
+    "address": "2201 The Coastal Highway, Upper Moutere, Nelson",
+    "country": "New Zealand"
+  },
+  "pack": {
+    "size": 1,
+    "unit": "kg",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 200,
+    "size": 5,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1478,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 79.6,
+      "sugars": 78.1,
+      "sodium": 12
+    },
+    "perServing": {
+      "energyKj": 73.9,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 4.0,
+      "sugars": 3.9
+    }
+  },
+  "ingredients": "Ingredients: 100% Naturally liquid, raw honey.",
+  "allergens": {
+    "contains": []
+  },
+  "origin": "Made in New Zealand by: The Bee Station Ltd",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7572.jpeg",
+      "raw_food_photos/IMG_7573.jpeg"
+    ],
+    "burst": "b056",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "storage"
+  ],
+  "note": "Protein is printed as 'LESS THAN 1g' in both columns and per-serving sodium as 'LESS THAN 5mg' — none of those is a number, so protein is omitted from both columns and sodium from perServing; the per-100 g sodium (12 mg) is a plain figure and is recorded. The label declares no allergens, hence an empty contains rather than an absent field. Front reads 'J BUSH & SONS, BEE KEEPERS, MARLBOROUGH, 1916'; the packer named on the panel is The Bee Station Ltd in Nelson. No barcode legible on either photo."
+}

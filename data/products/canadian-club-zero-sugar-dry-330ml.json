@@ -1,0 +1,33 @@
+{
+  "id": "canadian-club-zero-sugar-dry-330ml",
+  "name": "Canadian Club & Dry",
+  "brand": "Canadian Club",
+  "variant": "Zero Sugar",
+  "pack": {
+    "size": 330,
+    "unit": "ml",
+    "count": 1
+  },
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_8117.jpeg",
+      "raw_food_photos/IMG_8119.jpeg"
+    ],
+    "burst": "b059",
+    "captured": "2026-01-09",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition",
+    "origin",
+    "servings",
+    "storage"
+  ],
+  "note": "Front of can only, seen in a wide fridge shot. Legible: 'CC', 'Canadian Club', 'zero sugar', 'DRY', '330mL 4.8% ALC/VOL'. The mixer word behind the 'DRY' band reads 'GINGER A…' but is partly obscured, so the name is recorded as the legible 'Canadian Club & Dry'. Alcohol strength has no field in this schema. No panel was photographed."
+}

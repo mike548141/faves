@@ -1,0 +1,59 @@
+{
+  "id": "arnotts-tim-tam-chewy-caramel-175g",
+  "name": "Tim Tam",
+  "brand": "Arnott's",
+  "variant": "Chewy Caramel",
+  "pack": {
+    "size": 175,
+    "unit": "g",
+    "count": 9
+  },
+  "servings": {
+    "perPack": 9,
+    "size": 19.4,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2050,
+      "protein": 4.3,
+      "fatTotal": 23.4,
+      "fatSaturated": 13.5,
+      "carbohydrate": 64.6,
+      "sugars": 46.0,
+      "dietaryFibre": 1.6,
+      "sodium": 157
+    },
+    "perServing": {
+      "energyKj": 398,
+      "protein": 0.8,
+      "fatTotal": 4.5,
+      "fatSaturated": 2.6,
+      "carbohydrate": 12.5,
+      "sugars": 8.9,
+      "dietaryFibre": 0.3,
+      "sodium": 30
+    }
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7187.jpeg",
+      "raw_food_photos/IMG_7188.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "The English ingredient and allergen block is OFF-FRAME to the left; only the French-language block is partly visible, and a partial second-language list is not a substitute, so nothing is transcribed. POSSIBLE NUT RELEVANCE for a human follow-up: the visible French fragment includes 'fruits à coque' (tree nuts) and 'amidon (blé)', 'lécithine de soja', 'farine de blé' — enough to say the pack does carry a nut-related statement, not enough to say what it says. Do NOT treat the absence of a peanut mention here as evidence. Nutrition panel is fully in frame and crisp. Front of pack: 9 BISCUITS, NET 175 g, Health Star Rating 0.5, 'MADE WITH IRRESISTIBLE REAL CHOCOLATE', 'caramel (15,5 %)' appears in the French text."
+}

@@ -11,8 +11,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/README.md)*
 
 - [~] 🛑 [service is renamed to order-mode, INCLUDING the shipped filter](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/010-service-is-renamed-to-order-mode-including-the.md)
-- ✅ 🛑 [The roadmap is SPLIT — one file per item](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/020-the-roadmap-is-split-one-file-per-item.md)
 - [ ] [🚩 URL stability is NOT a constraint yet, and the day it becomes one is](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/020-url-stability-becomes-a-constraint-when-there-are-users.md)
+- ✅ 🛑 [The roadmap is SPLIT — one file per item](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/030-the-roadmap-is-split-one-file-per-item.md)
 
 ## Theme 1 — From *decided* to *ordered*: the Order tally ★ flagship
 
@@ -233,10 +233,10 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [📤 FILED UPSTREAM — the board's state vocabulary is atelier's, and…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
 - [~] 🛑 [cook_check wedges on its DEFAULT recipe, deterministically, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/120-cook-check-wedges-on-its-default-recipe.md)
 - ✅ [✅ DONE 2026-08-17 (436041d) — the job is now repo invariants, and](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/130-the-guard-job-name-cannot-be-fixed-alone.md)
-- [ ] [🚩 until() timeouts still exit 2, so a deleted element a check WAITS](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/130-until-timeouts-still-exit-2-as-a-transport-error.md)
-- [ ] [A tolerant OR-list selector can pass with every named target gone](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/140-a-tolerant-selector-can-pass-with-every-named-target-gone.md)
 - ⏳ [The "Dining" filter has no te reo, and the gloss on it is knowingly](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/140-the-dining-label-has-no-te-reo.md)
 - [ ] 🔎 [The corpus is uniformly healthy, so a whole class of behaviour ships](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/150-the-corpus-holds-no-degenerate-state-to-test-against.md)
+- [ ] [🚩 until() timeouts still exit 2, so a deleted element a check WAITS](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/160-until-timeouts-still-exit-2-as-a-transport-error.md)
+- [ ] [A tolerant OR-list selector can pass with every named target gone](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/170-a-tolerant-selector-can-pass-with-every-named-target-gone.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 

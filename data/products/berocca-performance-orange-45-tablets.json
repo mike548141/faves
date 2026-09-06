@@ -1,0 +1,44 @@
+{
+  "id": "berocca-performance-orange-45-tablets",
+  "name": "Berocca Performance Effervescent Tablets",
+  "brand": "Berocca",
+  "variant": "Orange Flavour",
+  "manufacturer": {
+    "name": "Bayer New Zealand Limited",
+    "address": "3 Argus Place, Hillcrest, Auckland 0627",
+    "country": "New Zealand"
+  },
+  "pack": {
+    "size": 45,
+    "unit": "each",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 45,
+    "size": 1,
+    "unit": "each"
+  },
+  "ingredients": "Berocca Performance tablet contains: Vitamin B1 (Thiamine hydrochloride) (as thiamine phosphate acid ester chloride dihydrate) 15 mg; Vitamin B2 (Riboflavine) (as riboflavine sodium phosphate) 15 mg; Vitamin B3 (Nicotinamide) 50 mg; Vitamin B5 (Pantothenic acid) (as calcium pantothenate) 23 mg; Vitamin B6 (Pyridoxine hydrochloride) 10 mg; Vitamin B12 (Cyanocobalamin) 10 µg; Vitamin C (Ascorbic acid) 500 mg; Vitamin H (Biotin) 150 µg; Folic acid 400 µg; Calcium (as calcium carbonate and calcium pantothenate) 100 mg; Magnesium (as magnesium carbonate and magnesium sulfate dihydrate) 100 mg; Zinc (as zinc citrate trihydrate) 10 mg. Also contains tabletting aids, artificial sweeteners, colour and natural flavouring.",
+  "allergens": {
+    "contains": []
+  },
+  "storage": "Keep the tube tightly closed in a cool dry place. Store below 25° C",
+  "category": "supplement",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7559.jpeg",
+      "raw_food_photos/IMG_7560.jpeg",
+      "raw_food_photos/IMG_7561.jpeg"
+    ],
+    "burst": "b053",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "nutrition",
+    "origin"
+  ],
+  "note": "A supplement, not a food: there is no nutrition information panel on the pack at all, hence 'nutrition' in needs. The one nutrient figure the label gives is 'Each tablet contains 274 mg sodium.' — recorded here rather than in a per-100 g table it does not have. PHENYLALANINE WARNING, quoted: 'Contains aspartame. Phenylketonurics are warned that this product contains phenylalanine.' The pack also states 'Does not contain caffeine, gluten or artificial stimulants.' — that is the only allergen-adjacent claim, so allergens.contains is empty rather than absent. Registration AUST L 193891; front is marked 'dietary supplement'. Dosage as printed: 'Adults and children over 12 years, 1 tablet, dissolved in a glass of water. Take daily or as directed by your healthcare professional.' Storage wording says 'tube' even on the 45-tablet carton — that is what the carton prints. Also listed: Bayer Australia Limited, 875 Pacific Highway, Pymble NSW 2073. Ingredient units use the micro sign (µg) as printed. No barcode in frame."
+}

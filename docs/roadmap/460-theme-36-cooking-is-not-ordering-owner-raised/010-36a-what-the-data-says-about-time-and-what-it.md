@@ -57,8 +57,8 @@
 >   Cakes, Chocolate Self-Saucing, B's Brownie, Chewy Cookies) and exclude
 >   6–15 min of prep, yet the app renders `time` as if it were the total.
 
-[ADR 0064]: decisions/0064-an-estimate-carries-its-working-and-never-a-timer.md
-[ADR 0066]: decisions/0066-an-estimated-duration-drives-a-timer-marked-as-an-estimate.md
+[ADR 0064]: ../../decisions/0064-an-estimate-carries-its-working-and-never-a-timer.md
+[ADR 0066]: ../../decisions/0066-an-estimated-duration-drives-a-timer-marked-as-an-estimate.md
 
 The owner asked for *"an estimate of time required for each step and each recipe
 as a total"*. Measured across the corpus, 2026-08-16:

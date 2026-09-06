@@ -1,0 +1,55 @@
+{
+  "id": "monteiths-beer-330ml",
+  "name": "Beer",
+  "brand": "Monteith's",
+  "manufacturer": {
+    "name": "Monteith's Brewing Co.",
+    "address": "Cnr Turumaha & Herbert Streets, Greymouth",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9414339599813"
+  },
+  "pack": {
+    "size": 330,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 330,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 143,
+      "energyKcal": 34,
+      "carbohydrate": 2.6,
+      "sodium": 2.4
+    },
+    "perServing": {
+      "energyKj": 473,
+      "energyKcal": 113,
+      "protein": 1.3,
+      "carbohydrate": 8.6,
+      "sodium": 8.0
+    }
+  },
+  "ingredients": "WATER, MALTED BARLEY, SUGAR, HOPS, CARAMEL III, HOP EXTRACT.",
+  "origin": "Made in New Zealand",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/2/IMG_3792C286-8177-41BC-BFCF-69C59E3AD32D.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens"
+  ],
+  "note": "Back label only - the front is turned away, so which Monteith's beer this is (the variant name) is not visible; the bottle is dark and the label green. BARLEY is set in bold in the ingredient list, which is how this label carries its allergen emphasis, but there is no explicit 'Contains' statement, so allergens are left unrecorded rather than inferred. Protein, fat, saturated fat and sugars per 100 mL, and fat/saturated/sugars per serving, are printed as '<1g' - not numbers, so omitted."
+}

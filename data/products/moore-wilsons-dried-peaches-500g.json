@@ -1,0 +1,69 @@
+{
+  "id": "moore-wilsons-dried-peaches-500g",
+  "name": "Dried Peaches",
+  "brand": "Moore Wilson's",
+  "manufacturer": {
+    "name": "Moore Wilson's",
+    "address": "Corner of Tory and College St, Wellington",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9414580002605"
+  },
+  "pack": {
+    "size": 500,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 10,
+    "size": 50,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 960,
+      "protein": 4.3,
+      "carbohydrate": 48.2,
+      "sugars": 48.2,
+      "sodium": 59
+    },
+    "perServing": {
+      "energyKj": 480,
+      "protein": 2.2,
+      "carbohydrate": 24.1,
+      "sugars": 24.1,
+      "sodium": 29
+    }
+  },
+  "ingredients": "Peaches (99.7%), Preservative (220)(Sulphites)",
+  "allergens": {
+    "contains": [
+      "Sulphites"
+    ],
+    "mayContain": [
+      "Gluten",
+      "Egg",
+      "Soy",
+      "Milk",
+      "Sesame",
+      "Tree Nuts"
+    ]
+  },
+  "origin": "Country of origin: South Africa",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_9125038B-5D31-4E41-AD1A-7008F1D0DF2A.jpeg"
+    ],
+    "burst": "b012",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "storage"
+  ],
+  "note": "Fat total and saturated fat are printed as 'LESS THAN 1g' on both columns, not as numbers, so they are omitted rather than guessed. The may-contain line reads 'Packed in premises handling products containing: Gluten, Egg, Soy, Milk, Sesame and Tree Nuts' — it names Tree Nuts but NOT peanut."
+}

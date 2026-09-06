@@ -1,0 +1,61 @@
+{
+  "id": "rainbow-compli-mints-1kg",
+  "name": "Compli-Mints",
+  "brand": "Rainbow",
+  "variant": "Jumbo Pack",
+  "identifiers": {
+    "gtin": "9421011262194"
+  },
+  "pack": {
+    "size": 1,
+    "unit": "kg",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 50,
+    "size": 20,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1690,
+      "energyKcal": 437,
+      "carbohydrate": 98.5,
+      "sugars": 95.8
+    },
+    "perServing": {
+      "energyKj": 338,
+      "energyKcal": 87,
+      "carbohydrate": 19.7,
+      "sugars": 19.2
+    }
+  },
+  "ingredients": "Sugar, Glucose Syrup (from corn), Water, Anticaking Agents (553, 570, Mineral Oil), Flavours, Colour (171), Glazing Agent (903, Vegetable Oil).",
+  "allergens": {
+    "mayContain": [
+      "Dairy",
+      "Soy"
+    ]
+  },
+  "storage": "STORE IN A COOL DRY PLACE.",
+  "origin": "NEW ZEALAND MADE",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7204.jpeg",
+      "raw_food_photos/IMG_7205.jpeg",
+      "raw_food_photos/IMG_7206.jpeg",
+      "raw_food_photos/IMG_7207.jpeg",
+      "raw_food_photos/IMG_7208.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "manufacturer"
+  ],
+  "note": "Individually wrapped mints, 'COUNT APPROX 350' printed above the panel. Protein, fat total and saturated are printed '<1g' in both columns and are OMITTED rather than rounded; gluten is printed '0g'; sodium is printed '<5mg' in both columns and is likewise omitted. Allergen line reads 'ALLERGEN ADVICE: MAY BE PRESENT DAIRY AND SOY'. Front of pack also carries a 'GLUTEN FREE' flash. Ingredient list confirmed at native resolution against a glare-free second photo. Manufacturer name is printed only in tiny type on the individual sweet wrappers, not legibly."
+}

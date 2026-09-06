@@ -1,0 +1,61 @@
+{
+  "id": "grandpas-manuka-smoked-streaky-bacon-800g",
+  "name": "Mānuka Smoked Streaky Bacon",
+  "brand": "Grandpa's",
+  "variant": "Honey Cured, Twin Pack",
+  "manufacturer": {
+    "name": "Grandpa's Meat & Bacon Co.",
+    "address": "5 Autumn Place, Penrose, Auckland 1061",
+    "country": "New Zealand"
+  },
+  "pack": {
+    "size": 800,
+    "unit": "g",
+    "count": 2
+  },
+  "servings": {
+    "perPack": 11,
+    "size": 75,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 840,
+      "protein": 13.8,
+      "fatTotal": 15.7,
+      "fatSaturated": 5.8,
+      "carbohydrate": 1.4,
+      "sugars": 0.3,
+      "sodium": 855
+    },
+    "perServing": {
+      "energyKj": 630,
+      "protein": 10.4,
+      "fatTotal": 11.8,
+      "fatSaturated": 4.4,
+      "carbohydrate": 1.1,
+      "sugars": 0.2,
+      "sodium": 641
+    }
+  },
+  "ingredients": "Pork (90%), Water, Salt, Mineral Salts (451, 450), Sugar, Antioxidant (316), Honey, Thickener (415), Preservative (250).",
+  "storage": "Store Below 4°C. Once opened use within 5 days. Cook thoroughly before consuming.",
+  "origin": "Made in New Zealand with pork from throughout Europe, (Denmark, Finland, Poland, Spain, Germany), or New Zealand. Country of origin may vary depending on availability.",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/1/IMG_87DBFE28-AEEA-4C53-96E5-24CA07E0C2FD.jpeg",
+      "raw_food_photos/1/IMG_59C46500-8267-4EDF-81CB-9C932B2AB0AF.jpeg"
+    ],
+    "burst": "b017",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin"
+  ],
+  "note": "Front-of-pack states TWIN PACK, 2X400 PACKS FOR FRESHNESS, 800g, and GLUTEN FREE. The nutrition panel's per-100g column is printed offset by half a row against its labels; values were assigned by arithmetic against the 75 g serving column (every one reconciles). No allergen declaration block is printed — the only allergen-relevant statements are the GLUTEN FREE flash and the '- gluten 0g' nutrition row. Barcode is present but photographed rotated and blurred; two readings of the digit string disagreed, so gtin is omitted. Candidate for a human to verify: 9415641000783 (this candidate does satisfy the EAN-13 check digit, but it was partly fitted to the checksum and must not be trusted without a clean re-scan). Category: no chilled/meat option in the allowed list; 'pantry' used as the generic."
+}

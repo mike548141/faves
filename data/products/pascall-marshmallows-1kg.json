@@ -1,0 +1,60 @@
+{
+  "id": "pascall-marshmallows-1kg",
+  "name": "Marshmallows",
+  "brand": "Pascall",
+  "variant": "A mixture of vanilla and raspberry flavoured marshmallows",
+  "manufacturer": {
+    "name": "Pascall",
+    "address": "323 Canterbury Road, Ringwood Victoria 3134",
+    "country": "Australia"
+  },
+  "identifiers": {
+    "gtin": "9400550641103"
+  },
+  "pack": {
+    "size": 1,
+    "unit": "kg",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 40,
+    "size": 25,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1450,
+      "protein": 2.6,
+      "carbohydrate": 82.3,
+      "sugars": 67.9,
+      "sodium": 59
+    },
+    "perServing": {
+      "energyKj": 361,
+      "carbohydrate": 20.6,
+      "sugars": 17.0,
+      "sodium": 15
+    }
+  },
+  "ingredients": "SUGAR, GLUCOSE SYRUP, INVERT SUGAR, GELATINE, FLAVOURS, COLOUR (120), CORNSTARCH.",
+  "allergens": {
+    "mayContain": [
+      "Milk"
+    ]
+  },
+  "storage": "PLEASE STORE IN COOL, DRY CONDITIONS.",
+  "origin": "MADE IN AUSTRALIA",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7202.jpeg",
+      "raw_food_photos/IMG_7203.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "note": "Allergen line is 'MAY CONTAIN MILK.' — no 'contains' statement. Protein per serving, and fat total and saturated in both columns, are printed '<1.0 g' and are OMITTED rather than rounded. The bag is crumpled so the row labels sit visually above their values; the table was cross-checked against the clearer second photo (IMG_7203) and against the front-of-pack 'Be treatwise' per-serve strip, which agree exactly. Pack size printed 'e 1kg'."
+}

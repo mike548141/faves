@@ -111,8 +111,17 @@ const SCREENS = [
     // is the one state that cannot age back into the blue tone, so this stays
     // a caution check without depending on the calendar. If someone reads this
     // menu in store, move the pin rather than dropping the check.
+    //
+    // RE-PINNED 2026-09-06, kk-malaysian → khandallah-trading-company, exactly
+    // as the line above instructs. KK was in the caution tone for a reason the
+    // comment did not describe: its menu HAD been read, from a delivery app,
+    // and `delivery-app` is an untrusted method. Reading it in store on
+    // 2026-08-26 moved it to the blue tone and this assertion started failing
+    // on correct behaviour. The new pin genuinely has `verified: null`, which
+    // is the state the comment always meant — so pick the replacement on that
+    // field, not on which venue happens to be amber today.
     name: "menu we have never read",
-    url: () => `/restaurant.html?id=kk-malaysian`,
+    url: () => `/restaurant.html?id=khandallah-trading-company`,
     ready: `!!document.querySelector(".menu-title")`,
     checks: [
       {

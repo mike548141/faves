@@ -1,0 +1,71 @@
+{
+  "id": "watties-classic-hash-browns-1250g",
+  "name": "Classic Hash Browns",
+  "brand": "Wattie's",
+  "variant": "Classic",
+  "manufacturer": {
+    "name": "Heinz Wattie's Limited",
+    "address": "513 King Street North, Hastings 4122, New Zealand",
+    "country": "New Zealand"
+  },
+  "pack": {
+    "size": 1.25,
+    "unit": "kg",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 19.5,
+    "size": 64,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 790,
+      "protein": 2.3,
+      "fatTotal": 9.7,
+      "fatSaturated": 0.7,
+      "carbohydrate": 22.1,
+      "sugars": 0.5,
+      "sodium": 370
+    },
+    "perServing": {
+      "energyKj": 505,
+      "protein": 1.5,
+      "fatTotal": 6.2,
+      "fatSaturated": 0.4,
+      "carbohydrate": 14.1,
+      "sugars": 0.3,
+      "sodium": 240
+    }
+  },
+  "ingredients": "Potatoes (89%), Canola Oil (9%), Seasoning, Mineral Salt (450), Dextrose.",
+  "allergens": {
+    "mayContain": [
+      "Wheat",
+      "Gluten",
+      "Egg",
+      "Milk",
+      "Soy"
+    ]
+  },
+  "storage": "Keep Frozen. Store at -18°C or colder. Do not thaw before cooking. Do not refreeze once thawed. Product must be cooked before use.",
+  "category": "frozen",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7199.jpeg",
+      "raw_food_photos/IMG_7200.jpeg",
+      "raw_food_photos/IMG_7306.jpeg",
+      "raw_food_photos/IMG_7307.jpeg"
+    ],
+    "burst": "b026+b045",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "origin"
+  ],
+  "note": "Trans fat is printed as 'LESS THAN 0.1 g' in both columns - not a number, so omitted. Polyunsaturated (2.7 g/100 g) and monounsaturated (6.2 g/100 g) are on the label but have no allowed key. The country-of-origin line runs off the bottom edge of the frame ('Made in Ne…'), so origin stays in needs; the front carries a 'GROWN [NZ] POTATOES' roundel and 'POTATO FROM THE CANTERBURY PLAINS'. Servings per package is printed as 'Approx. 19.5'. Pack also states 'NOT SUITABLE FOR COOKING IN A TOASTER.'"
+}

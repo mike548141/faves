@@ -1,0 +1,55 @@
+{
+  "id": "cadbury-unnamed-jar-b049",
+  "name": "Unidentified Cadbury confectionery (jar)",
+  "brand": "Cadbury",
+  "manufacturer": {
+    "name": "Cadbury",
+    "address": "323 Canterbury Road, Ringwood Victoria 3134",
+    "country": "Australia"
+  },
+  "servings": {
+    "perPack": 12.4,
+    "size": 25,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2230,
+      "protein": 8.2,
+      "fatTotal": 31.4,
+      "fatSaturated": 13.5,
+      "carbohydrate": 52.5,
+      "sugars": 49.8,
+      "sodium": 66
+    },
+    "perServing": {
+      "energyKj": 557,
+      "protein": 2.0,
+      "fatTotal": 7.8,
+      "fatSaturated": 3.4,
+      "carbohydrate": 13.1,
+      "sugars": 12.4,
+      "sodium": 16
+    }
+  },
+  "storage": "PLEASE STORE IN COOL, DRY CONDITIONS.",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_56877A63-E9CC-4BE4-B9C2-EB49B1F55759.jpeg"
+    ],
+    "burst": "b049",
+    "captured": "2025-11-30",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "origin",
+    "pack"
+  ],
+  "note": "PRODUCT NAME IS NOT KNOWN. Single photo of one face of a purple screw-cap jar; the face carries the nutrition panel, the Cadbury address block and a '100% SUSTAINABLY SOURCED COCOA' flash, and no product name. The left edge of the label was re-cropped at native resolution to look for one — there is none in frame. The name has deliberately NOT been guessed from the nutrition profile. Serving size is '25g (approx. 18-20 pieces)' and servings per package 12.4, implying about 310 g, but no net weight is printed on this face so pack is left unrecorded. No ingredient list or allergen statement on this face — this record says nothing about whether the product contains or may contain nuts. Re-photograph the front and the ingredient panel."
+}

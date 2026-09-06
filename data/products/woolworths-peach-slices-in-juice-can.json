@@ -1,0 +1,54 @@
+{
+  "id": "woolworths-peach-slices-in-juice-can",
+  "name": "Peach Slices",
+  "brand": "Woolworths",
+  "variant": "in Juice",
+  "manufacturer": {
+    "name": "Packed for Woolworths",
+    "address": "1 Woolworths Way, Bella Vista NSW 2153, Australia; 80 Favona Road, Mangere, Auckland",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9300633948404"
+  },
+  "servings": {
+    "perPack": 3,
+    "size": 135,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 230,
+      "energyKcal": 55,
+      "protein": 1.9,
+      "carbohydrate": 11.6,
+      "sugars": 11.0
+    },
+    "perServing": {
+      "energyKj": 310,
+      "energyKcal": 74,
+      "protein": 2.6,
+      "carbohydrate": 15.7,
+      "sugars": 14.8
+    }
+  },
+  "ingredients": "Peach Slices (59%), Water, Concentrated Pear Juice, Acidity Regulator (Citric Acid).",
+  "storage": "Store in a cool, dry place. Once opened, empty contents into an airtight container, refrigerate at 1-4°C and use within 3 days.",
+  "origin": "Product of South Africa",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_E6B40E9E-A735-4A40-A63D-C5BAF50DD90D.jpeg"
+    ],
+    "burst": "b019",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "pack"
+  ],
+  "note": "Back-of-can only; the front was not photographed, so the product name shown is taken from the ingredient list and the brand from the 'Packed for Woolworths' line. Net weight is partly hidden by the can's curve — legible only as '…10 g' — so pack size is omitted rather than guessed. No allergen declaration appears on the photographed panel. Fat total, saturated fat and sodium are printed as '< 0.1g' / '< 5mg' rather than as numbers, so they are omitted. Label carries 'Caution: Product may contain pits or pit fragments.'"
+}

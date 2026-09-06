@@ -56,6 +56,14 @@ import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { favourites } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
+import {
+  FAVOURITES,
+  availableDishFilters,
+  matchesDishFilters,
+  summarise,
+} from "./dish-filters.js";
+import { filterCandidates, textCandidate } from "./suggest.js";
+import { attachSuggestions } from "./suggest-ui.js";
 import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
 import { dishNeeds, priceUnknown } from "./needs.js";
@@ -724,6 +732,48 @@ function renderAside(r) {
 // English only, on purpose: reo.js's safety boundary keeps the refresh caveat
 // and the allergen chips in English until a reo review, and this says the same
 // class of thing about the same class of fact — including an `allergens` kind.
+/**
+ * "$24.00 on Delivereasy — about 26% more" (ADR 0089).
+ *
+ * Returns null unless this dish actually carries a second price, which is
+ * almost every dish in the corpus: the row exists for the venues where the
+ * counter and the app genuinely disagree, and appears nowhere else.
+ *
+ * The comparison is stated in the direction the reader is standing. They are
+ * looking at the counter price, so the sentence is about what the OTHER door
+ * costs relative to it — never the reverse, which reads as an endorsement of
+ * the app. And it is never phrased as a saving: "save 20%" is a claim about
+ * what someone would otherwise have done, and this app does not know that.
+ */
+function channelPrices(item, r) {
+  const declared = r?.priceChannels;
+  const prices = item?.prices;
+  if (!declared || !prices || item.price == null) return null;
+  const parts = [];
+  for (const [key, value] of Object.entries(prices)) {
+    const meta = declared[key];
+    if (!meta || typeof value !== "number") continue;
+    // A percentage only where one is meaningful. A free item, or a difference
+    // under 1%, would produce a number that is noise dressed as information.
+    const pct = item.price > 0 ? Math.round(((value - item.price) / item.price) * 100) : 0;
+    const gap =
+      Math.abs(pct) < 1
+        ? "about the same"
+        : `about ${Math.abs(pct)}% ${pct > 0 ? "more" : "less"}`;
+    parts.push(
+      el("span", { className: "dish-channel" }, [
+        el("span", { className: "dish-channel-price", textContent: money(value) }),
+        el("span", {
+          className: "dish-channel-where",
+          textContent: ` on ${meta.platform} — ${gap}`,
+        }),
+      ])
+    );
+  }
+  if (!parts.length) return null;
+  return el("p", { className: "dish-channels" }, parts);
+}
+
 function needsRow(item, venueId) {
   const rows = dishNeeds(item);
   if (!rows.length) return null;
@@ -1029,7 +1079,18 @@ function closePicks(venueId, section) {
   // browser's answer to that is <body> — i.e. back to the top of the document
   // for anyone on a keyboard or a screen reader. Park it on whatever the block
   // was sitting above (the menu itself) so reading carries on from here.
-  const after = section.nextElementSibling ?? section.parentElement;
+  //
+  // HIDDEN SIBLINGS ARE SKIPPED, and that is not defensive padding. This took
+  // the immediate `nextElementSibling` until 2026-09-06, when the "Showing N of
+  // M" line was inserted between the picks block and the menu. That line is
+  // `hidden` whenever no filter is on, `.focus()` on a hidden element is a
+  // no-op, and focus silently fell back to <body> — the exact failure the
+  // handoff exists to prevent, reintroduced by a change nowhere near it.
+  // picks_check caught it. Anything parked here must be something a reader can
+  // actually land on.
+  let after = section.nextElementSibling;
+  while (after?.hidden) after = after.nextElementSibling;
+  after = after ?? section.parentElement;
   section.remove();
   if (after) {
     after.tabIndex = -1;
@@ -1146,7 +1207,14 @@ function dishPhoto(item) {
 // `r` carries the kind, so the row no longer needs to be TOLD what it is
 // rendering — the old `isRecipes` boolean was a second copy of a fact already
 // in the arguments, and a second copy is a thing that can disagree.
-function renderDish(item, r = null, avoid = EMPTY_SET, section = null, dietary = EMPTY_SET) {
+function renderDish(
+  item,
+  r = null,
+  avoid = EMPTY_SET,
+  section = null,
+  dietary = EMPTY_SET,
+  onConfigured = null
+) {
   const kind = kindOf(r);
   const collectionId = r?.id ?? null;
   // The price slot doubles as a recipe meta chip (serves · time).
@@ -1265,6 +1333,18 @@ function renderDish(item, r = null, avoid = EMPTY_SET, section = null, dietary =
   // as another property of the food.
   const needs = needsRow(item, r?.id ?? "x");
   if (needs) children.push(needs);
+  // What the same dish costs through another door (ADR 0089). `.dish-price`
+  // above is always the COUNTER price; this says what a delivery app or the
+  // venue's own online storefront charges, and by how much they differ.
+  //
+  // It earns its place in the payload because of what it prevents. Before this,
+  // KK Malaysian's record held Delivereasy's prices and nothing on screen said
+  // so: the page showed $24 beside a "Call to order" number that would have
+  // charged $19. A reader cannot spot that, because both numbers are perfectly
+  // plausible. The percentage is spelled out rather than left as arithmetic —
+  // "$24 on Delivereasy" invites a shrug, "about 26% more" does not.
+  const channelRow = channelPrices(item, r);
+  if (channelRow) children.push(channelRow);
   if (item.tags?.length) {
     const tags = el("div", { className: "dish-tags" });
     for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid, dietary));
@@ -1327,6 +1407,14 @@ function renderDish(item, r = null, avoid = EMPTY_SET, section = null, dietary =
     [item.desc, ...ingredientKeys(item.ingredients)].filter(Boolean).join(" ")
   );
   li.dataset.tags = (item.tags || []).join(" ");
+  // The dish AS THE VENUE PRINTS IT, before any add-on the reader chose. Two
+  // fields because the filters now REMOVE rows and the two questions have
+  // different answers: "is this a vegetarian dish?" (the menu's claim, which
+  // decides whether the row is on screen at all) and "is what you have
+  // configured still vegetarian?" (yours, which decides whether it looks like a
+  // match). Filtering on the configured tags would make a row vanish from under
+  // the finger that just added bacon to it — see applyView.
+  li.dataset.baseTags = (item.tags || []).join(" ");
   li.append(...children);
 
   // Add-ons hang off the row rather than sitting in the actions bar: choosing
@@ -1339,6 +1427,17 @@ function renderDish(item, r = null, avoid = EMPTY_SET, section = null, dietary =
     const picker = dishAddOns(r, section, item, (tags) => {
       li.dataset.tags = tags.join(" ");
       li.classList.toggle("dish-flagged", dishFlagged(tags, avoid));
+      // ⚑ FIXED 2026-09-06. ADR 0048 §3 requires that a dish configured out of
+      // an active dietary filter "must dim with the rest of them, not linger
+      // looking like a match" — and until this line that was documented and
+      // never wired. The callback rewrote dataset.tags and stopped; the class
+      // that expresses the mismatch is set by applyView, which nothing called.
+      // So the row went on looking like a match until the reader happened to
+      // type in the search box or toggle a chip. `addon_check` never saw it
+      // because it never turns a dietary filter on, and `device_check` never
+      // saw it because it never configures a dish. Found by focus_check, which
+      // is the first check to do both at once.
+      onConfigured?.();
     });
     if (picker) li.append(picker.node);
   }
@@ -1488,34 +1587,67 @@ function render(r) {
   const preselect = new Set(prefs.dietary);
 
   const presentTags = new Set(allItems.flatMap((i) => i.tags || []));
-  const activeDiet = new Set();
+  // Renamed from `activeDiet` when ♥ Favourites joined the row: the set is no
+  // longer only dietary, and a name that says otherwise is how a favourites key
+  // ends up being passed to a dietary predicate.
+  const activeFilters = new Set();
   const dietChips = [];
-  const available = DIET_FILTERS.filter((f) =>
-    f.satisfies.some((t) => presentTags.has(t))
-  );
+  // Hearted dishes at THIS venue, by dish id (ADR 0051 — never by name, or the
+  // three "Cheeseburger" rows would light up together). Recomputed rather than
+  // cached because the reader can heart a dish while the filter is on, and the
+  // row must leave or arrive on the spot.
+  const favouriteIds = () =>
+    new Set(
+      favourites
+        .dishes()
+        .filter((e) => e.venueId === r.id)
+        .map((e) => e.dishId || "")
+    );
+  const available = availableDishFilters(presentTags, favouriteIds().size);
   let dietRow = null;
   if (available.length) {
-    dietRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Dietary filters", "data-i18n-aria": "menu.diet.aria" });
+    // The row is no longer only dietary — ♥ Favourites sits at its head — so it
+    // is announced for what it now is. It stays BELOW the sticky toolbar and
+    // outside the jump-nav on purpose: `--toolbar-h` is measured once on the
+    // stated assumption of "a single search + one-row nav" and drives every
+    // deep-link scroll offset, and Theme 29 already measured the order pill
+    // owning 82.5% of a chip's tap at large text. Another row inside the pinned
+    // chrome would inherit both problems.
+    dietRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Filter the menu", "data-i18n-aria": "menu.filters.aria" });
     // Stamp the pre-selection this row was built from, so a later capture can
     // tell an ad-hoc chip toggle apart from the viewer's stored preference
     // (ui-state.js). By capture time settings.get() has already moved on.
     dietRow.dataset.preselect = [...preselect].join(" ");
     for (const f of available) {
+      // `preselect` holds the reader's stored DIETARY needs, so ♥ Favourites is
+      // never pre-pressed — and that is right, not an oversight. A dietary need
+      // is a standing fact about a person; "show me only my favourites" is a
+      // thing you do for a moment. Starting a menu already narrowed to a
+      // handful of hearted rows would look like the venue had stopped selling
+      // everything else.
       const on = preselect.has(f.key);
-      if (on) activeDiet.add(f.key);
+      if (on) activeFilters.add(f.key);
       const chip = el("button", {
         type: "button",
         className: "diet-chip",
-        textContent: f.label,
-      });
+        // The ♥ is inside its own aria-hidden span, so the button's accessible
+        // name stays the plain label — a screen reader announcing "black heart
+        // suit Favourites, toggle button" is worse than no icon at all. No
+        // `title` tooltip: this screen is designed at 390 px first and a title
+        // never appears on a touch device, so it would be help only the people
+        // who need it least.
+      }, [
+        f.icon ? el("span", { className: "diet-chip-ico", textContent: f.icon, "aria-hidden": "true" }) : null,
+        el("span", { textContent: f.label }),
+      ]);
       // setAttribute (not an el() prop): "aria-pressed" is not an IDL property,
       // so Object.assign wouldn't reflect it to the attribute the CSS matches.
       chip.setAttribute("aria-pressed", String(on));
       chip.dataset.key = f.key;
       chip.addEventListener("click", () => {
-        if (activeDiet.has(f.key)) activeDiet.delete(f.key);
-        else activeDiet.add(f.key);
-        chip.setAttribute("aria-pressed", String(activeDiet.has(f.key)));
+        if (activeFilters.has(f.key)) activeFilters.delete(f.key);
+        else activeFilters.add(f.key);
+        chip.setAttribute("aria-pressed", String(activeFilters.has(f.key)));
         applyView();
       });
       dietChips.push({ f, chip });
@@ -1538,6 +1670,36 @@ function render(r) {
 
   const menuWrap = el("div", { className: "menu-sections" });
   const sectionEls = [];
+
+  // ⚠️ EVERYTHING applyView() TOUCHES IS DECLARED BEFORE THE SECTION LOOP, and
+  // that is load-bearing rather than tidy. `dishAddOns` calls its own
+  // `refresh()` once at construction to publish a dish's starting tags, so the
+  // onConfigured hook passed into renderDish below fires DURING the loop —
+  // before any `const` declared after it has initialised. Declaring these
+  // afterwards put them in the temporal dead zone, applyView threw a
+  // ReferenceError on the first venue that has add-on groups, and the whole
+  // menu fell back to nothing. Add a new element applyView reads? Declare it
+  // here, not down there.
+  const noResults = el("p", { className: "menu-status", hidden: true, "data-i18n": "menu.noMatch", textContent: "No dishes match." });
+  // The line that keeps a narrowing honest (ADR 0088). `role="status"` so a
+  // screen reader is told the count changed without the focus moving —
+  // pressing a chip and hearing nothing is the version of this that fails
+  // silently for the people who can least afford it.
+  const countText = el("span", { className: "menu-count-text" });
+  const showAll = el(
+    "button",
+    { type: "button", className: "menu-count-clear", "data-i18n": "menu.showAll", textContent: "Show all" }
+  );
+  const countLine = el(
+    "p",
+    { className: "menu-count", role: "status", "aria-live": "polite", hidden: true },
+    [countText, showAll]
+  );
+  /** The dietary subset of the active filters — what a dish's CONFIGURED tags
+   *  are judged against for the dim. Favourites has no bearing on it: hearting
+   *  a dish is not a claim about what is in it. Declared up here for the same
+   *  temporal-dead-zone reason as the elements above. */
+  const dietKeys = () => new Set([...activeFilters].filter((k) => k !== FAVOURITES));
   // When a section is served (Theme 28c). Read ONCE for the whole menu, off the
   // venue's own clock via the same route every other screen uses — never the
   // device clock, or a reader overseas is told a Wellington brunch is on at
@@ -1567,7 +1729,10 @@ function render(r) {
     );
     const dishes = el("ul", { className: "dish-list" });
     for (const item of section.items)
-      dishes.append(renderDish(item, r, avoid, section, preselect));
+      // The last argument re-runs the view when an add-on choice changes what
+      // the dish claims. applyView is a hoisted declaration further down this
+      // same scope, so it is defined by the time any reader can click.
+      dishes.append(renderDish(item, r, avoid, section, preselect, () => applyView()));
     // Subtext under the heading, never inside it (ADR 0057). The heading string
     // is also the jump-nav chip, so "Brunch (served till 2pm)" costs 24 chars of
     // a horizontal strip the reader scrolls with a thumb; the qualifier belongs
@@ -1611,24 +1776,50 @@ function render(r) {
   }
   main.append(menuWrap);
 
-  const noResults = el("p", { className: "menu-status", hidden: true, "data-i18n": "menu.noMatch", textContent: "No dishes match." });
   main.append(noResults);
 
-  // --- View logic: search hides, dietary dims -----------------------
+  // Above the dishes, below the controls that cause it: the reader who wonders
+  // "where did the rest of the menu go?" reads the answer before scrolling into
+  // the gap, not after.
+  menuWrap.before(countLine);
+
+  // --- View logic: search and filters both HIDE ---------------------
+  //
+  // This used to read "search hides, dietary dims". The dietary half changed on
+  // 2026-09-06 (ADR 0088): a filter now removes the row, because the owner's
+  // ask was to FOCUS the list rather than to decorate it. `countLine` above is
+  // the price of that — a narrowing this aggressive has to say so.
   function applyView() {
     const q = foldSearchText(search.value.trim());
     searchClear.hidden = search.value.length === 0;
+    const favIds = activeFilters.has(FAVOURITES) ? favouriteIds() : null;
     let visibleTotal = 0;
+    let total = 0;
     for (const sec of sectionEls) {
       let visibleInSection = 0;
       for (const dish of sec.querySelectorAll(".dish")) {
+        total++;
         const matchesSearch =
           !q || dish.dataset.name.includes(q) || dish.dataset.desc.includes(q);
-        // Same predicate as the initial render (dietary.js) — one code path.
-        const matchesDiet = dishSatisfiesDiet(dish.dataset.tags.split(" "), activeDiet);
-        dish.hidden = !matchesSearch;
-        dish.classList.toggle("dimmed", matchesSearch && !matchesDiet);
-        if (matchesSearch) visibleInSection++;
+        // Filtered on the venue's OWN claim (`baseTags`), never on what the
+        // reader has configured. Both predicates come from dish-filters.js, so
+        // the render, this re-apply and the search suggestions cannot drift.
+        const matchesFilters = matchesDishFilters(
+          { dishId: dish.dataset.dishId, tags: dish.dataset.baseTags.split(" ").filter(Boolean) },
+          activeFilters,
+          { favouriteIds: favIds }
+        );
+        const visible = matchesSearch && matchesFilters;
+        dish.hidden = !visible;
+        // The dim survives, with one job left: a row that still qualifies on the
+        // menu's own tags but has been configured out of them (ADR 0048 — satay
+        // added to a vegetarian dish). It must not linger looking like a match,
+        // and it must not vanish either, because the finger that configured it
+        // is still on it.
+        const configuredOut =
+          visible && !dishSatisfiesDiet(dish.dataset.tags.split(" ").filter(Boolean), dietKeys());
+        dish.classList.toggle("dimmed", configuredOut);
+        if (visible) visibleInSection++;
       }
       sec.hidden = visibleInSection === 0;
       const link = navScroll.querySelector(`a[href="#${sec.id}"]`);
@@ -1636,9 +1827,90 @@ function render(r) {
       visibleTotal += visibleInSection;
     }
     noResults.hidden = visibleTotal !== 0;
+    const sum = summarise(visibleTotal, total);
+    countText.textContent = sum.text;
+    // Shown only while something is actually being withheld. A permanent
+    // "showing 47 of 47" is chrome that teaches the reader to stop reading the
+    // line, which is precisely when it needs to be believed.
+    countLine.hidden = !sum.filtering;
   }
 
+  showAll.addEventListener("click", () => {
+    // Clears the filters AND the query, because "Show all" is read as a promise
+    // about the whole menu — leaving a live search term behind would answer a
+    // question the button did not ask.
+    activeFilters.clear();
+    search.value = "";
+    for (const { chip } of dietChips) chip.setAttribute("aria-pressed", "false");
+    applyView();
+  });
+
+  // Hearting a dish while the ♥ filter is on must move the row on the spot;
+  // otherwise the list quietly disagrees with the heart the reader just tapped.
+  favourites.subscribe(() => {
+    // `isConnected` because the menu re-renders on a profile switch and this
+    // closure would otherwise outlive its own DOM, filtering a detached tree on
+    // every heart for the rest of the session.
+    if (countLine.isConnected && activeFilters.has(FAVOURITES)) applyView();
+  });
+
   search.addEventListener("input", applyView);
+
+  // --- Search suggests the filters (ADR 0088) ------------------------
+  //
+  // The owner's better idea, and the reason there is no extra control for it:
+  // type "veg" and the box offers the Vegetarian chip, type "fav" and it offers
+  // ♥ Favourites. Choosing one PRESSES THE REAL CHIP, so the state ends up
+  // where it is visible (ADR 0052) rather than hidden inside a word in a text
+  // field. The text search underneath is untouched, which is the whole point —
+  // this venue has dishes literally called "Vegetarian Laksa", and a keyword
+  // that hijacked the query would make them unfindable.
+  //
+  // Dish names are offered too, so the box completes as well as commands.
+  // Sections deliberately are NOT: the jump-nav strip immediately above already
+  // does that job, and a list whose rows sometimes filter and sometimes
+  // navigate is a list you have to read before you can trust.
+  const menuCandidates = () => [
+    ...filterCandidates(available, (f) => {
+      // A live count, because a filter that would leave one dish standing is
+      // worth knowing about BEFORE you press it. Counted off base tags for the
+      // same reason applyView filters on them.
+      const n =
+        f.key === FAVOURITES
+          ? favouriteIds().size
+          : allItems.filter((i) =>
+              matchesDishFilters({ tags: i.tags || [] }, new Set([f.key]), {})
+            ).length;
+      return n === 1 ? "1 dish" : `${n} dishes`;
+    }),
+    ...allItems.map((i) =>
+      textCandidate({ id: `dish:${dishId(i)}`, kind: "dish", label: i.name })
+    ),
+  ];
+  // Attached BEFORE wireSearchClear, and that ordering is load-bearing: the
+  // Escape handler below stops propagation so a first Escape closes the popup
+  // without also emptying the field, and `stopImmediatePropagation` can only
+  // stop a listener registered after it.
+  attachSuggestions(search, {
+    getCandidates: menuCandidates,
+    onChoose(c) {
+      if (c.kind === "filter") {
+        // Press the chip rather than mutating the set directly, so the aria
+        // state, the view and the chip's own appearance all move through the
+        // one path a tap takes.
+        const hit = dietChips.find((d) => d.f.key === c.key);
+        search.value = "";
+        hit?.chip.click();
+        applyView();
+      } else {
+        // A dish completion narrows the list to that dish — the same thing the
+        // box already does, just spelled correctly.
+        search.value = c.value;
+        applyView();
+      }
+    },
+  });
+
   // Custom ✕ + Escape both clear the field (shared with the home search).
   wireSearchClear(search, searchClear, applyView);
 
@@ -1688,7 +1960,7 @@ function render(r) {
   addEventListener("resize", setToolbarH);
 
   // Apply any pre-selected dietary preferences now (dims non-matching dishes).
-  if (activeDiet.size) applyView();
+  if (activeFilters.size) applyView();
 }
 
 // A slim contact bar that pins to the top of the menu on mobile once the full

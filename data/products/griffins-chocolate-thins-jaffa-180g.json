@@ -1,0 +1,70 @@
+{
+  "id": "griffins-chocolate-thins-jaffa-180g",
+  "name": "Chocolate Thins",
+  "brand": "Griffin's",
+  "variant": "Jaffa",
+  "pack": {
+    "size": 180,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 8,
+    "size": 23,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2010,
+      "protein": 6.5,
+      "fatTotal": 20.9,
+      "fatSaturated": 15.4,
+      "carbohydrate": 66.2,
+      "sugars": 32.3,
+      "sodium": 334
+    },
+    "perServing": {
+      "energyKj": 461,
+      "energyKcal": 110,
+      "protein": 1.5,
+      "fatTotal": 4.8,
+      "fatSaturated": 3.5,
+      "carbohydrate": 15.2,
+      "sugars": 7.4,
+      "sodium": 77
+    }
+  },
+  "ingredients": "Ingredients: Wheat Flour, Choc Coating 3…[illegible: second digit obscured by glare]…% [Sugar, Vegetable Fat, Milk Solids, Cocoa Powder^, Emulsifier (Soy Lecithin), Natural Flavour], Sugar, Vegetable Fat [Antioxidant (307b)], Invert Syrup, Milk Solids, Raising Agents [Baking Soda, 450], Salt, Emulsifier [Soy Lecithin], Colour [160b], Natural Flavour.",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Soy",
+      "Wheat",
+      "Gluten"
+    ],
+    "mayContain": [
+      "Egg",
+      "Sesame",
+      "Sulphites"
+    ]
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7175.jpeg",
+      "raw_food_photos/IMG_7176.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "'ingredients' is in needs for one reason only: a specular highlight sits exactly on the second digit of the choc coating percentage ('3?%'), and it was re-cropped at native resolution and upscaled without becoming readable. Every other word of the list is legible. '^Rainforest Alliance Certified' footnotes the Cocoa Powder. Serving column reconciles with the per-100 g column throughout."
+}

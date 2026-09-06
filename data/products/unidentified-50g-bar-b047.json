@@ -1,0 +1,52 @@
+{
+  "id": "unidentified-50g-bar-b047",
+  "name": "Confectionery bar — brand and product name not in frame",
+  "pack": {
+    "size": 50,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 50,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1580,
+      "fatTotal": 7.8,
+      "fatSaturated": 4.7,
+      "carbohydrate": 74.5,
+      "sugars": 51.8,
+      "sodium": 41
+    },
+    "perServing": {
+      "energyKj": 790,
+      "fatTotal": 3.9,
+      "fatSaturated": 2.3,
+      "carbohydrate": 37.2,
+      "sugars": 25.9,
+      "sodium": 21
+    }
+  },
+  "origin": "MADE IN AUST …[cut off]",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_FDCB5D73-163E-4149-8F73-D228D80E4510.jpeg"
+    ],
+    "burst": "b047",
+    "captured": "2025-11-28",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "storage"
+  ],
+  "note": "One photo of the nutrition strip on a gold-foil 50 g bar. NO BRAND OR PRODUCT NAME IS IN FRAME — the id is a placeholder keyed to the burst. The right-hand block reads 'MADE IN AUST… / IMPORTED AN… / INGREDIENTS / PLEASE STORE I… / DRY CONDITIO… / THE COLOUR PU… / TRADE MARK US… / UNDER LICENCE', every line running past the frame edge. The purple-trade-mark wording is Cadbury's house statement, but no brand is printed in the frame, so brand is left unrecorded rather than inferred. Protein is printed as '<1.0 g' in both columns — not a number, so the protein key is omitted rather than guessed. Serving size '50g (1 bar)', 1 serving per package, so the bar is 50 g."
+}

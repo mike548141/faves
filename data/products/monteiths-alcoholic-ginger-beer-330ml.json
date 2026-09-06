@@ -1,0 +1,32 @@
+{
+  "id": "monteiths-alcoholic-ginger-beer-330ml",
+  "name": "Alcoholic Ginger Beer",
+  "brand": "Monteith's Brewing Co.",
+  "pack": {
+    "size": 330,
+    "unit": "ml",
+    "count": 1
+  },
+  "origin": "West Coast, New Zealand",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_8117.jpeg",
+      "raw_food_photos/IMG_8119.jpeg"
+    ],
+    "burst": "b059",
+    "captured": "2026-01-09",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition",
+    "servings",
+    "storage"
+  ],
+  "note": "Front of can only, seen in a wide fridge shot. Legible: '330 mL | 4.0% ALC/VOL' and 'WEST COAST 1868 NEW ZEALAND'. Alcohol strength has no field in this schema. No panel was photographed."
+}

@@ -1,0 +1,59 @@
+{
+  "id": "olivani-lite-500g",
+  "name": "Olivani Lite",
+  "brand": "Olivani",
+  "variant": "Lite",
+  "manufacturer": {
+    "name": "Goodman Fielder",
+    "address": "2/8 Nelson Street, Auckland 1010",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9415102100533"
+  },
+  "pack": {
+    "size": 500,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 50,
+    "size": 10,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2030,
+      "fatTotal": 55.0,
+      "fatSaturated": 14.9,
+      "fatTrans": 0.4,
+      "sodium": 335
+    },
+    "perServing": {
+      "energyKj": 200,
+      "fatTotal": 5.5,
+      "fatSaturated": 1.5,
+      "sodium": 30
+    }
+  },
+  "ingredients": "Vegetable oils (olive oil 16%), water, salt, emulsifiers (soy lecithin, 471), preservative (202), acidity regulator (270), flavour, colour (160a).",
+  "allergens": {
+    "contains": [
+      "Soy"
+    ]
+  },
+  "storage": "KEEP REFRIGERATED AT OR BELOW 5°C",
+  "origin": "Made in New Zealand from imported and local ingredients.",
+  "category": "dairy",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_BC704A6C-E856-4DC3-867C-9F20918390B6.jpeg"
+    ],
+    "burst": "b011",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "note": "Underside of the tub only; the front of pack was not photographed. The product name is taken verbatim from the label's own comparison footnote ('Olivani Lite (55 g/100 g) contains 33% less total fat than regular salted New Zealand butter'). Protein, carbohydrate and sugars are printed as '<1.0 g' and trans fat per serving as '<0.1 g' - not numbers, so those cells are omitted. Polyunsaturated (12.9 g/100 g) and monounsaturated (26.9 g/100 g) are on the label but have no allowed key. Categorised 'dairy' for the chiller aisle it sits in - it is a dairy-free spread. 500 g is derived from 50 servings x 10 g."
+}
