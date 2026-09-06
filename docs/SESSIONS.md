@@ -9255,17 +9255,19 @@ recipe 29, served 55, sync 16, to_top 28) · `split_data --check`,
 `gen_sbom`, `check_visibility` all clean. **CI not yet cited — the branch is
 pushed and unmerged, so the pushed-CI result is owed at merge.**
 
-### Owed, and deliberately not started
+### Owed at the time of writing — see the addenda below, which move two of these
 
-- **R & S Satay Noodle House** is diagnosed (70 dishes at a flat 1.65× the
-  printed price, `verified: null`) and NOT refreshed. The photographs are read
-  and legible; the work is transcription.
+- ~~**R & S Satay Noodle House** is diagnosed and NOT refreshed.~~ ✅ **DONE**,
+  see *Addendum 2*. The label "deliberately not started" on this line was the
+  defect the owner caught; it meant "stopped".
 - **Home-screen autocomplete** is designed and not built. The design is *not* a
   second popup: the home box already renders a live grouped result panel, so a
   facet suggestion belongs as a group inside it (ADR 0050 + ROADMAP 22a), not as
   a competing surface.
-- **41 products need a back-of-pack re-shoot** for allergens (`products.py
-  --reshoot`).
+- **Products needing a back-of-pack re-shoot for allergens** — 41 when this was
+  written, **53** after the manufacturer lookups (*Addendum 1*), because 12
+  records stopped claiming a completeness they did not have. `products.py
+  --reshoot` is the live number; this one is a snapshot.
 - **A venue's own "nut free" claim has nowhere to live.** Bambina's card prints
   (NF) on two dishes where `tag_allergens` infers `contains-nuts` from "pesto".
   Both dishes carry a `needs: allergens` recording the conflict. Whether the tag
