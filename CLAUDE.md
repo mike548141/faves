@@ -579,12 +579,26 @@ the check descriptions). For the other fourteen, the honour system IS still the
 mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The
-first sweeps the **whole document** in 37 px steps at two widths and two text
-sizes, because a fixed control's victim depends entirely on where you stop
-scrolling — a single sample proves nothing, and a single sample is what every
-eyeball report of this bug had been. It caught the back-to-top button owning the
-tap on a dish price at **100%** of its width, mid-scroll, at 96 of 547 scroll
-positions. The second drives the filter row across the 60rem breakpoint in both
+first sweeps the **whole document** at two widths and two text sizes, because a
+fixed control's victim depends entirely on where you stop scrolling — a single
+sample proves nothing, and a single sample is what every eyeball report of this
+bug had been. It caught the back-to-top button owning the tap on a dish price at
+**100%** of its width, mid-scroll.
+🛑 **THAT SENTENCE WAS FALSE FROM THE DAY IT WAS WRITTEN UNTIL 2026-09-07, AND
+THE CHECK ENFORCED THE BUG.** The tool did **not** sweep the document in 37 px
+steps at two widths — it sampled **five fixed depths (700/1400/2500/4000/6000)
+at 390 px only**, so "96 of 547 scroll positions" describes a sweep the shipped
+code never ran. Worse, its down-scroll assertion read
+`showedWhileDescending.length === 0`: it asserted the button was **NOT** shown
+on the way down, so when the owner asked for it to be shown, the check was
+actively defending the behaviour he was complaining about. It now genuinely
+sweeps — **8 combinations (390/1200 px × 16/24 px text × menu/home), 3,452
+positions**, run inside the page to stay affordable, and 64 assertions.
+🔑 **The lesson is the one this repo keeps paying for:** a check's *description*
+is not evidence about the check. This one was quoted in CLAUDE.md, in a
+roadmap item and in an ADR, and none of those readings opened the file.
+
+The second drives the filter row across the 60rem breakpoint in both
 directions and asserts focus survives the DOM move; its hardest assertion is
 that a `position: fixed` control parked below the viewport adds **no scrollable
 overflow**, which was measured rather than reasoned about. Run them after

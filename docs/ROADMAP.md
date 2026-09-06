@@ -200,7 +200,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/README.md)*
 
 - ✅ [⏸️ RULED NOT TO FIX 2026-08-16 — deliberately deferred, not](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/010-the-order-pill-eats-a-dietary-chip-s-tap-at-la.md)
-- [~] 🎯 [The back-to-top arrow should appear on the way DOWN too — and still](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/020-the-arrow-should-appear-on-the-way-down-too.md)
+- ✅ 🎯 [The back-to-top arrow should appear on the way DOWN too — and still](roadmap/300-theme-29-things-pinned-over-the-menu-owner-rai/020-the-arrow-should-appear-on-the-way-down-too.md)
 
 ## Theme 28 — one dish or three? sizes, portions and conditional prices (owner-raised 2026-08-16)
 
@@ -247,6 +247,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [A direct push to main can never satisfy a required status check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/180-a-direct-push-to-main-can-never-satisfy-a-required-check.md)
 - [ ] [🚩 Two of the harness guarantees CLAUDE.md states are not true — a](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/190-two-holes-in-the-check-harness-guarantees.md)
 - [ ] 🛑 [untilPresent can manufacture a FALSE REGRESSION under load, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/200-untilpresent-can-manufacture-a-false-regression-under-load.md)
+- ✅ 🛑 [to_top_check described a sweep it never ran, and its key assertion](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/210-a-check-described-a-sweep-it-never-ran.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
