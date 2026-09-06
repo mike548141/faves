@@ -18,9 +18,9 @@ content freshness separately from this file.
   or a ♥ is underneath it, it steps a little way up the column and returns to
   the corner as soon as the corner is free. Swept over the whole of a real menu
   and the whole home list, at two widths and two text sizes — 3,452 scroll
-  positions — it now covers none of them. It covered 27.6% of them on the menu
-  and 73.0% on the home list when it was simply left in the corner, worst case
-  a price 100% hidden.
+  positions — it now covers none of them. Left simply sitting in its corner it
+  covered something at 151 of the 554 places you can stop on a real menu and at
+  134 of 200 on the home list, worst case a price hidden completely.
 - **A closed chain says so once loudly, then quietly.** The banner at the top of
   a shut venue's page still states *"Permanently closed"* in full; the branch
   list underneath still says it on every single branch — a reader who scrolls
