@@ -36,7 +36,7 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
-import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, until } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, untilPresent } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -203,7 +203,7 @@ async function bootScreen(cdp, sessionId, driver, report, base, screen, venueId)
   // thrown timeout would abort the run before they were ever printed.
   let ready = true;
   try {
-    await until(() => driver.evalPage(screen.ready), {
+    await untilPresent(() => driver.evalPage(screen.ready), {
       label: `${screen.name}: page rendered by JS`,
       timeout: 15_000,
     });
@@ -282,7 +282,7 @@ async function run(opts) {
         { url: `${base}/restaurant.html?id=${encodeURIComponent(venueId)}` },
         sessionId
       );
-      await until(() => driver.evalPage(`!!document.querySelector(".menu-sub-link")`), {
+      await untilPresent(() => driver.evalPage(`!!document.querySelector(".menu-sub-link")`), {
         label: "menu: the subheading facets rendered",
       });
       const facet = await driver.evalPage(`(() => {
@@ -300,7 +300,7 @@ async function run(opts) {
       );
 
       await cdp.send("Page.navigate", { url: `${base}/${facet.href}` }, sessionId);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
         { label: "home: arrived with a facet filter" }
       );
@@ -337,7 +337,7 @@ async function run(opts) {
       );
 
       await driver.evalPage(`${need("#active-filters .active-filter")}.click()`);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`document.getElementById("active-filters")?.hidden === true`),
         { label: "home: filter cleared" }
       );
@@ -364,7 +364,7 @@ async function run(opts) {
     // an unhandled rejection that buries the diagnosis printed above it.
     try {
       await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
         { label: "home: back for the Settings check" }
       );
@@ -375,14 +375,14 @@ async function run(opts) {
         const more = [...document.querySelectorAll("button")].find((b) => b.getAttribute("aria-label") === "More");
         if (more) more.click();
       })()`);
-      await until(() => driver.evalPage(`[...document.querySelectorAll("button")].some((b) => /Settings/.test(b.textContent))`), {
+      await untilPresent(() => driver.evalPage(`[...document.querySelectorAll("button")].some((b) => /Settings/.test(b.textContent))`), {
         label: "settings: the ⋯ menu opened",
       });
       await driver.evalPage(`(() => {
         const b = [...document.querySelectorAll("button")].find((x) => /Settings/.test(x.textContent));
         if (b) b.click();
       })()`);
-      await until(() => driver.evalPage(`document.querySelectorAll(".settings-row").length > 0`), {
+      await untilPresent(() => driver.evalPage(`document.querySelectorAll(".settings-row").length > 0`), {
         label: "settings: the index rendered",
       });
       const rows = await driver.evalPage(`({
@@ -410,7 +410,7 @@ async function run(opts) {
           .find((e) => e.textContent.trim() === "Your data");
         if (t) t.closest(".settings-row").click();
       })()`);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`!!document.querySelector(".settings-panel:not([hidden]) .import-block")`),
         { label: "settings: the Your data panel opened" }
       );
@@ -446,7 +446,7 @@ async function run(opts) {
         const b = document.querySelector(".settings-sheet .settings-back");
         if (b) b.click();
       })()`);
-      await until(() => driver.evalPage(`!document.querySelector(".settings-rows")?.closest("[hidden]")`), {
+      await untilPresent(() => driver.evalPage(`!document.querySelector(".settings-rows")?.closest("[hidden]")`), {
         label: "settings: back at the index",
       });
       await driver.evalPage(`(() => {
@@ -454,7 +454,7 @@ async function run(opts) {
           .find((e) => e.textContent.trim() === "Refresh & reset");
         if (t) t.closest(".settings-row").click();
       })()`);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`!!document.querySelector(".settings-panel:not([hidden]) .settings-versions")`),
         { label: "settings: the Refresh & reset panel opened" }
       );
@@ -464,7 +464,7 @@ async function run(opts) {
       // `length === 2` is load-bearing: `every` over an empty list is true, so
       // a selector that matched nothing would satisfy this wait vacuously and
       // report the placeholder as an answer.
-      await until(
+      await untilPresent(
         () => driver.evalPage(`(() => {
           const v = [...document.querySelectorAll(".settings-version-value")];
           return v.length === 2 && v.every((e) => e.textContent.trim() !== "…");
@@ -505,7 +505,7 @@ async function run(opts) {
     // menu, and the version stamps must be GONE from it — moving means moving.
     try {
       await cdp.send("Page.navigate", { url: `${base}/index.html` }, sessionId);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
         { label: "home: back for the About check" }
       );
@@ -513,11 +513,11 @@ async function run(opts) {
         const more = [...document.querySelectorAll("button")].find((b) => b.getAttribute("aria-label") === "More");
         if (more) more.click();
       })()`);
-      await until(() => driver.evalPage(`!!document.getElementById("about-btn") && !document.getElementById("about-btn").hidden`), {
+      await untilPresent(() => driver.evalPage(`!!document.getElementById("about-btn") && !document.getElementById("about-btn").hidden`), {
         label: "about: the ⋯ menu offered About",
       });
       await driver.evalPage(`${need("#about-btn")}.click()`);
-      await until(() => driver.evalPage(`!!document.querySelector(".about-sheet[open]")`), {
+      await untilPresent(() => driver.evalPage(`!!document.querySelector(".about-sheet[open]")`), {
         label: "about: the dialog opened",
       });
       const about = await driver.evalPage(`(() => {

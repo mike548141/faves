@@ -91,12 +91,13 @@ import {
   Cdp,
   Report,
   createDriver,
+  exitFromError,
   launchChrome,
   settleUntil,
   sleep,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
 } from "./lib/browser.mjs";
 // The app's own slugger and its own list normaliser, so the ?dish= URLs this
 // tool builds and the line counts it expects are the ones the app itself would
@@ -386,7 +387,7 @@ async function run(opts) {
     };
     const goto = async (target, waitFor = ".recipe-body .ingredients .tick") => {
       await cdp.send("Page.navigate", { url: target }, sessionId);
-      await until(
+      await untilPresent(
         async () => await evalPage(`!!document.querySelector(${JSON.stringify(waitFor)})`),
         { label: `${waitFor} on ${target}` }
       );
@@ -856,8 +857,9 @@ try {
     })
   );
 } catch (err) {
-  // A harness failure is not an app verdict — exit 2 so the two never blur, and
-  // print no summary line, so a wall of PASS lines can never read as a pass.
-  console.error(`\nharness error: ${err.message}`);
-  process.exit(2);
+  // Classified in ONE place (lib/browser.mjs's exitFromError): a missing element
+  // is the SITE, and exits 1 naming what it wanted; anything else is the harness,
+  // and exits 2 so the two never blur. This used to be decided here, per tool —
+  // which is how the exit-1 verdict was quietly swallowed in eight of fifteen.
+  exitFromError(err);
 }

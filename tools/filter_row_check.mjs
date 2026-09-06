@@ -47,7 +47,7 @@ import {
   need,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
   sleep,
 } from "./lib/browser.mjs";
 
@@ -195,7 +195,7 @@ async function run(opts) {
     // --- The phone, which must be exactly what it always was. ---------------
     await size(390);
     await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/index.html` }, sessionId);
-    await until(() => driver.evalPage(READY), { label: "the home list rendered" });
+    await untilPresent(() => driver.evalPage(READY), { label: "the home list rendered" });
     await driver.settle();
     let s = await state();
     report.check(

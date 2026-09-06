@@ -47,7 +47,7 @@ import {
   need,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
   sleep,
 } from "./lib/browser.mjs";
 
@@ -168,7 +168,7 @@ async function run(opts) {
           sessionId
         );
         await cdp.send("Page.navigate", { url: screen.url }, sessionId);
-        await until(() => driver.evalPage(screen.ready), { label: `${screen.name} rendered` });
+        await untilPresent(() => driver.evalPage(screen.ready), { label: `${screen.name} rendered` });
         if (rootPx !== 16) {
           await driver.evalPage(`(() => { const s = document.createElement("style");
             s.textContent = "html{font-size:${rootPx}px}"; document.head.append(s); })()`);

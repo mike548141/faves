@@ -26,7 +26,13 @@
 //   · classifying a CDP transport failure as a HARNESS error, so "the browser
 //     stopped answering" can never print as `FAIL <assertion name>`;
 //   · `need()`, so a check that reaches for an element the page no longer has
-//     fails by NAMING it — not as a null TypeError, and never as exit 2.
+//     fails by NAMING it — not as a null TypeError, and never as exit 2;
+//   · `untilPresent()` / `untilStable()`, so a check that WAITS for an element
+//     the page no longer has fails the same way — the half `need()` did not
+//     cover, split apart on the owner's ruling of 2026-08-22;
+//   · `exitFromError()`, the one place a tool's top-level `catch` turns an
+//     escaped error into an exit code — because a tool that classifies for
+//     itself will classify a site failure as a transport one.
 
 import { execFileSync, spawn } from "node:child_process";
 import { createServer } from "node:http";
@@ -298,16 +304,86 @@ export class Cdp {
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/** Poll `fn` until it returns truthy, or give up. Returns the truthy value. */
-export async function until(fn, { label, timeout = 15_000, step = 100 }) {
+// --- Two waits, because a wait is two different claims --------------------
+// 🛑 A WAIT CARRIES A VERDICT AND THE OLD `until()` THREW IT AWAY. `need()`
+// fixed the DEREFERENCE case: a check that reaches for a missing element now
+// fails by name at exit 1. A check that WAITS for one was untouched —
+// `boot_check`'s wait on `#about-btn` threw a plain `Error`, which arrived at
+// the top level as "something unclassified went wrong" and left through
+// **exit 2**, this repo's code for "the browser stopped answering; nothing here
+// says anything about the site". So deleting an element a check waits on
+// produced a site regression wearing a transport flake's clothes, and CLAUDE.md
+// tells readers to believe the exit code over the message.
+//
+// OWNER-RULED 2026-08-22 (option 2 of three): split the wait by WHAT IT CLAIMS.
+// Options 1 (classify every timeout as an assertion) and 3 (leave it and
+// document it) were both declined — so a busy laptop must still never be able
+// to manufacture a regression, and "documented" was not good enough.
+//
+// The reasoning it rests on: every call site already knows which kind it is,
+// because its author knew when they wrote it. The old encoding discarded that
+// and then asked the reader to guess from an exit code. This does not add
+// information; it stops throwing information away.
+//
+// 🚩 THE NAMES ARE NOT THE ONES THE RULING FIRST SAID, ON PURPOSE. It named
+// `untilSettled`; this module already exports `settleUntil`, which polls a
+// predicate and on timeout RETURNS its last value instead of throwing. Two
+// exports differing only by word order, with opposite behaviour, is a trap —
+// so the naming fork was put back to the owner on 2026-09-06 and he took
+// `untilPresent` / `untilStable`. `settleUntil` is left exactly as it is; no
+// third API was touched.
+
+/** The shared loop. Only the error the two wrappers hand it differs, which is
+ *  the whole point: one wait, two verdicts. */
+async function poll(fn, { label, timeout = 15_000, step = 100 }, makeError) {
   const deadline = Date.now() + timeout;
   let last;
   for (;;) {
     last = await fn();
     if (last) return last;
-    if (Date.now() > deadline) throw new Error(`timed out waiting for ${label}`);
+    if (Date.now() > deadline) throw makeError(label, timeout);
     await sleep(step);
   }
+}
+
+/**
+ * Wait for something the SITE promises. Returns the truthy value.
+ *
+ * On timeout this throws a {@link MissingElementError}, so it lands as a named
+ * assertion failure at **exit 1** — the same verdict `need()` gives, because it
+ * is the same statement: the page does not have the thing this check names.
+ *
+ * Use it for anything the page is supposed to produce: a screen that renders, a
+ * dialog that opens, a panel that closes, a control that appears. Waiting for a
+ * DISAPPEARANCE counts too — "the sheet to close" is as much a promise as "the
+ * sheet to open", and both fail the same way when the feature has gone.
+ */
+export async function untilPresent(fn, opts) {
+  return poll(
+    fn,
+    opts,
+    (label, timeout) =>
+      new MissingElementError(
+        `${MISSING_TAG} this check waited ${timeout / 1000}s for ${label},` +
+          ` and the page never got there`
+      )
+  );
+}
+
+/**
+ * Wait for something about TIMING — the browser, the platform, or a transient
+ * the site never promised to finish by any particular moment.
+ *
+ * On timeout this throws a plain `Error`, which reaches a tool's top level
+ * unclassified and leaves at **exit 2**: conservative, and identical to what
+ * every wait did before the split. Use it when the thing being waited for is
+ * not the site's to promise — a scroll coming to rest, a browser target
+ * activating, a service worker registering — and when in doubt, because being
+ * wrong in this direction costs a re-run and being wrong in the other invents a
+ * regression out of a loaded laptop.
+ */
+export async function untilStable(fn, opts) {
+  return poll(fn, opts, (label) => new Error(`timed out waiting for ${label}`));
 }
 
 /**
@@ -390,27 +466,11 @@ function installReaper() {
     // handler, which is a no-op once the registry is cleared.
     process.on(signal, () => process.exit(128 + number));
   }
-  process.on("uncaughtException", (err) => {
-    // Print it and exit non-zero. A harness that eats an exception and exits 0
-    // reads as a pass, which is the one outcome worse than a leaked browser.
-    // Exit 2 is this repo's "harness error", distinct from 1 = assertions
-    // failed — the tools' own top-level catches already use it.
-    if (err instanceof HarnessError) abortAsHarnessError("an unguarded step");
-    // A missing element is the SITE being wrong, so it exits 1 (assertions
-    // failed) and never 2 (harness error) — and it says what it wanted, which
-    // a null TypeError never did.
-    if (err instanceof MissingElementError) {
-      console.log(`\nFAIL  ${err.message}`);
-      console.log(
-        `\nFAILED — the run stopped here; the assertions after this point did not run.` +
-          `\n   Either the element was renamed (retarget this check) or the feature went` +
-          `\n   (delete the assertion) — see the roadmap's id-durability sweep.`
-      );
-      process.exit(1);
-    }
-    console.error(err);
-    process.exit(2);
-  });
+  // Print it and exit non-zero. A harness that eats an exception and exits 0
+  // reads as a pass, which is the one outcome worse than a leaked browser. The
+  // classification is `exitFromError`'s, shared with every tool's own top-level
+  // catch, so the two can never drift apart.
+  process.on("uncaughtException", exitFromError);
 }
 
 // --- Sweeping the orphans a handler can never catch ----------------------
@@ -599,7 +659,9 @@ export async function launchChrome({ profileDir, headed, width = 390, height = 8
   });
 
   const portFile = join(profileDir, "DevToolsActivePort");
-  const contents = await until(
+  // untilStable: a browser that never writes its port file is a broken BROWSER,
+  // which is the one thing exit 2 exists to say.
+  const contents = await untilStable(
     async () => {
       try {
         const text = await readFile(portFile, "utf8");
@@ -710,6 +772,45 @@ function abortAsHarnessError(reachedAssertion) {
       `\n   orphan Chromes (pgrep -f 'user-data-dir=.*faves-'), then run it again.` +
       `\n   A slow machine can be given more rope: FAVES_CDP_TIMEOUT_MS=60000`
   );
+  process.exit(2);
+}
+
+/**
+ * Turn an error that escaped a check's own reporting into an exit code.
+ *
+ * 🛑 WHY THIS IS THE LIBRARY'S JOB AND NOT EACH TOOL'S. Eight of the fifteen
+ * checks ended with their own `catch (err) { console.error(…); exit(2) }`
+ * around `run()`. That catch is upstream of everything this file classifies:
+ * a `MissingElementError` raised inside `addon_check` never reached the
+ * `uncaughtException` handler that exists to give it exit 1, because the tool
+ * caught it first and called it a harness error. So `need()`'s promise — and,
+ * from 2026-09-07, `untilPresent()`'s — held in the seven tools with no
+ * top-level catch and was quietly void in the other eight. A rule enforced in
+ * one place and re-implemented in eight is a rule that is wrong in some of
+ * them; this is the one place.
+ *
+ * The three verdicts, in the order they are asked:
+ *   · the transport died  → exit 2, with the wording that says so out loud;
+ *   · the site is missing something → exit 1, naming what was wanted;
+ *   · anything else       → exit 2, because an unclassified failure says
+ *     nothing about the site and must not be written down as if it did.
+ */
+export function exitFromError(err) {
+  if (err instanceof HarnessError) abortAsHarnessError("an unguarded step");
+  // A missing element is the SITE being wrong, so it exits 1 (assertions
+  // failed) and never 2 (harness error) — and it says what it wanted, which a
+  // null TypeError never did.
+  if (err instanceof MissingElementError) {
+    console.log(`\nFAIL  ${err.message}`);
+    console.log(
+      `\nFAILED — the run stopped here; the assertions after this point did not run.` +
+        `\n   Either the element was renamed (retarget this check) or the feature went` +
+        `\n   (delete the assertion) — see the roadmap's id-durability sweep.`
+    );
+    process.exit(1);
+  }
+  console.error(`\nharness error: ${err?.message ?? err}`);
+  if (err?.stack) console.error(err.stack);
   process.exit(2);
 }
 

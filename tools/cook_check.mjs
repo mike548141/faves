@@ -94,13 +94,15 @@ import {
   Cdp,
   Report,
   createDriver,
+  exitFromError,
   launchChrome,
   need,
   settleUntil,
   sleep,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
+  untilStable,
 } from "./lib/browser.mjs";
 // The app's own slugger, so the ?dish= URL this tool builds is the one the app
 // would build — a copy here could drift and quietly test nothing.
@@ -567,14 +569,14 @@ async function run(opts) {
 
     const goto = async (url, waitFor) => {
       await cdp.send("Page.navigate", { url }, sessionId);
-      await until(async () => await evalPage(`!!document.querySelector(${JSON.stringify(waitFor)})`), {
+      await untilPresent(async () => await evalPage(`!!document.querySelector(${JSON.stringify(waitFor)})`), {
         label: `${waitFor} on ${url}`,
       });
       await settle();
     };
     const openCook = async (selector = ".cook-start") => {
       await click(selector);
-      await until(async () => (await snap()).open, { label: "cook mode to open" });
+      await untilPresent(async () => (await snap()).open, { label: "cook mode to open" });
     };
     /** Wait for cook mode to be gone AND the lock question to have settled. */
     const closed = () => settleUntil(snap, (s) => !s.open && s.held === 0);
@@ -598,11 +600,13 @@ async function run(opts) {
     const hidePage = async () => {
       otherTab ??= (await cdp.send("Target.createTarget", { url: "about:blank" })).targetId;
       await cdp.send("Target.activateTarget", { targetId: otherTab });
-      await until(async () => (await snap()).visibility === "hidden", { label: "the page to hide" });
+      // untilStable for both of these: what is being waited for is the BROWSER
+      // moving a tab to the foreground, which no markup in site/ promises.
+      await untilStable(async () => (await snap()).visibility === "hidden", { label: "the page to hide" });
     };
     const showPage = async () => {
       await cdp.send("Target.activateTarget", { targetId });
-      await until(async () => (await snap()).visibility === "visible", { label: "the page to show" });
+      await untilStable(async () => (await snap()).visibility === "visible", { label: "the page to show" });
     };
 
     // --- 1. The way in ----------------------------------------------------
@@ -1090,7 +1094,7 @@ async function run(opts) {
       window.__cookWake.stall = new Promise((r) => { window.__cookWake.go = r; });
     })()`);
     await click(".cook-start");
-    await until(async () => (await snap()).open, { label: "cook mode to open" });
+    await untilPresent(async () => (await snap()).open, { label: "cook mode to open" });
     await click(".cook-close");
     const midFlight = await snap();
     await evalPage(`window.__cookWake.go()`);
@@ -1507,7 +1511,9 @@ async function run(opts) {
       await goto(urlFor(longTimer.item), ".cook-start");
       // The SW path is the only one Chrome on Android accepts, so wait for the
       // registration rather than letting the run silently take the fallback.
-      const registered = await until(
+      // untilStable: registration is the PLATFORM's to complete, and it is the
+      // step on this whole run most exposed to a loaded machine.
+      const registered = await untilStable(
         async () => await evalPage(`navigator.serviceWorker.getRegistration().then((r) => !!r)`),
         { label: "the service worker to register" }
       );
@@ -1812,7 +1818,9 @@ if (opts.help) {
 try {
   process.exit(await run(opts));
 } catch (err) {
-  // A harness failure is not an app verdict — exit 2 so the two never blur.
-  console.error(`\nharness error: ${err.message}`);
-  process.exit(2);
+  // Classified in ONE place (lib/browser.mjs's exitFromError): a missing element
+  // is the SITE, and exits 1 naming what it wanted; anything else is the harness,
+  // and exits 2 so the two never blur. This used to be decided here, per tool —
+  // which is how the exit-1 verdict was quietly swallowed in eight of fifteen.
+  exitFromError(err);
 }

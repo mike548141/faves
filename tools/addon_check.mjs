@@ -58,7 +58,7 @@ import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Cdp, Report, createDriver, launchChrome, need, startServer, stopChrome, until } from "./lib/browser.mjs";
+import { Cdp, Report, createDriver, exitFromError, launchChrome, need, startServer, stopChrome, untilPresent } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -212,7 +212,7 @@ async function run(opts) {
     await cdp.send("Page.navigate", { url }, sessionId);
     await driver.evalPage(seedExpr).catch(() => {});
     await cdp.send("Page.navigate", { url }, sessionId);
-    await until(async () => (await driver.evalPage(snapshotExpr)).found, {
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
       label: "a dish offering add-ons to render",
     });
 
@@ -317,7 +317,7 @@ async function run(opts) {
     // --- (f)(g)(h) 14h: the sentence a dying claim produces --------------
     const warnUrl = `http://127.0.0.1:${port}/restaurant.html?id=${WARN_VENUE}`;
     await cdp.send("Page.navigate", { url: warnUrl }, sessionId);
-    await until(async () => (await driver.evalPage(snapshotExpr)).found, {
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
       label: `${WARN_VENUE} to render a dish offering add-ons`,
     });
 
@@ -421,6 +421,9 @@ if (opts.help) {
 try {
   process.exit(await run(opts));
 } catch (err) {
-  console.error(`\nharness error: ${err.message}`);
-  process.exit(2);
+  // Classified in ONE place (lib/browser.mjs's exitFromError): a missing element
+  // is the SITE, and exits 1 naming what it wanted; anything else is the harness,
+  // and exits 2 so the two never blur. This used to be decided here, per tool —
+  // which is how the exit-1 verdict was quietly swallowed in eight of fifteen.
+  exitFromError(err);
 }

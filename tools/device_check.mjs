@@ -40,11 +40,12 @@ import {
   Cdp,
   Report,
   createDriver,
+  exitFromError,
   launchChrome,
   need,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
 } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
@@ -226,7 +227,7 @@ async function run(opts) {
 
     // --- 1. First paint --------------------------------------------------
     await cdp.send("Page.navigate", { url }, sessionId);
-    await until(async () => (await evalPage("document.querySelectorAll('li.dish').length")) > 0, {
+    await untilPresent(async () => (await evalPage("document.querySelectorAll('li.dish').length")) > 0, {
       label: "the menu to render",
     });
     // A marker only a genuine document load can clear — belt to the navigation
@@ -398,7 +399,7 @@ async function run(opts) {
     // --- 2. Flip an allergen preference, live ----------------------------
     await click("#overflow-btn");
     await click("#settings-btn");
-    await until(async () => (await snap()).settingsOpen, { label: "the Settings sheet to open" });
+    await untilPresent(async () => (await snap()).settingsOpen, { label: "the Settings sheet to open" });
     report.check("Settings opens from the menu page's ⋯ menu", true);
 
     await click(".settings-row", "Food preferences");
@@ -548,7 +549,9 @@ if (opts.help) {
 try {
   process.exit(await run(opts));
 } catch (err) {
-  // A harness failure is not an app verdict — exit 2 so the two never blur.
-  console.error(`\nharness error: ${err.message}`);
-  process.exit(2);
+  // Classified in ONE place (lib/browser.mjs's exitFromError): a missing element
+  // is the SITE, and exits 1 naming what it wanted; anything else is the harness,
+  // and exits 2 so the two never blur. This used to be decided here, per tool —
+  // which is how the exit-1 verdict was quietly swallowed in eight of fifteen.
+  exitFromError(err);
 }

@@ -61,11 +61,12 @@ import {
   Cdp,
   Report,
   createDriver,
+  exitFromError,
   launchChrome,
   settleUntil,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
 } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
@@ -255,7 +256,7 @@ async function checkAt(driver, report, fx, when, key) {
   // shape of failure CLAUDE.md flags on sync_check, and the section vanishing
   // is the single most important thing this check exists to catch (a). Gate on
   // the page, assert the section.
-  await until(
+  await untilPresent(
     async () => await driver.evalPage(`!!document.querySelector(".menu-sections .menu-section")`),
     { label: `${fx.id}'s menu to render at ${when.label}` },
   );
@@ -345,7 +346,7 @@ async function checkAt(driver, report, fx, when, key) {
 /** (b): the deep link still resolves — and lands — with the window shut. */
 async function checkDeepLink(driver, report, fx, url) {
   await driver.cdpNavigate(`${url}#${fx.anchor}`);
-  await until(
+  await untilPresent(
     async () => await driver.evalPage(`!!document.querySelector(".menu-sections .menu-section")`),
     { label: `${fx.id}'s menu to render from a deep link` },
   );
@@ -467,6 +468,9 @@ if (opts.help) {
 try {
   process.exit(await run(opts));
 } catch (err) {
-  console.error(`\nharness error: ${err.message}`);
-  process.exit(2);
+  // Classified in ONE place (lib/browser.mjs's exitFromError): a missing element
+  // is the SITE, and exits 1 naming what it wanted; anything else is the harness,
+  // and exits 2 so the two never blur. This used to be decided here, per tool —
+  // which is how the exit-1 verdict was quietly swallowed in eight of fifteen.
+  exitFromError(err);
 }

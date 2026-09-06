@@ -56,7 +56,8 @@ import {
   launchChrome,
   startServer,
   stopChrome,
-  until,
+  untilPresent,
+  untilStable,
 } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
@@ -181,11 +182,11 @@ async function run(opts) {
      *  before that measures the no-location list. */
     async function openHome(query = "") {
       await cdp.send("Page.navigate", { url: `${origin}/index.html${query}` }, sessionId);
-      await until(
+      await untilPresent(
         () => driver.evalPage(`!!document.body && document.body.classList.contains("app-ready")`),
         { label: "home rendered" }
       );
-      await until(
+      await untilPresent(
         () =>
           driver.evalPage(
             `!!document.querySelector("#restaurant-list .card-distance") ||
@@ -199,7 +200,7 @@ async function run(opts) {
 
     async function openVenue(id) {
       await cdp.send("Page.navigate", { url: `${origin}/restaurant.html?id=${id}` }, sessionId);
-      await until(() => driver.evalPage(`!!document.querySelector(".menu-title")`), {
+      await untilPresent(() => driver.evalPage(`!!document.querySelector(".menu-title")`), {
         label: `${id} rendered`,
       });
       await driver.settle();
@@ -209,7 +210,9 @@ async function run(opts) {
     // ── 1. The wide-open baseline ──────────────────────────────────────────
     // Navigate once so there is an origin to write localStorage against.
     await cdp.send("Page.navigate", { url: `${origin}/index.html` }, sessionId);
-    await until(() => driver.evalPage(`typeof localStorage !== "undefined"`), {
+    // untilStable: this waits for the NAVIGATION to give us a real origin to
+    // write against. `localStorage` is the browser's, not the site's.
+    await untilStable(() => driver.evalPage(`typeof localStorage !== "undefined"`), {
       label: "storage reachable",
     });
     await setFarKm(100); // the dial's own maximum: nothing in the corpus is cut
