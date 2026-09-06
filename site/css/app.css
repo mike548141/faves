@@ -2149,8 +2149,18 @@ body.filters-inline .filter-foot {
   line-height: 1;
   box-shadow: var(--shadow-lift);
   cursor: pointer;
+  /* THE DODGE. `js/to-top.js` writes --to-top-dodge (a negative px value) when
+     something the reader needs — a price, a dish or venue name, a ♥ — is under
+     the button, so it steps up the column instead of sitting on top of it. The
+     header of that module carries the measurements. It rides a custom property
+     rather than being written to `transform` directly so that the press-scale
+     and the tuck below can COMPOSE with it; a rule setting `transform` outright
+     would silently cancel the dodge and put the button back on the price. */
+  transform: translateY(var(--to-top-dodge, 0px));
   /* opacity is in the list because of `.is-tucked` below — without it the
-     button would blink in and out instead of sliding. */
+     button would blink in and out instead of sliding. transform is in it for
+     both the tuck and the dodge: the dodge target changes as the page scrolls,
+     so the transition also smooths it. */
   transition: transform 0.16s ease, opacity 0.16s ease, color 0.16s ease,
     border-color 0.16s ease;
 }
@@ -2170,14 +2180,17 @@ body.filters-inline .filter-foot {
   }
 }
 .to-top:active {
-  transform: scale(0.94);
+  transform: translateY(var(--to-top-dodge, 0px)) scale(0.94);
 }
-/* TUCKED — off the bottom edge while the reader is scrolling DOWN. The whole
-   reasoning, and the measurements that forced it, are in the header of
-   `js/to-top.js`; the short version is that at 390 px this button covered a
-   dish price at 17.6 % of a real menu's scroll positions, worst case 100 % of
-   "$8". After `.to-top:active` on purpose: the two have equal specificity, and
-   a tucked button is never the one being pressed.
+/* TUCKED — off the bottom edge. Until 2026-09-07 this was the whole answer to
+   the occlusion problem and fired for the whole of every downward scroll; the
+   owner's second report was that it therefore could not be reached on the way
+   down, and the control now DODGES instead (see `js/to-top.js`). The tuck
+   survives as the safety valve for a page so dense that no clear resting place
+   exists within the dodge's travel — never observed in the corpus swept, and
+   `tools/to_top_check.mjs` fails if it fires. After `.to-top:active` on
+   purpose: the two have equal specificity, and a tucked button is never the one
+   being pressed.
    NOT `visibility: hidden`, NOT `pointer-events: none`, NOT the [hidden]
    attribute: each of those takes the button out of the tab order and out of the
    accessibility tree, so a keyboard reader would lose it altogether. Opacity +
@@ -2194,7 +2207,9 @@ body.filters-inline .filter-foot {
 }
 .to-top.is-tucked:focus-visible {
   opacity: 1;
-  transform: none;
+  /* Not `none`: that would drop the dodge and bring a focused button back
+     directly on top of whatever forced the tuck in the first place. */
+  transform: translateY(var(--to-top-dodge, 0px));
 }
 @media (prefers-reduced-motion: reduce) {
   .to-top {

@@ -9,6 +9,18 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Changed
+- **The back-to-top arrow is there on the way down, and it steps off your
+  price.** It used to slide away for the whole of a downward scroll and only
+  come back when you flicked up — which kept it off the menu but made it
+  unreachable exactly when you were reading. It now stays offered the moment you
+  are past the first screen, whichever way you are moving, and gets out of the
+  way by *moving* instead of vanishing: when a price, a dish name, a venue name
+  or a ♥ is underneath it, it steps a little way up the column and returns to
+  the corner as soon as the corner is free. Swept over the whole of a real menu
+  and the whole home list, at two widths and two text sizes — 3,454 scroll
+  positions — it now covers none of them. It covered 27.6% of them on the menu
+  and 73.0% on the home list when it was simply left in the corner, worst case
+  a price 100% hidden.
 - **A closed chain says so once loudly, then quietly.** The banner at the top of
   a shut venue's page still states *"Permanently closed"* in full; the branch
   list underneath still says it on every single branch — a reader who scrolls
