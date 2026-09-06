@@ -8,6 +8,33 @@
   decorative-guard shape ([ADR 0072]) with **no missing id for a sweep to
   find** — `070`'s method cannot see this one, which is why it is its own item.
 
+  🔎 **MEASURED 2026-09-06 (session faves-24) — the population is SEVEN, and
+  only ONE of them has the shape this item describes.** Grepping the 13 check
+  tools for a multi-target selector returns seven call sites:
+
+  | site | selector | can it pass with every named target gone? |
+  |---|---|---|
+  | `boot_check.mjs:83` | `.dish-price, .item-price, [class*='price']` | **YES** — the wildcard is the catch-all |
+  | `boot_check.mjs:530` | `.settings-versions, .about-versions` | no — both named |
+  | `device_check.mjs:136` | `.tag-allergen.is-muted, .tag-diet.is-muted` | no — both named |
+  | `focus_check.mjs:103` | `.diet-chip, .diet-chips` | no — both named |
+  | `picks_check.mjs:286` | `.settings-sheet[open], #settings-sheet[open]` | no — class-or-id, deliberate |
+  | `filter_row_check.mjs:121` | `select, .list-toggle, #filters-clear` | no — enumerates a control row |
+  | `filter_row_check.mjs:128` | `select, .list-toggle, #filters-clear` | no — same row, second read |
+
+  🔑 **This changes the size of the question, not its substance.** Six of the
+  seven name real alternatives, so deleting all of them *does* fail the
+  assertion — which is the behaviour the item wants. The decorative shape is
+  **one line**, and it is the very line the item quotes. So "the right answer
+  differs per assertion" is true in principle and, on today's corpus, resolves
+  to a single decision about `boot_check.mjs:83`.
+
+  🚩 **What this measurement does NOT settle**, said plainly so it is not
+  over-read: it looks only at selectors with a comma. It says nothing about the
+  111 single-target `querySelector(` calls the note below describes, where the
+  failure shape is *taking the first of several matches* rather than *matching a
+  catch-all*. That audit is still unrun and is still the bigger job.
+
   🎯 **Options, per assertion and not globally:**
   1. **Name one class and let it fail loudly.** Strongest signal; brittle if
      the markup legitimately offers two forms.
