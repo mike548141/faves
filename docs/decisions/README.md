@@ -927,3 +927,41 @@ deliberation those compact docs omit.
   way to say so, and this ruling removes the setting that would have let them.
   `Intl`'s `usage` option (TC39 Stage 2), a `uk` picker entry, geolocation as
   the signal, and special-casing GB inside `convertTemperatures` all rejected.
+
+- [0088](0088-the-menu-filters-focus-the-list.md) — **the menu filters focus
+  the list; search offers them, never becomes them.** Owner-ruled 2026-09-06:
+  a dietary chip now REMOVES a non-matching dish rather than dimming it, and a
+  ♥ Favourites chip joins the row. The "groups share one screen" objection that
+  produced the old dim is answered instead of dismissed — a persistent
+  `Showing 12 of 47 · Show all` line, `role="status"`, keeps the narrowing loud
+  and one tap from undone (ADR 0052). **Allergens never filter**: three-quarters
+  of `contains-*` are our inference (ADR 0025), and a shorter list would read as
+  "what remains is safe". Distinct from ROADMAP 22d, which governs the CHIP on a
+  dish where this governs the ROW — conflating the two nearly stopped the
+  feature. Typing "veg" SUGGESTS the chip rather than becoming a keyword
+  command, because seven dishes in this corpus have "Vegetarian" in their
+  printed name and a command reading makes all seven unfindable. Found two
+  pre-existing bugs on the way: ADR 0048 §3 was documented and never wired, and
+  `closePicks` was parking focus on an element that could be hidden.
+
+- [0089](0089-a-dish-has-a-price-per-door.md) — **a dish has a price per door;
+  `price` is the counter.** KK Malaysian's satay read $24 in Faves and $19 on
+  the shop's own card; R & S sat at a flat 1.65× its printed prices across 21 of
+  24 dishes. Neither record was stale — both were faithful readings of a
+  DIFFERENT PRICE LIST, which breaks the refresh rule's own *"did the shop
+  change it, or did we?"* test. Owner-ruled 2026-09-06 to model it: `price` is
+  the counter price, other doors hang off `prices`, and the venue declares each
+  door once in `priceChannels` with a platform, a date and a `method`. Also
+  established that a platform menu is a SUBSET, not a markup — KK gained
+  eighteen dishes and its order numbers. 7 new mutations (124 → 131).
+
+- [0090](0090-the-packaged-product-record-store.md) — **a packaged-product
+  record store, quoted from labels and never served.** 87 products off 183
+  pantry photographs into `data/products/`, repo-only under ADR 0047. Three
+  rules enforced by `tools/products.py` rather than trusted: no location (137 of
+  those photographs carry GPS on a private address), no eating events, and an
+  allergen list QUOTED rather than inferred. `needs` makes a gap speak, so "we
+  looked and could not read it" and "nobody looked" stop being identical.
+  Ranked `--reshoot` because the limiting factor is framing, not legibility: a
+  third of the corpus is front-of-pack only and no care recovers what was never
+  in the frame.

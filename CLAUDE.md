@@ -1,6 +1,6 @@
 # Faves — instructions for AI builders
 
-## Doctrine — inherited from atelier (pinned `atelier@f2104f0`, owner-ratified 2026-07-25, bumped 2026-08-19)
+## Doctrine — inherited from atelier (pinned `atelier@35912e3`, owner-ratified 2026-07-25, bumped 2026-09-06)
 
 This repo works by the atelier operating model. The safety floor here is
 **inlined so it binds even if atelier is never read**; all richer doctrine lives
@@ -27,6 +27,16 @@ in atelier and is read on demand — never wholesale.
   floor the re-briefing comes **before** the action, never after it, because
   what the floor guards cannot be taken back. Everything
   recoverable — commit/push/PR included — just proceed.
+- **Asking — any question, decision or ruling:** put the ask in the harness's
+  structured question device where one exists (Claude Code:
+  `AskUserQuestion`), never buried in prose. When the account will not fit the
+  device, it goes in the session reply *first* and the device carries only the
+  choice; never trim the account to fit. Give the real options, each with its
+  pros, cons, impacts, risks and costs, plus **a recommendation** with its
+  reasoning shown. Every fact in the ask is verified, or plainly marked as
+  assumed where verifying would cost more than the decision is worth.
+  (`00-APEX.md` for what an ask must contain; `COMMUNICATION.md` § *Asking for
+  a ruling* for how it travels.)
 - **Concurrency:** assume another session may be live — a clean tree is not
   proof you're alone. `git pull --rebase --autostash` at session start; push
   after each commit. Take a worktree by default for write-heavy or multi-commit
@@ -40,8 +50,14 @@ in atelier and is read on demand — never wholesale.
   `docs/ROADMAP.md`, and `board.py rebuild` reads the *worktree*, so **any**
   dirty item state line under `docs/roadmap/` — yours or a sibling item's —
   gets absorbed into the index you are about to commit, publishing another
-  session's uncommitted claim under your name. The hook cannot see it: its
-  `board` check compares worktree to index and they agree. So **a dirty item
+  session's uncommitted claim under your name. ⚠️ **This clause said "the hook
+  cannot see it" until 2026-09-06 and that was false.** atelier corrected
+  `CONCURRENCY.md` on 2026-08-23: the `board` check *does* catch a forgotten
+  rebuild, at the hook and again on CI. What the hook cannot vouch for is a
+  rebuild that **ran but was not staged**, or one that **absorbed a sibling's
+  dirty state line** — those pass the hook and are caught only on CI. The
+  obligation below is unchanged; only the reason was wrong, and a wrong reason
+  is how a rule gets argued away by someone who checks it. So **a dirty item
   state line anywhere under `docs/roadmap/` is a stop for claiming from that
   checkout** — take a worktree, don't pick a different item (BS1, owner-ruled in
   atelier 2026-08-17, until the staged-plane check lands). (Until 2026-08-17
@@ -87,6 +103,19 @@ in atelier and is read on demand — never wholesale.
   exotic one. (Owner-ruled 2026-08-17: this clause enriches past the canonical
   floor region, and enriching means owning the *whole* clause — without this
   sentence ours was satisfiable by exactly the evidence the source rejects.)
+- **Doctrine problems point up (every repo, atelier included):** if a house rule
+  is wrong, unworkable, ambiguous, contradictory, stale, missing or unfindable,
+  **report it to atelier** — with evidence where evidence exists, marked
+  unevidenced where it does not. Consideration and remediation are atelier's;
+  the reporting session stops at the report and never silently works around a
+  rule it thinks is wrong, because the workaround destroys the only evidence the
+  house would get. Check the parent's actual file first — this block is a lossy
+  summary and is not evidence about what the house says. File it in atelier's
+  board directly, or hand it over the peer channel, or — where neither is
+  reachable — hold it in this repo's record marked owed upstream. Filing without
+  harming the parent: name the branch for the report, say it is a hand-up in the
+  first line, open the PR before you stop, and touch nothing but your own item.
+  (`PROPAGATION.md` § *Pointing up*.)
 - **Source & drift:** canonical doctrine is `../atelier/docs/method/`. At
   session start run `git -C "../atelier" fetch -q && git -C "../atelier" log
   --oneline <pin>..origin/main` using the **pin SHA in the heading above** —
@@ -282,6 +311,16 @@ node tools/geo_check.mjs      # the location ask (ADR 0083). The tickbox on the
                               # pins the pill's ABSENCE, which is the assertion
                               # most likely to rot silently
 python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
+python3 tools/products.py     # data/products/ — the packaged-product record store
+                              # (ADR 0090). Enforces the three rules a reviewer
+                              # cannot: no location (137 of the source photos carry
+                              # GPS on a private address), no eating events, and a
+                              # street address ONLY in manufacturer.address — that
+                              # last one exists because .leakscanignore exempts this
+                              # store from leakscan's nz-address rule, so the guard
+                              # MOVED here rather than vanishing. --reshoot ranks the
+                              # gaps by what another photo would BUY, --stats counts
+                              # what the corpus actually holds
 node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part of
                               # LINE IDENTITY, so the sheet can show the same dish
                               # twice differing only by its note — and the ± control
@@ -289,6 +328,17 @@ node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part 
                               # note-aware, which no unit test can see. Also checks
                               # the note is rendered as characters, not parsed: it
                               # is the first free text a person types on this screen
+node tools/focus_check.mjs    # the menu's filters and the search suggestions (ADR
+                              # 0088, 0089). Its safety assertion compares a dish's
+                              # rendered tag chips BEFORE and AFTER filtering and
+                              # REFUSES to run against a dish with no chips — the
+                              # first version picked one with none, compared [] to []
+                              # and would have passed with the feature deleted. Also
+                              # pins that a dish configured out of a filter DIMS
+                              # rather than vanishing (which found ADR 0048 §3
+                              # documented and never wired), and that the price on a
+                              # row is the COUNTER price with the delivery one
+                              # subordinate to it
 node tools/picks_check.mjs    # where the "If it's your first time, try…" block sits,
                               # and its ✕. TWO claims a unit test cannot see: an
                               # ORDER between two elements built in different halves
@@ -340,13 +390,13 @@ still orphans both — nothing can catch it** — so if a run was `kill -9`ed, r
 you. Orphans do not make a check fail; they make it **stall silently** with a
 wall of PASS and no summary line.
 
-🛑 **CI runs ONE of the THIRTEEN browser checks — `boot_check`, and only since
+🛑 **CI runs ONE of the FOURTEEN browser checks — `boot_check`, and only since
 2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
 boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
 **not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
-`note_check` · `served_check` · `geo_check` · `picks_check` — **twelve** guards, every one written
+`note_check` · `served_check` · `geo_check` · `picks_check` · `focus_check` — **thirteen** guards, every one written
 precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through
 a whole settings refactor with CI green the entire time: nothing was calling it.
@@ -473,7 +523,7 @@ family runs when a human types it and at no other time, which is how
 `sync_check.mjs` stayed dead through a whole refactor. Type them. And note that
 even the automated one cannot stop a bad deploy: admins bypass `protect-main`,
 so its red lands **after** the push it is describing (see the fuller note above
-the check descriptions). For the other twelve, the honour system IS still the
+the check descriptions). For the other thirteen, the honour system IS still the
 mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The

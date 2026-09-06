@@ -67,8 +67,11 @@ there is downloaded by every phone whether a screen reads it or not. It holds
 exactly what a screen can show. `data/` at the repo root is the **record** —
 never served, never precached, never referenced from `site/` — and holds
 everything else, kept forever: superseded prices (`data/history/prices/`),
-departed dishes (`data/history/dishes/`), and the ownership graph
-(`data/entities/`, `data/people/`, `data/ownership.json`, ADR 0046). The record
+departed dishes (`data/history/dishes/`), the ownership graph
+(`data/entities/`, `data/people/`, `data/ownership.json`, ADR 0046), and the
+packaged-product store (`data/products/`, ADR 0090 — labels off the owner's own
+pantry photographs, validated by `tools/products.py`, with no screen reading
+them yet and no location or eating event permitted in one). The record
 keys on the venue `id` from its own side only, so the payload needs no field to
 gain an owner or a history. Before adding a field to a venue file, name the
 screen that renders it; `data/README.md` has the full rule, and
@@ -248,8 +251,11 @@ excluded from both stores, always.
                                      //   former one (ADR 0051)
           "code": null,              // optional: the venue's own order number ("14"), if it takes orders by number
           "desc": "Flat rice noodles wok-fried with egg, bean sprouts and soy.",
-          "price": 18.5,             // NZD; null if market/varies. May instead be a
-                                     //   dated series — see "Time" below
+          "price": 18.5,             // NZD **at the counter**; null if market/varies.
+                                     //   May instead be a dated series — see "Time"
+          "prices": {                // optional: the same dish through another door
+            "delivery": 24           //   (ADR 0089). Every key must be declared in the
+          },                         //   venue's `priceChannels`, and `price` must exist
           "available": null,         // optional: on the menu only in this window/season
           "revisions": [],           // optional: dated log of what changed about the dish
           "needs": [                 // optional: what we know we DON'T know about it

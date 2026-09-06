@@ -9,6 +9,42 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Focus a menu on the dishes you want.** The chip row above a menu gains
+  **♥ Favourites**, and the dietary chips now *remove* the dishes that do not
+  match instead of just fading them. A line under the controls says
+  *"Showing 12 of 47 dishes"* with a **Show all** beside it whenever anything is
+  being held back, so you always know the menu is narrowed and it is one tap to
+  see everything again. Allergen warnings on the dishes that remain are
+  unchanged — a filter never hides a dish because of an allergen, and never will.
+- **The search box now offers those filters as you type.** Type "veg" and the
+  first suggestion is the Vegetarian chip; choose it and the chip goes on, where
+  you can see it. Typing still searches the menu exactly as before, so
+  "vegetarian" also finds the dishes actually called Vegetarian Laksa and
+  Vegetarian Satay. Full keyboard support (↓ ↑ Enter Escape) and every
+  suggestion is a 44 px target.
+- **Bambina Pizzeria**, on Bowen Street — pizza, sandwiches and sweet treats,
+  20 dishes, with the $3 extra toppings as a proper add-on picker on every
+  pizza. Two prices on the card were unreadable under camera flare and are shown
+  as "?" rather than guessed.
+- **A dish can now show what it costs through a different door.** Where a venue
+  charges differently on a delivery app, the price on the row is the one you pay
+  at the counter, with a quiet line beside it: *"$24 on Delivereasy — about 26%
+  more"*.
+
+### Changed
+- **KK Malaysian's prices are now the shop's, not the delivery app's.** Every
+  price was about a quarter high because the menu had been read from
+  Delivereasy: satay was showing $24 and the counter charges $19. Read in store
+  on 2026-08-26. The menu also grew from 30 dishes to 48 — the delivery app
+  carries less than the shop does — and now shows the venue's own order numbers,
+  so you can ask for "two number 14s".
+
+### Fixed
+- **A dish you configured could stop looking filtered.** Adding an extra that
+  knocks a dish out of an active dietary filter now fades it immediately;
+  previously the row went on looking like a match until you typed something else.
+- **Closing the "try this" suggestions could throw keyboard focus to the top of
+  the page** instead of handing it to the menu.
 - **Daily Bakery, Lower Hutt** joins the list — the owner's find on
   High Street. Full Uber Eats menu (50 dishes across nine sections,
   allergen-tagged), with the gourmet chicken pie and blueberry loaf as
