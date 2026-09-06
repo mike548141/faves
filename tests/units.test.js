@@ -20,6 +20,7 @@ import {
   dialSpec,
   dialValue,
   dialKm,
+  widenDialTo,
   formatDial,
   celsiusToFahrenheit,
   ovenFahrenheit,
@@ -321,4 +322,55 @@ test("cook-at-home: only the °C steps change, and every one of them converts", 
   }
 
   assert.equal(changed.length, 14, "the collection's 14 oven temperatures");
+});
+
+// --- widenDialTo (ADR 0091) -----------------------------------------------
+// The way out of a distance limit is only honest if the figure it names is a
+// position the dial has AND is far enough to bring the hidden place back. That
+// is why this rounds UP where dialValue rounds to nearest: snapping 12.4 km
+// down to a 10 km stop would hand the reader a button that changes the number
+// and not the list — the same broken promise ADR 0091 exists to fix.
+
+test("widenDialTo: rounds UP to a real dial stop, never down", () => {
+  assert.equal(widenDialTo(12.4, "farKm", "metric"), 15);
+  assert.equal(widenDialTo(5.1, "farKm", "metric"), 10);
+  assert.equal(widenDialTo(99.9, "farKm", "metric"), 100);
+});
+
+test("widenDialTo: a value already ON a stop stays there", () => {
+  // Float noise here would climb 25 → 30 and quietly overshoot every time.
+  assert.equal(widenDialTo(25, "farKm", "metric"), 25);
+  assert.equal(widenDialTo(5, "farKm", "metric"), 5);
+});
+
+test("widenDialTo: below the dial's floor lands on the floor", () => {
+  assert.equal(widenDialTo(1, "farKm", "metric"), 5);
+});
+
+test("widenDialTo: null past the dial's maximum — a real answer, not a failure", () => {
+  // Auckland is ~490 km from Wellington. No position on this dial reaches it,
+  // so a caller must say something other than "widen it".
+  assert.equal(widenDialTo(490, "farKm", "metric"), null);
+  assert.equal(widenDialTo(Infinity, "farKm", "metric"), null);
+  assert.equal(widenDialTo(null, "farKm", "metric"), null);
+});
+
+test("widenDialTo: imperial widens onto a round MILE stop, stored as km", () => {
+  // 12.4 km ≈ 7.7 mi → the 10 mi stop → 16.1 km stored.
+  assert.equal(widenDialTo(12.4, "farKm", "imperial"), 16.1);
+  // 60 mi is the imperial dial's last stop: 96.6 km, and nothing past it.
+  assert.equal(widenDialTo(96.5, "farKm", "imperial"), 96.6);
+  assert.equal(widenDialTo(99, "farKm", "imperial"), null);
+});
+
+test("widenDialTo: whatever it returns actually clears the distance it was given", () => {
+  // The property that matters, swept rather than sampled: the returned limit is
+  // never SHORTER than the place it is meant to bring back.
+  for (const units of ["metric", "imperial"]) {
+    for (let km = 0.5; km < 95; km += 0.5) {
+      const got = widenDialTo(km, "farKm", units);
+      if (got === null) continue;
+      assert.ok(got >= km - 1e-9, `${units} ${km} km → ${got}`);
+    }
+  }
 });

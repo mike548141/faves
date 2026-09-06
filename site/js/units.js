@@ -161,6 +161,34 @@ export function dialKm(value, key, units = DEFAULT_UNITS) {
   return isImperialDistance(units) ? Math.round(milesToKm(v) * 10) / 10 : v;
 }
 
+/**
+ * The smallest position on `key`'s dial that is AT LEAST `km`, as stored km —
+ * or `null` when the dial does not reach that far.
+ *
+ * This is what lets a screen offer a way out of a distance limit that it can
+ * promise will work (ADR 0091): "widen to 15 km" is only honest if 15 km is a
+ * position the dial actually has and if the place it is meant to bring back is
+ * inside it. Rounds UP for that reason — `dialValue` rounds to nearest, which
+ * would happily snap 12.4 km to a 10 km stop and leave the reader tapping a
+ * button that changes the number and not the list.
+ *
+ * `null` (past the dial's own maximum) is a real answer, not a failure: a venue
+ * in another country is beyond any limit this dial can express, and a caller
+ * that gets `null` must say something other than "widen it".
+ */
+export function widenDialTo(km, key, units = DEFAULT_UNITS) {
+  if (km == null || !Number.isFinite(km)) return null;
+  const spec = dialSpec(key, units);
+  const raw = isImperialDistance(units) ? kmToMiles(km) : km;
+  if (raw <= spec.min) return dialKm(spec.min, key, units);
+  // The epsilon absorbs the float noise that makes a value already sitting on a
+  // grid point (25 km on a 5 km step) climb to the next one.
+  const stops = Math.ceil((raw - spec.min) / spec.step - 1e-9);
+  const value = tidy(spec.min + stops * spec.step);
+  if (value > spec.max) return null;
+  return dialKm(value, key, units);
+}
+
 // "20" not "20.0", "0.5" not "0.50" — Number's own formatting already does it.
 const num = (n) => String(n);
 

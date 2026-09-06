@@ -22,7 +22,9 @@
 //     an answer ("is this the same sort of distance away?") instead of the one
 //     that doesn't ("how many km is a heart worth?"). ADR 0068 finding 1.
 //  4. Beyond `farKm` a venue is another town: it sinks below everything
-//     reachable whatever its hours or hearts say.
+//     reachable whatever its hours or hearts say. Since ADR 0091 the home
+//     screen also CUTS at that line, before it ranks — see
+//     `splitByDistanceLimit` for why both exist.
 //  5. A "menu coming soon" stub can be found by name but not ordered from, so
 //     it sinks below everything orderable; among stubs, distance is the only
 //     useful signal (their availability tier is zeroed — see below).
@@ -140,6 +142,45 @@ export function isAvailableNow(r, { clock, origin = null, farKm = FAR_KM } = {})
   const dist = origin ? venueDistanceKm(r, origin) : Infinity;
   if (dist !== Infinity && dist > farKm) return false;
   return true;
+}
+
+/**
+ * Split venues by the reader's distance limit — the CUT the home list makes
+ * before it ranks (ADR 0091, owner-ruled 2026-08-22).
+ *
+ * The `far` key inside `rankVenues` below *sinks* a distant venue; this
+ * *removes* it. Both survive, and they are not redundant: Settings says the
+ * dial hides places, so the list has to hide them, while sinking is still what
+ * orders the places that remain — the ruling adds a cut, it does not replace
+ * the sort. (The `far` key therefore never fires on the home list any more,
+ * because nothing beyond the limit reaches the ranker. It is kept because
+ * `rankVenues` is a general ranker and its own callers are free not to cut.)
+ *
+ * Nothing is cut without an origin: with no location every distance is
+ * Infinity and a dial that hid everything on a guess would be worse than one
+ * that hides nothing. A venue with no coordinates is Infinity too, and is
+ * likewise KEPT — we only ever exclude a *known* too-far distance, exactly as
+ * `isAvailableNow` does.
+ *
+ * Returns `{ within, beyond, nearestBeyondKm }`. `nearestBeyondKm` is what the
+ * screen needs to offer a way out that will actually work: the smallest limit
+ * that would bring one of the hidden places back.
+ */
+export function splitByDistanceLimit(restaurants, { origin = null, farKm = FAR_KM } = {}) {
+  if (!origin) return { within: restaurants, beyond: [], nearestBeyondKm: null };
+  const within = [];
+  const beyond = [];
+  let nearestBeyondKm = null;
+  for (const r of restaurants) {
+    const dist = venueDistanceKm(r, origin);
+    if (dist !== Infinity && dist > farKm) {
+      beyond.push(r);
+      if (nearestBeyondKm === null || dist < nearestBeyondKm) nearestBeyondKm = dist;
+    } else {
+      within.push(r);
+    }
+  }
+  return { within, beyond, nearestBeyondKm };
 }
 
 /**
