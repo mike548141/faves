@@ -73,7 +73,29 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 TOP_KEYS = {
     "id", "name", "brand", "variant", "manufacturer", "identifiers", "pack",
     "servings", "nutrition", "ingredients", "allergens", "storage", "origin",
-    "category", "source", "needs", "note",
+    "category", "source", "alsoRead", "needs", "note",
+}
+# A second reading, from somewhere other than the photograph. `source` stays
+# the primary — what came off the packet in this house — and `alsoRead` names
+# every field that did NOT, and where it came from instead.
+#
+# WHY THE FIELD LIST IS MANDATORY. A record whose allergens came from a
+# manufacturer's website and whose nutrition came from the photograph is two
+# readings of two artefacts, and the website's product may not be the packet in
+# the cupboard: recipes get reformulated, pack sizes differ by market, and a
+# "Contains" line that is right for the current SKU can be wrong for the one
+# photographed last November. Saying WHICH fields travelled is what lets a
+# reader weigh them separately. A single `source.kind` could not.
+ALSO_READ_KEYS = {"kind", "ref", "read", "fields"}
+ALSO_READ_KINDS = {
+    "manufacturer",  # the maker's own published specification
+    "retailer",      # a supermarket's product listing (weaker: they transcribe too)
+}
+# Only facts. Never `source`, `needs` or `note` — those describe the record,
+# not the product, and cannot be "read from" anywhere.
+CITABLE = {
+    "allergens", "ingredients", "nutrition", "identifiers", "manufacturer",
+    "origin", "storage", "pack", "servings",
 }
 # Deliberately closed and deliberately WITHOUT lat/lng or any place field —
 # see rule 1 above. `kind` names how the fact reached us.
@@ -229,6 +251,35 @@ def validate(path: Path, problems: list[str]) -> dict | None:
                                f"({found.group(0)!r}). Only manufacturer.address may hold "
                                "one; these photographs were taken at a private address "
                                "and this repo is public (rule 1)")
+
+    also = rec.get("alsoRead")
+    if also is not None:
+        if not isinstance(also, list) or not also:
+            err(problems, rid, "alsoRead must be a non-empty list")
+            also = []
+        for i, entry in enumerate(also):
+            where = f"alsoRead[{i}]"
+            if not check_map(problems, rid, where, entry, ALSO_READ_KEYS):
+                continue
+            if entry.get("kind") not in ALSO_READ_KINDS:
+                err(problems, rid, f"{where}.kind must be one of {sorted(ALSO_READ_KINDS)}")
+            ref = str(entry.get("ref", ""))
+            if not ref.startswith("https://"):
+                err(problems, rid, f"{where}.ref must be an https URL — a citation "
+                                   "nobody can re-open is not a citation")
+            if not DATE_RE.match(str(entry.get("read", ""))):
+                err(problems, rid, f"{where}.read must be YYYY-MM-DD")
+            fields = entry.get("fields")
+            if not isinstance(fields, list) or not fields:
+                err(problems, rid, f"{where}.fields must name what came from there")
+                continue
+            for f in fields:
+                if f not in CITABLE:
+                    err(problems, rid, f"{where}.fields entry {f!r} not in {sorted(CITABLE)}")
+                # The rule that stops a citation floating free of anything: a
+                # field cited to a website must actually be in the record.
+                elif not rec.get(f):
+                    err(problems, rid, f"{where} cites {f!r} but the record has no {f}")
 
     for n in rec.get("needs") or []:
         if n not in NEEDS:
