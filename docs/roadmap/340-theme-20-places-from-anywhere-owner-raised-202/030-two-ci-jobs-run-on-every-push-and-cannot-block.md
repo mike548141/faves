@@ -4,11 +4,29 @@
       2026-08-16**, required checks 4 → 6, verified against the ruleset API. (b)
       *whether admin bypass stays `always`* is deferred by the owner and the item
       says it **"must not be changed for him"** — so this is not takeable work and
-      reading it as `[ ]` invites a session to take it. Also still true and
-      unclaimed by anyone: the job displayed as *"zero dependencies"* runs four
-      checks its name does not describe, and the cheap fix is a rename to
-      `repo invariants`. That half IS takeable; it is small enough to ride with
-      whatever next touches the workflow. Original filing follows —
+      reading it as `[ ]` invites a session to take it.
+      ⚠️ **CORRECTION 2026-09-06 (session faves-24): the paragraph that used to
+      sit here was STALE and invited work that does not exist.** It said the job
+      displayed as *"zero dependencies"* still needed renaming to
+      `repo invariants` and that the half "IS takeable". It was already done —
+      `130` in this same section records it shipped 2026-08-17 (`436041d`).
+      Verified now, not taken on report: `.github/workflows/ci.yml:63` reads
+      `name: repo invariants`, and the `protect-main` ruleset's required list
+      carries `repo invariants` as a context, so the rename was carried through
+      to the ruleset rather than silently breaking the requirement. **Nothing
+      here is takeable; only (b) remains, and (b) is the owner's alone.**
+      🔎 **Re-measured at the same time.** Six required contexts confirmed
+      against the ruleset API — `floor / scanner floor`, `menu data validates`,
+      `JS unit tests`, `service-worker version lockstep`, `every screen boots`,
+      `repo invariants`. `bypass_actors` still reads
+      `RepositoryRole 5 → always`, unchanged. The bypass *rate* has moved,
+      though: the rule-suite endpoint now returns **15** evaluations, of which
+      **14 bypassed and 1 passed**. CLAUDE.md's *"the last 100 ruleset
+      evaluations on `main` were 100 bypasses"* is therefore stale in its
+      numbers while sound in its conclusion — and the single `pass` is worth
+      more attention than the 14, because it is evidence that a non-bypassing
+      push path exists and nobody has said which one it is.
+      Original filing follows —
       🚩 **Two CI jobs run on every push and cannot block one** `[S][owner]` —
       found 2026-08-16 (wt: faves-schema30), verified against the ruleset API,
       not read off the workflow file. `protect-main` (ruleset 20597160, active)
