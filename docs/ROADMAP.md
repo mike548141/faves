@@ -117,6 +117,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/README.md)*
 
+- [ ] 🛑 [hours cannot express a close after midnight, and the first venue](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md)
+
 ## Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)
 
 *[Narrative](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/README.md)*

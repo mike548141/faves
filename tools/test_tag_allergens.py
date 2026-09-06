@@ -98,6 +98,20 @@ def _burgers(record):
     return {}
 
 
+def _dish_desc(record, dish_id):
+    """The description text of a dish by dishId, lowercased ('' if absent).
+
+    Keyed on dishId, not name, because `_burgers` keys on dishId — mismatching
+    the two silently returns "" for every dish, which makes an assertion about
+    descriptions vacuously true. It did exactly that on first write.
+    """
+    for section in record.get("menu", []):
+        for item in section.get("items", []):
+            if item.get("dishId") == dish_id:
+                return (item.get("desc") or "").lower()
+    return ""
+
+
 def _dish(record, dish_id):
     for section in record["menu"]:
         for item in section["items"]:
@@ -177,6 +191,28 @@ def check_unscoped_clause_is_not_tagged(after, out):
     return None
 
 
+def check_water_chestnut_is_not_a_tree_nut(after, out):
+    """Water chestnut is a sedge tuber, not Castanea — and almonds must survive.
+
+    Both halves matter and they fail independently. Dropping the lookbehind
+    re-flags every water chestnut in the corpus (an over-warning on a vegan
+    side); using an `exclude` instead would veto the WHOLE rule for the item
+    and lose the almonds sitting next to it, which is an over-warning traded
+    for a MISS. So the fixture names both in one dish.
+    """
+    tags = {d: sorted(t) for d, t in _burgers(after).items()}
+    watered = {d: t for d, t in tags.items() if "water chestnut" in _dish_desc(after, d)}
+    bad = {d: t for d, t in watered.items() if "contains-nuts" in t and "almond" not in _dish_desc(after, d)}
+    if bad:
+        return f"flagged contains-nuts from a water chestnut alone: {bad}"
+    withalmond = {d: t for d, t in tags.items() if "almond" in _dish_desc(after, d)}
+    if withalmond and not all("contains-nuts" in t for t in withalmond.values()):
+        return f"LOST THE ALMONDS beside a water chestnut: {withalmond}"
+    if not withalmond:
+        return "the almond half was never exercised — the case proves half of what it claims"
+    return None
+
+
 def check_real_note_tags_and_offer_does_not(after, out):
     """Petone's real note, both halves at once.
 
@@ -230,6 +266,15 @@ CASES = {
           "price": 16.5,
           "tags": []""")],
         0, check_addon_options_untouched),
+    "water chestnut is not a tree nut, and the almonds beside it survive": (
+        THORNDON,
+        STRIP_BURGERS + [
+            ('"desc": "Crumbed free range chicken breast, rocket sauce, aioli.",',
+             '"desc": "Crumbed free range chicken breast, water chestnuts, rocket sauce, aioli.",'),
+            ('"desc": "Crumbed hoki fillet, tartare sauce.",',
+             '"desc": "Crumbed hoki fillet, water chestnuts and toasted almonds, tartare sauce.",'),
+        ],
+        0, check_water_chestnut_is_not_a_tree_nut),
     "a section note reaches every dish under it": (
         THORNDON, STRIP_BURGERS, 0, check_note_reaches_every_dish),
     "an alternative on offer is not tagged as an ingredient": (
@@ -334,6 +379,15 @@ NAIVE_SPANS = (
 )
 
 BREAKERS = {
+    # Take the lookbehind back out and water chestnut is a tree nut again.
+    # This is the ONLY breaker whose bug over-warns rather than under-warns,
+    # and it is here because an over-warning on a vegan side dish is how a
+    # reader learns to discount the warnings that matter (ADR 0092, 14h).
+    "the water-chestnut lookbehind removed": (
+        [(r'pine\s?nuts?|brazil\s?nuts?|(?<!water )(?<!water-)chestnuts?)\b',
+          r'pine\s?nuts?|brazil\s?nuts?|chestnuts?)\b')],
+        ["water chestnut is not a tree nut, and the almonds beside it survive"]),
+
     "positional span matching (the add-on bug)": (
         [NAIVE_SPANS],
         ["a venue with add-ons is patched, not skipped",

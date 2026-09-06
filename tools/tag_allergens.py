@@ -97,9 +97,22 @@ RULES = [
     # --- tree nuts ----------------------------------------------------
     # NEVER match a bare "nut": doughnut, butternut, nutmeg. Coconut is not a
     # tree nut for NZ allergen labelling and is deliberately not matched.
+    #
+    # WATER CHESTNUT IS NOT A CHESTNUT, and the lookbehind is why. Eleocharis
+    # dulcis is an aquatic sedge tuber, botanically unrelated to Castanea and
+    # safe for a tree-nut allergy — the same call this comment already makes
+    # for coconut. It bit on 2026-09-07: a stir-fry and a side of greens both
+    # naming "water chestnut" were flagged `contains-nuts`, which is a false
+    # allergen warning on a vegan side dish.
+    # 🛑 It is a LOOKBEHIND and not an `exclude` on purpose. `exclude` vetoes
+    # the whole rule for the item, so "water chestnuts and toasted almonds"
+    # would have lost the ALMONDS — an over-warning traded for a miss, which is
+    # the one direction this tool must never move. The lookbehind neutralises
+    # only the `chestnuts?` alternative and leaves every other nut matching.
+    # Both spellings are covered because each lookbehind must be fixed-width.
     ("contains-nuts", "STATED", "names a tree nut",
      r"\b(almonds?|cashews?|walnuts?|pecans?|pistachios?|hazelnuts?|macadamias?|"
-     r"pine\s?nuts?|brazil\s?nuts?|chestnuts?)\b", None),
+     r"pine\s?nuts?|brazil\s?nuts?|(?<!water )(?<!water-)chestnuts?)\b", None),
     ("contains-nuts", "DERIVED", "pesto is made with pine nuts", r"\bpesto\b", None),
     ("contains-nuts", "DERIVED", "praline/marzipan/nougat are nut confections",
      r"\b(praline|marzipan|nougat|frangipane|baklava)\b", None),

@@ -11,17 +11,352 @@
   "lat": -41.29311,
   "lng": 174.78061,
   "services": [
-    "dine-in"
+    "dine-in",
+    "takeaway"
   ],
-  "phone": null,
-  "website": null,
-  "ordering": [],
-  "hours": null,
-  "detailsVerified": "2026-08-16",
-  "detailsVerifiedBy": "third-party",
+  "phone": "04 803 3995",
+  "website": "https://www.dragon-fly.co.nz",
+  "ordering": [
+    {
+      "platform": "Order on our site",
+      "url": "https://dragonfly.mobi2go.com"
+    }
+  ],
+  "hours": {
+    "mon": [
+      [
+        "16:30",
+        "23:00"
+      ]
+    ],
+    "tue": [
+      [
+        "16:30",
+        "23:00"
+      ]
+    ],
+    "wed": [
+      [
+        "16:30",
+        null
+      ]
+    ],
+    "thu": [
+      [
+        "16:30",
+        null
+      ]
+    ],
+    "fri": [
+      [
+        "16:30",
+        null
+      ]
+    ],
+    "sat": [
+      [
+        "16:30",
+        null
+      ]
+    ],
+    "sun": []
+  },
+  "vibe": [
+    "sit-down",
+    "licensed",
+    "garden-bar"
+  ],
+  "priceBand": "$$$",
+  "verified": "2026-09-07",
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-09-07",
+  "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Something Small",
+      "sectionId": "something-small",
+      "items": [
+        {
+          "name": "Wagyu Orange Beef Tostada",
+          "dishId": "wagyu-orange-beef-tostada",
+          "desc": "Master stock braised Wagyu, sweet soy, NZ orange, pickled ginger, Japanese mayo.",
+          "price": 22.5,
+          "tags": [
+            "contains-soy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Katsu Sando",
+          "dishId": "katsu-sando",
+          "desc": "Free range panko crumbed pork loin, soft milk bun, shredded bok choy, Japanese BBQ, mayo, mustard.",
+          "price": 16.9,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Taiwanese Popcorn Chicken",
+          "dishId": "taiwanese-popcorn-chicken",
+          "desc": "With Chinese five spice, sichuan pepper, curry leaves, roasted chilli soy glaze.",
+          "price": 21,
+          "tags": [
+            "gf-option",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Edamame Hummus",
+          "dishId": "edamame-hummus",
+          "desc": "Green soybean and Thai lime leaf hummus served with black and white sesame crackers.",
+          "price": 14.9,
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy",
+            "contains-sesame",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pork and Chive Dumplings",
+          "dishId": "pork-and-chive-dumplings",
+          "desc": "Pan seared and served with fermented chilli Chinese red vinegar, tomato and crisp garlic.",
+          "price": 20.9,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Thai Chicken Dumplings",
+          "dishId": "thai-chicken-dumplings",
+          "desc": "Free range chicken, fresh ginger and coriander, fragrant green curry broth, lemon grass oil.",
+          "price": 20.9,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mushroom & Tofu Dumpling",
+          "dishId": "mushroom-tofu-dumpling",
+          "desc": "With organic tofu, portobello mushrooms, water chestnuts, cress, fresh ginger and garlic chives.",
+          "price": 19.9,
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Seared Sesame Tuna",
+          "dishId": "seared-sesame-tuna",
+          "desc": "Sustainably caught, rare seared yellow fin tuna, cucumber, nahm jim, coconut and lemongrass gel, micro herbs, rice paper crisp.",
+          "price": 28.5,
+          "tags": [
+            "gf",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Coconut Squid",
+          "dishId": "coconut-squid",
+          "desc": "Seven spice, coconut and sesame, with wasabi mayo.",
+          "price": 22.5,
+          "tags": [
+            "gf",
+            "contains-sesame",
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Something More",
+      "sectionId": "something-more",
+      "items": [
+        {
+          "name": "Japanese Golden Curry",
+          "dishId": "japanese-golden-curry",
+          "desc": "Truffle infused curry, miso carrots, winter squash, petite potatoes, lotus root, enoki crisp, aonori dust, snowpeas.",
+          "price": 33,
+          "tags": [
+            "v",
+            "vg",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Ginger Soy Chicken",
+          "dishId": "ginger-soy-chicken",
+          "desc": "Free range chicken, lemongrass, turmeric, Thai lime, palm sugar, kecap manis, broccolini, coconut preserve.",
+          "price": 39.9,
+          "tags": [
+            "gf",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Sticky Pork Belly",
+          "dishId": "sticky-pork-belly",
+          "desc": "Twice cooked free range pork belly, with sweet roasted chilli, spring onion and sesame caramel.",
+          "price": 39.9,
+          "tags": [
+            "gf",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Red Duck Curry",
+          "dishId": "red-duck-curry",
+          "desc": "Five spice, roasted duck, fresh pineapple, long beans, cherry tomatoes, grapes, lime leaves and fried shallots.",
+          "price": 44.9,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Sesame Noodle Salad",
+          "dishId": "sesame-noodle-salad",
+          "desc": "With edamame beans, wakame, miso and roasted sesame dressing, organic soybean noodles, wasabi crumb.",
+          "price": 29.9,
+          "tags": [
+            "gf",
+            "v",
+            "vg",
+            "contains-soy",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "55 Day Aged Beef Short Rib",
+          "dishId": "55-day-aged-beef-short-rib",
+          "desc": "Slow roasted with black vinegar, chilli, sweet soy, shredded bok choy, daikon, and candied coconut.",
+          "price": 48,
+          "tags": [
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Salmon Two Ways",
+          "dishId": "salmon-two-ways",
+          "desc": "Char-grilled salmon fillet on a green tea smoked salmon salad with Vietnamese mint, cucumber, chilli, lime and roasted rice, hot and sour dressing.",
+          "price": 44.9,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Lemongrass Chicken Salad",
+          "dishId": "lemongrass-chicken-salad",
+          "desc": "With free range chicken, pickled mango, shredded greens, Asian herbs, coconut crisps, coconut flesh, mango, coconut chilli dressing.",
+          "price": 33,
+          "tags": [
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Something on the Side",
+      "sectionId": "something-on-the-side",
+      "items": [
+        {
+          "name": "Fresh Market Greens",
+          "dishId": "fresh-market-greens",
+          "desc": "Tossed with mushroom XO with shiitake, water chestnut and black vinegar, crispy garlic.",
+          "price": 13.9,
+          "tags": [
+            "gf",
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Massaman Potatoes",
+          "dishId": "massaman-potatoes",
+          "desc": "Roasted baby potatoes with massaman spices and coconut milk.",
+          "price": 12.9,
+          "tags": [
+            "gf",
+            "v",
+            "vg",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Duck Fat Fried Rice",
+          "dishId": "duck-fat-fried-rice",
+          "desc": "Dragonfly duck fat, coconut rice, free range eggs, garlic chives and crispy shallots.",
+          "price": 16.9,
+          "tags": [
+            "gf",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Edamame Beans",
+          "dishId": "edamame-beans",
+          "desc": "With togarashi, sea salt and sesame oil.",
+          "price": 12.9,
+          "tags": [
+            "gf",
+            "v",
+            "vg",
+            "contains-soy",
+            "contains-sesame"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Something Sweet",
+      "sectionId": "something-sweet",
+      "items": [
+        {
+          "name": "Coconut Gelato",
+          "dishId": "coconut-gelato",
+          "desc": "With fresh pineapple, mint salsa and black sesame praline.",
+          "price": 15.9,
+          "tags": [
+            "gf",
+            "v",
+            "vg",
+            "contains-sesame",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Korean Twisted Donuts",
+          "dishId": "korean-twisted-donuts",
+          "desc": "With miso caramel, coconut and puffed rice furikake.",
+          "price": 16.9,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-soy"
+          ]
+        },
+        {
+          "name": "Dark Chocolate + Vietnamese Coffee Mousse",
+          "dishId": "dark-chocolate-vietnamese-coffee-mousse",
+          "desc": "With stem ginger and dark chocolate cake, vanilla anglaise, 72% Whittakers chocolate shard.",
+          "price": 19.9,
+          "tags": [
+            "gf",
+            "v",
+            "contains-egg",
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ]
 }
