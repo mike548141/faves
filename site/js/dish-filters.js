@@ -8,7 +8,24 @@
 // menu render, the live re-apply and the search suggestions all read one
 // definition of "does this dish match?".
 //
-// ─── WHAT CHANGED, AND WHY IT IS A REVERSAL WORTH READING ───────────────────
+// ─── READ THIS BEFORE CITING 22d AT ANYTHING IN THIS FILE ───────────────────
+// This module and ROADMAP 22d are two different features and a session already
+// lost time to running them together. Keep them apart:
+//
+//   22d          = WHICH TAG CHIPS SHOUT ON A DISH. A noise problem. The owner
+//                  raised it because a dish wearing two identical red warnings,
+//                  only one of which was his, made the page unreadable. Answer:
+//                  dull the irrelevant chip, never remove it.
+//   this module  = WHICH DISH ROWS ARE IN THE LIST. A finding problem. The
+//                  owner raised it because a 70-dish menu is a long scroll when
+//                  four of them are the ones you can eat. Answer: show those
+//                  four.
+//
+// One is about the noise on a row; the other is about which rows there are.
+// Neither constrains the other, and a filter here NEVER changes how a surviving
+// row renders its tags — see "WHAT DID NOT CHANGE" below.
+//
+// ─── WHAT CHANGED ───────────────────────────────────────────────────────────
 // `docs/DESIGN.md` shipped the dietary chips as *"dim non-matching dishes
 // rather than hiding them (groups share one screen)"*, and menu.js carried the
 // asymmetry as a stated design fact: search hides, diet dims.

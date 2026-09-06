@@ -336,6 +336,111 @@ async function run(opts) {
       `${favOff.shown} still shown after the heart was cleared`
     );
 
+    // ─── Part D — search SUGGESTS the filter, it does not become one ───────
+    //
+    // The assertion this whole design exists for is the second one: typing
+    // "vegetarian" must offer the chip AND still find the dishes named
+    // "Vegetarian …". A keyword that quietly switched modes would pass every
+    // other check in this file while making four real rows unreachable.
+    await openVenue(driver, cdp, sessionId, port, FILTER_VENUE);
+    await driver.evalPage(
+      `(() => { const s = ${need(".menu-search")}; s.focus(); s.value = "vegetarian";
+        s.dispatchEvent(new Event("input", { bubbles: true })); })()`
+    );
+    await sleep(120);
+    await driver.settle();
+    const sug = await driver.evalPage(`(() => {
+      const list = document.querySelector(".suggest-list");
+      const input = document.querySelector(".menu-search");
+      return {
+        open: !!list && !list.hidden,
+        expanded: input.getAttribute("aria-expanded"),
+        role: list?.getAttribute("role"),
+        controls: input.getAttribute("aria-controls") === list?.id,
+        rows: [...(list?.querySelectorAll(".suggest-row") || [])].map((r) => ({
+          kind: [...r.classList].find((c) => c.startsWith("suggest-") && c !== "suggest-row"),
+          text: (r.querySelector(".suggest-label")?.textContent || "").trim(),
+          sub: (r.querySelector(".suggest-sub")?.textContent || "").trim(),
+          h: Math.round(r.getBoundingClientRect().height),
+          optRole: r.getAttribute("role"),
+        })),
+      };
+    })()`);
+    report.check(
+      "typing opens a real listbox the field points at",
+      sug.open && sug.expanded === "true" && sug.role === "listbox" && sug.controls &&
+        sug.rows.every((r) => r.optRole === "option"),
+      JSON.stringify({ open: sug.open, expanded: sug.expanded, role: sug.role, controls: sug.controls })
+    );
+    report.check(
+      "'vegetarian' offers the FILTER and still offers the dishes named Vegetarian",
+      sug.rows[0]?.kind === "suggest-filter" &&
+        sug.rows[0]?.text === "Vegetarian" &&
+        sug.rows.filter((r) => r.kind === "suggest-dish").length >= 2,
+      sug.rows.map((r) => `${r.kind}:${r.text}`).join(" | ")
+    );
+    report.check(
+      "the filter row says what pressing it will cost",
+      sug.rows[0]?.sub === "4 dishes",
+      `sub = ${JSON.stringify(sug.rows[0]?.sub)}`
+    );
+    report.check(
+      "every suggestion row is a 44px target",
+      sug.rows.every((r) => r.h >= 44),
+      sug.rows.map((r) => r.h).join(",")
+    );
+
+    // Escape closes the popup and must NOT also empty the field — both screens
+    // wire Escape to clear, and one keypress doing both loses the typing.
+    await driver.evalPage(
+      `${need(".menu-search")}.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }))`
+    );
+    await sleep(80);
+    const afterEsc = await driver.evalPage(`(() => ({
+      open: !document.querySelector(".suggest-list")?.hidden === true,
+      value: document.querySelector(".menu-search").value,
+    }))()`);
+    report.check(
+      "Escape closes the popup and keeps what you typed",
+      afterEsc.open === false && afterEsc.value === "vegetarian",
+      JSON.stringify(afterEsc)
+    );
+
+    // Keyboard: ↓ then Enter takes the highlighted row, and focus never left
+    // the field on the way (or the next keystroke would go nowhere).
+    await driver.evalPage(
+      `(() => { const s = ${need(".menu-search")}; s.focus(); s.value = "veg";
+        s.dispatchEvent(new Event("input", { bubbles: true })); })()`
+    );
+    await sleep(120);
+    const activeDesc = await driver.evalPage(`(() => {
+      const s = document.querySelector(".menu-search");
+      s.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+      return {
+        aad: s.getAttribute("aria-activedescendant"),
+        focusStillInField: document.activeElement === s,
+      };
+    })()`);
+    report.check(
+      "↓ highlights a row WITHOUT moving focus out of the field",
+      !!activeDesc.aad && activeDesc.focusStillInField,
+      JSON.stringify(activeDesc)
+    );
+    await driver.evalPage(
+      `${need(".menu-search")}.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }))`
+    );
+    await sleep(150);
+    await driver.settle();
+    const chosen = await driver.evalPage(PROBE);
+    report.check(
+      "…and Enter presses the real chip, clears the query, and narrows the list",
+      chosen.chips.some((c) => c.key === "v" && c.pressed) &&
+        chosen.query === "" &&
+        chosen.shown === 4,
+      `${chosen.shown} shown, query=${JSON.stringify(chosen.query)}, ` +
+        `pressed=${chosen.chips.filter((c) => c.pressed).map((c) => c.key).join(",") || "none"}`
+    );
+
     // ─── Part C — configured out must DIM, never vanish ────────────────────
     await openVenue(driver, cdp, sessionId, port, CONFIG_VENUE);
     await driver.click(".diet-chip", "Vegan");

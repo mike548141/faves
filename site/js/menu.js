@@ -62,6 +62,8 @@ import {
   matchesDishFilters,
   summarise,
 } from "./dish-filters.js";
+import { filterCandidates, textCandidate } from "./suggest.js";
+import { attachSuggestions } from "./suggest-ui.js";
 import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
 import { dishNeeds, priceUnknown } from "./needs.js";
@@ -1799,6 +1801,62 @@ function render(r) {
   });
 
   search.addEventListener("input", applyView);
+
+  // --- Search suggests the filters (ADR 0088) ------------------------
+  //
+  // The owner's better idea, and the reason there is no extra control for it:
+  // type "veg" and the box offers the Vegetarian chip, type "fav" and it offers
+  // ♥ Favourites. Choosing one PRESSES THE REAL CHIP, so the state ends up
+  // where it is visible (ADR 0052) rather than hidden inside a word in a text
+  // field. The text search underneath is untouched, which is the whole point —
+  // this venue has dishes literally called "Vegetarian Laksa", and a keyword
+  // that hijacked the query would make them unfindable.
+  //
+  // Dish names are offered too, so the box completes as well as commands.
+  // Sections deliberately are NOT: the jump-nav strip immediately above already
+  // does that job, and a list whose rows sometimes filter and sometimes
+  // navigate is a list you have to read before you can trust.
+  const menuCandidates = () => [
+    ...filterCandidates(available, (f) => {
+      // A live count, because a filter that would leave one dish standing is
+      // worth knowing about BEFORE you press it. Counted off base tags for the
+      // same reason applyView filters on them.
+      const n =
+        f.key === FAVOURITES
+          ? favouriteIds().size
+          : allItems.filter((i) =>
+              matchesDishFilters({ tags: i.tags || [] }, new Set([f.key]), {})
+            ).length;
+      return n === 1 ? "1 dish" : `${n} dishes`;
+    }),
+    ...allItems.map((i) =>
+      textCandidate({ id: `dish:${dishId(i)}`, kind: "dish", label: i.name })
+    ),
+  ];
+  // Attached BEFORE wireSearchClear, and that ordering is load-bearing: the
+  // Escape handler below stops propagation so a first Escape closes the popup
+  // without also emptying the field, and `stopImmediatePropagation` can only
+  // stop a listener registered after it.
+  attachSuggestions(search, {
+    getCandidates: menuCandidates,
+    onChoose(c) {
+      if (c.kind === "filter") {
+        // Press the chip rather than mutating the set directly, so the aria
+        // state, the view and the chip's own appearance all move through the
+        // one path a tap takes.
+        const hit = dietChips.find((d) => d.f.key === c.key);
+        search.value = "";
+        hit?.chip.click();
+        applyView();
+      } else {
+        // A dish completion narrows the list to that dish — the same thing the
+        // box already does, just spelled correctly.
+        search.value = c.value;
+        applyView();
+      }
+    },
+  });
+
   // Custom ✕ + Escape both clear the field (shared with the home search).
   wireSearchClear(search, searchClear, applyView);
 
