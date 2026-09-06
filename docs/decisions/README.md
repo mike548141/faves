@@ -965,3 +965,17 @@ deliberation those compact docs omit.
   Ranked `--reshoot` because the limiting factor is framing, not legibility: a
   third of the corpus is front-of-pack only and no care recovers what was never
   in the frame.
+
+- [0092](0092-an-add-on-option-states-what-it-is.md) — **an add-on option states
+  what it IS, and what stays unknown is said once.** ROADMAP 14h, owner-ruled
+  2026-08-22: tag, then collapse. `has-meat`/`has-fish` on an option — POSITIVE
+  claims off its own name, deliberately outside the `contains-` namespace
+  because meat is not an allergen and a ninth `contains-` tag would have joined
+  four allergen tables nobody could filter it in. Legal on an option, an error
+  on a dish. 18 tags, coverage 39% → 50%; the other 80 options stay untagged
+  because saying anything about them would assert an ABSENCE (ADR 0025), so the
+  collapse is the load-bearing half, not the polish. Re-derived the item's
+  baseline first: 155/62/93/40% reproduce exactly at the commit they were taken
+  from, and **807 does not** — it counted every untagged option against every
+  claim-bearing dish at a venue, ignoring which groups attach to which dishes.
+  The attachment-respecting figure was 72. 6 new mutations (131 → 137).
