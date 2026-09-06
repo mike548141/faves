@@ -63,6 +63,7 @@
   },
   "needs": [
     "gtin",
+    "ingredients",
     "manufacturer",
     "origin",
     "storage"

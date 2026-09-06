@@ -69,6 +69,8 @@ STORE = ROOT / "data" / "products"
 
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# How a transcriber marks "the pack says more than the photograph shows".
+TRUNCATED = re.compile(r"\[cut off\]|illegible|\.\.\.|…")
 
 TOP_KEYS = {
     "id", "name", "brand", "variant", "manufacturer", "identifiers", "pack",
@@ -327,6 +329,23 @@ def validate(path: Path, problems: list[str]) -> dict | None:
         if not rec.get(field) and need not in (rec.get("needs") or []):
             err(problems, rid, f"has no {field} and does not say it needs one — "
                                f"add {need!r} to needs, or the gap is silent")
+
+    # A PARTIAL READING MUST KEEP SAYING IT IS PARTIAL. An ingredient string
+    # that trails off at the frame edge still occupies a field that reads as
+    # complete, and the danger is not the ingredients — it is what a truncated
+    # list implies about the allergens beside it.
+    #
+    # Written after exactly that: Angel Bay's allergen line was photographed as
+    # "…, soy, milk." and stored as `contains: ["Soy","Milk"]`. The maker and a
+    # retailer independently give "wheat, gluten, egg, soy, milk" — the stored
+    # list was short by three, and nothing in the record's shape said so. The
+    # check found thirteen more of the same shape on its first run.
+    if TRUNCATED.search(str(rec.get("ingredients") or "")) and \
+            "ingredients" not in (rec.get("needs") or []):
+        err(problems, rid, "the ingredient string is cut off (it carries an ellipsis "
+                           "or an illegibility marker) but 'ingredients' is not in "
+                           "needs — a partial reading in a field that reads as "
+                           "complete is how a short allergen list looks finished")
     return rec
 
 

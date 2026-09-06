@@ -47,6 +47,7 @@
   },
   "needs": [
     "gtin",
+    "ingredients",
     "manufacturer",
     "pack",
     "storage"

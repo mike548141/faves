@@ -7,6 +7,14 @@
     "address": "513 King Street North, Hastings",
     "country": "New Zealand"
   },
+  "identifiers": {
+    "gtin": "9400547007394"
+  },
+  "pack": {
+    "size": 575,
+    "unit": "g",
+    "count": 1
+  },
   "servings": {
     "perPack": 38,
     "size": 15,
@@ -47,10 +55,19 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
-  "needs": [
-    "allergens",
-    "gtin",
-    "pack"
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.kraftheinz.com/en-NZ/watties/products/9400547007394-wattie-s-tomato-sauce-575-g",
+      "read": "2026-09-06",
+      "fields": [
+        "identifiers",
+        "pack"
+      ]
+    }
   ],
-  "note": "Servings per package printed 'Approx. 38' at 15 g. No net weight is printed on either photographed face, so pack is unrecorded rather than inferred from 38 x 15. The '126g of Tomatoes per 100g' and '81%' figures were re-read from a native-resolution crop. Barcode wraps round the can: only '…400547 00739…' is legible, missing both the leading digit and the check digit, so no gtin is recorded. No allergen statement on the panel. 'PX23993/J' beside the barcode is a batch code."
+  "needs": [
+    "allergens"
+  ],
+  "note": "Servings per package printed 'Approx. 38' at 15 g. No net weight is printed on either photographed face, so pack is unrecorded rather than inferred from 38 x 15. The '126g of Tomatoes per 100g' and '81%' figures were re-read from a native-resolution crop. Barcode wraps round the can: only '…400547 00739…' is legible, missing both the leading digit and the check digit, so no gtin is recorded. No allergen statement on the panel. 'PX23993/J' beside the barcode is a batch code. GTIN and net weight read from Heinz Wattie's own NZ product page 2026-09-06, NOT from the photograph. The record carried no pack size, so the usual four-way match could not be run; the SKU was pinned two other ways instead, each stronger than a size match. (1) The barcode fragment above, '…400547 00739…', is a substring of 9400547007394, the EAN-13 the maker's page carries for the 575 g, and is NOT a substring of the 560 g EAN (9300657240424); an EAN-13 admits only one check digit, so once the eleven legible digits are fixed there is one candidate, not several. The 565 g and 1.1 kg SKUs' barcodes were not checked, so this rests on (2) as much as on (1). (2) That page's ingredient text is byte-for-byte the line transcribed from this can, including the unusual '126g of Tomatoes per 100g', '19g per 15g serve' and '81%' figures, which differ from the 330 g and 50%-less-sugar recipes. 38 x 15 g = 570 g agrees with a 575 g net. ALLERGENS ARE STILL OPEN: neither the manufacturer's page nor the Woolworths NZ listing publishes any allergen statement for this product, and no statement is not the same as no allergen."
 }

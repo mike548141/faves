@@ -13,6 +13,26 @@
     "size": 17,
     "unit": "g"
   },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1990,
+      "protein": 4.4,
+      "fatTotal": 22.4,
+      "carbohydrate": 63.1,
+      "sugars": 44.0,
+      "sodium": 300
+    },
+    "perServing": {
+      "energyKj": 338,
+      "protein": 0.7,
+      "fatTotal": 3.8,
+      "carbohydrate": 10.7,
+      "sugars": 7.5,
+      "sodium": 51
+    }
+  },
+  "ingredients": "Sugar, Wheat Flour, Vegetable Fats and Oils [Antioxidant (307b), Emulsifier (Soy Lecithin)], Milk Solids, Glucose Syrup, Sweetened Condensed Milk [Milk, Sugar], Cocoa Butter^, Cocoa Mass^, Invert Syrup, Golden Syrup, Butter [Milk], Cocoa Powder^, Emulsifiers [Soy Lecithin, 471], Salt, Maize Starch, Raising Agents [Baking Soda, 450], Natural Flavour, Colour [160b].",
   "allergens": {
     "contains": [
       "Wheat",
@@ -39,11 +59,20 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.griffinsbiscuits.com/our-products/biscuits/toffee-pops/double-choc",
+      "read": "2026-09-06",
+      "fields": [
+        "ingredients",
+        "nutrition"
+      ]
+    }
+  ],
   "needs": [
     "gtin",
-    "ingredients",
-    "manufacturer",
-    "nutrition"
+    "manufacturer"
   ],
-  "note": "NUTRITION DELIBERATELY NOT RECORDED. The panel was photographed but is white print on dark navy, out of focus; the digits were re-cropped at native resolution and upscaled and remained mush. A set of plausible, internally-consistent numbers could be produced from it — which is exactly why it is not, since the consistency check would only be validating my own guesses. Servings per package (12) and serving size (1 biscuit approx. 17 g) ARE legible and are independently corroborated by the front-of-pack 200 g net (200/12 = 16.7). The ingredient list runs off the right frame edge on every line and is not transcribable at all. 'allergens' is also in needs: 'CONTAINS WHEAT, MILK, SOY, GLUTEN' is complete, but the 'MAY CONTAIN SULPHITES, EGG, SESAME…' line reaches the frame edge and may continue. Front of pack: 'Made and loved here / NEW ZEALAND MADE', BISCUITS 200g NET. Pack also states percentages for milk chocolate and 27% toffee (the chocolate figure is illegible)."
+  "note": "NUTRITION DELIBERATELY NOT RECORDED. The panel was photographed but is white print on dark navy, out of focus; the digits were re-cropped at native resolution and upscaled and remained mush. A set of plausible, internally-consistent numbers could be produced from it — which is exactly why it is not, since the consistency check would only be validating my own guesses. Servings per package (12) and serving size (1 biscuit approx. 17 g) ARE legible and are independently corroborated by the front-of-pack 200 g net (200/12 = 16.7). The ingredient list runs off the right frame edge on every line and is not transcribable at all. 'allergens' is also in needs: 'CONTAINS WHEAT, MILK, SOY, GLUTEN' is complete, but the 'MAY CONTAIN SULPHITES, EGG, SESAME…' line reaches the frame edge and may continue. Front of pack: 'Made and loved here / NEW ZEALAND MADE', BISCUITS 200g NET. Pack also states percentages for milk chocolate and 27% toffee (the chocolate figure is illegible). Ingredients and the nutrition panel read from Griffin's own product page 2026-09-06, NOT from the photograph. Matched on brand, product, variant and pack: the page's 'Servings Per Pack: 12', 'Serving Size: 1 biscuit (Approx. 17g)' and '27% Toffee' are the same three figures read off this packet, and 12 x 17 g is the 200 g net on the front. The page carries only six nutrient rows — no saturated fat and no dietary fibre — so those two are absent rather than guessed. It also settles the truncated allergen line: the page's CONTAINS (Milk, Soy, Wheat, Gluten) and MAY CONTAIN (Egg, Sesame, Sulphites) are exactly the sets already transcribed from the packet, so the 'MAY CONTAIN SULPHITES, EGG, SESAME…' line did NOT continue past the frame edge. NO peanut or tree-nut statement is published for this product. The photo-derived allergens above are unchanged."
 }

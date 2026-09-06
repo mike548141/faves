@@ -50,6 +50,7 @@
   "needs": [
     "allergens",
     "gtin",
+    "ingredients",
     "storage"
   ],
   "note": "Protein, fat total, saturated fat (all columns) and sodium (all columns) are printed 'Less than 1g' / 'Less than 5mg' and are OMITTED rather than rounded. The ingredient panel and the manufacturer block are on the curve of a small can: the first ingredient disappears round the edge after 'PINEAP', so the list is transcribed with a cut-off marker rather than completed. Also on the panel, cut off: 'DISTRIBUTED BY PAVE…' with Australian (Wallacia NSW) and New Zealand (Parnell, Auckland) addresses. Front of pack: NET WT. 227g."

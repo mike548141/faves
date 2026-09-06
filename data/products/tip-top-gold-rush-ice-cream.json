@@ -59,6 +59,7 @@
   },
   "needs": [
     "gtin",
+    "ingredients",
     "pack"
   ],
   "note": "PEANUT WARNING: the allergen line reads 'Contains Milk, Soy.' followed by '[May be] present: Peanut, Tree Nuts' — the left edge of that line is cut off by the frame but 'Peanut, Tree Nuts' is unambiguous. Only the back of the tub was photographed; the ingredient column runs off the left edge of the frame so roughly half of every line is missing and it is transcribed as fragments, NOT reconstructed. Product name is read from the back-of-pack blurb '…d Rush scoop ice cream' (first letters off-frame) in a sentence beginning 'Yeehaw! …e struck gold with this…'; the front of pack was not photographed. The barcode's leading digits run off the bottom edge of the photograph — only '…14932 385073' is legible, so no gtin is recorded. Serving size printed as '53g (100mL)'. Also printed: 'Contains a maximum of 10% Milk Fat.'"

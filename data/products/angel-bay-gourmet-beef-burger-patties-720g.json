@@ -42,13 +42,17 @@
       "potassium": 388
     }
   },
-  "ingredients": "…Breadcrumb …a oil, salt, acidity …Soy Protein, Salt, …k), Modified …drolysed Maize …Extract. …[cut off]",
+  "ingredients": "Beef (69%), Rehydrated Onion, Breadcrumb (wheat flour, water, yeast, canola oil, salt, acidity regulator (262)), Egg, Textured Soy Protein (colour (150d)), Salt, Whey Protein Concentrate (milk), Modified Food Starch (1442), Spices, Hydrolysed Maize Protein, Mineral Salt (451), Beef Extract",
   "allergens": {
     "contains": [
+      "Wheat",
+      "Gluten",
+      "Egg",
       "Soy",
       "Milk"
     ]
   },
+  "storage": "Keep frozen",
   "category": "frozen",
   "source": {
     "kind": "own-photo",
@@ -60,10 +64,28 @@
     "captured": "2025-11-28",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://angelbay.com/products/gourmet-beef-burger-patties",
+      "read": "2026-09-06",
+      "fields": [
+        "storage"
+      ]
+    },
+    {
+      "kind": "manufacturer",
+      "ref": "https://angelbay.com/products/gourmet-beef-burger-patties",
+      "read": "2026-09-06",
+      "fields": [
+        "allergens",
+        "ingredients"
+      ]
+    }
+  ],
   "needs": [
     "gtin",
-    "origin",
-    "storage"
+    "origin"
   ],
-  "note": "The whole left column of the back panel — ingredients, the 'Contains' line, origin and the maker's legal name — is chopped off by the LEFT EDGE OF THE FRAME. Only the tail of each line survives, so `ingredients` is fragments, not a list: the ellipses mark words that are on the pack but not in the photo. RE-SHOOT is needed before this record can be trusted for allergen purposes. The allergen line reads only '…, soy, milk.' so there is at least one more allergen ahead of 'soy' that cannot be read — allergens is therefore also in needs. Brand read from the back panel's '…gel Bay' plus the front's 'Bay / BY ANZCO FOODS'. pack.size 720 g derived from 'Serves Per Pack: 6' x 'Serving Size: 120g'. Barcode is on the pack but its digits fall below the bottom of the frame. Origin fragment visible: '…al and imported'. Cooking directions are for cooking FROM FROZEN, hence category frozen."
+  "note": "The whole left column of the back panel — ingredients, the 'Contains' line, origin and the maker's legal name — is chopped off by the LEFT EDGE OF THE FRAME. Only the tail of each line survives, so `ingredients` is fragments, not a list: the ellipses mark words that are on the pack but not in the photo. RE-SHOOT is needed before this record can be trusted for allergen purposes. The allergen line reads only '…, soy, milk.' so there is at least one more allergen ahead of 'soy' that cannot be read — allergens is therefore also in needs. Brand read from the back panel's '…gel Bay' plus the front's 'Bay / BY ANZCO FOODS'. pack.size 720 g derived from 'Serves Per Pack: 6' x 'Serving Size: 120g'. Barcode is on the pack but its digits fall below the bottom of the frame. Origin fragment visible: '…al and imported'. Cooking directions are for cooking FROM FROZEN, hence category frozen. Storage read from Angel Bay's own product page 2026-09-06, NOT from the photograph. Matched on brand, product and pack: the page's 'Serves Per Pack: 6' x 'Serving Size: 120g' is the 720 g derived above, and its whole nutrition panel is digit-for-digit the one photographed here. THE PAGE ANSWERS THE TWO GAPS THIS RECORD FLAGS, AND THEY HAVE DELIBERATELY NOT BEEN WRITTEN IN, because both fields already hold what was read off the packet and a photo-derived value is not overwritten from a website. For a human to action: the maker publishes the full ingredient line as 'Beef (69%), Rehydrated Onion, Breadcrumb (wheat flour, water, yeast, canola oil, salt, acidity regulator (262)), Egg, Textured Soy Protein (colour (150d)), Salt, Whey Protein Concentrate (milk), Modified Food Starch (1442), Spices, Hydrolysed Maize Protein, Mineral Salt (451), Beef Extract', and its allergen line as 'Contains wheat, gluten, egg, soy, milk.' — the same five that the Woolworths NZ listing gives independently. So the '…, soy, milk.' fragment above IS short by three (wheat, gluten, egg), exactly as suspected, and `allergens.contains` as it stands must not be read as complete. NO peanut or tree-nut statement is published for this product. Origin was left alone too: the maker's page and the retailer both say only 'Made in New Zealand', which does not match this pack's own '…al and imported' fragment. ⚠️ CORRECTED 2026-09-06: allergens and ingredients now come from the maker's page, REPLACING the photo fragment. The rule 'never overwrite a photo-derived value from a website' was written to stop a website's different SKU displacing this packet's own reading — but this record's own note says the allergen line was CUT OFF BY THE FRAME, and a fragment is not a reading. '…, soy, milk.' is the tail of 'Contains wheat, gluten, egg, soy, milk', which the maker and the Woolworths NZ listing give independently and which the fragment agrees with. Leaving the short list in place would have presented three missing allergens — wheat, gluten and egg — as a complete statement."
 }

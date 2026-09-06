@@ -38,6 +38,13 @@
       "sodium": 34
     }
   },
+  "ingredients": "Potato (95%), Canola Oil, Acidity Regulator (450), Dextrose",
+  "allergens": {
+    "contains": [
+      "Sulphites"
+    ]
+  },
+  "origin": "Made in New Zealand",
   "category": "frozen",
   "source": {
     "kind": "own-photo",
@@ -49,13 +56,22 @@
     "captured": "2025-11-28",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "retailer",
+      "ref": "https://www.woolworths.co.nz/shop/productdetails?stockcode=662937",
+      "read": "2026-09-06",
+      "fields": [
+        "allergens",
+        "ingredients",
+        "origin"
+      ]
+    }
+  ],
   "needs": [
-    "allergens",
     "gtin",
-    "ingredients",
     "manufacturer",
-    "origin",
     "storage"
   ],
-  "note": "Front (900 g NET, Health Star Rating 4.5, 'No Artificial Colours, Flavours or Preservatives') plus the nutrition panel only — the ingredient list, allergen statement, storage instructions and barcode are all outside both frames, so none are recorded. Serving size equals 100g, so the label's two columns are identical. Trans fat and cholesterol are printed as '< 0.1 g' and '< 3 mg' rather than as numbers and are omitted; cholesterol has no allowed key here in any case. A partly visible NZ-grown-potatoes roundel appears at the right edge of the front photo but is not legible enough to record as origin."
+  "note": "Front (900 g NET, Health Star Rating 4.5, 'No Artificial Colours, Flavours or Preservatives') plus the nutrition panel only — the ingredient list, allergen statement, storage instructions and barcode are all outside both frames, so none are recorded. Serving size equals 100g, so the label's two columns are identical. Trans fat and cholesterol are printed as '< 0.1 g' and '< 3 mg' rather than as numbers and are omitted; cholesterol has no allowed key here in any case. A partly visible NZ-grown-potatoes roundel appears at the right edge of the front photo but is not legible enough to record as origin. Allergens, ingredients and origin read from the Woolworths NZ listing for this SKU 2026-09-06 (a RETAILER source), NOT from the photograph. Matched on brand, product, variant and 900 g pack; the listing's 'New Zealand grown potatoes' claim and 'Made in New Zealand' origin are what the half-legible roundel on the front of this pack is. THE NZ SOURCE WAS USED DELIBERATELY: McCain's own site is Australian and publishes a DIFFERENT recipe for the same 900 g name — 'Potato (94%), Canola Oil, Dextrose', with no acidity regulator — so the maker's page is the wrong pack, not the better one. Two cautions on the allergen line. The retailer's allergen field gives Sulphites and no 'may contain' at all; McCain AU words its statement as a shared-facility one ('Made in a facility that also processes products with Gluten, Sulphites & Wheat'), so it is not certain whether this pack DECLARES sulphites or only shares a line with them, and the entry above takes the stronger, safer reading. And an absent 'may contain' here is an absent statement, not a cleared pack."
 }

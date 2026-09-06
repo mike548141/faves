@@ -36,6 +36,22 @@
       "sodium": 30
     }
   },
+  "ingredients": "Milk Chocolate (35%) (Sugar, Milk Solids, Cocoa Butter, Cocoa Mass, Vegetable Oil (Contains Soy), Emusifiers (Soy Lecithin, E476), Flavour), Wheat Flour, Caramel (15.5%) (Sugar, Condensed Milk, Glucose, Water, Butter (From Milk), Humectant (E422), Emulsiifiers (E471, Soy Lecithin), Antioxidant (E307b From Soy), Flavours, Salt), Sugar, Vegetable Oil (Antioxidant (E307b From Soy)), Golden Syrup, Food Colours (Caramel III, Beet Red, Cochineal, Annatto), Starch (Wheat), Cocoa Powder, Salt, Baking Powder, Emulsifier (Soy Lecithin), Flavour.",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Gluten",
+      "Soy",
+      "Wheat"
+    ],
+    "mayContain": [
+      "Egg",
+      "Tree Nuts",
+      "Peanuts",
+      "Sesame"
+    ]
+  },
+  "origin": "Made in Australia",
   "category": "snack",
   "source": {
     "kind": "own-photo",
@@ -47,13 +63,22 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "retailer",
+      "ref": "https://www.woolworths.co.nz/shop/productdetails?stockcode=117833",
+      "read": "2026-09-06",
+      "fields": [
+        "allergens",
+        "ingredients",
+        "origin"
+      ]
+    }
+  ],
   "needs": [
-    "allergens",
     "gtin",
-    "ingredients",
     "manufacturer",
-    "origin",
     "storage"
   ],
-  "note": "The English ingredient and allergen block is OFF-FRAME to the left; only the French-language block is partly visible, and a partial second-language list is not a substitute, so nothing is transcribed. POSSIBLE NUT RELEVANCE for a human follow-up: the visible French fragment includes 'fruits à coque' (tree nuts) and 'amidon (blé)', 'lécithine de soja', 'farine de blé' — enough to say the pack does carry a nut-related statement, not enough to say what it says. Do NOT treat the absence of a peanut mention here as evidence. Nutrition panel is fully in frame and crisp. Front of pack: 9 BISCUITS, NET 175 g, Health Star Rating 0.5, 'MADE WITH IRRESISTIBLE REAL CHOCOLATE', 'caramel (15,5 %)' appears in the French text."
+  "note": "The English ingredient and allergen block is OFF-FRAME to the left; only the French-language block is partly visible, and a partial second-language list is not a substitute, so nothing is transcribed. POSSIBLE NUT RELEVANCE for a human follow-up: the visible French fragment includes 'fruits à coque' (tree nuts) and 'amidon (blé)', 'lécithine de soja', 'farine de blé' — enough to say the pack does carry a nut-related statement, not enough to say what it says. Do NOT treat the absence of a peanut mention here as evidence. Nutrition panel is fully in frame and crisp. Front of pack: 9 BISCUITS, NET 175 g, Health Star Rating 0.5, 'MADE WITH IRRESISTIBLE REAL CHOCOLATE', 'caramel (15,5 %)' appears in the French text. Allergens, ingredients and origin read from the Woolworths NZ listing for this SKU 2026-09-06 (a RETAILER source: Arnott's own site publishes no per-product ingredient page). Matched on brand, product, variant and 175 g pack, and independently confirmed by the pack itself: the listing's 'Caramel (15.5%)' is the same figure as the photograph's French-language 'caramel (15,5 %)', and its '9 biscuits' claim matches the front of pack. The declared MAY CONTAIN includes PEANUTS and TREE NUTS — consistent with, and now explaining, the unreadable 'fruits à coque' fragment noted above. NOT from the photograph."
 }

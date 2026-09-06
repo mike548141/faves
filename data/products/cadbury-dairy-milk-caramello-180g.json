@@ -34,6 +34,20 @@
       "sodium": 32
     }
   },
+  "ingredients": "Full Cream Milk, Sugar, Cocoa Butter, Glucose Syrup, Milk Solids, Cocoa Mass, Sweetened Condensed Milk (Milk, Sugar), Golden Syrup, Invert Sugar, Vegetable Fat, Emulsifiers (Soy Lecithin, 476), Salt, Acidity Regulator (331), Flavours.",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Soy"
+    ],
+    "mayContain": [
+      "Peanuts",
+      "Tree Nuts",
+      "Wheat"
+    ]
+  },
+  "storage": "Please store in cool, dry conditions.",
+  "origin": "Made in Australia from imported and local ingredients",
   "category": "snack",
   "source": {
     "kind": "own-photo",
@@ -45,13 +59,22 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
-  "needs": [
-    "allergens",
-    "gtin",
-    "ingredients",
-    "manufacturer",
-    "origin",
-    "storage"
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.cadbury.com.au/nz/products/cadburydairymilkcaramellomilkchocolateblock180g/index.html",
+      "read": "2026-09-06",
+      "fields": [
+        "allergens",
+        "ingredients",
+        "storage",
+        "origin"
+      ]
+    }
   ],
-  "note": "Front of pack (180g) and the nutrition panel only. The ingredient and allergen block is on a flap that was not photographed — this is a milk chocolate bar and no allergen statement of any kind was read, so nothing is recorded for it. Serving size printed '25g (approx. 4 squares)'. Front also carries 'SUPPORTING SUSTAINABLY SOURCED COCOA'."
+  "needs": [
+    "gtin",
+    "manufacturer"
+  ],
+  "note": "Front of pack (180g) and the nutrition panel only. The ingredient and allergen block is on a flap that was not photographed — this is a milk chocolate bar and no allergen statement of any kind was read, so nothing is recorded for it. Serving size printed '25g (approx. 4 squares)'. Front also carries 'SUPPORTING SUSTAINABLY SOURCED COCOA'. Allergens, ingredients, storage and origin read from Cadbury's own NZ product page 2026-09-06 (the unphotographed flap), NOT from the photograph. Matched on brand, product, variant and 180 g pack, and corroborated by the panel that WAS photographed: the page's serving size 25 g and 7.2 servings per pack are the same figures. The declared MAY CONTAIN includes PEANUTS and TREE NUTS. The page's own nutrition figures differ from the photographed panel by a rounding step (2100 vs 2090 kJ per 100 g, sodium 130 vs 129 mg); the panel above is the pack's own and has NOT been reconciled against the website."
 }

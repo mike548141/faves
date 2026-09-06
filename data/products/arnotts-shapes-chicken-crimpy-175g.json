@@ -36,6 +36,22 @@
       "sodium": 217
     }
   },
+  "ingredients": "Wheat Flour, Vegetable Oil (Antioxidant (E307b From Soy)), Sugar, Salt, Malt Extract, (From Barley), Baking Powder, Flavour Enhancers (E621, E635), Onion Powder, Natural Flavour, Maltodextrin (Maize), Chicken Powder, Spices, Antioxidant (E300), Yeast Extract, Emulsifier (Soy Lecithin).",
+  "allergens": {
+    "contains": [
+      "Gluten",
+      "Soy",
+      "Wheat"
+    ],
+    "mayContain": [
+      "Egg",
+      "Milk",
+      "Tree Nuts",
+      "Peanuts",
+      "Sesame"
+    ]
+  },
+  "origin": "Made in Australia",
   "category": "snack",
   "source": {
     "kind": "own-photo",
@@ -47,13 +63,22 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "retailer",
+      "ref": "https://www.woolworths.co.nz/shop/productdetails?stockcode=384245",
+      "read": "2026-09-06",
+      "fields": [
+        "allergens",
+        "ingredients",
+        "origin"
+      ]
+    }
+  ],
   "needs": [
-    "allergens",
     "gtin",
-    "ingredients",
     "manufacturer",
-    "origin",
     "storage"
   ],
-  "note": "NO ALLERGEN DATA RECORDED — the panel is not readable. The ingredient panel sits at the LEFT frame edge of IMG_7196 and is cut off mid-line, and the surviving fragment is washed out by flash glare; only 'Oil (Antioxidant', 'ar, Salt, Malt' and 'Baking Powder' can be made out. The allergen lines are visible only as fragments — '…LUTEN, SOY.' and '…ILK, TREE NUTS,' — with both the start of each line and the end of the second cut off, so nothing has been entered in allergens rather than record a list that could be short. This pack must be re-photographed before it is treated as characterised for allergens. Front carries 'Oven Baked not fried', Health Star Rating 2, NET 175 g."
+  "note": "NO ALLERGEN DATA RECORDED — the panel is not readable. The ingredient panel sits at the LEFT frame edge of IMG_7196 and is cut off mid-line, and the surviving fragment is washed out by flash glare; only 'Oil (Antioxidant', 'ar, Salt, Malt' and 'Baking Powder' can be made out. The allergen lines are visible only as fragments — '…LUTEN, SOY.' and '…ILK, TREE NUTS,' — with both the start of each line and the end of the second cut off, so nothing has been entered in allergens rather than record a list that could be short. This pack must be re-photographed before it is treated as characterised for allergens. Front carries 'Oven Baked not fried', Health Star Rating 2, NET 175 g. Allergens, ingredients and origin read from the Woolworths NZ listing for this SKU 2026-09-06 (a RETAILER source: Arnott's own site publishes no per-product ingredient page). Matched on brand, product, variant and 175 g pack. It resolves both truncated fragments above rather than contradicting them: '…LUTEN, SOY.' is the tail of CONTAINS WHEAT, GLUTEN, SOY, and '…ILK, TREE NUTS,' is the middle of MAY BE PRESENT EGG, MILK, TREE NUTS, PEANUTS, SESAME — so the cut-off line did continue, and what it continued into was PEANUTS. NOT from the photograph. The nutrition panel above is the pack's own and is unchanged."
 }
