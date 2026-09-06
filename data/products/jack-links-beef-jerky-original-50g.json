@@ -1,0 +1,60 @@
+{
+  "id": "jack-links-beef-jerky-original-50g",
+  "name": "Beef Jerky",
+  "brand": "Jack Link's",
+  "variant": "Original Flavour",
+  "manufacturer": {
+    "name": "Jack Link's New Zealand Ltd",
+    "address": "159 Montgomerie Road, Auckland, 2022",
+    "country": "New Zealand"
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 50,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1100,
+      "protein": 34.0,
+      "fatTotal": 3.0,
+      "fatSaturated": 1.2,
+      "carbohydrate": 24.0,
+      "sugars": 21.6,
+      "sodium": 1400
+    },
+    "perServing": {
+      "energyKj": 550,
+      "protein": 17.0,
+      "fatTotal": 1.5,
+      "carbohydrate": 12.0,
+      "sugars": 10.8,
+      "sodium": 700
+    }
+  },
+  "ingredients": "Ingredients: Beef, Seasoning (Sugar, Salt, Yeast Extract, Onion Powder, Garlic Powder, Flavourings, Spice), Soy Protein, Natural Flavours, Smoke Flavour",
+  "allergens": {
+    "contains": [
+      "Soy"
+    ],
+    "mayContain": []
+  },
+  "storage": "Refrigerate after opening and consume within 3 days. No refrigeration required until opened. Do not eat absorber bag.",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7301.jpeg"
+    ],
+    "burst": "b043",
+    "captured": "2025-11-28",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "origin",
+    "pack"
+  ],
+  "note": "Back of pack only. The barcode runs off the BOTTOM frame edge — only a fragment ('…44 1407') is visible — so no GTIN is recorded. Net weight is not stated on the photographed panel; the label says 'Servings per package: 1, Serving size: 50 g', which implies a 50 g pack, but that is a derivation and not a printed net weight, so pack is left unrecorded. Saturated fat per serve is printed as 'LESS THAN 1 g' and is therefore omitted from perServing (the per-100g figure, 1.2 g, is a number and is recorded). Origin is not stated beyond 'NEW ZEALAND INSP. JL1'. Label also states 'Made with Wood Smoke'."
+}

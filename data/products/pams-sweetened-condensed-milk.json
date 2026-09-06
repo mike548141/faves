@@ -1,0 +1,60 @@
+{
+  "id": "pams-sweetened-condensed-milk",
+  "name": "Sweetened Condensed Milk",
+  "brand": "Pams",
+  "manufacturer": {
+    "name": "Pams Products",
+    "address": "703 Robe…[cut off by the can's curve], Palmersto…[cut off]",
+    "country": "New Zealand"
+  },
+  "servings": {
+    "perPack": 8,
+    "size": 50,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1370,
+      "protein": 7.6,
+      "fatTotal": 8.0,
+      "fatSaturated": 5.4,
+      "carbohydrate": 55.3,
+      "sugars": 55.3,
+      "sodium": 86
+    },
+    "perServing": {
+      "energyKj": 686,
+      "protein": 3.8,
+      "fatTotal": 4.0,
+      "fatSaturated": 2.7,
+      "carbohydrate": 27.7,
+      "sugars": 27.7,
+      "sodium": 43
+    }
+  },
+  "ingredients": "Whole milk (55%), sugar, firming agent (509).",
+  "allergens": {
+    "contains": [
+      "Milk"
+    ]
+  },
+  "storage": "STORE IN A COOL, DRY PLACE. ONCE OPENED, TRANSFER CONTENTS INTO A NON-METALLIC CONTAINER AND KEEP REFRIGERATED. USE WITHIN 5 DAYS.",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7224.jpeg",
+      "raw_food_photos/IMG_7225.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "origin",
+    "pack"
+  ],
+  "note": "Servings per package printed '8 approx.' at 50 g. No net weight is printed on either photographed face, so pack is unrecorded rather than inferred from 8 x 50. Every per-serving figure is exactly half its per-100g figure, which is the expected relation at a 50 g serving and was used as a check that the row labels line up with their values. 'Marketed by Pams Products' with a Palmerston North address runs round the curve of the can and is only partly legible."
+}

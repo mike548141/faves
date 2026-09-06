@@ -1,0 +1,72 @@
+{
+  "id": "golden-crumpet-toast-cinnamon-burst-600g",
+  "name": "Crumpet Toast",
+  "brand": "Golden Bakery",
+  "variant": "Cinnamon Burst (Limited Edition)",
+  "identifiers": {
+    "gtin": "9415382047542"
+  },
+  "pack": {
+    "size": 600,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 12,
+    "size": 50,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 933,
+      "protein": 8.1,
+      "fatTotal": 2.6,
+      "fatSaturated": 0.3,
+      "carbohydrate": 39.5,
+      "sugars": 8.1,
+      "dietaryFibre": 3.5,
+      "sodium": 644
+    },
+    "perServing": {
+      "energyKj": 467,
+      "protein": 4.1,
+      "fatTotal": 1.3,
+      "fatSaturated": 0.2,
+      "carbohydrate": 19.8,
+      "sugars": 4.1,
+      "dietaryFibre": 1.8,
+      "sodium": 322
+    }
+  },
+  "ingredients": "INGREDIENTS: WHEAT FLOUR, WATER, CINNAMON PIECES (7%) (INVERT SUGAR, PEAR PUREE CONCENTRATE (PEAR, FOOD ACID (300)), SUGAR, WHEAT FIBRE, HUMECTANT (GLYCEROL), FRUCTOSE, GROUND CINNAMON (3%), GELLING AGENT ((PECTIN), SUCROSE), ACIDITY REGULATOR (270)), WHEAT GLUTEN, SUGAR, CANOLA OIL, RAISING AGENTS (450, 500), BAKER'S YEAST, ACIDITY REGULATOR (263), MOLASSES, VINEGAR, IODISED SALT, SPICES (CINNAMON (0.4%), MIXED SPICES), NATURAL FLAVOUR, SOY FLOUR, EMULSIFIER (481), RICE FLOUR.",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Soy"
+    ],
+    "mayContain": [
+      "Milk",
+      "Other cereals (oats, barley, rye)"
+    ]
+  },
+  "storage": "STORAGE CONDITIONS: Keeps better in refrigerator. To freeze crumpets, wrap pack in a freezer bag. Store at or below -15°C. Recommended frozen life, 2 months. On thawing consume immediately, do not refreeze.",
+  "origin": "MADE IN NEW ZEALAND FROM IMPORTED & LOCAL INGREDIENTS",
+  "category": "bakery",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/3/IMG_7125.jpeg",
+      "raw_food_photos/3/IMG_7126.jpeg",
+      "raw_food_photos/3/IMG_7127.jpeg"
+    ],
+    "burst": "b004",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "manufacturer"
+  ],
+  "note": "Servings per package printed as '12 (10 Slices + 2 Crusts)'; serving size '50 g (1 Slice)'. Ingredient list transcribed from native-resolution crops — the printed text is strongly curved across the bag, so each line was read separately. 'GELLING AGENT ((PECTIN), SUCROSE)' is printed with the doubled opening bracket shown here; it is not a transcription error. No packer name or address is printed on the faces photographed. Barcode check digit validates."
+}

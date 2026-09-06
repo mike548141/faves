@@ -1,0 +1,52 @@
+{
+  "id": "cadbury-drinking-chocolate",
+  "name": "Drinking Chocolate",
+  "brand": "Cadbury",
+  "manufacturer": {
+    "name": "Cadbury",
+    "address": "323 Canterbury Road, Ringwood Victoria 3134, Australia",
+    "country": "Australia"
+  },
+  "servings": {
+    "perPack": 30,
+    "size": 15,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1630,
+      "protein": 4.8,
+      "fatTotal": 2.3,
+      "fatSaturated": 1.4,
+      "carbohydrate": 82.7,
+      "sugars": 77.7,
+      "sodium": 7
+    },
+    "perServing": {
+      "energyKj": 245,
+      "carbohydrate": 12.4,
+      "sugars": 11.7,
+      "sodium": 1
+    }
+  },
+  "ingredients": "DRINKING CHOCOLATE. INGREDIENTS: SUGAR, COCOA POWDER, STARCH (MAIZE OR TAPIOCA), FLAVOUR. DRINKING CHOCOLATE CONTAINS COCOA SOLIDS 21%.",
+  "storage": "PLEASE STORE IN COOL, DRY CONDITIONS.",
+  "origin": "PACKED IN AUSTRALIA FROM MULTIPLE ORIGINS",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/2/IMG_4837EB1F-948F-43AB-9B9C-92BC9BD1D566.jpeg"
+    ],
+    "burst": "b009",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "pack"
+  ],
+  "note": "Back-of-pack only; the front was not photographed, so no net weight is recorded (the panel's 30 x 15 g would imply 450 g but that figure is not printed). Per-serving protein, total fat and saturated fat are printed as '<1.0 g' — not numbers, so those three keys are omitted from perServing rather than guessed. A third and fourth panel column give 'as prepared' figures (with 200 mL of Reduced Fat Milk) which this schema has no place for. Barcode digits fall below the frame edge, so no GTIN. No 'CONTAINS' allergen statement appears on the face photographed."
+}

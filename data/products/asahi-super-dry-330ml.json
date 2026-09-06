@@ -1,0 +1,38 @@
+{
+  "id": "asahi-super-dry-330ml",
+  "name": "Super Dry",
+  "brand": "Asahi",
+  "manufacturer": {
+    "name": "Asahi Premium Beverages Pty Ltd",
+    "address": "58 Queens Bridge Street, Southbank, VIC. 3006, Australia",
+    "country": "Australia"
+  },
+  "pack": {
+    "size": 330,
+    "unit": "ml",
+    "count": 1
+  },
+  "origin": "BREWED AND MADE IN AUSTRALIA UNDER SUPERVISION OF ASAHI BREWERIES, LTD., TOKYO, JAPAN BY ASAHI PREMIUM BEVERAGES PTY LTD.",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7156.jpeg",
+      "raw_food_photos/IMG_7157.jpeg",
+      "raw_food_photos/IMG_8117.jpeg",
+      "raw_food_photos/IMG_8121.jpeg"
+    ],
+    "burst": "b023+b059",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "nutrition",
+    "servings",
+    "storage"
+  ],
+  "note": "Front and back both photographed; the back label carries no nutrition panel and no ingredient list at all - it is regulatory text only ('BEER - 5.0% ALC/VOL. CONTAINS APPROX 1.3 STANDARD DRINKS.', importer details, pregnancy warning). The barcode runs vertically at the label edge and its digits are not legible."
+}

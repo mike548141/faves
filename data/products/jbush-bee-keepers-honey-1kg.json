@@ -1,0 +1,56 @@
+{
+  "id": "jbush-bee-keepers-honey-1kg",
+  "name": "Honey",
+  "brand": "J Bush Bee Keepers",
+  "manufacturer": {
+    "name": "The Bee Station Ltd",
+    "address": "2201 The Coastal Highway, Upper Moutere, Nelson",
+    "country": "New Zealand"
+  },
+  "pack": {
+    "size": 1000,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 200,
+    "size": 5,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1478,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 79.6,
+      "sugars": 78.1,
+      "sodium": 12
+    },
+    "perServing": {
+      "energyKj": 73.9,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 4.0,
+      "sugars": 3.9
+    }
+  },
+  "ingredients": "100% Naturally liquid, raw honey.",
+  "origin": "Made in New Zealand",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/1/IMG_1F215127-7C5E-4599-8F4E-B4F78F07A726.jpeg"
+    ],
+    "burst": "b005",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "storage"
+  ],
+  "note": "Protein is printed as 'LESS THAN 1g' per serving and per 100 g, and sodium per serving as 'LESS THAN 5mg' - not numbers, so those cells are omitted rather than guessed. The variant name on the front of the tub is cut off by the frame: it reads 'BLUE B…' over a banner reading 'MOLES…'. Net weight is not legible either; 1000 g is derived from the panel's own 200 servings x 5 g, and a partly visible figure near the front label could not be read to confirm it."
+}

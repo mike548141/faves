@@ -1,0 +1,58 @@
+{
+  "id": "groovy-gumdrops-frozen-dessert-2l",
+  "name": "Groovy Gumdrops Bubblegum Flavoured Premium Frozen Dessert",
+  "pack": {
+    "size": 2,
+    "unit": "l",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 20,
+    "size": 54,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 927,
+      "protein": 2.4,
+      "fatTotal": 10.1,
+      "fatSaturated": 10.0,
+      "carbohydrate": 30.2,
+      "sugars": 25.8,
+      "sodium": 29
+    },
+    "perServing": {
+      "energyKj": 502,
+      "protein": 1.3,
+      "fatTotal": 5.5,
+      "fatSaturated": 5.4,
+      "carbohydrate": 16.4,
+      "sugars": 14.0,
+      "sodium": 16
+    }
+  },
+  "ingredients": "INGREDIENTS: Frozen dessert [water, sugar, vegetable fat, milk solids, glucose, vegetable emulsifiers (477, 471), vegetable gums (412, 407 and/or 407a), flavour, colours (102, 133)]; fruit flavoured jellies (gumdrops) (14%) [sugar, glucose, water, thickener (gelatine from beef), acidity regulator (citric acid), flavours, colours (102, 110, 124, 133)]. CONTAINS MILK.",
+  "allergens": {
+    "contains": [
+      "Milk"
+    ]
+  },
+  "category": "frozen",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7586.jpeg"
+    ],
+    "burst": "b058",
+    "captured": "2025-12-06",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "Only the lower part of the tub lid is in frame; the brand name is above the top edge of the photograph and is not visible, so no brand is recorded. A FURTHER ALLERGEN BLOCK runs down the right-hand edge and is cut off by the frame - the visible fragments are 'MA… / ICE… / GL…' and 'MU… / TR… / CO…', consistent with a 'MAY CONTAIN' statement that could not be read. So 'allergens' stays in needs and 'CONTAINS MILK.' is not the whole allergen picture. Serving size is printed as '54g (100ml)', so 20 servings is 2 L by volume; the mass equivalent would be 1080 g. Nutrition basis is per 100 g as printed."
+}

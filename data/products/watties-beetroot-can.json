@@ -1,0 +1,61 @@
+{
+  "id": "watties-beetroot-can",
+  "name": "Beetroot",
+  "brand": "Wattie's",
+  "variant": "Pick of the Crop",
+  "manufacturer": {
+    "name": "Heinz Wattie's Ltd.",
+    "address": "513 King Street North, Hastings 4122, New Zealand",
+    "country": "New Zealand"
+  },
+  "servings": {
+    "perPack": 2.5,
+    "size": 80,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 250,
+      "protein": 1.4,
+      "fatTotal": 0.1,
+      "fatSaturated": 0,
+      "carbohydrate": 11.9,
+      "sugars": 7.9,
+      "dietaryFibre": 2.1,
+      "sodium": 295
+    },
+    "perServing": {
+      "energyKj": 200,
+      "protein": 1.1,
+      "fatTotal": 0.1,
+      "fatSaturated": 0,
+      "carbohydrate": 9.5,
+      "sugars": 6.3,
+      "dietaryFibre": 1.7,
+      "sodium": 235
+    }
+  },
+  "ingredients": "INGREDIENTS: Beetroot (62%), Water, Sugar, Salt, Food Acid (Acetic Acid).",
+  "allergens": {
+    "contains": [],
+    "mayContain": []
+  },
+  "storage": "Store in a cool, dry place. Once opened, store in a non-metallic container and keep refrigerated at 0-4°C. Consume within 3 days.",
+  "origin": "MADE IN NEW ZEALAND FROM LOCAL AND IMPORTED INGREDIENTS",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/1/IMG_2B54FE1E-0DD5-4982-A4A5-38F061532FD7.jpeg"
+    ],
+    "burst": "b022",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "pack"
+  ],
+  "note": "Back-of-can only; the front label and barcode were not photographed, so the net weight and the cut (sliced / baby / whole) are unknown and are not guessed. The nutrition panel is headed 'When drained' and gives 'Servings per package: Approx. 2.5' at an 80 g serving. The 62% beetroot figure was re-read from a native-resolution crop. No allergen declaration is printed on this face; the ingredient list is fully legible and names none, so the allergen arrays are empty rather than unknown."
+}

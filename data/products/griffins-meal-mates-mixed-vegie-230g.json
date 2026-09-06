@@ -1,0 +1,68 @@
+{
+  "id": "griffins-meal-mates-mixed-vegie-230g",
+  "name": "Meal Mates",
+  "brand": "Griffin's",
+  "variant": "Mixed Vegie Crackers",
+  "pack": {
+    "size": 230,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 10,
+    "size": 23,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2030,
+      "protein": 8.9,
+      "fatTotal": 20.5,
+      "fatSaturated": 6.0,
+      "carbohydrate": 65.2,
+      "sugars": 7.9,
+      "sodium": 714
+    },
+    "perServing": {
+      "energyKj": 467,
+      "protein": 2.0,
+      "fatTotal": 4.7,
+      "fatSaturated": 1.4,
+      "carbohydrate": 15.0,
+      "sugars": 1.8,
+      "sodium": 164
+    }
+  },
+  "ingredients": "Ingredients: Wheat Flour, …[cut off] (307b)], Sugar, Vegetable Blend 3 …[cut off] Tomato, Celery], Natural Flavour [ …[cut off] Agents [Baking Soda, 450], Sesam …[cut off] Powder, Garlic Powder. …[cut off]",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Milk"
+    ],
+    "mayContain": [
+      "Egg",
+      "Soy",
+      "Sulphites"
+    ]
+  },
+  "origin": "Made in New Zealand",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7191.jpeg",
+      "raw_food_photos/IMG_7192.jpeg"
+    ],
+    "burst": "b025",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "storage"
+  ],
+  "note": "INCOMPLETE INGREDIENT AND ALLERGEN DATA — do not rely on this record for allergen decisions. The ingredient panel runs off the RIGHT edge of IMG_7192, so every line of the list is truncated mid-line; only the readable left-hand fragments are transcribed. The 'Contains' line reads 'Contains Wheat, Gluten, Milk, S…' — a fourth allergen beginning with S is cut off (the ingredient list separately shows a truncated 'Sesam…', but that is not confirmation and is not recorded as fact). The 'May Contain Egg, Soy, Sulphites' line may also continue past the frame edge. Serving size is printed as '4 Crackers (Approx. 23 g)'. Re-photograph the full back panel before use."
+}

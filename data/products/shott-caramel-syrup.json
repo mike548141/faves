@@ -1,0 +1,56 @@
+{
+  "id": "shott-caramel-syrup",
+  "name": "Caramel Syrup",
+  "brand": "SHOTT",
+  "variant": "Caramel",
+  "manufacturer": {
+    "name": "SHOTT Beverages Limited",
+    "address": "10 Kirkcaldy Street, Petone, Wellington; SHOTT Australia, 146 Gilba Road, Girraween NSW 2145, Australia",
+    "country": "New Zealand"
+  },
+  "servings": {
+    "perPack": 37,
+    "size": 20,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 1350,
+      "protein": 0.1,
+      "fatTotal": 0.1,
+      "fatSaturated": 0.0,
+      "carbohydrate": 79.9,
+      "sugars": 77.9,
+      "sodium": 0
+    },
+    "perServing": {
+      "energyKj": 270,
+      "protein": 0.0,
+      "fatTotal": 0.0,
+      "fatSaturated": 0.0,
+      "carbohydrate": 16.0,
+      "sugars": 15.5,
+      "sodium": 0
+    }
+  },
+  "ingredients": "Cane Sugar, Filtered Water, Natural Flavour, Citric Acid (E330), Preservative (E202).",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/2/IMG_704AEACE-4D1B-4F4C-8DC4-0DD7A5A239E1.jpeg"
+    ],
+    "burst": "b010",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "origin",
+    "pack",
+    "storage"
+  ],
+  "note": "Single back-label photo. Net volume is not printed on the panel shown (37 servings x 20 mL is stated, but that is arithmetic, not a printed net volume) so pack is left unrecorded. The panel also carries an Australian distributor line, cut off at the frame edge; both addresses are recorded in manufacturer.address. No allergen statement, barcode, storage or country-of-origin statement is visible on this face."
+}

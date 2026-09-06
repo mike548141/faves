@@ -205,6 +205,31 @@ def validate(path: Path, problems: list[str]) -> dict | None:
             err(problems, rid, f"{banned} is present — these photographs were taken "
                                "at a private address and this repo is public (rule 1)")
 
+    # An address may appear in exactly ONE place: `manufacturer.address`, which
+    # is a factory printed on the back of a retail packet. Anywhere else, a
+    # street address in this store is a private one — these photographs were
+    # taken in a kitchen, and a Kmart receipt is visible on the bench in at
+    # least one frame.
+    #
+    # This check exists because `.leakscanignore` exempts `data/products/*.json`
+    # from leakscan's `nz-address` rule: a regex cannot tell a Hastings cannery
+    # from someone's house, and 32 legitimate factory addresses were
+    # blocking the store. Exempting the file without replacing the check would
+    # have left the one thing worth catching uncaught, so the check moved here,
+    # where it can use the schema to tell the two apart. Do not delete this
+    # without narrowing that glob.
+    street = re.compile(r"\b\d+[A-Za-z]?\s+[A-Z][A-Za-z'\-]+(\s+[A-Z][A-Za-z'\-]+)*\s+"
+                        r"(Street|St|Road|Rd|Avenue|Ave|Drive|Dr|Lane|Ln|Place|Pl|"
+                        r"Terrace|Way|Crescent|Cres|Quay|Parade|Grove|Close)\b")
+    for key, value in rec.items():
+        if key == "manufacturer":
+            continue
+        for found in street.finditer(json.dumps(value)):
+            err(problems, rid, f"{key} contains what looks like a street address "
+                               f"({found.group(0)!r}). Only manufacturer.address may hold "
+                               "one; these photographs were taken at a private address "
+                               "and this repo is public (rule 1)")
+
     for n in rec.get("needs") or []:
         if n not in NEEDS:
             err(problems, rid, f"needs entry {n!r} not in {sorted(NEEDS)}")
@@ -236,12 +261,36 @@ def main() -> int:
         print(f"error: {p}")
 
     if args.reshoot:
-        wanted = [r for r in records if r.get("needs")]
-        print(f"\n{len(wanted)} of {len(records)} product(s) need another photograph:\n")
-        for r in sorted(wanted, key=lambda x: x["id"]):
-            print(f"  {r['name']}")
-            print(f"      missing: {', '.join(r['needs'])}")
-            print(f"      shot:    {', '.join(r['source'].get('files', []))}")
+        # RANKED, because an unranked list is one nobody walks. Every record
+        # that lacks a barcode would otherwise sit beside one that cannot say
+        # whether it contains peanuts, and the second is the only one worth
+        # getting off the sofa for. The tiers are what a re-shoot BUYS, not
+        # how many fields are blank.
+        tiers = [
+            ("🔴 SAFETY — no allergen statement was readable", {"allergens", "ingredients"}),
+            ("🟠 NUTRITION — no panel was readable", {"nutrition"}),
+            ("🟡 DETAIL — pack size, servings, maker, origin, storage",
+             {"pack", "servings", "manufacturer", "origin", "storage"}),
+            ("⚪ BARCODE only", {"gtin"}),
+        ]
+        placed = set()
+        print(f"\nRe-shoot list — {len([r for r in records if r.get('needs')])} of "
+              f"{len(records)} product(s) have a gap.\n"
+              "Photograph the BACK of the pack, filling the frame with the panel.\n")
+        for title, fields in tiers:
+            rows = [
+                r for r in records
+                if r["id"] not in placed and set(r.get("needs") or []) & fields
+            ]
+            if not rows:
+                continue
+            print(f"{title} — {len(rows)}")
+            for r in sorted(rows, key=lambda x: x["id"]):
+                placed.add(r["id"])
+                label = " ".join(x for x in (r.get("brand"), r["name"]) if x)
+                print(f"  · {label}")
+                print(f"      missing: {', '.join(r['needs'])}")
+            print()
 
     if args.stats:
         have = Counter()

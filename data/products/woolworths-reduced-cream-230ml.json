@@ -1,0 +1,63 @@
+{
+  "id": "woolworths-reduced-cream-230ml",
+  "name": "Reduced Cream",
+  "brand": "Woolworths",
+  "pack": {
+    "size": 230,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 9,
+    "size": 25,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 931,
+      "energyKcal": 223,
+      "protein": 2.5,
+      "fatTotal": 22.0,
+      "fatSaturated": 13.5,
+      "fatTrans": 0.7,
+      "carbohydrate": 4.4,
+      "sugars": 4.4,
+      "sodium": 64
+    },
+    "perServing": {
+      "energyKj": 233,
+      "energyKcal": 56,
+      "fatTotal": 5.5,
+      "fatSaturated": 3.4,
+      "fatTrans": 0.2,
+      "carbohydrate": 1.1,
+      "sugars": 1.1,
+      "sodium": 16
+    }
+  },
+  "ingredients": "Cream (Milk) (58%), S…[cut off by the can's curve] Milk, Milk Solids, Sta…[cut off] (401, Carrageenan).",
+  "allergens": {
+    "contains": [
+      "Milk"
+    ]
+  },
+  "storage": "Store in a cool, dry pla…[cut off by the can's curve]. …opened, empty conte… airtight container, …1-5°C and use withi… Shake well befor…[cut off]",
+  "category": "dairy",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7219.jpeg",
+      "raw_food_photos/IMG_7220.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin"
+  ],
+  "note": "Protein per serving is printed '< 1.0g' and is OMITTED rather than rounded. The ingredient and storage panels are on the curve of the can and the right-hand end of every line disappears round it — transcribed with cut-off markers, NOT completed. The '(58%)' on cream was verified by a tight native-resolution crop. Front of pack: 230 ml, health star rating 0.5, '35% less fat than regular cream'."
+}

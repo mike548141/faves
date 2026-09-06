@@ -1,0 +1,73 @@
+{
+  "id": "graze-skinny-dipped-pretzels-dark-chocolate-120g",
+  "name": "Skinny Dipped Pretzels",
+  "brand": "Graze",
+  "variant": "Dark Chocolate",
+  "identifiers": {
+    "gtin": "9415559052201"
+  },
+  "pack": {
+    "size": 120,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 6,
+    "size": 20,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2050,
+      "protein": 7.8,
+      "fatTotal": 23.5,
+      "fatSaturated": 13.7,
+      "carbohydrate": 59.1,
+      "sugars": 27.5,
+      "dietaryFibre": 4.8,
+      "sodium": 483
+    },
+    "perServing": {
+      "energyKj": 410,
+      "protein": 1.6,
+      "fatTotal": 4.7,
+      "fatSaturated": 2.7,
+      "carbohydrate": 11.8,
+      "sugars": 5.5,
+      "dietaryFibre": 1.0,
+      "sodium": 97
+    }
+  },
+  "ingredients": "Ingredients DARK CHOCOLATE (60%) (COCOA SOLIDS, SUGAR, EMULSIFIER (SOY LECITHIN, 476), NATURAL VANILLA FLAVOUR, MILK), PRETZEL (40%) (WHEAT FLOUR, VEGETABLE OIL, SUGAR, SALT, MINERAL SALTS (500, 503), EMULSIFIER (SOY LECITHIN)). DARK CHOCOLATE CONTAINS 52% COCOA SOLIDS.",
+  "allergens": {
+    "contains": [
+      "Soy",
+      "Milk",
+      "Wheat",
+      "Gluten"
+    ],
+    "mayContain": [
+      "Peanuts",
+      "Tree Nuts",
+      "Sesame"
+    ]
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7578.jpeg",
+      "raw_food_photos/IMG_7579.jpeg"
+    ],
+    "burst": "b057",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "PEANUT CROSS-CONTACT DECLARED. The precautionary statement reads verbatim: 'THIS PRODUCT IS PACKAGED ON EQUIPMENT OR IN A FACILITY WHERE NUT, WHEAT, GLUTEN, MILK, SESAME AND SOY-BASED PRODUCTS ARE PACKAGED. THIS PRODUCT MAY CONTAIN TRACES OF PEANUTS, TREE NUTS AND SESAME.' Manufacturer/origin text runs off the LEFT frame edge of IMG_7579 (only fragments '…WI.NZ', '…ATOR', '…NZ' survive) so none of it is recorded. Pack code P-17291-A printed under the barcode."
+}

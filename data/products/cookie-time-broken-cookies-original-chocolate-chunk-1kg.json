@@ -1,0 +1,78 @@
+{
+  "id": "cookie-time-broken-cookies-original-chocolate-chunk-1kg",
+  "name": "1kg Broken Cookies",
+  "brand": "Cookie Time",
+  "variant": "The Original Chocolate Chunk",
+  "manufacturer": {
+    "name": "Cookie Time Limited",
+    "address": "789 Main South Road, Christchurch",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9415912090161"
+  },
+  "pack": {
+    "size": 1,
+    "unit": "kg",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 20,
+    "size": 50,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1990,
+      "energyKcal": 476,
+      "protein": 5.9,
+      "fatTotal": 22.4,
+      "fatSaturated": 13.9,
+      "carbohydrate": 61.9,
+      "sugars": 38.1,
+      "sodium": 356
+    },
+    "perServing": {
+      "energyKj": 996,
+      "energyKcal": 238,
+      "protein": 2.9,
+      "fatTotal": 11.2,
+      "fatSaturated": 6.9,
+      "carbohydrate": 30.9,
+      "sugars": 19.0,
+      "sodium": 178
+    }
+  },
+  "ingredients": "INGREDIENTS: WHEAT FLOUR, DARK CHOCOLATE 20% (SUGAR, COCOA SOLIDS, EMULSIFIER (SOY LECITHIN), NATURAL FLAVOUR), BUTTER (CREAM (MILK), SALT), BROWN SUGAR, SUGAR, EGGS, RAISING AGENT (500), SALT.",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Soy",
+      "Milk",
+      "Egg"
+    ],
+    "mayContain": [
+      "Peanut",
+      "Sesame",
+      "Tree Nuts"
+    ]
+  },
+  "storage": "STORE IN A COOL, DRY PLACE AWAY FROM LIGHT. ONCE OPENED, KEEP COOKIES IN AN AIRTIGHT CONTAINER TO KEEP THEM FRESH.",
+  "category": "bakery",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7348.jpeg",
+      "raw_food_photos/IMG_7349.jpeg"
+    ],
+    "burst": "b050",
+    "captured": "2025-12-01",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "origin"
+  ],
+  "note": "MAY CONTAIN PEANUT — 'MAY BE PRESENT: PEANUT, SESAME, TREE NUTS.' The pack adds: 'WE TAKE GREAT CARE TO AVOID CROSS-CONTAMINATION HOWEVER OUR BAKERY DOES MAKE OTHER PRODUCTS WITH THESE INGREDIENTS.' The '20%' after DARK CHOCOLATE was re-cropped at native resolution and re-read to be sure of the figure — in this stencil font the per-cent sign can be mistaken for a Z. Sold under the 'BAKERY IMPERFECTIONS - ODDITIES AND MISFITS' sub-label. No 'Made in' statement is in frame, only the maker's Christchurch address."
+}

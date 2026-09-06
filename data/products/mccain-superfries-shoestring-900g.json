@@ -1,0 +1,61 @@
+{
+  "id": "mccain-superfries-shoestring-900g",
+  "name": "SuperFries",
+  "brand": "McCain",
+  "variant": "Shoestring",
+  "pack": {
+    "size": 900,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 9,
+    "size": 100,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 677,
+      "energyKcal": 162,
+      "protein": 3.1,
+      "fatTotal": 5.9,
+      "fatSaturated": 0.5,
+      "carbohydrate": 22.8,
+      "sugars": 0.2,
+      "dietaryFibre": 2.3,
+      "sodium": 34
+    },
+    "perServing": {
+      "energyKj": 677,
+      "energyKcal": 162,
+      "protein": 3.1,
+      "fatTotal": 5.9,
+      "fatSaturated": 0.5,
+      "carbohydrate": 22.8,
+      "sugars": 0.2,
+      "dietaryFibre": 2.3,
+      "sodium": 34
+    }
+  },
+  "category": "frozen",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7308.jpeg",
+      "raw_food_photos/IMG_7309.jpeg"
+    ],
+    "burst": "b045",
+    "captured": "2025-11-28",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "Front (900 g NET, Health Star Rating 4.5, 'No Artificial Colours, Flavours or Preservatives') plus the nutrition panel only — the ingredient list, allergen statement, storage instructions and barcode are all outside both frames, so none are recorded. Serving size equals 100g, so the label's two columns are identical. Trans fat and cholesterol are printed as '< 0.1 g' and '< 3 mg' rather than as numbers and are omitted; cholesterol has no allowed key here in any case. A partly visible NZ-grown-potatoes roundel appears at the right edge of the front photo but is not legible enough to record as origin."
+}

@@ -1,0 +1,70 @@
+{
+  "id": "amber-basmati-rice-5kg",
+  "name": "Basmati Rice",
+  "brand": "Amber",
+  "variant": "Aromatic Rice",
+  "manufacturer": {
+    "name": "MG International Limited",
+    "address": "10 Doncaster St, Mangere, Auckland 2022, New Zealand",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9421034060852"
+  },
+  "pack": {
+    "size": 5,
+    "unit": "kg",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 100,
+    "size": 50,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 358,
+      "protein": 10,
+      "fatTotal": 0.4,
+      "fatSaturated": 0,
+      "carbohydrate": 80,
+      "sugars": 0,
+      "dietaryFibre": 2,
+      "sodium": 2
+    },
+    "perServing": {
+      "energyKj": 179,
+      "protein": 5,
+      "fatTotal": 0.2,
+      "fatSaturated": 0,
+      "carbohydrate": 40,
+      "sugars": 0,
+      "dietaryFibre": 1,
+      "sodium": 1
+    }
+  },
+  "allergens": {
+    "contains": [],
+    "mayContain": []
+  },
+  "storage": "STORAGE ADVICE : STORE IN A COOL AND DRY PLACE.",
+  "origin": "Product of India",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/2/IMG_5736.jpeg",
+      "raw_food_photos/2/IMG_5737.jpeg",
+      "raw_food_photos/2/IMG_5738.jpeg",
+      "raw_food_photos/2/IMG_5740.jpeg"
+    ],
+    "burst": "b001",
+    "captured": "2025-07-04",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "ingredients"
+  ],
+  "note": "No ingredient list or allergen statement is printed on the panel photographed; sodium is printed in mg and transcribed as 2 mg per 100 g. The printed energy figures (179 kJ per 50 g serving, 358 kJ per 100 g) are implausibly low for uncooked rice but are recorded exactly as the label prints them — verified from a native-resolution crop of the panel. Net weight printed as '5kg / 11.03 lbs'. Barcode check digit validates."
+}

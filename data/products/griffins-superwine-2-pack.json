@@ -1,0 +1,67 @@
+{
+  "id": "griffins-superwine-2-pack",
+  "name": "SuperWine",
+  "brand": "Griffin's",
+  "variant": "2 Packs",
+  "servings": {
+    "perPack": 26,
+    "size": 19.5,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2020,
+      "energyKcal": 483,
+      "protein": 5.8,
+      "fatTotal": 17.8,
+      "fatSaturated": 10.4,
+      "carbohydrate": 73.4,
+      "sugars": 24.1,
+      "sodium": 350
+    },
+    "perServing": {
+      "energyKj": 394,
+      "energyKcal": 94,
+      "protein": 1.1,
+      "fatTotal": 3.5,
+      "fatSaturated": 2.0,
+      "carbohydrate": 14.3,
+      "sugars": 4.7,
+      "sodium": 68
+    }
+  },
+  "ingredients": "Ingredients: Wheat Flour, Sugar, Vegetable Fat [Antioxidant (307b)], Invert Syrup, Whey Powder [Milk], Salt, Raising Agent [Baking Soda], Natural Flavours, Colour [160b].",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Wheat",
+      "Gluten"
+    ],
+    "mayContain": [
+      "Egg",
+      "Sesame",
+      "Soy",
+      "Sulphites"
+    ]
+  },
+  "storage": "Store in a cool, dry place",
+  "origin": "Made in New Zealand",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7183.jpeg",
+      "raw_food_photos/IMG_7184.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "pack"
+  ],
+  "note": "'ingredients' is in needs as a moderate-confidence flag, not a gap: the list is legible in structure and word shape at native resolution but is soft-focused white-on-red, so individual codes ((307b), [160b]) warrant a human re-check before anyone relies on them. The allergen lines are crisp and are recorded with full confidence. The nutrition panel is crisp and every per-serving value reconciles exactly with its per-100 g figure at 19.5 g. Front of pack states '2 PACKS, individually sealed for freshness' but no net weight is in frame (26 x 19.5 g suggests ~500 g — arithmetic, so pack is left unrecorded). Descriptor: 'SWEET VANILLA FLAVOURED BISCUITS'. Barcode is visible on the back but cut off at the frame edge ('9 400…')."
+}

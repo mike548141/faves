@@ -1,0 +1,71 @@
+{
+  "id": "griffins-snax-original-250g",
+  "name": "Snax Crackers",
+  "brand": "Griffin's",
+  "variant": "Original",
+  "pack": {
+    "size": 250,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 13,
+    "size": 19,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2120,
+      "energyKcal": 507,
+      "protein": 6.4,
+      "fatTotal": 25.8,
+      "fatSaturated": 7.3,
+      "carbohydrate": 61.4,
+      "sugars": 4.0,
+      "sodium": 485
+    },
+    "perServing": {
+      "energyKj": 411,
+      "energyKcal": 98,
+      "protein": 1.2,
+      "fatTotal": 5.0,
+      "fatSaturated": 1.4,
+      "carbohydrate": 11.9,
+      "sugars": 0.8,
+      "sodium": 94
+    }
+  },
+  "ingredients": "Ingredients: Wheat Flour, Vegetable Fat and/or Oil [Antioxidant (307b)], Barley Malt Extract, Sugar, Raising Agents [501, 450], Salt.",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten"
+    ],
+    "mayContain": [
+      "Egg",
+      "Milk",
+      "Sesame",
+      "Soy",
+      "Sulphites"
+    ]
+  },
+  "storage": "Store in a cool, dry place. Once opened, place in an airtight container.",
+  "origin": "Made in New Zealand",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7193.jpeg",
+      "raw_food_photos/IMG_7194.jpeg"
+    ],
+    "burst": "b025",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer"
+  ],
+  "note": "Front reads 'CRACKERS NET 250 g'; Health Star Rating 1.5. Serving size printed as '5 Crackers (Approx. 19 g)'. Bilingual EN/FR panel — the French list matches the English one. No barcode or manufacturer address in frame."
+}

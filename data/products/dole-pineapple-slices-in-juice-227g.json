@@ -1,0 +1,56 @@
+{
+  "id": "dole-pineapple-slices-in-juice-227g",
+  "name": "Pineapple Slices",
+  "brand": "Dole",
+  "variant": "In Juice",
+  "manufacturer": {
+    "name": "Dole Philippines Inc",
+    "address": "Polomolok, South …[cut off by the can's curve]",
+    "country": "Philippines"
+  },
+  "pack": {
+    "size": 227,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 2,
+    "size": 114,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 221,
+      "energyKcal": 53,
+      "carbohydrate": 12.0,
+      "sugars": 12.0,
+      "dietaryFibre": 1.0
+    },
+    "perServing": {
+      "energyKj": 253,
+      "energyKcal": 60,
+      "carbohydrate": 13.7,
+      "sugars": 13.7,
+      "dietaryFibre": 1.2
+    }
+  },
+  "ingredients": "INGREDIENTS: PINEAP…[cut off by the can's curve], PINEAPPLE JUICE",
+  "category": "pantry",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7213.jpeg",
+      "raw_food_photos/IMG_7214.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "storage"
+  ],
+  "note": "Protein, fat total, saturated fat (all columns) and sodium (all columns) are printed 'Less than 1g' / 'Less than 5mg' and are OMITTED rather than rounded. The ingredient panel and the manufacturer block are on the curve of a small can: the first ingredient disappears round the edge after 'PINEAP', so the list is transcribed with a cut-off marker rather than completed. Also on the panel, cut off: 'DISTRIBUTED BY PAVE…' with Australian (Wallacia NSW) and New Zealand (Parnell, Auckland) addresses. Front of pack: NET WT. 227g."
+}

@@ -1,0 +1,64 @@
+{
+  "id": "cottees-maple-flavoured-syrup",
+  "name": "Maple Flavoured Syrup",
+  "brand": "Cottee's",
+  "manufacturer": {
+    "name": "Heinz Wattie's Ltd",
+    "address": "513 King St North, Hastings 4122",
+    "country": "New Zealand"
+  },
+  "identifiers": {
+    "gtin": "9300657173371"
+  },
+  "pack": {
+    "size": 400,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 13,
+    "size": 30,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1140,
+      "protein": 0,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 67.1,
+      "sugars": 67.1,
+      "sodium": 175
+    },
+    "perServing": {
+      "energyKj": 340,
+      "protein": 0,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 20.1,
+      "sugars": 20.1,
+      "sodium": 55
+    }
+  },
+  "ingredients": "INGREDIENTS: Sugar Syrup, Sugar, Water, Salt, Vegetable Gum (466), Colour (150c), Preservative (202), Natural Maple Flavour [Contains Colour (150d)], Food Acid (330).",
+  "allergens": {
+    "contains": []
+  },
+  "storage": "REFRIGERATE AFTER OPENING.",
+  "origin": "Made in New Zealand from imported and local ingredients",
+  "category": "condiment",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_42359EA8-FF37-4DF4-A401-AFE6AE587007.jpeg",
+      "raw_food_photos/IMG_7569.jpeg",
+      "raw_food_photos/IMG_7570.jpeg",
+      "raw_food_photos/IMG_7571.jpeg"
+    ],
+    "burst": "b013",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "note": "ONE product across TWO bursts, and in fact the same physical bottle photographed twice: burst b013 (2025-11-25) has the back label, and burst b056 (2025-12-05) has the front plus two more back shots carrying the identical date code ('BEST BEFORE 21 APR 26 / GTX 2974 11:43') and the same label code PX17337B/D. Merged into one record rather than duplicated; source.burst names b013, where the back panel was first read. The front supplied '400g NET' and 'with natural flavour', which is why pack is no longer in needs. The label declares NO allergens — there is no 'Contains' statement — so allergens.contains is empty rather than absent. Also printed: 'PACKED FOR: H.J. HEINZ COMPANY AUSTRALIA LTD, 2 SOUTHBANK BLVD, SOUTHBANK, VICTORIA 3006, AUSTRALIA'."
+}

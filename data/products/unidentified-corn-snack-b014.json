@@ -1,0 +1,56 @@
+{
+  "id": "unidentified-corn-snack-b014",
+  "name": "Corn snack — brand and product name not in frame",
+  "servings": {
+    "perPack": 16.7,
+    "size": 30,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1950,
+      "protein": 5.6,
+      "fatTotal": 21.5,
+      "fatSaturated": 1.3,
+      "carbohydrate": 59.9,
+      "sugars": 1.7,
+      "sodium": 471
+    },
+    "perServing": {
+      "energyKj": 585,
+      "protein": 1.7,
+      "fatTotal": 6.5,
+      "fatSaturated": 0.4,
+      "carbohydrate": 18.0,
+      "sugars": 0.5,
+      "sodium": 141
+    }
+  },
+  "ingredients": "[start cut off by frame edge] …Regulator (262), Yeast Extract, Rice Bran Oil, Spice Extract (Colour (160c))). …[cut off]",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Soy"
+    ],
+    "mayContain": []
+  },
+  "origin": "PROUDLY MADE IN NEW ZEALAND FROM LOCAL & IMPORTED INGREDIENTS",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_935530CE-1FAB-4CFC-A2B3-9A04340C7F82.jpeg"
+    ],
+    "burst": "b014",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "pack",
+    "storage"
+  ],
+  "note": "Single back-of-pack photo. NO BRAND OR PRODUCT NAME IS VISIBLE in the frame — the id is a placeholder keyed to the burst, not a product identity; do not merge it with another record without re-photographing the front. Only the TAIL of the ingredient list is in frame (the top of the panel is above the frame edge), so the transcribed fragment is deliberately marked cut off at BOTH ends. The panel also prints a '-gluten: Not Detected' row (per serving and per 100 g), which has no key in this schema. Panel says 'MADE FROM NON GMO CORN'. Servings per package printed as 16.7 at a 30 g serving; no net weight is printed in frame, so pack is not recorded."
+}

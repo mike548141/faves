@@ -1,0 +1,32 @@
+{
+  "id": "sprig-fern-grown-up-alcoholic-lemonade-330ml",
+  "name": "Grown Up Alcoholic Lemonade",
+  "brand": "Sprig + Fern Brewing Co.",
+  "pack": {
+    "size": 330,
+    "unit": "ml",
+    "count": 1
+  },
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_8117.jpeg",
+      "raw_food_photos/IMG_8119.jpeg"
+    ],
+    "burst": "b059",
+    "captured": "2026-01-09",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition",
+    "origin",
+    "servings",
+    "storage"
+  ],
+  "note": "Front of can only, seen in a wide fridge shot — brand, product name and 330 ml volume are legible and nothing else is. No panel was photographed."
+}

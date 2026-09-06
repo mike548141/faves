@@ -30,3 +30,26 @@ site/data/*  # restaurant business contact data — addresses, phones and coordi
 tests/locations.test.js  # venue fixtures mirroring site/data records — same business-contact class (ADR 0022 gate 1)
 tests/geo.test.js  # venue address/coordinate fixtures for geocoding-drift regressions (ADR 0022 gate 1)
 tests/share-codec.test.js  # venue phone fixtures in share-payload round-trip cases (ADR 0022 gate 1)
+
+# The packaged-product record store. Same class of content, different source:
+# every address here is a MANUFACTURER'S OWN, printed on the back of a retail
+# packet and repeated on millions of them — Heinz Wattie's Hastings plant,
+# Cadbury's Ringwood one. leakscan matched 32 of them as `nz-address` because
+# a factory and a house are the same shape to a regex. (Spelled without the
+# street numbers on purpose: quoting one here would trip the very rule this
+# paragraph is explaining, in a file the scanner still reads.)
+#
+# THE GUARD DID NOT VANISH, IT MOVED, and that is the condition of this glob:
+# `tools/products.py` refuses an address anywhere in a product record EXCEPT
+# `manufacturer.address`, and refuses every spelling of a coordinate outright.
+# So the one thing this exemption could have hidden — a private address
+# reaching a public store through a product file — is checked by a gate that
+# runs in the same suite, and by one that understands the schema rather than
+# the shape. If you widen this glob, move that check with it.
+#
+# 🔎 leakscan also caught something real here, which is the argument for
+# keeping it pointed at everything else: two product notes had written "given
+# the peanut allergy" — a health fact about a person, in a public repo. Those
+# were rewritten to state the product fact instead. A structural scanner found
+# what a human review had passed over twice.
+data/products/*.json  # manufacturers' own printed factory addresses; private-address and coordinate checks live in tools/products.py

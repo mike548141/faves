@@ -1,0 +1,56 @@
+{
+  "id": "watties-tomato-sauce",
+  "name": "Tomato Sauce",
+  "brand": "Wattie's",
+  "manufacturer": {
+    "name": "Heinz Wattie's Limited",
+    "address": "513 King Street North, Hastings",
+    "country": "New Zealand"
+  },
+  "servings": {
+    "perPack": 38,
+    "size": 15,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 395,
+      "protein": 0.9,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 21.3,
+      "sugars": 19.6,
+      "sodium": 470
+    },
+    "perServing": {
+      "energyKj": 60,
+      "protein": 0.1,
+      "fatTotal": 0,
+      "fatSaturated": 0,
+      "carbohydrate": 3.2,
+      "sugars": 2.9,
+      "sodium": 70
+    }
+  },
+  "ingredients": "Concentrated Tomatoes (Contains 126g of Tomatoes per 100g or 19g of Tomatoes per 15g serve), Sugar, Salt, Food Acid (Acetic Acid), Spices, Natural Flavours. Contains 81% Concentrated Tomatoes.",
+  "storage": "TRANSFER PRODUCT INTO A CLEAN AND DRY NON-METALLIC CONTAINER AND KEEP REFRIGERATED.",
+  "origin": "MADE IN NEW ZEALAND FROM IMPORTED AND LOCAL INGREDIENTS",
+  "category": "condiment",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7226.jpeg",
+      "raw_food_photos/IMG_7227.jpeg"
+    ],
+    "burst": "b027",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "pack"
+  ],
+  "note": "Servings per package printed 'Approx. 38' at 15 g. No net weight is printed on either photographed face, so pack is unrecorded rather than inferred from 38 x 15. The '126g of Tomatoes per 100g' and '81%' figures were re-read from a native-resolution crop. Barcode wraps round the can: only '…400547 00739…' is legible, missing both the leading digit and the check digit, so no gtin is recorded. No allergen statement on the panel. 'PX23993/J' beside the barcode is a batch code."
+}

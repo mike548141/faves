@@ -1,0 +1,53 @@
+{
+  "id": "bundaberg-ginger-beer-375ml",
+  "name": "Ginger Beer",
+  "brand": "Bundaberg",
+  "manufacturer": {
+    "name": "Bundaberg Brewed Drinks Pty Ltd",
+    "address": "16 Kay McDuff Drive, Bundaberg, Qld Australia 4670",
+    "country": "Australia"
+  },
+  "pack": {
+    "size": 375,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 375,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 182,
+      "carbohydrate": 10.7,
+      "sugars": 10.6,
+      "sodium": 11
+    },
+    "perServing": {
+      "energyKj": 682,
+      "carbohydrate": 40.1,
+      "sugars": 39.8,
+      "sodium": 42
+    }
+  },
+  "ingredients": "Carbonated Water, Cane Sugar, Ginger Root, Natural Flavours, Acid (Citric Acid), Yeast, Preservatives (202, 211), Antioxidant (Ascorbic Acid).",
+  "origin": "MADE IN AUSTRALIA.",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7164.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "storage"
+  ],
+  "note": "Protein, total fat and saturated fat are printed as 'Less than 1g' in both columns - not numbers, so omitted. No allergen statement on the label. The barcode is at the curved edge of the bottle and partly behind the hand holding it, so its digits are not legible."
+}

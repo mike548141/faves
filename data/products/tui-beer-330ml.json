@@ -1,0 +1,31 @@
+{
+  "id": "tui-beer-330ml",
+  "name": "Beer",
+  "brand": "Tui",
+  "pack": {
+    "size": 330,
+    "unit": "ml",
+    "count": 1
+  },
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/3/IMG_7153.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition",
+    "origin",
+    "servings",
+    "storage"
+  ],
+  "note": "Front label only. All that is legible is the brand, '330ML', the strap line 'CLASSIC BEER. BIG REPUTATION.', 'APPROX 1.0 Standard Drinks' and an arc of small text that is largely cut off by the bottle's curve. The ABV figure sits at the right edge of the label and is not legible."
+}

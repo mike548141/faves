@@ -1,0 +1,63 @@
+{
+  "id": "bluebird-originals-ready-salted-150g",
+  "name": "Originals Original Cut Potato Chips",
+  "brand": "Bluebird",
+  "variant": "Ready Salted",
+  "pack": {
+    "size": 150,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 5.6,
+    "size": 27,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2290,
+      "protein": 6.7,
+      "fatTotal": 34.9,
+      "fatSaturated": 2.4,
+      "fatTrans": 0.3,
+      "carbohydrate": 50.7,
+      "sugars": 1.0,
+      "dietaryFibre": 2.9,
+      "sodium": 440,
+      "potassium": 1380
+    },
+    "perServing": {
+      "energyKj": 619,
+      "protein": 1.8,
+      "fatTotal": 9.4,
+      "fatSaturated": 0.6,
+      "fatTrans": 0.1,
+      "carbohydrate": 13.7,
+      "sugars": 0.3,
+      "dietaryFibre": 0.8,
+      "sodium": 119,
+      "potassium": 373
+    }
+  },
+  "ingredients": "INGREDIENTS POTATOES (64%), CANOLA OIL AND/OR SUNFLOWER OIL, SALT, ANTIOXIDANTS (TOCOPHEROLS, ASCORBIC ACID, ROSEMARY EXTRACT, CITRIC ACID).",
+  "origin": "Made in New Zealand from local and imported ingredients",
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7197.jpeg",
+      "raw_food_photos/IMG_7198.jpeg"
+    ],
+    "burst": "b025",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "manufacturer",
+    "storage"
+  ],
+  "note": "Back panel title reads 'BLUEBIRD® ORIGINAL CUT READY SALTED POTATO CHIPS'. The pack declares 'GLUTEN FREE' and the nutrition panel lists gluten as NOT DETECTED, but no 'Contains'/'May contain' statement appears in frame, so allergens is left unrecorded rather than inferred from the gluten-free claim. Polyunsaturated (2.9g/10.9g) and monounsaturated (5.7g/21.0g) fat are on the label but have no allowed key in this schema, so they are not recorded. Servings per package printed as 5.6. A second, partly visible Ready Salted bag sits behind it in IMG_7197 — same variant, treated as the same product."
+}

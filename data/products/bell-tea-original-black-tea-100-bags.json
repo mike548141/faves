@@ -1,0 +1,31 @@
+{
+  "id": "bell-tea-original-black-tea-100-bags",
+  "name": "The Original Black Tea",
+  "brand": "Bell Tea",
+  "pack": {
+    "size": 250,
+    "unit": "g",
+    "count": 100
+  },
+  "origin": "BLENDED IN NZ",
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7563.jpeg"
+    ],
+    "burst": "b054",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition",
+    "servings",
+    "storage"
+  ],
+  "note": "FRONT OF PACK ONLY — one photo, so brand, product name and net weight are all that can be read. Front prints 'THE BELL TEA CO', 'ESTD 1898', 'THE ORIGINAL BLACK TEA', '100 TEA BAGS', '250g', a 'BLENDED IN NZ / SINCE 1898 / FEEL ALIVE FLAVOUR' roundel, a Rainforest Alliance mark, and the strapline \"NORMAN HARPER BELL'S ORIGINAL FULL-BODIED BLEND OF FEEL ALIVE FLAVOUR.\" pack.count is the 100 tea bags; pack.size is the 250 g net. No back or side panel was photographed."
+}

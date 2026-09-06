@@ -1,0 +1,64 @@
+{
+  "id": "sara-lee-apple-crumble-pie",
+  "name": "Apple Crumble Pie",
+  "brand": "Sara Lee",
+  "servings": {
+    "perPack": 10,
+    "size": 80,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1210,
+      "energyKcal": 289,
+      "protein": 2.8,
+      "fatTotal": 11.5,
+      "fatSaturated": 5.8,
+      "carbohydrate": 42.5,
+      "sugars": 24.3,
+      "sodium": 170
+    },
+    "perServing": {
+      "energyKj": 968,
+      "energyKcal": 231,
+      "protein": 2.2,
+      "fatTotal": 9.2,
+      "fatSaturated": 4.6,
+      "carbohydrate": 34.0,
+      "sugars": 19.4,
+      "sodium": 136
+    }
+  },
+  "ingredients": "Apple (42%), Wheat Flour (Thiamine), Sugar, Margarine [Vegetable Oil, Water, Salt, Milk Solids, Emulsifiers (471, 472c), Antioxidants (307, 304), Natural Flavour, Natural Colour (Carotene)], Thickener (1412), Dextrose, Whey Powder (Milk), Salt, Cinnamon, Lemon Juice Concentrate, Raising Agent (Sodium Bicarbonate), Citric Acid, Processing Aid (Wheat).",
+  "allergens": {
+    "contains": [
+      "Wheat",
+      "Gluten",
+      "Milk"
+    ],
+    "mayContain": [
+      "Egg",
+      "Soy",
+      "Peanuts",
+      "Tree Nuts"
+    ]
+  },
+  "storage": "Frozen fresh. Store at or below minus 18ºC. If contents become thawed, use as soon as possible. Do not refreeze.",
+  "category": "frozen",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_D958DA29-F458-4381-A871-954900210306.jpeg"
+    ],
+    "burst": "b016",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "origin",
+    "pack"
+  ],
+  "note": "PEANUT WARNING: the may-contain statement names Peanuts and Tree Nuts. Back panel only — the front of pack was not photographed, so the exact product name is taken from the back panel copy (\"Bake your Crumble Pie\", \"AUSSIE-GROWN APPLES\", first ingredient Apple 42%). Net weight is not printed on the back panel; 10 servings x 80 g is stated but that is arithmetic, so pack is left unrecorded. No barcode or country-of-origin statement in frame."
+}

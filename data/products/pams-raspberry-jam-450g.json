@@ -1,0 +1,58 @@
+{
+  "id": "pams-raspberry-jam-450g",
+  "name": "Raspberry Jam",
+  "brand": "Pams",
+  "pack": {
+    "size": 450,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 45,
+    "size": 10,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1140,
+      "protein": 0.6,
+      "fatTotal": 0.6,
+      "fatSaturated": 0.0,
+      "carbohydrate": 64.2,
+      "sugars": 62.1,
+      "sodium": 8
+    },
+    "perServing": {
+      "energyKj": 114,
+      "protein": 0.1,
+      "fatTotal": 0.1,
+      "fatSaturated": 0.0,
+      "carbohydrate": 6.4,
+      "sugars": 6.2,
+      "sodium": 1
+    }
+  },
+  "ingredients": "INGREDIENTS Sugar, raspberry (45%) (raspberry, raspberry juice from concentrate), gelling agent (440), acidity regulators (330, 333).",
+  "allergens": {
+    "contains": []
+  },
+  "storage": "Store in a cool, dry place. Once opened, keep refrigerated at 0-4°C.",
+  "origin": "Made in Poland.",
+  "category": "condiment",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7574.jpeg",
+      "raw_food_photos/IMG_7575.jpeg"
+    ],
+    "burst": "b056",
+    "captured": "2025-12-05",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer"
+  ],
+  "note": "The 45% figure was re-cropped at native resolution and confirmed against the front-of-pack '45% FRUIT' badge. ⚠️ The per-100 g protein and fat-total values are embossed gold on a red ground and sit at the edge of legibility even at native resolution: both read 0.6 g, but 0.5 g cannot be fully ruled out, and the per-serving column (0.1 g for each) does not disambiguate because 0.5 and 0.6 both round to 0.1 at a 10 g serving. Every other figure is crisp. pack.size 450 g is derived from 'Servings per package: 45' x 'Serving size: 10 g'; the net weight is not in either frame. The label declares no allergens. Front also claims 'NO ADDED COLOURS, FLAVOURS OR PRESERVATIVES'. No distributor address and no barcode in frame."
+}

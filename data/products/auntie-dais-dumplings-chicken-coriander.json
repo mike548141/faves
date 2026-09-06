@@ -1,0 +1,52 @@
+{
+  "id": "auntie-dais-dumplings-chicken-coriander",
+  "name": "Dumplings",
+  "brand": "Auntie Dai's",
+  "variant": "Chicken & Coriander",
+  "servings": {
+    "size": 150,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 881,
+      "protein": 9.1,
+      "fatTotal": 8.5,
+      "fatSaturated": 1.2,
+      "carbohydrate": 23.4,
+      "sugars": 0.5,
+      "sodium": 458
+    },
+    "perServing": {
+      "energyKj": 1322,
+      "protein": 13.6,
+      "fatTotal": 12.7,
+      "fatSaturated": 1.8,
+      "carbohydrate": 35.1,
+      "sugars": 0.7,
+      "sodium": 687
+    }
+  },
+  "category": "frozen",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7304.jpeg",
+      "raw_food_photos/IMG_7305.jpeg"
+    ],
+    "burst": "b044",
+    "captured": "2025-11-28",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "origin",
+    "pack",
+    "storage"
+  ],
+  "note": "NO INGREDIENT OR ALLERGEN INFORMATION COULD BE READ. On the back-panel photo a white paper label is folded down over the ingredient/allergen block; behind it only ghosted, unreadable lines remain. Nothing has been inferred from the product name — treat this record as unsafe for allergen decisions until re-shot with the label lifted. The pack front is bilingual: 'Auntie Dai's DUMPLINGS', 'Chicken & Coriander / 鸡肉香菜饺', 'EST. IN 2005'. The printed serving-size line is under the same label; servings.size 150 g is DERIVED from the panel's own arithmetic (1322 kJ per serving / 881 kJ per 100 g), and servings is still in needs because serves-per-pack is not visible. One legible fragment on the obscured block: '…Proudly Made in New Zealand from Local and Imported…'."
+}

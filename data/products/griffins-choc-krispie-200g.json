@@ -1,0 +1,70 @@
+{
+  "id": "griffins-choc-krispie-200g",
+  "name": "Choc Krispie",
+  "brand": "Griffin's",
+  "pack": {
+    "size": 200,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 7.5,
+    "size": 27,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 2100,
+      "energyKcal": 501,
+      "protein": 5.6,
+      "fatTotal": 24.3,
+      "fatSaturated": 19.0,
+      "carbohydrate": 63.5,
+      "sugars": 37.9,
+      "sodium": 282
+    },
+    "perServing": {
+      "energyKj": 566,
+      "energyKcal": 135,
+      "protein": 1.5,
+      "fatTotal": 6.6,
+      "fatSaturated": 5.1,
+      "carbohydrate": 17.1,
+      "sugars": 10.2,
+      "sodium": 76
+    }
+  },
+  "ingredients": "Ingredients: Wheat Flour, Choc Coating 28% [Sugar, Vegetab…[illegible: specular glare]…, Milk Solids, Cocoa Powder^, Emulsifier (S…[illegible: glare]… Lecithin), Natural Flavour], Sugar, Vegetable Fat [Antioxidant (307b)], Dessicated Coconut …[illegible: percentage obscured by glare]…%, Whey Powder [Milk], Salt, Raising Agent [Baking Soda], Natural Flavours.",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Soy",
+      "Wheat",
+      "Gluten"
+    ],
+    "mayContain": [
+      "Egg",
+      "Sesame",
+      "Sulphites"
+    ]
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7171.jpeg",
+      "raw_food_photos/IMG_7172.jpeg"
+    ],
+    "burst": "b024",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "'ingredients' is in needs because a specular highlight sits across three points in the list — the word after 'Vegetab', the emulsifier name, and the desiccated coconut percentage — and those are recorded as illegible rather than guessed. The 28% choc coating figure IS clearly legible. Allergen lines are fully legible and the panel ends immediately after them (verified by cropping below); unlike the plain Griffin's Krispie in the same burst, this pack carries NO 'made in a bakery handling peanuts and tree nuts' line, which may be a label-generation difference rather than a real difference in the bakery — do not infer peanut-freedom from its absence."
+}

@@ -1,0 +1,71 @@
+{
+  "id": "griffins-mallowpuffs-double-chocolate-200g",
+  "name": "MallowPuffs Double Chocolate",
+  "brand": "Griffin's",
+  "variant": "Double Chocolate",
+  "pack": {
+    "size": 200,
+    "unit": "g",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 10,
+    "size": 20,
+    "unit": "g"
+  },
+  "nutrition": {
+    "basis": "per-100g",
+    "per100": {
+      "energyKj": 1840,
+      "energyKcal": 440,
+      "protein": 4.4,
+      "fatTotal": 17.4,
+      "fatSaturated": 11.4,
+      "carbohydrate": 65.7,
+      "sugars": 49.5,
+      "sodium": 134
+    },
+    "perServing": {
+      "energyKj": 368,
+      "energyKcal": 88,
+      "protein": 0.9,
+      "fatTotal": 3.5,
+      "fatSaturated": 2.3,
+      "carbohydrate": 13.1,
+      "sugars": 9.9,
+      "sodium": 27
+    }
+  },
+  "ingredients": "Ingredients: Sugar, Wheat Flour, Liquid Sugar [Sugar, Water], Milk Solids, Vegetable Fats and Oils [Antioxidant (307b), Emulsifier (Soy Lecithin)], Cocoa Mass^, Cocoa Butter^, Glucose Syrup, Invert Syrup, Cocoa Powder^, Gelatine, Emulsifier [Soy Lecithin], Raising Agents [Baking Soda, 450], Salt, Natural Flavour, Preservative [202], Colour [160b].",
+  "allergens": {
+    "contains": [
+      "Milk",
+      "Soy",
+      "Wheat",
+      "Gluten"
+    ],
+    "mayContain": [
+      "Egg",
+      "Sesame",
+      "Sulphites"
+    ]
+  },
+  "category": "snack",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7167.jpeg",
+      "raw_food_photos/IMG_7168.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "gtin",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "PEANUT CHECK: the English allergen lines read exactly 'Contains Milk, Soy, Wheat, Gluten' and 'May Contain Egg, Sesame, Sulphites' - verified on a native-resolution crop; peanut is NOT named there. A SECOND-LANGUAGE block runs down the right-hand edge of the pack and is cut off by the frame; the fragments that are visible include a line beginning 'Peu…' (French 'Peut contenir' = may contain) and a word ending '…Peanut'. That block could not be read, so 'allergens' stays in needs and this record must not be treated as a complete allergen picture. One word in the ingredient list, 'Water' in 'Liquid Sugar [Sugar, Water]', is crossed by a glare streak; the word length and the surrounding text make it legible but it is not perfectly clean. The label also states '43% Milk Chocolate, 27% Marshmallow and 2% Dark Chocolate' and '^Rainforest Alliance Certified'. Front carries a 'NZ MADE 5 ROLL REFINED CHOCOLATE' roundel, which describes the chocolate and not the pack's country of origin, so origin is left in needs."
+}

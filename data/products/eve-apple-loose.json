@@ -1,0 +1,30 @@
+{
+  "id": "eve-apple-loose",
+  "name": "Eve Apple",
+  "brand": "Luvya Eve",
+  "pack": {
+    "count": 1,
+    "unit": "each"
+  },
+  "origin": "New Zealand",
+  "category": "produce",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/IMG_7231.jpeg"
+    ],
+    "burst": "b028",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "gtin",
+    "ingredients",
+    "manufacturer",
+    "nutrition",
+    "servings",
+    "storage"
+  ],
+  "note": "Loose apple; the only printed label is the fruit sticker, which reads 'Luvya / eve(TM) / NEW ZEALAND / 3607'. 3607 is a 4-digit PLU code, not a GTIN, so it is not recorded as one. Single-ingredient produce carries no ingredient list, allergen statement or nutrition panel — 'nutrition', 'ingredients' and 'allergens' are listed in needs to record that we looked."
+}

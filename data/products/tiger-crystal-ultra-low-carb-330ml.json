@@ -1,0 +1,54 @@
+{
+  "id": "tiger-crystal-ultra-low-carb-330ml",
+  "name": "Beer",
+  "brand": "Tiger",
+  "variant": "Crystal Ultra Low Carb",
+  "identifiers": {
+    "gtin": "9414339619016"
+  },
+  "pack": {
+    "size": 330,
+    "unit": "ml",
+    "count": 1
+  },
+  "servings": {
+    "perPack": 1,
+    "size": 330,
+    "unit": "ml"
+  },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 118,
+      "energyKcal": 28,
+      "carbohydrate": 0.9,
+      "sodium": 2.1
+    },
+    "perServing": {
+      "energyKj": 389,
+      "energyKcal": 93,
+      "protein": 1.7,
+      "carbohydrate": 3.0,
+      "sodium": 6.9
+    }
+  },
+  "category": "drink",
+  "source": {
+    "kind": "own-photo",
+    "files": [
+      "raw_food_photos/3/IMG_7154.jpeg",
+      "raw_food_photos/3/IMG_7155.jpeg"
+    ],
+    "burst": "b023",
+    "captured": "2025-11-25",
+    "read": "2026-09-06"
+  },
+  "needs": [
+    "allergens",
+    "ingredients",
+    "manufacturer",
+    "origin",
+    "storage"
+  ],
+  "note": "Front reads 'Tiger / SINCE 1932 / World Acclaimed / CRYSTAL ULTRA / LOW CARB*'. Back gives 330mL and 4.2% ALC/VOL but no ingredient list on the photographed face. Protein, fat, saturated fat, sugars and dietary fibre per 100 mL, and fat/saturated/sugars/fibre per serving, are printed as 'LESS THAN 1 g' - not numbers, so omitted."
+}
