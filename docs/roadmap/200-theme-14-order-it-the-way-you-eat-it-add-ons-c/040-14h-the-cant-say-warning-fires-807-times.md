@@ -1,7 +1,45 @@
-- [~] **14h — The "we can't say" warning fires 807 times, and Spinach is one of
-      them** `[S][data]`+`[S][ux]` — 🔒 **CLAIMED 2026-09-07 (session faves-24,
-      wt: faves-14h-addon-tags).** Building the owner's 2026-08-22 ruling:
-      (a) tag, then (b) collapse.
+- [x] **14h — The "we can't say" warning fires 807 times, and Spinach is one of
+      them** `[S][data]`+`[S][ux]` — ✅ **DELIVERED 2026-09-07 (session faves-24,
+      ADR 0092, merged `c31ebf3`).** The owner's 2026-08-22 ruling is built:
+      (a) `tools/tag_addon_options.py` — re-runnable, idempotent, reports by
+      default, `--apply` writes — then (b) the collapse. The line a reader now
+      sees on a configured dish is
+      *"Bacon is meat, so this is no longer vegetarian. Spinach, Tomatoes and
+      Bacon aren't tagged gluten free, so that label describes the dish as
+      listed."* — one fact, then everything still unknown said **once**.
+
+      🛑 **THIS ITEM'S OWN HEADLINE WAS WRONG, AND THE CORRECTION IS THE MOST
+      IMPORTANT THING HERE.** The baseline was re-derived against the corpus at
+      the very commit the numbers were taken from (`268c366`, 2026-08-17), not
+      merely against today's. Four of the five figures reproduce **exactly** —
+      155 options, 62 tagged, 93 untagged, 40% coverage. Two do not:
+      - *"concentrated in seven venues"* → it was **eight**.
+      - **807 option × dish combinations → the real figure was 72.** 807 is
+        reproducible only by crossing every untagged option at a venue against
+        every claim-bearing dish at that venue **while ignoring which add-on
+        groups actually attach to which dishes**. Respecting attachment: 72
+        (158 counting one per claim). The headline was about **11× too large**.
+      - The worked example — *Spinach and Tomatoes stripping the `v` claim off
+        Sprig + Fern's Thick Cut Fries* — **was never possible.** Verified
+        independently from the primary source at that commit: Thick Cut Fries
+        (`tags: gf, v, contains-egg`) declares `addOns: ["gravy"]`, and the
+        `gravy` group's sole option is `Gravy`, already tagged `v`. Spinach and
+        Tomatoes live in `brunch-sides`, which that dish never offered.
+      🔑 **The problem was real; only its size was not.** The ruling stands —
+      but it was taken partly on the strength of "807", so the owner is owed the
+      correction. The shape is a familiar one here: a number quoted forward
+      without re-derivation acquires an authority it never earned.
+
+      🚩 **AND THE RULING'S ORDER TURNS OUT TO BE INVERTED IN IMPORTANCE.** The
+      item told us to *"tag the 93 untagged options"*. Only **17 of 97** could
+      honestly be tagged — the other 80 would require asserting an **absence**,
+      which ADR 0025 forbids absolutely. Coverage moved 39% → 50%, absence-line
+      firings 183 → 134, fact-lines 10 → 59. So **(b) the collapse is the
+      load-bearing half, not the polish** that "then collapse whatever remains"
+      implies. Said plainly in ADR 0092 rather than left for the next reader.
+
+      📋 **Original filing follows** — its numbers are kept verbatim as the
+      record of what was believed, not as figures to reuse.
       **owner-raised 2026-08-17**, looking at
       *"We can't say whether Bacon is vegetarian, so we can't say this still is.
       We can't say whether Bacon is gluten free, so we can't say this still is."*

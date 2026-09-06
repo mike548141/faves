@@ -122,14 +122,14 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [~] [14b — The content sweep](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/010-14b-the-content-sweep.md)
 - [ ] [14f — Combos: several dishes ordered as one](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/020-14f-combos-several-dishes-ordered-as-one.md)
 - [ ] [14g — Extras you cannot configure until the dish is ordered](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/030-14g-extras-you-cannot-configure-until-the-dish.md)
-- [~] [14h — The "we can't say" warning fires 807 times, and Spinach is one…](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/040-14h-the-cant-say-warning-fires-807-times.md)
+- ✅ [14h — The "we can't say" warning fires 807 times, and Spinach is one…](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/040-14h-the-cant-say-warning-fires-807-times.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
 
 *[Narrative](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/README.md)*
 
 - [ ] [27a — Rank a facet match above a text match](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/010-27a-rank-a-facet-match-above-a-text-match.md)
-- [~] [Settings promises to hide places and nothing hides](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/020-settings-says-hide-when-nothing-hides.md)
+- ✅ [Settings promises to hide places and nothing hides](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/020-settings-says-hide-when-nothing-hides.md)
 - ✅ [Ranking and "Open now" ignore lifecycle closure](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/030-ranking-and-open-now-ignore-a-closed-venue.md)
 - [~] [🚩 The branch picker is a FIFTH surface that disagrees about a closed](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/040-the-branch-picker-is-a-fifth-surface-that-disagrees.md)
 - [ ] [A shut seven-branch chain now says "Permanently closed" eight times](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/050-a-shut-chain-says-permanently-closed-eight-times.md)
@@ -239,6 +239,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [🚩 until() timeouts still exit 2, so a deleted element a check WAITS](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/160-until-timeouts-still-exit-2-as-a-transport-error.md)
 - [ ] [A tolerant OR-list selector can pass with every named target gone](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/170-a-tolerant-selector-can-pass-with-every-named-target-gone.md)
 - [ ] 🔎 [A direct push to main can never satisfy a required status check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/180-a-direct-push-to-main-can-never-satisfy-a-required-check.md)
+- [ ] [🚩 Two of the harness guarantees CLAUDE.md states are not true — a](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/190-two-holes-in-the-check-harness-guarantees.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 

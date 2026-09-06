@@ -1,6 +1,28 @@
-- [~] ⚑ **Settings promises to *hide* places and nothing hides** `[XS]` —
-      🔒 **CLAIMED 2026-09-07 (session faves-24, wt: faves-distance-filter).**
-      Building the owner's 2026-08-22 ruling: the control filters.
+- [x] ⚑ **Settings promises to *hide* places and nothing hides** `[XS]` —
+      ✅ **DELIVERED 2026-09-07 (session faves-24, ADR 0091, merged `d300fb9`).**
+      The owner's 2026-08-22 ruling is built: `splitByDistanceLimit` in
+      `ranking.js` removes a venue past `farKm` **before** the ranker runs, and
+      `rankVenues` is untouched — the cut is added, the sort survives inside it.
+      Both questions the ruling left as implementation are settled in the ADR:
+      the **count is stated and named** (`#result-count` already read
+      *"38 of 57 places"*; a second line names the limit, because the count alone
+      says the list is short and not *what* shortened it), and the **empty state**
+      carries its own reason plus a widen button whose figure rounds **up** to a
+      real dial stop. The **direct link opens whole** with one quiet line, per his
+      second ruling the same day. `tools/distance_check.mjs` — 19 assertions.
+      🔎 **A premise the work corrected:** *on today's data the distance limit
+      cannot empty the home screen on its own.* `cook-at-home` and
+      `cosmic-vape-and-coffee` carry no coordinates, and a venue we cannot place
+      is never cut — so one always survives. The empty state is reachable through
+      a **combination** (a cuisine facet plus a tight limit), and becomes
+      reachable on distance alone the day every record has coordinates. Recorded
+      so a future session measuring *"can this even happen?"* does not delete it
+      as dead code.
+      🚩 **A dismissible ✕ was rejected, deliberately:** the chips it would
+      resemble clear a *view filter* and are gone on reload; this is a *stored
+      setting*, so a ✕ would either lie or silently rewrite a preference set
+      elsewhere. The line widens the setting instead.
+      📋 **Original filing follows.**
       found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`). The copy reads *"Hide places further than…"* and *"will
       start hiding places"*. **Nothing is hidden: the ranking sinks them.** A
       reader who sets a distance and still sees a far-away venue concludes the
