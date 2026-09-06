@@ -245,7 +245,8 @@ python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
                               # renamed without breaking every link to it
-python3 tools/test_validate.py # …and that gate still catches things (113 mutations)
+python3 tools/test_validate.py # …and that gate still catches things (131 mutations,
+                              # re-counted 2026-09-06; it said 113 and has grown since)
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
@@ -410,7 +411,11 @@ does not BLOCK.** `protect-main` requires **six** status checks as of
 added to the four (owner-authorised) once the boot job existed to be required.
 **But `bypass_actors` still carries `RepositoryRole 5 → always`, unchanged**, so
 a push from the owner's machine bypasses all six: measured 2026-08-17, **the
-last 100 ruleset evaluations on `main` were 100 bypasses.** On this repo's
+last 100 ruleset evaluations on `main` were 100 bypasses.** ⚠️ **That number
+cannot be reproduced as at 2026-09-06** — the rule-suite endpoint now retains
+**15** evaluations, of which **14 bypassed and 1 passed**. The conclusion
+survives; the figure does not, and a figure nobody can reproduce is how a true
+paragraph starts being disbelieved. On this repo's
 normal path a direct push to `main` **is** the Cloudflare Pages deploy, so the
 sequence is still **push → deploy → CI goes red afterwards**.
 🔑 **So the resting state is REQUIRED-BUT-BYPASSABLE, which is better than
@@ -419,6 +424,17 @@ moment the bypass is narrowed — a decision the owner holds separately and has
 not taken. Until then, what the automation buys is that these checks *run*
 without anyone remembering to type them. That is worth having, and it is a much
 weaker claim than "the push will fail".
+🔑 **And the WHY, measured 2026-09-06 from the API's own detail field rather
+than inferred: a direct push can never satisfy a required check.** Opening any
+bypassed evaluation shows `required_status_checks | fail | 6 of 6 required
+status checks are expected` — at push time nothing has run them yet, because a
+workflow starts *after* the ref moves. The 14 bypasses are the only outcome the
+mechanism allows, not 14 acts of carelessness. The single `pass` is the **merge
+of PR #7**, whose head already carried green checks. So narrowing
+`bypass_actors` would not "switch enforcement on" over the current workflow —
+it would make **every direct push to `main` fail**, moving the repo to
+PR-only. That is a bigger decision than this paragraph used to imply, and it is
+the owner's: see `docs/roadmap/340-theme-20-places-from-anywhere-owner-raised-202/180-a-direct-push-to-main-can-never-satisfy-a-required-check.md`.
 🚩 **A transport timeout in `tools/lib/browser.mjs` is NOT specific to
 `cook_check`.** Measured 2026-08-17 on a five-session laptop: `boot_check` 2 of
 4 runs failed and `recipe_check` 4 of 8 aborted, every failure on the same
