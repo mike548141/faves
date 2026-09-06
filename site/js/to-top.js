@@ -1,41 +1,96 @@
-// A floating "back to top" control for long lists. It appears only after you've
-// scrolled down a bit and scrolls back up (instant under prefers-reduced-motion).
-// Shared by the menu screen and the home restaurant list. Body-level and guarded
-// against a double-append so either caller can invoke it safely.
+// A floating "back to top" control for long lists. It appears once you've
+// scrolled down a bit — on the way DOWN as well as on the way up — and scrolls
+// back up (instant under prefers-reduced-motion). Shared by the menu screen and
+// the home restaurant list. Body-level and guarded against a double-append so
+// either caller can invoke it safely.
 //
-// WHY IT TUCKS AWAY WHEN YOU SCROLL DOWN (Theme 29, owner-raised from his own
-// phone: the ↑ sat over the "French fries" row and hid the right-hand end of
-// its price). A fixed control over a scrolling list will always overlap
-// something, so "move it" is not a fix — there is nowhere at 390 px that is not
-// over the list. Measured in headless Chrome at 390 × 844, root 16 px, over a
-// real menu (thai-tara-express, 21 667 px of document, 547 scroll positions):
-// the button covered a `.dish-price` at 96 of them — 17.6 % of everywhere you
-// can stop — and the worst case covered a price 100 %, leaving 0 px of "$8"
-// readable. On the home list the same button covered a venue's ♥ at 64 of 169
-// positions, worst case 88.8 %, leaving 5.4 px of a 48 px control.
+// WHY IT DODGES INSTEAD OF DISAPPEARING (Theme 29, both halves owner-raised
+// from his own phone).
 //
-// The other half of the roadmap's framing — "give the list enough end padding" —
-// was already true and is not the bug: at the very bottom of the document the
-// button overlapped nothing in any of the eight width × text-size combinations
-// measured, because `main`'s padding-bottom already reserves its band. The
-// damage is all mid-scroll, which only the second option reaches: let the
-// control get out of the way while the list is moving.
+// The first report was that the ↑ sat over the "French fries" row and hid the
+// right-hand end of its price. The answer then was to tuck the control away
+// while the reader was scrolling DOWN and summon it on a flick UP. The second
+// report, 2026-09-07, is that this made the control unreachable on the way
+// down: *"the arrow should appear the moment I start to scroll down the page."*
+// The straight revert — show it on the way down and accept the occlusion — was
+// put to the owner with the measurements below and DECLINED. Both asks stand:
+// offered while scrolling down, AND never on top of a price or a ♥.
 //
-// So: scrolling DOWN tucks it off the bottom edge; scrolling UP brings it back.
-// Scrolling up is the gesture that means "take me back", so the control arrives
-// exactly when it is wanted and is absent for the whole of a downward read —
-// including when you stop, because a stop after a downward scroll leaves it
-// tucked. It starts tucked, so a deep link that lands past the threshold does
-// not open with a button over a price.
+// The sentence that makes this hard, and it is still true: a fixed control over
+// a scrolling list will always overlap something, so "move it 20 px" is not a
+// fix — at 390 px the content column is `100% - 2 * --space-3`, so the gutter
+// either side is 16 px and a 44 px-minimum target cannot live in it. Measured
+// 2026-09-07 in headless Chrome by `tools/to_top_check.mjs` with the dodge
+// below switched off — i.e. exactly the declined "just show it on the way
+// down" — sweeping the whole document in 37 px steps:
+//
+//   menu  390 px / 16 px text   151 of 554 positions occluded, worst 100 % of a
+//                               `.dish-price` — 0 px of "$8" legible
+//   menu  390 px / 24 px text   184 of 844, worst 100 %
+//   home  390 px / 16 px text   134 of 200, worst 88.8 % of a ♥
+//   home  390 px / 24 px text   174 of 389, worst 77.9 %
+//   home 1200 px / 16 px text    60 of  97, worst 86.2 %
+//   home 1200 px / 24 px text    70 of 157, worst 94.6 %
+//
+// (The menu at 1200 px is the one layout with nothing to solve: the column
+// stops at 756 px and the button sits at 1004 px, clear of it.) These are not
+// the same numbers as the 2026-08 report's 96 of 547 — that measured a document
+// 21 667 px tall where this one is 21 330 px, so the corpus itself has moved;
+// no attempt has been made to reconcile the two.
+//
+// What the same sweep also showed is the way out: at EVERY one of those
+// positions there was a clear resting place within a short move UP the same
+// column, with a median of 0 (i.e. usually the corner is already free). There
+// is nowhere at 390 px that is not over the list; there is always somewhere
+// that is not over anything of the READER'S. Sweeping the same eight
+// combinations again with the dodge in place: occlusion 0 of 3 452 positions.
+// It has to step aside at 151 of 537 positions on the menu at 390 px (by at
+// most 82 px) and 132 of 183 on the home list (by at most 109 px); the largest
+// step anywhere was 172 px, on the home list at 24 px root text.
+//
+// ⚠️ WHAT THIS DOES NOT PROTECT, AND THE MEASURED COST OF PROTECTING IT. The
+// list above is the ruling's list — a price, a ♥, the names. It is NOT every
+// tappable thing under the button, and the button is now on screen for the
+// whole of a downward read where it used to be tucked, so it can come to rest
+// on a dish's ＋ / − stepper and own that tap — the same harm class as the
+// order pill eating a dietary chip's tap. Adding `.stepper-add, .stepper-btn,
+// .dish-photo-btn, .dish-report` to the list was measured 2026-09-07 and it
+// WORKS (occlusion still 0, still inside MAX_DODGE), at this price on the menu
+// at 390 px: the control is displaced at 326 of 537 positions instead of 151,
+// and travels up to 168 px instead of 82. The home list is unaffected (its
+// cards carry no stepper). Doubling the movement on the screen the owner
+// raised this on is his call, not a side effect of this fix, so it is recorded
+// here rather than taken.
+// The whole-card link on the home list is deliberately NOT protectable: it
+// spans the card, so counting it would leave nowhere clear at all — and a
+// mis-tap on it costs a reader nothing they cannot undo with Back.
+//
+// So the control stays offered the whole way down and steps out of the way of
+// whatever is actually beneath it: each frame it reads the boxes of the things
+// this app exists to make legible — a dish price, a dish name, a venue name, a
+// ♥ — and if any of them is under the button it slides up the smallest distance
+// that clears the topmost one, with CLEARANCE px of air. The corner is the
+// preferred home and it returns there the moment the corner is free.
 //
 // Rejected: re-tucking after an idle timeout. It would also clear the page at
 // rest, but it takes the control away *between* the reader deciding to tap it
-// and reaching it — the one moment it must not move.
+// and reaching it — the one moment it must not move. The dodge is not that
+// mistake: it only re-evaluates while the page is scrolling, so a control the
+// reader is reaching for on a still page never moves.
+// Rejected: fading it over the list. A translucent circle still owns the tap
+// and still makes the number under it unreadable — the two harms measured.
+// Rejected: reserving a right-hand rail so the column never reaches the button.
+// It works and it never moves, but it costs 56 px of a 358 px reading column on
+// every phone screen, always, for a control that only appears past 600 px of
+// scroll. That is a change to the app's reading width and is the owner's to
+// make, not a side effect of this fix.
 //
 // The tuck is opacity + transform, never `visibility`/`pointer-events`: the
 // button stays focusable and stays in the accessibility tree while tucked, and
 // `.to-top.is-tucked:focus-visible` in app.css brings it straight back on Tab.
-// It is also never tucked while it holds focus.
+// It is also never tucked while it holds focus. Tucking is now only the safety
+// valve for a page so dense that no clear resting place exists within
+// MAX_DODGE — never observed in the corpus, and the check would report it.
 
 import { el } from "./dom.js";
 
@@ -55,24 +110,82 @@ export function initBackToTop() {
   document.body.append(btn);
 
   const SHOW_AT = 600; // px of scroll before the control is offered at all
-  // Ignore sub-pixel drift and iOS rubber-banding, which would otherwise flip
-  // the direction (and so the tuck) on a stationary page.
-  const JITTER = 6;
+  // The things the control may never sit on: the two prices/names a menu row is
+  // read for, the venue name on a card, and the ♥ that saves it. Kept in step
+  // with the selector list `tools/to_top_check.mjs` measures against — if one
+  // list grows and the other does not, the check stops covering the new thing.
+  const PROTECTED = ".dish-price, .dish-name, .heart, .card-name";
+  const CLEARANCE = 6; // px of air left between the button and what it dodged
+  // Headroom over the largest dodge the sweep has ever needed: 172 px, on the
+  // home list at 390 px with 24 px root text (the menu at 390 px never needed
+  // more than 94). Past this the control tucks rather than climb absurdly far
+  // up the screen — and `tools/to_top_check.mjs` FAILS if that valve is ever
+  // reached, so this staying unused is observed on every run, not assumed.
+  const MAX_DODGE = 220;
 
-  let lastY = window.scrollY;
-  let goingDown = true; // start tucked — see the header note
+  let dodge = 0; // px the control is currently displaced UP from its corner
+
+  // The dodge rides a custom property rather than the `transform` shorthand so
+  // that `:active`'s press-scale and `.is-tucked`'s slide can compose with it
+  // in app.css instead of cancelling it.
+  const setDodge = (d) => {
+    if (d === dodge) return;
+    dodge = d;
+    btn.style.setProperty("--to-top-dodge", `${-d}px`);
+  };
 
   const apply = () => {
     const y = window.scrollY;
-    const dy = y - lastY;
-    if (Math.abs(dy) >= JITTER) {
-      goingDown = dy > 0;
-      lastY = y;
-    }
     btn.hidden = y < SHOW_AT;
+    if (btn.hidden) {
+      setDodge(0);
+      btn.classList.remove("is-tucked");
+      return;
+    }
+
+    // One layout read per frame, all of it before the single write below —
+    // reads and writes are never interleaved, so this costs one flush, not one
+    // per element. `getBoundingClientRect()` on the button already carries the
+    // current dodge, so add it back to recover the corner position.
+    const r = btn.getBoundingClientRect();
+    const homeTop = r.top + dodge;
+    const homeBottom = r.bottom + dodge;
+    const lo = homeBottom - MAX_DODGE - r.height;
+    const boxes = [];
+    for (const node of document.querySelectorAll(PROTECTED)) {
+      const b = node.getBoundingClientRect();
+      if (b.width < 1 || b.height < 1) continue;
+      if (b.bottom < lo || b.top > homeBottom) continue; // outside the travel
+      if (b.right <= r.left || b.left >= r.right) continue; // not in this column
+      boxes.push(b);
+    }
+
+    // Climb: clear the topmost box currently under the control, then look
+    // again — moving above one box can put it under the one before it.
+    let d = 0;
+    let clear = true;
+    for (let i = 0; i < 12; i++) {
+      const top = homeTop - d;
+      const bottom = homeBottom - d;
+      let hit = null;
+      for (const b of boxes) {
+        if (b.bottom > top && b.top < bottom && (!hit || b.top < hit.top)) hit = b;
+      }
+      if (!hit) break;
+      const next = homeBottom - hit.top + CLEARANCE;
+      // No progress means the geometry is degenerate (a box taller than the
+      // travel); stop rather than spin.
+      if (next <= d || next > MAX_DODGE) {
+        clear = false;
+        break;
+      }
+      d = next;
+    }
+
+    setDodge(clear ? d : 0);
     // A keyboard reader who has tabbed to the button keeps it, whichever way
     // the page then moves.
-    if (document.activeElement !== btn) btn.classList.toggle("is-tucked", goingDown);
+    if (document.activeElement !== btn) btn.classList.toggle("is-tucked", !clear);
   };
 
   // rAF-throttled (like the picker FAB) so a fast scroll coalesces to one
@@ -87,10 +200,12 @@ export function initBackToTop() {
     });
   };
   addEventListener("scroll", onScroll, { passive: true });
+  // A resize (or the browser's text size changing) moves every box the dodge is
+  // computed from, and neither fires a scroll event.
+  addEventListener("resize", onScroll, { passive: true });
   // Tab moving focus onto a tucked button has to un-tuck it for good, not just
   // for as long as :focus-visible happens to match.
   btn.addEventListener("focus", () => btn.classList.remove("is-tucked"));
-  btn.classList.add("is-tucked");
   apply(); // initial state, no need to wait for a frame
 
   btn.addEventListener("click", () => {
