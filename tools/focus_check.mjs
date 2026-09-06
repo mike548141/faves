@@ -91,18 +91,17 @@ const PROBE = `(() => {
       && r.width > 0 && r.height > 0 && el.getAttribute("aria-hidden") !== "true";
   };
   const line = document.querySelector(".menu-count");
-  const chips = [...document.querySelectorAll(".diet-chip")].map((c) => ({
-    key: c.dataset.key,
-    label: (c.textContent || "").trim(),
-    pressed: c.getAttribute("aria-pressed") === "true",
-  }));
+  const shown = dishes.filter((d) => !d.hidden);
   return {
     total: dishes.length,
-    shown: dishes.filter((d) => !d.hidden).length,
-    dimmed: dishes.filter((d) => d.classList.contains("dimmed")).length,
+    shown: shown.length,
+    names: shown.slice(0, 6).map((d) => (d.querySelector(".dish-name")?.textContent || "").trim()),
     sectionsShown: [...document.querySelectorAll(".menu-section")].filter((s) => !s.hidden).length,
     navShown: [...document.querySelectorAll(".section-link")].filter((a) => !a.hidden).length,
-    chips,
+    // Both must stay at zero: the chip row and the per-dish channel price were
+    // removed by the owner on 2026-09-06 and are not to reappear.
+    chipEls: document.querySelectorAll(".diet-chip, .diet-chips").length,
+    channelEls: document.querySelectorAll(".dish-channels").length,
     count: line ? {
       present: true,
       hidden: line.hidden,
@@ -136,6 +135,16 @@ const firstShownName = `(() => {
   const d = [...document.querySelectorAll("li.dish")].find((x) => !x.hidden);
   return d ? (d.querySelector(".dish-name")?.textContent || "").trim() : null;
 })()`;
+
+/** Type into the menu search the way a person does, and let the view settle. */
+async function typeQuery(driver, q) {
+  await driver.evalPage(
+    `(() => { const s = ${need(".menu-search")}; s.focus(); s.value = ${JSON.stringify(q)};
+      s.dispatchEvent(new Event("input", { bubbles: true })); })()`
+  );
+  await sleep(140);
+  await driver.settle();
+}
 
 async function openVenue(driver, cdp, sessionId, port, id) {
   await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/restaurant.html?id=${id}` }, sessionId);
@@ -186,8 +195,11 @@ async function run(opts) {
     );
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
 
-    // ─── Part A — the dietary filter now removes rows ──────────────────────
-    await openVenue(driver, cdp, sessionId, port, FILTER_VENUE);
+    // ─── Search IS the filter ──────────────────────────────────────────────
+    //
+    // Owner-ruled 2026-09-06: "search will filter the dishes e.g. if i search
+    // vegan then it should hide all the non vegan dishes". No chips, no modes.
+    await openVenue(driver, cdp, sessionId, port, CONFIG_VENUE);
 
     const before = await driver.evalPage(PROBE);
     report.check(
@@ -196,342 +208,176 @@ async function run(opts) {
       `${before.shown}/${before.total} shown, count line hidden=${before.count.hidden}`
     );
     report.check(
-      "unfiltered: no ♥ Favourites chip, because nothing here is hearted yet",
-      !before.chips.some((c) => c.key === "fav"),
-      `chips: ${before.chips.map((c) => c.label).join(" · ") || "none"}`
+      "there is NO chip row — the owner removed it, and it must not come back",
+      before.chipEls === 0,
+      `${before.chipEls} .diet-chip/.diet-chips element(s) in the DOM`
+    );
+    report.check(
+      "no dish renders a second channel price",
+      before.channelEls === 0,
+      `${before.channelEls} .dish-channels element(s)`
     );
 
-    // The safety baseline: what a real dish's tag chips look like with no
-    // filter on. Captured before anything is pressed, compared after.
-    //
-    // ⚠️ THE DISH IS CHOSEN FOR HAVING CHIPS, and that is not fussiness. The
-    // first version of this took the first vegetarian dish it found, which at
-    // this venue renders NO tag chips at all — so the assertion compared [] to
-    // [] and passed identically whether the feature worked or was deleted. A
-    // guard whose output is the same either way is decorative. If no vegetarian
-    // dish here carries a visible chip, this THROWS rather than quietly
-    // asserting nothing.
+    // The safety baseline: a real dish's tag chips with nothing typed.
     const vegDishName = await driver.evalPage(`(() => {
       const d = [...document.querySelectorAll("li.dish")].find(
-        (x) => (x.dataset.baseTags || "").split(" ").includes("v")
+        (x) => (x.dataset.terms || "").includes("vegetarian")
           && x.querySelectorAll(".tag").length > 0
       );
       return d ? (d.querySelector(".dish-name")?.textContent || "").trim() : null;
     })()`);
     if (!vegDishName) {
       throw new Error(
-        `${FILTER_VENUE}: no vegetarian dish renders a tag chip, so the safety ` +
-          `assertion would compare nothing to nothing. Point this check at a ` +
-          `venue whose vegetarian dishes carry allergen or diet tags.`
+        `${CONFIG_VENUE}: no vegetarian dish renders a tag chip, so the safety ` +
+          `assertion would compare nothing to nothing.`
       );
     }
     const tagsBefore = await driver.evalPage(tagsOn(vegDishName));
 
-    await driver.click(".diet-chip", "Vegetarian");
-    await driver.settle();
-    const filtered = await driver.evalPage(PROBE);
-
+    await typeQuery(driver, "vegan");
+    const vegan = await driver.evalPage(PROBE);
     report.check(
-      "Vegetarian: the list is narrowed to the dishes that qualify",
-      filtered.shown === 4 && filtered.total === 70,
-      `${filtered.shown} of ${filtered.total} shown`
+      'typing "vegan" hides the non-vegan dishes',
+      vegan.shown > 0 && vegan.shown < before.total,
+      `${vegan.shown} of ${vegan.total} — ${vegan.names.join(", ")}`
     );
     report.check(
-      "Vegetarian: the count line says so, in words, and is really on screen",
-      filtered.count.visible &&
-        filtered.count.text === `Showing ${filtered.shown} of ${filtered.total} dishes` &&
-        filtered.count.hasShowAll,
-      JSON.stringify(filtered.count)
-    );
-    report.check(
-      "Vegetarian: the count line is announced, not just drawn",
-      filtered.count.role === "status",
-      `role=${filtered.count.role}`
-    );
-    report.check(
-      "Vegetarian: an emptied section and its jump-nav chip both go",
-      filtered.sectionsShown === 3 && filtered.navShown === 3,
-      `${filtered.sectionsShown}/7 sections, ${filtered.navShown}/7 nav chips`
+      "…and says so, in words, in the accessibility tree",
+      vegan.count.visible && vegan.count.role === "status" &&
+        vegan.count.text === `Showing ${vegan.shown} of ${vegan.total} dishes`,
+      JSON.stringify(vegan.count)
     );
 
-    // 🛑 THE SAFETY ASSERTION.
+    await typeQuery(driver, "gluten free");
+    const gf = await driver.evalPage(PROBE);
+    report.check(
+      'a two-word diet — "gluten free" — filters too',
+      gf.shown > 0 && gf.shown < before.total && gf.shown !== vegan.shown,
+      `${gf.shown} of ${gf.total}`
+    );
+
+    // 🛑 THE SAFETY ASSERTION. Filtering must not touch what a surviving row
+    // says about allergens — the owner's own line: "if one of those dishes that
+    // still show when filtered has an allergen then that allergen should still
+    // show against the dish the same as it does now without the filter."
+    await typeQuery(driver, "vegetarian");
     const tagsAfter = await driver.evalPage(tagsOn(vegDishName));
     report.check(
-      `Vegetarian: "${vegDishName}" keeps all ${tagsBefore.chips.length} tag chip(s) it had, unchanged`,
-      !tagsAfter.missing &&
-        tagsAfter.hidden === false &&
+      `"${vegDishName}" keeps all ${tagsBefore.chips.length} tag chip(s) it had, unchanged`,
+      !tagsAfter.missing && tagsAfter.hidden === false &&
         tagsBefore.chips.length > 0 &&
         JSON.stringify(tagsAfter.chips) === JSON.stringify(tagsBefore.chips),
       `before ${JSON.stringify(tagsBefore.chips.map((c) => c.text))} | ` +
         `after ${JSON.stringify(tagsAfter.chips.map((c) => c.text))}`
     );
 
-    // Filters and search compose rather than replacing one another.
-    await driver.evalPage(
-      `(() => { const s = ${need(".menu-search")}; s.value = "satay";
-        s.dispatchEvent(new Event("input", { bubbles: true })); })()`
-    );
-    await driver.settle();
-    const both = await driver.evalPage(PROBE);
-    report.check(
-      "Vegetarian + a typed query narrow together, they do not replace each other",
-      both.shown > 0 && both.shown < filtered.shown,
-      `${both.shown} shown with "satay" + Vegetarian (was ${filtered.shown} with the chip alone)`
-    );
-
     await driver.click(".menu-count-clear");
     await driver.settle();
     const cleared = await driver.evalPage(PROBE);
     report.check(
-      "Show all restores the whole menu AND clears the query it was hiding behind",
-      cleared.shown === cleared.total && cleared.query === "" &&
-        !cleared.chips.some((c) => c.pressed) && cleared.count.hidden === true,
-      `${cleared.shown}/${cleared.total}, query=${JSON.stringify(cleared.query)}, ` +
-        `pressed=${cleared.chips.filter((c) => c.pressed).map((c) => c.key).join(",") || "none"}`
+      "Show all empties the query and restores the whole menu",
+      cleared.shown === cleared.total && cleared.query === "" && cleared.count.hidden === true,
+      `${cleared.shown}/${cleared.total}, query=${JSON.stringify(cleared.query)}`
     );
 
-    // ─── Part B — ♥ Favourites, and the live wire behind it ────────────────
+    // ─── "favourites" is a query about the reader, not the dish ────────────
+    await openVenue(driver, cdp, sessionId, port, FILTER_VENUE);
     const heartName = await driver.evalPage(`(() => {
       const d = document.querySelector("li.dish");
       d.querySelector(".dish-actions .heart").click();
       return (d.querySelector(".dish-name")?.textContent || "").trim();
     })()`);
     await driver.settle();
-    await openVenue(driver, cdp, sessionId, port, FILTER_VENUE);
-    const withFav = await driver.evalPage(PROBE);
-    report.check(
-      "hearting a dish here makes the ♥ Favourites chip appear",
-      withFav.chips.some((c) => c.key === "fav"),
-      `chips: ${withFav.chips.map((c) => c.label).join(" · ")}`
-    );
-    report.check(
-      "…and it leads the row, ahead of the dietary chips",
-      withFav.chips[0]?.key === "fav",
-      withFav.chips.map((c) => c.key).join(" → ")
-    );
-
-    await driver.click(".diet-chip", "Favourites");
-    await driver.settle();
+    await typeQuery(driver, "favourites");
     const favOn = await driver.evalPage(PROBE);
-    const favFirst = await driver.evalPage(firstShownName);
     report.check(
-      "♥ Favourites shows the hearted dish and nothing else",
-      favOn.shown === 1 && favFirst === heartName,
-      `${favOn.shown} shown, first = ${JSON.stringify(favFirst)} (hearted ${JSON.stringify(heartName)})`
+      'typing "favourites" shows the hearted dish and nothing else',
+      favOn.shown === 1 && favOn.names[0] === heartName,
+      `${favOn.shown} shown, first = ${JSON.stringify(favOn.names[0])}`
     );
-    report.check(
-      "…and the count line counts it against the whole menu",
-      favOn.count.text === `Showing 1 of ${favOn.total} dishes`,
-      favOn.count.text
-    );
-
-    // The live wire: un-heart while the filter is on. No reload.
     await driver.evalPage(`${need("li.dish:not([hidden]) .dish-actions .heart")}.click()`);
     await sleep(150);
     await driver.settle();
     const favOff = await driver.evalPage(PROBE);
     report.check(
-      "un-hearting a dish while the filter is on removes it there and then",
+      "un-hearting it while that query is live removes it there and then",
       favOff.shown === 0,
-      `${favOff.shown} still shown after the heart was cleared`
+      `${favOff.shown} still shown`
     );
 
-    // ─── Part D — search SUGGESTS the filter, it does not become one ───────
-    //
-    // The assertion this whole design exists for is the second one: typing
-    // "vegetarian" must offer the chip AND still find the dishes named
-    // "Vegetarian …". A keyword that quietly switched modes would pass every
-    // other check in this file while making four real rows unreachable.
-    await openVenue(driver, cdp, sessionId, port, FILTER_VENUE);
-    await driver.evalPage(
-      `(() => { const s = ${need(".menu-search")}; s.focus(); s.value = "vegetarian";
-        s.dispatchEvent(new Event("input", { bubbles: true })); })()`
+    // A dish literally NAMED "Vegetarian…" must still be findable by name —
+    // this venue has four, and a keyword that hijacked the query would lose
+    // every one of them.
+    await typeQuery(driver, "vegetarian");
+    const named = await driver.evalPage(PROBE);
+    report.check(
+      "a diet word still finds the dishes NAMED with it, not only the tagged ones",
+      named.names.some((n) => n.toLowerCase().includes("vegetarian")),
+      named.names.join(" | ")
     );
-    await sleep(120);
-    await driver.settle();
+
+    // ─── The dropdown, which the owner saw before any check did ────────────
+    await typeQuery(driver, "nasi");
     const sug = await driver.evalPage(`(() => {
       const list = document.querySelector(".suggest-list");
       const input = document.querySelector(".menu-search");
+      const rows = [...(list?.querySelectorAll(".suggest-row") || [])];
+      const r0 = rows[0];
+      if (r0) r0.classList.add("is-active");
+      const cs = list && getComputedStyle(list);
+      const rs = r0 && getComputedStyle(r0);
+      const lb = list && list.getBoundingClientRect();
+      const rb = r0 && r0.getBoundingClientRect();
       return {
         open: !!list && !list.hidden,
         expanded: input.getAttribute("aria-expanded"),
         role: list?.getAttribute("role"),
-        controls: input.getAttribute("aria-controls") === list?.id,
-        rows: [...(list?.querySelectorAll(".suggest-row") || [])].map((r) => ({
-          kind: [...r.classList].find((c) => c.startsWith("suggest-") && c !== "suggest-row"),
-          text: (r.querySelector(".suggest-label")?.textContent || "").trim(),
-          sub: (r.querySelector(".suggest-sub")?.textContent || "").trim(),
-          h: Math.round(r.getBoundingClientRect().height),
-          optRole: r.getAttribute("role"),
-        })),
+        radius: cs ? parseFloat(cs.borderRadius) : null,
+        activeBg: rs ? rs.backgroundColor : null,
+        rows: rows.map((x) => (x.querySelector(".suggest-label")?.textContent || "").trim()),
+        // Is the first row's box actually inside the list's, horizontally? An
+        // oval clips its ends behind the curve.
+        insetLeft: lb && rb ? +(rb.left - lb.left).toFixed(1) : null,
+        heights: rows.map((x) => Math.round(x.getBoundingClientRect().height)),
       };
     })()`);
     report.check(
-      "typing opens a real listbox the field points at",
-      sug.open && sug.expanded === "true" && sug.role === "listbox" && sug.controls &&
-        sug.rows.every((r) => r.optRole === "option"),
-      JSON.stringify({ open: sug.open, expanded: sug.expanded, role: sug.role, controls: sug.controls })
+      "the popup is a listbox the field points at",
+      sug.open && sug.expanded === "true" && sug.role === "listbox",
+      JSON.stringify({ open: sug.open, expanded: sug.expanded, role: sug.role })
+    );
+    // The two defects the owner reported by eye. --radius-chip is 999px, which
+    // turns a tall box into an oval and clips the end rows behind the curve.
+    report.check(
+      "it is a panel, not a pill — a 999px radius ovals the list and clips its rows",
+      sug.radius !== null && sug.radius <= 20,
+      `border-radius ${sug.radius}px`
     );
     report.check(
-      "'vegetarian' offers the FILTER and still offers the dishes named Vegetarian",
-      sug.rows[0]?.kind === "suggest-filter" &&
-        sug.rows[0]?.text === "Vegetarian" &&
-        sug.rows.filter((r) => r.kind === "suggest-dish").length >= 2,
-      sug.rows.map((r) => `${r.kind}:${r.text}`).join(" | ")
-    );
-    report.check(
-      "the filter row says what pressing it will cost",
-      sug.rows[0]?.sub === "4 dishes",
-      `sub = ${JSON.stringify(sug.rows[0]?.sub)}`
+      "the highlighted row is a neutral surface, not the dietary green",
+      sug.activeBg !== null && !/rgb\(\s*1?\d?\d,\s*1[2-9]\d,/.test(sug.activeBg) &&
+        sug.activeBg !== "rgb(76, 141, 90)",
+      `active row background ${sug.activeBg}`
     );
     report.check(
       "every suggestion row is a 44px target",
-      sug.rows.every((r) => r.h >= 44),
-      sug.rows.map((r) => r.h).join(",")
+      sug.heights.length > 0 && sug.heights.every((h) => h >= 44),
+      sug.heights.join(",")
     );
 
-    // Escape closes the popup and must NOT also empty the field — both screens
-    // wire Escape to clear, and one keypress doing both loses the typing.
-    await driver.evalPage(
-      `${need(".menu-search")}.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }))`
-    );
-    await sleep(80);
-    const afterEsc = await driver.evalPage(`(() => ({
-      open: !document.querySelector(".suggest-list")?.hidden === true,
-      value: document.querySelector(".menu-search").value,
-    }))()`);
-    report.check(
-      "Escape closes the popup and keeps what you typed",
-      afterEsc.open === false && afterEsc.value === "vegetarian",
-      JSON.stringify(afterEsc)
-    );
-
-    // Keyboard: ↓ then Enter takes the highlighted row, and focus never left
-    // the field on the way (or the next keystroke would go nowhere).
-    await driver.evalPage(
-      `(() => { const s = ${need(".menu-search")}; s.focus(); s.value = "veg";
-        s.dispatchEvent(new Event("input", { bubbles: true })); })()`
-    );
-    await sleep(120);
-    const activeDesc = await driver.evalPage(`(() => {
+    // Choosing a row types the word — it can do nothing the box cannot.
+    await driver.evalPage(`(() => {
       const s = document.querySelector(".menu-search");
       s.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
-      return {
-        aad: s.getAttribute("aria-activedescendant"),
-        focusStillInField: document.activeElement === s,
-      };
+      s.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
     })()`);
-    report.check(
-      "↓ highlights a row WITHOUT moving focus out of the field",
-      !!activeDesc.aad && activeDesc.focusStillInField,
-      JSON.stringify(activeDesc)
-    );
-    await driver.evalPage(
-      `${need(".menu-search")}.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }))`
-    );
     await sleep(150);
     await driver.settle();
     const chosen = await driver.evalPage(PROBE);
     report.check(
-      "…and Enter presses the real chip, clears the query, and narrows the list",
-      chosen.chips.some((c) => c.key === "v" && c.pressed) &&
-        chosen.query === "" &&
-        chosen.shown === 4,
-      `${chosen.shown} shown, query=${JSON.stringify(chosen.query)}, ` +
-        `pressed=${chosen.chips.filter((c) => c.pressed).map((c) => c.key).join(",") || "none"}`
-    );
-
-    // ─── Part E — the counter price is the price (ADR 0089) ────────────────
-    //
-    // KK Malaysian's record held Delivereasy's prices for two months with
-    // nothing on screen saying so — $24 beside a phone number that would have
-    // charged $19. Both numbers are plausible, which is exactly why no reader
-    // could have caught it. So the assertion is not "a second price renders";
-    // it is that the BIG number is the counter one and the second is subordinate
-    // to it and names its door.
-    await openVenue(driver, cdp, sessionId, port, "kk-malaysian");
-    const channel = await driver.evalPage(`(() => {
-      const d = [...document.querySelectorAll("li.dish")]
-        .find((x) => (x.querySelector(".dish-name")?.textContent || "").trim().startsWith("Chicken Satay"));
-      if (!d) return { missing: true };
-      const line = d.querySelector(".dish-channels");
-      const price = d.querySelector(".dish-price");
-      const cs = line && getComputedStyle(line);
-      const ps = price && getComputedStyle(price);
-      return {
-        price: (price?.textContent || "").trim(),
-        channel: (line?.textContent || "").replace(/\\s+/g, " ").trim(),
-        // The caveat must be visually quieter than the answer it qualifies.
-        channelPx: cs ? parseFloat(cs.fontSize) : null,
-        pricePx: ps ? parseFloat(ps.fontSize) : null,
-        total: document.querySelectorAll(".dish-channels").length,
-      };
-    })()`);
-    report.check(
-      "the price on the row is the COUNTER price, not the delivery app's",
-      // "$19", not "$19.00" — money() drops a trailing .00, and asserting the
-      // long form failed against correct behaviour on the first run.
-      channel.price === "$19",
-      `showing ${channel.price} (Delivereasy charges $24)`
-    );
-    report.check(
-      "the delivery price sits beside it, names its platform and says how much more",
-      /\$24 on Delivereasy — about 26% more/.test(channel.channel),
-      channel.channel
-    );
-    report.check(
-      "…and reads as a caveat, not as a competing answer",
-      channel.channelPx < channel.pricePx,
-      `channel ${channel.channelPx}px vs price ${channel.pricePx}px`
-    );
-    report.check(
-      "only the dishes that actually differ carry the line",
-      channel.total > 0 && channel.total < 48,
-      `${channel.total} of 48 dishes`
-    );
-
-    // ─── Part C — configured out must DIM, never vanish ────────────────────
-    await openVenue(driver, cdp, sessionId, port, CONFIG_VENUE);
-    await driver.click(".diet-chip", "Vegan");
-    await driver.settle();
-    const veganOn = await driver.evalPage(tagsOn(CONFIG_DISH));
-    report.check(
-      `Vegan: "${CONFIG_DISH}" is on screen and undimmed to start with`,
-      !veganOn.missing && veganOn.hidden === false && veganOn.dimmed === false,
-      JSON.stringify({ hidden: veganOn.hidden, dimmed: veganOn.dimmed })
-    );
-
-    // Scoped to the Garden Salad row by name, not to "the first dish": with the
-    // Vegan filter on, most rows are `hidden` and therefore have no box to
-    // click — which is how the first version of this failed with a harness
-    // error rather than an assertion.
-    const opened = await driver.evalPage(`(() => {
-      const d = [...document.querySelectorAll("li.dish")]
-        .find((x) => (x.querySelector(".dish-name")?.textContent || "").trim() === ${JSON.stringify(CONFIG_DISH)});
-      const s = d && d.querySelector(".dish-addons-summary");
-      if (!s) return false;
-      s.click();
-      return true;
-    })()`);
-    if (!opened) throw new Error(`"${CONFIG_DISH}" offers no add-on picker at ${CONFIG_VENUE}`);
-    await driver.settle();
-    const ticked = await driver.evalPage(`(() => {
-      const d = [...document.querySelectorAll("li.dish")]
-        .find((x) => (x.querySelector(".dish-name")?.textContent || "").trim() === ${JSON.stringify(CONFIG_DISH)});
-      const opt = [...d.querySelectorAll(".addon-option")]
-        .find((o) => (o.textContent || "").includes(${JSON.stringify(CONFIG_OPTION)}));
-      if (!opt) return false;
-      (opt.querySelector("input") || opt).click();
-      return true;
-    })()`);
-    if (!ticked) throw new Error(`"${CONFIG_DISH}" has no ${CONFIG_OPTION} option at ${CONFIG_VENUE}`);
-    await sleep(150);
-    await driver.settle();
-    const configured = await driver.evalPage(tagsOn(CONFIG_DISH));
-    report.check(
-      `adding ${CONFIG_OPTION} DIMS the row — it must not vanish under the finger that configured it`,
-      configured.hidden === false && configured.dimmed === true,
-      JSON.stringify({ hidden: configured.hidden, dimmed: configured.dimmed })
+      "choosing a suggestion just types it — no mode, no hidden state",
+      chosen.query.length > 0 && chosen.shown > 0 && chosen.shown < chosen.total,
+      `query=${JSON.stringify(chosen.query)}, ${chosen.shown} of ${chosen.total}`
     );
 
     return report.summary(SITE);

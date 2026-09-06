@@ -3918,58 +3918,15 @@ body.faves-view .to-top {
   -webkit-appearance: none;
   appearance: none;
 }
-.diet-chips {
-  margin-top: var(--space-3);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-}
-.diet-chip {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0.4em 0.9em;
-  border-radius: var(--radius-chip);
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--ink-soft);
-  font-size: var(--step-sub);
-  font-weight: 600;
-  cursor: pointer;
-}
-.diet-chip[aria-pressed="true"] {
-  background: var(--diet);
-  border-color: var(--diet);
-  color: var(--surface);
-}
-/* The ♥ on the Favourites chip. aria-hidden in the markup, so this is purely
-   visual — and it inherits `color`, which is what makes it legible against the
-   filled background when the chip is pressed. */
-.diet-chip-ico {
-  margin-inline-end: 0.35em;
-  line-height: 1;
-}
-
-/* "$24.00 on Delivereasy — about 26% more" (ADR 0089). Quiet by design: the
-   counter price is the answer and this is a caveat on it, so it must never
-   compete with .dish-price for the eye. Not colour-coded either — a red "more"
-   would editorialise about a channel the reader may have good reasons to use. */
-.dish-channels {
-  margin-top: var(--space-1);
-  color: var(--ink-soft);
-  font-size: var(--step-sub);
-}
-.dish-channel + .dish-channel::before {
-  content: " · ";
-}
-.dish-channel-price {
-  font-weight: 600;
-}
-
 /* The autocomplete popup (suggest-ui.js), shared by both search boxes. It hangs
    off the field's own positioned wrapper (.search-field / .menu-search-field),
    so it travels with a sticky toolbar instead of being left behind on the page.
-   z-index clears the sticky .menu-toolbar (6) and the section headings. */
+   z-index clears the sticky .menu-toolbar (6) and the section headings.
+
+   ⚠️ `--radius`, NEVER `--radius-chip`. The chip token is 999px — a pill — which
+   is right for a one-line control and catastrophic on a tall box: it rounds the
+   list into an oval and clips the first and last rows behind the curve. It
+   shipped that way on 2026-09-06 and the owner saw it before any check did. */
 .suggest-list {
   position: absolute;
   z-index: 20;
@@ -3983,7 +3940,7 @@ body.faves-view .to-top {
   overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius-chip);
+  border-radius: var(--radius);
   box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
 }
 .suggest-row {
@@ -3994,29 +3951,21 @@ body.faves-view .to-top {
      of the easiest things to accidentally build at 28 px. */
   min-height: 44px;
   padding: 0.4em 0.7em;
-  border-radius: var(--radius-chip);
+  border-radius: 8px;
   cursor: pointer;
 }
 /* Both the pointer hover and the keyboard's active descendant get the SAME
    treatment: arrowing down must look exactly like hovering, or the keyboard
-   reader is left guessing which row Enter will take. */
+   reader is left guessing which row Enter will take.
+   A NEUTRAL surface, not `--diet`: the green is the dietary-tag colour and it
+   carries meaning elsewhere in this app. Painting a whole suggestion row in it
+   said "vegetarian" about every row the pointer touched. */
 .suggest-row:hover,
 .suggest-row.is-active {
-  background: var(--diet);
-  color: var(--surface);
-}
-.suggest-ico {
-  line-height: 1;
+  background: var(--surface-2);
 }
 .suggest-label {
   font-weight: 600;
-}
-/* The count beside a filter ("4 dishes"), pushed to the far end. Opacity rather
-   than a fixed muted colour so it stays legible on the highlighted row too. */
-.suggest-sub {
-  margin-inline-start: auto;
-  font-size: var(--step-sub);
-  opacity: 0.75;
 }
 
 /* "Showing 12 of 47 dishes  [Show all]" — the honesty line that pays for the

@@ -56,14 +56,34 @@ import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { favourites } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
-import {
-  FAVOURITES,
-  availableDishFilters,
-  matchesDishFilters,
-  summarise,
-} from "./dish-filters.js";
-import { filterCandidates, textCandidate } from "./suggest.js";
+import { summarise } from "./dish-filters.js";
+import { textCandidate } from "./suggest.js";
 import { attachSuggestions } from "./suggest-ui.js";
+
+// What a person types for a dietary need, beyond the label itself. Bounded the
+// same way search.js's synonym map is: only words someone would really type,
+// only onto a claim a venue actually made. 🛑 Nothing here may ever name the
+// ABSENCE of an allergen — "nut free" is not a tag, is not a filter, and a
+// search that appeared to answer it would be a safety claim with nothing
+// behind it (ADR 0025).
+const DIET_ALIASES = {
+  v: ["veg", "veggie"],
+  vg: ["plant based", "plantbased"],
+  gf: ["gf", "gluten-free", "coeliac", "celiac"],
+  df: ["df", "dairy-free", "lactose free"],
+};
+
+/** Every dietary word a dish should answer to, from the tags it carries. */
+function dietTerms(tags) {
+  const has = new Set(tags || []);
+  const out = [];
+  for (const f of DIET_FILTERS) {
+    if (f.satisfies.some((t) => has.has(t))) {
+      out.push(f.label, ...(DIET_ALIASES[f.key] || []));
+    }
+  }
+  return out.join(" ");
+}
 import { initReo, translate } from "./reo.js";
 import { disclosure } from "./disclosure.js";
 import { dishNeeds, priceUnknown } from "./needs.js";
@@ -732,48 +752,6 @@ function renderAside(r) {
 // English only, on purpose: reo.js's safety boundary keeps the refresh caveat
 // and the allergen chips in English until a reo review, and this says the same
 // class of thing about the same class of fact — including an `allergens` kind.
-/**
- * "$24.00 on Delivereasy — about 26% more" (ADR 0089).
- *
- * Returns null unless this dish actually carries a second price, which is
- * almost every dish in the corpus: the row exists for the venues where the
- * counter and the app genuinely disagree, and appears nowhere else.
- *
- * The comparison is stated in the direction the reader is standing. They are
- * looking at the counter price, so the sentence is about what the OTHER door
- * costs relative to it — never the reverse, which reads as an endorsement of
- * the app. And it is never phrased as a saving: "save 20%" is a claim about
- * what someone would otherwise have done, and this app does not know that.
- */
-function channelPrices(item, r) {
-  const declared = r?.priceChannels;
-  const prices = item?.prices;
-  if (!declared || !prices || item.price == null) return null;
-  const parts = [];
-  for (const [key, value] of Object.entries(prices)) {
-    const meta = declared[key];
-    if (!meta || typeof value !== "number") continue;
-    // A percentage only where one is meaningful. A free item, or a difference
-    // under 1%, would produce a number that is noise dressed as information.
-    const pct = item.price > 0 ? Math.round(((value - item.price) / item.price) * 100) : 0;
-    const gap =
-      Math.abs(pct) < 1
-        ? "about the same"
-        : `about ${Math.abs(pct)}% ${pct > 0 ? "more" : "less"}`;
-    parts.push(
-      el("span", { className: "dish-channel" }, [
-        el("span", { className: "dish-channel-price", textContent: money(value) }),
-        el("span", {
-          className: "dish-channel-where",
-          textContent: ` on ${meta.platform} — ${gap}`,
-        }),
-      ])
-    );
-  }
-  if (!parts.length) return null;
-  return el("p", { className: "dish-channels" }, parts);
-}
-
 function needsRow(item, venueId) {
   const rows = dishNeeds(item);
   if (!rows.length) return null;
@@ -1333,18 +1311,19 @@ function renderDish(
   // as another property of the food.
   const needs = needsRow(item, r?.id ?? "x");
   if (needs) children.push(needs);
-  // What the same dish costs through another door (ADR 0089). `.dish-price`
-  // above is always the COUNTER price; this says what a delivery app or the
-  // venue's own online storefront charges, and by how much they differ.
+  // ⚠️ NOTHING RENDERS `item.prices` HERE, and that is deliberate.
   //
-  // It earns its place in the payload because of what it prevents. Before this,
-  // KK Malaysian's record held Delivereasy's prices and nothing on screen said
-  // so: the page showed $24 beside a "Call to order" number that would have
-  // charged $19. A reader cannot spot that, because both numbers are perfectly
-  // plausible. The percentage is spelled out rather than left as arithmetic —
-  // "$24 on Delivereasy" invites a shrug, "about 26% more" does not.
-  const channelRow = channelPrices(item, r);
-  if (channelRow) children.push(channelRow);
+  // A line reading "$25 on Delivereasy — about 25% more" shipped under every
+  // dish on 2026-09-06 and the owner removed it the same day: *"this is not how
+  // we are going to show pricing variances over time, per channel, delivered vs
+  // in-store… this is just you dumping more content in the UI."* He is right
+  // that the ruling he gave was about the DATA MODEL (ADR 0089) — how a record
+  // holds two prices honestly — and that putting a second price on all 48 rows
+  // was a rendering decision nobody asked for.
+  //
+  // The data stays; it is correct and it cost a real reading to get. How a
+  // reader is ever shown price variance — over time, per channel, delivery
+  // against the counter — is its own piece of design work and is not this.
   if (item.tags?.length) {
     const tags = el("div", { className: "dish-tags" });
     for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid, dietary));
@@ -1407,14 +1386,12 @@ function renderDish(
     [item.desc, ...ingredientKeys(item.ingredients)].filter(Boolean).join(" ")
   );
   li.dataset.tags = (item.tags || []).join(" ");
-  // The dish AS THE VENUE PRINTS IT, before any add-on the reader chose. Two
-  // fields because the filters now REMOVE rows and the two questions have
-  // different answers: "is this a vegetarian dish?" (the menu's claim, which
-  // decides whether the row is on screen at all) and "is what you have
-  // configured still vegetarian?" (yours, which decides whether it looks like a
-  // match). Filtering on the configured tags would make a row vanish from under
-  // the finger that just added bacon to it — see applyView.
-  li.dataset.baseTags = (item.tags || []).join(" ");
+  // The dietary vocabulary this dish answers to, folded for matching. It is
+  // what makes typing "vegan" narrow the menu to the vegan dishes WITHOUT a
+  // control existing (owner-ruled 2026-09-06): search is the filter, so the
+  // words a reader would search by have to be in the haystack. Labels and the
+  // aliases people actually type — "veg", "gf", "coeliac", "plant based".
+  li.dataset.terms = foldSearchText(dietTerms(item.tags));
   li.append(...children);
 
   // Add-ons hang off the row rather than sitting in the actions bar: choosing
@@ -1586,16 +1563,10 @@ function render(r) {
   const avoid = new Set(prefs.avoid);
   const preselect = new Set(prefs.dietary);
 
-  const presentTags = new Set(allItems.flatMap((i) => i.tags || []));
-  // Renamed from `activeDiet` when ♥ Favourites joined the row: the set is no
-  // longer only dietary, and a name that says otherwise is how a favourites key
-  // ends up being passed to a dietary predicate.
-  const activeFilters = new Set();
-  const dietChips = [];
   // Hearted dishes at THIS venue, by dish id (ADR 0051 — never by name, or the
-  // three "Cheeseburger" rows would light up together). Recomputed rather than
-  // cached because the reader can heart a dish while the filter is on, and the
-  // row must leave or arrive on the spot.
+  // three "Cheeseburger" rows would match together). Recomputed rather than
+  // cached because the reader can heart a dish while "favourites" is typed, and
+  // the row must leave or arrive on the spot.
   const favouriteIds = () =>
     new Set(
       favourites
@@ -1603,68 +1574,30 @@ function render(r) {
         .filter((e) => e.venueId === r.id)
         .map((e) => e.dishId || "")
     );
-  const available = availableDishFilters(presentTags, favouriteIds().size);
-  let dietRow = null;
-  if (available.length) {
-    // The row is no longer only dietary — ♥ Favourites sits at its head — so it
-    // is announced for what it now is. It stays BELOW the sticky toolbar and
-    // outside the jump-nav on purpose: `--toolbar-h` is measured once on the
-    // stated assumption of "a single search + one-row nav" and drives every
-    // deep-link scroll offset, and Theme 29 already measured the order pill
-    // owning 82.5% of a chip's tap at large text. Another row inside the pinned
-    // chrome would inherit both problems.
-    dietRow = el("div", { className: "diet-chips", role: "group", "aria-label": "Filter the menu", "data-i18n-aria": "menu.filters.aria" });
-    // Stamp the pre-selection this row was built from, so a later capture can
-    // tell an ad-hoc chip toggle apart from the viewer's stored preference
-    // (ui-state.js). By capture time settings.get() has already moved on.
-    dietRow.dataset.preselect = [...preselect].join(" ");
-    for (const f of available) {
-      // `preselect` holds the reader's stored DIETARY needs, so ♥ Favourites is
-      // never pre-pressed — and that is right, not an oversight. A dietary need
-      // is a standing fact about a person; "show me only my favourites" is a
-      // thing you do for a moment. Starting a menu already narrowed to a
-      // handful of hearted rows would look like the venue had stopped selling
-      // everything else.
-      const on = preselect.has(f.key);
-      if (on) activeFilters.add(f.key);
-      const chip = el("button", {
-        type: "button",
-        className: "diet-chip",
-        // The ♥ is inside its own aria-hidden span, so the button's accessible
-        // name stays the plain label — a screen reader announcing "black heart
-        // suit Favourites, toggle button" is worse than no icon at all. No
-        // `title` tooltip: this screen is designed at 390 px first and a title
-        // never appears on a touch device, so it would be help only the people
-        // who need it least.
-      }, [
-        f.icon ? el("span", { className: "diet-chip-ico", textContent: f.icon, "aria-hidden": "true" }) : null,
-        el("span", { textContent: f.label }),
-      ]);
-      // setAttribute (not an el() prop): "aria-pressed" is not an IDL property,
-      // so Object.assign wouldn't reflect it to the attribute the CSS matches.
-      chip.setAttribute("aria-pressed", String(on));
-      chip.dataset.key = f.key;
-      chip.addEventListener("click", () => {
-        if (activeFilters.has(f.key)) activeFilters.delete(f.key);
-        else activeFilters.add(f.key);
-        chip.setAttribute("aria-pressed", String(activeFilters.has(f.key)));
-        applyView();
-      });
-      dietChips.push({ f, chip });
-      dietRow.append(chip);
-    }
-  }
 
+  // THERE IS NO CHIP ROW. Owner-ruled 2026-09-06, after seeing one:
+  // *"I hate the chips for favourites, vegetarian, vegan etc. lose them."*
+  //
+  // The ask was never a control. It was: **the search box filters the dishes.**
+  // *"If I search vegan then it should hide all the non vegan dishes leaving me
+  // with a shorter list to review."* So the whole feature is that `applyView`
+  // below matches a dish's DIETARY VOCABULARY and its hearted state as well as
+  // its name and description — type "vegan", get the vegan dishes; type
+  // "favourites", get the hearted ones. One box, no new furniture, and nothing
+  // to discover.
+  //
+  // The chips were me answering a question he had not asked, and they cost a
+  // row of chrome on a screen whose pinned band was already measured as
+  // contested (Theme 29: the order pill owning 82.5% of a chip's tap at large
+  // text). Do not bring them back without him asking for them by name.
   const nav = el("nav", { className: "section-nav", "aria-label": "Menu sections", "data-i18n-aria": "menu.sections.aria" });
   const navScroll = el("div", { className: "section-nav-scroll" });
   nav.append(navScroll);
 
   const toolbar = el("div", { className: "menu-toolbar" }, [searchField, nav]);
   main.append(toolbar);
-  if (dietRow) main.append(dietRow);
-  // After the chips, not between them and the toolbar: search, jump-nav and
-  // dietary chips are one block of controls over the menu, and the picks are
-  // content. Splitting the controls to slot content into the middle of them is
+  // Search and the jump-nav are the controls; the picks are content, and they
+  // go after. Splitting the controls to slot content into the middle of them is
   // what made the search hard to find in the first place.
   if (picks) main.append(picks);
 
@@ -1695,11 +1628,12 @@ function render(r) {
     { className: "menu-count", role: "status", "aria-live": "polite", hidden: true },
     [countText, showAll]
   );
-  /** The dietary subset of the active filters — what a dish's CONFIGURED tags
-   *  are judged against for the dim. Favourites has no bearing on it: hearting
-   *  a dish is not a claim about what is in it. Declared up here for the same
-   *  temporal-dead-zone reason as the elements above. */
-  const dietKeys = () => new Set([...activeFilters].filter((k) => k !== FAVOURITES));
+  /** Does the typed query mean "the ones I hearted"? Kept to words that could
+   *  not plausibly be a dish, so a menu selling a "Favourite Fried Rice" is
+   *  still findable by name — the prefix must be at least 3 characters, which
+   *  is why "fav" works and "f" does not. */
+  const FAV_WORDS = ["favourites", "favourite", "favorites", "favorite", "faves", "hearted"];
+  const wantsFavourites = (q) => q.length >= 3 && FAV_WORDS.some((w) => w.startsWith(q));
   // When a section is served (Theme 28c). Read ONCE for the whole menu, off the
   // venue's own clock via the same route every other screen uses — never the
   // device clock, or a reader overseas is told a Wellington brunch is on at
@@ -1792,33 +1726,28 @@ function render(r) {
   function applyView() {
     const q = foldSearchText(search.value.trim());
     searchClear.hidden = search.value.length === 0;
-    const favIds = activeFilters.has(FAVOURITES) ? favouriteIds() : null;
+    // "favourites" is the one query that is not text at all — it asks about the
+    // reader, not about the dish — so it is resolved once per pass rather than
+    // per row, and only when the word was actually typed.
+    const favIds = wantsFavourites(q) ? favouriteIds() : null;
     let visibleTotal = 0;
     let total = 0;
     for (const sec of sectionEls) {
       let visibleInSection = 0;
       for (const dish of sec.querySelectorAll(".dish")) {
         total++;
-        const matchesSearch =
-          !q || dish.dataset.name.includes(q) || dish.dataset.desc.includes(q);
-        // Filtered on the venue's OWN claim (`baseTags`), never on what the
-        // reader has configured. Both predicates come from dish-filters.js, so
-        // the render, this re-apply and the search suggestions cannot drift.
-        const matchesFilters = matchesDishFilters(
-          { dishId: dish.dataset.dishId, tags: dish.dataset.baseTags.split(" ").filter(Boolean) },
-          activeFilters,
-          { favouriteIds: favIds }
-        );
-        const visible = matchesSearch && matchesFilters;
+        // ONE predicate, and it is the search box. `data-terms` carries the
+        // dish's dietary vocabulary — "vegetarian", "vegan", "gluten free" and
+        // the words people actually type for them — so typing a diet narrows
+        // the menu to it without a control existing. `data-name` and
+        // `data-desc` are unchanged.
+        const visible = favIds
+          ? favIds.has(dish.dataset.dishId)
+          : !q ||
+            dish.dataset.name.includes(q) ||
+            dish.dataset.desc.includes(q) ||
+            dish.dataset.terms.includes(q);
         dish.hidden = !visible;
-        // The dim survives, with one job left: a row that still qualifies on the
-        // menu's own tags but has been configured out of them (ADR 0048 — satay
-        // added to a vegetarian dish). It must not linger looking like a match,
-        // and it must not vanish either, because the finger that configured it
-        // is still on it.
-        const configuredOut =
-          visible && !dishSatisfiesDiet(dish.dataset.tags.split(" ").filter(Boolean), dietKeys());
-        dish.classList.toggle("dimmed", configuredOut);
         if (visible) visibleInSection++;
       }
       sec.hidden = visibleInSection === 0;
@@ -1836,57 +1765,62 @@ function render(r) {
   }
 
   showAll.addEventListener("click", () => {
-    // Clears the filters AND the query, because "Show all" is read as a promise
-    // about the whole menu — leaving a live search term behind would answer a
-    // question the button did not ask.
-    activeFilters.clear();
+    // The query IS the filter now, so clearing it is the whole action.
     search.value = "";
-    for (const { chip } of dietChips) chip.setAttribute("aria-pressed", "false");
     applyView();
   });
 
-  // Hearting a dish while the ♥ filter is on must move the row on the spot;
+  // Hearting a dish while "favourites" is typed must move the row on the spot;
   // otherwise the list quietly disagrees with the heart the reader just tapped.
   favourites.subscribe(() => {
     // `isConnected` because the menu re-renders on a profile switch and this
     // closure would otherwise outlive its own DOM, filtering a detached tree on
     // every heart for the rest of the session.
-    if (countLine.isConnected && activeFilters.has(FAVOURITES)) applyView();
+    if (countLine.isConnected && wantsFavourites(foldSearchText(search.value.trim()))) {
+      applyView();
+    }
   });
 
   search.addEventListener("input", applyView);
 
-  // --- Search suggests the filters (ADR 0088) ------------------------
+  // --- Autocomplete: words that will actually narrow THIS menu ---------
   //
-  // The owner's better idea, and the reason there is no extra control for it:
-  // type "veg" and the box offers the Vegetarian chip, type "fav" and it offers
-  // ♥ Favourites. Choosing one PRESSES THE REAL CHIP, so the state ends up
-  // where it is visible (ADR 0052) rather than hidden inside a word in a text
-  // field. The text search underneath is untouched, which is the whole point —
-  // this venue has dishes literally called "Vegetarian Laksa", and a keyword
-  // that hijacked the query would make them unfindable.
+  // Every row is a term you could have typed yourself, and choosing one types
+  // it. There are no modes and no actions here — a suggestion cannot do
+  // anything the box cannot, so there is nothing to learn and nothing that
+  // behaves differently from what it says.
   //
-  // Dish names are offered too, so the box completes as well as commands.
-  // Sections deliberately are NOT: the jump-nav strip immediately above already
-  // does that job, and a list whose rows sometimes filter and sometimes
-  // navigate is a list you have to read before you can trust.
-  const menuCandidates = () => [
-    ...filterCandidates(available, (f) => {
-      // A live count, because a filter that would leave one dish standing is
-      // worth knowing about BEFORE you press it. Counted off base tags for the
-      // same reason applyView filters on them.
-      const n =
-        f.key === FAVOURITES
-          ? favouriteIds().size
-          : allItems.filter((i) =>
-              matchesDishFilters({ tags: i.tags || [] }, new Set([f.key]), {})
-            ).length;
-      return n === 1 ? "1 dish" : `${n} dishes`;
-    }),
-    ...allItems.map((i) =>
-      textCandidate({ id: `dish:${dishId(i)}`, kind: "dish", label: i.name })
-    ),
-  ];
+  // Offered: the dietary words this menu can actually answer, "Favourites" when
+  // the reader has hearted something here, and the dish names. Sections are
+  // deliberately NOT offered — the jump-nav strip immediately above already
+  // does that, and a list whose rows sometimes filter and sometimes navigate is
+  // a list you have to read before you can trust it.
+  const menuCandidates = () => {
+    const rows = [];
+    const favCount = favouriteIds().size;
+    if (favCount) {
+      rows.push(textCandidate({
+        id: "term:favourites", kind: "term", label: "Favourites",
+        sub: favCount === 1 ? "1 dish" : `${favCount} dishes`,
+        terms: FAV_WORDS,
+      }));
+    }
+    for (const f of DIET_FILTERS) {
+      const n = allItems.filter((i) =>
+        f.satisfies.some((t) => (i.tags || []).includes(t))
+      ).length;
+      if (!n) continue; // never offer a word that would empty this menu
+      rows.push(textCandidate({
+        id: `term:${f.key}`, kind: "term", label: f.label,
+        sub: n === 1 ? "1 dish" : `${n} dishes`,
+        terms: [f.label, ...(DIET_ALIASES[f.key] || [])],
+      }));
+    }
+    for (const i of allItems) {
+      rows.push(textCandidate({ id: `dish:${dishId(i)}`, kind: "dish", label: i.name }));
+    }
+    return rows;
+  };
   // Attached BEFORE wireSearchClear, and that ordering is load-bearing: the
   // Escape handler below stops propagation so a first Escape closes the popup
   // without also emptying the field, and `stopImmediatePropagation` can only
@@ -1894,20 +1828,10 @@ function render(r) {
   attachSuggestions(search, {
     getCandidates: menuCandidates,
     onChoose(c) {
-      if (c.kind === "filter") {
-        // Press the chip rather than mutating the set directly, so the aria
-        // state, the view and the chip's own appearance all move through the
-        // one path a tap takes.
-        const hit = dietChips.find((d) => d.f.key === c.key);
-        search.value = "";
-        hit?.chip.click();
-        applyView();
-      } else {
-        // A dish completion narrows the list to that dish — the same thing the
-        // box already does, just spelled correctly.
-        search.value = c.value;
-        applyView();
-      }
+      // One behaviour for every row: put the word in the box. What happens next
+      // is exactly what would have happened had the reader finished typing it.
+      search.value = c.label;
+      applyView();
     },
   });
 
@@ -1959,8 +1883,7 @@ function render(r) {
   requestAnimationFrame(setToolbarH);
   addEventListener("resize", setToolbarH);
 
-  // Apply any pre-selected dietary preferences now (dims non-matching dishes).
-  if (activeFilters.size) applyView();
+  // Nothing is pre-filtered: the query is the filter, and it starts empty.
 }
 
 // A slim contact bar that pins to the top of the menu on mobile once the full
