@@ -73,6 +73,17 @@ one and keeps the local catch available.
   `exitFromError` sends it to exit 2 with no `FAIL` line. Whether a geometry
   throw is a site claim or a harness claim is undecided; see roadmap
   `340/190` (a).
+- 🛑 **A load-induced `untilPresent` timeout now presents as exit 1 — a FALSE
+  REGRESSION — and it was measured within minutes of this landing.** Same
+  commit, twice: inside a 15-check sweep with two extra Chrome instances live
+  (load 18–27) `cook_check` exited **1** on the `MissingElementError` path;
+  isolated and quiet, it ran **85 passed, 0 failed**, exit 0. Nothing about the
+  site changed between them. This is option 1's rejected failure mode arriving
+  through option 2's door: the split keeps the 7 genuine timing waits at exit 2,
+  but the 48 site claims can still be starved into a phantom regression. Filed
+  with four costed options as roadmap `340/200`; until it is decided, a lone
+  `FAIL MISSING ELEMENT` on a loaded machine is not evidence until it
+  reproduces quiet.
 - ⚠️ **This ADR asserts nothing about the two tools that print no tree line.**
   `geo_check` and `served_check` hand-roll their summaries, so a run of either
   cannot confirm which tree it measured (`340/190` (b)). Their exit

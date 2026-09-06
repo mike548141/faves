@@ -394,6 +394,19 @@ Everything green, everything meaningless. It surfaced only because a **passing**
 run reported 22 where an agent had just said 25 — nobody interrogates a green
 run, so this is a mechanism and not a discipline.
 
+🛑 **AND SINCE 2026-09-07 (ADR 0093) THE EXIT CODE IS NO LONGER A CLEAN
+SIGNAL IN BOTH DIRECTIONS.** A wait classified as a claim about the SITE
+(`untilPresent`) throws a `MissingElementError` and exits **1** with a named
+`FAIL MISSING ELEMENT` line — which is the whole point, and is a real
+improvement on the exit-2 mystery it replaced. But a **loaded machine can starve
+that same wait past its 15 s budget**, and the result is byte-identical to a
+real regression. Measured the day it landed: `cook_check` exited 1 on that path
+inside a 15-check sweep at load 18–27, then ran **85 passed, 0 failed** on the
+**same commit** once the machine was quiet. So: **a lone `FAIL MISSING ELEMENT`
+on a busy machine is not evidence until it reproduces on a quiet one.** Filed
+with four costed options as roadmap item `340/200` (ADR 0093 carries the same
+measurement under *Consequences*).
+
 **`HARNESS ERROR — the browser stopped answering` means the CDP transport died,
 NOT that an assertion failed.** It exits **2**, never 1, and never prints a
 `FAIL` line carrying an assertion's name. That distinction did not exist until
