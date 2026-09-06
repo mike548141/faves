@@ -350,6 +350,19 @@ node tools/picks_check.mjs    # where the "If it's your first time, try…" bloc
                               # it did not. Also pins where focus lands when the
                               # button under it is removed: <body> means a keyboard
                               # reader is back at the top of the document
+node tools/distance_check.mjs # the distance limit actually CUTS the home list
+                              # (ADR 0091). Three shapes no unit test reaches: a
+                              # venue past the limit is GONE from the page (the
+                              # pure split can be right and the render ignore it);
+                              # the screen the cut can EMPTY carries its reason
+                              # and its way out while the generic "no places
+                              # match" line stands down — one explanation, not
+                              # two; and a DIRECT LINK to a place beyond the
+                              # limit opens WHOLE, menu and all, carrying one
+                              # line. Its absence assertion is the one most
+                              # likely to rot: a venue inside the limit must
+                              # carry NO note, and without it a note that fired
+                              # on all 57 places would pass everything else
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
                               # Reaches its end: "OK — 16 passed, 0 failed". Check the
                               # summary line is there AND that N is still 16 — a
@@ -390,13 +403,14 @@ still orphans both — nothing can catch it** — so if a run was `kill -9`ed, r
 you. Orphans do not make a check fail; they make it **stall silently** with a
 wall of PASS and no summary line.
 
-🛑 **CI runs ONE of the FOURTEEN browser checks — `boot_check`, and only since
+🛑 **CI runs ONE of the FIFTEEN browser checks — `boot_check`, and only since
 2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
 boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
 **not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
-`note_check` · `served_check` · `geo_check` · `picks_check` · `focus_check` — **thirteen** guards, every one written
+`note_check` · `served_check` · `geo_check` · `picks_check` · `focus_check` ·
+`distance_check` — **fourteen** guards, every one written
 precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through
 a whole settings refactor with CI green the entire time: nothing was calling it.
@@ -523,7 +537,7 @@ family runs when a human types it and at no other time, which is how
 `sync_check.mjs` stayed dead through a whole refactor. Type them. And note that
 even the automated one cannot stop a bad deploy: admins bypass `protect-main`,
 so its red lands **after** the push it is describing (see the fuller note above
-the check descriptions). For the other thirteen, the honour system IS still the
+the check descriptions). For the other fourteen, the honour system IS still the
 mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The

@@ -730,6 +730,18 @@ precached payload nothing on any screen can reach (ADR 0047).
   > pinned → orderable-before-stub → reachable (`farKm`) → **availability** →
   > **distance band** → **favourite** → exact distance → curated
 
+  **The home list CUTS at `farKm` before it ranks** (ADR 0091, owner-ruled
+  2026-08-22): Settings says the dial hides places, so `splitByDistanceLimit`
+  removes them rather than sinking them. Nothing is cut without an origin, and a
+  venue with no coordinates is kept — only a *known* too-far distance excludes.
+  The ranking is unchanged and still orders what survives the cut; the ruling
+  added a cut, it did not replace the sort. The list states its count and names
+  the limit beside it, the screen the cut can empty carries its own reason and a
+  widen button, and a **direct link to a venue past the limit opens normally**
+  with one line saying why it was missing from home. Search and the favourites
+  view are **not** cut: asking for a place by name is the same act as following
+  a link to it.
+
   Availability leads and distance follows, deliberately: a closed shop 200 m
   away is not a better answer than an open one at 900 m. The favourite is a
   **tiebreak at a tiebreak's size** — venues are bucketed into `FAV_TIE_KM`
