@@ -604,15 +604,24 @@ function init(restaurants) {
       return false;
     }
     const limit = formatDial(farKm, "farKm", units);
+    // On an EMPTY screen the note and the empty state below it would say the
+    // same sentence twice, both visible at 390 px without scrolling, each with
+    // its own button. The empty state wins that: it carries everything the note
+    // does and the statement the note cannot make. So the note is for a list
+    // that is merely SHORT.
     if (distanceNoteEl) {
-      distanceNoteEl.replaceChildren(
-        el("span", {
-          className: "distance-note-text",
-          textContent: `Your ${limit} distance limit is hiding ${plural(hidden, "place")}.`,
-        }),
-        widenButton(nearestBeyondKm, units, parkFocus)
-      );
-      distanceNoteEl.hidden = false;
+      if (listEmpty) {
+        distanceNoteEl.replaceChildren();
+      } else {
+        distanceNoteEl.replaceChildren(
+          el("span", {
+            className: "distance-note-text",
+            textContent: `Your ${limit} distance limit is hiding ${plural(hidden, "place")}.`,
+          }),
+          widenButton(nearestBeyondKm, units, parkFocus)
+        );
+      }
+      distanceNoteEl.hidden = listEmpty;
     }
     // The empty state stands in for the generic "no places match those filters"
     // line, never beside it: two explanations of one blank screen is worse than

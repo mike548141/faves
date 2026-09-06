@@ -78,7 +78,9 @@ joining it, so a blank screen never carries two explanations.
 **4. An empty state of its own**, where the list would be: what the limit is,
 how many places it is holding back, and a button that widens it. It **stands in
 place of** the generic "no places match those filters" line rather than beside
-it.
+it — and the short-list note above stands down while it is showing, because
+both are visible at 390 px without scrolling and would otherwise say the same
+sentence twice with a button each.
 
 **5. The direct link opens whole**, with one line on the venue page naming the
 distance, the limit, and the way out.
@@ -152,10 +154,11 @@ would not help.
   venue page that re-render is synchronous inside `settings.set` and throws the
   button away, so the confirmation is a toast and focus is parked on the title —
   otherwise a keyboard reader lands on `<body>`.
-- **Guarded by `tools/distance_check.mjs`** (18 assertions), not by CI: CI runs
+- **Guarded by `tools/distance_check.mjs`** (19 assertions), not by CI: CI runs
   `boot_check` and nothing else in that family. Three were break-probed by
   reintroducing the bug they cover — the note firing on every venue (1
-  assertion), two explanations on one blank screen (1), and **the original bug
-  itself**, ranking the uncut set, which fails exactly the six assertions
-  describing the cut and none of the direct-link ones. The rest are not
-  individually break-proven.
+  assertion), two explanations on one blank screen (1), the short-list note
+  refusing to stand down on the empty one (1), and **the original bug itself**,
+  ranking the uncut set, which fails exactly the six assertions describing the
+  cut and none of the direct-link ones. The rest are not individually
+  break-proven, said plainly rather than left to be assumed.

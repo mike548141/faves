@@ -290,6 +290,11 @@ async function run(opts) {
       `#empty-state visible: ${emptied.genericShown}`
     );
     report.check(
+      "…and the short-list note stands down too, rather than saying it twice on one screen",
+      emptied.noteShown === false,
+      `#distance-note visible: ${emptied.noteShown} — "${emptied.noteText}"`
+    );
+    report.check(
       "the empty screen carries the way out, on the screen that has nothing else",
       /Widen to \d+ km/.test(emptied.emptyButton),
       `button reads "${emptied.emptyButton}"`
