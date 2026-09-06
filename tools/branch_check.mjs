@@ -27,6 +27,20 @@
 //      answers, and the wrong one was the actionable-looking one. Asserted here
 //      because both halves are drawn by the same render and only a browser puts
 //      them on the same page (Theme 27, item 040).
+//   e) the FIX FOR (d) IS OVER- OR UNDER-DONE. Saying it on every branch meant a
+//      shut seven-branch chain printed "Permanently closed" EIGHT times at one
+//      weight (Theme 27, item 050). The owner ruled the repeats be muted, not
+//      dropped — so this asserts both directions: every branch section still
+//      carries exactly one closure badge (an over-eager tidy leaves a reader who
+//      scrolls into one row with nothing), AND the row's rendered weight and
+//      size are strictly below the banner's (an under-done fix leaves them
+//      identical). Both are computed-style facts: a CSS rule that loses a
+//      specificity fight or names a token that does not exist looks right in the
+//      stylesheet and changes nothing on screen. It also MEASURES the muted
+//      colour's contrast against whatever actually paints behind it, in light
+//      and in dark, against the 4.5:1 AA floor — because "muted" is one bad
+//      guess away from "illegible", and this is the most consequential sentence
+//      on the card.
 //
 // A FIXTURE, AND WHY. The shipped corpus holds NO closed venue — measured
 // 2026-08-19: 55 records, all 55 with `lifecycle.added` and not one
@@ -147,7 +161,10 @@ appears only when there are more branches than the card can hold.
 
 Also serves two of those chains back with a permanent-closure event injected
 (the corpus holds no closed venue) and asserts the branch card says what the
-page header says, rather than offering an "Open" branch of a shut chain.
+page header says, rather than offering an "Open" branch of a shut chain — and
+that it says it QUIETLY: on every branch still, but at a lower weight than the
+header banner and at a contrast ratio measured against the AA floor in both
+light and dark mode.
 
 Options:
   --id <venue-id>   Check only this venue (default: ${VENUES.join(", ")}
@@ -233,6 +250,59 @@ const snapshotExpr = `(() => {
     showAll: (card.querySelector(".contact-branches-more") || {}).textContent || null,
     dialNote: (card.querySelector(".contact-branches-dial") || {}).textContent || null,
     headings: [...card.querySelectorAll("h3")].length,
+    // --- item 050: the repeats are MUTED, never removed -------------------
+    // How many lifecycle-closure badges each branch section carries, ONE ENTRY
+    // PER BRANCH rather than a card-wide total. The total above (allChips)
+    // would be satisfied by two badges on one row and none on another, which
+    // is exactly the shape a half-finished "tidy up the repeats" leaves behind.
+    perBranchClosures: [...card.querySelectorAll(".contact-branch")].map(
+      (b) => b.querySelectorAll('.hours-badge[data-state^="closed-"]').length,
+    ),
+    // What the closure actually LOOKS like on a branch row versus in the header
+    // banner. Read from computed style in the browser, because "muted" is a
+    // rendered property: a rule that loses a specificity fight, or names a
+    // token that does not exist, reads as perfect in the stylesheet.
+    closureStyle: (() => {
+      // The first ancestor that actually paints. .branch-toggle,
+      // .contact-branch and .branch-head are all transparent, so reading the
+      // badge's own parent would compare the text against rgba(0,0,0,0) and
+      // return a contrast ratio of 1 — or, worse, a flattering number.
+      const paintedBg = (node) => {
+        for (let n = node; n; n = n.parentElement) {
+          const c = getComputedStyle(n).backgroundColor;
+          const parts = (c.match(/[\\d.]+/g) || []).map(Number);
+          if (parts.length < 4 || parts[3] > 0) return c;
+        }
+        return getComputedStyle(document.documentElement).backgroundColor;
+      };
+      const lum = (c) => {
+        const [r, g, b] = (c.match(/[\\d.]+/g) || []).slice(0, 3).map(Number).map((v) => {
+          const s = v / 255;
+          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+      const contrast = (fg, bg) => {
+        const a = lum(fg), b = lum(bg);
+        return Math.round(((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)) * 100) / 100;
+      };
+      const read = (node) => {
+        if (!node) return null;
+        const cs = getComputedStyle(node);
+        const bg = paintedBg(node);
+        return {
+          color: cs.color,
+          bg,
+          weight: Number(cs.fontWeight),
+          px: Math.round(parseFloat(cs.fontSize) * 100) / 100,
+          contrast: contrast(cs.color, bg),
+        };
+      };
+      return {
+        row: read(card.querySelector('.contact-branch .hours-badge[data-state^="closed-"]')),
+        header: read(document.querySelector(".menu-closure .hours-badge")),
+      };
+    })(),
   };
 })()`;
 
@@ -328,6 +398,63 @@ async function checkVenue(driver, report, id, url, venue, spec = null) {
         `badge(s) for ${branches.length} branch(es): ` +
         `${JSON.stringify([...new Set(s.allChips.map((c) => c.text))])}`,
     );
+
+    // --- item 050: muted on the rows, full weight on the banner ------------
+    // Owner-ruled 2026-09-06 (option 3). A shut seven-branch chain said
+    // "Permanently closed" eight times at identical weight. The fix is CSS
+    // only, and it has to fail in BOTH directions:
+    //   too little — the rows keep shouting, which is the bug;
+    //   too much   — a future session reads "muted" as "tidy the rows away"
+    //                and a reader who scrolls into one branch finds no closure
+    //                at all, which is the option the owner declined.
+    // The per-branch count guards the second; the weight comparison the first.
+    const bare = s.perBranchClosures.filter((n) => n !== 1).length;
+    report.check(
+      `${id}: EVERY branch row still states the closure — muted is not removed`,
+      s.perBranchClosures.length === branches.length && bare === 0,
+      `closure badges per branch section: ${JSON.stringify(s.perBranchClosures)} ` +
+        `(${branches.length} branch(es) — want exactly one each)`,
+    );
+
+    // Pinned to light before reading any computed style. Without this the
+    // evidence line below reports whatever theme the OPERATOR'S machine is in
+    // — it printed the dark palette on the laptop this was written on — and a
+    // check whose printed evidence depends on the reader's OS is one nobody can
+    // compare across two runs. The assertion itself holds in both themes; the
+    // number beside it should not move.
+    await driver.setColorScheme("light");
+    s = await driver.evalPage(snapshotExpr);
+    const { row, header } = s.closureStyle;
+    report.check(
+      `${id}: the repeats are SUBORDINATE to the header banner, not equal to it`,
+      !!row && !!header && row.weight < header.weight && row.px < header.px &&
+        row.color !== header.color,
+      row && header
+        ? `row ${row.weight}/${row.px}px ${row.color} vs banner ${header.weight}/${header.px}px ${header.color}`
+        : `row=${JSON.stringify(row)} header=${JSON.stringify(header)}`,
+    );
+
+    // "Muted" must not mean "inaccessible". This is the single most
+    // consequential fact on the card, so the floor is WCAG 2.2 AA for normal
+    // text (1.4.3, 4.5:1) against whatever actually paints behind it — read in
+    // the browser rather than reasoned about from the token, because the token
+    // is only half the answer and a `color-mix` or an inherited alpha is where
+    // a pleasing grey stops being a legible one.
+    for (const mode of ["light", "dark"]) {
+      await driver.setColorScheme(mode);
+      s = await driver.evalPage(snapshotExpr);
+      const st = s.closureStyle.row;
+      const hd = s.closureStyle.header;
+      report.check(
+        `${id}: the muted closure still meets WCAG AA in ${mode} mode`,
+        !!st && st.contrast >= 4.5,
+        st
+          ? `${st.contrast}:1 — ${st.color} on ${st.bg} (floor 4.5:1); banner ${hd?.contrast}:1`
+          : "no closure badge on any branch row to measure",
+      );
+    }
+    await driver.setColorScheme(null);
+    s = await driver.evalPage(snapshotExpr);
   }
 
   // --- the second step appears only when it is needed --------------------
@@ -455,6 +582,17 @@ async function run(opts) {
     );
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
     driver.cdpNavigate = (url) => cdp.send("Page.navigate", { url }, sessionId);
+    // Dark mode is a supported theme, not a nicety, and the muted closure has
+    // to clear AA in it too. Emulating the media query is enough: the tokens
+    // live in `@media (prefers-color-scheme: dark)`, so nothing re-renders and
+    // the same DOM can be measured twice. `null` restores the OS setting, so a
+    // venue checked after a fixture is not silently checked in the dark.
+    driver.setColorScheme = (scheme) =>
+      cdp.send(
+        "Emulation.setEmulatedMedia",
+        { features: scheme ? [{ name: "prefers-color-scheme", value: scheme }] : [] },
+        sessionId,
+      );
 
     for (const id of ids) {
       const url = `http://127.0.0.1:${port}/restaurant.html?id=${encodeURIComponent(id)}`;
