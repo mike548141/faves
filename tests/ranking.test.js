@@ -21,6 +21,7 @@ import {
   availabilityTier,
   isAvailableNow,
   rankVenues,
+  splitByDistanceLimit,
   FAR_KM,
   FAV_TIE_KM,
   FAV_BOOST_KM,
@@ -465,4 +466,64 @@ test("isAvailableNow: a multi-location venue is available when its nearest branc
   assert.equal(isAvailableNow(chain, { clock: clockAt(MON_NOON), origin: CBD }), true);
   // Nearest branch is the far one (closed at noon) → not available.
   assert.equal(isAvailableNow(chain, { clock: clockAt(MON_NOON), origin: { lat: -45.03, lng: 168.66 } }), false);
+});
+
+// --- THE CUT: splitByDistanceLimit (ADR 0091) ------------------------------
+// The owner ruled on 2026-08-22 that the distance dial must actually FILTER.
+// These pin the three things the pure function decides, and the fourth — that
+// the ranking survives inside the limit — because "adds a cut, does not replace
+// the sort" is the half of the ruling a later simplification would drop first.
+
+test("splitByDistanceLimit: cuts nothing without an origin", () => {
+  // No location ⇒ every distance is Infinity. A dial that hid places on that
+  // basis would hide ALL of them, on a guess.
+  const out = splitByDistanceLimit([openNear, openFar], { farKm: 5 });
+  assert.deepEqual(out.within.map((r) => r.id), ["open-near", "open-far"]);
+  assert.deepEqual(out.beyond, []);
+  assert.equal(out.nearestBeyondKm, null);
+});
+
+test("splitByDistanceLimit: a place past the limit is REMOVED, not sunk", () => {
+  const { within, beyond } = splitByDistanceLimit([openNear, openFar], {
+    origin: CBD,
+    farKm: 50,
+  });
+  assert.deepEqual(within.map((r) => r.id), ["open-near"]);
+  assert.deepEqual(beyond.map((r) => r.id), ["open-far"]);
+});
+
+test("splitByDistanceLimit: a coordless venue is kept — only a KNOWN too-far distance cuts", () => {
+  const nowhere = { id: "nowhere", hours: OPEN };
+  const { within, beyond } = splitByDistanceLimit([nowhere], { origin: CBD, farKm: 1 });
+  assert.deepEqual(within.map((r) => r.id), ["nowhere"]);
+  assert.deepEqual(beyond, []);
+});
+
+test("splitByDistanceLimit: nearestBeyondKm is the smallest limit that would bring one back", () => {
+  // at(6) and at(20) are due north of CBD, so their distances are ~6 and ~20 km.
+  const six = { id: "six", ...at(6) };
+  const twenty = { id: "twenty", ...at(20) };
+  const { beyond, nearestBeyondKm } = splitByDistanceLimit([twenty, six], {
+    origin: CBD,
+    farKm: 5,
+  });
+  assert.deepEqual(beyond.map((r) => r.id).sort(), ["six", "twenty"]);
+  assert.ok(nearestBeyondKm > 5.5 && nearestBeyondKm < 6.5, `got ${nearestBeyondKm}`);
+});
+
+test("splitByDistanceLimit: a branch inside the limit keeps the whole chain", () => {
+  // The measure is the NEAREST branch, exactly as rankVenues and isAvailableNow
+  // measure it — a chain is not cut for having a Queenstown branch.
+  const { within, beyond } = splitByDistanceLimit([chain], { origin: CBD, farKm: 50 });
+  assert.deepEqual(within.map((r) => r.id), ["chain"]);
+  assert.deepEqual(beyond, []);
+});
+
+test("the cut does not replace the sort: distance still orders what survives it", () => {
+  const near = { id: "near", ...at(1) };
+  const mid = { id: "mid", ...at(3) };
+  const gone = { id: "gone", ...at(40) };
+  const { within } = splitByDistanceLimit([gone, mid, near], { origin: CBD, farKm: 10 });
+  const ranked = rankVenues(within, { clock: clockAt(MON_NOON), origin: CBD });
+  assert.deepEqual(ranked.map((r) => r.id), ["near", "mid"]);
 });

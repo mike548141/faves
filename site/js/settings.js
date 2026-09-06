@@ -12,8 +12,12 @@
 //    #!## The name is now a lie in both directions: it is not a favourites
 //    boost and it is not a boost. It is the branch distance limit, and that is
 //    what the UI calls it. Renaming the key needs a migration in store.js.
-//  - farKm: beyond this straight-line distance a venue is "another town" and
-//    sinks below everything reachable (and the shuffle skips it).
+//  - farKm: beyond this straight-line distance a venue is "another town" and is
+//    REMOVED from the home list (and the shuffle skips it). It sank rather than
+//    hid until 2026-09-07, which made the label above it a promise the app did
+//    not keep; the owner ruled on 2026-08-22 that the control should filter
+//    (ADR 0091). Within the limit, distance still orders the list — the cut was
+//    added to the sort, not swapped for it.
 //
 // Also here: the food preferences, the UI language, the maps app, and the
 // metric/imperial display choice (units.js).

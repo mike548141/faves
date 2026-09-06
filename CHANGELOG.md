@@ -41,6 +41,17 @@ content freshness separately from this file.
   so you can ask for "two number 14s".
 
 ### Fixed
+- **"Hide places further than 5 km" now hides them.** The distance limit in
+  Settings only ever *reordered* the home list — you set 5 km and still saw every
+  place, further-away ones lower down, which read as a broken setting. It now
+  removes them. Closer places still come first within the limit, the list says
+  *"38 of 57 places"* with a line naming the limit that is holding the rest back,
+  and a **Widen to 10 km** button beside it. If the limit leaves nothing to show,
+  the screen says so and carries the same way out instead of going blank. A link
+  straight to a place further away than your limit **still opens normally** — the
+  person who sent it had no way of knowing what limit you had set — and carries
+  one line saying how far it is and offering to widen. Nothing is hidden until
+  Faves knows where you are.
 - **A dish you configured could stop looking filtered.** Adding an extra that
   knocks a dish out of an active dietary filter now fades it immediately;
   previously the row went on looking like a match until you typed something else.

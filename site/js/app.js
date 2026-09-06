@@ -16,8 +16,8 @@ import {
 } from "./filters.js";
 import { initFiltersUI } from "./filters-ui.js";
 import { formatDriveTime } from "./distance.js";
-import { formatDistance } from "./units.js";
-import { rankVenues, isAvailableNow } from "./ranking.js";
+import { formatDistance, formatDial, widenDialTo } from "./units.js";
+import { rankVenues, isAvailableNow, splitByDistanceLimit } from "./ranking.js";
 import { venueHours, nearestBranch } from "./locations.js";
 import { recallOrigin, rememberOrigin } from "./geo.js";
 import { askSurface, suppressAsk, declineAsk, readConsent } from "./geo-consent.js";
@@ -312,6 +312,46 @@ function card(r, clock, origin = null) {
   return li;
 }
 
+// The way out of a distance limit, as a real button (ADR 0091).
+//
+// It is offered ONLY when it will work: `widenDialTo` rounds UP to a position
+// the dial actually has, and returns null when the nearest hidden place is
+// past the dial's own maximum — a venue in another country is beyond anything
+// this control can express. A button that changed the number and not the list
+// would be the same broken promise this whole item exists to fix, one dial
+// position further along.
+//
+// The fallback is not a lesser button, it is a different offer: it opens the
+// dial and lets the reader see the range for themselves, rather than naming a
+// figure that cannot help them. The route is the ⚙ button's own click —
+// settings-ui.js builds its sheet lazily on that button and exports no open()
+// (the same borrow the branch card makes for the same reason, menu.js).
+function widenButton(nearestBeyondKm, units, afterChange) {
+  const target = widenDialTo(nearestBeyondKm, "farKm", units);
+  const btn = el("button", {
+    type: "button",
+    className: "distance-widen",
+    textContent: target === null
+      ? "Change your distance limit"
+      : `Widen to ${formatDial(target, "farKm", units)}`,
+  });
+  btn.addEventListener("click", () => {
+    if (target === null) {
+      document.getElementById("settings-btn")?.click();
+      return;
+    }
+    // `settings.subscribe(render)` redraws the list; this handler only moves
+    // the dial. Focus is parked by the caller, because the button is about to
+    // be removed from the DOM by that redraw and focus on a detached node
+    // falls to <body> — a keyboard reader back at the top of the document.
+    settings.set({ farKm: target });
+    afterChange?.();
+  });
+  return btn;
+}
+
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
 function fillSelect(select, values, allLabel, i18nKey) {
   const all = el("option", { value: "all", textContent: allLabel });
   if (i18nKey) all.dataset.i18n = i18nKey; // "All areas"/"All cuisines" translate; the values are place/cuisine names, left as-is
@@ -331,6 +371,8 @@ function init(restaurants) {
   const listEl = document.getElementById("restaurant-list");
   const countEl = document.getElementById("result-count");
   const emptyEl = document.getElementById("empty-state");
+  const distanceNoteEl = document.getElementById("distance-note");
+  const distanceEmptyEl = document.getElementById("distance-empty");
   const activeEl = document.getElementById("active-filters");
   const areaSel = document.getElementById("filter-area");
   const cuisineSel = document.getElementById("filter-cuisine");
@@ -543,17 +585,89 @@ function init(restaurants) {
   // dish lifts its whole venue. Flattened to venue ids for the ranker.
   const favouriteVenueIds = () => new Set(favourites.items().map((e) => e.venueId));
 
+  // Say what the distance limit did, in both of the places it has to be said
+  // (ADR 0091). Called on every render; writes nothing when nothing was cut.
+  //
+  // Two surfaces, because they answer two different questions. Beside the count
+  // it explains a SHORT list — the "12 of 55" above it says the list is short
+  // and this says which invisible control did it, since a setting has no chip
+  // to wear a ✕. Where the list would be it explains an EMPTY one, which is the
+  // state the ruling actually opened: a blank home screen reads as a broken app,
+  // so the reason and the way out go where the reader is already staring.
+  function renderDistanceCut({ hidden, nearestBeyondKm, farKm, units, listEmpty }) {
+    const parkFocus = () => countEl?.focus?.();
+    if (!hidden) {
+      distanceNoteEl?.replaceChildren();
+      if (distanceNoteEl) distanceNoteEl.hidden = true;
+      distanceEmptyEl?.replaceChildren();
+      if (distanceEmptyEl) distanceEmptyEl.hidden = true;
+      return false;
+    }
+    const limit = formatDial(farKm, "farKm", units);
+    // On an EMPTY screen the note and the empty state below it would say the
+    // same sentence twice, both visible at 390 px without scrolling, each with
+    // its own button. The empty state wins that: it carries everything the note
+    // does and the statement the note cannot make. So the note is for a list
+    // that is merely SHORT.
+    if (distanceNoteEl) {
+      if (listEmpty) {
+        distanceNoteEl.replaceChildren();
+      } else {
+        distanceNoteEl.replaceChildren(
+          el("span", {
+            className: "distance-note-text",
+            textContent: `Your ${limit} distance limit is hiding ${plural(hidden, "place")}.`,
+          }),
+          widenButton(nearestBeyondKm, units, parkFocus)
+        );
+      }
+      distanceNoteEl.hidden = listEmpty;
+    }
+    // The empty state stands in for the generic "no places match those filters"
+    // line, never beside it: two explanations of one blank screen is worse than
+    // either. It does NOT claim distance is the only filter running — the chips
+    // above name the others — it claims only what is true whatever else is on.
+    if (distanceEmptyEl) {
+      if (listEmpty) {
+        distanceEmptyEl.replaceChildren(
+          el("p", {
+            className: "distance-empty-head",
+            textContent: `Nothing to show within your ${limit} distance limit.`,
+          }),
+          el("p", {
+            className: "distance-empty-sub",
+            textContent: `${plural(hidden, "place")} further away ${hidden === 1 ? "is" : "are"} hidden.`,
+          }),
+          widenButton(nearestBeyondKm, units, parkFocus)
+        );
+      } else {
+        distanceEmptyEl.replaceChildren();
+      }
+      distanceEmptyEl.hidden = !listEmpty;
+    }
+    return listEmpty;
+  }
+
   function render() {
     // One clock per render, read per venue in that venue's own zone (ADR 0043):
     // the whole list is ranked against a single instant, so two venues can never
     // disagree about what time it is because the render took a moment to run.
     const clock = makeClock();
-    let shown = applyFilters(restaurants, state, clock);
-    const { favBoostKm, farKm } = settings.get();
+    const matched = applyFilters(restaurants, state, clock);
+    const { favBoostKm, farKm, units } = settings.get();
+    // THE CUT (ADR 0091, owner-ruled 2026-08-22). Settings says the dial hides
+    // places, so it hides them — before the ranker sees them, which is why the
+    // count below is honest for free. The ranking is untouched and still sinks
+    // distant venues *within* the limit: this adds a cut, it does not replace
+    // the sort. Nothing is cut without an origin (splitByDistanceLimit).
+    const { within, beyond, nearestBeyondKm } = splitByDistanceLimit(matched, {
+      origin: state.origin,
+      farKm,
+    });
     // Default order floats open/favourite/nearby venues up, sinks
     // closed/faraway ones; distance refines it once "Near me" gives an origin.
     // The favourite pull + reachable radius are the viewer's own dials.
-    shown = rankVenues(shown, {
+    const shown = rankVenues(within, {
       clock,
       origin: state.origin,
       favouriteIds: favouriteVenueIds(),
@@ -561,7 +675,16 @@ function init(restaurants) {
       farKm,
     });
     listEl.replaceChildren(...shown.map((r) => card(r, clock, state.origin)));
-    emptyEl.hidden = shown.length !== 0;
+    const distanceEmptied = renderDistanceCut({
+      hidden: beyond.length,
+      nearestBeyondKm,
+      farKm,
+      units,
+      listEmpty: shown.length === 0,
+    });
+    // One blank screen, one explanation: the distance state supersedes the
+    // generic one when the cut is what emptied the list.
+    emptyEl.hidden = shown.length !== 0 || distanceEmptied;
     const n = shown.length;
     const total = restaurants.length;
     countEl.textContent =

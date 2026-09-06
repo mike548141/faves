@@ -223,6 +223,13 @@
              overflow into a "+n more" button that opens the sheet. Empty and
              hidden whenever nothing is on. -->
         <div id="active-filters" class="active-filters" hidden></div>
+        <!-- Why the list is short for a reason no chip above can carry: the
+             distance limit is a SETTING, not a view filter, so it has no
+             control on this screen to wear a ✕ (ADR 0091). Since that dial now
+             removes places rather than sinking them, the list would otherwise
+             be quietly shorter than the collection with nothing on screen
+             saying so. app.js fills and unhides it; empty means no cut. -->
+        <p id="distance-note" class="distance-note" hidden></p>
       </div>
       <!-- What came of the location ask (ADR 0083). The PILL IS GONE — the
            owner removed it on 2026-08-17 ("I don't like the pill button to
@@ -642,6 +649,13 @@
       </ul>
 
       <p id="empty-state" class="empty browse-only" data-i18n="result.empty" hidden>No places match those filters. Try widening them.</p>
+      <!-- The distance limit can now empty this screen on its own, and a blank
+           home screen is indistinguishable from a broken app (ADR 0091). When
+           the cut is the reason nothing is showing, this stands in place of the
+           generic line above: it names the limit, says how many places it is
+           holding back, and carries the button that widens it. Built by app.js
+           because every part of it is a number read at render time. -->
+      <div id="distance-empty" class="empty browse-only" hidden></div>
 
       <footer class="site-footer">
         <!-- No-JS visitors keep the full privacy note here; about-ui.js hides

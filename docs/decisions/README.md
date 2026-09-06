@@ -965,3 +965,16 @@ deliberation those compact docs omit.
   Ranked `--reshoot` because the limiting factor is framing, not legibility: a
   third of the corpus is front-of-pack only and no care recovers what was never
   in the frame.
+
+- [0091](0091-the-distance-limit-cuts-the-list.md) — **the distance limit cuts
+  the list, and every screen it empties says so.** Settings promised to hide
+  places and the ranking only sank them; the owner was offered the cheap reword,
+  declined it, and chose the feature (2026-08-22). The cut lands before the
+  ranker, so the count is honest for free — and the sort survives inside the
+  limit, because sinking distant places was never wrong on its own. The two
+  questions the ruling left open are settled here: the count is stated **and
+  named** (a chip was rejected — those clear a view filter, this is a stored
+  setting), and the screen the limit can now empty carries its own reason and a
+  widen button that names a figure the dial can actually reach. A direct link
+  opens **whole**, with one line, because the sender never knew what limit the
+  recipient set.
