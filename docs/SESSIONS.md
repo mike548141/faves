@@ -9375,3 +9375,127 @@ Three things beyond the prices:
 ⚠️ Its weakness, stated: the `online` channel's `recorded` date is the
 record's own `lifecycle.added`, because no verification date was ever kept
 for that reading. Best available evidence, not a claim to have re-read it.
+
+## 2026-09-06-1501 — two rulings built in parallel, and both items' own numbers were wrong
+
+**Orchestration session (faves-24).** Two worktrees, two Opus agents, disjoint
+file sets, merged in version order. 19 commits. No branch, worktree or PR left
+open. `main` is `ca37d64`; the push **is** the Cloudflare Pages deploy.
+
+### What was delivered
+
+1. **The distance limit actually cuts** (ADR 0091, item `210/020`, merged
+   `d300fb9`). `splitByDistanceLimit` removes a venue past `farKm` **before**
+   the ranker; `rankVenues` untouched, so the sort survives *inside* the limit.
+   The count is stated and named, the empty state carries its reason and a
+   widen button whose figure rounds **up** to a real dial stop, and a direct
+   link opens **whole** with one quiet line. New `tools/distance_check.mjs`,
+   19 assertions.
+2. **An add-on option states what it IS** (ADR 0092, item 14h, merged
+   `c31ebf3`). `tools/tag_addon_options.py` — re-runnable, idempotent — then
+   the collapse. A reader now sees *"Bacon is meat, so this is no longer
+   vegetarian. Spinach, Tomatoes and Bacon aren't tagged gluten free, so that
+   label describes the dish as listed."* One fact, then the residue said once.
+
+### 🛑 Both items' headline numbers were wrong, and that is the session's finding
+
+**14h said the warning fired 807 times.** Re-derived against the corpus at the
+very commit the figure was taken from (`268c366`), four of five numbers
+reproduce **exactly** — 155 options, 62 tagged, 93 untagged, 40%. Two do not:
+the venue count was eight, not seven, and **807 was really 72**. 807 is
+reachable only by crossing every untagged option at a venue against every
+claim-bearing dish there *while ignoring which add-on groups attach to which
+dishes*. The worked example — Spinach stripping `v` off Thick Cut Fries — was
+**never possible**: that dish declares `addOns: ["gravy"]`, and `Gravy` is
+already tagged `v`. Verified here from the primary source, not taken on the
+agent's report.
+
+**And the ruling's order is inverted in importance.** Only **17 of 97**
+untagged options could honestly be tagged; the other 80 would require asserting
+an **absence**, which ADR 0025 forbids. So (b) the collapse is the load-bearing
+half, not the polish that "then collapse whatever remains" implies.
+
+**`210/020` carried a premise that is also not true today:** the distance limit
+cannot empty the home screen on its own, because two venues carry no
+coordinates and a venue we cannot place is never cut. The empty state is
+reachable through a *combination*, and on distance alone only once every record
+has coordinates.
+
+🔑 **The shape both share:** a number quoted forward without re-derivation
+acquires an authority it never earned. Both rulings still stand — the problems
+were real — but the owner ruled partly on figures that do not survive contact
+with their own source.
+
+### 🔎 The ruleset finding: a direct push can never satisfy a required check
+
+Measured from the rule-suite API's own detail field, not inferred:
+`required_status_checks | fail | 6 of 6 required status checks are expected`.
+At push time nothing has run them, because a workflow starts *after* the ref
+moves. The 14 bypasses in the retained log are the only outcome the mechanism
+allows — not carelessness. The single `pass` is the **merge of PR #7**, whose
+head already carried green checks.
+
+🛑 **So narrowing `bypass_actors` would not "switch enforcement on" over the
+current workflow — it would end direct pushes to `main` entirely** and move the
+repo to PR-only. On this repo `main` is the deploy, so it also means every
+deploy waits for CI. That is a workflow decision, not a settings tweak. Filed
+as `340/180`; CLAUDE.md's paragraph corrected to point at it.
+
+### Other findings filed
+
+- **`340/190` — two harness guarantees are not true.** `picks_check` is flaky on
+  the **pristine baseline** (1 failure in 3 runs at `236b3b6`, bisected before
+  being believed), and its failure is a **third shape** CLAUDE.md does not
+  describe: a plain `Error`, exit **1**, **no `FAIL` line**. And **two** checks
+  never print the second indented tree line — `geo_check` **and**
+  `served_check` — so CLAUDE.md's bold *"**Every** check prints…"* is false for
+  two of fifteen, on the very mechanism installed after a session verified
+  green against the wrong tree.
+  🔑 **The second one came from a sweep, not the symptom.** The build that
+  raised this saw only `geo_check`, the one it ran. Running all fourteen here,
+  then `grep -L "summary(SITE)" tools/*_check.mjs`, returned exactly two. A
+  symptom count proves a fault exists, never how many there are — and the
+  enumeration doubled the answer.
+- **`340/160` — a name collision found before executing.** The ruled
+  `untilSettled` would sit beside the existing `settleUntil`, which never throws
+  and returns its last value. Two exports differing only by word order with
+  opposite behaviour. The ruling's substance is untouched; only the label is in
+  question. **Not executed** — surfacing the fork rather than picking one. 54
+  call sites measured.
+- **`340/170` narrowed from an audit to one line.** Of 7 multi-target selectors,
+  only `boot_check.mjs:83`'s `[class*='price']` wildcard can pass with every
+  named target gone.
+- **`340/030` was advertising work already done** — the `repo invariants` rename
+  shipped 2026-08-17. Corrected.
+- **`240/020` — version constants are dated NZ-local, record filenames UTC.**
+  For twelve hours a day they disagree by a calendar day. Nothing breaks;
+  `check_versions.py` never parses the date.
+- **CLAUDE.md numbers corrected:** `test_validate` is **137** mutations (said
+  113), and "the last 100 ruleset evaluations were 100 bypasses" cannot be
+  reproduced — the endpoint retains 15.
+
+### Verification on the MERGED tree (the combination neither agent tested)
+
+`node --test` **1158 pass / 0 fail** · `test_validate` **137 mutations** ·
+`test_tag_addon_options` 16 · `test_tag_allergens` 18 · `validate` 57 files ·
+all ten Python gates clean · `check_versions --range e13af35..HEAD`:
+**lockstep holds, SHELL 2026-09-06.6 → 2026-09-07.2 (9 files), DATA
+2026-09-07.1 → 2026-09-07.2 (6 files)**. Browser: `boot_check` 24 ·
+`distance_check` 19 · `addon_check` 21 · `device_check` 25 · `focus_check` 16 ·
+`note_check` 19 · `geo_check` 22 · `served_check` 55 · `to_top_check` 28 ·
+`filter_row_check` — all green, and every one **except `geo_check` and
+`served_check`** reporting `tree …/.pets/faves/site · shell 2026-09-07.2 ·
+main@ca37d64`, read rather than assumed. Those two printed no tree line, which
+is how the second half of `340/190` was found. ✅ **CI green on the deployed
+commit `ca37d64`** — both `floor` and `CI` jobs.
+
+⚠️ **The `--range origin/main..HEAD` form said "not in scope"** once HEAD *was*
+origin/main — an empty range proves nothing. The session range was used
+instead. Worth knowing: the documented invocation is only meaningful on a
+branch that is ahead.
+
+### Owed to the owner
+
+Four decisions, put to him at close: the `until` naming fork; the
+`boot_check:83` selector; the bypass/PR-only question `340/180` reframes; and
+`210/050`'s "Permanently closed" repetition. Nothing else is left uncaptured.

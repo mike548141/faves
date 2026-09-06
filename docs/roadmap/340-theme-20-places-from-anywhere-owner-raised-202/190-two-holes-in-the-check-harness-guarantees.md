@@ -25,23 +25,32 @@
   ruled for *waits*, and this is a third path — a helper that throws on
   geometry (`no clickable box`) rather than on absence.
 
-  **(b) `geo_check.mjs` does not print the second indented tree line.** It
-  hand-rolls its summary instead of calling `report.summary(SITE)`. CLAUDE.md
-  says, in bold: *"**Every** check prints a SECOND, indented line naming the
-  tree it served, that tree's `SHELL_VERSION`, and its `branch@sha`. Read it."*
-  That sentence is **false for one of fifteen**.
+  **(b) TWO checks never print the second indented tree line — `geo_check.mjs`
+  and `served_check.mjs`.** Both hand-roll their summary instead of calling
+  `report.summary(SITE)`. CLAUDE.md says, in bold: *"**Every** check prints a
+  SECOND, indented line naming the tree it served, that tree's `SHELL_VERSION`,
+  and its `branch@sha`. Read it."* That sentence is **false for two of
+  fifteen**.
+
+  🔎 **The count came from a sweep, not from the symptom.** The build that
+  raised this found `geo_check` — the one it happened to run. Running all
+  fourteen on the merged tree showed `served_check` doing the same thing, and
+  `grep -L "summary(SITE)" tools/*_check.mjs` returns exactly those two and
+  nothing else. Worth recording as method: *a symptom count proves a fault
+  exists, never how many there are* — the enumeration is a different act from
+  the observation, and here it doubled the answer.
 
   🔑 **Why (b) matters more than a missing line usually would.** That line is
   not decoration — it is the mechanism installed after a session's shell cwd
   drifted out of its worktree and its verification ran green against a tree
   without the change. Everything green, everything meaningless. The rule exists
-  *"so this is a mechanism and not a discipline"* — and a mechanism with a
-  fifteenth hole in it is a discipline again, precisely on the check a session
-  is least likely to re-run.
+  *"so this is a mechanism and not a discipline"* — and a mechanism with two
+  holes in it is a discipline again, on exactly the checks a session is least
+  likely to re-run.
 
   📋 **Both are small and neither was fixed, on purpose** — they surfaced inside
   another item's build, and the repo's rule is that a finding is filed rather
   than folded into unrelated work. (a) wants a decision (is a geometry throw an
   assertion failure or a harness error? it interacts with `160`'s ruled split);
-  (b) is a one-line change to call `report.summary(SITE)` and should ride with
-  whatever next touches `geo_check`.
+  (b) is a one-line change per tool to call `report.summary(SITE)` and should
+  ride with whatever next touches `geo_check` or `served_check`.
