@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Changed
+- **A closed chain says so once loudly, then quietly.** The banner at the top of
+  a shut venue's page still states *"Permanently closed"* in full; the branch
+  list underneath still says it on every single branch — a reader who scrolls
+  straight into one branch must never find it missing — but now in a smaller,
+  lighter, softer red so a seven-branch chain no longer prints the same sentence
+  eight times at full volume. The muted colour was measured against the
+  background it sits on rather than eyeballed: 5.9:1 in light mode and 6.8:1 in
+  dark, both comfortably past the 4.5:1 the standard asks for.
 - **Adding an extra now tells you what it IS, and says the rest once.** Putting
   bacon on the vegetarian breakfast used to read *"We can't say whether Bacon is
   vegetarian, so we can't say this still is. We can't say whether Bacon is

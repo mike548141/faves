@@ -17,6 +17,14 @@
   --warn: #b02a15;
   --warn-bg: #fbe4de;
   --warn-ink: #5c130a;
+  /* A closure RESTATED — the branch rows under a header banner that already
+     said it (Theme 27 item 050). Lower chroma than --warn so eight copies of
+     one sentence stop shouting, still in the warn family so it never reads as
+     ordinary secondary text. Measured, not eyeballed: 5.92:1 on --surface,
+     5.09:1 on --surface-2 (the row's hover background), 5.54:1 on --bg —
+     every one of them past the 4.5:1 AA floor for normal text, because the
+     thing being muted is the most consequential fact on the card. */
+  --warn-soft: #8f5346;
   --ok: #2f7d32; /* "open" — meets AA on --surface */
   --amber: #9a5b00; /* "closing/opening soon" */
   /* "We checked, and it's current" — deliberately NOT --ok: green already
@@ -78,6 +86,8 @@
     --warn: #ff7a68;
     --warn-bg: #3a1712;
     --warn-ink: #ffd8d0;
+    /* 6.83:1 on --surface, 6.18:1 on --surface-2, 7.48:1 on --bg. */
+    --warn-soft: #c99a90;
     --ok: #7bc47f;
     --amber: #e0a33e;
     --info: #6fb3dd;
@@ -3665,6 +3675,33 @@ body.faves-view .to-top {
   font-weight: 600;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
+}
+
+/* A shut chain says its closure ONCE IN FULL and then quietly, on every branch
+   row beneath (Theme 27 item 050, owner-ruled 2026-09-06, option 3). A shut
+   seven-branch chain was printing "Permanently closed" eight times at full
+   weight — banner, lead, and every collapsed row — which on a 390px screen is
+   most of the card.
+   WHAT DOES NOT CHANGE: the statement stays on EVERY row. Option 2 (state it on
+   the "Branches" heading and leave the rows bare) was declined precisely
+   because a reader who scrolls into one row would then find no closure at all,
+   and because the rows stop being repeats the day closure becomes per-branch
+   (item 040 decision 2) — this rule must not pre-empt that.
+   WHY NOT GREY: "red, not grey" is an owner ruling (2026-08-16) about this same
+   badge — grey was the one state that did not signal itself at a glance. So the
+   repeats keep the warn hue and are subordinated by size, weight and chroma
+   instead. --warn-soft's contrast is measured on every background this badge
+   can land on; see the token. Scoped to the two LIFECYCLE states by name: the
+   hours engine's own "closed" must keep its full --warn, because that one is
+   not a repeat of anything. */
+.contact-branch .hours-badge[data-state="closed-permanently"],
+.contact-branch .hours-badge[data-state="closed-temporarily"] {
+  /* 0.75rem = 12px, not the 0.72rem used for the uppercase "Branches" label:
+     that one is a signpost, this one is a consequential sentence a person has
+     to be able to read. Three levers, none of them pushed to its limit. */
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--warn-soft);
 }
 
 /* A collapsed branch — the rows beside the expanded lead. One tap opens its
