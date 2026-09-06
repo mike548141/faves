@@ -20,14 +20,23 @@
 // a scrolling list will always overlap something, so "move it 20 px" is not a
 // fix — at 390 px the content column is `100% - 2 * --space-3`, so the gutter
 // either side is 16 px and a 44 px-minimum target cannot live in it. Measured
-// in headless Chrome, button pinned visible at every scroll position, 37 px
-// steps over the whole document:
+// 2026-09-07 in headless Chrome by `tools/to_top_check.mjs` with the dodge
+// below switched off — i.e. exactly the declined "just show it on the way
+// down" — sweeping the whole document in 37 px steps:
 //
-//   menu  390 px / 16 px text   153 of 554 positions occluded (27.6 %), worst
-//                               100 % of a `.dish-price` — 0 px of "$8" legible
-//   menu  390 px / 24 px text   184 of 844 (21.8 %), worst 100 %
-//   home  390 px / 16 px text   146 of 200 (73.0 %), worst 88.8 % of a ♥
-//   home  390 px / 24 px text   180 of 392 (45.9 %), worst 77.9 %
+//   menu  390 px / 16 px text   151 of 554 positions occluded, worst 100 % of a
+//                               `.dish-price` — 0 px of "$8" legible
+//   menu  390 px / 24 px text   184 of 844, worst 100 %
+//   home  390 px / 16 px text   134 of 200, worst 88.8 % of a ♥
+//   home  390 px / 24 px text   174 of 389, worst 77.9 %
+//   home 1200 px / 16 px text    60 of  97, worst 86.2 %
+//   home 1200 px / 24 px text    70 of 157, worst 94.6 %
+//
+// (The menu at 1200 px is the one layout with nothing to solve: the column
+// stops at 756 px and the button sits at 1004 px, clear of it.) These are not
+// the same numbers as the 2026-08 report's 96 of 547 — that measured a document
+// 21 667 px tall where this one is 21 330 px, so the corpus itself has moved;
+// no attempt has been made to reconcile the two.
 //
 // What the same sweep also showed is the way out: at EVERY one of those
 // positions there was a clear resting place within a short move UP the same
