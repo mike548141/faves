@@ -40,6 +40,35 @@
   present encoding throws that knowledge away and then asks the reader to guess
   from an exit code. This does not add information; it stops discarding it.
 
+  🚩 **A NAME COLLISION THE RULING COULD NOT HAVE KNOWN ABOUT — raised
+  2026-09-06 (session faves-24) before executing, not after.** `browser.mjs`
+  **already exports `settleUntil`** (line ~320): it polls until a predicate
+  holds and, on timeout, **returns the last value instead of throwing** —
+  deliberately, so a state that never arrives reads as a failed assertion
+  rather than a harness error. Adding the ruled `untilSettled` beside it puts
+  two exports in one module whose names differ only by word order and whose
+  behaviour differs completely (one returns, one throws). That is a trap for
+  every future reader, and this repo has already paid for one pair of
+  near-identical rules that read correct in every diff.
+
+  🔑 **The ruling's SUBSTANCE is untouched by this** — splitting the wait by
+  what it *claims* is right, and the reasoning that the call site already knows
+  its kind still holds. Only the label is in question. Options, none taken:
+  1. **`untilPresent` / `untilStable`** — keeps `settleUntil` as it is and
+     avoids the near-miss entirely. Cheapest, and departs from the ruled word.
+  2. **`untilPresent` / `untilSettled`, and rename `settleUntil`** to something
+     unambiguous in the same commit. Honours the ruled names; touches a third
+     API nobody asked to change.
+  3. **Ship the ruled names as given** and rely on the doc comments. Cheapest
+     to decide, and it is the option that creates the trap.
+
+  📋 **Also measured while scoping:** the migration is **49 `until(` call
+  sites** across 14 tools — `sync_check` 11, `boot_check` 14, `cook_check` 6,
+  `geo_check`/`note_check` 3 each, `device_check`/`picks_check`/`served_check` 2
+  each, and 1 each in `focus_check`, `branch_check`, `filter_row_check`,
+  `addon_check`, `recipe_check`, `to_top_check` — plus one inside `browser.mjs`
+  itself.
+
   📋 **Doing it.** Rename at all `until` call sites across the 13 check tools,
   one at a time, choosing per site rather than by pattern — **a site whose kind
   is unclear is a finding, not a coin toss.** The cost here is coordination, not
