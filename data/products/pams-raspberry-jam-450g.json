@@ -2,6 +2,9 @@
   "id": "pams-raspberry-jam-450g",
   "name": "Raspberry Jam",
   "brand": "Pams",
+  "identifiers": {
+    "gtin": "9415077109166"
+  },
   "pack": {
     "size": 450,
     "unit": "g",
@@ -47,10 +50,19 @@
     "captured": "2025-12-05",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.pams.co.nz/product-finder/5003832",
+      "read": "2026-09-06",
+      "fields": [
+        "identifiers"
+      ]
+    }
+  ],
   "needs": [
     "allergens",
-    "gtin",
     "manufacturer"
   ],
-  "note": "The 45% figure was re-cropped at native resolution and confirmed against the front-of-pack '45% FRUIT' badge. ⚠️ The per-100 g protein and fat-total values are embossed gold on a red ground and sit at the edge of legibility even at native resolution: both read 0.6 g, but 0.5 g cannot be fully ruled out, and the per-serving column (0.1 g for each) does not disambiguate because 0.5 and 0.6 both round to 0.1 at a 10 g serving. Every other figure is crisp. pack.size 450 g is derived from 'Servings per package: 45' x 'Serving size: 10 g'; the net weight is not in either frame. The label declares no allergens. Front also claims 'NO ADDED COLOURS, FLAVOURS OR PRESERVATIVES'. No distributor address and no barcode in frame."
+  "note": "The 45% figure was re-cropped at native resolution and confirmed against the front-of-pack '45% FRUIT' badge. ⚠️ The per-100 g protein and fat-total values are embossed gold on a red ground and sit at the edge of legibility even at native resolution: both read 0.6 g, but 0.5 g cannot be fully ruled out, and the per-serving column (0.1 g for each) does not disambiguate because 0.5 and 0.6 both round to 0.1 at a 10 g serving. Every other figure is crisp. pack.size 450 g is derived from 'Servings per package: 45' x 'Serving size: 10 g'; the net weight is not in either frame. The label declares no allergens. Front also claims 'NO ADDED COLOURS, FLAVOURS OR PRESERVATIVES'. No distributor address and no barcode in frame. The barcode was read from the Pams own-brand page 2026-09-06, NOT from the photograph (no barcode is in frame). Pams is Foodstuffs' own brand, so that site is the brand owner's, not a third-party retailer's. Matched on brand, product, pack size (450 g) and every figure on the panel — and it settles the ⚠️ above: the page's own table gives protein 0.6 g and fat 0.6 g per 100 g, so the embossed readings were right and 0.5 g is ruled out. It also prints the ingredient list character for character and gives origin as 'Product of New Zealand or Poland'. THE PAGE CARRIES NO ALLERGEN SECTION AT ALL — not an empty one — so 'allergens' stays in needs and nothing is claimed about an absence. No manufacturer name or address is published there either."
 }

@@ -34,6 +34,7 @@
     }
   },
   "ingredients": "Crushed & Sieved Tomatoes (100%).",
+  "origin": "Made in Italy",
   "category": "pantry",
   "source": {
     "kind": "own-photo",
@@ -45,12 +46,21 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.woolworths.co.nz/shop/productdetails?stockcode=569805",
+      "read": "2026-09-06",
+      "fields": [
+        "origin"
+      ]
+    }
+  ],
   "needs": [
     "allergens",
     "gtin",
     "manufacturer",
-    "origin",
     "storage"
   ],
-  "note": "Saturated fat is printed '< 0.1g' in both columns and is OMITTED rather than rounded. The side panel carrying 'Made in …', the packer address and the barcode wraps round the can and is not legible in either photo, so origin, manufacturer and gtin are all unrecorded. Front of pack: 400g, health star rating 4.5, 'Contains 5 serves of vegetables'."
+  "note": "Saturated fat is printed '< 0.1g' in both columns and is OMITTED rather than rounded. The side panel carrying 'Made in …', the packer address and the barcode wraps round the can and is not legible in either photo, so origin, manufacturer and gtin are all unrecorded. Front of pack: 400g, health star rating 4.5, 'Contains 5 serves of vegetables'. Origin read from Woolworths' own product page 2026-09-06, NOT from the photograph (the side panel carrying 'Made in …' is unreadable in both frames). This is a Woolworths own-brand line, so the retailer IS the brand owner and the citation is recorded as a manufacturer one. Matched on brand, product, variant (Italian) and pack size (400 g), and the page's ingredient statement — 'Crushed & Sieved Tomatoes (100.0000%)' — is the photographed one. THE PAGE PUBLISHES NO ALLERGEN STATEMENT, so 'allergens' stays in needs; nor does it give a packer name or address."
 }

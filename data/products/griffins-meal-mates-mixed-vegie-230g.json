@@ -39,7 +39,8 @@
     "contains": [
       "Wheat",
       "Gluten",
-      "Milk"
+      "Milk",
+      "Sesame"
     ],
     "mayContain": [
       "Egg",
@@ -59,11 +60,21 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.griffinsbiscuits.com/our-products/category-three/meal-mates/meal-mates-vegie",
+      "read": "2026-09-06",
+      "fields": [
+        "allergens"
+      ]
+    }
+  ],
   "needs": [
     "gtin",
     "ingredients",
     "manufacturer",
     "storage"
   ],
-  "note": "INCOMPLETE INGREDIENT AND ALLERGEN DATA — do not rely on this record for allergen decisions. The ingredient panel runs off the RIGHT edge of IMG_7192, so every line of the list is truncated mid-line; only the readable left-hand fragments are transcribed. The 'Contains' line reads 'Contains Wheat, Gluten, Milk, S…' — a fourth allergen beginning with S is cut off (the ingredient list separately shows a truncated 'Sesam…', but that is not confirmation and is not recorded as fact). The 'May Contain Egg, Soy, Sulphites' line may also continue past the frame edge. Serving size is printed as '4 Crackers (Approx. 23 g)'. Re-photograph the full back panel before use."
+  "note": "INCOMPLETE INGREDIENT AND ALLERGEN DATA — do not rely on this record for allergen decisions. The ingredient panel runs off the RIGHT edge of IMG_7192, so every line of the list is truncated mid-line; only the readable left-hand fragments are transcribed. The 'Contains' line reads 'Contains Wheat, Gluten, Milk, S…' — a fourth allergen beginning with S is cut off (the ingredient list separately shows a truncated 'Sesam…', but that is not confirmation and is not recorded as fact). The 'May Contain Egg, Soy, Sulphites' line may also continue past the frame edge. Serving size is printed as '4 Crackers (Approx. 23 g)'. Re-photograph the full back panel before use. THE CUT-OFF FOURTH ALLERGEN IS SESAME. Griffin's own product page for Meal Mates Vegie, read 2026-09-06 (matched on brand, product, variant and pack size — it names the 230 g pack), states 'Contains: Milk, Sesame, Wheat, Gluten' and 'May Contain: Egg, Soy, Sulphites'. Only 'Sesame' is taken from that page, NOT from the photograph; the other three and the whole may-contain line remain the photographed ones and are unchanged. PAK'nSAVE's listing for the same 230 g pack (https://www.paknsave.co.nz/shop/product/5004667_ea_000pns) agrees word for word. NEITHER PEANUT NOR TREE NUT IS DECLARED on the manufacturer's page or on either retailer's. The manufacturer publishes the full ingredient statement at the same URL and it matches every legible fragment transcribed above, but the truncated packet reading is deliberately left in place rather than overwritten with a website's, so 'ingredients' stays in needs and the back panel is still worth re-photographing."
 }

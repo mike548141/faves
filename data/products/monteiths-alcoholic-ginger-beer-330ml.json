@@ -7,6 +7,21 @@
     "unit": "ml",
     "count": 1
   },
+  "nutrition": {
+    "basis": "per-100ml",
+    "per100": {
+      "energyKj": 220,
+      "carbohydrate": 7.3,
+      "sugars": 6.0,
+      "sodium": 1.5
+    }
+  },
+  "ingredients": "Water, Sugar, Malted Barley, Flavours, Wheat, Oats, Citric Acid, Ginger Extract, Hops",
+  "allergens": {
+    "contains": [
+      "Gluten"
+    ]
+  },
   "origin": "West Coast, New Zealand",
   "category": "drink",
   "source": {
@@ -19,14 +34,30 @@
     "captured": "2026-01-09",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.db.co.nz/monteiths/products/alcoholic-ginger-beer/",
+      "read": "2026-09-06",
+      "fields": [
+        "nutrition"
+      ]
+    },
+    {
+      "kind": "retailer",
+      "ref": "https://www.paknsave.co.nz/shop/product/5326057_ea_000pns",
+      "read": "2026-09-06",
+      "fields": [
+        "ingredients",
+        "allergens"
+      ]
+    }
+  ],
   "needs": [
-    "allergens",
     "gtin",
-    "ingredients",
     "manufacturer",
-    "nutrition",
     "servings",
     "storage"
   ],
-  "note": "Front of can only, seen in a wide fridge shot. Legible: '330 mL | 4.0% ALC/VOL' and 'WEST COAST 1868 NEW ZEALAND'. Alcohol strength has no field in this schema. No panel was photographed."
+  "note": "Front of can only, seen in a wide fridge shot. Legible: '330 mL | 4.0% ALC/VOL' and 'WEST COAST 1868 NEW ZEALAND'. Alcohol strength has no field in this schema. No panel was photographed. Ingredients and the allergen line were read from PAK'nSAVE's listing 2026-09-06 and the per-100 mL panel from DB Breweries' own Monteith's page the same day — NOT from the photograph, which shows only the front of the can. The match rests on brand, product name (Monteith's Alcoholic Ginger Beer), 330 mL can and 4.0% ALC/VOL, all four legible in frame, plus the two sources' per-100 mL panels agreeing figure for figure (220 kJ, 7.3 g carbohydrate, 6 g sugars, 1.5 mg sodium). The retailer sells it only as a 10 x 330 mL pack, which is the same 330 mL can. ⚠️ THE INGREDIENT LIST NAMES MALTED BARLEY, WHEAT AND OATS — three gluten cereals — and the retailer's own description ends 'Contains Gluten.', which is the source of the single entry in contains; the page's 'Allergens' heading itself carries only the pregnancy warning, so 'Gluten' is quoted from that description and nothing further is inferred from the cereals. No 'may contain' is published anywhere, so none is recorded. Protein, fat and saturated fat are printed '< 1 g' and are omitted rather than rounded. Servings are left in needs because both sources count a serving as one can of a 10-pack and this record is a single can."
 }

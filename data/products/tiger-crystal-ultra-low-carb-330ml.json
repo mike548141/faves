@@ -32,6 +32,7 @@
       "sodium": 6.9
     }
   },
+  "ingredients": "Water, Malted Barley, Sugar, Hop Extract",
   "category": "drink",
   "source": {
     "kind": "own-photo",
@@ -43,12 +44,21 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "retailer",
+      "ref": "https://www.newworld.co.nz/shop/product/5302871_ea_000nw",
+      "read": "2026-09-06",
+      "fields": [
+        "ingredients"
+      ]
+    }
+  ],
   "needs": [
     "allergens",
-    "ingredients",
     "manufacturer",
     "origin",
     "storage"
   ],
-  "note": "Front reads 'Tiger / SINCE 1932 / World Acclaimed / CRYSTAL ULTRA / LOW CARB*'. Back gives 330mL and 4.2% ALC/VOL but no ingredient list on the photographed face. Protein, fat, saturated fat, sugars and dietary fibre per 100 mL, and fat/saturated/sugars/fibre per serving, are printed as 'LESS THAN 1 g' - not numbers, so omitted."
+  "note": "Front reads 'Tiger / SINCE 1932 / World Acclaimed / CRYSTAL ULTRA / LOW CARB*'. Back gives 330mL and 4.2% ALC/VOL but no ingredient list on the photographed face. Protein, fat, saturated fat, sugars and dietary fibre per 100 mL, and fat/saturated/sugars/fibre per serving, are printed as 'LESS THAN 1 g' - not numbers, so omitted. Ingredients read from New World's listing 2026-09-06, NOT from the photograph (the photographed face carries no ingredient list). Matched on brand, product, variant (Crystal Ultra Low Carb), the 330 mL bottle and 4.2% ALC/VOL, and confirmed by the listing's nutrition panel reproducing the photographed one to the digit in both columns — 118/389 kJ, 0.9/3.0 g carbohydrate, 2.1/6.9 mg sodium. 🛑 NO ALLERGEN STATEMENT IS PUBLISHED for this beer: DB Breweries' own Tiger page (https://www.db.co.nz/tiger/products/tiger-crystal-ultra-low-carb/) prints nutrition only, with no ingredient or allergen section at all, and the retailer's 'Allergens' heading carries only the pregnancy warning. Malted barley is in the ingredient list, but this store never derives an allergen list from ingredients, so 'allergens' stays in needs."
 }
