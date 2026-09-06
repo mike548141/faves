@@ -441,6 +441,55 @@ async function run(opts) {
         `pressed=${chosen.chips.filter((c) => c.pressed).map((c) => c.key).join(",") || "none"}`
     );
 
+    // ─── Part E — the counter price is the price (ADR 0089) ────────────────
+    //
+    // KK Malaysian's record held Delivereasy's prices for two months with
+    // nothing on screen saying so — $24 beside a phone number that would have
+    // charged $19. Both numbers are plausible, which is exactly why no reader
+    // could have caught it. So the assertion is not "a second price renders";
+    // it is that the BIG number is the counter one and the second is subordinate
+    // to it and names its door.
+    await openVenue(driver, cdp, sessionId, port, "kk-malaysian");
+    const channel = await driver.evalPage(`(() => {
+      const d = [...document.querySelectorAll("li.dish")]
+        .find((x) => (x.querySelector(".dish-name")?.textContent || "").trim().startsWith("Chicken Satay"));
+      if (!d) return { missing: true };
+      const line = d.querySelector(".dish-channels");
+      const price = d.querySelector(".dish-price");
+      const cs = line && getComputedStyle(line);
+      const ps = price && getComputedStyle(price);
+      return {
+        price: (price?.textContent || "").trim(),
+        channel: (line?.textContent || "").replace(/\\s+/g, " ").trim(),
+        // The caveat must be visually quieter than the answer it qualifies.
+        channelPx: cs ? parseFloat(cs.fontSize) : null,
+        pricePx: ps ? parseFloat(ps.fontSize) : null,
+        total: document.querySelectorAll(".dish-channels").length,
+      };
+    })()`);
+    report.check(
+      "the price on the row is the COUNTER price, not the delivery app's",
+      // "$19", not "$19.00" — money() drops a trailing .00, and asserting the
+      // long form failed against correct behaviour on the first run.
+      channel.price === "$19",
+      `showing ${channel.price} (Delivereasy charges $24)`
+    );
+    report.check(
+      "the delivery price sits beside it, names its platform and says how much more",
+      /\$24 on Delivereasy — about 26% more/.test(channel.channel),
+      channel.channel
+    );
+    report.check(
+      "…and reads as a caveat, not as a competing answer",
+      channel.channelPx < channel.pricePx,
+      `channel ${channel.channelPx}px vs price ${channel.pricePx}px`
+    );
+    report.check(
+      "only the dishes that actually differ carry the line",
+      channel.total > 0 && channel.total < 48,
+      `${channel.total} of 48 dishes`
+    );
+
     // ─── Part C — configured out must DIM, never vanish ────────────────────
     await openVenue(driver, cdp, sessionId, port, CONFIG_VENUE);
     await driver.click(".diet-chip", "Vegan");

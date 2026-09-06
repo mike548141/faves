@@ -3950,6 +3950,22 @@ body.faves-view .to-top {
   line-height: 1;
 }
 
+/* "$24.00 on Delivereasy — about 26% more" (ADR 0089). Quiet by design: the
+   counter price is the answer and this is a caveat on it, so it must never
+   compete with .dish-price for the eye. Not colour-coded either — a red "more"
+   would editorialise about a channel the reader may have good reasons to use. */
+.dish-channels {
+  margin-top: var(--space-1);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.dish-channel + .dish-channel::before {
+  content: " · ";
+}
+.dish-channel-price {
+  font-weight: 600;
+}
+
 /* The autocomplete popup (suggest-ui.js), shared by both search boxes. It hangs
    off the field's own positioned wrapper (.search-field / .menu-search-field),
    so it travels with a sticky toolbar instead of being left behind on the page.

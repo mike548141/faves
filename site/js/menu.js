@@ -732,6 +732,48 @@ function renderAside(r) {
 // English only, on purpose: reo.js's safety boundary keeps the refresh caveat
 // and the allergen chips in English until a reo review, and this says the same
 // class of thing about the same class of fact — including an `allergens` kind.
+/**
+ * "$24.00 on Delivereasy — about 26% more" (ADR 0089).
+ *
+ * Returns null unless this dish actually carries a second price, which is
+ * almost every dish in the corpus: the row exists for the venues where the
+ * counter and the app genuinely disagree, and appears nowhere else.
+ *
+ * The comparison is stated in the direction the reader is standing. They are
+ * looking at the counter price, so the sentence is about what the OTHER door
+ * costs relative to it — never the reverse, which reads as an endorsement of
+ * the app. And it is never phrased as a saving: "save 20%" is a claim about
+ * what someone would otherwise have done, and this app does not know that.
+ */
+function channelPrices(item, r) {
+  const declared = r?.priceChannels;
+  const prices = item?.prices;
+  if (!declared || !prices || item.price == null) return null;
+  const parts = [];
+  for (const [key, value] of Object.entries(prices)) {
+    const meta = declared[key];
+    if (!meta || typeof value !== "number") continue;
+    // A percentage only where one is meaningful. A free item, or a difference
+    // under 1%, would produce a number that is noise dressed as information.
+    const pct = item.price > 0 ? Math.round(((value - item.price) / item.price) * 100) : 0;
+    const gap =
+      Math.abs(pct) < 1
+        ? "about the same"
+        : `about ${Math.abs(pct)}% ${pct > 0 ? "more" : "less"}`;
+    parts.push(
+      el("span", { className: "dish-channel" }, [
+        el("span", { className: "dish-channel-price", textContent: money(value) }),
+        el("span", {
+          className: "dish-channel-where",
+          textContent: ` on ${meta.platform} — ${gap}`,
+        }),
+      ])
+    );
+  }
+  if (!parts.length) return null;
+  return el("p", { className: "dish-channels" }, parts);
+}
+
 function needsRow(item, venueId) {
   const rows = dishNeeds(item);
   if (!rows.length) return null;
@@ -1291,6 +1333,18 @@ function renderDish(
   // as another property of the food.
   const needs = needsRow(item, r?.id ?? "x");
   if (needs) children.push(needs);
+  // What the same dish costs through another door (ADR 0089). `.dish-price`
+  // above is always the COUNTER price; this says what a delivery app or the
+  // venue's own online storefront charges, and by how much they differ.
+  //
+  // It earns its place in the payload because of what it prevents. Before this,
+  // KK Malaysian's record held Delivereasy's prices and nothing on screen said
+  // so: the page showed $24 beside a "Call to order" number that would have
+  // charged $19. A reader cannot spot that, because both numbers are perfectly
+  // plausible. The percentage is spelled out rather than left as arithmetic —
+  // "$24 on Delivereasy" invites a shrug, "about 26% more" does not.
+  const channelRow = channelPrices(item, r);
+  if (channelRow) children.push(channelRow);
   if (item.tags?.length) {
     const tags = el("div", { className: "dish-tags" });
     for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid, dietary));

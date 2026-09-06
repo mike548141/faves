@@ -88,8 +88,8 @@
     "Nasi Goreng",
     "Chicken Mee Goreng"
   ],
-  "verified": "2026-07-06",
-  "verifiedBy": "delivery-app",
+  "verified": "2026-08-26",
+  "verifiedBy": "in-store",
   "lifecycle": {
     "added": "2026-07-06"
   },
@@ -103,51 +103,108 @@
           "name": "Chicken Satay",
           "dishId": "chicken-satay",
           "desc": "6 sticks of satay served with peanut sauce.",
-          "price": 24.0,
+          "price": 19.0,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "delivery": 24.0
+          },
+          "code": "1"
         },
         {
           "name": "Beef Satay",
           "dishId": "beef-satay",
           "desc": "6 sticks of satay served with peanut sauce.",
-          "price": 24.0,
+          "price": 19.0,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "delivery": 24.0
+          },
+          "code": "1"
         },
         {
           "name": "Fried Won Tons",
           "dishId": "fried-won-tons",
           "desc": "6 pieces of won tons filled with chicken mince and veges, served with sweet and sour sauce.",
-          "price": 15.0,
-          "tags": []
+          "price": 12.0,
+          "tags": [],
+          "prices": {
+            "delivery": 15.0
+          },
+          "code": "4"
         },
         {
           "name": "Chicken Wings",
           "dishId": "chicken-wings",
           "desc": "6 pieces of crispy deep fried chicken wings, served with chilli sauce.",
-          "price": 17.5,
-          "tags": []
+          "price": 14.0,
+          "tags": [],
+          "prices": {
+            "delivery": 17.5
+          },
+          "code": "2"
         },
         {
           "name": "Won Ton Soup",
           "dishId": "won-ton-soup",
           "desc": null,
-          "price": 15.5,
-          "tags": []
+          "price": 12.5,
+          "tags": [],
+          "prices": {
+            "delivery": 15.5
+          },
+          "code": "7"
         },
         {
           "name": "Spring Rolls",
           "dishId": "spring-rolls",
           "desc": null,
-          "price": 15.5,
+          "price": 12.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "delivery": 15.5
+          },
+          "code": "3"
+        },
+        {
+          "name": "Deep Fried Tofu",
+          "dishId": "deep-fried-tofu",
+          "price": 13.5,
+          "tags": [
+            "v",
+            "contains-peanuts",
+            "contains-soy"
+          ],
+          "desc": "Deep fried tofu served with beansprouts, cucumbers and carrots sprinkled with peanuts and sweet chilli sauce.",
+          "code": "5"
+        },
+        {
+          "name": "Sweet Corn Soup",
+          "dishId": "sweet-corn-soup",
+          "price": 12.0,
+          "tags": [
+            "contains-egg"
+          ],
+          "desc": "Sweet corn soup with chicken pieces and shredded eggs.",
+          "code": "6"
+        },
+        {
+          "name": "Achar",
+          "dishId": "achar",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "contains-peanuts"
+          ],
+          "desc": "A mixture of pickled carrot, turnip, cabbages and cucumber blended with peanuts.",
+          "code": "8"
         }
       ]
     },
@@ -159,42 +216,117 @@
           "name": "Chicken Mee Goreng",
           "dishId": "chicken-mee-goreng",
           "desc": "Stir fried egg noodles flavoured with Malaysian spices.",
-          "price": 25.0,
+          "price": 20.0,
           "tags": [
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "prices": {
+            "delivery": 25.0
+          },
+          "code": "9"
         },
         {
           "name": "Seafood Mee Goreng",
           "dishId": "seafood-mee-goreng",
           "desc": "Stir fried egg noodles flavoured with Malaysian spices.",
-          "price": 25.0,
+          "price": 20.0,
           "tags": [
             "contains-shellfish",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "prices": {
+            "delivery": 25.0
+          },
+          "code": "9"
         },
         {
           "name": "Sin Chew Mee Hoon",
           "dishId": "sin-chew-mee-hoon",
           "desc": "Stir fried rice noodles with chicken, shrimp, cabbage, carrots, tomatoes, onion, and eggs.",
-          "price": 25.0,
+          "price": 20.0,
           "tags": [
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "prices": {
+            "delivery": 25.0
+          },
+          "code": "24"
         },
         {
           "name": "Char Kuey Teow",
           "dishId": "char-kuey-teow",
           "desc": "Thick flat rice noodles stir fried with chicken, shrimps, fishcakes, and eggs.",
-          "price": 25.0,
+          "price": 20.0,
           "tags": [
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "prices": {
+            "delivery": 25.0
+          },
+          "code": "27"
+        },
+        {
+          "name": "Hokkien Mee",
+          "dishId": "hokkien-mee",
+          "price": 20.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg"
+          ],
+          "desc": "Egg noodles cooked with chicken, shrimps, fishcakes, fishballs and cabbage in dark gravy.",
+          "code": "26"
+        },
+        {
+          "name": "Wat Tan Hor",
+          "dishId": "wat-tan-hor",
+          "price": 21.5,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ],
+          "desc": "Thick flat rice noodles cooked with chicken, prawn, fishcakes, fishballs, cabbage and eggs in gravy.",
+          "code": "28"
+        },
+        {
+          "name": "Teo Chew Noodle Soup",
+          "dishId": "teo-chew-noodle-soup",
+          "price": 20.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-egg"
+          ],
+          "desc": "Noodles with prawn, fishcakes, fishballs and chicken pieces in chicken soup. Choice of egg or rice noodles.",
+          "code": "29"
+        },
+        {
+          "name": "Vegetarian Sin Chew Mee Hoon",
+          "dishId": "vegetarian-sin-chew-mee-hoon",
+          "price": 19.5,
+          "tags": [
+            "v",
+            "contains-egg",
+            "contains-soy"
+          ],
+          "desc": "Stir fried rice noodles with beans, cabbages, carrots, tomatoes, cauliflower, broccoli, tofu and eggs.",
+          "code": "31"
+        },
+        {
+          "name": "Vegetarian Mee Goreng",
+          "dishId": "vegetarian-mee-goreng",
+          "price": 19.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg",
+            "contains-soy"
+          ],
+          "desc": "Stir fried egg noodles with broccoli, cauliflower, carrots, beansprouts, tofu, tomatoes and eggs with Malaysian spices.",
+          "code": "32"
         }
       ]
     },
@@ -206,74 +338,150 @@
           "name": "Nasi Goreng",
           "dishId": "nasi-goreng",
           "desc": "Malaysian style fried rice with combination of shrimps, chicken, mixed vegetables, and eggs.",
-          "price": 25.0,
+          "price": 20.0,
           "tags": [
             "contains-shellfish",
             "contains-egg"
-          ]
+          ],
+          "prices": {
+            "delivery": 25.0
+          },
+          "code": "10"
         },
         {
           "name": "Hainanese Chicken Rice",
           "dishId": "hainanese-chicken-rice",
           "desc": "Tasty rice served with cucumbers and specially blended chilli sauce.",
-          "price": 26.0,
-          "tags": []
+          "price": 21.0,
+          "tags": [],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "25"
         },
         {
-          "name": "Nasi Lemak",
+          "name": "Nasi Lemak (Chicken)",
           "dishId": "nasi-lemak",
           "desc": "Aromatic coconut rice served with rendang, peanuts, egg, cucumber, and sambal on the side. Chicken or beef options available.",
-          "price": 26.0,
+          "price": 21.0,
           "tags": [
             "contains-peanuts",
             "contains-egg"
-          ]
+          ],
+          "revisions": [
+            {
+              "recorded": "2026-08-26",
+              "change": "Split from 'Nasi Lemak' — the in-store card prices beef and chicken separately. This row keeps the original dishId."
+            }
+          ],
+          "code": "14"
+        },
+        {
+          "name": "Nasi Lemak (Beef)",
+          "dishId": "nasi-lemak-beef",
+          "desc": "Aromatic coconut rice served with rendang, peanuts, egg, cucumber, and sambal on the side. Chicken or beef options available.",
+          "price": 23.0,
+          "tags": [
+            "contains-peanuts",
+            "contains-egg"
+          ],
+          "revisions": [
+            {
+              "recorded": "2026-08-26",
+              "change": "Added from the in-store card, which prices the beef version separately."
+            }
+          ],
+          "code": "14"
         },
         {
           "name": "Beef Rendang",
           "dishId": "beef-rendang",
           "desc": "Beef in spiced dry curry blended with desiccated coconut. Served with steamed rice.",
-          "price": 26.0,
-          "tags": []
+          "price": 24.0,
+          "tags": [],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "13"
         },
         {
           "name": "Chicken Rendang",
           "dishId": "chicken-rendang",
           "desc": "Chicken in spiced dry curry blended with desiccated coconut. Served with steamed rice.",
-          "price": 26.0,
-          "tags": []
+          "price": 21.0,
+          "tags": [],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "12"
         },
         {
           "name": "Chicken Sambal",
           "dishId": "chicken-sambal",
           "desc": "Boneless chicken pieces cooked in sweet and sour chilli sauce. Served with steamed rice.",
-          "price": 26.0,
-          "tags": []
+          "price": 21.0,
+          "tags": [],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "15"
         },
         {
           "name": "Kung Po Beef",
           "dishId": "kung-po-beef",
           "desc": "Boneless beef pieces stir fried with onions and peanuts in tangy sauce. Served with steamed rice.",
-          "price": 26.0,
+          "price": 23.0,
           "tags": [
             "contains-peanuts"
-          ]
+          ],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "22"
         },
         {
           "name": "Kung Po Chicken",
           "dishId": "kung-po-chicken",
           "desc": "Boneless chicken pieces stir fried with onions and peanuts in tangy sauce. Served with steamed rice.",
-          "price": 26.0,
+          "price": 21.0,
           "tags": [
             "contains-peanuts"
-          ]
+          ],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "22"
         },
         {
           "name": "Sweet & Sour Chicken",
           "dishId": "sweet-sour-chicken",
           "desc": "Boneless chicken pieces stir fried with pineapple pieces, onions, capsicum, and tomatoes with sweet and sour sauce. Served with steamed rice.",
-          "price": 26.0,
-          "tags": []
+          "price": 21.0,
+          "tags": [],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "23"
+        },
+        {
+          "name": "Prawn Sambal",
+          "dishId": "prawn-sambal",
+          "price": 23.0,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "desc": "Prawns cooked in sweet and sour chilli sauce. Served with steamed rice.",
+          "code": "16"
+        },
+        {
+          "name": "Stir Fried Vegetables",
+          "dishId": "stir-fried-vegetables",
+          "price": 19.5,
+          "tags": [
+            "v"
+          ],
+          "desc": "An assortment of vegetables stir fried in Malaysian style. Served with steamed rice.",
+          "code": "33"
         }
       ]
     },
@@ -285,26 +493,56 @@
           "name": "Roti Chanai",
           "dishId": "roti-chanai",
           "desc": "Traditional plain roti served with creamy chicken or vege curry.",
-          "price": 19.0,
+          "price": 15.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "delivery": 19.0
+          },
+          "code": "11"
         },
         {
           "name": "Chicken Curry",
           "dishId": "chicken-curry",
           "desc": "Boneless chicken pieces in creamy curry. Served with steamed rice.",
-          "price": 26.0,
-          "tags": []
+          "price": 21.0,
+          "tags": [],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "20"
         },
         {
           "name": "Vegetarian Curry",
           "dishId": "vegetarian-curry",
           "desc": "Mixed vegetables in creamy curry. Served with steamed rice.",
-          "price": 24.5,
+          "price": 19.5,
           "tags": [
             "v"
-          ]
+          ],
+          "prices": {
+            "delivery": 24.5
+          },
+          "code": "30"
+        },
+        {
+          "name": "Seafood Curry",
+          "dishId": "seafood-curry",
+          "price": 22.0,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "desc": "Squids, prawns, mussels, fishballs, fishcakes, in creamy curry. Served with steamed rice.",
+          "code": "19"
+        },
+        {
+          "name": "Lamb Curry",
+          "dishId": "lamb-curry",
+          "price": 22.0,
+          "tags": [],
+          "desc": "Lamb pieces in creamy curry. Served with steamed rice.",
+          "code": "21"
         }
       ]
     },
@@ -316,36 +554,48 @@
           "name": "Curry Laksa",
           "dishId": "curry-laksa",
           "desc": "Egg noodles with chicken pieces, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.",
-          "price": 25.0,
+          "price": 20.0,
           "tags": [
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "delivery": 25.0
+          },
+          "code": "17"
         },
         {
           "name": "Seafood Laksa",
           "dishId": "seafood-laksa",
           "desc": "Egg noodles with prawns, mussels, fishcakes, fishballs, squid, tofu, and egg in creamy laksa soup.",
-          "price": 26.0,
+          "price": 21.0,
           "tags": [
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "delivery": 26.0
+          },
+          "code": "18"
         },
         {
           "name": "Vegetarian Laksa",
           "dishId": "vegetarian-laksa",
           "desc": "Egg noodles with an assortment of vegetables and egg in creamy laksa soup.",
-          "price": 24.5,
+          "price": 19.5,
           "tags": [
             "v",
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "prices": {
+            "delivery": 24.5
+          },
+          "code": "34"
         }
       ]
     },
@@ -357,42 +607,115 @@
           "name": "Plain Roti",
           "dishId": "plain-roti",
           "desc": null,
-          "price": 5.0,
+          "price": 4.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "delivery": 5.0
+          }
         },
         {
           "name": "Steamed Rice",
           "dishId": "steamed-rice",
           "desc": null,
-          "price": 5.0,
-          "tags": []
+          "price": 4.0,
+          "tags": [],
+          "prices": {
+            "delivery": 5.0
+          }
         },
         {
           "name": "Coconut Rice",
           "dishId": "coconut-rice",
           "desc": null,
-          "price": 5.5,
-          "tags": []
+          "price": 4.5,
+          "tags": [],
+          "prices": {
+            "delivery": 5.5
+          }
         },
         {
           "name": "Steamed Vegetables",
           "dishId": "steamed-vegetables",
           "desc": null,
-          "price": 8.0,
-          "tags": []
+          "price": 6.0,
+          "tags": [],
+          "prices": {
+            "delivery": 8.0
+          }
         },
         {
           "name": "Peanut Sauce",
           "dishId": "peanut-sauce",
           "desc": null,
-          "price": 5.0,
+          "price": 4.0,
           "tags": [
             "contains-peanuts"
+          ],
+          "prices": {
+            "delivery": 5.0
+          }
+        }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "sectionId": "drinks",
+      "items": [
+        {
+          "name": "Soft Drinks",
+          "dishId": "soft-drinks",
+          "desc": "Coke, Diet Coke, Sprite or Orange Fanta.",
+          "price": 3.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Juice",
+          "dishId": "juice",
+          "desc": "Apple, Orange, Mango or Pineapple juice.",
+          "price": 4.0,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Coconut Water",
+          "dishId": "coconut-water",
+          "price": 4.0,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Jasmine Tea",
+          "dishId": "jasmine-tea",
+          "desc": "Per person.",
+          "price": 3.0,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Green Tea",
+          "dishId": "green-tea",
+          "desc": "Per person.",
+          "price": 3.0,
+          "tags": [
+            "vg"
           ]
         }
       ]
     }
-  ]
+  ],
+  "priceChannels": {
+    "delivery": {
+      "platform": "Delivereasy",
+      "recorded": "2026-07-06",
+      "method": "delivery-app",
+      "note": "The whole 2026-07-06 reading. Every price in it was the platform's, not the counter's."
+    }
+  }
 }

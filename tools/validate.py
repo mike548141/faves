@@ -75,14 +75,14 @@ VENUE_KEYS = {
     "lifecycle", "website", "ordering", "services", "hours", "locations",
     "image", "alt", "vibe", "picks", "priceBand", "pricePerPerson",
     "verified", "verifiedBy", "detailsVerified", "detailsVerifiedBy",
-    "rating", "status", "addOnGroups", "menu",
+    "rating", "status", "addOnGroups", "priceChannels", "menu",
 }
 SECTION_KEYS = {
     "section", "sectionId", "note", "served", "available",
     "addOns", "addOnsOnly", "items", "translations",
 }
 ITEM_KEYS = {
-    "name", "dishId", "formerIds", "code", "desc", "price", "available",
+    "name", "dishId", "formerIds", "code", "desc", "price", "prices", "available",
     "revisions", "needs", "tags", "image", "alt", "rating", "goesWith",
     "addOns", "served", "translations",
     # Recipe-only fields (kind: "recipes"), all optional and all validated
@@ -759,6 +759,102 @@ def check_add_on_price(rid, obj, where):
         err(rid, f"{where}: price must be a finite number, got {p!r}")
     elif p < 0:
         err(rid, f"{where}: price must not be negative, got {p!r}")
+
+
+# A venue may charge different amounts through different doors. The closed set
+# is short on purpose: each value is a DOOR, not a brand, so a second delivery
+# platform is another entry under "delivery" rather than a new channel key.
+PRICE_CHANNELS = {
+    "delivery",  # a third-party platform (Uber Eats, Delivereasy…)
+    "online",    # the venue's own online-ordering storefront
+}
+
+
+def check_price_channels(rid, data):
+    """`record.priceChannels`: what a dish's `prices` map is allowed to say, and
+    where each of those readings came from. Returns the declared channel keys.
+
+    WHY THIS EXISTS, and it is not a hypothetical. On 2026-09-06 the owner
+    photographed the in-store menus at KK Malaysian and R & S Satay Noodle
+    House and they did not agree with what Faves was showing. Not slightly:
+    KK's satay was $19.00 on the counter card and $24.00 in the record, and
+    twenty-one of R & S's dishes sat at a flat 1.65× their printed price. The
+    records were not stale and they were not wrong — KK's carried
+    `verifiedBy: "delivery-app"` and said so honestly. They were reading a
+    DIFFERENT PRICE LIST.
+
+    That breaks the refresh rule's own test (`ARCHITECTURE.md`, "Refreshing a
+    menu": *did the shop change it, or did we?*) because the answer is neither.
+    Appending the counter price as a change would have written a 20-40% price
+    CUT into the history that never happened; overwriting as a correction would
+    have thrown away a true reading of a real price somebody actually pays. The
+    owner ruled on 2026-09-06 to model the thing itself.
+
+    So: **`price` is what you pay at the counter.** Every other door hangs off
+    `prices`, and the venue declares each door ONCE here rather than repeating a
+    platform name and a date on all seventy dishes — that is both the honest
+    shape (one reading of one platform's menu on one day) and the reason this
+    costs the payload almost nothing.
+
+    The check that carries the weight is that a dish may not name a channel the
+    venue has not declared. Without it, a typo produces a price on a door
+    nobody can see, which is exactly the class of silent wrongness this whole
+    feature exists to end."""
+    channels = data.get("priceChannels")
+    if channels is None:
+        return set()
+    if not isinstance(channels, dict):
+        err(rid, "priceChannels must be an object keyed by channel")
+        return set()
+    declared = set()
+    for key, meta in channels.items():
+        if key not in PRICE_CHANNELS:
+            err(rid, f"priceChannels key {key!r} not in {sorted(PRICE_CHANNELS)} — "
+                     "a channel is a DOOR, not a brand; a second platform is "
+                     "another entry under the same door")
+            continue
+        if not isinstance(meta, dict):
+            err(rid, f"priceChannels.{key} must be an object")
+            continue
+        for k in meta:
+            if k not in {"platform", "recorded", "method", "note"}:
+                err(rid, f"priceChannels.{key}.{k} is not a field of a channel")
+        if not str(meta.get("platform", "")).strip():
+            err(rid, f"priceChannels.{key}: platform is required — "
+                     "'delivery' without a name tells a reader nothing they can act on")
+        # The method is what makes the second price as accountable as the first.
+        # A channel reading is a reading: it says how it was obtained or it is
+        # an assertion (ADR 0031).
+        if meta.get("method") not in VERIFY_METHODS:
+            err(rid, f"priceChannels.{key}: method must be one of {sorted(VERIFY_METHODS)}")
+        if not DATE_RE.match(str(meta.get("recorded", ""))):
+            err(rid, f"priceChannels.{key}: recorded must be a YYYY-MM-DD date")
+        declared.add(key)
+    return declared
+
+
+def check_item_prices(rid, item, where, declared):
+    """A dish's `prices` — the same dish's price on another channel."""
+    prices = item.get("prices")
+    if prices is None:
+        return
+    if not isinstance(prices, dict) or not prices:
+        err(rid, f"{where}: prices must be a non-empty object keyed by channel")
+        return
+    if item.get("price") is None:
+        # Otherwise the app would show a delivery price as though it were the
+        # counter price, which is the original defect wearing a new hat.
+        err(rid, f"{where}: has prices for another channel but no counter price — "
+                 "`price` is what you pay in the shop and it is what every screen "
+                 "renders; a channel price may only ever sit BESIDE it")
+    for key, value in prices.items():
+        if key not in declared:
+            err(rid, f"{where}: prices.{key} is not declared in the venue's "
+                     "priceChannels — a price on a door nobody can see")
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            err(rid, f"{where}: prices.{key} must be a number, got {value!r}")
+        elif not math.isfinite(value) or value < 0:
+            err(rid, f"{where}: prices.{key} must be a finite, non-negative number")
 
 
 def check_add_on_groups(rid, data):
@@ -1483,6 +1579,9 @@ def check_restaurant(path):
     add_on_defs = check_add_on_groups(rid, data)
     add_on_refs = []
 
+    # The doors this venue sells through, declared once for the whole record.
+    declared_channels = check_price_channels(rid, data)
+
     # menu + collect item names for picks check
     item_names = set()
     pairings = []  # (dish_name, ref) — validated after all names are known
@@ -1533,6 +1632,7 @@ def check_restaurant(path):
             dishes.append((sec_name, item))
             check_translations(rid, item, f"item {name!r}", {"name", "desc"})
             add_on_refs += collect_add_on_refs(rid, item, f"item {name!r}")
+            check_item_prices(rid, item, f"item {name!r}", declared_channels)
             # price may be a plain number/null, or a dated series (ADR 0023).
             # Every value in the series is type-checked exactly as a flat price
             # always was: gaining a time dimension must not weaken the schema.
