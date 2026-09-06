@@ -42,9 +42,6 @@
     }
   },
   "ingredients": "INGREDIENTS: Sugar Syrup, Sugar, Water, Salt, Vegetable Gum (466), Colour (150c), Preservative (202), Natural Maple Flavour [Contains Colour (150d)], Food Acid (330).",
-  "allergens": {
-    "contains": []
-  },
   "storage": "REFRIGERATE AFTER OPENING.",
   "origin": "Made in New Zealand from imported and local ingredients",
   "category": "condiment",
@@ -60,5 +57,8 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
-  "note": "ONE product across TWO bursts, and in fact the same physical bottle photographed twice: burst b013 (2025-11-25) has the back label, and burst b056 (2025-12-05) has the front plus two more back shots carrying the identical date code ('BEST BEFORE 21 APR 26 / GTX 2974 11:43') and the same label code PX17337B/D. Merged into one record rather than duplicated; source.burst names b013, where the back panel was first read. The front supplied '400g NET' and 'with natural flavour', which is why pack is no longer in needs. The label declares NO allergens — there is no 'Contains' statement — so allergens.contains is empty rather than absent. Also printed: 'PACKED FOR: H.J. HEINZ COMPANY AUSTRALIA LTD, 2 SOUTHBANK BLVD, SOUTHBANK, VICTORIA 3006, AUSTRALIA'."
+  "note": "ONE product across TWO bursts, and in fact the same physical bottle photographed twice: burst b013 (2025-11-25) has the back label, and burst b056 (2025-12-05) has the front plus two more back shots carrying the identical date code ('BEST BEFORE 21 APR 26 / GTX 2974 11:43') and the same label code PX17337B/D. Merged into one record rather than duplicated; source.burst names b013, where the back panel was first read. The front supplied '400g NET' and 'with natural flavour', which is why pack is no longer in needs. The label declares NO allergens — there is no 'Contains' statement — so allergens.contains is empty rather than absent. Also printed: 'PACKED FOR: H.J. HEINZ COMPANY AUSTRALIA LTD, 2 SOUTHBANK BLVD, SOUTHBANK, VICTORIA 3006, AUSTRALIA'.",
+  "needs": [
+    "allergens"
+  ]
 }

@@ -110,7 +110,7 @@ IDENTIFIER_KEYS = {"gtin", "sku", "mpn"}
 PACK_KEYS = {"size", "unit", "count"}
 SERVING_KEYS = {"perPack", "size", "unit"}
 NUTRITION_KEYS = {"basis", "per100", "perServing", "perPiece"}
-ALLERGEN_KEYS = {"contains", "mayContain"}
+ALLERGEN_KEYS = {"contains", "mayContain", "declaredNone"}
 UNITS = {"g", "kg", "ml", "l", "each"}
 BASES = {"per-100g", "per-100ml"}
 # What a panel can state. Names follow the NZ/AU panel, not a US one — this is
@@ -196,12 +196,49 @@ def validate(path: Path, problems: list[str]) -> dict | None:
 
     alg = rec.get("allergens")
     if check_map(problems, rid, "allergens", alg, ALLERGEN_KEYS):
-        for k in ALLERGEN_KEYS:
+        for k in ("contains", "mayContain"):
             v = alg.get(k)
             if v is not None and (not isinstance(v, list)
                                   or not all(isinstance(x, str) for x in v)):
                 err(problems, rid, f"allergens.{k} must be a list of strings, "
                                    "quoted from the label")
+            # 🛑 AN EMPTY LIST IS THE ONE SHAPE THIS FIELD MAY NOT TAKE.
+            # `contains: []` is indistinguishable from `contains: []` written by
+            # someone who never found the statement — it looks like a fact and
+            # carries none. This repo's whole allergen doctrine is that absence
+            # of a tag means NOT STATED, never FREE OF IT (ADR 0025), and an
+            # empty list quietly says the opposite.
+            #
+            # It is refused rather than tolerated because it was written for
+            # real: a lookup found a maker declaring its drinks "free of
+            # Allergens as defined by the Food Standards Code" and recorded that
+            # as `contains: []`. The claim was true AND the record was worse than
+            # the source — the same page also warns of possible gluten
+            # cross-contamination, which an empty list has nowhere to put. Say it
+            # with `declaredNone` and put the caveat in `mayContain`, or say
+            # nothing and keep `allergens` in `needs`.
+            if isinstance(v, list) and not v:
+                err(problems, rid, f"allergens.{k} is an empty list — that reads as "
+                                   "'free of allergens' and this repo never asserts "
+                                   "an absence. Use allergens.declaredNone for a "
+                                   "maker's own statement, or omit the field and "
+                                   "keep 'allergens' in needs")
+        dn = alg.get("declaredNone")
+        if dn is not None:
+            if dn is not True:
+                err(problems, rid, "allergens.declaredNone is a claim or it is absent; "
+                                   "it may only ever be `true`")
+            if alg.get("contains"):
+                err(problems, rid, "allergens.declaredNone cannot sit beside a "
+                                   "non-empty contains — the maker cannot both "
+                                   "declare none and declare some")
+            # A declared absence is the strongest thing this store can say and
+            # the most dangerous to get wrong, so it must be attributable.
+            cited = any("allergens" in (e.get("fields") or [])
+                        for e in rec.get("alsoRead") or [])
+            if not cited:
+                err(problems, rid, "allergens.declaredNone must cite where the maker "
+                                   "says it — add an alsoRead entry naming 'allergens'")
 
     src = rec.get("source")
     if src is None:

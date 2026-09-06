@@ -37,10 +37,6 @@
     }
   },
   "ingredients": "INGREDIENTS: Beetroot (62%), Water, Sugar, Salt, Food Acid (Acetic Acid).",
-  "allergens": {
-    "contains": [],
-    "mayContain": []
-  },
   "storage": "Store in a cool, dry place. Once opened, store in a non-metallic container and keep refrigerated at 0-4°C. Consume within 3 days.",
   "origin": "MADE IN NEW ZEALAND FROM LOCAL AND IMPORTED INGREDIENTS",
   "category": "pantry",
@@ -54,6 +50,7 @@
     "read": "2026-09-06"
   },
   "needs": [
+    "allergens",
     "gtin",
     "pack"
   ],

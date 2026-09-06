@@ -34,7 +34,10 @@
   },
   "ingredients": "Carbonated Water, Cane Sugar, Ginger Root, Natural Flavours, Acid (Citric Acid), Yeast, Preservatives (202, 211), Antioxidant (Ascorbic Acid).",
   "allergens": {
-    "contains": []
+    "declaredNone": true,
+    "mayContain": [
+      "Gluten (cross-contamination possible — the maker states gluten is not added but some ingredient suppliers handle gluten-based products)"
+    ]
   },
   "origin": "MADE IN AUSTRALIA.",
   "category": "drink",

@@ -34,9 +34,6 @@
     }
   },
   "ingredients": "INGREDIENTS Sugar, raspberry (45%) (raspberry, raspberry juice from concentrate), gelling agent (440), acidity regulators (330, 333).",
-  "allergens": {
-    "contains": []
-  },
   "storage": "Store in a cool, dry place. Once opened, keep refrigerated at 0-4°C.",
   "origin": "Made in Poland.",
   "category": "condiment",
@@ -51,6 +48,7 @@
     "read": "2026-09-06"
   },
   "needs": [
+    "allergens",
     "gtin",
     "manufacturer"
   ],

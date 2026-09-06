@@ -44,10 +44,6 @@
       "sodium": 1
     }
   },
-  "allergens": {
-    "contains": [],
-    "mayContain": []
-  },
   "storage": "STORAGE ADVICE : STORE IN A COOL AND DRY PLACE.",
   "origin": "Product of India",
   "category": "pantry",
@@ -64,6 +60,7 @@
     "read": "2026-09-06"
   },
   "needs": [
+    "allergens",
     "ingredients"
   ],
   "note": "No ingredient list or allergen statement is printed on the panel photographed; sodium is printed in mg and transcribed as 2 mg per 100 g. The printed energy figures (179 kJ per 50 g serving, 358 kJ per 100 g) are implausibly low for uncooked rice but are recorded exactly as the label prints them — verified from a native-resolution crop of the panel. Net weight printed as '5kg / 11.03 lbs'. Barcode check digit validates."

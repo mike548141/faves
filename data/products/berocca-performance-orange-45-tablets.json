@@ -19,9 +19,6 @@
     "unit": "each"
   },
   "ingredients": "Berocca Performance tablet contains: Vitamin B1 (Thiamine hydrochloride) (as thiamine phosphate acid ester chloride dihydrate) 15 mg; Vitamin B2 (Riboflavine) (as riboflavine sodium phosphate) 15 mg; Vitamin B3 (Nicotinamide) 50 mg; Vitamin B5 (Pantothenic acid) (as calcium pantothenate) 23 mg; Vitamin B6 (Pyridoxine hydrochloride) 10 mg; Vitamin B12 (Cyanocobalamin) 10 µg; Vitamin C (Ascorbic acid) 500 mg; Vitamin H (Biotin) 150 µg; Folic acid 400 µg; Calcium (as calcium carbonate and calcium pantothenate) 100 mg; Magnesium (as magnesium carbonate and magnesium sulfate dihydrate) 100 mg; Zinc (as zinc citrate trihydrate) 10 mg. Also contains tabletting aids, artificial sweeteners, colour and natural flavouring.",
-  "allergens": {
-    "contains": []
-  },
   "storage": "Keep the tube tightly closed in a cool dry place. Store below 25° C",
   "category": "supplement",
   "source": {
@@ -36,6 +33,7 @@
     "read": "2026-09-06"
   },
   "needs": [
+    "allergens",
     "gtin",
     "nutrition",
     "origin"

@@ -40,10 +40,6 @@
     }
   },
   "ingredients": "INGREDIENTS: Cane Sugar, Filtered Water, Natural Flavour, Citric Acid (330), Preservative (202).",
-  "allergens": {
-    "contains": [],
-    "mayContain": []
-  },
   "storage": "SHAKE BEFORE USE",
   "origin": "MADE IN NEW ZEALAND",
   "category": "drink",
@@ -59,6 +55,7 @@
     "read": "2026-09-06"
   },
   "needs": [
+    "allergens",
     "gtin"
   ],
   "note": "The panel has THREE columns — '20mL Just Syrup', '100mL Just Syrup' and '200mL as Prepared Drink' (20 mL syrup in 180 mL black coffee). per100 and perServing here are both the JUST SYRUP columns; the prepared-drink column (284 kJ, 0.2 g protein, 0.4 g fat, 0.2 g saturated, 16.0 g carbohydrate, 15.6 g sugars, 0 mg sodium) has no place in this schema. Sodium is printed as 0 mg in every column. No allergen statement is printed and the ingredient list names none. The 'MADE IN NEW ZEALAND' line sits right on the bottom frame edge of IMG_7565 but the front label carries a 'NEW ZEALAND MADE' badge as well. Front also prints 'MAKES 10 LITRES / 50 GLASSES'. Distributor addresses for SHOTT Australia and SHOTT Asia are also printed; the NZ maker's is the one recorded. No barcode in frame."
