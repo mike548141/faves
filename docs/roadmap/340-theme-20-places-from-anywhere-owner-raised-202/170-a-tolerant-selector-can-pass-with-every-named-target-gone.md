@@ -35,6 +35,15 @@
   failure shape is *taking the first of several matches* rather than *matching a
   catch-all*. That audit is still unrun and is still the bigger job.
 
+  ✅ **RULED 2026-09-06 — OPTION 2: ASSERT WHICH ALTERNATIVE MATCHED.** Taken on
+  the measurement above, which reduced the question from an audit to a single
+  line. The tolerance stays, so legitimately two-form markup still passes; what
+  changes is that the check now reports **which** class it actually found, so a
+  silent migration becomes visible instead of being absorbed by the wildcard.
+  Options 1 and 3 were both declined — naming one class was judged too brittle,
+  and commenting the tolerance leaves the decorative shape ADR 0072 exists to
+  remove.
+
   🎯 **Options, per assertion and not globally:**
   1. **Name one class and let it fail loudly.** Strongest signal; brittle if
      the markup legitimately offers two forms.

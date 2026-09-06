@@ -1,4 +1,4 @@
-- [ ] 🔎 **A direct push to `main` can never satisfy a required status check —
+- [x] 🔎 **A direct push to `main` can never satisfy a required status check —
       so narrowing the bypass would not "switch enforcement on", it would end
       direct pushes entirely** `[S][owner]` — measured 2026-09-06 (session
       faves-24) against the rule-suite API, and it reframes the deferred half of
@@ -38,6 +38,16 @@
   The change is therefore not "turn on enforcement"; it is **"every change to
   `main` now goes through a pull request"**, and on this repo `main` is the
   Cloudflare Pages deploy, so it is also "every deploy now waits for CI".
+
+  ✅ **RULED 2026-09-06 — LEAVE IT AS IT IS (option 1).** Put to the owner with
+  the mechanism above stated plainly and the PR-only consequence costed; he
+  chose the resting state. So direct pushes keep working and a red CI result
+  keeps landing **after** the deploy it describes — that is now an accepted
+  cost, not an unexamined one. The break-glass variant was also declined.
+  🔑 **What this ruling settles that the old framing could not:** nobody should
+  again read the bypass log as a discipline problem, and nobody should propose
+  "just narrow the bypass" as a cheap fix. It is not cheap; it is PR-only, and
+  it has been considered and declined on that basis.
 
   🎯 **Options, for the owner and nobody else. The cost is workflow, not code.**
   1. **Leave it.** Direct pushes keep working; CI keeps reporting after the

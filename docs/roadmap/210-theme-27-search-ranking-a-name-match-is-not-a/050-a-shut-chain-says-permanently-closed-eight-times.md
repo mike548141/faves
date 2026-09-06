@@ -8,6 +8,14 @@
   "Open" on every branch of a closed chain, and under-correcting it is how that
   comes back.
 
+  ✅ **RULED 2026-09-06 — OPTION 3: A MUTED STYLE FOR THE REPEATS.** Full weight
+  on the header banner, subdued on the branch rows. The owner took the option
+  that keeps the statement on every row — so it stays correct the day closure
+  becomes per-branch, and `040`'s decision 2 is not pre-empted — while stopping
+  it shouting the same sentence eight times on a 390 px screen. Option 2
+  (heading only) was declined precisely because a reader who scrolls into one
+  branch row would see no closure at all.
+
   🎯 **Owner's taste, and it interacts with `040`'s decision 2.** Options:
   1. **As shipped** — say it on every row. Nobody can miss it, and it stays
      correct the day closure becomes per-branch.

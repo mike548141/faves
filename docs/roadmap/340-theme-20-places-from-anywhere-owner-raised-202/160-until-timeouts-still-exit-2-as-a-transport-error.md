@@ -62,12 +62,22 @@
   3. **Ship the ruled names as given** and rely on the doc comments. Cheapest
      to decide, and it is the option that creates the trap.
 
-  📋 **Also measured while scoping:** the migration is **49 `until(` call
-  sites** across 14 tools — `sync_check` 11, `boot_check` 14, `cook_check` 6,
-  `geo_check`/`note_check` 3 each, `device_check`/`picks_check`/`served_check` 2
-  each, and 1 each in `focus_check`, `branch_check`, `filter_row_check`,
-  `addon_check`, `recipe_check`, `to_top_check` — plus one inside `browser.mjs`
-  itself.
+  📋 **Also measured while scoping: the migration is 54 `until(` call sites
+  across 15 tools.** It was 49 when first counted this session and became 54
+  within the hour, because ADR 0091 landed `distance_check.mjs` (4 sites) in a
+  parallel worktree. ⚠️ **That is the point, not a footnote** — this population
+  grows every time a check is added, so a count taken before the migration runs
+  is stale by the time it lands. Re-run
+  `grep -c "until(" tools/*.mjs` immediately before starting rather than
+  trusting this figure.
+
+  ✅ **RULED 2026-09-06 ON THE NAMING FORK — `untilPresent` / `untilStable`.**
+  Put to the owner with the collision stated and all three options costed; he
+  took the one that keeps the ruling's substance and sidesteps the near-miss.
+  `settleUntil` is **left exactly as it is** — no third API is touched, so the
+  blast radius stays inside the two new names. The 2026-08-22 ruling is
+  otherwise unchanged: `untilPresent` is a claim about the **site** and fails at
+  exit 1; the timing wait keeps exit 2.
 
   📋 **Doing it.** Rename at all `until` call sites across the 13 check tools,
   one at a time, choosing per site rather than by pattern — **a site whose kind
