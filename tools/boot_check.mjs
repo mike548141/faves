@@ -77,13 +77,43 @@ const SCREENS = [
     ready: `!!document.querySelector(".menu-title")`,
     checks: [
       {
+        // THE TOLERANCE STAYS; THE SILENCE GOES (owner-ruled 2026-09-06,
+        // option 2 of three). This selector is an OR-list ending in a
+        // `[class*='price']` catch-all, so if both NAMED classes were renamed
+        // the catch-all would still match whatever replaced them and the
+        // assertion would keep passing while the thing it names had gone —
+        // ADR 0072's decorative shape, with no missing id for an id sweep to
+        // find. Naming one class outright was declined as too brittle (the
+        // markup legitimately offers two forms) and commenting the tolerance
+        // was declined as leaving the shape in place. So the check now reports
+        // WHICH alternative matched, and fails if only the catch-all did.
+        // Measured the same day: of the seven multi-target selectors across
+        // the check tools, this is the ONLY one with this flaw — the other six
+        // name real alternatives and do fail when all of them go.
         what: "the venue's menu rendered with priced dishes",
-        expr: `(() => ({
-          title: document.querySelector(".menu-title")?.textContent ?? "",
-          prices: [...document.querySelectorAll(".dish-price, .item-price, [class*='price']")]
-            .map((e) => e.textContent.trim()).filter((s) => /\\d/.test(s)).length,
-        }))()`,
-        assert: (v) => (v.title && v.prices > 0 ? null : `title=${JSON.stringify(v.title)} priced=${v.prices}`),
+        expr: `(() => {
+          const priced = (sel) => [...document.querySelectorAll(sel)]
+            .map((e) => e.textContent.trim()).filter((s) => /\\d/.test(s)).length;
+          const named = [".dish-price", ".item-price"];
+          return {
+            title: document.querySelector(".menu-title")?.textContent ?? "",
+            prices: priced(named.join(", ") + ", [class*='price']"),
+            // Carried out rather than repeated in the assertion below: the
+            // failure sentence has to name the classes this check actually
+            // looked for, and a second copy of the list is how the two drift.
+            named,
+            // Which of the names the markup actually uses today. Empty means
+            // only the wildcard matched, which is the silent migration.
+            matchedBy: named.filter((c) => priced(c) > 0),
+          };
+        })()`,
+        assert: (v) =>
+          !v.title || v.prices === 0
+            ? `title=${JSON.stringify(v.title)} priced=${v.prices}`
+            : v.matchedBy.length === 0
+              ? `${v.prices} priced element(s), but NONE of ${v.named.join(" / ")} matched any of them` +
+                ` — only the [class*='price'] catch-all did, so the price class has been renamed under this check`
+              : null,
       },
       {
         // The currency must be findable from the prices themselves, in EITHER
