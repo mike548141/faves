@@ -162,8 +162,80 @@ test("CONTRADICTS: peanuts, nuts, soy and sesame contradict no dietary claim", (
   for (const t of ["contains-peanuts", "contains-nuts", "contains-soy", "contains-sesame"]) {
     assert.ok(!all.includes(t), `${t} should not contradict a dietary claim`);
   }
-  // …and the four that do are exactly the four tag_allergens.py knows about.
-  assert.deepEqual(new Set(all), new Set(["contains-gluten", "contains-dairy", "contains-egg", "contains-shellfish"]));
+  // …and the four ALLERGENS that do are exactly the four tag_allergens.py
+  // knows about. validate.py `check_contradiction_tables` holds the two
+  // tables in step; this is the same claim said in the language of the app.
+  assert.deepEqual(
+    new Set(all.filter((t) => t.startsWith("contains-"))),
+    new Set(["contains-gluten", "contains-dairy", "contains-egg", "contains-shellfish"]),
+  );
+  // The two non-allergen facts (ADR 0092) kill `v` and `vg` and nothing else —
+  // meat is not gluten, and a `gf` or `df` dish stays gf or df with bacon on it.
+  assert.deepEqual(new Set(all.filter((t) => t.startsWith("has-"))), new Set(["has-meat", "has-fish"]));
+  for (const key of ["gf", "df"]) {
+    assert.ok(!CONTRADICTS[key].some((t) => t.startsWith("has-")), `${key} must not be killed by meat or fish`);
+  }
+});
+
+// --- ADR 0092: a fact where a fact exists, one sentence for the rest ---
+test("composeTags: bacon costs a vegetarian dish its claim as a FACT, not a silence", () => {
+  // Live in the corpus (Sprig & Fern Tawa, brunch sides). Before 14h, Bacon
+  // carried no tags at all and the reader was told "we can't say whether Bacon
+  // is vegetarian" — an absence about the one option nobody needed telling.
+  const bacon = { group: "brunch-sides", name: "Bacon", price: 8, tags: ["has-meat"] };
+  const out = composeTags(["v", "gf"], [bacon]);
+  const v = out.dropped.find((d) => d.tag === "v");
+  assert.equal(v.reason, "contradicted");
+  assert.equal(v.allergen, "has-meat");
+  assert.ok(!out.tags.includes("v"));
+  // …and gluten free is untouched by it, because meat is not gluten. That
+  // claim still dies — bacon says nothing about gluten — but as a silence.
+  assert.equal(out.dropped.find((d) => d.tag === "gf").reason, "not-stated");
+});
+
+test("composeTags: salmon is fish, and fish is not vegetarian either", () => {
+  const salmon = { group: "brunch-sides", name: "Salmon", price: 9, tags: ["has-fish"] };
+  for (const claim of ["v", "vg"]) {
+    const out = composeTags([claim], [salmon]);
+    assert.equal(out.dropped[0].reason, "contradicted", `${claim} should be contradicted`);
+    assert.equal(out.dropped[0].allergen, "has-fish");
+  }
+});
+
+test("composeTags: `has-meat` is NOT an allergen — it never joins `added`", () => {
+  // It has no chip, no settings row and no place in the avoid list, so a dish
+  // configured with bacon must not sprout "Bacon contains meat." as a plain
+  // allergen line. Its whole job is killing `v`/`vg`.
+  const bacon = { group: "sides", name: "Bacon", price: 8, tags: ["has-meat"] };
+  const out = composeTags(["contains-gluten"], [bacon]);
+  assert.deepEqual(out.added, []);
+  assert.deepEqual(out.dropped, []);
+  assert.ok(out.tags.includes("has-meat"), "it still unions onto the composed tags");
+});
+
+test("composeTags: a not-stated drop names EVERY option that was silent, not just the first", () => {
+  // What the collapsed sentence is built from (ADR 0092). Naming only the
+  // first would under-report the residue: "Spinach isn't tagged vegetarian"
+  // when Tomatoes is equally untagged and equally on the plate.
+  const spinach = { group: "brunch-sides", name: "Spinach", price: 5, tags: [] };
+  const tomatoes = { group: "brunch-sides", name: "Tomatoes", price: 5, tags: [] };
+  const out = composeTags(["v", "gf"], [spinach, tomatoes]);
+  for (const d of out.dropped) {
+    assert.equal(d.reason, "not-stated");
+    assert.deepEqual(d.silent, ["Spinach", "Tomatoes"], `${d.tag} named ${d.silent}`);
+  }
+  assert.equal(out.dropped[0].from, "Spinach");
+});
+
+test("composeTags: a claim killed by a FACT carries no silent list", () => {
+  // The fact is the news. Listing the options that merely said nothing about a
+  // claim already dead by contradiction is the noise 14h removed.
+  const spinach = { group: "brunch-sides", name: "Spinach", price: 5, tags: [] };
+  const bacon = { group: "brunch-sides", name: "Bacon", price: 8, tags: ["has-meat"] };
+  const out = composeTags(["v"], [spinach, bacon]);
+  assert.equal(out.dropped.length, 1);
+  assert.equal(out.dropped[0].reason, "contradicted");
+  assert.equal(out.dropped[0].silent, undefined);
 });
 
 // --- group resolution -------------------------------------------------

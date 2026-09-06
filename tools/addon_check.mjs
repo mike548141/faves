@@ -29,6 +29,20 @@
 //   e) the configured dish is its OWN order line, not a quantity of the plain
 //      one, at its own configured price.
 //
+// AND SINCE 14h (ADR 0092), a second venue and a second question: WHAT THE
+// WARNING SAYS WHEN A CLAIM DIES. The composer's two shapes — a fact we hold, an
+// absence we don't — are unit-tested in tests/addons.test.js; what no unit test
+// can see is the SENTENCE, its shape, and above all how many of them there are.
+// Before 14h a vegetarian brunch with spinach and tomatoes on it printed one
+// absence sentence per claim per option, each repeating the option's name, and
+// the volume did the discounting that the careful wording was written to
+// prevent. So Sprig & Fern Tawa's brunch sides are driven at 390 px to assert:
+//   f) a tagged option produces the FACT — "Bacon is meat, so this is no longer
+//      vegetarian" — and the words "can't say" appear nowhere on the page;
+//   g) the residue collapses to exactly ONE sentence for the whole
+//      configuration, naming each untagged option once and each label once;
+//   h) with both on the plate, the fact leads and the one quiet sentence closes.
+//
 // WHAT A GREEN RUN HERE STILL CANNOT TELL YOU. It never proves the tagging is
 // right — that the sauce called "Garlic yogurt" really does contain dairy. That
 // is a claim about food, made by whoever transcribed the menu, and no browser
@@ -123,6 +137,43 @@ const snapshotExpr = `(() => {
 
 /** Tick the nth sauce by its visible label, through a real mouse click. */
 const sauceSelector = (name) => `.addon-option`;
+
+// --- 14h: what the warning SAYS when a claim dies (ADR 0092) --------------
+// A second venue, because the kebab card has no dish making a dietary claim and
+// this half of the check is entirely about the sentence a dying claim produces.
+const WARN_VENUE = "sprig-and-fern-tawa";
+// `v`, and brunch sides. Ticking bacon on the vegetarian breakfast is the
+// bluntest form of the question 14h asked.
+const VEG_DISH = "The Vegetarian Breakfast";
+// `v` + `gf-option`: TWO claims, so the collapsed sentence has to name two
+// labels without repeating either option. One claim would hide that bug.
+const TWO_CLAIM_DISH = "Eggs on Toast";
+const MEAT_OPTION = "Bacon";
+const SILENT_OPTIONS = ["Spinach", "Tomatoes"];
+
+// `li.dish` carries the SEARCH-FOLDED name (menu.js `foldSearchText`), not the
+// menu's own capitalisation — lower-cased with macrons folded. Addressing a
+// dish by its printed name silently matches nothing, which arrives as a harness
+// error rather than a failed assertion, so the fold is applied here too.
+const FOLD = { "\u0101": "a", "\u0113": "e", "\u012b": "i", "\u014d": "o", "\u016b": "u" };
+const dishSel = (name) =>
+  `li.dish[data-name=${JSON.stringify(name.toLowerCase().replace(/[\u0101\u0113\u012b\u014d\u016b]/g, (c) => FOLD[c]))}]`;
+
+/** One dish's picker, addressed by name rather than "the first one with add-ons". */
+const dishExpr = (name) => `(() => {
+  const dish = ${need(dishSel(name))};
+  const box = ${need(".dish-addons", "dish")};
+  const warn = ${need(".addon-warning", "box")};
+  return {
+    tags: (dish.dataset.tags || "").split(" ").filter(Boolean),
+    checked: [...box.querySelectorAll(".addon-input:checked")].map((i) => i.value).filter(Boolean),
+    warnHidden: warn.hidden,
+    warnText: warn.textContent,
+  };
+})()`;
+
+/** How many times `needle` occurs in `hay` — the assertion 14h is actually about. */
+const occurrences = (hay, needle) => hay.split(needle).length - 1;
 
 async function run(opts) {
   const report = new Report(opts.verbose);
@@ -261,6 +312,89 @@ async function run(opts) {
       "the same dish ordered plain is a SECOND line, not a quantity of two",
       s.lines.length === 2 && plain && plain[2] === 1,
       s.lines.map((l) => `${l[2]}× ${l[0]}${l[3] ? ` (${l[3]})` : ""} @ ${l[1]}`).join(" | "),
+    );
+
+    // --- (f)(g)(h) 14h: the sentence a dying claim produces --------------
+    const warnUrl = `http://127.0.0.1:${port}/restaurant.html?id=${WARN_VENUE}`;
+    await cdp.send("Page.navigate", { url: warnUrl }, sessionId);
+    await until(async () => (await driver.evalPage(snapshotExpr)).found, {
+      label: `${WARN_VENUE} to render a dish offering add-ons`,
+    });
+
+    // (f) a tagged option is a FACT, and it reads like one.
+    const vegDish = dishSel(VEG_DISH);
+    await driver.click(`${vegDish} .dish-addons-summary`);
+    await driver.click(`${vegDish} .addon-option`, MEAT_OPTION);
+    let w = await driver.evalPage(dishExpr(VEG_DISH));
+    report.check(
+      `${MEAT_OPTION} on a vegetarian dish is stated as a FACT, not as an absence`,
+      !w.warnHidden && w.warnText.includes(`${MEAT_OPTION} is meat, so this is no longer vegetarian.`),
+      JSON.stringify(w.warnText),
+    );
+    report.check(
+      "…and the words \"can't say\" are nowhere on that warning",
+      !/can'?t say/i.test(w.warnText),
+      JSON.stringify(w.warnText),
+    );
+    report.check(
+      "the vegetarian claim is actually gone from the row, not merely narrated",
+      !w.tags.includes("v"),
+      `dataset.tags = ${w.tags.join(" ") || "(none)"}`,
+    );
+
+    // (g) the residue is ONE sentence, however many options and claims feed it.
+    const twoClaim = dishSel(TWO_CLAIM_DISH);
+    await driver.click(`${twoClaim} .dish-addons-summary`);
+    for (const name of SILENT_OPTIONS) await driver.click(`${twoClaim} .addon-option`, name);
+    w = await driver.evalPage(dishExpr(TWO_CLAIM_DISH));
+    report.check(
+      "two untagged options and two claims collapse into ONE sentence",
+      !w.warnHidden &&
+        occurrences(w.warnText, "aren't tagged") === 1 &&
+        occurrences(w.warnText, "isn't tagged") === 0,
+      JSON.stringify(w.warnText),
+    );
+    report.check(
+      "…naming each option ONCE and each label ONCE — the repetition 14h removed",
+      SILENT_OPTIONS.every((n) => occurrences(w.warnText, n) === 1) &&
+        occurrences(w.warnText, "vegetarian") === 1 &&
+        occurrences(w.warnText, "gluten free") === 1,
+      JSON.stringify(w.warnText),
+    );
+    report.check(
+      "…and it still says the labels no longer cover what was configured",
+      /describe the dish as listed\.$/.test(w.warnText.trim()),
+      JSON.stringify(w.warnText),
+    );
+
+    // (h) both together: the fact leads, the quiet sentence closes.
+    await driver.click(`${twoClaim} .addon-option`, MEAT_OPTION);
+    w = await driver.evalPage(dishExpr(TWO_CLAIM_DISH));
+    const factAt = w.warnText.indexOf(`${MEAT_OPTION} is meat`);
+    const residueAt = w.warnText.indexOf("aren't tagged");
+    report.check(
+      "with a fact and an absence on the same plate, the FACT is said first",
+      factAt >= 0 && residueAt > factAt,
+      JSON.stringify(w.warnText),
+    );
+    report.check(
+      "…and the residue is STILL one sentence, with a fact standing beside it",
+      occurrences(w.warnText, "aren't tagged") === 1 && occurrences(w.warnText, "isn't tagged") === 0,
+      JSON.stringify(w.warnText),
+    );
+    // Bacon is named in BOTH sentences, and that is correct rather than the
+    // repetition 14h removed. The fact is about VEGETARIAN; bacon says nothing
+    // about GLUTEN, so leaving it out of the gluten sentence would understate
+    // the hedge — and understating a safety hedge is the wrong direction. What
+    // must never happen is the same option named twice for the same reason, so
+    // each sentence is checked separately.
+    const sentences = w.warnText.split(/(?<=\.)\s+/).filter(Boolean);
+    const factPart = sentences.find((x) => x.includes("is meat")) || "";
+    const residuePart = sentences.find((x) => x.includes("aren't tagged")) || "";
+    report.check(
+      `…and ${MEAT_OPTION} is named once per sentence — never twice for one reason`,
+      occurrences(factPart, MEAT_OPTION) === 1 && occurrences(residuePart, MEAT_OPTION) === 1,
+      `fact: ${JSON.stringify(factPart)} · residue: ${JSON.stringify(residuePart)}`,
     );
 
     return report.summary(SITE) ? 0 : 1;
