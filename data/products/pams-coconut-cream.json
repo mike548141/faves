@@ -2,6 +2,11 @@
   "id": "pams-coconut-cream",
   "name": "Coconut Cream",
   "brand": "Pams",
+  "pack": {
+    "size": 400,
+    "unit": "ml",
+    "count": 1
+  },
   "servings": {
     "perPack": 7,
     "size": 60,
@@ -32,6 +37,7 @@
   },
   "ingredients": "Coconut kernel extract (92%), water, stabilisers (412, 466), emulsifier (435).",
   "storage": "STORE IN A COOL, DRY PLACE. ONCE OPENED TRANSFER UNUSED CONTENTS INTO A NON-METALLIC CONTAINER AND REFRIGERATE. CONSUME WITHIN 2 DAYS.",
+  "origin": "Product of Thailand",
   "category": "pantry",
   "source": {
     "kind": "own-photo",
@@ -43,12 +49,21 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.pams.co.nz/product-finder/5003719",
+      "read": "2026-09-06",
+      "fields": [
+        "pack",
+        "origin"
+      ]
+    }
+  ],
   "needs": [
     "allergens",
     "gtin",
-    "manufacturer",
-    "origin",
-    "pack"
+    "manufacturer"
   ],
-  "note": "Servings per pack printed '7 approx.' at 60 mL. No net volume is printed on either photographed face, so pack is unrecorded rather than inferred from 7 x 60. No allergen statement anywhere on the panel — that absence is recorded in needs, not read as 'allergen free'. Front of pack carries 'DAIRY FREE', 'VEGETARIAN & VEGAN FRIENDLY', 'NO ADDED COLOURS OR FLAVOURS'. Barcode is on the far edge of the can and only its bars are in frame."
+  "note": "Servings per pack printed '7 approx.' at 60 mL. No net volume is printed on either photographed face, so pack is unrecorded rather than inferred from 7 x 60. No allergen statement anywhere on the panel — that absence is recorded in needs, not read as 'allergen free'. Front of pack carries 'DAIRY FREE', 'VEGETARIAN & VEGAN FRIENDLY', 'NO ADDED COLOURS OR FLAVOURS'. Barcode is on the far edge of the can and only its bars are in frame. pack and origin were read from the Pams own-brand product page 2026-09-06, NOT from the photograph. The pack size could not be MATCHED against the packet - the photographed faces print no net volume - so it is derived from that page rather than confirmed against the can; what ties the page to this packet instead is a fingerprint match on everything the panel does print: the same ingredient list, the same per-100 mL and per-60 mL nutrition figures in every row, and the same '7 servings x 60 mL'. The page carries NO allergen statement of any kind, so 'allergens' stays in needs - a website that is silent is not a website that declares none."
 }

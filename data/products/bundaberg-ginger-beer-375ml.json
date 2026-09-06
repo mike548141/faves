@@ -33,6 +33,9 @@
     }
   },
   "ingredients": "Carbonated Water, Cane Sugar, Ginger Root, Natural Flavours, Acid (Citric Acid), Yeast, Preservatives (202, 211), Antioxidant (Ascorbic Acid).",
+  "allergens": {
+    "contains": []
+  },
   "origin": "MADE IN AUSTRALIA.",
   "category": "drink",
   "source": {
@@ -44,10 +47,19 @@
     "captured": "2025-11-25",
     "read": "2026-09-06"
   },
+  "alsoRead": [
+    {
+      "kind": "manufacturer",
+      "ref": "https://www.bundaberg.com/faqs/",
+      "read": "2026-09-06",
+      "fields": [
+        "allergens"
+      ]
+    }
+  ],
   "needs": [
-    "allergens",
     "gtin",
     "storage"
   ],
-  "note": "Protein, total fat and saturated fat are printed as 'Less than 1g' in both columns - not numbers, so omitted. No allergen statement on the label. The barcode is at the curved edge of the bottle and partly behind the hand holding it, so its digits are not legible."
+  "note": "Protein, total fat and saturated fat are printed as 'Less than 1g' in both columns - not numbers, so omitted. No allergen statement on the label. The barcode is at the curved edge of the bottle and partly behind the hand holding it, so its digits are not legible. Allergens read from the manufacturer's own site 2026-09-06, NOT from the photograph: Bundaberg's FAQ states 'All Bundaberg Brewed Drinks Products are free of Allergens as defined by the Australian and New Zealand Food Standards Code (Standard 1.2.3 (4)).' That is a blanket statement across the range, so the match to THIS packet was established separately from the maker's own Ginger Beer page (https://www.bundaberg.com/brew/ginger-beer/), which lists the 375 mL bottle and prints an ingredient list and a per-100 mL panel identical to the photographed ones, character for character and figure for figure. contains is therefore an empty list - a declared absence - rather than the missing field it was before. No 'may contain' is published, so none is recorded."
 }
