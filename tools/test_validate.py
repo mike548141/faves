@@ -522,6 +522,40 @@ CASES = {
         _breaks(lambda g, d: g["options"][0].update(tags=["contains-mystery"])),
         "error", r"option 'Satay': unknown tag 'contains-mystery'",
     ),
+    # --- ADR 0092: what an add-on option IS -------------------------------
+    # `has-meat`/`has-fish` are legal on an OPTION and an error on a DISH.
+    # menu.js `tagChip` has no label for them, so on a dish they paint a raw
+    # chip; the picker's warning line is the one screen that renders them.
+    "has-meat on an add-on option is legal": (
+        _breaks(lambda g, d: g["options"][0].update(tags=["has-meat"])),
+        "clean", None,
+    ),
+    "has-meat on a DISH is refused": (
+        lambda d: _first_item(d).update(tags=["has-meat"]),
+        "error", r"'has-meat' on .*: that tag belongs to an ADD-ON OPTION",
+    ),
+    "has-fish on a DISH is refused": (
+        lambda d: _first_item(d).update(tags=["has-fish"]),
+        "error", r"'has-fish' on .*: that tag belongs to an ADD-ON OPTION",
+    ),
+    # The sweep-is-owed warning, the half of ADR 0092 that stops a new menu
+    # quietly reintroducing the gap 14h closed. An option whose own name says
+    # meat, carrying nothing, must not go past in silence.
+    "an untagged add-on option whose name says meat is reported": (
+        _breaks(lambda g, d: g["options"][0].update(name="Bacon", tags=[])),
+        "warn", r"add-on 'Bacon' in group 'sauces': missing has-meat",
+    ),
+    "an untagged add-on option whose name says fish is reported": (
+        _breaks(lambda g, d: g["options"][0].update(name="Salmon", tags=[])),
+        "warn", r"add-on 'Salmon' in group 'sauces': missing has-fish",
+    ),
+    # …and the guard that keeps it from over-reaching: the sweep may only ever
+    # state what IS present. An option named for a vegetable stays untouched,
+    # because "Spinach is vegetarian" is a claim of ABSENCE (ADR 0025).
+    "an untagged vegetable option is NOT asked to state an absence": (
+        _breaks(lambda g, d: g["options"][0].update(name="Spinach", tags=[])),
+        "clean", None,
+    ),
     # The typo that sells an extra free: a mistyped price key inside a group
     # that defaults to 0 is not a harmless no-op, it is an under-stated total.
     "mistyped price key on an add-on option": (

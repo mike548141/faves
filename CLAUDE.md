@@ -311,6 +311,14 @@ node tools/geo_check.mjs      # the location ask (ADR 0083). The tickbox on the
                               # pins the pill's ABSENCE, which is the assertion
                               # most likely to rot silently
 python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
+python3 tools/test_tag_addon_options.py # …and the add-on option tagger still REFUSES
+                              # what it must (ADR 0092). Half its cases assert an
+                              # ABSENCE of writing — "Spinach still carries no tags" —
+                              # because saying spinach is vegetarian is a claim of
+                              # absence and the one thing the sweep may not make. Each
+                              # such case also demands the tool tagged something ELSE
+                              # in the same file, so a tool that wrote nothing at all
+                              # cannot satisfy them silently
 python3 tools/products.py     # data/products/ — the packaged-product record store
                               # (ADR 0090). Enforces the three rules a reviewer
                               # cannot: no location (137 of the source photos carry
