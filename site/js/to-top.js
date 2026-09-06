@@ -43,9 +43,27 @@
 // column, with a median of 0 (i.e. usually the corner is already free). There
 // is nowhere at 390 px that is not over the list; there is always somewhere
 // that is not over anything of the READER'S. Sweeping the same eight
-// combinations again with the dodge in place: occlusion 0 of 3 454 positions,
-// and the largest step it ever had to take was 94 px on the menu and 172 px on
-// the home list (both at 390 px, 24 px root text).
+// combinations again with the dodge in place: occlusion 0 of 3 449 positions.
+// It has to step aside at 151 of 537 positions on the menu at 390 px (by at
+// most 82 px) and 132 of 183 on the home list (by at most 109 px); the largest
+// step anywhere was 172 px, on the home list at 24 px root text.
+//
+// ⚠️ WHAT THIS DOES NOT PROTECT, AND THE MEASURED COST OF PROTECTING IT. The
+// list above is the ruling's list — a price, a ♥, the names. It is NOT every
+// tappable thing under the button, and the button is now on screen for the
+// whole of a downward read where it used to be tucked, so it can come to rest
+// on a dish's ＋ / − stepper and own that tap — the same harm class as the
+// order pill eating a dietary chip's tap. Adding `.stepper-add, .stepper-btn,
+// .dish-photo-btn, .dish-report` to the list was measured 2026-09-07 and it
+// WORKS (occlusion still 0, still inside MAX_DODGE), at this price on the menu
+// at 390 px: the control is displaced at 326 of 537 positions instead of 151,
+// and travels up to 168 px instead of 82. The home list is unaffected (its
+// cards carry no stepper). Doubling the movement on the screen the owner
+// raised this on is his call, not a side effect of this fix, so it is recorded
+// here rather than taken.
+// The whole-card link on the home list is deliberately NOT protectable: it
+// spans the card, so counting it would leave nowhere clear at all — and a
+// mis-tap on it costs a reader nothing they cannot undo with Back.
 //
 // So the control stays offered the whole way down and steps out of the way of
 // whatever is actually beneath it: each frame it reads the boxes of the things

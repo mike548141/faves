@@ -142,6 +142,7 @@ const SWEEP = `(async () => {
     occluded: 0,
     worst: null,
     maxDodge: 0,
+    dodged: 0,
     notOffered: [],
     tuckedAt: [],
     unfocusableAt: [],
@@ -166,6 +167,7 @@ const SWEEP = `(async () => {
       out.past++;
       if (!p.shown && out.notOffered.length < 8) out.notOffered.push(y);
       if (p.tucked && out.tuckedAt.length < 8) out.tuckedAt.push(y);
+      if (p.dodge > 0) out.dodged++;
       if (p.dodge > out.maxDodge) out.maxDodge = p.dodge;
     }
   }
@@ -299,7 +301,7 @@ async function run(opts) {
             s.occluded === 0,
             s.occluded
               ? `${s.occluded} of ${s.positions} positions occluded; worst ${s.worst.pct}% of ${s.worst.sel} "${s.worst.text}" at y=${s.worst.y}`
-              : `${scale}, largest dodge needed ${s.maxDodge}px`
+              : `${scale}; it had to step aside at ${s.dodged} of ${s.past}, by at most ${Math.round(s.maxDodge)}px`
           );
 
           // --- 3. The tuck is the safety valve, and it must stay unused. -----
