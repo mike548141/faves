@@ -245,8 +245,9 @@ python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
                               # renamed without breaking every link to it
-python3 tools/test_validate.py # …and that gate still catches things (131 mutations,
-                              # re-counted 2026-09-06; it said 113 and has grown since)
+python3 tools/test_validate.py # …and that gate still catches things (137 mutations,
+                              # re-counted 2026-09-06; it said 113 and has grown since —
+                              # 131 that day, +6 with ADR 0092's add-on option rules)
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
@@ -312,6 +313,14 @@ node tools/geo_check.mjs      # the location ask (ADR 0083). The tickbox on the
                               # pins the pill's ABSENCE, which is the assertion
                               # most likely to rot silently
 python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
+python3 tools/test_tag_addon_options.py # …and the add-on option tagger still REFUSES
+                              # what it must (ADR 0092). Half its cases assert an
+                              # ABSENCE of writing — "Spinach still carries no tags" —
+                              # because saying spinach is vegetarian is a claim of
+                              # absence and the one thing the sweep may not make. Each
+                              # such case also demands the tool tagged something ELSE
+                              # in the same file, so a tool that wrote nothing at all
+                              # cannot satisfy them silently
 python3 tools/products.py     # data/products/ — the packaged-product record store
                               # (ADR 0090). Enforces the three rules a reviewer
                               # cannot: no location (137 of the source photos carry

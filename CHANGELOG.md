@@ -8,6 +8,20 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Changed
+- **Adding an extra now tells you what it IS, and says the rest once.** Putting
+  bacon on the vegetarian breakfast used to read *"We can't say whether Bacon is
+  vegetarian, so we can't say this still is. We can't say whether Bacon is
+  gluten free, so we can't say this still is."* — two sentences about the one
+  thing nobody needs telling. Bacon, sausages, salami, prosciutto and salmon are
+  now tagged for what they are, so the app says **"Bacon is meat, so this is no
+  longer vegetarian."** Extras we genuinely have no information about are
+  gathered into a single quiet line at the end — *"Spinach and Tomatoes aren't
+  tagged vegetarian or gluten free, so those labels describe the dish as
+  listed."* — instead of one sentence per label per extra. The app still never
+  says an extra is free of anything; an untagged extra still costs the dish its
+  claim, it just says so once.
+
 ### Added
 - **Focus a menu on the dishes you want.** The chip row above a menu gains
   **♥ Favourites**, and the dietary chips now *remove* the dishes that do not

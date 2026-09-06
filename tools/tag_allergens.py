@@ -72,6 +72,14 @@ CONTRADICTED_BY = {
     "contains-dairy": {"vg", "df"},
     "contains-egg": {"vg"},
     "contains-shellfish": {"v", "vg"},
+    # Not allergens, and never applied by THIS tool — it tags dishes and these
+    # two say what an add-on option is (ADR 0092, tools/tag_addon_options.py).
+    # They are here because validate.py checks that this table and
+    # `CONTRADICTS` in site/js/addons.js are the same food fact both ways
+    # round, and because the guard they encode is true for any future dish rule
+    # as well: a row the venue itself calls vegetarian is never given meat.
+    "has-meat": {"v", "vg"},
+    "has-fish": {"v", "vg"},
 }
 
 # (tag, tier, basis, pattern, exclude)

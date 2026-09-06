@@ -15,6 +15,24 @@
 // contains dairy" is a fact we hold. "We can't say whether Mushrooms is dairy
 // free" is an absence. Flattening them into one warning would teach the reader
 // to discount both, and a discounted allergen warning is worse than none.
+//
+// 14h: THAT RULE HELD AND THE ABSENCE LINE STILL DROWNED THE FACTS, by volume
+// instead of by wording (owner-raised 2026-08-17, ruled 2026-08-22 — ADR 0092).
+// Two fixes, in the order he ruled them, and the distinction above is intact in
+// both:
+//
+//   (a) Say the fact where a fact exists. `has-meat`/`has-fish` on the option
+//       moves Bacon, Salami and Salmon off the absence branch entirely — the
+//       line is now "Bacon is meat, so this is no longer vegetarian."
+//   (b) Collapse what is genuinely still unknown into ONE sentence for the
+//       whole configuration, listed LAST and quietly, rather than one sentence
+//       per claim per option repeating the same name.
+//
+// So the two shapes are still said differently — more differently than before,
+// because the facts are now first, individual and loud, and the absence is one
+// closing line. What is flattened is the absence against ITSELF, never against
+// a fact. There is no branch here where an untagged option is silently treated
+// as safe: the claim still dies, and the sentence still says so.
 
 import { el } from "./dom.js";
 import { dishId } from "./dish-id.js";
@@ -45,6 +63,46 @@ const CLAIM_LABEL = {
   "df-option": "dairy free",
   "vg-option": "vegan",
 };
+
+// How a contradicting tag is SAID. An allergen reads "contains dairy"; the two
+// non-allergen facts read "is meat" / "is fish", because "Bacon contains meat"
+// is not how anybody says it. Falls back to the raw tag rather than dropping
+// the clause, so a vocabulary addition is visible instead of silent.
+const CARRIES = {
+  "has-meat": "is meat",
+  "has-fish": "is fish",
+};
+const carries = (tag) => CARRIES[tag] || `contains ${ALLERGEN_LABEL[tag] || tag}`;
+
+/** "A", "A and B", "A, B and C" — NZ English, no serial comma. */
+function joinList(items, last = "and") {
+  if (items.length < 2) return items[0] || "";
+  return `${items.slice(0, -1).join(", ")} ${last} ${items[items.length - 1]}`;
+}
+
+/**
+ * ONE sentence for everything the configuration leaves unknown (ADR 0092).
+ *
+ * Was: one sentence per claim per option — "We can't say whether Spinach is
+ * vegetarian, so we can't say this still is. We can't say whether Spinach is
+ * gluten free, so we can't say this still is." Two sentences, one option, one
+ * fact, and the reader learns to skip the whole block.
+ *
+ * It says "aren't tagged", not "we can't say whether" — because that is the
+ * true statement and it is shorter. It never says an extra IS safe, which is
+ * the line ADR 0025 draws and this must not cross: the claim has already been
+ * dropped from the dish by the time this renders, and the sentence explains
+ * which labels no longer cover what the reader configured.
+ */
+function unstatedLine(drops) {
+  // `silent` names every option that failed the claim; `from` is the fallback
+  // for a drop composed before that field existed.
+  const names = [...new Set(drops.flatMap((d) => (d.silent?.length ? d.silent : [d.from])))];
+  const claims = [...new Set(drops.map((d) => CLAIM_LABEL[d.tag] || d.tag))];
+  const verb = names.length > 1 ? "aren't" : "isn't";
+  const labels = claims.length > 1 ? "those labels describe" : "that label describes";
+  return `${joinList(names)} ${verb} tagged ${joinList(claims, "or")}, so ${labels} the dish as listed.`;
+}
 
 /** "+$3.00", or nothing at all when the extra is free — the commonest case. */
 const priceSuffix = (amount, currency) =>
@@ -117,14 +175,18 @@ export function dishAddOns(record, section, item, onCompose) {
     for (const a of added.filter((a) => !avoidSet.has(a.tag))) {
       lines.push(`${a.from} contains ${ALLERGEN_LABEL[a.tag] || a.tag}.`);
     }
+    // Facts first, one per claim, exactly as before. The absences are held back
+    // and said once at the end — the order is the point: what we KNOW leads.
+    const unstated = [];
     for (const d of dropped) {
+      if (d.reason !== "contradicted") {
+        unstated.push(d);
+        continue;
+      }
       const claim = CLAIM_LABEL[d.tag] || d.tag;
-      lines.push(
-        d.reason === "contradicted"
-          ? `${d.from} contains ${ALLERGEN_LABEL[d.allergen] || d.allergen}, so this is no longer ${claim}.`
-          : `We can't say whether ${d.from} is ${claim}, so we can't say this still is.`,
-      );
+      lines.push(`${d.from} ${carries(d.allergen)}, so this is no longer ${claim}.`);
     }
+    if (unstated.length > 0) lines.push(unstatedLine(unstated));
 
     if (notice) lines.push(notice);
     warn.hidden = lines.length === 0;

@@ -80,11 +80,15 @@
       "options": [
         {
           "name": "Chicken",
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         },
         {
           "name": "Spicy beef",
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         },
         {
           "name": "Vegetarian",
@@ -102,7 +106,9 @@
         {
           "name": "Bacon",
           "price": 2.0,
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         }
       ]
     }

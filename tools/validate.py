@@ -33,7 +33,16 @@ TAGS = {
     "contains-soy", "contains-sesame",
     "spicy-1", "spicy-2", "spicy-3",
     "gf-option", "v-option", "df-option", "vg-option",
+    # Not allergens, and deliberately not in the `contains-` namespace (ADR
+    # 0092): they say what an ADD-ON OPTION is, so the picker can say "Bacon is
+    # meat, so this is no longer vegetarian" instead of "we can't say".
+    "has-meat", "has-fish",
 }
+# Legal on an add-on option, an ERROR on a dish. ADR 0047 asks which screen
+# renders a field: for these two it is the picker's warning line, reached only
+# through `composeTags` from an OPTION's tags. `tagChip` in menu.js has no entry
+# for them, so on a dish they would render as a bare, unexplained chip.
+OPTION_ONLY_TAGS = {"has-meat", "has-fish"}
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 # The time dimension (ADR 0023) allows reduced precision — "2019" and "2019-05"
@@ -1752,6 +1761,15 @@ def check_restaurant(path):
                 for t in tags:
                     if t not in TAGS:
                         err(rid, f"unknown tag {t!r} on {name!r}")
+                    elif t in OPTION_ONLY_TAGS:
+                        err(
+                            rid,
+                            f"{t!r} on {name!r}: that tag belongs to an ADD-ON OPTION, "
+                            "not a dish (ADR 0092). One screen renders it — the "
+                            "picker's warning line — and menu.js `tagChip` has no "
+                            "label for it, so on a dish it would paint a raw "
+                            f"{t!r} chip",
+                        )
 
             # Recipe-only item fields (all optional). Validated whenever
             # present so a stray field on a venue item is also caught.
@@ -1938,6 +1956,37 @@ def check_allergen_tags():
             continue
         for item, tag, tier, why in audit(record):
             warn(record.get("id", path.stem), f"{item['name']}: missing {tag} ({tier} — {why}) — run tools/tag_allergens.py")
+
+
+def check_add_on_option_tags():
+    """Warn where an add-on option's own name says it is meat or fish and the
+    tag is missing (ADR 0092, ROADMAP 14h).
+
+    Same shape and same reasoning as `check_allergen_tags` above: a warning
+    rather than an error, because a venue's own correction must be able to win,
+    but the gap this closes was made by hand-tagging one venue at a time, so a
+    new menu that reintroduces it says so on the way past.
+
+    It can only ever ask for `has-meat`/`has-fish` — a POSITIVE fact off the
+    option's name. Nothing here will ever ask for `v`, `vg`, `gf` or `df` on an
+    option; that would be asserting an absence, which is the one thing the
+    corpus may not do (ADR 0025).
+    """
+    try:
+        sys.path.insert(0, str(Path(__file__).parent))
+        from tag_addon_options import audit as audit_options
+    except ImportError:  # tool removed or renamed — not worth failing validation
+        return
+    for path in sorted((DATA / "restaurants").glob("*.json")):
+        record = load_record(path)
+        if not isinstance(record, dict):
+            continue
+        for group, option, tag, why in audit_options(record):
+            warn(
+                record.get("id", path.stem),
+                f"add-on {option.get('name')!r} in group {group.get('id')!r}: missing "
+                f"{tag} ({why}) — run tools/tag_addon_options.py",
+            )
 
 
 def check_twin_allergens():
@@ -2145,6 +2194,7 @@ def main():
 
     check_version_bump()
     check_allergen_tags()
+    check_add_on_option_tags()
     check_twin_allergens()
     check_self_contradicting_claims()
     check_contradiction_tables()

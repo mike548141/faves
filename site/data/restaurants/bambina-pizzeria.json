@@ -78,12 +78,12 @@
       "select": "many",
       "price": 3,
       "options": [
-        { "name": "Pepperoni", "tags": [] },
+        { "name": "Pepperoni", "tags": ["has-meat"] },
         { "name": "Extra cheese", "tags": ["contains-dairy"] },
-        { "name": "Cotto ham", "tags": [] },
+        { "name": "Cotto ham", "tags": ["has-meat"] },
         { "name": "Mushrooms", "tags": ["v"] },
-        { "name": "Italian sausage", "tags": [] },
-        { "name": "Beef meatball", "tags": [] }
+        { "name": "Italian sausage", "tags": ["has-meat"] },
+        { "name": "Beef meatball", "tags": ["has-meat"] }
       ]
     }
   ],

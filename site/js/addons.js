@@ -45,11 +45,20 @@ const ALLERGEN_PREFIX = "contains-";
 //
 // Absent by design: nuts, peanuts, soy and sesame contradict nothing. A peanut
 // is vegan and gluten free. Their whole job here is the union half.
+//
+// `has-meat` and `has-fish` are NOT allergens and are deliberately outside the
+// `contains-` namespace (ADR 0092). Meat is not an allergen, and a ninth
+// `contains-` tag would have joined four separate allergen tables — the chips
+// in menu.js and recipe.js, the avoid list in settings.js, the report filter in
+// report.js — as a half-built one nobody can filter on. What they ARE is the
+// positive fact that closes 14h: "Bacon is meat" is readable off the option's
+// own name, and it turns the picker's absence-shaped line into a fact-shaped
+// one. Applied by tools/tag_addon_options.py; never inferred the other way.
 export const CONTRADICTS = {
   gf: ["contains-gluten"],
   df: ["contains-dairy"],
-  v: ["contains-shellfish"],
-  vg: ["contains-dairy", "contains-egg", "contains-shellfish"],
+  v: ["contains-shellfish", "has-meat", "has-fish"],
+  vg: ["contains-dairy", "contains-egg", "contains-shellfish", "has-meat", "has-fish"],
 };
 
 const DIET_KEYS = DIET_FILTERS.map((f) => f.key);
@@ -132,11 +141,18 @@ export function selectionAllowed(group, chosenCount) {
  *   • `added`   — `[{ tag, from }]`, allergens the selection brought in.
  *   • `dropped` — `[{ tag, from, reason }]`, dietary claims the selection cost,
  *                 `reason` being "contradicted" (the option positively carries a
- *                 clashing allergen) or "not-stated" (the option simply never
- *                 said). The screen says different things for the two: "Halloumi
- *                 contains dairy" is a fact, "we can't say whether Mushrooms is
- *                 dairy free" is an absence, and flattening them into one
- *                 warning would teach the reader to discount both.
+ *                 clashing allergen, or is meat or fish) or "not-stated" (the
+ *                 option simply never said). The screen says different things
+ *                 for the two: "Halloumi contains dairy" is a fact, "we can't
+ *                 say whether Mushrooms is dairy free" is an absence, and
+ *                 flattening them into one warning would teach the reader to
+ *                 discount both.
+ *                 A "not-stated" entry also carries `silent` — EVERY chosen
+ *                 option that failed to state that claim, not just the first.
+ *                 `from` names one of them and is what the old per-claim
+ *                 sentence used; `silent` is what lets the screen collapse the
+ *                 whole residue into one sentence (ADR 0092) instead of
+ *                 repeating an option's name once per claim.
  *
  * An empty selection returns the dish's own tags, unchanged and in order —
  * nothing moves on the day this lands, which is the test that matters most.
@@ -177,6 +193,10 @@ export function composeTags(dishTags, selection) {
     const key = tag.replace(/-option$/, "");
     const clashes = CONTRADICTS[key] || [];
     let kill = null;
+    // Every option that failed to state this claim, in selection order — the
+    // screen names them all in one sentence, so stopping at the first would
+    // under-report the residue rather than over-report it.
+    const silent = [];
     for (const opt of chosen) {
       const ot = opt.tags || [];
       const hit = ot.find((t) => clashes.includes(t));
@@ -184,10 +204,14 @@ export function composeTags(dishTags, selection) {
         kill = { tag, from: opt.name, reason: "contradicted", allergen: hit };
         break; // a stated clash outranks a silence — report the harder fact
       }
-      if (!CLAIM_TAGS.get(key).some((t) => ot.includes(t)) && !kill) {
-        kill = { tag, from: opt.name, reason: "not-stated" };
+      if (!CLAIM_TAGS.get(key).some((t) => ot.includes(t))) {
+        silent.push(opt.name);
+        if (!kill) kill = { tag, from: opt.name, reason: "not-stated" };
       }
     }
+    // Only on the silence branch: a claim killed by a fact is reported as that
+    // fact, and the options that merely said nothing about it are not the news.
+    if (kill && kill.reason === "not-stated") kill.silent = silent;
     if (kill) dropped.push(kill);
     else surviving.push(tag);
   }
