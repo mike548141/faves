@@ -67,7 +67,7 @@
     "Chicken Noodles Soup"
   ],
   "priceBand": "$$",
-  "verified": null,
+  "verified": "2026-08-26",
   "lifecycle": {
     "added": "2026-07-06"
   },
@@ -81,50 +81,74 @@
           "name": "Combination Noodle Soup",
           "dishId": "combination-noodle-soup",
           "desc": null,
-          "price": 32.8,
-          "tags": []
+          "price": 19.9,
+          "tags": [],
+          "prices": {
+            "online": 32.8
+          },
+          "code": "1"
         },
         {
           "name": "Chicken Noodles Soup",
           "dishId": "chicken-noodles-soup",
           "desc": null,
-          "price": 31.2,
-          "tags": []
+          "price": 18.9,
+          "tags": [],
+          "prices": {
+            "online": 31.2
+          },
+          "code": "2"
         },
         {
           "name": "Seafood Noodles Soup",
           "dishId": "seafood-noodles-soup",
           "desc": null,
-          "price": 33.8,
+          "price": 20.5,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "prices": {
+            "online": 33.8
+          },
+          "code": "3"
         },
         {
           "name": "Beef Noodles Soup",
           "dishId": "beef-noodles-soup",
           "desc": null,
-          "price": 32.8,
-          "tags": []
+          "price": 19.9,
+          "tags": [],
+          "prices": {
+            "online": 32.8
+          },
+          "code": "4"
         },
         {
           "name": "Satay Noodles Soup (Chicken or Beef)",
           "dishId": "satay-noodles-soup-chicken-or-beef",
           "desc": null,
-          "price": 32.8,
+          "price": 19.9,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 32.8
+          },
+          "code": "5"
         },
         {
           "name": "Seafood Deluxe",
           "dishId": "seafood-deluxe",
           "desc": null,
-          "price": 38.8,
+          "price": 23.5,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "prices": {
+            "online": 38.8
+          },
+          "code": "6"
         }
       ]
     },
@@ -136,63 +160,87 @@
           "name": "Combination Satay",
           "dishId": "combination-satay",
           "desc": null,
-          "price": 31.2,
+          "price": 18.9,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 31.2
+          },
+          "code": "7"
         },
         {
           "name": "Supreme Satay",
           "dishId": "supreme-satay",
           "desc": null,
-          "price": 32.8,
+          "price": 19.9,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 32.8
+          },
+          "code": "8"
         },
         {
           "name": "Sweet & Sour Satay",
           "dishId": "sweet-sour-satay",
           "desc": null,
-          "price": 32.8,
+          "price": 19.9,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 32.8
+          },
+          "code": "9"
         },
         {
           "name": "Satay Burger",
           "dishId": "satay-burger",
           "desc": null,
-          "price": 17.3,
+          "price": 10.5,
           "tags": [
             "contains-peanuts",
             "contains-gluten",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 17.3
+          },
+          "code": "10"
         },
         {
           "name": "Vegetarian Satay",
           "dishId": "vegetarian-satay",
           "desc": null,
-          "price": 29.7,
+          "price": 18.0,
           "tags": [
             "v",
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 29.7
+          },
+          "code": "11"
         },
         {
           "name": "Satay Sauce on Rice or Noodles",
           "dishId": "satay-sauce-on-rice-or-noodles",
           "desc": null,
-          "price": 14.0,
+          "price": 8.5,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 14.0
+          },
+          "code": "12"
         }
       ]
     },
@@ -204,26 +252,38 @@
           "name": "Combination Chew Kua Teaw",
           "dishId": "combination-chew-kua-teaw",
           "desc": null,
-          "price": 32.2,
-          "tags": []
+          "price": 19.5,
+          "tags": [],
+          "prices": {
+            "online": 32.2
+          },
+          "code": "13"
         },
         {
           "name": "Seafood Chew Kua Teaw",
           "dishId": "seafood-chew-kua-teaw",
           "desc": null,
-          "price": 33.8,
+          "price": 20.5,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "prices": {
+            "online": 33.8
+          },
+          "code": "14"
         },
         {
           "name": "Vegetarian Chew Kua Teaw",
           "dishId": "vegetarian-chew-kua-teaw",
           "desc": null,
-          "price": 32.2,
+          "price": 19.5,
           "tags": [
             "v"
-          ]
+          ],
+          "prices": {
+            "online": 32.2
+          },
+          "code": "15"
         }
       ]
     },
@@ -235,8 +295,12 @@
           "name": "Chicken Rice",
           "dishId": "chicken-rice",
           "desc": null,
-          "price": 30.5,
-          "tags": []
+          "price": 18.5,
+          "tags": [],
+          "prices": {
+            "online": 30.5
+          },
+          "code": "16"
         }
       ]
     },
@@ -248,217 +312,398 @@
           "name": "Curry Laksa",
           "dishId": "curry-laksa",
           "desc": null,
-          "price": 32.8,
+          "price": 19.9,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "prices": {
+            "online": 32.8
+          },
+          "code": "S1"
         },
         {
           "name": "Kway Teow Th'ng",
           "dishId": "kway-teow-th-ng",
           "desc": null,
-          "price": 26.4,
-          "tags": []
+          "price": 16.0,
+          "tags": [],
+          "prices": {
+            "online": 26.4
+          },
+          "code": "S2"
         },
         {
           "name": "Combination Fried Noodles",
           "dishId": "combination-fried-noodles",
           "desc": null,
-          "price": 36.3,
-          "tags": []
+          "price": 22.0,
+          "tags": [],
+          "prices": {
+            "online": 36.3
+          },
+          "code": "S4"
         },
         {
           "name": "Hokkien Char",
           "dishId": "hokkien-char",
           "desc": null,
-          "price": 37.1,
+          "price": 22.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "S5"
         },
         {
           "name": "Curry Chicken Rice",
           "dishId": "curry-chicken-rice",
           "desc": null,
-          "price": 34.7,
-          "tags": []
+          "price": 21.0,
+          "tags": [],
+          "prices": {
+            "online": 34.7
+          },
+          "code": "S7"
         },
         {
           "name": "Hainanese Chicken Rice (Fried or Boiled)",
           "dishId": "hainanese-chicken-rice-fried-or-boiled",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "S9"
         },
         {
           "name": "Deep Fried Crumbed Prawn",
           "dishId": "deep-fried-crumbed-prawn",
           "desc": null,
-          "price": 17.3,
+          "price": 10.5,
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "online": 17.3
+          },
+          "code": "R6"
         },
         {
           "name": "Deep Fried Chicken Wings",
           "dishId": "deep-fried-chicken-wings",
           "desc": null,
-          "price": 17.3,
-          "tags": []
+          "price": 10.5,
+          "tags": [],
+          "prices": {
+            "online": 17.3
+          },
+          "code": "S10"
         },
         {
           "name": "Deep Fried Spring Rolls (Vegetarian)",
           "dishId": "deep-fried-spring-rolls-vegetarian",
           "desc": null,
-          "price": 10.7,
+          "price": 6.5,
           "tags": [
             "v",
             "contains-gluten"
-          ]
-        },
-        {
-          "name": "Deep Fried Money Bag (Vegetarian)",
-          "dishId": "deep-fried-money-bag-vegetarian",
-          "desc": null,
-          "price": 10.7,
-          "tags": [
-            "v"
-          ]
+          ],
+          "prices": {
+            "online": 10.7
+          },
+          "code": "S11"
         },
         {
           "name": "Wonton & BBQ Pork Noodles Soup",
           "dishId": "wonton-bbq-pork-noodles-soup",
           "desc": null,
-          "price": 30.5,
+          "price": 18.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "online": 30.5
+          },
+          "code": "S15"
         },
         {
           "name": "Wonton & BBQ Pork Noodles",
           "dishId": "wonton-bbq-pork-noodles",
           "desc": null,
-          "price": 34.7,
+          "price": 21.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "online": 34.7
+          },
+          "code": "S16"
         },
         {
           "name": "Kai See Mein",
           "dishId": "kai-see-mein",
           "desc": null,
-          "price": 32.2,
-          "tags": []
+          "price": 19.5,
+          "tags": [],
+          "prices": {
+            "online": 32.2
+          },
+          "code": "S17"
         },
         {
           "name": "Roti Canai",
           "dishId": "roti-canai",
           "desc": null,
-          "price": 21.5,
+          "price": 13.0,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "online": 21.5
+          },
+          "code": "S19"
         },
         {
           "name": "Roti",
           "dishId": "roti",
           "desc": null,
-          "price": 7.4,
+          "price": 4.5,
           "tags": [
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "online": 7.4
+          }
         },
         {
           "name": "BBQ Pork on Rice",
           "dishId": "bbq-pork-on-rice",
           "desc": null,
-          "price": 36.3,
-          "tags": []
+          "price": 22.0,
+          "tags": [],
+          "prices": {
+            "online": 36.3
+          },
+          "code": "S20"
         },
         {
           "name": "Mince Beef on Rice",
           "dishId": "mince-beef-on-rice",
           "desc": null,
-          "price": 31.2,
-          "tags": []
+          "price": 18.9,
+          "tags": [],
+          "prices": {
+            "online": 31.2
+          },
+          "code": "S21"
         },
         {
           "name": "Dry Fried Kua Teaw (Chicken or Beef)",
           "dishId": "dry-fried-kua-teaw-chicken-or-beef",
           "desc": null,
-          "price": 35.5,
-          "tags": []
+          "price": 21.5,
+          "tags": [],
+          "prices": {
+            "online": 35.5
+          },
+          "code": "S22"
         },
         {
           "name": "Tumeric Glutinous Rice",
           "dishId": "tumeric-glutinous-rice",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "S24"
         },
         {
           "name": "Pork Balls Noodles Soup",
           "dishId": "pork-balls-noodles-soup",
           "desc": null,
-          "price": 28.9,
-          "tags": []
+          "price": 17.5,
+          "tags": [],
+          "prices": {
+            "online": 28.9
+          },
+          "code": "S25"
         },
         {
           "name": "Combination Balls Noodles Soup",
           "dishId": "combination-balls-noodles-soup",
           "desc": null,
-          "price": 28.9,
-          "tags": []
+          "price": 17.5,
+          "tags": [],
+          "prices": {
+            "online": 28.9
+          },
+          "code": "S26"
         },
         {
-          "name": "Tom Yum Noodles Soup (Chicken or Seafood)",
+          "name": "Chicken Tom Yum Noodles Soup",
           "dishId": "tom-yum-noodles-soup-chicken-or-seafood",
           "desc": null,
-          "price": 33.8,
+          "price": 20.5,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "code": "S27",
+          "revisions": [
+            {
+              "recorded": "2026-08-26",
+              "change": "Split from 'Tom Yum Noodles Soup (Chicken or Seafood)' — the in-store card prices the proteins apart. This row keeps the original dishId."
+            }
+          ],
+          "prices": {
+            "online": 33.8
+          }
         },
         {
-          "name": "Mee Goreng (Chicken, Beef or Seafood)",
+          "name": "Seafood Tom Yum Noodles Soup",
+          "dishId": "seafood-tom-yum-noodles-soup",
+          "desc": null,
+          "price": 23.0,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "code": "S27",
+          "revisions": [
+            {
+              "recorded": "2026-08-26",
+              "change": "Added from the in-store card, which prices this protein separately."
+            }
+          ],
+          "prices": {
+            "online": 33.8
+          }
+        },
+        {
+          "name": "Mee Goreng (Chicken or Beef)",
           "dishId": "mee-goreng-chicken-beef-or-seafood",
           "desc": null,
-          "price": 35.5,
+          "price": 21.5,
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "code": "S28",
+          "revisions": [
+            {
+              "recorded": "2026-08-26",
+              "change": "Split from 'Mee Goreng (Chicken, Beef or Seafood)' — the in-store card prices the proteins apart. This row keeps the original dishId."
+            }
+          ],
+          "prices": {
+            "online": 35.5
+          }
         },
         {
-          "name": "Fried Rice (Chicken, Beef or Seafood)",
+          "name": "Mee Goreng (Seafood)",
+          "dishId": "mee-goreng-seafood",
+          "desc": null,
+          "price": 24.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten"
+          ],
+          "code": "S28",
+          "revisions": [
+            {
+              "recorded": "2026-08-26",
+              "change": "Added from the in-store card, which prices this protein separately."
+            }
+          ],
+          "prices": {
+            "online": 35.5
+          }
+        },
+        {
+          "name": "Fried Rice (Chicken or Beef)",
           "dishId": "fried-rice-chicken-beef-or-seafood",
           "desc": null,
-          "price": 35.5,
+          "price": 21.5,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "code": "S29",
+          "revisions": [
+            {
+              "recorded": "2026-08-26",
+              "change": "Split from 'Fried Rice (Chicken, Beef or Seafood)' — the in-store card prices the proteins apart. This row keeps the original dishId."
+            }
+          ],
+          "prices": {
+            "online": 35.5
+          }
+        },
+        {
+          "name": "Fried Rice (Seafood)",
+          "dishId": "fried-rice-seafood",
+          "desc": null,
+          "price": 24.0,
+          "tags": [
+            "contains-shellfish"
+          ],
+          "code": "S29",
+          "revisions": [
+            {
+              "recorded": "2026-08-26",
+              "change": "Added from the in-store card, which prices this protein separately."
+            }
+          ],
+          "prices": {
+            "online": 35.5
+          }
         },
         {
           "name": "Fried Mee Hoon",
           "dishId": "fried-mee-hoon",
           "desc": null,
-          "price": 35.5,
-          "tags": []
+          "price": 21.5,
+          "tags": [],
+          "prices": {
+            "online": 35.5
+          },
+          "code": "S30"
         },
         {
           "name": "Fried Chicken & BBQ Pork on Rice",
           "dishId": "fried-chicken-bbq-pork-on-rice",
           "desc": null,
-          "price": 39.6,
-          "tags": []
+          "price": 24.0,
+          "tags": [],
+          "prices": {
+            "online": 39.6
+          },
+          "code": "S31"
         },
         {
           "name": "Deep Fried Chicken Wings on Rice",
           "dishId": "deep-fried-chicken-wings-on-rice",
           "desc": null,
-          "price": 26.4,
-          "tags": []
+          "price": 16.0,
+          "tags": [],
+          "prices": {
+            "online": 26.4
+          },
+          "code": "S32"
+        },
+        {
+          "name": "Roti with Satay Sauce",
+          "dishId": "roti-with-satay-sauce",
+          "price": 8.0,
+          "code": "S23",
+          "tags": [
+            "contains-peanuts",
+            "contains-gluten",
+            "contains-soy"
+          ]
         }
       ]
     },
@@ -470,169 +715,253 @@
           "name": "Spring Onion & Ginger on Steamed Rice",
           "dishId": "spring-onion-ginger-on-steamed-rice",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R1"
         },
         {
           "name": "Chicken with Mixed Vegetables on Rice",
           "dishId": "chicken-with-mixed-vegetables-on-rice",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R2"
         },
         {
           "name": "Malaysian Style Gong Poh Chicken on Rice",
           "dishId": "malaysian-style-gong-poh-chicken-on-rice",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R3"
         },
         {
           "name": "Malaysian Style Sweet & Sour",
           "dishId": "malaysian-style-sweet-sour",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R4"
         },
         {
           "name": "Stir Fried Satay Chicken on Rice",
           "dishId": "stir-fried-satay-chicken-on-rice",
           "desc": null,
-          "price": 37.1,
+          "price": 22.5,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R5"
         },
         {
           "name": "Combination Three Style on Rice",
           "dishId": "combination-three-style-on-rice",
           "desc": null,
-          "price": 26.4,
-          "tags": []
+          "price": 16.0,
+          "tags": [],
+          "prices": {
+            "online": 26.4
+          },
+          "code": "R7"
         },
         {
           "name": "Stir Fried Chicken & Pineapple on Rice",
           "dishId": "stir-fried-chicken-pineapple-on-rice",
           "desc": null,
-          "price": 30.5,
-          "tags": []
+          "price": 18.5,
+          "tags": [],
+          "prices": {
+            "online": 30.5
+          },
+          "code": "R8"
         },
         {
           "name": "Malaysian Style Sweet & Sour Prawns",
           "dishId": "malaysian-style-sweet-sour-prawns",
           "desc": null,
-          "price": 37.1,
+          "price": 23.5,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R9"
         },
         {
           "name": "Lemon Chicken",
           "dishId": "lemon-chicken",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R10"
         },
         {
           "name": "Chicken Rendang",
           "dishId": "chicken-rendang",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R11"
         },
         {
           "name": "Beef Rendang",
           "dishId": "beef-rendang",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R12"
         },
         {
           "name": "Sambal Chicken",
           "dishId": "sambal-chicken",
           "desc": null,
-          "price": 37.1,
-          "tags": []
+          "price": 22.5,
+          "tags": [],
+          "prices": {
+            "online": 37.1
+          },
+          "code": "R13"
         },
         {
           "name": "Sambal Fish",
           "dishId": "sambal-fish",
           "desc": null,
-          "price": 41.3,
-          "tags": []
+          "price": 25.0,
+          "tags": [],
+          "prices": {
+            "online": 41.3
+          },
+          "code": "R14"
         },
         {
           "name": "Sambal Squid",
           "dishId": "sambal-squid",
           "desc": null,
-          "price": 41.3,
+          "price": 25.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "prices": {
+            "online": 41.3
+          },
+          "code": "R15"
         },
         {
           "name": "Sambal Prawns",
           "dishId": "sambal-prawns",
           "desc": null,
-          "price": 41.3,
+          "price": 25.0,
           "tags": [
             "contains-shellfish"
-          ]
+          ],
+          "prices": {
+            "online": 41.3
+          },
+          "code": "R16"
         },
         {
           "name": "Curry Fish",
           "dishId": "curry-fish",
           "desc": null,
-          "price": 41.3,
-          "tags": []
+          "price": 25.0,
+          "tags": [],
+          "prices": {
+            "online": 41.3
+          },
+          "code": "R17"
         },
         {
           "name": "Nasi Lemak",
           "dishId": "nasi-lemak",
           "desc": null,
-          "price": 39.6,
-          "tags": []
+          "price": 24.0,
+          "tags": [],
+          "prices": {
+            "online": 39.6
+          },
+          "code": "R18"
         },
         {
           "name": "Satay Roll",
           "dishId": "satay-roll",
           "desc": null,
-          "price": 30.5,
+          "price": 18.5,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 30.5
+          },
+          "code": "R19"
         },
         {
           "name": "Satay Sticks (6 Sticks)",
           "dishId": "satay-sticks-6-sticks",
           "desc": null,
-          "price": 30.5,
+          "price": 18.5,
           "tags": [
             "contains-peanuts",
             "contains-soy"
-          ]
+          ],
+          "prices": {
+            "online": 30.5
+          },
+          "code": "R20"
         },
         {
           "name": "Homemade Prawns Wonton Soup",
           "dishId": "homemade-prawns-wonton-soup",
           "desc": null,
-          "price": 30.5,
+          "price": 18.5,
           "tags": [
             "contains-shellfish",
             "contains-gluten"
-          ]
+          ],
+          "prices": {
+            "online": 30.5
+          },
+          "code": "R21"
         },
         {
           "name": "Chicken & Mushroom with Egg Noodles on Hot Plate",
           "dishId": "chicken-mushroom-with-egg-noodles-on-hot-plate",
           "desc": null,
-          "price": 42.9,
+          "price": 26.0,
           "tags": [
             "contains-gluten",
             "contains-egg"
-          ]
+          ],
+          "prices": {
+            "online": 42.9
+          },
+          "code": "R22"
         }
       ]
     },
@@ -644,47 +973,104 @@
           "name": "Steamed Rice",
           "dishId": "steamed-rice",
           "desc": null,
-          "price": 6.1,
-          "tags": []
+          "price": 3.5,
+          "tags": [],
+          "prices": {
+            "online": 6.1
+          }
         },
         {
           "name": "Coconut Rice",
           "dishId": "coconut-rice",
           "desc": null,
-          "price": 7.7,
-          "tags": []
+          "price": 4.0,
+          "tags": [],
+          "prices": {
+            "online": 7.7
+          }
         },
         {
           "name": "Garlic Rice",
           "dishId": "garlic-rice",
           "desc": null,
-          "price": 7.7,
-          "tags": []
+          "price": 4.0,
+          "tags": [],
+          "prices": {
+            "online": 7.7
+          }
         },
         {
           "name": "Plain Noodle Soup",
           "dishId": "plain-noodle-soup",
           "desc": null,
-          "price": 10.3,
-          "tags": []
+          "price": 6.5,
+          "tags": [],
+          "prices": {
+            "online": 10.3
+          }
         },
         {
           "name": "Steamed Plain Noodle",
           "dishId": "steamed-plain-noodle",
           "desc": null,
-          "price": 7.7,
-          "tags": []
+          "price": 4.5,
+          "tags": [],
+          "prices": {
+            "online": 7.7
+          }
         },
         {
           "name": "Plain Roti",
           "dishId": "plain-roti",
           "desc": null,
-          "price": 7.2,
+          "price": 4.5,
           "tags": [
             "contains-gluten"
+          ],
+          "prices": {
+            "online": 7.2
+          }
+        }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "sectionId": "drinks",
+      "items": [
+        {
+          "name": "Ice Coffee",
+          "dishId": "ice-coffee",
+          "price": 4.0,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Ice Fresh Lemon Drink",
+          "dishId": "ice-fresh-lemon-drink",
+          "price": 4.0,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Chinese Tea",
+          "dishId": "chinese-tea",
+          "price": 2.5,
+          "tags": [
+            "vg"
           ]
         }
       ]
     }
-  ]
+  ],
+  "priceChannels": {
+    "online": {
+      "platform": "R & S online ordering",
+      "recorded": "2026-07-06",
+      "method": "official-site",
+      "note": "The whole original reading, from the venue's own ordering page. The date is this record's lifecycle.added: no verification date was ever kept for it (verified was null), so this is the best evidence of when the page was read, not a claim to have read it again."
+    }
+  },
+  "verifiedBy": "in-store"
 }

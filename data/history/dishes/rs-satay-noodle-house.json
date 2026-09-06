@@ -1,0 +1,30 @@
+{
+  "venue": "rs-satay-noodle-house",
+  "note": "Dishes confirmed off the menu (`available.offBy`). The whole item is kept so it can be restored verbatim if it returns.",
+  "rows": [
+    {
+      "key": {
+        "section": "Malaysian Style Dishes",
+        "name": "Deep Fried Money Bag (Vegetarian)",
+        "code": null,
+        "dishId": "deep-fried-money-bag-vegetarian"
+      },
+      "item": {
+        "name": "Deep Fried Money Bag (Vegetarian)",
+        "dishId": "deep-fried-money-bag-vegetarian",
+        "desc": null,
+        "price": 10.7,
+        "tags": [
+          "v"
+        ],
+        "available": {
+          "offBy": "2026-08-26",
+          "note": "Taped over and struck out on the in-store menu."
+        },
+        "prices": {
+          "online": 10.7
+        }
+      }
+    }
+  ]
+}
