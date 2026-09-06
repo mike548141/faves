@@ -182,6 +182,6 @@ now holds only "Pick for us" and the order pill, so its label is slightly off.
 >    toggles → one "Sort by" `<select>`. Offered the revert of either and took
 >    neither.
 
-[ADR 0062]: decisions/0062-a-toolbar-is-not-a-sheet-lying-down.md
+[ADR 0062]: ../../decisions/0062-a-toolbar-is-not-a-sheet-lying-down.md
 
-[ADR 0059]: decisions/0059-the-info-disclosure-is-click-only.md
+[ADR 0059]: ../../decisions/0059-the-info-disclosure-is-click-only.md
