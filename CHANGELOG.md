@@ -32,6 +32,7 @@ content freshness separately from this file.
   more"*.
 
 ### Changed
+- **R & S Satay Noodle House's prices are now the shop's.** Every price was about 65% high because the menu had been read from the venue's online ordering page — chicken rice was showing $30.50 and the counter charges $18.50. Read in store on 2026-08-26, with the venue's own order numbers (1-16, S1-S32, R1-R22) so you can ask for "an S28", the drinks list, and Roti with Satay Sauce. Tom Yum, Mee Goreng and Fried Rice now show their chicken and seafood prices separately, as the shop's menu does. Deep Fried Money Bag has come off the menu.
 - **KK Malaysian's prices are now the shop's, not the delivery app's.** Every
   price was about a quarter high because the menu had been read from
   Delivereasy: satay was showing $24 and the counter charges $19. Read in store

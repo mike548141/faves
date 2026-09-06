@@ -9341,3 +9341,35 @@ showed every KK price moving TOWARD what the shop charges. The old values
 were the defect. Merged, branch deleted local and remote, worktree removed.
 Recorded in memory: caution stated vaguely reads as diligence; caution
 stated in numbers usually evaporates.
+
+### Addendum 2 — "why aren't you doing this work?"
+
+R & S Satay Noodle House had been left as "diagnosed, transcription
+outstanding" and labelled **deliberately not started**. The owner asked why.
+There was no reason: the photographs were read, the schema existed, KK had
+established the pattern an hour earlier. "Deliberately not started" was
+dressing up stopping, and it is the second time in this session that a
+cautious-sounding label covered an absence of reasoning — the first was
+holding PR #7 open.
+
+Done now. 72 dishes matched by name in both directions, every figure re-read
+from the photographs at native resolution column by column rather than
+trusted from the earlier pass (a transcription of my own from fifty turns
+back is not evidence). The venue goes from `verified: null` — never checked —
+to a first-party in-store reading, which is the biggest single freshness
+change in the corpus.
+
+Three things beyond the prices:
+- **A departed dish.** "Deep Fried Money Bag (Vegetarian)" is taped over and
+  struck out in marker on the card. Moved whole to `data/history/dishes/`
+  with `available.offBy`, never deleted.
+- **Three splits**, where the card prices by protein and the record held one
+  row: Tom Yum, Mee Goreng, Fried Rice. The original `dishId` stays on the
+  first row.
+- **66 order codes**, a drinks section and one dish the online page does not
+  carry at all — more evidence for the KK finding that a platform menu is a
+  SUBSET, not a markup.
+
+⚠️ Its weakness, stated: the `online` channel's `recorded` date is the
+record's own `lifecycle.added`, because no verification date was ever kept
+for that reading. Best available evidence, not a claim to have re-read it.
