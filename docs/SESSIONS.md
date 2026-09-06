@@ -9494,8 +9494,80 @@ origin/main — an empty range proves nothing. The session range was used
 instead. Worth knowing: the documented invocation is only meaningful on a
 branch that is ahead.
 
-### Owed to the owner
+### Four rulings taken at the close, and three of them built the same session
 
-Four decisions, put to him at close: the `until` naming fork; the
-`boot_check:83` selector; the bypass/PR-only question `340/180` reframes; and
-`210/050`'s "Permanently closed" repetition. Nothing else is left uncaptured.
+Put through `AskUserQuestion` with the account first. All four recorded on the
+board; three needed code and all three landed.
+
+1. **`340/160` naming fork → `untilPresent` / `untilStable`.** The 2026-08-22
+   ruling said `untilSettled`; `browser.mjs` already exports `settleUntil`,
+   which never throws and returns its last value. Two exports differing only by
+   word order with opposite behaviour is a trap, so the fork was surfaced rather
+   than silently resolved. `settleUntil` untouched, its 13 call sites unchanged.
+2. **`340/170` → assert WHICH alternative matched.** Narrowed from an audit to
+   one line by measuring first.
+3. **`210/050` → a muted style for the repeats.** The sequencing-safe option:
+   `040` names option 2, not 3, as the one needing undoing later.
+4. **`340/180` → leave the CI bypass as it is.** Now an accepted cost, not an
+   unexamined one, and nobody should again propose "just narrow the bypass" as
+   cheap. Closed `[x]`.
+
+### 🛑 The `until` split found a bigger fault than the one it was sent to fix
+
+**Eight of fifteen tools ended with their own `catch { process.exit(2) }`
+around `run()`.** A local catch sits *upstream* of the `uncaughtException`
+handler that classifies errors — so **`need()`'s exit-1 promise from `070` had
+been void in over half the corpus since the day it shipped**, all eight green
+throughout. [ADR 0072]'s decorative-guard pattern, applied to ADR 0072's own
+remedy. Fixed by one exported `exitFromError()`; recorded as **ADR 0093**,
+because wrapping `run()` in a `try/catch` is an obvious thing a future author
+would do and nothing would tell them they had switched it off.
+
+**Population re-counted at execution: 56 `until(` occurrences — 1 definition +
+55 call sites.** Not the 49 first measured nor the 54 corrected to; it grew
+mid-session when `distance_check` landed. 7 → `untilStable`, 48 →
+`untilPresent`, four sites deliberated and named rather than pattern-matched.
+
+**Proven by breaking, and re-proven independently by this session** rather than
+taken on the agent's report: renaming `.order-fab` under an `untilPresent` gave
+`FAIL MISSING ELEMENT …` and `REAL_EXIT=1`, where the same break at the base
+commit gave exit 2. `note_check` was restored and re-run to 19/19 afterwards.
+
+### 🛑 And shipping it immediately produced the risk the ruling had declined
+
+**A load-induced `untilPresent` timeout now presents as exit 1 — a false
+regression.** Measured on the *same commit* within minutes: inside a 15-check
+sweep with two extra Chrome instances live (load 18–27) `cook_check` exited 1
+on the `MissingElementError` path; isolated and quiet it ran **85 passed, 0
+failed**, exit 0. Nothing about the site changed. This is option 1's rejected
+failure mode arriving through option 2's door — the split keeps the 7 timing
+waits at exit 2, but the 48 site claims can still be starved into a phantom.
+Filed with four costed options as `340/200`, added to ADR 0093's Consequences,
+and CLAUDE.md's exit-code guidance amended: **a lone `FAIL MISSING ELEMENT` on
+a busy machine is not evidence until it reproduces quiet.**
+
+🔑 Worth keeping as method: the finding exists only because the sweep and an
+isolated re-run disagreed on identical code. A single green run would have
+hidden it; a single red one would have been reported as a regression.
+
+### Verification at close — all fifteen browser checks on merged `main`
+
+boot 24 · distance 19 · focus 16 · filter_row 25 · to_top 28 · picks 20 ·
+geo 22 · served 55 · note 19 · addon 21 · device 25 · branch 84 · recipe 29 ·
+**sync 16** · cook 85 — every one exit 0. `node --test` **1158 pass, 0 fail**;
+`test_validate` 137 mutations; all Python gates clean; `check_decisions` 92
+records. ⚠️ `geo_check` and `served_check` print no tree line, so for those two
+there is an exit code but **no confirmation of which tree they measured**
+(`340/190`). The other thirteen all reported `main@…`, read not assumed.
+
+🚀 **Deploy verified in production, not just locally:** `faves.pages.dev/sw.js`
+served `SHELL/DATA 2026-09-07.2` after the first merge, and the live venue JSON
+showed `Bacon → has-meat`, `Salmon → has-fish`, `Spinach → []` — the
+never-assert-an-absence rule holding on a real phone's payload.
+
+### Still owed
+
+Nothing takeable is left uncaptured. Open for the owner alone: the te reo gloss
+for "Dining" (`340/140`, needs a fluent speaker, not a session); the ninth
+closure surface (`210/060`); the `untilPresent` load question (`340/200`); and
+the geometry-throw classification (`340/190` a).
