@@ -229,7 +229,9 @@
         {
           "name": "Extra meat",
           "price": 6,
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         },
         {
           "name": "Extra falafel",

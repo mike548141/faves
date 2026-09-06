@@ -100,17 +100,23 @@
         {
           "name": "Sausages",
           "price": 8.0,
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         },
         {
           "name": "Bacon",
           "price": 8.0,
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         },
         {
           "name": "Salmon",
           "price": 9.0,
-          "tags": []
+          "tags": [
+            "has-fish"
+          ]
         },
         {
           "name": "Free Range Egg",
@@ -179,7 +185,9 @@
       "options": [
         {
           "name": "Chicken",
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         },
         {
           "name": "Halloumi",
@@ -195,7 +203,9 @@
         },
         {
           "name": "Beef",
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         }
       ]
     },
@@ -233,7 +243,9 @@
         {
           "name": "Salmon",
           "price": 7.0,
-          "tags": []
+          "tags": [
+            "has-fish"
+          ]
         }
       ]
     },

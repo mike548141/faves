@@ -75,7 +75,9 @@
         {
           "name": "Prosciutto",
           "price": 5.0,
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         }
       ]
     },
@@ -88,7 +90,8 @@
           "name": "Cheese & beef gravy",
           "price": 5.0,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "has-meat"
           ]
         }
       ]
@@ -123,7 +126,9 @@
         {
           "name": "Bacon",
           "price": 5.0,
-          "tags": []
+          "tags": [
+            "has-meat"
+          ]
         },
         {
           "name": "Cheese",
