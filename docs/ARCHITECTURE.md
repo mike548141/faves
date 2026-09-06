@@ -649,6 +649,17 @@ reason. English only, like the refresh caveat, per `reo.js`'s safety boundary.
   `contains-peanuts`, `contains-shellfish`, `contains-egg`,
   `contains-dairy`, `contains-gluten`, `contains-soy`, `contains-sesame`
 - Heat: `spicy-1` … `spicy-3`
+- **What an add-on option IS** (ADR 0092): `has-meat`, `has-fish` — **legal on
+  an add-on option, an ERROR on a dish** (`validate.py` `OPTION_ONLY_TAGS`).
+  Positive claims read off the option's own name, so the picker can say
+  *"Bacon is meat, so this is no longer vegetarian"* instead of *"we can't
+  say"*. Deliberately **not** in the `contains-` namespace: meat is not an
+  allergen, and a ninth `contains-` tag would have joined the four allergen
+  tables (`menu.js`/`recipe.js` chips, `settings.js`'s avoid list,
+  `report.js`'s prefix filter) as one nobody could filter on. They contradict
+  `v`/`vg` in `addons.js` `CONTRADICTS` and nothing else. Applied by
+  `tools/tag_addon_options.py`; `menu.js` `tagChip` has no label for them,
+  which is why a dish may not carry one.
 - Options: `gf-option`, `v-option`, `df-option`, `vg-option` — one per dietary
   claim, so "available on request" is sayable about all four (owner ruling,
   2026-08-16). An `-option` tag asserts the **venue offers the substitution**;
@@ -695,6 +706,18 @@ a `contains-*` or remove a `gf`/`df`/`v`/`vg` — it can never invent a
 safety claim. Its `CONTRADICTS` table is `CONTRADICTED_BY` in
 `tools/tag_allergens.py` inverted, and `validate.py` errors if the two
 ever stop agreeing.
+
+**What the picker SAYS when a claim dies** (ADR 0092). A fact is said on its
+own, per claim, first: *"Halloumi contains dairy, so this is no longer vegan"*,
+*"Bacon is meat, so this is no longer vegetarian"*. Everything still unknown is
+held back and said **once** for the whole configuration, last: *"Spinach and
+Tomatoes aren't tagged vegetarian or gluten free, so those labels describe the
+dish as listed."* The claim still dies either way — the collapse changes how
+many sentences say so, never whether they do. `composeTags` carries `silent` on
+a `not-stated` drop (every option that failed that claim, not just the first)
+so the one sentence can name them all; a drop killed by a fact carries none.
+`tools/tag_addon_options.py` is the sweep that keeps facts winning, and
+`validate.py` warns when it is owed.
 
 Add-on prices never feed the venue's price band (`site/js/price.js` reads
 dish prices only), and a group no section or dish names is a **warning**:
