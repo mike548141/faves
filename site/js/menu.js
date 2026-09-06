@@ -13,7 +13,7 @@ import {
   venueHours,
 } from "./locations.js";
 import { travelHint } from "./distance.js";
-import { formatDistance, convertTemperatures } from "./units.js";
+import { formatDistance, convertTemperatures, formatDial, widenDialTo } from "./units.js";
 import {
   openStatus,
   groupWeek,
@@ -602,6 +602,74 @@ function subFacets(r) {
   return parts;
 }
 
+/**
+ * The line a venue beyond the reader's distance limit carries (ADR 0091).
+ *
+ * THE LINK OPENS NORMALLY. That was ruled explicitly on 2026-08-22 and blocking
+ * was rejected: the person who sent the link never knew what limit the
+ * recipient had set, so a blocked link fails for a reason neither party can
+ * see. Nothing below gates the page — this returns a paragraph or nothing.
+ *
+ * And the line is not an apology for the filter. It is the ONE moment the
+ * setting becomes legible: a reader wondering why this place was missing from
+ * home gets the answer on the page they are already looking at, beside the
+ * control that fixes it. That is the whole reason it is worth a line at all.
+ *
+ * Returns null unless the location was captured THIS session and this venue's
+ * nearest branch is genuinely past the dial — no origin means every distance is
+ * Infinity, and a note that fired on a guess would be worse than silence.
+ */
+function distanceLimitNote(r) {
+  const origin = recallOrigin();
+  if (!origin) return null;
+  const { farKm, units } = settings.get();
+  const km = nearestBranch(r, origin).distanceKm;
+  if (km == null || !Number.isFinite(km) || km <= farKm) return null;
+
+  const limit = formatDial(farKm, "farKm", units);
+  const target = widenDialTo(km, "farKm", units);
+  const note = el("p", { className: "menu-far-note" }, [
+    el("span", { "aria-hidden": "true", textContent: "📍" }),
+    ` ${formatDistance(km, units)} away — further than your ${limit} distance limit, ` +
+      `so it isn’t on your home list. `,
+  ]);
+  // Offered only when it will work. Past the dial's maximum there is no figure
+  // to name, so the offer becomes "go and look at the dial" rather than a
+  // number that would not bring this place back (units.widenDialTo).
+  const btn = el("button", {
+    type: "button",
+    className: "menu-far-widen",
+    textContent: target === null ? "Change your distance limit" : `Widen to ${formatDial(target, "farKm", units)}`,
+  });
+  btn.addEventListener("click", () => {
+    if (target === null) {
+      // settings-ui.js builds its sheet lazily on the ⚙ button and exports no
+      // open(); borrowing that click beats duplicating the construction.
+      document.getElementById("settings-btn")?.click();
+      return;
+    }
+    const shown = formatDial(target, "farKm", units);
+    // 🚩 This line lands SYNCHRONOUSLY inside `settings.set`: the store notifies
+    // its subscribers before returning, and menu.js's is `reapply`, which
+    // re-renders the whole screen. So by the next statement this paragraph — and
+    // this very button — are detached, which is why nothing below touches them.
+    settings.set({ farKm: target });
+    // The note is gone because it stopped being true, and a control vanishing
+    // with no word said reads as a misfire. The toast is the whole feedback.
+    toast(`Distance limit is now ${shown}. This place is on your home list.`);
+    // Focus was on the button the re-render just threw away; left alone it falls
+    // to <body>, putting a keyboard reader back at the top of the document. The
+    // title is the freshly built element nearest to where they were.
+    const title = document.querySelector(".menu-title");
+    if (title) {
+      title.tabIndex = -1;
+      title.focus();
+    }
+  });
+  note.append(btn);
+  return note;
+}
+
 function renderHeader(r) {
   const kind = kindOf(r);
   // A kind with a tagline of its own says what it is; one without is described
@@ -669,6 +737,12 @@ function renderHeader(r) {
     }
     bits.push(banner);
   }
+
+  // Why this place was not on the home list, for a reader who got here by a
+  // link rather than by browsing (ADR 0091). After the closure banner, because
+  // "shut for a refit" outranks "further than you usually look".
+  const farNote = distanceLimitNote(r);
+  if (farNote) bits.push(farNote);
 
   // Only present when prices are being converted — so a reader at home never
   // sees it, and a reader abroad is told once instead of 187 times.

@@ -294,6 +294,62 @@ main {
   outline-offset: 3px;
 }
 
+/* The distance limit's own line (ADR 0091). It sits with the active-filter
+   chips because it answers the same question they do — "why is this list
+   short?" — but it cannot BE one: those chips clear a view filter with a ✕,
+   and this names a stored setting, so its control widens rather than clears
+   and has to say which. `flex-basis: 100%` gives it its own row in
+   .results-head; sharing a line with the count would squeeze both. */
+.distance-note {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.distance-note-text {
+  min-width: 0;
+}
+
+/* One button shape for both surfaces and both screens. It is a real button, not
+   an inline text link, because it changes a saved setting — and at 44 px it
+   clears the tap-target floor a link in a sentence would not. */
+.distance-widen,
+.menu-far-widen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.4em 1.1em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--step-sub);
+  font-weight: 700;
+  cursor: pointer;
+}
+.distance-widen:hover,
+.menu-far-widen:hover {
+  border-color: var(--accent);
+}
+
+/* The empty screen the limit can now produce. `.empty` already centres it; this
+   only separates the statement from the count of what is being held back, and
+   gives the way out room of its own. */
+.distance-empty-head {
+  margin: 0 0 var(--space-1);
+  color: var(--ink);
+  font-weight: 600;
+}
+.distance-empty-sub {
+  margin: 0 0 var(--space-3);
+}
+
 /* Shared pill toggles, inside the filter sheet's "Narrow to" group: "Open
    now" / "Cheap eats". The location ask no longer borrows this look at all:
    ADR 0083 removed the #geo-ask pill and moved the ask to #geo-dialog and
@@ -3663,6 +3719,24 @@ body.faves-view .to-top {
 }
 /* The dial that hid some branches, named where its effect is felt. Silent
    truncation reads as "these are all of them"; this says it is not. */
+/* "You are past your own distance limit" on a venue page (ADR 0091). Tinted
+   rather than quiet grey: it is the one moment the setting becomes legible, and
+   a reader who arrived by a link has no other explanation for why this place
+   was missing from home. Not the closure banner's weight — a closure costs a
+   wasted trip, this costs a setting the reader chose. */
+.menu-far-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--ink);
+  font-size: var(--step-sub);
+}
+
 .contact-branches-dial {
   margin: 0;
   padding: var(--space-2) var(--space-3);
