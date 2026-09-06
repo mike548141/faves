@@ -1,0 +1,348 @@
+{
+  "id": "bambina-pizzeria",
+  "name": "Bambina Pizzeria",
+  "cuisine": [
+    "Italian",
+    "Pizza"
+  ],
+  "area": "Pipitea",
+  "city": "Wellington",
+  "currency": "NZD",
+  "address": "38 Bowen Street, Pipitea, Wellington 6011",
+  "lat": -41.27846,
+  "lng": 174.77479,
+  "services": [
+    "dine-in",
+    "takeaway"
+  ],
+  "phone": null,
+  "website": "https://bambinapizzeria.co.nz",
+  "ordering": [],
+  "hours": {
+    "mon": [
+      [
+        "11:00",
+        "15:00"
+      ]
+    ],
+    "tue": [
+      [
+        "11:00",
+        "15:00"
+      ]
+    ],
+    "wed": [
+      [
+        "11:00",
+        "15:00"
+      ]
+    ],
+    "thu": [
+      [
+        "11:00",
+        "15:00"
+      ]
+    ],
+    "fri": [
+      [
+        "11:00",
+        "15:00"
+      ]
+    ],
+    "sat": [],
+    "sun": []
+  },
+  "vibe": [
+    "quick-eats",
+    "counter-order"
+  ],
+  "picks": [
+    "Margherita",
+    "Italian Sausage & Hot Honey",
+    "Italian BLT",
+    "Tiramisu"
+  ],
+  "priceBand": "$$",
+  "verified": "2026-09-01",
+  "verifiedBy": "paper-menu",
+  "detailsVerified": "2026-09-01",
+  "detailsVerifiedBy": "paper-menu",
+  "lifecycle": {
+    "added": "2026-09-06"
+  },
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "extra-toppings",
+      "name": "Extra toppings",
+      "select": "many",
+      "price": 3,
+      "options": [
+        { "name": "Pepperoni", "tags": [] },
+        { "name": "Extra cheese", "tags": ["contains-dairy"] },
+        { "name": "Cotto ham", "tags": [] },
+        { "name": "Mushrooms", "tags": ["v"] },
+        { "name": "Italian sausage", "tags": [] },
+        { "name": "Beef meatball", "tags": [] }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Pizza",
+      "sectionId": "pizza",
+      "addOns": [
+        "extra-toppings"
+      ],
+      "items": [
+        {
+          "name": "Margherita",
+          "dishId": "margherita",
+          "desc": "Tomato, mozzarella, basil.",
+          "price": 19,
+          "tags": [
+            "v",
+            "vg-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Italian Sausage & Hot Honey",
+          "dishId": "italian-sausage-hot-honey",
+          "desc": "'Nduja, garlic, basil.",
+          "price": 23,
+          "tags": []
+        },
+        {
+          "name": "Carne Italiano",
+          "dishId": "carne-italiano",
+          "desc": "Provolone, spinach, beef meatball, capsicum, ricotta. Add chilli oil.",
+          "price": 22,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Pepperoni",
+          "dishId": "pepperoni",
+          "desc": "Provolone, alla vodka, 'nduja, mascarpone, basil.",
+          "price": 21,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Prosciutto Cotto",
+          "dishId": "prosciutto-cotto",
+          "desc": "Provolone, basilico pesto, ricotta.",
+          "price": 22,
+          "needs": [
+            {
+              "what": "allergens",
+              "note": "The card prints (NF) against this dish, but tag_allergens infers contains-nuts from 'pesto' (pine nuts). Both may be true — a nut-free pesto is ordinary — and the tag vocabulary cannot record a venue's own nut-free claim, so the inference is the only thing on screen. Worth asking the shop before trusting either.",
+              "since": "2026-09-06"
+            }
+          ],
+          "tags": [
+            "contains-nuts",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Funghi",
+          "dishId": "funghi",
+          "desc": "Provolone, formaggio, black pepper, parsley, truffle oil, lemon.",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "Obscured by camera flare on the 2026-09-01 card; the first digit reads 2 and the second is unreadable. Left out rather than guessed.",
+              "since": "2026-09-06"
+            }
+          ],
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mediterranean",
+          "dishId": "mediterranean",
+          "desc": "Alla vodka, mozzarella, artichoke hearts, black olives, capsicum.",
+          "price": 21,
+          "needs": [
+            {
+              "what": "ingredients",
+              "note": "The topping line runs under camera flare after 'capsicum'; there may be one or two further ingredients on the card.",
+              "since": "2026-09-06"
+            }
+          ],
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Caramelised Onions",
+          "dishId": "caramelised-onions",
+          "desc": "Mozzarella, tomato, hot honey, rocket.",
+          "price": 21,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sandwiches",
+      "sectionId": "sandwiches",
+      "items": [
+        {
+          "name": "Italian BLT",
+          "dishId": "italian-blt",
+          "desc": "Cotto ham, tomato, pesto, aioli and lettuce.",
+          "price": 18,
+          "needs": [
+            {
+              "what": "allergens",
+              "note": "As with Prosciutto Cotto: the card prints (NF) and tag_allergens infers contains-nuts from 'pesto'. The inference stands because ADR 0025 over-warns by design, but the venue's own contrary claim has nowhere to live in the schema.",
+              "since": "2026-09-06"
+            }
+          ],
+          "tags": [
+            "df",
+            "contains-nuts",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Deli",
+          "dishId": "deli",
+          "desc": "Mortadella, salami, chorizo, provolone, lettuce, tomato, Italian dressing, garlic mayo.",
+          "price": 18,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Italian Beef",
+          "dishId": "italian-beef",
+          "desc": "Roast beef, mascarpone, peperonata, salad, garlic mayo.",
+          "price": 18,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Chicken Salad",
+          "dishId": "chicken-salad",
+          "desc": "Roasted apple, lettuce, crème fraîche, pickled onions, mustard mayo.",
+          "price": 18,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Mushroom",
+          "dishId": "mushroom",
+          "desc": "Goat's cheese, spinach, peperonata, garlic aioli.",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "Wholly obscured by camera flare on the 2026-09-01 card. The neighbouring sandwiches are all $18 but the card's own number could not be read, so nothing is claimed.",
+              "since": "2026-09-06"
+            }
+          ],
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sweet Treats",
+      "sectionId": "sweet-treats",
+      "items": [
+        {
+          "name": "Tiramisu",
+          "dishId": "tiramisu",
+          "desc": "Flight coffee, mascarpone, sherry.",
+          "price": 12,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Lemon Cake",
+          "dishId": "lemon-cake",
+          "desc": "Meyer lemon, polenta, cream cheese icing.",
+          "price": 6,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cookie",
+          "dishId": "cookie",
+          "desc": "Chocolate chip.",
+          "price": 4,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Drinks",
+      "sectionId": "drinks",
+      "items": [
+        {
+          "name": "Coke cans range",
+          "dishId": "coke-cans-range",
+          "desc": "330ml.",
+          "price": 3.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Coke bottle range",
+          "dishId": "coke-bottle-range",
+          "desc": "600ml.",
+          "price": 5.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Juice range",
+          "dishId": "juice-range",
+          "price": 5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Voyage water range",
+          "dishId": "voyage-water-range",
+          "price": 5,
+          "tags": [
+            "vg"
+          ]
+        }
+      ]
+    }
+  ]
+}
