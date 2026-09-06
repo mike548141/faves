@@ -1,4 +1,4 @@
-- [~] 🎯 **Dragonfly, Courtenay Place — owner-directed online fetch**
+- [x] 🎯 **Dragonfly, Courtenay Place — owner-directed online fetch**
       `[S][content]` — 🔒 **CLAIMED 2026-09-07 (session faves-24).**
       Owner, this session: *"Add Dragonfly restaurant in courtney place,
       Wellington to the list of restaurants. Gather all the info you can
@@ -25,6 +25,54 @@
   missed a venue whose menu is two clicks from its homepage. **The other
   thirteen have not been re-checked**, so nobody should now assume they are
   fetchable either. Re-running that sweep is its own job; see `190`.
+
+  ✅ **DELIVERED 2026-09-07 (`093f7d7`).** `stub` → `menu-complete`: 24 dishes
+  in four sections, phone, website, per-day hours, `priceBand` `$$$`, vibe, the
+  takeaway ordering link, and the fallback `<li>` promoted from an unlinked
+  "Menu coming soon" card to a real link (40 linked / 17 stub, was 39 / 18).
+
+  🛑 **TWO THINGS THE WORK FOUND THAT ARE BIGGER THAN THE VENUE.**
+  1. **The allergen tagger flags `water chestnut` as a tree nut.** Both a
+     dumpling and a side of greens here name it, and `validate.py` demanded
+     `contains-nuts` on a **vegan side dish**. Water chestnut is *Eleocharis
+     dulcis*, an aquatic sedge tuber, botanically unrelated to *Castanea* and
+     safe for a tree-nut allergy — the same call the rule's own comment already
+     makes for coconut. Fixed with a **fixed-width negative lookbehind**, not
+     an `exclude`: `exclude` vetoes the whole rule for the item, so
+     *"water chestnuts and toasted almonds"* would have **lost the almonds** —
+     trading an over-warning for a MISS, the one direction this tool must never
+     move. New test case plus a breaker that removes the lookbehind and proves
+     the case notices; suite 18 → 20.
+     🔑 An over-warning is not harmless here: firing a nut warning on a vegan
+     side is exactly how a reader learns to discount the warnings that matter,
+     which is the finding 14h shipped the same day.
+  2. **The schema cannot express a past-midnight close** — filed as
+     [`190/010`](../190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md).
+     This venue is the corpus's **first** with one, and the record knowingly
+     understates Fri–Sat.
+
+  ✅ **Two allergen findings from the tagger were accepted, not argued away.**
+  `Massaman Potatoes` → `contains-peanuts` (DERIVED: massaman is a peanut
+  curry; the venue prints no peanut, and this is precisely the gap a diner
+  cannot see) and `Coconut Gelato` → `contains-nuts`. The gelato's is a
+  **deliberate over-warning**: its "black sesame praline" names its own
+  inclusion, but praline is a technique that is usually nut-based, and unlike
+  water chestnut that is genuinely ambiguous. **Certain → exclude; ambiguous →
+  warn** is the line drawn, and it is the line worth reusing.
+
+  🛑 **A SAFETY GAP THIS VENUE MAKES CONCRETE AND CANNOT FIX: there is no
+  `contains-fish` tag.** `Seared Sesame Tuna`, `Salmon Two Ways` and the
+  squid's neighbours cannot declare fish, because the vocabulary has no such
+  tag and `has-fish` is **option-only** (an error on a dish, ADR 0092). Adding
+  it is already ruled — Theme 5 `010`, *"RULED 2026-08-16 — ADD contains-fish,
+  and land it WITH 37n"* — and still open. Until it lands, three fish dishes on
+  this menu are silent about fish.
+
+  📋 **Ownership deliberately NOT recorded.** The About page names the two
+  people who own the venue, and ADR 0046 would permit it. `data/ownership.json`
+  is empty, no Faves screen reads it, and the owner's own design rule is *don't
+  write an identifier into the repo the product doesn't need*. Permissible is
+  not the same as needed, and this is a public repo.
 
   📋 **What the fetch actually yielded, and what it did not.**
   - ✅ **Food menu — complete**, 24 dishes, four sections, every price and the
