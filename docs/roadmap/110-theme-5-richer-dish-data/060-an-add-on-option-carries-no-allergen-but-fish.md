@@ -44,6 +44,36 @@
   alternative** — the same reasoning `tag_allergens.py` already carries for
   `(?<!water )chestnuts?` and `(?<!seed )caviar`.
 
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — FIX THE HEDGE FIRST, THEN
+  SWEEP ONCE.** 🚩 **He OVERRULED the recommendation**, which was to land the two
+  real misses immediately and treat the hedge separately. He took the thorough
+  sequencing: get the rules right, then run everything through them in one pass.
+  🛑 **What that costs, stated because he accepted it knowingly:** `Hummus`
+  (sesame) and `Chocolate or Nutella` (**nuts**) carry **no warning anywhere in
+  the app** and will keep carrying none until the hedge work lands. That is a
+  real gap with a real allergen, and the sequencing makes it wait. It is not an
+  oversight — **it is the trade he chose**, and whoever picks this up should
+  treat the hedge fix as urgent for that reason rather than tidy.
+  🔑 **The hedge, explained once so nobody re-derives it.** A hedge is a venue
+  writing an allergen word in order to say the allergen is **absent**:
+  `Gluten free toast` · `No gluten added bun`. A rule that matches the word and
+  not its context tags them as *containing* the allergen — and this was measured,
+  not hypothesised: `tag_allergens.py` proposed `contains-gluten` on a dish
+  literally named **`Gluten free toast`** during the Simmer intake (`080/200`).
+  🛑 **Why it is worse than an ordinary false positive.** An over-warning is
+  usually annoying and safe — the water-chestnut case warned a vegan side about
+  nuts and nobody was harmed. This one puts a **false gluten warning on the one
+  item a coeliac is hunting for**, and the way a reader "fixes" that experience
+  is by learning to distrust the gluten chips. The over-warning trains away the
+  warning.
+  🚩 **And the obvious fix is the trap this repo already knows.** "Skip any dish
+  mentioning *gluten free*" would also skip a genuine gluten item in the same
+  phrase — *"sourdough toast, gluten free option available"* would lose its
+  warning entirely. That is an **over-warning traded for a miss**. The shape
+  wanted is a narrow **lookbehind** that cancels the match only where the
+  negation directly precedes it, **break-probed on `Gluten free toast`** and on a
+  sentence where the hedge and a real gluten item coexist.
+
   📋 **Options, costed, none recommended — this is the owner's to scope:**
   1. **Share the whole dish rule set, guarded per-allergen by a "free-from"
      negation.** An option name making a free-from claim about allergen X

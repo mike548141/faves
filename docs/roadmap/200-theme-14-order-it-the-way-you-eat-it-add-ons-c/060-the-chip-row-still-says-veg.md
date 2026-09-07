@@ -41,6 +41,24 @@
   `dish-flagged` already fires. So if only one half moves, it is the claim
   chips.
 
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — UPDATE THE CHIPS LIVE.**
+  Re-render the chip row from the composed tags, so `Veg` disappears when a
+  configuration breaks it. That matches what the warning and the `dish-flagged`
+  dimming already do, and ends the state where three surfaces carry two meanings.
+  ❌ Greying the broken claims and ❌ leaving it are **declined**.
+  🛑 **This is the code change `110/040` wrongly claimed already existed.** That
+  item asserted composed tags reach `tagChip` and render a raw identifier; they
+  do **not** — `menu.js` builds the row once in `renderDish` from `item.tags`,
+  and `onCompose` rewrites `dataset.tags` without appending chips. **So this
+  ruling is what makes composed tags reach the chip row for the first time**, and
+  the raw-identifier risk that was falsely reported becomes REAL the moment it
+  lands. `has-fish` is not `contains-`-prefixed, not spicy and not in `DIETARY`,
+  so it would fall through `tagChip`'s bare fallback and render as the literal
+  string. **Whoever builds this must decide what a non-reader-facing tag does
+  before wiring the re-render** — the false alarm has become a genuine
+  precondition.
+  🚩 Watch for flicker: the row must not visibly rebuild on every tap.
+
   📋 **Options, costed:**
   1. **Recompose the chip row on every change.** `[S]` One surface, one truth.
      🛑 The chips would then carry `has-fish`/`has-meat`, which have **no entry

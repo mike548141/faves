@@ -44,6 +44,22 @@
   join `added`; fish is the one substance that now produces a near-miss rather
   than a verbatim repeat (*"Salmon contains fish"* + *"Salmon is fish"*).
 
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — MERGE INTO ONE SENTENCE.**
+  Say the fact once and both consequences after it, e.g. *"Halloumi contains
+  dairy — you asked to avoid it, and it's no longer vegan."* Both meanings are
+  preserved; the repetition is not.
+  🔑 **This is the same complaint he made about the chip row, on a different
+  surface.** Ruling on `110/040` he wrote: *"We don't want a flood of noisy
+  tags on the menu, especially if two tags are telling the reader the same thing."*
+  The chip-row instance turned out not to exist; **this one is real and has been
+  shipping since ADR 0048**, reachable by five allergen×claim pairs.
+  ❌ Dropping the second sentence is **declined** — it silently loses the broken
+  dietary claim, which matters to a reader choosing on vegan grounds rather than
+  allergy. ❌ Leaving it is **declined**.
+  🚩 The merged sentence must not weaken the **allergen** half: it leads, and the
+  dietary consequence follows it. A reader skimming must still meet "you asked to
+  avoid it" first.
+
   📋 **Options, costed:**
   1. **Merge the two when they name the same option AND the same substance** —
      *"Halloumi contains dairy — you asked to avoid it, and this is no longer

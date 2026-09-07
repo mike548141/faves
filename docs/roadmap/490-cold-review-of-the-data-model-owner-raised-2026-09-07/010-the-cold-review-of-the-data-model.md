@@ -77,6 +77,20 @@
      already carries chains where they do. The model currently allows per-branch
      **hours** and nothing else.
 
+  ## 📥 Referred INTO this review by the owner
+
+  - **A venue-level note has nowhere to live** (referred 2026-09-07 from
+    `080/200`). Simmer prints two statements true of its whole kitchen — *"All
+    of our dishes may contain allergens…"* and *"we are unable to swap one
+    ingredient for another"* — and `VENUE_KEYS` has no prose slot; `note` exists
+    only on a **section**. They are parked on `Breakfast`, which renders
+    correctly and is the wrong home. He ruled **fold it into this review**
+    rather than add a field now: *"adding a field now means designing it
+    twice"*, and every field added to the payload downloads to every phone.
+    🔑 It is a good probe for the review as a whole — a one-field question whose
+    honest answer needs the store split, the precache budget and the render
+    surface all considered at once.
+
   ## 🛑 The constraints any answer must survive
 
   Not preferences — they are in `CLAUDE.md` as hard constraints, and a proposal

@@ -42,6 +42,25 @@
   means the wall clock, and the open/closed verdict must keep reading it that
   way. That is a model change, and it belongs to the owner to want.
 
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — FIX IT PROPERLY.**
+  🚩 **He OVERRULED the recommendation**, which was to leave it documented: one
+  hour, one night a year, erring in the safe direction. He chose to compute
+  between **absolute instants** rather than wall-clock minutes.
+  🛑 **The cost he accepted, stated plainly:** this changes the signature of
+  `openStatus` and every caller — a meaningful refactor of the exact code that
+  was stabilised on 2026-09-07 (ADR 0094 and the DST sweep), for one hour a year.
+  🔑 **The pattern across his rulings this session is worth naming for whoever
+  frames the next ask.** He was offered the cheaper, narrower option four times
+  and took the thorough one every time (the stub sweep, DST, agent teardown, and
+  this). **The recommendation being smallest is not what he optimises for.**
+  🚩 **Sequencing:** it touches `hours.js` and every consumer, so it must not run
+  concurrently with work in `menu.js`. And the frozen-clock coverage added on
+  2026-09-07 (`tests/hours-dst.test.js` 22 tests, `midnight_check` 68
+  assertions) is the safety net — this refactor must leave all of it green, and
+  the April assertions must **flip from pinning the understatement to pinning
+  the correct answer**, which is a deliberate, visible change to what those
+  tests claim.
+
   📋 **Options, offered rather than recommended** (a child repo does not settle
   this on its own):
   1. **Leave it, documented.** Zero cost; the behaviour is pinned by an
