@@ -1271,7 +1271,9 @@
           "dishId": "splatter-platter-1",
           "price": 37.5,
           "desc": "Broken Wings 6 pack, chicken tenders, corn nuggets, cajun wedges and a selection of dips.",
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Splatter Platter 2",

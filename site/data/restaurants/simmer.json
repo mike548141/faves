@@ -507,7 +507,9 @@
           "name": "Chicken nuggets, fries",
           "dishId": "chicken-nuggets-fries",
           "price": 12.0,
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Crumbed fish, fries",

@@ -18,6 +18,15 @@ content freshness separately from this file.
   the number is the number: when it says one minute, the place shuts in one
   minute. Which places are open, and until when, is unchanged — "we shut at 3am"
   still means the clock on the wall.
+- **Nine more dishes now carry a gluten warning.** The sweep that reads a menu
+  for allergens had never heard of a baguette, a hoagie roll, a sando,
+  sourdough, a crouton, a Yorkshire pudding, a nugget or tzatziki — so a
+  breakfast served on toasted sourdough and a caesar full of croutons read as
+  though nobody had checked them. It also could not match a plural: it knew a
+  *toastie* and not *toasties*, a *sandwich* and not *sandwiches*. Both are
+  fixed, the plural for every rule at once rather than word by word, and the
+  guards that stop a coconut yoghurt or a ginger beer being warned about were
+  widened with them. As always, no tag still means "not stated", never "safe".
 - **"Don't ask me about my location again" no longer travels in your backup.**
   Ticking that box is a promise about the phone in your hand, and the app said
   so in two places — but the backup file was carrying the flag anyway, and
