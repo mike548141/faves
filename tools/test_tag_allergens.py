@@ -47,6 +47,45 @@ BERHAMPORE = "site/data/restaurants/sprig-and-fern-berhampore.json"
 TAWA = "site/data/restaurants/sprig-and-fern-tawa.json"
 KEBAB = "site/data/restaurants/wellington-kebab-grill.json"
 CHARLEY = "site/data/restaurants/charley-noble.json"
+SIMMER = "site/data/restaurants/simmer.json"
+
+# --- the hedge (2026-09-07) -----------------------------------------------
+# Simmer is the record the fault was MEASURED on, so it is the record the cases
+# run against: `Gluten free toast` in Extras, and six cabinet items whose whole
+# description is the venue's own "No added gluten."
+#
+# Every case below empties the Boysenberry tart's tags as well. It is not part
+# of any assertion about hedges — it is the PROOF OF WRITE this file's absence
+# cases all carry: `tarts?` is in the bakery rule, so the tag must come back,
+# and without that a tagger which had stopped writing anything at all would
+# satisfy "the gluten-free toast gained no gluten tag" perfectly.
+STRIP_TART = [
+    ("""          "name": "Boysenberry tart",
+          "dishId": "boysenberry-tart",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]""",
+     """          "name": "Boysenberry tart",
+          "dishId": "boysenberry-tart",
+          "price": 7.5,
+          "tags": []"""),
+]
+
+# A hedge and a REAL wheat item inside one clause, and the hedge comes first.
+# Both words are alternatives of the SAME rule (the STATED wheat-product one),
+# which is what makes this a probe of `first_unhedged` rather than of rule
+# ordering: `pasta` is cancelled, `wheat` is not, and a guard that stopped at
+# the first match would drop the rule and lose the croutons. "croutons" is
+# deliberately not a rule word, so no second rule can rescue the case.
+HEDGE_BESIDE_REAL = [
+    ('''          "desc": "No added gluten.",
+          "price": 9.5,
+          "tags": []''',
+     '''          "desc": "Gluten free pasta with wheat croutons.",
+          "price": 9.5,
+          "tags": []'''),
+]
 
 # The three burgers under Thorndon's "All burgers served with … on a sesame bun"
 # note, with their tags emptied. Nothing in any of the three names or
@@ -342,6 +381,78 @@ def check_note_declares_its_own_allergen(after, out):
     return f"note-declared tags missing: {sorted(missing)} (has {sorted(tags)})" if missing else None
 
 
+# --- the hedge (2026-09-07) -----------------------------------------------
+
+def _tart_wrote_something(after):
+    """The proof-of-write every hedge case needs. See STRIP_TART."""
+    tags = _dish(after, "boysenberry-tart") or set()
+    if "contains-gluten" not in tags:
+        return ("the Boysenberry tart did not get its gluten tag back — the tool "
+                f"wrote nothing here and the case proves nothing (has {sorted(tags)})")
+    return None
+
+
+def check_a_hedged_name_gains_no_warning(after, out):
+    """`Gluten free toast` is the one item a coeliac is hunting for.
+
+    The rule matches "toast" and the negation sits two words in front of it,
+    unlooked at — measured during the Simmer intake, not imagined. A false
+    gluten warning here is not the usual harmless over-warning: the way a reader
+    "fixes" it is by learning to distrust the gluten chips.
+    """
+    tags = _dish(after, "gluten-free-toast") or set()
+    if "contains-gluten" in tags:
+        return f"warned that GLUTEN FREE TOAST contains gluten (has {sorted(tags)})"
+    return _tart_wrote_something(after)
+
+
+def check_a_declared_free_dish_gains_no_warning(after, out):
+    """"No added gluten." is the venue speaking about the whole dish.
+
+    Six cabinet items say exactly that and nothing else, and the tool proposed
+    `contains-gluten` on the two whose NAME is a bakery word. Read the way a `gf`
+    tag is read — curation outranks a pattern — but per-allergen, so the
+    feta salad keeps its dairy.
+    """
+    bad = {
+        dish: sorted(_dish(after, dish) or [])
+        for dish in ("brownie", "spiced-ginger-love-muffin", "breakfast-bite",
+                     "vege-bite", "pumpkin-beetroot-chickpea-feta-salad",
+                     "roast-vege-salad")
+        if "contains-gluten" in (_dish(after, dish) or set())
+    }
+    if bad:
+        return f"contradicted the venue's own printed 'No added gluten': {bad}"
+    salad = _dish(after, "pumpkin-beetroot-chickpea-feta-salad") or set()
+    if "contains-dairy" not in salad:
+        return ("the feta salad lost its DAIRY tag — the guard vetoed the whole "
+                f"item instead of one allergen (has {sorted(salad)})")
+    return _tart_wrote_something(after)
+
+
+def check_a_hedge_does_not_cancel_a_real_item_beside_it(after, out):
+    """THE case the obvious fix fails. "Gluten free pasta with wheat croutons."
+
+    Two ways to get this wrong, and both are a MISS rather than an over-warning
+    — the one direction this tool may never move:
+      • stop at the first match, and the cancelled `pasta` takes the rule down
+        with it and the wheat croutons go unwarned;
+      • un-anchor the free-from clause test, and it becomes an item-level veto
+        that silences the dish because the words "gluten free" appear anywhere
+        in it. That is the water-chestnut fault with the polarity reversed.
+    The toast is re-asserted in the same breath, so a "fix" that simply switches
+    the hedge guard off cannot pass this case either.
+    """
+    salad = _dish(after, "roast-vege-salad") or set()
+    if "contains-gluten" not in salad:
+        return ("LOST THE WHEAT CROUTONS standing beside a hedge — an "
+                f"over-warning traded for a miss (has {sorted(salad)})")
+    toast = _dish(after, "gluten-free-toast") or set()
+    if "contains-gluten" in toast:
+        return f"the hedge guard is off — gluten free toast was warned about ({sorted(toast)})"
+    return _tart_wrote_something(after)
+
+
 def check_single_line_layout_survives(after, out):
     """A one-line tags array must stay on one line. The whole reason this tool
     patches raw text instead of re-serialising is that the diff stays readable."""
@@ -439,11 +550,26 @@ CASES = {
               "note": "Priced as MP (market price) on the menu for both sizes and all four grades.","""),
          ],
         0, check_mustard_seed_caviar_is_not_caviar),
+    "a hedged name gains no allergen warning": (
+        SIMMER, STRIP_TART, 0, check_a_hedged_name_gains_no_warning),
+    "the venue's own 'No added gluten' is not contradicted": (
+        SIMMER, STRIP_TART, 0, check_a_declared_free_dish_gains_no_warning),
+    "a hedge does not cancel a real wheat item beside it": (
+        SIMMER, STRIP_TART + HEDGE_BESIDE_REAL, 0,
+        check_a_hedge_does_not_cancel_a_real_item_beside_it),
     "an alternative on offer is not tagged as an ingredient": (
         THORNDON,
+        # "or halloumi" was added 2026-09-07 with the hedge guard, and the
+        # breaker below is why. The original clause was "…with dairy free cheese
+        # on request", and once a hedge cancels the match on "cheese" that
+        # clause is refused TWICE — so deleting the availability guard changed
+        # nothing and its breaker passed with the bug back. Halloumi is an offer
+        # with no negation in front of it, which leaves AVAILABILITY as the only
+        # thing standing between it and the tag. The hedged half is kept so the
+        # real sentence a venue writes is still exercised.
         STRIP_BURGERS + [(BURGER_NOTE,
                           BURGER_NOTE + " All our burgers can be made with dairy "
-                          "free cheese on request.")],
+                          "free cheese or halloumi on request.")],
         0, check_availability_is_not_an_ingredient),
     "a shared fryer is not tagged as an ingredient": (
         THORNDON,
@@ -580,6 +706,35 @@ BREAKERS = {
         [(r'r"(?<!seed )caviar|tobiko|ikura|masago)\b"',
           r'r"caviar|tobiko|ikura|masago)\b"')],
         ["mustard seed caviar is not caviar, and the roe beside it still is"]),
+
+    # --- the hedge (2026-09-07) -------------------------------------------
+    # Three breakers, one per way of getting this wrong. The first restores the
+    # shipped fault; the other two restore the two "obvious fixes" for it, both
+    # of which trade the over-warning for a MISS.
+    "the adjacency half of the hedge guard removed": (
+        [("    pattern = _HEDGE_BEFORE.get(tag)\n"
+          "    return bool(pattern and pattern.search(text[:start]))",
+          "    return False")],
+        ["a hedged name gains no allergen warning",
+         "a hedge does not cancel a real wheat item beside it"]),
+    "the venue's free-from declaration ignored": (
+        [("                if tag in declared:\n"
+          "                    continue  # the venue's own printed free-from claim, ditto",
+          "                if False:\n"
+          "                    continue  # the venue's own printed free-from claim, ditto")],
+        ["the venue's own 'No added gluten' is not contradicted"]),
+    # `search` instead of `finditer`: a hedged FIRST occurrence takes the whole
+    # rule down and the real wheat two words later goes unwarned.
+    "the hedge cancels the whole rule, not one match": (
+        [("    for match in pattern.finditer(text):",
+          "    for match in list(pattern.finditer(text))[:1]:")],
+        ["a hedge does not cancel a real wheat item beside it"]),
+    # …and the item-level veto, which is the water-chestnut fault reversed:
+    # un-anchor the clause test and any mention of "gluten free" anywhere in a
+    # description silences the dish's gluten warning entirely.
+    "the free-from clause test un-anchored into an item-level veto": (
+        [("            if pattern.fullmatch(clause):", "            if pattern.search(clause):")],
+        ["a hedge does not cancel a real wheat item beside it"]),
 
     "positional span matching (the add-on bug)": (
         [NAIVE_SPANS],

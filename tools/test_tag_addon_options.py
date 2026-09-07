@@ -98,6 +98,42 @@ PEARL = '''        {
         },'''
 PEARL_TO_BACON = (PEARL, PEARL.replace('"Pearl"', '"Bacon"'))
 
+# --- every other allergen (2026-09-07, Theme 5 item 060) -------------------
+# The two live misses this item existed for, with their tags taken back off.
+# Neither is fish and neither has a local rule in this tool — the ONLY thing
+# that can retag them is tag_allergens.py's dish rule set, run over the option's
+# own name.
+STRIP_CREPES_ALLERGENS = [
+    ('''          "name": "Hummus",
+          "price": 3,
+          "tags": [
+            "contains-sesame"
+          ]''',
+     '''          "name": "Hummus",
+          "price": 3,
+          "tags": []'''),
+    ('''          "name": "Chocolate or Nutella",
+          "price": 4,
+          "tags": [
+            "contains-nuts"
+          ]''',
+     '''          "name": "Chocolate or Nutella",
+          "price": 4,
+          "tags": []'''),
+]
+
+# A hedge and a REAL allergen in one option name. An item-level veto — "skip any
+# option whose name says 'no added gluten'" — passes every hedge assertion and
+# LOSES THE HUMMUS, which is an over-warning traded for a miss.
+NGA_BUN_WITH_HUMMUS = [
+    ('''          "name": "No gluten added bun",
+          "price": 2.5,
+          "tags": []''',
+     '''          "name": "No gluten added bun with hummus",
+          "price": 2.5,
+          "tags": []'''),
+]
+
 
 def options(record):
     """{(group id, option name): sorted tags} for every add-on option."""
@@ -183,6 +219,46 @@ def check_gluten_free_bun_is_left_alone(after, out):
     return _tagged_something(after, at_least=3)
 
 
+def check_every_allergen_reaches_an_option(after, out):
+    """THE case Theme 5 item 060 exists for. A hummus extra is sesame.
+
+    Until 2026-09-07 this tool wrote no `contains-*` but fish, so both of these
+    sat in the corpus unwarned on every screen — and the owner accepted that gap
+    KNOWINGLY while the hedge was fixed first. Neither has a rule in this file:
+    they can only come from tag_allergens.py's dish rules being run over the
+    option's own name, which is the literal reading of his ruling that an add-on
+    carries its own allergen tags the same way a dish does.
+    """
+    got = options(after)
+    want = {("savoury-extras", "Hummus"): "contains-sesame",
+            ("sweet-extras", "Chocolate or Nutella"): "contains-nuts"}
+    missing = {k: got.get(k) for k, tag in want.items() if tag not in (got.get(k) or [])}
+    return f"not retagged from the dish rules: {missing}" if missing else None
+
+
+def check_a_hedge_cancels_one_word_not_the_option(after, out):
+    """"No gluten added bun with hummus" keeps its SESAME and gains no gluten.
+
+    Both halves fail independently, and they fail in opposite directions:
+      • drop the hedge guard and the venue's gluten-free alternative is warned
+        as containing gluten — the one direction a safety sweep may never move;
+      • narrow it to an item-level veto instead and the hummus goes unwarned,
+        which is an over-warning traded for a MISS.
+    An option name this ungainly is not in the corpus, and that is the point —
+    the guard has to be right for the name a venue writes next, not only for the
+    three it has already written.
+    """
+    got = options(after)
+    tags = got.get(("nga-bun", "No gluten added bun with hummus"))
+    if tags is None:
+        return "the mutation did not land — no 'No gluten added bun with hummus' option"
+    if "contains-gluten" in tags:
+        return f"warned that the NO-GLUTEN bun contains gluten (has {tags})"
+    if "contains-sesame" not in tags:
+        return f"LOST THE HUMMUS standing beside a hedge (has {tags})"
+    return None
+
+
 def check_curation_outranks_the_pattern(after, out):
     """An option the VENUE calls vegetarian is never given meat OR fish,
     whatever its name looks like. Two options renamed with their `v` intact, so
@@ -265,6 +341,11 @@ CASES = {
         TAWA, STRIP_TAWA, 0, check_gluten_free_bun_is_left_alone),
     "an option naming a finfish gains the ALLERGEN, not just the diet marker": (
         CREPES, STRIP_KINGFISH, 0, check_fish_gains_the_allergen_too),
+    "an option gains any allergen its name implies, not just fish": (
+        CREPES, STRIP_CREPES_ALLERGENS, 0, check_every_allergen_reaches_an_option),
+    "a hedge in an option name cancels one word, not the option": (
+        TAWA, STRIP_TAWA + NGA_BUN_WITH_HUMMUS, 0,
+        check_a_hedge_cancels_one_word_not_the_option),
     "the venue's own `v` outranks the pattern": (
         KEBAB,
         [('''          "name": "Extra falafel",''', '''          "name": "Chicken",'''),
@@ -374,6 +455,33 @@ BREAKERS = {
           'FINFISH = (r"\\b(fish|salmon|tuna|anchovy|anchovies|snapper|hoki|cod|'
           'sardines?|mackerel|trout|whitebait|kahawai|terakihi|tarakihi)\\b")')],
         ["an option naming a finfish gains the ALLERGEN, not just the diet marker"],
+    ),
+    # --- every other allergen (2026-09-07) --------------------------------
+    # Delete the borrowed dish rules and the tool is back to fish-only: a hummus
+    # extra is sesame and nobody is told, which is the state the owner accepted
+    # knowingly for as long as the hedge took to fix.
+    "the borrowed dish rules dropped, leaving fish-only again": (
+        [("        for tag, why, pattern, exclude in ALLERGEN_SWEEP:",
+          "        for tag, why, pattern, exclude in []:")],
+        ["an option gains any allergen its name implies, not just fish",
+         "a hedge in an option name cancels one word, not the option"],
+    ),
+    # The hedge guard bypassed in THIS tool — the dish tagger keeps its own
+    # breakers, and a shared helper called from two places can be un-called from
+    # one of them without either sweep noticing.
+    "the option sweep stops reading the hedge": (
+        [("            match = first_unhedged(tag, pattern, name)",
+          "            match = pattern.search(name)")],
+        ["a venue's own 'no added gluten' is reported, not tagged",
+         "a hedge in an option name cancels one word, not the option"],
+    ),
+    # …and the narrowing this repo has already paid for once: veto the whole
+    # option because its name mentions a negation, and the hummus goes with it.
+    "the hedge narrowed to an item-level veto": (
+        [("            match = first_unhedged(tag, pattern, name)",
+          "            match = None if re.search(r'no\\s+(added\\s+)?gluten', name, re.I) "
+          "else pattern.search(name)")],
+        ["a hedge in an option name cancels one word, not the option"],
     ),
     "an unwritable record exits 0 again": (
         [("        for rid, why in unwritable:\n"

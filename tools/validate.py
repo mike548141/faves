@@ -2055,18 +2055,26 @@ def check_allergen_tags():
 
 
 def check_add_on_option_tags():
-    """Warn where an add-on option's own name says it is meat or fish and the
-    tag is missing (ADR 0092, ROADMAP 14h).
+    """Warn where an add-on option's own name says what it contains and the tag
+    is missing (ADR 0092, ADR 0095, ROADMAP 14h and Theme 5 item 060).
 
     Same shape and same reasoning as `check_allergen_tags` above: a warning
     rather than an error, because a venue's own correction must be able to win,
     but the gap this closes was made by hand-tagging one venue at a time, so a
     new menu that reintroduces it says so on the way past.
 
-    It can only ever ask for `has-meat`/`has-fish` — a POSITIVE fact off the
-    option's name. Nothing here will ever ask for `v`, `vg`, `gf` or `df` on an
-    option; that would be asserting an absence, which is the one thing the
-    corpus may not do (ADR 0025).
+    ⚠️ This docstring said "it can only ever ask for `has-meat`/`has-fish`" until
+    2026-09-07, and that had been false since ADR 0095 added `contains-fish` the
+    same week. It now asks for ANY allergen an option's name implies, because
+    `tag_addon_options.py` runs `tag_allergens.py`'s dish rules over option
+    names — the owner's ruling that an add-on carries its own allergen tags the
+    same way a dish does.
+
+    What has NOT changed is the direction. Everything it can ask for is a
+    POSITIVE fact off the option's name. Nothing here will ever ask for `v`,
+    `vg`, `gf` or `df` on an option; that would be asserting an absence, which
+    is the one thing the corpus may not do (ADR 0025) — and a venue's own
+    "no added gluten" is refused for exactly that reason rather than promoted.
     """
     try:
         sys.path.insert(0, str(Path(__file__).parent))
