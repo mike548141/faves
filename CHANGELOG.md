@@ -23,6 +23,21 @@ content freshness separately from this file.
   now removes the **Veg** and **GF option** chips and adds the fish warning
   chip; unticking it puts them back. The chips, the dimmed row and the warning
   line finally agree about what is on the plate.
+- **A hummus extra now warns you about sesame, and a Nutella one about nuts.**
+  Adding an extra to a dish could change what is in it, and until now only a
+  fish extra said so — every other allergen an add-on can carry reached you
+  only if someone had typed it in by hand. Two on Crepes A Go Go's board were
+  carrying none: **Hummus** is sesame and **Chocolate or Nutella** is nuts, and
+  neither was warned about on any screen. Add-on extras are now read by the
+  same allergen rules as the dishes themselves.
+- **A gluten-free item is no longer warned about as containing gluten.** The
+  allergen sweep read the word "toast" in *Gluten free toast* and the word
+  "bun" in *No gluten added bun* without reading the two words in front of
+  them, so it wanted to put a gluten warning on the one thing a coeliac is
+  looking for. It now reads a venue writing an allergen word to say the
+  allergen is **absent** — while still warning about a real wheat item standing
+  in the same sentence.
+- **Simmer's menu is dated when it was photographed, not when it was typed
   up.** The record said 7 September; the photographs it was read from were
   taken on **25 August**. Thirteen days matters because the "this may need a
   refresh" note ages off that date, so an optimistic date quietly delays the

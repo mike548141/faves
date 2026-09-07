@@ -1,8 +1,8 @@
-- [~] 🔎 **An add-on option carries no allergen but fish — a hummus extra is
+- [x] 🔎 **An add-on option carries no allergen but fish — a hummus extra is
       sesame and nobody is told** `[S][tools][data]` — found 2026-09-07 (wt:
       faves-addon-allergens) while landing `040`, **measured before filing**,
       and filed rather than fixed because the obvious fix is dangerous.
-      🔒 CLAIMED 2026-09-07 (session faves-hedge)
+      ✅ **CLOSED 2026-09-07 (session faves-hedge); the claim is released.**
 
   **`tools/tag_addon_options.py` wrote no `contains-*` tag at all** until `040`
   added fish. It was scoped by [ADR 0092](../../decisions/0092-an-add-on-option-states-what-it-is.md)
@@ -98,3 +98,94 @@
   🚩 **Two live misses are sitting in the corpus while this is open**
   (`Hummus` → sesame, `Chocolate or Nutella` → nuts, both at
   `crepes-a-go-go`). Neither is currently warned about on any screen.
+
+  ---
+
+  ✅ **DELIVERED 2026-09-07 (wt: faves-hedge), in the owner's order — hedge
+  first, then one sweep.** [ADR 0097](../../decisions/0097-a-hedge-is-not-a-warning.md)
+  carries the reasoning; this is what was measured.
+
+  🔎 **The hedge forms that actually occur** — swept out of all 57 records
+  (every name, desc, ingredient line, section note and option name), not
+  guessed: `gluten free` ×76 · `no gluten added` ×23 · `gluten-free` ×15 ·
+  `dairy free` ×10 · `no added gluten` ×9 · `dairy-free` ×8. **Nothing else of
+  that shape exists** — no *wheat free*, *nut free*, *egg free*, *soy free*,
+  *sesame free*, *without gluten*, *free of dairy*, *non-dairy*, *lactose free*,
+  *gluten-less* or *low gluten* anywhere.
+
+  🔑 **Two guards, because one shape does not cover both faults.**
+  `hedge_before` is the narrow lookbehind the ruling asked for and handles
+  `Gluten free toast` (the negation qualifies the matched noun). It cannot
+  reach `Brownie` / `Spiced ginger love muffin`, where the negation is a whole
+  separate sentence in the `desc` — so `declared_free` reads a clause that is
+  **nothing but** the venue's own free-from claim, per-allergen. Stopping
+  `contains-gluten` on those five cabinet items was explicitly in scope; the
+  `gf`-vs-`no added gluten` vocabulary question was not touched and stays with
+  Theme 38.
+
+  🧪 **Break-probes, both cases.**
+  - **(a)** `Gluten free toast` gains no gluten tag — *"a hedged name gains no
+    allergen warning"*. Removing `hedge_before` fails it **and nothing else**
+    except the coexistence case below.
+  - **(b)** A hedge and a genuine wheat item in one sentence — *"Gluten free
+    pasta with wheat croutons."*, both alternatives of the **same** rule so
+    only `first_unhedged` can save it. Three separate breakers fail this case
+    and nothing else: switching the guard off, narrowing `finditer` to one
+    match (the hedge takes the whole rule down), and un-anchoring
+    `declared_free` from `fullmatch` to `search` (the item-level veto).
+  - **(c)** On the add-on side, an option renamed `No gluten added bun with
+    hummus` must gain **sesame** and **no gluten** — the salmon case from this
+    item's own text, in a form the rules can see. Three more breakers fail it.
+
+  📊 **Re-derived candidate set — it matched the recorded 8, with the 3 fish
+  removed.** Run against the current tree (200 options, 57 records): **8 rule
+  hits, of which 3 are already refused by `CONTRADICTED_BY`** (options carrying
+  `gf`: `little-sprig-seatoun` *GF bun*, `sprig-and-fern-tawa` *Gluten Free
+  Toast* and *Gluten free toast* — never in the original 8 because it counted
+  only what would be WRITTEN). The **5 that would have been written** are
+  exactly rows 3–7 of the table above. **No new candidate appeared** despite
+  Simmer landing 108 dishes in between — Simmer carries no `addOnGroups`.
+  With the hedge guard on, the same sweep writes **2** and refuses **3**.
+
+  📈 **Measured counts.** Dish sweep **3 proposals → 0**, corpus otherwise
+  unmoved (no shipped tag changed — the three were refused by hand during the
+  Simmer intake). Add-on sweep **+2 tags at `crepes-a-go-go`**; option coverage
+  **103/200 → 105/200 (52%)**. The three hedged buns are still **reported** for
+  a person, which is what ADR 0092 asks for.
+
+  ✅ **No `site/js` change was needed and none was made.** Every table that has
+  to recognise `contains-sesame` and `contains-nuts` already carried both —
+  `ALLERGEN_LABEL` in `addons-ui.js`, the chip maps in `menu.js`/`recipe.js`,
+  the avoid list in `settings.js`, `TAGS` in `validate.py`; `report.js` filters
+  on the `contains-` prefix. Checked, not assumed.
+
+  ⚠️ **One existing breaker had gone DECORATIVE and was repaired in the same
+  commit.** `test_tag_allergens.py`'s availability probe injected *"…can be made
+  with dairy free cheese on request"* — once a hedge cancels the match on
+  **cheese**, that clause is refused twice, so deleting the availability guard
+  changed nothing and its breaker passed with the bug back. `or halloumi` was
+  added to the injected clause to restore it.
+
+  🚩 **Filed, not fixed (a different owner's call).** `charley-noble`'s
+  Charcuterie Board and Classic Beef Tartare carry `contains-gluten` by hand,
+  and the only gluten word the rules can see in either is the **bread inside
+  their hedge** (*"$41 with gluten-free bread instead of crostini"*). The real
+  evidence is **crostini**, which is not in the wheat rule at all. Nothing
+  changes today; if a refresh ever strips those tags the sweep will not put them
+  back. Adding `crostini` to the STATED wheat rule is a rule-set widening and
+  belongs to whoever owns that.
+
+  🚩 **Also filed:** `contains-fish` is the one dish rule the option sweep does
+  **not** borrow, keeping ADR 0095's decision that only the STATED species list
+  crosses over. Measured before accepting it: **zero** options in the corpus
+  would gain `contains-fish` from the DERIVED fish rules (Worcestershire, dashi,
+  surimi, sashimi, ceviche), so the carve-out costs nothing today.
+
+  🔎 **Duplicated rule sets between the two taggers — checked, and there is one
+  left, deliberately.** After ADR 0095 shared `FINFISH` and this item shared the
+  whole allergen rule set and `CONTRADICTED_BY`, the only thing written twice is
+  the fish rule itself (`tag_addon_options.RULES` carries its own `has-fish` /
+  `contains-fish` pair reading the shared `FINFISH`). That duplication is ADR
+  0095's two-axes structure and its two breakers depend on it, so it is kept and
+  named rather than tidied away. The `NOT_FISH` exclusion is this tool's own by
+  design (an option is named *"Vegan fish-free sauce"*; a dish is not).

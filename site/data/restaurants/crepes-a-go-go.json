@@ -168,7 +168,9 @@
         {
           "name": "Hummus",
           "price": 3,
-          "tags": []
+          "tags": [
+            "contains-sesame"
+          ]
         },
         {
           "name": "Mushrooms",
@@ -207,7 +209,9 @@
         {
           "name": "Chocolate or Nutella",
           "price": 4,
-          "tags": []
+          "tags": [
+            "contains-nuts"
+          ]
         },
         {
           "name": "Whipped cream",

@@ -1034,6 +1034,7 @@ deliberation those compact docs omit.
   was needed**: `composeTags` already composed, so the fix is three tags of
   data. The finfish list is now shared with `tag_allergens.py`, which had
   already drifted 13 species against thirty-odd.
+<<<<<<< HEAD
 - [0096](0096-a-tag-with-no-reader-facing-branch-is-not-a-chip.md) — **a tag
   with no reader-facing branch is not a chip.** Owner ruled (`200/060`) that the
   dish chip row must re-render from the **composed** tags, so a `Veg` chip stops
@@ -1049,3 +1050,25 @@ deliberation those compact docs omit.
   break-probed (removing the filter fails exactly the 2 assertions that guard
   it, 35 passed / 2 failed, nothing else moves). Accepts one bounded silence: a
   future vocabulary word is dropped rather than painted raw.
+=======
+- [0097](0097-a-hedge-is-not-a-warning.md) — **a hedge is not a warning: the
+  free-from case, then every add-on allergen.** A **hedge** is a venue writing
+  an allergen word to say the allergen is **absent**. `tag_allergens.py` matched
+  the word and never read the two in front of it, proposing `contains-gluten` on
+  a dish named `Gluten free toast` and on two cabinet items whose whole
+  description is `No added gluten.` — **the one place ADR 0025's one-way rule
+  stops being fail-safe**, because a false gluten warning lands on exactly the
+  item a coeliac is hunting for and the reader's fix is to distrust the chips.
+  Narrowed with **two guards, never an item-level veto**: `hedge_before` cancels
+  the ONE match a negation precedes, walking every occurrence so a hedged first
+  match cannot take the rule down with it; `declared_free` reads a clause that
+  is **nothing but** the venue's own free-from claim, per-allergen, so the feta
+  salad keeps its dairy. Forms swept from the corpus, not guessed (6 spellings,
+  141 occurrences; nothing else of that shape exists). With the hedge fixed, the
+  add-on sweep ADR 0095 measured and declined is taken: `tag_addon_options.py`
+  runs the dish rules over option names and lands the two live misses — `Hummus`
+  → sesame, `Chocolate or Nutella` → nuts, both previously unwarned **anywhere
+  in the app**. Dish sweep 3 → 0 proposals; option coverage 103/200 → 105/200.
+  Seven new breakers, and one **existing** breaker that this change had made
+  decorative is repaired in the same commit.
+>>>>>>> 6cb391d (data: an add-on carries every allergen its name implies, not just fish)

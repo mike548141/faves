@@ -26,13 +26,30 @@ ticked "avoid Fish" in Settings and added Salmon to a fish-free dish was told
 NOTHING: `site/js/addons.js` builds its allergen union off the `contains-`
 prefix, and `has-fish` carries nothing into it.
 
-WHAT THIS TOOL STILL DOES NOT DO. It writes no OTHER `contains-*`. A hummus
-extra is sesame and a Nutella extra is nuts, and both are live misses in the
-corpus today — measured, and filed as its own board item rather than widened
-into here, because a naive reuse of tag_allergens.py's whole rule set over
-option names produces 8 candidates of which 3 are the venue's own gluten HEDGE
-("No gluten added bun" → contains-gluten), which is the one direction a safety
-sweep may never move.
+EVERY OTHER ALLERGEN COMES FROM THE DISH RULES (2026-09-07, Theme 5 item 060,
+owner-ruled: fix the hedge first, then sweep once). Until then this tool wrote
+no `contains-*` but fish, so a hummus extra was sesame and a Nutella extra was
+nuts and NOBODY WAS TOLD — two live misses in the corpus, one of them peanuts'
+neighbour. The literal reading of the owner's ruling on ADR 0095 is what is
+implemented: an add-on has its own allergen tags the same way a dish does, so
+tag_allergens.py's rule set is looked up and run over the option's NAME.
+
+WHY THAT COULD NOT BE DONE FIRST. A naive reuse produced 8 candidates of which
+THREE were the venue's own gluten HEDGE — "No gluten added bun" →
+`contains-gluten`, the one direction a safety sweep may never move. The hedge
+guard lives in tag_allergens.py (`hedge_before`, `first_unhedged`) and is
+shared, not reimplemented; with it on, the same sweep produces exactly the two
+real misses and refuses the three hedges. The narrowing is deliberately NOT an
+item-level veto: an option named "No gluten added bun with smoked salmon" keeps
+its salmon.
+
+`contains-fish` is the one dish rule this sweep does NOT borrow, because it
+already has its own rule below. That is ADR 0095's decision standing, not an
+oversight: only the STATED species list is shared, so an option named
+"Worcestershire" is not given a fish allergen the way a dish is. Measured
+2026-09-07: ZERO options in the corpus would gain `contains-fish` from the
+DERIVED fish rules, so the carve-out costs nothing today and is filed rather
+than reopened here.
 
 THE ONE-WAY RULE STILL BINDS, and it is why this tool is small. Inference may
 only ever state what IS present. It must never add `gf`, `df`, `v` or `vg` to
@@ -79,12 +96,14 @@ import sys
 # file" would read correct in every diff and drift on the first fix to either.
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from tag_allergens import (  # noqa: E402
+    CONTRADICTED_BY as DISH_CONTRADICTED_BY,
     MULTILINE_TAGS,
     RULES as ALLERGEN_RULES,
     Unpatchable,
     _elements,
     _member,
     _skip_ws,
+    first_unhedged,
 )
 
 DATA = pathlib.Path("site/data/restaurants")
@@ -93,14 +112,15 @@ DATA = pathlib.Path("site/data/restaurants")
 # a pattern, exactly as in tag_allergens.py: an option the venue itself calls
 # vegetarian or vegan is never given meat or fish, whatever its name looks like.
 # ("Extra falafel" is tagged `v`; a "Vegan sausage" would be caught here.)
-CONTRADICTED_BY = {
-    "has-meat": {"v", "vg"},
-    "has-fish": {"v", "vg"},
-    # Same guard, same food fact — and the same one tag_allergens.py already
-    # applies to `contains-fish` on a DISH. A "Vegan fish-free sauce" the venue
-    # tagged `vg` is not given a fish allergen by a regex.
-    "contains-fish": {"v", "vg"},
-}
+#
+# LOOKED UP, NOT RETYPED — same reasoning as FINFISH below, and the same fault
+# waiting at the end of a copy. The dish table is already a strict superset: it
+# carries `has-meat`/`has-fish` (put there so validate.py can check it against
+# `CONTRADICTS` in site/js/addons.js) plus the guards this sweep now needs for
+# every OTHER allergen — `contains-gluten: {gf}` is what stops a "GF bun" option
+# being told it contains gluten. A local copy would have had to grow the same
+# five entries by hand on the day the sweep widened.
+CONTRADICTED_BY = dict(DISH_CONTRADICTED_BY)
 
 # ONE list of finfish for the whole repo, looked up out of tag_allergens.py's
 # STATED fish rule rather than retyped here.
@@ -146,6 +166,27 @@ RULES = [
     ("has-fish", "names a finfish", FINFISH, NOT_FISH),
     ("contains-fish", "names a finfish, and fish is a declarable allergen in NZ",
      FINFISH, NOT_FISH),
+]
+
+# Every OTHER allergen, read off the option's own name by the DISH rules — the
+# literal reading of "an add-on should have its own allergen and dietary tags
+# the same way a dish does" (owner, 2026-09-07). Compiled here rather than
+# retyped, so a rule added for dishes reaches add-ons on the same commit.
+#
+# `contains-fish` is dropped because this tool already carries its own paired
+# rule above; borrowing the dish version as well would write the tag twice and,
+# worse, would make the ADR 0095 breaker that DELETES the local rule pass with
+# the bug back — the dietary/allergen pair would silently be carried by one
+# source again. It also keeps ADR 0095's standing decision that only the STATED
+# species list crosses over.
+#
+# TIERS ARE NOT REPORTED HERE. tag_allergens.py separates STATED from DERIVED so
+# a dish sweep's count is auditable; an option name is three words long and the
+# distinction buys nothing at this size. The `why` string still names the rule.
+ALLERGEN_SWEEP = [
+    (tag, why, re.compile(pat, re.I), re.compile(exc, re.I) if exc else None)
+    for tag, tier, why, pat, exc in ALLERGEN_RULES
+    if tag != "contains-fish"
 ]
 
 # Options whose name reaches for a decision this tool may not take. Reported for
@@ -196,6 +237,28 @@ def audit(record):
                 continue  # the venue called it vegetarian; that beats our regex
             if _matches(pattern, exclude, name):
                 yield group, option, tag, why
+        # …then every other allergen, off the same name, through the DISH rules.
+        # `written` is local to this option and is what stops two rules for one
+        # allergen yielding it twice — the dish sweep gets the same guarantee
+        # from `tags.add(tag)` in its own loop.
+        written = set(tags)
+        for tag, why, pattern, exclude in ALLERGEN_SWEEP:
+            if tag in written:
+                continue
+            if tags & CONTRADICTED_BY.get(tag, set()):
+                continue
+            if exclude and exclude.search(name):
+                continue
+            # `first_unhedged`, not `pattern.search`: "No gluten added bun" is
+            # the VENUE SAYING THE ALLERGEN IS ABSENT, and tagging the
+            # gluten-free alternative as containing gluten is the one direction
+            # a safety sweep may never move. The guard cancels only the match
+            # the negation precedes, so an option named "No gluten added bun
+            # with smoked salmon" would still keep its salmon.
+            match = first_unhedged(tag, pattern, name)
+            if match:
+                written.add(tag)
+                yield group, option, tag, f"{why} ({match.group(0).lower()})"
 
 
 def review(record):
