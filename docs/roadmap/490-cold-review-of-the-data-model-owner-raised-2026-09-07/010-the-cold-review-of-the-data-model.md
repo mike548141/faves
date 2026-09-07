@@ -1,6 +1,20 @@
-- [~] 🎯 **38a — the cold review itself** `[XL][schema][design][js][docs]`
-      ⏳ **FRESH SESSION, owner-directed 2026-09-07.** Recorded now and
-      deliberately not started; see this section's README for why.
+- [x] 🎯 **38a — the cold review itself** `[XL][schema][design][js][docs]`
+      ✅ **DELIVERED 2026-09-08 (session faves-38a), in the fresh session the
+      owner asked for:**
+      [`docs/reviews/2026-09-07-1216-theme-38-cold-review.md`](../../reviews/2026-09-07-1216-theme-38-cold-review.md).
+      Nine follow-up items filed as `020`–`100` in this directory; five are the
+      owner's decisions, four are engineering calls with a recommendation.
+      🛑 **The review's §1 refutes eighteen claims in THIS file and its README,
+      eleven of them wrong or stale — read that section before relying on the
+      strand table below.** The table is kept as filed rather than rewritten,
+      because it is the record of what was believed when the theme was raised;
+      the two worst rows are strand 8 (*"counter-vs-delivery price already
+      renders"* — the owner removed that render on 2026-09-06, and 101 dishes
+      carry `prices` that nothing reads) and strand 7 (*"Not modelled"* — the
+      beef-or-chicken case is modelled four inconsistent ways).
+      ⏳ *(Original header:)* **FRESH SESSION, owner-directed 2026-09-07.**
+      Recorded now and deliberately not started; see this section's README for
+      why.
 
   **The deliverable is a written review**, not a migration: what gets it right,
   where it will break, and what the options are — each costed against the hard
