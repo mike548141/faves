@@ -210,7 +210,9 @@ excluded from both stores, always.
                                      //   mirror of the null close `hours` already
                                      //   allows; a menu that says "served till 2pm"
                                      //   states no start, and writing one would be
-                                     //   inventing evidence.
+                                     //   inventing evidence. A close BEFORE its open
+                                     //   means the next day here too (ADR 0094) —
+                                     //   one engine, one dialect.
                                      //   IT ANNOTATES, IT NEVER FILTERS — unlike
                                      //   `available`, an out-of-window section is
                                      //   still rendered, still readable and still
@@ -746,8 +748,14 @@ precached payload nothing on any screen can reach (ADR 0047).
   intervals in `"HH:MM"` 24h local time: `[]` = closed that day; two or
   more intervals express a lunch/dinner split, e.g.
   `"mon": [["12:00","15:00"],["17:00","21:00"]]`. `close` may be `null`
-  meaning open-ended ("late"). `close`, when given, must be after `open`
-  — past-midnight is expressed with a `null` close, never a wrap. The
+  meaning open-ended ("late"). **A `close` BEFORE its `open` means the
+  NEXT DAY** (ADR 0094, owner-ruled 2026-09-07): `["16:30","03:00"]` is a
+  Friday night ending Saturday morning, and `["16:30","00:00"]` closes at
+  midnight. This reverses ADR 0006's rule that past-midnight be expressed
+  with a `null` close. A `close` **equal** to its `open` is still refused
+  as ambiguous, and `validate.py` warns on a wrapped span over 16 hours —
+  the shape a transposed pair makes. `TIME_RE` is unchanged: the wrap is
+  carried by the pair, not by a `"24:00"`-style notation (declined). The
   hours engine (`site/js/hours.js`) computes a live open/closed status
   from this in the **venue's own timezone** (not the viewer's clock) — its
   `timezone`, or the branch's, or `Pacific/Auckland` if neither says

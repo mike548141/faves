@@ -1003,3 +1003,19 @@ deliberation those compact docs omit.
   was rejected — it fixes today and re-opens the moment a future author wraps
   `run()` again. Verified by breaking: the same missing element gives exit 2 at
   the base commit and a named `FAIL` at exit 1 after.
+- [0094](0094-a-close-before-its-open-means-the-next-day.md) — **a close before
+  its open means the next day.** `segments()` turned `["16:30","03:00"]` into a
+  segment ending 810 minutes before it started, so a venue trading till 3am read
+  **closed all evening**, and `validate.py` refused to let the shape be written
+  anyway. ADR 0006 had rejected this wrap in 2026-07 partly because "the only
+  late-night venues use `null` anyway" — Dragonfly falsified that. Owner-ruled
+  2026-09-07 from three costed options; `"24:00"`–`"29:59"` notation and living
+  with the understatement were **declined**. Corpus swept before it landed —
+  **507 spans, 0 that would newly wrap**, positive-controlled against five
+  synthetic shapes before the zero was believed. The week boundary is a second,
+  independent failure (a Saturday span ends past minute 10080) and is the very
+  edge 0006 named. Guarded by a new frozen-clock `tools/midnight_check.mjs`,
+  34 assertions on two render paths with a never-wraps control venue; both
+  halves verified by reintroducing the bug (8 unit + 9 browser assertions fail
+  without the wrap; exactly 2 + 3, all naming Sunday, without the boundary
+  re-ask).

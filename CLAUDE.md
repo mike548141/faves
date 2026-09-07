@@ -303,6 +303,19 @@ node tools/served_check.mjs   # a section's serving window, on a FROZEN clock (2
                               # outside-window state cannot be asserted any other way
                               # without waiting until 9pm, and a check whose verdict
                               # depends on the hour gets switched off within a week
+node tools/midnight_check.mjs # a venue that trades PAST MIDNIGHT, on a FROZEN
+                              # clock (ADR 0094). `["16:30","03:00"]` used to make
+                              # a segment that ENDED BEFORE IT STARTED, so a venue
+                              # open till 3am read closed all evening. Asserts the
+                              # rendered badge at six fixed instants on TWO render
+                              # paths (menu.js hoursRow, app.js hoursBadge). Two
+                              # assertions carry the weight: a CONTROL venue closing
+                              # at 23:00 that must read Closed at 1am — without it a
+                              # change making everything read open passes the lot —
+                              # and Sunday 01:00, because a SATURDAY night ends past
+                              # minute 10080 and the week boundary is a second,
+                              # independent way to get this wrong (it is the exact
+                              # edge ADR 0006 cited when it REJECTED the wrap)
 node tools/geo_check.mjs      # the location ask (ADR 0083). The tickbox on the
                               # dialog makes a PROMISE — "don't ask me about this
                               # again" — and a promise breaks in the WIRING, not in
@@ -426,14 +439,14 @@ still orphans both — nothing can catch it** — so if a run was `kill -9`ed, r
 you. Orphans do not make a check fail; they make it **stall silently** with a
 wall of PASS and no summary line.
 
-🛑 **CI runs ONE of the FIFTEEN browser checks — `boot_check`, and only since
+🛑 **CI runs ONE of the SIXTEEN browser checks — `boot_check`, and only since
 2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
 boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
 **not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
 `note_check` · `served_check` · `geo_check` · `picks_check` · `focus_check` ·
-`distance_check` — **fourteen** guards, every one written
+`distance_check` · `midnight_check` — **fifteen** guards, every one written
 precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through
 a whole settings refactor with CI green the entire time: nothing was calling it.
@@ -575,7 +588,7 @@ family runs when a human types it and at no other time, which is how
 `sync_check.mjs` stayed dead through a whole refactor. Type them. And note that
 even the automated one cannot stop a bad deploy: admins bypass `protect-main`,
 so its red lands **after** the push it is describing (see the fuller note above
-the check descriptions). For the other fourteen, the honour system IS still the
+the check descriptions). For the other fifteen, the honour system IS still the
 mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The
