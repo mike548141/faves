@@ -675,9 +675,39 @@ CASES = {
         lambda d: _first_section(d)["served"].update(bank_holiday=[]),
         "error", r'served must have exactly the 7 day keys .*bank_holiday',
     ),
-    "served close before open": (
-        lambda d: _first_section(d)["served"].update(mon=[["14:30", "07:30"]]),
-        "error", 'served\\[mon\\] close 07:30 must be after open 14:30',
+    # --- a close BEFORE its open is a WRAP now (ADR 0094) -------------------
+    # This case used to assert `close 07:30 must be after open 14:30`. That rule
+    # was reversed on 2026-09-07: a close before its open means the NEXT DAY, so
+    # the shape it refused is the shape the ruling exists to allow. What is left
+    # to refuse is the AMBIGUOUS pair and the pair that looks TRANSPOSED, and
+    # those are what the three cases below pin. Written out rather than deleted,
+    # because "the mutation gate no longer covers close-vs-open at all" is the
+    # silent outcome of simply removing a case that started failing.
+    "served close equal to its open": (
+        lambda d: _first_section(d)["served"].update(mon=[["14:30", "14:30"]]),
+        "error", 'served\\[mon\\] close 14:30 is the same as open 14:30',
+    ),
+    "hours close equal to its open": (
+        lambda d: d.update(hours={k: [["09:00", "09:00"]] for k in _DAYS}),
+        "error", 'hours\\[mon\\] close 09:00 is the same as open 09:00',
+    ),
+    # A transposed pair of ordinary hours is now legal arithmetic and a nonsense
+    # trading day — 17h30 — so it is a WARNING and not an error: a genuinely
+    # long night is possible and the validator cannot know which it is looking
+    # at. 16h is measured, not invented (the corpus's longest span is 15h30).
+    "hours that look transposed": (
+        lambda d: d.update(hours={k: [["23:00", "16:30"]] for k in _DAYS}),
+        "warn", r"hours\[mon\] 23:00–16:30 reads as a 17h30 span closing after midnight",
+    ),
+    # And the positive: the shape the ruling exists for must sail through. A
+    # gate that only ever refuses cannot show it stopped refusing the right
+    # thing. `served` is dropped with it because the section's window would
+    # otherwise be reported as starting before the venue opens — a true
+    # observation about a mutated record, and noise here.
+    "a close before its open is a legal wrap, not an error": (
+        lambda d: (d.update(hours={k: [["16:30", "03:00"]] for k in _DAYS}),
+                   _first_section(d).pop("served", None)),
+        "clean", None,
     ),
     "served time is not HH:MM": (
         lambda d: _first_section(d)["served"].update(mon=[["7.30am", "14:30"]]),

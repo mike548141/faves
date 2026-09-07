@@ -66,6 +66,26 @@ ADD_ON_OPTION_KEYS = {"name", "price", "tags"}
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
+# A close BEFORE its open means the next day (ADR 0094, owner-ruled 2026-09-07).
+# TIME_RE is unchanged by that ruling — the wrap is carried by the pair, not by
+# a new notation — but two things beside it are:
+#
+#   1. A close EQUAL to its open stays a hard error. The engine's formula
+#      (`c <= o` ⇒ +1440) makes `["09:00","09:00"]` a 24-hour span, but nobody
+#      writes a day that way on purpose and the reader cannot tell it from a
+#      typo. Both unambiguous spellings already exist — `["00:00", null]` is
+#      midnight to midnight, and a real span states a real close — so refusing
+#      the ambiguous one costs nothing and catches a duplicated field.
+#   2. A WRAPPED span longer than this is advisory. The risk the ruling
+#      introduces is a TRANSPOSITION: `["23:00","16:30"]` for
+#      `["16:30","23:00"]` used to be a hard error and is now silently a
+#      17½-hour trading day. The threshold is measured, not invented — the
+#      longest closed-ended span in the corpus on 2026-09-07 was 15h30
+#      (kaffee-eis, Fri 07:30–23:00), so 16h clears every real record while a
+#      transposed pair of ordinary hours lands above it. A WARNING, not an
+#      error: a genuinely long night is possible and the validator cannot know.
+WRAP_ADVISORY_MIN = 16 * 60
+
 # The four key sets the record is built from, mirroring the jsonc block under
 # "Data model" in docs/ARCHITECTURE.md. Every nested object in this file already
 # refused an unknown key — `available`, `revisions`, `needs`, `lifecycle`, each
@@ -125,6 +145,34 @@ def check_keys(rid, obj, allowed, where):
                  f"phone and renders nothing")
 
 
+def minutes(hhmm):
+    """Minutes since midnight from a TIME_RE-shaped "HH:MM". Mirrors
+    `toMinutes` in site/js/hours.js; callers check the shape first."""
+    h, m = hhmm.split(":")
+    return int(h) * 60 + int(m)
+
+
+def span_minutes(o, c):
+    """One [open, close] pair as absolute `(start, end)` minutes from that day's
+    midnight, applying the wrapping close (ADR 0094) exactly as `segments()` in
+    site/js/hours.js does — so the validator and the engine cannot disagree
+    about which spans overlap.
+
+    A null open is the start of the day and a null close is its end; both are
+    the reasoning bounds the two shapes already use ("from opening", "till
+    late"). Returns None for a pair whose shape the caller has not vouched
+    for."""
+    if o is not None and not (isinstance(o, str) and TIME_RE.match(o)):
+        return None
+    if c is not None and not (isinstance(c, str) and TIME_RE.match(c)):
+        return None
+    start = 0 if o is None else minutes(o)
+    if c is None:
+        return start, 1440
+    end = minutes(c)
+    return start, end + (1440 if end <= start else 0)
+
+
 def overlapping(intervals):
     """The first pair of intervals in one day's list that overlap, or None.
 
@@ -134,17 +182,26 @@ def overlapping(intervals):
     windows on one day DO overlap, and skipping them would be the decorative
     read of this check. Malformed pairs are ignored: the shape checks beside the
     call site already complain about those, and complaining twice about one
-    fault buries the message that explains it."""
+    fault buries the message that explains it.
+
+    COMPARED IN MINUTES, NOT AS STRINGS (ADR 0094). Lexical comparison was
+    right while every close was after its open and is wrong the moment one
+    wraps: `[["16:30","03:00"], ["20:00","22:00"]]` is a real clash that the
+    string form sorted apart and never saw, because "20:00" is not less than
+    "03:00". Minutes make the wrapped span 990–1620 and the clash obvious.
+
+    KNOWN AND NOT BUILT: a span that wraps out of one day can overlap the NEXT
+    day's early window (Fri 16:30–03:00 against Sat 01:00–02:00). That is a
+    cross-day question and this function is handed one day at a time; no record
+    in the corpus has the shape. Recorded in ADR 0094 rather than guessed at."""
     spans = []
     for iv in intervals:
         if not (isinstance(iv, list) and len(iv) == 2):
             continue
-        o, c = iv
-        if o is not None and not (isinstance(o, str) and TIME_RE.match(o)):
+        span = span_minutes(iv[0], iv[1])
+        if span is None:
             continue
-        if c is not None and not (isinstance(c, str) and TIME_RE.match(c)):
-            continue
-        spans.append((o or "00:00", c or "24:00", iv))
+        spans.append((span[0], span[1], iv))
     spans.sort(key=lambda s: (s[0], s[1]))
     for a, b in zip(spans, spans[1:]):
         # Strict overlap only. Two windows that merely ABUT ("07:00–14:00" then
@@ -153,6 +210,30 @@ def overlapping(intervals):
         if b[0] < a[1]:
             return a[2], b[2]
     return None
+
+
+def check_close_against_open(rid, o, c, where, field, day):
+    """The close/open relationship for one interval, shared by `hours` and
+    `served` so the two cannot drift apart — they feed the same `segments()`.
+
+    Since ADR 0094 a close BEFORE its open is legal and means the next day. What
+    is refused is a close EQUAL to its open (ambiguous — see WRAP_ADVISORY_MIN),
+    and what is flagged is a wrapped span long enough to look like a
+    transposition."""
+    if not (isinstance(o, str) and TIME_RE.match(o) and isinstance(c, str) and TIME_RE.match(c)):
+        return
+    om, cm = minutes(o), minutes(c)
+    if cm == om:
+        err(rid, f"{where}: {field}[{day}] close {c} is the same as open {o} — write "
+                 f"[\"00:00\", null] for a day that never shuts, or state the real close")
+        return
+    if cm < om:
+        length = cm + 1440 - om
+        if length > WRAP_ADVISORY_MIN:
+            err_h, err_m = divmod(length, 60)
+            warn(rid, f"{where}: {field}[{day}] {o}–{c} reads as a {err_h}h{err_m:02d} span "
+                      f"closing after midnight — check it is not a transposed "
+                      f"[\"{c}\", \"{o}\"]")
 
 errors = []
 warnings = []
@@ -542,8 +623,11 @@ def check_served(rid, section, hours, where):
                 err(rid, f"{where}: served[{day}] close {c!r} must be 'HH:MM' or null")
             if o is None and c is None:
                 err(rid, f"{where}: served[{day}] states neither a start nor an end — that is not a window")
-            if isinstance(o, str) and isinstance(c, str) and TIME_RE.match(o) and TIME_RE.match(c) and c <= o:
-                err(rid, f"{where}: served[{day}] close {c} must be after open {o}")
+            # The SAME rule as `hours`, deliberately: `servedStatus` resolves a
+            # window through the very same `segments()`, so a late-night menu
+            # served 22:00–02:00 must be expressible here or one engine would be
+            # reading two dialects (ADR 0094).
+            check_close_against_open(rid, o, c, where, "served", day)
             if o_ok and c_ok and not (o is None and c is None):
                 any_window = True
         clash = overlapping(intervals) if isinstance(intervals, list) else None
@@ -572,16 +656,27 @@ def check_served(rid, section, hours, where):
             if not (isinstance(iv, list) and len(iv) == 2):
                 continue
             o, c = iv
-            if isinstance(o, str) and TIME_RE.match(o) and all(
-                isinstance(x, list) and len(x) == 2 and isinstance(x[0], str) and o < x[0]
-                for x in open_ivs
+            # COMPARED IN MINUTES (ADR 0094). The lexical form these two lines
+            # used was right while every close was after its open and silently
+            # WRONG the moment one wraps: against a venue trading 16:30–03:00,
+            # "22:00" > "03:00" is true as text, so a section served squarely
+            # inside opening hours was warned about as being served after close.
+            # A false warning on the one venue the feature was built for is how
+            # a warning stream stops being read.
+            venue_spans = [s for s in (span_minutes(*x[:2]) for x in open_ivs
+                                       if isinstance(x, list) and len(x) == 2) if s]
+            if isinstance(o, str) and TIME_RE.match(o) and venue_spans and all(
+                minutes(o) < start for start, _ in venue_spans
             ):
                 warn(rid, f"{where}: served from {o} on {day}, before the venue opens")
-            if isinstance(c, str) and TIME_RE.match(c) and all(
-                isinstance(x, list) and len(x) == 2 and isinstance(x[1], str) and c > x[1]
-                for x in open_ivs
-            ):
-                warn(rid, f"{where}: served until {c} on {day}, after the venue closes")
+            if isinstance(c, str) and TIME_RE.match(c) and venue_spans:
+                served_span = span_minutes(o, c)
+                # The section's own close, on the same absolute scale as the
+                # venue's — so a section that wraps is measured at its wrapped
+                # end rather than at the small number it is written as.
+                close_at = served_span[1] if served_span else minutes(c)
+                if all(close_at > end for _, end in venue_spans):
+                    warn(rid, f"{where}: served until {c} on {day}, after the venue closes")
 
 
 def check_section_ids(rid, menu):
@@ -1164,9 +1259,15 @@ def check_hours(rid, hours, where):
     """hours on `obj`: null, or a full week keyed mon..sun. Each day is a list of
     [open, close] intervals ([] = closed); multiple intervals express a
     lunch/dinner split. Times are "HH:MM" 24h; close may be null ("late"/
-    open-ended). close, when given, must be after open — past-midnight is
-    expressed with a null close, not a wrap (see ADR 0006). Used for both the
-    top-level venue and each branch of a multi-location venue."""
+    open-ended).
+
+    A close BEFORE its open means THE NEXT DAY (ADR 0094, owner-ruled
+    2026-09-07): `["16:30", "03:00"]` is a Friday night ending Saturday morning.
+    This reverses ADR 0006's third rejected alternative, which forbade the wrap
+    here on the premise that "the dataset's only late-night venues use null
+    anyway" — Dragonfly falsified that premise on 2026-09-07. A close EQUAL to
+    its open is still refused as ambiguous. Used for both the top-level venue
+    and each branch of a multi-location venue."""
     if hours is None:
         return
     if not isinstance(hours, dict):
@@ -1188,12 +1289,7 @@ def check_hours(rid, hours, where):
                 err(rid, f"{where}: hours[{day}] open {o!r} must be 'HH:MM'")
             if c is not None and not (isinstance(c, str) and TIME_RE.match(c)):
                 err(rid, f"{where}: hours[{day}] close {c!r} must be 'HH:MM' or null")
-            if (
-                isinstance(o, str) and TIME_RE.match(o)
-                and isinstance(c, str) and TIME_RE.match(c)
-                and c <= o
-            ):
-                err(rid, f"{where}: hours[{day}] close {c} must be after open {o}")
+            check_close_against_open(rid, o, c, where, "hours", day)
         # Two windows that overlap are two readings of the same day that
         # disagree, and hours.js resolves "open now" by taking the FIRST match —
         # so the second window silently decides nothing while looking like data.
