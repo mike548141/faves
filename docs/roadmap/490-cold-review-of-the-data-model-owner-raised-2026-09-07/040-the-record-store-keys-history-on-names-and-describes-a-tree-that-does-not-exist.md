@@ -1,7 +1,12 @@
-- [ ] 🔎 **The record store keys history on names, not ids, and its documents
+- [~] 🔎 **The record store keys history on names, not ids, and its documents
       describe a tree that does not exist** `[M][tools][docs]` — Theme 38 review
       (`../../reviews/2026-09-07-1216-theme-38-cold-review.md` §3c, §7 E2).
       Engineering call; recommended.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — the review's
+  recommendation is the brief. Delivered by a sub-agent in its own worktree
+  (`faves-o1-history-rekey`, branch `history-rekey`), landing by PR so CI
+  runs before the merge.
 
   **The identity finding.** `ARCHITECTURE.md` says *"the id is what carries the
   price history … across the rename"* and ADR 0051's consequences say
