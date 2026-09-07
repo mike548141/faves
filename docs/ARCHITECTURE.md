@@ -1026,6 +1026,27 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
   decide which cache(s) rebuild. **Lockstep:** data-only change under
   `site/data/` → bump `DATA_VERSION`; any other `site/` change → bump
   `SHELL_VERSION`; both → both.
+- **The version constants are dated on NEW ZEALAND LOCAL TIME**
+  (`YYYY-MM-DD.N`, `N` counting that day's bumps from `.1`). Written down
+  2026-09-07 because it was practised and never stated: the convention was
+  carried entirely by each session copying the previous value's shape, and
+  `tools/check_versions.py` enforces only that the constant *changed* — it
+  never parses the date, so a mis-dated stamp passes every gate.
+  🚩 **This deliberately disagrees with record filenames, which are UTC**
+  (CLAUDE.md's concurrency clause: `YYYY-MM-DD-HHMM-slug.md`, `HHMM` from
+  `date -u`). New Zealand is UTC+12, so from midday UTC the two name
+  different days — verified 2026-09-07, when commits stamped `2026-09-07.x`
+  at 00:51 and 02:51 NZST were still 2026-09-06 in UTC.
+  🔑 **Local is the right clock for these and the disagreement is not a
+  defect to repair.** `git log`'s author dates here are local (`+12:00`) and
+  agree with the constants, so it is the filename rule that is the outlier —
+  and that rule is atelier's, not ours to change. Moving the constants to
+  UTC would make the next stamp appear to go *backwards* for twelve hours,
+  which is worse than the disagreement.
+  📌 Recorded here and in CLAUDE.md rather than in ADR 0015: that ADR is
+  **accepted**, and this repo's rule is *never edit an accepted ADR's
+  substance — supersede it*. Adding a convention it never stated is
+  substance, and the fact is not worth an ADR of its own.
 - Photos: cache-on-demand with a size-capped runtime cache
   (`faves-img-v1`, version-free so it survives every bump).
 - **Update flow** (ADR 0027): `sw-register.js` calls `registration.update()`

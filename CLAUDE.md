@@ -684,6 +684,17 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
     change under `site/` → bump `SHELL_VERSION`; a change touching both →
     bump both. Split caches so a menu edit no longer re-downloads the
     whole shell (ADR 0015).
+    🚩 **The constants are dated on NEW ZEALAND LOCAL TIME** —
+    `YYYY-MM-DD.N`, `N` counting that day's bumps from `.1`. Record
+    filenames are **UTC** (the concurrency clause above), and New Zealand
+    is UTC+12, so **from midday UTC the two conventions name different
+    days**: verified 2026-09-07, when bumps stamped `2026-09-07.x` at
+    00:51 and 02:51 NZST were still 2026-09-06 in UTC. Local is correct
+    here — `git log`'s author dates are local and agree with it — so do
+    not "fix" a constant to UTC; that makes the next stamp go *backwards*
+    for twelve hours. `check_versions.py` only checks the constant
+    CHANGED, never that its date is right, so nothing catches a mis-dated
+    stamp but this paragraph (ARCHITECTURE.md carries the fuller note).
   - Keep the no-JS fallback `<ul>` in `site/index.html` in step with
     `site/data/index.json` (it's a hand-maintained mirror for fail-soft).
   - Adding a restaurant = new `site/data/restaurants/<id>.json` + its id

@@ -159,7 +159,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/README.md)*
 
 - [ ] [🚩 The service worker's install guard is decorative on Pages, and](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/010-the-service-worker-s-install-guard-is-decorative-on-pages.md)
-- [ ] 🔎 [The version constants and the record filenames run on different](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/020-the-version-constants-and-the-record-filenames-use-different-clocks.md)
+- ✅ 🔎 [The version constants and the record filenames run on different](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/020-the-version-constants-and-the-record-filenames-use-different-clocks.md)
 
 ## Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)
 
