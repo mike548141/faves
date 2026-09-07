@@ -65,6 +65,14 @@
   The 68 → 73 is the April pair added to app.js's home-card path (menu.js's had
   covered it alone), plus the state assertion at 02:30 NZDT.
 
+  🚩 **A peer took `SHELL_VERSION 2026-09-08.1` on `main` while this ran**, so
+  `origin/main` was merged in and the bump moved to **`2026-09-08.2`** — caught
+  by `check_versions.py --range origin/main..HEAD`, which the bare form would
+  have called clean. Re-verified on the merge (`dst-countdown@a7ceef0`, shell
+  `2026-09-08.2`): `node --test` `pass 1219 · fail 0`, `boot_check`
+  `24 passed`, `midnight_check` `73 passed`, `device_check` `25 passed` — the
+  last because the merge brought `site/js/personal-data.js` with it.
+
   **Break-probe** — `realMinutes` reverted to `return wallDelta` (the pre-0098
   model, one line), new tests kept:
 
