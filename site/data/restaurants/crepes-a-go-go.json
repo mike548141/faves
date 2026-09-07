@@ -15,14 +15,600 @@
     "takeaway"
   ],
   "phone": null,
-  "website": null,
-  "ordering": [],
-  "hours": null,
-  "detailsVerified": "2026-08-16",
-  "detailsVerifiedBy": "third-party",
+  "website": "https://www.crepesagogo.co.nz",
+  "ordering": [
+    {
+      "platform": "Order on our site",
+      "url": "https://www.crepesagogo.co.nz/online-ordering-1"
+    }
+  ],
+  "hours": {
+    "mon": [
+      [
+        "10:00",
+        "20:30"
+      ]
+    ],
+    "tue": [
+      [
+        "10:00",
+        "21:00"
+      ]
+    ],
+    "wed": [
+      [
+        "10:00",
+        "21:00"
+      ]
+    ],
+    "thu": [
+      [
+        "10:00",
+        "21:00"
+      ]
+    ],
+    "fri": [
+      [
+        "09:00",
+        "23:00"
+      ]
+    ],
+    "sat": [
+      [
+        "09:00",
+        "23:00"
+      ]
+    ],
+    "sun": [
+      [
+        "09:00",
+        "20:30"
+      ]
+    ]
+  },
+  "vibe": [
+    "counter-order"
+  ],
+  "verified": "2026-09-07",
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-09-07",
+  "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "savoury-extras",
+      "name": "Extras or make your own",
+      "select": "many",
+      "options": [
+        {
+          "name": "Plain crepe base",
+          "price": 6,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Free range egg",
+          "price": 2.5,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Feta",
+          "price": 3.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cheddar cheese",
+          "price": 4,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Blue cheese",
+          "price": 4,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cream cheese",
+          "price": 3.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Sundried tomatoes",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Caramelised onion",
+          "price": 2,
+          "tags": []
+        },
+        {
+          "name": "Ham",
+          "price": 4,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Chicken",
+          "price": 4,
+          "tags": [
+            "has-meat"
+          ]
+        },
+        {
+          "name": "Salmon",
+          "price": 4.5,
+          "tags": [
+            "has-fish"
+          ]
+        },
+        {
+          "name": "Béchamel",
+          "price": 2,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hummus",
+          "price": 3,
+          "tags": []
+        },
+        {
+          "name": "Mushrooms",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Spinach",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Fresh tomatoes",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Basil",
+          "price": 1.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "sweet-extras",
+      "name": "Extras or make your own",
+      "select": "many",
+      "options": [
+        {
+          "name": "Homemade salted caramel",
+          "price": 3,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chocolate or Nutella",
+          "price": 4,
+          "tags": []
+        },
+        {
+          "name": "Whipped cream",
+          "price": 2,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Grilled almonds",
+          "price": 2.5,
+          "tags": [
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Banana",
+          "price": 2,
+          "tags": []
+        },
+        {
+          "name": "Berry sauce",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Maple syrup",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Arataki honey",
+          "price": 2.5,
+          "tags": []
+        },
+        {
+          "name": "Strawberries",
+          "price": 3,
+          "tags": []
+        },
+        {
+          "name": "Plain crepe base",
+          "price": 6,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Savoury",
+      "sectionId": "savoury",
+      "note": "Our savoury galette base is organic buckwheat — gluten, sugar and dairy free.",
+      "addOns": [
+        "savoury-extras"
+      ],
+      "items": [
+        {
+          "name": "Mediterranean Sun",
+          "dishId": "mediterranean-sun",
+          "desc": "Sundried tomatoes, hummus and fresh basil.",
+          "price": 13,
+          "tags": [
+            "gf",
+            "v",
+            "df-option",
+            "vg-option",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "The Good Fella'",
+          "dishId": "the-good-fella",
+          "desc": "Cheese, spinach and free range egg.",
+          "price": 14,
+          "tags": [
+            "gf",
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Paris for Ever",
+          "dishId": "paris-for-ever",
+          "desc": "NZ smoked ham and cheese, just like in Paris!",
+          "price": 14,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "First Class",
+          "dishId": "first-class",
+          "desc": "Sundried tomatoes, cream cheese and mushrooms.",
+          "price": 14,
+          "tags": [
+            "gf",
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Taste of Provence",
+          "dishId": "taste-of-provence",
+          "desc": "Fresh basil, feta, fresh tomatoes and olive oil.",
+          "price": 15,
+          "tags": [
+            "gf",
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Complete",
+          "dishId": "complete",
+          "desc": "NZ smoked ham, cheese and free range egg. Classic! Perfect match for hungry people!",
+          "price": 16,
+          "tags": [
+            "gf",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Rustique",
+          "dishId": "rustique",
+          "desc": "Santa Rosa smoked chicken, cheese and mushrooms.",
+          "price": 16,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Croque Monsieur",
+          "dishId": "croque-monsieur",
+          "desc": "Inspired by the number one French sandwich: NZ smoked ham, cheddar, butter and one of the mother sauces of French cuisine, béchamel.",
+          "price": 16,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Blue Rdv",
+          "dishId": "blue-rdv",
+          "desc": "Cheese, blue cheese from Auvergne (France) and mushrooms.",
+          "price": 17,
+          "tags": [
+            "gf",
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Uncle Green",
+          "dishId": "uncle-green",
+          "desc": "Mushrooms, spinach, caramelised onions, vegan cheddar and walnuts.",
+          "price": 17,
+          "tags": [
+            "gf",
+            "v",
+            "df-option",
+            "vg-option",
+            "contains-nuts",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Complete Deluxe",
+          "dishId": "complete-deluxe",
+          "desc": "Ham, cheese, caramelised onions and egg. Perfect match!",
+          "price": 17,
+          "tags": [
+            "gf",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Big is Good",
+          "dishId": "big-is-good",
+          "desc": "Spinach, cheese, free range egg and fresh tomatoes.",
+          "price": 17,
+          "tags": [
+            "gf",
+            "v",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Norvegian Catch",
+          "dishId": "norvegian-catch",
+          "desc": "Aoraki smoked salmon, spinach cream cheese, capers and a twist of lemon.",
+          "price": 17,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Sweet",
+      "sectionId": "sweet",
+      "addOns": [
+        "sweet-extras"
+      ],
+      "items": [
+        {
+          "name": "Simply Kiwi",
+          "dishId": "simply-kiwi",
+          "desc": "Freshly squeezed lemon juice and sugar, classic! Try with brown sugar.",
+          "price": 8,
+          "tags": [
+            "gf-option",
+            "df-option",
+            "vg-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Simply French",
+          "dishId": "simply-french",
+          "desc": "Butter and sugar, brown or white.",
+          "price": 8,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Sweet Temptation",
+          "dishId": "sweet-temptation",
+          "desc": "Choice of lemon or passion curd.",
+          "price": 9,
+          "tags": [
+            "gf-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cinnamon Delight",
+          "dishId": "cinnamon-delight",
+          "desc": "Cinnamon and apple syrup, or butter and sugar.",
+          "price": 9,
+          "tags": [
+            "gf-option",
+            "vg-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chocolate Addiction",
+          "dishId": "chocolate-addiction",
+          "desc": "Choice of chocolate or Nutella.",
+          "price": 10,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Canadian Delight",
+          "dishId": "canadian-delight",
+          "desc": "Maple syrup and grilled almonds.",
+          "price": 10,
+          "tags": [
+            "gf-option",
+            "df-option",
+            "vg-option",
+            "contains-gluten",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Banana Love",
+          "dishId": "banana-love",
+          "desc": "Choice of chocolate, salted caramel or honey, plus banana.",
+          "price": 12,
+          "tags": [
+            "gf-option",
+            "df-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Choconuts",
+          "dishId": "choconuts",
+          "desc": "Nutella with peanut butter.",
+          "price": 12,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-peanuts",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "White Forrest",
+          "dishId": "white-forrest",
+          "desc": "White chocolate with canned cherries.",
+          "price": 12,
+          "tags": [
+            "gf-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Caramellow",
+          "dishId": "caramellow",
+          "desc": "Choice of chocolate topped with salted caramel.",
+          "price": 12,
+          "tags": [
+            "gf-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Oreo & Cream",
+          "dishId": "oreo-cream",
+          "desc": "Oreo cookie crushed, white chocolate and whipped cream.",
+          "price": 13,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Snicker",
+          "dishId": "snicker",
+          "desc": "Dark chocolate, salted caramel and peanuts.",
+          "price": 13,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-peanuts"
+          ]
+        },
+        {
+          "name": "Exotica",
+          "dishId": "exotica",
+          "desc": "Banana, Nutella and roasted coconut.",
+          "price": 13,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Choco Almonds",
+          "dishId": "choco-almonds",
+          "desc": "Choice of chocolate and almonds.",
+          "price": 13,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Chocoberry",
+          "dishId": "chocoberry",
+          "desc": "Dark chocolate, berry sauce mixed with whipped cream.",
+          "price": 13.5,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Sweet Tooth",
+          "dishId": "sweet-tooth",
+          "desc": "Banana, salted caramel and whipped cream.",
+          "price": 13.5,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Belle Helene",
+          "dishId": "belle-helene",
+          "desc": "Canned pears, Nutella and almonds.",
+          "price": 13.5,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-nuts"
+          ]
+        }
+      ]
+    }
+  ]
 }
