@@ -11,6 +11,8 @@ import assert from "node:assert/strict";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { CHECKLIST_KEY } from "../site/js/checklist.js";
 import { SYNC_KEY, SYNC_BASE_KEY } from "../site/js/sync.js";
+import { CONSENT_KEY } from "../site/js/geo-consent.js";
+import { mergePersonal } from "../site/js/sync-merge.js";
 import {
   FORMAT,
   FORMAT_VERSION,
@@ -888,13 +890,23 @@ test("the sync code never reaches the export", () => {
   assert.match(data.excluded[SYNC_KEY], /sync code/i);
 });
 
+// `file()` collides with `device()` on both profiles, so an apply with no
+// answers is REFUSED before it writes anything. Every "the import did not write
+// X" test below has to answer first, or it asserts an absence produced by the
+// refusal rather than by the exclusion. This one did not, from the day it was
+// written until 2026-09-08, and was found by the positive control in the
+// consent tests further down (roadmap 490/020).
+const answers = (data) => ({ [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "new" } });
+
 test("an older backup carrying a sync code does not pair the device on import", () => {
   const r = parsePersonalData(file({ other: { [SYNC_KEY]: PAIRING, "faves.recipes.v1": "[]" } }));
   assert.equal(r.ok, true);
   assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
   const store = device();
-  applyPersonalData(store, r.data, { mode: "merge", decisions: {} });
+  const report = applyPersonalData(store, r.data, { mode: "merge", decisions: answers(r.data) });
+  assert.equal(report.ok, true, report.error);
   assert.equal(store.getItem(SYNC_KEY), null, "import wrote the exporter's sync code");
+  assert.equal(store.getItem("faves.recipes.v1"), "[]", "the import wrote nothing at all");
 });
 
 test("a replace import leaves this device's own sync pairing alone", () => {
@@ -905,4 +917,85 @@ test("a replace import leaves this device's own sync pairing alone", () => {
   const r = parsePersonalData(file());
   applyPersonalData(store, r.data, { mode: "replace", decisions: {} });
   assert.equal(store.getItem(SYNC_KEY), PAIRING);
+});
+
+// =========================================================================
+// "DON'T ASK ME AGAIN" IS ABOUT THIS DEVICE (Theme 38 cold review, 490/020)
+// =========================================================================
+// ARCHITECTURE and geo-consent.js's own header both said `faves.geo.consent.v1`
+// was "deliberately outside the backup export". Neither was the code: the key
+// was missing from EXCLUDED, so the catch-all sweep carried it into the file
+// and a merge import wrote it onto the receiving device. The flag shadows a
+// browser permission that is per-origin-per-device, so it cannot be right on a
+// phone that did not set it — in EITHER direction. Reproduced in Node against
+// the real module before these tests were written; each asserts an ABSENCE, so
+// each also demands the export/import carried something ELSE, or a module that
+// collected nothing at all would satisfy the lot.
+
+const SUPPRESSED = JSON.stringify({ suppressed: true, declined: true });
+
+test("personal-data excludes the consent key geo-consent.js exports", () => {
+  // Imported, not re-typed: geo-consent.js imports nothing, so unlike the sync
+  // keys above there is no circularity to force a literal — and a rename
+  // therefore cannot quietly reopen this hole.
+  const data = collectPersonalData(seeded(), { exportedAt: AT });
+  assert.ok(CONSENT_KEY in data.excluded, `${CONSENT_KEY} is not in the excluded table`);
+  assert.match(data.excluded[CONSENT_KEY], /location/i);
+});
+
+test("the “don’t ask again” promise never reaches the export", () => {
+  const storage = seeded();
+  storage.setItem(CONSENT_KEY, SUPPRESSED);
+  storage.setItem("faves.recipes.v1", "[]");
+  const data = collectPersonalData(storage, { exportedAt: AT });
+  // The sibling store proves the sweep ran: without it, a collector that
+  // gathered nothing would pass the assertion below unnoticed.
+  assert.deepEqual(Object.keys(data.other), ["faves.recipes.v1"]);
+  assert.equal(personalDataJson(data).includes("suppressed"), false, "the consent flag is in the file");
+});
+
+test("the consent flag is excluded for a scoped key too", () => {
+  // It is a device-level store today, so this is a guard rather than a fix:
+  // were it ever moved behind a profile, the suffix match keeps the promise
+  // instead of the exclusion silently matching nothing (see `excludedEntry`).
+  const storage = seeded();
+  storage.setItem(scopeKey("default", CONSENT_KEY), SUPPRESSED);
+  assert.equal("other" in collectPersonalData(storage, { exportedAt: AT }), false);
+});
+
+test("a backup carrying the consent flag does not silence the ask on import", () => {
+  const r = parsePersonalData(file({ other: { [CONSENT_KEY]: SUPPRESSED, "faves.recipes.v1": "[]" } }));
+  assert.equal(r.ok, true);
+  assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
+  const store = device();
+  const report = applyPersonalData(store, r.data, { mode: "merge", decisions: answers(r.data) });
+  assert.equal(report.ok, true, report.error);
+  assert.equal(store.getItem(CONSENT_KEY), null, "import silenced an ask this device never declined");
+  assert.equal(store.getItem("faves.recipes.v1"), "[]", "the import wrote nothing at all");
+});
+
+test("a replace import leaves this device's own consent flag alone", () => {
+  // `spare`, unlike the cook-mode ticks: "make this device look like the file"
+  // cannot mean re-arming a prompt the person holding the phone switched off,
+  // and there is nothing here that expires on its own.
+  const store = device();
+  store.setItem(CONSENT_KEY, SUPPRESSED);
+  const r = parsePersonalData(file());
+  applyPersonalData(store, r.data, { mode: "replace", decisions: {} });
+  assert.equal(store.getItem(CONSENT_KEY), SUPPRESSED);
+});
+
+test("the sealed sync blob carries no `other` stores at all", () => {
+  // The review filed this as "sync seals collectPersonalData()", which is only
+  // half true: sync.js seals `mergePersonal`'s output, and that builds a fresh
+  // object of format/v/profiles/order — `other` never reaches sealBlob. Pinned
+  // here because the EXCLUDED entry above is then the ONLY thing keeping the
+  // consent flag off the wire, and a future merge that carried `other` through
+  // would be a second, uncovered path.
+  const storage = seeded();
+  storage.setItem("faves.recipes.v1", "[]");
+  const mine = collectPersonalData(storage, { exportedAt: AT });
+  assert.deepEqual(Object.keys(mine.other), ["faves.recipes.v1"]); // it IS collected
+  const { merged } = mergePersonal(null, mine, mine);
+  assert.deepEqual(Object.keys(merged).sort(), ["format", "order", "profiles", "v"]);
 });
