@@ -9655,3 +9655,58 @@ cannot be reproduced and should stop being quoted.
 🔑 The class: *a check's description is not evidence about the check*. Three
 records quoted it forward; none opened the file.
 
+### The stepper decision, taken at the close
+
+🎯 **Put to the owner with the movement cost in front of him, and he took the
+expensive side.** The dodge protected the ruling's list (price, dish name, ♥,
+card name), which left the **＋/− order stepper** exposed — and the control is
+now on screen for the whole of a downward read, so it could come to rest on a
+stepper and own a tap that silently changes an order. He chose to protect it.
+
+**Re-measured on the shipped configuration, not on the agent's prediction:**
+`to_top_check` **64/64, occlusion still 0, dodge inside its travel limit in all
+8 combinations.** Menu at 390 px now steps aside at **326 of 537** positions
+(from 151) — the predicted figure, to the position — and 376 of 827 at 24 px
+text. The home list is **132 of 183 and 172 of 374, identical to before**,
+which is the evidence for the claim that cards carry no stepper rather than an
+assertion of it. Menu at 1200 px steps aside 0 times of 495 and 681: that
+layout has nothing to solve.
+🚩 So the arrow floats above its corner for **more than half** of a downward
+read on a phone. That is deliberate and was chosen with the number visible.
+
+### An accidental improvement worth recording
+
+`picks_check`'s known flake now reads `harness error: #settings-btn has no
+clickable box` at **exit 2**, where `340/190` recorded it as a plain `Error` at
+**exit 1 with no FAIL line**. ADR 0093 routed every tool's top-level catch
+through `exitFromError()`, whose fallback is exit 2, so an *unclassified* throw
+now lands there. **The third failure shape is gone; the flake is not** — and
+the open question moves from "one tool's stray catch" to "what should
+`exitFromError`'s fallback do with a geometry throw?". Item updated.
+
+### Close evidence
+
+✅ **CI green on `19715c1`** — `floor` and `CI`, all five jobs including
+`menu data validates` (which exercises the new venue), `every screen boots` and
+`service-worker version lockstep`.
+🚀 **Deploy verified in production twice, not inferred from a push:**
+`faves.pages.dev/data/restaurants/dragonfly.json` served 24 dishes and
+`status: menu-complete`; `faves.pages.dev/sw.js` served
+`SHELL 2026-09-07.7 / DATA 2026-09-07.3`.
+Local: `node --test` 1158/0 · `test_tag_allergens` **20** cases · `validate` 57
+files · `to_top_check` 64 · `boot_check` 24 · `focus_check` 16 ·
+`filter_row_check` 25 · `distance_check` 19 · `note_check` 19 · `addon_check`
+21 · all Python gates clean. No branch, worktree or PR open; no orphan Chromes.
+
+### Still owed, and none of it takeable without the owner
+
+- **`contains-fish` does not exist** (Theme 5 `010`, ruled 2026-08-16). Three
+  fish dishes on this menu are silent about fish until it lands.
+- **`190/010`** — past-midnight hours; Dragonfly's Fri–Sat is understated by
+  three hours today.
+- **`080/190`** — whether to re-sweep the other thirteen stubs, and softening
+  `150`'s "the search is exhausted" sentence, which is load-bearing and wrong
+  at least once.
+- **`210/060`** — the ninth closure surface (sticky contact bar).
+- **`340/200`** — what a load-starved `untilPresent` should do.
+- **`340/190`(a)** — is a geometry throw a site claim or a harness claim?
