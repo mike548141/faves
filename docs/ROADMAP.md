@@ -64,6 +64,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [✅ RULED AND FIXED 2026-08-17 (77726e2): the salad keeps its gf](roadmap/080-theme-4-content-growth-ongoing-in-parallel/170-rock-yard-s-vietnamese-salad-is-tagged-gf-and-contains-gluten.md)
 - ✅ 🎯 [Dragonfly, Courtenay Place — owner-directed online fetch](roadmap/080-theme-4-content-growth-ongoing-in-parallel/180-dragonfly-owner-directed-fetch.md)
 - ✅ 🔎 [The "not one stub is fetchable" sweep missed at least one venue that](roadmap/080-theme-4-content-growth-ongoing-in-parallel/190-the-stub-sweep-missed-a-fetchable-menu.md)
+- [~] 🎯 [Simmer, Churton Park — owner-supplied menu photos](roadmap/080-theme-4-content-growth-ongoing-in-parallel/200-simmer-owner-supplied-menu-photos.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
