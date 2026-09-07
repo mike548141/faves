@@ -760,8 +760,19 @@ precached payload nothing on any screen can reach (ADR 0047).
   from this in the **venue's own timezone** (not the viewer's clock) — its
   `timezone`, or the branch's, or `Pacific/Auckland` if neither says
   (ADR 0043) — and a
-  grouped weekly display; see ADR 0006. That status also drives the home
-  list ordering (`site/js/ranking.js`). **There is one ranking and no sort
+  grouped weekly display; see ADR 0006. **Hours are WALL-CLOCK times and the
+  clock is read as wall-clock through `Intl`, so both agree through a
+  daylight-saving transition** — tested 2026-09-07 across the real New Zealand
+  switches in both directions (roadmap 190/030; `tests/hours-dst.test.js` and
+  the DST half of `tools/midnight_check.mjs`), which closes the *"No DST
+  coverage"* gap ADR 0094 recorded. Two consequences fall out of wall-clock
+  semantics and are correct rather than defects, but surprise: a **23-hour
+  September Sunday** deletes 02:00–02:59, so a venue closing at 3am shows **no
+  countdown at all** that night — the badge steps from "Open · until 3am"
+  straight to "Closed"; and a **25-hour April Sunday** runs 02:00–02:59 twice,
+  so the same countdown runs twice and **understates the real time remaining by
+  up to an hour on the first pass** (roadmap 190/040). That status also drives
+  the home list ordering (`site/js/ranking.js`). **There is one ranking and no sort
   control** (ADR 0068), in this order:
 
   > pinned → orderable-before-stub → reachable (`farKm`) → **availability** →
