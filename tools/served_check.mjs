@@ -442,8 +442,7 @@ async function run(opts) {
       await checkDeepLink(driver, report, fx, url);
     }
 
-    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
-    return report.failed ? 1 : 0;
+    return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();
     await stopChrome(chrome?.proc);

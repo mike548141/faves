@@ -381,8 +381,7 @@ async function run(opts) {
       `banner: ${blockedState.bannerShown}, status: "${blockedState.statusText}"`
     );
 
-    console.log(`\n${report.failed ? "FAILED" : "OK"} — ${report.passed} passed, ${report.failed} failed`);
-    return report.failed === 0;
+    return report.summary(SITE);
   } finally {
     cdp?.close();
     await stopChrome(chrome?.proc);
