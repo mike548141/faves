@@ -1,7 +1,17 @@
 - [ ] 🔎 **An orchestrator tore down a sub-agent's worktree while the agent was
       still running, because a clean tree and a pushed HEAD look exactly like a
       finished agent** `[S][docs]` — found 2026-09-07 (session faves-b1) by
-      doing it, and reported by the agent it happened to.
+      doing it **twice**, and reported by both agents it happened to.
+
+  ⚠️ **It says TWICE because the second report corrected the first count.** This
+  item was written from the `past-midnight` agent's report and said "an agent".
+  The `stub-sweep` agent's report, which arrived afterwards, opens with the same
+  incident: *"Between my push and my final test run, my worktree was deleted and
+  my branch merged and deleted — not by me."* **Two of three agents, not one.**
+  🔑 That is the repo's own lesson landing on the item that records it: *a
+  symptom count proves a fault exists, never how many there are.* The
+  orchestrator wrote "an agent" from the one report it had, which is exactly the
+  inference this board has been burned by before.
 
   **What happened.** Three sub-agents worked in their own worktrees under
   `/Users/mike/worktrees/`, each briefed to commit, push its branch and stop

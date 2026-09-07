@@ -9868,11 +9868,15 @@ about** — one compound `cd` moved the shell into an agent's worktree. Harmless
 demonstration that **the tree line is a mechanism precisely because the
 discipline fails, including for whoever wrote the warning.**
 
-🚩 **And it tore down a running agent's worktree** on a clean tree + pushed HEAD,
-which look exactly like a finished agent and are not. Two of that agent's
-commands failed into a directory that no longer existed; it diagnosed them as
-teardown artefacts itself. Nothing lost — luck plus a good agent. Filed as
-`340/240`.
+🚩 **And it tore down a running agent's worktree — TWICE**, on a clean tree +
+pushed HEAD, which look exactly like a finished agent and are not. Both the
+`past-midnight` and `stub-sweep` agents lost their directory mid-verification;
+each diagnosed it as a teardown artefact and re-verified against `main`, and
+`stub-sweep` opened its report with it. **Nothing lost — luck plus two good
+agents.** 🔑 And the count itself is the lesson: `340/240` was filed saying
+*"an agent"*, written from the one report in hand, and the second report
+doubled it. *A symptom count proves a fault exists, never how many there are* —
+the board's own rule, landing on the item that records the board's own error.
 
 ### Close evidence
 
