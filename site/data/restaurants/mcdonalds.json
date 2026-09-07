@@ -185,7 +185,9 @@
           "price": null,
           "image": "img/mcdonalds/filet-o-fish.webp",
           "alt": "A Filet-O-Fish: a crumbed fish patty with melting cheese and tartare sauce in a soft steamed bun",
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         }
       ]
     },

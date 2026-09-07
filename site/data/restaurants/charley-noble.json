@@ -140,7 +140,8 @@
           "price": 28,
           "tags": [
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-fish"
           ]
         },
         {
@@ -150,7 +151,8 @@
           "price": null,
           "tags": [
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ],
           "needs": [
             {
@@ -192,7 +194,8 @@
           "desc": "Salmon roe, cucumber — a bread topping. Traditionally made with a bread or potato base.",
           "price": 14,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {
@@ -255,7 +258,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         }
       ]
@@ -281,7 +285,8 @@
           "price": 30,
           "tags": [
             "contains-shellfish",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {
@@ -386,7 +391,8 @@
           "price": 48,
           "tags": [
             "contains-gluten",
-            "gf-option"
+            "gf-option",
+            "contains-fish"
           ]
         },
         {
@@ -396,7 +402,8 @@
           "price": 49,
           "tags": [
             "contains-dairy",
-            "gf"
+            "gf",
+            "contains-fish"
           ]
         },
         {
@@ -406,7 +413,8 @@
           "price": 39,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -858,7 +866,8 @@
           "price": null,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ],
           "needs": [
             {

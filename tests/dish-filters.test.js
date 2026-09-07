@@ -46,8 +46,9 @@ test("availableDishFilters: an allergen tag never produces a filter", () => {
   // The load-bearing one. Every contains-* tag in the vocabulary, and not one
   // of them may become a control that removes rows.
   const allergens = tags(
-    "contains-nuts", "contains-peanuts", "contains-shellfish", "contains-egg",
-    "contains-dairy", "contains-gluten", "contains-soy", "contains-sesame"
+    "contains-nuts", "contains-peanuts", "contains-shellfish", "contains-fish",
+    "contains-egg", "contains-dairy", "contains-gluten", "contains-soy",
+    "contains-sesame"
   );
   assert.deepEqual(availableDishFilters(allergens, 0), []);
 });

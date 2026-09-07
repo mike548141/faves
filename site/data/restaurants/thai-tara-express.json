@@ -257,7 +257,9 @@
               "recorded": "2026-08-15"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Crispy pork snack",
@@ -300,7 +302,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         }
       ]

@@ -222,7 +222,8 @@
           "price": 29.5,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -267,7 +268,8 @@
             "gf-option",
             "contains-gluten",
             "contains-egg",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-fish"
           ]
         },
         {
@@ -432,7 +434,8 @@
           "tags": [
             "gf",
             "contains-egg",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-fish"
           ]
         },
         {
@@ -478,7 +481,8 @@
             "contains-gluten",
             "contains-dairy",
             "contains-nuts",
-            "contains-sesame"
+            "contains-sesame",
+            "contains-fish"
           ]
         },
         {
@@ -690,7 +694,8 @@
           "price": 15.5,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -1069,7 +1074,8 @@
           "desc": "Finlandia vodka, tomato juice, lemon, Worcestershire, hot sauce, cracked pepper, celery salt.",
           "price": 16.0,
           "tags": [
-            "spicy-1"
+            "spicy-1",
+            "contains-fish"
           ]
         }
       ]

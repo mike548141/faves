@@ -359,7 +359,8 @@
             "contains-egg",
             "contains-dairy",
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ],
           "needs": [
             {
@@ -765,7 +766,8 @@
             "contains-egg",
             "contains-dairy",
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ],
           "needs": [
             {
@@ -1231,7 +1233,8 @@
           "tags": [
             "contains-egg",
             "contains-dairy",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ],
           "needs": [
             {

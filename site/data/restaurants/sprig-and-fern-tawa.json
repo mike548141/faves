@@ -445,7 +445,9 @@
           "dishId": "salmon-bruschetta",
           "desc": "Cured salmon, cherry tomatoes, pickled cucumber and whipped raita.",
           "price": 26.0,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Garden Salad",
@@ -472,7 +474,8 @@
           "price": 29.0,
           "tags": [
             "df",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {
@@ -481,7 +484,8 @@
           "desc": "Market catch of the day, served with grilled courgette, capsicum jam and potato chip salad. Price on application.",
           "price": null,
           "tags": [
-            "gf"
+            "gf",
+            "contains-fish"
           ]
         },
         {
@@ -769,7 +773,9 @@
           "dishId": "salmon",
           "desc": null,
           "price": 9.0,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Free Range Egg",
@@ -918,7 +924,8 @@
           "desc": "Battered market catch with curly fries and carrot sticks.",
           "price": 15.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {
@@ -1005,7 +1012,7 @@
           "dishId": "fish-and-chips-gold-card",
           "desc": "Gold Card portion.",
           "price": 21.0,
-          "tags": ["df", "contains-gluten"]
+          "tags": ["df", "contains-gluten", "contains-fish"]
         },
         {
           "name": "Sirloin",

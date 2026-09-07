@@ -574,7 +574,8 @@
           "tags": [
             "gf",
             "df",
-            "contains-nuts"
+            "contains-nuts",
+            "contains-fish"
           ]
         },
         {
@@ -647,7 +648,8 @@
             "gf",
             "df",
             "contains-peanuts",
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-fish"
           ]
         }
       ]
@@ -787,7 +789,8 @@
           "price": 1.5,
           "tags": [
             "gf",
-            "df"
+            "df",
+            "contains-fish"
           ]
         },
         {

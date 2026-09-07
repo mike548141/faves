@@ -132,7 +132,9 @@
           "dishId": "fish-tikka",
           "desc": null,
           "price": 22.0,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Tandoori Chicken",
@@ -337,7 +339,9 @@
           "dishId": "fish-masala",
           "desc": "Boneless fish pieces mixed with ginger garlic paste and cooked in tomato onion gravy.",
           "price": 19.0,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Fish Malawari",
@@ -345,7 +349,8 @@
           "desc": "Boneless pieces of fish cooked with cashew gravy, capsicum and coconut cream.",
           "price": 19.0,
           "tags": [
-            "contains-nuts"
+            "contains-nuts",
+            "contains-fish"
           ]
         },
         {
@@ -353,7 +358,9 @@
           "dishId": "fish-madras",
           "desc": "A spicy South Indian dish in which boneless fish is cooked with grated coconut, coconut cream and curry leaves.",
           "price": 19.0,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Prawn Masala",

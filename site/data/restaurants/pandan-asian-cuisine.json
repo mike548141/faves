@@ -333,7 +333,8 @@
           "desc": "Grilled fish cooked in a mildly spiced rich spinach gravy.",
           "price": 27,
           "tags": [
-            "spicy-1"
+            "spicy-1",
+            "contains-fish"
           ]
         },
         {
@@ -342,7 +343,8 @@
           "desc": "Marinated seafood cooked true to its originality from villages throughout Malaysia.",
           "price": 27,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-fish"
           ]
         },
         {
@@ -611,7 +613,9 @@
           "dishId": "sweet-and-sour-fish",
           "desc": "Crispy fish fillet tossed in a tangy sweet and sour sauce with peppers, onion and pineapple.",
           "price": 27,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Sweet and sour chicken",
@@ -859,7 +863,8 @@
           "desc": null,
           "price": 8,
           "tags": [
-            "spicy-3"
+            "spicy-3",
+            "contains-fish"
           ]
         }
       ]

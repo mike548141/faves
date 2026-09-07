@@ -262,7 +262,8 @@
           "price": 20.0,
           "tags": [
             "contains-shellfish",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ],
           "prices": {
             "delivery": 25.0
@@ -276,7 +277,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ],
           "desc": "Egg noodles cooked with chicken, shrimps, fishcakes, fishballs and cabbage in dark gravy.",
           "code": "26"
@@ -287,7 +289,8 @@
           "price": 21.5,
           "tags": [
             "contains-shellfish",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ],
           "desc": "Thick flat rice noodles cooked with chicken, prawn, fishcakes, fishballs, cabbage and eggs in gravy.",
           "code": "28"
@@ -298,7 +301,8 @@
           "price": 20.0,
           "tags": [
             "contains-shellfish",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ],
           "desc": "Noodles with prawn, fishcakes, fishballs and chicken pieces in chicken soup. Choice of egg or rice noodles.",
           "code": "29"
@@ -531,7 +535,8 @@
           "dishId": "seafood-curry",
           "price": 22.0,
           "tags": [
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-fish"
           ],
           "desc": "Squids, prawns, mussels, fishballs, fishcakes, in creamy curry. Served with steamed rice.",
           "code": "19"
@@ -559,7 +564,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ],
           "prices": {
             "delivery": 25.0
@@ -575,7 +581,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ],
           "prices": {
             "delivery": 26.0

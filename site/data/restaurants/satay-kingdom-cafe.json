@@ -100,7 +100,8 @@
             "contains-peanuts",
             "contains-shellfish",
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         },
         {
@@ -251,7 +252,9 @@
           "code": "7",
           "desc": "Fresh fish cooked in curry soup with veggies. Served with steamed rice.",
           "price": 21.3,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Mussel Curry",
@@ -500,7 +503,8 @@
           "price": 22.4,
           "tags": [
             "contains-shellfish",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {
@@ -531,7 +535,8 @@
             "contains-gluten",
             "contains-egg",
             "contains-shellfish",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         },
         {
@@ -543,7 +548,8 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-fish"
           ]
         },
         {
@@ -612,7 +618,8 @@
           "tags": [
             "contains-gluten",
             "contains-egg",
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-fish"
           ]
         },
         {
@@ -649,7 +656,8 @@
           "price": 20.7,
           "tags": [
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {

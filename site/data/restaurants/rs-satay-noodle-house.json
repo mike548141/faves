@@ -853,7 +853,9 @@
           "dishId": "sambal-fish",
           "desc": null,
           "price": 25.0,
-          "tags": [],
+          "tags": [
+            "contains-fish"
+          ],
           "prices": {
             "online": 41.3
           },
@@ -890,7 +892,9 @@
           "dishId": "curry-fish",
           "desc": null,
           "price": 25.0,
-          "tags": [],
+          "tags": [
+            "contains-fish"
+          ],
           "prices": {
             "online": 41.3
           },

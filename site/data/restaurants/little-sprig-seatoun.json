@@ -271,7 +271,9 @@
           "dishId": "fish-of-the-day",
           "desc": "Roast butternut squash, grilled zucchini, red pepper, radicchio, shallot & caper e.v.o sauce.",
           "price": 30.0,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Daily Special's",

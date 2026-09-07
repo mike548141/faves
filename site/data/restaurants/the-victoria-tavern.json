@@ -226,7 +226,8 @@
           "price": 19.0,
           "tags": [
             "contains-egg",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {
@@ -236,7 +237,8 @@
           "price": 19.0,
           "tags": [
             "df",
-            "gf"
+            "gf",
+            "contains-fish"
           ]
         },
         {
@@ -247,7 +249,8 @@
           "tags": [
             "df",
             "gf",
-            "contains-nuts"
+            "contains-nuts",
+            "contains-fish"
           ]
         },
         {
@@ -465,7 +468,8 @@
           "tags": [
             "df",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -487,7 +491,8 @@
             "gf",
             "df",
             "contains-shellfish",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
