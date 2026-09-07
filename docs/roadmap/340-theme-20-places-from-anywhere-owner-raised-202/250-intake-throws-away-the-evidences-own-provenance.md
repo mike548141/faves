@@ -65,7 +65,8 @@
   ## 📋 Options, none taken — he asked whether we need a tool, and this is the
   ask back
 
-  1. **A `tools/intake.py` that READS and REPORTS, and never writes.** Point it
+  1. **A `tools/intake.py` that READS and REPORTS, and never writes.** <!-- pathscan:allow: proposed tool name, deliberately does not exist yet -->
+     Point it
      at an `intake/` folder: it prints each file's capture date, device, GPS
      presence, PDF creation date, and the `verified` date the record *should*
      carry — and refuses nothing. The transcribing session then writes the
