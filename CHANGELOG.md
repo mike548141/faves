@@ -9,6 +9,17 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Simmer, Churton Park has its menu.** 108 dishes across 19 sections —
+  the printed food menu, the drinks board, the cabinet and the counter
+  baking — transcribed from photographs taken in the shop, with prices,
+  the venue's own dietary markers and allergen warnings. Its card is a
+  real link now instead of a "Menu coming soon" placeholder. The
+  breakfast and lunch sections carry their "available until 2pm" window
+  and the Friday snacks and pizzas carry "Friday from 5pm", so the app
+  says when a section is served without hiding it the rest of the time.
+  Two cabinet slices show a **?** where their price should be: the
+  handwritten tags read "$55" with no decimal point, and guessing $5.50
+  would have been inventing a price.
 - **Five more places have menus: Abrakebabra, Crepes A Go Go, Dirty Little
   Secret, Garage Project Leeds Street and Hotel Bristol.** All five had been
   sitting behind a "Menu coming soon" card since 2026-08-16 on the strength of
