@@ -1,6 +1,23 @@
-- [ ] 🔎 **The "not one stub is fetchable" sweep missed at least one venue that
+- [~] 🔎 **The "not one stub is fetchable" sweep missed at least one venue that
       publishes a full priced menu** `[S][content]` — found 2026-09-07 (session
       faves-24) while doing the owner-directed Dragonfly fetch (`180`).
+      🔒 **CLAIMED 2026-09-07 (session faves-b1).**
+
+  ✅ **OWNER-DIRECTED 2026-09-07 (session faves-b1) — RE-CHECK ALL THIRTEEN AND
+  FETCH WHAT IS THERE.** Put to him as four options; he was offered a
+  report-only sweep as the recommendation and **chose the wider one**: find the
+  menus and transcribe them in one pass. 🔑 **This matters for the menu-content
+  rule, so state it exactly.** The rule is *"whatever food/dishes I give you are
+  to be included, if I don't give them to you or tell you to fetch them they are
+  not."* The Dragonfly instruction named one venue and did **not** cover these
+  thirteen — the delivering session was right to stop. **This ruling is the
+  direction that covers them**, given knowingly, with the narrower option in
+  front of him. It covers the thirteen stubs carrying the *"publishes nothing at
+  all"* verdict and nothing beyond them.
+  🚩 **It does not license invention.** Where a venue publishes prose, a
+  rotating board, or a client-rendered ordering platform rather than a priced
+  list, the answer is still *not captured* — the Dragonfly fetch recorded two
+  such refusals and they were correct.
 
   `150-venues-still-stub.md` records, measured 2026-08-17: *"18 stubs remain
   and NOT ONE is fetchable … the four that publish a website

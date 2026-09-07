@@ -1,6 +1,20 @@
-- [ ] 🛑 **`hours` cannot express a close after midnight, and the first venue
+- [~] 🛑 **`hours` cannot express a close after midnight, and the first venue
       that needs it is now in the corpus** `[M][js][schema]` — found 2026-09-07
       (session faves-24) while fleshing out Dragonfly from its own website.
+      🔒 **CLAIMED 2026-09-07 (session faves-b1).**
+
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — OPTION 1, the wrapping
+  close.** Put to him with all three options, their costs and a recommendation.
+  He took *"Wrap when close < open"*: in `segments()`, a close earlier than its
+  open means the next day. **The condition he approved carries its own caveat
+  and it is binding**: it changes the meaning of data already on disk, so
+  **every existing record must be checked for a span that would newly wrap —
+  verified, never assumed.** The item's own text said there are none today;
+  that sentence is a prediction, not evidence, and the sweep is part of the
+  work. If the sweep finds one, that is a finding to report, not to fix by
+  editing the record into agreement.
+  ❌ Option 2 (`"24:00"`–`"29:59"` notation) and option 3 (accept the
+  understatement) are **declined** — recorded so neither is re-proposed.
 
   **The mechanism, read rather than inferred.** `site/js/hours.js` `segments()`
   expands the week into absolute minutes:

@@ -3,6 +3,24 @@
       (session faves-24) while verifying `160` on merged `main`. This is the
       residual half of the very risk option 1 was declined to avoid.
 
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — RETRY ONCE, THEN REPORT.**
+  Put to him as four options with their costs. He took the recommendation: a
+  wait that times out causes the check to be **re-run from scratch once**, and a
+  failure is only reported if it fails **twice**.
+  🛑 **The retry must restart the WHOLE check, never re-issue the individual
+  CDP call.** CLAUDE.md already states why, and it is the reason this repo
+  shipped *"deliberately no retry"* in the first place: *"CDP calls are not
+  idempotent, so re-issuing one silently changes what the next assertion
+  measures."* A whole-check restart on a fresh profile has no such coupling. A
+  reviewer should treat any per-call retry as a misreading of this ruling.
+  🚩 **The accepted cost, stated to him before he chose:** a genuinely broken
+  check now takes about twice as long to say so. He took that trade against
+  false alarms.
+  🔎 **What the retry must print** so it can never become a silent flake-hider:
+  the fact that a retry happened, and that BOTH runs failed when it reports a
+  failure. A retry nobody can see is a decorative guard ([ADR 0072]) pointed the
+  other way — it would convert a reproducible failure into a quiet one.
+
   **The measurement, same commit, same code, twice.**
 
   | run | conditions | result |

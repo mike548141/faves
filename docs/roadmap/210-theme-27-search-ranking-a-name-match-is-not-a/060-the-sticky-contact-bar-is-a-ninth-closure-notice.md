@@ -25,6 +25,14 @@
      the same thing simultaneously — the most work, and the only option that
      needs JS rather than a CSS rule.
 
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — TAKE THE MEASUREMENT FIRST,
+  THEN HE DECIDES.** All three options were put to him with the measurement
+  offered as the recommendation, and he took it: nobody is to make the taste
+  call until the co-visibility number exists. So **the measurement is the work
+  this item now owes**, and the taste call stays with him afterwards. If the two
+  surfaces are never co-visible at 390 px, option 1 wins by default and the
+  question dissolves — which is why measuring is cheaper than deciding.
+
   🚩 **Worth checking before deciding:** whether the sticky bar and the header
   banner are ever visible *at the same time* at 390 px. If they are not, this is
   close to a non-problem and option 1 wins by default. That is a measurement
