@@ -359,7 +359,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🎯 [38a — the cold review itself](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/010-the-cold-review-of-the-data-model.md)
 - ✅ 🛑 [The location-consent flag travels in the backup file and the sync](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/020-the-location-consent-flag-travels-in-the-backup-and-the-sync-blob.md)
 - [ ] 🎯 [prices and priceChannels ship to every phone and nothing renders](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/030-prices-and-pricechannels-ship-to-every-phone-and-nothing-renders-them.md)
-- [~] 🔎 [The record store keys history on names, not ids, and its documents](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/040-the-record-store-keys-history-on-names-and-describes-a-tree-that-does-not-exist.md)
+- ✅ 🔎 [The record store keys history on names, not ids, and its documents](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/040-the-record-store-keys-history-on-names-and-describes-a-tree-that-does-not-exist.md)
 - [ ] 🎯 [One shape for "a dish with choices" — variants, sizes, proteins and](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/050-one-shape-for-a-dish-with-choices.md)
 - [ ] 🔎 [A branch has no id, and every per-branch plan needs to name one](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/060-a-branch-has-no-id.md)
 - [ ] 🎯 [Claim strength has no representation, and a venue has no prose slot](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/070-claim-strength-and-a-venue-level-note.md)
