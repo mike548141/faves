@@ -348,7 +348,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/480-what-the-owner-wants-moved-next-asked-and-answ/README.md)*
 
-## Theme 38 — a cold review of the data model (owner-raised 2026-09-07)
+## Theme 38 — a cold review of the data model AND the features, developed and planned (owner-raised 2026-09-07)
 
 *[Narrative](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/README.md)*
 

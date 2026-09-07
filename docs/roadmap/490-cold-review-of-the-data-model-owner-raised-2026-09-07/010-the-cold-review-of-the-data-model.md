@@ -1,11 +1,36 @@
-- [ ] 🎯 **38a — the cold review itself** `[XL][schema][design][docs]`
+- [ ] 🎯 **38a — the cold review itself** `[XL][schema][design][js][docs]`
       ⏳ **FRESH SESSION, owner-directed 2026-09-07.** Recorded now and
       deliberately not started; see this section's README for why.
 
-  **The deliverable is a written review**, not a migration: what the model gets
-  right, where it will break, and what the options are — each option costed
-  against the hard constraints. A schema change may fall out of it. **That is a
+  **The deliverable is a written review**, not a migration: what gets it right,
+  where it will break, and what the options are — each costed against the hard
+  constraints. A schema or feature change may fall out of it. **That is a
   separate decision and a separate item, and it is the owner's.**
+
+  🛑 **THREE SUBJECTS, NOT ONE — and the first filing of this item got this
+  wrong.** He asked for a review of *"the data model **and features developed
+  and planned**"*:
+  1. **The data model** — the shapes we store. What this item was originally
+     scoped to, and roughly a third of the ask.
+  2. **The features already developed.** Does what *ships today* actually handle
+     this list? That is a question about `site/js/` and the screens, and it is
+     answered by driving the app, not by reading the schema. Several strands
+     below are already **storable and not shown** — a `served` window annotates
+     but nothing surfaces "what is on right now"; per-branch hours exist and no
+     screen lets you compare branches; price history accrues and is never
+     rendered (`Theme 13`, ruled three times: **Faves collects it and does not
+     display trends**). **A model that can express something the app never shows
+     is not the same as a feature.**
+  3. **The features planned** — the roadmap's own open items, read *together*
+     rather than one at a time. This is the part nothing else in the process
+     does. `14f` combos, `26a` saved orders, `28b` a second price, `30g` a
+     delivery fee and `33b` reservations were each filed sensibly and in
+     isolation; whether they compose into one coherent product is a question
+     only this review asks.
+  🔑 **The three are not separable in practice**, which is the argument for
+  doing them in one pass rather than three items: a modelling answer that no
+  screen can render is worthless, and a planned feature that the model cannot
+  carry is a schema change nobody has costed.
 
   ## The eleven strands he named, each with what ALREADY EXISTS
 
@@ -104,6 +129,10 @@
 
   ## What the review should produce
 
+  0. **A map of the FEATURES as they are** — what each screen actually does
+     with this data today, and specifically **what the model can express that
+     no screen shows**. Cheapest way in, and it is the half the first filing
+     omitted.
   1. A **map of the model as it is** — entities, the fields that carry state,
      and where each concept lives across the two stores.
   2. For each strand: **does the current model express it, express it badly, or

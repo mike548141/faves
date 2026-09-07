@@ -1,14 +1,57 @@
-# Theme 38 — a cold review of the data model (owner-raised 2026-09-07)
+# Theme 38 — a cold review of the data model AND the features, developed and planned (owner-raised 2026-09-07)
 
 **Raised by the owner at the close of session `faves-b1`, to be done in a
 FRESH session.** His framing, kept verbatim because the scope is his:
 
-> *"We need a full cold review of the data model and features developed and
-> planned to support all the complexities we are finding / trying to handle to
-> make sure we are well setup for the future use of Faves. … I am sure there is
-> more that I've missed. Do whatever work, look at sessions, do research as
-> needed to supplement this work. We can attack all that in a fresh session.
-> For now make sure its fully recorded in the roadmap etc."*
+> *"This one is for the roadmap to do in a fresh session. We need a full cold
+> review of the data model and features developed and planned to support all the
+> complexities we are finding / trying to handle to make sure we are well setup
+> for the future use of Faves.*
+>
+> - *Cooking food at home vs getting it from a restaurant*
+> - *Ready made food at home (from a can of beer to a bag od chips to a ready
+>   made meal/dish). And potentially in future maybe we add dishes that have been
+>   made prior (e.g. left overs) and are ready to eat in the fridge which gets
+>   into what stock we have in the house vs recipes we can make assuming we have
+>   the ingredients*
+> - *The restaurant vs branch vs franchises we are seeing, each with nuances like
+>   different locations, hours, menus etc*
+> - *The idea of seasonal menus, and menus by time of day*
+> - *Being able to configure a dish (like subway) and or add-on to a dish like
+>   adding bacon to a brunch dish.*
+> - *Combo's like McDonalds or other places e.g. pie & a can ok coke for $??*
+> - *Variants of a dish like beef vs chicken satay skewers*
+> - *Specialised pricing based on delivered vs eat in vs takeaway, special deals
+>   e.g. time of day,*
+> - *Data I want to capture for later liek changes in dish and resaurant pricing
+>   over time, changes is the types of dishes offered etc*
+> - *The state of a restaurant or branch e.g. temproarily closed, permanently
+>   closed*
+> - *a restaurant staying open past midnight, Daylight savings etc*
+>
+> *I am sure there is more that I've missed. Do whatever work, look at sessions,
+> do research as needed to supplement this work. We can attack all that in a
+> fresh session. For now make sure its fully recorded in the roadmap etc."*
+
+🔑 **That is his text unaltered — spelling, punctuation and all — and only the
+line breaks are ours.** It was elided to two sentences plus a `…` when this
+theme was first filed on 2026-09-07, with the eleven bullets replaced by a
+paraphrased table. He caught it the same day. **A paraphrase of a brief is not
+the brief**: "Ready made food at home" lost the chain that follows it — leftovers
+in the fridge, *"what stock we have in the house vs recipes we can make assuming
+we have the ingredients"* — which is a feature idea, not a storage question, and
+the paraphrase dropped it entirely. `RECORD.md`'s rule that a record must not be
+narrower than its source applies to an instruction as much as to a decision.
+
+🛑 **AND THE SCOPE IS WIDER THAN "THE DATA MODEL".** He wrote *"the data model
+**and features developed and planned**"*. Three things, not one:
+- **the data model** — the shapes we store;
+- **the features already developed** — whether what ships actually handles this
+  list, which is a question about `site/js/` and the screens, not the schema;
+- **the features planned** — the roadmap's own open items, reviewed for whether
+  they still make sense against the whole picture rather than one at a time.
+The first filing of this theme framed it as a schema review and the summary
+given back to him narrowed it again. **Two thirds of the ask is about features.**
 
 🛑 **NOT WORK TO START.** He said *"for now make sure it's fully recorded"*. A
 session that finds this theme and begins building against it has misread the
