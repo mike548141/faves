@@ -31,22 +31,42 @@ payload. A price that was superseded three refreshes ago does not.
 
 ## Layout
 
-```
-data/
-  README.md            this file
-  entities/<id>.json   an organisation: company, trust, partnership, sole trader
-  people/<id>.json     a natural person, recorded only under the rules below
-  ownership.json       the edges — who holds what, in what role, since when
-  history/
-    prices/<venue>.json   superseded price entries, appended forever
-    dishes/<venue>.json   dishes that came off the menu
-    venues/<venue>.json   venues retired from the payload
-```
+This is what is on disk, and what writes and checks each part. It was wrong for
+a year — it described `entities/`, `people/` and `history/venues/` as if they
+held something, and did not mention three stores that do (found by the Theme 38
+cold review, 2026-09-07).
+
+| Path | Holds | Written by | Checked by |
+|---|---|---|---|
+| `ownership.json` | the edges — who holds what, in what role, since when | by hand | `tools/registry.py` |
+| `entities/<id>.json` | an organisation: company, trust, partnership, sole trader | by hand | `tools/registry.py` |
+| `people/<id>.json` | a natural person, under the provenance rule below | by hand | `tools/registry.py` |
+| `history/prices/<venue>.json` | superseded price entries, appended forever | `tools/split_data.py` | `split_data.py --check` |
+| `history/dishes/<venue>.json` | dishes confirmed off the menu, kept whole | `tools/split_data.py` | `split_data.py --check` |
+| `estimates/recipes.json` | estimated times and serving sizes, with their workings | by hand | `tools/recipe_estimates.py --check` |
+| `images/<venue>.json` | provenance and rights for every photograph the app ships | by hand | `tools/check_records.py` |
+| `withdrawn/<venue>.json` | rows pulled from the payload **by policy**, not by the shop | by hand | `tools/check_records.py` |
+| `products/<id>.json` | packaged products off the owner's own pantry photographs (ADR 0090) | `tools/products.py` | `tools/products.py` |
+
+**`entities/` and `people/` do not exist yet**, and that is the honest state
+rather than a gap: `ownership.json` holds `{"edges": []}`, no ownership fact has
+been recorded, and `registry.py` defines and enforces the shape the first one
+will take (`tools/test_registry.py` builds them synthetically to prove it). They
+are listed here because the shape is decided, not because there is anything in
+them. **`history/venues/` was never real** — nothing has ever written it and
+nothing reads it; it is gone from this table rather than waiting to be filled.
 
 Every record keys on the venue `id` already used in
-`site/data/restaurants/<id>.json`. The link is one-way and read from this side
-only: **no file under `site/` refers to anything in here**, so the payload needs
-no new field and no migration to gain an owner.
+`site/data/restaurants/<id>.json`, and a venue id can be corrected — so the
+history reader follows a record's `formerIds` before concluding a venue has no
+history, and `split_data.py --check` fails on a history file **no venue read**.
+Within a venue, a history row joins to its dish on `sectionId` and `dishId`
+(ADR 0099), never on the heading and the name, so a rename ADR 0051 and ADR 0058
+both permit cannot orphan a price series.
+
+The link is one-way and read from this side only: **no file under `site/` refers
+to anything in here**, so the payload needs no new field and no migration to
+gain an owner.
 
 ## The provenance rule — mandatory, and checked
 

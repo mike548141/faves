@@ -36,14 +36,15 @@ deviating from the architecture.
 | Offline | **Service worker precache** | Menus are small text; precache everything. Whole app works in flight mode / dodgy reception outside the takeaway. |
 | Hosting | **Cloudflare Pages** (`lets-eat.myspot.nz`) | Decided 2026-07-07 (ADR 0004); AWS S3 + CloudFront is the host-agnostic fallback. See "Hosting" below. |
 | Rendering | **Client-side from JSON** | Two tiny HTML shells + fetch. Precached data makes it instant; no SSG needed at this scale. |
-| Repo | Private; site public | Curation and picks are ours; the URL is shareable with guests. |
+| Repo | **Public** since 2026-08-09 (`a207a15`, Theme 8); site public | A push *is* publication, irreversibly and including git history. The bar on personal data in `site/data/` follows from it; `tools/check_visibility.py` holds this row to what GitHub actually reports. This row said "Private" until 2026-09-08 — a month after the fact, and the one row a reader checks before deciding whether a push can be taken back. |
 | Time | **Dated in the data, resolved before the UI** | Prices, menus and venues change; git dates our *edits*, never the world. Optional dated primitives + one pure resolver (`temporal.js`) run in `data.js`, so the app stays time-blind and the dinner-choosing UX is untouched. Decided 2026-08-08 (ADR 0023); atelier PRINCIPLES §9. |
 
 ## Hosting
 
 **Cloudflare Pages at `lets-eat.myspot.nz` (decided 2026-07-07, ADR 0004).**
-Connects to the private GitHub repo: push to `main` → deployed (no build
-command, output dir `site/`); free tier, global CDN, automatic HTTPS, custom
+Connects to the GitHub repo (public since 2026-08-09): push to `main` →
+deployed (no build command, output dir `site/`); free tier, global CDN,
+automatic HTTPS, custom
 domain via the existing Cloudflare DNS, per-branch preview URLs. Provisioned as
 code — [`tools/deploy.json`](../tools/deploy.json) declares the Pages project,
 build config and domain; [`tools/deploy.py`](../tools/deploy.py) reconciles it
@@ -68,15 +69,29 @@ exactly what a screen can show. `data/` at the repo root is the **record** —
 never served, never precached, never referenced from `site/` — and holds
 everything else, kept forever: superseded prices (`data/history/prices/`),
 departed dishes (`data/history/dishes/`), the ownership graph
-(`data/entities/`, `data/people/`, `data/ownership.json`, ADR 0046), and the
-packaged-product store (`data/products/`, ADR 0090 — labels off the owner's own
-pantry photographs, validated by `tools/products.py`, with no screen reading
-them yet and no location or eating event permitted in one). The record
+(`data/ownership.json`, ADR 0046 — with `data/entities/` and `data/people/` the
+shape `tools/registry.py` enforces for the first record, not yet directories on
+disk), recipe time and serving estimates with their workings
+(`data/estimates/`, checked by `tools/recipe_estimates.py`), the provenance and
+rights for every photograph the app ships (`data/images/`), rows pulled from the
+payload by policy rather than by the shop (`data/withdrawn/`, ADR 0085 — both
+checked by `tools/check_records.py`), and the packaged-product store
+(`data/products/`, ADR 0090 — labels off the owner's own pantry photographs,
+validated by `tools/products.py`, with no screen reading them yet and no
+location or eating event permitted in one). The record
 keys on the venue `id` from its own side only, so the payload needs no field to
 gain an owner or a history. Before adding a field to a venue file, name the
-screen that renders it; `data/README.md` has the full rule, and
-`tools/split_data.py --check` proves the two stores still reconstruct the
-pre-split corpus.
+screen that renders it; `data/README.md` has the full rule and the table of who
+writes and checks each store, and `tools/split_data.py --check` proves the two
+stores still reconstruct the pre-split corpus.
+
+**A history row is joined to its dish by `sectionId` and `dishId` (ADR 0099),
+and to its venue through `formerIds`.** That sentence was true of the documents
+and false of the store from the day it was written until 2026-09-08: 226 of 227
+rows carried no `dishId` and none carried a `sectionId`, so the join really ran
+on the section heading and the dish name — the two things ADR 0051 and ADR 0058
+exist to let a shop rename. `split_data.py --check` now prints how many rows are
+still joined on the name alone, and fails on a history file no venue read.
 
 Personal data is barred from the payload absolutely. It is permitted in the
 record only under ADR 0046's provenance rule — name, email and phone, sourced
@@ -385,8 +400,16 @@ would be inventing evidence.
    reading came from somewhere other than the venue's last reading.
    A plain value means "true now; we never established since when" — which is
    honest for most of this data, and cheap: the venue's `verified` date already
-   supplies the record time. **Only a price that actually moved needs the
-   series form.** A future-dated `from` is a scheduled change: the current day
+   supplies the record time. **A price that moved NEEDS the series form; a
+   single reading may use it, to date that reading.** 265 dishes carry a
+   one-entry series and every one of them is correct: 213 are what ADR 0047
+   leaves behind, since splitting a moved price out of the payload keeps exactly
+   its newest entry, and the other 52 (1841 Bar & Restaurant) are one dated
+   reading of a menu we have read once. This paragraph read *"only a price that
+   actually moved needs the series form"* until 2026-09-08, and the Theme 38
+   cold review read it — correctly, as written — as saying those 265 were wrong.
+   "Needs" was doing work "may only use" was never entitled to.
+   A future-dated `from` is a scheduled change: the current day
    keeps its own price and `pending()` returns the announced one ("coffee is $6
    from Wednesday" — ROADMAP Theme 13).
 2. **Lifecycle** — dated transitions (`closed-temporarily` · `reopened` ·

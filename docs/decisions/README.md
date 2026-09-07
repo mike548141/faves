@@ -1085,3 +1085,17 @@ deliberation those compact docs omit.
   transitions. **Five assertions flipped**, each carrying its old expectation in
   a comment; break-probed (the one-line revert fails exactly 7 tests, all naming
   a transition, nothing else in the other 1,188).
+- [0099](0099-history-joins-on-ids-and-the-name-tier-is-a-fallback.md) —
+  **history joins on ids, and the name tier is a fallback.** The record store
+  keyed every row on the section heading and the dish name — 226 of 227 rows
+  carried no `dishId`, none a `sectionId` — while ARCHITECTURE.md and ADR 0051's
+  own consequences both said the id carried the history across a rename. So a
+  rename ADR 0051 permits, or a heading rename ADR 0058 permits, orphaned every
+  row it touched; `--check` failed on the orphan, which is the right failure
+  arriving after the loss. `--rekey` resolved 227 of 227 against the payload,
+  guessing at none. Dropping the name tier entirely was rejected — it is what
+  makes the re-key refuse rather than guess — and replaced by a COUNT `--check`
+  prints every run. Two adjacent faults fixed with it: a venue rename never
+  reached `data/` (`--check` passed reporting "0 with a history file", and a
+  break-probe proved the check could not see it), and the writer REPLACED the
+  file the documented refresh procedure told it to append to.

@@ -368,6 +368,21 @@ python3 tools/products.py     # data/products/ — the packaged-product record s
                               # MOVED here rather than vanishing. --reshoot ranks the
                               # gaps by what another photo would BUY, --stats counts
                               # what the corpus actually holds
+python3 tools/check_records.py # data/images/ and data/withdrawn/ — the two record
+                              # stores NOTHING validated until 2026-09-08. The
+                              # direction that matters is file→row: a photo shipped
+                              # with no provenance row is a published image nobody
+                              # can say where we got. --selftest breaks a good
+                              # fixture 15 ways; all 15 must be caught. Now in CI
+python3 tools/test_split_data.py # history joins to a dish by ID, not by its name
+                              # (ADR 0099). Each permitted-rename case is PAIRED
+                              # with a break-probe that reverts the id-first line
+                              # and must FAIL — the venue-rename probe is the one
+                              # that found --check could pass while reading no
+                              # history file at all. Now in CI
+python3 tools/recipe_estimates.py --check # data/estimates/ still lines up with the
+                              # recipes, and every countdown names its source.
+                              # Human-typed only until 2026-09-08; now in CI
 node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part of
                               # LINE IDENTITY, so the sheet can show the same dish
                               # twice differing only by its note — and the ± control
