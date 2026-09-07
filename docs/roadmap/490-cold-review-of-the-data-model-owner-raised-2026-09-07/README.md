@@ -97,3 +97,13 @@ supersessions of which **two were false**. So:
   most likely to be dropped.
 - **Measure the corpus, do not reason about it.** Nearly every wrong number in
   this repo's history came from a claim about the data that nobody re-ran.
+
+## ✅ The review was delivered 2026-09-08
+
+[`docs/reviews/2026-09-07-1216-theme-38-cold-review.md`](../../reviews/2026-09-07-1216-theme-38-cold-review.md)
+— four independent maps (model, features, plan, citations), every headline
+re-checked at source. Its own first finding was about **this theme's record**:
+eighteen of the brief's sourced claims were opened and eleven were wrong or
+stale, the pricing strand written as if ADR 0089 never happened. The three
+rules above did their job, and the first place they had to be applied was here.
+What follows from it is items `020`–`100` below; nothing was built.
