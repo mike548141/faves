@@ -42,7 +42,7 @@
 
   ✅ **DELIVERED 2026-09-08 (session faves-o1).** Worktree
   `/Users/mike/worktrees/faves-o1-history-rekey`, branch `history-rekey`,
-  ADR 0098. Nothing under `site/` changed: `check_versions.py --range
+  ADR 0099. Nothing under `site/` changed: `check_versions.py --range
   origin/main..HEAD` → *"Version lockstep not in scope: nothing under site/
   changed."*
 
@@ -86,7 +86,7 @@
   `--check --against` only afterwards. It merges now.
 
   **Break-probe, verbatim.** Each permitted-rename case reverts one line of the
-  tool to its pre-ADR-0098 form and must fail:
+  tool to its pre-ADR-0099 form and must fail:
 
   ```
   ✓ control: a clean fixture passes --check
@@ -146,6 +146,16 @@
   `>>>>>>> 6cb391d` at :1074, from commit `f6869a6`, straddling the index
   entries for ADR 0096 and ADR 0097. `check_decisions.py` passes because both
   entries are textually present, so nothing catches it. The ADR **allocator**
-  is the file this is in. Left for whoever owns those two records; the 0098
-  entry was appended below the marker rather than resolving another session's
-  conflict.
+  is the file this is in. Left for whoever owns those two records; this item's
+  index entry was appended below the marker rather than resolving another
+  session's conflict.
+
+  🚩 **And the allocator collided again, exactly as it is documented to.** This
+  record was drafted as **0098**; the post-push check found branch
+  `dst-countdown` had already pushed
+  `0098-the-verdict-reads-the-wall-clock-the-countdown-counts-real-time.md`.
+  Neither is on `main`, so nothing was broken — but per
+  `docs/decisions/README.md`, the record with **fewer inbound references
+  moves**, not the one that landed second. Measured: theirs 24 occurrences
+  across 8 files including `site/js/hours.js` and its tests, mine 12. **This
+  one moved, to 0099.**

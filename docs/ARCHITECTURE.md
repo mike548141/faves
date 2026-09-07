@@ -85,7 +85,7 @@ screen that renders it; `data/README.md` has the full rule and the table of who
 writes and checks each store, and `tools/split_data.py --check` proves the two
 stores still reconstruct the pre-split corpus.
 
-**A history row is joined to its dish by `sectionId` and `dishId` (ADR 0098),
+**A history row is joined to its dish by `sectionId` and `dishId` (ADR 0099),
 and to its venue through `formerIds`.** That sentence was true of the documents
 and false of the store from the day it was written until 2026-09-08: 226 of 227
 rows carried no `dishId` and none carried a `sectionId`, so the join really ran

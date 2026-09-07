@@ -1072,7 +1072,7 @@ deliberation those compact docs omit.
   Seven new breakers, and one **existing** breaker that this change had made
   decorative is repaired in the same commit.
 >>>>>>> 6cb391d (data: an add-on carries every allergen its name implies, not just fish)
-- [0098](0098-history-joins-on-ids-and-the-name-tier-is-a-fallback.md) —
+- [0099](0099-history-joins-on-ids-and-the-name-tier-is-a-fallback.md) —
   **history joins on ids, and the name tier is a fallback.** The record store
   keyed every row on the section heading and the dish name — 226 of 227 rows
   carried no `dishId`, none a `sectionId` — while ARCHITECTURE.md and ADR 0051's

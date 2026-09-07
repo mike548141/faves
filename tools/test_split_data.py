@@ -6,7 +6,7 @@ keyed every row on `{section heading, dish name, code}` — 226 of 227 rows carr
 no `dishId` at all — while `ARCHITECTURE.md` and ADR 0051's own consequences both
 said the id was what carried a dish's price history across a rename. Nothing
 disagreed with them, because nothing had ever renamed a dish in a venue that had
-history. ADR 0098 made the join id-first; this is what stops it drifting back.
+history. ADR 0099 made the join id-first; this is what stops it drifting back.
 
 THE METHOD is the one `test_registry.py` and `test_validate.py` established, with
 one addition. Each case builds a synthetic venue in a temporary tree, applies a
@@ -91,7 +91,7 @@ def _rename_venue(v):
     v["formerIds"] = ["old-test-venue"]
 
 
-# Each probe reverts ONE line of the tool to what it did before ADR 0098. The
+# Each probe reverts ONE line of the tool to what it did before ADR 0099. The
 # paired case must then fail — if it still passes, the case was never testing
 # what its name says.
 PERMITTED = [

@@ -368,7 +368,7 @@ python3 tools/check_records.py # data/images/ and data/withdrawn/ — the two re
                               # can say where we got. --selftest breaks a good
                               # fixture 15 ways; all 15 must be caught. Now in CI
 python3 tools/test_split_data.py # history joins to a dish by ID, not by its name
-                              # (ADR 0098). Each permitted-rename case is PAIRED
+                              # (ADR 0099). Each permitted-rename case is PAIRED
                               # with a break-probe that reverts the id-first line
                               # and must FAIL — the venue-rename probe is the one
                               # that found --check could pass while reading no

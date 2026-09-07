@@ -61,7 +61,7 @@ Every record keys on the venue `id` already used in
 history reader follows a record's `formerIds` before concluding a venue has no
 history, and `split_data.py --check` fails on a history file **no venue read**.
 Within a venue, a history row joins to its dish on `sectionId` and `dishId`
-(ADR 0098), never on the heading and the name, so a rename ADR 0051 and ADR 0058
+(ADR 0099), never on the heading and the name, so a rename ADR 0051 and ADR 0058
 both permit cannot orphan a price series.
 
 The link is one-way and read from this side only: **no file under `site/` refers

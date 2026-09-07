@@ -34,7 +34,7 @@ record is removed from both sides of its own comparison and passes. (3) and
 only place that exists, so it catches the commit doing the damage rather than
 damage already committed; that is a real limit, stated rather than papered over.
 
-HOW A ROW IS JOINED BACK TO ITS DISH (ADR 0098, 2026-09-08). On `sectionId` and
+HOW A ROW IS JOINED BACK TO ITS DISH (ADR 0099, 2026-09-08). On `sectionId` and
 `dishId` first, on the section heading and the dish name only where a row has no
 id. It was the other way round for the store's whole life: 226 of 227 rows
 carried no `dishId`, so a dish rename ADR 0051 permits, or a heading rename ADR
@@ -80,7 +80,7 @@ def _text(value):
 def dish_key(section, item):
     """Stable enough to rejoin on, and readable by a human reading the record.
 
-    IDS FIRST, NAMES ALONGSIDE (ADR 0098). `sectionId` (ADR 0058) and `dishId`
+    IDS FIRST, NAMES ALONGSIDE (ADR 0099). `sectionId` (ADR 0058) and `dishId`
     (ADR 0051) are the two parts of a dish's address that a rename cannot move,
     so both go on every key this tool writes. The heading and the name stay
     beside them — not as the join, but so a human reading the record can tell

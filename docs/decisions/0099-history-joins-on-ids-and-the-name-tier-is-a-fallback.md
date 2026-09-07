@@ -1,4 +1,4 @@
-# 0098 — History joins on ids, and the name tier is a fallback
+# 0099 — History joins on ids, and the name tier is a fallback
 
 **Status:** accepted
 **Date:** 2026-09-08
