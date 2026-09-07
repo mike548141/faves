@@ -80,6 +80,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [RULED 2026-08-16 — ADD contains-fish, and land it WITH 37n.](roadmap/110-theme-5-richer-dish-data/010-ruled-2026-08-16-add-contains-fish-and-land-it.md)
 - [ ] [✅ RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
 - ✅ [⚠️ ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
+- [ ] 🛑 [Adding a fish option to a dish produces NO allergen warning — the](roadmap/110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
 
 ## Theme 6 — North star: the health tie-in
 
@@ -250,6 +251,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🛑 [untilPresent can manufacture a FALSE REGRESSION under load, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/200-untilpresent-can-manufacture-a-false-regression-under-load.md)
 - ✅ 🛑 [to_top_check described a sweep it never ran, and its key assertion](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/210-a-check-described-a-sweep-it-never-ran.md)
 - [ ] [🚩 Two orphaned stashes have sat on the shared stash stack for three](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/220-two-orphaned-stashes-sit-on-a-stack-every-worktree-shares.md)
+- [ ] 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
