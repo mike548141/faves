@@ -1072,3 +1072,17 @@ deliberation those compact docs omit.
   Seven new breakers, and one **existing** breaker that this change had made
   decorative is repaired in the same commit.
 >>>>>>> 6cb391d (data: an add-on carries every allergen its name implies, not just fish)
+- [0098](0098-history-joins-on-ids-and-the-name-tier-is-a-fallback.md) —
+  **history joins on ids, and the name tier is a fallback.** The record store
+  keyed every row on the section heading and the dish name — 226 of 227 rows
+  carried no `dishId`, none a `sectionId` — while ARCHITECTURE.md and ADR 0051's
+  own consequences both said the id carried the history across a rename. So a
+  rename ADR 0051 permits, or a heading rename ADR 0058 permits, orphaned every
+  row it touched; `--check` failed on the orphan, which is the right failure
+  arriving after the loss. `--rekey` resolved 227 of 227 against the payload,
+  guessing at none. Dropping the name tier entirely was rejected — it is what
+  makes the re-key refuse rather than guess — and replaced by a COUNT `--check`
+  prints every run. Two adjacent faults fixed with it: a venue rename never
+  reached `data/` (`--check` passed reporting "0 with a history file", and a
+  break-probe proved the check could not see it), and the writer REPLACED the
+  file the documented refresh procedure told it to append to.
