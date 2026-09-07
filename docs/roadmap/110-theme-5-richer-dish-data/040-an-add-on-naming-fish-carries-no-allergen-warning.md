@@ -1,4 +1,4 @@
-- [ ] 🛑 **Adding a fish option to a dish produces NO allergen warning — the
+- [~] 🛑 **Adding a fish option to a dish produces NO allergen warning — the
       one thing the add-on picker exists to prevent** `[S][js][data]` — found
       2026-09-07 (session faves-b1) while landing `contains-fish` (`010`), and
       **verified on shipped data before filing**, not taken from the delivering
@@ -44,8 +44,64 @@
   inherits the same silence automatically**, and nothing will report it. The
   count is small; the mechanism is not.
 
-  📋 **Options, none taken — the fix is a decision because it widens an
-  owner-ruled sweep:**
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — OPTION 1, AND HE WIDENED
+  IT.** In his words: *"I accept Tagger writes both tags but I want to add to
+  your recommendation that the UX impact needs to be considered and properly
+  designed. We don't want a flood of noisy tags on the menu, especially if two
+  tags are telling the reader the same thing i.e. the dish has fish in it. Also
+  I believe an add-on like salmon should have its **own** allergen and dietary
+  tags the same way a dish does. So when you include one or more add-ons to a
+  dish it is a collection of both the dish's and the selected add-ons' that make
+  the dietary and allergen info. Think of situations like kebab where we add
+  sauces to a dish, Subway where you customise every sandwich etc."*
+
+  🎉 **THE ARCHITECTURE HE DESCRIBES ALREADY EXISTS — only the DATA is
+  missing.** Checked in `site/js/addons.js` before briefing anyone, because
+  "build this" and "populate this" are very different jobs. `composeTags()`
+  already unions the selected options' allergen tags into the dish's, already
+  **de-duplicates** through a `seen` set, already records `added: [{tag, from}]`
+  so a warning can name *which option* brought the allergen, and already
+  *intersects* dietary claims rather than unioning them (a dish stays vegan only
+  if every selected option agrees). So the ruling is not a redesign: **an option
+  is already a first-class tag carrier and the composition is already
+  dish + selection.** What is absent is `contains-*` tags on the option records.
+
+  🔑 **And the de-duplication already answers half the noise worry.** A dish
+  that itself declares `contains-fish` gains **nothing** when salmon is added —
+  `seen` blocks it, and `added` stays empty, so no second chip and no second
+  warning. The reader cannot be told the same thing twice by that path.
+
+  🛑 **BUT THE OTHER HALF IS REAL, AND IT IS WORSE THAN NOISE — VERIFIED IN THE
+  CODE.** `tagChip()` in `site/js/menu.js` ends with a bare fallback:
+
+  ```js
+  return el("span", { className: "tag", textContent: t });
+  ```
+
+  `has-fish` is not `contains-`-prefixed, so it is not an allergen; it is not
+  spicy; and it is **not in `DIETARY`** (it is labelled only in
+  `addons-ui.js`, for the option picker, as *"is fish"*). It therefore falls
+  through to that fallback and would render on the composed dish row as a chip
+  reading literally **`has-fish`** — beside a proper `⚠ fish`. That is exactly
+  the *"two tags telling the reader the same thing"* he named, in its ugliest
+  form: one of them is a raw internal identifier. **This must be designed before
+  it is populated, not after.**
+
+  📋 **What the design pass has to settle**, so it is not rediscovered:
+  1. Does `has-fish`/`has-meat` reach the dish's chip row at all after
+     composition, or is it option-picker-only? (Today it reaches it, as a raw
+     string.) A tag with no reader-facing job should not compose onto a row.
+  2. When an allergen is added **by an option**, does the chip say so? The
+     `added` array already carries `{tag, from}` and nothing uses it on that
+     row — *"⚠ fish (from Salmon)"* is available for free and is more useful
+     than a bare chip.
+  3. The Subway/kebab case he named: a heavily customised item can accumulate
+     several options. Design for the row that gains **four** allergens, not the
+     one that gains one.
+  4. `addon_check.mjs` must gain a **fish** case. Its green run today is
+     evidence about peanuts and is being read as evidence about allergens.
+
+  📋 **Original options, kept for the record — option 1 is the ruled one:**
   1. **Have the add-on tagger write BOTH tags** where an option names a
      finfish: `has-fish` for the dietary axis and `contains-fish` for the
      allergen. Correct, and it keeps the two axes separate rather than merging

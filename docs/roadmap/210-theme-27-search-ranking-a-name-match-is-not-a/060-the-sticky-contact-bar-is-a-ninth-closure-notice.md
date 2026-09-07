@@ -1,4 +1,4 @@
-- [ ] 🔎 **The sticky contact bar is a NINTH place the closure sentence appears,
+- [x] 🔎 **The sticky contact bar is a NINTH place the closure sentence appears,
       and `050` counted eight** `[XS][ux]` — found 2026-09-07 (session faves-24)
       while delivering `050`'s muting, and filed rather than folded into it.
 
@@ -88,8 +88,16 @@
   house knew and the knowledge was not where a new sweep would find it.** That
   is a findability defect, and it is filed as `210/070`.
 
-  🎯 **The taste call is now yours with the number in hand, and the
-  recommendation is OPTION 1 — leave it.** Nothing needs building.
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — OPTION 1, LEAVE IT AT FULL
+  WEIGHT.** Put to him with the measurement in hand and option 1 recommended.
+  **CLOSED: no work is owed and nothing was built.** Options 2 (mute it) and 3
+  (suppress it while the banner shows) are **declined** — recorded so neither is
+  re-proposed. 🔑 Option 3 in particular would have been **dead code**: the
+  measurement shows the condition it fires on never occurs.
+  🔑 **The item closed by being measured, not by being built**, which is the
+  cheapest way an item can close and is worth naming as a pattern — its own
+  text predicted it (*"if they are not [co-visible], this is close to a
+  non-problem and option 1 wins by default"*) and was right.
 
   🚩 **Worth checking before deciding:** whether the sticky bar and the header
   banner are ever visible *at the same time* at 390 px. If they are not, this is
