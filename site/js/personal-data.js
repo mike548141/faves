@@ -25,21 +25,25 @@
 //
 // WHAT IS DELIBERATELY NOT COLLECTED, and the rule behind it: if the import
 // path wouldn't put it back usefully, the export has no business carrying it
-// (owner's ruling, ROADMAP 36g). Three stores qualify — the Near-me origin
-// (`faves.origin.v1`, the user's own whereabouts, sessionStorage anyway),
-// cook-mode ticks (`faves.checklist.v1`, twelve-hour progress about the meal in
-// front of you) and a running cook-mode timer (`faves.timers.v1`, a wall clock
-// about that same meal). The exported file NAMES each and says why, because a
-// backup that silently omitted something would be the dishonest kind of quiet.
-// See `EXCLUDED` — and note the trap it documents: both of those are matched on
-// more than their bare key, because a per-profile store's real key carries a
-// profile id.
+// (owner's ruling, ROADMAP 36g). `EXCLUDED` below is the whole list and the
+// only list — this paragraph deliberately no longer counts them, because it
+// said "three stores qualify" while the table held five, and a prose tally that
+// drifts is how a reader concludes a store is covered when it isn't. Two shapes
+// qualify: what is about the meal or the moment in front of you rather than
+// about you (the Near-me origin, cook-mode ticks, a running timer), and what is
+// this DEVICE's standing rather than your data (the sync pairing, the promise
+// not to ask about your location). The exported file NAMES each and says why,
+// because a backup that silently omitted something would be the dishonest kind
+// of quiet. Note the trap `EXCLUDED` documents too: entries are matched on more
+// than their bare key, because a per-profile store's real key carries a profile
+// id.
 //
 // Pure and DOM-free (storage is injected), so it unit-tests without a browser.
 
 import { PROFILES_KEY, SCOPED_BASE_KEYS, sanitiseName, sanitiseRegistry, scopeKey } from "./profiles.js";
 import { CHECKLIST_KEY } from "./checklist.js";
 import { TIMERS_KEY } from "./cook.js";
+import { CONSENT_KEY } from "./geo-consent.js";
 import { createFavourites, favKey } from "./favourites.js";
 import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
@@ -140,6 +144,33 @@ const EXCLUDED = {
   "faves.sync.base.v1": {
     spare: true,
     why: "Sync’s own last-agreed snapshot. Internal to syncing on this device.",
+  },
+  // The location ask's "don't ask me again" tickbox (ADR 0083, geo-consent.js).
+  // Two places already said in writing that this key is outside the export —
+  // ARCHITECTURE's location-ask paragraph and geo-consent.js's own header — and
+  // neither was the code: the key was never in this table, so the catch-all
+  // sweep carried it and a merge import wrote it onto the receiving device.
+  // Found by the Theme 38 cold review (roadmap 490/020), executed rather than
+  // inferred. It is the same class ADR 0074 was written for and the same table
+  // it recurred in — a promise made in prose is not a promise until the
+  // whitelist that has to keep it names the key.
+  // WHY it must not travel, either way round: the flag shadows a browser
+  // permission that is per-origin-per-device, so restoring "don't ask" onto a
+  // fresh phone silences an ask that phone never declined, and restoring its
+  // absence resurrects a nag someone had deliberately turned off. Spared by a
+  // replace for that second reason — "make this device look like the file"
+  // cannot mean re-arming a prompt the person holding the phone switched off,
+  // and unlike the cook-mode ticks it spares nothing that expires.
+  // Imported rather than written as a literal (unlike the sync keys above,
+  // where the import would be circular): geo-consent.js imports nothing, so a
+  // rename cannot silently reopen this hole.
+  [CONSENT_KEY]: {
+    spare: true,
+    why:
+      "Whether you told Faves to stop asking about your location. Deliberately " +
+      "not exported: it is a promise about this device and this browser, and " +
+      "carrying it to another one would either silence an ask that phone never " +
+      "turned down, or bring back a prompt you had switched off.",
   },
 };
 

@@ -18,6 +18,13 @@ content freshness separately from this file.
   the number is the number: when it says one minute, the place shuts in one
   minute. Which places are open, and until when, is unchanged — "we shut at 3am"
   still means the clock on the wall.
+- **"Don't ask me about my location again" no longer travels in your backup.**
+  Ticking that box is a promise about the phone in your hand, and the app said
+  so in two places — but the backup file was carrying the flag anyway, and
+  restoring that file on another device silenced an ask it had never turned
+  down. It is now left out of the export, and a backup that already carries it
+  is ignored on the way back in. Restoring a backup also no longer wipes the
+  answer you gave on the device you are restoring onto.
 - **The add-on picker no longer says the same thing twice.** Ticking an extra
   that brings in an allergen you have asked to avoid *and* breaks the dish's
   dietary label used to print the fact twice — "Halloumi contains dairy — you

@@ -1,6 +1,9 @@
-- [ ] 🚩 **The service worker's install guard is decorative on Pages, and
+- [~] 🚩 **The service worker's install guard is decorative on Pages, and
       one precache entry never matches** `[S][pwa]` — found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`). Three
       findings, one surface:
+      🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — delivered by
+      a sub-agent in its own worktree (`faves-o1-sw-install-guard`, branch
+      `sw-install-guard`), landing by PR so CI runs before the merge.
       **(a)** The install step's `!res.ok → throw` cannot fire on Cloudflare
       Pages, because a missing path returns `index.html` with **200**, curl'd
       and confirmed. The guard that is supposed to stop a broken shell

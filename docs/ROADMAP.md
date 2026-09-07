@@ -82,7 +82,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [✅ RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
 - ✅ [⚠️ ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
 - ✅ 🛑 [Adding a fish option to a dish produces NO allergen warning — the](roadmap/110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
-- [ ] 🔎 [The allergen sweep has no rule for seven everyday food words, and](roadmap/110-theme-5-richer-dish-data/050-the-allergen-sweep-misses-seven-everyday-food-words.md)
+- [~] 🔎 [The allergen sweep has no rule for seven everyday food words, and](roadmap/110-theme-5-richer-dish-data/050-the-allergen-sweep-misses-seven-everyday-food-words.md)
 - ✅ 🔎 [An add-on option carries no allergen but fish — a hummus extra is](roadmap/110-theme-5-richer-dish-data/060-an-add-on-option-carries-no-allergen-but-fish.md)
 
 ## Theme 6 — North star: the health tie-in
@@ -137,6 +137,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [The picker says one clause twice when an allergen both warns AND](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/050-the-picker-says-one-clause-twice.md)
 - ✅ 🔎 [The chip row still says Veg on a dish the warning has just said is](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/060-the-chip-row-still-says-veg.md)
 - [ ] 🔎 [The picker still says one SUBSTANCE two ways when the option carries](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/070-the-picker-says-one-substance-two-ways.md)
+- [ ] 🔎 [A spicy- tag on an add-on option is legal and renders nothing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/080-a-spicy-tag-on-an-add-on-option-renders-nothing.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
 
@@ -168,7 +169,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/README.md)*
 
-- [ ] [🚩 The service worker's install guard is decorative on Pages, and](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/010-the-service-worker-s-install-guard-is-decorative-on-pages.md)
+- [~] [🚩 The service worker's install guard is decorative on Pages, and](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/010-the-service-worker-s-install-guard-is-decorative-on-pages.md)
 - ✅ 🔎 [The version constants and the record filenames run on different](roadmap/240-theme-16-staying-current-pwa-updates-a-manual/020-the-version-constants-and-the-record-filenames-use-different-clocks.md)
 
 ## Theme 17 — Cook mode: recipes you can actually cook from (owner-raised 2026-08-09)
@@ -200,7 +201,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/README.md)*
 
-- [ ] [Turn can_approve_pull_request_reviews back off — UNBLOCKED 2026-08-17,](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/010-turn-can-approve-pull-request-reviews-back-off.md)
+- ✅ [Turn can_approve_pull_request_reviews back off — UNBLOCKED 2026-08-17,](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/010-turn-can-approve-pull-request-reviews-back-off.md)
+- [ ] [🚩 The weekly FX PR opens correctly and cannot land on its own — the](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/020-the-weekly-fx-pr-opens-and-cannot-land-on-its-own.md)
 
 ## Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)
 
@@ -260,9 +262,11 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [~] 🛑 [untilPresent can manufacture a FALSE REGRESSION under load, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/200-untilpresent-can-manufacture-a-false-regression-under-load.md)
 - ✅ 🛑 [to_top_check described a sweep it never ran, and its key assertion](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/210-a-check-described-a-sweep-it-never-ran.md)
 - [ ] [🚩 Two orphaned stashes have sat on the shared stash stack for three](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/220-two-orphaned-stashes-sit-on-a-stack-every-worktree-shares.md)
-- [~] 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
+- ✅ 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
 - [ ] 🔎 [An orchestrator tore down a sub-agent's worktree while the agent was](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/240-a-pushed-branch-is-not-a-finished-agent.md)
 - [ ] 🛑 [Intake throws away the evidence's own provenance, and the first](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/250-intake-throws-away-the-evidences-own-provenance.md)
+- [ ] 🔎 [The Python gates print no tree line, so CLAUDE.md's "EVERY check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/260-the-python-gates-print-no-tree-line.md)
+- [ ] [🚩 The machine-side half of the 2026-08-17 force-push ruling does not](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
@@ -353,9 +357,9 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/README.md)*
 
 - ✅ 🎯 [38a — the cold review itself](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/010-the-cold-review-of-the-data-model.md)
-- [~] 🛑 [The location-consent flag travels in the backup file and the sync](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/020-the-location-consent-flag-travels-in-the-backup-and-the-sync-blob.md)
+- ✅ 🛑 [The location-consent flag travels in the backup file and the sync](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/020-the-location-consent-flag-travels-in-the-backup-and-the-sync-blob.md)
 - [ ] 🎯 [prices and priceChannels ship to every phone and nothing renders](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/030-prices-and-pricechannels-ship-to-every-phone-and-nothing-renders-them.md)
-- [ ] 🔎 [The record store keys history on names, not ids, and its documents](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/040-the-record-store-keys-history-on-names-and-describes-a-tree-that-does-not-exist.md)
+- [~] 🔎 [The record store keys history on names, not ids, and its documents](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/040-the-record-store-keys-history-on-names-and-describes-a-tree-that-does-not-exist.md)
 - [ ] 🎯 [One shape for "a dish with choices" — variants, sizes, proteins and](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/050-one-shape-for-a-dish-with-choices.md)
 - [ ] 🔎 [A branch has no id, and every per-branch plan needs to name one](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/060-a-branch-has-no-id.md)
 - [ ] 🎯 [Claim strength has no representation, and a venue has no prose slot](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/070-claim-strength-and-a-venue-level-note.md)
