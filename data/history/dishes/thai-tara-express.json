@@ -5,11 +5,14 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Prawn spring rolls",
-        "code": null
+        "code": null,
+        "dishId": "prawn-spring-rolls"
       },
       "item": {
         "name": "Prawn spring rolls",
+        "dishId": "prawn-spring-rolls",
         "desc": "Deep fried whole prawn wrapped with rice paper. Served with sweet & sour sauce.",
         "price": 6.5,
         "available": {
@@ -23,11 +26,14 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Spicy mince chicken",
-        "code": null
+        "code": null,
+        "dishId": "spicy-mince-chicken"
       },
       "item": {
         "name": "Spicy mince chicken",
+        "dishId": "spicy-mince-chicken",
         "desc": "Deep fried spicy minced chicken balls. Served with Thai sweet chilli sauce.",
         "price": 8,
         "available": {
@@ -39,11 +45,14 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Dim sums",
-        "code": null
+        "code": null,
+        "dishId": "dim-sums"
       },
       "item": {
         "name": "Dim sums",
+        "dishId": "dim-sums",
         "desc": "A mixture of prawn and pork wrapped with wonton wrapper. Served with sweet black soy sauce.",
         "price": 10,
         "available": {
@@ -59,11 +68,14 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Angel wing",
-        "code": null
+        "code": null,
+        "dishId": "angel-wing"
       },
       "item": {
         "name": "Angel wing",
+        "dishId": "angel-wing",
         "desc": "2 chicken wings stuffed with carrots, cabbage, onion and glass noodles. Served with sweet and sour sauce.",
         "price": 10,
         "available": {
@@ -75,11 +87,14 @@
     {
       "key": {
         "section": "Fried rice",
+        "sectionId": "fried-rice",
         "name": "Pineapple fried rice",
-        "code": null
+        "code": null,
+        "dishId": "pineapple-fried-rice"
       },
       "item": {
         "name": "Pineapple fried rice",
+        "dishId": "pineapple-fried-rice",
         "desc": "Fried rice with curry powder, egg and raisins. Topped with cashew nuts.",
         "price": 15,
         "available": {
@@ -94,11 +109,14 @@
     {
       "key": {
         "section": "Thai curry",
+        "sectionId": "thai-curry",
         "name": "Choo chee salmon",
-        "code": null
+        "code": null,
+        "dishId": "choo-chee-salmon"
       },
       "item": {
         "name": "Choo chee salmon",
+        "dishId": "choo-chee-salmon",
         "desc": "2 pieces of grilled salmon on stir fried mixed vegetables. Topped with Thai special choo chee curry sauce.",
         "price": 17.5,
         "available": {
@@ -110,11 +128,14 @@
     {
       "key": {
         "section": "Thai salad",
+        "sectionId": "thai-salad",
         "name": "Thai grilled salad",
-        "code": null
+        "code": null,
+        "dishId": "thai-grilled-salad"
       },
       "item": {
         "name": "Thai grilled salad",
+        "dishId": "thai-grilled-salad",
         "desc": "A tangy Thai style spicy salad with a selection of meat, lime juice, chilli flakes, shallots, coriander, ground rice and fresh herbs.",
         "price": 16,
         "available": {
@@ -126,11 +147,14 @@
     {
       "key": {
         "section": "On rice",
+        "sectionId": "on-rice",
         "name": "Grilled chicken on rice",
-        "code": null
+        "code": null,
+        "dishId": "grilled-chicken-on-rice"
       },
       "item": {
         "name": "Grilled chicken on rice",
+        "dishId": "grilled-chicken-on-rice",
         "desc": "Sliced boneless grilled chicken thigh served with steamed vegetables and satay sauce.",
         "price": 14.5,
         "available": {
@@ -145,11 +169,14 @@
     {
       "key": {
         "section": "Stir fry",
+        "sectionId": "stir-fry",
         "name": "Sweet Thai chilli stir fry",
-        "code": null
+        "code": null,
+        "dishId": "sweet-thai-chilli-stir-fry"
       },
       "item": {
         "name": "Sweet Thai chilli stir fry",
+        "dishId": "sweet-thai-chilli-stir-fry",
         "desc": "Sweet Thai chilli sauce stir fried with a selection of meat, mixed seasonal vegetables, pineapple, capsicum and onion.",
         "price": 14.5,
         "available": {

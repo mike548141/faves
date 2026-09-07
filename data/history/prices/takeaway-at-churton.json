@@ -5,8 +5,10 @@
     {
       "key": {
         "section": "Soup",
+        "sectionId": "soup",
         "name": "Wonton Soup",
-        "code": "1"
+        "code": "1",
+        "dishId": "wonton-soup"
       },
       "superseded": [
         {
@@ -19,8 +21,10 @@
     {
       "key": {
         "section": "Soup",
+        "sectionId": "soup",
         "name": "Wonton Noodle Soup",
-        "code": "2"
+        "code": "2",
+        "dishId": "wonton-noodle-soup"
       },
       "superseded": [
         {
@@ -33,8 +37,10 @@
     {
       "key": {
         "section": "Soup",
+        "sectionId": "soup",
         "name": "Chicken Sweet Corn Soup",
-        "code": "3"
+        "code": "3",
+        "dishId": "chicken-sweet-corn-soup"
       },
       "superseded": [
         {
@@ -47,8 +53,10 @@
     {
       "key": {
         "section": "Fried Rice",
+        "sectionId": "fried-rice",
         "name": "Chicken Fried Rice",
-        "code": "4"
+        "code": "4",
+        "dishId": "chicken-fried-rice"
       },
       "superseded": [
         {
@@ -61,8 +69,10 @@
     {
       "key": {
         "section": "Fried Rice",
+        "sectionId": "fried-rice",
         "name": "Pork Fried Rice",
-        "code": "5"
+        "code": "5",
+        "dishId": "pork-fried-rice"
       },
       "superseded": [
         {
@@ -75,8 +85,10 @@
     {
       "key": {
         "section": "Fried Rice",
+        "sectionId": "fried-rice",
         "name": "Steak Fried Rice",
-        "code": "6"
+        "code": "6",
+        "dishId": "steak-fried-rice"
       },
       "superseded": [
         {
@@ -89,8 +101,10 @@
     {
       "key": {
         "section": "Fried Rice",
+        "sectionId": "fried-rice",
         "name": "Combination Fried Rice",
-        "code": "7"
+        "code": "7",
+        "dishId": "combination-fried-rice"
       },
       "superseded": [
         {
@@ -103,8 +117,10 @@
     {
       "key": {
         "section": "Fried Rice",
+        "sectionId": "fried-rice",
         "name": "Vegetarian Fried Rice",
-        "code": "8"
+        "code": "8",
+        "dishId": "vegetarian-fried-rice"
       },
       "superseded": [
         {
@@ -117,8 +133,10 @@
     {
       "key": {
         "section": "Fried Rice",
+        "sectionId": "fried-rice",
         "name": "Bacon Fried Rice",
-        "code": "9"
+        "code": "9",
+        "dishId": "bacon-fried-rice"
       },
       "superseded": [
         {
@@ -131,8 +149,10 @@
     {
       "key": {
         "section": "Fried Rice",
+        "sectionId": "fried-rice",
         "name": "Shrimp Fried Rice",
-        "code": "10"
+        "code": "10",
+        "dishId": "shrimp-fried-rice"
       },
       "superseded": [
         {
@@ -145,8 +165,10 @@
     {
       "key": {
         "section": "Fried Rice",
+        "sectionId": "fried-rice",
         "name": "Prawn Fried Rice",
-        "code": "11"
+        "code": "11",
+        "dishId": "prawn-fried-rice"
       },
       "superseded": [
         {
@@ -159,8 +181,10 @@
     {
       "key": {
         "section": "Curry on Rice",
+        "sectionId": "curry-on-rice",
         "name": "Chicken Curry on Rice",
-        "code": "12"
+        "code": "12",
+        "dishId": "chicken-curry-on-rice"
       },
       "superseded": [
         {
@@ -173,8 +197,10 @@
     {
       "key": {
         "section": "Curry on Rice",
+        "sectionId": "curry-on-rice",
         "name": "Pork Curry on Rice",
-        "code": "13"
+        "code": "13",
+        "dishId": "pork-curry-on-rice"
       },
       "superseded": [
         {
@@ -187,8 +213,10 @@
     {
       "key": {
         "section": "Curry on Rice",
+        "sectionId": "curry-on-rice",
         "name": "Steak Curry on Rice",
-        "code": "14"
+        "code": "14",
+        "dishId": "steak-curry-on-rice"
       },
       "superseded": [
         {
@@ -201,8 +229,10 @@
     {
       "key": {
         "section": "Curry on Rice",
+        "sectionId": "curry-on-rice",
         "name": "Combination Curry on Rice",
-        "code": "15"
+        "code": "15",
+        "dishId": "combination-curry-on-rice"
       },
       "superseded": [
         {
@@ -215,8 +245,10 @@
     {
       "key": {
         "section": "Curry on Rice",
+        "sectionId": "curry-on-rice",
         "name": "Vegetarian Curry on Rice",
-        "code": "16"
+        "code": "16",
+        "dishId": "vegetarian-curry-on-rice"
       },
       "superseded": [
         {
@@ -229,8 +261,10 @@
     {
       "key": {
         "section": "Curry on Rice",
+        "sectionId": "curry-on-rice",
         "name": "Shrimp Curry on Rice",
-        "code": "17"
+        "code": "17",
+        "dishId": "shrimp-curry-on-rice"
       },
       "superseded": [
         {
@@ -243,8 +277,10 @@
     {
       "key": {
         "section": "Curry on Rice",
+        "sectionId": "curry-on-rice",
         "name": "Prawn Curry on Rice",
-        "code": "18"
+        "code": "18",
+        "dishId": "prawn-curry-on-rice"
       },
       "superseded": [
         {
@@ -257,8 +293,10 @@
     {
       "key": {
         "section": "Steamed Rice",
+        "sectionId": "steamed-rice",
         "name": "Steamed Rice - Small",
-        "code": "19"
+        "code": "19",
+        "dishId": "steamed-rice-small"
       },
       "superseded": [
         {
@@ -271,8 +309,10 @@
     {
       "key": {
         "section": "Steamed Rice",
+        "sectionId": "steamed-rice",
         "name": "Steamed Rice - Medium",
-        "code": "20"
+        "code": "20",
+        "dishId": "steamed-rice-medium"
       },
       "superseded": [
         {
@@ -285,8 +325,10 @@
     {
       "key": {
         "section": "Steamed Rice",
+        "sectionId": "steamed-rice",
         "name": "Steamed Rice - Large",
-        "code": "21"
+        "code": "21",
+        "dishId": "steamed-rice-large"
       },
       "superseded": [
         {
@@ -299,8 +341,10 @@
     {
       "key": {
         "section": "Egg Fu Young",
+        "sectionId": "egg-fu-young",
         "name": "Chicken Egg Fu Young",
-        "code": "22"
+        "code": "22",
+        "dishId": "chicken-egg-fu-young"
       },
       "superseded": [
         {
@@ -313,8 +357,10 @@
     {
       "key": {
         "section": "Egg Fu Young",
+        "sectionId": "egg-fu-young",
         "name": "Pork Egg Fu Young",
-        "code": "23"
+        "code": "23",
+        "dishId": "pork-egg-fu-young"
       },
       "superseded": [
         {
@@ -327,8 +373,10 @@
     {
       "key": {
         "section": "Egg Fu Young",
+        "sectionId": "egg-fu-young",
         "name": "Steak Egg Fu Young",
-        "code": "24"
+        "code": "24",
+        "dishId": "steak-egg-fu-young"
       },
       "superseded": [
         {
@@ -341,8 +389,10 @@
     {
       "key": {
         "section": "Egg Fu Young",
+        "sectionId": "egg-fu-young",
         "name": "Combination Egg Fu Young",
-        "code": "25"
+        "code": "25",
+        "dishId": "combination-egg-fu-young"
       },
       "superseded": [
         {
@@ -355,8 +405,10 @@
     {
       "key": {
         "section": "Egg Fu Young",
+        "sectionId": "egg-fu-young",
         "name": "Vegetarian Egg Fu Young",
-        "code": "26"
+        "code": "26",
+        "dishId": "vegetarian-egg-fu-young"
       },
       "superseded": [
         {
@@ -369,8 +421,10 @@
     {
       "key": {
         "section": "Egg Fu Young",
+        "sectionId": "egg-fu-young",
         "name": "Bacon Egg Fu Young",
-        "code": "27"
+        "code": "27",
+        "dishId": "bacon-egg-fu-young"
       },
       "superseded": [
         {
@@ -383,8 +437,10 @@
     {
       "key": {
         "section": "Egg Fu Young",
+        "sectionId": "egg-fu-young",
         "name": "Shrimp Egg Fu Young",
-        "code": "28"
+        "code": "28",
+        "dishId": "shrimp-egg-fu-young"
       },
       "superseded": [
         {
@@ -397,8 +453,10 @@
     {
       "key": {
         "section": "Egg Fu Young",
+        "sectionId": "egg-fu-young",
         "name": "Prawn Egg Fu Young",
-        "code": "29"
+        "code": "29",
+        "dishId": "prawn-egg-fu-young"
       },
       "superseded": [
         {
@@ -411,8 +469,10 @@
     {
       "key": {
         "section": "Chow Mein",
+        "sectionId": "chow-mein",
         "name": "Chicken Chow Mein",
-        "code": "30"
+        "code": "30",
+        "dishId": "chicken-chow-mein"
       },
       "superseded": [
         {
@@ -425,8 +485,10 @@
     {
       "key": {
         "section": "Chow Mein",
+        "sectionId": "chow-mein",
         "name": "Pork Chow Mein",
-        "code": "31"
+        "code": "31",
+        "dishId": "pork-chow-mein"
       },
       "superseded": [
         {
@@ -439,8 +501,10 @@
     {
       "key": {
         "section": "Chow Mein",
+        "sectionId": "chow-mein",
         "name": "Steak Chow Mein",
-        "code": "32"
+        "code": "32",
+        "dishId": "steak-chow-mein"
       },
       "superseded": [
         {
@@ -453,8 +517,10 @@
     {
       "key": {
         "section": "Chow Mein",
+        "sectionId": "chow-mein",
         "name": "Combination Chow Mein",
-        "code": "33"
+        "code": "33",
+        "dishId": "combination-chow-mein"
       },
       "superseded": [
         {
@@ -467,8 +533,10 @@
     {
       "key": {
         "section": "Chow Mein",
+        "sectionId": "chow-mein",
         "name": "Vegetarian Chow Mein",
-        "code": "34"
+        "code": "34",
+        "dishId": "vegetarian-chow-mein"
       },
       "superseded": [
         {
@@ -481,8 +549,10 @@
     {
       "key": {
         "section": "Chow Mein",
+        "sectionId": "chow-mein",
         "name": "Bacon Chow Mein",
-        "code": "35"
+        "code": "35",
+        "dishId": "bacon-chow-mein"
       },
       "superseded": [
         {
@@ -495,8 +565,10 @@
     {
       "key": {
         "section": "Chow Mein",
+        "sectionId": "chow-mein",
         "name": "Shrimp Chow Mein",
-        "code": "36"
+        "code": "36",
+        "dishId": "shrimp-chow-mein"
       },
       "superseded": [
         {
@@ -509,8 +581,10 @@
     {
       "key": {
         "section": "Chow Mein",
+        "sectionId": "chow-mein",
         "name": "Prawn Chow Mein",
-        "code": "37"
+        "code": "37",
+        "dishId": "prawn-chow-mein"
       },
       "superseded": [
         {
@@ -523,8 +597,10 @@
     {
       "key": {
         "section": "Chop Suey",
+        "sectionId": "chop-suey",
         "name": "Chicken Chop Suey",
-        "code": "38"
+        "code": "38",
+        "dishId": "chicken-chop-suey"
       },
       "superseded": [
         {
@@ -537,8 +613,10 @@
     {
       "key": {
         "section": "Chop Suey",
+        "sectionId": "chop-suey",
         "name": "Pork Chop Suey",
-        "code": "39"
+        "code": "39",
+        "dishId": "pork-chop-suey"
       },
       "superseded": [
         {
@@ -551,8 +629,10 @@
     {
       "key": {
         "section": "Chop Suey",
+        "sectionId": "chop-suey",
         "name": "Steak Chop Suey",
-        "code": "40"
+        "code": "40",
+        "dishId": "steak-chop-suey"
       },
       "superseded": [
         {
@@ -565,8 +645,10 @@
     {
       "key": {
         "section": "Chop Suey",
+        "sectionId": "chop-suey",
         "name": "Combination Chop Suey",
-        "code": "41"
+        "code": "41",
+        "dishId": "combination-chop-suey"
       },
       "superseded": [
         {
@@ -579,8 +661,10 @@
     {
       "key": {
         "section": "Chop Suey",
+        "sectionId": "chop-suey",
         "name": "Vegetarian Chop Suey",
-        "code": "42"
+        "code": "42",
+        "dishId": "vegetarian-chop-suey"
       },
       "superseded": [
         {
@@ -593,8 +677,10 @@
     {
       "key": {
         "section": "Chop Suey",
+        "sectionId": "chop-suey",
         "name": "Bacon Chop Suey",
-        "code": "43"
+        "code": "43",
+        "dishId": "bacon-chop-suey"
       },
       "superseded": [
         {
@@ -607,8 +693,10 @@
     {
       "key": {
         "section": "Chop Suey",
+        "sectionId": "chop-suey",
         "name": "Shrimp Chop Suey",
-        "code": "44"
+        "code": "44",
+        "dishId": "shrimp-chop-suey"
       },
       "superseded": [
         {
@@ -621,8 +709,10 @@
     {
       "key": {
         "section": "Chop Suey",
+        "sectionId": "chop-suey",
         "name": "Prawn Chop Suey",
-        "code": "45"
+        "code": "45",
+        "dishId": "prawn-chop-suey"
       },
       "superseded": [
         {
@@ -635,8 +725,10 @@
     {
       "key": {
         "section": "Sweet and Sour Sauce",
+        "sectionId": "sweet-and-sour-sauce",
         "name": "Sweet and Sour Pork",
-        "code": "46"
+        "code": "46",
+        "dishId": "sweet-and-sour-pork"
       },
       "superseded": [
         {
@@ -649,8 +741,10 @@
     {
       "key": {
         "section": "Sweet and Sour Sauce",
+        "sectionId": "sweet-and-sour-sauce",
         "name": "Sweet and Sour Chicken",
-        "code": "47"
+        "code": "47",
+        "dishId": "sweet-and-sour-chicken"
       },
       "superseded": [
         {
@@ -663,8 +757,10 @@
     {
       "key": {
         "section": "Sweet and Sour Sauce",
+        "sectionId": "sweet-and-sour-sauce",
         "name": "Sweet and Sour Fish",
-        "code": "48"
+        "code": "48",
+        "dishId": "sweet-and-sour-fish"
       },
       "superseded": [
         {
@@ -677,8 +773,10 @@
     {
       "key": {
         "section": "Sweet and Sour Sauce",
+        "sectionId": "sweet-and-sour-sauce",
         "name": "Sweet and Sour Wontons (12)",
-        "code": "49"
+        "code": "49",
+        "dishId": "sweet-and-sour-wontons-12"
       },
       "superseded": [
         {
@@ -691,8 +789,10 @@
     {
       "key": {
         "section": "Sweet and Sour Sauce",
+        "sectionId": "sweet-and-sour-sauce",
         "name": "Lemon Chicken",
-        "code": "50"
+        "code": "50",
+        "dishId": "lemon-chicken"
       },
       "superseded": [
         {
@@ -705,8 +805,10 @@
     {
       "key": {
         "section": "Sweet and Sour Sauce",
+        "sectionId": "sweet-and-sour-sauce",
         "name": "Honey Chicken",
-        "code": "51"
+        "code": "51",
+        "dishId": "honey-chicken"
       },
       "superseded": [
         {
@@ -719,8 +821,10 @@
     {
       "key": {
         "section": "Black Bean Dishes",
+        "sectionId": "black-bean-dishes",
         "name": "Chicken Black Bean on Rice",
-        "code": "52"
+        "code": "52",
+        "dishId": "chicken-black-bean-on-rice"
       },
       "superseded": [
         {
@@ -733,8 +837,10 @@
     {
       "key": {
         "section": "Black Bean Dishes",
+        "sectionId": "black-bean-dishes",
         "name": "Pork Black Bean on Rice",
-        "code": "53"
+        "code": "53",
+        "dishId": "pork-black-bean-on-rice"
       },
       "superseded": [
         {
@@ -747,8 +853,10 @@
     {
       "key": {
         "section": "Black Bean Dishes",
+        "sectionId": "black-bean-dishes",
         "name": "Steak Black Bean on Rice",
-        "code": "54"
+        "code": "54",
+        "dishId": "steak-black-bean-on-rice"
       },
       "superseded": [
         {
@@ -761,8 +869,10 @@
     {
       "key": {
         "section": "Black Bean Dishes",
+        "sectionId": "black-bean-dishes",
         "name": "Combination Black Bean on Rice",
-        "code": "55"
+        "code": "55",
+        "dishId": "combination-black-bean-on-rice"
       },
       "superseded": [
         {
@@ -775,8 +885,10 @@
     {
       "key": {
         "section": "Black Bean Dishes",
+        "sectionId": "black-bean-dishes",
         "name": "Shrimp Black Bean on Rice",
-        "code": "56"
+        "code": "56",
+        "dishId": "shrimp-black-bean-on-rice"
       },
       "superseded": [
         {
@@ -789,8 +901,10 @@
     {
       "key": {
         "section": "Black Bean Dishes",
+        "sectionId": "black-bean-dishes",
         "name": "Prawn Black Bean on Rice",
-        "code": "57"
+        "code": "57",
+        "dishId": "prawn-black-bean-on-rice"
       },
       "superseded": [
         {
@@ -803,8 +917,10 @@
     {
       "key": {
         "section": "Satay Dishes",
+        "sectionId": "satay-dishes",
         "name": "Chicken Satay on Rice",
-        "code": "58"
+        "code": "58",
+        "dishId": "chicken-satay-on-rice"
       },
       "superseded": [
         {
@@ -817,8 +933,10 @@
     {
       "key": {
         "section": "Satay Dishes",
+        "sectionId": "satay-dishes",
         "name": "Pork Satay on Rice",
-        "code": "59"
+        "code": "59",
+        "dishId": "pork-satay-on-rice"
       },
       "superseded": [
         {
@@ -831,8 +949,10 @@
     {
       "key": {
         "section": "Satay Dishes",
+        "sectionId": "satay-dishes",
         "name": "Steak Satay on Rice",
-        "code": "60"
+        "code": "60",
+        "dishId": "steak-satay-on-rice"
       },
       "superseded": [
         {
@@ -845,8 +965,10 @@
     {
       "key": {
         "section": "Satay Dishes",
+        "sectionId": "satay-dishes",
         "name": "Combination Satay on Rice",
-        "code": "61"
+        "code": "61",
+        "dishId": "combination-satay-on-rice"
       },
       "superseded": [
         {
@@ -859,8 +981,10 @@
     {
       "key": {
         "section": "Satay Dishes",
+        "sectionId": "satay-dishes",
         "name": "Shrimp Satay on Rice",
-        "code": "62"
+        "code": "62",
+        "dishId": "shrimp-satay-on-rice"
       },
       "superseded": [
         {
@@ -873,8 +997,10 @@
     {
       "key": {
         "section": "Satay Dishes",
+        "sectionId": "satay-dishes",
         "name": "Prawn Satay on Rice",
-        "code": "63"
+        "code": "63",
+        "dishId": "prawn-satay-on-rice"
       },
       "superseded": [
         {
@@ -887,8 +1013,10 @@
     {
       "key": {
         "section": "Pineapple & Cashew Dishes",
+        "sectionId": "pineapple-cashew-dishes",
         "name": "Chicken with Pineapple and Cashew Nuts",
-        "code": "64"
+        "code": "64",
+        "dishId": "chicken-with-pineapple-and-cashew-nuts"
       },
       "superseded": [
         {
@@ -901,8 +1029,10 @@
     {
       "key": {
         "section": "Pineapple & Cashew Dishes",
+        "sectionId": "pineapple-cashew-dishes",
         "name": "Pork with Pineapple and Cashew Nuts",
-        "code": "65"
+        "code": "65",
+        "dishId": "pork-with-pineapple-and-cashew-nuts"
       },
       "superseded": [
         {
@@ -915,8 +1045,10 @@
     {
       "key": {
         "section": "Pineapple & Cashew Dishes",
+        "sectionId": "pineapple-cashew-dishes",
         "name": "Steak with Pineapple and Cashew Nuts",
-        "code": "66"
+        "code": "66",
+        "dishId": "steak-with-pineapple-and-cashew-nuts"
       },
       "superseded": [
         {
@@ -929,8 +1061,10 @@
     {
       "key": {
         "section": "Pineapple & Cashew Dishes",
+        "sectionId": "pineapple-cashew-dishes",
         "name": "Combination with Pineapple and Cashew Nuts",
-        "code": "67"
+        "code": "67",
+        "dishId": "combination-with-pineapple-and-cashew-nuts"
       },
       "superseded": [
         {
@@ -943,8 +1077,10 @@
     {
       "key": {
         "section": "Pineapple & Cashew Dishes",
+        "sectionId": "pineapple-cashew-dishes",
         "name": "Shrimp with Pineapple and Cashew Nuts",
-        "code": "68"
+        "code": "68",
+        "dishId": "shrimp-with-pineapple-and-cashew-nuts"
       },
       "superseded": [
         {
@@ -957,8 +1093,10 @@
     {
       "key": {
         "section": "Pineapple & Cashew Dishes",
+        "sectionId": "pineapple-cashew-dishes",
         "name": "Prawn with Pineapple and Cashew Nuts",
-        "code": "69"
+        "code": "69",
+        "dishId": "prawn-with-pineapple-and-cashew-nuts"
       },
       "superseded": [
         {
@@ -971,8 +1109,10 @@
     {
       "key": {
         "section": "Hot Dishes",
+        "sectionId": "hot-dishes",
         "name": "Nasi Goreng (Rice)",
-        "code": "70"
+        "code": "70",
+        "dishId": "nasi-goreng-rice"
       },
       "superseded": [
         {
@@ -985,8 +1125,10 @@
     {
       "key": {
         "section": "Hot Dishes",
+        "sectionId": "hot-dishes",
         "name": "Bami Goreng (Noodles)",
-        "code": "71"
+        "code": "71",
+        "dishId": "bami-goreng-noodles"
       },
       "superseded": [
         {
@@ -999,8 +1141,10 @@
     {
       "key": {
         "section": "Hot Dishes",
+        "sectionId": "hot-dishes",
         "name": "Hot Spicy Chicken with Cashew and Vegetables",
-        "code": "72"
+        "code": "72",
+        "dishId": "hot-spicy-chicken-with-cashew-and-vegetables"
       },
       "superseded": [
         {
@@ -1013,8 +1157,10 @@
     {
       "key": {
         "section": "Hot Dishes",
+        "sectionId": "hot-dishes",
         "name": "Hot Spicy Beef with Cashew and Vegetables",
-        "code": "73"
+        "code": "73",
+        "dishId": "hot-spicy-beef-with-cashew-and-vegetables"
       },
       "superseded": [
         {
@@ -1027,8 +1173,10 @@
     {
       "key": {
         "section": "Special Dishes",
+        "sectionId": "special-dishes",
         "name": "Combination Fried Noodles",
-        "code": "74"
+        "code": "74",
+        "dishId": "combination-fried-noodles"
       },
       "superseded": [
         {
@@ -1041,8 +1189,10 @@
     {
       "key": {
         "section": "Special Dishes",
+        "sectionId": "special-dishes",
         "name": "Combination Chilly Noodles",
-        "code": "75"
+        "code": "75",
+        "dishId": "combination-chilly-noodles"
       },
       "superseded": [
         {
@@ -1055,8 +1205,10 @@
     {
       "key": {
         "section": "Special Dishes",
+        "sectionId": "special-dishes",
         "name": "Combination Egg Noodles",
-        "code": "76"
+        "code": "76",
+        "dishId": "combination-egg-noodles"
       },
       "superseded": [
         {
@@ -1069,8 +1221,10 @@
     {
       "key": {
         "section": "Special Dishes",
+        "sectionId": "special-dishes",
         "name": "Combination Seafood",
-        "code": "77"
+        "code": "77",
+        "dishId": "combination-seafood"
       },
       "superseded": [
         {
@@ -1083,8 +1237,10 @@
     {
       "key": {
         "section": "Special Dishes",
+        "sectionId": "special-dishes",
         "name": "Steak Tomato Onion on Rice",
-        "code": "78"
+        "code": "78",
+        "dishId": "steak-tomato-onion-on-rice"
       },
       "superseded": [
         {
@@ -1097,8 +1253,10 @@
     {
       "key": {
         "section": "Extras",
+        "sectionId": "extras",
         "name": "Extra Meat",
-        "code": "79"
+        "code": "79",
+        "dishId": "extra-meat"
       },
       "superseded": [
         {
@@ -1111,8 +1269,10 @@
     {
       "key": {
         "section": "Extras",
+        "sectionId": "extras",
         "name": "Extra Seafood",
-        "code": "80"
+        "code": "80",
+        "dishId": "extra-seafood"
       },
       "superseded": [
         {
@@ -1125,8 +1285,10 @@
     {
       "key": {
         "section": "Extras",
+        "sectionId": "extras",
         "name": "Extra Cashew Nuts",
-        "code": "81"
+        "code": "81",
+        "dishId": "extra-cashew-nuts"
       },
       "superseded": [
         {
@@ -1139,8 +1301,10 @@
     {
       "key": {
         "section": "Extras",
+        "sectionId": "extras",
         "name": "Extra Tomato, Pineapple or Mushrooms",
-        "code": "82"
+        "code": "82",
+        "dishId": "extra-tomato-pineapple-or-mushrooms"
       },
       "superseded": [
         {
@@ -1153,8 +1317,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Fish - Battered",
-        "code": null
+        "code": null,
+        "dishId": "fish-battered"
       },
       "superseded": [
         {
@@ -1167,8 +1333,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Fish - Crumbed",
-        "code": null
+        "code": null,
+        "dishId": "fish-crumbed"
       },
       "superseded": [
         {
@@ -1181,8 +1349,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Fish Fillet - Battered",
-        "code": null
+        "code": null,
+        "dishId": "fish-fillet-battered"
       },
       "superseded": [
         {
@@ -1195,8 +1365,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Fish Fillet - Crumbed",
-        "code": null
+        "code": null,
+        "dishId": "fish-fillet-crumbed"
       },
       "superseded": [
         {
@@ -1209,8 +1381,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Fish Fillet - Grilled",
-        "code": null
+        "code": null,
+        "dishId": "fish-fillet-grilled"
       },
       "superseded": [
         {
@@ -1223,8 +1397,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Fish - Grilled",
-        "code": null
+        "code": null,
+        "dishId": "fish-grilled"
       },
       "superseded": [
         {
@@ -1237,8 +1413,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Chips - One Scoop",
-        "code": null
+        "code": null,
+        "dishId": "chips-one-scoop"
       },
       "superseded": [
         {
@@ -1251,8 +1429,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Small Chips",
-        "code": null
+        "code": null,
+        "dishId": "small-chips"
       },
       "superseded": [
         {
@@ -1265,8 +1445,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Wedges",
-        "code": null
+        "code": null,
+        "dishId": "wedges"
       },
       "superseded": [
         {
@@ -1279,8 +1461,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Criss-Cut Fries",
-        "code": null
+        "code": null,
+        "dishId": "criss-cut-fries"
       },
       "superseded": [
         {
@@ -1293,8 +1477,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Homemade Chunkies",
-        "code": null
+        "code": null,
+        "dishId": "homemade-chunkies"
       },
       "superseded": [
         {
@@ -1307,8 +1493,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Potato Fritters",
-        "code": null
+        "code": null,
+        "dishId": "potato-fritters"
       },
       "superseded": [
         {
@@ -1321,8 +1509,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Battered Sav",
-        "code": null
+        "code": null,
+        "dishId": "battered-sav"
       },
       "superseded": [
         {
@@ -1335,8 +1525,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Hot Dog on Stick",
-        "code": null
+        "code": null,
+        "dishId": "hot-dog-on-stick"
       },
       "superseded": [
         {
@@ -1349,8 +1541,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Sausages",
-        "code": null
+        "code": null,
+        "dishId": "sausages"
       },
       "superseded": [
         {
@@ -1363,8 +1557,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Battered Sausage",
-        "code": null
+        "code": null,
+        "dishId": "battered-sausage"
       },
       "superseded": [
         {
@@ -1377,8 +1573,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Prawn Cutlet",
-        "code": null
+        "code": null,
+        "dishId": "prawn-cutlet"
       },
       "superseded": [
         {
@@ -1391,8 +1589,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Crab Stick",
-        "code": null
+        "code": null,
+        "dishId": "crab-stick"
       },
       "superseded": [
         {
@@ -1405,8 +1605,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Fish Cake",
-        "code": null
+        "code": null,
+        "dishId": "fish-cake"
       },
       "superseded": [
         {
@@ -1419,8 +1621,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Spring Roll",
-        "code": null
+        "code": null,
+        "dishId": "spring-roll"
       },
       "superseded": [
         {
@@ -1433,8 +1637,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Curry Roll",
-        "code": null
+        "code": null,
+        "dishId": "curry-roll"
       },
       "superseded": [
         {
@@ -1447,8 +1653,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Vege Roll",
-        "code": null
+        "code": null,
+        "dishId": "vege-roll"
       },
       "superseded": [
         {
@@ -1461,8 +1669,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Steak & Onion Roll",
-        "code": null
+        "code": null,
+        "dishId": "steak-onion-roll"
       },
       "superseded": [
         {
@@ -1475,8 +1685,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Lasagne Square",
-        "code": null
+        "code": null,
+        "dishId": "lasagne-square"
       },
       "superseded": [
         {
@@ -1489,8 +1701,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Meat Pattie",
-        "code": null
+        "code": null,
+        "dishId": "meat-pattie"
       },
       "superseded": [
         {
@@ -1503,8 +1717,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Paua Fritter 100%",
-        "code": null
+        "code": null,
+        "dishId": "paua-fritter-100"
       },
       "superseded": [
         {
@@ -1517,8 +1733,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Corn Fritter",
-        "code": null
+        "code": null,
+        "dishId": "corn-fritter"
       },
       "superseded": [
         {
@@ -1531,8 +1749,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Mussel Fritter",
-        "code": null
+        "code": null,
+        "dishId": "mussel-fritter"
       },
       "superseded": [
         {
@@ -1545,8 +1765,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Pineapple Fritter",
-        "code": null
+        "code": null,
+        "dishId": "pineapple-fritter"
       },
       "superseded": [
         {
@@ -1559,8 +1781,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Banana Fritter",
-        "code": null
+        "code": null,
+        "dishId": "banana-fritter"
       },
       "superseded": [
         {
@@ -1573,8 +1797,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Mars Bar",
-        "code": null
+        "code": null,
+        "dishId": "mars-bar"
       },
       "superseded": [
         {
@@ -1587,8 +1813,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Cinnamon Donut",
-        "code": null
+        "code": null,
+        "dishId": "cinnamon-donut"
       },
       "superseded": [
         {
@@ -1601,8 +1829,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Jam Rap",
-        "code": null
+        "code": null,
+        "dishId": "jam-rap"
       },
       "superseded": [
         {
@@ -1615,8 +1845,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Hash Brown",
-        "code": null
+        "code": null,
+        "dishId": "hash-brown"
       },
       "superseded": [
         {
@@ -1629,8 +1861,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Stuffed Mushroom",
-        "code": null
+        "code": null,
+        "dishId": "stuffed-mushroom"
       },
       "superseded": [
         {
@@ -1643,8 +1877,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Chicken Schnitzel",
-        "code": null
+        "code": null,
+        "dishId": "chicken-schnitzel"
       },
       "superseded": [
         {
@@ -1657,8 +1893,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Chicken Nugget (each)",
-        "code": null
+        "code": null,
+        "dishId": "chicken-nugget-each"
       },
       "superseded": [
         {
@@ -1671,8 +1909,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Calamari Ring (each)",
-        "code": null
+        "code": null,
+        "dishId": "calamari-ring-each"
       },
       "superseded": [
         {
@@ -1685,8 +1925,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Battered Mussel (each)",
-        "code": null
+        "code": null,
+        "dishId": "battered-mussel-each"
       },
       "superseded": [
         {
@@ -1699,8 +1941,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Scallop (each)",
-        "code": null
+        "code": null,
+        "dishId": "scallop-each"
       },
       "superseded": [
         {
@@ -1713,8 +1957,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Onion Rings (6)",
-        "code": null
+        "code": null,
+        "dishId": "onion-rings-6"
       },
       "superseded": [
         {
@@ -1727,8 +1973,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Wontons (6)",
-        "code": null
+        "code": null,
+        "dishId": "wontons-6"
       },
       "superseded": [
         {
@@ -1741,8 +1989,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Dim Sim (each)",
-        "code": null
+        "code": null,
+        "dishId": "dim-sim-each"
       },
       "superseded": [
         {
@@ -1755,8 +2005,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Pork Bun",
-        "code": null
+        "code": null,
+        "dishId": "pork-bun"
       },
       "superseded": [
         {
@@ -1769,8 +2021,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Plain Roti",
-        "code": null
+        "code": null,
+        "dishId": "plain-roti"
       },
       "superseded": [
         {
@@ -1783,8 +2037,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Vegetarian Pattie",
-        "code": null
+        "code": null,
+        "dishId": "vegetarian-pattie"
       },
       "superseded": [
         {
@@ -1797,8 +2053,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Chicken Dumplings (6)",
-        "code": null
+        "code": null,
+        "dishId": "chicken-dumplings-6"
       },
       "superseded": [
         {
@@ -1811,8 +2069,10 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Vegetarian Dumplings (6)",
-        "code": null
+        "code": null,
+        "dishId": "vegetarian-dumplings-6"
       },
       "superseded": [
         {
@@ -1825,8 +2085,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Kids Ham Burger (no salad)",
-        "code": null
+        "code": null,
+        "dishId": "kids-ham-burger-no-salad"
       },
       "superseded": [
         {
@@ -1839,8 +2101,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Kids Beef Burger (no salad)",
-        "code": null
+        "code": null,
+        "dishId": "kids-beef-burger-no-salad"
       },
       "superseded": [
         {
@@ -1853,8 +2117,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Kids Fish Burger (no salad)",
-        "code": null
+        "code": null,
+        "dishId": "kids-fish-burger-no-salad"
       },
       "superseded": [
         {
@@ -1867,8 +2133,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Kids Chicken Burger (no salad)",
-        "code": null
+        "code": null,
+        "dishId": "kids-chicken-burger-no-salad"
       },
       "superseded": [
         {
@@ -1881,8 +2149,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Ham Burger",
-        "code": null
+        "code": null,
+        "dishId": "ham-burger"
       },
       "superseded": [
         {
@@ -1895,8 +2165,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Cheese Burger",
-        "code": null
+        "code": null,
+        "dishId": "cheese-burger"
       },
       "superseded": [
         {
@@ -1909,8 +2181,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Egg Burger",
-        "code": null
+        "code": null,
+        "dishId": "egg-burger"
       },
       "superseded": [
         {
@@ -1923,8 +2197,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Mushroom Burger",
-        "code": null
+        "code": null,
+        "dishId": "mushroom-burger"
       },
       "superseded": [
         {
@@ -1937,8 +2213,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Hawaiian Burger",
-        "code": null
+        "code": null,
+        "dishId": "hawaiian-burger"
       },
       "superseded": [
         {
@@ -1951,8 +2229,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Chicken Burger",
-        "code": null
+        "code": null,
+        "dishId": "chicken-burger"
       },
       "superseded": [
         {
@@ -1965,8 +2245,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Fish Burger",
-        "code": null
+        "code": null,
+        "dishId": "fish-burger"
       },
       "superseded": [
         {
@@ -1979,8 +2261,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Crumb Fish Burger",
-        "code": null
+        "code": null,
+        "dishId": "crumb-fish-burger"
       },
       "superseded": [
         {
@@ -1993,8 +2277,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Bacon Egg Burger",
-        "code": null
+        "code": null,
+        "dishId": "bacon-egg-burger"
       },
       "superseded": [
         {
@@ -2007,8 +2293,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Vegetarian Burger",
-        "code": null
+        "code": null,
+        "dishId": "vegetarian-burger"
       },
       "superseded": [
         {
@@ -2021,8 +2309,10 @@
     {
       "key": {
         "section": "Burgers (Standard)",
+        "sectionId": "burgers-standard",
         "name": "Works Burger",
-        "code": null
+        "code": null,
+        "dishId": "works-burger"
       },
       "superseded": [
         {
@@ -2035,8 +2325,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Gourmet Beef Burger",
-        "code": null
+        "code": null,
+        "dishId": "gourmet-beef-burger"
       },
       "superseded": [
         {
@@ -2049,8 +2341,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Beef & Egg",
-        "code": null
+        "code": null,
+        "dishId": "beef-egg"
       },
       "superseded": [
         {
@@ -2063,8 +2357,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Beef & Cheese",
-        "code": null
+        "code": null,
+        "dishId": "beef-cheese"
       },
       "superseded": [
         {
@@ -2077,8 +2373,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Beef Cheese & Chilli",
-        "code": null
+        "code": null,
+        "dishId": "beef-cheese-chilli"
       },
       "superseded": [
         {
@@ -2091,8 +2389,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Beef, Bacon & Egg",
-        "code": null
+        "code": null,
+        "dishId": "beef-bacon-egg"
       },
       "superseded": [
         {
@@ -2105,8 +2405,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Crumb Chicken Fillet",
-        "code": null
+        "code": null,
+        "dishId": "crumb-chicken-fillet"
       },
       "superseded": [
         {
@@ -2119,8 +2421,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Cheesy Chicken",
-        "code": null
+        "code": null,
+        "dishId": "cheesy-chicken"
       },
       "superseded": [
         {
@@ -2133,8 +2437,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Gourmet Vegetarian Burger",
-        "code": null
+        "code": null,
+        "dishId": "gourmet-vegetarian-burger"
       },
       "superseded": [
         {
@@ -2147,8 +2453,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Gourmet Fish Burger",
-        "code": null
+        "code": null,
+        "dishId": "gourmet-fish-burger"
       },
       "superseded": [
         {
@@ -2161,8 +2469,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Lamb Burger",
-        "code": null
+        "code": null,
+        "dishId": "lamb-burger"
       },
       "superseded": [
         {
@@ -2175,8 +2485,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Chicken Bacon & Avo",
-        "code": null
+        "code": null,
+        "dishId": "chicken-bacon-avo"
       },
       "superseded": [
         {
@@ -2189,8 +2501,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Beef Bacon & Avo",
-        "code": null
+        "code": null,
+        "dishId": "beef-bacon-avo"
       },
       "superseded": [
         {
@@ -2203,8 +2517,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Beef & Camembert",
-        "code": null
+        "code": null,
+        "dishId": "beef-camembert"
       },
       "superseded": [
         {
@@ -2217,8 +2533,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Beef & Blue Cheese",
-        "code": null
+        "code": null,
+        "dishId": "beef-blue-cheese"
       },
       "superseded": [
         {
@@ -2231,8 +2549,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Fillet of the Day",
-        "code": null
+        "code": null,
+        "dishId": "fillet-of-the-day"
       },
       "superseded": [
         {
@@ -2245,8 +2565,10 @@
     {
       "key": {
         "section": "Gourmet Burgers",
+        "sectionId": "gourmet-burgers",
         "name": "Chicken Apricot Cream Cheese & Chilli",
-        "code": null
+        "code": null,
+        "dishId": "chicken-apricot-cream-cheese-chilli"
       },
       "superseded": [
         {
@@ -2259,8 +2581,10 @@
     {
       "key": {
         "section": "Wraps",
+        "sectionId": "wraps",
         "name": "Grilled Chicken & Bacon Wrap",
-        "code": null
+        "code": null,
+        "dishId": "grilled-chicken-bacon-wrap"
       },
       "superseded": [
         {
@@ -2273,8 +2597,10 @@
     {
       "key": {
         "section": "Wraps",
+        "sectionId": "wraps",
         "name": "Chicken Schnitzel & Bacon Wrap",
-        "code": null
+        "code": null,
+        "dishId": "chicken-schnitzel-bacon-wrap"
       },
       "superseded": [
         {
@@ -2287,8 +2613,10 @@
     {
       "key": {
         "section": "Toasted Sandwiches",
+        "sectionId": "toasted-sandwiches",
         "name": "Single Filling",
-        "code": null
+        "code": null,
+        "dishId": "single-filling"
       },
       "superseded": [
         {
@@ -2301,8 +2629,10 @@
     {
       "key": {
         "section": "Toasted Sandwiches",
+        "sectionId": "toasted-sandwiches",
         "name": "Double Filling",
-        "code": null
+        "code": null,
+        "dishId": "double-filling"
       },
       "superseded": [
         {
@@ -2315,8 +2645,10 @@
     {
       "key": {
         "section": "Toasted Sandwiches",
+        "sectionId": "toasted-sandwiches",
         "name": "Bacon & Egg",
-        "code": null
+        "code": null,
+        "dishId": "bacon-egg"
       },
       "superseded": [
         {
@@ -2329,8 +2661,10 @@
     {
       "key": {
         "section": "Family Packs & Deals",
+        "sectionId": "family-packs-deals",
         "name": "Family Pack 1",
-        "code": null
+        "code": null,
+        "dishId": "family-pack-1"
       },
       "superseded": [
         {
@@ -2343,8 +2677,10 @@
     {
       "key": {
         "section": "Family Packs & Deals",
+        "sectionId": "family-packs-deals",
         "name": "Family Pack 2",
-        "code": null
+        "code": null,
+        "dishId": "family-pack-2"
       },
       "superseded": [
         {
@@ -2357,8 +2693,10 @@
     {
       "key": {
         "section": "Family Packs & Deals",
+        "sectionId": "family-packs-deals",
         "name": "Family Pack 3",
-        "code": null
+        "code": null,
+        "dishId": "family-pack-3"
       },
       "superseded": [
         {
@@ -2371,8 +2709,10 @@
     {
       "key": {
         "section": "Family Packs & Deals",
+        "sectionId": "family-packs-deals",
         "name": "Fish Dinner",
-        "code": null
+        "code": null,
+        "dishId": "fish-dinner"
       },
       "superseded": [
         {
@@ -2385,8 +2725,10 @@
     {
       "key": {
         "section": "Family Packs & Deals",
+        "sectionId": "family-packs-deals",
         "name": "Seafood Pack",
-        "code": null
+        "code": null,
+        "dishId": "seafood-pack"
       },
       "superseded": [
         {
@@ -2399,8 +2741,10 @@
     {
       "key": {
         "section": "Family Packs & Deals",
+        "sectionId": "family-packs-deals",
         "name": "Calamari Pack",
-        "code": null
+        "code": null,
+        "dishId": "calamari-pack"
       },
       "superseded": [
         {
@@ -2413,8 +2757,10 @@
     {
       "key": {
         "section": "Family Packs & Deals",
+        "sectionId": "family-packs-deals",
         "name": "Fish Burger Pack",
-        "code": null
+        "code": null,
+        "dishId": "fish-burger-pack"
       },
       "superseded": [
         {
@@ -2427,8 +2773,10 @@
     {
       "key": {
         "section": "Family Packs & Deals",
+        "sectionId": "family-packs-deals",
         "name": "Kids Packs",
-        "code": null
+        "code": null,
+        "dishId": "kids-packs"
       },
       "superseded": [
         {

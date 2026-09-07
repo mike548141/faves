@@ -5,8 +5,10 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Roti with satay sauce",
-        "code": "A1"
+        "code": "A1",
+        "dishId": "roti-with-satay-sauce"
       },
       "superseded": [
         {
@@ -19,8 +21,10 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Spring rolls",
-        "code": "A3"
+        "code": "A3",
+        "dishId": "spring-rolls"
       },
       "superseded": [
         {
@@ -33,8 +37,10 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Deep fried wontons",
-        "code": "A4"
+        "code": "A4",
+        "dishId": "deep-fried-wontons"
       },
       "superseded": [
         {
@@ -47,8 +53,10 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Curry puffs",
-        "code": "A5"
+        "code": "A5",
+        "dishId": "curry-puffs"
       },
       "superseded": [
         {
@@ -61,8 +69,10 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Money bags",
-        "code": "A7"
+        "code": "A7",
+        "dishId": "money-bags"
       },
       "superseded": [
         {
@@ -75,8 +85,10 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Satay chicken kebabs",
-        "code": "A9"
+        "code": "A9",
+        "dishId": "satay-chicken-kebabs"
       },
       "superseded": [
         {
@@ -89,8 +101,10 @@
     {
       "key": {
         "section": "Appetisers",
+        "sectionId": "appetisers",
         "name": "Fish cake",
-        "code": "A10"
+        "code": "A10",
+        "dishId": "fish-cake"
       },
       "superseded": [
         {
@@ -103,8 +117,10 @@
     {
       "key": {
         "section": "Fried rice",
+        "sectionId": "fried-rice",
         "name": "Fried rice",
-        "code": "R1"
+        "code": "R1",
+        "dishId": "fried-rice"
       },
       "superseded": [
         {
@@ -117,8 +133,10 @@
     {
       "key": {
         "section": "Fried rice",
+        "sectionId": "fried-rice",
         "name": "Green curry fried rice",
-        "code": "R2"
+        "code": "R2",
+        "dishId": "green-curry-fried-rice"
       },
       "superseded": [
         {
@@ -131,8 +149,10 @@
     {
       "key": {
         "section": "Fried rice",
+        "sectionId": "fried-rice",
         "name": "Nasi goreng",
-        "code": "R3"
+        "code": "R3",
+        "dishId": "nasi-goreng"
       },
       "superseded": [
         {
@@ -145,8 +165,10 @@
     {
       "key": {
         "section": "Fried rice",
+        "sectionId": "fried-rice",
         "name": "Tom yum fried rice",
-        "code": "R4"
+        "code": "R4",
+        "dishId": "tom-yum-fried-rice"
       },
       "superseded": [
         {
@@ -159,8 +181,10 @@
     {
       "key": {
         "section": "Fried rice",
+        "sectionId": "fried-rice",
         "name": "Spicy fried rice",
-        "code": "R5"
+        "code": "R5",
+        "dishId": "spicy-fried-rice"
       },
       "superseded": [
         {
@@ -173,8 +197,10 @@
     {
       "key": {
         "section": "Fried noodles",
+        "sectionId": "fried-noodles",
         "name": "Pad thai",
-        "code": "N1"
+        "code": "N1",
+        "dishId": "pad-thai"
       },
       "superseded": [
         {
@@ -187,8 +213,10 @@
     {
       "key": {
         "section": "Fried noodles",
+        "sectionId": "fried-noodles",
         "name": "Pad see ewe",
-        "code": "N2"
+        "code": "N2",
+        "dishId": "pad-see-ewe"
       },
       "superseded": [
         {
@@ -201,8 +229,10 @@
     {
       "key": {
         "section": "Fried noodles",
+        "sectionId": "fried-noodles",
         "name": "Pad kee mao",
-        "code": "N3"
+        "code": "N3",
+        "dishId": "pad-kee-mao"
       },
       "superseded": [
         {
@@ -215,8 +245,10 @@
     {
       "key": {
         "section": "Fried noodles",
+        "sectionId": "fried-noodles",
         "name": "Mee goreng",
-        "code": "N4"
+        "code": "N4",
+        "dishId": "mee-goreng"
       },
       "superseded": [
         {
@@ -229,8 +261,10 @@
     {
       "key": {
         "section": "Thai curry",
+        "sectionId": "thai-curry",
         "name": "Green curry",
-        "code": "C1"
+        "code": "C1",
+        "dishId": "green-curry"
       },
       "superseded": [
         {
@@ -243,8 +277,10 @@
     {
       "key": {
         "section": "Thai curry",
+        "sectionId": "thai-curry",
         "name": "Red curry",
-        "code": "C2"
+        "code": "C2",
+        "dishId": "red-curry"
       },
       "superseded": [
         {
@@ -257,8 +293,10 @@
     {
       "key": {
         "section": "Thai curry",
+        "sectionId": "thai-curry",
         "name": "Yellow curry",
-        "code": "C3"
+        "code": "C3",
+        "dishId": "yellow-curry"
       },
       "superseded": [
         {
@@ -271,8 +309,10 @@
     {
       "key": {
         "section": "Thai curry",
+        "sectionId": "thai-curry",
         "name": "Panang curry",
-        "code": "C4"
+        "code": "C4",
+        "dishId": "panang-curry"
       },
       "superseded": [
         {
@@ -285,8 +325,10 @@
     {
       "key": {
         "section": "Thai curry",
+        "sectionId": "thai-curry",
         "name": "Beef massamun curry",
-        "code": "C5"
+        "code": "C5",
+        "dishId": "beef-massamun-curry"
       },
       "superseded": [
         {
@@ -299,8 +341,10 @@
     {
       "key": {
         "section": "Thai curry",
+        "sectionId": "thai-curry",
         "name": "Roasted duck curry",
-        "code": "C6"
+        "code": "C6",
+        "dishId": "roasted-duck-curry"
       },
       "superseded": [
         {
@@ -313,8 +357,10 @@
     {
       "key": {
         "section": "On rice",
+        "sectionId": "on-rice",
         "name": "BBQ pork on rice",
-        "code": "OR1"
+        "code": "OR1",
+        "dishId": "bbq-pork-on-rice"
       },
       "superseded": [
         {
@@ -327,8 +373,10 @@
     {
       "key": {
         "section": "On rice",
+        "sectionId": "on-rice",
         "name": "Roasted duck on rice",
-        "code": "OR2"
+        "code": "OR2",
+        "dishId": "roasted-duck-on-rice"
       },
       "superseded": [
         {
@@ -341,8 +389,10 @@
     {
       "key": {
         "section": "On rice",
+        "sectionId": "on-rice",
         "name": "Crispy pork on rice",
-        "code": "OR3"
+        "code": "OR3",
+        "dishId": "crispy-pork-on-rice"
       },
       "superseded": [
         {
@@ -355,8 +405,10 @@
     {
       "key": {
         "section": "Noodle soup",
+        "sectionId": "noodle-soup",
         "name": "Beef noodle soup",
-        "code": "S1"
+        "code": "S1",
+        "dishId": "beef-noodle-soup"
       },
       "superseded": [
         {
@@ -369,8 +421,10 @@
     {
       "key": {
         "section": "Noodle soup",
+        "sectionId": "noodle-soup",
         "name": "Tom yum noodle soup",
-        "code": "S2"
+        "code": "S2",
+        "dishId": "tom-yum-noodle-soup"
       },
       "superseded": [
         {
@@ -383,8 +437,10 @@
     {
       "key": {
         "section": "Noodle soup",
+        "sectionId": "noodle-soup",
         "name": "Wonton soup with BBQ pork",
-        "code": "S3"
+        "code": "S3",
+        "dishId": "wonton-soup-with-bbq-pork"
       },
       "superseded": [
         {
@@ -397,8 +453,10 @@
     {
       "key": {
         "section": "Noodle soup",
+        "sectionId": "noodle-soup",
         "name": "Duck noodle",
-        "code": "S4"
+        "code": "S4",
+        "dishId": "duck-noodle"
       },
       "superseded": [
         {
@@ -411,8 +469,10 @@
     {
       "key": {
         "section": "Thai soup",
+        "sectionId": "thai-soup",
         "name": "Tom kha soup",
-        "code": "SP1"
+        "code": "SP1",
+        "dishId": "tom-kha-soup"
       },
       "superseded": [
         {
@@ -425,8 +485,10 @@
     {
       "key": {
         "section": "Thai soup",
+        "sectionId": "thai-soup",
         "name": "Tom yum soup",
-        "code": "SP2"
+        "code": "SP2",
+        "dishId": "tom-yum-soup"
       },
       "superseded": [
         {
@@ -439,8 +501,10 @@
     {
       "key": {
         "section": "Stir fry",
+        "sectionId": "stir-fry",
         "name": "Thai chilli",
-        "code": "F1"
+        "code": "F1",
+        "dishId": "thai-chilli"
       },
       "superseded": [
         {
@@ -453,8 +517,10 @@
     {
       "key": {
         "section": "Stir fry",
+        "sectionId": "stir-fry",
         "name": "Thai basil",
-        "code": "F2"
+        "code": "F2",
+        "dishId": "thai-basil"
       },
       "superseded": [
         {
@@ -467,8 +533,10 @@
     {
       "key": {
         "section": "Stir fry",
+        "sectionId": "stir-fry",
         "name": "The cashew nut",
-        "code": "F3"
+        "code": "F3",
+        "dishId": "the-cashew-nut"
       },
       "superseded": [
         {
@@ -481,8 +549,10 @@
     {
       "key": {
         "section": "Stir fry",
+        "sectionId": "stir-fry",
         "name": "Sweet and sour",
-        "code": "F4"
+        "code": "F4",
+        "dishId": "sweet-and-sour"
       },
       "superseded": [
         {
@@ -495,8 +565,10 @@
     {
       "key": {
         "section": "Stir fry",
+        "sectionId": "stir-fry",
         "name": "Satay sauce",
-        "code": "F5"
+        "code": "F5",
+        "dishId": "satay-sauce"
       },
       "superseded": [
         {
@@ -509,8 +581,10 @@
     {
       "key": {
         "section": "Stir fry",
+        "sectionId": "stir-fry",
         "name": "Ginger and vegetable",
-        "code": "F6"
+        "code": "F6",
+        "dishId": "ginger-and-vegetable"
       },
       "superseded": [
         {
@@ -523,8 +597,10 @@
     {
       "key": {
         "section": "Stir fry",
+        "sectionId": "stir-fry",
         "name": "Crispy pork stir-fry vegetable",
-        "code": "F7"
+        "code": "F7",
+        "dishId": "crispy-pork-stir-fry-vegetable"
       },
       "superseded": [
         {

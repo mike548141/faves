@@ -5,11 +5,14 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Sweet Potato Wedges",
-        "code": null
+        "code": null,
+        "dishId": "sweet-potato-wedges"
       },
       "item": {
         "name": "Sweet Potato Wedges",
+        "dishId": "sweet-potato-wedges",
         "desc": null,
         "tags": [],
         "price": [
@@ -28,11 +31,14 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Seafood Fritter",
-        "code": null
+        "code": null,
+        "dishId": "seafood-fritter"
       },
       "item": {
         "name": "Seafood Fritter",
+        "dishId": "seafood-fritter",
         "desc": null,
         "tags": [
           "contains-shellfish"
@@ -53,11 +59,14 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Bacon Fritter",
-        "code": null
+        "code": null,
+        "dishId": "bacon-fritter"
       },
       "item": {
         "name": "Bacon Fritter",
+        "dishId": "bacon-fritter",
         "desc": null,
         "tags": [],
         "price": [
@@ -76,11 +85,14 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Chocolate Rap",
-        "code": null
+        "code": null,
+        "dishId": "chocolate-rap"
       },
       "item": {
         "name": "Chocolate Rap",
+        "dishId": "chocolate-rap",
         "desc": null,
         "tags": [],
         "price": [
@@ -99,11 +111,14 @@
     {
       "key": {
         "section": "Deep Fried",
+        "sectionId": "deep-fried",
         "name": "Pacific Oyster",
-        "code": null
+        "code": null,
+        "dishId": "pacific-oyster"
       },
       "item": {
         "name": "Pacific Oyster",
+        "dishId": "pacific-oyster",
         "desc": null,
         "tags": [
           "contains-shellfish"
