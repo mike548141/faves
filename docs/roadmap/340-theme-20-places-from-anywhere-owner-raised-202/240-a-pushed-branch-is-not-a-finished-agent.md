@@ -54,7 +54,29 @@
   working directory until it has reported.** Merging `origin/<branch>` touches
   nothing the agent is standing in.
 
-  📋 **Options, none taken:**
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — OPTION 2: MAKE AGENTS SIGNAL
+  WHEN THEY ARE DONE.** 🚩 **He did NOT take the recommendation**, which was the
+  narrower option 1 (write the rule down: merge freely, delay only the
+  teardown). He took the more robust one: an orchestrator should not have to
+  *infer* a terminal state at all. Recorded as an overrule so nobody re-proposes
+  option 1 as "what was agreed".
+  📋 **What this obliges, and the hole it leaves.** Every agent brief requires an
+  explicit terminal marker as the agent's last act. But **a crashed agent never
+  sends one**, so the signal proves *done* and can never prove *not done* — an
+  absent marker is ambiguous between "still working" and "died". The harness's
+  own completion notification covers that second case (it fires on failure as
+  well as success), so the working rule is: **teardown waits for the completion
+  notification; the agent's marker is what makes the report trustworthy.** Option
+  1's substance survives inside option 2 rather than being discarded — merging
+  from `origin/<branch>` early is still safe and is still what keeps a session
+  fast.
+  ⏸️ **Not retro-fitted to the three agents live when this was ruled.**
+  Interrupting a working agent to change its brief risks the exact derailment
+  this item is about. Their briefs already carry *"after you push, STAY PUT
+  until you have written your report"*, and the orchestrator waited for each
+  completion notification before any teardown.
+
+  📋 **Original options, kept for the record — option 2 is the ruled one:**
   1. **Write the rule into the orchestration guidance** — review and merge from
      `origin/<branch>` whenever you like; `git worktree remove` and branch
      deletion wait for the completion notification. Free, and it is the smallest

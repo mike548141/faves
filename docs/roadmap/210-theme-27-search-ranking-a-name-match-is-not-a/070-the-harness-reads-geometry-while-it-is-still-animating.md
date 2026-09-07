@@ -60,8 +60,30 @@
   invisible, so the stabilising wait should land **before or with** the retry,
   never instead of it.
 
-  📋 **Options, none taken — this is a design call about the harness, not a
-  tidy-up:**
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — OPTION 1, WITH A CONDITION.**
+  His words: *"I accept your recommendation but want it tested etc for
+  lag/latency in use."* So `driver.click` waits for a stable box before
+  dispatching, via `untilStable` — **and the cost of that wait must be
+  MEASURED, not assumed negligible.**
+  🛑 **What the condition actually demands, stated so it is not softened into a
+  shrug.** A wait added to *every* click is a tax paid on every assertion in
+  sixteen checks. The obligation is a **before/after wall-clock measurement per
+  check**, on a quiet machine, reported as numbers — not "it felt the same".
+  🔑 And there is a second reason the measurement matters beyond runtime: **a
+  wait that is too generous hides a real regression.** If a control genuinely
+  takes 400 ms to settle because someone shipped a janky animation, a click that
+  patiently waits it out turns a user-visible defect into a green run. So the
+  measurement wants **both** numbers — the added time, and the settle time
+  actually observed — and the timeout must be **bounded and loud**: a box that
+  never settles is a FAILED ASSERTION about the site, not a silent hang and not
+  a harness error.
+  🚩 It interacts with `340/200`'s ruled retry (retry the whole check once): a
+  retry that papers over an animation race makes the race permanent and
+  invisible. **The stabilising wait lands before or with the retry, never
+  instead of it.**
+  ❌ Options 2 (fix the two known sites) and 3 (document only) are **declined**.
+
+  📋 **Original options, kept for the record — option 1 is the ruled one:**
   1. **Make `driver.click` wait for a stable box** before dispatching, using
      `untilStable`. Fixes every call site at once, including the ones nobody has
      hit yet. Costs a small delay on every click and needs a bound so a genuinely

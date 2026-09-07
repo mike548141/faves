@@ -33,7 +33,23 @@
   guard whose output is the same whether or not the thing is broken*, but **a
   neighbouring guard whose existence makes an unguarded surface feel covered.**
 
-  📋 **Options, none taken:**
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — OPTION 1, ADD THE TEST NOW.**
+  A plain unit test asserting every tag in `validate.py`'s `TAGS` has a
+  reader-facing label in all four JavaScript tables and in Settings' avoid list.
+  ❌ Option 2 (one shared source of truth) is **declined for now** — it is the
+  right end state and it crosses the Python/JavaScript boundary in a
+  zero-build-step repo, so it is not worth paying for on today's evidence.
+  ❌ Option 3 (document the checklist) is **declined**: it is what we
+  effectively had, and it failed twice on 2026-09-07 — caught by a test run and
+  by luck, not by design.
+  🔑 **The interesting half is where the vocabulary comes from.** The master
+  list is Python and the labels are JavaScript, and the zero-dependency rule
+  forbids a build step — so the test needs either a small shared JSON both read,
+  or a parse of one by the other. **A parse that rebuilds its input must
+  re-emit it byte-for-byte or refuse the line** (the standard set by ADR 0076);
+  a lenient parse here would be a check that agrees with a broken vocabulary.
+
+  📋 **Original options, kept for the record — option 1 is the ruled one:**
   1. **A test that asserts every tag in `validate.py`'s `TAGS` has an entry in
      each of the four label tables** (and in Settings' avoid list). Pure logic,
      runs in `node --test`, no browser. Cheapest real mechanism. Needs the JS
