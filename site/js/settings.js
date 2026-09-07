@@ -49,6 +49,7 @@ export const ALLERGEN_PREFS = [
   { key: "contains-nuts", label: "Nuts" },
   { key: "contains-peanuts", label: "Peanuts" },
   { key: "contains-shellfish", label: "Shellfish" },
+  { key: "contains-fish", label: "Fish" },
   { key: "contains-egg", label: "Egg" },
   { key: "contains-dairy", label: "Dairy" },
   { key: "contains-gluten", label: "Gluten" },

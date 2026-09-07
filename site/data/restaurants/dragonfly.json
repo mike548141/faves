@@ -161,7 +161,8 @@
           "price": 28.5,
           "tags": [
             "gf",
-            "contains-sesame"
+            "contains-sesame",
+            "contains-fish"
           ]
         },
         {
@@ -250,7 +251,8 @@
           "desc": "Char-grilled salmon fillet on a green tea smoked salmon salad with Vietnamese mint, cucumber, chilli, lime and roasted rice, hot and sour dressing.",
           "price": 44.9,
           "tags": [
-            "gf"
+            "gf",
+            "contains-fish"
           ]
         },
         {

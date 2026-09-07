@@ -555,7 +555,9 @@
           "code": "52",
           "desc": null,
           "price": 14.0,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Seafood Congee",
@@ -579,7 +581,9 @@
           "code": "54",
           "desc": null,
           "price": 27.3,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Roast Pork with Tofu & Vegetable",
@@ -598,7 +602,8 @@
           "desc": null,
           "price": 26.8,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         },
         {
@@ -656,7 +661,8 @@
           "desc": null,
           "price": 26.1,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         },
         {
@@ -989,7 +995,8 @@
           "price": 25.4,
           "tags": [
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         },
         {
@@ -998,7 +1005,9 @@
           "code": "101",
           "desc": null,
           "price": 26.2,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Hot & Spicy Beef Soup",
@@ -1127,7 +1136,9 @@
           "code": "115",
           "desc": null,
           "price": 25.3,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Stir Fried Beans with Dace Fish",
@@ -1135,7 +1146,9 @@
           "code": "116",
           "desc": null,
           "price": 26.1,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Tora Tora in Black Bean Sauce",
@@ -1191,7 +1204,9 @@
           "code": "122",
           "desc": null,
           "price": 32.3,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Hot & Spicy Beef Brisket with Bean Curd",
@@ -1402,7 +1417,9 @@
           "code": "145",
           "desc": null,
           "price": 24.1,
-          "tags": []
+          "tags": [
+            "contains-fish"
+          ]
         },
         {
           "name": "Fried Rice with Chinese Pork & Vegetable",
@@ -1534,7 +1551,8 @@
           "desc": null,
           "price": 22.3,
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         }
       ]

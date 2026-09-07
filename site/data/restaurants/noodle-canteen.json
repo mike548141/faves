@@ -229,7 +229,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         },
         {
@@ -327,7 +328,8 @@
             "contains-shellfish",
             "contains-gluten",
             "contains-egg",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         },
         {

@@ -46,6 +46,7 @@ const ALLERGEN = {
   "contains-nuts": "Contains nuts",
   "contains-peanuts": "Contains peanuts",
   "contains-shellfish": "Contains shellfish",
+  "contains-fish": "Contains fish",
   "contains-egg": "Contains egg",
   "contains-dairy": "Contains dairy",
   "contains-gluten": "Contains gluten",

@@ -519,7 +519,8 @@
           "price": 19.9,
           "tags": [
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {
@@ -528,7 +529,8 @@
           "desc": "Fresh salmon with avocado and salad on rice, served with miso soup.",
           "price": 19.9,
           "tags": [
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         }
       ]
@@ -566,7 +568,8 @@
           "tags": [
             "contains-gluten",
             "contains-soy",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -576,7 +579,8 @@
           "price": 25.9,
           "tags": [
             "contains-soy",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {

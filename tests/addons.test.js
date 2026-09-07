@@ -162,12 +162,15 @@ test("CONTRADICTS: peanuts, nuts, soy and sesame contradict no dietary claim", (
   for (const t of ["contains-peanuts", "contains-nuts", "contains-soy", "contains-sesame"]) {
     assert.ok(!all.includes(t), `${t} should not contradict a dietary claim`);
   }
-  // …and the four ALLERGENS that do are exactly the four tag_allergens.py
-  // knows about. validate.py `check_contradiction_tables` holds the two
-  // tables in step; this is the same claim said in the language of the app.
+  // …and the ALLERGENS that do are exactly the ones tag_allergens.py knows
+  // about. validate.py `check_contradiction_tables` holds the two tables in
+  // step; this is the same claim said in the language of the app.
+  // `contains-fish` joined them 2026-09-07 — a separate allergen from
+  // `contains-shellfish`, contradicting the same two claims.
   assert.deepEqual(
     new Set(all.filter((t) => t.startsWith("contains-"))),
-    new Set(["contains-gluten", "contains-dairy", "contains-egg", "contains-shellfish"]),
+    new Set(["contains-gluten", "contains-dairy", "contains-egg", "contains-shellfish",
+             "contains-fish"]),
   );
   // The two non-allergen facts (ADR 0092) kill `v` and `vg` and nothing else —
   // meat is not gluten, and a `gf` or `df` dish stays gf or df with bacon on it.

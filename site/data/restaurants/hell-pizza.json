@@ -965,7 +965,8 @@
           "price": 28.5,
           "desc": "Smoked salmon, spring onion and cream cheese.",
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-fish"
           ]
         }
       ]

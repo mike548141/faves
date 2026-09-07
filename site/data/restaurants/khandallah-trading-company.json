@@ -205,7 +205,8 @@
           "price": 29.5,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -247,7 +248,8 @@
           "tags": [
             "gf-option",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -393,7 +395,8 @@
           "price": 27.5,
           "tags": [
             "gf",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -576,7 +579,7 @@
           "dishId": "lil-fish-flicks",
           "desc": "Crispy fish bites, fries, tartare sauce.",
           "price": 15.5,
-          "tags": ["contains-egg"]
+          "tags": ["contains-egg", "contains-fish"]
         },
         {
           "name": "Meatballs",

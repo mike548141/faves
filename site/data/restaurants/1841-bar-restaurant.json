@@ -220,7 +220,8 @@
           ],
           "tags": [
             "contains-gluten",
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-fish"
           ]
         },
         {
@@ -252,7 +253,8 @@
           "tags": [
             "contains-shellfish",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-fish"
           ]
         },
         {
@@ -474,7 +476,8 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {
@@ -483,7 +486,8 @@
           "desc": "200g fresh fish of the day, baby potatoes, greens, chimichurri. Price on application.",
           "price": null,
           "tags": [
-            "gf"
+            "gf",
+            "contains-fish"
           ]
         },
         {
@@ -500,7 +504,8 @@
             "gf",
             "contains-egg",
             "contains-dairy",
-            "contains-nuts"
+            "contains-nuts",
+            "contains-fish"
           ]
         },
         {
@@ -749,7 +754,8 @@
             }
           ],
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-fish"
           ]
         },
         {

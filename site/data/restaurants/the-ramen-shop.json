@@ -123,7 +123,8 @@
           "desc": "6 pieces. Deep fried savoury balls with octopus, served with mayo, tonkatsu sauce and katsuobushi.",
           "price": 10,
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -144,7 +145,8 @@
           "price": 12,
           "tags": [
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {
@@ -260,7 +262,8 @@
           "price": 26,
           "tags": [
             "contains-gluten",
-            "contains-soy"
+            "contains-soy",
+            "contains-fish"
           ]
         },
         {
@@ -429,7 +432,8 @@
           "desc": "Choice of chicken or pork, stir fried noodle with mixed veges topped with spring onion, katsuobushi, tonkatsu sauce and mayo.",
           "price": 22,
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-fish"
           ]
         },
         {

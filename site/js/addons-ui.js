@@ -46,6 +46,7 @@ const ALLERGEN_LABEL = {
   "contains-nuts": "nuts",
   "contains-peanuts": "peanuts",
   "contains-shellfish": "shellfish",
+  "contains-fish": "fish",
   "contains-egg": "egg",
   "contains-dairy": "dairy",
   "contains-gluten": "gluten",

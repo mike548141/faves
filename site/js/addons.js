@@ -46,6 +46,12 @@ const ALLERGEN_PREFIX = "contains-";
 // Absent by design: nuts, peanuts, soy and sesame contradict nothing. A peanut
 // is vegan and gluten free. Their whole job here is the union half.
 //
+// `contains-fish` (added 2026-09-07) contradicts `v` and `vg` for the same
+// reason `contains-shellfish` does, and is a SEPARATE allergen from it —
+// neither implies the other. It is also not `has-fish` below: that one is a
+// dietary marker read off an option's own name, this one is the allergen. They
+// contradict the same two claims and are never written in terms of each other.
+//
 // `has-meat` and `has-fish` are NOT allergens and are deliberately outside the
 // `contains-` namespace (ADR 0092). Meat is not an allergen, and a ninth
 // `contains-` tag would have joined four separate allergen tables — the chips
@@ -57,8 +63,9 @@ const ALLERGEN_PREFIX = "contains-";
 export const CONTRADICTS = {
   gf: ["contains-gluten"],
   df: ["contains-dairy"],
-  v: ["contains-shellfish", "has-meat", "has-fish"],
-  vg: ["contains-dairy", "contains-egg", "contains-shellfish", "has-meat", "has-fish"],
+  v: ["contains-shellfish", "contains-fish", "has-meat", "has-fish"],
+  vg: ["contains-dairy", "contains-egg", "contains-shellfish", "contains-fish",
+       "has-meat", "has-fish"],
 };
 
 const DIET_KEYS = DIET_FILTERS.map((f) => f.key);

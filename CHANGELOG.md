@@ -44,6 +44,18 @@ content freshness separately from this file.
   claim, it just says so once.
 
 ### Added
+- **Fish is now an allergen Faves warns about.** It is one of the major
+  declarable allergens and the app had never mentioned it once — so
+  **199 dishes across 32 of the 57 places** now carry a *Contains fish*
+  warning, and **Fish** joins the allergens you can ask to have foregrounded in
+  Settings. It reads the obvious ones (anchovy on a pizza, salmon on a bagel,
+  Subway's tuna) and the ones a menu never spells out: **fish sauce** in a
+  Vietnamese dipping sauce, **bonito** and **dashi** behind a Japanese broth,
+  **surimi** in an imitation crab stick, and **Worcestershire sauce** — anchovy
+  in a bottle nobody reads the label of — in two Bloody Marys. Fish and
+  shellfish stay two separate warnings, because they are two separate
+  allergies: a tuna sandwich is fish and not shellfish, a prawn cutlet is the
+  reverse, and a seafood chowder is both.
 - **Focus a menu on the dishes you want.** The chip row above a menu gains
   **♥ Favourites**, and the dietary chips now *remove* the dishes that do not
   match instead of just fading them. A line under the controls says
