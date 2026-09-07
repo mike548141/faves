@@ -34,9 +34,19 @@ record is removed from both sides of its own comparison and passes. (3) and
 only place that exists, so it catches the commit doing the damage rather than
 damage already committed; that is a real limit, stated rather than papered over.
 
+HOW A ROW IS JOINED BACK TO ITS DISH (ADR 0098, 2026-09-08). On `sectionId` and
+`dishId` first, on the section heading and the dish name only where a row has no
+id. It was the other way round for the store's whole life: 226 of 227 rows
+carried no `dishId`, so a dish rename ADR 0051 permits, or a heading rename ADR
+0058 permits, orphaned every row it touched — while ARCHITECTURE.md and ADR
+0051's own consequences said the id was carrying the history. `--rekey` is the
+one-off that put the ids on; `--check` now prints how many rows still lack one,
+so the name tier cannot silently become the norm again.
+
     python3 tools/split_data.py --dry-run   # what would move
     python3 tools/split_data.py             # do it
     python3 tools/split_data.py --check     # the four questions above
+    python3 tools/split_data.py --rekey     # ids onto every key that can hold one
 
 Stdlib only. Writes only under site/data/restaurants/ and data/history/.
 """
@@ -47,44 +57,116 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+TOOLS = Path(__file__).resolve().parent
+ROOT = TOOLS.parent
+
+# The dish slug, from the tool that seeded every id in the payload — imported
+# rather than copied, because a fourth copy of `slug` is a fourth thing to keep
+# in step and the id this writes must be the id `validate.py` and the browser
+# would derive. `seed_dish_ids` does no work at import.
+sys.path.insert(0, str(TOOLS))
+from seed_dish_ids import slug  # noqa: E402
+
 VENUES = ROOT / "site" / "data" / "restaurants"
 HIST = ROOT / "data" / "history"
+
+
+def _text(value):
+    """`value` if it is a non-empty string, else None. Written once because
+    every id read below has to reject `""` and `None` identically."""
+    return value if isinstance(value, str) and value else None
 
 
 def dish_key(section, item):
     """Stable enough to rejoin on, and readable by a human reading the record.
 
+    IDS FIRST, NAMES ALONGSIDE (ADR 0098). `sectionId` (ADR 0058) and `dishId`
+    (ADR 0051) are the two parts of a dish's address that a rename cannot move,
+    so both go on every key this tool writes. The heading and the name stay
+    beside them — not as the join, but so a human reading the record can tell
+    what a row is about without opening the payload.
+
     Not the list index: indices shift the moment a section is reordered, and
-    this record has to survive years of menu edits. `code` where the shop
-    gives one, name otherwise, always scoped by section.
+    this record has to survive years of menu edits.
+
+    A key can still come out id-less, and that is deliberate rather than
+    tolerated: a section or dish with no id yields no id here instead of a
+    derived one. `--check` counts those rows and prints the count, so the
+    name-only tier cannot quietly become the norm again — which is exactly what
+    it had been for 226 of 227 rows until the 2026-09-08 re-key.
     """
-    key = {
-        "section": section.get("section"),
-        "name": item.get("name"),
-        "code": item.get("code"),
-    }
-    # An explicit `dishId` (ADR 0051) is the one part of a dish that survives a
-    # rename, so carry it when the data gives one — a renamed dish would
-    # otherwise orphan its own price history. Only when it is explicit: adding
-    # the derived `slug(name)` would say nothing name doesn't already say, and
-    # would rewrite every history file that predates dish ids for no gain.
-    did = item.get("dishId")
-    if isinstance(did, str) and did:
+    key = {"section": section.get("section")}
+    sid = _text(section.get("sectionId"))
+    if sid:
+        key["sectionId"] = sid
+    key["name"] = item.get("name")
+    key["code"] = item.get("code")
+    did = _text(item.get("dishId"))
+    if did:
         key["dishId"] = did
     return key
 
 
-def same_dish(key, section, item):
-    if key.get("section") != section.get("section"):
+def former_ids(item):
+    """A dish's `formerIds` as a list of strings, tolerating a malformed field.
+
+    Mirrors `findDish` in site/js/dish-id.js: an id that genuinely had to change
+    leaves the old one here, so a history row keyed on the old id still resolves.
+    """
+    v = item.get("formerIds")
+    return [x for x in v if _text(x)] if isinstance(v, list) else []
+
+
+def same_section(key, section):
+    """ID FIRST. A heading is display text and ADR 0058 permits renaming it —
+    the anchor comes from the id precisely so it can be renamed — so a key that
+    carries a `sectionId` is joined on the id and the heading is ignored. Only a
+    key with no id falls back to the heading it was written with."""
+    ksid, sid = _text(key.get("sectionId")), _text(section.get("sectionId"))
+    if ksid and sid:
+        return ksid == sid
+    return key.get("section") == section.get("section")
+
+
+def same_dish(key, section, item, former=False):
+    """Does this key name this dish? `former` opens the second pass — see
+    `match_dish`, which is the only caller that should ever set it."""
+    if not same_section(key, section):
         return False
     # An id on the key decides on its own, because that is what an id is for.
     # A key written before ids existed carries none and matches the way it
     # always did — so no existing history row changes meaning.
-    if key.get("dishId"):
-        return key["dishId"] == item.get("dishId")
+    kid = _text(key.get("dishId"))
+    if kid:
+        if kid == _text(item.get("dishId")):
+            return True
+        return former and kid in former_ids(item)
     return (key.get("name") == item.get("name")
             and key.get("code") == item.get("code"))
+
+
+def each_dish(doc):
+    """Every (section, item) pair in a venue record, flattened — the Python
+    twin of `eachDish` in site/js/dish-id.js."""
+    return [(s, i) for s in doc.get("menu") or [] if isinstance(s, dict)
+            for i in s.get("items") or [] if isinstance(i, dict)]
+
+
+def match_dish(key, doc):
+    """The dish a history key points at, or None.
+
+    Two passes, and the order is the same one `findDish` uses for the same
+    reason: a LIVE id always beats another dish's FORMER one, so retiring an id
+    can never hijack a row belonging to a dish that still exists.
+    """
+    live = each_dish(doc)
+    for s, i in live:
+        if same_dish(key, s, i):
+            return s, i
+    for s, i in live:
+        if same_dish(key, s, i, former=True):
+            return s, i
+    return None
 
 
 def split_venue(doc):
@@ -129,40 +211,178 @@ def reconstruct(doc, prices, departed):
     menu = doc.get("menu")
     if not isinstance(menu, list):
         return doc
+    # Resolved against the WHOLE document rather than section by section, so the
+    # live-id-beats-former-id order in `match_dish` can actually apply: a
+    # per-section loop would take whichever match it reached first.
+    for row in prices:
+        found = match_dish(row["key"], doc)
+        if found:
+            found[1]["price"] = row["superseded"] + found[1]["price"]
     for section in menu:
         if not isinstance(section, dict):
             continue
         items = section.get("items", []) or []
-        for item in items:
-            if not isinstance(item, dict):
-                continue
-            for row in prices:
-                if same_dish(row["key"], section, item):
-                    item["price"] = row["superseded"] + item["price"]
         for row in departed:
-            if row["key"].get("section") == section.get("section"):
+            if same_section(row["key"], section):
                 items.append(row["item"])
         section["items"] = items
     return doc
 
 
-def read_history(vid):
+def history_file(vid, kind, doc=None):
+    """The history file for a venue, following a venue rename.
+
+    A venue id can be corrected (`renames.js`), and the record's `formerIds`
+    holds the old ones — `validate.py` keeps the two in step, so this is a fact
+    the codebase already guarantees rather than a new one. Without this, a
+    rename made `read_history` open a filename nothing had written yet: it found
+    no rows, and `--check` reported "0 with a history file" and passed.
+
+    Returns the current-id path when it exists, else the first former id's, else
+    the current-id path (which is where a writer should put it).
+    """
+    d = HIST / kind
+    current = d / f"{vid}.json"
+    if current.is_file() or not isinstance(doc, dict):
+        return current
+    for old in doc.get("formerIds") or []:
+        if _text(old) and (d / f"{old}.json").is_file():
+            return d / f"{old}.json"
+    return current
+
+
+def read_history(vid, doc=None):
     def load(kind):
-        f = HIST / kind / f"{vid}.json"
+        f = history_file(vid, kind, doc)
         if not f.is_file():
             return []
-        doc = json.loads(f.read_text())
-        return doc.get("rows", [])
+        return json.loads(f.read_text()).get("rows", [])
     return load("prices"), load("dishes")
 
 
-def write_history(vid, kind, rows, note):
-    d = HIST / kind
-    d.mkdir(parents=True, exist_ok=True)
-    f = d / f"{vid}.json"
+def write_history(vid, kind, rows, note, doc=None):
+    """MERGE the new rows into the record; never replace it.
+
+    This overwrote the file until 2026-09-08, and the ARCHITECTURE procedure for
+    refreshing a menu walks straight into it: append a new price entry to the
+    payload, run this tool, and the venue's whole record is replaced by the one
+    row the refresh happened to move. `--check --against` catches it after the
+    fact, which is a guard doing its job on damage the writer should never have
+    caused. Appending is what ADR 0023 promises, so the writer appends.
+    """
+    f = history_file(vid, kind, doc)
+    existing = json.loads(f.read_text()).get("rows", []) if f.is_file() else []
+    for row in rows:
+        prior = next((r for r in existing
+                      if _same_key(row.get("key") or {}, r.get("key") or {})),
+                     None)
+        if prior is None:
+            existing.append(row)
+        elif kind == "prices":
+            prior["superseded"] = (prior.get("superseded") or []) + \
+                row.get("superseded", [])
+        else:
+            prior["item"] = row["item"]   # a re-confirmed departure, not a new one
+    _write_rows(vid, kind, existing, note, doc)
+
+
+def _write_rows(vid, kind, rows, note, doc=None):
+    """Put `rows` on disk verbatim. The file keeps its own `note` where it has
+    one — several were written by hand and say more than the default."""
+    (HIST / kind).mkdir(parents=True, exist_ok=True)
+    f = history_file(vid, kind, doc)
+    head = json.loads(f.read_text()) if f.is_file() else {}
     f.write_text(json.dumps(
-        {"venue": vid, "note": note, "rows": rows}, indent=2,
-        ensure_ascii=False) + "\n")
+        {"venue": head.get("venue", vid), "note": head.get("note") or note,
+         "rows": rows}, indent=2, ensure_ascii=False) + "\n")
+
+
+def rekey_history(vid, doc, hp, hd):
+    """Put `sectionId` and `dishId` on every history key that can carry one.
+
+    Returns (rows_changed, unresolved) — `unresolved` naming each row this
+    REFUSED to key, because a guess here is worse than a name-keyed row: it
+    points a price series at a dish that never had it.
+
+    A departed row's stored item is seeded too. Those items left the payload
+    before `dishId` existed, so restoring one verbatim — the thing the store is
+    for — would produce a dish `validate.py` refuses. `slug(name)` is exactly
+    what `seed_dish_ids.py` wrote for every live dish, and it is only ever
+    written where the item has none.
+    """
+    changed, unresolved = 0, []
+    for kind, rows in (("prices", hp), ("dishes", hd)):
+        for row in rows:
+            key = row.get("key") or {}
+            before = dict(key)
+            if kind == "dishes":
+                item = row.get("item") or {}
+                if not _text(item.get("dishId")) and _text(item.get("name")):
+                    seeded = slug(item["name"])
+                    live = {_text(i.get("dishId")) for _, i in each_dish(doc)}
+                    if not seeded or seeded in live:
+                        unresolved.append(
+                            f"{vid}/{kind}: {item.get('name')!r} would take the "
+                            f"dishId {seeded!r}, which a live dish already holds")
+                        continue
+                    # Rebuilt rather than assigned, so the id lands on the line
+                    # under the name — the whole point of seeding it in the
+                    # payload was that a transcriber renaming a dish SEES it.
+                    rest = {k: v for k, v in item.items() if k != "name"}
+                    row["item"] = item = {"name": item["name"],
+                                          "dishId": seeded, **rest}
+                found = next(((s, item) for s in doc.get("menu") or []
+                              if isinstance(s, dict) and same_section(key, s)),
+                             None)
+            else:
+                found = match_dish(key, doc)
+            if not found:
+                unresolved.append(
+                    f"{vid}/{kind}: {key.get('name')!r} in "
+                    f"{key.get('section')!r} matches no dish in the payload")
+                continue
+            section, item = found
+            row["key"] = dish_key(section, item)
+            # The name and code the row was WRITTEN with are what a human reads;
+            # keep them rather than the payload's current wording, so a rename
+            # leaves a trace instead of being quietly back-dated over the record.
+            for field in ("name", "code"):
+                if field in before:
+                    row["key"][field] = before[field]
+            if row["key"] != before:
+                changed += 1
+    return changed, unresolved
+
+
+def rows_missing_ids(rows):
+    """How many rows are still joined by name alone — no `dishId` on the key."""
+    return sum(1 for r in rows if not _text((r.get("key") or {}).get("dishId")))
+
+
+def unread_history_files(seen):
+    """Complaints about history files that no venue in the payload READ.
+
+    Not "no venue claims the id" — READ, which is the stronger question and the
+    only one that catches the failure this exists for. A venue id can be
+    corrected, and `formerIds` keeps the old one resolving; if that resolution
+    is ever broken or removed, `read_history` returns nothing, every other
+    question in `--check` is asked of an empty record, and the run passes while
+    reporting "0 with a history file" — measured, and exactly what the store
+    would have done for a venue renamed before 2026-09-08. Comparing the files
+    on disk against the files actually opened is what makes that visible: a file
+    nobody read is history nobody will ever look for again, whether the venue
+    was renamed without `formerIds` or deleted outright.
+    """
+    problems = []
+    for kind in ("prices", "dishes"):
+        for f in sorted((HIST / kind).glob("*.json")):
+            if f.resolve() in seen:
+                continue
+            problems.append(
+                f"data/history/{kind}/{f.name} was read by no venue — no "
+                f"record in site/data/restaurants/ resolves to it, so its rows "
+                f"are invisible to every other question this check asks")
+    return problems
 
 
 def check_orphans(vid, doc, hp, hd):
@@ -182,28 +402,39 @@ def check_orphans(vid, doc, hp, hd):
         tombstone behind, so the menu now shows it twice.
     """
     problems = []
-    live = [(s, i) for s in doc.get("menu") or []
-            if isinstance(s, dict)
-            for i in s.get("items") or [] if isinstance(i, dict)]
     for row in hp:
         key = row.get("key") or {}
-        if any(same_dish(key, s, i) for s, i in live):
+        if match_dish(key, doc):
             continue
-        if any(r.get("key") == key for r in hd):
+        # A departed row is the other legitimate home. Matched on the row's own
+        # key rather than on dict equality: the two keys are written by the same
+        # function from the same dish, but only one of them is re-keyed if a
+        # session hand-edits one file and not the other.
+        if any(_same_key(key, r.get("key") or {}) for r in hd):
             continue
         problems.append(
             f"{vid}: price history for {key.get('name')!r} in "
             f"{key.get('section')!r} points at no dish — live nor departed")
     for row in hd:
         key = row.get("key") or {}
-        if any(same_dish(key, s, i) for s, i in live):
+        if match_dish(key, doc):
             problems.append(
                 f"{vid}: {key.get('name')!r} in {key.get('section')!r} is "
                 f"recorded as departed AND still on the menu")
     return problems
 
 
-def rows_at_head(vid, kind, ref="HEAD"):
+def _same_key(a, b):
+    """Do two history keys name the same dish? Ids where both carry them, the
+    old whole-dict equality otherwise."""
+    aid, bid = _text(a.get("dishId")), _text(b.get("dishId"))
+    if aid and bid:
+        return aid == bid and same_section(a, {
+            "section": b.get("section"), "sectionId": b.get("sectionId")})
+    return a == b
+
+
+def rows_at_head(vid, kind, ref="HEAD", doc=None):
     """`data/history/<kind>/<vid>.json`'s rows as committed at `ref`, or None
     when git cannot answer (no checkout, no git, file absent there).
 
@@ -216,20 +447,28 @@ def rows_at_head(vid, kind, ref="HEAD"):
     already clean and HEAD-versus-HEAD can only ever agree — so `--against`
     lets a runner name the state before the push (the same range trick the
     version-lockstep job already uses). A guard that cannot fire where it runs
-    is worse than no guard, because the green is read as coverage."""
-    rel = f"data/history/{kind}/{vid}.json"
-    try:
-        out = subprocess.run(
-            ["git", "-C", str(ROOT), "show", f"{ref}:{rel}"],
-            capture_output=True, text=True, timeout=30)
-    except (OSError, subprocess.SubprocessError):
-        return None
-    if out.returncode != 0:
-        return None
-    try:
-        return json.loads(out.stdout).get("rows", [])
-    except json.JSONDecodeError:
-        return None
+    is worse than no guard, because the green is read as coverage.
+
+    A venue that has been renamed is looked up under its former ids too, in the
+    order `formerIds` gives — otherwise the commit that renames the venue reads
+    as "no baseline" and the append-only half goes quiet on the one commit most
+    able to lose a whole file."""
+    names = [vid] + [x for x in ((doc or {}).get("formerIds") or []) if _text(x)]
+    for name in names:
+        rel = f"data/history/{kind}/{name}.json"
+        try:
+            out = subprocess.run(
+                ["git", "-C", str(ROOT), "show", f"{ref}:{rel}"],
+                capture_output=True, text=True, timeout=30)
+        except (OSError, subprocess.SubprocessError):
+            return None
+        if out.returncode != 0:
+            continue
+        try:
+            return json.loads(out.stdout).get("rows", [])
+        except json.JSONDecodeError:
+            return None
+    return None
 
 
 def weight(rows, kind):
@@ -244,7 +483,7 @@ def weight(rows, kind):
     return len(rows)
 
 
-def check_append_only(vid, ref="HEAD"):
+def check_append_only(vid, ref="HEAD", doc=None):
     """Complaints where the record holds LESS history than `ref` did.
 
     ADR 0023's guarantee is that a refresh cannot silently destroy history, and
@@ -255,9 +494,9 @@ def check_append_only(vid, ref="HEAD"):
     """
     problems = []
     baseline = False
-    hp, hd = read_history(vid)
+    hp, hd = read_history(vid, doc)
     for kind, rows in (("prices", hp), ("dishes", hd)):
-        was = rows_at_head(vid, kind, ref)
+        was = rows_at_head(vid, kind, ref, doc)
         if was is None:
             continue
         baseline = True
@@ -287,6 +526,10 @@ def main(argv=None):
     g.add_argument("--dry-run", action="store_true", help="report, change nothing")
     g.add_argument("--check", action="store_true",
                    help="assert payload + record still reconstruct the original")
+    g.add_argument("--rekey", action="store_true",
+                   help="put sectionId/dishId on every history key that can "
+                        "carry one; refuses to guess, and is a no-op on a "
+                        "record already keyed by id")
     ap.add_argument("--against", metavar="REF", default="HEAD",
                     help="git ref to compare history against for the "
                          "append-only half (default HEAD). A clean CI checkout "
@@ -297,11 +540,26 @@ def main(argv=None):
     files = sorted(VENUES.glob("*.json"))
     moved_p = moved_d = touched = 0
     checked = with_history = against_head = 0
-    failures = []
+    hist_rows = nameless = rekeyed = 0
+    failures, unresolved, seen = [], [], set()
 
     for f in files:
         vid = f.stem
         doc = json.loads(f.read_text())
+
+        if args.rekey:
+            hp, hd = read_history(vid, doc)
+            if not hp and not hd:
+                continue
+            changed, blocked = rekey_history(vid, doc, hp, hd)
+            rekeyed += changed
+            unresolved += blocked
+            hist_rows += len(hp) + len(hd)
+            if hp:
+                _write_rows(vid, "prices", hp, PRICE_NOTE, doc)
+            if hd:
+                _write_rows(vid, "dishes", hd, DISH_NOTE, doc)
+            continue
 
         if args.check:
             # EVERY venue, not only the ones that happen to have a history
@@ -312,11 +570,17 @@ def main(argv=None):
             # never split at all (superseded prices still sitting in the
             # payload, shipping to every phone) was skipped for the same
             # reason: no history file, nothing to compare, silence.
-            hp, hd = read_history(vid)
+            hp, hd = read_history(vid, doc)
+            for kind in ("prices", "dishes"):
+                hf = history_file(vid, kind, doc)
+                if hf.is_file():
+                    seen.add(hf.resolve())
             payload = json.loads(f.read_text())
             checked += 1
             if hp or hd:
                 with_history += 1
+            hist_rows += len(hp) + len(hd)
+            nameless += rows_missing_ids(hp) + rows_missing_ids(hd)
 
             # Is the payload already split? Asked FIRST, because "there are
             # still superseded prices in site/data/" and "the two stores
@@ -343,7 +607,7 @@ def main(argv=None):
                     f"row(s), round trip yields {len(p2)}/{len(d2)}")
 
             failures += check_orphans(vid, payload, hp, hd)
-            appended, baseline = check_append_only(vid, args.against)
+            appended, baseline = check_append_only(vid, args.against, doc)
             failures += appended
             if baseline:
                 against_head += 1
@@ -363,11 +627,22 @@ def main(argv=None):
         trimmed, prices, departed = split_venue(doc)
         f.write_text(json.dumps(trimmed, indent=2, ensure_ascii=False) + "\n")
         if prices:
-            write_history(vid, "prices", prices, PRICE_NOTE)
+            write_history(vid, "prices", prices, PRICE_NOTE, doc)
         if departed:
-            write_history(vid, "dishes", departed, DISH_NOTE)
+            write_history(vid, "dishes", departed, DISH_NOTE, doc)
+
+    if args.rekey:
+        print(f"✓ split_data --rekey: {rekeyed} of {hist_rows} history row(s) "
+              f"re-keyed on sectionId + dishId.")
+        for x in unresolved:
+            print(f"  ⚠ left keyed by name: {x}")
+        return 1 if unresolved else 0
 
     if args.check:
+        # A file under an id nothing claims is history nobody will ever look
+        # for again — and until 2026-09-08 it read as a venue with no record at
+        # all, which is the same silence a deleted file leaves.
+        failures += unread_history_files(seen)
         # The population, always — before the verdict, and whether it passed or
         # failed. "Clean" over 2 of 55 files reads identically to "clean" over
         # 55, and that is how this check spent its life saying nothing (ADR
@@ -375,6 +650,13 @@ def main(argv=None):
         print(f"  scope: {checked} of {len(files)} venue file(s) checked · "
               f"{with_history} with a history file · {against_head} compared "
               f"against {args.against} for append-only")
+        # The name tier was the norm for 226 of 227 rows until the 2026-09-08
+        # re-key, while three records said the id carried the history. Printed
+        # every run, pass or fail, so it cannot quietly climb again.
+        print(f"  keys: {hist_rows - nameless} of {hist_rows} history row(s) "
+              f"joined on dishId · {nameless} still joined on the name alone"
+              + (" — run `python3 tools/split_data.py --rekey`" if nameless
+                 else ""))
         if failures:
             print(f"✗ split_data: {len(failures)} problem(s).")
             for x in failures:
