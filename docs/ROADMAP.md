@@ -63,7 +63,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
 - ✅ [✅ RULED AND FIXED 2026-08-17 (77726e2): the salad keeps its gf](roadmap/080-theme-4-content-growth-ongoing-in-parallel/170-rock-yard-s-vietnamese-salad-is-tagged-gf-and-contains-gluten.md)
 - ✅ 🎯 [Dragonfly, Courtenay Place — owner-directed online fetch](roadmap/080-theme-4-content-growth-ongoing-in-parallel/180-dragonfly-owner-directed-fetch.md)
-- [~] 🔎 [The "not one stub is fetchable" sweep missed at least one venue that](roadmap/080-theme-4-content-growth-ongoing-in-parallel/190-the-stub-sweep-missed-a-fetchable-menu.md)
+- ✅ 🔎 [The "not one stub is fetchable" sweep missed at least one venue that](roadmap/080-theme-4-content-growth-ongoing-in-parallel/190-the-stub-sweep-missed-a-fetchable-menu.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 
@@ -81,6 +81,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [✅ RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
 - ✅ [⚠️ ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
 - [ ] 🛑 [Adding a fish option to a dish produces NO allergen warning — the](roadmap/110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
+- [ ] 🔎 [The allergen sweep has no rule for seven everyday food words, and](roadmap/110-theme-5-richer-dish-data/050-the-allergen-sweep-misses-seven-everyday-food-words.md)
 
 ## Theme 6 — North star: the health tie-in
 
@@ -119,6 +120,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/README.md)*
 
 - ✅ 🛑 [hours cannot express a close after midnight, and the first venue](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md)
+- [ ] 🔎 [hours cannot say "we do not know about this day" — an empty day](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/020-hours-cannot-say-a-day-is-unknown.md)
 
 ## Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)
 

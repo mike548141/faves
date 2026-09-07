@@ -13,15 +13,288 @@
   "services": [
     "dine-in"
   ],
-  "phone": null,
-  "website": null,
+  "phone": "04 389 8693",
+  "website": "https://garageproject.co.nz/locations/leeds-street",
   "ordering": [],
-  "hours": null,
-  "detailsVerified": "2026-08-16",
-  "detailsVerifiedBy": "third-party",
+  "hours": {
+    "mon": [
+      [
+        "14:00",
+        "22:00"
+      ]
+    ],
+    "tue": [
+      [
+        "14:00",
+        "22:00"
+      ]
+    ],
+    "wed": [
+      [
+        "14:00",
+        "22:00"
+      ]
+    ],
+    "thu": [
+      [
+        "14:00",
+        "22:00"
+      ]
+    ],
+    "fri": [
+      [
+        "12:00",
+        "22:00"
+      ]
+    ],
+    "sat": [
+      [
+        "12:00",
+        "22:00"
+      ]
+    ],
+    "sun": [
+      [
+        "12:00",
+        "21:00"
+      ]
+    ]
+  },
+  "vibe": [
+    "sit-down",
+    "licensed",
+    "craft-beer"
+  ],
+  "verified": "2026-09-07",
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-09-07",
+  "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "french-onion-dip",
+      "name": "Add house French onion dip",
+      "select": "one",
+      "options": [
+        {
+          "name": "House French onion dip",
+          "price": 5,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "double-patty",
+      "name": "Make it a double patty",
+      "select": "one",
+      "options": [
+        {
+          "name": "Second patty",
+          "price": 5,
+          "tags": [
+            "has-meat"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "side-of-shoestring-fries",
+      "name": "Add a side of shoestring fries to any meal",
+      "select": "one",
+      "options": [
+        {
+          "name": "Shoestring fries",
+          "price": 4,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Snacks",
+      "sectionId": "snacks",
+      "note": "Our fryer is gluten free, and vegan mayo is available.",
+      "items": [
+        {
+          "name": "Triple Cooked Hand Cut Fries",
+          "dishId": "triple-cooked-hand-cut-fries",
+          "desc": "House style with curry ketchup and mayo.",
+          "price": 12,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Triple Cooked Hand Cut Fries with Café de Paris Butter & Beef Jus",
+          "dishId": "triple-cooked-hand-cut-fries-with-caf-de-paris-butter-and-beef-jus",
+          "desc": "The house fries, dressed with Café de Paris butter and beef jus.",
+          "price": 15,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Triple Cooked Hand Cut Fries with Truffle Mayo & Aged Parmesan",
+          "dishId": "triple-cooked-hand-cut-fries-with-truffle-mayo-and-aged-parmesan",
+          "desc": "The house fries, dressed with truffle mayo and aged parmesan.",
+          "price": 15,
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Triple Cooked Hand Cut Fries with Gochujang, Chilli Crisp and Kewpie Mayo",
+          "dishId": "triple-cooked-hand-cut-fries-with-gochujang-chilli-crisp-and-kewpie-mayo",
+          "desc": "The house fries, dressed with gochujang, chilli crisp and kewpie mayo.",
+          "price": 15,
+          "tags": [
+            "v",
+            "df",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Proper Crisps",
+          "dishId": "proper-crisps",
+          "desc": null,
+          "price": 7.5,
+          "tags": [],
+          "addOns": [
+            "french-onion-dip"
+          ]
+        },
+        {
+          "name": "Greek Dolmades",
+          "dishId": "greek-dolmades",
+          "desc": "Spiced savoury rice wrapped in soft vine leaves, served warm.",
+          "price": 10,
+          "tags": [
+            "v",
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Giant German-Style Bretzel",
+          "dishId": "giant-german-style-bretzel",
+          "desc": "Served warm with hot beer cheese dip.",
+          "price": 13,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Crispy Spiced Potato & Onion Bhaji",
+          "dishId": "crispy-spiced-potato-and-onion-bhaji",
+          "desc": "With tangy tamarind chutney.",
+          "price": 14,
+          "tags": [
+            "v",
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Smoked Kielbasa Sausage",
+          "dishId": "smoked-kielbasa-sausage",
+          "desc": "With curry ketchup and sauerkraut, served hot. Made locally by Polish Sausage Co.",
+          "price": 15,
+          "tags": [
+            "gf",
+            "df"
+          ]
+        },
+        {
+          "name": "Cheese, Pickles & Charcuterie",
+          "dishId": "cheese-pickles-and-charcuterie",
+          "desc": "Two cheeses, two cured meats, assorted pickles and bread.",
+          "price": 26,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Meals",
+      "sectionId": "meals",
+      "addOns": [
+        "side-of-shoestring-fries"
+      ],
+      "items": [
+        {
+          "name": "Boss Level Burger — Burger Wellington",
+          "dishId": "boss-level-burger-burger-wellington",
+          "desc": "Dry aged Wagyu beef patty, cheese, pickles, onion and MSG-spiked burger sauce on a sesame potato bun.",
+          "price": 25,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-sesame"
+          ],
+          "addOns": [
+            "double-patty"
+          ]
+        },
+        {
+          "name": "Beef & Horseradish Baguette",
+          "dishId": "beef-and-horseradish-baguette",
+          "desc": "Slow cooked beef, caramelised onion jam, horseradish cream, fresh rocket, crusty baguette served with hot beef jus.",
+          "price": 22,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Crispy Bhaji & Paneer Burger",
+          "dishId": "crispy-bhaji-and-paneer-burger",
+          "desc": "With tamarind chutney, coriander relish and fried curry leaves.",
+          "price": 19,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Lamb Merguez Sub",
+          "dishId": "lamb-merguez-sub",
+          "desc": "Spiced lamb sausage with harissa ketchup, pickled red onion and feta on a soft hoagie roll.",
+          "price": 19,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Corn Cheese Toastie",
+          "dishId": "corn-cheese-toastie",
+          "desc": "Served with chipotle mayo and jalapeño relish on grilled Shelly Bay sourdough.",
+          "price": 16,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    }
+  ]
 }

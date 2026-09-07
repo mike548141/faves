@@ -2,7 +2,9 @@
   "id": "abrakebabra",
   "name": "Abrakebabra",
   "cuisine": [
-    "Turkish"
+    "Turkish",
+    "Mediterranean",
+    "Kebabs"
   ],
   "area": "Te Aro",
   "city": "Wellington",
@@ -14,15 +16,922 @@
     "dine-in",
     "takeaway"
   ],
-  "phone": null,
-  "website": null,
+  "phone": "04 473 3311",
+  "website": "https://kebabcentral.co.nz",
   "ordering": [],
   "hours": null,
-  "detailsVerified": "2026-08-16",
-  "detailsVerifiedBy": "third-party",
+  "vibe": [
+    "counter-order",
+    "cheap-and-cheerful"
+  ],
+  "verified": "2026-09-07",
+  "verifiedBy": "official-site",
+  "detailsVerified": "2026-09-07",
+  "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "combo",
+      "name": "Make it a combo — two of a small drink, small salad, garlic bread or small fries",
+      "select": "one",
+      "options": [
+        {
+          "name": "Combo",
+          "price": 7.0,
+          "tags": []
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Kebab",
+      "sectionId": "kebab",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Supreme Kebab",
+          "dishId": "supreme-kebab",
+          "desc": "Served in white flat bread with salad and sauces. Regular $16.50; large $18.00.",
+          "price": 16.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Kebab",
+          "dishId": "chicken-kebab",
+          "desc": "Served in white flat bread with salad and sauces. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Lamb Kebab",
+          "dishId": "lamb-kebab",
+          "desc": "Served in white flat bread with salad and sauces. Regular $14.00; large $15.50.",
+          "price": 14,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mixed Kebab",
+          "dishId": "mixed-kebab",
+          "desc": "Served in white flat bread with salad and sauces. Chicken and lamb. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetarian Kebab",
+          "dishId": "vegetarian-kebab",
+          "desc": "Served in white flat bread with salad and sauces. Regular $14.00; large $15.50.",
+          "price": 14,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Falafel Kebab",
+          "dishId": "falafel-kebab",
+          "desc": "Served in white flat bread with salad and sauces. Regular $14.00; large $15.50.",
+          "price": 14,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Halloumi Kebab",
+          "dishId": "halloumi-kebab",
+          "desc": "Served in white flat bread with salad and sauces. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Diablo Kebab",
+          "dishId": "diablo-kebab",
+          "desc": "Served in white flat bread with salad and sauces. Super hot.",
+          "price": 17.5,
+          "tags": [
+            "spicy-3",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Syrian Kebab",
+      "sectionId": "syrian-kebab",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Syrian Kebab",
+          "dishId": "syrian-kebab",
+          "desc": "Rolled and toasted with your choice of chicken, lamb or mixed meat, pickles, pomegranate molasses, tahini and garlic mayo, plus a sauce of your choice. Served with a side of fries and salad. Regular $17.00; large $19.00.",
+          "price": 17,
+          "tags": [
+            "contains-egg",
+            "contains-sesame"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Shawarma",
+      "sectionId": "shawarma",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Chicken Shawarma",
+          "dishId": "chicken-shawarma",
+          "desc": "Served on roti bread with salad and sauce.",
+          "price": 17,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Lamb Shawarma",
+          "dishId": "lamb-shawarma",
+          "desc": "Served on roti bread with salad and sauce.",
+          "price": 17,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mixed Shawarma",
+          "dishId": "mixed-shawarma",
+          "desc": "Served on roti bread with salad and sauce. Chicken and lamb.",
+          "price": 17,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetarian Shawarma",
+          "dishId": "vegetarian-shawarma",
+          "desc": "Served on roti bread with salad and sauce.",
+          "price": 17,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Falafel Shawarma",
+          "dishId": "falafel-shawarma",
+          "desc": "Served on roti bread with salad and sauce.",
+          "price": 17,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Halloumi Shawarma",
+          "dishId": "halloumi-shawarma",
+          "desc": "Served on roti bread with salad and sauce.",
+          "price": 17,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Burger",
+      "sectionId": "burger",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Chicken Burger",
+          "dishId": "chicken-burger",
+          "desc": "On a home made Turkish burger bun with salad and sauce. Regular $13.50; large $15.00.",
+          "price": 13.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Lamb Burger",
+          "dishId": "lamb-burger",
+          "desc": "On a home made Turkish burger bun with salad and sauce. Regular $12.50; large $14.00.",
+          "price": 12.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mixed Burger",
+          "dishId": "mixed-burger",
+          "desc": "On a home made Turkish burger bun with salad and sauce. Chicken and lamb. Regular $13.50; large $15.00.",
+          "price": 13.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetarian Burger",
+          "dishId": "vegetarian-burger",
+          "desc": "On a home made Turkish burger bun with salad and sauce. Regular $13.50; large $14.00.",
+          "price": 13.5,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Falafel Burger",
+          "dishId": "falafel-burger",
+          "desc": "On a home made Turkish burger bun with salad and sauce. Regular $12.50; large $14.00.",
+          "price": 12.5,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Halloumi Burger",
+          "dishId": "halloumi-burger",
+          "desc": "On a home made Turkish burger bun with salad and sauce. Regular $14.00; large $16.00.",
+          "price": 14,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Diablo Burger",
+          "dishId": "diablo-burger",
+          "desc": "On a home made Turkish burger bun with salad and sauce. Super hot.",
+          "price": 16.5,
+          "tags": [
+            "spicy-3",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Iskender",
+      "sectionId": "iskender",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Supreme Iskender",
+          "dishId": "supreme-iskender",
+          "desc": "A rice dish with salad, hummus, beetroot, tzatziki, tabouli and sauce. Regular $22.00; large $24.00.",
+          "price": 22,
+          "tags": [
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chicken Iskender",
+          "dishId": "chicken-iskender",
+          "desc": "A rice dish with salad, hummus, beetroot, tzatziki, tabouli and sauce. Regular $19.50; large $21.50.",
+          "price": 19.5,
+          "tags": [
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Lamb Iskender",
+          "dishId": "lamb-iskender",
+          "desc": "A rice dish with salad, hummus, beetroot, tzatziki, tabouli and sauce. Regular $19.00; large $21.00.",
+          "price": 19,
+          "tags": [
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mixed Iskender",
+          "dishId": "mixed-iskender",
+          "desc": "A rice dish with salad, hummus, beetroot, tzatziki, tabouli and sauce. Chicken and lamb. Regular $19.50; large $21.50.",
+          "price": 19.5,
+          "tags": [
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Vegetarian Iskender",
+          "dishId": "vegetarian-iskender",
+          "desc": "A rice dish with salad, hummus, beetroot, tzatziki, tabouli and sauce. Regular $19.00; large $21.00.",
+          "price": 19,
+          "tags": [
+            "v",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Falafel Iskender",
+          "dishId": "falafel-iskender",
+          "desc": "A rice dish with salad, hummus, beetroot, tzatziki, tabouli and sauce. Regular $19.00; large $21.00.",
+          "price": 19,
+          "tags": [
+            "v",
+            "gf",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Diablo Iskender",
+          "dishId": "diablo-iskender",
+          "desc": "A rice dish with salad, hummus, beetroot, tzatziki, tabouli and sauce. Super hot.",
+          "price": 23,
+          "tags": [
+            "spicy-3",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Souvlaki",
+      "sectionId": "souvlaki",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Chicken Souvlaki",
+          "dishId": "chicken-souvlaki",
+          "desc": "Served in pita bread with lettuce, fries, hummus, tzatziki and sauce. Regular $15.50; large $17.00.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Lamb Souvlaki",
+          "dishId": "lamb-souvlaki",
+          "desc": "Served in pita bread with lettuce, fries, hummus, tzatziki and sauce. Regular $15.50; large $17.00.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mixed Souvlaki",
+          "dishId": "mixed-souvlaki",
+          "desc": "Served in pita bread with lettuce, fries, hummus, tzatziki and sauce. Chicken and lamb. Regular $15.50; large $17.00.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Vegetarian Souvlaki",
+          "dishId": "vegetarian-souvlaki",
+          "desc": "Served in pita bread with lettuce, fries, hummus, tzatziki and sauce. Regular $15.50; large $17.00.",
+          "price": 15.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Falafel Souvlaki",
+          "dishId": "falafel-souvlaki",
+          "desc": "Served in pita bread with lettuce, fries, hummus, tzatziki and sauce. Regular $15.50; large $17.00.",
+          "price": 15.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Halloumi Souvlaki",
+          "dishId": "halloumi-souvlaki",
+          "desc": "Served in pita bread with lettuce, fries, hummus, tzatziki and sauce. Regular $15.50; large $17.00.",
+          "price": 15.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-sesame"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Meat on Chips",
+      "sectionId": "meat-on-chips",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Chicken on Chips",
+          "dishId": "chicken-on-chips",
+          "desc": "Fries topped with your choice of filling and sauce. Regular $17.50; large $19.00.",
+          "price": 17.5,
+          "tags": []
+        },
+        {
+          "name": "Lamb on Chips",
+          "dishId": "lamb-on-chips",
+          "desc": "Fries topped with your choice of filling and sauce. Regular $17.50; large $19.00.",
+          "price": 17.5,
+          "tags": []
+        },
+        {
+          "name": "Mixed on Chips",
+          "dishId": "mixed-on-chips",
+          "desc": "Fries topped with your choice of filling and sauce. Chicken and lamb. Regular $17.50; large $19.00.",
+          "price": 17.5,
+          "tags": []
+        },
+        {
+          "name": "Vegetarian on Chips",
+          "dishId": "vegetarian-on-chips",
+          "desc": "Fries topped with your choice of filling and sauce. Regular $17.50; large $19.00.",
+          "price": 17.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Falafel on Chips",
+          "dishId": "falafel-on-chips",
+          "desc": "Fries topped with your choice of filling and sauce. Regular $17.50; large $19.00.",
+          "price": 17.5,
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Kebab Nachos",
+      "sectionId": "kebab-nachos",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Chicken Kebab Nachos",
+          "dishId": "chicken-kebab-nachos",
+          "desc": "Nacho corn chips topped with chilli beans, cheese and sour cream. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Lamb Kebab Nachos",
+          "dishId": "lamb-kebab-nachos",
+          "desc": "Nacho corn chips topped with chilli beans, cheese and sour cream. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mixed Kebab Nachos",
+          "dishId": "mixed-kebab-nachos",
+          "desc": "Nacho corn chips topped with chilli beans, cheese and sour cream. Chicken and lamb. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Vegetarian Kebab Nachos",
+          "dishId": "vegetarian-kebab-nachos",
+          "desc": "Nacho corn chips topped with chilli beans, cheese and sour cream. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Shish Kebab",
+      "sectionId": "shish-kebab",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Mixed Shish",
+          "dishId": "mixed-shish",
+          "desc": "Grilled meat served with rice, salad, Turkish bread, hummus, tzatziki, tabouli and your choice of sauce.",
+          "price": 28,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chicken Shish",
+          "dishId": "chicken-shish",
+          "desc": "Grilled chicken served with rice, salad, Turkish bread, hummus, tzatziki, tabouli and your choice of sauce.",
+          "price": 25.5,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Lamb Shish",
+          "dishId": "lamb-shish",
+          "desc": "Grilled lamb served with rice, salad, Turkish bread, hummus, tzatziki, tabouli and your choice of sauce.",
+          "price": 25.5,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Kofta",
+          "dishId": "kofta",
+          "desc": "Grilled lamb mince served with rice, salad, Turkish bread, hummus, tzatziki, tabouli and your choice of sauce.",
+          "price": 23,
+          "tags": [
+            "contains-gluten",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Turkish Pizza",
+      "sectionId": "turkish-pizza",
+      "note": "Made fresh in two sizes.",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Chicken Turkish Pizza",
+          "dishId": "chicken-turkish-pizza",
+          "desc": "Home made Turkish pizza. 12 inch $18.00; 16 inch $27.00.",
+          "price": 18,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Lamb Turkish Pizza",
+          "dishId": "lamb-turkish-pizza",
+          "desc": "Home made Turkish pizza. 12 inch $18.00; 16 inch $27.00.",
+          "price": 18,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Mixed Turkish Pizza",
+          "dishId": "mixed-turkish-pizza",
+          "desc": "Home made Turkish pizza with chicken and lamb. 12 inch $18.50; 16 inch $28.00.",
+          "price": 18.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetarian Turkish Pizza",
+          "dishId": "vegetarian-turkish-pizza",
+          "desc": "Home made Turkish pizza. 12 inch $18.00; 16 inch $27.00.",
+          "price": 18,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cheese Lovers Turkish Pizza",
+          "dishId": "cheese-lovers-turkish-pizza",
+          "desc": "Home made Turkish pizza. 12 inch $15.00; 16 inch $22.50.",
+          "price": 15,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Diablo Turkish Pizza",
+          "dishId": "diablo-turkish-pizza",
+          "desc": "Home made Turkish pizza, super hot. 12 inch $20.50; 16 inch $30.00.",
+          "price": 20.5,
+          "tags": [
+            "spicy-3",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Salad / Keto",
+      "sectionId": "salad-and-keto",
+      "addOns": [
+        "combo"
+      ],
+      "items": [
+        {
+          "name": "Chicken Salad",
+          "dishId": "chicken-salad",
+          "desc": "With your choice of salad, dips and sauces. Regular $15.00; large $16.50.",
+          "price": 15,
+          "tags": [
+            "gf"
+          ]
+        },
+        {
+          "name": "Lamb Salad",
+          "dishId": "lamb-salad",
+          "desc": "With your choice of salad, dips and sauces. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": []
+        },
+        {
+          "name": "Mixed Salad",
+          "dishId": "mixed-salad",
+          "desc": "With your choice of salad, dips and sauces. Chicken and lamb. Regular $15.00; large $16.50.",
+          "price": 15,
+          "tags": []
+        },
+        {
+          "name": "Falafel Salad",
+          "dishId": "falafel-salad",
+          "desc": "With your choice of salad, dips and sauces. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Vegetarian Salad",
+          "dishId": "vegetarian-salad",
+          "desc": "With your choice of salad, dips and sauces. Regular $14.50; large $16.00.",
+          "price": 14.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Halloumi Salad",
+          "dishId": "halloumi-salad",
+          "desc": "With your choice of salad, dips and sauces. Regular $15.00; large $16.50.",
+          "price": 15,
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Rice Bean Salad",
+          "dishId": "rice-bean-salad",
+          "desc": "Salad served with rice and beans. Regular $12.50; large $15.00.",
+          "price": 12.5,
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Snack Menu",
+      "sectionId": "snack-menu",
+      "note": "A mini kebab or burger filled with lettuce, carrot and onions with one sauce, plus small chips and a small drink.",
+      "items": [
+        {
+          "name": "Lamb Snack",
+          "dishId": "lamb-snack",
+          "desc": "Mini kebab or burger with lettuce, carrot, onions and one sauce, plus small chips and a small drink.",
+          "price": 12.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Snack",
+          "dishId": "chicken-snack",
+          "desc": "Mini kebab or burger with lettuce, carrot, onions and one sauce, plus small chips and a small drink.",
+          "price": 12.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vegetarian Snack",
+          "dishId": "vegetarian-snack",
+          "desc": "Mini kebab or burger with lettuce, carrot, onions and one sauce, plus small chips and a small drink.",
+          "price": 12.5,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Kids Menu",
+      "sectionId": "kids-menu",
+      "note": "Children’s sized meals.",
+      "items": [
+        {
+          "name": "Chicken Nuggets, Chips and a Drink",
+          "dishId": "chicken-nuggets-chips-and-a-drink",
+          "desc": "Six chicken nuggets, chips and a 250ml drink.",
+          "price": 12.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cheesy Toasties, Chips and a Drink",
+          "dishId": "cheesy-toasties-chips-and-a-drink",
+          "desc": "Cheesy toasties, chips and a 250ml drink.",
+          "price": 12.5,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Rice, Meat and Sauce, Chips and a Drink",
+          "dishId": "rice-meat-and-sauce-chips-and-a-drink",
+          "desc": "Rice, meat and sauce, chips and a 250ml drink.",
+          "price": 12.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Sides",
+      "sectionId": "sides",
+      "items": [
+        {
+          "name": "Turkish Bread",
+          "dishId": "turkish-bread",
+          "desc": null,
+          "price": 3.5,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Turkish Garlic Bread",
+          "dishId": "turkish-garlic-bread",
+          "desc": null,
+          "price": 5.5,
+          "tags": [
+            "v",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Turkish Cheese Bread",
+          "dishId": "turkish-cheese-bread",
+          "desc": null,
+          "price": 6,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Turkish Hummus Bread",
+          "dishId": "turkish-hummus-bread",
+          "desc": null,
+          "price": 5.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Turkish Hummus + Tabouli Bread",
+          "dishId": "turkish-hummus-and-tabouli-bread",
+          "desc": null,
+          "price": 6.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Dips",
+          "dishId": "dips",
+          "desc": "Hummus, beetroot or tzatziki.",
+          "price": 6,
+          "tags": [
+            "v",
+            "contains-sesame",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Salad Plate",
+          "dishId": "salad-plate",
+          "desc": null,
+          "price": 4.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Pizza Slice",
+          "dishId": "pizza-slice",
+          "desc": "Chicken.",
+          "price": 4,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chips",
+          "dishId": "chips",
+          "desc": "Regular $5.50; large $9.50.",
+          "price": 5.5,
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Turkish Treats",
+      "sectionId": "turkish-treats",
+      "items": [
+        {
+          "name": "Baklava",
+          "dishId": "baklava",
+          "desc": "Home made.",
+          "price": 5.5,
+          "tags": [
+            "v",
+            "contains-nuts"
+          ]
+        },
+        {
+          "name": "Turkish Delight",
+          "dishId": "turkish-delight",
+          "desc": null,
+          "price": 5.5,
+          "tags": [
+            "v"
+          ]
+        }
+      ]
+    }
+  ]
 }
