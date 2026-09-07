@@ -1,4 +1,4 @@
-- [~] 🚩 **Two of the harness guarantees CLAUDE.md states are not true — a
+- [ ] 🚩 **Two of the harness guarantees CLAUDE.md states are not true — a
       THIRD failure shape it does not describe, and one check that never prints
       the tree line** `[S][tools]` — found 2026-09-07 (session faves-24) while
       building ADR 0091, and both were found the honest way: by a run that
@@ -129,3 +129,28 @@
 
   No CHANGELOG entry: this is developer tooling (the check harness), not a
   user-visible feature or fix in the shipped site.
+
+  🔎 **THE FIX BOUGHT MORE THAN THE TREE LINE, and the delivering agent did not
+  claim this — it was found reviewing the merge.** `report.summary()` opens with
+  `if (transportBroken) abortAsHarnessError("the summary")`, whose own comment
+  says why: *"A run that lost the browser between its final assertion and here
+  would otherwise print a clean `OK — N passed, 0 failed` with a short N, which
+  is the wrong-tree bug's twin: a green line nobody reads twice."* Both
+  hand-rolled summaries went straight to `console.log`, **bypassing that gate**.
+  So for these two checks the hole was not one missing line — it was that a
+  `geo_check` or `served_check` run which lost its browser mid-way could print
+  **`OK`** and exit **0**. That is a false GREEN, which is strictly worse than
+  the false red this section is otherwise about, and neither the item nor
+  CLAUDE.md knew it. Restoring the call closes it.
+  🔑 **Method note worth keeping:** the item's framing ("a one-line change per
+  tool") was accurate about the *edit* and wrong about the *stake*. A defect
+  described by its diff size gets triaged by its diff size.
+
+  📌 **CLAIM RELEASED 2026-09-07 (session faves-b1) — merged to `main` at
+  `4ef7fd6`.** The item stays `- [ ]` because **(a) is still owed** and is
+  unclaimed: it is the classification question — is a geometry throw a claim
+  about the SITE or about the HARNESS? — and it is now a question about
+  `exitFromError`'s fallback branch. 🔗 It should be decided **together with**
+  [`200`](200-untilpresent-can-manufacture-a-false-regression-under-load.md),
+  which the owner ruled this session (retry the whole check once): a retry
+  changes what the fallback should do with a throw that a second run survives.
