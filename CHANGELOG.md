@@ -9,7 +9,20 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
-- **Simmer's menu is dated when it was photographed, not when it was typed
+- **The add-on picker no longer says the same thing twice.** Ticking an extra
+  that brings in an allergen you have asked to avoid *and* breaks the dish's
+  dietary label used to print the fact twice — "Halloumi contains dairy — you
+  asked to avoid it. Halloumi contains dairy, so this is no longer vegan." It is
+  one sentence now: "Halloumi contains dairy — you asked to avoid it, and this
+  is no longer vegan." The allergen still leads, and the label that died is
+  still named, so neither reader loses anything. One extra that breaks two
+  labels reads "…no longer dairy free or vegan" instead of three sentences.
+- **The tag chips on a dish now follow what you have configured.** A dish with a
+  green **Veg** chip beside a warning saying it is no longer vegetarian was
+  telling you two different things at once. Ticking Salmon on a vegetarian pizza
+  now removes the **Veg** and **GF option** chips and adds the fish warning
+  chip; unticking it puts them back. The chips, the dimmed row and the warning
+  line finally agree about what is on the plate.
   up.** The record said 7 September; the photographs it was read from were
   taken on **25 August**. Thirteen days matters because the "this may need a
   refresh" note ages off that date, so an optimistic date quietly delays the

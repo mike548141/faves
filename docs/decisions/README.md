@@ -1034,3 +1034,18 @@ deliberation those compact docs omit.
   was needed**: `composeTags` already composed, so the fix is three tags of
   data. The finfish list is now shared with `tag_allergens.py`, which had
   already drifted 13 species against thirty-odd.
+- [0096](0096-a-tag-with-no-reader-facing-branch-is-not-a-chip.md) — **a tag
+  with no reader-facing branch is not a chip.** Owner ruled (`200/060`) that the
+  dish chip row must re-render from the **composed** tags, so a `Veg` chip stops
+  sitting beside a warning saying the configuration is no longer vegetarian —
+  and that ruling is what first makes `tagChip`'s bare `textContent: t` fallback
+  reachable with an option's vocabulary in it. `has-meat`/`has-fish` would have
+  painted as raw internal identifiers. They are **filtered out of the row**, not
+  labelled: `validate.py` already errors on them on a dish for this exact
+  reason, `has-fish` always ships beside `contains-fish` (ADR 0095) so a chip
+  for it is the duplicate pair the owner ruled against, and the fact is already
+  said twice on the row — the killed claim chip vanishes and the warning names
+  it. Labelling them, and letting them paint raw, were both rejected;
+  break-probed (removing the filter fails exactly the 2 assertions that guard
+  it, 35 passed / 2 failed, nothing else moves). Accepts one bounded silence: a
+  future vocabulary word is dropped rather than painted raw.

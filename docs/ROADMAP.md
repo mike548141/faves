@@ -134,8 +134,9 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [14f — Combos: several dishes ordered as one](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/020-14f-combos-several-dishes-ordered-as-one.md)
 - [ ] [14g — Extras you cannot configure until the dish is ordered](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/030-14g-extras-you-cannot-configure-until-the-dish.md)
 - ✅ [14h — The "we can't say" warning fires 807 times, and Spinach is one…](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/040-14h-the-cant-say-warning-fires-807-times.md)
-- [~] 🔎 [The picker says one clause twice when an allergen both warns AND](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/050-the-picker-says-one-clause-twice.md)
-- [~] 🔎 [The chip row still says Veg on a dish the warning has just said is](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/060-the-chip-row-still-says-veg.md)
+- ✅ 🔎 [The picker says one clause twice when an allergen both warns AND](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/050-the-picker-says-one-clause-twice.md)
+- ✅ 🔎 [The chip row still says Veg on a dish the warning has just said is](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/060-the-chip-row-still-says-veg.md)
+- [ ] 🔎 [The picker still says one SUBSTANCE two ways when the option carries](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/070-the-picker-says-one-substance-two-ways.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
 

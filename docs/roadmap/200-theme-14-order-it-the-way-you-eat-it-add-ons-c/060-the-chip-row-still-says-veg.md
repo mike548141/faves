@@ -1,6 +1,6 @@
-- [~] 🔎 **The chip row still says `Veg` on a dish the warning has just said is
-      no longer vegetarian** `[S][ux][js]` — 🔒 **CLAIMED 2026-09-07 (session
-      faves-picker).** Found 2026-09-07 (wt:
+- [x] 🔎 **The chip row still says `Veg` on a dish the warning has just said is
+      no longer vegetarian** `[S][ux][js]` — ✅ **CLOSED 2026-09-07 (session
+      faves-picker); the claim is released.** Found 2026-09-07 (wt:
       faves-addon-allergens) while verifying `110/040`, **measured in a real
       browser**, and **pre-dates that work** — the same disagreement is
       reachable with bacon, halloumi or prawns.
@@ -84,3 +84,56 @@
   reads `dataset.tags` and the warning and never looks at the chips (it now
   reads them for one absence assertion only), and `focus_check.mjs` compares
   chips before and after **filtering**, never before and after **configuring**.
+
+  ---
+
+  ✅ **BUILT 2026-09-07 (session faves-picker) — option 1, as ruled.**
+  `renderDish` now holds a `paintChips()` closure over the row's chip
+  container; the initial paint and `onCompose` both go through it. Measured in
+  headless Chrome at 390 px, same dish, same option as the report above:
+
+  ```
+  BEFORE tick  chips ["⚠ nuts", "Veg", "GF option"]
+  AFTER  tick  chips ["⚠ nuts", "⚠ Contains fish"]
+  UNTICK       chips ["⚠ nuts", "Veg", "GF option"]   ← byte-identical to before
+  ```
+
+  Both dead claims leave, the allergen the configuration **added** arrives, and
+  the three surfaces agree: `dataset.tags` has no `v`, the row is
+  `dish-flagged`, the warning says *"no longer vegetarian"*, and no chip says
+  `Veg`.
+
+  🔑 **THE NON-READER-FACING TAG DECISION — [ADR 0096](../../decisions/0096-a-tag-with-no-reader-facing-branch-is-not-a-chip.md).**
+  This item was right that the raw-identifier risk becomes real here.
+  `has-meat`/`has-fish` are **filtered out of the chip row**, not labelled: one
+  predicate `isChipTag` inside `tagOrder`, so the first paint and every
+  recomposition share it and cannot diverge. Three reasons, any one sufficient
+  — `validate.py` already makes them an **error on a dish** naming this exact
+  rendering as the reason; `has-fish` always ships beside `contains-fish` (ADR
+  0095), so a chip for it is literally the duplicate pair the owner ruled
+  against; and the fact is already said twice on the row, both louder as of
+  today — the killed claim chip **vanishes** and the warning names it in words.
+  ❌ Labelling them `Meat`/`Fish` was rejected on all three. The bounded cost is
+  stated in the ADR: a *future* vocabulary word is dropped rather than painted
+  raw, which is the safe direction and is still a silence.
+
+  🚩 **Flicker: handled, and measured rather than reasoned about.**
+  `paintChips` compares the composed list with the painted one and returns
+  before touching the DOM when nothing moved — which is the common tap, a free
+  sauce carrying no tags. When it *has* moved, `replaceChildren` swaps the row
+  in one paint. `tagOrder`'s allergens-first order is preserved (it is the same
+  function).
+  🔎 **One structural change the ruling implies and the item did not name:** the
+  container is now built **unconditionally**, because a dish with *no* tags can
+  GAIN one by configuration — satay on a plain kebab — and there was otherwise
+  nowhere to put it. `.dish-tags:empty { display: none }` keeps an untagged,
+  unconfigured row laid out exactly as before.
+
+  🧪 **Break-probed, twice, and the two halves fail independently.** Unwiring
+  `paintChips(composed)` fails **exactly four** assertions (the two claims
+  leaving, the allergen arriving, the surfaces agreeing) and leaves the baseline
+  and untick assertions passing — correctly, since a row that never changes
+  passes both. Removing the `isChipTag` filter fails **exactly two** — both
+  raw-identifier absences, on two different dishes — and moves nothing else:
+  proof that the defect this item warned about is real and that the filter is
+  what prevents it.
