@@ -140,9 +140,22 @@
   `simmer.json`'s `verified` should read **2026-08-25**, not 2026-09-07. Under
   ADR 0047's rule this is a **correction, not a shop change** — *did the shop
   change it, or did we?* — so it **overwrites and appends no history**.
-  ⏸️ Not done at the moment of filing: two agents were live in `site/data/` and
-  editing another session's lane is the concurrency rule this repo does not
-  bend.
+  ✅ **DONE 2026-09-07** — `verified` now reads `2026-08-25`, the date the
+  evidence carries. Applied as a single-line string replacement rather than a
+  re-serialisation, so a concurrent agent's tag sweep over the same file merges
+  cleanly.
+  🔎 **And it immediately produced the effect the item predicted**, which is the
+  cheapest possible confirmation that the field is load-bearing: `validate.py`'s
+  warning count for the corpus moved the moment the date became truthful.
+
+  🔎 **A second surface, found while correcting it, and it needs no second
+  fix.** `tools/validate.py` *itself* warns *"[simmer] Gluten free toast:
+  missing contains-gluten (DERIVED — a wheat bakery item (toast))"* — so the
+  hedge defect nags from the validator as well as from the tagger. It imports
+  `audit` from `tag_allergens` (line 2046), so **the two share one rule set and
+  one fix silences both**. Worth recording because the opposite — two
+  implementations of one question, both locally right, only one updated — is a
+  failure this repo has already paid for.
 
   🔗 Related: [`270/010`](../270-theme-19-from-the-2026-08-15-johnsonville-inta/010-age-detailsverified-the-way-refreshcaveat-ages.md)
   (a venue never checked and one long stale render alike) — that item is about
