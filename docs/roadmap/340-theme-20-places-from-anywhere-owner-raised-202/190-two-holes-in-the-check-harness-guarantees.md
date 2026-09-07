@@ -81,3 +81,51 @@
   assertion failure or a harness error? it interacts with `160`'s ruled split);
   (b) is a one-line change per tool to call `report.summary(SITE)` and should
   ride with whatever next touches `geo_check` or `served_check`.
+
+  ✅ **PART (b) DELIVERED 2026-09-07 (session faves-tree-line), part (a)
+  UNTOUCHED and still open.** `tools/geo_check.mjs` and
+  `tools/served_check.mjs` each hand-rolled their final summary; both now end
+  with `report.summary(SITE)` — byte-identical in shape to the other checks
+  that use their respective return convention (`return report.summary(SITE);`
+  for `geo_check.mjs`, matching `to_top_check.mjs`/`picks_check.mjs`/etc.;
+  `return report.summary(SITE) ? 0 : 1;` for `served_check.mjs`, matching the
+  `exitFromError`-wired checks `cook_check.mjs`/`branch_check.mjs`/
+  `device_check.mjs`/`sync_check.mjs`/`addon_check.mjs`). No change to
+  `exitFromError` or to how errors are classified — that is (a), left alone.
+
+  Re-swept after the fix: `grep -L "summary(SITE)" tools/*_check.mjs` now
+  returns nothing (was exactly the same two files before). Also checked
+  whether any check calls `report.summary(...)` with something other than
+  `SITE` — `grep -n "report.summary(" tools/*_check.mjs | grep -v
+  "summary(SITE)"` returns nothing, so no check was printing a tree line
+  naming the wrong tree.
+
+  Verbatim evidence, worktree `/Users/mike/worktrees/faves-tree-line`, branch
+  `tree-line` at `b0fb27a` (this repo confirms it: `git rev-parse --short
+  HEAD` → `b0fb27a`):
+
+  ```
+  $ node tools/geo_check.mjs
+  ...
+  OK — 22 passed, 0 failed
+     tree /Users/mike/worktrees/faves-tree-line/site · shell 2026-09-07.7 · tree-line@b0fb27a
+
+  $ node tools/served_check.mjs
+  ...
+  OK — 55 passed, 0 failed
+     tree /Users/mike/worktrees/faves-tree-line/site · shell 2026-09-07.7 · tree-line@b0fb27a
+  ```
+
+  Regression checked the other thirteen were not disturbed: `node
+  tools/boot_check.mjs` (OK — 24 passed, 0 failed) and `node
+  tools/to_top_check.mjs` (OK — 64 passed, 0 failed), both printing the same
+  tree line. Also ran the cheap gates: `python3 tools/check_no_deps.py` (zero-
+  dependency invariant holds), `python3 tools/check_decisions.py` (92 records,
+  clean), `python3 tools/validate.py` (57/57 restaurant files valid — only
+  pre-existing, unrelated warnings), `python3 tools/check_versions.py --range
+  origin/main..HEAD` ("Version lockstep not in scope: nothing under site/
+  changed" — correct, this change is `tools/`-only, no `SHELL_VERSION`/
+  `DATA_VERSION` bump owed), and `node --test` (1158/1158 pass).
+
+  No CHANGELOG entry: this is developer tooling (the check harness), not a
+  user-visible feature or fix in the shipped site.
