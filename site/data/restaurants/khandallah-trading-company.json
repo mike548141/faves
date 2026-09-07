@@ -249,7 +249,8 @@
             "gf-option",
             "contains-dairy",
             "contains-egg",
-            "contains-fish"
+            "contains-fish",
+            "contains-gluten"
           ]
         },
         {
@@ -406,7 +407,8 @@
           "price": 16.5,
           "tags": [
             "gf-option",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -475,7 +477,8 @@
           "price": 31.0,
           "tags": [
             "gf-option",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         }
       ]

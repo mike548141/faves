@@ -1876,7 +1876,9 @@
               "recorded": "2026-08-08"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Calamari Ring (each)",
@@ -2722,7 +2724,8 @@
             }
           ],
           "tags": [
-            "contains-fish"
+            "contains-fish",
+            "contains-gluten"
           ]
         }
       ]

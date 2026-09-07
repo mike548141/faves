@@ -706,7 +706,8 @@
           "desc": "Eggs your way on toasted sourdough, bacon, sausages, grilled tomato, potato rosti, roasted field mushrooms and hollandaise.",
           "price": 28.5,
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -717,7 +718,8 @@
           "tags": [
             "v",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {

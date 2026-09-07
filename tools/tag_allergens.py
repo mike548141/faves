@@ -188,12 +188,22 @@ RULES = [
     ("contains-fish", "DERIVED", "ceviche is raw fish cured in citrus", r"\bceviche\b", None),
 
     # --- gluten -------------------------------------------------------
+    # `baguette`, `hoagie`, `sourdough` and `crouton` are here for the same
+    # reason `bread` is: each names a wheat loaf outright, and a reader who has
+    # to know that a hoagie is a bread roll is the reader the warning is for.
+    # Added 2026-09-08 (roadmap 110/050) — `bread` was already catching "Turkish
+    # bread" at the same venue, so this was never a missing category, only a
+    # missing vocabulary inside one.
     ("contains-gluten", "STATED", "names a wheat product",
-     r"\b(bread|breaded|flour|wheat|barley|rye|semolina|couscous|pastry|pasta|"
+     r"\b(bread|breaded|flour|wheat|barley|rye|semolina|couscous|pastr(?:y|ies)|pasta|"
      r"spaghetti|lasagne|lasagna|ravioli|fettuccine|penne|croissant|bagel|pita|"
-     r"naan|rotis?|paratha|chapati|brioche|crumpet|pretzel|filo|panko|breadcrumb)\b", None),
+     r"naan|rotis?|paratha|chapati|brioche|crumpet|pretzel|filo|panko|breadcrumb|"
+     r"baguette|hoagie|sourdough|crouton)\b", None),
+    # A nugget on a NZ menu is crumbed — chicken, corn or otherwise. It sits in
+    # the coating rule rather than the bakery one because that is what makes it
+    # wheat: the coating, not the thing inside it.
     ("contains-gluten", "DERIVED", "battered/crumbed coatings are wheat flour",
-     r"\b(battered|crumbed|schnitzel|katsu|tempura)\b", None),
+     r"\b(battered|crumbed|schnitzel|katsu|tempura|nugget)\b", None),
     ("contains-gluten", "DERIVED", "a wheat-flour wrapper",
      # `tortillas?` added 2026-08-16 with the cheddar gap. Corn tortillas are
      # real and are the excluded case below — but a burrito or a wrap on a NZ
@@ -204,14 +214,24 @@ RULES = [
      r"\b(rice\s?paper|corn\s?tortillas?)\b"),
     # "pie spice" is a spice blend, and a fish/crab/rice cake is not a bakery
     # cake — both found by dry-run against the real corpus.
+    # `sando` is a sandwich named the way a menu names it now, and nothing else
+    # in English spells it. It sits beside `sandwich` because it IS one.
     ("contains-gluten", "DERIVED", "a wheat bakery item",
-     r"\b(buns?|burgers?|sandwich|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
+     r"\b(buns?|burgers?|sandwich|sando|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
      r"brownies?|muffins?|scones?|doughnuts?|donuts?|pizzas?|pancakes?|waffles?|"
      r"crackers?|tarts?|slices?|danish|éclair|eclair)\b",
      r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),
     ("contains-gluten", "DERIVED", "a wheat noodle",
      r"\b(udon|ramen|egg\s?noodles?|chow\s?mein|lo\s?mein|hokkien|mee\s?goreng|"
      r"bami\s?goreng|chow\s?fun)\b", None),
+    # TWO RULES, ONE FACT, TWO ALLERGENS — the shape ADR 0095 argued for on the
+    # add-on fish pair. A Yorkshire pudding is flour, milk and egg baked in
+    # dripping; the gluten and the egg are independent claims about it, and the
+    # egg twin lives in the egg block below. Neither reads the other's tag, so
+    # deleting one leaves the other standing rather than silently taking it too.
+    # A bare `pudding` is deliberately NOT matched — a rice pudding is not wheat.
+    ("contains-gluten", "DERIVED", "a Yorkshire pudding is a flour-and-egg batter",
+     r"\byorkshire\s?pudding\b", None),
     ("contains-gluten", "DERIVED", "soy sauce is brewed with wheat",
      r"\b(soy\s?sauce|soya\s?sauce|teriyaki|hoisin)\b", None),
     # Ginger beer and root beer are soft drinks, not brewed from barley — the
@@ -252,6 +272,12 @@ RULES = [
      r"(butter|milk|cream|yoghurt|yogurt)\b"),
     ("contains-dairy", "DERIVED", "an espresso milk drink",
      r"\b(latte|cappuccino|mocha|flat\s?white|macchiato)\b", NON_DAIRY),
+    # Tzatziki is yoghurt, cucumber and garlic — the yoghurt is the dish, and
+    # the word "yoghurt" never appears beside it on a menu. 23 rows of one
+    # kebab shop carry it. No `exclude`: a vegan tzatziki is real but rare, and
+    # a venue that makes one says so with `vg`/`df`, which CONTRADICTED_BY
+    # already outranks this rule with.
+    ("contains-dairy", "DERIVED", "tzatziki is a yoghurt dip", r"\btzatziki\b", None),
     ("contains-dairy", "DERIVED", "the sauce is cream- or butter-based",
      r"\b(alfredo|carbonara|butter\s?chicken|korma|tikka\s?masala|ganache|"
      r"cheesecake|tiramisu|panna\s?cotta)\b", None),
@@ -267,6 +293,9 @@ RULES = [
      r"tartare\s?sauce|tartar\s?sauce)\b", None),
     ("contains-egg", "DERIVED", "egg is in the batter or base",
      r"\b(omelettes?|frittata|quiche|carbonara|tempura|tiramisu)\b", None),
+    # The egg half of the Yorkshire pudding pair; see the gluten twin above.
+    ("contains-egg", "DERIVED", "a Yorkshire pudding is a flour-and-egg batter",
+     r"\byorkshire\s?pudding\b", None),
 
     # --- soy ----------------------------------------------------------
     ("contains-soy", "STATED", "names soy",
@@ -279,8 +308,52 @@ RULES = [
     ("contains-sesame", "DERIVED", "hummus is made with tahini", r"\b(hummus|houmous|halva)\b", None),
 ]
 
+# --- plurals, fixed once for every rule (2026-09-08, roadmap 110/050) -------
+# Every rule above is `\b(alternatives)\b`, and until 2026-09-08 the ONLY way an
+# alternative matched its own plural was a hand-written `s?` on that one word.
+# Miss it and the shared trailing `\b` refuses the plural outright: `toastie`
+# tagged "Corn Cheese Toastie" and could not see "Cheesy toasties", and
+# `sandwich` could not see "sandwiches". Measured, not reasoned: 5 words the
+# corpus already uses in the plural were unreachable, across 4 rules.
+#
+# Adding `s?` to each of ~250 alternatives is 250 chances to miss one and
+# nothing that would report it, so the plural is applied ONCE, to the rule's
+# closing boundary, by the compiler below.
+#
+# 🛑 WHY NOT THE OBVIOUS `(?:e?s)?`. A bare `e?s` also spells `cod` + `es` =
+# "codes", which is a false FISH warning built out of a word that has nothing to
+# do with food. English only takes `-es` after a sibilant, so that is all this
+# allows — and the two lookbehinds are fixed-width, which `re` requires. It
+# keeps "sandwiches", "danishes" and "hummuses"; it refuses "codes", "tartes"
+# and "pitaes".
+#
+# `-y → -ies` cannot be done by a suffix at all (the `y` has to go), so the two
+# words that need it spell it out in the rule: `anchov(?:y|ies)` and
+# `pastr(?:y|ies)`.
+PLURAL = r"(?:s|(?<=[sxz])es|(?<=[cs]h)es)?"
+
+# A rule whose pattern deliberately does NOT close with `\b` — it is already
+# open at the end, so a plural needs nothing added. Listed rather than inferred
+# so a NEW rule that forgets its closing boundary is a test failure and not a
+# silent opt-out (test_tag_allergens.py, "every rule tolerates a plural").
+OPEN_ENDED = {r"\bgado"}
+
+
+def compile_rule(pat):
+    """Compile a rule pattern so its closing word boundary tolerates a plural.
+
+    Applied to a rule's `exclude` as well as its pattern, and that is not
+    symmetry for its own sake: widening only the pattern turns "coconut
+    yoghurts" into a dairy warning and "ginger beers" into a gluten one,
+    because the guard that vetoes the singular can no longer see the plural.
+    """
+    if not pat.endswith(r"\b"):
+        return re.compile(pat, re.I)
+    return re.compile(pat[:-2] + PLURAL + r"\b", re.I)
+
+
 COMPILED = [
-    (tag, tier, why, re.compile(pat, re.I), re.compile(exc, re.I) if exc else None)
+    (tag, tier, why, compile_rule(pat), compile_rule(exc) if exc else None)
     for tag, tier, why, pat, exc in RULES
 ]
 

@@ -48,6 +48,7 @@ TAWA = "site/data/restaurants/sprig-and-fern-tawa.json"
 KEBAB = "site/data/restaurants/wellington-kebab-grill.json"
 CHARLEY = "site/data/restaurants/charley-noble.json"
 SIMMER = "site/data/restaurants/simmer.json"
+ABRAKEBABRA = "site/data/restaurants/abrakebabra.json"
 
 # --- the hedge (2026-09-07) -----------------------------------------------
 # Simmer is the record the fault was MEASURED on, so it is the record the cases
@@ -466,6 +467,28 @@ def check_unwritable_record_is_loud(after, out):
     return None
 
 
+def check_a_plural_rule_word_is_tagged(after, out):
+    """"Cheesy toasties" — the row the plural fault was reported against.
+
+    `toastie` is a rule word and it tagged "Corn Cheese Toastie" at another
+    venue on the same day; the shared trailing `\\b` is what refused the plural.
+    Run against the real record rather than a probe because the whole path —
+    scan, match, patch, write — is what has to produce the tag.
+
+    `contains-dairy` is the proof of write and it is the RIGHT control: it comes
+    from "Cheesy", which the matcher could always see. Remove the plural
+    mechanism and the dairy still returns while the gluten does not, so the case
+    fails for the one reason it exists for.
+    """
+    tags = _dish(after, "cheesy-toasties-chips-and-a-drink") or set()
+    if "contains-dairy" not in tags:
+        return ("the tool wrote nothing to this row — the case proves nothing "
+                f"(has {sorted(tags)})")
+    if "contains-gluten" not in tags:
+        return f"'Cheesy toasties' did not produce contains-gluten (has {sorted(tags)})"
+    return None
+
+
 CASES = {
     "a venue with add-ons is patched, not skipped": (
         THORNDON, STRIP_BURGERS, 0, check_addon_venue_is_patched),
@@ -626,6 +649,21 @@ CASES = {
           "price": 21.0,
           "tags": ["df"]""")],
         0, check_single_line_layout_survives),
+    "a plural rule word is tagged on a real record": (
+        ABRAKEBABRA,
+        [("""          "desc": "Cheesy toasties, chips and a 250ml drink.",
+          "price": 12.5,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-gluten"
+          ]""",
+          """          "desc": "Cheesy toasties, chips and a 250ml drink.",
+          "price": 12.5,
+          "tags": [
+            "v"
+          ]""")],
+        0, check_a_plural_rule_word_is_tagged),
     "a record it cannot write makes the run fail": (
         THORNDON,
         # Take the tags key away from a dish that is about to gain one. The old
@@ -653,6 +691,118 @@ RAW_CHECKS = {
         lambda raw: None if '"tags": ["df", "contains-fish", "contains-gluten"]' in raw
         else "the array was reflowed or not patched",
 }
+
+
+# --- word probes (2026-09-08, roadmap 110/050) ------------------------------
+# A CASE above proves the whole path — scan, match, patch, write — on one real
+# record. A PROBE proves one RULE, on one line of text, and that is the right
+# granularity for a vocabulary: eight new words and a plural mechanism need
+# eight-plus answers, and eight real records to strip would be eight brittle
+# text mutations that say less.
+#
+# The probes run the REAL rule set, in a subprocess, inside the work tree — so
+# a BREAKER that has just rewritten `tools/tag_allergens.py` is what they read.
+# Each group must contain at least one PRESENCE probe (enforced by the runner):
+# a group that only asserts absences is satisfied perfectly by a tool that has
+# stopped matching anything at all, which is this file's oldest lesson.
+PROBE_DRIVER = """
+import json, sys
+sys.path.insert(0, "tools")
+from tag_allergens import audit
+out = []
+for text in json.load(sys.stdin):
+    record = {"menu": [{"items": [{"name": text, "tags": []}]}]}
+    out.append(sorted({tag for _i, tag, _t, _w in audit(record)}))
+json.dump(out, sys.stdout)
+"""
+
+# group name -> [(text, tags it MUST gain, tags it must NOT gain), …]
+PROBES = {
+    # (a) The eight words the tool had never heard of. Each line is the phrasing
+    # the word was actually found in (roadmap 110/050's table), so a probe that
+    # passes says the real menu row would have been tagged.
+    "the eight missing food words are read": [
+        ("Crusty baguette served with hot beef jus", {"contains-gluten"}, set()),
+        ("Pulled pork on a soft hoagie roll", {"contains-gluten"}, set()),
+        ("Wagyu steak sando", {"contains-gluten"}, set()),
+        ("Toasted sourdough, candied jalapeños", {"contains-gluten"}, set()),
+        ("Ranch, pancetta, herb crouton", {"contains-gluten"}, set()),
+        # BOTH tags, because they are two independent rules on one fact. Delete
+        # either and this line fails while the other tag still stands, which is
+        # the property the pair was written apart for (ADR 0095's shape).
+        ("Yorkshire pudding", {"contains-gluten", "contains-egg"}, set()),
+        ("Six chicken nuggets, chips", {"contains-gluten"}, set()),
+        ("Lamb kebab with tzatziki", {"contains-dairy"}, set()),
+        # …and the narrowing that keeps the Yorkshire rule honest: a pudding is
+        # not thereby wheat. A rice pudding is a rice pudding.
+        ("Rice pudding", set(), {"contains-gluten", "contains-egg"}),
+    ],
+    # (b) The plural, once, for every rule.
+    "a rule word matches its own plural": [
+        ("Corn Cheese Toastie", {"contains-gluten"}, set()),
+        ("Cheesy toasties", {"contains-gluten"}, set()),
+        ("Two sandwiches", {"contains-gluten"}, set()),
+        # `pastries` needs the -y -> -ies spelling in the rule; a suffix cannot
+        # reach it. NOT "Danish pastries", because `danish` is a rule word of
+        # its own and would carry the line with `pastry` deleted.
+        ("Assorted pastries", {"contains-gluten"}, set()),
+        ("Ranch, pancetta, herb croutons", {"contains-gluten"}, set()),
+        ("Six chicken nuggets", {"contains-gluten"}, set()),
+    ],
+    # (c) 🛑 THE DANGEROUS HALF. Widening a rule's pattern without widening its
+    # own `exclude` is not a smaller version of the fix — it is a NEW false
+    # warning, on exactly the dishes the excludes were written for. Measured on
+    # 2026-09-08 before the fix was finished: pattern-only widening puts
+    # contains-dairy on "coconut yoghurts" and contains-gluten on "ginger
+    # beers". Both are the over-warning ADR 0025 tolerates *in general* and the
+    # water-chestnut ruling refuses *here*: a plant yoghurt warned about dairy
+    # is a false warning on the one row a dairy-avoiding reader is hunting for.
+    "the plural does not widen a rule past its own guard": [
+        ("House granola with coconut yoghurts", set(), {"contains-dairy"}),
+        ("Oat milks", set(), {"contains-dairy"}),
+        ("Ginger beers", set(), {"contains-gluten"}),
+        ("Rice cakes", set(), {"contains-gluten"}),
+        ("Corn tortillas", set(), {"contains-gluten"}),
+        # The controls. Without these a rule set that matched nothing at all
+        # would satisfy every line above.
+        ("Yoghurt and berries", {"contains-dairy"}, set()),
+        ("A pint of lager", {"contains-gluten"}, set()),
+    ],
+    # (d) …and the other direction the plural can over-reach: `-es` after a
+    # letter that never takes it in English. `cod` + `es` spells "codes", which
+    # would be a FISH warning built out of a word with no food in it.
+    "the plural does not invent a word out of -es": [
+        ("Scan the QR codes on the table", set(), {"contains-fish"}),
+        ("Boysenberry tartes", set(), {"contains-gluten"}),
+        # The controls: the same two rules still read the real words.
+        ("Blue cod, chips", {"contains-fish"}, set()),
+        ("Boysenberry tart", {"contains-gluten"}, set()),
+    ],
+}
+
+
+def run_probes(work, name, verbose=False):
+    """Run one PROBES group against the tool as it currently sits in `work`."""
+    lines = PROBES[name]
+    if not any(want for _t, want, _n in lines):
+        return "the group asserts no PRESENCE — a tool matching nothing passes it"
+    proc = subprocess.run(
+        [sys.executable, "-c", PROBE_DRIVER], cwd=work, timeout=120,
+        input=json.dumps([t for t, _w, _n in lines]), capture_output=True, text=True,
+    )
+    if proc.returncode != 0:
+        return f"the rule set would not load: {proc.stderr.strip().splitlines()[-1:]}"
+    got = json.loads(proc.stdout)
+    for (text, want, forbid), tags in zip(lines, got):
+        if verbose:
+            print(f"       | {text!r} -> {tags}")
+        missing = want - set(tags)
+        if missing:
+            return f"{text!r} did not gain {sorted(missing)} (got {tags})"
+        wrong = forbid & set(tags)
+        if wrong:
+            return f"{text!r} was given {sorted(wrong)} (got {tags})"
+    return None
 
 
 # --- reintroducing the bugs ------------------------------------------------
@@ -771,6 +921,74 @@ BREAKERS = {
         [("        elif not UNIVERSAL.search(clause):", "        elif False:")],
         ["a clause about one dish does not reach the section"],
     ),
+    # --- vocabulary and plurals (2026-09-08, roadmap 110/050) --------------
+    # One breaker per added word. A word list is the easiest thing in this file
+    # to add to and the easiest to lose in a merge, so each one has to be
+    # individually load-bearing: delete it and exactly the group that names it
+    # fails.
+    "the baguette rule word removed": (
+        [(r'r"baguette|hoagie|sourdough|crouton)\b"', r'r"hoagie|sourdough|crouton)\b"')],
+        ["the eight missing food words are read"]),
+    "the hoagie rule word removed": (
+        [(r'r"baguette|hoagie|sourdough|crouton)\b"', r'r"baguette|sourdough|crouton)\b"')],
+        ["the eight missing food words are read"]),
+    "the sourdough rule word removed": (
+        [(r'r"baguette|hoagie|sourdough|crouton)\b"', r'r"baguette|hoagie|crouton)\b"')],
+        ["the eight missing food words are read"]),
+    "the crouton rule word removed": (
+        [(r'r"baguette|hoagie|sourdough|crouton)\b"', r'r"baguette|hoagie|sourdough)\b"')],
+        ["the eight missing food words are read",
+         "a rule word matches its own plural"]),
+    "the nugget rule word removed": (
+        [(r"|schnitzel|katsu|tempura|nugget)\b", r"|schnitzel|katsu|tempura)\b")],
+        ["the eight missing food words are read",
+         "a rule word matches its own plural"]),
+    "the sando rule word removed": (
+        [(r"\b(buns?|burgers?|sandwich|sando|toast|", r"\b(buns?|burgers?|sandwich|toast|")],
+        ["the eight missing food words are read"]),
+    # The Yorkshire pair, one breaker each. Deleting the gluten rule must NOT
+    # take the egg tag with it and vice versa — that is what "two rules, one
+    # fact" buys, and a single rule emitting both tags would pass one of these
+    # breakers by accident.
+    "the Yorkshire gluten rule removed (the egg twin must survive)": (
+        [('("contains-gluten", "DERIVED", "a Yorkshire pudding is a flour-and-egg batter",\n'
+          '     r"\\byorkshire\\s?pudding\\b", None),',
+          '("contains-gluten", "DERIVED", "a Yorkshire pudding is a flour-and-egg batter",\n'
+          '     r"\\ba-dish-no-menu-names\\b", None),')],
+        ["the eight missing food words are read"]),
+    "the Yorkshire egg rule removed (the gluten twin must survive)": (
+        [('("contains-egg", "DERIVED", "a Yorkshire pudding is a flour-and-egg batter",\n'
+          '     r"\\byorkshire\\s?pudding\\b", None),',
+          '("contains-egg", "DERIVED", "a Yorkshire pudding is a flour-and-egg batter",\n'
+          '     r"\\ba-dish-no-menu-names\\b", None),')],
+        ["the eight missing food words are read"]),
+    "the tzatziki rule removed": (
+        [(r'"tzatziki is a yoghurt dip", r"\btzatziki\b"',
+          r'"tzatziki is a yoghurt dip", r"\ba-dip-no-menu-names\b"')],
+        ["the eight missing food words are read"]),
+    "the -y -> -ies spelling reverted to a bare pastry": (
+        [(r"couscous|pastr(?:y|ies)|pasta|", r"couscous|pastry|pasta|")],
+        ["a rule word matches its own plural"]),
+
+    # The mechanism itself, broken three ways — the fault as reported, and the
+    # two "obvious fixes" for it, both of which over-reach.
+    "the plural mechanism removed (the fault as reported)": (
+        [('PLURAL = r"(?:s|(?<=[sxz])es|(?<=[cs]h)es)?"', 'PLURAL = r""')],
+        ["a rule word matches its own plural",
+         "a plural rule word is tagged on a real record"]),
+    # 🛑 THE DANGEROUS ONE. Widen the pattern, leave the exclude on the raw
+    # form, and the guard that vetoes "coconut yoghurt" can no longer see
+    # "coconut yoghurts". Measured before the fix landed: contains-dairy on a
+    # plant yoghurt and contains-gluten on a ginger beer.
+    "the plural widens the pattern but not the exclude": (
+        [("    (tag, tier, why, compile_rule(pat), compile_rule(exc) if exc else None)",
+          "    (tag, tier, why, compile_rule(pat), re.compile(exc, re.I) if exc else None)")],
+        ["the plural does not widen a rule past its own guard"]),
+    # …and the lazier suffix, which spells `cod` + `es`.
+    "the plural allows -es after any letter": (
+        [('PLURAL = r"(?:s|(?<=[sxz])es|(?<=[cs]h)es)?"', 'PLURAL = r"(?:e?s)?"')],
+        ["the plural does not invent a word out of -es"]),
+
     "an unwritable record exits 0 again": (
         [("    if skipped:\n"
           '        print(f"\\n{len(skipped)} record(s) NOT written — the sweep is incomplete.")\n'
@@ -821,6 +1039,41 @@ def run_case(work, name, verbose=False):
             path.write_bytes(data)
 
 
+def run_named(work, name, verbose=False):
+    """Run a CASE or a PROBE group by name, whichever this is."""
+    if name in CASES:
+        return run_case(work, name, verbose)
+    if name in PROBES:
+        return run_probes(work, name, verbose)
+    return f"no case or probe called {name!r}"
+
+
+def check_every_rule_tolerates_a_plural(work):
+    """A rule pattern that does not close with `\\b` never gets the plural.
+
+    The mechanism is applied at the closing boundary, so a NEW rule written
+    without one silently opts out and nothing else would ever say so. The one
+    deliberate case (`\\bgado`, open at the end already) is listed in the tool
+    as `OPEN_ENDED`; anything else is an accident.
+    """
+    driver = """
+import json, sys
+sys.path.insert(0, "tools")
+from tag_allergens import RULES, OPEN_ENDED
+json.dump([[tag, pat] for tag, _tier, _why, pat, _exc in RULES
+           if not pat.endswith(chr(92) + "b") and pat not in OPEN_ENDED], sys.stdout)
+"""
+    proc = subprocess.run([sys.executable, "-c", driver], cwd=work,
+                          capture_output=True, text=True, timeout=120)
+    if proc.returncode != 0:
+        return f"the rule set would not load: {proc.stderr.strip().splitlines()[-1:]}"
+    stray = json.loads(proc.stdout)
+    if stray:
+        return ("rule(s) that never receive the plural and are not listed as "
+                f"OPEN_ENDED: {stray}")
+    return None
+
+
 def check_dry_run_writes_nothing(work):
     """The default run is a report. If it can write, every other guarantee is off."""
     before = {p: p.read_bytes() for p in (work / "site/data").rglob("*.json")}
@@ -844,14 +1097,16 @@ def main() -> int:
         shutil.copytree(ROOT / "tools", work / "tools")
         shutil.copytree(ROOT / "site" / "data", work / "site" / "data")
 
-        complaint = check_dry_run_writes_nothing(work)
-        print(f"  {'❌' if complaint else '✅'} {'a dry run writes nothing':52} "
-              f"{complaint or 'clean'}")
-        if complaint:
-            failures.append("dry run writes nothing")
+        for label, fn in (("a dry run writes nothing", check_dry_run_writes_nothing),
+                          ("every rule tolerates a plural",
+                           check_every_rule_tolerates_a_plural)):
+            complaint = fn(work)
+            print(f"  {'❌' if complaint else '✅'} {label:52} {complaint or 'clean'}")
+            if complaint:
+                failures.append(label)
 
-        for name in CASES:
-            complaint = run_case(work, name, args.verbose)
+        for name in list(CASES) + list(PROBES):
+            complaint = run_named(work, name, args.verbose)
             print(f"  {'❌' if complaint else '✅'} {name:52} {complaint or 'as specified'}")
             if complaint:
                 failures.append(name)
@@ -873,7 +1128,7 @@ def main() -> int:
                 continue
             tool.write_text(broken, encoding="utf-8")
             try:
-                survived = [c for c in covered if run_case(work, c, args.verbose) is None]
+                survived = [c for c in covered if run_named(work, c, args.verbose) is None]
             finally:
                 tool.write_text(good, encoding="utf-8")
             ok = not survived
@@ -885,7 +1140,7 @@ def main() -> int:
     if failures:
         print(f"\n{len(failures)} failure(s): {', '.join(failures)}", file=sys.stderr)
         return 1
-    print(f"\nAll {len(CASES) + len(BREAKERS) + 1} cases behaved as specified.")
+    print(f"\nAll {len(CASES) + len(PROBES) + len(BREAKERS) + 2} cases behaved as specified.")
     return 0
 
 
