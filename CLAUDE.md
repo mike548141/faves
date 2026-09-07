@@ -264,6 +264,19 @@ python3 tools/check_fallback.py # the no-JS <ul> in site/index.html still mirror
                               # rule below was unenforced from the day it was written;
                               # its first run found NINE venues with finished menus
                               # rendered as unreachable "Menu coming soon" cards
+python3 tools/check_precache.py # every path site/sw.js precaches EXISTS in site/.
+                              # The install step's own `!res.ok → throw` cannot
+                              # tell you this on Pages: a path Pages does not have
+                              # is answered with index.html and a **200** (curl'd
+                              # 2026-09-08), so the guard passes on exactly the
+                              # input it exists to catch. Reads SHELL, the two data
+                              # constants and the menu-URL TEMPLATE out of sw.js
+                              # with a parse that must re-emit what it read byte for
+                              # byte (ADR 0076) — fewer paths is the answer that
+                              # makes a completeness check pass in silence.
+                              # `--self-test` proves it still refuses (9 cases, one
+                              # of them the unmutated tree, so a gate broken into
+                              # refusing everything cannot pass)
 python3 tools/check_decisions.py # every ADR is in the decisions index (it's the
                               # allocator — an unindexed record is how a number
                               # gets reused; seven were missing on 2026-08-16)

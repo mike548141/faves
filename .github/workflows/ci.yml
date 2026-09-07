@@ -97,6 +97,18 @@ jobs:
       # times is not a guard, so it is a gate now.
       - name: Assert every decision record is indexed
         run: python3 tools/check_decisions.py
+      # A path in sw.js's precache list that does not exist installs CLEAN on
+      # Cloudflare Pages: a missing path there is answered with index.html and a
+      # 200, so the install's own `!res.ok → throw` never fires and the shell is
+      # broken only offline, with nothing red anywhere (ADR 0098). Nothing
+      # checked this until 2026-09-08.
+      - name: Assert every precached path exists
+        run: python3 tools/check_precache.py
+      # And prove it can still fire. The parse is strict on purpose — a shape it
+      # half-recognises must be REFUSED, because "fewer paths" is the reading
+      # that makes the check above pass on a broken list.
+      - name: Prove the precache gate actually catches things
+        run: python3 tools/check_precache.py --self-test
       # The no-JS `<ul>` in site/index.html is the home screen a reader gets
       # when app.js has not run — which is not hypothetical: an unimported
       # symbol made it the live home screen on 2026-08-16 while 570 unit tests
