@@ -141,32 +141,52 @@
   3. **Hotel Bristol's beer and cider are listed with ABV and no price**, so
      the taps, the bottles and the RTDs are not captured. The wine, which is
      priced by the glass and the bottle, is.
-  4. **Abrakebabra publishes no hours for Wednesday.** An empty day in the
-     `hours` shape asserts *closed*, and unknown is not closed, so `hours`
-     stays `null` rather than claiming six known days and one invented one.
+  4. **Abrakebabra publishes no hours for Wednesday.** It lists Sunday to
+     Tuesday, Thursday, Friday and Saturday, and says nothing at all about
+     Wednesday. An empty day in the `hours` shape asserts *closed*, and unknown
+     is not closed, so `hours` stays `null` rather than claiming six known days
+     and one invented one. Telling a reader a kebab shop is shut when it is
+     trading is the direction ADR 0094 was written to stop.
+     ⚠️ **The commit that landed this record gave a second reason — that the
+     Thursday-to-Saturday closes after midnight could not be expressed
+     either — and that reason was already stale when it was written.** ADR
+     0094 landed on `main` the same day and makes the wrap legal; the rebase
+     brought it in. Wednesday alone is what blocks the field. Correcting it
+     here rather than rewriting the commit, because the commit is the record
+     of what was believed at the time.
 
   ### Found and filed, not fixed
 
-  🚩 **The allergen tagger has no rule for several everyday bread words.**
+  🚩 **The allergen tagger has no rule for several everyday food words.**
   Working through five menus it missed `baguette`, `hoagie roll`, `sando`,
-  `sourdough`, `crouton` and `Yorkshire pudding` — each a wheat product named
-  in a dish description — and it missed `tzatziki` as a dairy product across
-  seventeen rows of one venue. Every one was added by hand and named in the
-  commit that added it. **The tool was not touched**: another session held it
-  this day. This is a list for whoever picks it up, not a diagnosis of the
-  rule file.
+  `sourdough`, `crouton`, `Yorkshire pudding` and `nugget` — each a wheat
+  product named in a dish description — and `tzatziki` as a dairy product
+  across seventeen rows of one venue. Every one was added by hand and named in
+  the commit that added it. Checked against the tool **as it stands after the
+  `contains-fish` merge**, not against a remembered version: none of those
+  seven words appears in `tools/tag_allergens.py` at all.
+  🔎 **One is a different fault and worth separating.** `toastie` **does** have
+  a rule, and it fires on *"Corn Cheese Toastie"* — but it does **not** fire on
+  *"Cheesy toasties"*. Probed directly: the tag was removed, the sweep re-run,
+  and nothing was reported. So that one is a matching bug, not a missing rule.
+  **The tool was not touched**: another session held it on 2026-09-07. This is
+  a list for whoever picks it up, not a diagnosis of the rule file.
 
-  🚩 **`contains-fish` still does not exist**, so a smoked-salmon crepe and a
-  smoked-salmon add-on option cannot declare fish. Already ruled and still
-  open — Theme 5 `010`. This sweep adds two more silent dishes to the count.
+  ✅ **`contains-fish` landed on `main` while this work was in flight** and was
+  picked up on the rebase — it tagged four dishes across these records
+  (a smoked-salmon crepe, two fish dishes and an anchovy dressing) that would
+  otherwise have shipped silent about fish. A salmon **add-on option** still
+  carries only `has-fish` and no allergen warning, matching the rest of the
+  corpus; that gap is already filed as Theme 5 `040`.
 
   🚩 **A venue can be open on a day it does not list.** Abrakebabra is the
   second record on 2026-09-07 to be understated by the `hours` shape; the first
   was Dragonfly's past-midnight close, filed as
-  [`190/010`](../190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md).
-  This is the neighbouring gap: the shape has no way to say *"we do not know
-  about this one day"*, and `[]` is read as closed. Both are the same class —
-  the week's shape cannot hold what the venue actually said.
+  [`190/010`](../190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md)
+  and since fixed by ADR 0094. This is the neighbouring gap and it is **not**
+  fixed: the shape has no way to say *"we do not know about this one day"*, and
+  `[]` is read as closed. Same class — the week's shape cannot hold what the
+  venue actually said — but a different half of it.
 
   📌 **`150`'s "do not repeat this search" sentence is amended** in the same
   commit as this closure, to say what is now true: the negative verdict was

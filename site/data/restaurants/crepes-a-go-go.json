@@ -407,7 +407,8 @@
           "price": 17,
           "tags": [
             "gf",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-fish"
           ]
         }
       ]
