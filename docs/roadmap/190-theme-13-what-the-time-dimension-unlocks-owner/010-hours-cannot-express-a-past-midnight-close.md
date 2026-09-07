@@ -1,7 +1,60 @@
-- [~] 🛑 **`hours` cannot express a close after midnight, and the first venue
+- [x] 🛑 **`hours` cannot express a close after midnight, and the first venue
       that needs it is now in the corpus** `[M][js][schema]` — found 2026-09-07
       (session faves-24) while fleshing out Dragonfly from its own website.
-      🔒 **CLAIMED 2026-09-07 (session faves-b1).**
+      ✅ **DONE 2026-09-07 (branch `past-midnight`) — [ADR
+      0094](../../decisions/0094-a-close-before-its-open-means-the-next-day.md).**
+
+  📊 **THE CORPUS SWEEP, WHICH WAS THE CONDITION OF THE RULING — measured, not
+  predicted.** Both stores, venue `hours` *and* per-branch `hours` under
+  `locations[]` *and* section `served`: **155 JSON files · 72 hours/served
+  blocks · 957 time strings, every one a valid `00:00`–`23:59` · 507
+  `[open, close]` spans · 0 that would newly wrap.** The latest close anywhere
+  was 23:00. 🔑 **The zero was positive-controlled before it was believed** —
+  the detector was run against synthetic records of all five shapes it must
+  reach (root `hours`, branch `hours`, section `served`, a `close == open`
+  pair, a deeply nested block) and caught every one. A sweep that finds nothing
+  and was never shown finding something is not evidence. Nothing was edited into
+  agreement with the code, because nothing needed to be.
+
+  🚩 **TWO THINGS THE ITEM DID NOT ANTICIPATE, both load-bearing.**
+  1. **`validate.py` hard-errored on `c <= o`** — for `hours` AND for `served`,
+     with a docstring citing ADR 0006. Option 1 was unshippable without
+     changing it: the ruling's own data could not be written down. `TIME_RE` is
+     untouched, as predicted; that rule is a different rule.
+  2. **A Saturday night ends past the end of the week.** Sat 16:30–03:00 runs to
+     absolute minute 10260 where the week is 10080, so Sunday 1am is minute 60
+     and direct containment cannot see it — the venue would read shut on the
+     morning after its busiest night. This is the **exact** edge ADR 0006 named
+     when it rejected the wrap in 2026-07; 0006 was right about the cost and
+     wrong only about the premise that no venue would need it.
+
+  🔎 **Also found and fixed, unasked:** `overlapping()` compared times as
+  STRINGS, so `[["16:30","03:00"], ["20:00","22:00"]]` — a real clash — sorted
+  apart and was never seen. And the `served`-after-venue-close warning would
+  have fired falsely on the one venue the wrap was built for (`"22:00" >
+  "03:00"` is true as text). Both now compare in minutes.
+
+  ✅ **Dragonfly corrected to its real hours**: Mon–Tue 23:00, Wed–Thu
+  **`"00:00"`**, Fri–Sat **`"03:00"`**. `"00:00"` was chosen over keeping
+  `null` for the midnight days because `null` deliberately shows **no
+  countdown** — it means "we don't know when it shuts", and we do; and over
+  `"23:59"`, which invents a close and is a minute short. A correction, not a
+  shop change, so it overwrites and appends no history (ADR 0047).
+
+  🧪 **Guarded by `tools/midnight_check.mjs`** (new, 34 assertions): a real
+  browser at 390 px on a clock frozen at six instants, asserting the rendered
+  badge on **two** render paths, with Sunday 01:00 asserted separately and a
+  **control venue closing at 23:00 that must read Closed at 1am** — without
+  which a change making everything read open would pass the lot. Plus 11 unit
+  tests. **Both halves break-probed:** removing the wrap fails 8 unit + 9
+  browser assertions and no control assertion; removing *only* the
+  week-boundary re-ask fails exactly 2 unit + 3 browser assertions, all naming
+  Sunday.
+
+  📌 **Left open, recorded rather than guessed at** (ADR 0094 *Consequences*):
+  cross-day overlap detection (a wrapping span against the next day's early
+  window — no record has the shape), and DST — every fixture is NZST June, so a
+  wrapped span crossing the late-September switch is untested ground.
 
   ✅ **OWNER RULED 2026-09-07 (session faves-b1) — OPTION 1, the wrapping
   close.** Put to him with all three options, their costs and a recommendation.

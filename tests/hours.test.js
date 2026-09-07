@@ -347,3 +347,118 @@ test("served and the venue's own hours stay separate questions", () => {
   assert.equal(openStatus(VENUE_TEN, at(MON, 21)).state, "open");
   assert.equal(servedStatus(GOLD_CARD, at(MON, 21), VENUE_TEN).state, "not-served");
 });
+
+// ——————————————— A close after midnight (ADR 0094, owner-ruled 2026-09-07) ————
+//
+// A close at or BEFORE its open means the next day. Before this, `segments()`
+// produced `end < start` for such a pair — a segment that ends before it
+// begins — which nothing rejected and `openStatus` never matched, so a venue
+// trading till 3am read CLOSED for the whole evening.
+//
+// These are unit tests and they are NOT the evidence that matters. The claim a
+// reader cares about is "at 1am on a Saturday this venue's page says Open",
+// and that is asserted against a real render on a frozen clock in
+// tools/midnight_check.mjs. What is below pins the arithmetic underneath it.
+
+const THU = 4;
+const FRI = 5;
+// Dragonfly's real week: Mon–Tue to 11pm, Wed–Thu to midnight, Fri–Sat to 3am.
+const LATE_NIGHT = {
+  mon: [["16:30", "23:00"]],
+  tue: [["16:30", "23:00"]],
+  wed: [["16:30", "00:00"]],
+  thu: [["16:30", "00:00"]],
+  fri: [["16:30", "03:00"]],
+  sat: [["16:30", "03:00"]],
+  sun: [],
+};
+
+test("segments: a close before its open runs into the next day", () => {
+  const segs = segments({ ...CLOSED_ALL, fri: [["16:30", "03:00"]] });
+  assert.equal(segs.length, 1);
+  const [s] = segs;
+  assert.equal(s.start, 5 * 1440 + 990); // Fri 16:30
+  assert.equal(s.end, 5 * 1440 + 180 + 1440); // Sat 03:00
+  assert.ok(s.end > s.start, "the segment must not end before it starts");
+  // closeMin stays the WALL-CLOCK close, so "until 3am" reads off the data
+  // rather than off the wrapped arithmetic.
+  assert.equal(s.closeMin, 180);
+});
+
+test("segments: a close of 00:00 is midnight at the END of the day, not the start", () => {
+  const [s] = segments({ ...CLOSED_ALL, thu: [["16:30", "00:00"]] });
+  assert.equal(s.end, 4 * 1440 + 1440, "Thu 16:30–00:00 ends at Friday 00:00");
+  assert.equal(s.end - s.start, 450); // 7h30, not a negative or a 24h span
+});
+
+test("segments: a close AFTER its open is untouched — the 507-span corpus", () => {
+  // The whole risk of this ruling is that it changes the meaning of data
+  // already on disk. Ordinary spans must be bit-identical to before.
+  const [s] = segments({ ...CLOSED_ALL, mon: [["11:00", "22:00"]] });
+  assert.equal(s.start, 1440 + 660);
+  assert.equal(s.end, 1440 + 1320);
+});
+
+test("a venue trading till 3am reads OPEN at 1am the next morning", () => {
+  const s = openStatus(LATE_NIGHT, at(SAT, 1));
+  assert.equal(s.state, "open");
+  assert.equal(s.detail, "until 3am");
+});
+
+test("the countdown across the wrap counts to the REAL close, not to midnight", () => {
+  // `left` is measured against the wrapped end, so 2:55am is five minutes from
+  // closing — not "-1315 minutes", which is what the un-wrapped subtraction
+  // gives and which would render as a nonsense "Closes in -1315 min".
+  const s = openStatus(LATE_NIGHT, at(SAT, 2, 55));
+  assert.equal(s.state, "closing-soon");
+  assert.equal(s.label, "Closes in 5 min");
+});
+
+test("at the wrapped close it is shut again", () => {
+  const s = openStatus(LATE_NIGHT, at(SAT, 3));
+  assert.equal(s.state, "closed");
+  assert.equal(s.detail, "opens 4:30pm"); // Saturday's own opening, later today
+});
+
+test("A SATURDAY NIGHT SPILLS PAST THE END OF THE WEEK and is still open", () => {
+  // The edge ADR 0006 named when it rejected the wrap, and the one place a
+  // half-applied fix fails: Sat 16:30–03:00 ends at absolute minute 10260 where
+  // the week is 10080 long. Sunday 1am is minute 60, not 10140, so the direct
+  // containment test cannot see it and `containing()` must ask again a week on.
+  const segs = segments(LATE_NIGHT);
+  assert.ok(segs.some((s) => s.end > 7 * 24 * 60), "a segment must overrun the week for this to test anything");
+  const s = openStatus(LATE_NIGHT, at(SUN, 1));
+  assert.equal(s.state, "open");
+  assert.equal(s.detail, "until 3am");
+});
+
+test("the Sunday spill-over ends, and Sunday itself is closed", () => {
+  assert.equal(openStatus(LATE_NIGHT, at(SUN, 2, 59)).state, "closing-soon");
+  const shut = openStatus(LATE_NIGHT, at(SUN, 3));
+  assert.equal(shut.state, "closed");
+  assert.equal(shut.detail, "opens Mon 4:30pm"); // not "opens 4:30pm" — not today
+  assert.equal(openStatus(LATE_NIGHT, at(SUN, 12)).state, "closed");
+});
+
+test("a midnight close counts down and then shuts, without wrapping a day", () => {
+  assert.equal(openStatus(LATE_NIGHT, at(THU, 23, 30)).label, "Closes in 30 min");
+  // Friday 00:00 is Thursday's close exactly — end is exclusive, so shut.
+  assert.equal(openStatus(LATE_NIGHT, at(FRI, 0)).state, "closed");
+});
+
+test("groupWeek prints the wrapped close in wall-clock words", () => {
+  const rows = groupWeek(LATE_NIGHT);
+  assert.deepEqual(rows.map((r) => [r.days, r.text]), [
+    ["Mon–Tue", "4:30pm–11pm"],
+    ["Wed–Thu", "4:30pm–12am"],
+    ["Fri–Sat", "4:30pm–3am"],
+    ["Sun", "Closed"],
+  ]);
+});
+
+test("a section served past midnight wraps the same way", () => {
+  // `served` feeds the identical segments(), so one engine reads one dialect.
+  const LATE_MENU = { mon: [], tue: [], wed: [], thu: [], fri: [["22:00", "02:00"]], sat: [], sun: [] };
+  assert.equal(servedStatus(LATE_MENU, at(SAT, 1), LATE_NIGHT).state, "served");
+  assert.equal(servedStatus(LATE_MENU, at(SAT, 3), LATE_NIGHT).state, "not-served");
+});

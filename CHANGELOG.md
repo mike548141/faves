@@ -9,6 +9,17 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Changed
+- **A place that trades past midnight now says so.** Opening hours could not
+  express a close after midnight at all: a Friday running to 3am was stored as
+  a segment that ended before it began, and the app answered "closed" for the
+  whole evening. A close earlier than its open now means the next day, so
+  **Dragonfly reads "Open · until 3am" at 1am on a Saturday** — on the home card
+  and on its own page — and counts down to the real closing time instead of to
+  midnight. Its Wednesday and Thursday now say "until 12am" where they used to
+  say nothing at all, and its Friday and Saturday are no longer three hours
+  short. Checked on a frozen clock in a real browser at six different hours,
+  including 1am on the Sunday — a Saturday night runs past the end of the week
+  and was its own separate way to get this wrong.
 - **The back-to-top arrow is there on the way down, and it steps off your
   price.** It used to slide away for the whole of a downward scroll and only
   come back when you flicked up — which kept it off the menu but made it
