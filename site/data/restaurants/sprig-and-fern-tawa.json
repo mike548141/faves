@@ -115,7 +115,8 @@
           "name": "Salmon",
           "price": 9.0,
           "tags": [
-            "has-fish"
+            "has-fish",
+            "contains-fish"
           ]
         },
         {
@@ -244,7 +245,8 @@
           "name": "Salmon",
           "price": 7.0,
           "tags": [
-            "has-fish"
+            "has-fish",
+            "contains-fish"
           ]
         }
       ]
