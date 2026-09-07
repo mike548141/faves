@@ -646,8 +646,14 @@ reason. English only, like the refresh caveat, per `reo.js`'s safety boundary.
 
 - Dietary: `v` (vegetarian), `vg` (vegan), `gf`, `df`
 - Allergens (warnings, rendered prominently): `contains-nuts`,
-  `contains-peanuts`, `contains-shellfish`, `contains-egg`,
-  `contains-dairy`, `contains-gluten`, `contains-soy`, `contains-sesame`
+  `contains-peanuts`, `contains-shellfish`, `contains-fish`, `contains-egg`,
+  `contains-dairy`, `contains-gluten`, `contains-soy`, `contains-sesame`.
+  **`contains-fish` and `contains-shellfish` are two allergens, not one**
+  (added 2026-09-07, owner-ruled 2026-08-16): a finfish sensitivity and a
+  crustacean/mollusc one are different, so neither tag implies the other and
+  a dish may carry both. It is also **not** `has-fish` below — that is a
+  *dietary* marker on an add-on option, a different axis, and neither is
+  written in terms of the other.
 - Heat: `spicy-1` … `spicy-3`
 - **What an add-on option IS** (ADR 0092): `has-meat`, `has-fish` — **legal on
   an add-on option, an ERROR on a dish** (`validate.py` `OPTION_ONLY_TAGS`).

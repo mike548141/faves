@@ -1,5 +1,48 @@
-- [~] ✅ **RULED 2026-08-16 — ADD `contains-fish`, and land it WITH 37n.**
-      🔒 **CLAIMED 2026-09-07 (session faves-b1).**
+- [x] ✅ **RULED 2026-08-16 — ADD `contains-fish`, and land it WITH 37n.**
+      ✅ **SHIPPED 2026-09-07 (session faves-b1), branch `contains-fish`.**
+      **199 tags across 32 of 57 venues**, 3,175 dishes read — 196 STATED, 3
+      DERIVED. `contains-fish` is in `ARCHITECTURE.md`'s closed vocabulary,
+      `validate.py`'s `TAGS`, all four allergen label tables (`menu.js`,
+      `recipe.js`, `addons-ui.js`, `settings.js`'s avoid list) and both
+      contradiction tables (`addons.js` `CONTRADICTS` ⇄
+      `tag_allergens.CONTRADICTED_BY`, which `validate.py` holds in step).
+      `report.js`'s `contains-` prefix filter needed nothing.
+      **The named dishes, confirmed by the sweep rather than assumed:** Pizza
+      Pomodoro 4 (Romana and Inferno, each in two sizes) · Regal 21 (including
+      the "Spicy Fish Sauce" dish) · Subway 3 (all three Tuna Mayo rows —
+      `contains-fish`, and **not** `contains-shellfish`) · Rock Yard 3.
+      🔎 **Rock Yard is NOT what this item said it was, and the item was the
+      only source for it.** The line below claims "fish sauce named in a dozen
+      dishes, its own badge printed literally as 'Fish', plus Yin & Yang
+      Pan-fried Salmon". Measured against
+      `site/data/restaurants/rock-yard-restaurant.json` at `b0fb27a`: **one**
+      dish names fish sauce (Vietnamese Traditional Sauce), the salmon is
+      there, and the third is "Kaffir Lime Seafood Curry", which names grilled
+      tarakihi. There is **no "Fish" badge anywhere in the record** and no
+      `data/` research file for the venue. Three, not a dozen — either the data
+      was trimmed after the note was written, or the note was written from the
+      source menu rather than from what we transcribed. Nothing was
+      hand-patched to make the number look right.
+      🔎 **The species list is mine, and here is what it excludes and why.**
+      `sole`, `ray` and bare `bass` are ordinary English words in far commoner
+      senses and would mis-fire; `\bseafood\b` stays a *shellfish*-only
+      derivation, because the frozen seafood mix a kitchen here buys is squid,
+      prawn and mussel far more often than it is fish. Two narrowings were
+      found by dry run against the real corpus and both are **lookbehinds, not
+      `exclude`s**, so the rest of the rule still fires on the same item:
+      `\bfish\w*` cannot reach inside "shellfish" or "jellyfish" (Regal has a
+      jellyfish dish, correctly untagged), and "mustard seed caviar" on Charley
+      Noble's venison loin is a plating word, not roe — it was the **only false
+      positive in 200**, and the real Oscietra Caviar two rows away still
+      tags.
+      🔎 **Nothing was suppressed by the `v`/`vg` curation guard**, so no venue
+      in the corpus calls a dish vegetarian while naming fish in it. The guard
+      is still wired and break-probed; it just has nothing to catch today.
+      **Verified:** `test_tag_allergens.py` 30/30 with five new cases (four of
+      them absence assertions, each also demanding the tool wrote something
+      else in the record) and five new breakers, **every one verified by
+      reintroducing its bug** — including writing the fish rule's findings to
+      `contains-shellfish`, which is the wrong-tag trap named below.
       🔎 **The stated blocker is DISCHARGED, and that is why this is takeable.**
       The line below says this is *"blocked on 37n's report existing, not on a
       decision"* — and `tools/allergen_disagreements.py` **exists** (delivered
