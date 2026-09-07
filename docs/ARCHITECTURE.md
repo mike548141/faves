@@ -826,7 +826,13 @@ precached payload nothing on any screen can reach (ADR 0047).
   device; declining without ticking "don't ask again" leaves `#geo-banner`;
   ticking it suppresses **both**, permanently, via `faves.geo.consent.v1` — a
   key deliberately outside the backup export, because the promise is about this
-  device. A `denied` state raises neither surface, only the status line. **The
+  device. That is enforced by `personal-data.js`'s `EXCLUDED` table, and was not
+  until 2026-09-08: this sentence and `geo-consent.js`'s header both said it
+  while the sweep exported the flag and a merge import wrote it onto the
+  receiving phone. It is `spare`, so a `replace` leaves it alone too — restoring
+  "don't ask" silences a phone that never declined, and wiping it re-arms a
+  prompt someone switched off.
+  A `denied` state raises neither surface, only the status line. **The
   dialog is only ever shown to a reader who has not started**: a scroll, pointer
   or key event before the beat elapses downgrades it to `#geo-banner`, because
   `showModal()` makes the rest of the page inert and would take it away from
@@ -961,11 +967,18 @@ bearer sync code (Theme 9 v2, below). The feature stores:
   `collectPersonalData` gathers the whole layer above into one versioned,
   serialisable object, reading the *device* storage directly so it sees
   **every** profile, not just the active one. Settings → "Your data" writes it
-  out as a dated JSON file (`Blob` + `<a download>`). The Near-me origin is
-  excluded by name, and the excluded keys also seed the skip-set of the sweep
-  that catches unknown `faves.*` stores — otherwise the sweep would re-collect
-  it. This is the same collect seam ADR 0017's sync blob and Theme 10's share
-  grant reuse.
+  out as a dated JSON file (`Blob` + `<a download>`). What it refuses to carry
+  is the `EXCLUDED` table in that module and nothing else — the Near-me origin,
+  cook-mode ticks and timers, the sync pairing and base, and the location-ask
+  consent flag — and those keys also seed the skip-set of the catch-all sweep
+  that gathers unknown `faves.*` stores, or the sweep would re-collect them.
+  Named as a table rather than a list here on purpose: this paragraph said "the
+  Near-me origin is excluded by name" while the table held five, and the consent
+  flag was promised out of the export in two documents and in no code at all
+  until 2026-09-08 (roadmap `490/020`). This is the same collect seam ADR 0017's
+  sync blob and Theme 10's share grant reuse — though what is sealed there is
+  `mergePersonal`'s output, which drops `other` entirely, so a store's exclusion
+  from the file is what keeps it off the wire.
   The way back in is `parsePersonalData` → `planImport` → `applyPersonalData`
   (ADR 0030): merge by default, replace behind a confirm, and two things it
   refuses to guess — whether an incoming profile is an existing person (id
