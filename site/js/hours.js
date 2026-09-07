@@ -115,6 +115,13 @@ export function makeClock(date = new Date()) {
 // A null close is open-ended: capped at midnight for "is it open now" but
 // carries closeMin=null so we show no countdown.
 //
+// A CLOSE AT OR BEFORE ITS OPEN MEANS THE NEXT DAY (owner-ruled 2026-09-07,
+// ADR 0094). `["16:30", "03:00"]` is a Friday night that ends on Saturday
+// morning. Until then the arithmetic produced `end < start` — a segment that
+// ends before it begins — which nothing rejected and `openStatus` simply never
+// matched, so a late-trading venue read CLOSED for the whole evening. The
+// corpus was swept before this landed: 507 spans, none of which changed meaning.
+//
 // EXPORTED for `servedStatus` below, which asks the identical question of a
 // menu section's serving window ("is the Gold Card menu on right now, and when
 // is it next?"). It was module-private until 2026-08-17. The alternative was a
@@ -130,7 +137,7 @@ export function segments(hours) {
       const base = dow * 1440;
       out.push({
         start: base + o,
-        end: base + (c == null ? 1440 : c),
+        end: base + (c == null ? 1440 : c + (c <= o ? 1440 : 0)),
         openMin: o,
         closeMin: c,
         dow,
@@ -138,6 +145,32 @@ export function segments(hours) {
     }
   });
   return out.sort((a, b) => a.start - b.start);
+}
+
+/**
+ * The segment containing absolute minute `at`, plus the coordinate the match
+ * was made in — `{ seg, at }`, or null. Shared by openStatus and servedStatus
+ * so the week-boundary reasoning below exists once.
+ *
+ * WHY IT ASKS TWICE. A span that wraps out of SATURDAY ends past the last
+ * minute of the week: Sat 16:30–03:00 runs to minute 10260 where the week is
+ * 10080 long. Sunday 1am is minute 60, not 10140, so the direct containment
+ * test cannot see it. Asking again a week later is the same instant for a
+ * segment that overran the boundary. Without this the exact case the wrapping
+ * close was introduced to serve — a Saturday night — would still read closed on
+ * the Sunday morning, which is the failure with the fix half-applied and is
+ * why the second loop is not an edge case worth trimming.
+ *
+ * The caller must use the RETURNED `at` for any arithmetic against `seg.end`
+ * (the countdown), not its own: in the wrapped case they differ by a week.
+ */
+function containing(segs, at) {
+  for (const s of segs) if (at >= s.start && at < s.end) return { seg: s, at };
+  for (const s of segs) {
+    const wrapped = at + WEEK;
+    if (wrapped >= s.start && wrapped < s.end) return { seg: s, at: wrapped };
+  }
+  return null;
 }
 
 /**
@@ -154,10 +187,11 @@ export function openStatus(hours, now) {
   const at = now.dow * 1440 + now.minutes;
 
   // Open right now?
-  const current = segs.find((s) => at >= s.start && at < s.end);
-  if (current) {
+  const found = containing(segs, at);
+  if (found) {
+    const current = found.seg;
     if (current.closeMin == null) return { state: "open", label: "Open", detail: "" };
-    const left = current.end - at;
+    const left = current.end - found.at;
     if (left <= CLOSING_SOON) {
       // One phrase, not two. The card renders `label · detail`, so a "Closing
       // soon" label beside a "closes in 12 min" detail said the same thing
@@ -326,7 +360,7 @@ export function servedStatus(served, now, hours = null) {
   if (!segs.length) return none;
 
   const at = now.dow * 1440 + now.minutes;
-  if (segs.some((s) => at >= s.start && at < s.end)) {
+  if (containing(segs, at)) {
     return { state: "served", next: null, today: false, stated: false, minutes: null };
   }
 
