@@ -33,6 +33,13 @@
 // closing line. What is flattened is the absence against ITSELF, never against
 // a fact. There is no branch here where an untagged option is silently treated
 // as safe: the claim still dies, and the sentence still says so.
+//
+// 2026-09-07 (roadmap 200/050, owner-ruled): and a FACT is now flattened against
+// ITSELF too. "Halloumi contains dairy — you asked to avoid it. Halloumi
+// contains dairy, so this is no longer vegan." is one fact with two
+// consequences, and it opened with the same clause twice from ADR 0048 until
+// now. It is one sentence today. See `claimsKilledBy` below for the merge rule,
+// what it deliberately does NOT merge, and why the allergen half still leads.
 
 import { el } from "./dom.js";
 import { dishId } from "./dish-id.js";
@@ -105,6 +112,63 @@ function unstatedLine(drops) {
   return `${joinList(names)} ${verb} tagged ${joinList(claims, "or")}, so ${labels} the dish as listed.`;
 }
 
+/**
+ * SAY THE FACT ONCE (roadmap 200/050, owner-ruled 2026-09-07).
+ *
+ * The allergen an option brings in and the dietary claim that same allergen
+ * kills are two consequences of ONE fact, and until now they were two sentences
+ * that each opened with it — measured verbatim in headless Chrome on Sprig &
+ * Fern Tawa's Garden Salad with dairy flagged:
+ *
+ *   "Halloumi contains dairy — you asked to avoid it. Halloumi contains dairy,
+ *    so this is no longer vegan."
+ *
+ * Shipping since ADR 0048 and reachable by every (`contains-*`, claim) pair in
+ * `CONTRADICTS`. The owner ruled: merge into one sentence, say the fact once,
+ * both consequences after it.
+ *
+ * 🚩 THE ALLERGEN HALF LEADS AND IS NOT WEAKENED. It stays first, in its own
+ * block, in the words a reader scanning for their own allergy is looking for;
+ * the dietary consequence is appended to it. Dropping the dietary half was
+ * offered and declined — it is what a reader choosing on vegan grounds rather
+ * than allergy is reading for, so both meanings survive the merge.
+ *
+ * Keyed on (option, TAG) rather than on the substance, so it merges only where
+ * the clause is literally the same one twice. "Salmon contains fish" beside
+ * "Salmon is fish" names one substance through two tags that ADR 0095 keeps
+ * deliberately independent of each other; collapsing those is a different
+ * question and is filed as roadmap 200/070 rather than decided here.
+ *
+ * It also merges a fact that kills TWO claims — "Halloumi contains dairy, so
+ * this is no longer dairy free or vegan" — which was three sentences before and
+ * is the same repetition wearing a different hat.
+ */
+// Tag FIRST: a tag comes from a closed, hyphenated vocabulary and can never
+// contain a space, so one space is an unambiguous separator however the
+// option is named. (It read `${from}\0${tag}` for about an hour on 2026-09-07
+// — a literal NUL in a shipped module, which git reported by calling the file
+// binary. Nothing needs a control character here.)
+const factKey = (from, tag) => `${tag} ${from}`;
+
+/** (option, substance) → the claim labels that fact killed, in the dish's order. */
+function claimsKilledBy(dropped) {
+  const out = new Map();
+  for (const d of dropped) {
+    if (d.reason !== "contradicted") continue;
+    const key = factKey(d.from, d.allergen);
+    const claims = out.get(key) || [];
+    const label = CLAIM_LABEL[d.tag] || d.tag;
+    // `gf` and `gf-option` are two tags making ONE claim; a dish carrying both
+    // must not produce "no longer gluten free or gluten free".
+    if (!claims.includes(label)) claims.push(label);
+    out.set(key, claims);
+  }
+  return out;
+}
+
+/** "Halloumi contains dairy" — the clause both halves of the merge share. */
+const containsClause = (a) => `${a.from} contains ${ALLERGEN_LABEL[a.tag] || a.tag}`;
+
 /** "+$3.00", or nothing at all when the extra is free — the commonest case. */
 const priceSuffix = (amount, currency) =>
   amount > 0 ? ` +${formatMoney(amount, currency)}` : "";
@@ -165,27 +229,44 @@ export function dishAddOns(record, section, item, onCompose) {
     const avoid = settings.get()?.diet?.avoid;
     const avoidSet = avoid instanceof Set ? avoid : new Set(avoid || []);
     const lines = [];
+    const killed = claimsKilledBy(dropped);
+    // Which (option, tag) facts have already been said by the allergen block,
+    // so the contradiction block below does not say them a second time.
+    const spoken = new Set();
+    const lost = (from, tag) => {
+      const claims = killed.get(factKey(from, tag));
+      if (!claims) return "";
+      spoken.add(factKey(from, tag));
+      return ` no longer ${joinList(claims, "or")}`;
+    };
 
     // Flagged allergens first and loudest: this is the reader's own list, and
     // it is the reason they will look at all.
     const hit = added.filter((a) => avoidSet.has(a.tag));
     for (const a of hit) {
-      lines.push(`${a.from} contains ${ALLERGEN_LABEL[a.tag] || a.tag} — you asked to avoid it.`);
+      const also = lost(a.from, a.tag);
+      lines.push(
+        `${containsClause(a)} — you asked to avoid it${also ? `, and this is${also}` : ""}.`,
+      );
     }
     // Then allergens they did not flag, stated plainly rather than as a warning.
     for (const a of added.filter((a) => !avoidSet.has(a.tag))) {
-      lines.push(`${a.from} contains ${ALLERGEN_LABEL[a.tag] || a.tag}.`);
+      const also = lost(a.from, a.tag);
+      lines.push(`${containsClause(a)}${also ? `, so this is${also}` : ""}.`);
     }
-    // Facts first, one per claim, exactly as before. The absences are held back
-    // and said once at the end — the order is the point: what we KNOW leads.
+    // Facts first, one per (option, substance), exactly as before. The absences
+    // are held back and said once at the end — the order is the point: what we
+    // KNOW leads.
     const unstated = [];
     for (const d of dropped) {
       if (d.reason !== "contradicted") {
         unstated.push(d);
         continue;
       }
-      const claim = CLAIM_LABEL[d.tag] || d.tag;
-      lines.push(`${d.from} ${carries(d.allergen)}, so this is no longer ${claim}.`);
+      const key = factKey(d.from, d.allergen);
+      if (spoken.has(key)) continue; // the allergen line above already said it
+      spoken.add(key);
+      lines.push(`${d.from} ${carries(d.allergen)}, so this is no longer ${joinList(killed.get(key), "or")}.`);
     }
     if (unstated.length > 0) lines.push(unstatedLine(unstated));
 

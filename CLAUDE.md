@@ -552,6 +552,14 @@ the option and the allergen live, the flagged treatment follows the
 order line. Run it after touching `addons.js`, `addons-ui.js`, `cart.js`,
 `cart-ui.js` or the dish render. Its header names what a green run cannot show
 you — above all that no browser can check whether the tagging is *true*.
+🔑 **Since 2026-09-07 it also owns the two owner rulings on the picker's WORDS
+and its CHIPS** (roadmap `200/050`, `200/060`, ADR 0096) — 37 assertions. It
+**counts** the shared clause rather than matching the merged string, because a
+merge that appends the consequence and forgets to delete the old sentence passes
+an `includes` and fails a count; and it reads the chip row **before, after and
+after untick** on one row, because "Veg is gone" is satisfiable by a chip row
+that was never drawn. Its raw-identifier absence assertion — added by ADR 0095
+against a row nothing composed onto — is load-bearing only from that date.
 
 `branch_check.mjs` is the fourth (ADR 0054). Choosing a branch is choosing where
 your food comes from, and the card now makes that choice for you, so it drives

@@ -667,7 +667,12 @@ reason. English only, like the refresh caveat, per `reo.js`'s safety boundary.
   `report.js`'s prefix filter) as one nobody could filter on. They contradict
   `v`/`vg` in `addons.js` `CONTRADICTS` and nothing else. Applied by
   `tools/tag_addon_options.py`; `menu.js` `tagChip` has no label for them,
-  which is why a dish may not carry one.
+  which is why a dish may not carry one. Since 2026-09-07 the dish chip row is
+  re-rendered from the **composed** tags when a dish is configured (roadmap
+  `200/060`), so an option's tags do now reach the row — and `menu.js`
+  `isChipTag` filters it to the tags that have a reader-facing branch, which
+  keeps these two off it (ADR 0096). The chips, `dataset.tags`, `dish-flagged`
+  and the picker's warning now describe the same dish.
 - Options: `gf-option`, `v-option`, `df-option`, `vg-option` — one per dietary
   claim, so "available on request" is sayable about all four (owner ruling,
   2026-08-16). An `-option` tag asserts the **venue offers the substitution**;
