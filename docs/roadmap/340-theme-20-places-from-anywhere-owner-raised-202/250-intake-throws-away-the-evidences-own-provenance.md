@@ -91,6 +91,51 @@
   mechanism once there is a convention for it to check. Option 3 is a data-model
   question and Theme 38 is already convened to answer that class.
 
+  ✅ **OWNER RULED 2026-09-07 (session faves-b1) — ALL THREE, IN ORDER, PLUS
+  KEEP THE EVIDENCE.** He took options **1, 2 and 3** (they stack rather than
+  compete) and, on a second question, **keep the original evidence in the
+  repo-only store** so a disputed reading can be re-checked against what was
+  actually read. Option 4 (write the convention down and change no code) is
+  declined by omission.
+  📌 **Sequencing, since he chose the order himself:** the read-only tool first,
+  the pre-commit guard second (it needs the tool's convention to exist before it
+  can check anything), and the schema block third. 🔗 **Option 3 still belongs
+  with Theme 38** — it is a data-model change and Theme 38 is convened for
+  exactly that class. Taking it here means the review inherits a decided
+  question rather than an open one; that is fine, but the review must be told,
+  or it will re-open it.
+
+  ## 🛑 TWO COSTS OF "KEEP THE EVIDENCE" THAT MUST BE SETTLED BEFORE ANY BULK
+  IMPORT
+
+  Both were stated in the ask; both are sharper than they look, and neither is
+  the delivering session's to resolve alone.
+
+  1. **Size, and it does not scale linearly — it accumulates for ever.** The
+     four Simmer photos are **32 MB**. Across 57 venues, plus recipes, plus the
+     87 packaged products, that is a repository measured in gigabytes — and
+     **git history is permanent**, so a photo committed once is carried for
+     ever even if deleted later.
+     🚩 **The obvious mitigation defeats the purpose.** Downscaling to ~2200 px
+     (about 1 MB) keeps a *printed* menu perfectly legible — but the Simmer
+     cabinet's **handwritten tags needed native-resolution crops to read at
+     all**, and reading a disputed handwritten price is precisely the case this
+     is for. So "store a smaller copy" is not a free win; it is a choice about
+     which disputes remain re-checkable. **A per-evidence-type rule is probably
+     the answer** (full resolution for handwriting, downscaled for print), and
+     that is a decision, not a detail.
+  2. **This repo is PUBLIC, and a committed photo is published irreversibly.**
+     [ADR 0090] measured **137 product photos carrying GPS on a private
+     address**. CLAUDE.md's rule for secrets applies unchanged to this: *a
+     secret committed and then removed is still disclosed*. So **every image
+     must be stripped or verified GPS-free BEFORE it lands**, and that check
+     belongs in the guard (option 2), not in a session's care. The Simmer four
+     happened to carry no GPS — luck, not diligence, because nothing looked.
+  🎯 **Recommendation: the tool (1) lands first and reports GPS presence, and
+  NOTHING is bulk-imported until the size rule and the strip-or-refuse guard
+  both exist.** Importing first and deciding after is the one order that cannot
+  be undone.
+
   🛑 **A correction is owed regardless of which option is chosen.**
   `simmer.json`'s `verified` should read **2026-08-25**, not 2026-09-07. Under
   ADR 0047's rule this is a **correction, not a shop change** — *did the shop
