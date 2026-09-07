@@ -41,6 +41,7 @@ TAWA = "site/data/restaurants/sprig-and-fern-tawa.json"
 BAMBINA = "site/data/restaurants/bambina-pizzeria.json"
 KEBAB = "site/data/restaurants/wellington-kebab-grill.json"
 GONG_CHA = "site/data/restaurants/gong-cha.json"
+CREPES = "site/data/restaurants/crepes-a-go-go.json"
 
 # Tawa's brunch sides, with the tags this sweep applies taken back off. Bacon
 # and Sausages must return; Spinach and Tomatoes must not gain anything.
@@ -64,10 +65,26 @@ STRIP_TAWA = [
     ('''          "name": "Salmon",
           "price": 9.0,
           "tags": [
-            "has-fish"
+            "has-fish",
+            "contains-fish"
           ]''',
      '''          "name": "Salmon",
           "price": 9.0,
+          "tags": []'''),
+]
+
+# crepes-a-go-go's Salmon, renamed to a species the OLD hand-copied fish list in
+# this tool did not carry. It is in tag_allergens.py's list, which is now the
+# only list — so this case fails the moment the two drift apart again.
+STRIP_KINGFISH = [
+    ('''          "name": "Salmon",
+          "price": 4.5,
+          "tags": [
+            "has-fish",
+            "contains-fish"
+          ]''',
+     '''          "name": "Kingfish",
+          "price": 4.5,
           "tags": []'''),
 ]
 
@@ -97,15 +114,44 @@ def _tagged_something(after, *, at_least=1):
 
 
 def check_meat_and_fish_return(after, out):
-    """The three options whose own name settles it get their tag back."""
+    """The three options whose own name settles it get their tag back.
+
+    Salmon gets TWO, and they are asserted separately (ADR 0095): a finfish is
+    not vegetarian AND is a declarable allergen, and each rule must be able to
+    fail on its own. Asserting the pair as a set would let one rule quietly
+    carry the other.
+    """
     got = options(after)
     want = {
-        ("brunch-sides", "Sausages"): "has-meat",
-        ("brunch-sides", "Bacon"): "has-meat",
-        ("brunch-sides", "Salmon"): "has-fish",
+        ("brunch-sides", "Sausages"): ["has-meat"],
+        ("brunch-sides", "Bacon"): ["has-meat"],
+        ("brunch-sides", "Salmon"): ["has-fish", "contains-fish"],
     }
-    missing = {k: got.get(k) for k, tag in want.items() if tag not in (got.get(k) or [])}
+    missing = {
+        (k, tag): got.get(k)
+        for k, tags in want.items()
+        for tag in tags
+        if tag not in (got.get(k) or [])
+    }
     return f"not retagged: {missing}" if missing else None
+
+
+def check_fish_gains_the_allergen_too(after, out):
+    """THE case this item exists for, on a species the old copied list missed.
+
+    Before 2026-09-07 an add-on naming a finfish carried `has-fish` alone, and
+    `site/js/addons.js` builds its allergen union off the `contains-` prefix — so
+    a reader who had ticked "avoid Fish" and added salmon to a fish-free dish was
+    told nothing at all. `Kingfish` doubles the case as a drift guard: it is in
+    tag_allergens.py's species list, which this tool now shares rather than
+    copies.
+    """
+    got = options(after)
+    tags = got.get(("savoury-extras", "Kingfish"))
+    if tags is None:
+        return "the mutation did not land — no 'Kingfish' option"
+    absent = [t for t in ("has-fish", "contains-fish") if t not in tags]
+    return f"Kingfish is missing {absent} — got {tags}" if absent else None
 
 
 def check_absence_is_never_asserted(after, out):
@@ -138,16 +184,25 @@ def check_gluten_free_bun_is_left_alone(after, out):
 
 
 def check_curation_outranks_the_pattern(after, out):
-    """An option the VENUE calls vegetarian is never given meat, whatever its
-    name looks like. Renamed to "Chicken" with its `v` intact, so the only thing
-    standing between it and a wrong tag is CONTRADICTED_BY."""
+    """An option the VENUE calls vegetarian is never given meat OR fish,
+    whatever its name looks like. Two options renamed with their `v` intact, so
+    the only thing standing between each and a wrong tag is CONTRADICTED_BY.
+
+    The fish half is checked on BOTH axes (ADR 0095). `contains-fish` was added
+    to that table in the same commit as the rule that writes it, and a guard
+    added beside a rule is the guard most likely to have been forgotten.
+    """
     got = options(after)
-    tags = got.get(("extras", "Chicken"))
-    if tags is None:
-        return "the mutation did not land — no 'Chicken' option in the extras group"
-    if "has-meat" in tags:
-        return "overrode the venue's own `v` with a regex"
-    return None
+    complaints = []
+    for name, forbidden in (("Chicken", ["has-meat"]),
+                            ("Extra salmon", ["has-fish", "contains-fish"])):
+        tags = got.get(("extras", name))
+        if tags is None:
+            return f"the mutation did not land — no {name!r} option in the extras group"
+        wrong = [t for t in forbidden if t in tags]
+        if wrong:
+            complaints.append(f"{name} overrode the venue's own `v` with {wrong}")
+    return "; ".join(complaints) or None
 
 
 def check_chicken_salt_is_not_chicken(after, out):
@@ -208,9 +263,12 @@ CASES = {
         TAWA, STRIP_TAWA, 0, check_absence_is_never_asserted),
     "a venue's own 'no added gluten' is reported, not tagged": (
         TAWA, STRIP_TAWA, 0, check_gluten_free_bun_is_left_alone),
+    "an option naming a finfish gains the ALLERGEN, not just the diet marker": (
+        CREPES, STRIP_KINGFISH, 0, check_fish_gains_the_allergen_too),
     "the venue's own `v` outranks the pattern": (
         KEBAB,
-        [('''          "name": "Extra falafel",''', '''          "name": "Chicken",''')],
+        [('''          "name": "Extra falafel",''', '''          "name": "Chicken",'''),
+         ('''          "name": "Extra mucver",''', '''          "name": "Extra salmon",''')],
         0, check_curation_outranks_the_pattern),
     "chicken salt is not chicken": (
         BAMBINA,
@@ -286,6 +344,36 @@ BREAKERS = {
     ("v", "looks like a vegetable", r"\\b(spinach|tomato(es)?|rocket|basil)\\b", None),
     ("has-meat", "names a cured or preserved meat",''')],
         ["an option whose name says nothing is left alone"],
+    ),
+    # THE REGRESSION THIS ITEM CLOSED. Deleting the allergen rule leaves the
+    # dietary one firing and every pre-2026-09-07 assertion green — the option
+    # is still "not vegetarian", it is simply no longer an allergen — which is
+    # precisely the silence a reader avoiding fish met on a real menu.
+    "the fish ALLERGEN rule dropped, leaving only the dietary marker": (
+        [('''    ("contains-fish", "names a finfish, and fish is a declarable allergen in NZ",
+     FINFISH, NOT_FISH),''', "")],
+        ["an option naming a finfish gains the ALLERGEN, not just the diet marker",
+         "an option whose name says meat or fish is tagged"],
+    ),
+    # …and the mirror. One axis must not be able to carry the other: with the
+    # DIETARY rule gone, a salmon add-on stops killing a vegetarian claim even
+    # though the allergen is still written.
+    "the fish DIETARY rule dropped, leaving only the allergen": (
+        [('''    ("has-fish", "names a finfish", FINFISH, NOT_FISH),''', "")],
+        ["an option naming a finfish gains the ALLERGEN, not just the diet marker",
+         "an option whose name says meat or fish is tagged"],
+    ),
+    # The drift this tool used to ship: a species list hand-copied from
+    # tag_allergens.py and thirty species short of it. Both sweeps stayed green
+    # and each was right about its own list, so nothing could report it.
+    "the finfish list copied back out of tag_allergens.py, at its old width": (
+        [("""FINFISH = next(
+    pat for tag, tier, why, pat, exc in ALLERGEN_RULES
+    if tag == "contains-fish" and tier == "STATED"
+)""",
+          'FINFISH = (r"\\b(fish|salmon|tuna|anchovy|anchovies|snapper|hoki|cod|'
+          'sardines?|mackerel|trout|whitebait|kahawai|terakihi|tarakihi)\\b")')],
+        ["an option naming a finfish gains the ALLERGEN, not just the diet marker"],
     ),
     "an unwritable record exits 0 again": (
         [("        for rid, why in unwritable:\n"

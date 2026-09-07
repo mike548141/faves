@@ -1019,3 +1019,18 @@ deliberation those compact docs omit.
   halves verified by reintroducing the bug (8 unit + 9 browser assertions fail
   without the wrap; exactly 2 + 3, all naming Sunday, without the boundary
   re-ask).
+- [0095](0095-an-add-on-carries-both-axes.md) — **an add-on carries both axes:
+  fish is a diet marker AND an allergen.** A Salmon add-on carried `has-fish`
+  alone; `addons.js` unions allergens off the `contains-` prefix, so a reader
+  who had ticked *avoid Fish* and added salmon to a fish-free dish was told
+  **nothing** — measured in Chrome as `warnHidden: true`, `dishFlagged: false`,
+  on a dish that makes no dietary claim (the configuration where the dietary
+  axis cannot mask it). `addon_check.mjs` was green throughout because it drives
+  a **peanut**. The tagger now writes both tags from **two independent rules on
+  the same evidence**, never one from the other, break-probed each way. Deriving
+  the allergen from `has-fish` was rejected (item `010` forbids it); running the
+  whole dish rule set over option names was rejected on measurement — 8
+  candidates, **3 of them the venue's own gluten hedge**. **No `site/js` change
+  was needed**: `composeTags` already composed, so the fix is three tags of
+  data. The finfish list is now shared with `tag_allergens.py`, which had
+  already drifted 13 species against thirty-odd.

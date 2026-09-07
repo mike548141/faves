@@ -81,8 +81,9 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [RULED 2026-08-16 — ADD contains-fish, and land it WITH 37n.](roadmap/110-theme-5-richer-dish-data/010-ruled-2026-08-16-add-contains-fish-and-land-it.md)
 - [ ] [✅ RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
 - ✅ [⚠️ ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
-- [~] 🛑 [Adding a fish option to a dish produces NO allergen warning — the](roadmap/110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
+- ✅ 🛑 [Adding a fish option to a dish produces NO allergen warning — the](roadmap/110-theme-5-richer-dish-data/040-an-add-on-naming-fish-carries-no-allergen-warning.md)
 - [ ] 🔎 [The allergen sweep has no rule for seven everyday food words, and](roadmap/110-theme-5-richer-dish-data/050-the-allergen-sweep-misses-seven-everyday-food-words.md)
+- [ ] 🔎 [An add-on option carries no allergen but fish — a hummus extra is](roadmap/110-theme-5-richer-dish-data/060-an-add-on-option-carries-no-allergen-but-fish.md)
 
 ## Theme 6 — North star: the health tie-in
 
@@ -133,6 +134,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [14f — Combos: several dishes ordered as one](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/020-14f-combos-several-dishes-ordered-as-one.md)
 - [ ] [14g — Extras you cannot configure until the dish is ordered](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/030-14g-extras-you-cannot-configure-until-the-dish.md)
 - ✅ [14h — The "we can't say" warning fires 807 times, and Spinach is one…](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/040-14h-the-cant-say-warning-fires-807-times.md)
+- [ ] 🔎 [The picker says one clause twice when an allergen both warns AND](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/050-the-picker-says-one-clause-twice.md)
+- [ ] 🔎 [The chip row still says Veg on a dish the warning has just said is](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/060-the-chip-row-still-says-veg.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
 

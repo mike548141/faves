@@ -1,4 +1,4 @@
-- [~] 🛑 **Adding a fish option to a dish produces NO allergen warning — the
+- [x] 🛑 **Adding a fish option to a dish produces NO allergen warning — the
       one thing the add-on picker exists to prevent** `[S][js][data]` — found
       2026-09-07 (session faves-b1) while landing `contains-fish` (`010`), and
       **verified on shipped data before filing**, not taken from the delivering
@@ -124,3 +124,87 @@
   current green run is evidence about peanuts and is being read as evidence
   about allergens. That gap is the same shape as the one this repo keeps
   paying for: *a check's description is not evidence about the check.*
+
+  ---
+
+  ✅ **DONE 2026-09-07 (wt: faves-addon-allergens) — [ADR 0095](../../decisions/0095-an-add-on-carries-both-axes.md).**
+  **3 `contains-fish` tags, 3 options, 2 venues** (`sprig-and-fern-tawa` ×2,
+  `crepes-a-go-go` ×1). Option coverage 103/200 (51%). `DATA_VERSION` moved;
+  **`SHELL_VERSION` did not** — no file under `site/` outside `data/` changed,
+  because the architecture was already there.
+
+  🔎 **THE FILING ABOVE UNDERCOUNTED THE CORPUS AND MIS-DESCRIBED THE DEFECT.
+  Both are said first, because a record repeated forward is how a wrong number
+  becomes a fact.**
+  1. It says the sweep returns *"two rows, both the same Salmon option at one
+     venue"*. Re-measured 2026-09-07 across every `addOnGroups` in
+     `site/data/restaurants/`: **three rows at two venues** — Tawa's
+     `brunch-sides` and `add-salmon`, and **crepes-a-go-go's `savoury-extras`**,
+     which the original sweep missed. The mechanism argument stands; the count
+     was 2/3 of the truth.
+  2. It says `has-fish` *"would render on the composed dish row as a chip
+     reading literally `has-fish`"*. **It would not, and the design question
+     that rested on it dissolves.** `menu.js` builds the chip row **once**, from
+     `item.tags`, in `renderDish`; the `onCompose` callback rewrites
+     `li.dataset.tags` and toggles `dish-flagged` and **appends no chips**.
+     Verified in headless Chrome before and after the change — the waffles row
+     shows `["⚠ gluten"]` in both states. The reading of `tagChip`'s bare
+     fallback was correct; what was wrong was the assumption that composed tags
+     ever reach it.
+
+  📋 **The four design questions, answered against the running page.** (a) No
+  tag reaches the chip row after composition, so the owner's *"flood of noisy
+  tags on the menu"* cannot happen by this route — the question is moot rather
+  than decided, and that is worth more than a decision because nothing has to be
+  maintained. (b) `added`'s `{tag, from}` is already consumed by the warning
+  line, which is `role="status"` and names the option; there is no
+  post-composition chip for it to annotate. (c) The four-allergen row already
+  scales — flagged allergens one line each, then plain ones, then the facts,
+  then **one** collapsed absence sentence (ADR 0092) — and the venue cap bounds
+  it (`max: 3` on the kebab board). No new surface was added, so nothing new
+  grows with the selection. (d) `seen` already blocks a second mention, now
+  pinned by a unit test rather than by a reading.
+
+  📐 **What a reader now sees.** Same dish, same probe, `contains-fish` ticked
+  in Settings, ticking Salmon on Housemade Waffles (`contains-gluten`, no
+  dietary claim — the configuration where the dietary axis cannot mask the
+  fault):
+
+  ```
+  BEFORE  warnHidden: true   warnText: ""                                   dishFlagged: false
+  AFTER   warnHidden: false  warnText: "Salmon contains fish — you asked     dishFlagged: true
+                                        to avoid it."
+  ```
+
+  🔑 **`has-meat` gains nothing, asked and answered in the same pass.** Meat is
+  not an allergen and there is no `contains-meat`; ADR 0092 rejected one and
+  this does not reopen it.
+
+  🔎 **`tag_addon_options.py` wrote NO `contains-*` at all before today — the
+  gap is wider than fish, and the naive fix is dangerous.** Measured by running
+  `tag_allergens.py`'s whole rule set over every option name: **8 candidates**,
+  of which 3 are this item's fish, **2 are real live misses** (`Hummus` →
+  `contains-sesame`, `Chocolate or Nutella` → `contains-nuts`) and **3 are the
+  venue's own gluten HEDGE** — `"No gluten added bun"` → `contains-gluten`, on
+  three records the tool already REVIEWS rather than touches. Tagging the
+  gluten-free alternative as containing gluten is the one direction a safety
+  sweep may never move. Filed as `060` in this theme rather than improvised
+  here.
+
+  🔎 **Two pre-existing defects found while verifying, filed under Theme 14 and
+  NOT folded in** — both measured, both true with no fish anywhere near them:
+  `200/050` (the picker says one clause twice — *"Halloumi contains dairy — you
+  asked to avoid it. Halloumi contains dairy, so this is no longer vegan."*,
+  shipped since ADR 0048, and exactly the shape the owner named) and `200/060`
+  (the chip row keeps showing `Veg` on a dish the warning has just said is no
+  longer vegetarian).
+
+  ✅ **Guards.** `tools/addon_check.mjs` gains a fish block — the point being
+  that its green run was evidence about **peanuts** — driving a dish with no
+  dietary claim so the allergen path has to speak for itself, plus its first
+  **absence** assertion: no chip on a configured row may be a raw internal
+  identifier, refusing to run against a row with no chips at all.
+  `test_tag_addon_options.py` goes 15 → 20 cases with three new breakers: delete
+  the allergen rule (dietary survives, cases fail), delete the dietary rule
+  (allergen survives, cases fail) — which is how the two axes are held apart —
+  and restore the hand-copied finfish list, which fails the `Kingfish` case.

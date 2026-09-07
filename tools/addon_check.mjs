@@ -43,6 +43,17 @@
 //      configuration, naming each untagged option once and each label once;
 //   h) with both on the plate, the fact leads and the one quiet sentence closes.
 //
+// AND SINCE ADR 0095, A SECOND ALLERGEN — because everything above is peanuts.
+// Peanuts were always inside the `contains-` namespace, so every assertion in
+// (b)(c) could pass while a whole allergen axis was silent, and one was: an
+// add-on naming a finfish carried `has-fish` (a DIETARY marker, outside the
+// namespace) and nothing else, so the picker's allergen union never saw it. The
+// fish block at the end drives a dish that makes NO dietary claim, which is the
+// only configuration where the allergen path has to speak for itself:
+//   i) with fish flagged in Settings, ticking Salmon warns at all (it did not),
+//      names the option and the allergen, puts `contains-fish` on the composed
+//      tags, and lights the ROW — and no chip on that row is a raw `has-fish`.
+//
 // WHAT A GREEN RUN HERE STILL CANNOT TELL YOU. It never proves the tagging is
 // right — that the sauce called "Garlic yogurt" really does contain dairy. That
 // is a claim about food, made by whoever transcribed the menu, and no browser
@@ -69,6 +80,23 @@ const VENUE = "wellington-kebab-grill";
 const SAUCES = "sauces";
 const PEANUT_OPTION = "Satay";
 const ALLERGEN = "contains-peanuts";
+
+// 🛑 A SECOND ALLERGEN, AND THE REASON THIS FILE NEEDED ONE (ADR 0095).
+// Everything above drives a PEANUT option, and peanuts were always inside the
+// `contains-` namespace this whole feature is built on. So a green run here was
+// evidence about peanuts and was being read as evidence about ALLERGENS — and
+// underneath it, for as long as `contains-fish` had existed, a reader who ticked
+// "avoid Fish" and added Salmon to a fish-free dish was told nothing whatsoever.
+// Every assertion in this file passed while that was true, because the fish axis
+// walked straight past all of them.
+const FISH_ALLERGEN = "contains-fish";
+const FISH_OPTION = "Salmon";
+// Chosen because it makes NO dietary claim. On a `v` dish the picker would have
+// said "Salmon is fish, so this is no longer vegetarian" — a true sentence that
+// masks the bug, since it is spoken by the DIETARY axis and would be there with
+// the allergen still missing. With no claim to die, the allergen path is the
+// only thing that can speak, and before the fix the warning was hidden outright.
+const FISH_DISH = "Housemade Waffles";
 
 const HELP = `Faves add-on check — verify add-on composition in a real browser.
 
@@ -105,10 +133,13 @@ function parseArgs(argv) {
   return opts;
 }
 
-/** Peanuts already flagged, so the loud treatment is under test from the first
- *  paint rather than needing a Settings round-trip (device_check owns that). */
+/** Peanuts AND fish already flagged, so the loud treatment is under test from
+ *  the first paint rather than needing a Settings round-trip (device_check owns
+ *  that). Two allergens rather than one: neither venue below carries a dish
+ *  tagged `contains-fish`, so flagging it changes nothing about the peanut and
+ *  14h assertions — it only arms the fish block at the end. */
 const seedExpr = `try {
-  localStorage.setItem("faves.settings.v1", JSON.stringify({ diet: { dietary: [], avoid: [${JSON.stringify(ALLERGEN)}] } }));
+  localStorage.setItem("faves.settings.v1", JSON.stringify({ diet: { dietary: [], avoid: [${JSON.stringify(ALLERGEN)}, ${JSON.stringify(FISH_ALLERGEN)}] } }));
 } catch (e) { /* opaque origin — the real page seeds on load */ }`;
 
 /** Everything an assertion needs about the first dish that offers the sauces. */
@@ -169,6 +200,11 @@ const dishExpr = (name) => `(() => {
     checked: [...box.querySelectorAll(".addon-input:checked")].map((i) => i.value).filter(Boolean),
     warnHidden: warn.hidden,
     warnText: warn.textContent,
+    dishFlagged: dish.classList.contains("dish-flagged"),
+    // The chip row, verbatim. Read for an ABSENCE (see the fish block): the
+    // owner's worry when he ruled this was "a flood of noisy tags on the menu",
+    // and the ugliest form of it would be a raw internal identifier.
+    chips: [...dish.querySelectorAll(".dish-tags .tag")].map((c) => c.textContent),
   };
 })()`;
 
@@ -395,6 +431,50 @@ async function run(opts) {
       `…and ${MEAT_OPTION} is named once per sentence — never twice for one reason`,
       occurrences(factPart, MEAT_OPTION) === 1 && occurrences(residuePart, MEAT_OPTION) === 1,
       `fact: ${JSON.stringify(factPart)} · residue: ${JSON.stringify(residuePart)}`,
+    );
+
+    // --- (i) ADR 0095: an add-on that names a fish IS an allergen -------
+    // Same venue, a dish that makes no dietary claim at all. Before the option
+    // carried `contains-fish` this whole block was silent: measured 2026-09-07
+    // in headless Chrome, ticking Salmon on the waffles left
+    // `warnHidden = true`, `warnText = ""` and `dish-flagged` off, with
+    // `contains-fish` ticked in Settings.
+    const fishDish = dishSel(FISH_DISH);
+    await driver.click(`${fishDish} .dish-addons-summary`);
+    await driver.click(`${fishDish} .addon-option`, FISH_OPTION);
+    const f = await driver.evalPage(dishExpr(FISH_DISH));
+    report.check(
+      `${FISH_OPTION} on a dish that claims nothing still WARNS — the dietary axis cannot speak here`,
+      !f.warnHidden,
+      `warning hidden=${f.warnHidden}, text=${JSON.stringify(f.warnText)}`,
+    );
+    report.check(
+      "…and the warning names the option, the allergen, and that the reader asked to avoid it",
+      f.warnText.includes(FISH_OPTION) && /\bfish\b/i.test(f.warnText) &&
+        /asked to avoid/i.test(f.warnText),
+      JSON.stringify(f.warnText),
+    );
+    report.check(
+      "the fish allergen reaches the composed tags, which is what the filter re-reads",
+      f.tags.includes(FISH_ALLERGEN),
+      `dataset.tags = ${f.tags.join(" ") || "(none)"}`,
+    );
+    report.check(
+      "…and the ROW lights up — the flagged treatment follows the configuration",
+      f.dishFlagged,
+      `dish-flagged=${f.dishFlagged}`,
+    );
+    // The absence half of the owner's ruling, and the assertion most likely to
+    // rot: `has-fish` is a dietary marker with no entry in menu.js `tagChip`,
+    // so anything that ever composes option tags onto the chip row paints it as
+    // a bare `has-fish` beside a proper `⚠ fish` — two chips saying one thing,
+    // one of them an internal identifier. It refuses to run against a dish with
+    // no chips at all, which would compare [] to [] and pass with the row
+    // deleted.
+    report.check(
+      "no chip on the row is a raw internal tag — the reader never sees `has-fish`",
+      f.chips.length > 0 && !f.chips.some((c) => /^\s*has-/.test(c)),
+      `${f.chips.length} chip(s): ${JSON.stringify(f.chips)}`,
     );
 
     return report.summary(SITE) ? 0 : 1;

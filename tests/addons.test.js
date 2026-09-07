@@ -205,6 +205,30 @@ test("composeTags: salmon is fish, and fish is not vegetarian either", () => {
   }
 });
 
+// --- ADR 0095: a finfish option carries BOTH axes ---------------------
+test("composeTags: salmon carrying both tags warns about the allergen AND kills the claim", () => {
+  // The shipped shape since 2026-09-07. The two tags are independent: the
+  // dietary one contradicts `v`, the allergen one unions in and lands in
+  // `added` so the picker can name which option brought it.
+  const salmon = { group: "brunch-sides", name: "Salmon", price: 9, tags: ["has-fish", "contains-fish"] };
+  const out = composeTags(["v"], [salmon]);
+  assert.deepEqual(out.added, [{ tag: "contains-fish", from: "Salmon" }]);
+  assert.equal(out.dropped[0].tag, "v");
+  assert.equal(out.dropped[0].allergen, "has-fish");
+  assert.ok(out.tags.includes("contains-fish"));
+});
+
+test("composeTags: a dish that ALREADY declares fish is not told twice", () => {
+  // The owner's noise worry, and the half `seen` already answers: adding salmon
+  // to a dish the venue already tagged `contains-fish` must produce NO second
+  // warning and NO second chip. `added` empty is the whole assertion — it is
+  // what the picker's allergen lines are built from.
+  const salmon = { group: "brunch-sides", name: "Salmon", price: 9, tags: ["has-fish", "contains-fish"] };
+  const out = composeTags(["contains-fish"], [salmon]);
+  assert.deepEqual(out.added, []);
+  assert.deepEqual(out.tags.filter((t) => t === "contains-fish"), ["contains-fish"]);
+});
+
 test("composeTags: `has-meat` is NOT an allergen — it never joins `added`", () => {
   // It has no chip, no settings row and no place in the avoid list, so a dish
   // configured with bacon must not sprout "Bacon contains meat." as a plain
