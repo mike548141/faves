@@ -71,8 +71,35 @@
   `seen` blocks it, and `added` stays empty, so no second chip and no second
   warning. The reader cannot be told the same thing twice by that path.
 
-  🛑 **BUT THE OTHER HALF IS REAL, AND IT IS WORSE THAN NOISE — VERIFIED IN THE
-  CODE.** `tagChip()` in `site/js/menu.js` ends with a bare fallback:
+  🛑 **THE PARAGRAPH BELOW WAS WRONG, AND THE ORCHESTRATOR WROTE IT. Kept, with
+  the correction on top, because deleting it would hide how the error was
+  made.** It claimed a raw `has-fish` chip would render on a composed dish row,
+  and marked itself *"VERIFIED IN THE CODE"*. What was actually verified is that
+  `tagChip()` has a bare fallback — **true**. What was *assumed* is that composed
+  tags reach it — **false**. `site/js/menu.js` builds the chip row **once**, in
+  `renderDish`, from `item.tags`; the `onCompose` callback rewrites
+  `li.dataset.tags` and toggles `dish-flagged` and **appends no chips**. So
+  composed tags never reach `tagChip` and the raw identifier cannot render.
+  Measured in headless Chrome before *and* after the fix: the waffles row shows
+  `["⚠ gluten"]` in both states.
+  🔑 **The shape of the mistake, which is the reusable part:** a true
+  observation about one function, plus an unexamined assumption about who calls
+  it, published as one verified claim. It is the same error as
+  *a symptom count is not an enumeration*, one layer along — **reading a
+  callee is not reading the call graph.** The delivering agent caught it by
+  measuring the rendered row instead of reading the source, which is the only
+  method that could have.
+  ⚠️ **It also undercounted the corpus.** The sweep below reports *"two rows,
+  both the same Salmon option at one venue"*; re-measured across every
+  `addOnGroups`, it is **three rows at two venues** — Tawa's `brunch-sides` and
+  `add-salmon`, plus `crepes-a-go-go`'s `savoury-extras`. That venue was
+  transcribed by a *concurrent* agent hours after the sweep ran, so the number
+  was true when written and stale by the time it was read. **A corpus
+  measurement taken while other sessions are writing to the corpus has a
+  shelf life.**
+
+  ~~**BUT THE OTHER HALF IS REAL, AND IT IS WORSE THAN NOISE — VERIFIED IN THE
+  CODE.**~~ `tagChip()` in `site/js/menu.js` ends with a bare fallback:
 
   ```js
   return el("span", { className: "tag", textContent: t });
