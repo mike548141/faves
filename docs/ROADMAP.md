@@ -201,7 +201,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/README.md)*
 
-- [ ] [Turn can_approve_pull_request_reviews back off — UNBLOCKED 2026-08-17,](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/010-turn-can-approve-pull-request-reviews-back-off.md)
+- ✅ [Turn can_approve_pull_request_reviews back off — UNBLOCKED 2026-08-17,](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/010-turn-can-approve-pull-request-reviews-back-off.md)
+- [ ] [🚩 The weekly FX PR opens correctly and cannot land on its own — the](roadmap/280-automating-the-fx-refresh-shipped-2026-08-16/020-the-weekly-fx-pr-opens-and-cannot-land-on-its-own.md)
 
 ## Theme 25 — Should a dish have an id? (owner-raised 2026-08-16)
 
