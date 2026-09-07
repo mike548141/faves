@@ -46,6 +46,7 @@ PETONE = "site/data/restaurants/sprig-and-fern-petone.json"
 BERHAMPORE = "site/data/restaurants/sprig-and-fern-berhampore.json"
 TAWA = "site/data/restaurants/sprig-and-fern-tawa.json"
 KEBAB = "site/data/restaurants/wellington-kebab-grill.json"
+CHARLEY = "site/data/restaurants/charley-noble.json"
 
 # The three burgers under Thorndon's "All burgers served with … on a sesame bun"
 # note, with their tags emptied. Nothing in any of the three names or
@@ -69,7 +70,8 @@ STRIP_BURGERS = [
             "gf-option",
             "contains-gluten",
             "contains-egg",
-            "contains-sesame"
+            "contains-sesame",
+            "contains-fish"
           ]""",
      """          "desc": "Crumbed hoki fillet, tartare sauce.",
           "price": 25.0,
@@ -213,6 +215,111 @@ def check_water_chestnut_is_not_a_tree_nut(after, out):
     return None
 
 
+# --- contains-fish (2026-09-07) -------------------------------------------
+# Five cases, and FOUR of them assert an ABSENCE. That ratio is the point: the
+# fish rule is the widest pattern in the file (`\bfish\w*` plus 40-odd species),
+# and the ways it can be wrong are all ways of tagging something it should not.
+# Per this file's convention every absence case also demands the tool wrote
+# something ELSE in the same record, so a tagger that had stopped writing
+# altogether cannot satisfy one by doing nothing.
+
+def _burgers_wrote_something(after):
+    """The proof-of-write every absence case below needs.
+
+    The section note puts contains-sesame on all three burgers, so its presence
+    says the tool ran, read the record and patched it. Without this an assertion
+    like "the chicken burger is not fish" passes just as happily against a tool
+    that wrote nothing at all.
+    """
+    if not any("contains-sesame" in t for t in _burgers(after).values()):
+        return "nothing was tagged at all — the case proves nothing"
+    return None
+
+
+def check_species_is_fish_and_chicken_is_not(after, out):
+    """"hoki" is a fish; the burger's NAME no longer says so.
+
+    The real row is called "Fish Burger", which would make this case pass off
+    `\\bfish\\w*` alone and prove nothing about the species list. The mutation
+    renames it, so the only fish evidence left in the record is the word "hoki"
+    in the description — which is exactly the case the tag exists for: a reader
+    who does not know hoki is a fish is the person the warning is for.
+    """
+    if "contains-fish" not in (_dish(after, "fish-burger") or set()):
+        return f"'hoki' did not produce contains-fish (has {sorted(_dish(after, 'fish-burger') or [])})"
+    for dish in ("chicken-schnitzburger", "black-bean-burger"):
+        if "contains-fish" in (_dish(after, dish) or set()):
+            return f"{dish} was given contains-fish with no fish in it"
+    return _burgers_wrote_something(after)
+
+
+def check_fish_and_shellfish_do_not_bleed(after, out):
+    """Two allergens, not one — and the leading `\\b` is the only thing between them.
+
+    Both halves fail independently and both are real bugs someone shipped
+    towards: dropping the word boundary makes every "shellfish" and "jellyfish"
+    in the corpus a finfish, and writing the fish rule's tag as
+    `contains-shellfish` is the wrong-tag trap the owner named when he ruled
+    (Subway's tuna must not become shellfish).
+    """
+    chicken = _dish(after, "chicken-schnitzburger") or set()
+    fish = _dish(after, "fish-burger") or set()
+    if "contains-shellfish" not in chicken:
+        return f"the prawn was not read as shellfish (has {sorted(chicken)})"
+    if "contains-fish" in chicken:
+        return ("'shellfish'/'jellyfish' was read as fish — the leading word "
+                f"boundary is gone (has {sorted(chicken)})")
+    if "contains-fish" not in fish:
+        return f"the hoki fillet did not produce contains-fish (has {sorted(fish)})"
+    if "contains-shellfish" in fish:
+        return f"a finfish was tagged contains-shellfish — the wrong-tag trap (has {sorted(fish)})"
+    return None
+
+
+def check_worcestershire_is_fish(after, out):
+    """The one people miss: anchovy in a bottle nobody reads the label of."""
+    tags = _dish(after, "black-bean-burger") or set()
+    if "contains-fish" not in tags:
+        return f"Worcestershire sauce did not produce contains-fish (has {sorted(tags)})"
+    if "contains-fish" in (_dish(after, "chicken-schnitzburger") or set()):
+        return "the burger WITHOUT Worcestershire was tagged too — the rule is not reading the sauce"
+    return None
+
+
+def check_a_vegan_dish_is_not_given_fish(after, out):
+    """Curation outranks a pattern, for this tag as for the other seven.
+
+    The black bean burger keeps its `vg` here while its description gains
+    Worcestershire. A venue calling a dish vegan is a stronger statement than
+    our reading of its sauce list, and CONTRADICTED_BY is what says so.
+    """
+    tags = _dish(after, "black-bean-burger") or set()
+    if "contains-fish" in tags:
+        return f"a vg dish was given contains-fish by inference (has {sorted(tags)})"
+    if "vg" not in tags:
+        return "the vg tag went missing — the case is no longer testing curation"
+    return _burgers_wrote_something(after)
+
+
+def check_mustard_seed_caviar_is_not_caviar(after, out):
+    """"Caviar" is also a plating word for anything small and round.
+
+    Same shape as the water chestnut above, and narrowed the same way — a
+    lookbehind, not an `exclude`, so a dish reading "mustard seed caviar and
+    smoked salmon" keeps its salmon. Both halves are asserted because they fail
+    independently: dropping the lookbehind puts a fish warning on a venison
+    loin, and dropping `caviar` from the rule silently loses the real roe two
+    rows away.
+    """
+    venison = _dish(after, "wild-awatoru-venison-loin") or set()
+    if "contains-fish" in venison:
+        return f"mustard seed caviar was read as fish roe (venison loin has {sorted(venison)})"
+    roe = _dish(after, "oscietra-caviar-10g-or-14g") or set()
+    if "contains-fish" not in roe:
+        return f"the real caviar lost its fish tag (has {sorted(roe)})"
+    return None
+
+
 def check_real_note_tags_and_offer_does_not(after, out):
     """Petone's real note, both halves at once.
 
@@ -277,6 +384,61 @@ CASES = {
         0, check_water_chestnut_is_not_a_tree_nut),
     "a section note reaches every dish under it": (
         THORNDON, STRIP_BURGERS, 0, check_note_reaches_every_dish),
+    "a fish named only by species is tagged; the chicken beside it is not": (
+        THORNDON,
+        STRIP_BURGERS + [
+            # Take the word "Fish" out of the NAME so the species list is the
+            # only thing that can produce the tag.
+            ('"name": "Fish Burger",', '"name": "Crumbed Fillet Burger",'),
+        ],
+        0, check_species_is_fish_and_chicken_is_not),
+    "shellfish is not fish, and fish is not shellfish": (
+        THORNDON,
+        STRIP_BURGERS + [
+            ('"desc": "Crumbed free range chicken breast, rocket sauce, aioli.",',
+             '"desc": "Crumbed free range chicken breast, prawn and jellyfish, '
+             'shellfish bisque, aioli.",'),
+        ],
+        0, check_fish_and_shellfish_do_not_bleed),
+    "Worcestershire sauce is tagged as fish": (
+        THORNDON,
+        STRIP_BURGERS + [
+            ('"desc": "Chipotle sauce.",',
+             '"desc": "Chipotle sauce, Worcestershire sauce.",'),
+        ],
+        0, check_worcestershire_is_fish),
+    "a dish the venue calls vegan is not given fish": (
+        THORNDON,
+        # Only the first two burgers are stripped: the third KEEPS its `vg`,
+        # which is the whole subject of the case.
+        STRIP_BURGERS[:2] + [
+            ('"desc": "Chipotle sauce.",',
+             '"desc": "Chipotle sauce, Worcestershire sauce.",'),
+        ],
+        0, check_a_vegan_dish_is_not_given_fish),
+    "mustard seed caviar is not caviar, and the roe beside it still is": (
+        CHARLEY,
+        # Empty the real caviar's tags so the tool has a reason to write this
+        # record at all; the venison loin two rows away is left exactly as the
+        # corpus has it.
+        [("""          "price": null,
+          "tags": [
+            "contains-egg",
+            "contains-gluten",
+            "contains-fish"
+          ],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Priced as MP (market price) on the menu for both sizes and all four grades.",""",
+          """          "price": null,
+          "tags": [],
+          "needs": [
+            {
+              "what": "price",
+              "note": "Priced as MP (market price) on the menu for both sizes and all four grades.","""),
+         ],
+        0, check_mustard_seed_caviar_is_not_caviar),
     "an alternative on offer is not tagged as an ingredient": (
         THORNDON,
         STRIP_BURGERS + [(BURGER_NOTE,
@@ -332,7 +494,7 @@ CASES = {
         [("""          "dishId": "fish-and-chips-gold-card",
           "desc": "Gold Card portion.",
           "price": 21.0,
-          "tags": ["df", "contains-gluten"]""",
+          "tags": ["df", "contains-gluten", "contains-fish"]""",
           """          "dishId": "fish-and-chips-gold-card",
           "desc": "Battered. Gold Card portion.",
           "price": 21.0,
@@ -358,8 +520,11 @@ CASES = {
 # Assertions on the subject's raw TEXT rather than its parsed form — layout is
 # the property, so parsing it away would test nothing.
 RAW_CHECKS = {
+    # The dish is called "Fish and Chips", so the fish rule fires on the name
+    # and the gluten rule on the injected "Battered" — two additions, in RULES
+    # order, appended to the `df` the mutation left behind.
     "a one-line tags array stays on one line":
-        lambda raw: None if '"tags": ["df", "contains-gluten"]' in raw
+        lambda raw: None if '"tags": ["df", "contains-fish", "contains-gluten"]' in raw
         else "the array was reflowed or not patched",
 }
 
@@ -387,6 +552,34 @@ BREAKERS = {
         [(r'pine\s?nuts?|brazil\s?nuts?|(?<!water )(?<!water-)chestnuts?)\b',
           r'pine\s?nuts?|brazil\s?nuts?|chestnuts?)\b')],
         ["water chestnut is not a tree nut, and the almonds beside it survive"]),
+
+    # --- contains-fish (2026-09-07) ---------------------------------------
+    # The wrong-tag trap the owner named when he ruled the tag in: write the
+    # fish rule's findings to `contains-shellfish` and Subway's tuna warns the
+    # wrong reader — the fish-allergic one gets nothing, and the one avoiding
+    # crustaceans avoids a sandwich they could have eaten.
+    "the fish rule writes contains-shellfish (the wrong-tag trap)": (
+        [('("contains-fish", "STATED", "names fish, or a fish by species",',
+          '("contains-shellfish", "STATED", "names fish, or a fish by species",')],
+        ["a fish named only by species is tagged; the chicken beside it is not",
+         "shellfish is not fish, and fish is not shellfish"]),
+    # One backslash-b is all that keeps `fish\w*` out of "shellfish" and
+    # "jellyfish". Reading it is not evidence; removing it and watching the
+    # case fail is.
+    "the fish rule's leading word boundary removed": (
+        [(r'r"\b(fish\w*|salmon|', r'r"(fish\w*|salmon|')],
+        ["shellfish is not fish, and fish is not shellfish"]),
+    "the Worcestershire rule removed": (
+        [(r'r"\b(worcestershire|worcester\s?sauce)\b"',
+          r'r"\b(a-sauce-no-menu-names)\b"')],
+        ["Worcestershire sauce is tagged as fish"]),
+    "the fish curation guard removed": (
+        [('    "contains-fish": {"v", "vg"},', '    "contains-fish": set(),')],
+        ["a dish the venue calls vegan is not given fish"]),
+    "the mustard-seed lookbehind removed": (
+        [(r'r"(?<!seed )caviar|tobiko|ikura|masago)\b"',
+          r'r"caviar|tobiko|ikura|masago)\b"')],
+        ["mustard seed caviar is not caviar, and the roe beside it still is"]),
 
     "positional span matching (the add-on bug)": (
         [NAIVE_SPANS],

@@ -72,6 +72,7 @@ CONTRADICTED_BY = {
     "contains-dairy": {"vg", "df"},
     "contains-egg": {"vg"},
     "contains-shellfish": {"v", "vg"},
+    "contains-fish": {"v", "vg"},
     # Not allergens, and never applied by THIS tool — it tags dishes and these
     # two say what an add-on option is (ADR 0092, tools/tag_addon_options.py).
     # They are here because validate.py checks that this table and
@@ -125,6 +126,63 @@ RULES = [
     ("contains-shellfish", "DERIVED", "an unnamed seafood mix reliably includes prawn or squid", r"\bseafood\b", None),
     ("contains-shellfish", "DERIVED", "laksa paste contains belacan (dried shrimp)", r"\blaksa\b", None),
     ("contains-shellfish", "DERIVED", "XO sauce is made with dried scallop and shrimp", r"\bXO sauce\b", None),
+
+    # --- fish ---------------------------------------------------------
+    # Fish is a declarable allergen in NZ and this corpus warned about it ZERO
+    # times until 2026-09-07 (owner-ruled 2026-08-16, Theme 5 item 010).
+    #
+    # 🛑 FISH AND SHELLFISH ARE TWO ALLERGENS, NOT ONE, and neither tag ever
+    # implies the other. A finfish sensitivity and a crustacean/mollusc
+    # sensitivity are different sensitivities: Subway's Tuna Mayo is
+    # `contains-fish` and NOT `contains-shellfish`; a prawn cutlet is the
+    # reverse. `\bseafood\b` therefore stays a shellfish-only derivation — the
+    # frozen "seafood mix" a kitchen here buys is squid, prawn and mussel far
+    # more often than it is fish, so deriving fish from it would be a guess
+    # dressed as a rule.
+    #
+    # `fish\w*` is open at the END (fishcake, fishballs, fisherman's) and closed
+    # at the START by `\b`. That leading boundary is the ONLY thing keeping this
+    # rule out of "shellfish", which is why test_tag_allergens.py reintroduces
+    # its removal as a breaker rather than trusting a reading of it.
+    #
+    # Deliberately NOT matched: `sole` and `ray` are ordinary English words in
+    # far commoner senses ("the sole reason", "a ray of"), and `bass` is an
+    # instrument unless the menu says sea bass. Coconut/water-chestnut logic: an
+    # inference should under-reach, not mis-fire. `has-fish` (ADR 0092) is a
+    # DIETARY marker on an add-on option and a different axis entirely — it is
+    # not this tag, and neither is written in terms of the other.
+    #
+    # MUSTARD SEED CAVIAR IS NOT CAVIAR, and — like water chestnut above — the
+    # narrowing is a LOOKBEHIND and not an `exclude`. Found by dry run against
+    # the corpus on 2026-09-07: Charley Noble's venison loin is garnished with
+    # "mustard seed caviar", a plating word for anything small and round, and it
+    # was the only false positive in 200. An `exclude` would veto the whole rule
+    # for that item, so a dish reading "mustard seed caviar and smoked salmon"
+    # would lose the SALMON — an over-warning traded for a miss, the one
+    # direction this tool may not move. Real fish roe (Oscietra Caviar, two rows
+    # away) still matches. The metaphor is wider than this one phrase — balsamic
+    # "caviar" is the other common one — so if a second turns up, add a second
+    # fixed-width lookbehind rather than reaching for `exclude`.
+    ("contains-fish", "STATED", "names fish, or a fish by species",
+     r"\b(fish\w*|salmon|tuna|snapper|t[ae]rakihi|hoki|kahawai|kingfish|gurnard|"
+     r"cod|monkfish|mackerel|sardines?|pilchards?|herrings?|anchov(?:y|ies)|"
+     r"trout|barramundi|john\s?dory|marlin|swordfish|eels?|unagi|whitebait|"
+     r"flounder|halibut|haddock|basa|tilapia|mahi\s?mahi|bream|sea\s?bass|"
+     r"trevally|warehou|groper|h[āa]puku|bonito|katsuobushi|kippers?|"
+     r"(?<!seed )caviar|tobiko|ikura|masago)\b", None),
+    # The one people miss, and the reason the owner named it when he ruled:
+    # Worcestershire sauce is anchovy by construction, and it turns up in a
+    # Bloody Mary, a marinade and a burger sauce with nothing else fishy in
+    # sight.
+    ("contains-fish", "DERIVED", "Worcestershire sauce is made with anchovy",
+     r"\b(worcestershire|worcester\s?sauce)\b", None),
+    ("contains-fish", "DERIVED", "dashi is a bonito stock", r"\bdashi\b", None),
+    ("contains-fish", "DERIVED", "surimi is a minced white-fish paste",
+     r"\b(surimi|kanikama)\b", None),
+    ("contains-fish", "DERIVED", "sashimi is raw fish", r"\bsashimi\b", None),
+    ("contains-fish", "DERIVED", "nam pla and nuoc mam are fish sauce",
+     r"\b(nam\s?pla|nuoc\s?mam)\b", None),
+    ("contains-fish", "DERIVED", "ceviche is raw fish cured in citrus", r"\bceviche\b", None),
 
     # --- gluten -------------------------------------------------------
     ("contains-gluten", "STATED", "names a wheat product",
@@ -283,6 +341,11 @@ NOTE_ALLERGENS = [
     ("contains-soy", r"\b(soy|soya)\b"),
     ("contains-sesame", r"\bsesame\b"),
     ("contains-shellfish", r"\b(shellfish|crustaceans?|molluscs?)\b"),
+    # `\bfish\b` and not `\bfish\w*`, because a note is prose: "contains
+    # shellfish" must not read as fish, and the leading boundary is what stops
+    # it. The species list is not repeated here — a venue writing its own
+    # allergen line writes "fish", not "kahawai".
+    ("contains-fish", r"\bfish\b"),
 ]
 # "gluten free" is the negation of the word beside it, and must never be read as
 # a declaration. Belt and braces: AVAILABILITY catches nearly every real
