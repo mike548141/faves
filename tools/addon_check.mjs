@@ -54,6 +54,22 @@
 //      names the option and the allergen, puts `contains-fish` on the composed
 //      tags, and lights the ROW — and no chip on that row is a raw `has-fish`.
 //
+// AND SINCE 2026-09-07, TWO OWNER RULINGS ON THIS SURFACE (roadmap 200/050 and
+// 200/060), both of them defects that shipped for weeks with this file green:
+//   j) THE PICKER SAID ONE CLAUSE TWICE. An allergen an option brings in and the
+//      dietary claim that same allergen kills are two consequences of one fact,
+//      and they were two sentences that both opened with it — "Halloumi contains
+//      dairy — you asked to avoid it. Halloumi contains dairy, so this is no
+//      longer vegan." One sentence now, allergen half leading. Asserted by
+//      COUNTING the shared clause, not by matching the merged string alone: a
+//      merge that appends the consequence and forgets to drop the old sentence
+//      passes an `includes` and fails a count.
+//   k) THE CHIP ROW WENT STALE. It was built once from `item.tags` and never
+//      rebuilt, so a `v` pizza with salmon on it wore a green `Veg` chip beside
+//      a warning saying it is no longer vegetarian. The chips are recomposed
+//      now, which is also what makes (i)'s raw-identifier assertion load-bearing
+//      for the first time — before this, NOTHING composed reached `tagChip`.
+//
 // WHAT A GREEN RUN HERE STILL CANNOT TELL YOU. It never proves the tagging is
 // right — that the sauce called "Garlic yogurt" really does contain dairy. That
 // is a claim about food, made by whoever transcribed the menu, and no browser
@@ -98,6 +114,20 @@ const FISH_OPTION = "Salmon";
 // only thing that can speak, and before the fix the warning was hidden outright.
 const FISH_DISH = "Housemade Waffles";
 
+// --- 200/050 + 200/060: one clause once, and a chip row that keeps up --------
+// `vg` + an option whose ONLY tag is `contains-dairy`, so the allergen line and
+// the contradiction line name the same option and the same tag — the exact
+// configuration the owner was shown. Dairy is flagged in Settings below so the
+// LOUD half of the merge is what is under test; the merge must not weaken it.
+const MERGE_DISH = "Garden Salad";
+const MERGE_OPTION = "Halloumi";
+const MERGE_ALLERGEN = "contains-dairy";
+// A dish whose chips must CHANGE. `["v", "gf-option", "contains-nuts"]` renders
+// ["⚠ nuts", "Veg", "GF option"]; ticking Salmon kills both claims and adds an
+// allergen, so all three chips have something to prove — two leave, one arrives,
+// and `has-fish` must not appear at all.
+const CHIP_DISH = "Potato, Rosemary + Basil Pesto";
+
 const HELP = `Faves add-on check — verify add-on composition in a real browser.
 
   node tools/addon_check.mjs [options]
@@ -133,13 +163,18 @@ function parseArgs(argv) {
   return opts;
 }
 
-/** Peanuts AND fish already flagged, so the loud treatment is under test from
- *  the first paint rather than needing a Settings round-trip (device_check owns
- *  that). Two allergens rather than one: neither venue below carries a dish
- *  tagged `contains-fish`, so flagging it changes nothing about the peanut and
- *  14h assertions — it only arms the fish block at the end. */
+/** Peanuts, fish AND dairy already flagged, so the loud treatment is under test
+ *  from the first paint rather than needing a Settings round-trip (device_check
+ *  owns that). Three allergens rather than one: each arms one block and none of
+ *  them can quietly satisfy another's assertions. Flagging fish changes nothing
+ *  about the peanut and 14h assertions (neither venue has a dish tagged
+ *  `contains-fish`); flagging dairy arms the merge block — the merged sentence's
+ *  loud half only exists when the reader has declared that allergen, and the
+ *  ruling's own constraint is that the loud half still LEADS. Its side effect is
+ *  that Sprig & Fern's dairy dishes start out `dish-flagged`, which no assertion
+ *  in this file reads on a dish it has not configured. */
 const seedExpr = `try {
-  localStorage.setItem("faves.settings.v1", JSON.stringify({ diet: { dietary: [], avoid: [${JSON.stringify(ALLERGEN)}, ${JSON.stringify(FISH_ALLERGEN)}] } }));
+  localStorage.setItem("faves.settings.v1", JSON.stringify({ diet: { dietary: [], avoid: [${JSON.stringify(ALLERGEN)}, ${JSON.stringify(FISH_ALLERGEN)}, ${JSON.stringify(MERGE_ALLERGEN)}] } }));
 } catch (e) { /* opaque origin — the real page seeds on load */ }`;
 
 /** Everything an assertion needs about the first dish that offers the sauces. */
@@ -475,6 +510,89 @@ async function run(opts) {
       "no chip on the row is a raw internal tag — the reader never sees `has-fish`",
       f.chips.length > 0 && !f.chips.some((c) => /^\s*has-/.test(c)),
       `${f.chips.length} chip(s): ${JSON.stringify(f.chips)}`,
+    );
+
+    // --- (j) 200/050: the same clause is not said twice ------------------
+    // Measured verbatim before the fix, headless Chrome, this exact dish and
+    // option with dairy flagged: "Halloumi contains dairy — you asked to avoid
+    // it. Halloumi contains dairy, so this is no longer vegan."
+    const mergeDish = dishSel(MERGE_DISH);
+    await driver.click(`${mergeDish} .dish-addons-summary`);
+    await driver.click(`${mergeDish} .addon-option`, MERGE_OPTION);
+    const m = await driver.evalPage(dishExpr(MERGE_DISH));
+    const clause = `${MERGE_OPTION} contains dairy`;
+    report.check(
+      "the fact is said ONCE — the allergen clause does not open two sentences",
+      occurrences(m.warnText, clause) === 1,
+      `${occurrences(m.warnText, clause)}× "${clause}" in ${JSON.stringify(m.warnText)}`,
+    );
+    report.check(
+      "…and the ALLERGEN half still leads, in the words the reader is scanning for",
+      new RegExp(`^\\s*${MERGE_OPTION} contains dairy — you asked to avoid it`).test(m.warnText),
+      JSON.stringify(m.warnText),
+    );
+    report.check(
+      "…and the dietary consequence SURVIVES the merge, in the same sentence",
+      /you asked to avoid it, and this is no longer vegan\./.test(m.warnText),
+      JSON.stringify(m.warnText),
+    );
+    report.check(
+      "…so the whole warning is one sentence, not two",
+      m.warnText.trim().split(/(?<=\.)\s+/).filter(Boolean).length === 1,
+      JSON.stringify(m.warnText),
+    );
+
+    // --- (k) 200/060: the chip row follows the configuration --------------
+    // Read BEFORE and AFTER on the same row. Before-and-after rather than an
+    // absolute expectation, because "Veg is gone" is satisfiable by a chip row
+    // that was never drawn — so the before read is what makes the after read
+    // mean anything, and it refuses to run if the row starts with no chips.
+    const chipDish = dishSel(CHIP_DISH);
+    const before = await driver.evalPage(dishExpr(CHIP_DISH));
+    report.check(
+      "the chip row starts with the dish's own claims on it — the baseline this rests on",
+      before.chips.length > 0 && before.chips.some((c) => /^Veg$/.test(c.trim())) &&
+        before.chips.some((c) => /GF option/.test(c)),
+      `${before.chips.length} chip(s): ${JSON.stringify(before.chips)}`,
+    );
+    await driver.click(`${chipDish} .dish-addons-summary`);
+    await driver.click(`${chipDish} .addon-option`, FISH_OPTION);
+    const after = await driver.evalPage(dishExpr(CHIP_DISH));
+    report.check(
+      "a claim the configuration killed LEAVES the chip row — no green `Veg` beside the warning",
+      !after.chips.some((c) => /^Veg$/.test(c.trim())),
+      `before ${JSON.stringify(before.chips)} → after ${JSON.stringify(after.chips)}`,
+    );
+    report.check(
+      "…and so does the second claim, so this is not one hard-coded chip going away",
+      !after.chips.some((c) => /GF option/.test(c)),
+      JSON.stringify(after.chips),
+    );
+    report.check(
+      "an allergen the configuration ADDED arrives on the chip row",
+      after.chips.some((c) => /fish/i.test(c)),
+      JSON.stringify(after.chips),
+    );
+    report.check(
+      "…and the row that gained it still carries no raw internal identifier",
+      after.chips.length > 0 && !after.chips.some((c) => /^\s*has-/.test(c)),
+      JSON.stringify(after.chips),
+    );
+    report.check(
+      "the warning and the chips now agree about what this dish is",
+      /no longer vegetarian/.test(after.warnText) &&
+        !after.chips.some((c) => /^Veg$/.test(c.trim())) &&
+        !after.tags.includes("v"),
+      `chips ${JSON.stringify(after.chips)} · tags ${after.tags.join(" ")} · ${JSON.stringify(after.warnText)}`,
+    );
+    // Untick it: a row that can only ever LOSE chips is half a feature, and the
+    // rebuild has to survive going backwards as well as forwards.
+    await driver.click(`${chipDish} .addon-option`, "None");
+    const undone = await driver.evalPage(dishExpr(CHIP_DISH));
+    report.check(
+      "unticking the option puts the dish's own claims BACK on the row",
+      JSON.stringify(undone.chips) === JSON.stringify(before.chips),
+      `${JSON.stringify(undone.chips)} vs the original ${JSON.stringify(before.chips)}`,
     );
 
     return report.summary(SITE) ? 0 : 1;
