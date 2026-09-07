@@ -10241,8 +10241,10 @@ parse-at-render quantities; `menus[]` held; no accounts; owner-supplied content.
 
 ### Close evidence
 
-Pushed as branch `review-38a` → PR for CI (a branch push alone runs only the
-floor). ⏳ CI result recorded at merge. Local: `validate.py` 57 valid / 77
+Pushed as branch `review-38a` → PR #12 (a branch push alone runs only the
+floor): **8/8 checks green**, merged as `fd08add`. ✅ **`CI` and `floor` both
+green on `main` at `fd08add`** (runs `34122019189`, `34122019794`).
+Local: `validate.py` 57 valid / 77
 warnings; `split_data --check` clean; `midnight_check` 68/68; the hook's
 scanners on every commit in the worktree. No source, data or tool file changed.
 
