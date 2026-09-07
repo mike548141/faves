@@ -1099,3 +1099,18 @@ deliberation those compact docs omit.
   reached `data/` (`--check` passed reporting "0 with a history file", and a
   break-probe proved the check could not see it), and the writer REPLACED the
   file the documented refresh procedure told it to append to.
+- [0100](0100-what-the-install-can-see-on-cloudflare-pages.md) — **what the
+  service worker's install can actually see on Cloudflare Pages.** Three
+  findings on one surface, all re-curl'd 2026-09-08. Pages answers a path it
+  does not have with `index.html` and a **200**, so the install's `!res.ok →
+  throw` passed on exactly the input it existed to catch — ADR 0072's shape in
+  the most load-bearing place in the app. The honest signal is the **content
+  type**: a `.js`/`.css`/`.json`/image URL returning `text/html` cannot be the
+  file we asked for. **Checking `res.redirected`/`res.url` was rejected on
+  measurement** — the stand-in is a direct 200, not a redirect. The guard is
+  deliberately one-way, because over-refusing bricks every future update while
+  under-refusing is caught before the push by the new
+  `tools/check_precache.py`. Third finding: Pages 308s `/foo.html` → `/foo`, so
+  the URL a reader BOOKMARKS missed the precache and the deep link was the one
+  route that failed offline; `cacheFirst` now retries the `.html` sibling.
+  Break-probed both halves in a real browser.

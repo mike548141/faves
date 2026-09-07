@@ -43,7 +43,7 @@ jobs:
         run: python3 tools/test_validate.py
 
   # THE NAME IS THE WHOLE JOB, and it took a ruleset edit to say so. This runs
-  # thirteen checks (nine until 2026-09-08); it was displayed as "zero
+  # fifteen checks (nine until 2026-09-08); it was displayed as "zero
   # dependencies", which describes one of them — so an audit by job name reported the ADR-index allocator and ADR
   # 0023's history guarantee as UNGATED WHEN THEY ARE GATED (ROADMAP 340/130).
   # Not a decorative guard: the guard works. A decorative LABEL, where the damage
@@ -100,7 +100,7 @@ jobs:
       # A path in sw.js's precache list that does not exist installs CLEAN on
       # Cloudflare Pages: a missing path there is answered with index.html and a
       # 200, so the install's own `!res.ok → throw` never fires and the shell is
-      # broken only offline, with nothing red anywhere (ADR 0098). Nothing
+      # broken only offline, with nothing red anywhere (ADR 0100). Nothing
       # checked this until 2026-09-08.
       - name: Assert every precached path exists
         run: python3 tools/check_precache.py
@@ -173,7 +173,7 @@ jobs:
       # The record store keyed history on section headings and dish names for
       # its whole life, while three documents said the id carried it. Every
       # permitted-rename case in here is paired with a break-probe that reverts
-      # the id-first lookup and must fail (ADR 0099).
+      # the id-first lookup and must fail (ADR 0100).
       - name: Prove history is joined to dishes by id, not by name
         run: python3 tools/test_split_data.py
       # Estimates drive the cook-mode countdowns, and its safety invariant —
@@ -238,9 +238,9 @@ jobs:
 
   # THE ONE BROWSER CHECK CI RUNS — owner's ruling, 2026-08-16.
   #
-  # TWELVE real-browser guards live in tools/ (count them: `ls tools/*_check.mjs`,
+  # SEVENTEEN real-browser guards live in tools/ (count them: `ls tools/*_check.mjs`,
   # and note the roadmap item that authorised this still says eight — the family
-  # grew under it). Eleven stay on CLAUDE.md's manual list; this one is wired up
+  # grew under it). Sixteen stay on CLAUDE.md's manual list; this one is wired up
   # because it is the only one that is both cheap and
   # unconditional — it makes no timing assumptions, and it catches the worst
   # failure class there is: a screen whose JavaScript does not run at all.

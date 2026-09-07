@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A saved link to a place now opens in flight mode.** Opening a menu and then
+  bookmarking it, or sharing the link, gave you a slightly different address
+  from the one you tapped — and that one was the single route the offline copy
+  did not cover, so it failed with no connection while everything else worked.
+  It opens from the offline copy now, menu and all.
 - **"Closes in 30 min" now means thirty minutes of your time**, on the two
   nights a year the clocks change. When New Zealand goes back an hour in April,
   a place trading till 3am used to count down from 60 twice and tell you it had
