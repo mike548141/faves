@@ -54,6 +54,26 @@
   entry behind with no owner and a label that says nothing about who made it.
   The rule that produces it is the same rule that never mentions cleaning it up.
 
+
+  🔎 **RE-MEASURED 2026-09-08 03:30 NZST (session faves-o1): the stack is EMPTY.**
+  `git stash list` in the primary checkout prints nothing. Both entries are gone
+  and no record in this repo says who dropped them or when — so option 1 has
+  been taken by somebody, unrecorded, which is the residue problem this item is
+  about arriving from the other side. Nothing is lost by it (the contents were
+  verified on `main` above).
+  ✅ **The hand-up half is already filed, by a peer, and needs no second
+  filing.** atelier PR #71 (`report/concurrency-autostash-at-session-start`,
+  item `320/150`, 2026-09-07) reports that the session-start `--autostash`
+  bookend writes to a stash stack shared across every worktree, quotes the
+  same "back any autostash out to a file" line this item found, and sketches
+  three gates. That covers the shared-stack fact and the autostash edge; the
+  only thing it does not say is that an entry found on the stack is somebody's
+  to reconcile — a one-line rider best added to that item when atelier rules,
+  not a competing PR.
+  🎯 **What is still this repo's to decide: option 2 alone.** A session-start
+  warning when the stack is non-empty and any entry predates today. Cheap, and
+  a mechanism where the drop above was a discipline. Owner's call.
+
   🎯 **Options, none taken — the drop is the owner's call because the work is
   not this session's:**
   1. **Drop both**, having verified the contents reached `main` (done above).
