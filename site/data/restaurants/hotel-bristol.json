@@ -7,21 +7,954 @@
   "area": "Te Aro",
   "city": "Wellington",
   "currency": "NZD",
-  "address": "Cuba Mall, Te Aro, Wellington 6011",
+  "address": "131-133 Cuba Street, Te Aro, Wellington 6011",
   "lat": -41.29296,
   "lng": 174.77606,
   "services": [
     "dine-in"
   ],
   "phone": null,
-  "website": null,
+  "website": "https://stargroup.nz/venues/hotel-bristol",
   "ordering": [],
-  "hours": null,
-  "detailsVerified": "2026-08-16",
-  "detailsVerifiedBy": "third-party",
+  "hours": {
+    "mon": [],
+    "tue": [
+      [
+        "12:00",
+        null
+      ]
+    ],
+    "wed": [
+      [
+        "12:00",
+        null
+      ]
+    ],
+    "thu": [
+      [
+        "12:00",
+        null
+      ]
+    ],
+    "fri": [
+      [
+        "12:00",
+        null
+      ]
+    ],
+    "sat": [
+      [
+        "12:00",
+        null
+      ]
+    ],
+    "sun": [
+      [
+        "12:00",
+        null
+      ]
+    ]
+  },
+  "vibe": [
+    "sit-down",
+    "licensed",
+    "wellington-icon"
+  ],
+  "verified": "2026-09-07",
+  "verifiedBy": "paper-menu",
+  "detailsVerified": "2026-09-07",
+  "detailsVerifiedBy": "official-site",
   "lifecycle": {
     "added": "2026-08-16"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "addOnGroups": [
+    {
+      "id": "no-gluten-added-bun",
+      "name": "No gluten added bun",
+      "select": "one",
+      "options": [
+        {
+          "name": "No gluten added bun",
+          "price": 2.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "id": "add-grilled-chicken",
+      "name": "Add grilled chicken",
+      "select": "one",
+      "options": [
+        {
+          "name": "Grilled chicken",
+          "price": 8.0,
+          "tags": [
+            "has-meat"
+          ]
+        }
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "section": "Pub Snacks",
+      "sectionId": "pub-snacks",
+      "items": [
+        {
+          "name": "Pull-Apart Garlic Loaf",
+          "dishId": "pull-apart-garlic-loaf",
+          "desc": "Garlic butter.",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Korean-Fried Cauliflower",
+          "dishId": "korean-fried-cauliflower",
+          "desc": "Korean BBQ sauce, pickles.",
+          "price": 20.0,
+          "tags": [
+            "v",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Salt & Pepper Squid",
+          "dishId": "salt-pepper-squid",
+          "desc": "Garlic aioli, fresh lemon.",
+          "price": 22.5,
+          "tags": [
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        },
+        {
+          "name": "Sticky Pork Belly Bites",
+          "dishId": "sticky-pork-belly-bites",
+          "desc": "Gochujang BBQ glaze, chilli, sesame seeds.",
+          "price": 24.0,
+          "tags": [
+            "contains-sesame",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Loaded Fries",
+          "dishId": "loaded-fries",
+          "desc": "BBQ brisket, cheesy sauce, chipotle mayo, pickles, green onion.",
+          "price": 25.5,
+          "tags": [
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Garlic Chilli Prawns",
+          "dishId": "garlic-chilli-prawns",
+          "desc": "Blistered cherry tomatoes, green onion, chilli aioli on roti.",
+          "price": 26.0,
+          "tags": [
+            "contains-shellfish",
+            "contains-gluten",
+            "contains-egg",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Glazed Pork & Wagyu Brisket Meatballs",
+          "dishId": "glazed-pork-wagyu-brisket-meatballs",
+          "desc": "Smoky herb butter jus, mustard cream, cheddar dust.",
+          "price": 24.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Buttermilk Fried Chicken",
+          "dishId": "buttermilk-fried-chicken",
+          "desc": "Honey sriracha, ranch, garden pickles.",
+          "price": 24.5,
+          "tags": [
+            "contains-dairy",
+            "contains-gluten",
+            "spicy-1"
+          ]
+        },
+        {
+          "name": "Onion Rings",
+          "dishId": "onion-rings",
+          "desc": "Chipotle mayo.",
+          "price": 14.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Fries",
+          "dishId": "fries",
+          "desc": "Confit garlic aioli.",
+          "price": 13.0,
+          "tags": [
+            "v",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Tools Down Platter",
+          "dishId": "tools-down-platter",
+          "desc": "Sticky pork belly bites, buttermilk fried chicken, Korean fried cauliflower, salt & pepper squid, pork & wagyu brisket meatballs, grilled focaccia.",
+          "price": 69.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-sesame",
+            "contains-egg",
+            "contains-shellfish"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pub Mains",
+      "sectionId": "pub-mains",
+      "items": [
+        {
+          "name": "Chicken Schnitty",
+          "dishId": "chicken-schnitty",
+          "desc": "Crumbed chicken breast, green herb slaw, gravy. Choose fries or mash.",
+          "price": 32.5,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Fish & Chips",
+          "dishId": "fish-chips",
+          "desc": "Beer-battered daily catch, house fries, green herb slaw, tartare sauce.",
+          "price": 29.5,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Potato Gnocchi",
+          "dishId": "potato-gnocchi",
+          "desc": "Leek & peas, Italian tomato sauce, lemon ricotta verde, crispy kale.",
+          "price": 29.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Twice Cooked Pork Belly",
+          "dishId": "twice-cooked-pork-belly",
+          "desc": "Potato gratin, winter greens, pear & fig relish, jus. No gluten added.",
+          "price": 38.0,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fettuccine Carbonara",
+          "dishId": "fettuccine-carbonara",
+          "desc": "Creamy carbonara sauce, chicken, bacon, Grana Padano.",
+          "price": 29.5,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Classic Caesar",
+          "dishId": "classic-caesar",
+          "desc": "Cos lettuce, bacon, herbed croutons, anchovy dressing, soft-boiled egg, parmesan snow.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-egg",
+            "contains-dairy"
+          ],
+          "addOns": [
+            "add-grilled-chicken"
+          ]
+        },
+        {
+          "name": "Green Tahini Bowl",
+          "dishId": "green-tahini-bowl",
+          "desc": "Roast carrots, lemon ricotta verde, winter leaves, toasted buckwheat, pumpkin seed crunch. No gluten added.",
+          "price": 22.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-sesame",
+            "contains-dairy"
+          ],
+          "addOns": [
+            "add-grilled-chicken"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Butcher's Cut Steak",
+      "sectionId": "butcher-s-cut-steak",
+      "items": [
+        {
+          "name": "Rotating Cut of Premium NZ Beef",
+          "dishId": "rotating-cut-of-premium-nz-beef",
+          "desc": "Fries, café de Paris butter, red wine jus, charred winter greens.",
+          "price": 42.0,
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Burgers",
+      "sectionId": "burgers",
+      "items": [
+        {
+          "name": "Cheeseburger",
+          "dishId": "cheeseburger",
+          "desc": "150g brisket patty, American cheese, special sauce, ketchup, sweet & spicy pickles, milk bun, fries.",
+          "price": 27.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "The Cluckerson",
+          "dishId": "the-cluckerson",
+          "desc": "Crispy-fried chicken, American cheese, chipotle mayo, ranch, sweet & spicy pickles, lettuce, milk bun, fries.",
+          "price": 29.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "The Hallouminati",
+          "dishId": "the-hallouminati",
+          "desc": "Grilled halloumi, house-made vegan patty, American cheese, special sauce, sweet & spicy pickles, ranch, red onion, milk bun, fries.",
+          "price": 29.5,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ],
+      "note": "A lettuce bun is available on any burger.",
+      "addOns": [
+        "no-gluten-added-bun"
+      ]
+    },
+    {
+      "section": "Sides",
+      "sectionId": "sides",
+      "items": [
+        {
+          "name": "Cos Lettuce",
+          "dishId": "cos-lettuce",
+          "desc": "Pumpkin seed crunch, house dressing. No gluten added.",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "gf"
+          ]
+        },
+        {
+          "name": "Charred Winter Greens",
+          "dishId": "charred-winter-greens",
+          "desc": "Garlic butter. No gluten added.",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "gf",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Desserts",
+      "sectionId": "desserts",
+      "items": [
+        {
+          "name": "American Chocolate Brownie Sundae",
+          "dishId": "american-chocolate-brownie-sundae",
+          "desc": "Chocolate peanut butter granola, vanilla ice cream, chocolate sauce.",
+          "price": 16.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-peanuts",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Baked Cheesecake Pop",
+          "dishId": "baked-cheesecake-pop",
+          "desc": "Chocolate crackle, raspberry gel, sherbert.",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Sticky Date Pudding",
+          "dishId": "sticky-date-pudding",
+          "desc": "Butterscotch sauce, vanilla bean ice cream.",
+          "price": 15.0,
+          "tags": [
+            "v",
+            "contains-dairy",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Kids",
+      "sectionId": "kids",
+      "items": [
+        {
+          "name": "Mini Beast Burger",
+          "dishId": "mini-beast-burger",
+          "desc": "Beef patty, cheese, ketchup, toasted bun, fries. All kids' meals served with a kids' sundae — 100s & 1000s and chocolate, caramel or strawberry sauce.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Chook & Chips",
+          "dishId": "chook-chips",
+          "desc": "Crumbed chicken bites, fries, tomato sauce. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Lil' Fish & Flicks",
+          "dishId": "lil-fish-flicks",
+          "desc": "Crispy fish bites, fries, tartare sauce. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Meatballs",
+          "dishId": "meatballs",
+          "desc": "Italian tomato sauce, fettucine, cheese. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Grilled Chicken & Mash",
+          "dishId": "grilled-chicken-mash",
+          "desc": "Gravy, greens. No gluten added. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": [
+            "gf",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Fettucine",
+          "dishId": "fettucine",
+          "desc": "Italian tomato sauce, mozzarella. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cheese & Bacon Loaded Fries",
+          "dishId": "cheese-bacon-loaded-fries",
+          "desc": "Cheese sauce, mozzarella, gravy. Served with a kids' sundae.",
+          "price": 15.5,
+          "tags": [
+            "v-option",
+            "contains-dairy"
+          ]
+        }
+      ],
+      "note": "Available to kids 12 years and under. Every kids’ meal comes with a kids’ sundae."
+    },
+    {
+      "section": "Refreshments",
+      "sectionId": "refreshments",
+      "items": [
+        {
+          "name": "Coca-Cola Zero Sugar",
+          "dishId": "coca-cola-zero-sugar",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Sprite",
+          "dishId": "sprite",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Fanta / L&P",
+          "dishId": "fanta-l-p",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Schweppes Ginger Ale / Tonic Water",
+          "dishId": "schweppes-ginger-ale-tonic-water",
+          "desc": null,
+          "price": 7.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Schweppes Ginger Beer",
+          "dishId": "schweppes-ginger-beer",
+          "desc": null,
+          "price": 8.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Red Bull",
+          "dishId": "red-bull",
+          "desc": "Energy drink, sugarfree, coconut edition sugarfree, or red edition watermelon.",
+          "price": 8.5,
+          "tags": [
+            "v"
+          ]
+        },
+        {
+          "name": "Keri Juice",
+          "dishId": "keri-juice",
+          "desc": "Apple, pineapple, orange, cranberry or tomato.",
+          "price": 7.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Voyage Water",
+          "dishId": "voyage-water",
+          "desc": "Sparkling or still. 500ml $7.00; 1L $11.50.",
+          "price": 7.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Coffee",
+      "sectionId": "coffee",
+      "items": [
+        {
+          "name": "Long Black / Short Black / Americano",
+          "dishId": "long-black-short-black-americano",
+          "desc": null,
+          "price": 5.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Flat White / Latte / Chai Latte / Cappuccino / Macchiato",
+          "dishId": "flat-white-latte-chai-latte-cappuccino-macchiato",
+          "desc": null,
+          "price": 5.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Mochaccino",
+          "dishId": "mochaccino",
+          "desc": null,
+          "price": 6.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hot Chocolate",
+          "dishId": "hot-chocolate",
+          "desc": null,
+          "price": 5.5,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Kid’s Hot Chocolate",
+          "dishId": "kid-s-hot-chocolate",
+          "desc": null,
+          "price": 4.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Kid’s Fluffy",
+          "dishId": "kid-s-fluffy",
+          "desc": null,
+          "price": 3.0,
+          "tags": [
+            "v",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Tea",
+      "sectionId": "tea",
+      "items": [
+        {
+          "name": "Tea",
+          "dishId": "tea",
+          "desc": "English breakfast, Earl Grey, peppermint, green, chamomile, or lemon, honey & ginger.",
+          "price": 5.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cocktails",
+      "sectionId": "cocktails",
+      "items": [
+        {
+          "name": "Rainbow Road",
+          "dishId": "rainbow-road",
+          "desc": "Stolen white rum, Malibu, blue Curaçao, orange, pineapple, grenadine.",
+          "price": 19.0,
+          "tags": []
+        },
+        {
+          "name": "Mind Your Manners",
+          "dishId": "mind-your-manners",
+          "desc": "Absolut Vanilla vodka, De Kuyper Passion liqueur, passionfruit syrup, lime juice, prosecco.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Ghuznee Iced Tea",
+          "dishId": "ghuznee-iced-tea",
+          "desc": "Finlandia vodka, Larios rosé, Cazcabel coconut tequila liqueur, Malibu, mango purée, lime juice, sugar syrup, pineapple juice, soda water.",
+          "price": 20.0,
+          "tags": []
+        },
+        {
+          "name": "Dixon Street Martini",
+          "dishId": "dixon-street-martini",
+          "desc": "Absolut Vanilla vodka, Kahlúa, cold brew, sugar syrup.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Blushing Vivian",
+          "dishId": "blushing-vivian",
+          "desc": "Finlandia vodka, passionfruit purée, cranberry juice, pineapple juice, lime juice, sugar syrup.",
+          "price": 16.0,
+          "tags": []
+        },
+        {
+          "name": "Big Bill",
+          "dishId": "big-bill",
+          "desc": "Bati coconut rum, Red Bull coconut edition sugarfree, blue Curaçao.",
+          "price": 16.0,
+          "tags": []
+        },
+        {
+          "name": "Rotating Taptail",
+          "dishId": "rotating-taptail",
+          "desc": "Ask our team for today’s special. The menu prints no price.",
+          "price": null,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Mocktails",
+      "sectionId": "mocktails",
+      "items": [
+        {
+          "name": "Apple Ginger Refresher",
+          "dishId": "apple-ginger-refresher",
+          "desc": "Keri apple juice, lime juice, Schweppes ginger beer.",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Minty Lemon Cooler",
+          "dishId": "minty-lemon-cooler",
+          "desc": "Fresh mint, lemon juice, simple syrup, soda water.",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        },
+        {
+          "name": "Watermelon Breeze",
+          "dishId": "watermelon-breeze",
+          "desc": "Watermelon purée, lime juice, soda water.",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "vg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Wine — champagne & sparkling",
+      "sectionId": "wine-champagne-sparkling",
+      "items": [
+        {
+          "name": "Moët & Chandon Impérial Brut",
+          "dishId": "mo-t-chandon-imp-rial-brut",
+          "desc": "France. Bottle only.",
+          "price": 110.0,
+          "tags": []
+        },
+        {
+          "name": "Moët & Chandon Impérial Rosé",
+          "dishId": "mo-t-chandon-imp-rial-ros",
+          "desc": "France. Bottle only.",
+          "price": 135.0,
+          "tags": []
+        },
+        {
+          "name": "Cloudy Bay Pelorus Brut",
+          "dishId": "cloudy-bay-pelorus-brut",
+          "desc": "Marlborough. Glass $17.00; bottle $75.00.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "Cloudy Bay Pelorus Rosé",
+          "dishId": "cloudy-bay-pelorus-ros",
+          "desc": "Marlborough. Glass $17.00; bottle $75.00.",
+          "price": 17.0,
+          "tags": []
+        },
+        {
+          "name": "De Bortoli KV Prosecco",
+          "dishId": "de-bortoli-kv-prosecco",
+          "desc": "Australia. Glass $10.00; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — sauvignon blanc",
+      "sectionId": "wine-sauvignon-blanc",
+      "items": [
+        {
+          "name": "Northrow Sauvignon Blanc",
+          "dishId": "northrow-sauvignon-blanc",
+          "desc": "Marlborough. Glass $10.00; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Petal & Stem Sauvignon Blanc",
+          "dishId": "petal-stem-sauvignon-blanc",
+          "desc": "Marlborough. Glass $13.50; bottle $57.00.",
+          "price": 13.5,
+          "tags": []
+        },
+        {
+          "name": "Villa Maria Private Bin Sauvignon Blanc",
+          "dishId": "villa-maria-private-bin-sauvignon-blanc",
+          "desc": "Marlborough. Glass $15.00; bottle $61.50.",
+          "price": 15.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — pinot gris",
+      "sectionId": "wine-pinot-gris",
+      "items": [
+        {
+          "name": "Northrow Pinot Gris",
+          "dishId": "northrow-pinot-gris",
+          "desc": "Gisborne. Glass $10.00; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Pasqua Pinot Grigio",
+          "dishId": "pasqua-pinot-grigio",
+          "desc": "Italy. Glass $12.50; bottle $54.00.",
+          "price": 12.5,
+          "tags": []
+        },
+        {
+          "name": "Esk Valley Estate Pinot Gris",
+          "dishId": "esk-valley-estate-pinot-gris",
+          "desc": "Hawke’s Bay. Glass $14.00; bottle $58.50.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — chardonnay",
+      "sectionId": "wine-chardonnay",
+      "items": [
+        {
+          "name": "Northrow Chardonnay",
+          "dishId": "northrow-chardonnay",
+          "desc": "Gisborne. Glass $10.00; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Villa Maria Private Bin Chardonnay",
+          "dishId": "villa-maria-private-bin-chardonnay",
+          "desc": "East Coast. Glass $13.50; bottle $57.00.",
+          "price": 13.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — rosé",
+      "sectionId": "wine-ros",
+      "items": [
+        {
+          "name": "Northrow Rosé",
+          "dishId": "northrow-ros",
+          "desc": "Hawke’s Bay. Glass $10.00; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Esk Valley Estate Rosé",
+          "dishId": "esk-valley-estate-ros",
+          "desc": "Hawke’s Bay. Glass $14.00; bottle $58.50.",
+          "price": 14.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — pinot noir",
+      "sectionId": "wine-pinot-noir",
+      "items": [
+        {
+          "name": "Northrow Pinot Noir",
+          "dishId": "northrow-pinot-noir",
+          "desc": "Marlborough. Glass $10.00; bottle $50.00.",
+          "price": 10.0,
+          "tags": []
+        },
+        {
+          "name": "Rua Pinot Noir",
+          "dishId": "rua-pinot-noir",
+          "desc": "Central Otago. Glass $16.00; bottle $67.50.",
+          "price": 16.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine — other reds",
+      "sectionId": "wine-other-reds",
+      "items": [
+        {
+          "name": "Sacred Hill Merlot",
+          "dishId": "sacred-hill-merlot",
+          "desc": "Hawke’s Bay. Glass $12.00; bottle $52.50.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Grant Burge Benchmark Cabernet Sauvignon",
+          "dishId": "grant-burge-benchmark-cabernet-sauvignon",
+          "desc": "South Australia. Glass $14.50; bottle $60.00.",
+          "price": 14.5,
+          "tags": []
+        },
+        {
+          "name": "Trinity Hill Syrah",
+          "dishId": "trinity-hill-syrah",
+          "desc": "Hawke’s Bay. Glass $16.00; bottle $67.50.",
+          "price": 16.0,
+          "tags": []
+        }
+      ]
+    }
+  ]
 }
