@@ -1,8 +1,12 @@
-- [ ] 🔎 **The allergen sweep has no rule for seven everyday food words, and
+- [~] 🔎 **The allergen sweep has no rule for seven everyday food words, and
       one rule it does have misses the plural** `[S][tools][data]` — found
       2026-09-07 (session faves-b1) while transcribing five menus for `080/190`,
       and **checked against the tool as it stands after the `contains-fish`
       merge**, not against a remembered version.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — delivered by a
+  sub-agent in its own worktree (`faves-o1-allergen-words`, branch
+  `allergen-words`), landing by PR so CI runs before the merge.
 
   **What happened.** Five newly-transcribed menus were run through
   `tools/tag_allergens.py`, which applied 132 tags across them. Reading the
