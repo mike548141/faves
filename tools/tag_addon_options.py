@@ -8,20 +8,39 @@ ruling was to CLOSE THE DATA GAP first and collapse only the genuine residue,
 so this is the (a) half: a re-runnable sweep, modelled on tag_allergens.py,
 never a hand pass across the venues.
 
-TWO TAGS, AND THEY ARE NOT ALLERGENS. `has-meat` and `has-fish` sit outside the
-`contains-` namespace on purpose. Meat is not an allergen; a ninth `contains-`
-tag would have walked straight into four allergen tables (the chips in menu.js
-and recipe.js, the avoid list in settings.js, the report filter in report.js)
-as one nobody can filter on. What they do is contradict `v` and `vg` in
+TWO AXES, NEVER ONE IMPLEMENTED IN TERMS OF THE OTHER (ADR 0095, owner-ruled
+2026-09-07). `has-meat` and `has-fish` are DIETARY markers and sit outside the
+`contains-` namespace on purpose. Meat is not an allergen; a `contains-meat`
+would have walked straight into four allergen tables (the chips in menu.js and
+recipe.js, the avoid list in settings.js, the report filter in report.js) as one
+nobody can filter on. What they do is contradict `v` and `vg` in
 site/js/addons.js `CONTRADICTS`, which turns the picker's line into a fact:
 "Bacon is meat, so this is no longer vegetarian."
+
+Fish is BOTH. It breaks a vegetarian claim (the dietary axis, `has-fish`) and it
+is a declarable allergen in New Zealand (`contains-fish`). So an option naming a
+finfish gains BOTH tags, each read independently off the option's own NAME —
+neither is derived from the other, and deleting either rule must leave the other
+firing. Until 2026-09-07 only the dietary half was written, so a reader who had
+ticked "avoid Fish" in Settings and added Salmon to a fish-free dish was told
+NOTHING: `site/js/addons.js` builds its allergen union off the `contains-`
+prefix, and `has-fish` carries nothing into it.
+
+WHAT THIS TOOL STILL DOES NOT DO. It writes no OTHER `contains-*`. A hummus
+extra is sesame and a Nutella extra is nuts, and both are live misses in the
+corpus today — measured, and filed as its own board item rather than widened
+into here, because a naive reuse of tag_allergens.py's whole rule set over
+option names produces 8 candidates of which 3 are the venue's own gluten HEDGE
+("No gluten added bun" → contains-gluten), which is the one direction a safety
+sweep may never move.
 
 THE ONE-WAY RULE STILL BINDS, and it is why this tool is small. Inference may
 only ever state what IS present. It must never add `gf`, `df`, `v` or `vg` to
 an option, and never remove a tag. So:
 
   • Bacon, Salami, Prosciutto, "Extra meat"   → `has-meat`. The name says so.
-  • Salmon                                    → `has-fish`. The name says so.
+  • Salmon, Kingfish, Anchovies               → `has-fish` AND `contains-fish`.
+    The name says so, twice over: it is not vegetarian and it is an allergen.
   • Spinach, Tomatoes, Rocket, Aloe Vera      → NOTHING. "Spinach is vegetarian"
     is a claim of ABSENCE (no meat, no fish, no stock) and this tool may not
     make it, however obvious it looks. They fall to the (b) half — one quiet
@@ -61,6 +80,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from tag_allergens import (  # noqa: E402
     MULTILINE_TAGS,
+    RULES as ALLERGEN_RULES,
     Unpatchable,
     _elements,
     _member,
@@ -76,7 +96,30 @@ DATA = pathlib.Path("site/data/restaurants")
 CONTRADICTED_BY = {
     "has-meat": {"v", "vg"},
     "has-fish": {"v", "vg"},
+    # Same guard, same food fact — and the same one tag_allergens.py already
+    # applies to `contains-fish` on a DISH. A "Vegan fish-free sauce" the venue
+    # tagged `vg` is not given a fish allergen by a regex.
+    "contains-fish": {"v", "vg"},
 }
+
+# ONE list of finfish for the whole repo, looked up out of tag_allergens.py's
+# STATED fish rule rather than retyped here.
+#
+# 🔎 The two lists HAD already drifted, which is why this is a lookup and not a
+# tidy-up. Measured 2026-09-07: the copy that lived here carried 13 species
+# where the dish sweep carries thirty-odd, so `Kingfish`, `Gurnard`, `Eel`,
+# `Barramundi`, `Anchovies` (it had only `anchovy`) and two dozen more were fish
+# on a dish and not fish on an add-on. Nothing would ever have reported that —
+# both sweeps were green, and each was right about its own list.
+#
+# The species list is the only part borrowed. The exclusion below is this
+# tool's own, because an OPTION is named the way an option is named ("Vegan
+# fish-free sauce") and a dish is not.
+FINFISH = next(
+    pat for tag, tier, why, pat, exc in ALLERGEN_RULES
+    if tag == "contains-fish" and tier == "STATED"
+)
+NOT_FISH = r"\b(vegan|vegetarian|veggie|plant[\s-]?based|mock|fish[\s-]?free)\b"
 
 # (tag, basis, pattern, exclude). Every exclusion below is a specific, checkable
 # claim about a specific false positive — never a broad word that happens to
@@ -94,10 +137,15 @@ RULES = [
     ("has-meat", "the option's own name is 'meat'", r"\bmeats?\b",
      r"\b(vegan|vegetarian|veggie|plant[\s-]?based|mock|meat[\s-]?free|"
      r"no\s+meat|meat\s+free)\b"),
-    ("has-fish", "names a finfish",
-     r"\b(fish|salmon|tuna|anchovy|anchovies|snapper|hoki|cod|sardines?|"
-     r"mackerel|trout|whitebait|kahawai|terakihi|tarakihi)\b",
-     r"\b(vegan|vegetarian|veggie|plant[\s-]?based|mock|fish[\s-]?free)\b"),
+    # TWO RULES, ONE PIECE OF EVIDENCE, TWO AXES (ADR 0095). Both read the
+    # option's own NAME; neither reads the other's tag. Written apart on purpose
+    # — collapsing them into one entry that emits a pair would make the allergen
+    # a consequence of the dietary marker, which is exactly what item 010 and
+    # the owner's ruling forbid, and would make the fish allergen the only one in
+    # the app that cannot exist without a dietary claim beside it.
+    ("has-fish", "names a finfish", FINFISH, NOT_FISH),
+    ("contains-fish", "names a finfish, and fish is a declarable allergen in NZ",
+     FINFISH, NOT_FISH),
 ]
 
 # Options whose name reaches for a decision this tool may not take. Reported for
