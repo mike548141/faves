@@ -1034,7 +1034,6 @@ deliberation those compact docs omit.
   was needed**: `composeTags` already composed, so the fix is three tags of
   data. The finfish list is now shared with `tag_allergens.py`, which had
   already drifted 13 species against thirty-odd.
-<<<<<<< HEAD
 - [0096](0096-a-tag-with-no-reader-facing-branch-is-not-a-chip.md) — **a tag
   with no reader-facing branch is not a chip.** Owner ruled (`200/060`) that the
   dish chip row must re-render from the **composed** tags, so a `Veg` chip stops
@@ -1050,7 +1049,6 @@ deliberation those compact docs omit.
   break-probed (removing the filter fails exactly the 2 assertions that guard
   it, 35 passed / 2 failed, nothing else moves). Accepts one bounded silence: a
   future vocabulary word is dropped rather than painted raw.
-=======
 - [0097](0097-a-hedge-is-not-a-warning.md) — **a hedge is not a warning: the
   free-from case, then every add-on allergen.** A **hedge** is a venue writing
   an allergen word to say the allergen is **absent**. `tag_allergens.py` matched
@@ -1071,7 +1069,22 @@ deliberation those compact docs omit.
   in the app**. Dish sweep 3 → 0 proposals; option coverage 103/200 → 105/200.
   Seven new breakers, and one **existing** breaker that this change had made
   decorative is repaired in the same commit.
->>>>>>> 6cb391d (data: an add-on carries every allergen its name implies, not just fish)
+- [0098](0098-the-verdict-reads-the-wall-clock-the-countdown-counts-real-time.md)
+  — **the verdict reads the wall clock, the countdown counts real time.** Owner
+  overruled (`190/040`) the recommendation to leave April's repeated hour
+  documented. `openStatus` measured everything in minutes-of-week, so on a
+  fall-back night the badge said `Closes in 30 min` with **90 real minutes**
+  left and ran 60→1 twice; on a spring-forward night it showed **no countdown at
+  all**, and a close inside the deleted hour said `31 min` one real minute
+  before reading `Closed` — the LATE direction. The instant now travels **inside
+  `now`** (`{dow, minutes, epochMs, tz}` from `nowIn`/`makeClock().at()`) rather
+  than as a third argument, which makes a mismatched pair of time sources
+  unrepresentable and changes no caller. Verdict and containment stay wall-clock:
+  *"we shut at 3am"* means the clock face. The invariant bought is that **the
+  number comes true** — N minutes later the venue is shut, swept across both
+  transitions. **Five assertions flipped**, each carrying its old expectation in
+  a comment; break-probed (the one-line revert fails exactly 7 tests, all naming
+  a transition, nothing else in the other 1,188).
 - [0099](0099-history-joins-on-ids-and-the-name-tier-is-a-fallback.md) —
   **history joins on ids, and the name tier is a fallback.** The record store
   keyed every row on the section heading and the dish name — 226 of 227 rows

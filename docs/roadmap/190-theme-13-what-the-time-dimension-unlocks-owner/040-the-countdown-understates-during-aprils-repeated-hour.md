@@ -1,13 +1,95 @@
-- [~] 🔎 **The countdown understates by up to an hour during April's repeated
+- [x] 🔎 **The countdown understates by up to an hour during April's repeated
       hour** `[S][js]` — measured 2026-09-07 (session faves-dst) while closing
       `030`. **Filed rather than fixed**, on that item's own rule: it buys
       evidence, and changing the model was out of scope unless something failed.
       Nothing failed — this is a characterised imprecision, not a regression.
 
-  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — the owner's
-  ruling above is the brief. Delivered by a sub-agent in its own worktree
-  (`faves-o1-dst-countdown`, branch `dst-countdown`), landing by PR so CI
-  runs before the merge.
+  ✅ **DELIVERED 2026-09-08 (session faves-o1)** — worktree
+  `/Users/mike/worktrees/faves-o1-dst-countdown`, branch `dst-countdown`,
+  ADR 0098. Landed by PR so CI runs before the merge.
+
+  **The shape chosen, and why not the item's option 2.** The instant travels
+  **inside `now`** — `nowIn`/`makeClock().at()` return
+  `{dow, minutes, epochMs, tz}` — rather than as a third argument
+  `openStatus(hours, now, date)`. Option 2 is the smaller diff on paper and
+  the larger hazard in practice: it puts two time sources in one signature that
+  can disagree, and `menu.js`'s contact bar has no `date` in scope, so it would
+  have minted a **second** clock read a moment after the first, inside the one
+  function whose subject is that a moment matters. Carrying it inside `now`
+  makes the mismatch unrepresentable, and **no call site changed at all** — the
+  seven consumers (`app.js` `hoursBadge`, `menu.js` `hoursRow`, its branch
+  status and `branchSummary`, its contact bar, `filters.js` "Open now",
+  `ranking.js` `tierFromHours`) all already pass a clock reading through
+  untouched. Purity holds: nothing calls `Date.now()`; the instant is an input.
+
+  **The verdict still reads the wall clock**, per the constraint: containment,
+  `segments()`, the week boundary and "until 3am" are byte-identical. Only the
+  duration moved.
+
+  🔁 **Five assertions flipped, and TWO of them go beyond this item.** The
+  September pair was not a choice — measuring real time moves the closing-soon
+  window to wherever it belongs, and the old expectations were the wall clock's
+  answer:
+
+  (April instants are 2027-04-03; September ones 2026-09-26.)
+
+  | Instant | Was | Now |
+  | --- | --- | --- |
+  | 13:30Z (02:30 NZDT) | `Closes in 30 min` | `Open · until 3am`, 90 |
+  | 14:30Z (02:30 NZST) | `Closes in 30 min` | same — the pair must **differ** |
+  | April sweep | 120 closing-soon minutes | **60**, strictly descending |
+  | 13:59Z (01:59 NZST) | `Open · until 3am` | `Closes in 1 min` |
+  | September sweep | **no** closing-soon minute | 60, at 01:00–01:59 NZST |
+  | 01:59, close inside the gap | `Closes in 31 min` | `Closes in 1 min` |
+  | 01:59, open inside the gap | `Opens in 16 min` | `Opens in 1 min` |
+
+  The last two are the spring-forward gap the brief asked to cover: a close the
+  zone steps over resolves to the **transition instant**, so the number is
+  never negative, never NaN, and never contradicted by the badge one minute
+  later. That was the LATE direction ADR 0094 named as the serious one.
+
+  **Evidence.** `node --test` — `pass 1195 · fail 0` (24 tests in
+  `tests/hours-dst.test.js`, was 22). Browser checks run **sequentially** at
+  `FAVES_CDP_TIMEOUT_MS=60000`, load 8–11 throughout, every one reporting
+  `tree /Users/mike/worktrees/faves-o1-dst-countdown/site · shell 2026-09-08.1
+  · dst-countdown@8017995`:
+
+  | Check | Result |
+  | --- | --- |
+  | `midnight_check` | `OK — 73 passed, 0 failed` (was 68) |
+  | `boot_check` | `OK — 24 passed, 0 failed` |
+  | `served_check` | `OK — 55 passed, 0 failed` |
+  | `branch_check` | `OK — 84 passed, 0 failed` |
+  | `device_check` | `OK — 25 passed, 0 failed` |
+
+  The 68 → 73 is the April pair added to app.js's home-card path (menu.js's had
+  covered it alone), plus the state assertion at 02:30 NZDT.
+
+  🚩 **A peer took `SHELL_VERSION 2026-09-08.1` on `main` while this ran**, so
+  `origin/main` was merged in and the bump moved to **`2026-09-08.2`** — caught
+  by `check_versions.py --range origin/main..HEAD`, which the bare form would
+  have called clean. Re-verified on the merge (`dst-countdown@a7ceef0`, shell
+  `2026-09-08.2`): `node --test` `pass 1219 · fail 0`, `boot_check`
+  `24 passed`, `midnight_check` `73 passed`, `device_check` `25 passed` — the
+  last because the merge brought `site/js/personal-data.js` with it.
+
+  **Break-probe** — `realMinutes` reverted to `return wallDelta` (the pre-0098
+  model, one line), new tests kept:
+
+  ```
+  ✖ a venue trading till 3am is OPEN through the September jump and shut after it
+  ✖ the week boundary and the DST boundary are crossed at once, and both hold
+  ✖ SEPTEMBER SHOWS THE COUNTDOWN ONCE, in real minutes, for a 3am close
+  ✖ APRIL runs the countdown ONCE, and the first pass through 02:30 is 90 real…
+  ✖ the countdown is the difference between two INSTANTS across the fall-back
+  ✖ a close INSIDE the deleted hour counts down to the instant it is REACHED
+  ✖ an open INSIDE the deleted hour is honoured the instant the clock steps past it
+  ℹ pass 1188
+  ℹ fail 7
+  ```
+
+  Seven, all in `tests/hours-dst.test.js`, all naming a transition, and nothing
+  else in the other 1,188. Restored: `pass 1195 · fail 0`.
 
   **What happens.** New Zealand leaves NZDT at 03:00 on Sunday 2027-04-04, so
   the wall clock **02:00–02:59 occurs twice** and that Sunday is 25 hours long.

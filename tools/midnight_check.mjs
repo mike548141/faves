@@ -58,18 +58,26 @@
 // works in absolute minutes-of-week and has no notion of either.
 //
 // The finding, so a reader of this header knows what a green run is asserting
-// rather than assuming: the model is CORRECT, because `hours` are wall-clock
-// times and `nowIn` reads the venue's wall clock through Intl, so the two agree
-// through a transition by construction. Two consequences are pinned below
-// because they surprise, not because they are wrong:
-//   • SEPTEMBER SWALLOWS THE COUNTDOWN. Dragonfly's "closing soon" window for a
-//     3am close is 02:00–02:59 — exactly the hour that does not exist — so the
-//     badge steps from "Open · until 3am" straight to "Closed". Asserted on two
-//     instants ONE MINUTE of real time apart.
-//   • APRIL REPEATS IT. The identical badge is asserted at 02:30 NZDT and at
-//     02:30 NZST, an hour of real time later. During the first pass the number
-//     understates the real time remaining by up to an hour — the direction that
-//     sends someone early, which is the direction ADR 0094 already chose.
+// rather than assuming: the VERDICT is wall-clock and correct, because `hours`
+// are wall-clock times and `nowIn` reads the venue's wall clock through Intl, so
+// the two agree through a transition by construction.
+//
+// 🛑 THE COUNTDOWN IS NOT WALL-CLOCK, AND TWO EXPECTATIONS HERE FLIPPED ON
+// 2026-09-08 (ADR 0098, roadmap 190/040, owner-ruled). This header used to pin
+// two consequences as surprising-but-right:
+//   • SEPTEMBER SWALLOWED THE COUNTDOWN — the "closing soon" window for a 3am
+//     close was 02:00–02:59, exactly the hour that does not exist, so the badge
+//     stepped from "Open · until 3am" straight to "Closed" and `sepLastNzst`
+//     expected "Open · until 3am".
+//   • APRIL REPEATED IT — the identical badge at 02:30 NZDT and 02:30 NZST, with
+//     the first pass understating the real time left by an hour; `aprFirstPass`
+//     expected "Closes in 30 min".
+// The owner overruled leaving that documented. The countdown now measures REAL
+// minutes between two instants, so `sepLastNzst` reads "Closes in 1 min" (03:00
+// NZDT is one real minute after 01:59 NZST) and `aprFirstPass` reads
+// "Open · until 3am" (ninety real minutes remain). `aprSecondPass` is
+// unchanged at "Closes in 30 min", which is what makes the pair the assertion:
+// the same wall clock an hour apart must now read DIFFERENTLY.
 // The DST CONTROL is a pair of ordinary Mondays a week apart, both read at
 // 14:30 local — one NZST, one NZDT — whose badges must be IDENTICAL. 14:30 is
 // chosen so that an hour's error lands outside the control venue's 14:00
@@ -181,11 +189,18 @@ const DST = {
 //   dragonfly              Mon–Tue 16:30–23:00, Wed–Thu 16:30–00:00, Fri–Sat 16:30–03:00, Sun closed
 //   sprig-and-fern-petone  Mon 14:00–22:00, Tue 12:00–22:00, Wed–Sat 12:00–23:00, Sun 12:00–22:00
 const DST_SUBJECT_BADGE = {
-  sepLastNzst: "Open · until 3am", // Saturday's wrapped span, still running
+  // Saturday's wrapped span, still running — and ONE REAL MINUTE from its 3am
+  // close, because the next minute of real time is 03:00 NZDT (ADR 0098). Was
+  // "Open · until 3am" until 2026-09-08, on the wall clock's 61 minutes.
+  sepLastNzst: "Closes in 1 min",
   sepFirstNzdt: "Closed · opens Mon 4:30pm", // one minute later; Sunday is shut
   sepMiddayNzdt: "Closed · opens Mon 4:30pm",
-  aprFirstPass: "Closes in 30 min",
-  aprSecondPass: "Closes in 30 min", // the SAME badge an hour of real time on
+  // 02:30 NZDT is NINETY real minutes from a 03:00 NZST close, so it is not
+  // closing soon and the badge names the wall-clock close instead. Was
+  // "Closes in 30 min" until 2026-09-08 — the understatement the item was filed
+  // for, and the assertion that pinned it.
+  aprFirstPass: "Open · until 3am",
+  aprSecondPass: "Closes in 30 min", // an hour of real time on, and thirty left
   monNzst: "Closed · opens 4:30pm",
   monNzdt: "Closed · opens 4:30pm",
 };
@@ -483,9 +498,14 @@ async function run(opts) {
     // The September jump, stated as a reader would: one minute of real time
     // passes and the wall clock moves an hour, so a venue that was trading is
     // shut. These two are the crux of the whole item.
+    // 🔁 FLIPPED 2026-09-08 (ADR 0098): this expected `"open"`. The venue is
+    // still trading — that has not changed — but with the countdown measured in
+    // real minutes it is one minute from shutting, which is the "closing-soon"
+    // state. A fix that lost the wrap or the week boundary would say "closed"
+    // here, so this still refuses the failure it was written for.
     report.check(
-      `${SUBJECT} @ ${DST.sepLastNzst.label}: the last minute of NZST, and it is OPEN`,
-      dstSubject.sepLastNzst.state === "open",
+      `${SUBJECT} @ ${DST.sepLastNzst.label}: the last minute of NZST, and it is still TRADING`,
+      dstSubject.sepLastNzst.state === "closing-soon",
       `dataset.state was ${JSON.stringify(dstSubject.sepLastNzst.state)}`,
     );
     report.check(
@@ -493,25 +513,40 @@ async function run(opts) {
       dstSubject.sepFirstNzdt.state === "closed",
       `dataset.state was ${JSON.stringify(dstSubject.sepFirstNzdt.state)}`,
     );
-    // The countdown is SWALLOWED by the hour that does not exist: 02:00–02:59 is
-    // where "Closes in N min" would have lived. Asserted as an absence, because
-    // a reader who saw the badge skip from "until 3am" to "Closed" would
-    // reasonably file it as a bug.
+    // 🔁 FLIPPED 2026-09-08 (ADR 0098). This asserted the countdown was
+    // SWALLOWED — badge "Open · until 3am" at 01:59 NZST, then "Closed" — on the
+    // reasoning that 02:00–02:59 is where "Closes in N min" would have lived and
+    // that hour does not exist. It now asserts the opposite, and asserts it as
+    // one claim rather than two: the badge names a number, and that number COMES
+    // TRUE. One real minute is what it says, and one real minute later the venue
+    // is shut. A wall-clock countdown said 61 and could not satisfy this.
     report.check(
-      `${SUBJECT} @ ${DST.sepLastNzst.label}: the closing-soon window fell inside the deleted hour, so no countdown is shown`,
-      dstSubject.sepLastNzst.badge === "Open · until 3am" && dstSubject.sepFirstNzdt.state === "closed",
+      `${SUBJECT} @ ${DST.sepLastNzst.label}: "Closes in 1 min" COMES TRUE — one minute of real time later it is closed`,
+      dstSubject.sepLastNzst.badge === "Closes in 1 min" &&
+        dstSubject.sepLastNzst.state === "closing-soon" &&
+        dstSubject.sepFirstNzdt.state === "closed",
       `got ${JSON.stringify(dstSubject.sepLastNzst.badge)} then ${JSON.stringify(dstSubject.sepFirstNzdt.badge)}`,
     );
 
-    // The April repeated hour — the harder direction. Same wall clock an hour of
-    // real time apart, so the badge must be the same. A containment test that
-    // matched the span only once would fail the second pass; one that lost the
-    // wrap would fail both.
+    // The April repeated hour — the harder direction, and THE ITEM.
+    //
+    // 🔁 FLIPPED 2026-09-08 (ADR 0098). This asserted the two badges read
+    // IDENTICALLY, which was the wall clock's answer and the understatement the
+    // item was filed for: at 02:30 NZDT ninety real minutes remained and the
+    // badge said thirty. They must now DIFFER, and differ in the one way that is
+    // correct — the first pass names the close it cannot yet count to, the
+    // second counts. A change that reverted the engine would make them identical
+    // again and fail here, which is the point of asserting the pair rather than
+    // each badge alone (each is already in the table above).
     report.check(
-      `${SUBJECT}: 02:30 NZDT and 02:30 NZST are one hour apart and read IDENTICALLY`,
-      dstSubject.aprFirstPass.badge === dstSubject.aprSecondPass.badge &&
-        dstSubject.aprFirstPass.state === dstSubject.aprSecondPass.state,
+      `${SUBJECT}: 02:30 NZDT and 02:30 NZST are one hour of REAL time apart and must NOT read the same`,
+      dstSubject.aprFirstPass.badge !== dstSubject.aprSecondPass.badge,
       `NZDT ${JSON.stringify(dstSubject.aprFirstPass.badge)} vs NZST ${JSON.stringify(dstSubject.aprSecondPass.badge)}`,
+    );
+    report.check(
+      `${SUBJECT} @ ${DST.aprFirstPass.label}: 90 real minutes out is OPEN, not closing soon`,
+      dstSubject.aprFirstPass.state === "open",
+      `dataset.state was ${JSON.stringify(dstSubject.aprFirstPass.state)}`,
     );
     report.check(
       `${SUBJECT} @ ${DST.aprSecondPass.label}: the repeated hour is still INSIDE Saturday's wrapped span`,
@@ -575,8 +610,12 @@ async function run(opts) {
     // And the second render path across the switch. app.js builds the home
     // card; a fix or a fault in only one of the two call sites is a real shape
     // this repo has shipped before.
+    // The April pair is on this path too, added 2026-09-08 with ADR 0098: the
+    // countdown correction lives in one engine but reaches the reader through
+    // two renders, and a check that only ever asserts it on menu.js's would miss
+    // an app.js that had been given its own copy of the arithmetic.
     console.log(`\n  the home screen across the switch — app.js's own path`);
-    for (const key of ["sepLastNzst", "sepFirstNzdt", "monNzdt"]) {
+    for (const key of ["sepLastNzst", "sepFirstNzdt", "monNzdt", "aprFirstPass", "aprSecondPass"]) {
       await setClock(DST[key].iso);
       await driver.cdpNavigate(homeUrl);
       await untilPresent(

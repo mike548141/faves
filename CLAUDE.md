@@ -324,8 +324,15 @@ node tools/midnight_check.mjs # a venue that trades PAST MIDNIGHT, on a FROZEN
                               # badges must be IDENTICAL — 14:30 chosen so an hour's
                               # error falls outside the control venue's 14:00 opening,
                               # which is what a clock hard-wired to the winter offset
-                              # fails on (9 of 68 assertions, ALL naming an NZDT
-                              # instant, none of the June six). Two
+                              # fails on (measured 2026-09-07 at 68 assertions: 9
+                              # failed, ALL naming an NZDT instant, none of the June
+                              # six — that probe has NOT been re-run since). The file
+                              # now carries 73: ADR 0098 made the COUNTDOWN real
+                              # minutes between two instants where the VERDICT stays
+                              # wall-clock, which flipped two expectations here
+                              # (01:59 NZST reads "Closes in 1 min", 02:30 NZDT reads
+                              # "Open · until 3am") and put the April pair on app.js's
+                              # home-card path as well as menu.js's. Two
                               # assertions carry the weight: a CONTROL venue closing
                               # at 23:00 that must read Closed at 1am — without it a
                               # change making everything read open passes the lot —

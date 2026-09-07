@@ -124,7 +124,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🛑 [hours cannot express a close after midnight, and the first venue](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md)
 - [ ] 🔎 [hours cannot say "we do not know about this day" — an empty day](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/020-hours-cannot-say-a-day-is-unknown.md)
 - ✅ [✅ The whole hours model is now tested across the daylight-saving](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/030-the-hours-model-is-untested-across-the-dst-switch.md)
-- [~] 🔎 [The countdown understates by up to an hour during April's repeated](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/040-the-countdown-understates-during-aprils-repeated-hour.md)
+- ✅ 🔎 [The countdown understates by up to an hour during April's repeated](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/040-the-countdown-understates-during-aprils-repeated-hour.md)
 
 ## Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)
 
@@ -267,6 +267,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🛑 [Intake throws away the evidence's own provenance, and the first](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/250-intake-throws-away-the-evidences-own-provenance.md)
 - [ ] 🔎 [The Python gates print no tree line, so CLAUDE.md's "EVERY check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/260-the-python-gates-print-no-tree-line.md)
 - [ ] [🚩 The machine-side half of the 2026-08-17 force-push ruling does not](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
+- ✅ 🛑 [An unresolved merge conflict shipped to a PUBLIC main and stood](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/280-a-merge-conflict-shipped-to-a-public-main-and-no-gate-saw-it.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 

@@ -28,24 +28,32 @@
 //     clock 02:00–02:59 OCCURS TWICE. This is the harder direction: a
 //     containment test matches the same span twice, an hour apart.
 //
-// WHAT THE ANSWER TURNED OUT TO BE, so a reader need not run it: the model is
-// CORRECT in the only sense a wall-clock model can be. `hours` are wall-clock
-// times ("we shut at 3am"), `nowIn` reads the venue's wall clock through Intl,
-// and the two therefore agree through both transitions. Two consequences of
-// that — neither a defect, both surprising enough to be pinned below rather
-// than rediscovered:
-//   1. SEPTEMBER SWALLOWS THE COUNTDOWN. A venue closing at 03:00 has its
-//      "closing soon" window (02:00–02:59) fall entirely inside the hour that
-//      does not exist, so on that one night the badge goes straight from
-//      "Open · until 3am" to "Closed". No number is wrong; the number is never
-//      shown.
-//   2. APRIL REPEATS IT. The same countdown runs 60→1 twice, an hour apart.
-//      During the first pass it UNDERSTATES the real time remaining by up to an
-//      hour — it says "Closes in 40 min" when 100 minutes of real time remain.
-//      That errs in the direction that sends someone early rather than late,
-//      which is the same direction ADR 0094 chose for the understated close it
-//      replaced. Fixing it means computing in absolute instants instead of
-//      wall-clock minutes, which is a different model, not a patch.
+// WHAT THE ANSWER TURNED OUT TO BE, so a reader need not run it: the VERDICT is
+// wall-clock and correct. `hours` are wall-clock times ("we shut at 3am"),
+// `nowIn` reads the venue's wall clock through Intl, and the two therefore agree
+// through both transitions.
+//
+// 🛑 THE COUNTDOWN IS NO LONGER WALL-CLOCK, AND FIVE ASSERTIONS IN THIS FILE
+// FLIPPED ON 2026-09-08 (ADR 0098, roadmap 190/040, owner-ruled). It used to
+// pin two consequences of wall-clock arithmetic as "correct rather than
+// defects":
+//   1. SEPTEMBER SWALLOWED THE COUNTDOWN. A 03:00 close put the whole
+//      "closing soon" window inside the hour that does not exist, so the badge
+//      stepped from "Open · until 3am" straight to "Closed".
+//   2. APRIL REPEATED IT. The 60→1 sequence ran twice, and the first pass
+//      understated the real time remaining by up to an hour.
+// Both were real, both were filed rather than fixed, and the owner OVERRULED
+// that: the countdown now measures REAL minutes between two instants. So
+// September shows a countdown that runs 60→1 exactly once (01:00–01:59 NZST,
+// because 03:00 NZDT is sixty real minutes after 01:00 NZST), and April shows
+// one that also runs exactly once (during the SECOND pass, 02:00–02:59 NZST),
+// with the first pass reading "Open · until 3am" because ninety real minutes
+// remain. The flipped assertions carry the old expectation in a comment so the
+// change is visible rather than merely applied.
+//
+// THE INVARIANT THAT REPLACES THEM, and the one worth keeping if the file is
+// ever cut down: when the badge says "Closes in N min", N minutes of real time
+// later the venue is shut. That is now swept across both transitions.
 //
 // THE CONTROL. `Australia/Brisbane` keeps one offset all year. Every sweep
 // below is run against it as well and must show an ordinary 24-hour day with
@@ -71,6 +79,10 @@ const FIXED_12 = "Etc/GMT-12"; // UTC+12 all year: NZ's WINTER offset, frozen
 
 const utc = (iso) => new Date(iso);
 const MIN = 60_000;
+
+// A clock reading carries its INSTANT and its ZONE as well as the wall clock
+// (ADR 0098). Where an assertion is about the wall clock alone, compare this.
+const wall = (t) => ({ dow: t.dow, minutes: t.minutes });
 
 // ————————————————————————— The two transitions, stated ———————————————————————
 //
@@ -139,8 +151,22 @@ const OPENS_IN_THE_GAP = { ...CLOSED_WEEK, sun: [["02:15", "09:00"]] };
 test("nowIn reads NZST and NZDT either side of the September jump", () => {
   // One minute of real time separates these two readings and the wall clock
   // moves an hour. If this fails, nothing else in the file means anything.
-  assert.deepEqual(nowIn(NZ, SEP.lastNzst), { dow: 0, minutes: 119 }, "Sun 01:59 NZST");
-  assert.deepEqual(nowIn(NZ, SEP.firstNzdt), { dow: 0, minutes: 180 }, "Sun 03:00 NZDT");
+  assert.deepEqual(wall(nowIn(NZ, SEP.lastNzst)), { dow: 0, minutes: 119 }, "Sun 01:59 NZST");
+  assert.deepEqual(wall(nowIn(NZ, SEP.firstNzdt)), { dow: 0, minutes: 180 }, "Sun 03:00 NZDT");
+});
+
+test("a clock reading carries the INSTANT it was read at and the zone it was read in", () => {
+  // The countdown is real minutes between two instants (ADR 0098), and the
+  // instant reaches the engine inside `now` — so a `now` that has lost it
+  // silently reverts to wall-clock arithmetic and every April assertion below
+  // goes back to pinning the understatement. The way that rots is somebody
+  // reshaping the clock read, not a caller, so it is pinned HERE.
+  const t = nowIn(NZ, SEP.lastNzst);
+  assert.equal(t.epochMs, SEP.lastNzst.getTime(), "the instant, not a re-read of the wall clock");
+  assert.equal(t.tz, NZ);
+  const c = makeClock(APR.firstPass).at(NO_DST);
+  assert.equal(c.epochMs, APR.firstPass.getTime(), "makeClock's readings carry it too");
+  assert.equal(c.tz, NO_DST, "and the zone the reading was taken in, per venue");
 });
 
 test("SEPTEMBER: the wall clock 02:00–02:59 never occurs, and the day is 23 hours", () => {
@@ -205,9 +231,10 @@ test("makeClock hands the same instant to two zones that disagree about the offs
   // instants — the fault that would make two venues disagree about what time
   // it is because the render took a moment to run.
   const clock = makeClock(SEP.firstNzdt);
-  assert.deepEqual(clock.at(NZ), { dow: 0, minutes: 180 }, "Auckland: 03:00 NZDT");
-  assert.deepEqual(clock.at(NO_DST), { dow: 0, minutes: 0 }, "Brisbane: 00:00, still UTC+10");
-  assert.deepEqual(clock.at(NZ), { dow: 0, minutes: 180 }, "and the memoised answer is unchanged");
+  assert.deepEqual(wall(clock.at(NZ)), { dow: 0, minutes: 180 }, "Auckland: 03:00 NZDT");
+  assert.deepEqual(wall(clock.at(NO_DST)), { dow: 0, minutes: 0 }, "Brisbane: 00:00, still UTC+10");
+  assert.deepEqual(wall(clock.at(NZ)), { dow: 0, minutes: 180 }, "and the memoised answer is unchanged");
+  assert.equal(clock.at(NZ).epochMs, clock.at(NO_DST).epochMs, "one instant, read twice");
 });
 
 // ——————————————————— 2. The day boundary: todayIn (surface 4) —————————————————
@@ -249,9 +276,15 @@ test("CONTROL: todayIn rolls after exactly 24 hours in a zone with no DST", () =
 
 test("a venue trading till 3am is OPEN through the September jump and shut after it", () => {
   // The claim the whole item is about, on the two instants a minute apart.
+  //
+  // 🔁 FLIPPED 2026-09-08 (ADR 0098). This asserted `state: "open"` and
+  // `detail: "until 3am"`. The venue is still trading — that has not changed —
+  // but it is now ONE REAL MINUTE from its close, and the badge says so. The
+  // old expectation was the wall clock's answer: 61 wall minutes to 03:00,
+  // sixty of which are about to be deleted.
   const before = openStatus(LATE_NIGHT, nowIn(NZ, SEP.lastNzst));
-  assert.equal(before.state, "open", "Sun 01:59 NZST — Saturday's span still runs");
-  assert.equal(before.detail, "until 3am");
+  assert.equal(before.state, "closing-soon", "Sun 01:59 NZST — Saturday's span still runs");
+  assert.equal(before.label, "Closes in 1 min", "and the close is one minute of REAL time away");
 
   const after = openStatus(LATE_NIGHT, nowIn(NZ, SEP.firstNzdt));
   assert.equal(after.state, "closed", "Sun 03:00 NZDT — the stated close has been reached");
@@ -264,44 +297,95 @@ test("the week boundary and the DST boundary are crossed at once, and both hold"
   // this is the only instant where both apply.
   const segs = segments(LATE_NIGHT);
   assert.ok(segs.some((s) => s.end > 7 * 24 * 60), "a segment must overrun the week for this to test anything");
-  assert.equal(openStatus(LATE_NIGHT, nowIn(NZ, SEP.oneAm)).state, "open", "Sun 01:00 NZST");
+  // 🔁 FLIPPED 2026-09-08 (ADR 0098): this asserted `"open"`. Sun 01:00 NZST is
+  // exactly sixty real minutes from a 03:00 NZDT close, so the venue is now in
+  // its closing-soon window. It is still INSIDE Saturday's wrapped span, which
+  // is the only thing this test is about — a fix that lost the week boundary
+  // would return "closed" here, not "closing-soon".
+  assert.equal(openStatus(LATE_NIGHT, nowIn(NZ, SEP.oneAm)).state, "closing-soon", "Sun 01:00 NZST");
 });
 
-test("SEPTEMBER SWALLOWS THE COUNTDOWN for a 3am close, and that is correct", () => {
-  // A 03:00 close puts the whole "closing soon" window inside the hour that
-  // does not exist. Pinned because it is the sort of absence a future reader
-  // would file as a bug: the badge is never wrong, the number is never shown.
+test("SEPTEMBER SHOWS THE COUNTDOWN ONCE, in real minutes, for a 3am close", () => {
+  // 🔁 FLIPPED WHOLE 2026-09-08 (ADR 0098). This test was called "SEPTEMBER
+  // SWALLOWS THE COUNTDOWN … and that is correct" and asserted
+  // `states.includes("closing-soon") === false`: the wall-clock window
+  // (02:00–02:59) fell inside the hour that does not exist, so no number was
+  // ever shown. Measuring real time instead moves the window to 01:00–01:59
+  // NZST, which is genuinely the last hour before the shop shuts at 03:00 NZDT.
   const states = [];
+  const labels = [];
   for (let i = 0; i < SEP_HOURS * 60; i++) {
     const s = openStatus(LATE_NIGHT, nowIn(NZ, new Date(SEP_DAY_START.getTime() + i * MIN)));
     states.push(s.state);
+    if (s.state === "closing-soon") labels.push(s.label);
   }
-  assert.equal(states.includes("closing-soon"), false, "no closing-soon minute exists on the short Sunday");
-  assert.equal(states[0], "open", "midnight NZST — still trading");
-  assert.equal(states[119], "open", "01:59 NZST — the last minute of NZST, still trading");
+  assert.equal(labels.length, 60, "sixty closing-soon minutes on the short Sunday, not zero and not 120");
+  assert.equal(labels[0], "Closes in 60 min", "01:00 NZST");
+  assert.equal(labels[59], "Closes in 1 min", "01:59 NZST");
+  assert.equal(states[0], "open", "midnight NZST — two real hours out, so no number yet");
+  assert.equal(states[59], "open", "00:59 NZST — 61 real minutes, still outside the window");
+  assert.equal(states[60], "closing-soon", "01:00 NZST — the window opens on the real minute");
+  assert.equal(states[119], "closing-soon", "01:59 NZST — the last minute of NZST");
   assert.equal(states[120], "closed", "the very next minute of real time is 03:00 NZDT and it is shut");
 });
 
-test("APRIL runs the countdown TWICE, an hour of real time apart", () => {
-  // The 25-hour day's signature. Same wall clock, same badge — and during the
-  // first pass the number understates the real time left by up to an hour.
+test("APRIL runs the countdown ONCE, and the first pass through 02:30 is 90 real minutes out", () => {
+  // 🔁 FLIPPED 2026-09-08 (ADR 0098) — the item's own defect, on the two
+  // instants it was measured on. This asserted `first.label === "Closes in 30
+  // min"` and `deepEqual(second, first)`: the same wall clock, an hour of real
+  // time apart, read identically. It now reads DIFFERENTLY, which is the whole
+  // point of the ruling.
   const first = openStatus(LATE_NIGHT, nowIn(NZ, APR.firstPass));
   const second = openStatus(LATE_NIGHT, nowIn(NZ, APR.secondPass));
-  assert.equal(first.state, "closing-soon");
-  assert.equal(first.label, "Closes in 30 min", "Sun 02:30 NZDT");
-  assert.deepEqual(second, first, "Sun 02:30 NZST — one hour later, the identical badge");
+  assert.equal(first.state, "open", "Sun 02:30 NZDT — 90 real minutes left is not 'closing soon'");
+  assert.equal(first.label, "Open");
+  assert.equal(first.detail, "until 3am", "the wall-clock close is still what is NAMED");
+  assert.equal(first.minutes, 90, "and ninety real minutes is what is MEASURED");
+  assert.equal(second.state, "closing-soon", "Sun 02:30 NZST — one hour of real time later");
+  assert.equal(second.label, "Closes in 30 min");
+  assert.equal(second.minutes, 30);
+  assert.notDeepEqual(second, first, "the same wall clock, an hour apart, must NOT read the same");
   assert.equal(openStatus(LATE_NIGHT, nowIn(NZ, APR.after)).state, "closed", "Sun 03:00 NZST");
 
-  // …and the sequence really is run twice rather than stalling or skipping.
+  // …and the sequence is run ONCE rather than twice. It used to assert 120.
   const counted = [];
   for (let i = 0; i < APR_HOURS * 60; i++) {
     const s = openStatus(LATE_NIGHT, nowIn(NZ, new Date(APR_DAY_START.getTime() + i * MIN)));
     if (s.state === "closing-soon") counted.push(s.label);
   }
-  assert.equal(counted.length, 120, "60 closing-soon minutes, lived through twice");
+  assert.equal(counted.length, 60, "60 closing-soon minutes, lived through once");
   assert.equal(counted[0], "Closes in 60 min");
   assert.equal(counted[59], "Closes in 1 min");
-  assert.deepEqual(counted.slice(60), counted.slice(0, 60), "the second pass repeats the first exactly");
+  assert.deepEqual(
+    counted,
+    Array.from({ length: 60 }, (_, i) => `Closes in ${60 - i} min`),
+    "one strictly descending run, with no number repeated",
+  );
+});
+
+test("the countdown is the difference between two INSTANTS across the fall-back", () => {
+  // The claim stated as arithmetic rather than as a badge: take the instant the
+  // countdown was read at, add the number it printed, and the venue must be
+  // shut. Run for every minute of the 25-hour Sunday, so the repeated hour is
+  // crossed 60 times rather than sampled once.
+  //
+  // This is the assertion that a wall-clock countdown cannot satisfy: it said
+  // "30 min" at 13:30Z, and at 14:00Z Dragonfly was still trading.
+  let checked = 0;
+  for (let i = 0; i < APR_HOURS * 60; i++) {
+    const t = new Date(APR_DAY_START.getTime() + i * MIN);
+    const s = openStatus(LATE_NIGHT, nowIn(NZ, t));
+    if (s.state !== "closing-soon") continue;
+    const n = Number(/Closes in (\d+) min/.exec(s.label)[1]);
+    const shut = openStatus(LATE_NIGHT, nowIn(NZ, new Date(t.getTime() + n * MIN)));
+    assert.equal(shut.state, "closed", `"${s.label}" read at ${t.toISOString()} did not come true`);
+    const stillOpen = openStatus(LATE_NIGHT, nowIn(NZ, new Date(t.getTime() + (n - 1) * MIN)));
+    assert.notEqual(stillOpen.state, "closed", `it was already shut a minute BEFORE "${s.label}" ran out`);
+    checked++;
+  }
+  // Without this the loop could `continue` past everything and pass empty —
+  // the shape that has burned this repo before (a sweep that never arrived).
+  assert.equal(checked, 60, "every closing-soon minute of the long Sunday was carried to its close");
 });
 
 test("the countdown is never negative and never absurd across either switch", () => {
@@ -322,20 +406,41 @@ test("the countdown is never negative and never absurd across either switch", ()
   }
 });
 
-test("a close INSIDE the deleted hour counts down and then simply stops", () => {
+test("a close INSIDE the deleted hour counts down to the instant it is REACHED", () => {
   // 02:30 is a wall clock that does not occur on 2026-09-27, so the venue's
   // stated close never arrives — it is shut the moment the clock steps over it.
+  //
+  // 🔁 FLIPPED 2026-09-08 (ADR 0098): this asserted "Closes in 31 min", the
+  // wall-clock distance to a 02:30 that will not happen. One real minute later
+  // the badge read "Closed" — a countdown contradicted by its own engine, and
+  // in the LATE direction ADR 0094 named as the serious one. A target the zone
+  // steps over resolves to the transition itself.
   const before = openStatus(CLOSES_IN_THE_GAP, nowIn(NZ, SEP.lastNzst));
   assert.equal(before.state, "closing-soon");
-  assert.equal(before.label, "Closes in 31 min", "01:59 NZST, closing at a 02:30 that will not happen");
+  assert.equal(before.label, "Closes in 1 min", "01:59 NZST, closing at a 02:30 that will not happen");
   const after = openStatus(CLOSES_IN_THE_GAP, nowIn(NZ, SEP.firstNzdt));
   assert.equal(after.state, "closed", "03:00 NZDT — past a close that was never reached");
+
+  // The gap must not produce a negative, a zero or a NaN anywhere in the hour
+  // before it — the failure mode a subtraction across a skipped hour invites.
+  // Swept rather than sampled, and counted, so an empty sweep cannot pass.
+  let seen = 0;
+  for (let i = 0; i < 120; i++) {
+    const s = openStatus(CLOSES_IN_THE_GAP, nowIn(NZ, new Date(SEP.lastNzst.getTime() - i * MIN)));
+    if (s.minutes == null) continue;
+    assert.ok(Number.isFinite(s.minutes) && s.minutes > 0, `minute -${i}: minutes was ${s.minutes}`);
+    seen++;
+  }
+  assert.equal(seen, 120, "every one of the two hours running into the gap carried a real number");
 });
 
 test("an open INSIDE the deleted hour is honoured the instant the clock steps past it", () => {
+  // 🔁 FLIPPED 2026-09-08 (ADR 0098): this asserted "Opens in 16 min" — the
+  // wall-clock distance to a 02:15 that never occurs — one real minute before
+  // the venue was open. The two halves of this test disagreed with each other.
   const before = openStatus(OPENS_IN_THE_GAP, nowIn(NZ, SEP.lastNzst));
   assert.equal(before.state, "opening-soon");
-  assert.equal(before.label, "Opens in 16 min", "01:59 NZST, opening at a 02:15 that will not happen");
+  assert.equal(before.label, "Opens in 1 min", "01:59 NZST, opening at a 02:15 that will not happen");
   const after = openStatus(OPENS_IN_THE_GAP, nowIn(NZ, SEP.firstNzdt));
   assert.equal(after.state, "open", "03:00 NZDT — the venue is open, it just never read 'opening now'");
   assert.equal(after.detail, "until 9am");
@@ -391,8 +496,8 @@ test("CONTROL: the same wall clock gives the same badge under NZST and under NZD
   // hour's error puts 13:30 outside the venue's 14:00 opening, so a clock
   // hard-wired to the winter offset fails HERE and passes almost everywhere
   // else.
-  assert.deepEqual(nowIn(NZ, MON_NZST), { dow: 1, minutes: 870 }, "Mon 21 Sep 14:30 NZST");
-  assert.deepEqual(nowIn(NZ, MON_NZDT), { dow: 1, minutes: 870 }, "Mon 28 Sep 14:30 NZDT");
+  assert.deepEqual(wall(nowIn(NZ, MON_NZST)), { dow: 1, minutes: 870 }, "Mon 21 Sep 14:30 NZST");
+  assert.deepEqual(wall(nowIn(NZ, MON_NZDT)), { dow: 1, minutes: 870 }, "Mon 28 Sep 14:30 NZDT");
 
   const nzst = openStatus(ORDINARY, nowIn(NZ, MON_NZST));
   const nzdt = openStatus(ORDINARY, nowIn(NZ, MON_NZDT));
