@@ -14,9 +14,10 @@ content freshness separately from this file.
   come back when you flicked up — which kept it off the menu but made it
   unreachable exactly when you were reading. It now stays offered the moment you
   are past the first screen, whichever way you are moving, and gets out of the
-  way by *moving* instead of vanishing: when a price, a dish name, a venue name
-  or a ♥ is underneath it, it steps a little way up the column and returns to
-  the corner as soon as the corner is free. Swept over the whole of a real menu
+  way by *moving* instead of vanishing: when a price, a dish name, a venue name,
+  a ♥ **or a dish's ＋/− order buttons** are underneath it, it steps a little
+  way up the column and returns to the corner as soon as the corner is free.
+  Swept over the whole of a real menu
   and the whole home list, at two widths and two text sizes — 3,452 scroll
   positions — it now covers none of them. Left simply sitting in its corner it
   covered something at 151 of the 554 places you can stop on a real menu and at

@@ -48,19 +48,28 @@
 // most 82 px) and 132 of 183 on the home list (by at most 109 px); the largest
 // step anywhere was 172 px, on the home list at 24 px root text.
 //
-// ⚠️ WHAT THIS DOES NOT PROTECT, AND THE MEASURED COST OF PROTECTING IT. The
-// list above is the ruling's list — a price, a ♥, the names. It is NOT every
-// tappable thing under the button, and the button is now on screen for the
-// whole of a downward read where it used to be tucked, so it can come to rest
-// on a dish's ＋ / − stepper and own that tap — the same harm class as the
-// order pill eating a dietary chip's tap. Adding `.stepper-add, .stepper-btn,
-// .dish-photo-btn, .dish-report` to the list was measured 2026-09-07 and it
-// WORKS (occlusion still 0, still inside MAX_DODGE), at this price on the menu
-// at 390 px: the control is displaced at 326 of 537 positions instead of 151,
-// and travels up to 168 px instead of 82. The home list is unaffected (its
-// cards carry no stepper). Doubling the movement on the screen the owner
-// raised this on is his call, not a side effect of this fix, so it is recorded
-// here rather than taken.
+// ✅ THE STEPPER IS PROTECTED TOO — owner-ruled 2026-09-07, and the movement
+// cost was accepted with its number in front of him. The list is the ruling's
+// list (a price, a ♥, the names) PLUS the tappable controls on a dish row:
+// `.stepper-add, .stepper-btn, .dish-photo-btn, .dish-report`. The reason is
+// that the button is now on screen for the whole of a downward read where it
+// used to be tucked, so without this it comes to rest on a dish's ＋ / −
+// stepper and owns that tap — the same harm class as the order pill eating a
+// dietary chip's tap, and a mis-tap that silently changes an order.
+// 🚩 THE PRICE, MEASURED AND KNOWINGLY PAID: on the menu at 390 px the control
+// is displaced at 326 of 537 positions instead of 151, and travels further. So
+// it floats above its corner for MORE THAN HALF of a downward read. That is
+// deliberate. If a future session finds the movement distracting, the fix is to
+// argue the trade with the owner again — not to quietly shorten this list,
+// which is how the mis-tap comes back.
+// ✅ RE-MEASURED ON THE SHIPPED CONFIGURATION 2026-09-07 (64/64, occlusion 0,
+// dodge inside its travel limit in all 8 combinations): menu 390/16 steps
+// aside at 326 of 537 — the predicted figure, to the position — and 376 of 827
+// at 24 px text. The home list is 132 of 183 and 172 of 374, IDENTICAL to
+// before the stepper was added, which is the evidence for the claim below that
+// cards carry no stepper. The two menu-at-1200 px combinations step aside 0
+// times of 495 and 681: that layout has nothing to solve, the column stopping
+// at 756 px while the button sits at 1004 px.
 // The whole-card link on the home list is deliberately NOT protectable: it
 // spans the card, so counting it would leave nowhere clear at all — and a
 // mis-tap on it costs a reader nothing they cannot undo with Back.
@@ -114,7 +123,9 @@ export function initBackToTop() {
   // read for, the venue name on a card, and the ♥ that saves it. Kept in step
   // with the selector list `tools/to_top_check.mjs` measures against — if one
   // list grows and the other does not, the check stops covering the new thing.
-  const PROTECTED = ".dish-price, .dish-name, .heart, .card-name";
+  const PROTECTED =
+    ".dish-price, .dish-name, .heart, .card-name, " +
+    ".stepper-add, .stepper-btn, .dish-photo-btn, .dish-report";
   const CLEARANCE = 6; // px of air left between the button and what it dodged
   // Headroom over the largest dodge the sweep has ever needed: 172 px, on the
   // home list at 390 px with 24 px root text (the menu at 390 px never needed

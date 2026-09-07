@@ -14,6 +14,26 @@
   runs.** On the branch: 1 pass in 3, same failure position (line 285). Not a
   regression.
 
+  ⚠️ **UPDATE 2026-09-07 — (a)'s SHAPE HAS CHANGED, and the change is an
+  improvement made by accident.** Re-observed after ADR 0093 landed, the same
+  failure now reads:
+
+  ```
+  harness error: #settings-btn has no clickable box
+  Error: #settings-btn has no clickable box
+      at Object.click (tools/lib/browser.mjs:942)
+      at async run (tools/picks_check.mjs:285)
+  ```
+
+  — i.e. it is now classified as a **harness error at exit 2**, not the "plain
+  `Error`, exit **1**, no `FAIL` line" recorded below. ADR 0093 routed every
+  tool's top-level catch through `exitFromError()`, whose fallback branch is
+  exit 2, so an *unclassified* throw now lands there instead of wherever each
+  tool's own catch used to put it. **The third shape is gone; the flake is
+  not.** What remains open is the classification question — is a geometry
+  throw a site claim or a harness claim? — and it is now a live question about
+  `exitFromError`'s fallback rather than about one tool's stray catch.
+
   🛑 **The shape is the finding, not the flake.** CLAUDE.md describes exactly
   two outcomes — an assertion failure (`FAIL <name>`, exit 1) and a transport
   death (`HARNESS ERROR …`, exit 2) — and tells the reader to *believe the exit
