@@ -141,14 +141,16 @@
   the payload, **52** (1841 Bar & Restaurant) are one dated reading of a menu
   read once.
 
-  🚩 **Found on `main`, untouched, not this item's:** `docs/decisions/README.md`
-  carries an **unresolved merge conflict** — `<<<<<<< HEAD` at :1037,
-  `>>>>>>> 6cb391d` at :1074, from commit `f6869a6`, straddling the index
-  entries for ADR 0096 and ADR 0097. `check_decisions.py` passes because both
-  entries are textually present, so nothing catches it. The ADR **allocator**
-  is the file this is in. Left for whoever owns those two records; this item's
-  index entry was appended below the marker rather than resolving another
-  session's conflict.
+  🚩 **Found on `main`, and since fixed by someone else.** While this branch
+  was open, `docs/decisions/README.md` on `main` carried an **unresolved merge
+  conflict** — `<<<<<<< HEAD` at :1037, `>>>>>>> 6cb391d` at :1074, from commit
+  `f6869a6`, straddling the ADR 0096 and 0097 index entries — in the file that
+  is the ADR **allocator**. `check_decisions.py` passed throughout, because both
+  entries were textually present. It was reported rather than resolved here (it
+  was another session's conflict), and `f4a5958` on `main` has since resolved it
+  and filed the gap as `340/280`. This branch merged that resolution in; the
+  0099 entry is appended after it, and this paragraph is corrected rather than
+  left standing, because it was true when written and is not now.
 
   🚩 **And the allocator collided again, exactly as it is documented to.** This
   record was drafted as **0098**; the post-push check found branch
