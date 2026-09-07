@@ -1,5 +1,6 @@
-- [ ] 🔎 **The picker says one clause twice when an allergen both warns AND
-      kills a claim** `[S][ux][js]` — found 2026-09-07 (wt:
+- [~] 🔎 **The picker says one clause twice when an allergen both warns AND
+      kills a claim** `[S][ux][js]` — 🔒 **CLAIMED 2026-09-07 (session
+      faves-picker).** Found 2026-09-07 (wt:
       faves-addon-allergens) while verifying `110/040`, **measured in a real
       browser**, and **pre-dates that work entirely** — it is true with no fish
       anywhere near it.

@@ -1,5 +1,6 @@
-- [ ] 🔎 **The chip row still says `Veg` on a dish the warning has just said is
-      no longer vegetarian** `[S][ux][js]` — found 2026-09-07 (wt:
+- [~] 🔎 **The chip row still says `Veg` on a dish the warning has just said is
+      no longer vegetarian** `[S][ux][js]` — 🔒 **CLAIMED 2026-09-07 (session
+      faves-picker).** Found 2026-09-07 (wt:
       faves-addon-allergens) while verifying `110/040`, **measured in a real
       browser**, and **pre-dates that work** — the same disagreement is
       reachable with bacon, halloumi or prawns.
