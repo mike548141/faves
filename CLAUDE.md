@@ -313,8 +313,19 @@ node tools/midnight_check.mjs # a venue that trades PAST MIDNIGHT, on a FROZEN
                               # clock (ADR 0094). `["16:30","03:00"]` used to make
                               # a segment that ENDED BEFORE IT STARTED, so a venue
                               # open till 3am read closed all evening. Asserts the
-                              # rendered badge at six fixed instants on TWO render
-                              # paths (menu.js hoursRow, app.js hoursBadge). Two
+                              # rendered badge at THIRTEEN fixed instants on TWO render
+                              # paths (menu.js hoursRow, app.js hoursBadge) — six in
+                              # June, and SEVEN on the two real NZ daylight-saving
+                              # transitions since 2026-09-07 (roadmap 190/030, which
+                              # replaced this file's "does not exercise a DST
+                              # boundary" paragraph rather than leaving it standing).
+                              # The DST half's own control is a PAIR: two ordinary
+                              # Mondays at 14:30 local, one NZST and one NZDT, whose
+                              # badges must be IDENTICAL — 14:30 chosen so an hour's
+                              # error falls outside the control venue's 14:00 opening,
+                              # which is what a clock hard-wired to the winter offset
+                              # fails on (9 of 68 assertions, ALL naming an NZDT
+                              # instant, none of the June six). Two
                               # assertions carry the weight: a CONTROL venue closing
                               # at 23:00 that must read Closed at 1am — without it a
                               # change making everything read open passes the lot —
