@@ -124,7 +124,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🛑 [hours cannot express a close after midnight, and the first venue](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md)
 - [ ] 🔎 [hours cannot say "we do not know about this day" — an empty day](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/020-hours-cannot-say-a-day-is-unknown.md)
 - ✅ [✅ The whole hours model is now tested across the daylight-saving](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/030-the-hours-model-is-untested-across-the-dst-switch.md)
-- [ ] 🔎 [The countdown understates by up to an hour during April's repeated](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/040-the-countdown-understates-during-aprils-repeated-hour.md)
+- [~] 🔎 [The countdown understates by up to an hour during April's repeated](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/040-the-countdown-understates-during-aprils-repeated-hour.md)
 
 ## Theme 14 — Order it the way you eat it: add-ons & customisation (owner-raised 2026-08-09)
 
@@ -148,7 +148,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [~] [🚩 The branch picker is a FIFTH surface that disagrees about a closed](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/040-the-branch-picker-is-a-fifth-surface-that-disagrees.md)
 - ✅ [A shut seven-branch chain now says "Permanently closed" eight times](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/050-a-shut-chain-says-permanently-closed-eight-times.md)
 - ✅ 🔎 [The sticky contact bar is a NINTH place the closure sentence appears,](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/060-the-sticky-contact-bar-is-a-ninth-closure-notice.md)
-- [ ] 🔎 [The check harness reads and clicks geometry while it is still](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/070-the-harness-reads-geometry-while-it-is-still-animating.md)
+- [~] 🔎 [The check harness reads and clicks geometry while it is still](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/070-the-harness-reads-geometry-while-it-is-still-animating.md)
 
 ## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
 
@@ -257,10 +257,10 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [A tolerant OR-list selector can pass with every named target gone](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/170-a-tolerant-selector-can-pass-with-every-named-target-gone.md)
 - ✅ 🔎 [A direct push to main can never satisfy a required status check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/180-a-direct-push-to-main-can-never-satisfy-a-required-check.md)
 - [ ] [🚩 Two of the harness guarantees CLAUDE.md states are not true — a](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/190-two-holes-in-the-check-harness-guarantees.md)
-- [ ] 🛑 [untilPresent can manufacture a FALSE REGRESSION under load, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/200-untilpresent-can-manufacture-a-false-regression-under-load.md)
+- [~] 🛑 [untilPresent can manufacture a FALSE REGRESSION under load, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/200-untilpresent-can-manufacture-a-false-regression-under-load.md)
 - ✅ 🛑 [to_top_check described a sweep it never ran, and its key assertion](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/210-a-check-described-a-sweep-it-never-ran.md)
 - [ ] [🚩 Two orphaned stashes have sat on the shared stash stack for three](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/220-two-orphaned-stashes-sit-on-a-stack-every-worktree-shares.md)
-- [ ] 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
+- [~] 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
 - [ ] 🔎 [An orchestrator tore down a sub-agent's worktree while the agent was](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/240-a-pushed-branch-is-not-a-finished-agent.md)
 - [ ] 🛑 [Intake throws away the evidence's own provenance, and the first](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/250-intake-throws-away-the-evidences-own-provenance.md)
 
@@ -353,7 +353,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/README.md)*
 
 - ✅ 🎯 [38a — the cold review itself](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/010-the-cold-review-of-the-data-model.md)
-- [ ] 🛑 [The location-consent flag travels in the backup file and the sync](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/020-the-location-consent-flag-travels-in-the-backup-and-the-sync-blob.md)
+- [~] 🛑 [The location-consent flag travels in the backup file and the sync](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/020-the-location-consent-flag-travels-in-the-backup-and-the-sync-blob.md)
 - [ ] 🎯 [prices and priceChannels ship to every phone and nothing renders](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/030-prices-and-pricechannels-ship-to-every-phone-and-nothing-renders-them.md)
 - [ ] 🔎 [The record store keys history on names, not ids, and its documents](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/040-the-record-store-keys-history-on-names-and-describes-a-tree-that-does-not-exist.md)
 - [ ] 🎯 [One shape for "a dish with choices" — variants, sizes, proteins and](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/050-one-shape-for-a-dish-with-choices.md)

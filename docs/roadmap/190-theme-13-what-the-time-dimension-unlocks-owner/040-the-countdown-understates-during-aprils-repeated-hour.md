@@ -1,8 +1,13 @@
-- [ ] 🔎 **The countdown understates by up to an hour during April's repeated
+- [~] 🔎 **The countdown understates by up to an hour during April's repeated
       hour** `[S][js]` — measured 2026-09-07 (session faves-dst) while closing
       `030`. **Filed rather than fixed**, on that item's own rule: it buys
       evidence, and changing the model was out of scope unless something failed.
       Nothing failed — this is a characterised imprecision, not a regression.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — the owner's
+  ruling above is the brief. Delivered by a sub-agent in its own worktree
+  (`faves-o1-dst-countdown`, branch `dst-countdown`), landing by PR so CI
+  runs before the merge.
 
   **What happens.** New Zealand leaves NZDT at 03:00 on Sunday 2027-04-04, so
   the wall clock **02:00–02:59 occurs twice** and that Sunday is 25 hours long.

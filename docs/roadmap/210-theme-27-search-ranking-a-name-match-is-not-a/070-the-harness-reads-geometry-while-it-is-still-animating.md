@@ -1,7 +1,12 @@
-- [ ] 🔎 **The check harness reads and clicks geometry while it is still
+- [~] 🔎 **The check harness reads and clicks geometry while it is still
       animating, and the knowledge that prevents it is scattered across three
       tools' headers** `[M][tools]` — found 2026-09-07 (session faves-b1) while
       taking `060`'s co-visibility measurement, and filed rather than folded in.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — the owner's
+  ruling above is the brief. Delivered by a sub-agent in its own worktree
+  (`faves-o1-harness-stable-click`, branch `harness-stable-click`), landing by PR so CI
+  runs before the merge.
 
   **What happened.** A sweep written for `060` scrolled with `scrollTo(0, y)`
   and read the page two animation frames later. `site/css/app.css` sets

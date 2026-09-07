@@ -1,7 +1,12 @@
-- [ ] 🛑 **The location-consent flag travels in the backup file and the sync
+- [~] 🛑 **The location-consent flag travels in the backup file and the sync
       blob, against a stated promise** `[S][js][privacy]` — found 2026-09-08 by
       the Theme 38 review (`../../reviews/2026-09-07-1216-theme-38-cold-review.md`
       §4c), **executed, not inferred**.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — the owner's
+  ruling above is the brief. Delivered by a sub-agent in its own worktree
+  (`faves-o1-consent-exclude`, branch `consent-exclude`), landing by PR so CI
+  runs before the merge.
 
   **The promise.** `ARCHITECTURE.md` (the location-ask paragraph) and
   `site/js/geo-consent.js:16-22` both say `faves.geo.consent.v1` is *"a key

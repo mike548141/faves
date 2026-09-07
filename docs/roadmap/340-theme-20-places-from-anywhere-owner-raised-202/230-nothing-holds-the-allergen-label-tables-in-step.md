@@ -1,7 +1,12 @@
-- [ ] 🔎 **Nothing holds the four JavaScript allergen LABEL tables in step with
+- [~] 🔎 **Nothing holds the four JavaScript allergen LABEL tables in step with
       `validate.py`'s vocabulary, so a future tag can ship as a bare
       unexplained chip** `[S][tools]` — found 2026-09-07 (session faves-b1)
       while landing `contains-fish`, and filed rather than fixed.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — the owner's
+  ruling above is the brief. Delivered by a sub-agent in its own worktree
+  (`faves-o1-allergen-labels`, branch `allergen-labels`), landing by PR so CI
+  runs before the merge.
 
   **The asymmetry, stated precisely.** Adding an allergen touches two kinds of
   table:

@@ -1,7 +1,12 @@
-- [ ] 🛑 **`untilPresent` can manufacture a FALSE REGRESSION under load, and it
+- [~] 🛑 **`untilPresent` can manufacture a FALSE REGRESSION under load, and it
       was measured within minutes of shipping** `[M][tools]` — found 2026-09-07
       (session faves-24) while verifying `160` on merged `main`. This is the
       residual half of the very risk option 1 was declined to avoid.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — the owner's
+  ruling above is the brief. Delivered by a sub-agent in its own worktree
+  (`faves-o1-harness-stable-click`, branch `harness-stable-click`), landing by PR so CI
+  runs before the merge.
 
   ✅ **OWNER RULED 2026-09-07 (session faves-b1) — RETRY ONCE, THEN REPORT.**
   Put to him as four options with their costs. He took the recommendation: a
