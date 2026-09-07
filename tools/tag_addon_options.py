@@ -103,6 +103,7 @@ from tag_allergens import (  # noqa: E402
     _elements,
     _member,
     _skip_ws,
+    compile_rule,
     first_unhedged,
 )
 
@@ -183,8 +184,14 @@ RULES = [
 # TIERS ARE NOT REPORTED HERE. tag_allergens.py separates STATED from DERIVED so
 # a dish sweep's count is auditable; an option name is three words long and the
 # distinction buys nothing at this size. The `why` string still names the rule.
+#
+# `compile_rule`, not `re.compile` — it is what makes a dish rule tolerate a
+# plural (tag_allergens.py, 2026-09-08), and compiling the raw pattern here
+# would mean "Toasties" was wheat on a dish and not wheat on an add-on. That is
+# the drift ADR 0095 §3 measured on the finfish list, one layer down: both
+# sweeps green, each right about its own reading of the same rule.
 ALLERGEN_SWEEP = [
-    (tag, why, re.compile(pat, re.I), re.compile(exc, re.I) if exc else None)
+    (tag, why, compile_rule(pat), compile_rule(exc) if exc else None)
     for tag, tier, why, pat, exc in ALLERGEN_RULES
     if tag != "contains-fish"
 ]
