@@ -245,9 +245,15 @@ python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
                               # renamed without breaking every link to it
-python3 tools/test_validate.py # …and that gate still catches things (137 mutations,
-                              # re-counted 2026-09-06; it said 113 and has grown since —
-                              # 131 that day, +6 with ADR 0092's add-on option rules)
+python3 tools/test_validate.py # …and that gate still catches things (140 mutations,
+                              # re-counted 2026-09-07; it said 113 and has grown since —
+                              # 131 on 2026-09-06, +6 with ADR 0092's add-on option rules,
+                              # then 137 → 140 when ADR 0094 replaced the one case that
+                              # asserted `close must be after open` with four: close ==
+                              # open on `served` AND on `hours`, the transposition
+                              # warning, and the POSITIVE case that a wrapping close now
+                              # sails through. A gate that only ever refuses cannot show
+                              # it stopped refusing the right thing)
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
