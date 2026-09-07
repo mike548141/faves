@@ -8,6 +8,15 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Five more places have menus: Abrakebabra, Crepes A Go Go, Dirty Little
+  Secret, Garage Project Leeds Street and Hotel Bristol.** All five had been
+  sitting behind a "Menu coming soon" card since 2026-08-16 on the strength of
+  a sweep that said they published nothing at all online. They all do — one on
+  a domain with none of its name in it, one as two images, two as PDFs — so
+  their cards are real links now, 223 dishes between them, with prices,
+  dietary markers and allergen warnings.
+
 ### Changed
 - **A place that trades past midnight now says so.** Opening hours could not
   express a close after midnight at all: a Friday running to 3am was stored as
