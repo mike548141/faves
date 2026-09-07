@@ -21,6 +21,26 @@
   failure. A retry nobody can see is a decorative guard ([ADR 0072]) pointed the
   other way — it would convert a reproducible failure into a quiet one.
 
+  📊 **A THIRD MEASUREMENT, 2026-09-07 (session faves-b1) — AND THIS TIME THE
+  LOAD NUMBER WAS CAPTURED.** Running all fifteen browser checks on merged
+  `main@92d567b` to close the session, `to_top_check` died. The load average at
+  that instant was **107.28** (1-minute; 127.22 over 5), with **zero** orphan
+  Chromes — so the cause was genuine machine load from five parallel sessions,
+  not leaked processes. Re-run with `FAVES_CDP_TIMEOUT_MS=60000`: **64 passed,
+  0 failed** on the same commit. Every other one of the fifteen passed.
+  🔑 **It failed in the RIGHT shape, which is the part worth recording.** It
+  exited **2** as a `HARNESS ERROR`, and its own message said *"nothing here
+  says anything about the site"* and told the reader to check load and orphan
+  Chromes. That is the classifier working exactly as designed, and it is the
+  contrast this item is about: `to_top_check`'s transport death is *legible*,
+  while a starved `untilPresent` is byte-identical to a regression. **The
+  problem was never that checks fail under load — it is that one failure shape
+  lies about what it means.**
+  📌 So the ruled fix (retry the whole check once) has a measured budget to
+  respect: at load ~107 a 15 s wait starves but a 60 s one does not, on this
+  machine. That is one data point, not a threshold — but it is the first one
+  that pairs a load figure with a verdict.
+
   **The measurement, same commit, same code, twice.**
 
   | run | conditions | result |
