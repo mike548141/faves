@@ -216,9 +216,37 @@ function tagChip(t, avoid = EMPTY_SET, dietary = EMPTY_SET) {
   return el("span", { className: "tag", textContent: t });
 }
 
+/**
+ * WHICH TAGS ARE A CHIP AT ALL — the gate in front of `tagChip`'s bare fallback.
+ *
+ * 🛑 Until 2026-09-07 the chip row was built once, from `item.tags`, and NOTHING
+ * composed reached it. The moment it does (roadmap 200/060, owner-ruled: update
+ * the chips live) `tagChip`'s last line — `el("span", { textContent: t })` —
+ * becomes reachable with an option's vocabulary in it, and `has-meat`/`has-fish`
+ * would paint on a menu row as their raw internal identifiers. So this predicate
+ * is a PRECONDITION of the live re-render, not a tidy-up after it.
+ *
+ * The vocabulary is closed (`TAGS` in tools/validate.py): 9 `contains-*`, 3
+ * `spicy-*`, 8 dietary claim/option tags, and `has-meat`/`has-fish`. Every one
+ * of the first three groups has a reader-facing branch above. The last two do
+ * not, and they do not get one — see ADR 0096. In short: they are
+ * `OPTION_ONLY_TAGS`, which validate.py already REJECTS on a dish, so putting
+ * them on a row that describes a dish would render a word the schema forbids
+ * there; `has-fish` always ships beside `contains-fish` (ADR 0095), so a chip
+ * for it is literally the second chip saying one thing that the owner ruled
+ * against; and the fact each one carries is already on the row twice over — the
+ * claim chip it killed has just disappeared, and the warning line names it.
+ *
+ * A future vocabulary word lands here and is silently dropped rather than
+ * painted raw, which is the safe direction but is still a silence:
+ * `addon_check.mjs` asserts against BOTH failures on a real configured row —
+ * no raw identifier, and the chips it should carry are all present.
+ */
+const isChipTag = (t) => isAllergen(t) || isSpicy(t) || t in DIETARY;
+
 // Order tags so allergen warnings come first (safety first).
 const tagOrder = (tags) =>
-  [...tags].sort((a, b) => Number(isAllergen(b)) - Number(isAllergen(a)));
+  [...tags].filter(isChipTag).sort((a, b) => Number(isAllergen(b)) - Number(isAllergen(a)));
 
 // The dietary filter model + the flag/dim predicates live in dietary.js (DOM-free
 // and unit-tested), so the initial render and the live re-apply share one path.
@@ -1399,11 +1427,32 @@ function renderDish(
   // The data stays; it is correct and it cost a real reading to get. How a
   // reader is ever shown price variance — over time, per channel, delivery
   // against the counter — is its own piece of design work and is not this.
-  if (item.tags?.length) {
-    const tags = el("div", { className: "dish-tags" });
-    for (const t of tagOrder(item.tags)) tags.append(tagChip(t, avoid, dietary));
-    children.push(tags);
-  }
+  // THE CHIP ROW IS REBUILT FROM THE COMPOSED TAGS, not written once from
+  // `item.tags` (roadmap 200/060, owner-ruled 2026-09-07). It shipped as a
+  // build-once row, so ticking Salmon on a `v` pizza left a green `Veg` chip
+  // sitting beside a warning saying it is no longer vegetarian — three surfaces
+  // (chips, `dataset.tags`, `dish-flagged`) carrying two meanings of "this
+  // dish", with nothing on screen saying which was in force.
+  //
+  // The container is created unconditionally because a dish with NO tags can
+  // GAIN one by configuration — satay on a plain kebab — and there would
+  // otherwise be nowhere to put it. `.dish-tags:empty` is display:none in
+  // app.css so an untagged, unconfigured row is laid out exactly as before.
+  const tags = el("div", { className: "dish-tags" });
+  // Flicker guard: the row must not visibly rebuild on every tap, and most taps
+  // change no tag at all (a free sauce that carries none, a pick-one swapped for
+  // another with the same tags). Compare the painted list and do nothing when it
+  // has not moved; when it HAS, `replaceChildren` swaps it in one paint.
+  let painted = null;
+  const paintChips = (list) => {
+    const next = tagOrder(list || []);
+    const key = next.join(" ");
+    if (key === painted) return;
+    painted = key;
+    tags.replaceChildren(...next.map((t) => tagChip(t, avoid, dietary)));
+  };
+  paintChips(item.tags);
+  children.push(tags);
   if (kind.itemsHaveRecipeFields && (item.ingredients?.length || item.steps?.length)) {
     children.push(renderRecipeDetail(item));
   }
@@ -1476,9 +1525,14 @@ function renderDish(
   // configured out of "vegan" must dim with the rest of them, not linger
   // looking like a match (ADR 0048 §3).
   if (r && kind.canOrder) {
-    const picker = dishAddOns(r, section, item, (tags) => {
-      li.dataset.tags = tags.join(" ");
-      li.classList.toggle("dish-flagged", dishFlagged(tags, avoid));
+    const picker = dishAddOns(r, section, item, (composed) => {
+      li.dataset.tags = composed.join(" ");
+      li.classList.toggle("dish-flagged", dishFlagged(composed, avoid));
+      // ⚑ THE THIRD SURFACE, wired 2026-09-07 (roadmap 200/060). `dataset.tags`
+      // and `dish-flagged` have followed the configuration since ADR 0048 §3;
+      // the chips did not, so a dish the warning had just called non-vegetarian
+      // went on wearing a green `Veg`. One truth on the row now.
+      paintChips(composed);
       // ⚑ FIXED 2026-09-06. ADR 0048 §3 requires that a dish configured out of
       // an active dietary filter "must dim with the rest of them, not linger
       // looking like a match" — and until this line that was documented and

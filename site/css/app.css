@@ -4280,6 +4280,13 @@ body.faves-view .to-top {
   gap: var(--space-1);
   margin-top: var(--space-2);
 }
+/* The row is now built unconditionally, because configuring a dish can ADD a
+   tag to one that had none (roadmap 200/060) and there has to be somewhere to
+   put it. An untagged, unconfigured dish must lay out exactly as it did before
+   that change — so an empty container takes no margin and no line box. */
+.dish-tags:empty {
+  display: none;
+}
 /* Dish photo — a thumbnail that floats out of the text's way, and opens
    full-size on a tap. It shipped full-bleed and turned a menu into a gallery;
    the row has eight jobs and the picture is one of them. Float rather than a
