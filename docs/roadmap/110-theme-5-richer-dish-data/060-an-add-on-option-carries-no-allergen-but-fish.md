@@ -1,7 +1,8 @@
-- [ ] 🔎 **An add-on option carries no allergen but fish — a hummus extra is
+- [~] 🔎 **An add-on option carries no allergen but fish — a hummus extra is
       sesame and nobody is told** `[S][tools][data]` — found 2026-09-07 (wt:
       faves-addon-allergens) while landing `040`, **measured before filing**,
       and filed rather than fixed because the obvious fix is dangerous.
+      🔒 CLAIMED 2026-09-07 (session faves-hedge)
 
   **`tools/tag_addon_options.py` wrote no `contains-*` tag at all** until `040`
   added fish. It was scoped by [ADR 0092](../../decisions/0092-an-add-on-option-states-what-it-is.md)
