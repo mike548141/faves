@@ -132,7 +132,7 @@
           ]
         },
         {
-          "name": "Triple Cooked Hand Cut Fries with Café de Paris Butter and Beef Jus",
+          "name": "Triple Cooked Hand Cut Fries with Café de Paris Butter & Beef Jus",
           "dishId": "triple-cooked-hand-cut-fries-with-caf-de-paris-butter-and-beef-jus",
           "desc": "The house fries, dressed with Café de Paris butter and beef jus.",
           "price": 15,
@@ -142,7 +142,7 @@
           ]
         },
         {
-          "name": "Triple Cooked Hand Cut Fries with Truffle Mayo and Aged Parmesan",
+          "name": "Triple Cooked Hand Cut Fries with Truffle Mayo & Aged Parmesan",
           "dishId": "triple-cooked-hand-cut-fries-with-truffle-mayo-and-aged-parmesan",
           "desc": "The house fries, dressed with truffle mayo and aged parmesan.",
           "price": 15,
@@ -197,7 +197,7 @@
           ]
         },
         {
-          "name": "Crispy Spiced Potato and Onion Bhaji",
+          "name": "Crispy Spiced Potato & Onion Bhaji",
           "dishId": "crispy-spiced-potato-and-onion-bhaji",
           "desc": "With tangy tamarind chutney.",
           "price": 14,
@@ -218,7 +218,7 @@
           ]
         },
         {
-          "name": "Cheese, Pickles and Charcuterie",
+          "name": "Cheese, Pickles & Charcuterie",
           "dishId": "cheese-pickles-and-charcuterie",
           "desc": "Two cheeses, two cured meats, assorted pickles and bread.",
           "price": 26,
@@ -252,7 +252,7 @@
           ]
         },
         {
-          "name": "Beef and Horseradish Baguette",
+          "name": "Beef & Horseradish Baguette",
           "dishId": "beef-and-horseradish-baguette",
           "desc": "Slow cooked beef, caramelised onion jam, horseradish cream, fresh rocket, crusty baguette served with hot beef jus.",
           "price": 22,
@@ -262,7 +262,7 @@
           ]
         },
         {
-          "name": "Crispy Bhaji and Paneer Burger",
+          "name": "Crispy Bhaji & Paneer Burger",
           "dishId": "crispy-bhaji-and-paneer-burger",
           "desc": "With tamarind chutney, coriander relish and fried curry leaves.",
           "price": 19,

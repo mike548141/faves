@@ -672,7 +672,7 @@
       ]
     },
     {
-      "section": "Salad and Keto",
+      "section": "Salad / Keto",
       "sectionId": "salad-and-keto",
       "addOns": [
         "combo"
@@ -858,7 +858,7 @@
           ]
         },
         {
-          "name": "Turkish Hummus and Tabouli Bread",
+          "name": "Turkish Hummus + Tabouli Bread",
           "dishId": "turkish-hummus-and-tabouli-bread",
           "desc": null,
           "price": 6.5,
