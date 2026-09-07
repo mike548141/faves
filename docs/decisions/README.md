@@ -1099,3 +1099,25 @@ deliberation those compact docs omit.
   reached `data/` (`--check` passed reporting "0 with a history file", and a
   break-probe proved the check could not see it), and the writer REPLACED the
   file the documented refresh procedure told it to append to.
+- [0100](0100-a-click-waits-for-a-still-box-and-a-starved-wait-buys-one-whole-retry.md)
+  — **a click waits for a still box, and a starved wait buys one whole retry.**
+  Two owner rulings of 2026-09-07 landing together, because either alone makes
+  the other worse. `driver.click` now waits — *inside the page*, one animation
+  frame, no extra CDP round-trip — until the target's box is unchanged across
+  two frames and at least 1×1; a box that never settles is a **site** claim
+  (`FAIL UNSTABLE ELEMENT`, exit 1), which settles the question
+  [0093](0093-one-place-decides-what-a-thrown-error-means.md) left open. And a
+  `untilPresent` timeout re-runs the **whole check** once in a new process on a
+  new profile, reporting only if it fails twice — never a per-call retry, which
+  [0078](0078-a-harness-owns-its-own-lifecycle-and-a-transport-failure-is-not-a-test-failure.md)
+  forbids because CDP calls are not idempotent. 🔑 **The measurement was the
+  owner's condition and it changed the answer twice.** Sweep wall-clock could
+  not resolve the cost — the five checks that make **no clicks at all** moved
+  −14.9 s to +12.4 s — so the real number is the settle time the harness now
+  prints: **4.7 s across all sixteen checks**, and interleaved runs put
+  `cook` (130 clicks) at +0.9 s on 45 s. The second number is the one that
+  matters: a wait too generous **hides jank**, so the worst settle is named
+  every run (`"Sync now"` at 176–237 ms). ❌ **It does NOT cure `340/190` (a)**,
+  which `210/070` hoped one fix would cover: the evidence says that failure is
+  not an animation at all — `anims: 0`, the menu `display:none`, the button at
+  `top: -35`.
