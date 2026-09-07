@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **"Closes in 30 min" now means thirty minutes of your time**, on the two
+  nights a year the clocks change. When New Zealand goes back an hour in April,
+  a place trading till 3am used to count down from 60 twice and tell you it had
+  half an hour left when it really had ninety; when the clocks go forward in
+  September it showed no countdown at all, stepping from "Open · until 3am"
+  straight to "Closed". The countdown is measured between real moments now, so
+  the number is the number: when it says one minute, the place shuts in one
+  minute. Which places are open, and until when, is unchanged — "we shut at 3am"
+  still means the clock on the wall.
 - **The add-on picker no longer says the same thing twice.** Ticking an extra
   that brings in an allergen you have asked to avoid *and* breaks the dish's
   dietary label used to print the fact twice — "Halloumi contains dairy — you
