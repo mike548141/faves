@@ -17,6 +17,17 @@ content freshness separately from this file.
   their cards are real links now, 223 dishes between them, with prices,
   dietary markers and allergen warnings.
 
+### Fixed
+- **Adding salmon to a dish now warns you if you avoid fish.** A Salmon extra
+  was recorded as "not vegetarian" and nothing more, so if you had ticked
+  **Fish** in your allergen list and added it to a fish-free dish, the app said
+  nothing at all — no warning line, no highlight on the row. It now says
+  *"Salmon contains fish — you asked to avoid it"* the moment you tick it, and
+  the dish lights up like any other dish carrying an allergen you avoid.
+  Sprig & Fern Tawa and Crepes A Go Go, three extras between them. Checked in a
+  real browser on a dish that makes no dietary claim at all, which is the one
+  place the old wording could not paper over the gap.
+
 ### Changed
 - **A place that trades past midnight now says so.** Opening hours could not
   express a close after midnight at all: a Friday running to 3am was stored as
