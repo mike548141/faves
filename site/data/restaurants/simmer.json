@@ -64,10 +64,1356 @@
   },
   "vibe": [],
   "picks": [],
-  "verified": null,
+  "verified": "2026-09-07",
+  "verifiedBy": "in-store",
   "lifecycle": {
     "added": "2026-07-06"
   },
-  "status": "stub",
-  "menu": []
+  "status": "menu-complete",
+  "menu": [
+    {
+      "section": "Breakfast",
+      "sectionId": "breakfast",
+      "note": "Available until 2pm. All of our dishes may contain allergens. Please make our team aware of any dietary requirements and we'll do our best to accommodate you. Unfortunately as we are a busy kitchen, we are unable to swap one ingredient for another.",
+      "served": {
+        "mon": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "tue": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "wed": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "thu": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "fri": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sat": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sun": [
+          [
+            null,
+            "14:00"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "name": "Avocado & tomato",
+          "dishId": "avocado-tomato",
+          "desc": "With house made toasted focaccia, rocket.",
+          "price": 16.0,
+          "tags": [
+            "vg",
+            "gf-option"
+          ]
+        },
+        {
+          "name": "Fluffy pancakes",
+          "dishId": "fluffy-pancakes",
+          "desc": "With bacon, banana and maple syrup.",
+          "price": 28.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Salmon bagel",
+          "dishId": "salmon-bagel",
+          "desc": "Hot smoked salmon, crispy skin, herb & caper cream cheese, seeded bagel.",
+          "price": 27.0,
+          "tags": [
+            "contains-fish",
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "The shizzle",
+          "dishId": "the-shizzle",
+          "desc": "Manuka smoked middle bacon, chorizo sausages, tomato, mushrooms, fried potato, toast, eggs however you'd like.",
+          "price": 29.0,
+          "tags": [
+            "gf-option",
+            "df-option",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Eggs",
+      "sectionId": "eggs",
+      "note": "Available until 2pm.",
+      "served": {
+        "mon": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "tue": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "wed": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "thu": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "fri": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sat": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sun": [
+          [
+            null,
+            "14:00"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "name": "Eggs on toast",
+          "dishId": "eggs-on-toast",
+          "desc": "Eggs cooked however you'd like, toasted focaccia, salad greens.",
+          "price": 14.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-gluten",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Green eggs & ham",
+          "dishId": "green-eggs-ham",
+          "desc": "House made bagel, poached eggs, grilled manuka smoked ham, slightly spicy spinach mascarpone sauce.",
+          "price": 25.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Benedict",
+          "dishId": "benedict",
+          "desc": "Manuka smoked middle bacon, poached eggs, toasted focaccia, hollandaise.",
+          "price": 25.0,
+          "tags": [
+            "gf-option",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Montreal",
+          "dishId": "montreal",
+          "desc": "Hot smoked salmon, poached eggs, toasted focaccia, hollandaise.",
+          "price": 30.0,
+          "tags": [
+            "gf-option",
+            "contains-fish",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Florentine",
+          "dishId": "florentine",
+          "desc": "Sauteed baby spinach, poached eggs, toasted focaccia, hollandaise.",
+          "price": 25.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Lunch",
+      "sectionId": "lunch",
+      "note": "Available until 2pm.",
+      "served": {
+        "mon": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "tue": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "wed": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "thu": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "fri": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sat": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sun": [
+          [
+            null,
+            "14:00"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "name": "Crispy pork belly",
+          "dishId": "crispy-pork-belly",
+          "desc": "Aromatic caramel sauce, sticky rice, spicy nahm jim slaw.",
+          "price": 29.0,
+          "tags": [
+            "df"
+          ]
+        },
+        {
+          "name": "Pan fried fish",
+          "dishId": "pan-fried-fish",
+          "desc": "Warehou, yuzu caper mayo, green beans, capsicum, avocado, ponzu sesame dressing.",
+          "price": 26.0,
+          "tags": [
+            "gf-option",
+            "df-option",
+            "contains-fish",
+            "contains-egg",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Malaysian fish curry",
+          "dishId": "malaysian-fish-curry",
+          "desc": "Aromatic spiced curry, tomato, chilli, potato, coriander, jasmine rice.",
+          "price": 28.0,
+          "tags": [
+            "gf",
+            "contains-fish"
+          ]
+        },
+        {
+          "name": "Open steak sandwich",
+          "dishId": "open-steak-sandwich",
+          "desc": "Seared 250g sirloin, iceberg lettuce, tomato, red onion, gherkin, bearnaise sauce, hand cut chips.",
+          "price": 32.0,
+          "tags": [
+            "gf-option",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken & avo burger",
+          "dishId": "chicken-avo-burger",
+          "desc": "Crispy chicken, avocado, rainbow slaw, pickled red onion, relish, hand cut chips.",
+          "price": 28.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Gnocchi",
+          "dishId": "gnocchi",
+          "desc": "Hand made potato gnocchi, pomodoro sauce, rocket, parmesan.",
+          "price": 23.0,
+          "tags": [
+            "v",
+            "vg-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Soup of the day",
+          "dishId": "soup-of-the-day",
+          "desc": "Ask the team for today's flavour. Add toasted focaccia +$1.50.",
+          "price": 12.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Go on, have…",
+      "sectionId": "go-on-have",
+      "note": "Available until 2pm.",
+      "served": {
+        "mon": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "tue": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "wed": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "thu": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "fri": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sat": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sun": [
+          [
+            null,
+            "14:00"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "name": "Twice cooked hand cut chips or shoestrings",
+          "dishId": "twice-cooked-hand-cut-chips-or-shoestrings",
+          "desc": "Tossed with garlic butter, served with our tangy paprika aioli.",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "vg-option",
+            "contains-dairy",
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "For the kids",
+      "sectionId": "for-the-kids",
+      "note": "Available until 2pm.",
+      "served": {
+        "mon": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "tue": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "wed": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "thu": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "fri": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sat": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sun": [
+          [
+            null,
+            "14:00"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "name": "Chicken nuggets, fries",
+          "dishId": "chicken-nuggets-fries",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Crumbed fish, fries",
+          "dishId": "crumbed-fish-fries",
+          "price": 12.0,
+          "tags": [
+            "contains-fish",
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Extras",
+      "sectionId": "extras",
+      "note": "To add to a full meal or cabinet item. Available until 2pm.",
+      "served": {
+        "mon": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "tue": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "wed": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "thu": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "fri": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sat": [
+          [
+            null,
+            "14:00"
+          ]
+        ],
+        "sun": [
+          [
+            null,
+            "14:00"
+          ]
+        ]
+      },
+      "items": [
+        {
+          "name": "Hot smoked salmon",
+          "dishId": "hot-smoked-salmon",
+          "price": 13.0,
+          "tags": [
+            "contains-fish"
+          ]
+        },
+        {
+          "name": "Bacon, mushrooms, avocado, or crispy potatoes",
+          "dishId": "bacon-mushrooms-avocado-or-crispy-potatoes",
+          "price": 7.0,
+          "tags": []
+        },
+        {
+          "name": "Grilled tomato or sauteed spinach",
+          "dishId": "grilled-tomato-or-sauteed-spinach",
+          "price": 6.0,
+          "tags": []
+        },
+        {
+          "name": "Gluten free toast",
+          "dishId": "gluten-free-toast",
+          "price": 2.0,
+          "tags": []
+        },
+        {
+          "name": "Egg",
+          "dishId": "egg",
+          "price": 3.0,
+          "tags": [
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Hollandaise",
+          "dishId": "hollandaise",
+          "price": 4.0,
+          "tags": [
+            "contains-egg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Friday night snacks",
+      "sectionId": "friday-night-snacks",
+      "note": "Friday from 5pm only.",
+      "served": {
+        "mon": [],
+        "tue": [],
+        "wed": [],
+        "thu": [],
+        "fri": [
+          [
+            "17:00",
+            null
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      },
+      "items": [
+        {
+          "name": "Warmed olives",
+          "dishId": "warmed-olives",
+          "price": 11.0,
+          "tags": [
+            "vg",
+            "gf"
+          ]
+        },
+        {
+          "name": "Fried chicken",
+          "dishId": "fried-chicken",
+          "desc": "Sweet & sour tamarind, gochujang mayo. Printed as one line with the cauliflower: “Fried chicken OR cauliflower $18 / $16”.",
+          "price": 18.0,
+          "tags": [
+            "df",
+            "gf-option",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Fried cauliflower",
+          "dishId": "fried-cauliflower",
+          "desc": "Sweet & sour tamarind, gochujang mayo. Printed as one line with the fried chicken: “Fried chicken OR cauliflower $18 / $16”.",
+          "price": 16.0,
+          "tags": [
+            "df",
+            "gf-option",
+            "contains-egg"
+          ]
+        },
+        {
+          "name": "Hand cut or shoestring chips",
+          "dishId": "hand-cut-or-shoestring-chips",
+          "price": 12.0,
+          "tags": [
+            "v",
+            "vg-option"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Pizzas",
+      "sectionId": "pizzas",
+      "note": "All with a tomato sauce base and mozzarella. Friday from 5pm only.",
+      "served": {
+        "mon": [],
+        "tue": [],
+        "wed": [],
+        "thu": [],
+        "fri": [
+          [
+            "17:00",
+            null
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      },
+      "items": [
+        {
+          "name": "Meaty boy",
+          "dishId": "meaty-boy",
+          "desc": "Bacon, chorizo, smoked chicken, onion jam.",
+          "price": 26.0,
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Pepperoni & the sundried syndicate",
+          "dishId": "pepperoni-the-sundried-syndicate",
+          "desc": "Pepperoni, red onion, olives, sundried tomatoes.",
+          "price": 24.0,
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Hei Hei Hawaiian",
+          "dishId": "hei-hei-hawaiian",
+          "desc": "Smoked chicken, pineapple, hot honey, green capsicum.",
+          "price": 25.0,
+          "tags": [
+            "gf-option",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Plants are neat",
+          "dishId": "plants-are-neat",
+          "desc": "Roasted capsicum, olives, mushroom, onion, spinach, cream cheese.",
+          "price": 23.0,
+          "tags": [
+            "v",
+            "gf-option",
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Fancy extra toppings?",
+      "sectionId": "fancy-extra-toppings",
+      "note": "Added to a Friday night pizza. Friday from 5pm only.",
+      "served": {
+        "mon": [],
+        "tue": [],
+        "wed": [],
+        "thu": [],
+        "fri": [
+          [
+            "17:00",
+            null
+          ]
+        ],
+        "sat": [],
+        "sun": []
+      },
+      "items": [
+        {
+          "name": "Smoked chicken, bacon or chorizo",
+          "dishId": "smoked-chicken-bacon-or-chorizo",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Olives, pickled jalapenos or hot honey",
+          "dishId": "olives-pickled-jalapenos-or-hot-honey",
+          "price": 3.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Smoothies",
+      "sectionId": "smoothies",
+      "note": "All vegan.",
+      "items": [
+        {
+          "name": "Nadia's dream",
+          "dishId": "nadia-s-dream",
+          "desc": "Strawberry, peach, apple, passionfruit.",
+          "price": 9.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Andrea's ensemble",
+          "dishId": "andrea-s-ensemble",
+          "desc": "Boysenberry, apricot, banana.",
+          "price": 9.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Nectarfillia",
+          "dishId": "nectarfillia",
+          "desc": "Blueberries, apricot, banana.",
+          "price": 9.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Mango tango",
+          "dishId": "mango-tango",
+          "desc": "Mango, strawberry, banana.",
+          "price": 9.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Jumping jaguar",
+          "dishId": "jumping-jaguar",
+          "desc": "Mango, passionfruit, orange.",
+          "price": 9.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "India incorporated",
+          "dishId": "india-incorporated",
+          "desc": "Mixed berries, banana, passionfruit.",
+          "price": 9.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Sejuicer",
+          "dishId": "sejuicer",
+          "desc": "Pineapple, strawberry, passionfruit, peach.",
+          "price": 9.5,
+          "tags": [
+            "vg"
+          ]
+        },
+        {
+          "name": "Spring passion",
+          "dishId": "spring-passion",
+          "desc": "Banana, peach, passionfruit.",
+          "price": 9.5,
+          "tags": [
+            "vg"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Add an extra kick of…",
+      "sectionId": "add-an-extra-kick-of",
+      "note": "Added to any smoothie.",
+      "items": [
+        {
+          "name": "Spirulina",
+          "dishId": "spirulina",
+          "price": 2.0,
+          "tags": []
+        },
+        {
+          "name": "Protein powder",
+          "dishId": "protein-powder",
+          "price": 2.0,
+          "tags": []
+        },
+        {
+          "name": "Açai",
+          "dishId": "a-ai",
+          "price": 2.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Iced",
+      "sectionId": "iced",
+      "items": [
+        {
+          "name": "Coffee, chocolate or mocha",
+          "dishId": "coffee-chocolate-or-mocha",
+          "desc": "With ice cream and cream.",
+          "price": 9.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Fresh juices",
+      "sectionId": "fresh-juices",
+      "items": [
+        {
+          "name": "Vege zing",
+          "dishId": "vege-zing",
+          "desc": "Carrot, apple, ginger, lemon.",
+          "price": 9.5,
+          "tags": []
+        },
+        {
+          "name": "Beet it",
+          "dishId": "beet-it",
+          "desc": "Apple, beetroot.",
+          "price": 9.5,
+          "tags": []
+        },
+        {
+          "name": "Crapple",
+          "dishId": "crapple",
+          "desc": "Carrot, apple.",
+          "price": 9.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Bottled softs",
+      "sectionId": "bottled-softs",
+      "items": [
+        {
+          "name": "Benjer juice range",
+          "dishId": "benjer-juice-range",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Charlies OJ",
+          "dishId": "charlies-oj",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Foxton fizz",
+          "dishId": "foxton-fizz",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Bunderburg",
+          "dishId": "bunderburg",
+          "price": 5.0,
+          "tags": []
+        },
+        {
+          "name": "Coke Zero",
+          "dishId": "coke-zero",
+          "price": 5.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Wine",
+      "sectionId": "wine",
+      "note": "125ml glass. Please enquire about bottle prices. Happy Hour Fri 4pm–6pm: $1 off wine by the glass.",
+      "items": [
+        {
+          "name": "Tempus Two Prosecco",
+          "dishId": "tempus-two-prosecco",
+          "desc": "Australia. 200ml.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Veuve de Vernay Brut",
+          "dishId": "veuve-de-vernay-brut",
+          "desc": "France. 200ml.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Pretty Paddock Sauvignon Blanc",
+          "dishId": "pretty-paddock-sauvignon-blanc",
+          "desc": "Marlborough.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Latitude 41 Chardonnay",
+          "dishId": "latitude-41-chardonnay",
+          "desc": "Nelson.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Maude Pinot Gris",
+          "dishId": "maude-pinot-gris",
+          "desc": "Central Otago.",
+          "price": 14.0,
+          "tags": []
+        },
+        {
+          "name": "Barton and Guestier Rosé",
+          "dishId": "barton-and-guestier-ros",
+          "desc": "Provence, France.",
+          "price": 13.0,
+          "tags": []
+        },
+        {
+          "name": "Casillero del Diablo Merlot",
+          "dishId": "casillero-del-diablo-merlot",
+          "desc": "Maypo Valley, Chile.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Richland Shiraz",
+          "dishId": "richland-shiraz",
+          "desc": "Riverina, Australia.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Hoppers Crossing Pinot Noir",
+          "dishId": "hoppers-crossing-pinot-noir",
+          "desc": "Central Otago.",
+          "price": 12.0,
+          "tags": []
+        },
+        {
+          "name": "Pegasus Bay Gewürztraminer 2021",
+          "dishId": "pegasus-bay-gew-rztraminer-2021",
+          "desc": "Waipara Valley. Bottle only.",
+          "price": 85.0,
+          "tags": []
+        },
+        {
+          "name": "Luna Blue Rock Pinot Noir",
+          "dishId": "luna-blue-rock-pinot-noir",
+          "desc": "Martinborough. Bottle only.",
+          "price": 75.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Cocktails",
+      "sectionId": "cocktails",
+      "note": "Printed on the food menu as “Brunch cocktails”. Happy Hour Fri 4pm–6pm: $1 off cocktails.",
+      "items": [
+        {
+          "name": "Simmer Espresso Martini",
+          "dishId": "simmer-espresso-martini",
+          "desc": "Havana Especial Rum, Kahlua, Havana 5-star Coffee.",
+          "price": 18.0,
+          "tags": []
+        },
+        {
+          "name": "Aperol Spritz",
+          "dishId": "aperol-spritz",
+          "price": 15.0,
+          "tags": []
+        },
+        {
+          "name": "Mimosa",
+          "dishId": "mimosa",
+          "price": 8.0,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "Beer",
+      "sectionId": "beer",
+      "note": "Happy Hour Fri 4pm–6pm: $1 off beer. Simmer prides itself on being responsible hosts and we will serve alcohol responsibly. Free tap water, and low/no alcohol drinks and food to purchase are available at all times. Please don't be offended if we request to see some ID.",
+      "items": [
+        {
+          "name": "Panhead Super Charger APA",
+          "dishId": "panhead-super-charger-apa",
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Parrotdog Birdseye Hazy IPA",
+          "dishId": "parrotdog-birdseye-hazy-ipa",
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Garage Project Beer",
+          "dishId": "garage-project-beer",
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Parrotdog Black Stout",
+          "dishId": "parrotdog-black-stout",
+          "price": 10.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tiger",
+          "dishId": "tiger",
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Corona",
+          "dishId": "corona",
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Steinlager Light 2.5%",
+          "dishId": "steinlager-light-2-5",
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Garage Project Tiny <0.5%",
+          "dishId": "garage-project-tiny-0-5",
+          "price": 9.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Heineken 00",
+          "dishId": "heineken-00",
+          "price": 9.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        }
+      ]
+    },
+    {
+      "section": "Cabinet",
+      "sectionId": "cabinet",
+      "note": "Handwritten cabinet tags. “No added gluten” is the venue's own wording and is a weaker claim than gluten free.",
+      "items": [
+        {
+          "name": "Coffee eclair",
+          "dishId": "coffee-eclair",
+          "price": 7.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chocolate eclair",
+          "dishId": "chocolate-eclair",
+          "price": 7.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chocolate cake",
+          "dishId": "chocolate-cake",
+          "price": 7.5,
+          "tags": [
+            "vg",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Brownie",
+          "dishId": "brownie",
+          "desc": "No added gluten.",
+          "price": 5.5,
+          "tags": []
+        },
+        {
+          "name": "Spiced ginger love muffin",
+          "dishId": "spiced-ginger-love-muffin",
+          "desc": "No added gluten. Dairy free.",
+          "price": 7.0,
+          "tags": [
+            "df"
+          ]
+        },
+        {
+          "name": "Boysenberry tart",
+          "dishId": "boysenberry-tart",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Passionfruit & lime tart",
+          "dishId": "passionfruit-lime-tart",
+          "price": 7.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Caramel slice",
+          "dishId": "caramel-slice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "The handwritten tag reads “$55” with no decimal point, unlike the “$7·50” tags beside it. $5.50 is the obvious intent but is not what is written, so nothing is recorded.",
+              "since": "2026-09-07"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Citrus slice",
+          "dishId": "citrus-slice",
+          "price": null,
+          "needs": [
+            {
+              "what": "price",
+              "note": "The handwritten tag reads “$55” with no decimal point, the same as the caramel slice beside it. Not transcribed rather than guessed.",
+              "since": "2026-09-07"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Bacon bagel",
+          "dishId": "bacon-bagel",
+          "price": 10.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken bagel",
+          "dishId": "chicken-bagel",
+          "price": 10.8,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Corn & potato fritter",
+          "dishId": "corn-potato-fritter",
+          "price": 7.8,
+          "tags": []
+        },
+        {
+          "name": "Potato top beef pie",
+          "dishId": "potato-top-beef-pie",
+          "price": 8.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Thai chicken filo",
+          "dishId": "thai-chicken-filo",
+          "price": 11.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken Cabone",
+          "dishId": "chicken-cabone",
+          "desc": "With spinach, feta, olive, red onion and cheese.",
+          "price": 14.5,
+          "needs": [
+            {
+              "what": "name",
+              "note": "The handwritten tag reads “Cabone”. The item in the cabinet is a calzone, so this is very likely a misspelling, but the tag is transcribed as written rather than corrected.",
+              "since": "2026-09-07"
+            }
+          ],
+          "tags": [
+            "contains-dairy",
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Breakfast bite",
+          "dishId": "breakfast-bite",
+          "desc": "No added gluten.",
+          "price": 7.8,
+          "tags": []
+        },
+        {
+          "name": "Vege bite",
+          "dishId": "vege-bite",
+          "desc": "No added gluten.",
+          "price": 7.8,
+          "tags": []
+        },
+        {
+          "name": "Bacon panini",
+          "dishId": "bacon-panini",
+          "price": 12.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Chicken panini",
+          "dishId": "chicken-panini",
+          "price": 12.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Sausage roll",
+          "dishId": "sausage-roll",
+          "price": 11.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Vege pizza",
+          "dishId": "vege-pizza",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Bacon pizza",
+          "dishId": "bacon-pizza",
+          "price": 14.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Pumpkin, beetroot, chickpea & feta salad",
+          "dishId": "pumpkin-beetroot-chickpea-feta-salad",
+          "desc": "No added gluten.",
+          "price": 9.5,
+          "tags": [
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Roast vege salad",
+          "dishId": "roast-vege-salad",
+          "desc": "No added gluten.",
+          "price": 9.5,
+          "tags": []
+        }
+      ]
+    },
+    {
+      "section": "At the counter",
+      "sectionId": "at-the-counter",
+      "items": [
+        {
+          "name": "Donut",
+          "dishId": "donut",
+          "price": 4.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Blueberry muffin",
+          "dishId": "blueberry-muffin",
+          "price": 6.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Date scone",
+          "dishId": "date-scone",
+          "price": 6.0,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Cinnamon pinwheel",
+          "dishId": "cinnamon-pinwheel",
+          "price": 6.5,
+          "tags": [
+            "contains-gluten"
+          ]
+        },
+        {
+          "name": "Tomato, spinach, red onion & cheese muffin",
+          "dishId": "tomato-spinach-red-onion-cheese-muffin",
+          "price": 6.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        },
+        {
+          "name": "Cheese scone",
+          "dishId": "cheese-scone",
+          "price": 6.0,
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
+        }
+      ]
+    }
+  ]
 }
