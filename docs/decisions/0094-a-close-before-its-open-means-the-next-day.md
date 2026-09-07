@@ -4,6 +4,18 @@
 `0006-hours-model-and-timezone.md` (which itself is amended by `0043`); 0006
 otherwise stands.
 
+**Amended by `0098-the-verdict-reads-the-wall-clock-the-countdown-counts-real-time.md`
+(2026-09-08).** Two lines below are no longer accurate and are left standing
+rather than rewritten. *Consequences*: **"counts down correctly to its real
+close"** was true only away from a daylight-saving transition — on one it was
+out by up to an hour in April and showed no countdown at all in September; the
+countdown is now measured between absolute instants. *Known and not built*:
+**"No DST coverage. Every fixture is NZST June."** was closed on 2026-09-07 by
+roadmap `190/030` (`tests/hours-dst.test.js`, and the DST half of
+`midnight_check.mjs`). Everything else here — the wrap, the week boundary, the
+`served` dialect, the `validate.py` rules — stands unchanged, and the
+open/closed verdict is still decided exactly as this record left it.
+
 **Date:** 2026-09-07
 
 ## Context

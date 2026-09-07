@@ -13,6 +13,24 @@
 //  2. The clock read (nowIn / makeClock) is the only impure part;
 //     openStatus/groupWeek are pure functions of (hours, now) so they're
 //     fully unit-testable.
+//
+// And a third, added 2026-09-08 (ADR 0098, owner-ruled): THE VERDICT READS THE
+// WALL CLOCK; THE COUNTDOWN COUNTS REAL TIME. "We shut at 3am" is a wall-clock
+// promise, so open/closed is still decided in minutes-of-week exactly as before.
+// But "Closes in 30 min" is a promise about the reader's next half hour, and on
+// the two nights a year the wall clock repeats or skips an hour those are
+// different quantities. `now` therefore carries the INSTANT it was read at
+// (`epochMs`) and the zone it was read in (`tz`) alongside the wall clock, and
+// the countdown is the real minutes between two instants. Purity is untouched:
+// the instant is an INPUT — nothing here calls `Date.now()`.
+//
+// A `now` written by hand as `{dow, minutes}` (which is how tests/hours.test.js
+// drives the pure arithmetic) still works and falls back to wall-clock minutes.
+// That is not a silent degradation: a bare wall clock genuinely cannot tell the
+// two 02:30s apart, so wall minutes is the only answer available and is right
+// except inside a transition. Every production `now` comes from `nowIn` or
+// `makeClock().at()`, which always carry both — pinned by a unit test, because
+// the way this rots is somebody reshaping the clock read, not a caller.
 
 import { HOME_TIMEZONE } from "./home.js";
 
@@ -58,6 +76,11 @@ export function formatTime(min) {
 // One formatter per zone, built once. Constructing an Intl.DateTimeFormat is
 // the expensive part, and a render reads the clock for every venue on screen —
 // nearly all of which share a zone.
+//
+// The cache entry carries the zone that is ACTUALLY in force, not the one asked
+// for: a malformed zone falls back to home below, and the countdown re-reads the
+// clock a second time to find an instant. Handing it the requested name would
+// make the two reads disagree for exactly the record already known to be broken.
 const zoneFormatters = new Map();
 
 function zoneFormatter(tz) {
@@ -65,13 +88,16 @@ function zoneFormatter(tz) {
   if (!f) {
     const opts = { weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" };
     try {
-      f = new Intl.DateTimeFormat("en-NZ", { ...opts, timeZone: tz });
+      f = { format: new Intl.DateTimeFormat("en-NZ", { ...opts, timeZone: tz }), zone: tz };
     } catch {
       // A malformed zone in the data would otherwise throw mid-render and blank
       // the page. Fall back to home rather than to the *viewer's* clock: home is
       // wrong for that one venue in a knowable way, where the device clock is
       // wrong differently for every reader and looks right to whoever is testing.
-      f = new Intl.DateTimeFormat("en-NZ", { ...opts, timeZone: HOME_TIMEZONE });
+      f = {
+        format: new Intl.DateTimeFormat("en-NZ", { ...opts, timeZone: HOME_TIMEZONE }),
+        zone: HOME_TIMEZONE,
+      };
     }
     zoneFormatters.set(tz, f);
   }
@@ -79,15 +105,27 @@ function zoneFormatter(tz) {
 }
 
 /**
- * Current moment in `tz` as { dow: 0-6 (Sun=0), minutes: 0-1439 }.
+ * Current moment in `tz` as
+ * `{ dow: 0-6 (Sun=0), minutes: 0-1439, epochMs, tz }`.
  * The single impure function here — pass its result to openStatus().
+ *
+ * `epochMs` and `tz` are the INSTANT this wall clock was read at and the zone it
+ * was read in (the resolved one — see zoneFormatter). They carry no meaning for
+ * the open/closed verdict, which is wall-clock by ruling; they are what lets the
+ * countdown measure real time across a daylight-saving transition (ADR 0098).
  */
 export function nowIn(tz = HOME_TIMEZONE, date = new Date()) {
-  const parts = zoneFormatter(tz).formatToParts(date);
+  const fmt = zoneFormatter(tz);
+  const parts = fmt.format.formatToParts(date);
   const get = (t) => parts.find((p) => p.type === t)?.value;
   const dow = DAYS.indexOf((get("weekday") || "").slice(0, 3).toLowerCase());
   const minutes = Number(get("hour")) * 60 + Number(get("minute"));
-  return { dow, minutes };
+  // `Number(date)`, not `date.getTime()`: tests hand this a duck-typed Date
+  // whose prototype is Date's but which has no internal slot, so `getTime`
+  // exists and throws while `valueOf` answers. A clock read must not be the
+  // thing that blows up a render.
+  const epochMs = Number(date);
+  return { dow, minutes, epochMs: Number.isFinite(epochMs) ? epochMs : null, tz: fmt.zone };
 }
 
 /**
@@ -173,16 +211,114 @@ function containing(segs, at) {
   return null;
 }
 
+// ————————————————— The countdown, measured in REAL minutes (ADR 0098) ————————
+//
+// Everything above works in minutes-of-week, which is a WALL CLOCK. On the two
+// nights a year a zone changes offset that stops being a measure of time:
+//   • APRIL (NZ, fall back). 02:00–02:59 happens twice. At 02:30 NZDT a 03:00
+//     close is NINETY real minutes away and wall arithmetic says thirty.
+//   • SEPTEMBER (NZ, spring forward). 02:00–02:59 never happens. At 01:59 NZST
+//     a 03:00 close is ONE real minute away and wall arithmetic says sixty-one.
+// Both are the same defect and this is the one fix for both.
+//
+// THE INVARIANT WORTH STATING: the number in "Closes in N min" is the real
+// minutes until this engine's own verdict changes. Before, on a transition
+// night, the badge could say "31 min" and read "Closed" one minute later.
+
+const MS_MIN = 60_000;
+const HALF_WEEK = WEEK / 2;
+
+/** Signed shortest distance between two minutes-of-week, in (-5040, 5040]. */
+function signedWeekDelta(d) {
+  return ((((d % WEEK) + WEEK + HALF_WEEK) % WEEK) - HALF_WEEK);
+}
+
+/** Minutes-of-week the wall clock in `zone` reads at instant `ms`. */
+function wallOfWeek(zone, ms) {
+  const t = nowIn(zone, new Date(ms));
+  return t.dow * 1440 + t.minutes;
+}
+
 /**
- * Live status for a venue's hours at moment `now` ({dow, minutes}).
- * Returns { state, label, detail }:
- *   state: 'open' | 'closing-soon' | 'closed' | 'opening-soon' | 'unknown'
+ * The first instant at or after `fromMs` whose wall clock in `zone` has reached
+ * the wall clock `wallDelta` minutes ahead of the one `fromMs` reads.
+ *
+ * TWO PROBES, NOT A SEARCH. Adding `wallDelta` to the instant is right whenever
+ * the offset is the same at both ends; when it is not, the miss IS the offset
+ * change, so correcting by it lands on the answer. A third probe would only
+ * repeat the second. This is why the whole thing costs one extra Intl read on
+ * an ordinary day and two on a transition night, rather than a scan.
+ *
+ * WHEN THE TARGET DOES NOT EXIST (a close inside the deleted hour) the two
+ * probes disagree in both directions and neither converges. The honest answer
+ * is then the transition itself — the instant at which this engine's own
+ * wall-clock verdict flips — so the bracket the probes straddle is bisected for
+ * it. Saying "31 min" and then "Closed" a minute later is the LATE direction,
+ * which ADR 0094 named as the serious one.
+ */
+function instantAhead(zone, fromMs, wallHere, wallDelta) {
+  const target = (wallHere + wallDelta) % WEEK;
+  const first = fromMs + wallDelta * MS_MIN;
+  const miss = signedWeekDelta(target - wallOfWeek(zone, first));
+  if (miss === 0) return first;
+  const second = first + miss * MS_MIN;
+  if (signedWeekDelta(target - wallOfWeek(zone, second)) === 0) return second;
+
+  // The gap. Within the bracket the wall clock only ever jumps FORWARD, so
+  // "how much wall clock has elapsed since lo" is monotonic there and can be
+  // bisected — which it cannot be across a fall-back, hence the probes above.
+  let lo = Math.min(first, second);
+  let hi = Math.max(first, second);
+  const base = wallOfWeek(zone, lo);
+  const want = (target - base + WEEK) % WEEK;
+  const elapsed = (ms) => (wallOfWeek(zone, ms) - base + WEEK) % WEEK;
+  if (elapsed(hi) < want) return hi;
+  while (hi - lo > MS_MIN) {
+    const mid = lo + Math.round((hi - lo) / 2 / MS_MIN) * MS_MIN;
+    if (mid <= lo || mid >= hi) break;
+    if (elapsed(mid) >= want) hi = mid;
+    else lo = mid;
+  }
+  return hi;
+}
+
+/**
+ * `wallDelta` wall-clock minutes ahead, re-measured as REAL minutes.
+ *
+ * Falls back to the wall-clock number when `now` carries no instant (a
+ * hand-written `{dow, minutes}` — see the module header) and when the answer
+ * comes back non-positive or non-finite, which is not a countdown and must
+ * never reach a label: ADR 0094 §2 already shipped "Closes in -1315 min" once.
+ */
+function realMinutes(now, wallDelta) {
+  if (!now || now.epochMs == null || !now.tz) return wallDelta;
+  const ms = instantAhead(now.tz, now.epochMs, now.dow * 1440 + now.minutes, wallDelta);
+  const real = Math.round((ms - now.epochMs) / MS_MIN);
+  return Number.isFinite(real) && real > 0 ? real : wallDelta;
+}
+
+/**
+ * Live status for a venue's hours at moment `now`.
+ *
+ * `now` is `{ dow, minutes }` — and, from `nowIn`/`makeClock().at()`, also
+ * `{ epochMs, tz }`, which is what makes the countdown real minutes rather than
+ * wall-clock minutes (ADR 0098). The open/closed VERDICT reads the wall clock
+ * either way.
+ *
+ * Returns { state, label, detail, minutes }:
+ *   state:   'open' | 'closing-soon' | 'closed' | 'opening-soon' | 'unknown'
+ *   minutes: real minutes until that state changes — until the close when open,
+ *            until the next opening when closed — or null when there is nothing
+ *            to count to (no hours, an open-ended close, a week with no
+ *            segments). It is the number `label` renders when it renders one,
+ *            exposed because the 60-minute gate means the interesting values are
+ *            the ones the badge does NOT show.
  * `unknown` = no hours data (render no badge). Pure.
  */
 export function openStatus(hours, now) {
-  if (!hours || typeof hours !== "object") return { state: "unknown", label: "", detail: "" };
+  if (!hours || typeof hours !== "object") return { state: "unknown", label: "", detail: "", minutes: null };
   const segs = segments(hours);
-  if (!segs.length) return { state: "closed", label: "Closed", detail: "" };
+  if (!segs.length) return { state: "closed", label: "Closed", detail: "", minutes: null };
 
   const at = now.dow * 1440 + now.minutes;
 
@@ -190,19 +326,32 @@ export function openStatus(hours, now) {
   const found = containing(segs, at);
   if (found) {
     const current = found.seg;
-    if (current.closeMin == null) return { state: "open", label: "Open", detail: "" };
-    const left = current.end - found.at;
+    if (current.closeMin == null) return { state: "open", label: "Open", detail: "", minutes: null };
+    // Wall-clock minutes to the close, then re-measured as real ones. The
+    // 60-minute gate reads the REAL number, so "closing soon" means the last
+    // hour of the reader's life rather than the last hour of the clock face —
+    // which is also what stops April running the whole 60→1 sequence twice.
+    const left = realMinutes(now, current.end - found.at);
     if (left <= CLOSING_SOON) {
       // One phrase, not two. The card renders `label · detail`, so a "Closing
       // soon" label beside a "closes in 12 min" detail said the same thing
       // twice and spent a line doing it (owner, 2026-08-16). The *number* is
       // the useful half; "soon" is already carried by the amber dot.
-      return { state: "closing-soon", label: `Closes in ${left} min`, detail: "" };
+      return { state: "closing-soon", label: `Closes in ${left} min`, detail: "", minutes: left };
     }
-    return { state: "open", label: "Open", detail: `until ${formatTime(current.closeMin)}` };
+    return {
+      state: "open",
+      label: "Open",
+      detail: `until ${formatTime(current.closeMin)}`,
+      minutes: left,
+    };
   }
 
   // Otherwise find the next opening, wrapping the week.
+  //
+  // The SEARCH stays on the wall clock: it is picking which stated opening comes
+  // next, and an offset shift is an hour against gaps that are hours or days.
+  // Only the chosen one's distance is re-measured.
   let best = Infinity;
   let nextSeg = null;
   for (const s of segs) {
@@ -212,9 +361,10 @@ export function openStatus(hours, now) {
       nextSeg = s;
     }
   }
-  if (!nextSeg) return { state: "closed", label: "Closed", detail: "" };
+  if (!nextSeg) return { state: "closed", label: "Closed", detail: "", minutes: null };
 
   const opensToday = nextSeg.dow === now.dow && nextSeg.start > at;
+  best = realMinutes(now, best);
 
   // Opening within the hour reads as ONE phrase — "Opens in 14 min" — for the
   // same reason as closing-soon above: "Opens soon · opens in 14 min" was the
@@ -222,12 +372,12 @@ export function openStatus(hours, now) {
   // label and detail genuinely differ ("Closed" is the state, "opens Mon
   // 9:30am" is the fact), so both are kept.
   if (best <= CLOSING_SOON) {
-    return { state: "opening-soon", label: `Opens in ${best} min`, detail: "" };
+    return { state: "opening-soon", label: `Opens in ${best} min`, detail: "", minutes: best };
   }
   const when = opensToday
     ? `opens ${formatTime(nextSeg.openMin)}` // e.g. after the lunch–dinner gap
     : `opens ${DAY_LABEL[DAYS[nextSeg.dow]]} ${formatTime(nextSeg.openMin)}`;
-  return { state: "closed", label: "Closed", detail: when };
+  return { state: "closed", label: "Closed", detail: when, minutes: best };
 }
 
 /**

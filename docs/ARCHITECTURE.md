@@ -770,13 +770,21 @@ precached payload nothing on any screen can reach (ADR 0047).
   daylight-saving transition** — tested 2026-09-07 across the real New Zealand
   switches in both directions (roadmap 190/030; `tests/hours-dst.test.js` and
   the DST half of `tools/midnight_check.mjs`), which closes the *"No DST
-  coverage"* gap ADR 0094 recorded. Two consequences fall out of wall-clock
-  semantics and are correct rather than defects, but surprise: a **23-hour
-  September Sunday** deletes 02:00–02:59, so a venue closing at 3am shows **no
-  countdown at all** that night — the badge steps from "Open · until 3am"
-  straight to "Closed"; and a **25-hour April Sunday** runs 02:00–02:59 twice,
-  so the same countdown runs twice and **understates the real time remaining by
-  up to an hour on the first pass** (roadmap 190/040). That status also drives
+  coverage"* gap ADR 0094 recorded. **The VERDICT reads the wall clock; the
+  COUNTDOWN counts real time** (ADR 0098, owner-ruled 2026-09-08). "We shut at
+  3am" is a wall-clock promise, so open/closed is decided in minutes-of-week;
+  "Closes in 30 min" is a promise about the reader's next half hour, so it is
+  measured between two instants. A clock reading (`nowIn`, `makeClock().at()`)
+  therefore carries `epochMs` and `tz` beside `{dow, minutes}`, and `openStatus`
+  returns `minutes` — the real minutes until its own verdict changes. This
+  replaced two wall-clock artefacts that were pinned as correct until
+  2026-09-08: a **23-hour September Sunday** deleted 02:00–02:59, so a venue
+  closing at 3am showed **no countdown at all** that night (it now counts
+  01:00–01:59 NZST, which is the real hour before it shuts); and a **25-hour
+  April Sunday** ran the countdown **twice**, understating by up to an hour on
+  the first pass (it now runs once, during the second pass — roadmap 190/040).
+  A close inside the deleted hour counts to the transition that makes it
+  closed, not to a wall clock that never arrives. That status also drives
   the home list ordering (`site/js/ranking.js`). **There is one ranking and no sort
   control** (ADR 0068), in this order:
 

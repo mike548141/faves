@@ -1069,3 +1069,19 @@ deliberation those compact docs omit.
   in the app**. Dish sweep 3 → 0 proposals; option coverage 103/200 → 105/200.
   Seven new breakers, and one **existing** breaker that this change had made
   decorative is repaired in the same commit.
+- [0098](0098-the-verdict-reads-the-wall-clock-the-countdown-counts-real-time.md)
+  — **the verdict reads the wall clock, the countdown counts real time.** Owner
+  overruled (`190/040`) the recommendation to leave April's repeated hour
+  documented. `openStatus` measured everything in minutes-of-week, so on a
+  fall-back night the badge said `Closes in 30 min` with **90 real minutes**
+  left and ran 60→1 twice; on a spring-forward night it showed **no countdown at
+  all**, and a close inside the deleted hour said `31 min` one real minute
+  before reading `Closed` — the LATE direction. The instant now travels **inside
+  `now`** (`{dow, minutes, epochMs, tz}` from `nowIn`/`makeClock().at()`) rather
+  than as a third argument, which makes a mismatched pair of time sources
+  unrepresentable and changes no caller. Verdict and containment stay wall-clock:
+  *"we shut at 3am"* means the clock face. The invariant bought is that **the
+  number comes true** — N minutes later the venue is shut, swept across both
+  transitions. **Five assertions flipped**, each carrying its old expectation in
+  a comment; break-probed (the one-line revert fails exactly 7 tests, all naming
+  a transition, nothing else in the other 1,188).
