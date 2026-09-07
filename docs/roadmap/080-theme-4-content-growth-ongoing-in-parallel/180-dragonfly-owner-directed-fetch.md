@@ -1,5 +1,6 @@
 - [x] 🎯 **Dragonfly, Courtenay Place — owner-directed online fetch**
-      `[S][content]` — 🔒 **CLAIMED 2026-09-07 (session faves-24).**
+      `[S][content]` — ✅ **CLOSED 2026-09-07 (session faves-24); the claim is
+      released.**
       Owner, this session: *"Add Dragonfly restaurant in courtney place,
       Wellington to the list of restaurants. Gather all the info you can
       online."* That is the direction the menu-content rule requires — content

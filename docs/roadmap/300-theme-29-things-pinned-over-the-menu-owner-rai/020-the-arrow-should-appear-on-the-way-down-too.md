@@ -1,6 +1,6 @@
 - [x] 🎯 **The back-to-top arrow should appear on the way DOWN too — and still
-      not sit on a price** `[M][js][css]` — 🔒 **CLAIMED 2026-09-07 (session
-      faves-24).** Owner, this session: *"On the restaurant page. The arrow to
+      not sit on a price** `[M][js][css]` — ✅ **CLOSED 2026-09-07 (session
+      faves-24); the claim is released.** Owner, this session: *"On the restaurant page. The arrow to
       scroll to the top of the page should appear the moment I start to scroll
       down the page, currently it does not appear until I start to scroll back
       up after scrolling down."*
