@@ -78,17 +78,26 @@ const MIME = {
  * browser doing exactly what it does in life — one HTTP GET of one venue JSON —
  * and only the bytes are a fixture. Everything else on the tree is the real
  * working tree, which is what the second line of the summary reports.
+ *
+ * An overlay entry is a string, or `{ body, type }` where the CONTENT TYPE is
+ * itself the fixture. The second form exists because Cloudflare Pages answers a
+ * path it does not have with `index.html` and a **200** — a `.js` URL served as
+ * `text/html` — and that response is the one the install guard (ADR 0100) has to
+ * refuse. A local static server cannot produce it by serving a file, because
+ * the type is derived from the name; only naming the type can stage it.
  */
 export function startServer(port, siteDir, overlay = null) {
   const server = createServer(async (req, res) => {
     const path = decodeURIComponent(new URL(req.url, "http://x").pathname);
     const stub = overlay?.get(path);
     if (stub !== undefined) {
+      const { body, type } =
+        typeof stub === "string" ? { body: stub, type: null } : stub;
       res.writeHead(200, {
-        "Content-Type": MIME[extname(path)] || "application/octet-stream",
+        "Content-Type": type || MIME[extname(path)] || "application/octet-stream",
         "Cache-Control": "no-store, must-revalidate",
       });
-      res.end(stub);
+      res.end(body);
       return;
     }
     let file = normalize(join(siteDir, path));

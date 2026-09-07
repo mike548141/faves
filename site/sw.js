@@ -11,7 +11,7 @@
 //   - Change both? bump both.
 // Any byte change to *this file* is what makes the browser re-run the SW update
 // cycle at all; the version constants then decide which cache(s) get rebuilt.
-const SHELL_VERSION = "2026-09-08.2";
+const SHELL_VERSION = "2026-09-08.3";
 const DATA_VERSION = "2026-09-08.1";
 
 const SHELL_CACHE = `faves-shell-${SHELL_VERSION}`;
@@ -153,6 +153,53 @@ async function fetchClean(url, init) {
   return res.redirected ? new Response(res.body, res) : res;
 }
 
+// 🛑 `res.ok` IS NOT A TRUTHFUL ANSWER ON CLOUDFLARE PAGES (ADR 0100). Pages
+// answers a path it does not have with `index.html` and a **200** — its
+// single-page-app fallback, and not something a plain static file server does.
+// So the install step's `!res.ok → throw` below cannot fire on the input it
+// exists to catch: a shell asset that is simply GONE arrives as a successful
+// response carrying the home page, and gets precached under the missing file's
+// URL. Curl'd against the live site 2026-09-08:
+//
+//     $ curl -sI https://lets-eat.myspot.nz/js/this-file-does-not-exist.js
+//     HTTP/2 200
+//     content-type: text/html; charset=utf-8
+//
+// What Pages does give away is the CONTENT TYPE. A `.js`/`.css`/`.json`/image
+// path answered as `text/html` cannot be the real file — every real one is
+// served with its own type (measured the same day: `js/app.js` →
+// `application/javascript`, `site.webmanifest` → `application/manifest+json`,
+// `favicon.ico` → `image/vnd.microsoft.icon`). The response URL is no help: the
+// fallback is a direct 200, so `res.redirected` is false and `res.url` equals
+// the request URL — see ADR 0100's *Rejected*.
+//
+// 🔑 DELIBERATELY ONE-WAY, and that is the whole design. It refuses ONLY a known
+// non-HTML extension answered as HTML; an unknown extension, a missing header,
+// anything else, passes. A guard that throws on a legitimate response is worse
+// than the decorative one it replaces: install would reject, the new worker
+// would never activate, and every phone would hold the old shell forever with
+// no notice and no way back. Over-refusing here is unrecoverable; under-refusing
+// is what tools/check_precache.py covers before the push.
+const NON_HTML_EXT = /\.(?:js|mjs|css|json|webmanifest|png|jpe?g|webp|svg|ico)$/i;
+
+function servedAsHtmlStandIn(url, contentType) {
+  const path = String(url).split(/[?#]/)[0];
+  if (!NON_HTML_EXT.test(path)) return false;
+  return /^\s*text\/html\b/i.test(String(contentType || ""));
+}
+
+/** Refuse a response that cannot be the file we asked for. */
+function requireAsset(url, res) {
+  if (!res.ok) throw new Error(`SW install: ${url} → ${res.status}`);
+  if (servedAsHtmlStandIn(url, res.headers.get("content-type"))) {
+    throw new Error(
+      `SW install: ${url} → ${res.status} but served as HTML — that path is ` +
+        `missing from the deploy`
+    );
+  }
+  return res;
+}
+
 // Building a versioned cache must not read the browser's own HTTP cache.
 // `fetch()` defaults to `cache: "default"`, and Cloudflare Pages serves every
 // non-HTML asset with `cache-control: public, max-age=14400` (four hours; only
@@ -199,17 +246,19 @@ self.addEventListener("install", (event) => {
         // first — but keep addAll's response.ok guard by hand: a 404/500 during
         // a deploy race must reject the install, not silently cache a broken
         // asset that offline visitors then serve until the next version bump.
+        // `requireAsset` adds the half `res.ok` cannot see on Pages (ADR 0100).
         await Promise.all(
           SHELL.map(async (u) => {
-            const res = await fetchClean(u, PRECACHE_FETCH);
-            if (!res.ok) throw new Error(`SW install: ${u} → ${res.status}`);
+            const res = requireAsset(u, await fetchClean(u, PRECACHE_FETCH));
             await cache.put(u, res);
           })
         );
       });
       await ensureCache(DATA_CACHE, async (cache) => {
-        const res = await fetchClean(DATA_INDEX, PRECACHE_FETCH);
-        if (!res.ok) throw new Error(`SW install: ${DATA_INDEX} → ${res.status}`);
+        const res = requireAsset(
+          DATA_INDEX,
+          await fetchClean(DATA_INDEX, PRECACHE_FETCH)
+        );
         await cache.put(DATA_INDEX, res);
         // Every menu listed in the index, so offline covers all data. Not
         // cache.addAll: that fetches with the default cache mode, which is the
@@ -219,17 +268,23 @@ self.addEventListener("install", (event) => {
         await Promise.all(
           ids.map(async (id) => {
             const u = `data/restaurants/${id}.json`;
-            const menu = await fetchClean(u, PRECACHE_FETCH);
-            if (!menu.ok) throw new Error(`SW install: ${u} → ${menu.status}`);
+            const menu = requireAsset(u, await fetchClean(u, PRECACHE_FETCH));
             await cache.put(u, menu);
           })
         );
         // Rates last: a failure here must not cost the menus their cache entry.
         // Without it the app simply shows each place's own currency, which is
         // the correct fallback rather than a broken state.
+        // Not `requireAsset`: this one must never reject the install. But an
+        // HTML stand-in is still refused a cache entry — storing the home page
+        // under fx.json's URL would make every price conversion die on a JSON
+        // parse, offline, until the next DATA_VERSION bump. Skipping it lands
+        // on the same fallback the catch below documents.
         try {
           const fx = await fetchClean(DATA_FX, PRECACHE_FETCH);
-          if (fx.ok) await cache.put(DATA_FX, fx);
+          const usable =
+            fx.ok && !servedAsHtmlStandIn(DATA_FX, fx.headers.get("content-type"));
+          if (usable) await cache.put(DATA_FX, fx);
         } catch {
           /* offline install, or the file is briefly missing — no conversion */
         }
@@ -346,12 +401,41 @@ self.addEventListener("fetch", (event) => {
   }
 });
 
+// Cloudflare Pages 308-redirects `/foo.html` → `/foo`, so the URL a reader ends
+// up HOLDING — in the address bar, a bookmark, a shared link, the back stack —
+// is the extensionless one. Curl'd 2026-09-08:
+//
+//     $ curl -sI 'https://lets-eat.myspot.nz/restaurant.html?id=mcdonalds'
+//     HTTP/2 308
+//     location: /restaurant?id=mcdonalds
+//
+// The precache is keyed on the paths in SHELL, and those carry `.html` because
+// they have to: a plain static file server has no other name for them, and the
+// site must run on one (ADR 0001). `ignoreSearch` drops the `?id=…` but not a
+// missing extension, so `/restaurant?id=…` missed the shell cache entirely and
+// fell through to the network — which offline means it throws. The deep link a
+// reader is most likely to have saved was the one route flight mode did not
+// cover (ADR 0100).
+//
+// `/` is already covered: `"./"` is in SHELL, so `/index.html` → `/` needs
+// nothing here.
+function htmlSibling(pathname) {
+  if (pathname.endsWith("/")) return null; // already a directory index
+  if (/\/[^/]*\.[^/.]+$/.test(pathname)) return null; // already has an extension
+  return `${pathname}.html`;
+}
+
 // Shell: precached, so serve instantly; ignoreSearch lets the one
 // restaurant.html entry answer every ?id=… deep link.
 async function cacheFirst(req) {
   const cache = await caches.open(SHELL_CACHE);
   const hit = await cache.match(req, { ignoreSearch: true });
   if (hit) return hit;
+  const sibling = htmlSibling(new URL(req.url).pathname);
+  if (sibling) {
+    const viaSibling = await cache.match(sibling, { ignoreSearch: true });
+    if (viaSibling) return viaSibling;
+  }
   // Cache miss (e.g. a fresh deep link): the network copy of a shell page may be
   // redirected by Cloudflare — fetchClean strips that so a navigation doesn't fail.
   return fetchClean(req);

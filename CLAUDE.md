@@ -264,6 +264,19 @@ python3 tools/check_fallback.py # the no-JS <ul> in site/index.html still mirror
                               # rule below was unenforced from the day it was written;
                               # its first run found NINE venues with finished menus
                               # rendered as unreachable "Menu coming soon" cards
+python3 tools/check_precache.py # every path site/sw.js precaches EXISTS in site/.
+                              # The install step's own `!res.ok → throw` cannot
+                              # tell you this on Pages: a path Pages does not have
+                              # is answered with index.html and a **200** (curl'd
+                              # 2026-09-08), so the guard passes on exactly the
+                              # input it exists to catch. Reads SHELL, the two data
+                              # constants and the menu-URL TEMPLATE out of sw.js
+                              # with a parse that must re-emit what it read byte for
+                              # byte (ADR 0076) — fewer paths is the answer that
+                              # makes a completeness check pass in silence.
+                              # `--self-test` proves it still refuses (9 cases, one
+                              # of them the unmutated tree, so a gate broken into
+                              # refusing everything cannot pass)
 python3 tools/check_decisions.py # every ADR is in the decisions index (it's the
                               # allocator — an unindexed record is how a number
                               # gets reused; seven were missing on 2026-08-16)
@@ -375,7 +388,7 @@ python3 tools/check_records.py # data/images/ and data/withdrawn/ — the two re
                               # can say where we got. --selftest breaks a good
                               # fixture 15 ways; all 15 must be caught. Now in CI
 python3 tools/test_split_data.py # history joins to a dish by ID, not by its name
-                              # (ADR 0099). Each permitted-rename case is PAIRED
+                              # (ADR 0100). Each permitted-rename case is PAIRED
                               # with a break-probe that reverts the id-first line
                               # and must FAIL — the venue-rename probe is the one
                               # that found --check could pass while reading no
@@ -425,6 +438,21 @@ node tools/distance_check.mjs # the distance limit actually CUTS the home list
                               # likely to rot: a venue inside the limit must
                               # carry NO note, and without it a note that fired
                               # on all 57 places would pass everything else
+node tools/precache_check.mjs # the service worker's install guard and the
+                              # extensionless deep link (ADR 0100). It stages the
+                              # response CLOUDFLARE PAGES ACTUALLY SENDS for a path
+                              # it does not have — 200, `text/html`, on a `.js` URL
+                              # — which no static file server can produce by
+                              # serving a file, and asserts the install REJECTS it
+                              # and leaves no ready shell cache. Its control is the
+                              # other half: a correct deploy must still install,
+                              # because a guard mangled into refusing everything
+                              # bricks every future update and passes the first
+                              # assertion. Offline is the SERVER BEING STOPPED, not
+                              # CDP's `offline:true` — that flag never reaches a
+                              # controlled page's fetches (they are the WORKER's,
+                              # a separate target), and its own probe caught it
+                              # doing nothing while everything else stayed green
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
                               # Reaches its end: "OK — 16 passed, 0 failed". Check the
                               # summary line is there AND that N is still 16 — a
@@ -478,14 +506,15 @@ still orphans both — nothing can catch it** — so if a run was `kill -9`ed, r
 you. Orphans do not make a check fail; they make it **stall silently** with a
 wall of PASS and no summary line.
 
-🛑 **CI runs ONE of the SIXTEEN browser checks — `boot_check`, and only since
+🛑 **CI runs ONE of the SEVENTEEN browser checks — `boot_check`, and only since
 2026-08-17.** `.github/workflows/ci.yml` runs `node --test`, the Python gates,
 and `node tools/boot_check.mjs` (the owner's ruling; job name `every screen
 boots`, 8–12 s on the runner's preinstalled Chrome, burnt in 7/7 green). It does
 **not** run `sync_check` · `cook_check` · `device_check` · `addon_check` ·
 `branch_check` · `to_top_check` · `filter_row_check` · `recipe_check` ·
 `note_check` · `served_check` · `geo_check` · `picks_check` · `focus_check` ·
-`distance_check` · `midnight_check` — **fifteen** guards, every one written
+`distance_check` · `midnight_check` · `precache_check` — **sixteen** guards,
+every one written
 precisely because unit tests had already missed a leak, a wreck or a mistap. Those run **only when a human or
 an agent types them from this list**. That is how `sync_check` sat dead through
 a whole settings refactor with CI green the entire time: nothing was calling it.
@@ -635,7 +664,7 @@ family runs when a human types it and at no other time, which is how
 `sync_check.mjs` stayed dead through a whole refactor. Type them. And note that
 even the automated one cannot stop a bad deploy: admins bypass `protect-main`,
 so its red lands **after** the push it is describing (see the fuller note above
-the check descriptions). For the other fifteen, the honour system IS still the
+the check descriptions). For the other sixteen, the honour system IS still the
 mechanism.
 
 `to_top_check.mjs` and `filter_row_check.mjs` are the fifth and sixth. The
