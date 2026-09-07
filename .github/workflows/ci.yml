@@ -173,7 +173,7 @@ jobs:
       # The record store keyed history on section headings and dish names for
       # its whole life, while three documents said the id carried it. Every
       # permitted-rename case in here is paired with a break-probe that reverts
-      # the id-first lookup and must fail (ADR 0100).
+      # the id-first lookup and must fail (ADR 0099).
       - name: Prove history is joined to dishes by id, not by name
         run: python3 tools/test_split_data.py
       # Estimates drive the cook-mode countdowns, and its safety invariant —

@@ -32,9 +32,16 @@
 //     cover, split apart on the owner's ruling of 2026-08-22;
 //   · `exitFromError()`, the one place a tool's top-level `catch` turns an
 //     escaped error into an exit code — because a tool that classifies for
-//     itself will classify a site failure as a transport one.
+//     itself will classify a site failure as a transport one;
+//   · the STABLE-BOX WAIT inside `click()`, so no tool can dispatch into a
+//     control that is still travelling through the coordinate it was measured
+//     at, and the settle time it observed is reported rather than absorbed;
+//   · the WHOLE-CHECK RETRY, so a `untilPresent` wait starved by machine load
+//     is re-run once from scratch instead of being written down as a
+//     regression — one mechanism for sixteen tools, never a per-call retry
+//     (ADR 0101).
 
-import { execFileSync, spawn } from "node:child_process";
+import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { createServer } from "node:http";
 import { readFile, readdir, rm, stat } from "node:fs/promises";
 import { existsSync, readFileSync, rmSync } from "node:fs";
@@ -120,9 +127,21 @@ export function startServer(port, siteDir, overlay = null) {
   });
   return new Promise((res, rej) => {
     server.once("error", rej);
-    server.listen(port, "127.0.0.1", () => res({ server, port: server.address().port }));
+    server.listen(port, "127.0.0.1", () => {
+      // Registered so the whole-check retry can hand its port back before it
+      // spawns the second run. On the default `--port 0` nothing collides
+      // anyway, but a run given an explicit port would otherwise re-exec into
+      // an EADDRINUSE and report a harness error instead of the assertion it
+      // was retrying.
+      liveServers.add(server);
+      res({ server, port: server.address().port });
+    });
   });
 }
+
+/** Every server this process started, so {@link reapAll} can let go of the
+ *  port as well as of the browser. */
+const liveServers = new Set();
 
 // --- Chrome DevTools Protocol over a raw WebSocket ----------------------
 // Node 24 ships a global WebSocket, which is the whole client: one socket to the
@@ -207,6 +226,35 @@ export const need = (selector, root = "document") => {
   return `(${root}.querySelector(${sel}) ?? (() => { throw new Error(${msg}); })())`;
 };
 
+/** The sentinel prefix an unsettled-geometry failure carries, for the same
+ *  reason {@link MISSING_TAG} exists: a reader greps the output. */
+const UNSTABLE_TAG = "UNSTABLE ELEMENT —";
+
+/**
+ * Raised when a control the check wanted to press never came to rest.
+ *
+ * WHY IT IS A SITE CLAIM AND NOT A HARNESS ONE. [ADR 0093] shipped with this
+ * question open — `picks_check` threw a plain `Error: #settings-btn has no
+ * clickable box` from a geometry helper, which is neither a
+ * {@link MissingElementError} nor a {@link HarnessError}, so `exitFromError`
+ * sent it to **exit 2** with no `FAIL` line at all. The owner ruled it on
+ * 2026-09-07 (roadmap `210/070`): *a box that never settles is a FAILED
+ * ASSERTION about the site, not a silent hang and not a harness error.* A
+ * control that is still moving two whole seconds after the page was asked for
+ * it is a defect a person would hit, so it reads as **exit 1** and names what
+ * it watched.
+ *
+ * 🛑 IT IS DELIBERATELY NOT RETRYABLE. See {@link exitFromError}: the whole
+ * point of the ruling is that an animation race must be visible, and a retry
+ * would make it permanent and invisible.
+ */
+export class UnstableElementError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "UnstableElementError";
+  }
+}
+
 /**
  * Raised when the browser stopped answering — never when a page is wrong.
  *
@@ -227,6 +275,28 @@ export class HarnessError extends Error {
  *  laptop and tight with five agent sessions live, and editing a shared library
  *  to get through a busy afternoon is how a timeout ends up wrong for everyone. */
 export const CDP_TIMEOUT_MS = Number(process.env.FAVES_CDP_TIMEOUT_MS) || 30_000;
+
+/** How long a click may wait for its target's box to stop moving before it
+ *  gives up and FAILS. Bounded because the owner's condition on `210/070` was
+ *  that a box which never settles is a failed assertion and not a hang; two
+ *  seconds because the site's longest transition is a fraction of that, so
+ *  anything reaching this bound is either broken or genuinely janky. Same
+ *  reasoning as CDP_TIMEOUT_MS for making it an env var, and the same warning:
+ *  never lower it to make a run finish. */
+export const CLICK_SETTLE_MS = Number(process.env.FAVES_CLICK_SETTLE_MS) || 2_000;
+
+/**
+ * What the stabilising wait actually cost, and what it actually saw.
+ *
+ * 🔑 THE SECOND NUMBER IS THE POINT, not the first. The owner accepted the wait
+ * on condition it was measured, and named a failure mode a runtime figure would
+ * never show: **a wait that is too generous hides a real regression.** If a
+ * control starts taking 400 ms to settle because someone shipped a janky
+ * animation, a click that patiently waits it out turns a user-visible defect
+ * into a green run. So every run reports how many clicks needed more than the
+ * single comparison frame, and the worst one by name.
+ */
+export const clickStats = { clicks: 0, waited: 0, settleMs: 0, worstMs: 0, worst: null };
 
 export class Cdp {
   #ws;
@@ -368,15 +438,18 @@ async function poll(fn, { label, timeout = 15_000, step = 100 }, makeError) {
  * sheet to open", and both fail the same way when the feature has gone.
  */
 export async function untilPresent(fn, opts) {
-  return poll(
-    fn,
-    opts,
-    (label, timeout) =>
-      new MissingElementError(
-        `${MISSING_TAG} this check waited ${timeout / 1000}s for ${label},` +
-          ` and the page never got there`
-      )
-  );
+  return poll(fn, opts, (label, timeout) => {
+    const err = new MissingElementError(
+      `${MISSING_TAG} this check waited ${timeout / 1000}s for ${label},` +
+        ` and the page never got there`
+    );
+    // The ONE flag the whole-check retry keys on. A `need()` dereference makes
+    // the same class of error and must NOT be retried — it does not wait, so
+    // there is no budget for a loaded machine to starve, and retrying it only
+    // doubles the time a real regression takes to report. See exitFromError.
+    err.fromWait = true;
+    return err;
+  });
 }
 
 /**
@@ -457,6 +530,17 @@ function reapAll() {
     }
   }
   liveChromes.clear();
+  for (const server of liveServers) {
+    try {
+      // closeAllConnections first: `close()` alone waits on keep-alives, and
+      // the caller may be about to re-bind this port in a child process.
+      server.closeAllConnections?.();
+      server.close();
+    } catch {
+      /* already closed — the port goes with the process either way */
+    }
+  }
+  liveServers.clear();
 }
 
 function installReaper() {
@@ -784,6 +868,81 @@ function abortAsHarnessError(reachedAssertion) {
   process.exit(2);
 }
 
+// --- Running the whole check a second time --------------------------------
+// 🛑 THIS REVERSES A SENTENCE THIS FILE STILL CARRIES, AND BOTH ARE TRUE.
+// `Cdp.send` says "NO RETRY, deliberately" and gives the reason: CDP calls are
+// not idempotent, so re-issuing one silently changes what the next assertion
+// measures. That reason is about ONE CALL and it is untouched — nothing here
+// re-issues anything.
+//
+// What the owner ruled on 2026-09-07 (roadmap `340/200`) is the other shape: a
+// `untilPresent` wait starved past its budget by machine load throws a
+// MissingElementError and lands as `FAIL MISSING ELEMENT`, exit 1 —
+// byte-identical to a real regression, and CLAUDE.md tells the reader to
+// believe it. Measured the day [ADR 0093] shipped: `cook_check` exit 1 inside a
+// 15-check sweep at load 18–27, then 85 passed / 0 failed on the SAME commit
+// once the machine was quiet. So the whole check re-runs once, in a NEW
+// PROCESS with a new Chrome and a new profile, and a failure is reported only
+// if it happens twice. A fresh process has none of the coupling a per-call
+// retry has: no latched module state, no half-driven page, no browser that has
+// already been clicked.
+//
+// 🔎 It PRINTS, every time. A retry nobody can see is [ADR 0072]'s decorative
+// guard pointed the other way: it would turn a reproducible failure into a
+// quiet one. So the first run's verdict stays on screen, the retry announces
+// itself before it starts, and the last line says whether one run failed or
+// both did.
+
+const RETRY_ENV = "FAVES_CHECK_IS_RETRY";
+
+/**
+ * Re-run this whole check once and exit with the second run's verdict.
+ *
+ * Returns `false` — without running anything — when this process IS already the
+ * retry, or when there is no script path to re-execute. Otherwise it does not
+ * return at all.
+ */
+function retryWholeCheck(why) {
+  if (process.env[RETRY_ENV]) return false;
+  const script = process.argv[1];
+  if (!script) return false;
+  console.log(
+    `\n↻ RETRY — that failure came from a WAIT, and a loaded machine can starve a` +
+      `\n   wait past its budget with nothing about the site having changed.` +
+      `\n   ${why}` +
+      `\n   Re-running the WHOLE check once from scratch: new process, new Chrome,` +
+      `\n   new profile. Never a per-call retry — CDP calls are not idempotent.` +
+      `\n   Owner-ruled 2026-09-07 (roadmap 340/200, ADR 0101); a failure is only` +
+      `\n   reported if it happens TWICE.\n`
+  );
+  // Let go of this run's browser and its port BEFORE the second run starts —
+  // otherwise the retry is measured on a machine this process is still loading,
+  // which is the very condition it exists to rule out.
+  reapAll();
+  const started = Date.now();
+  const result = spawnSync(process.execPath, [script, ...process.argv.slice(2)], {
+    stdio: "inherit",
+    env: { ...process.env, [RETRY_ENV]: "1" },
+  });
+  const code = result.status ?? 2;
+  const secs = ((Date.now() - started) / 1000).toFixed(1);
+  if (code === 0) {
+    console.log(
+      `\n↻ THE RETRY PASSED (${secs}s) — run 1 FAILED and run 2 PASSED on the same tree.` +
+        `\n   Nothing about the site changed between them, so run 1 was the machine.` +
+        `\n   This is a pass WITH A FLAKE RECORDED, not a clean green run: if it keeps` +
+        `\n   happening, the wait's budget or the machine's load is the thing to look at.`
+    );
+  } else {
+    console.log(
+      `\n↻ BOTH RUNS FAILED (retry took ${secs}s, exit ${code}) — run 1 and run 2 agree,` +
+        `\n   on two independent browsers and two fresh profiles. Load did not manufacture` +
+        `\n   this one. Read the FAIL line above as a statement about the SITE.`
+    );
+  }
+  process.exit(code);
+}
+
 /**
  * Turn an error that escaped a check's own reporting into an exit code.
  *
@@ -798,14 +957,32 @@ function abortAsHarnessError(reachedAssertion) {
  * one place and re-implemented in eight is a rule that is wrong in some of
  * them; this is the one place.
  *
- * The three verdicts, in the order they are asked:
+ * The four verdicts, in the order they are asked:
  *   · the transport died  → exit 2, with the wording that says so out loud;
- *   · the site is missing something → exit 1, naming what was wanted;
+ *   · a control never came to rest → exit 1, naming what it watched;
+ *   · the site is missing something → exit 1, naming what was wanted — and, if
+ *     a WAIT produced it, one whole re-run first (ADR 0101);
  *   · anything else       → exit 2, because an unclassified failure says
  *     nothing about the site and must not be written down as if it did.
  */
 export function exitFromError(err) {
   if (err instanceof HarnessError) abortAsHarnessError("an unguarded step");
+  // A control still moving after its whole budget is the SITE being wrong —
+  // owner-ruled, `210/070` — so it names what it watched and exits 1.
+  //
+  // 🛑 AND IT IS NOT RETRIED, ON PURPOSE. The same ruling says why: "a retry
+  // that papers over an animation race makes the race permanent and invisible".
+  // An unsettling box IS an animation race, so re-running it is precisely the
+  // papering-over the stabilising wait was built to prevent.
+  if (err instanceof UnstableElementError) {
+    console.log(`\nFAIL  ${err.message}`);
+    console.log(
+      `\nFAILED — the run stopped here; the assertions after this point did not run.` +
+        `\n   This is NOT retried: a control that will not stop moving is a defect a` +
+        `\n   person would hit, and running it twice would only hide it.`
+    );
+    process.exit(1);
+  }
   // A missing element is the SITE being wrong, so it exits 1 (assertions
   // failed) and never 2 (harness error) — and it says what it wanted, which a
   // null TypeError never did.
@@ -816,6 +993,9 @@ export function exitFromError(err) {
         `\n   Either the element was renamed (retarget this check) or the feature went` +
         `\n   (delete the assertion) — see the roadmap's id-durability sweep.`
     );
+    // Only a WAIT is retried. `need()` raises the same class from a single
+    // instantaneous read, which load cannot starve.
+    if (err.fromWait) retryWholeCheck(err.message);
     process.exit(1);
   }
   console.error(`\nharness error: ${err?.message ?? err}`);
@@ -882,6 +1062,19 @@ export class Report {
     if (transportBroken) abortAsHarnessError("the summary");
     console.log(`\n${this.failed ? "FAILED" : "OK"} — ${this.passed} passed, ${this.failed} failed`);
     console.log(`   ${treeIdentity(siteDir)}`);
+    // Only when this run clicked anything: four checks drive no controls at
+    // all, and a line reading "clicks 0" on those is noise pretending to be
+    // evidence.
+    if (clickStats.clicks) {
+      const settled = clickStats.clicks - clickStats.waited;
+      console.log(
+        `   clicks ${clickStats.clicks} · ${settled} still on the first frame, ` +
+          `${clickStats.waited} waited · ${Math.round(clickStats.settleMs)}ms total` +
+          (clickStats.waited
+            ? `, worst ${clickStats.worstMs}ms (${clickStats.worst})`
+            : "")
+      );
+    }
     return this.failed === 0;
   }
 }
@@ -932,7 +1125,13 @@ export function createDriver(cdp, sessionId, log = () => {}) {
     evalPage("new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))");
 
   const click = async (selector, text = null) => {
-    const box = await evalPage(`(() => {
+    // 🛑 THE WAIT IS INSIDE THE PAGE, AND THAT IS THE WHOLE DESIGN. A box can
+    // only be shown to be still by looking at it twice with time in between,
+    // and doing that from Node costs one CDP round-trip per look, on every
+    // click, in sixteen tools. Comparing two consecutive ANIMATION FRAMES in
+    // the page costs one frame and keeps the round-trip count exactly what it
+    // was before this existed.
+    const box = await evalPage(`(async () => {
       const els = [...document.querySelectorAll(${JSON.stringify(selector)})];
       const want = ${JSON.stringify(text)};
       const el = want == null ? els[0] : els.find((e) => e.textContent.includes(want));
@@ -943,12 +1142,67 @@ export function createDriver(cdp, sessionId, log = () => {}) {
       // straight after is the pre-scroll one — a click into empty space for
       // anything far down the page.
       el.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
-      const r = el.getBoundingClientRect();
-      return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height };
+      const read = () => {
+        const r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height };
+      };
+      // Half a pixel. Sub-pixel jitter cannot move a >= 44px tap target off
+      // its own centre, and a real transition moves whole pixels per frame.
+      const same = (a, b) =>
+        Math.abs(a.x - b.x) <= 0.5 && Math.abs(a.y - b.y) <= 0.5 &&
+        Math.abs(a.w - b.w) <= 0.5 && Math.abs(a.h - b.h) <= 0.5;
+      const raf = () => new Promise((r) => requestAnimationFrame(r));
+      const t0 = performance.now();
+      let prev = read();
+      for (let frames = 1; ; frames++) {
+        await raf();
+        const now = read();
+        const elapsed = +(performance.now() - t0).toFixed(1);
+        // Clickable AND unchanged: a control mid-open can be perfectly still
+        // at 0x0 for a frame, and dispatching at its centre would be a click
+        // into nothing.
+        if (same(prev, now) && now.w >= 1 && now.h >= 1) {
+          return { ...now, frames, settleMs: elapsed, stable: true };
+        }
+        if (elapsed >= ${CLICK_SETTLE_MS}) {
+          return {
+            ...now, frames, settleMs: elapsed, stable: false,
+            step: { dx: +(now.x - prev.x).toFixed(1), dy: +(now.y - prev.y).toFixed(1) },
+            // Diagnostic only, never a decision: a box can move for reasons
+            // the Web Animations API never sees, so this narrows the hunt
+            // where it can and says nothing where it cannot.
+            animating: (document.getAnimations ? document.getAnimations() : [])
+              .filter((a) => a.playState === "running")
+              .map((a) => a.animationName || a.transitionProperty || "an animation")
+              .slice(0, 6),
+          };
+        }
+        prev = now;
+      }
     })()`);
     const what = `${selector}${text ? ` containing "${text}"` : ""}`;
     if (!box) throw new Error(`no element matching ${what}`);
-    if (box.w < 1 || box.h < 1) throw new Error(`${what} has no clickable box`);
+    clickStats.clicks++;
+    clickStats.settleMs += box.settleMs;
+    if (box.frames > 1) {
+      clickStats.waited++;
+      if (box.settleMs > clickStats.worstMs) {
+        clickStats.worstMs = box.settleMs;
+        clickStats.worst = what;
+      }
+    }
+    if (!box.stable) {
+      const still = box.animating?.length ? `; still running: ${box.animating.join(", ")}` : "";
+      throw new UnstableElementError(
+        box.w < 1 || box.h < 1
+          ? `${UNSTABLE_TAG} ${what} has no clickable box: ${box.settleMs}ms and` +
+            ` ${box.frames} frames after the page was asked for it, it still measures` +
+            ` ${box.w.toFixed(1)}x${box.h.toFixed(1)}${still}`
+          : `${UNSTABLE_TAG} ${what} never came to rest: after ${box.settleMs}ms and` +
+            ` ${box.frames} frames its box was still moving (last frame dx ${box.step.dx},` +
+            ` dy ${box.step.dy})${still}`
+      );
+    }
     const base = { x: box.x, y: box.y, button: "left", clickCount: 1 };
     await cdp.send("Input.dispatchMouseEvent", { ...base, type: "mouseMoved" }, sessionId);
     await cdp.send(
@@ -973,5 +1227,39 @@ export function createDriver(cdp, sessionId, log = () => {}) {
     await settle();
   };
 
-  return { evalPage, settle, click, press };
+  /**
+   * Scroll the window to `y` and REFUSE TO CONTINUE unless it got there.
+   *
+   * 🔑 THE ARRIVAL CHECK IS THE REASON THIS EXISTS. `app.css` sets
+   * `html { scroll-behavior: smooth }`, and the two-argument `scrollTo(0, y)`
+   * obeys it — so a sweep that scrolls and reads two frames later measures the
+   * position it started from. Measured 2026-09-07: `scrollTo(0, 5000)` left
+   * `scrollY` at **2**, and 238 swept "positions" were nearly all the same
+   * position. ⚠️ It produced the CORRECT ANSWER anyway, so nothing in the
+   * output invited a second look; it was caught only by printing `scrollY`.
+   * Passing `behavior: "instant"` fixes the scroll and proves nothing, which
+   * is why the assertion is here rather than a comment saying to remember.
+   *
+   * Clamped against the document's own maximum, because asking for 6000 on a
+   * 4000 px page is a legitimate way to say "the bottom".
+   */
+  const scrollTo = async (y) => {
+    const at = await evalPage(`(() => {
+      window.scrollTo({ top: ${Number(y)}, left: 0, behavior: "instant" });
+      return { y: window.scrollY, max: document.documentElement.scrollHeight - innerHeight };
+    })()`);
+    const wanted = Math.min(Number(y), Math.max(0, at.max));
+    if (Math.abs(at.y - wanted) > 2) {
+      throw new UnstableElementError(
+        `${UNSTABLE_TAG} the page was sent to y=${wanted} and stopped at y=${at.y}.` +
+          ` A scroll that does not arrive makes every measurement after it a` +
+          ` measurement of somewhere else.`
+      );
+    }
+    await settle();
+    log(`scrolled to ${at.y}`);
+    return at.y;
+  };
+
+  return { evalPage, settle, click, press, scrollTo };
 }

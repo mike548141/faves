@@ -65,10 +65,31 @@ import {
   stopChrome,
   untilPresent,
   sleep,
+  UnstableElementError,
 } from "./lib/browser.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
+
+/**
+ * Refuse to report on a sweep that did not go where it was sent.
+ *
+ * 🔑 A REFUSAL, NOT AN ASSERTION, AND THE DIFFERENCE IS THE WHOLE VALUE. A
+ * `report.check` here would let the run carry on and print sixty-three other
+ * verdicts computed from measurements taken at one scroll position pretending
+ * to be three thousand — which is exactly what happened on 2026-09-07, where
+ * `scrollTo(0, 5000)` left `scrollY` at 2 and the sweep still produced the
+ * correct answer. Nothing invited a second look. So the instrument's own
+ * failure stops the run instead of joining the results.
+ */
+function refuseUnlessItArrived(what, missed) {
+  if (!missed || missed.length === 0) return;
+  throw new UnstableElementError(
+    `UNSTABLE ELEMENT — ${what} did not reach ${missed.length} of the positions it` +
+      ` was sent to (${missed.map((m) => `${m.sent}→${m.reached}`).join(", ")}).` +
+      ` Every measurement in that sweep describes somewhere else.`
+  );
+}
 
 // 37 px, not 50 or 100: a step that is a factor of nothing in the layout cannot
 // march in phase with a repeating row and step over the same offset every time.
@@ -148,6 +169,12 @@ const SWEEP = `(async () => {
     unfocusableAt: [],
     docW: 0,
     innerW: innerWidth,
+    // The arrival count. A sweep that did not go where it was sent measures
+    // one position N times and reports it as N positions — and on 2026-09-07 a
+    // sweep that had done exactly that returned the RIGHT ANSWER, so nothing
+    // in the output invited a second look (roadmap 210/070).
+    missed: 0,
+    missedAt: [],
   };
   for (let y = 0; y <= maxY; y += ${STEP}) {
     window.scrollTo({ top: y, behavior: "instant" });
@@ -155,6 +182,10 @@ const SWEEP = `(async () => {
     // style it writes to have been applied before anything is measured.
     await raf();
     await raf();
+    if (Math.abs(window.scrollY - Math.min(y, maxY)) > 2) {
+      out.missed++;
+      if (out.missedAt.length < 8) out.missedAt.push({ sent: y, reached: Math.round(window.scrollY) });
+    }
     const p = probe();
     out.positions++;
     out.docW = Math.max(out.docW, p.docW);
@@ -184,10 +215,15 @@ const BOTH_WAYS = (depths) => `(async () => {
   const raf = () => new Promise((r) => requestAnimationFrame(r));
   const btn = document.querySelector(".to-top");
   btn.style.transition = "none";
+  const missed = [];
   const at = async (y) => {
     window.scrollTo({ top: y, behavior: "instant" });
     await raf();
     await raf();
+    const maxY = document.documentElement.scrollHeight - innerHeight;
+    if (Math.abs(window.scrollY - Math.min(y, maxY)) > 2) {
+      missed.push({ sent: y, reached: Math.round(window.scrollY) });
+    }
     return probe();
   };
   const rows = [];
@@ -199,7 +235,7 @@ const BOTH_WAYS = (depths) => `(async () => {
     rows.push({ y, down: { shown: down.shown, dodge: down.dodge }, up: { shown: up.shown, dodge: up.dodge } });
   }
   btn.style.transition = "";
-  return rows;
+  return { rows, missed };
 })()`;
 
 async function run(opts) {
@@ -284,6 +320,7 @@ async function run(opts) {
             report.check(`${at}: the back-to-top control exists`, false, "no .to-top in the DOM");
             continue;
           }
+          refuseUnlessItArrived(`${at}: the ${s.positions}-position sweep`, s.missedAt);
           const scale = `${s.positions} positions over ${s.maxY + 844}px of document`;
 
           // --- 1. The 2026-09-07 report. It must BE there on the way down. ---
@@ -330,7 +367,9 @@ async function run(opts) {
           // --- 4. Direction must no longer decide anything. ------------------
           const depths = [1200, 2400, 4000].filter((d) => d + 500 <= s.maxY);
           if (depths.length) {
-            const rows = await driver.evalPage(BOTH_WAYS(depths));
+            const both = await driver.evalPage(BOTH_WAYS(depths));
+            refuseUnlessItArrived(`${at}: the up/down comparison`, both.missed);
+            const rows = both.rows;
             const disagree = rows.filter(
               (r) => r.down.shown !== r.up.shown || Math.abs(r.down.dodge - r.up.dodge) > 1
             );
@@ -342,7 +381,7 @@ async function run(opts) {
           }
 
           // --- 5. Keyboard. Focus must bring it fully on screen. -------------
-          await driver.evalPage(`window.scrollTo({ top: ${Math.min(6000, s.maxY)}, behavior: "instant" })`);
+          await driver.scrollTo(Math.min(6000, s.maxY));
           await sleep(250);
           await driver.evalPage(`${need(".to-top")}.focus()`);
           await sleep(250);
@@ -355,7 +394,7 @@ async function run(opts) {
           await driver.evalPage(`${need(".to-top")}.blur()`);
 
           // --- 6. Below the threshold it is gone entirely, as it always was. -
-          await driver.evalPage(`window.scrollTo({ top: 0, behavior: "instant" })`);
+          await driver.scrollTo(0);
           await sleep(250);
           const top = await driver.evalPage(`(${PROBE_FN})()`);
           report.check(

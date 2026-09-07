@@ -1169,7 +1169,14 @@ async function run(opts) {
     await evalPage(`(() => {
       const one = ${listDetail};
       one.open = true;
-      one.scrollIntoView({ block: "center" });
+      // "instant" is load-bearing, not style. scrollIntoView's default
+      // behavior: "auto" RESOLVES TO THE CSS scroll-behavior, and app.css sets
+      // that to smooth — so this call used to return with the page still
+      // travelling, and what follows it is a CLICK. driver.click now waits for
+      // a stable box, so the click is safe either way; this stops the animation
+      // happening at all, which is cheaper than waiting it out and removes the
+      // one live site the 2026-09-07 sweep found (roadmap 210/070).
+      one.scrollIntoView({ block: "center", behavior: "instant" });
     })()`);
     await settle();
     const listOpen = await evalPage(

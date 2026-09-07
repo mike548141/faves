@@ -388,7 +388,7 @@ python3 tools/check_records.py # data/images/ and data/withdrawn/ — the two re
                               # can say where we got. --selftest breaks a good
                               # fixture 15 ways; all 15 must be caught. Now in CI
 python3 tools/test_split_data.py # history joins to a dish by ID, not by its name
-                              # (ADR 0100). Each permitted-rename case is PAIRED
+                              # (ADR 0099). Each permitted-rename case is PAIRED
                               # with a break-probe that reverts the id-first line
                               # and must FAIL — the venue-rename probe is the one
                               # that found --check could pass while reading no
@@ -474,6 +474,27 @@ Everything green, everything meaningless. It surfaced only because a **passing**
 run reported 22 where an agent had just said 25 — nobody interrogates a green
 run, so this is a mechanism and not a discipline.
 
+**A check that CLICKS anything prints a THIRD line, and it is about ANIMATION**
+(2026-09-08, ADR 0101). `app.css` sets `html { scroll-behavior: smooth }`, so a
+box read straight after a scroll or while a menu is opening is the box's *old*
+position — that is how `picks_check` came to report `#settings-btn has no
+clickable box` intermittently, and how a `210/060` sweep swept 238 "positions"
+that were nearly all the same position **and still got the right answer**.
+`driver.click` now waits (inside the page, one animation frame, no extra CDP
+round-trip) until the target's box is unchanged across two frames and at least
+1×1, bounded by `FAVES_CLICK_SETTLE_MS` (default 2000) — and a box that never
+settles is a **failed assertion about the site**: `FAIL UNSTABLE ELEMENT`,
+exit 1, naming the elapsed time, the last movement and any animations still
+running. 🔑 **Read the third line, because a wait that is too generous hides
+jank**: it says how many clicks were still on the first frame, how many had to
+wait, and the worst one by name. `#overflow-btn` measures ~25 ms and
+*"Show suggestions again"* ~120 ms today; if either grows, someone shipped a
+slower animation and the check will keep passing.
+🚩 **New scroll code: use `driver.scrollTo(y)`.** It passes
+`behavior: "instant"` *and* refuses to continue unless the page arrived — the
+three-line assertion that turned an undetectable wrong answer into a
+two-minute fix. `to_top_check`'s in-page sweeps carry the same refusal.
+
 🛑 **AND SINCE 2026-09-07 (ADR 0093) THE EXIT CODE IS NO LONGER A CLEAN
 SIGNAL IN BOTH DIRECTIONS.** A wait classified as a claim about the SITE
 (`untilPresent`) throws a `MissingElementError` and exits **1** with a named
@@ -482,10 +503,19 @@ improvement on the exit-2 mystery it replaced. But a **loaded machine can starve
 that same wait past its 15 s budget**, and the result is byte-identical to a
 real regression. Measured the day it landed: `cook_check` exited 1 on that path
 inside a 15-check sweep at load 18–27, then ran **85 passed, 0 failed** on the
-**same commit** once the machine was quiet. So: **a lone `FAIL MISSING ELEMENT`
-on a busy machine is not evidence until it reproduces on a quiet one.** Filed
-with four costed options as roadmap item `340/200` (ADR 0093 carries the same
-measurement under *Consequences*).
+**same commit** once the machine was quiet.
+✅ **SINCE 2026-09-08 THE HARNESS RE-RUNS ITSELF INSTEAD OF LEAVING YOU TO
+GUESS** (owner-ruled on `340/200`, ADR 0101). A `untilPresent` timeout re-runs
+the **whole check** once in a new process on a new Chrome and a new profile, and
+reports a failure only if it fails **twice**. It says so out loud both times:
+`↻ RETRY` before the second run, then `↻ THE RETRY PASSED` (exit 0, a **flake
+recorded** — not a clean green) or `↻ BOTH RUNS FAILED` (exit 1, and *that* one
+is a statement about the site). So the old rule — *a lone `FAIL MISSING ELEMENT`
+is not evidence until it reproduces quiet* — is now enforced rather than
+remembered, and the cost the owner accepted is that a genuinely broken check
+takes about twice as long to say so. 🛑 **A `FAIL` with no `↻` line above it was
+never retried**, which means it came from `need()` or from the stable-click wait
+— both deliberately excluded (ADR 0101).
 
 **`HARNESS ERROR — the browser stopped answering` means the CDP transport died,
 NOT that an assertion failed.** It exits **2**, never 1, and never prints a
@@ -495,8 +525,14 @@ with exit 1, byte-indistinguishable from a real regression — and a peer measur
 `boot_check` failing **2 of 4** runs and `recipe_check` aborting **4 of 8** on a
 loaded five-session machine, every one of them that timeout. Give a loaded
 machine more rope with `FAVES_CDP_TIMEOUT_MS` (default 30000); never lower it to
-make a run finish. There is deliberately **no retry** — CDP calls are not
-idempotent, so re-issuing one silently changes what the next assertion measures.
+make a run finish. There is deliberately **no PER-CALL retry** — CDP calls are
+not idempotent, so re-issuing one silently changes what the next assertion
+measures. ⚠️ **That read "no retry" flat until 2026-09-08, and half of it
+stopped being true**: a *whole-check* retry now exists, for `untilPresent`
+timeouts only (above; ADR 0101). The reasoning is untouched, because a fresh
+process on a fresh profile re-issues nothing — and a transport death is still
+**never** retried, so this paragraph's exit-2 `HARNESS ERROR` means what it
+always did.
 
 **The harness reaps its own Chrome and profile directory** on `SIGINT`,
 `SIGTERM` and uncaught exceptions, and sweeps unheld `faves-*-check-*` profiles
