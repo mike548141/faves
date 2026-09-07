@@ -1,12 +1,84 @@
-- [~] 🛑 **`untilPresent` can manufacture a FALSE REGRESSION under load, and it
+- [x] 🛑 **`untilPresent` can manufacture a FALSE REGRESSION under load, and it
       was measured within minutes of shipping** `[M][tools]` — found 2026-09-07
       (session faves-24) while verifying `160` on merged `main`. This is the
       residual half of the very risk option 1 was declined to avoid.
 
-  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — the owner's
-  ruling above is the brief. Delivered by a sub-agent in its own worktree
-  (`faves-o1-harness-stable-click`, branch `harness-stable-click`), landing by PR so CI
-  runs before the merge.
+  ✅ **DELIVERED 2026-09-08 (session faves-o1)** — retry-once-then-report built,
+  in `tools/lib/browser.mjs`; ADR 0100. **One mechanism for all sixteen checks,
+  at the entry-point layer the ruling pointed at.** A `MissingElementError`
+  raised by a `untilPresent` timeout reaches `exitFromError` — the single place
+  ADR 0093 made every ending path pass through, whether the tool has its own
+  top-level `catch` (8 of 16) or leaves it to the `uncaughtException` handler
+  (the other 8) — and that function re-executes `process.argv[1]` with
+  `spawnSync`, `stdio: "inherit"`, marking the child `FAVES_CHECK_IS_RETRY=1`
+  so it can never recurse. It **reaps this run's Chrome and closes its server
+  first**, because a retry measured on a machine the first run is still loading
+  would defeat the point.
+
+  🎯 **WHAT TRIGGERS IT — decided, and the reasoning matters more than the
+  answer.** Only a `untilPresent` timeout, flagged at the raise site
+  (`err.fromWait`). Three deliberate exclusions:
+  - **The stable-click timeout from `210/070` is NOT retried.** That item says
+    it in as many words — *"a retry that papers over an animation race makes
+    the race permanent and invisible"* — and an unsettling box **is** an
+    animation race. Retrying it would undo the guard that landed with it.
+  - **`need()` is NOT retried**, though it raises the same class. It does not
+    wait, so there is no budget for load to starve; retrying only doubles the
+    time a genuine regression takes to report.
+  - **`HarnessError` is unchanged at exit 2.** This item's own third
+    measurement records why: a transport death is already *legible*. The
+    problem was never that checks fail under load, it is that one failure shape
+    lies about what it means.
+
+  🔎 **It prints, every time, in both directions** — a silent retry would be
+  ADR 0072's decorative guard pointed the other way, converting a reproducible
+  failure into a quiet one. The first run's verdict stays on screen, `↻ RETRY`
+  announces the second before it starts, and the last line is either
+  `↻ THE RETRY PASSED` (exit 0, worded as **a pass with a flake recorded**, not
+  a clean green) or `↻ BOTH RUNS FAILED` (exit 1).
+
+  ✅ **Break-probed three ways, verbatim.** A forced first-run-only timeout —
+  note the two runs use **different profile directories**, which is the proof
+  the restart is genuinely from scratch:
+
+      FAIL  MISSING ELEMENT — this check waited 15s for cook-at-home rendered,
+      and the page never got there
+      …
+      ↻ RETRY — that failure came from a WAIT, and a loaded machine can starve a
+         wait past its budget with nothing about the site having changed.
+      …
+      OK — 20 passed, 0 failed
+      ↻ THE RETRY PASSED (9.5s) — run 1 FAILED and run 2 PASSED on the same tree.
+
+  Exit **0**. Forced on both runs:
+
+      ↻ BOTH RUNS FAILED (retry took 3.2s, exit 1) — run 1 and run 2 agree,
+         on two independent browsers and two fresh profiles. Load did not
+         manufacture this one.
+
+  Exit **1**. And the discrimination, probed with a **real** `need()` failure
+  rather than a synthetic one (`#filters-btn` renamed in `filter_row_check`):
+  `FAIL MISSING ELEMENT … nothing on the page matches it`, exit 1, **no `↻`
+  line** — not retried, as ruled.
+
+  🚩 **One residual, stated rather than papered over.** The retry fires on an
+  error that ESCAPES. A tool that *caught* a `untilPresent` timeout and filed it
+  through `report.check` would not be seen. No tool does that today — every one
+  of the 69 `untilPresent` call sites either escapes or sits in `try/finally` —
+  so a second trigger in `Report.summary` was written and then **removed**: it
+  could not be shown to fire, and an unfireable branch is ADR 0072's own
+  pattern. If a future tool swallows a wait timeout, this is where to look.
+
+  📊 **Cost, as accepted:** a genuinely broken check takes about twice as long
+  to say so. Measured on `picks_check`: 9.5 s for the second run against a
+  ~10 s first. All sixteen checks pass on the delivered tree.
+
+  📝 **CLAUDE.md amended, minimally, where it became false.** *"There is
+  deliberately no retry"* now reads *"no PER-CALL retry"* with the reason
+  intact and a dated note saying which half changed; the ADR 0093 paragraph's
+  *"not evidence until it reproduces on a quiet one"* now records that the
+  harness reproduces it for you, and that a `FAIL` with no `↻` above it was
+  never retried.
 
   ✅ **OWNER RULED 2026-09-07 (session faves-b1) — RETRY ONCE, THEN REPORT.**
   Put to him as four options with their costs. He took the recommendation: a
