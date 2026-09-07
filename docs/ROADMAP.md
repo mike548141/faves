@@ -137,6 +137,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [The picker says one clause twice when an allergen both warns AND](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/050-the-picker-says-one-clause-twice.md)
 - ✅ 🔎 [The chip row still says Veg on a dish the warning has just said is](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/060-the-chip-row-still-says-veg.md)
 - [ ] 🔎 [The picker still says one SUBSTANCE two ways when the option carries](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/070-the-picker-says-one-substance-two-ways.md)
+- [ ] 🔎 [A spicy- tag on an add-on option is legal and renders nothing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/080-a-spicy-tag-on-an-add-on-option-renders-nothing.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
 
@@ -263,6 +264,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
 - [ ] 🔎 [An orchestrator tore down a sub-agent's worktree while the agent was](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/240-a-pushed-branch-is-not-a-finished-agent.md)
 - [ ] 🛑 [Intake throws away the evidence's own provenance, and the first](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/250-intake-throws-away-the-evidences-own-provenance.md)
+- [ ] 🔎 [The Python gates print no tree line, so CLAUDE.md's "EVERY check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/260-the-python-gates-print-no-tree-line.md)
+- [ ] [🚩 The machine-side half of the 2026-08-17 force-push ruling does not](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 

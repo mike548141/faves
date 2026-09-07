@@ -696,7 +696,7 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   (`--force`, `+refspec`, `update-ref`), so a permission rule naming one form
   does not cover the others, and this will recur with other tools.
   🔑 **And the refusal came from AUTO MODE's classifier, not from a permission
-  rule** — `.claude/settings.local.json` here already allows `Bash` outright, so
+  rule** — `.claude/settings.local.json` here already allows `Bash` outright, so <!-- pathscan:allow: gitignored, never present in a clean tree -->
   no allow-list entry was ever in the way. Diagnosing it as a permission problem
   would have produced a fix that changed nothing. **The machine-side half of the
   owner's ruling therefore lives in `autoMode`, not `permissions`**: the
