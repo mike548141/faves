@@ -352,4 +352,4 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/README.md)*
 
-- [ ] 🎯 [38a — the cold review itself](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/010-the-cold-review-of-the-data-model.md)
+- [~] 🎯 [38a — the cold review itself](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/010-the-cold-review-of-the-data-model.md)

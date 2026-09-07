@@ -1,4 +1,4 @@
-- [ ] 🎯 **38a — the cold review itself** `[XL][schema][design][js][docs]`
+- [~] 🎯 **38a — the cold review itself** `[XL][schema][design][js][docs]`
       ⏳ **FRESH SESSION, owner-directed 2026-09-07.** Recorded now and
       deliberately not started; see this section's README for why.
 
