@@ -1,4 +1,4 @@
-- [ ] 🚩 **Two of the harness guarantees CLAUDE.md states are not true — a
+- [~] 🚩 **Two of the harness guarantees CLAUDE.md states are not true — a
       THIRD failure shape it does not describe, and one check that never prints
       the tree line** `[S][tools]` — found 2026-09-07 (session faves-24) while
       building ADR 0091, and both were found the honest way: by a run that
@@ -67,6 +67,13 @@
   *"so this is a mechanism and not a discipline"* — and a mechanism with two
   holes in it is a discipline again, on exactly the checks a session is least
   likely to re-run.
+
+  🔒 **PART (b) CLAIMED 2026-09-07 (session faves-b1); part (a) is NOT claimed
+  and stays open** — (a) is a classification question about `exitFromError`'s
+  fallback, not a fix, and it is one of the questions put to the owner this
+  session. Re-verified before claiming:
+  `grep -L "summary(SITE)" tools/*_check.mjs` still returns exactly
+  `geo_check.mjs` and `served_check.mjs`, out of **15** checks.
 
   📋 **Both are small and neither was fixed, on purpose** — they surfaced inside
   another item's build, and the repo's rule is that a finding is filed rather

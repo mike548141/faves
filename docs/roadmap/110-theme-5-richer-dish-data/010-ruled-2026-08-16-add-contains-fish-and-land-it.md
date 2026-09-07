@@ -1,4 +1,20 @@
-- [ ] ✅ **RULED 2026-08-16 — ADD `contains-fish`, and land it WITH 37n.**
+- [~] ✅ **RULED 2026-08-16 — ADD `contains-fish`, and land it WITH 37n.**
+      🔒 **CLAIMED 2026-09-07 (session faves-b1).**
+      🔎 **The stated blocker is DISCHARGED, and that is why this is takeable.**
+      The line below says this is *"blocked on 37n's report existing, not on a
+      decision"* — and `tools/allergen_disagreements.py` **exists** (delivered
+      2026-08-16; 37n's own item records it). The remaining open half of 37n is
+      the *human data sweep* over its 58 rows, which is a different act and is
+      still owner-blocked on four calls. Nothing in `contains-fish` waits on
+      those four: the tag, the tagger rules and the named dishes are all
+      specified below and owner-ruled. `SESSIONS.md` for 2026-09-07 (faves-24)
+      lists this under *"none of it takeable without the owner"* — **that is
+      wrong**, and the correction is recorded rather than quietly acted on.
+      🚩 **The trap, named before the work starts:** `site/js/addons.js` already
+      carries **`has-fish`**, which is a *dietary* marker used to decide whether
+      an add-on breaks a vegetarian/vegan configuration. `contains-fish` is an
+      **allergen** and is a different axis. Neither may be implemented in terms
+      of the other.
       Owner's call, asked with the cost stated. The reasoning he took: fish is a
       major declarable allergen we currently warn about **zero** times, and
       landing it alongside the 37n consistency sweep means the corpus gets

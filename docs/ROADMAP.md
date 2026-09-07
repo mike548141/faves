@@ -77,7 +77,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/110-theme-5-richer-dish-data/README.md)*
 
-- [ ] [RULED 2026-08-16 — ADD contains-fish, and land it WITH 37n.](roadmap/110-theme-5-richer-dish-data/010-ruled-2026-08-16-add-contains-fish-and-land-it.md)
+- [~] [RULED 2026-08-16 — ADD contains-fish, and land it WITH 37n.](roadmap/110-theme-5-richer-dish-data/010-ruled-2026-08-16-add-contains-fish-and-land-it.md)
 - [ ] [✅ RULED 2026-08-16 — capture PRESENT and TRACE separately in the data,](roadmap/110-theme-5-richer-dish-data/020-ruled-2026-08-16-capture-present-and-trace-sep.md)
 - ✅ [⚠️ ANSWERED AND SUPERSEDED by 010 in this same section — its ⚑ is](roadmap/110-theme-5-richer-dish-data/030-the-tag-vocabulary-has-no-contains-fish-and-th.md)
 
@@ -245,7 +245,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [🚩 until() timeouts still exit 2, so a deleted element a check WAITS](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/160-until-timeouts-still-exit-2-as-a-transport-error.md)
 - ✅ [A tolerant OR-list selector can pass with every named target gone](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/170-a-tolerant-selector-can-pass-with-every-named-target-gone.md)
 - ✅ 🔎 [A direct push to main can never satisfy a required status check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/180-a-direct-push-to-main-can-never-satisfy-a-required-check.md)
-- [ ] [🚩 Two of the harness guarantees CLAUDE.md states are not true — a](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/190-two-holes-in-the-check-harness-guarantees.md)
+- [~] [🚩 Two of the harness guarantees CLAUDE.md states are not true — a](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/190-two-holes-in-the-check-harness-guarantees.md)
 - [ ] 🛑 [untilPresent can manufacture a FALSE REGRESSION under load, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/200-untilpresent-can-manufacture-a-false-regression-under-load.md)
 - ✅ 🛑 [to_top_check described a sweep it never ran, and its key assertion](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/210-a-check-described-a-sweep-it-never-ran.md)
 
