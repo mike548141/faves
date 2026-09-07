@@ -18,11 +18,14 @@ Two tiers, kept apart so the count is auditable (ADR 0025):
   DERIVED  the menu names a dish whose defining ingredient it doesn't print —
            satay (peanut), tempura (wheat + egg), a laksa (belacan).
 
-Three guards keep it honest:
+Four guards keep it honest:
   • EXCLUDE patterns per rule — "rice noodles" are not wheat, "peanut butter"
     is not dairy, a "doughnut" is not a tree nut.
   • CONTRADICTED_BY — a dish the data already calls gf/df/vegan is not
     silently overridden by an inference. Curation beats a pattern.
+  • THE HEDGE (added 2026-09-07) — a venue writing an allergen word in order to
+    say the allergen is ABSENT. "Gluten free toast" is not a gluten warning.
+    See the HEDGE block below; it is the one over-warning that is not fail-safe.
   • Paid add-ons are not ingredients — "add prawns +$7" doesn't make a garden
     salad shellfish.
 
@@ -281,6 +284,114 @@ COMPILED = [
     for tag, tier, why, pat, exc in RULES
 ]
 
+# --- the hedge -------------------------------------------------------------
+# A HEDGE is a venue writing an allergen word in order to say the allergen is
+# ABSENT: "Gluten free toast", "No added gluten". Nothing above reads it — the
+# rules match a wheat noun ("toast", "bun", "bread") and the negation sits in
+# front of it, unlooked at. Measured, not hypothesised: this tool proposed
+# `contains-gluten` on a dish literally named `Gluten free toast` during the
+# Simmer intake (roadmap 080/200), and on the Brownie and the Spiced ginger love
+# muffin whose descriptions read "No added gluten."
+#
+# 🛑 WHY THIS IS WORSE THAN AN ORDINARY FALSE POSITIVE. Everywhere else an
+# over-warning is annoying and safe — the water-chestnut case warned a vegan
+# side about nuts and nobody was harmed. A hedge tag puts a FALSE GLUTEN WARNING
+# ON THE ONE ITEM A COELIAC IS HUNTING FOR, and the way a reader "fixes" that
+# experience is by learning to distrust the gluten chips. The over-warning
+# trains away the warning, so ADR 0025's "inference may only ever ADD" stops
+# being fail-safe here.
+#
+# THE FORMS BELOW WERE SWEPT OUT OF THE CORPUS, NOT GUESSED (2026-09-07, 57
+# records, every name/desc/ingredient/section note/option name):
+#     "gluten free" ×76 · "no gluten added" ×23 · "gluten-free" ×15 ·
+#     "dairy free" ×10 · "no added gluten" ×9 · "dairy-free" ×8
+# and NOTHING else of this shape exists — no "wheat free", "nut free",
+# "egg free", "soy free", "sesame free", "without gluten", "free of dairy",
+# "non-dairy", "lactose free", "gluten-less" or "low gluten" anywhere. Adding an
+# entry here is cheap; inventing one that no venue writes is how a guard starts
+# looking thorough while covering nothing.
+HEDGE = {
+    "contains-gluten": r"(?:gluten[\s-]free|no\s+(?:added\s+gluten|gluten\s+added))",
+    "contains-dairy": r"dairy[\s-]free",
+}
+
+# 🛑 TWO MECHANISMS, AND THE SECOND IS NOT THE FIRST WIDENED. The obvious fix —
+# "skip any dish mentioning gluten free" — is an ITEM-LEVEL VETO, and this repo
+# has already paid for that shape once (the water chestnut, above): it trades an
+# over-warning for a MISS, and a miss is the direction this tool may never move.
+# "Beer battered fish, gluten free chips" is a real sentence shape, and an
+# item-level veto loses the BATTER. So:
+#
+#   1. `hedge_before` — the negation DIRECTLY precedes the matched word. It
+#      cancels that ONE match and nothing else, exactly as `(?<!water )` cancels
+#      one alternative of the tree-nut rule. "Gluten free toast" loses the tag;
+#      "gluten free chips" beside a battered fish does not save the fish.
+#   2. `declared_free` — a description clause that is NOTHING BUT the venue's
+#      own free-from claim ("No added gluten.") is the venue speaking about the
+#      whole dish, which is what `gf` in CONTRADICTED_BY already outranks a
+#      pattern for. It is per-allergen, so a brownie declaring "No added gluten"
+#      still gains `contains-nuts` if it names almonds.
+#      The full-clause anchor is the whole safety argument: "sourdough toast,
+#      gluten free option available" is NOT a bare declaration, so the toast
+#      keeps its warning.
+#
+# Written as a lookbehind-in-spirit helper rather than `(?<!gluten free )`
+# spliced into each pattern because the negation has to cancel EVERY gluten
+# alternative across seven rules, not one alternative of one rule. Seven
+# hand-edited patterns would be seven chances to miss one, and nothing would
+# report it.
+_HEDGE_BEFORE = {
+    tag: re.compile(rf"\b{pat}\b[\s\-]*$", re.I) for tag, pat in HEDGE.items()
+}
+_HEDGE_ONLY = {
+    tag: re.compile(rf"\s*{pat}\s*", re.I) for tag, pat in HEDGE.items()
+}
+
+
+def hedge_before(tag, text, start):
+    """True when a free-from claim for `tag` sits DIRECTLY before `text[start:]`.
+
+    The narrow half of the hedge guard: it cancels the single match that the
+    negation qualifies and leaves every other match in the same text alone.
+    """
+    pattern = _HEDGE_BEFORE.get(tag)
+    return bool(pattern and pattern.search(text[:start]))
+
+
+def first_unhedged(tag, pattern, text):
+    """The first match of `pattern` in `text` that a hedge does NOT cancel.
+
+    🛑 `finditer`, never `search`. `search` returns the first match and stops, so
+    a hedged FIRST occurrence would take the whole rule down with it: "gluten
+    free bread and a side of pasta" would lose the PASTA. That is an
+    over-warning traded for a miss — the one direction this tool may not move,
+    and the exact failure an item-level `exclude` would have shipped. Walking
+    every occurrence is what keeps the cancellation as narrow as the lookbehind
+    it is named for.
+    """
+    for match in pattern.finditer(text):
+        if not hedge_before(tag, text, match.start()):
+            return match
+    return None
+
+
+def declared_free(text):
+    """Tags whose allergen `text` declares ABSENT in a clause that says nothing else.
+
+    The venue's own printed claim about the dish — "No added gluten." — read the
+    way a `gf` tag is read. Anchored to the WHOLE clause on purpose: a clause
+    that also offers, qualifies or describes ("gluten free option available",
+    "served with gluten free crackers") is not a claim about this dish and must
+    not silence its warning.
+    """
+    out = set()
+    for clause in re.split(r"[.;]", text or ""):
+        for tag, pattern in _HEDGE_ONLY.items():
+            if pattern.fullmatch(clause):
+                out.add(tag)
+    return out
+
+
 # A paid optional extra — "Add chicken, halloumi, prawns or beef +$7". The dish
 # as served contains none of it. Both signals required (an "add" AND a "+$"),
 # so a description that merely says "added" still counts as an ingredient.
@@ -387,21 +498,40 @@ def read_section_note(note):
     """
     applies, review, seen = [], [], set()
     for clause, verdict in section_clauses(note):
-        hits = [(tag, tier, f"{why} ({m.group(0).lower()})")
-                for tag, tier, why, pattern, exclude in COMPILED
-                if not (exclude and exclude.search(clause))
-                for m in [pattern.search(clause)] if m]
+        # Two lists, because the two buckets want different things. `seen_by`
+        # is everything the rules can see and is what a PERSON is shown;
+        # `writable` is that minus what a hedge cancels, and is the only one
+        # that can put a tag on a dish.
+        seen_by, writable = [], []
+        for tag, tier, why, pattern, exclude in COMPILED:
+            if exclude and exclude.search(clause):
+                continue
+            match = pattern.search(clause)
+            if not match:
+                continue
+            seen_by.append((tag, tier, f"{why} ({match.group(0).lower()})"))
+            unhedged = first_unhedged(tag, pattern, clause)
+            if unhedged:
+                writable.append((tag, tier, f"{why} ({unhedged.group(0).lower()})"))
         if NOTE_DECLARES.search(clause):
             for tag, word in NOTE_ALLERGENS:
                 m = re.search(word, clause, re.I)
                 if m and not NOTE_FREE.match(clause[m.end():]):
-                    hits.append((tag, "STATED", f"the note says it contains {m.group(0).lower()}"))
-        if not hits:
+                    said = (tag, "STATED", f"the note says it contains {m.group(0).lower()}")
+                    seen_by.append(said)
+                    writable.append(said)
+        if not seen_by:
             continue
         if verdict:
-            review.append((clause, verdict, sorted({tag for tag, _, _ in hits})))
+            # The REVIEW bucket keeps the hedged hits ON PURPOSE. It is read by a
+            # person, and "gluten free pasta available" is the strongest evidence
+            # anywhere that the DEFAULT pasta has gluten — dropping the line
+            # because the words happen to spell a negation would delete the very
+            # pointer this bucket exists to raise. Only `writable` writes, so
+            # only `writable` is filtered.
+            review.append((clause, verdict, sorted({tag for tag, _, _ in seen_by})))
         else:
-            for tag, tier, why in hits:
+            for tag, tier, why in writable:
                 if tag not in seen:
                     seen.add(tag)
                     applies.append((tag, tier, f'section note "{clause}" — {why}'))
@@ -478,13 +608,20 @@ def audit(record, tier=None):
                 continue
             text = ingredient_text(item)
             tags = set(item.get("tags", []))
+            # The venue's own free-from sentence, read off the raw `desc` rather
+            # than off `text`: ingredient_text() splits the description into
+            # clauses and joins them back with the NAME, so "No added gluten."
+            # arrives as part of one long line and the whole-clause anchor —
+            # which is the entire safety argument for this guard — can no longer
+            # see where the sentence begins and ends.
+            declared = declared_free(item.get("desc"))
             # The dish's own words first, so a burger that says "sesame" itself
             # is reported against its own name rather than against the note.
             findings = [
                 (tag, rule_tier, f"{why} ({hit.group(0).lower()})")
                 for tag, rule_tier, why, pattern, exclude in COMPILED
                 if not (exclude and exclude.search(text))
-                for hit in [pattern.search(text)] if hit
+                for hit in [first_unhedged(tag, pattern, text)] if hit
             ] + note_applies
             for tag, rule_tier, why in findings:
                 if tag in tags:
@@ -493,6 +630,8 @@ def audit(record, tier=None):
                     continue
                 if tags & CONTRADICTED_BY.get(tag, set()):
                     continue  # curation outranks a pattern
+                if tag in declared:
+                    continue  # the venue's own printed free-from claim, ditto
                 tags.add(tag)  # one tag per item, whichever rule fires first
                 yield item, tag, rule_tier, why
 
