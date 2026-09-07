@@ -8,6 +8,13 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Fixed
+- **Simmer's menu is dated when it was photographed, not when it was typed
+  up.** The record said 7 September; the photographs it was read from were
+  taken on **25 August**. Thirteen days matters because the "this may need a
+  refresh" note ages off that date, so an optimistic date quietly delays the
+  warning. Corrected to the date the evidence itself carries.
+
 ### Added
 - **Simmer, Churton Park has its menu.** 108 dishes across 19 sections —
   the printed food menu, the drinks board, the cabinet and the counter
