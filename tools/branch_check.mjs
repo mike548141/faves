@@ -79,6 +79,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Cdp, Report, createDriver, exitFromError, launchChrome, need, startServer, stopChrome, untilPresent } from "./lib/browser.mjs";
+import { ALWAYS_OPEN, NEVER_OPEN, buildFixture } from "./lib/fixtures.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -107,18 +108,16 @@ const NEAR_LIMIT = 4; // must match locations.NEAR_BRANCH_LIMIT
 // about the branch regardless), so this is the venue that proves the closure
 // chip appears where the hours chip correctly never does. hell-pizza would add
 // only run time.
-// Long past, never reopened → shut at every hour of every day. See the header.
-const CLOSED_EVENT = { type: "closed-permanently", date: "2016-04-01", note: "fixture" };
-// Two hours blocks whose state does not depend on the clock. `{}` has no
-// segments at all, which hours.js answers as "closed" (not "unknown" — that
-// needs no `hours` key whatsoever). "00:00"–"24:00" every day ends each
-// segment exactly where the next begins, so there is no minute of the week it
-// is shut. They are the only invented data in this file, and they exist so the
-// lead-branch probe below can be true at 1am as well as 1pm.
-const NEVER_OPEN = {};
-const ALWAYS_OPEN = Object.fromEntries(
-  ["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((d) => [d, [["00:00", "24:00"]]]),
-);
+// The closure event and the two clock-independent hours blocks now live in
+// tools/lib/fixtures.mjs, with every other degenerate state, so a check asks
+// for "a venue that is permanently closed" by name rather than hand-rolling
+// the JSON — and so a fixture built here is put through the REAL validate.py
+// by tools/fixture_check.mjs instead of being trusted (roadmap 340/150, ADR
+// 0109). `{}` has no segments at all, which hours.js answers as "closed" (not
+// "unknown" — that needs no `hours` key whatsoever); "00:00"–"24:00" every day
+// ends each segment exactly where the next begins, so there is no minute of
+// the week it is shut. Both exist so the lead-branch probe below is true at
+// 1am as well as 1pm.
 
 const FIXTURES = [
   // Hours on all seven branches — where a stale "Open" chip would actually be
@@ -643,30 +642,24 @@ async function buildRecords(ids) {
   const overlay = new Map();
   for (const id of ids) {
     const spec = FIXTURES.find((f) => f.id === id) || null;
-    const real = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${spec?.from ?? id}.json`), "utf8"));
     if (spec === null) {
-      records.set(id, real);
+      records.set(id, JSON.parse(await readFile(join(SITE, "data", "restaurants", `${id}.json`), "utf8")));
       continue;
     }
-    // A shallow clone with the id and lifecycle replaced — everything else is
-    // the genuine venue, so the branches, hours and timezones under test are
-    // the corpus's own rather than a hand-written miniature that could be wrong
-    // in ways the real data never is. `spec.hours` overrides the first few
-    // branches' hours where a fixture needs a clock-independent one.
+    // Built by the shared library: a deep clone of the GENUINE venue with the
+    // id replaced and one named state applied, so the branches, hours and
+    // timezones under test are the corpus's own rather than a hand-written
+    // miniature that could be wrong in ways the real data never is.
     // `closed: false` opts a fixture OUT of the injected closure: a closure
     // outranks every branch's posted hours, so a fixture whose whole point is a
     // disagreement between two branches' hours cannot also be shut.
-    const fixture = spec.closed === false
-      ? { ...real, id }
-      : { ...real, id, lifecycle: { ...(real.lifecycle || {}), events: [CLOSED_EVENT] } };
-    if (spec.hours) {
-      fixture.locations = (real.locations || []).map((b, i) =>
-        i < spec.hours.length ? { ...b, hours: spec.hours[i] } : b,
-      );
-    }
-    if (spec.keepBranches) {
-      fixture.locations = (fixture.locations || real.locations || []).slice(0, spec.keepBranches);
-    }
+    const fixture = await buildFixture(SITE, {
+      id,
+      from: spec.from,
+      states: spec.closed === false ? [] : ["permanently-closed"],
+      hours: spec.hours,
+      keepBranches: spec.keepBranches,
+    });
     records.set(id, fixture);
     specs.set(id, spec);
     overlay.set(`/data/restaurants/${id}.json`, JSON.stringify(fixture));

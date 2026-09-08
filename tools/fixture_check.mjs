@@ -389,18 +389,25 @@ async function selfTest(report) {
 
 // --- the browser half --------------------------------------------------------
 
+// A closure is not a separate banner element: `closure-ui.js` renders it as a
+// `.hours-badge` carrying the lifecycle state, deliberately, so the header and
+// the branch card say the same thing in the same words. Reading it by class
+// alone would find the hours chips too — the state is what tells them apart,
+// which is why this snapshot carries `state` and not just `text`.
+const CLOSURE_STATES = new Set(["closed-permanently", "closed-temporarily"]);
+
 /** One menu page as a reader sees it, reduced to what these states are about. */
 const SNAPSHOT = `(() => {
   const text = (el) => (el ? el.textContent.replace(/\\s+/g, " ").trim() : null);
-  const banner = document.querySelector(".venue-closed, .closure, [data-closure]");
   const badges = [...document.querySelectorAll(".hours-badge")].map((b) => ({
     text: text(b),
     state: b.dataset.state ?? null,
   }));
-  const sections = [...document.querySelectorAll(".menu-sections > section, .menu-section")].map((s) => ({
+  const sections = [...document.querySelectorAll(".menu-section")].map((s) => ({
     id: s.id || null,
     heading: text(s.querySelector("h2, h3")),
-    rows: s.querySelectorAll(".dish, .dish-row, [data-dish-id]").length,
+    hidden: s.hidden,
+    rows: s.querySelectorAll("[data-dish-id]").length,
   }));
   const prices = [...document.querySelectorAll("[data-dish-id]")].map((d) => ({
     id: d.dataset.dishId,
@@ -408,11 +415,12 @@ const SNAPSHOT = `(() => {
   }));
   return {
     heading: text(document.querySelector("#venue-name, h1")),
-    closureText: text(banner),
-    bodyText: document.body.textContent.replace(/\\s+/g, " ").trim(),
     badges,
     sections,
     prices,
+    // Every jump-nav target on the page. A section that vanishes must not leave
+    // a chip pointing at an anchor that no longer resolves.
+    navHrefs: [...document.querySelectorAll(".section-link")].map((a) => a.getAttribute("href")),
   };
 })()`;
 
@@ -451,6 +459,10 @@ async function browserHalf(report, opts) {
       sessionId,
     );
     const driver = createDriver(cdp, sessionId, (m) => report.step(m));
+    // `createDriver` deliberately offers no navigation — every check that needs
+    // one attaches its own, the same one line branch_check and midnight_check
+    // both carry.
+    driver.cdpNavigate = (url) => cdp.send("Page.navigate", { url }, sessionId);
 
     const id = (states) => [...records.keys()].find((k) => states.every((s) => k.includes(s)));
 
@@ -469,10 +481,16 @@ async function browserHalf(report, opts) {
         ? hoursDerived.map((b) => `${b.state}: ${b.text}`).join(" | ")
         : `${shut.badges.length} badge(s) on the card, none of them an hours claim`,
     );
+    // The other half of the pair, and the one that matters more. "No hours
+    // chip" is satisfied by a card that says NOTHING — which is what the first
+    // fix for this left behind: the header said the chain was shut while the
+    // most prominent row on the card was silent.
+    const shutClosures = shut.badges.filter((b) => CLOSURE_STATES.has(b.state));
     report.check(
-      "…and the closure is SAID, not merely implied by a missing chip",
-      /closed/i.test(shut.bodyText),
-      `banner ${JSON.stringify(shut.closureText)}, ${shut.badges.length} badge(s)`,
+      "…and the closure is SAID on the card, not merely implied by a missing chip",
+      shutClosures.length > 0 && shutClosures.every((b) => /permanently closed/i.test(b.text)),
+      `${shutClosures.length} closure badge(s): ` +
+        JSON.stringify([...new Set(shutClosures.map((b) => b.text))]),
     );
     // The control for the pair above: a shut venue must still be a MENU. A page
     // that failed to render satisfies "no hours chip" perfectly.
@@ -484,12 +502,24 @@ async function browserHalf(report, opts) {
 
     // --- temporarily closed: a DIFFERENT sentence from the permanent one -----
     const temp = await open(driver, base, id(["temporarily-closed"]));
+    const tempClosures = temp.badges.filter((b) => CLOSURE_STATES.has(b.state));
+    const tempWords = [...new Set(tempClosures.map((b) => b.text))];
+    const shutWords = [...new Set(shutClosures.map((b) => b.text))];
     report.check(
       "a temporary closure reads differently from a permanent one",
-      temp.closureText !== null &&
-        shut.closureText !== null &&
-        temp.closureText !== shut.closureText,
-      `temporary ${JSON.stringify(temp.closureText)} vs permanent ${JSON.stringify(shut.closureText)}`,
+      tempWords.length === 1 && shutWords.length === 1 && tempWords[0] !== shutWords[0],
+      `temporary ${JSON.stringify(tempWords)} vs permanent ${JSON.stringify(shutWords)}`,
+    );
+    // The OVERDUE reopening the item names. This fixture's `until` is
+    // 2016-05-01 — stated, and long past. `closure-ui.js` drops the date rather
+    // than repeating a promise the record can no longer support, and this is
+    // the only place in the repo where that branch runs at all: no record in
+    // the corpus carries an `until`, so before this fixture the code path had
+    // never been executed by anything.
+    report.check(
+      "…and an overdue reopening states no date it can no longer support",
+      tempWords.length === 1 && !/\bback\b/i.test(tempWords[0]) && !/2016/.test(tempWords[0]),
+      `reads ${JSON.stringify(tempWords[0] ?? null)} (until was 2016-05-01)`,
     );
 
     // --- no hours anywhere ---------------------------------------------------
@@ -509,20 +539,42 @@ async function browserHalf(report, opts) {
     );
 
     // --- an empty section ----------------------------------------------------
+    // WHAT THIS FIXTURE ACTUALLY FOUND, and it is not what was expected.
+    // `resolveRecord` (temporal.js) drops a section with no items before the
+    // page ever sees it, so an empty heading never reaches a reader. That is
+    // good behaviour and it is what is asserted below.
+    //
+    // 🚩 But the comment justifying it reads: *"a section that genuinely ships
+    // no items is a data error validate.py catches, so dropping empties here is
+    // safe."* The schema half of THIS file proves the second clause false —
+    // `empty-section` validates with zero new errors, on both sources. The
+    // behaviour survives its wrong reason (the resolver's own filter is what
+    // makes it safe, not a gate upstream), so nothing here is broken. But a
+    // load-bearing claim about a guard that does not exist is exactly the shape
+    // that gets a defence deleted by whoever checks it — reported, and left
+    // alone, because this change is tools-only.
     const empty = await open(driver, base, id(["empty-section"]));
     const emptySec = empty.sections.find((s) => s.id === "section-fixture-empty");
     const filled = empty.sections.filter((s) => s.rows > 0);
     report.check(
-      "an empty section still gets its heading, and holds no rows",
-      !!emptySec && emptySec.rows === 0,
+      "a section with no rows never reaches the page — no empty heading is drawn",
+      !emptySec,
       emptySec
-        ? `${JSON.stringify(emptySec.heading)} with ${emptySec.rows} row(s)`
-        : `no #section-fixture-empty among ${JSON.stringify(empty.sections.map((s) => s.id))}`,
+        ? `#section-fixture-empty rendered: ${JSON.stringify(emptySec.heading)}, hidden=${emptySec.hidden}`
+        : `sections on the page: ${JSON.stringify(empty.sections.map((s) => s.id))}`,
     );
-    // The control. "The empty section has no rows" is satisfied by a page whose
-    // sections ALL lost their rows, which is a much worse bug.
+    // The half that would fail independently. Dropping the section and leaving
+    // its jump-nav chip behind gives a reader a chip that scrolls nowhere, and
+    // every assertion above still passes.
     report.check(
-      "…while the sections beside it still have theirs",
+      "…and it leaves no jump-nav chip pointing at an anchor that is gone",
+      !empty.navHrefs.includes("#section-fixture-empty"),
+      `nav: ${JSON.stringify(empty.navHrefs)}`,
+    );
+    // The control. "The empty section is absent" is satisfied by a page where
+    // every section vanished, which is a far worse bug.
+    report.check(
+      "…while the sections beside it are untouched",
       filled.length > 0,
       `${filled.length} of ${empty.sections.length} section(s) carry rows`,
     );
