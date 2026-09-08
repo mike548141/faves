@@ -1152,3 +1152,20 @@ deliberation those compact docs omit.
   photographs say so out loud in `data/intake/not-products.json` — with what
   they hold, who read them and when, because *"we looked and it is not a
   product"* and *"nobody looked"* are otherwise identical.
+- [0103](0103-a-branch-has-an-id-and-its-position-is-not-it.md) — **a branch has
+  an id, and its position is not it.**
+  [0051](0051-a-dish-has-an-id-and-its-name-is-not-it.md)'s identity rule
+  applied to a third entity: all 47 branches seeded from their labels by
+  `tools/seed_branch_ids.py`, required and unique per record in `validate.py`.
+  A branch had two names and neither was one — its `label` (optional, free
+  text) and its **position**, since `data.js` projects `locations[0]` to the
+  top level, so a branch inserted at index 0 moves the venue's address, phone
+  and hours to a different shop in a diff that reads as an addition. The field
+  is `id`, not `branchId`: a branch is a *place*, and a place's record already
+  spells its identity `id`. 🔑 It became a **precondition** the day the owner
+  ruled Cook at Home into a venue with branches (`470/050`) — a key a reader
+  stores on their phone against a branch in a *shipped* record must survive the
+  next payload refresh. ⚠️ Nothing enforces the immutability but the seeder's
+  refusal to overwrite and the reader's eye — and that is equally true of
+  `dishId` and `sectionId`, said out loud here rather than implied. Measured:
+  **+330 bytes gzipped**, against the item's estimate of ~1 KB.
