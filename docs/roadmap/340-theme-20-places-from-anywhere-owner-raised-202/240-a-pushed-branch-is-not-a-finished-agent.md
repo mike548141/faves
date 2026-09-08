@@ -89,9 +89,21 @@
      own transcript, and today's agent handled it. 🛑 Weak: the failure mode is
      *a false regression report against a deleted tree*, which is the most
      expensive kind of wrong answer this repo has.
-  🎯 **Recommendation: 1, with 2 if a future session runs more than about three
+  🎯 **[SUPERSEDED — he took OPTION 2 on 2026-09-07 and explicitly did NOT take
+  this recommendation; see the ruling above. Kept for the record, not a live
+  ask.]
+  Recommendation: 1, with 2 if a future session runs more than about three
   agents at once** — at that point inferring state from git for each of them
   stops being cheap.
+
+  📝 **BOARD HYGIENE 2026-09-09 — NO LIVE OWNER ASK REMAINS ON THIS ITEM.** The
+  question was ruled on 2026-09-07 and the item already records the overrule
+  plainly; the only 🎯 left is the superseded recommendation above, now labelled
+  in place so it cannot be read as still sitting with him.
+  🛑 **The bracket stays `- [ ]`** because option 2's obligation is unbuilt: every
+  agent brief must carry an explicit terminal marker, and the ⏸️ note above says
+  it was deliberately not retro-fitted. That is `[XS][docs]` work, not a
+  decision.
 
   🔗 This is the same family as
   [`200`](200-untilpresent-can-manufacture-a-false-regression-under-load.md) and

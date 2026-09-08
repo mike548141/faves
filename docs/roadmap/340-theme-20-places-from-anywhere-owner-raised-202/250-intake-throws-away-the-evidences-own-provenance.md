@@ -69,7 +69,7 @@
   silently skipped — a method that escapes the guard should be visible on the
   page that escapes it.
 
-  ## 🎯 What was built — he asked "a tool or a guard": both
+  ## ✅ What was built — he asked "a tool or a guard": both
 
   **The tool** — `python3 tools/intake_exif.py --for <venue-id>`. The other
   modes report on *files*; this one reports on the **fields you are about to
@@ -138,7 +138,7 @@
   | All four photos' EXIF `creation` | **2026-08-25**, 09:49:44 · 09:49:53 · 10:13:25 · 10:13:29 |
   | File mtime (when they were copied into `intake/`) | 2026-09-07 14:16 |
   | What `simmer.json` recorded | `verified: 2026-09-07`, `verifiedBy: in-store` |
-  | GPS on any of the four | **absent** (`kMDItemLatitude` null) |
+  | GPS on any of the four | ~~**absent** (`kMDItemLatitude` null)~~ 🛑 **WRONG — see the correction at the top of this item.** The EXIF GPS IFD is **present**, 15 entries, on all four |
   | Camera | Apple iPhone 14 Pro |
 
   🛑 **So the record claims a freshness it does not have, by 13 days.** The
@@ -151,8 +151,13 @@
   🔎 **And the two timestamps are 24 minutes apart in two pairs** — 09:49 for
   the two printed boards, 10:13 for the cabinet and the counter. That is a
   visit, and it is a fact about the evidence nobody recorded.
-  ✅ **GPS was absent here, which is luck rather than diligence** — nothing in
-  the pipeline looked, so a photo *with* GPS would have been treated identically.
+  🛑 ~~**GPS was absent here, which is luck rather than diligence**~~ — **THIS
+  SENTENCE IS FALSE AND IS KEPT ONLY TO SHOW WHAT WAS BELIEVED (annotated
+  2026-09-09).** The correction at the top of this item measured the EXIF GPS
+  IFD as **present on all four**, and the sweep at **64 of 68 files**. There was
+  no luck: nothing in the pipeline looked, and the leak risk was live the whole
+  time. The original point survives inverted — a photo *with* GPS **was** treated
+  identically, because that is exactly what happened.
 
   ## 🚩 Why this is not simply "read the EXIF" — the trap on the other side
 
@@ -208,7 +213,9 @@
      change and every payload field downloads to every phone.
   4. **Write the convention down and change no code.** Free; and this repo's
      own record is that a convention with no mechanism is what just failed.
-  🎯 **Recommendation: 1 now, 2 next, 3 into Theme 38.** Option 1 is cheap, is
+  🎯 **[SUPERSEDED — he took ALL THREE on 2026-09-07; see the ruling directly
+  below. Kept for the record, not a live ask.]
+  Recommendation: 1 now, 2 next, 3 into Theme 38.** Option 1 is cheap, is
   useful the very next time a photo arrives, and **cannot itself be wrong about
   a venue** because it only reports. Option 2 turns the discipline into a
   mechanism once there is a convention for it to check. Option 3 is a data-model
@@ -252,12 +259,21 @@
      address**. CLAUDE.md's rule for secrets applies unchanged to this: *a
      secret committed and then removed is still disclosed*. So **every image
      must be stripped or verified GPS-free BEFORE it lands**, and that check
-     belongs in the guard (option 2), not in a session's care. The Simmer four
-     happened to carry no GPS — luck, not diligence, because nothing looked.
-  🎯 **Recommendation: the tool (1) lands first and reports GPS presence, and
+     belongs in the guard (option 2), not in a session's care. ~~The Simmer four
+     happened to carry no GPS — luck, not diligence, because nothing looked.~~
+     🛑 **FALSE, annotated 2026-09-09** — all four carry a 15-entry GPS IFD.
+     This is the third place in this item that repeated the wrong reading; the
+     correction at the top is the measured one.
+  🎯 **[SUPERSEDED — he ruled on this on 2026-09-09: STRIP LOCATION, THEN
+  COMMIT. See the ruling at the foot of this item. Kept for the record.]
+  Recommendation: the tool (1) lands first and reports GPS presence, and
   NOTHING is bulk-imported until the size rule and the strip-or-refuse guard
   both exist.** Importing first and deciding after is the one order that cannot
   be undone.
+  🔑 **Its substance survived the ruling rather than being discarded** — he
+  ordered the strip-or-**refuse** guard *before* the import for the same reason
+  this paragraph gives, so the sequencing stands even though the recommendation
+  was overtaken.
 
   🛑 **A correction is owed regardless of which option is chosen.**
   `simmer.json`'s `verified` should read **2026-08-25**, not 2026-09-07. Under
@@ -314,4 +330,19 @@
   `.leakscanignore` currently exempts a store for a different reason and that
   precedent should not be copied here; (3) a measured size report; (4) only
   then the import. **Not started this session.**
+
+  📝 **BOARD HYGIENE 2026-09-09 — NO LIVE OWNER ASK REMAINS ON THIS ITEM.**
+  Both questions it put to him are answered and both answers are corroborated
+  outside this file: the three-option ruling on 2026-09-07, and *strip location
+  then commit* on 2026-09-09 (`docs/SESSIONS.md:10528-10531`, which also records
+  it as strip-or-**refuse** with a byte-level verification pass). The two 🎯s
+  above are now labelled in place as superseded recommendations and the section
+  heading that read `## 🎯 What was built` — never an ask at all — is now `## ✅`.
+  🛑 **The bracket stays `- [ ]`, and the work owed is large:** the stripper with
+  its refusal path, the floor gate, the size report, and only then the import.
+  🚩 **Three stale "GPS was absent" claims are annotated rather than removed.**
+  They sat 120+ lines below the correction that refutes them, so a reader
+  arriving mid-file read a falsehood with no marker on it. The measured truth is
+  the correction at the top: 15 GPS IFD entries on all four Simmer photographs,
+  and 64 of 68 files across the corpus.
 
