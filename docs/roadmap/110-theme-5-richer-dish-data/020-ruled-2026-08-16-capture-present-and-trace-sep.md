@@ -27,7 +27,9 @@
       - **`site/data/`, unrendered for now** — keeps one dish's allergen facts
         in one place, at the cost of precaching a field nothing shows, which is
         the exact thing ADR 0047 was written to stop.
-      🎯 **Recommend the record (`data/`)**, because ADR 0047 is accepted and
+      🎯 **[SUPERSEDED 2026-09-09 — kept for the record, see the two rulings
+      below. This ask was already answered when it was written.]
+      Recommend the record (`data/`)**, because ADR 0047 is accepted and
       the payload cost is paid by every phone on every visit — but flag that it
       makes the split-store rule load-bearing for safety data for the first
       time, which is a genuine escalation of what `split_data.py --check` is
@@ -35,6 +37,24 @@
       🔎 **It will recur.** Every venue publishing a first-party allergen chart
       is likely to grade it this way; Subway's own NZ Allergen Web Guide is the
       next one to check.
+
+  🛑 **CORRECTION 2026-09-09 — HE HAD ALREADY RULED THIS ON 2026-08-16, AND
+  THIS ITEM NEVER RECORDED IT.** Verbatim at `docs/SESSIONS.md:6480-6488`, in
+  the session headed *2026-08-16 15:40 UTC*: *"The trace tier: app tags
+  unchanged, and it lives in `site/data/`. Only `P` becomes a `contains-*` tag;
+  the payload gains the ability to carry `T` rather than discarding it."* And
+  the premise he overruled, in his own words at `docs/SESSIONS.md:6483-6484`:
+  *"In ruling 47 I said it only holds data the screen shows, **or may with
+  future features**."*
+  🔎 **So the 2026-09-09 ruling below is the SAME ruling, given a second time.**
+  Because the item stayed silent, a session re-asked a settled question and he
+  answered it identically 24 days later. That is the cost this note exists to
+  stop repeating — the ask, not the answer, was the defect.
+  🚩 **And his premise is checkable, not merely asserted.** ADR 0047's
+  **Context** does carry the future clause — *"data the app will never render —
+  now or in a future feature"* (`docs/decisions/0047-the-app-ships-only-what-it-renders.md:35-37`).
+  Its own **Consequences** and `CLAUDE.md`'s restatement both drop it. Two of
+  the three places a builder looks are narrower than the decision.
 
   ✅ **OWNER RULED 2026-09-09 — THE TRACE TIER LIVES IN `site/data/`,
   UNRENDERED.** He took the reading this item recommended AGAINST: one dish's
@@ -56,4 +76,18 @@
   chart (Pizza Hut is the first), and a validator rule so a trace tag cannot be
   confused with a present one by anything that reads tags positionally.
   ⏳ **Not started this session.**
+
+  🛑 **THE ADR 0047 SUPERSEDING NOTE IS OWED WORK, AND IT HAS BEEN OWED SINCE
+  2026-08-16 — MEASURED, NOT RECALLED (2026-09-09).** The 2026-08-16 record
+  closes on *"🎯 Wants a superseding note; raised, not taken"*
+  (`docs/SESSIONS.md:6488`). Twenty-four days later it is **still not taken**:
+  `grep -rn "0047" docs/decisions/*.md` returns 33 inbound references and **not
+  one** superseding or amending record, and 0047's own header carries `Status:
+  accepted` with no *Superseded by* / *Amended by* line. This is why the
+  bracket on this item stays `- [ ]`: the ruling is settled twice over, but the
+  work it obliges has not started.
+  ✅ **NO LIVE OWNER ASK REMAINS ON THIS ITEM (2026-09-09).** Everything left is
+  build and record work on a decision he has now given twice. The 🎯 above is
+  marked superseded rather than deleted, so a reader can still see what was put
+  to him and what he did with it.
 

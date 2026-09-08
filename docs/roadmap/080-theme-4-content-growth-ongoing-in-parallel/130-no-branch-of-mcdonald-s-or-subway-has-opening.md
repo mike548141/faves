@@ -1,5 +1,6 @@
 - [ ] 🚩 **No branch of McDonald's or Subway has opening hours** `[M][content]`
-      — **10 of the corpus's 22 branches**, measured 2026-08-16. This is now
+      — ~~**10 of the corpus's 22 branches**, measured 2026-08-16~~ →
+      **10 of the corpus's 47 branches**, re-measured 2026-09-09. This is now
       load-bearing rather than cosmetic: [ADR 0054](../../decisions/0054-the-branch-offered-first-is-the-nearest-open-one.md)
       picks the branch that leads a chain's contact card by *"nearest, and
       open"*, and with no hours anywhere on those two chains the openness half
@@ -49,3 +50,27 @@
       first-party. **Option (c) changes a standing rule and is his call alone.**
       Claim released — this is not blocked on effort and re-attempting it with
       the same tools will produce the same result.
+
+  📏 **COUNT RE-MEASURED 2026-09-09 — the denominator moved, the problem did
+  not.** The corpus now holds **47 branches across 12 venues**, not 22. The
+  numerator is unchanged at **10**, and they are still exactly the same ten:
+  all **5 McDonald's** and all **5 Subway**. Nothing else in the corpus is
+  missing hours — the other 37 branches all carry them.
+  The command, so the next reader re-runs rather than inherits:
+
+  ```
+  python3 -c "import json,glob
+  n=[(json.load(open(f)).get('id'),i) for f in glob.glob('site/data/restaurants/*.json')
+     for i,b in enumerate(json.load(open(f)).get('locations') or []) if not b.get('hours')]
+  print(len(n))"
+  ```
+
+  🔑 **Why the correction matters in the right direction.** *"10 of 22"* reads as
+  **45% of the estate broken**; *"10 of 47"* is **21%**, and the gap is confined
+  to two chains that share one cause. The stale figure overstated the blast
+  radius of a live owner decision — which is the wrong way for a number to be
+  wrong on an item that is about to be put to him.
+  🎯 **THE OWNER DECISION ABOVE IS STILL LIVE AND UNANSWERED (checked
+  2026-09-09).** Options (a), (b) and (c) all stand; nothing here answers them,
+  and (c) still changes a standing rule and is his alone. The bracket stays
+  `- [ ]`.

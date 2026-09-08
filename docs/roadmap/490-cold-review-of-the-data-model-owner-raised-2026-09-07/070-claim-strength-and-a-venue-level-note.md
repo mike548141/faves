@@ -6,7 +6,9 @@
 
   ✅ **OWNER RULED 2026-09-08 on the venue note — OPTION 3, DESIGN IT WIDER
   FIRST.** He declined adding `note` now, taking his own earlier steer
-  seriously: *"adding a field now means designing it twice"*. So the note waits
+  seriously: *"adding a field now means designing it twice"* ⚠️ **[quote
+  UNCORROBORATED — see the note at the foot of this item, 2026-09-09]**.
+  So the note waits
   for the prose design it belongs to, and Simmer's kitchen-wide allergen
   statement stays attached to its Breakfast section meanwhile — which is a
   known, accepted wrong until that design lands.
@@ -61,8 +63,48 @@
   way; 1841 keeps *"open till late"* in a Mains note; Simmer's happy hour is on
   the Wine note.
 
-  🎯 **Recommendation: add `note` to the venue**, rendered on the menu header under
-  the caveat — the screen ADR 0047 asks to be named — at tens of bytes per venue
-  that has one. The alternative in the corpus is a statement about the whole
-  kitchen attached to breakfast. The owner's referral said *"adding a field now
-  means designing it twice"*; this is the second design.
+  🎯 **[SUPERSEDED — he took option 3 on 2026-09-08 and declined this. Kept for
+  the record.] Recommendation: add `note` to the venue**, rendered on the menu
+  header under the caveat — the screen ADR 0047 asks to be named — at tens of
+  bytes per venue that has one. The alternative in the corpus is a statement
+  about the whole kitchen attached to breakfast. The owner's referral said
+  *"adding a field now means designing it twice"* ⚠️ **[UNCORROBORATED — see
+  below]**; this is the second design.
+
+  ## ⚠️ THE QUOTE THIS ITEM RESTS ON IS UNCORROBORATED — recorded 2026-09-09
+
+  🛑 **His words are kept exactly as written, above and here. Nothing is
+  deleted.** What follows is a note about the *evidence* for them, not a
+  challenge to the ruling they sit under.
+
+  This repo's own Theme 38 cold review checked the quote **four days before this
+  item was written** and marked it **UNVERIFIABLE**
+  (`../../reviews/2026-09-07-1216-theme-38-cold-review.md:86`, row 17 of its
+  citation audit), in these words:
+
+  > §Referred: the owner said *"adding a field now means designing it twice"* —
+  > The referral is evidenced by commit `43a4208`; the quoted words appear in no
+  > record but the brief.
+
+  🔎 **Re-checked 2026-09-09 and the finding holds.** `grep -rn "designing it
+  twice"` across `docs/SESSIONS.md`, `docs/decisions/` and `docs/roadmap/`
+  returns the review line above and **the two occurrences in this file** — and
+  nothing else. There is no session log entry, no ADR and no transcript carrying
+  it. The **referral itself is evidenced** (commit `43a4208`); it is the
+  *wording* that has no first-hand home.
+
+  🔑 **Why it is worth flagging on this item specifically.** The quote is not
+  decoration here — it is cited **twice**, and it is the stated reason the ruling
+  went the way it did (*"taking his own earlier steer seriously"*). A paraphrase
+  that has hardened into quotation marks carries his authority forward
+  unchallenged, and this board has a recorded pattern of records getting
+  *stronger* than their sources, never weaker.
+  ✅ **This changes nothing about the ruling.** He ruled option 3 on 2026-09-08
+  and that is independently recorded; the ruling stands whether or not the
+  earlier steer was worded this way. **Do not re-open the decision on the
+  strength of this note** — the only safe use of it is that a future session
+  quoting the line should attribute it to the brief rather than to him directly,
+  or ask him.
+  🛑 **The bracket stays `- [ ]`:** the claim-strength half of this item
+  (options 1-3 above) is unruled and unbuilt, and the venue note is deferred to
+  a prose design that does not exist yet.

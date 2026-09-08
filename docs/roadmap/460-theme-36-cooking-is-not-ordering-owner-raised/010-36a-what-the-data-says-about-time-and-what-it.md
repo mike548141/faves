@@ -80,7 +80,57 @@ Hotcakes states 5 minutes across its steps against a `time` of "~50 min",
 because prep is untimed. Publishing sum-of-steps as a recipe total would
 understate most recipes by most of their length.
 
-🎯 **For the owner — this one only you can close.** Per-step times and the 15
+~~🎯 **For the owner — this one only you can close.** Per-step times and the 15
 missing totals need to come from you (or from cooking them). Say the word and
 the field goes in the schema and the screens read it; what will not happen is a
-number being invented to fill a column.
+number being invented to fill a column.~~
+
+## 🛑 THE PARAGRAPH DIRECTLY ABOVE IS DEAD TEXT — struck 2026-09-09
+
+It was already false when the ruling block at the head of this file was written,
+and it has been contradicted **twice over** ever since. It is struck rather than
+deleted so the reversal stays legible.
+
+- **It asks him for the per-step times.** The ruling at the top of this item is
+  *estimate the per-step and total times, and label them as estimates*, and the
+  line beneath it records the work as **✅ DONE 2026-08-16** — all 24 recipes
+  and 118 steps, in `data/estimates/`, guarded by
+  `tools/recipe_estimates.py --check` and recorded as ADR 0064.
+- **It says "what will not happen is a number being invented".** Under the
+  ruling, estimating them is exactly what happened — honestly, with each number
+  carrying its **working**, which is the whole subject of ADR 0064.
+- **It re-opens something this same file forbids re-opening.** Eight bullets
+  above it: *"The nine weak estimates → **SHIP AS THEY ARE**. He declined to
+  supply his own numbers… **Do NOT re-open this by asking him per recipe.**"*
+  Asking him for the missing totals is that request in different words.
+
+🔑 **This is why it mattered enough to strike rather than leave.** The item is
+`- [ ]` and carries a 🎯, so a session scanning the board for owner asks reads
+the **last** paragraph as the live one and takes him a question he has already
+answered and explicitly closed. That is not hypothetical — the same failure is
+recorded on `110/020`, where an unrecorded ruling caused the identical question
+to be put to him twice, 24 days apart.
+
+### 📎 On the two rulings quoted at the head of this item — checked, not assumed
+
+- **The timer ruling *"Estimates drive timers too, clearly marked…"* is
+  first-hand and corroborated.** It appears verbatim in
+  `docs/decisions/0066-an-estimated-duration-drives-a-timer-marked-as-an-estimate.md:36-37`
+  and again in `docs/decisions/README.md:597`. Treat it as his words.
+- **The *estimate-them* ruling is RELAYED, and this item already says so** —
+  *"Owner ruling 2026-08-16, relayed from a peer session"*. Recorded here
+  because it was queried: it is **not** presented as a verbatim quotation (no
+  quotation marks, italic paraphrase), and it **is** independently corroborated
+  in substance by ADR 0064's own Context, lines 15-16: *"He ruled the other way
+  on 2026-08-16: estimate them, and label them as estimates. That is his call
+  and it stands."* No first-hand transcript of the wording exists. So: relayed
+  as to wording, corroborated as to substance, and already labelled correctly.
+  Nothing to change — noted so the next reader does not re-check it.
+
+🛑 **The bracket stays `- [ ]` and the 🎯 on the title line stays**, because one
+genuine question in this item is still open and unanswered: **the five bake-only
+`time` values** (Orange Yoghurt Cake, Queen Cakes, Chocolate Self-Saucing, B's
+Brownie, Chewy Cookies), which exclude 6–15 min of prep while the app renders
+`time` as if it were the total. The item names it as open in the ruling block
+and nothing since has settled it. **That** is the live ask here — not the struck
+paragraph above.

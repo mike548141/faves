@@ -1,4 +1,4 @@
-- [ ] 🎯 **Cook at Home should use the venue/branch structure, so two houses are
+- [ ] ✅ **Cook at Home should use the venue/branch structure, so two houses are
       two branches** `[M][schema][design]` — **owner-raised 2026-09-08**, his
       words: *"cook at home should use our restaurant / branch data structure so
       if I have two houses I can differentiate between houses"*.
@@ -38,7 +38,7 @@
   🚩 **Three things this ruling now makes true, which the original filing did
   not anticipate.**
   1. **A branch's address becomes optional in a new, third way.** Today
-     `validate.py:1509-1511` requires a non-empty string. The ruled shape needs
+     `validate.py:1585-1587` requires a non-empty string. The ruled shape needs
      a branch that declares *"anywhere"* — which is a **value**, not a missing
      field, and should be spelled so a reader cannot confuse it with data
      nobody has captured yet.
@@ -53,6 +53,9 @@
   3. **`490/060` (a branch has no id) is now a hard precondition**, not a
      recommendation: a user adding branches to a shipped venue needs a stable
      key that a payload refresh cannot renumber.
+     ✅ **SATISFIED — checked 2026-09-09.** `490/060` is `- [x]`; ADR 0103
+     landed the branch id and `tools/seed_branch_ids.py --check` guards it.
+     This precondition no longer blocks anything here.
 
   📌 **Sequencing, as the ruling implies it:** the wildcard branch on the
   shipped record is small and can land on its own. The private-branch store is
@@ -77,7 +80,7 @@
 
   🛑 **THE HARD RULE IT COLLIDES WITH, STATED BEFORE ANY BUILD.** CLAUDE.md:
   *"No home addresses of people, no health details, anywhere — those two are
-  absolute."* And `validate.py:1509-1511` **requires** a branch's `address`
+  absolute."* And `validate.py:1585-1587` **requires** a branch's `address`
   to be a non-empty string. So a house-as-branch, built the way every existing branch
   is built, would put the owner's home address in `site/data/` and precache it
   onto every phone that installs the app. **The public repo makes it worse:** the
@@ -122,3 +125,21 @@
   🔗 Bears on `490/080` (household stock) — that decision needs this identity —
   and on `490/060` (a branch has no id), which becomes a precondition the moment
   a second branch exists here.
+
+  📝 **BOARD HYGIENE 2026-09-09 — what is left here is BUILD, not a decision.**
+  Three corrections, each re-measured rather than inherited:
+  - **The headline's 🎯 is retired.** He ruled on 2026-09-08 and the ruling is
+    quoted whole above; no ask sits with him on this item. The one 🎯 left in
+    the body sits inside the *"kept for the record"* options block and already
+    says he took none of the three — it is a superseded recommendation, not a
+    live ask.
+  - **The `validate.py` citation was wrong in two places and is fixed.** It read
+    `1509-1511`; that range is a *comment* about the top-level `address` on a
+    multi-branch venue. The rule the text is about — *"address must be a
+    non-empty string"* on each branch — is at **`1585-1587`**, inside the
+    `for i, b in enumerate(locations)` loop. Verified by reading the file at
+    this commit, not by search-and-replace.
+  - **The stated precondition `490/060` is DONE**, noted inline above.
+  🚩 **Nothing here changes the bracket.** It stays `- [ ]` because real build
+  work is owed: the wildcard branch, the private-branch store and its ADR, and
+  the validator change that lets a branch declare *"anywhere"* as a value.

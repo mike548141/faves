@@ -17,9 +17,27 @@
   put the disposition to him, not the design. The next session should bring him
   **two or three sketched alternatives with their costs**, not ask him an open
   question — the open question is what produced the rejected line.
-  📌 And whichever lands, ADR 0089 is accepted, so his 2026-09-06 reversal needs
-  a superseding note. It currently lives **only in a code comment**, which is
-  the narrowest possible home for a ruling that changed a shipped feature.
+  📌 ~~And whichever lands, ADR 0089 is accepted, so his 2026-09-06 reversal
+  needs a superseding note. It currently lives **only in a code comment**, which
+  is the narrowest possible home for a ruling that changed a shipped feature.~~
+  🛑 **FALSE — CORRECTED 2026-09-09. The superseding note ALREADY EXISTS and the
+  reversal is NOT only in a code comment.** `docs/decisions/0089-a-dish-has-a-price-per-door.md`
+  carries a section headed **`## Partly superseded, 2026-09-08 — the render, not
+  the model`** (line 122), which opens *"Recorded here as a pointer, not as an
+  edit. The Decision above is unchanged and its model still ships. One clause of
+  it does not"*, quotes the removed line, and then quotes him **verbatim**
+  (lines 130-133) — the same words this item attributes to the code comment
+  alone. It also records his reasoning (*the ruling he had given was about the
+  DATA MODEL … putting a second price on every row was a rendering decision
+  nobody asked for*) and closes by routing the ADR 0047 question to this very
+  item by number.
+  🔑 **Why this correction matters rather than being pedantry: it inflates the
+  item's own ask.** As written, this item tells the next session it owes a
+  superseding note on an accepted ADR — a real piece of work, done carefully or
+  not at all. That work is done. Left standing, the likely outcomes are a
+  session writing a second superseding note on the same clause, or a session
+  editing the accepted record because it believes nothing else covers it. The
+  repo forbids the second outright.
 
 
   **The facts, measured at `de6d2b7`.** ADR 0089 (accepted 2026-09-06, owner-ruled)
@@ -51,7 +69,25 @@
      row — and ship it, which satisfies ADR 0047 as ADR 0089 intended.
 
   Whichever he picks: ADR 0089 is accepted, so the correction is a superseding
-  note, never an edit, and his reversal needs a home other than a code comment.
+  note, never an edit. ~~and his reversal needs a home other than a code
+  comment.~~ ✅ **It has one — ADR 0089 § *Partly superseded, 2026-09-08*. See
+  the correction above (2026-09-09).**
   🔑 `370/010` (30g)'s question — a fee on the order or a per-dish price — is
   untouched by 0089, which chose per-dish without asking it, and its premise
   that nothing exercises a per-channel price is stale by 101 rows.
+
+  📝 **BOARD HYGIENE 2026-09-09 — what this item still owes, and what it does
+  not.**
+  - ❌ **Owed and now removed from the ask: the superseding note on ADR 0089.**
+    It exists. Corrected in both places above; the wrong text is struck through
+    rather than deleted so the diff is legible.
+  - ✅ **Re-measured and CORRECT as written: "101 dishes in 2 venues"**
+    (`kk-malaysian` ×29, `rs-satay-noodle-house` ×72 — counted from
+    `site/data/restaurants/*.json` on 2026-09-09, exactly 101). And
+    `grep -rn "priceChannels\|\.prices\b" site/js` still finds **no reader**.
+  - 🎯 **STILL LIVE AND STILL HIS: what the render actually is.** Option 3 was
+    ruled on 2026-09-08, so the *disposition* is settled and the *design* is
+    not. The instruction above stands — bring him two or three sketched
+    alternatives with their costs, never an open question, because an open
+    question is what produced the line he deleted.
+  🛑 **The bracket stays `- [ ]`.** A screen is owed and none exists.

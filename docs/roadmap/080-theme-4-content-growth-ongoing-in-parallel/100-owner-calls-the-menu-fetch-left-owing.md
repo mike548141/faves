@@ -1,12 +1,19 @@
 - [ ] 🎯 **Owner calls the menu fetch left owing** `[XS][decision]` — three
       questions the batch raised and refused to settle alone, kept together
       because each one changes what a *future* intake does, not just a record.
-      **One of the three is now ruled; two remain.**
+      ~~**One of the three is now ruled; two remain.**~~ → **TWO of the three
+      are ruled (q1 on 2026-08-17, q3 on 2026-08-22); ONE remains — q2, and it
+      is a phone call, not a decision.** Corrected 2026-09-09; see the note at
+      the foot.
       🔑 **The fetch recorded its own gaps rather than losing them** — as of
-      2026-08-17 `python3 tools/needs.py --count` reports **188 open dish-level
+      2026-08-17 `python3 tools/needs.py --count` reported **188 open dish-level
       gaps across 6 venues** (Subway 162, Regal Chinese 14, Charley Noble 7,
       Gold Lining 3, Gong Cha 1, Southern Cross 1). Derive that list, never
       re-type it. Question 1 below was most of it.
+      📏 **RE-MEASURED 2026-09-09: `python3 tools/needs.py --count` now reports
+      279 open gaps across 10 venues.** The original figure is kept above
+      because the way it changed is the interesting part — see the foot of this
+      item.
       1. ✅ **RULED 2026-08-17 — an unpriced row is a RECORD. Always keep it,
          flagged as a gap.** Never drop a menu row for lacking a price: keep it
          and mark `needs: price`, so the row is simultaneously the record of
@@ -78,3 +85,35 @@
       and never checked the *content*. Moving a claim is not reading it. A
       relocation pass should re-verify every factual claim it carries, because
       relocation is exactly when a reader assumes someone just looked.
+
+  📏 **THE GAP COUNT, RE-MEASURED 2026-09-09 — and the six original figures did
+  not move by a single row.**
+
+  | Venue | 2026-08-17 | 2026-09-09 |
+  |---|---|---|
+  | Subway | 162 | **162** |
+  | Regal Chinese | 14 | **14** |
+  | Charley Noble | 7 | **7** |
+  | Gold Lining | 3 | **3** |
+  | Gong Cha | 1 | **1** |
+  | Southern Cross | 1 | **1** |
+  | McDonald's | — | 82 |
+  | Bambina Pizzeria | — | 5 |
+  | Simmer | — | 3 |
+  | Daily Bakery | — | 1 |
+  | **Total** | **188 / 6 venues** | **279 / 10 venues** |
+
+  🔑 **All 91 of the growth is NEW venues; none of it is regression, and none of
+  it is progress either.** 188 + 91 = 279 exactly, and every one of the six
+  original venues carries the identical number it carried 23 days ago. So the
+  worklist has not been worked at all — it has only been added to. That is a
+  different fact from *"the number went up"*, and it is the one worth having.
+  🔎 **McDonald's at 82 is now the second-largest gap in the corpus** and did not
+  exist on this list when the item was written. It is the same chain as
+  `080/130`'s hours blocker, from the same cause: no readable first-party
+  source.
+  🛑 **The bracket stays `- [ ]`.** Question 2 (Pizza Hut's prices may be the
+  national default rather than Johnsonville's) is unresolved — but read it
+  carefully before putting it to him: the item itself says *"one phone call or
+  one in-store look clears it"*, which is `[XS]` verification work, not a
+  decision. Questions 1 and 3 are both ruled and both owe nothing.
