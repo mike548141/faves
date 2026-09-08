@@ -27,7 +27,7 @@
   about what a check should do, and the fix is smaller than the paragraph
   explaining the gap.
 
-  ✅ **DELIVERED 2026-09-09 (session faves-p1, ADR 0113, PR #31)** — option (1),
+  ✅ **DELIVERED 2026-09-09 (session faves-p1, ADR 0113, PR #33)** — option (1),
   the filing session's own recommendation. `tools/lib/tree.py` prints
   `tree <root> · shell <version> · <branch>@<sha>` in `browser.mjs`'s shape,
   registered from each tool's `__main__` block as an **exit hook**, so it lands
