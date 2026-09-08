@@ -404,8 +404,17 @@ python3 tools/test_tag_addon_options.py # …and the add-on option tagger still 
                               # cannot satisfy them silently
 python3 tools/products.py     # data/products/ — the packaged-product record store
                               # (ADR 0090). Enforces the three rules a reviewer
-                              # cannot: no location (137 of the source photos carry
-                              # GPS on a private address), no eating events, and a
+                              # cannot: no COORDINATE — in any spelling — because 137
+                              # of the source photos carry GPS on a private address
+                              # (rule 1 said "no location, EVER" until ADR 0115
+                              # superseded it: read literally that also forbade
+                              # READING GPS at intake, which intake_exif.py must keep
+                              # doing to sort photos to a venue and to evidence
+                              # `verifiedBy: in-store`. Where a product was seen may
+                              # now be a venue reference or a shop name — never a
+                              # number — but that key is NOT built: zero in-shop
+                              # photographs exist, and the fork is open with the owner
+                              # on roadmap 500/060), no eating events, and a
                               # street address ONLY in manufacturer.address — that
                               # last one exists because .leakscanignore exempts this
                               # store from leakscan's nz-address rule, so the guard
