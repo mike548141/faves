@@ -82,7 +82,14 @@ function tierFromHours(hours, now) {
   const st = openStatus(hours, now).state;
   if (st === "open" || st === "closing-soon") return 0;
   if (st === "opening-soon") return 1;
-  if (st === "unknown") return 2;
+  // Both flavours of "we cannot say" land on the same tier, and that is the
+  // point of the tier: it is "can't rule it out, so above definitely-closed".
+  // `unknown` is a venue we hold no hours for at all; `unknown-today` is one
+  // whose week we hold but whose TODAY it never published (ADR 0105). The
+  // reader's question — is there any chance I can eat there tonight? — has the
+  // same answer, and demoting the second to tier 3 would be the record
+  // asserting the shut day it was rewritten to stop asserting.
+  if (st === "unknown" || st === "unknown-today") return 2;
   return 3;
 }
 
@@ -119,7 +126,8 @@ function tierOf(r, kind, hours, now) {
  *   0  open (incl. "closing soon" — still serving) OR a Cook-at-Home
  *      collection (you can always cook), so these anchor the top
  *   1  opening within the hour
- *   2  hours unknown — can't rule it out, so above definitely-closed
+ *   2  hours unknown — no hours at all, OR a week that says nothing about
+ *      today (ADR 0105); can't rule it out, so above definitely-closed
  *   3  closed (shut for the night, or shut down — see tierOf)
  * For a multi-location venue the hours are the *nearest* branch's when `origin`
  * is known, else the primary branch's (venueHours) — the honest read, since we

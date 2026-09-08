@@ -71,6 +71,19 @@ test("availabilityTier: open, opening-soon, unknown, closed, recipes", () => {
   assert.equal(availabilityTier(recipes, clockAt(MON_NOON)), 0); // always an option
 });
 
+test("availabilityTier: a week that never published TODAY is tier 2, not tier 3", () => {
+  // ADR 0105. A venue whose Monday was never published is in the same
+  // epistemic state as one with no hours at all — "can't rule it out" — and
+  // tier 2 is the tier for exactly that. Sinking it to 3 would be the ranking
+  // asserting the shut day the record was rewritten to stop asserting.
+  const partial = { id: "partial", lat: -41.29, lng: 174.76, hours: { ...OPEN, mon: null } };
+  assert.equal(availabilityTier(partial, clockAt(MON_NOON)), 2);
+  // The control: the SAME record with Monday spelled `[]` — the venue saying it
+  // is shut — is tier 3. One byte apart, and the tiers must differ.
+  const shutMonday = { ...partial, hours: { ...OPEN, mon: [] } };
+  assert.equal(availabilityTier(shutMonday, clockAt(MON_NOON)), 3);
+});
+
 test("availabilityTier: 'closing soon' still counts as open (tier 0)", () => {
   // Open till 12:30, it's noon → 30 min left → closing-soon, but still serving.
   const closingSoon = { hours: week("09:00", "12:30") };

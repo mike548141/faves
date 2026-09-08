@@ -225,6 +225,21 @@ export function activeFilters(state) {
  * makeClock) is required only for the openNow clause, which reads it in each
  * venue's own timezone; a venue whose hours are unknown
  * (or a recipe, which has none) is treated as not-open, so it drops out.
+ *
+ * 🚩 AND SO DOES A VENUE WHOSE *TODAY* IS UNKNOWN — `unknown-today`, the state a
+ * partial week produces (ADR 0105) — for the same reason and by the same clause,
+ * which is worth stating because it was the sharp question this filter was
+ * re-read for. "Open now" is a CLAIM, and it is the one thing a partial week
+ * cannot support; a place in this list that turns out to be shut breaks the only
+ * promise the button makes, and it is exactly the wrong-direction error `hours`
+ * was already making before the fourth state existed. Two things stop that being
+ * a silent deletion. The venue is untouched in the unfiltered list, where its
+ * card now reads **"Hours not published today"** instead of a false "Closed", so
+ * the reader who turns the filter off is told why in words. And the RANKING puts
+ * it at tier 2, above every venue we know is shut (ranking.js) — so the ordinary
+ * browsing path surfaces it rather than burying it. Widening "Open now" to
+ * include maybes, or captioning the home screen with a count of what the clause
+ * removed, are both product decisions and neither is ours to take.
  */
 export function applyFilters(restaurants, state, clock = null) {
   return restaurants.filter((r) => {

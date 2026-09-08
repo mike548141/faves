@@ -24,6 +24,23 @@
 // the countdown is the real minutes between two instants. Purity is untouched:
 // the instant is an INPUT — nothing here calls `Date.now()`.
 //
+// And a fourth, added 2026-09-08 (ADR 0105): A DAY MAY BE `null`, AND THAT IS
+// NOT `[]`. `[]` is the venue saying *"we are closed that day"*. `null` — or the
+// key simply not being there — is *"the venue did not say"*. Abrakebabra
+// publishes four lines (Sun–Tue, Thu, Fri, Sat) and no Wednesday line at all;
+// before this the record could either claim a Wednesday it does not know or
+// throw away the six days it does, and it threw away the six. The rule is the
+// one the corpus already applies to `verified` and to a dish `price`: UNKNOWN IS
+// NOT NONE. `hours: null` (nothing known about the week) and `hours.wed: null`
+// (nothing known about that day) are the same word meaning the same thing at two
+// depths of the same tree, which is why `null` was chosen over a sentinel.
+//
+// The consequence that matters is that `openStatus` now answers in SIX states,
+// not five: `unknown-today` is *"we cannot say about right now"* and it RENDERS
+// WORDS. It is deliberately not folded into `unknown`, because `unknown` means
+// "draw no badge" at every call site, and a blank is the same shape as the bug —
+// a reader cannot tell "we do not know" from "nobody thought this worth saying".
+//
 // A `now` written by hand as `{dow, minutes}` (which is how tests/hours.test.js
 // drives the pure arithmetic) still works and falls back to wall-clock minutes.
 // That is not a silent degradation: a bare wall clock genuinely cannot tell the
@@ -166,6 +183,15 @@ export function makeClock(date = new Date()) {
 // second copy of the week-expansion in the section code, and the same rule
 // applies here as to `tierFromHours` in ranking.js: export it again if a second
 // caller needs this reasoning; don't duplicate it.
+//
+// A DAY THAT IS `null` (or absent) CONTRIBUTES NOTHING, exactly as `[]` does —
+// and that is right HERE and wrong everywhere the result is turned into a
+// verdict. This function answers "when is this venue open, that we know of";
+// `[]` and `null` genuinely have the same answer to that. The difference between
+// them is the difference between "and therefore it is shut" and "and therefore
+// we cannot say", which is `openStatus`'s job, not this one's (ADR 0105). Do not
+// "simplify" a caller by asking this function whether a day is known: it cannot
+// tell you, by construction.
 export function segments(hours) {
   const out = [];
   DAYS.forEach((key, dow) => {
@@ -298,6 +324,25 @@ function realMinutes(now, wallDelta) {
 }
 
 /**
+ * Did this record say anything at all about day `dow` (a getDay() index)?
+ *
+ * `null` and a MISSING KEY both answer no, and they answer it identically on
+ * purpose. `validate.py` insists on all seven keys, so a written record says
+ * *"we asked and were not told"* rather than trailing off; but the engine reads
+ * an absent key the safe way regardless, because the alternative is a
+ * hand-written or half-migrated object silently asserting CLOSED — which is the
+ * exact direction ADR 0094 exists to stop. Strict validator, tolerant engine.
+ */
+export function dayIsKnown(hours, dow) {
+  return hours != null && hours[DAYS[dow]] != null;
+}
+
+/** The day keys this record says nothing about, as getDay() indices. */
+function unknownDows(hours) {
+  return DAYS.map((_, dow) => dow).filter((dow) => !dayIsKnown(hours, dow));
+}
+
+/**
  * Live status for a venue's hours at moment `now`.
  *
  * `now` is `{ dow, minutes }` — and, from `nowIn`/`makeClock().at()`, also
@@ -307,23 +352,34 @@ function realMinutes(now, wallDelta) {
  *
  * Returns { state, label, detail, minutes }:
  *   state:   'open' | 'closing-soon' | 'closed' | 'opening-soon' | 'unknown'
+ *            | 'unknown-today'
  *   minutes: real minutes until that state changes — until the close when open,
  *            until the next opening when closed — or null when there is nothing
  *            to count to (no hours, an open-ended close, a week with no
  *            segments). It is the number `label` renders when it renders one,
  *            exposed because the 60-minute gate means the interesting values are
  *            the ones the badge does NOT show.
- * `unknown` = no hours data (render no badge). Pure.
+ * `unknown` = no hours data (render no badge).
+ * `unknown-today` = we hold hours, but nothing for the day the reader is in, and
+ *            nothing else puts them inside an opening. It CARRIES WORDS and must
+ *            be rendered (ADR 0105) — the whole point is that a person can tell
+ *            it apart from "Closed", which is what this record used to say about
+ *            a day nobody ever told us about. Pure.
  */
 export function openStatus(hours, now) {
   if (!hours || typeof hours !== "object") return { state: "unknown", label: "", detail: "", minutes: null };
   const segs = segments(hours);
-  if (!segs.length) return { state: "closed", label: "Closed", detail: "", minutes: null };
 
   const at = now.dow * 1440 + now.minutes;
 
   // Open right now?
-  const found = containing(segs, at);
+  //
+  // THIS COMES FIRST, BEFORE THE UNKNOWN-DAY TEST, AND THE ORDER IS THE WHOLE
+  // ARGUMENT. A Tuesday span that runs to 03:00 puts the reader inside an
+  // opening at 2am on an unknown Wednesday, and we know that from TUESDAY's
+  // line. Positive evidence of being open beats an absent day; only when there
+  // is no such evidence does the silence decide.
+  const found = segs.length ? containing(segs, at) : null;
   if (found) {
     const current = found.seg;
     if (current.closeMin == null) return { state: "open", label: "Open", detail: "", minutes: null };
@@ -347,6 +403,26 @@ export function openStatus(hours, now) {
     };
   }
 
+  // Not inside an opening — so what the record says about TODAY now decides,
+  // and if it says nothing, so must we (ADR 0105). "Closed" here would be the
+  // record asserting a day it was never told about, in the direction that sends
+  // someone across town to a shut door — or, worse, keeps them at home while the
+  // shop is trading.
+  const unknown = unknownDows(hours);
+  if (unknown.includes(now.dow)) {
+    // ONE PHRASE, NOT A LABEL PLUS A BLANK. Every render on the site draws
+    // `label · detail` and skips the badge entirely on `unknown`; this state
+    // exists so that something legible is drawn instead of nothing.
+    return {
+      state: "unknown-today",
+      label: "Hours not published today",
+      detail: "",
+      minutes: null,
+    };
+  }
+
+  if (!segs.length) return { state: "closed", label: "Closed", detail: "", minutes: null };
+
   // Otherwise find the next opening, wrapping the week.
   //
   // The SEARCH stays on the wall clock: it is picking which stated opening comes
@@ -364,6 +440,23 @@ export function openStatus(hours, now) {
   if (!nextSeg) return { state: "closed", label: "Closed", detail: "", minutes: null };
 
   const opensToday = nextSeg.dow === now.dow && nextSeg.start > at;
+
+  // 🚩 AN UNKNOWN DAY BETWEEN HERE AND THERE MAKES "next" A CLAIM WE CANNOT
+  // MAKE (ADR 0105). Today is known by now — the branch above returned
+  // otherwise — but the days in between need not be. On a Tuesday night, with
+  // Wednesday unpublished, "opens Thu 5pm" quietly re-asserts the Wednesday the
+  // record was rewritten to stop asserting: the shop may well open tomorrow.
+  // The VERDICT is untouched (closed right now is known and true); only the
+  // detail is hedged, and the hedge leads so it cannot be skimmed past.
+  //
+  // The comparison is on the wall clock deliberately: it matches the search
+  // above, and an unknown day is a 1,440-minute window against which an
+  // offset shift is noise. Note this cannot collide with `opening-soon` below —
+  // an unknown day contributes no segment, so an opening within the hour is
+  // always on a day that starts no later than this one.
+  const dayStartDelta = (dow) => (dow * 1440 - at + WEEK) % WEEK;
+  const unknownFirst = unknown.some((dow) => dayStartDelta(dow) < best);
+
   best = realMinutes(now, best);
 
   // Opening within the hour reads as ONE phrase — "Opens in 14 min" — for the
@@ -374,9 +467,10 @@ export function openStatus(hours, now) {
   if (best <= CLOSING_SOON) {
     return { state: "opening-soon", label: `Opens in ${best} min`, detail: "", minutes: best };
   }
-  const when = opensToday
-    ? `opens ${formatTime(nextSeg.openMin)}` // e.g. after the lunch–dinner gap
-    : `opens ${DAY_LABEL[DAYS[nextSeg.dow]]} ${formatTime(nextSeg.openMin)}`;
+  const at_ = opensToday
+    ? formatTime(nextSeg.openMin) // e.g. after the lunch–dinner gap
+    : `${DAY_LABEL[DAYS[nextSeg.dow]]} ${formatTime(nextSeg.openMin)}`;
+  const when = unknownFirst ? `next published opening ${at_}` : `opens ${at_}`;
   return { state: "closed", label: "Closed", detail: when, minutes: best };
 }
 
@@ -390,7 +484,13 @@ export function openStatus(hours, now) {
  * is what the naive formatter produced, which is worse than saying nothing.
  */
 export function formatDay(intervals) {
-  if (!intervals || !intervals.length) return "Closed";
+  // A NULL OR ABSENT DAY reads "Not published", never "Closed" (ADR 0105). The
+  // column is already headed "Hours", so two words are enough here and the badge
+  // above carries the fuller sentence. This is the row a reader compares against
+  // a real "Closed" one line up, so the two must not be the same string — which
+  // is exactly what the shape used to force.
+  if (intervals == null) return "Not published";
+  if (!intervals.length) return "Closed";
   return intervals
     .map(([o, c]) => {
       if (o == null && c == null) return "all day"; // no bound either end
