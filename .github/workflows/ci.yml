@@ -181,6 +181,24 @@ jobs:
       # a human typed the command. It is stdlib, offline and a second or two.
       - name: Assert the recipe estimates still line up with the recipes
         run: python3 tools/recipe_estimates.py --check
+      # `verified` is the date `refreshCaveat` ages, so a date fresher than the
+      # evidence delays the "needs a refresh" warning by exactly its own error —
+      # and one shipped that way: Simmer's photos are EXIF-dated 2026-08-25 and
+      # the record said 2026-09-07, because today is what a transcribing session
+      # knows. This compares each venue's date against the provenance of the
+      # material it was read from.
+      #
+      # SAFE HERE BECAUSE IT DOES NOT NEED `intake/`. The raw material is
+      # gitignored; the committed record `data/intake/menu-sources.json` carries
+      # the provenance (dates, device, GPS presence — never a coordinate, never
+      # a pixel), so the comparison runs on a bare checkout and says which of the
+      # two it used. 🛑 `intake/` still EXISTS here — .gitignore keeps a README
+      # and two .gitkeep inside it — so the tool tests for MATERIAL, not for the
+      # path; testing the path reported all 14 venues as drift on a clean tree.
+      - name: Assert a `verified` date is not fresher than its evidence
+        run: python3 tools/check_provenance.py
+      - name: Prove that provenance gate actually catches things
+        run: python3 tools/check_provenance.py --selftest
 
   versions:
     name: service-worker version lockstep
