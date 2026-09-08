@@ -55,3 +55,22 @@
   ADR 0047 exists to refuse.
   ⚠️ ADR 0090 is **accepted**, so whichever he picks lands as a superseding
   note, never an edit to its Decision text.
+
+  ---
+
+  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — OPTION 2: REWORD **AND**
+  OPEN THE SHOP CASE.** He overruled this item's own recommendation of (1)
+  now / (2) later, and took the wider option in one step. Recorded as his,
+  with the recommendation left standing above so the divergence is visible.
+  🎯 **One thing option 2 does not settle, and it is left open for him:**
+  whether the validator rule ships **now** (a field with no rows — which is
+  what ADR 0047 exists to refuse, and the stated reason this item recommended
+  waiting) or **when the first in-shop photograph exists**. Today there are
+  **zero** such photographs. Both readings are faithful to "open the shop
+  case"; they differ in whether the schema grows ahead of its evidence.
+  📌 The privacy floor is untouched either way: his home coordinate never
+  enters a tracked file, and the wording change is what stops a future
+  session reading *"No location, ever"* as *"never read GPS at intake"* and
+  silently breaking venue sorting.
+  ⚠️ ADR 0090 is **accepted**, so this lands as a **superseding note**, never
+  an edit to its Decision text.

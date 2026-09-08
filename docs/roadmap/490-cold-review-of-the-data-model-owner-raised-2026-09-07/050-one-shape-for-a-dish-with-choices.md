@@ -66,3 +66,36 @@
   stays his: whether a size or a protein is ever "one dish" for hearts, ratings
   and links — because under (a) the id belongs to the base dish and the choice
   lives on the line, which is the opposite of 28a's premise.
+
+  ---
+
+  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — ONE DISH, THE CHOICE MADE
+  AT ORDER TIME.** Put to him in the reader's terms: *if someone hearts
+  "Large Butter Chicken", have they hearted a dish or a size?* His answer is
+  the dish. Not "separate dishes, as today", and not "let the venue's own
+  presentation decide".
+
+  📋 **What that settles, and it settles more than this item.**
+  - A **size** and a **protein** become a CHOICE on one dish, the shape
+    add-ons already use. The **id belongs to the base dish**; the choice
+    lives on the order line.
+  - 🛑 **This is the opposite of `310/010` (28a)'s premise**, which reads
+    *"nothing to do about one dish or three: they are three dishes"*. That
+    item is now overtaken by a later ruling and must say so rather than
+    stand as a contrary decision — the sibling-item trap this board has hit
+    before. It is NOT closed by this note; it needs re-stating against the
+    ruling.
+  - `200/020` (14f, combos) and the intake rule for future size ladders both
+    inherit the answer.
+
+  🚩 **Sized as an engineering job before anything is promised: this is `[L]`
+  and it is a corpus migration, not a schema tweak.** Measured 2026-09-09 by
+  the ask that produced the ruling: **348 size-ladder rows** across the corpus
+  (`find_addons.py`), plus **665 prose offers over 36 venues**. Hearts,
+  ratings, saved orders and price history all currently join to the row that
+  is about to stop being a dish, so each is a separate migration question —
+  ADR 0099 made history join by dish **id**, which is exactly the id that
+  moves. Nothing here should start as one piece of work.
+  🎯 **Owed before build: a decomposition into parts**, and a statement of
+  what happens to an existing heart on "Large Butter Chicken" the day the
+  shape changes. Do not migrate data until that is written down.

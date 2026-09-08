@@ -52,3 +52,48 @@
   option 2 — the option he declined.
   ⏳ **Owed by him, and nothing else in this item can proceed without it.**
 
+
+  ---
+
+  🎯 **OWNER RE-DIRECTED 2026-09-09 (session faves-p1): _"I want you to do it —
+  you have access using the shed repo."_** This **supersedes** the
+  2026-09-09 line above saying the rotation is his alone and no session may do
+  it for him. He is the principal and may lift his own restriction; recorded
+  here rather than argued.
+
+  🛑 **NOT DONE — blocked on an interactive re-auth, measured not assumed.**
+  `gcloud` is installed and shows the owner's own account as active,
+  but any live call returns *"Reauthentication failed. cannot prompt
+  during non-interactive execution — please run `gcloud auth login`"*. An
+  agent session cannot complete that flow. **One `gcloud auth login` in his
+  own terminal unblocks the whole item.**
+
+  🔎 **What the estate root already knows about this key, read at his
+  direction and reported as metadata only.** The credential registry
+  identifies it by `uid` alone and has never held its value: it is the
+  *Default Gemini API Key*, created automatically 2026-01-09 with its
+  project, **restricted** to `generativelanguage.googleapis.com` and nothing
+  else, with **no keychain item** and the standing assessment *"no estate
+  consumer uses it"*. Its recorded roll story is a console action. Two further
+  facts bear on the risk: the org's **billing account is closed and no project
+  has billing enabled**, so the key cannot run up a bill — but it can still
+  call the free tier, which is the abuse that matters; and the estate's own
+  minting tool is **deliberately incapable** of creating a key of this kind
+  (*"no `--create-key` flag and never will"*), because the estate pattern is
+  keyless impersonation.
+
+  🎯 **A challenge to the ruling, raised rather than acted on.** The order was
+  *rotate*. But **delete** now looks the better answer, and it was not among
+  the options he was given:
+  - The registry says nothing in the estate uses it, and the only consumer we
+    have ever identified is two **one-off intake scripts whose job is done** —
+    the 183 photographs are harvested and ADR 0090 has landed.
+  - A regenerated key is the same class of object: a bearer credential with no
+    identity, sitting in cleartext in a gitignored file, one `git add -f` from
+    a public repo. Rotating replaces a live key with a live key.
+  - The estate's own doctrine (shed ADR 0001) is that exported keys should not
+    exist at all.
+  **If the scripts are ever needed again**, mint access then, or move them to
+  the keyless pattern. 📌 His call; nothing is done either way until he
+  answers, and the revoke-before-edit ordering still binds if he keeps
+  *rotate*.

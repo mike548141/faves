@@ -50,3 +50,26 @@
   the guard, and correct the two rows the old guard already let through.
   🎯 Recommendation: **(3)**, and the corpus sweep for softeners comes first so
   the widening is evidenced rather than guessed.
+
+  ---
+
+  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — BOTH: fix the two false
+  tags AND read image `alt`.** Put to him with four options; he took the
+  widest. Not "fix the two rows only", and not "read `alt` only".
+
+  📋 **What that licenses, in the order that is safe.**
+  1. **Remove the two false `contains-gluten` tags** — *Gluten friendly bun*
+     (which also carries `gf-option`, so the row contradicts itself) and
+     *Low Carborator lettuce bun* (a lettuce leaf). Verified in the shipped
+     data 2026-09-09 before the ask was put. This is a **data** edit, outside
+     the tagger's one-way rule, which is why it needed him.
+  2. **Give `alt` an evidence tier** below ADR 0025's `STATED`, then let
+     `tag_allergens.py` read it. `alt` describes a **photograph**, not the
+     menu's own words, and nobody promises the picture is of the dish as
+     served — so the tier is the ruling's substance, and a new ADR owes an
+     account of what the weaker tier means on screen.
+  🚩 **The gluten-hedge guard needs widening in the same pass.** ADR 0097's
+  hedge covers *"gluten free"* and not *"gluten friendly"*, and its comment
+  claims the corpus holds nothing else of that shape. It does — that is how
+  row 1 above was tagged. Fixing the two rows without widening the hedge
+  leaves the next *"gluten friendly"* row to be mis-tagged identically.
