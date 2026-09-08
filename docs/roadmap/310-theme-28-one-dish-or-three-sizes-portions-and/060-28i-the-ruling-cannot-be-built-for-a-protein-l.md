@@ -94,3 +94,23 @@
 
   **Depends on:** `28h` (for the enumerator to name the 36 divergent groups).
   **Blocks:** `28k` (the schema), `28o` and `28p` (the two merge items).
+  ---
+
+  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — OPTION 3: SPLIT IT. MERGE
+  THE GROUPS WHOSE CLAIMS ALREADY AGREE, AND SETTLE THE RULE SEPARATELY.**
+  Put to him with the verified case (`Falafel kebab` carries `v`,
+  `Chicken kebab` does not, in `wellington-kebab-grill.json` and
+  `abrakebabra.json`; ADR 0048 §3 quoted verbatim). He took the sequencing
+  option, which is this item's own recommendation.
+  📋 **What that licenses now:** merge only the groups where **every** variant
+  already agrees on its dietary claims — no claim is lost and ADR 0048 §3 is
+  untouched. The 36 protein groups carrying 58 claims are **held**, not
+  abandoned.
+  🛑 **What it does NOT license:** amending ADR 0048 §3. That stays a separate
+  question with its own record, deliberately **outside** the migration —
+  because a food-safety rule changing inside a 248-id data migration makes
+  each half's failures look like the other's.
+  🎯 **Still owed and still his:** whether §3 is eventually amended so a choice
+  may restore a claim, or whether protein ladders simply stay as separate
+  dishes for good. Not asked now, because nothing is blocked on it until the
+  agreeing groups are merged.

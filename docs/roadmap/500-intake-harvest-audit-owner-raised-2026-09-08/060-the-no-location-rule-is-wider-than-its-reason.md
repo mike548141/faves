@@ -116,3 +116,38 @@
      implied. The recommendation is unchanged: **build it against the first
      real in-shop photograph**, so the key's shape is disciplined by an actual
      record rather than invented.
+
+  ---
+
+  🎯 **OWNER CORRECTED THE PREMISE 2026-09-09 (session faves-p1).** Asked
+  whether the validator for the new shop field should ship now or wait for the
+  first in-shop photograph — the ask stating there were **zero** — he replied:
+  *"There are photos of products and menus taken in the restaurants."*
+
+  🔎 **Measured in response, and the correction is right about MENUS and not
+  yet demonstrable about PRODUCTS. The two corpora are different and this
+  rule governs only one of them.**
+  - **Menu photographs — his point holds, and it is already load-bearing.**
+    63 of 67 carry GPS across **12 distinct locations**; that is exactly what
+    `verifiedBy: in-store` rests on. Nothing about them is in question here:
+    ADR 0090 governs `data/products/`, not menu evidence.
+  - **Product (pantry) photographs — no in-shop one is yet identifiable.**
+    Clustered at 500 m from `product_bursts.py --json`: **119 photographs in
+    25 bursts, all in ONE cluster.** The remaining **64 photographs in 34
+    bursts carry no GPS at all**, so their location is unknown and cannot be
+    ruled either way. No coordinate is printed here; this repo is public.
+  - **The 15 product records that mention a retailer are NOT evidence of an
+    in-shop photograph** — checked one by one rather than counted. Every hit
+    is a **brand name** (Woolworths own-brand), a **manufacturer's address**,
+    or an `alsoRead` reference to a retailer's **website**. None describes a
+    shop shelf.
+
+  🎯 **So one narrow question is still owed, and it decides whether a schema
+  field gets built on a real case or a misreading:** does he mean the **menu**
+  photographs (already covered, and the field stays unbuilt), or does he have
+  **product** photographs taken in a shop — which would be among the 64 that
+  carry no GPS, or not yet imported? If the latter, pointing at one settles it
+  and the field should be built against that instance, per ADR 0080 D4's rule
+  that a shape recorded before its first instance is a hypothesis.
+  📌 Nothing built either way. The rewording — the half he ruled on that was
+  unambiguous — is delivered and merged (ADR 0115).

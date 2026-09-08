@@ -91,3 +91,20 @@
 
   **Depends on:** `28h`. **Blocks:** `28l` (absorption mechanics) and every
   merge item after it.
+
+  ---
+
+  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — SILENTLY ABSORB IT.** The
+  heart lands on the base dish, which is what he ruled the heart was for in
+  the first place. Not "absorb it and tell them", and not "let it lapse".
+  📋 **So `formerIds` carries the 248 surrendered ids onto their base dishes**
+  — the mechanism already exists, is gated by `validate.py` both ways, and is
+  in use on 10 rows today. No client change, no rewrite of anyone's stored
+  data, and every heart, rating, deep link and shared shortlist keeps
+  resolving.
+  🛑 **The ruling does NOT make the three silent follow-ons optional** — they
+  are what "silently" has to mean to be true rather than merely quiet. Above
+  all the menu's *favourites only* filter, which reads the raw stored id and
+  never goes through `findDish`, so without wiring it would **hide the very
+  dish the reader hearted**. A heart that resolves but cannot be found is not
+  absorption; it is a different lie from the one this ruling removes.
