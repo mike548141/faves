@@ -85,15 +85,18 @@
   | branch | **1 / 10** | `FAIL UNREACHABLE ELEMENT — #overflow-btn is covered…` |
 
   ⚠️ **The machine was NOT quiet — 1-minute load ran 29–85 across it**, so
-  those rates are load-inflated and are not the quiet-machine numbers. The
-  direction is not in doubt: the base arm's five failures are all the
-  documented fault and the branch had none of it. Quieter, the branch ran **41
-  consecutive passes** (11 + 30) with the re-scroll firing and being reported.
+  neither rate is the quiet-machine number. The direction is not in doubt: the
+  base arm's five failures are all the documented fault and the branch had
+  none of it.
+  📊 **The branch's real rate is 1 failure in 82 runs, with 69 consecutive
+  passes since it** — every `picks_check` run made on this branch, in order:
+  12 passes, the single *covered* failure inside the paired block, then
+  9 + 10 + 20 + 30. `#settings-btn has no clickable box` did not occur once.
 
   🚩 **One residual, unexplained.** The branch's single failure was a
   **covered** verdict on `#overflow-btn` — a shape nothing could see before
-  this change. It did not reproduce in 30 later runs, and **what covered the
-  button is not known: the message named it and the measuring loop truncated
+  this change. It did not reproduce in the 69 runs since, and **what covered
+  the button is not known: the message named it and the measuring loop truncated
   the line at 70 characters.** A self-inflicted loss of the one observation
   that mattered. The diagnostic now prints the coverer's `position` and
   `z-index`, so the next one is actionable. Whether it was a real overlay or a

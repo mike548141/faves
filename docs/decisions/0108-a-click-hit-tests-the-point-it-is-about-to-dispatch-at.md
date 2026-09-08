@@ -133,17 +133,22 @@ ten each, zero orphan Chromes at every sample:
 | base | **5 / 10** | `FAIL UNSTABLE ELEMENT — #settings-btn has no clickable box` |
 | branch | **1 / 10** | `FAIL UNREACHABLE ELEMENT — #overflow-btn is covered…` |
 
-⚠️ **The machine was NOT quiet: 1-minute load ran 29–85 across the block.** The
-direction is not in doubt — the base arm's five failures are the documented
-fault, and the branch's zero occurrences of it are the point — but the *rates*
-are load-inflated and should not be quoted as the quiet-machine numbers. On the
-quieter samples the branch ran **41 consecutive passes** (11 + 30) with the
-re-scroll firing and being reported.
+⚠️ **The machine was NOT quiet: 1-minute load ran 29–85 across the block**, so
+those two rates are load-inflated and neither is the quiet-machine number. The
+direction is not in doubt — the base arm's five failures are all the documented
+fault, and the branch had **zero** occurrences of it — but the honest figure for
+the branch comes from the wider count, not from that ten.
+
+📊 **The branch's real rate: 1 failure in 82 runs, and 69 consecutive passes
+since it.** Every `picks_check` run made on this branch, in order: 12 passes,
+then the single *covered* failure inside the paired block, then 9 + 10 + 20 + 30
+passes. The documented fault — `#settings-btn has no clickable box` — did not
+occur once in the 82.
 
 🚩 **One residual, unexplained, and stated rather than buried.** The branch's
 single failure was a **covered** verdict on `#overflow-btn` — a shape never seen
-before this change existed to see it. It has not reproduced in 30 subsequent
-runs, and **what was covering the button is not known**: the message named it,
+before this change existed to see it. It has not reproduced in the **69** runs
+since, and **what was covering the button is not known**: the message named it,
 and the measuring loop truncated the line at 70 characters. That is a
 self-inflicted loss of the one observation that mattered, and the diagnostic
 now carries `position` and `z-index` so the next one is actionable. Until it
