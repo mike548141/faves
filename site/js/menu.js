@@ -1482,6 +1482,11 @@ function renderDish(
           // and what gets read down the phone, so both travel.
           dishId: dishId(item),
           price: item.price ?? null,
+          // The venue's own currency, stored on the line. An order can span
+          // venues in different countries, and a line that does not say what
+          // its number is in defaults to NZD — so a London price renders as
+          // "$8.95" beside a Wellington one and the two look addable.
+          currency: venueCurrency(r),
         })
       );
     }

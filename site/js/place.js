@@ -49,10 +49,20 @@ export function branchTimezone(r, branch) {
  * The ISO 4217 code the venue's own menu prices are in — what the shop will
  * actually charge. Venue-level, not per-branch: a menu is one document with one
  * currency, and a chain that genuinely prices in two currencies has two menus,
- * so it is two records. An individual price may still override it (`item.currency`)
- * for the rare menu that quotes one line in another currency.
+ * so it is two records.
  *
- * `validate.py` now REQUIRES `currency` on every record (ADR 0045), so the
+ * ⚠️ This said "an individual price may still override it (`item.currency`)"
+ * until 2026-09-08, and NO RECORD CAN: `currency` is not in `validate.py`'s
+ * `ITEM_KEYS`, so a dish carrying one is refused before it ships. Nor does any
+ * caller pass one — all seven call sites of `displayPrice`/`displayCurrency`
+ * give a record and no item (measured 2026-09-08, roadmap `490/100`). The
+ * `item` parameter below is therefore reachable only from a future schema that
+ * adds the key. It is kept rather than deleted because removing it changes
+ * three exported signatures on the path that formats every price chip on the
+ * home screen, and buys nothing a phone can measure; what could not stand was
+ * a comment promising a capability the schema refuses.
+ *
+ * `validate.py` REQUIRES `currency` on every record (ADR 0045), so the
  * fallback here is a boot-order safety net, not a schema default: every price
  * in the data states the currency it is in, which is what makes conversion
  * possible at all.
@@ -61,7 +71,8 @@ export function venueCurrency(r) {
   return r?.currency || HOME_CURRENCY;
 }
 
-/** The currency of one price: its own override, else the venue's. */
+/** The currency of one price: its own override, else the venue's. See the
+ *  warning above — no shipped record can carry an override today. */
 export function priceCurrency(item, record) {
   return item?.currency || venueCurrency(record);
 }

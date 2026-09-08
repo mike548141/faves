@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **An order line now shows the money the place actually charges in.** Every
+  line was recorded as New Zealand dollars whatever the venue's menu was priced
+  in, and the line's own price was printed with no currency at all — so a
+  London order would have read "$8.95" directly above a "£8.95" subtotal. No
+  venue on the site is priced in anything but NZD today, so nobody has seen
+  this; it is fixed before the first one is.
 - **Spices Indian now says when its menu was read.** Its page carried "Menu
   items and prices need a refresh", which reads as *nobody has ever looked* —
   and we had. 80 of its 92 dishes were transcribed from the shop's own printed

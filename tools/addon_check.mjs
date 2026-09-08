@@ -70,6 +70,20 @@
 //      now, which is also what makes (i)'s raw-identifier assertion load-bearing
 //      for the first time — before this, NOTHING composed reached `tagChip`.
 //
+// AND SINCE 2026-09-08, WHAT CURRENCY THE ORDER LINE IS IN (roadmap `490/100`,
+// defect 1). A line is added by exactly two call sites — the dish row's stepper
+// (menu.js) and this picker's (addons-ui.js) — and NEITHER passed a currency, so
+// `cart.js` defaulted every line to "NZD" and `cart-ui.js` formatted the line
+// price with no currency at all. The venue SUBTOTAL right beneath it already
+// read the stored value, so a GBP order printed "$8.95" above a "£8.95"
+// subtotal. It is latent — the corpus has no non-NZD venue — which is exactly
+// why it needs a fixture: the same kebab record served back under a second id
+// with `currency: "GBP"` (startServer's `overlay`), so the real render path runs
+// over a real menu that is not priced in dollars. The reader's currency
+// preference is seeded to "as-charged" for the whole run so no conversion sits
+// between the stored line and the rendered one; on the NZD venue that is a
+// no-op, because NZD is already what it charges in.
+//
 // WHAT A GREEN RUN HERE STILL CANNOT TELL YOU. It never proves the tagging is
 // right — that the sauce called "Garlic yogurt" really does contain dairy. That
 // is a claim about food, made by whoever transcribed the menu, and no browser
@@ -173,8 +187,13 @@ function parseArgs(argv) {
  *  ruling's own constraint is that the loud half still LEADS. Its side effect is
  *  that Sprig & Fern's dairy dishes start out `dish-flagged`, which no assertion
  *  in this file reads on a dish it has not configured. */
+//  `currency: "as-charged"` is the currency block's requirement, not this one's:
+//  the default is LOCAL, which converts a GBP price into the reader's money and
+//  would put a conversion between the line the fixture stores and the line it
+//  renders. "As charged" is a supported setting, so nothing here is a mode the
+//  product does not have.
 const seedExpr = `try {
-  localStorage.setItem("faves.settings.v1", JSON.stringify({ diet: { dietary: [], avoid: [${JSON.stringify(ALLERGEN)}, ${JSON.stringify(FISH_ALLERGEN)}, ${JSON.stringify(MERGE_ALLERGEN)}] } }));
+  localStorage.setItem("faves.settings.v1", JSON.stringify({ currency: "as-charged", diet: { dietary: [], avoid: [${JSON.stringify(ALLERGEN)}, ${JSON.stringify(FISH_ALLERGEN)}, ${JSON.stringify(MERGE_ALLERGEN)}] } }));
 } catch (e) { /* opaque origin — the real page seeds on load */ }`;
 
 /** Everything an assertion needs about the first dish that offers the sauces. */
@@ -201,6 +220,21 @@ const snapshotExpr = `(() => {
   };
 })()`;
 
+/** The order sheet's own reading of the lines, for the currency block. Read from
+ *  the DOM rather than from storage: the stored value and the rendered one are
+ *  the two halves that disagreed, so asserting one from the other proves
+ *  nothing. */
+const sheetExpr = `(() => {
+  const sheet = document.querySelector('dialog.order-sheet');
+  if (!sheet || !sheet.open) return { open: false };
+  return {
+    open: true,
+    lines: [...sheet.querySelectorAll(".order-line-price")].map((e) => e.textContent.trim()),
+    subtotals: [...sheet.querySelectorAll(".order-subtotal-amount")].map((e) => e.textContent.trim()),
+    stored: JSON.parse(localStorage.getItem("faves.order.v1") || "[]").map((l) => [l.name, l.currency ?? null, (l.options || []).length]),
+  };
+})()`;
+
 /** Tick the nth sauce by its visible label, through a real mouse click. */
 const sauceSelector = (name) => `.addon-option`;
 
@@ -216,6 +250,15 @@ const VEG_DISH = "The Vegetarian Breakfast";
 const TWO_CLAIM_DISH = "Eggs on Toast";
 const MEAT_OPTION = "Bacon";
 const SILENT_OPTIONS = ["Spinach", "Tomatoes"];
+
+// --- the currency fixture (490/100 · 1) ------------------------------------
+// The same kebab record, served back under a second id priced in pounds. A
+// fixture rather than a real venue because there is no non-NZD venue to use:
+// measured 2026-09-08, all 57 records carry `"currency": "NZD"`. Everything but
+// the id and the currency is the genuine menu, so the prices, the add-on groups
+// and the render path under test are the corpus's own.
+const GBP_ID = `${VENUE}-gbp-fixture`;
+const GBP_SYMBOL = "£";
 
 // `li.dish` carries the SEARCH-FOLDED name (menu.js `foldSearchText`), not the
 // menu's own capitalisation — lower-cased with macrons folded. Addressing a
@@ -253,7 +296,10 @@ async function run(opts) {
   if (!group) throw new Error(`${opts.id} has no "${SAUCES}" add-on group — pick another --id`);
   if (typeof group.max !== "number") throw new Error(`the "${SAUCES}" group has no max — this check exists to prove the cap`);
 
-  const { server, port } = await startServer(opts.port, SITE);
+  const overlay = new Map([
+    [`/data/restaurants/${GBP_ID}.json`, JSON.stringify({ ...venue, id: GBP_ID, currency: "GBP" })],
+  ]);
+  const { server, port } = await startServer(opts.port, SITE, overlay);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-addon-check-"));
   let chrome = null;
   let cdp = null;
@@ -595,6 +641,62 @@ async function run(opts) {
       `${JSON.stringify(undone.chips)} vs the original ${JSON.stringify(before.chips)}`,
     );
 
+    // --- 490/100 · 1: the order line is in the venue's own money ----------
+    // A fresh order, on the GBP fixture, added through BOTH call sites — the
+    // dish row's stepper and the picker's — because they are two separate
+    // omissions and either could be fixed alone.
+    //
+    // First the CONTROL, read before the order is cleared: the two lines block
+    // (e) added on the REAL, NZD-priced venue. Without it a build that
+    // hard-coded a pound sign passes every assertion below.
+    const nzd = await driver.evalPage(
+      `JSON.parse(localStorage.getItem("faves.order.v1") || "[]").map((l) => l.currency ?? null)`,
+    );
+    report.check(
+      "the NZD venue's lines are stored as NZD — the control the GBP block rests on",
+      Array.isArray(nzd) && nzd.length === 2 && nzd.every((c) => c === "NZD"),
+      JSON.stringify(nzd),
+    );
+
+    const gbpUrl = `http://127.0.0.1:${port}/restaurant.html?id=${GBP_ID}`;
+    await cdp.send("Page.navigate", { url: gbpUrl }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
+      label: `${GBP_ID} to render a dish offering add-ons`,
+    });
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await cdp.send("Page.navigate", { url: gbpUrl }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
+      label: `${GBP_ID} to render again with an empty order`,
+    });
+    await driver.click("li.dish .dish-actions .stepper-add");
+    await driver.click(".dish-addons-summary");
+    // A NAMED option, not "the first one": an empty selection keys to the same
+    // line as the plain add above and merges into it, so the picker's call site
+    // would never be exercised and the assertion would silently test one of the
+    // two it names.
+    await driver.click(".dish-addons .addon-option", PEANUT_OPTION);
+    await driver.click(".addon-stepper .stepper-add");
+    await driver.click(".order-fab");
+    await untilPresent(async () => (await driver.evalPage(sheetExpr)).open, {
+      label: "the order sheet on the GBP fixture",
+    });
+    const gbp = await driver.evalPage(sheetExpr);
+    report.check(
+      "both call sites store the venue's currency on the line, not the default",
+      gbp.stored.length === 2 && gbp.stored.every((l) => l[1] === "GBP") &&
+        gbp.stored.some((l) => l[2] === 0) && gbp.stored.some((l) => l[2] > 0),
+      JSON.stringify(gbp.stored),
+    );
+    report.check(
+      "…and the LINE PRICE renders in it — the half the subtotal already had right",
+      gbp.lines.length === 2 && gbp.lines.every((t) => t.startsWith(GBP_SYMBOL)),
+      JSON.stringify(gbp.lines),
+    );
+    report.check(
+      "…so the line and the subtotal above it name ONE currency, which is the bug",
+      gbp.subtotals.length > 0 && gbp.subtotals.every((t) => t.startsWith(GBP_SYMBOL)),
+      `lines ${JSON.stringify(gbp.lines)} · subtotals ${JSON.stringify(gbp.subtotals)}`,
+    );
     return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();

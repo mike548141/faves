@@ -47,7 +47,7 @@ import { dishStepper } from "./cart-ui.js";
 import { settings } from "./settings.js";
 import { dishFlagged } from "./dietary.js";
 import { groupsFor, optionPrice, selectionPrice, selectionAllowed, composeTags } from "./addons.js";
-import { formatMoney } from "./place.js";
+import { formatMoney, venueCurrency } from "./place.js";
 
 const ALLERGEN_LABEL = {
   "contains-nuts": "nuts",
@@ -213,6 +213,9 @@ export function dishAddOns(record, section, item, onCompose) {
       // null stays null — an unpriced dish with a paid extra is still a dish we
       // cannot total, and guessing would be worse than the honest "—".
       price: base == null ? null : base + extra,
+      // Same reason as the plain row's stepper (menu.js): the line carries the
+      // currency it was priced in, or it silently becomes NZD.
+      currency: venueCurrency(record),
       options: selection.map((s) => ({ group: s.group, name: s.name, price: s.price })),
     };
   }
