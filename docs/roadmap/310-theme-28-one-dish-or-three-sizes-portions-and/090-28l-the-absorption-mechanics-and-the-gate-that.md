@@ -36,8 +36,20 @@
      store fits, that is a third store or a new `reason`, and it is the
      owner's to rule.
 
-  🚩 **Three joins that will NOT be fixed by any of the above, and each needs a
-  named answer in this item.**
+  🛑 **`formerIds` does NOT fully rescue `split_data.py --check`, and this was
+  measured rather than assumed.** Its *orphan* half is satisfiable by carrying
+  every surrendered id forward — `same_dish(..., former=True)` honours them.
+  Its **round-trip** half is not: `reconstruct` prepends every matching row's
+  `superseded` onto the one surviving dish, `split_venue` then re-emits
+  **one** row for it, and the count assertion (`split_data.py:602–609`)
+  compares those two numbers. Eight sibling rows collapsing to one fails it
+  every time. So this item owes either a `--rekey`-style migration of the 212
+  history rows or an explicit change to the round-trip arithmetic — and
+  `tools/test_split_data.py` will stay 8/8 green either way, because it never
+  opens the corpus (see `28s`).
+
+  🚩 **Three more joins that will NOT be fixed by any of the above, and each
+  needs a named answer in this item.**
   - **`tools/recipe_estimates.py --check` does not consult `formerIds`**
     (`:107-115`). A vanished id warns; a new base dish with no estimate
     **errors**.
@@ -46,7 +58,12 @@
     `pandan-asian-cuisine` Beef rendang, `rs-satay-noodle-house` Chicken
     Noodles Soup, `wellington-kebab-grill` Chicken kebab / Mixed iskender /
     Chicken shawarmama box). `validate.py:2033` **errors** on an unresolvable
-    pick, so this one at least fails loudly.
+    pick, so this one at least fails loudly. ⚠️ **7 is the machine count** —
+    picks naming a row that has ≥1 detected sibling. A hand-read of the same
+    40 puts it at **12**, adding `Combination noodles`, `Fish Dinner`,
+    `Beef Nachos` and `Beef massamun curry`, whose siblings the detector did
+    not group. The gap between 7 and 12 is `28h`'s job to close, and is the
+    plainest argument for building the enumerator before anything else.
   - **Share links cannot be versioned out of it.** `CODEC_VERSION` is compared
     with a strict `!==` and bumping it invalidates every outstanding link
     (`site/js/share-codec.js:139-141`). An order link minted before the merge

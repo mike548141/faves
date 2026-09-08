@@ -104,7 +104,7 @@
 
   ✅ **DECOMPOSED 2026-09-09 (session faves-p1-sizes-plan). Written down, not
   started** — this item stays `- [ ]`, and no byte of `site/data/`, `data/` or
-  `site/js/` moved. The eleven parts are `28h`–`28r` in
+  `site/js/` moved. The twelve parts are `28h`–`28s` in
   [Theme 28](../310-theme-28-one-dish-or-three-sizes-portions-and/), which is
   the theme that owns the shape:
 
@@ -121,6 +121,16 @@
   | `310/130` **28p** | the 70 that need a human, one at a time | `[L]` |
   | `310/140` **28q** | an add-on option has no id, and this makes it expensive | `[M]` |
   | `310/150` **28r** | the intake rule, written down | `[S]` |
+  | `310/160` **28s** | the checks that would stay GREEN while being wrong | `[M]` |
+
+  🛑 **One of `28s`'s findings belongs in this item's own summary, because it
+  is an inversion rather than a gap.** `validate.py`'s `check_twin_allergens`
+  is the only check that compares one dish's allergen tags against another
+  row's, and it joins on the **duplicate display name**. The merge removes the
+  duplicate names *and* reduces tags to the sibling intersection in one
+  operation — so the check goes silent at the exact moment the fault it exists
+  to catch is applied as policy, and the run reads cleaner. It needs a second
+  join (base dish ↔ its `selects` options) landing with `28k`.
 
   🛑 **Two corrections to this item's own sizing, both measured at `e50c0ee`
   and both material.**

@@ -58,9 +58,9 @@ hearted a dish or a size?"*, the owner answered **the dish** — so a size or a
 protein is a **choice on one dish**, the id belongs to the base dish, and the
 choice lives on the order line. The ruling is recorded on
 [`490/050`](../490-cold-review-of-the-data-model-owner-raised-2026-09-07/050-one-shape-for-a-dish-with-choices.md);
-its decomposition is `28h`–`28r` below. `28a` keeps its reasoning with a dated
+its decomposition is `28h`–`28s` below. `28a` keeps its reasoning with a dated
 note beside it, because its five-field test turned out to be the rubric `28p`
-uses. **Two of the eleven parts are asks the owner has not yet answered**
+uses. **Two of the twelve parts are asks the owner has not yet answered**
 (`28i` the dietary-claim rule, `28j` the heart), and both block the merges.
 
 **What that leaves.**
