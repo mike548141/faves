@@ -233,7 +233,17 @@ line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
 
 - Lighthouse (mobile): Performance ≥ 95, Accessibility 100, Best
   Practices 100, SEO ≥ 95, installable PWA.
-- Total transfer for first visit < 300 KB (excluding photos, which lazy-load).
+- **There is deliberately NO first-visit transfer budget** — owner-ruled
+  2026-09-08 (roadmap `490/090`). This line used to read *"Total transfer
+  for first visit < 300 KB"*. Nothing ever measured it, and when the Theme 38
+  review finally did, the home screen needed ~380 KB gzipped to paint and
+  ~660 KB to precache. Offered the choice of restating the number and gating
+  it, cutting the shell to meet it, or dropping it, he **dropped it**. What
+  governs payload growth instead is ADR 0047's test — *name the screen that
+  renders it* — which is enforced by review on every field added to
+  `site/data/`. Do not reinstate a number here without asking him: a bar
+  nothing measures is the decorative-guard class ADR 0072 names, and this
+  one went unwatched while the thing it bounded grew sevenfold.
 - Works in Safari iOS, Chrome Android, and desktop evergreen browsers.
 
 ## Verify before committing

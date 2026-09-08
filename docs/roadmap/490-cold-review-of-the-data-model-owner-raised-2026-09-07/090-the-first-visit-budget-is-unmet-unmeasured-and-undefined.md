@@ -1,4 +1,4 @@
-- [ ] 🎯 **The first-visit budget is unmet, unmeasured and undefined**
+- [x] 🎯 **The first-visit budget is unmet, unmeasured and undefined**
       `[S][perf][ci]` — Theme 38 review
       (`../../reviews/2026-09-07-1216-theme-38-cold-review.md` §2, §7 D4). Owner's
       number; a recommendation that whichever number he picks gets a check.
@@ -14,10 +14,17 @@
   measured. So the number was not being met and was not being watched; dropping
   it removes a claim the repo could not support rather than removing a
   guarantee it was keeping.
-  📋 **What this ruling owes**, and it is small: CLAUDE.md's *Quality bar*
-  loses the transfer line, `WORKPLAN.md`'s `[~]` for it is closed with a dated
-  note, and both say the decision was his and when. Until that lands, the repo
-  still asserts a bar its owner has withdrawn.
+  ✅ **DELIVERED 2026-09-08 (session faves-o1).** CLAUDE.md's *Quality bar*
+  now states the absence and why, names the ruling and its date, quotes the
+  line it replaced, and tells a future session **not to reinstate a number
+  without asking him** — because the failure mode here is not that the bar is
+  missing, it is that a well-meaning session re-adds an unmeasured one.
+  `docs/WORKPLAN.md:133` is closed with a dated withdrawal note; its
+  2026-07-08 measurement and the owner's real-device pass are kept, because
+  those are evidence and only the *budget* was withdrawn.
+  🔎 Verified: `grep -n "300 KB" CLAUDE.md docs/WORKPLAN.md docs/STRATEGY.md`
+  now returns only the two lines that quote the withdrawn wording in order to
+  say it is withdrawn.
 
 
   **The bar.** CLAUDE.md: *"Total transfer for first visit < 300 KB (excluding

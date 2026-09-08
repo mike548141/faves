@@ -130,8 +130,10 @@ flight-mode test.*
       label) fixed → A11y 100. Scores are a floor: localhost has no
       Brotli/HTTP-2, so the CDN will only do better. Re-confirm on the
       live URL post-deploy.*
-- [~] First-visit transfer < 300 KB; test on a real phone and tablet,
-      both colour schemes, portrait + landscape.
+- [x] ~~First-visit transfer < 300 KB~~ — **the budget was WITHDRAWN by the
+      owner 2026-09-08** (roadmap `490/090`); the real-device pass below
+      stands and is what this line now records. Test on a real phone and
+      tablet, both colour schemes, portrait + landscape.
       *Measured 2026-07-08: shell + all menu data = 176.9 KB raw,
       45.3 KB gzipped — well under budget. Real-device pass = owner:
       iPhone general pass 2026-07-12 (site launched, link shared with

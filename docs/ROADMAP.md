@@ -366,7 +366,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🔎 [A branch has no id, and every per-branch plan needs to name one](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/060-a-branch-has-no-id.md)
 - [ ] 🎯 [Claim strength has no representation, and a venue has no prose slot](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/070-claim-strength-and-a-venue-level-note.md)
 - [ ] 🎯 [Household stock, leftovers and "what can I make" are a…](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/080-household-stock-and-leftovers-are-a-boundary-decision.md)
-- [ ] 🎯 [The first-visit budget is unmet, unmeasured and undefined](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/090-the-first-visit-budget-is-unmet-unmeasured-and-undefined.md)
+- ✅ 🎯 [The first-visit budget is unmet, unmeasured and undefined](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/090-the-first-visit-budget-is-unmet-unmeasured-and-undefined.md)
 - [ ] 🔎 [Five smaller defects found while tracing fields to screens](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/100-five-smaller-defects-found-while-tracing-fields-to-screens.md)
 - [ ] 🎯 [Allergen and dietary tags at venue and branch level, the way dishes](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/110-allergen-and-dietary-tags-at-venue-and-branch-level.md)
 
