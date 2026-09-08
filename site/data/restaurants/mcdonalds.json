@@ -72,6 +72,17 @@
           "price": null,
           "image": "img/mcdonalds/big-mac.webp",
           "alt": "A Big Mac: two beef patties, lettuce, cheese, pickles and sauce in a three-layer sesame seed bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -80,6 +91,17 @@
           "price": null,
           "image": "img/mcdonalds/quarter-pounder.webp",
           "alt": "A Quarter Pounder: a thick beef patty with melted cheese, onion and pickles in a sesame seed bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -88,6 +110,17 @@
           "price": null,
           "image": "img/mcdonalds/double-quarter-pounder.webp",
           "alt": "A Double Quarter Pounder: two thick beef patties with melted cheese, onion and pickles in a sesame seed bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -96,7 +129,21 @@
           "price": null,
           "image": "img/mcdonalds/cheeseburger.webp",
           "alt": "A cheeseburger: a beef patty with a slice of melted cheese, onion, pickle, ketchup and mustard in a soft bun",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Double Cheeseburger",
@@ -104,7 +151,21 @@
           "price": null,
           "image": "img/mcdonalds/double-cheeseburger.webp",
           "alt": "A double cheeseburger: two beef patties with two slices of melted cheese, onion and pickle in a soft bun",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten",
+            "contains-dairy"
+          ]
         },
         {
           "name": "Hamburger",
@@ -112,7 +173,20 @@
           "price": null,
           "image": "img/mcdonalds/hamburger.webp",
           "alt": "A hamburger: a beef patty with onion, pickle, ketchup and mustard in a soft bun",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Big Arch",
@@ -120,6 +194,17 @@
           "price": null,
           "image": "img/mcdonalds/big-arch.webp",
           "alt": "A Big Arch: two beef patties with cheese, crispy onions, pickles and sauce in a large sesame seed bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         }
       ]
@@ -134,6 +219,17 @@
           "price": null,
           "image": "img/mcdonalds/mcchicken.webp",
           "alt": "A McChicken: a crumbed chicken patty with lettuce and mayonnaise in a sesame seed bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -142,6 +238,17 @@
           "price": null,
           "image": "img/mcdonalds/mccrispy.webp",
           "alt": "A McCrispy: a crispy chicken fillet with pickles in a toasted potato bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -150,6 +257,17 @@
           "price": null,
           "image": "img/mcdonalds/double-mccrispy.webp",
           "alt": "A Double McCrispy: two crispy chicken fillets with pickles in a toasted potato bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -158,6 +276,17 @@
           "price": null,
           "image": "img/mcdonalds/mccrispy-bacon-deluxe.webp",
           "alt": "A McCrispy Bacon Deluxe: a crispy chicken fillet with bacon, lettuce, tomato and sauce in a toasted potato bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -166,7 +295,20 @@
           "price": null,
           "image": "img/mcdonalds/chicken-mcnuggets-6-pack.webp",
           "alt": "Six Chicken McNuggets, golden crumbed chicken pieces",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Chicken McNuggets (10 pack)",
@@ -174,7 +316,20 @@
           "price": null,
           "image": "img/mcdonalds/chicken-mcnuggets-10-pack.webp",
           "alt": "Ten Chicken McNuggets in a box, golden crumbed chicken pieces",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Chicken McNuggets (20 pack)",
@@ -182,7 +337,20 @@
           "price": null,
           "image": "img/mcdonalds/chicken-mcnuggets-20-pack.webp",
           "alt": "Twenty Chicken McNuggets in a share box, golden crumbed chicken pieces",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Filet-O-Fish",
@@ -190,6 +358,17 @@
           "price": null,
           "image": "img/mcdonalds/filet-o-fish.webp",
           "alt": "A Filet-O-Fish: a crumbed fish patty with melting cheese and tartare sauce in a soft steamed bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-fish"
           ]
@@ -206,6 +385,17 @@
           "price": null,
           "image": "img/mcdonalds/fries-small.webp",
           "alt": "A small carton of McDonald's fries",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -214,6 +404,17 @@
           "price": null,
           "image": "img/mcdonalds/fries-medium.webp",
           "alt": "A medium carton of McDonald's fries",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -222,6 +423,17 @@
           "price": null,
           "image": "img/mcdonalds/fries-large.webp",
           "alt": "A large carton of McDonald's fries",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -230,6 +442,17 @@
           "price": null,
           "image": "img/mcdonalds/hash-brown.webp",
           "alt": "A hash brown: a golden, deep-fried potato patty",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         }
       ]
@@ -244,8 +467,20 @@
           "price": null,
           "image": "img/mcdonalds/bacon-egg-mcmuffin.webp",
           "alt": "A Bacon & Egg McMuffin: bacon, a round egg and melted cheese in a toasted English muffin",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -254,8 +489,20 @@
           "price": null,
           "image": "img/mcdonalds/sausage-egg-mcmuffin.webp",
           "alt": "A Sausage & Egg McMuffin: a sausage patty, a round egg and melted cheese in a toasted English muffin",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -264,7 +511,20 @@
           "price": null,
           "image": "img/mcdonalds/sausage-mcmuffin.webp",
           "alt": "A Sausage McMuffin: a sausage patty with melted cheese in a toasted English muffin",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Chicken McMuffin",
@@ -272,7 +532,20 @@
           "price": null,
           "image": "img/mcdonalds/chicken-mcmuffin.webp",
           "alt": "A Chicken McMuffin: a crumbed chicken patty with melted cheese in a toasted English muffin",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Massive McMuffin",
@@ -280,7 +553,20 @@
           "price": null,
           "image": "img/mcdonalds/massive-mcmuffin.webp",
           "alt": "A Massive McMuffin: bacon, sausage, egg and cheese stacked in a toasted English muffin",
-          "tags": []
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Hotcakes",
@@ -288,6 +574,17 @@
           "price": null,
           "image": "img/mcdonalds/hotcakes.webp",
           "alt": "Hotcakes: a stack of pancakes with butter and syrup",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -296,6 +593,17 @@
           "price": null,
           "image": "img/mcdonalds/big-brekkie-burger.webp",
           "alt": "A Big Brekkie Burger: a beef patty, bacon, egg, hash brown and cheese in a toasted bun",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -312,6 +620,17 @@
           "price": null,
           "image": "img/mcdonalds/flat-white.webp",
           "alt": "A McCafé flat white in a takeaway cup",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-dairy"
           ]
@@ -322,6 +641,17 @@
           "price": null,
           "image": "img/mcdonalds/latte.webp",
           "alt": "A McCafé latte in a takeaway cup",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-dairy"
           ]
@@ -332,6 +662,17 @@
           "price": null,
           "image": "img/mcdonalds/cappuccino.webp",
           "alt": "A McCafé cappuccino in a takeaway cup",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-dairy"
           ]
@@ -342,6 +683,17 @@
           "price": null,
           "image": "img/mcdonalds/mocha.webp",
           "alt": "A McCafé mocha in a takeaway cup",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-dairy"
           ]
@@ -352,6 +704,17 @@
           "price": null,
           "image": "img/mcdonalds/long-black.webp",
           "alt": "A McCafé long black in a takeaway cup",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -360,6 +723,17 @@
           "price": null,
           "image": "img/mcdonalds/hot-chocolate.webp",
           "alt": "A McCafé hot chocolate in a takeaway cup",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -368,6 +742,17 @@
           "price": null,
           "image": "img/mcdonalds/iced-latte.webp",
           "alt": "A McCafé iced latte in a clear cup with ice",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-dairy"
           ]
@@ -378,6 +763,17 @@
           "price": null,
           "image": "img/mcdonalds/iced-mocha.webp",
           "alt": "A McCafé iced mocha in a clear cup with ice and cream",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-dairy"
           ]
@@ -388,6 +784,17 @@
           "price": null,
           "image": "img/mcdonalds/iced-chocolate.webp",
           "alt": "A McCafé iced chocolate in a clear cup with ice and cream",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         }
       ]
@@ -402,6 +809,17 @@
           "price": null,
           "image": "img/mcdonalds/hot-apple-pie.webp",
           "alt": "A hot apple pie in its cardboard sleeve",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -412,6 +830,17 @@
           "price": null,
           "image": "img/mcdonalds/soft-serve-cone.webp",
           "alt": "A soft serve ice cream in a wafer cone",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -420,6 +849,17 @@
           "price": null,
           "image": "img/mcdonalds/hot-fudge-sundae.webp",
           "alt": "A hot fudge sundae: soft serve in a cup under chocolate fudge sauce",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -428,6 +868,17 @@
           "price": null,
           "image": "img/mcdonalds/mcflurry.webp",
           "alt": "A McFlurry: soft serve in a cup mixed with crushed biscuit pieces",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -436,6 +887,17 @@
           "price": null,
           "image": "img/mcdonalds/thickshake.webp",
           "alt": "A thickshake in a takeaway cup with a straw",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         },
         {
@@ -444,6 +906,17 @@
           "price": null,
           "image": "img/mcdonalds/frozen-coke.webp",
           "alt": "A Frozen Coke in a clear cup with a straw",
+          "needs": [
+            {
+              "what": "price",
+              "since": "2026-09-09"
+            },
+            {
+              "what": "allergens",
+              "note": "Names only — no ingredient list was read for this record. A tag here is inferred from the dish name; no tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
           "tags": []
         }
       ]

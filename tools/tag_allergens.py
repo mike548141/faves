@@ -86,6 +86,51 @@ CONTRADICTED_BY = {
     "has-fish": {"v", "vg"},
 }
 
+# --- compound tails (2026-09-09, roadmap 080/160) ---------------------------
+# A few alternatives below are written `\w*token` instead of `token`. That is a
+# COMPOUND TAIL: the word may carry anything in front of the token, but must
+# still END at it. `\w*burgers?` sees "Cheeseburger"; `\bburgers?\b` never could.
+#
+# 🛑 IT IS THE LEADING BOUNDARY THAT IS OPENED, NEVER THE CLOSING ONE, AND ONLY
+# ON THREE NAMED TOKENS. Both halves of that sentence were measured against the
+# real corpus (57 records, 3,557 name/desc/ingredient/note/option strings) by
+# `--compounds`, not reasoned about:
+#
+#   opening the CLOSING boundary would tag `eggplant`/`eggplants` (12 rows) with
+#   egg, `Bundaberg` (4) with gluten from `bun`, `edamame` (7) with dairy from
+#   `edam`, `pieces` (106) from `pie`, `toasted` (61) from `toast`, `tartare`
+#   (17) from `tart` and `creamy` (64) from `cream`.
+#
+#   opening the LEADING boundary WHOLESALE would tag `kale` (11), `pale` (7),
+#   `royale` (3), `cardinale` (2) and `vale` (1) with gluten from `ale`;
+#   `buckwheat` (5) from `wheat` and `cornflour` (1) from `flour` — a false
+#   gluten warning on the two things a coeliac is specifically hunting for,
+#   which is ADR 0097's harm and not an ordinary over-warning; `kewpie` (5,
+#   Japanese mayonnaise) from `pie`; `cheesecake` (15) from `cake`; and
+#   `kielbasa`, `pinwheel`, `jellyfish` and `agedashi` with fish.
+#
+# So the tail is opt-in, per token, and the three are `burger`, `muffin` and
+# `nugget` — each a food noun that only ever forms compounds by taking a
+# prefix, each verified to have no non-food word ending in it anywhere in the
+# corpus. A fourth is NOT added by editing this comment: run `--compounds`,
+# read what the corpus actually holds, and put the near-miss in front of a
+# person.
+#
+# 🛑 AND RUN THE DRY RUN BEFORE YOU BELIEVE A TAIL IS SAFE, because "no false
+# positive" is not the only test. `katsu` was the fourth tail until the sweep
+# was actually run: it reaches `tonkatsu`, all five of which are tonkatsu
+# SAUCE, and it proposed three tags whose printed basis — "battered/crumbed
+# coatings" — was false of the dish. A tail can be harmless to the word list
+# and still make the tool lie about its reason.
+#
+# 🔑 WHY NOT A BARE LIST OF COMPOUND WORDS (`cheeseburger|hamburger|…`). That is
+# strictly safer and it is what `cheeseburgers?` in the dairy rule does — but it
+# is SILENT about the compound that lands after it was written, and silence is
+# 13 BurgerFuel rows in the roadmap item went two months unnoticed. `--compounds`
+# is the half that makes the remaining gap falsifiable; the tail is the half
+# that closes the three the corpus can already prove are safe.
+COMPOUND_TAILS = ("burger", "muffin", "nugget")
+
 # (tag, tier, basis, pattern, exclude)
 # `exclude` is checked against the same text; a hit vetoes the rule for that
 # item. Every entry below is a claim about food that someone can check.
@@ -202,8 +247,21 @@ RULES = [
     # A nugget on a NZ menu is crumbed — chicken, corn or otherwise. It sits in
     # the coating rule rather than the bakery one because that is what makes it
     # wheat: the coating, not the thing inside it.
+    # `\w*nugget` is a COMPOUND TAIL — see the block above RULES. "McNuggets"
+    # (3 rows) is the corpus's own word for a crumbed chicken piece and the
+    # leading `\b` could not see it.
+    #
+    # 🛑 `katsu` IS NOT A TAIL, AND THE DRY RUN IS WHY. `\w*katsu` reaches
+    # `tonkatsu`, and every one of the corpus's five is **tonkatsu SAUCE** — a
+    # thick brown condiment, not a panko cutlet. It proposed the tag on
+    # Takoyaki, Yakisoba and a Potato croquette under the basis "battered/
+    # crumbed coatings are wheat flour", which is not true of any of them. The
+    # tag might be right for another reason (the sauce is usually built on soy
+    # sauce); a rule whose printed basis is false is a claim stronger than its
+    # evidence either way, and this file's whole promise is that the basis is
+    # checkable. `\bkatsu\b` still catches "Ebi katsu", which is the cutlet.
     ("contains-gluten", "DERIVED", "battered/crumbed coatings are wheat flour",
-     r"\b(battered|crumbed|schnitzel|katsu|tempura|nugget)\b", None),
+     r"\b(battered|crumbed|schnitzel|katsu|tempura|\w*nugget)\b", None),
     ("contains-gluten", "DERIVED", "a wheat-flour wrapper",
      # `tortillas?` added 2026-08-16 with the cheddar gap. Corn tortillas are
      # real and are the excluded case below — but a burrito or a wrap on a NZ
@@ -216,9 +274,14 @@ RULES = [
     # cake — both found by dry-run against the real corpus.
     # `sando` is a sandwich named the way a menu names it now, and nothing else
     # in English spells it. It sits beside `sandwich` because it IS one.
+    # `\w*burgers?` and `\w*muffins?` are COMPOUND TAILS — see the block above
+    # RULES. "Cheeseburger" (13 rows), "Hamburger" and "Schnitzburger" are
+    # burgers in a bun, and "McMuffin" (5) is an English muffin; the leading
+    # `\b` could see none of them. `buns?` is deliberately NOT a tail: the
+    # corpus's own word ending in "bun" is `Bundaberg`.
     ("contains-gluten", "DERIVED", "a wheat bakery item",
-     r"\b(buns?|burgers?|sandwich|sando|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
-     r"brownies?|muffins?|scones?|doughnuts?|donuts?|pizzas?|pancakes?|waffles?|"
+     r"\b(buns?|\w*burgers?|sandwich|sando|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
+     r"brownies?|\w*muffins?|scones?|doughnuts?|donuts?|pizzas?|pancakes?|waffles?|"
      r"crackers?|tarts?|slices?|danish|éclair|eclair)\b",
      r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),
     ("contains-gluten", "DERIVED", "a wheat noodle",
@@ -254,8 +317,12 @@ RULES = [
     # means coconut cream at least as often as dairy — it was tagging every
     # Malaysian laksa and curry. Losing a few real hits ("Creamy Mushrooms") is
     # the right trade: an inference should under-reach, not mis-fire.
+    # `cheeseburgers?` is spelled out rather than reached by opening `cheese`'s
+    # closing boundary. `cheese\w*` would also spell "cheeseless", and a false
+    # dairy warning on the row a dairy-avoider is hunting for is ADR 0097's
+    # harm, not an ordinary over-warning. One compound, one word, no mechanism.
     ("contains-dairy", "STATED", "names a dairy product",
-     r"\b(cheese|cheesy|butter|buttermilk|creams?|milks?|milkshakes?|yoghurt|yogurt|"
+     r"\b(cheese|cheesy|cheeseburgers?|butter|buttermilk|creams?|milks?|milkshakes?|yoghurt|yogurt|"
      r"mozzarella|parmesan|feta|halloumi|paneer|camembert|brie|mascarpone|ricotta|ghee|"
      # Named cheeses that never say "cheese". Found 2026-08-16 by a sibling
      # session: the rule matched "Cheeseburger" but not a bare "Cheddar", and
@@ -881,12 +948,98 @@ def patch_tags(raw, items, additions):
     return "".join(out)
 
 
+def corpus_strings():
+    """Every string the rules are matched against, as (record, dish, text).
+
+    The same reach `audit()` has — name, description, ingredients, section
+    notes and add-on option names — so `--compounds` cannot report a near-miss
+    the tagger would never have seen anyway.
+    """
+    for path in sorted(DATA.glob("*.json")):
+        record = json.loads(path.read_text())
+        for section in record.get("menu", []) or []:
+            if not isinstance(section, dict):
+                continue
+            if section.get("note"):
+                yield record.get("id", path.stem), "§ " + str(section.get("section")), section["note"]
+            for item in section.get("items") or []:
+                if not isinstance(item, dict):
+                    continue
+                yield record.get("id", path.stem), item.get("name", "?"), ingredient_text(item)
+                for group in item.get("addOnGroups") or []:
+                    for option in group.get("options") or []:
+                        name = option.get("name") or ""
+                        yield record.get("id", path.stem), f"[add-on] {name}", name
+
+
+def compound_misses():
+    """{(tag, token, side): Counter(word)} — every word a boundary refuses.
+
+    A rule alternative matches inside a longer word, and one of the two word
+    boundaries is what stops it becoming a tag. This says which words those are,
+    and on which side, so the question "should this token take a compound?" is
+    answered from the corpus rather than from memory. It is the evidence behind
+    COMPOUND_TAILS and the standing report on what is still missed.
+
+    Reported, never tagged — most of these words are exactly why the boundaries
+    are there (`eggplant`, `buckwheat`, `kale`), and telling them apart from
+    `cheeseburger` is a judgement about food that only a person can make.
+    """
+    import collections
+
+    out = collections.defaultdict(collections.Counter)
+    texts = list(corpus_strings())
+    for _tag, _tier, _why, pat, _exc in RULES:
+        strict = compile_rule(pat)
+        loose_src = strict.pattern
+        if loose_src.startswith(r"\b"):
+            loose_src = loose_src[2:]
+        if loose_src.endswith(r"\b"):
+            loose_src = loose_src[:-2]
+        loose = re.compile(loose_src, re.I)
+        for _rec, _dish, text in texts:
+            for m in loose.finditer(text):
+                a, b = m.start(), m.end()
+                pre = a > 0 and bool(re.match(r"\w", text[a - 1]))
+                post = b < len(text) and bool(re.match(r"\w", text[b]))
+                if not (pre or post):
+                    continue
+                while a > 0 and re.match(r"\w", text[a - 1]):
+                    a -= 1
+                while b < len(text) and re.match(r"\w", text[b]):
+                    b += 1
+                word = text[a:b].lower()
+                # Some OTHER alternative of the same rule already reaches this
+                # word cleanly — "crayfish" is shellfish by name — so it is not
+                # a miss and printing it would bury the ones that are.
+                if strict.search(word):
+                    continue
+                side = ("head" if pre else "") + ("+" if pre and post else "") + ("tail" if post else "")
+                out[(_tag, m.group(0).lower(), side)][word] += 1
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write the tags (default: report only)")
     ap.add_argument("--tier", choices=["STATED", "DERIVED"], help="only this tier")
     ap.add_argument("--quiet", action="store_true", help="counts only")
+    ap.add_argument("--compounds", action="store_true",
+                    help="words a rule ALMOST matches, and which boundary refused them")
     args = ap.parse_args()
+
+    if args.compounds:
+        misses = compound_misses()
+        print("Words a rule matches INSIDE, and the boundary that refuses them.")
+        print("`head` = a prefix is in the way (Cheeseburger); `tail` = a suffix is")
+        print("(eggplant). Nothing here is tagged — read it and rule on it.\n")
+        for (tag, token, side) in sorted(misses):
+            words = misses[(tag, token, side)]
+            shown = ", ".join(f"{w} ×{n}" for w, n in words.most_common())
+            print(f"  {tag:<19} {side:<9} {token!r:<15} {shown}")
+        print(f"\n{len(misses)} near-miss group(s). Tails already opened: "
+              f"{', '.join(COMPOUND_TAILS)}.")
+        return 0
 
     total = {"STATED": 0, "DERIVED": 0}
     by_tag = {}

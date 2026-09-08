@@ -515,7 +515,8 @@
           "desc": "Kids cheeseburger, spud fries and small juice.",
           "price": 13.9,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {

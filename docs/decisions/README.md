@@ -1292,3 +1292,21 @@ deliberation those compact docs omit.
   and a synthetic sibling corpus. 🚩 The standing consequence stands: these are
   the states someone thought of, and an unnamed one still looks exactly like a
   passing check.
+- [0110](0110-a-rule-word-may-end-a-compound-never-start-one.md) — **a rule
+  word may END a compound, never START one.** `\bburgers?\b` cannot see
+  "Cheeseburger", and nothing reported that it could not. Three tokens —
+  `burger`, `muffin`, `nugget` — may now carry a prefix and must still end at
+  the token; the CLOSING boundary is never opened, because a sweep of all 57
+  records says that would tag `eggplant` (12 rows) with egg, `Bundaberg` (4)
+  with gluten and `edamame` (7) with dairy. Opening the leading boundary
+  WHOLESALE is worse still: `kale` ×11 and `pale` ×7 from `ale`, `buckwheat`
+  ×5 from `wheat`, `cornflour` ×1 from `flour` — the last two a false gluten
+  warning on the rows a coeliac is hunting for, which is
+  [0097](0097-a-hedge-is-not-a-warning.md)'s harm, not an over-warning.
+  🔑 **`--compounds` is half the decision**: a bare list of compound words is
+  safer and SILENT about the one that lands after it was written.
+  🛑 **A fourth tail was withdrawn by the dry run** — `katsu` passed every
+  false-positive check and still reached `tonkatsu`, all five of which are
+  tonkatsu SAUCE, proposing
+  three tags whose printed basis was untrue of the dish. 17 tags landed; twin
+  warnings 21 → 18.
