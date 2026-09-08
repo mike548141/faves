@@ -21,6 +21,7 @@
   "locations": [
     {
       "label": "Manners Street",
+      "id": "manners-street",
       "address": "57 Manners Street, Te Aro, Wellington 6011",
       "lat": -41.29044,
       "lng": 174.77629,

@@ -19,6 +19,15 @@ content freshness separately from this file.
   claiming it. A place we can't vouch for stays out of "Open now" — that button
   is a promise — but it keeps its place in the list, above everywhere we know
   is shut.
+- **The add-on picker no longer tells you about the same fish twice.** Adding
+  salmon to a vegetarian dish, with fish on your avoid list, said *"Salmon
+  contains fish — you asked to avoid it. Salmon is fish, so this is no longer
+  vegetarian."* — one fish, two sentences. It is one sentence now, carrying both
+  facts, with the allergen half still leading: *"Salmon contains fish — you
+  asked to avoid it, and this is no longer vegetarian."*
+- **Goldings Free Dive is pinned at the right end of Leeds Street.** Its
+  stored coordinate sat 158 m from its own address, which quietly skewed
+  the distance sort and every "what's close" decision that reads it.
 - **Spices Indian now says when its menu was read.** Its page carried "Menu
   items and prices need a refresh", which reads as *nobody has ever looked* —
   and we had. 80 of its 92 dishes were transcribed from the shop's own printed

@@ -17,6 +17,7 @@
   "locations": [
     {
       "label": "97 Courtenay Place",
+      "id": "97-courtenay-place",
       "address": "97 Courtenay Place, Te Aro, Wellington 6011",
       "lat": -41.29295,
       "lng": 174.77915,
@@ -63,6 +64,7 @@
     },
     {
       "label": "88 Manners Street",
+      "id": "88-manners-street",
       "address": "88 Manners Street, Te Aro, Wellington 6011",
       "lat": -41.29104,
       "lng": 174.77645,
@@ -114,6 +116,7 @@
     },
     {
       "label": "11 Courtenay Place",
+      "id": "11-courtenay-place",
       "address": "11 Courtenay Place, Te Aro, Wellington 6011",
       "lat": -41.29416,
       "lng": 174.78289,
@@ -160,6 +163,7 @@
     },
     {
       "label": "142 Featherston Street",
+      "id": "142-featherston-street",
       "address": "142 Featherston Street, Wellington Central, Wellington 6011",
       "lat": -41.28312,
       "lng": 174.77694,
@@ -201,6 +205,7 @@
     },
     {
       "label": "114 Lambton Quay",
+      "id": "114-lambton-quay",
       "address": "114 Lambton Quay, Wellington Central, Wellington 6011",
       "lat": -41.28025,
       "lng": 174.77569,
@@ -242,6 +247,7 @@
     },
     {
       "label": "109 Willis Street",
+      "id": "109-willis-street",
       "address": "109 Willis Street, Te Aro, Wellington 6011",
       "lat": -41.28942,
       "lng": 174.77469,
@@ -283,6 +289,7 @@
     },
     {
       "label": "Wellington Airport",
+      "id": "wellington-airport",
       "address": "Level 1, Main Terminal Building, Stewart Duff Drive, Rongotai, Wellington 6022",
       "phone": null,
       "hours": {

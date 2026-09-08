@@ -9,3 +9,10 @@
   the stored pin *is* that same street centroid. Left exactly as it was; never
   invent a coordinate. Claim released: this stays open as a standing re-check,
   not as work, and the re-check is one `audit_coords.py` run.
+  🔎 **RE-CHECKED 2026-09-08 (session faves-o1) — unchanged, and this is what
+  the standing re-check costs: one `audit_coords.py` run.** The Melling branch
+  reports `0 m · street · fine` — the stored pin still agrees with the live
+  geocode to the metre, and the geocode is still street-level, so OSM still
+  carries no house number. Nothing to do. **Left exactly as it was; never
+  invent a coordinate.**
+

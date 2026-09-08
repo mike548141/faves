@@ -21,6 +21,7 @@
   "locations": [
     {
       "label": "Woodward Street",
+      "id": "woodward-street",
       "address": "4 Woodward Street, Wellington Central, Wellington 6011",
       "lat": -41.28202,
       "lng": 174.77571,
@@ -62,6 +63,7 @@
     },
     {
       "label": "Willis Street",
+      "id": "willis-street",
       "address": "99 Willis Street, Te Aro, Wellington 6011",
       "lat": -41.28889,
       "lng": 174.77502,
@@ -103,6 +105,7 @@
     },
     {
       "label": "Railway Station",
+      "id": "railway-station",
       "address": "2 Bunny Street, Pipitea, Wellington 6011",
       "lat": -41.27927,
       "lng": 174.78019,

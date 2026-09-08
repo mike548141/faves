@@ -151,13 +151,15 @@ excluded from both stores, always.
   "hours": null,                     // null, or a full week (see below)
   "locations": [                     // OPTIONAL: for a venue with several branches
     { "label": "Courtenay Place",    //   sharing this name/menu (see "Multi-location"
-      "address": "…", "lat": -41.29, //   below + ADR 0011). When present, the branches
-      "lng": 174.78, "phone": "…",   //   carry address/lat/lng/phone/hours — those five
-      "hours": { /* week */ },       //   fields must then be ABSENT at the top level.
-      "timezone": null,              //   `timezone`, `detailsVerified` and
-      "detailsVerified": null,       //   `detailsVerifiedBy` are DIFFERENT: legal at
-      "detailsVerifiedBy": null }    //   both levels, branch winning, top level the
-  ],                                 //   default (ADR 0043; per-branch provenance)
+      "id": "courtenay-place",       //   below + ADR 0011). REQUIRED identity, seeded
+      "address": "…", "lat": -41.29, //   from the label once (ADR 0103) — the label and
+      "lng": 174.78, "phone": "…",   //   the array POSITION are both mutable. When
+      "hours": { /* week */ },       //   present, the branches carry address/lat/lng/
+      "timezone": null,              //   phone/hours — those five must then be ABSENT
+      "detailsVerified": null,       //   at the top level. `timezone`, `detailsVerified`
+      "detailsVerifiedBy": null }    //   and `detailsVerifiedBy` are DIFFERENT: legal at
+  ],                                 //   both levels, branch winning, top level the
+                                     //   default (ADR 0043; per-branch provenance)
 
   "image": null,                     // optional self-hosted card photo, e.g. "img/kk/hero.jpg"
   "alt": null,                       // required when image is set (a11y)
@@ -939,9 +941,18 @@ precached payload nothing on any screen can reach (ADR 0047).
   them; a wrong pin is worse than no pin (an absent pair just searches by
   text). `validate.py` warns when a venue has none.
 - `locations` (**multi-location venues**, ADR 0011) is an optional array of
-  branches that share this record's name/menu/cuisine, each `{ label?,
+  branches that share this record's name/menu/cuisine, each `{ id, label?,
   address, lat, lng, phone, hours }` — same field rules as the top-level
-  equivalents (`label` an optional non-empty string). When present it is the
+  equivalents (`label` an optional non-empty string). `id` is the branch's
+  **stored, immutable identity** (ADR 0103): required, unique within the record,
+  slug form, seeded once from the label by `tools/seed_branch_ids.py`. It exists
+  because the other two ways of naming a branch are both mutable — the `label`,
+  and the array POSITION that `data.js` projects to the top level, so that
+  inserting a branch at index 0 moves the venue's address, phone and hours to a
+  different shop in a diff that reads as an addition. No screen renders the id
+  yet; `210/040` (per-branch closure), ADR 0080 D4 (per-branch prices) and the
+  owner's 2026-09-08 Cook at Home ruling (private branches a reader adds on
+  their own device) are what it is for. When present it is the
   source of truth: the per-branch fields (`address`/`lat`/`lng`/`phone`/
   `hours`) must **not** also sit at the top level, and `area`/`city` stay
   shared at the top. A single-location venue omits `locations` entirely and

@@ -928,6 +928,29 @@ SOURCE_CASES = {
             ),
             "error", 'locations\\[0\\]: detailsVerified must be null or an ISO date',
         ),
+        # ADR 0103. A branch id has NO visible symptom when it is wrong —
+        # nothing on any screen renders one — so unlike a duplicate `sectionId`
+        # (which at least makes a link land in the wrong place) these four
+        # breaks are invisible everywhere except here.
+        "two branches claiming one identity": (
+            lambda s: s.replace('"id": "press-hall",', '"id": "melling",', 1),
+            "error", r"locations\[1\]: id 'melling' is already used by locations\[0\] \('Melling'\)",
+        ),
+        "a branch id that is not a slug": (
+            lambda s: s.replace('"id": "melling",', '"id": "Melling Road",', 1),
+            "error", r"locations\[0\]: id 'Melling Road' is not a slug — expected 'melling-road'",
+        ),
+        "a branch with no id at all": (
+            lambda s: s.replace('      "id": "melling",\n', "", 1),
+            "error", r"locations\[0\]: no id — run tools/seed_branch_ids\.py",
+        ),
+        # An empty string is the shape a hand-edit produces — someone clears the
+        # value meaning to retype it — and it is not caught by the presence gate
+        # above, because the key is still there.
+        "a branch id blanked rather than removed": (
+            lambda s: s.replace('"id": "melling",', '"id": "   ",', 1),
+            "error", r"locations\[0\]: id must be a non-empty string, got",
+        ),
     },
 }
 

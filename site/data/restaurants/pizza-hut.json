@@ -13,6 +13,7 @@
   "locations": [
     {
       "label": "Johnsonville",
+      "id": "johnsonville",
       "address": "88 Johnsonville Road, Johnsonville, Wellington 6037",
       "lat": -41.225,
       "lng": 174.8073,
