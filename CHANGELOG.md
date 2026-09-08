@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **Deleting a profile now takes its cooking progress with it.** Everything
+  else that profile had — hearts, ratings, settings — was already removed, but
+  the ticks it left on a recipe's ingredients and steps stayed on the device
+  indefinitely, and could be picked up by a later profile minted with the same
+  internal id. They go with the rest now. Cook-mode ticks remain deliberately
+  absent from the backup file, which has not changed.
 - **An order line now shows the money the place actually charges in.** Every
   line was recorded as New Zealand dollars whatever the venue's menu was priced
   in, and the line's own price was printed with no currency at all — so a

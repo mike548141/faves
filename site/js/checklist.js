@@ -45,9 +45,12 @@
 // whoever is active. Cooking progress belongs to the person cooking.
 
 import { dishId } from "./dish-id.js";
-import { profiles, profileScopedStorage } from "./profiles.js";
+import { CHECKLIST_BASE_KEY, profiles, profileScopedStorage } from "./profiles.js";
 
-export const CHECKLIST_KEY = "faves.checklist.v1";
+// The literal lives in profiles.js so its per-profile purge can name this store
+// without importing this module back (the cycle would break every page's boot).
+// This is the name the rest of the app knows it by.
+export const CHECKLIST_KEY = CHECKLIST_BASE_KEY;
 
 /** A record untouched for this long is dropped the next time the store loads. */
 export const STALE_MS = 12 * 60 * 60 * 1000;
