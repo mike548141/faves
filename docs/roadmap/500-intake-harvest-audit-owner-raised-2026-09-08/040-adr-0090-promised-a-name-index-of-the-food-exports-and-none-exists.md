@@ -1,7 +1,11 @@
-- [ ] 🔎 **ADR 0090 promised a name index of the prior food databases and none
+- [~] 🔎 **ADR 0090 promised a name index of the prior food databases and none
       was ever written; the exports also hold data with no store**
       `[M][data][docs]` — found 2026-09-08 by the intake audit (session
       faves-o1), which read all six files.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — owner
+  authorised this one directly. Delivered by a sub-agent in its own
+  worktree (`faves-o1-intake-coverage`, branch `intake-coverage`), landing by PR.
 
   **What is in `intake/ingredients/`** — five nutrition exports the owner
   collected before Faves, plus one chat export:

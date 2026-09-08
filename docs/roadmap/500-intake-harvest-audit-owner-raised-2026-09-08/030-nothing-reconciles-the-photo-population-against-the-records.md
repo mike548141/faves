@@ -1,7 +1,11 @@
-- [ ] 🔎 **Nothing joins the photograph population to the records, so a
+- [~] 🔎 **Nothing joins the photograph population to the records, so a
       harvest cannot report its own coverage** `[S][tools]` — found 2026-09-08
       by the intake audit (session faves-o1). This is the mechanism gap that
       let `020` stay invisible.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — owner
+  authorised this one directly. Delivered by a sub-agent in its own
+  worktree (`faves-o1-intake-coverage`, branch `intake-coverage`), landing by PR.
 
   **Two tools, no join.** `tools/product_bursts.py` prints the **population**
   (183 photographs, 59 bursts). `tools/products.py` validates the **records**

@@ -1,6 +1,10 @@
-- [ ] 🔎 **A complete menu carries no `verified` date, and three older menu
+- [~] 🔎 **A complete menu carries no `verified` date, and three older menu
       photo sets have no price history** `[S][data]` — found 2026-09-08 by the
       intake audit (session faves-o1).
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — owner
+  authorised this one directly. Delivered by a sub-agent in its own
+  worktree (`faves-o1-spices-verified`, branch `spices-verified`), landing by PR.
 
   **(a) `spices-indian.json` has `verified: null` and `verifiedBy: null`**,
   with `status: "menu-complete"` and **92 priced items**. Its intake
