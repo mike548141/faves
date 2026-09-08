@@ -10,6 +10,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { buildIndex, search } from "../site/js/search.js";
+import { resolveRecord } from "../site/js/temporal.js";
 
 const FIXTURE = [
   {
@@ -567,4 +568,143 @@ test("27a: dishes are unaffected — a dish carries no facet", () => {
     "Kumara wedges",
     "Kūmara fries",
   ]);
+});
+
+// ─── 210/080: search ranks a venue that has CLOSED DOWN last (ADR 0111) ───────
+//
+// LATENT IN THE CORPUS, exactly as item `030` recorded for the home list: no
+// venue in `site/data/` carries a closure event today, so this cannot be
+// observed by browsing the app. The fixture is built by running a raw
+// `lifecycle` block through the real `resolveRecord`, never by hand-writing the
+// `closure` object it produces — a hand-written one tests the ranker against a
+// shape nothing in the app emits, and keeps passing the day the fold changes.
+const CLOSURE_ASOF = "2026-09-09";
+const withLifecycle = (record, events) =>
+  resolveRecord({ ...record, lifecycle: { added: "2026-07-06", events } }, CLOSURE_ASOF);
+
+const CLOSURE_FIXTURE = [
+  // Trading, and carries the query as a FACET — the top of the list.
+  withLifecycle({ id: "c-open-facet", name: "Zed Open Place", area: "Te Aro", cuisine: ["Sushi"],
+    menu: [{ section: "Rolls", items: [{ name: "Bbb Roll" }] }] }, []),
+  // Trading, and merely NAMED for the query. Below the facet hit (27a) and
+  // above every closed venue — the row that pins WHICH KEY IS OUTERMOST.
+  withLifecycle({ id: "c-open-name", name: "Sushi Coincidence", area: "Kelburn", cuisine: ["Pizza"] }, []),
+  // Shut for good, and a facet hit: the strongest possible match, and still last.
+  // Alphabetically first of the five, so the pre-change ranking put it at the TOP.
+  withLifecycle({ id: "c-shut-facet", name: "A Shut Place", area: "Te Aro", cuisine: ["Sushi"],
+    menu: [{ section: "Rolls", items: [{ name: "Aaa Roll" }] }] },
+    [{ type: "closed-permanently", date: "2026-06-01" }]),
+  // Shut for a refit, with a stated return date — the two facts the row's badge
+  // renders (closure-ui.js), which is why `until` is asserted below.
+  withLifecycle({ id: "c-refit-facet", name: "B Refit Place", area: "Te Aro", cuisine: ["Sushi"] },
+    [{ type: "closed-temporarily", date: "2026-06-01", until: "2026-12-01" }]),
+  // Shut for good and only NAMED for the query: last of the closed, which is how
+  // the inner keys are shown to still apply below the new one.
+  withLifecycle({ id: "c-shut-name", name: "Sushi Ghost", area: "Kelburn", cuisine: ["Pizza"] },
+    [{ type: "closed-permanently", date: "2026-06-01" }]),
+];
+const closureIndex = buildIndex(CLOSURE_FIXTURE);
+const closureIds = (q) => search(closureIndex, q, { placeLimit: 20 }).places.items.map((p) => p.id);
+
+test("210/080: every closed-down venue ranks below every trading one", () => {
+  const ids = closureIds("sushi");
+  const closed = ["c-shut-facet", "c-refit-facet", "c-shut-name"];
+  const lastOpen = Math.max(ids.indexOf("c-open-facet"), ids.indexOf("c-open-name"));
+  const firstClosed = Math.min(...closed.map((id) => ids.indexOf(id)));
+  assert.ok(
+    lastOpen < firstClosed,
+    `every trading place must precede every closed one; got ${ids.join(" > ")}`
+  );
+});
+
+test("210/080: a REFIT demotes as well as a permanent closure", () => {
+  // Both states, one key — the same answer `availabilityTier` gives the home
+  // list. Named separately because "closed" quietly meaning only
+  // "closed-permanently" is the shape this would regress into.
+  const ids = closureIds("sushi");
+  assert.ok(
+    ids.indexOf("c-open-name") < ids.indexOf("c-refit-facet"),
+    `a venue shut for a refit must sink below a trading one; got ${ids.join(" > ")}`
+  );
+});
+
+test("210/080: closure is the OUTERMOST key — it beats the facet key, not the other way round", () => {
+  // The whole ordering claim in one assertion. `c-shut-facet` is TAGGED Sushi
+  // and `c-open-name` merely contains the word, so 27a's key alone would put the
+  // shut venue first. A shut café is a worse answer to "Cafe" than an open place
+  // named one: the reader can walk into the second.
+  const ids = closureIds("sushi");
+  assert.ok(
+    ids.indexOf("c-open-name") < ids.indexOf("c-shut-facet"),
+    `a trading NAME match must beat a closed FACET match; got ${ids.join(" > ")}`
+  );
+});
+
+test("210/080: the keys below it still apply — closed venues keep facet-then-text order", () => {
+  // A new outermost key can flatten everything beneath it and still pass every
+  // "closed is last" assertion above.
+  const ids = closureIds("sushi");
+  assert.deepEqual(ids, ["c-open-facet", "c-open-name", "c-shut-facet", "c-refit-facet", "c-shut-name"]);
+});
+
+test("210/080: a closed venue is still FINDABLE — demoted, never dropped", () => {
+  // The reader this item exists for is the one checking whether their old local
+  // really has gone. Option (3) — excluding it — was rejected for exactly that.
+  const ids = closureIds("sushi");
+  for (const id of ["c-shut-facet", "c-refit-facet", "c-shut-name"]) {
+    assert.ok(ids.includes(id), `${id} must still be findable; got ${ids.join(" > ")}`);
+  }
+  assert.equal(search(closureIndex, "sushi").places.total, 5, "every match still counted");
+  // And a query only the shut venue can answer still answers it.
+  assert.deepEqual(closureIds("a shut place"), ["c-shut-facet"]);
+});
+
+test("210/080: the place entry carries the FOLDED closure, so the row can state it", () => {
+  // The render half's precondition (app.js → closure-ui.js). `state` is what the
+  // badge's words come from and `until` is the "back 1 Dec" half; a fold that
+  // stopped emitting either would leave the row silent while every ordering
+  // assertion above stayed green.
+  const items = search(closureIndex, "sushi", { placeLimit: 20 }).places.items;
+  const by = (id) => items.find((p) => p.id === id);
+  assert.equal(by("c-shut-facet").closure.state, "closed-permanently");
+  assert.equal(by("c-refit-facet").closure.state, "closed-temporarily");
+  assert.equal(by("c-refit-facet").closure.until, "2026-12-01");
+  assert.equal(by("c-refit-facet").closure.overdue, false);
+  assert.equal(by("c-open-facet").closure.state, "trading");
+});
+
+test("210/080: a record that never went through the fold is treated as TRADING", () => {
+  // `buildIndex` is called with resolved records by the app, but it is a public
+  // export and its own tests pass raw objects. The default must be the safe one:
+  // a missing `closure` is not evidence of a closure.
+  const mixed = buildIndex([
+    { id: "raw", name: "Sushi Raw", area: "Te Aro", cuisine: ["Sushi"] },
+    CLOSURE_FIXTURE.find((r) => r.id === "c-shut-facet"),
+  ]);
+  const ids = search(mixed, "sushi", { placeLimit: 20 }).places.items.map((p) => p.id);
+  assert.deepEqual(ids, ["raw", "c-shut-facet"]);
+  assert.equal(mixed.places.find((p) => p.id === "raw").closure, null);
+});
+
+test("210/080: DISHES are untouched — a dish is not sunk by its venue's closure", () => {
+  // `rank` takes both the facet test and the closure test as parameters, and
+  // dishes are given neither. Whether a dish should sink with the shop that
+  // served it is a product question nobody has been asked (ADR 0111 leaves it
+  // open); until it is, "Aaa Roll" outranks "Bbb Roll" on text alone, exactly as
+  // it did before this change — even though its venue has shut.
+  const { dishes } = search(closureIndex, "roll", { dishLimit: 20 });
+  assert.deepEqual(dishes.items.map((d) => `${d.venueId}:${d.name}`), [
+    "c-shut-facet:Aaa Roll",
+    "c-open-facet:Bbb Roll",
+  ]);
+  // ⚠️ THE ORDER ASSERTION ABOVE CANNOT, BY ITSELF, CATCH THE LEAK — measured,
+  // not reasoned: wiring `placeClosed` into the dishes call changes nothing,
+  // because a dish entry has no `closure` for it to read, and every one of these
+  // tests stayed green through that probe. So the structural fact is pinned as
+  // well: a dish carries no closure at all. A future session that wants dishes
+  // to sink with their venue has to break this line deliberately, which is the
+  // point — it is a product decision (ADR 0111), not a refactor.
+  for (const d of closureIndex.dishes) {
+    assert.ok(!("closure" in d), `a dish entry must carry no closure; ${d.name} does`);
+  }
 });
