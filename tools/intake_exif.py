@@ -48,6 +48,14 @@ GPS coordinates of a *venue* are public facts and already in the data. GPS of
 a *person* is not — this tool prints what the file holds so the importer can
 judge, and nothing it prints is copied into `site/` beyond the venue-level
 date and method. See CLAUDE.md's no-personal-data rule.
+
+🛑 THE `data/products/` RULE DOES NOT REACH THIS FILE — do not "fix" it by
+deleting the GPS read. ADR 0090's rule 1 said "No location, ever", which read
+literally is a rule about the whole subject and would take the two jobs above
+with it. ADR 0115 supersedes that wording on the owner's 2026-09-09 ruling: no
+*coordinate in a tracked record*, the intake read explicitly preserved. What
+enters the repo is the derived fact — which venue, that someone stood there —
+never the number, and that is exactly what this tool is for.
 """
 
 import argparse

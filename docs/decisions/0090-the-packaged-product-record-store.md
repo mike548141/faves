@@ -40,6 +40,14 @@ Three rules are **enforced by the validator**, not left to care:
    inside one 73 m × 51 m box — a private address — and this repo is public. The
    schema has no field for a position and the validator rejects every spelling
    of one. A capture date plus a position is a movement record.
+   **This rule is superseded in full by
+   [0115](0115-where-a-product-was-seen-is-a-business-not-a-coordinate.md)** —
+   owner-ruled 2026-09-09. Read literally, *"No location, ever"* also forbids
+   **reading** GPS at intake, which `tools/intake_exif.py` does and must keep
+   doing, and it forecloses recording that a product was seen **in a shop**,
+   which is a fact about a business. 0115 replaces the wording; the privacy
+   floor beneath it — no coordinate in a tracked record — is unchanged. Rules
+   2 and 3 below are untouched.
 2. **No eating events.** This is a store of *products*, not of meals. "He had
    this for lunch on Tuesday" is health-adjacent personal data about a named
    person. The transcripts in `intake/` are full of it; none of it comes

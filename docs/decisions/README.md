@@ -1364,3 +1364,25 @@ deliberation those compact docs omit.
   where a branch goes reads as an ordinary run. `--self-test` stages the
   incident itself — a probe in tree A run with `cwd = B` must still name A —
   and reverting the root to `Path.cwd()` fails that case and only that case.
+
+- [0115](0115-where-a-product-was-seen-is-a-business-not-a-coordinate.md) —
+  **where a product was seen is a business, not a coordinate.** Supersedes
+  [0090](0090-the-packaged-product-record-store.md) **rule 1 only** — *"No
+  location, ever."* Read literally that rule forbids **reading** GPS at intake,
+  which `tools/intake_exif.py` does for two live jobs (sorting loose photographs
+  to a venue, and positive evidence of `verifiedBy: in-store`), so a future
+  session could have over-applied it and silently broken a harvest that works.
+  It also forecloses a product photographed **in a shop**, which is a fact about
+  a business. Rule 1 becomes *no coordinate in a product record, and no position
+  derived from a photograph taken at a private address*, with the intake read
+  explicitly preserved and *where it was seen* admissible as a **venue reference
+  or shop name, never a number**. Owner ruled 2026-09-09, **overruling the
+  item's own recommendation** of reword-now / open-the-case-later. 🎯 He left
+  one thing open: whether the validator rule ships **now** or when the first
+  in-shop photograph exists — roadmap `500/060` stays open on that fork alone.
+  🔑 The **negative** half already ships (`products.py` refuses every spelling
+  of a coordinate and `SOURCE_KEYS` has no place field), and **ADR 0047 is not
+  the objection** to the positive half — it cuts on `site/data/` vs `data/`, and
+  a field in the record store costs no phone a byte. The precedent that bites is
+  [0080](0080-a-venue-has-menus-plural.md) Decision 4: a shape recorded before
+  its first instance is a hypothesis.
