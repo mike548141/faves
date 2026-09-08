@@ -33,8 +33,11 @@ guest."** People should *enjoy* opening it.
 
 ### 1. Home — "Where are we eating?"
 
-- Restaurant cards: name, cuisine chips, area, services (takeaway /
-  dine-in), status ("menu coming soon" for stubs).
+- Restaurant cards: name, cuisine chips, area, status ("menu coming
+  soon" for stubs), and — once a location is known — distance and a
+  travel hint. The **services line** ("Dine-in, Takeaway") this
+  specified was removed by the owner on 2026-08-16: it repeated on
+  every card and told nobody anything (`app.js`, `servicesText`).
 - **One filter control**: a `Filters (n)` button (floating bottom-right;
   inline in the row above the list from 60rem up — `filter_row_check`)
   opening a sheet that holds every filter, under the one heading **Narrow
@@ -73,15 +76,25 @@ guest."** People should *enjoy* opening it.
 ### 2. Menu — one restaurant
 
 - Header: name, cuisine, area, **call button** (`tel:`), website link,
-  hours if known, "verified <date>".
+  hours if known. The **"verified <date>" line** this specified was
+  removed on 2026-08-16 as a duplicate: freshness now sits behind the
+  ⓘ beside the title (ADR 0036), which says how the menu was read as
+  well as when.
 - Sticky horizontal section nav (Entrées, Mains…) that tracks scroll.
 - Dish rows: name, description, price, tag chips. Allergen tags render
   as warnings (icon + colour + text — never colour alone).
-- **Our picks** highlighted at the top ("If it's your first time…").
+- **Our picks** ("If it's your first time…"), directly under the search
+  field rather than at the top of the page — owner ruling 2026-08-17:
+  the controls come first, the picks are content. Closable, and the
+  close is remembered per venue (`picks_check`).
 - Search-as-you-type across the menu for regulars who know the word
   they want ("roti").
-- Dietary filter chips (vegetarian, GF…) that dim non-matching dishes
-  rather than hiding them (groups share one screen).
+- Dietary filters (vegetarian, GF…) that **remove** non-matching dishes,
+  with a count line above the list saying how much was narrowed away.
+  This specified chips that DIM rather than hide, and both halves were
+  overturned on 2026-09-06: the owner's ask was to focus the list, not
+  decorate it (ADR 0088), and the chip row went with it — the filters
+  live in the Filters sheet and the search box does the rest.
 
 ### 3. Install/offline
 

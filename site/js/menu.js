@@ -1,6 +1,9 @@
 // Menu screen. Reads ?id=<restaurant>, fetches its file, renders the
 // header, "our picks", section nav (scroll-spy), and dish rows with
-// allergen warnings. Search hides non-matches; dietary chips dim them.
+// allergen warnings. Search and the dietary filters BOTH hide non-matches, and
+// a count line says how much was narrowed away. (This read "dietary chips dim
+// them" until 2026-09-08; the dimming went on 2026-09-06 with ADR 0088, and the
+// chip row went with it — the filters live in the Filters sheet.)
 
 import { loadRestaurant } from "./data.js";
 import { mapsUrl, recallOrigin } from "./geo.js";
