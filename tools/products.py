@@ -4,6 +4,7 @@
     python3 tools/products.py            # validate every record
     python3 tools/products.py --stats    # …and what the corpus holds
     python3 tools/products.py --reshoot  # products whose photos cannot answer
+    python3 tools/products.py --coverage # …and how much of the intake was READ
 
 WHAT THIS STORE IS. Labels off packaged food in the owner's house, harvested
 from his own photographs: manufacturer, identifiers, pack size, servings,
@@ -52,6 +53,51 @@ which could not be read says so in `needs` rather than quietly omitting a
 field — the difference between "we looked and it isn't legible" and "nobody
 looked", which is otherwise invisible for ever.
 
+────────────────────────────────────────────────────────────────────────────
+`--coverage` — THE RECONCILIATION, and why it lives HERE rather than in
+`tools/product_bursts.py`.
+
+Two tools existed and nothing joined them. `product_bursts.py` prints the
+POPULATION (183 photographs, 59 bursts); this one validates the RECORDS (87).
+"How much of the intake has been read" was therefore a question the repo could
+not answer, and 15 bursts sat uncited for two days with every gate green — a
+guard whose output is identical whether or not the thing it guards is complete
+(ADR 0072).
+
+The join belongs to this file because the claim it settles is a claim about
+THIS STORE: has it read what it was given? `--reshoot` already reports the gaps
+*inside* a record; `--coverage` reports the gaps *between* the records and the
+photographs, which is the same question one level out. `product_bursts.py` is
+the population's tool and knows nothing about `data/products/` — making it read
+this store would invert the dependency, and a burst grouper that fails because a
+product record is malformed is a worse tool than the one we have. So this file
+shells out to it exactly as it shells out to `intake_exif.py`.
+
+🛑 `source.burst` IS SOMETIMES A COMPOSITE — `"b026+b045"`, one product whose
+front and back landed either side of a 45-second pause. An exact-string
+comparison reports 17 uncited bursts where the true answer is 15, because
+`b026` and `b051` are named only inside a composite. The field is PARSED here,
+never compared, and `--probe` prints the naive answer beside the parsed one so
+that the difference stays measurable rather than remembered.
+
+🔑 A GAP IS NOT A FAILURE, AND A CONTRADICTION IS. Uncited bursts and unnamed
+photographs are WORK — they are reported with counts and the exit code stays 0,
+because a check that can never reach zero is a check somebody switches off
+inside a month. What exits 1 is the store disagreeing with the population: a
+record citing a burst or a file that does not exist, an exclusion naming a burst
+that does not exist or whose file count has moved, or an exclusion for a burst
+that also has a product record.
+
+`data/intake/not-products.json` is how a burst says "read, and deliberately not
+a product" — the 26 recipe and menu-leaflet photographs. It carries what each
+burst holds, who read it and when, so the answer is EVIDENCE rather than a
+silence. Its shape is checked on every run, including runs with no `intake/`.
+
+WHAT `--coverage` CANNOT TELL YOU. That a record is *about* the photograph it
+cites. It joins identifiers, so a record citing the wrong burst reconciles
+perfectly. Only the images can settle that.
+────────────────────────────────────────────────────────────────────────────
+
 Stdlib only (ADR 0001 binds the tools by habit).
 """
 
@@ -60,12 +106,28 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / "data" / "products"
+# Read, and deliberately not a product — see the `--coverage` block above.
+NOT_PRODUCTS = ROOT / "data" / "intake" / "not-products.json"
+# `intake/**` is gitignored, so this folder is absent on a fresh clone and in
+# CI. That is not an error: `--coverage` says so and exits 0.
+PHOTOS_DEFAULT = "intake/ingredients/raw_food_photos"
+# `source.files` are relative to `intake/ingredients/`; the burst grouper emits
+# whatever path it was given. Everything is normalised onto the first by
+# cutting at this segment, so the two are comparable however the tool was run.
+INGREDIENTS_SEGMENT = "/ingredients/"
+
+BURST_RE = re.compile(r"^b\d{3}$")
+NOT_PRODUCT_KEYS = {"id", "files", "kind", "what", "read", "readBy", "seeAlso"}
+# Closed on purpose. A free-text `kind` is a place to write "misc" and stop
+# looking, which is the exact silence this file exists to replace.
+NOT_PRODUCT_KINDS = {"recipe", "menu", "other"}
 
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -349,12 +411,219 @@ def validate(path: Path, problems: list[str]) -> dict | None:
     return rec
 
 
+def parse_burst(raw: object) -> list[str] | None:
+    """The burst ids a `source.burst` field names, or None if it is not a shape
+    this store defines.
+
+    🛑 THIS IS THE FUNCTION THE NAIVE VERSION DOES NOT HAVE. One product's front
+    and back can land either side of the grouper's 45-second gap, so a record
+    may cite `"b026+b045"`. Comparing that string against the burst list marks
+    BOTH halves uncited and reports 17 gaps where there are 15 — a wrong answer
+    that looks exactly like a right one, on the two bursts a reader is least
+    likely to check. `--probe` prints both numbers for that reason.
+
+    The re-emit rule is ADR 0076's: a parse that cannot reproduce its input
+    exactly has not read the field, it has guessed at it. So an unfamiliar
+    spelling — spaces round the `+`, a trailing separator, `B026`, a range —
+    comes back None and is reported as a malformed field rather than being
+    quietly half-understood.
+    """
+    if not isinstance(raw, str):
+        return None
+    parts = raw.split("+")
+    if not parts or not all(BURST_RE.match(p) for p in parts):
+        return None
+    if "+".join(parts) != raw:
+        return None
+    return parts
+
+
+def load_not_products(problems: list[str]) -> dict[str, dict]:
+    """`data/intake/not-products.json`, shape-checked.
+
+    Checked on EVERY run, not only under `--coverage`, because the shape can be
+    checked with no `intake/` present and `--coverage` cannot — so on a fresh
+    clone and in CI this is the only reading the file ever gets.
+    """
+    if not NOT_PRODUCTS.exists():
+        return {}
+    try:
+        doc = json.loads(NOT_PRODUCTS.read_text())
+    except json.JSONDecodeError as e:
+        problems.append(f"data/intake/not-products.json: not valid JSON — {e}")
+        return {}
+    rows = doc.get("bursts")
+    if not isinstance(rows, list):
+        problems.append("data/intake/not-products.json: 'bursts' must be a list")
+        return {}
+    out: dict[str, dict] = {}
+    for i, row in enumerate(rows):
+        rid = f"not-products[{i}]"
+        if not isinstance(row, dict):
+            problems.append(f"{rid}: must be an object")
+            continue
+        for k in row:
+            if k not in NOT_PRODUCT_KEYS:
+                problems.append(f"{rid}: unknown key {k!r} (allowed: "
+                                f"{', '.join(sorted(NOT_PRODUCT_KEYS))})")
+        bid = row.get("id")
+        if not isinstance(bid, str) or not BURST_RE.match(bid):
+            problems.append(f"{rid}: id must be a burst id like 'b003', got {bid!r}")
+            continue
+        if bid in out:
+            problems.append(f"{rid}: {bid} is listed twice")
+        if not isinstance(row.get("files"), int) or row["files"] < 1:
+            problems.append(f"{rid} ({bid}): files must be the number of photographs "
+                            "in the burst — it is the tripwire that fires when the "
+                            "burst grows and nobody looked again")
+        if row.get("kind") not in NOT_PRODUCT_KINDS:
+            problems.append(f"{rid} ({bid}): kind must be one of "
+                            f"{sorted(NOT_PRODUCT_KINDS)}")
+        if not str(row.get("what", "")).strip():
+            problems.append(f"{rid} ({bid}): 'what' must say what the images hold — "
+                            "an exclusion with no account of what was seen is the "
+                            "silence this file replaces")
+        if not DATE_RE.match(str(row.get("read", ""))):
+            problems.append(f"{rid} ({bid}): read must be YYYY-MM-DD")
+        if not str(row.get("readBy", "")).strip():
+            problems.append(f"{rid} ({bid}): readBy must name who looked")
+        out[bid] = row
+    return out
+
+
+def read_population(photos: Path) -> dict[str, list[str]]:
+    """Burst id → the photographs in it, as paths relative to intake/ingredients/.
+
+    Delegates to `product_bursts.py`, which delegates to `intake_exif.py`. Only
+    the ids and the file names are taken: that output also carries the EXIF
+    lat/lng, and those coordinates sit on a private address in a public repo
+    (rule 1). Nothing here reads them and nothing here prints them.
+    """
+    out = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "product_bursts.py"),
+         "--dir", str(photos), "--json"],
+        capture_output=True, text=True, cwd=ROOT)
+    if out.returncode != 0:
+        sys.exit(f"product_bursts.py failed:\n{out.stderr.strip()}")
+    doc = json.loads(out.stdout or "{}")
+    if doc.get("undated"):
+        # An undated photo is in no burst at all, so it can never be reconciled.
+        print(f"⚠️  {len(doc['undated'])} photograph(s) carry no EXIF "
+              "DateTimeOriginal and are in no burst — they cannot be covered.")
+
+    def rel(p: str) -> str:
+        i = p.find(INGREDIENTS_SEGMENT)
+        return p[i + len(INGREDIENTS_SEGMENT):] if i >= 0 else p
+
+    return {b["id"]: [rel(f) for f in b["files"]] for b in doc.get("bursts", [])}
+
+
+def coverage(records: list[dict], photos: Path, excluded: dict[str, dict],
+             probe: bool) -> list[str]:
+    """Reconcile the photograph population against the records. Returns the
+    CONTRADICTIONS (which fail the run); gaps are printed and do not."""
+    bursts = read_population(photos)
+    photo_set = {f for files in bursts.values() for f in files}
+
+    cited: dict[str, list[str]] = {}
+    cited_naive: set[str] = set()
+    named: set[str] = set()
+    bad: list[str] = []
+    for rec in records:
+        src = rec.get("source") or {}
+        raw = src.get("burst")
+        if raw is not None:
+            cited_naive.add(str(raw))
+            ids = parse_burst(raw)
+            if ids is None:
+                bad.append(f"{rec['id']}: source.burst {raw!r} is not a burst id or a "
+                           "'+'-joined list of them")
+            else:
+                for b in ids:
+                    cited.setdefault(b, []).append(rec["id"])
+        for f in src.get("files") or []:
+            named.add(f)
+
+    for b, ids in sorted(cited.items()):
+        if b not in bursts:
+            bad.append(f"source.burst names {b}, which is not in the population "
+                       f"(cited by {', '.join(ids)})")
+    for f in sorted(named - photo_set):
+        bad.append(f"source.files names {f!r}, which is not in the population")
+    for bid, row in sorted(excluded.items()):
+        if bid not in bursts:
+            bad.append(f"not-products.json excludes {bid}, which is not in the "
+                       "population")
+        elif len(bursts[bid]) != row.get("files"):
+            bad.append(f"not-products.json says {bid} holds {row.get('files')} "
+                       f"photograph(s); the burst holds {len(bursts[bid])}. Someone "
+                       "added to it after it was read")
+        if bid in cited:
+            bad.append(f"not-products.json says {bid} is not a product, but "
+                       f"{', '.join(cited[bid])} was harvested from it")
+
+    uncited = sorted(set(bursts) - set(cited) - set(excluded))
+    unnamed = sorted(f for f in photo_set - named
+                     if not any(f in bursts[b] for b in excluded if b in bursts))
+
+    print(f"\nCoverage — {len(photo_set)} photograph(s) in {len(bursts)} burst(s) "
+          f"against {len(records)} product record(s).")
+    print(f"  bursts harvested   {len(cited):3}")
+    print(f"  bursts read, not a product   {len(excluded):3} "
+          f"({sum(len(bursts.get(b, [])) for b in excluded)} photograph(s))")
+    print(f"  bursts with neither          {len(uncited):3}")
+    print(f"  photographs no source.files names  {len(unnamed):3}")
+
+    if uncited:
+        print("\nBursts with no product record and no entry in "
+              "data/intake/not-products.json:")
+        for b in uncited:
+            print(f"  · {b}  {len(bursts[b])} photograph(s)")
+    if unnamed:
+        print("\nPhotographs inside a harvested burst that no source.files names "
+              "— the burst was read, these frames were not:")
+        for f in unnamed:
+            owner = next((b for b, fs in bursts.items() if f in fs), "?")
+            print(f"  · {f}  ({owner})")
+
+    if probe:
+        # The break-probe, kept rather than remembered. Composites are the whole
+        # reason `parse_burst` exists, and a difference of two is invisible in a
+        # number that nobody re-derives.
+        # Deliberately computed WITHOUT the exclusions, so the two numbers move
+        # only with the parse. Subtracting the read-but-not-a-product bursts
+        # would fold two variables into one figure and hide the one this probe
+        # is about.
+        naive = sorted(set(bursts) - cited_naive)
+        parsed = sorted(set(bursts) - set(cited))
+        comps = sorted(c for c in cited_naive if "+" in c)
+        print(f"\n--probe (before the exclusions are applied): exact-string "
+              f"comparison reports {len(naive)} uncited burst(s); parsing "
+              f"reports {len(parsed)}.")
+        print(f"  composite source.burst fields: {', '.join(comps) or 'none'}")
+        extra = sorted(set(naive) - set(parsed))
+        print(f"  only the naive version calls these uncited: "
+              f"{', '.join(extra) or 'none'}")
+
+    return bad
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Validate data/products/.",
         formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
     ap.add_argument("--stats", action="store_true", help="what the corpus holds")
     ap.add_argument("--reshoot", action="store_true", help="products needing another photo")
+    ap.add_argument("--coverage", action="store_true",
+                    help="reconcile the photograph population against the records")
+    ap.add_argument("--photos", default=PHOTOS_DEFAULT,
+                    help=f"the intake photo folder (default: {PHOTOS_DEFAULT}). "
+                         "It is gitignored, so it is absent on a fresh clone and "
+                         "in CI; --coverage says so and exits 0. A worktree has "
+                         "none either — point this at the primary checkout's copy.")
+    ap.add_argument("--probe", action="store_true",
+                    help="with --coverage: print the naive exact-string answer "
+                         "beside the parsed one (the composite-burst break-probe)")
     args = ap.parse_args()
 
     if not STORE.exists():
@@ -363,6 +632,17 @@ def main() -> int:
     files = sorted(STORE.glob("*.json"))
     problems: list[str] = []
     records = [r for r in (validate(p, problems) for p in files) if r]
+    excluded = load_not_products(problems)
+
+    if args.coverage:
+        photos = (ROOT / args.photos).resolve()
+        if not photos.exists():
+            # Not a failure. `intake/**` is gitignored by design, so this is the
+            # ordinary state everywhere but the owner's own checkout.
+            print(f"intake not present ({args.photos}) — coverage cannot be "
+                  "computed here. The exclusions file was still shape-checked.")
+        else:
+            problems += coverage(records, photos, excluded, args.probe)
 
     for p in problems:
         print(f"error: {p}")

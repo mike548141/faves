@@ -1,0 +1,140 @@
+{
+  "note": "Capture bursts in intake/ingredients/raw_food_photos that were READ and are deliberately NOT packaged products. Without this file every one of them is a permanent gap in `products.py --coverage`, and a check that can never reach zero is one nobody runs. A row here is evidence that someone opened the images and says what they hold — it is not a way to make a burst stop counting.",
+  "bursts": [
+    {
+      "id": "b003",
+      "files": 3,
+      "kind": "recipe",
+      "what": "One cookbook page (p.207), photographed in three frames.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b029",
+      "files": 2,
+      "kind": "menu",
+      "what": "Takeaway @ Churton printed menu leaflet, both sides, dated 2025-11-25 — 82 numbered dishes with prices. Whether those prices differ from the venue's 2019 and 2026-08-08 readings is still unsettled; that question belongs to roadmap item 500/020, not here.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b030",
+      "files": 1,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b031",
+      "files": 1,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b032",
+      "files": 1,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b033",
+      "files": 1,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b034",
+      "files": 2,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b035",
+      "files": 1,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b036",
+      "files": 2,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b037",
+      "files": 1,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b038",
+      "files": 1,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b039",
+      "files": 5,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b040",
+      "files": 2,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b041",
+      "files": 2,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    },
+    {
+      "id": "b042",
+      "files": 1,
+      "kind": "recipe",
+      "what": "The owner's recipe notebook and loose sheets, page by page.",
+      "read": "2026-09-08",
+      "readBy": "intake audit, session faves-o1",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
+    }
+  ]
+}
