@@ -648,9 +648,7 @@
           "dishId": "low-carborator-lettuce-bun",
           "desc": "Free.",
           "price": 0,
-          "tags": [
-            "contains-gluten"
-          ]
+          "tags": []
         }
       ]
     }

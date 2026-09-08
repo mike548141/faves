@@ -11,12 +11,29 @@ fail-safe — the worst case is someone avoids a dish they could have eaten.
 Inferring absence would be asserting safety from a guess, which is the failure
 this whole feature exists to prevent. "No tag = not stated" still holds.
 
-Two tiers, kept apart so the count is auditable (ADR 0025):
+Three tiers, kept apart so the count is auditable (ADR 0025, extended by 0114):
 
   STATED   the menu names the allergen or an unambiguous form of it —
            "Prawn Cutlet", "…with Oyster Sauce", "Almond Croissant".
   DERIVED  the menu names a dish whose defining ingredient it doesn't print —
            satay (peanut), tempura (wheat + egg), a laksa (belacan).
+  PHOTO    the dish's image `alt` says it (ADR 0114, owner-ruled 2026-09-09).
+           BELOW both of the above and never merged with them, because an
+           `alt` describes a PHOTOGRAPH: nobody promises the picture is of the
+           dish as served, and a chain's caption is marketing prose. The TIER
+           is the substance — the rules are the same rules. A PHOTO finding is
+           tier PHOTO whichever rule fired, because the tier names the
+           EVIDENCE and not the reasoning: "sesame seed bun" is a STATED rule
+           reading a photo caption, and it is still only a photo caption.
+
+  🛑 A PHOTO tag is REFUSED on a dish that does not already carry a
+  `needs: allergens` caveat, and the refusal is printed, never silent. That
+  gate is what gives the weaker tier a meaning A READER CAN SEE: the caveat
+  renders on the dish row ("Allergen details unconfirmed. Ask the venue before
+  ordering."), so no tag read off a photograph can land where the page claims
+  a confirmed allergen picture. Without it the tier would be a distinction
+  only this file knows about — ADR 0072's decorative guard, in the one place
+  in the repo where being wrong hurts someone.
 
 Four guards keep it honest:
   • EXCLUDE patterns per rule — "rice noodles" are not wheat, "peanut butter"
@@ -56,6 +73,7 @@ unswept behind a green run.
 
     python3 tools/tag_allergens.py               # report (default)
     python3 tools/tag_allergens.py --tier DERIVED  # just the inferences
+    python3 tools/tag_allergens.py --tier PHOTO  # just what a caption says
     python3 tools/tag_allergens.py --apply       # write them
 """
 
@@ -279,8 +297,24 @@ RULES = [
     # burgers in a bun, and "McMuffin" (5) is an English muffin; the leading
     # `\b` could see none of them. `buns?` is deliberately NOT a tail: the
     # corpus's own word ending in "bun" is `Bundaberg`.
+    #
+    # A LETTUCE BUN IS A LETTUCE LEAF, and — exactly like water chestnut and
+    # mustard seed caviar above — the narrowing is a LOOKBEHIND and never an
+    # `exclude`. BurgerFuel's `Low Carborator lettuce bun` is the burger
+    # wrapped in lettuce *instead of* bread and it shipped `contains-gluten`
+    # from 2026-08-09 until 2026-09-09 (roadmap 080/210) — ADR 0097's harm,
+    # not an ordinary over-warning: a false gluten warning on the row a
+    # coeliac is hunting for. `exclude` would veto the whole rule for the
+    # item, and the corpus proves what that costs: four OTHER rows say
+    # "milk bun, fries … or lettuce bun available", so an item-level veto
+    # would lose the MILK BUN — an over-warning traded for a miss, the one
+    # direction this tool may not move. The lookbehind cancels the `buns?`
+    # alternative at "lettuce bun" only; `finditer` walks on and finds the
+    # milk bun two clauses earlier. Both spellings, because each lookbehind
+    # must be fixed-width. Measured 2026-09-09: "lettuce bun" ×5 across 5
+    # venues, "milk bun" ×16 across 6.
     ("contains-gluten", "DERIVED", "a wheat bakery item",
-     r"\b(buns?|\w*burgers?|sandwich|sando|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
+     r"\b((?<!lettuce )(?<!lettuce-)buns?|\w*burgers?|sandwich|sando|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
      r"brownies?|\w*muffins?|scones?|doughnuts?|donuts?|pizzas?|pancakes?|waffles?|"
      r"crackers?|tarts?|slices?|danish|éclair|eclair)\b",
      r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),
@@ -450,8 +484,31 @@ COMPILED = [
 # "non-dairy", "lactose free", "gluten-less" or "low gluten" anywhere. Adding an
 # entry here is cheap; inventing one that no venue writes is how a guard starts
 # looking thorough while covering nothing.
+#
+# 🛑 THAT PARAGRAPH WAS WRONG WHEN IT WAS WRITTEN, AND A SHIPPED ROW PAID FOR IT
+# (2026-09-09, roadmap 080/210). "gluten friendly" existed in the corpus on
+# 2026-09-07 and the sweep above did not look for it, so BurgerFuel's
+# `Gluten friendly bun` carried `contains-gluten` beside its own `gf-option` —
+# the row contradicting itself, on exactly the item a coeliac is hunting for.
+# The claim "nothing else of that shape exists" is only ever as good as the
+# shapes the sweep enumerated, and a sweep that enumerates `free` finds `free`.
+#
+# RE-SWEPT 2026-09-09 over all 57 records / 5,803 strings (name, desc,
+# ingredients, section notes, add-on option names) for a much wider set of
+# softeners — `X free`, `X friendly`, `X conscious`, `X smart/wise/aware/safe/
+# sensitive`, `no/without/zero X`, `no X added`, `low X`, `X-less`, `non-X`,
+# `reduced/less X` — against every declarable allergen word:
+#     "gluten free" ×74 · "no gluten added" ×21 · "gluten-free" ×15 ·
+#     "dairy free" ×10 · "dairy-free" ×8 · "no added gluten" ×7 ·
+#     "gluten friendly" ×2
+# and nothing else. ONLY `friendly` is new, only on gluten, and both of its
+# occurrences are the one BurgerFuel row (its name and its description).
+# `dairy friendly` is deliberately NOT added: no venue writes it, and this
+# comment's own history is what a guard covering an invented form looks like.
+# "vegan friendly" ×4 is a different shape — `vegan` is not an allergen word
+# and those clauses are offers ("Speak to staff to make it vegan friendly").
 HEDGE = {
-    "contains-gluten": r"(?:gluten[\s-]free|no\s+(?:added\s+gluten|gluten\s+added))",
+    "contains-gluten": r"(?:gluten[\s-](?:free|friendly)|no\s+(?:added\s+gluten|gluten\s+added))",
     "contains-dairy": r"dairy[\s-]free",
 }
 
@@ -736,8 +793,78 @@ def ingredient_text(item):
     return " ".join(kept)
 
 
-def audit(record, tier=None):
-    """Yield (item, tag, tier, why) for every tag this record is missing."""
+# --- the PHOTO tier (2026-09-09, ADR 0114, roadmap 080/210) ----------------
+# `alt` is the sentence a screen-reader user hears in place of the photograph.
+# On McDonald's — 41 items, NO description on any of them — it is the only prose
+# in the record, and it names cheese, egg, mayonnaise and a sesame seed bun that
+# the tag row said nothing about. Reading it is the owner's ruling of
+# 2026-09-09; the tier below it is what makes reading it honest.
+#
+# 🛑 WHY IT IS NOT `STATED`. ADR 0025's STATED means THE MENU NAMES IT. An `alt`
+# names what is IN A PICTURE, and three things are true of a picture that are
+# not true of a menu line:
+#   • nobody promises the photograph is of the dish as served — it is a stock
+#     shot of one variant, and the corpus has one already: `McFlurry`'s caption
+#     says "crushed biscuit pieces", which is the Oreo one, not the flavour a
+#     reader is buying;
+#   • the caption is written for LAYOUT and for a screen reader, so it is
+#     partial by construction — the same record's `Hot Chocolate` caption is "in
+#     a takeaway cup" and says nothing about milk, while `Iced Chocolate` gains
+#     dairy purely because the photographer's cup had cream on it. Coverage
+#     follows the photography, not the food;
+#   • it is a chain's marketing prose about its own product, not an ingredient
+#     declaration, and no part of it is a legal statement.
+# A tier that sits below DERIVED says all of that once, in a place a count can
+# be taken from, instead of leaving it in a comment nobody re-reads.
+#
+# 🛑 AND IT IS NEVER MERGED INTO `ingredient_text`. If the caption were glued on
+# to the name and description, one string would carry two strengths of evidence,
+# `first_unhedged` would let a hedge in one cancel a match in the other, and the
+# tier could not be reported at all. Separate text, separate tier, same rules
+# and the same four guards.
+def photo_text(item):
+    """The caption written about this dish's PHOTOGRAPH, or "".
+
+    Deliberately not folded into `ingredient_text` — see the block above. Read
+    raw, so `first_unhedged` and `declared_free` see the caption's own clause
+    boundaries rather than a name spliced onto the front of it.
+    """
+    alt = item.get("alt")
+    return alt if isinstance(alt, str) else ""
+
+
+def has_allergen_caveat(item):
+    """Does this dish already tell a reader its allergen picture is unconfirmed?
+
+    `needs: allergens` renders on the dish row as "Allergen details
+    unconfirmed. Ask the venue before ordering." (site/js/needs.js), so it is
+    the one piece of vocabulary this repo already ships that says on screen what
+    the PHOTO tier means. The gate is one-way and conservative: a PHOTO tag may
+    land only where that sentence is already on the page.
+
+    🔑 SAY WHAT THIS DOES NOT DO TODAY. Every alt-bearing dish in the corpus
+    (41 of 41, all McDonald's) carries the caveat, so this gate currently
+    refuses NOTHING — which is the decorative-guard shape ADR 0072 names, and
+    saying so is the only defence against it. Two things keep it real: an
+    `--apply` run PRINTS every refusal rather than dropping it, and
+    test_tag_allergens.py drives a dish with a caption and no caveat and
+    asserts the tag is withheld. The day a second venue ships `alt`, this stops
+    being theoretical without anyone having to remember it.
+    """
+    for need in item.get("needs") or []:
+        if isinstance(need, dict) and need.get("what") == "allergens":
+            return True
+    return False
+
+
+def audit(record, tier=None, refusals=None):
+    """Yield (item, tag, tier, why) for every tag this record is missing.
+
+    `refusals`, when given a list, collects (item, tag, why) for PHOTO findings
+    withheld because the dish carries no `needs: allergens` caveat. A skipped
+    tag that nothing prints is the "swept behind a green line" failure this
+    file has already paid for twice.
+    """
     for section in record.get("menu", []) or []:
         if not isinstance(section, dict):
             continue
@@ -763,6 +890,21 @@ def audit(record, tier=None):
                 if not (exclude and exclude.search(text))
                 for hit in [first_unhedged(tag, pattern, text)] if hit
             ] + note_applies
+            # THE PHOTO TIER GOES LAST, and the order is the whole of its
+            # accounting. A dish whose own name or description carries the
+            # evidence is credited to the menu at its real tier; the caption is
+            # only ever asked about a tag nothing stronger already supports, so
+            # `--tier PHOTO`'s count is what the photographs actually BOUGHT.
+            # The rule's own tier is discarded on purpose: a PHOTO finding is
+            # PHOTO whichever rule fired, because the tier names the evidence.
+            caption = photo_text(item)
+            findings += [
+                (tag, "PHOTO", f'photo caption — {why} ({hit.group(0).lower()})')
+                for tag, _rule_tier, why, pattern, exclude in COMPILED
+                if caption and not (exclude and exclude.search(caption))
+                for hit in [first_unhedged(tag, pattern, caption)] if hit
+            ]
+            caveat = has_allergen_caveat(item)
             for tag, rule_tier, why in findings:
                 if tag in tags:
                     continue
@@ -772,6 +914,13 @@ def audit(record, tier=None):
                     continue  # curation outranks a pattern
                 if tag in declared:
                     continue  # the venue's own printed free-from claim, ditto
+                if rule_tier == "PHOTO" and not caveat:
+                    # Reported, never written: the tier's on-screen meaning is
+                    # the `needs: allergens` line, so a row without it must not
+                    # gain a tag read off a photograph. See has_allergen_caveat.
+                    if refusals is not None:
+                        refusals.append((item, tag, why))
+                    continue
                 tags.add(tag)  # one tag per item, whichever rule fires first
                 yield item, tag, rule_tier, why
 
@@ -952,8 +1101,11 @@ def corpus_strings():
     """Every string the rules are matched against, as (record, dish, text).
 
     The same reach `audit()` has — name, description, ingredients, section
-    notes and add-on option names — so `--compounds` cannot report a near-miss
-    the tagger would never have seen anyway.
+    notes, add-on option names and, since ADR 0114, the image `alt` — so
+    `--compounds` cannot report a near-miss the tagger would never have seen
+    anyway. The alt line was added the same day the tagger gained it: a reach
+    the tool has and this function does not is a near-miss report that is
+    quietly narrower than the thing it claims to describe.
     """
     for path in sorted(DATA.glob("*.json")):
         record = json.loads(path.read_text())
@@ -966,6 +1118,9 @@ def corpus_strings():
                 if not isinstance(item, dict):
                     continue
                 yield record.get("id", path.stem), item.get("name", "?"), ingredient_text(item)
+                if photo_text(item):
+                    yield (record.get("id", path.stem),
+                           "[alt] " + str(item.get("name", "?")), photo_text(item))
                 for group in item.get("addOnGroups") or []:
                     for option in group.get("options") or []:
                         name = option.get("name") or ""
@@ -1022,7 +1177,7 @@ def compound_misses():
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write the tags (default: report only)")
-    ap.add_argument("--tier", choices=["STATED", "DERIVED"], help="only this tier")
+    ap.add_argument("--tier", choices=["STATED", "DERIVED", "PHOTO"], help="only this tier")
     ap.add_argument("--quiet", action="store_true", help="counts only")
     ap.add_argument("--compounds", action="store_true",
                     help="words a rule ALMOST matches, and which boundary refused them")
@@ -1041,10 +1196,11 @@ def main():
               f"{', '.join(COMPOUND_TAILS)}.")
         return 0
 
-    total = {"STATED": 0, "DERIVED": 0}
+    total = {"STATED": 0, "DERIVED": 0, "PHOTO": 0}
     by_tag = {}
     skipped = []
     reviews = []
+    refusals = []
     swept_records = swept_dishes = 0
     for path in sorted(DATA.glob("*.json")):
         raw = path.read_text()
@@ -1060,7 +1216,10 @@ def main():
                 f" — {reason}\n      note: “{clause}”"
             )
 
-        findings = list(audit(record, args.tier))
+        record_refusals = []
+        findings = list(audit(record, args.tier, record_refusals))
+        for item, tag, why in record_refusals:
+            refusals.append(f"{record['id']} / {item.get('name')}: {tag} — {why}")
         if not findings:
             continue
         if not args.quiet:
@@ -1093,12 +1252,24 @@ def main():
     # real sweep from a sweep that never happened. Same reasoning as the
     # SKIPPED line below, one step earlier in the pipeline.
     print(f"\nSwept {swept_records} record(s), {swept_dishes} dish(es).")
-    print(f"{sum(total.values())} tag(s) {verb} — {total['STATED']} STATED, {total['DERIVED']} DERIVED")
+    print(f"{sum(total.values())} tag(s) {verb} — {total['STATED']} STATED, "
+          f"{total['DERIVED']} DERIVED, {total['PHOTO']} PHOTO")
     for tag, n in sorted(by_tag.items(), key=lambda kv: -kv[1]):
         print(f"  {tag:<22} {n}")
     # Never silent: a record we couldn't write is reported, not swallowed.
     for s in skipped:
         print(f"  SKIPPED (not written) — {s}")
+
+    # NEVER SILENT, same reasoning as SKIPPED above one step later: a PHOTO
+    # finding withheld by the caveat gate is a tag this tool CAN see and has
+    # chosen not to write, which is exactly the kind of decision that has to
+    # leave a mark. Printed even in --quiet; the count is the point.
+    if refusals:
+        print(f"\n{len(refusals)} PHOTO tag(s) REFUSED — the dish carries no "
+              f"`needs: allergens` caveat, so a tag read off a photograph would "
+              f"land on a row that claims a confirmed allergen picture (ADR 0114):")
+        for r in refusals:
+            print(f"  • {r}")
 
     if reviews:
         print(f"\n{len(reviews)} section note(s) need a human — this tool will not tag from them:")
