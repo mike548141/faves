@@ -1,6 +1,6 @@
 {
   "venue": "takeaway-at-churton",
-  "note": "Dishes confirmed off the menu (`available.offBy`). The whole item is kept so it can be restored verbatim if it returns.",
+  "note": "Dishes confirmed off the menu (`available.offBy`). The whole item is kept so it can be restored verbatim if it returns. Their price entries were redated from `2019` to 2026-07-06 on 2026-09-09 for the reason in data/history/prices/takeaway-at-churton.json — see ADR 0112. The `offBy` dates are untouched and are corroborated by burst b029: all five are on the leaflet photographed 2025-11-25 and gone by 2026-08-08.",
   "rows": [
     {
       "key": {
@@ -18,8 +18,8 @@
         "price": [
           {
             "value": 6.2,
-            "recorded": "2019",
-            "note": "2019 menu scan"
+            "recorded": "2026-07-06",
+            "note": "2026-07-06 leaflet scan (menu 2.pdf)"
           }
         ],
         "available": {
@@ -46,8 +46,8 @@
         "price": [
           {
             "value": 4.5,
-            "recorded": "2019",
-            "note": "2019 menu scan"
+            "recorded": "2026-07-06",
+            "note": "2026-07-06 leaflet scan (menu 2.pdf)"
           }
         ],
         "available": {
@@ -72,8 +72,8 @@
         "price": [
           {
             "value": 4.0,
-            "recorded": "2019",
-            "note": "2019 menu scan"
+            "recorded": "2026-07-06",
+            "note": "2026-07-06 leaflet scan (menu 2.pdf)"
           }
         ],
         "available": {
@@ -98,8 +98,8 @@
         "price": [
           {
             "value": 3.0,
-            "recorded": "2019",
-            "note": "2019 menu scan"
+            "recorded": "2026-07-06",
+            "note": "2026-07-06 leaflet scan (menu 2.pdf)"
           }
         ],
         "available": {
@@ -126,8 +126,8 @@
         "price": [
           {
             "value": 2.5,
-            "recorded": "2019",
-            "note": "2019 menu scan"
+            "recorded": "2026-07-06",
+            "note": "2026-07-06 leaflet scan (menu 2.pdf)"
           }
         ],
         "available": {
