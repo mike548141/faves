@@ -348,6 +348,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [SUPERSEDED — not delivered, and not open work either.](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/020-37k-superseded-claim-note.md)
 - [~] [37n — the corpus disagrees with itself about allergens](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/030-37n-the-corpus-disagrees-with-itself-about-all.md)
 - ✅ [🚩 The "ambiguous single word" rule hides the ingredient line the](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/040-the-ambiguous-word-rule-hides-the-line-the-step-uses.md)
+- [ ] 🎯 [Cook at Home should use the venue/branch structure, so two houses are](roadmap/470-theme-37-cook-mode-and-the-recipe-page-as-the/050-cook-at-home-as-a-venue-with-branches-one-per-house.md)
 
 ## What the owner wants moved next (asked and answered 2026-08-16) — ✅ BOTH DONE
 
