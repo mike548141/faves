@@ -74,10 +74,13 @@
   warning when the stack is non-empty and any entry predates today. Cheap, and
   a mechanism where the drop above was a discipline. Owner's call.
 
-  🎯 **Options, none taken — the drop is the owner's call because the work is
+  🎯 **[PARTLY MOOT — option 1 is gone; see the re-measurement above and the
+  note at the foot. Kept for the record.]
+  Options, none taken — the drop is the owner's call because the work is
   not this session's:**
-  1. **Drop both**, having verified the contents reached `main` (done above).
-     One command each, removes the hazard, unrecoverable by design.
+  1. ❌ **MOOT — the stack is already empty.** ~~**Drop both**, having verified
+     the contents reached `main` (done above).
+     One command each, removes the hazard, unrecoverable by design.~~
   2. **Leave them and add a stash check** to the session-start routine or the
      pre-commit floor: warn when the stack is non-empty and any entry predates
      today. Cheap, and it makes the residue visible to whoever *can* judge it.
@@ -98,3 +101,25 @@
   autostash left by an interrupted rebase is somebody's to reconcile rather than
   nobody's. **Options 1 and 2 are local and stay here** — the residue in this
   repo is this repo's to clear, and no house rule is needed to do it.
+
+  📝 **BOARD HYGIENE 2026-09-09 — of the three options, only one is still a
+  question, and this item's own text already said so before the options block
+  did.** Nothing here is new analysis; it is the item's later findings applied
+  to its earlier list, which were left contradicting each other.
+
+  | Option | Status, checked 2026-09-09 |
+  |---|---|
+  | **1 — drop both** | ❌ **Moot.** `git stash list` in the primary checkout prints **nothing** — re-run 2026-09-09, read-only, confirming the 2026-09-08 measurement. Somebody dropped them, unrecorded. |
+  | **2 — a session-start / floor warning** | 🎯 **The only one still open**, and the item already names it: *"What is still this repo's to decide: option 2 alone."* Local, `[XS][tools]`. |
+  | **3 — write the rule down** | ✅ **Filed upstream, needs nothing here.** atelier PR #71 (`report/concurrency-autostash-at-session-start`, item `320/150`, 2026-09-07). By this item's own pointing-up note the rule half is **atelier's**, not ours. |
+
+  🔎 **So the item was carrying two 🎯 blocks that disagreed with each other.**
+  The one at *"What is still this repo's to decide"* is correct; the options
+  block below it still offered a drop of stashes that no longer exist and a rule
+  this repo may not write. Option 1 is struck in place and option 3's disposition
+  is recorded, so a reader arriving at the list is not handed three live choices
+  where there is one.
+  🛑 **Left deliberately as the owner's, NOT reclassified.** The item says of
+  option 2 *"Owner's call"*, and this pass does not overturn that — it is cheap
+  and local, but whether to spend a session-start check on it is his to say. The
+  bracket stays `- [ ]`.
