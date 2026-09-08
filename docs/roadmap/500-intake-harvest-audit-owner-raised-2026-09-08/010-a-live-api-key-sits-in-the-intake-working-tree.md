@@ -33,3 +33,22 @@
   3. **Leave it.** The ignore rule has held since 2026-08-15. Free, and it is
      the option that has already been chosen once by default.
   📌 Nothing here is done without his answer.
+
+  ✅ **OWNER RULED 2026-09-09 — OPTION 1: ROTATE IT, AND READ IT FROM THE
+  ENVIRONMENT.** Not option 2 (delete from the files without rotating) and not
+  option 3 (leave it).
+  🛑 **The rotation is HIS to do and no session may do it for him.** It is a
+  Google credential on his account; the estate's floor says a session records
+  the principal's decision about a secret and never originates the act.
+  📋 **What a session may do once he confirms the new key exists:** edit
+  `intake/ingredients/ingest_food.py` and `ingest_food_v2.py` to read
+  `os.environ["GEMINI_API_KEY"]` and fail loudly when it is unset, deleting the
+  literal. ⚠️ Both files are **gitignored**, so that edit is invisible to the
+  repo and to CI — it leaves no evidence, which is precisely why this ruling is
+  recorded here rather than only in a session log.
+  🚩 **Order matters and only one order is safe:** revoke first, then edit. An
+  edit that removes the literal while the key stays valid leaves a live
+  credential that has already been written to disk in cleartext, which is
+  option 2 — the option he declined.
+  ⏳ **Owed by him, and nothing else in this item can proceed without it.**
+

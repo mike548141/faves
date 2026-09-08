@@ -6,3 +6,20 @@
       cannot carry both. 🎯 **Owner's call, two shapes:** map GB → metric
       outright, or split the preference so distance and temperature are chosen
       separately. The second is more honest and more work.
+
+  ✅ **OWNER RULED 2026-09-09 — MAP GREAT BRITAIN TO METRIC.** He declined
+  splitting the preference into separate distance and temperature axes (the
+  more honest and more expensive shape) and declined leaving it.
+  🔑 **What the ruling accepts, said so it is a choice and not an oversight:**
+  road distances in Britain really are in miles, so a British reader will see
+  metres and kilometres for a unit they do not use that way. He traded that for
+  an oven temperature their oven can actually be set to — the direction that
+  can spoil food rather than merely read oddly.
+  📋 **The work is small and its test is the point:** the country-to-units map
+  gains Britain on the metric side, and a unit test pins **both halves** — that
+  a British reader gets Celsius, and that the distance consequence is the one
+  chosen rather than a regression someone later "fixes". Check whether any
+  other country in the map has the same split (Ireland and Canada are the
+  obvious candidates) and report rather than widening the ruling.
+  ⏳ **Not started this session.**
+

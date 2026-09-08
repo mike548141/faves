@@ -285,3 +285,33 @@
   *displaying* age, this one is about *recording* it truthfully, and a wrong
   date makes that item's work meaningless. And Theme 38 strand 4, which lists
   provenance as a model-level question.
+
+  ✅ **OWNER RULED 2026-09-09 on the half left owed — STRIP LOCATION, THEN
+  COMMIT.** He declined keeping the evidence outside the repo, declined
+  committing only the four files that carry no GPS, and declined deferring.
+  So the original photographs are to live in the repo, permanently, once they
+  are clean.
+
+  🛑 **Strip-or-REFUSE, not strip-and-hope — and this is the whole design.**
+  64 of 68 files carry GPS, the repo is public, and **git history cannot be
+  edited after the fact**. So the tool must refuse any file it cannot prove it
+  cleaned, and the proof must be a re-read of the written bytes rather than a
+  claim that a library was called. A stripper that silently passes a format it
+  did not understand publishes a private address forever, and the failure is
+  invisible at the moment it happens.
+  🔑 **What must be stripped is wider than GPS.** Today's audit found the GPS
+  IFD carries 15 entries; the EXIF also holds a device, a serial-capable
+  MakerNote, sub-second timestamps and orientation. The provenance the repo
+  actually wants is already committed in `data/intake/menu-sources.json`
+  (ADR 0107) — so the image itself needs to keep **nothing**, and the safest
+  rule is an allowlist of tags to retain, not a denylist of tags to drop.
+  ⚠️ **Cost he accepted, stated plainly:** four Simmer photographs are 32 MB,
+  the corpus is 68 files, and a repository never gets smaller. Size should be
+  measured and reported before the first commit, not after.
+  📋 **The work, in order:** (1) a stripper with a refusal path and a
+  byte-level verification pass; (2) a gate that refuses to commit an image
+  carrying any location tag, wired into the floor rather than left to care —
+  `.leakscanignore` currently exempts a store for a different reason and that
+  precedent should not be copied here; (3) a measured size report; (4) only
+  then the import. **Not started this session.**
+

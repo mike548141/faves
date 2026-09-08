@@ -35,3 +35,25 @@
       🔎 **It will recur.** Every venue publishing a first-party allergen chart
       is likely to grade it this way; Subway's own NZ Allergen Web Guide is the
       next one to check.
+
+  ✅ **OWNER RULED 2026-09-09 — THE TRACE TIER LIVES IN `site/data/`,
+  UNRENDERED.** He took the reading this item recommended AGAINST: one dish's
+  allergen facts stay in one place, at the cost of precaching a field no screen
+  shows.
+  🚩 **This session's recommendation was the record store, and he overruled it.**
+  Recorded because the reasoning was published here and a future reader should
+  not mistake the recommendation for the decision. His choice buys correctness
+  on refresh — the argument against `data/` was that it splits one menu reading
+  across two stores and every future refresh must remember both, which is the
+  kind of rule that fails quietly and is failing on safety data when it does.
+  🛑 **It is a deliberate, owner-made exception to ADR 0047**, whose test is
+  *name the screen that renders it*. That test now has an answer of "none, by
+  ruling" for this field. ADR 0047 is accepted, so this needs a **superseding
+  note on 0047 naming the exception and its reason** — never an edit — and a
+  new ADR recording the trade he made. Without that, the next cold review finds
+  a field nothing renders and correctly reports it as a breach.
+  📋 **Also owed with it:** the payload cost measured per venue that carries a
+  chart (Pizza Hut is the first), and a validator rule so a trace tag cannot be
+  confused with a present one by anything that reads tags positionally.
+  ⏳ **Not started this session.**
+
