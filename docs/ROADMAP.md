@@ -60,7 +60,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [No branch of McDonald's or Subway has opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/130-no-branch-of-mcdonald-s-or-subway-has-opening.md)
 - [ ] [picks are empty on most venues](roadmap/080-theme-4-content-growth-ongoing-in-parallel/140-picks-are-empty-on-most-venues.md)
 - [ ] [Venues still stub](roadmap/080-theme-4-content-growth-ongoing-in-parallel/150-venues-still-stub.md)
-- [~] [The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
+- [ ] [The allergen corpus has holes the tagger cannot see](roadmap/080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md)
 - ✅ [✅ RULED AND FIXED 2026-08-17 (77726e2): the salad keeps its gf](roadmap/080-theme-4-content-growth-ongoing-in-parallel/170-rock-yard-s-vietnamese-salad-is-tagged-gf-and-contains-gluten.md)
 - ✅ 🎯 [Dragonfly, Courtenay Place — owner-directed online fetch](roadmap/080-theme-4-content-growth-ongoing-in-parallel/180-dragonfly-owner-directed-fetch.md)
 - ✅ 🔎 [The "not one stub is fetchable" sweep missed at least one venue that](roadmap/080-theme-4-content-growth-ongoing-in-parallel/190-the-stub-sweep-missed-a-fetchable-menu.md)
