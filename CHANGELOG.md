@@ -9,6 +9,13 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **The bar pinned to the top of a chain's menu now talks about the branch you
+  are reading.** Scrolling down a chain's menu pins a slim strip with the
+  open/closed status and a call button. It read the venue's first branch, while
+  the card, the freshness note and every section's serving window read the one
+  nearest you — so on a chain the strip could say "Closed" over a page saying
+  the branch beside you is open. It follows the nearest branch now, and dials
+  that branch's own number where it publishes one.
 - **Deleting a profile now takes its cooking progress with it.** Everything
   else that profile had — hearts, ratings, settings — was already removed, but
   the ticks it left on a recipe's ingredients and steps stayed on the device

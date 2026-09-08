@@ -2028,17 +2028,25 @@ function render(r) {
 function compactContactBar(r) {
   const inner = el("div", { className: "contact-bar-inner" });
 
-  // Reads `r.hours` / `r.phone` and that is correct even for a multi-location
-  // venue: `data.js` projects the primary branch up to the top level before
-  // anything here sees the record, precisely so these consumers stay simple.
+  // ⚠️ This read `r.hours` — the PRIMARY branch, projected up by data.js — with
+  // a comment saying that was correct for a chain. It was not (roadmap
+  // `490/100`, defect 3). The card below it, the header's freshness caveat and
+  // every section's serving window all resolve the NEAREST branch once the home
+  // screen has captured a location, so on a chain this bar could pin "Closed"
+  // over a card saying the branch you are reading is open. Same origin, same
+  // branch, same answer as the page it floats above.
+  const origin = recallOrigin();
+  const branch = nearestBranch(r, origin).branch;
+  const tz = venueTimezone(r, origin);
   // Open-now status, mirroring the full card's badge (dot + "Open · until 9pm").
-  // A lifecycle closure replaces it — the same precedence the card applies.
-  const closure = closureBadge(r, todayIn(venueTimezone(r)));
+  // A lifecycle closure replaces it — the same precedence the card applies. A
+  // closure is a fact about the whole venue, so it takes no branch.
+  const closure = closureBadge(r, todayIn(tz));
   if (closure) {
     closure.classList.add("contact-bar-status");
     inner.append(closure);
-  } else if (r.hours) {
-    const st = openStatus(r.hours, nowIn(venueTimezone(r)));
+  } else if (branch.hours) {
+    const st = openStatus(branch.hours, nowIn(tz));
     if (st.state !== "unknown") {
       const badge = el("span", {
         className: "hours-badge contact-bar-status",
@@ -2051,9 +2059,17 @@ function compactContactBar(r) {
 
   // Call is the star: a compact tel: button. It's why the bar exists for
   // phone-order venues, so it stays reachable the whole way down the menu.
-  if (r.phone) {
+  //
+  // The nearest branch's OWN number when it publishes one, so the button dials
+  // the shop the status above it is describing. The fallback is the venue's
+  // projected number rather than nothing, because most branches of a chain
+  // publish none — 6 of TJ Katsu's 7, measured 2026-09-08 — and a bar that
+  // disappears on six branches out of seven would be a worse answer than a
+  // number the venue itself gives out for the whole chain.
+  const phone = branch.phone || r.phone;
+  if (phone) {
     inner.append(
-      el("a", { className: "contact-bar-call", href: `tel:${r.phone.replace(/\s+/g, "")}` }, [
+      el("a", { className: "contact-bar-call", href: `tel:${phone.replace(/\s+/g, "")}` }, [
         el("span", { className: "contact-ico", textContent: "📞", "aria-hidden": "true" }),
         el("span", { "data-i18n": "menu.call", textContent: "Call to order" }),
       ])
