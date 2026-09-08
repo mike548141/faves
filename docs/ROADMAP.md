@@ -122,7 +122,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/README.md)*
 
 - ✅ 🛑 [hours cannot express a close after midnight, and the first venue](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md)
-- [~] 🔎 [hours cannot say "we do not know about this day" — an empty day](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/020-hours-cannot-say-a-day-is-unknown.md)
+- ✅ 🔎 [hours cannot say "we do not know about this day" — an empty day](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/020-hours-cannot-say-a-day-is-unknown.md)
 - ✅ [✅ The whole hours model is now tested across the daylight-saving](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/030-the-hours-model-is-untested-across-the-dst-switch.md)
 - ✅ 🔎 [The countdown understates by up to an hour during April's repeated](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/040-the-countdown-understates-during-aprils-repeated-hour.md)
 
@@ -136,7 +136,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [14h — The "we can't say" warning fires 807 times, and Spinach is one…](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/040-14h-the-cant-say-warning-fires-807-times.md)
 - ✅ 🔎 [The picker says one clause twice when an allergen both warns AND](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/050-the-picker-says-one-clause-twice.md)
 - ✅ 🔎 [The chip row still says Veg on a dish the warning has just said is](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/060-the-chip-row-still-says-veg.md)
-- [~] 🔎 [The picker still says one SUBSTANCE two ways when the option carries](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/070-the-picker-says-one-substance-two-ways.md)
+- ✅ 🔎 [The picker still says one SUBSTANCE two ways when the option carries](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/070-the-picker-says-one-substance-two-ways.md)
 - [ ] 🔎 [A spicy- tag on an add-on option is legal and renders nothing](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/080-a-spicy-tag-on-an-add-on-option-renders-nothing.md)
 
 ## Theme 27 — Search ranking: a name match is not a cuisine match (2026-08-16)
@@ -363,7 +363,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🎯 [prices and priceChannels ship to every phone and nothing renders](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/030-prices-and-pricechannels-ship-to-every-phone-and-nothing-renders-them.md)
 - ✅ 🔎 [The record store keys history on names, not ids, and its documents](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/040-the-record-store-keys-history-on-names-and-describes-a-tree-that-does-not-exist.md)
 - [ ] 🎯 [One shape for "a dish with choices" — variants, sizes, proteins and](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/050-one-shape-for-a-dish-with-choices.md)
-- [~] 🔎 [A branch has no id, and every per-branch plan needs to name one](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/060-a-branch-has-no-id.md)
+- ✅ 🔎 [A branch has no id, and every per-branch plan needs to name one](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/060-a-branch-has-no-id.md)
 - [ ] 🎯 [Claim strength has no representation, and a venue has no prose slot](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/070-claim-strength-and-a-venue-level-note.md)
 - [ ] 🎯 [Household stock, leftovers and "what can I make" are a…](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/080-household-stock-and-leftovers-are-a-boundary-decision.md)
 - ✅ 🎯 [The first-visit budget is unmet, unmeasured and undefined](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/090-the-first-visit-budget-is-unmet-unmeasured-and-undefined.md)

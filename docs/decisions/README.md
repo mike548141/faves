@@ -1152,3 +1152,53 @@ deliberation those compact docs omit.
   photographs say so out loud in `data/intake/not-products.json` — with what
   they hold, who read them and when, because *"we looked and it is not a
   product"* and *"nobody looked"* are otherwise identical.
+- [0103](0103-a-branch-has-an-id-and-its-position-is-not-it.md) — **a branch has
+  an id, and its position is not it.**
+  [0051](0051-a-dish-has-an-id-and-its-name-is-not-it.md)'s identity rule
+  applied to a third entity: all 47 branches seeded from their labels by
+  `tools/seed_branch_ids.py`, required and unique per record in `validate.py`.
+  A branch had two names and neither was one — its `label` (optional, free
+  text) and its **position**, since `data.js` projects `locations[0]` to the
+  top level, so a branch inserted at index 0 moves the venue's address, phone
+  and hours to a different shop in a diff that reads as an addition. The field
+  is `id`, not `branchId`: a branch is a *place*, and a place's record already
+  spells its identity `id`. 🔑 It became a **precondition** the day the owner
+  ruled Cook at Home into a venue with branches (`470/050`) — a key a reader
+  stores on their phone against a branch in a *shipped* record must survive the
+  next payload refresh. ⚠️ Nothing enforces the immutability but the seeder's
+  refusal to overwrite and the reader's eye — and that is equally true of
+  `dishId` and `sectionId`, said out loud here rather than implied. Measured:
+  **+330 bytes gzipped**, against the item's estimate of ~1 KB.
+- [0104](0104-the-picker-names-a-substance-once-and-the-tags-stay-independent.md)
+  — **the picker names a substance once, and the two fish tags stay
+  independent.** [0095](0095-an-add-on-carries-both-axes.md) §1 writes
+  `has-fish` and `contains-fish` from two independent rules on purpose, so
+  `200/050`'s tag-keyed merge could not see *"Salmon contains fish — you asked
+  to avoid it. Salmon is fish, so this is no longer vegetarian."* — one fish,
+  twice. The merge keys on the **substance** now, through a map consulted in one
+  expression whose only job is deciding which two SENTENCES are one. 🛑 It
+  relates no two tags: the composer still reports them separately, neither
+  implies the other, and all four halves of that are **asserted** rather than
+  promised. Swept over 57 venues and 2,866 (dish, option) combinations in both
+  avoid states: **22 → 0**, on 11 pairs across 2 venues, with the unflagged
+  branch fixed for the same reason `050` fixed it. Break-probe: **4 of 6** new
+  browser assertions fail and nothing pre-existing does — the other two pass in
+  both states, and that is said rather than assumed.
+- [0105](0105-a-day-may-say-nothing-and-that-is-not-closed.md)
+  — **a day may say nothing, and that is not "closed".** `hours` had three
+  states and needed four: `[]` said *the venue is closed that day* and nothing
+  said *the venue did not say*. Abrakebabra publishes Sun–Tue, Thu, Fri and Sat
+  and **no Wednesday line at all**, so its record had to claim a day it did not
+  know or drop the six it did — and it dropped the six. A day may now be
+  **`null`**, chosen over a sentinel because `hours: null` already means
+  "nothing known about the venue’s week" and this is the same word one level
+  down.
+  🔑 Omitting the key was checked first and is **not** free: `segments()` and
+  `groupWeek` read a missing key identically to `[]`, and `validate.py` demands
+  all seven. `openStatus` gains a sixth state, `unknown-today`, which
+  **carries words** — folding it into `unknown` draws no badge, and a blank is
+  the same shape as the bug. Being open beats an unknown day (a Tuesday span
+  running to 3am still reads *Open* on an unpublished Wednesday), and an unknown
+  day between now and the next opening hedges the detail to *"next published
+  opening Thu 12pm"*. 🚩 **Abrakebabra's hours were NOT restored** — no source
+  in this repo records its times, only its days.

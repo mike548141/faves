@@ -119,7 +119,7 @@ ITEM_KEYS = {
     "steps", "ingredients", "serves", "time", "attribution",
 }
 BRANCH_KEYS = {
-    "label", "address", "lat", "lng", "phone", "hours",
+    "id", "label", "address", "lat", "lng", "phone", "hours",
     "timezone", "detailsVerified", "detailsVerifiedBy",
 }
 
@@ -647,6 +647,9 @@ def check_served(rid, section, hours, where):
     for day in DAYS:
         windows = served.get(day)
         open_ivs = hours.get(day)
+        # A day the venue never published (`None`, ADR 0105) fails the `list`
+        # test and is skipped — deliberately. "Served on a day the venue is
+        # shut" needs to know the venue is shut, and on that day we do not.
         if not isinstance(windows, list) or not windows or not isinstance(open_ivs, list):
             continue
         if not open_ivs:
@@ -721,6 +724,50 @@ def check_section_ids(rid, menu):
                      "— one anchor cannot address two sections")
         else:
             seen[sid] = section.get("section")
+
+
+def check_branch_id(rid, branch, where, seen):
+    """A branch's `id`: its stored, immutable identity (ADR 0103).
+
+    A branch had two names before this and neither was one. Its POSITION —
+    `data.js` projects `locations[0]` to the top level, so reordering the array
+    moves the venue's address, phone and hours to a different shop, silently.
+    And its `label`, which is optional, free text, and the field a transcriber
+    is most likely to tidy.
+
+    The gate is ADR 0058's, one entity over, and uniqueness is again the half
+    with teeth: two branches sharing an id means a per-branch price override
+    (ADR 0080 D4), a closure notice (`210/040`) or a reader's own stored
+    preference lands on whichever one a lookup happens to reach first. Unlike a
+    duplicate `sectionId` this one has no visible symptom at all — nothing
+    renders a branch id — so the gate is the ONLY thing that can ever say so.
+
+    Presence is REQUIRED from the day all 47 were seeded, which is the same day
+    the field was added: there was no window to leave it ungated in, because no
+    reader existed to break. `tools/seed_branch_ids.py --check` reports the gap
+    for anyone adding a branch by hand."""
+    bid = branch.get("id")
+    if bid is None:
+        err(rid, f"{where}: no id — run tools/seed_branch_ids.py. A branch addressed by its "
+                 "position in the array is not an identity (ADR 0103)")
+        return
+    if not isinstance(bid, str) or not bid.strip():
+        err(rid, f"{where}: id must be a non-empty string, got {bid!r}")
+        return
+    if bid != slug(bid):
+        # Same reason as `sectionId`: whatever ends up pointing at a branch —
+        # a URL, a stored key, an `absent_at_location_ids` list — is safest
+        # holding a slug, and the cheapest moment to require one is now, while
+        # nothing holds one yet.
+        err(rid, f"{where}: id {bid!r} is not a slug — expected {slug(bid)!r}")
+    if bid in seen:
+        err(rid, f"{where}: id {bid!r} is already used by {seen[bid]} "
+                 "— two branches cannot share one identity")
+    else:
+        # The earlier branch is named by its index AND its label: the index is
+        # what the reader scrolls to, the label is what they recognise.
+        label = branch.get("label")
+        seen[bid] = f"{where}" + (f" ({label!r})" if isinstance(label, str) and label.strip() else "")
 
 
 def check_section_note(rid, section):
@@ -1261,6 +1308,15 @@ def check_hours(rid, hours, where):
     lunch/dinner split. Times are "HH:MM" 24h; close may be null ("late"/
     open-ended).
 
+    A DAY MAY ALSO BE `null`, AND THAT IS NOT `[]` (ADR 0105). `[]` is the venue
+    saying it is closed that day; `null` is the venue not saying. Abrakebabra
+    publishes Sun-Tue, Thu, Fri and Sat and no Wednesday line at all, so before
+    this the record had to claim a Wednesday it did not know or throw away the
+    six days it did. The seven keys are STILL all required: an explicit `null`
+    records that we asked and were not told, where a missing key is
+    indistinguishable from a typo. (site/js/hours.js reads a missing key the same
+    safe way anyway — strict validator, tolerant engine.)
+
     A close BEFORE its open means THE NEXT DAY (ADR 0094, owner-ruled
     2026-09-07): `["16:30", "03:00"]` is a Friday night ending Saturday morning.
     This reverses ADR 0006's third rejected alternative, which forbade the wrap
@@ -1276,9 +1332,18 @@ def check_hours(rid, hours, where):
     if set(hours) != set(DAYS):
         err(rid, f"{where}: hours must have exactly the 7 day keys {DAYS}, got {sorted(hours)}")
         return
+    if all(hours[day] is None for day in DAYS):
+        err(rid, f"{where}: hours says nothing about any of the seven days — "
+                 f"write hours: null instead")
+        return
     for day, intervals in hours.items():
+        # `null` = the venue never published this day (ADR 0105). Nothing more to
+        # check: there are no times to parse and no windows to clash.
+        if intervals is None:
+            continue
         if not isinstance(intervals, list):
-            err(rid, f"{where}: hours[{day}] must be a list of intervals")
+            err(rid, f"{where}: hours[{day}] must be a list of intervals, or null "
+                     f"(null = the venue publishes nothing for that day; [] = closed)")
             continue
         for iv in intervals:
             if not (isinstance(iv, list) and len(iv) == 2):
@@ -1509,12 +1574,14 @@ def check_restaurant(path):
             if data.get(field) is not None:
                 err(rid, f"{field} must live on each branch, not top-level, when 'locations' is set")
         seen_labels = set()
+        seen_branch_ids = {}
         for i, b in enumerate(locations):
             where = f"locations[{i}]"
             if not isinstance(b, dict):
                 err(rid, f"{where} must be an object")
                 continue
             check_keys(rid, b, BRANCH_KEYS, where)
+            check_branch_id(rid, b, where, seen_branch_ids)
             addr = b.get("address")
             if not (isinstance(addr, str) and addr.strip()):
                 err(rid, f"{where}: address must be a non-empty string")

@@ -709,6 +709,35 @@ CASES = {
                    _first_section(d).pop("served", None)),
         "clean", None,
     ),
+    # ADR 0105 — a day may be `null` ("the venue publishes nothing for that
+    # day"), and that is NOT `[]` ("the venue says it is closed"). Three cases,
+    # because the rule has three edges and only one of them is a refusal.
+    #
+    # The POSITIVE first: the shape the ruling exists for must sail through. A
+    # gate that only ever refuses cannot show it stopped refusing the right
+    # thing, and this is the shape Abrakebabra needs — six published days and a
+    # Wednesday nobody ever stated. `served` is dropped with it for the same
+    # reason as the wrap case above: the section's window against a day the
+    # venue never published is noise, not a finding.
+    "a null day is a legal 'we were not told', not an error": (
+        lambda d: (d.update(hours={**{k: [["09:00", "21:00"]] for k in _DAYS}, "wed": None}),
+                   _first_section(d).pop("served", None)),
+        "clean", None,
+    ),
+    # The REFUSAL: a week where every day is null says exactly what `hours:
+    # null` says, in seven times the bytes, and two spellings of one state is
+    # how consumers drift apart.
+    "hours where every day is null": (
+        lambda d: d.update(hours={k: None for k in _DAYS}),
+        "error", r"hours says nothing about any of the seven days",
+    ),
+    # And the edge the null must NOT open: a day is still a list or null, never
+    # a bare string. Without this, relaxing `isinstance(intervals, list)` to
+    # admit None could quietly admit anything falsy.
+    "hours day is neither a list nor null": (
+        lambda d: d.update(hours={**{k: [["09:00", "21:00"]] for k in _DAYS}, "wed": "closed"}),
+        "error", r"hours\[wed\] must be a list of intervals, or null",
+    ),
     "served time is not HH:MM": (
         lambda d: _first_section(d)["served"].update(mon=[["7.30am", "14:30"]]),
         "error", "served\\[mon\\] open '7\\.30am' must be 'HH:MM' or null",
@@ -898,6 +927,29 @@ SOURCE_CASES = {
                 1,
             ),
             "error", 'locations\\[0\\]: detailsVerified must be null or an ISO date',
+        ),
+        # ADR 0103. A branch id has NO visible symptom when it is wrong —
+        # nothing on any screen renders one — so unlike a duplicate `sectionId`
+        # (which at least makes a link land in the wrong place) these four
+        # breaks are invisible everywhere except here.
+        "two branches claiming one identity": (
+            lambda s: s.replace('"id": "press-hall",', '"id": "melling",', 1),
+            "error", r"locations\[1\]: id 'melling' is already used by locations\[0\] \('Melling'\)",
+        ),
+        "a branch id that is not a slug": (
+            lambda s: s.replace('"id": "melling",', '"id": "Melling Road",', 1),
+            "error", r"locations\[0\]: id 'Melling Road' is not a slug — expected 'melling-road'",
+        ),
+        "a branch with no id at all": (
+            lambda s: s.replace('      "id": "melling",\n', "", 1),
+            "error", r"locations\[0\]: no id — run tools/seed_branch_ids\.py",
+        ),
+        # An empty string is the shape a hand-edit produces — someone clears the
+        # value meaning to retype it — and it is not caught by the presence gate
+        # above, because the key is still there.
+        "a branch id blanked rather than removed": (
+            lambda s: s.replace('"id": "melling",', '"id": "   ",', 1),
+            "error", r"locations\[0\]: id must be a non-empty string, got",
         ),
     },
 }

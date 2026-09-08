@@ -255,7 +255,16 @@ python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
                               # renamed without breaking every link to it
-python3 tools/test_validate.py # …and that gate still catches things (140 mutations,
+python3 tools/seed_branch_ids.py --check # …and every BRANCH its own (ADR 0103). A
+                              # branch used to be named by its POSITION — data.js
+                              # projects locations[0] to the top level, so inserting a
+                              # branch at index 0 moves the venue's address, phone and
+                              # hours to a different shop, in a diff that reads as an
+                              # addition — or by its `label`, which is optional and free
+                              # text. Nothing renders a branch id, so a wrong one has NO
+                              # visible symptom: this and validate.py's uniqueness gate
+                              # are the only things in the repo that can say so
+python3 tools/test_validate.py # …and that gate still catches things (144 mutations,
                               # re-counted 2026-09-07; it said 113 and has grown since —
                               # 131 on 2026-09-06, +6 with ADR 0092's add-on option rules,
                               # then 137 → 140 when ADR 0094 replaced the one case that
@@ -263,7 +272,10 @@ python3 tools/test_validate.py # …and that gate still catches things (140 muta
                               # open on `served` AND on `hours`, the transposition
                               # warning, and the POSITIVE case that a wrapping close now
                               # sails through. A gate that only ever refuses cannot show
-                              # it stopped refusing the right thing)
+                              # it stopped refusing the right thing), then 140 → 144 with
+                              # ADR 0103's branch id — four cases on the ONE multi-branch
+                              # record the corpus mutates (pandan), because that gate is
+                              # new code on a path nothing else exercises
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network

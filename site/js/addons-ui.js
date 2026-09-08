@@ -40,6 +40,13 @@
 // consequences, and it opened with the same clause twice from ADR 0048 until
 // now. It is one sentence today. See `claimsKilledBy` below for the merge rule,
 // what it deliberately does NOT merge, and why the allergen half still leads.
+//
+// 2026-09-08 (roadmap 200/070): that merge keyed on the literal TAG, so it left
+// one shape standing — one SUBSTANCE said through two tags. "Salmon contains
+// fish — you asked to avoid it. Salmon is fish, so this is no longer
+// vegetarian." is one fish, twice. It keys on the substance now. `SUBSTANCE`
+// below is a map about WORDS; it relates no two tags anywhere else, and the
+// comment on it says why that distinction is the whole of the decision.
 
 import { el } from "./dom.js";
 import { dishId } from "./dish-id.js";
@@ -133,22 +140,66 @@ function unstatedLine(drops) {
  * offered and declined — it is what a reader choosing on vegan grounds rather
  * than allergy is reading for, so both meanings survive the merge.
  *
- * Keyed on (option, TAG) rather than on the substance, so it merges only where
- * the clause is literally the same one twice. "Salmon contains fish" beside
- * "Salmon is fish" names one substance through two tags that ADR 0095 keeps
- * deliberately independent of each other; collapsing those is a different
- * question and is filed as roadmap 200/070 rather than decided here.
+ * Keyed on (option, SUBSTANCE) since 2026-09-08 (roadmap 200/070). It was
+ * keyed on the literal tag until then, so it merged only where the clause was
+ * word for word the same one twice — and "Salmon contains fish" beside "Salmon
+ * is fish" names one substance through two tags, which sailed past it. See
+ * `SUBSTANCE` above for what that map is and, more importantly, what it is
+ * not: `has-fish` and `contains-fish` stay independent everywhere else in the
+ * app, exactly as ADR 0095 §1 requires.
  *
  * It also merges a fact that kills TWO claims — "Halloumi contains dairy, so
  * this is no longer dairy free or vegan" — which was three sentences before and
  * is the same repetition wearing a different hat.
  */
-// Tag FIRST: a tag comes from a closed, hyphenated vocabulary and can never
-// contain a space, so one space is an unambiguous separator however the
-// option is named. (It read `${from}\0${tag}` for about an hour on 2026-09-07
-// — a literal NUL in a shipped module, which git reported by calling the file
-// binary. Nothing needs a control character here.)
-const factKey = (from, tag) => `${tag} ${from}`;
+/**
+ * ONE SUBSTANCE, TWO TAGS — AND THIS IS ABOUT WORDS, NOT ABOUT THE TAG MODEL
+ * (roadmap 200/070, owner-recommended option 1).
+ *
+ * 🛑 READ THIS BEFORE REUSING IT. `has-fish` and `contains-fish` are kept
+ * deliberately INDEPENDENT of each other — two rules on the same evidence,
+ * neither written in terms of the other (ADR 0095 §1), because making the
+ * allergen a consequence of the dietary marker is what Theme 5 item `010`
+ * forbids. This map does NOT relate them: `composeTags` still reports
+ * `has-fish` as the tag that killed the claim and `contains-fish` as the
+ * allergen the option added, both unchanged, and neither is derivable from the
+ * other anywhere in the app. What this map says is narrower and purely
+ * presentational — **a reader told about fish twice in two consecutive
+ * sentences has been told about fish twice.** It is consulted in exactly one
+ * place, `factKey` below, whose only job is deciding which two SENTENCES are
+ * one sentence.
+ *
+ * Measured verbatim in headless Chrome at 390 px before it existed, Sprig &
+ * Fern Tawa's *Potato, Rosemary + Basil Pesto* with `contains-fish` in the
+ * avoid list, ticking Salmon:
+ *
+ *   "Salmon contains fish — you asked to avoid it. Salmon is fish, so this is
+ *    no longer vegetarian. …"
+ *
+ * `050`'s merge could not see it: it keys on the literal tag, and here the
+ * allergen half comes from `contains-fish` while the contradiction half comes
+ * from `has-fish`.
+ *
+ * Fish is the only substance in the vocabulary carried by two tags — `has-meat`
+ * has no `contains-meat` (ADR 0092 rejected one), so meat cannot make this
+ * shape. Swept 2026-09-08 over all 57 venues: the only other option in the
+ * corpus carrying a `has-` and a `contains-` tag at once is Little Sprig's
+ * *Cheese & beef gravy* (`contains-dairy` + `has-meat`), which is two
+ * substances and stays two sentences. A future pair would be added here, and
+ * only here.
+ */
+const SUBSTANCE = {
+  "has-fish": "fish",
+  "contains-fish": "fish",
+};
+
+// Substance FIRST: a tag comes from a closed, hyphenated vocabulary and a
+// substance name from the map above, so neither can contain a space and one
+// space is an unambiguous separator however the option is named. (It read
+// `${from}\0${tag}` for about an hour on 2026-09-07 — a literal NUL in a
+// shipped module, which git reported by calling the file binary. Nothing needs
+// a control character here.)
+const factKey = (from, tag) => `${SUBSTANCE[tag] || tag} ${from}`;
 
 /** (option, substance) → the claim labels that fact killed, in the dish's order. */
 function claimsKilledBy(dropped) {
@@ -168,6 +219,65 @@ function claimsKilledBy(dropped) {
 
 /** "Halloumi contains dairy" — the clause both halves of the merge share. */
 const containsClause = (a) => `${a.from} contains ${ALLERGEN_LABEL[a.tag] || a.tag}`;
+
+/**
+ * Every sentence the warning line says, for one composed selection.
+ *
+ * Pure, and exported for that reason: the merges above are the whole of what
+ * roadmap `200/050` and `200/070` changed, and a rule this small is one that a
+ * sweep can run over the real corpus rather than over a copy of it. A replica
+ * of these five loops in a tool would be a second implementation of a safety
+ * sentence, correct in every diff and updated in only one place.
+ *
+ * `flagged` is whether any allergen the SELECTION added is on the reader's own
+ * avoid list — the loud treatment on the warning, returned rather than
+ * recomputed so the class and the sentences cannot disagree about it.
+ */
+export function warningLines(added, dropped, avoidSet) {
+  const lines = [];
+  const killed = claimsKilledBy(dropped);
+  // Which (option, substance) facts have already been said by the allergen
+  // block, so the contradiction block below does not say them a second time.
+  const spoken = new Set();
+  const lost = (from, tag) => {
+    const claims = killed.get(factKey(from, tag));
+    if (!claims) return "";
+    spoken.add(factKey(from, tag));
+    return ` no longer ${joinList(claims, "or")}`;
+  };
+
+  // Flagged allergens first and loudest: this is the reader's own list, and
+  // it is the reason they will look at all.
+  const hit = added.filter((a) => avoidSet.has(a.tag));
+  for (const a of hit) {
+    const also = lost(a.from, a.tag);
+    lines.push(
+      `${containsClause(a)} — you asked to avoid it${also ? `, and this is${also}` : ""}.`,
+    );
+  }
+  // Then allergens they did not flag, stated plainly rather than as a warning.
+  for (const a of added.filter((a) => !avoidSet.has(a.tag))) {
+    const also = lost(a.from, a.tag);
+    lines.push(`${containsClause(a)}${also ? `, so this is${also}` : ""}.`);
+  }
+  // Facts first, one per (option, substance), exactly as before. The absences
+  // are held back and said once at the end — the order is the point: what we
+  // KNOW leads.
+  const unstated = [];
+  for (const d of dropped) {
+    if (d.reason !== "contradicted") {
+      unstated.push(d);
+      continue;
+    }
+    const key = factKey(d.from, d.allergen);
+    if (spoken.has(key)) continue; // the allergen line above already said it
+    spoken.add(key);
+    lines.push(`${d.from} ${carries(d.allergen)}, so this is no longer ${joinList(killed.get(key), "or")}.`);
+  }
+  if (unstated.length > 0) lines.push(unstatedLine(unstated));
+
+  return { lines, flagged: hit.length > 0 };
+}
 
 /** "+$3.00", or nothing at all when the extra is free — the commonest case. */
 const priceSuffix = (amount, currency) =>
@@ -231,51 +341,11 @@ export function dishAddOns(record, section, item, onCompose) {
 
     const avoid = settings.get()?.diet?.avoid;
     const avoidSet = avoid instanceof Set ? avoid : new Set(avoid || []);
-    const lines = [];
-    const killed = claimsKilledBy(dropped);
-    // Which (option, tag) facts have already been said by the allergen block,
-    // so the contradiction block below does not say them a second time.
-    const spoken = new Set();
-    const lost = (from, tag) => {
-      const claims = killed.get(factKey(from, tag));
-      if (!claims) return "";
-      spoken.add(factKey(from, tag));
-      return ` no longer ${joinList(claims, "or")}`;
-    };
-
-    // Flagged allergens first and loudest: this is the reader's own list, and
-    // it is the reason they will look at all.
-    const hit = added.filter((a) => avoidSet.has(a.tag));
-    for (const a of hit) {
-      const also = lost(a.from, a.tag);
-      lines.push(
-        `${containsClause(a)} — you asked to avoid it${also ? `, and this is${also}` : ""}.`,
-      );
-    }
-    // Then allergens they did not flag, stated plainly rather than as a warning.
-    for (const a of added.filter((a) => !avoidSet.has(a.tag))) {
-      const also = lost(a.from, a.tag);
-      lines.push(`${containsClause(a)}${also ? `, so this is${also}` : ""}.`);
-    }
-    // Facts first, one per (option, substance), exactly as before. The absences
-    // are held back and said once at the end — the order is the point: what we
-    // KNOW leads.
-    const unstated = [];
-    for (const d of dropped) {
-      if (d.reason !== "contradicted") {
-        unstated.push(d);
-        continue;
-      }
-      const key = factKey(d.from, d.allergen);
-      if (spoken.has(key)) continue; // the allergen line above already said it
-      spoken.add(key);
-      lines.push(`${d.from} ${carries(d.allergen)}, so this is no longer ${joinList(killed.get(key), "or")}.`);
-    }
-    if (unstated.length > 0) lines.push(unstatedLine(unstated));
+    const { lines, flagged } = warningLines(added, dropped, avoidSet);
 
     if (notice) lines.push(notice);
     warn.hidden = lines.length === 0;
-    warn.classList.toggle("is-flagged", hit.length > 0 || dishFlagged(tags, avoidSet));
+    warn.classList.toggle("is-flagged", flagged || dishFlagged(tags, avoidSet));
     warn.textContent = lines.join(" ");
 
     stepperSlot.replaceChildren(dishStepper(meta()));

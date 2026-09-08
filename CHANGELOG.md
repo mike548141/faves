@@ -36,6 +36,25 @@ content freshness separately from this file.
   London order would have read "$8.95" directly above a "£8.95" subtotal. No
   venue on the site is priced in anything but NZD today, so nobody has seen
   this; it is fixed before the first one is.
+- **A place is no longer called "Closed" on a day it never told us about.**
+  Some venues publish six days and simply say nothing about the seventh, and
+  the record had no way to write that down — so it either called that day shut
+  (sending you home while the shop is trading) or threw away all seven days to
+  avoid saying so. Such a day now reads **"Hours not published today"** on the
+  card and **"Not published"** in the week, and the night before, a place whose
+  next day is unpublished says *"next published opening Thu 12pm"* rather than
+  claiming it. A place we can't vouch for stays out of "Open now" — that button
+  is a promise — but it keeps its place in the list, above everywhere we know
+  is shut.
+- **The add-on picker no longer tells you about the same fish twice.** Adding
+  salmon to a vegetarian dish, with fish on your avoid list, said *"Salmon
+  contains fish — you asked to avoid it. Salmon is fish, so this is no longer
+  vegetarian."* — one fish, two sentences. It is one sentence now, carrying both
+  facts, with the allergen half still leading: *"Salmon contains fish — you
+  asked to avoid it, and this is no longer vegetarian."*
+- **Goldings Free Dive is pinned at the right end of Leeds Street.** Its
+  stored coordinate sat 158 m from its own address, which quietly skewed
+  the distance sort and every "what's close" decision that reads it.
 - **Spices Indian now says when its menu was read.** Its page carried "Menu
   items and prices need a refresh", which reads as *nobody has ever looked* —
   and we had. 80 of its 92 dishes were transcribed from the shop's own printed

@@ -151,13 +151,15 @@ excluded from both stores, always.
   "hours": null,                     // null, or a full week (see below)
   "locations": [                     // OPTIONAL: for a venue with several branches
     { "label": "Courtenay Place",    //   sharing this name/menu (see "Multi-location"
-      "address": "…", "lat": -41.29, //   below + ADR 0011). When present, the branches
-      "lng": 174.78, "phone": "…",   //   carry address/lat/lng/phone/hours — those five
-      "hours": { /* week */ },       //   fields must then be ABSENT at the top level.
-      "timezone": null,              //   `timezone`, `detailsVerified` and
-      "detailsVerified": null,       //   `detailsVerifiedBy` are DIFFERENT: legal at
-      "detailsVerifiedBy": null }    //   both levels, branch winning, top level the
-  ],                                 //   default (ADR 0043; per-branch provenance)
+      "id": "courtenay-place",       //   below + ADR 0011). REQUIRED identity, seeded
+      "address": "…", "lat": -41.29, //   from the label once (ADR 0103) — the label and
+      "lng": 174.78, "phone": "…",   //   the array POSITION are both mutable. When
+      "hours": { /* week */ },       //   present, the branches carry address/lat/lng/
+      "timezone": null,              //   phone/hours — those five must then be ABSENT
+      "detailsVerified": null,       //   at the top level. `timezone`, `detailsVerified`
+      "detailsVerifiedBy": null }    //   and `detailsVerifiedBy` are DIFFERENT: legal at
+  ],                                 //   both levels, branch winning, top level the
+                                     //   default (ADR 0043; per-branch provenance)
 
   "image": null,                     // optional self-hosted card photo, e.g. "img/kk/hero.jpg"
   "alt": null,                       // required when image is set (a11y)
@@ -789,7 +791,25 @@ precached payload nothing on any screen can reach (ADR 0047).
   intervals in `"HH:MM"` 24h local time: `[]` = closed that day; two or
   more intervals express a lunch/dinner split, e.g.
   `"mon": [["12:00","15:00"],["17:00","21:00"]]`. `close` may be `null`
-  meaning open-ended ("late"). **A `close` BEFORE its `open` means the
+  meaning open-ended ("late"). **A DAY may itself be `null`, and that is
+  NOT `[]`** (ADR 0105): `[]` is the venue saying it is closed that day,
+  `null` is the venue publishing nothing about it. Abrakebabra lists
+  Sun–Tue, Thu, Fri and Sat and no Wednesday line at all, so before this the
+  record had to claim a day it did not know or drop all seven and carry
+  `hours: null` — it dropped all seven. All seven keys are still required:
+  an explicit `null` records *we asked and were not told*, where a missing key
+  is indistinguishable from a typo (the engine reads a missing key the same
+  safe way regardless). A week where **every** day is `null` is refused —
+  that is `hours: null`. `openStatus` answers `unknown-today` for a day it
+  holds nothing for, and that state **carries words** ("Hours not published
+  today"); the week table prints "Not published" for the row. Being open
+  beats an unknown day: a Tuesday span running to 3am still reads *Open* at
+  2am on an unpublished Wednesday. And an unknown day between now and the
+  next opening hedges the detail to *"next published opening Thu 12pm"*,
+  because "opens Thu" would re-assert the day the record stopped asserting.
+  `served` is deliberately **not** extended this way — a section's window is
+  our own transcription, where `[]` genuinely means "not served".
+  **A `close` BEFORE its `open` means the
   NEXT DAY** (ADR 0094, owner-ruled 2026-09-07): `["16:30","03:00"]` is a
   Friday night ending Saturday morning, and `["16:30","00:00"]` closes at
   midnight. This reverses ADR 0006's rule that past-midnight be expressed
@@ -928,9 +948,18 @@ precached payload nothing on any screen can reach (ADR 0047).
   them; a wrong pin is worse than no pin (an absent pair just searches by
   text). `validate.py` warns when a venue has none.
 - `locations` (**multi-location venues**, ADR 0011) is an optional array of
-  branches that share this record's name/menu/cuisine, each `{ label?,
+  branches that share this record's name/menu/cuisine, each `{ id, label?,
   address, lat, lng, phone, hours }` — same field rules as the top-level
-  equivalents (`label` an optional non-empty string). When present it is the
+  equivalents (`label` an optional non-empty string). `id` is the branch's
+  **stored, immutable identity** (ADR 0103): required, unique within the record,
+  slug form, seeded once from the label by `tools/seed_branch_ids.py`. It exists
+  because the other two ways of naming a branch are both mutable — the `label`,
+  and the array POSITION that `data.js` projects to the top level, so that
+  inserting a branch at index 0 moves the venue's address, phone and hours to a
+  different shop in a diff that reads as an addition. No screen renders the id
+  yet; `210/040` (per-branch closure), ADR 0080 D4 (per-branch prices) and the
+  owner's 2026-09-08 Cook at Home ruling (private branches a reader adds on
+  their own device) are what it is for. When present it is the
   source of truth: the per-branch fields (`address`/`lat`/`lng`/`phone`/
   `hours`) must **not** also sit at the top level, and `area`/`city` stay
   shared at the top. A single-location venue omits `locations` entirely and

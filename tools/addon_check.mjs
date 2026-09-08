@@ -64,6 +64,17 @@
 //      COUNTING the shared clause, not by matching the merged string alone: a
 //      merge that appends the consequence and forgets to drop the old sentence
 //      passes an `includes` and fails a count.
+//   l) AND SINCE 2026-09-08 (roadmap 200/070), THE SHAPE (j) DELIBERATELY LEFT
+//      STANDING: one SUBSTANCE said through two tags. "Salmon contains fish —
+//      you asked to avoid it. Salmon is fish, so this is no longer
+//      vegetarian." (j) keys on the literal tag, so it merges a clause said
+//      twice and not a fish said twice — the allergen half comes from
+//      `contains-fish`, the contradiction half from `has-fish`, and ADR 0095
+//      §1 keeps those two independent on purpose. The merge keys on the
+//      SUBSTANCE now, which is a presentation equivalence and relates no two
+//      tags anywhere else. Counted the same way (j) is, plus the absence — the
+//      second phrasing is GONE — and a control on the dish's unrelated absence
+//      sentence, so a merge that ate one sentence too many cannot pass.
 //   k) THE CHIP ROW WENT STALE. It was built once from `item.tags` and never
 //      rebuilt, so a `v` pizza with salmon on it wore a green `Veg` chip beside
 //      a warning saying it is no longer vegetarian. The chips are recomposed
@@ -690,6 +701,65 @@ async function run(opts) {
         !after.tags.includes("v"),
       `chips ${JSON.stringify(after.chips)} · tags ${after.tags.join(" ")} · ${JSON.stringify(after.warnText)}`,
     );
+    // --- (l) 200/070: one SUBSTANCE, said once ---------------------------
+    // Same row, same tick — the warning `after` already carries. Measured
+    // verbatim here BEFORE the fix, 390 px, fish flagged in Settings:
+    //
+    //   "Salmon contains fish — you asked to avoid it. Salmon is fish, so this
+    //    is no longer vegetarian. Salmon isn't tagged gluten free, so that
+    //    label describes the dish as listed."
+    //
+    // One option, one fish, two sentences opening with it. (j)'s merge could
+    // not reach it and that was deliberate: it keys on the literal tag, and
+    // here the allergen half comes from `contains-fish` while the
+    // contradiction half comes from `has-fish` — two tags ADR 0095 keeps
+    // independent on purpose. The picker now keys on the SUBSTANCE.
+    //
+    // COUNTED rather than matched, for the reason (j) is counted: a merge that
+    // appends the consequence and forgets to delete the old sentence passes an
+    // `includes` and fails a count.
+    const fishSentences = after.warnText.trim().split(/(?<=\.)\s+/).filter(Boolean);
+    report.check(
+      `the allergen clause is said ONCE — "${FISH_OPTION} contains fish" opens one sentence, not two`,
+      occurrences(after.warnText, `${FISH_OPTION} contains fish`) === 1,
+      `${occurrences(after.warnText, `${FISH_OPTION} contains fish`)}× in ${JSON.stringify(after.warnText)}`,
+    );
+    // The ABSENCE half, and the one this item is actually about: the second
+    // phrasing of the same fish is GONE, not merely joined to the first.
+    report.check(
+      `…and the second phrasing of the same fish is gone — no "${FISH_OPTION} is fish" beside it`,
+      occurrences(after.warnText, `${FISH_OPTION} is fish`) === 0,
+      JSON.stringify(after.warnText),
+    );
+    // Broader than the two clauses above, and the one that survives a rewording:
+    // however the picker says it, the substance is named once in the whole
+    // warning. (Safe here only because the dish's own name carries no "fish" —
+    // asserted rather than assumed, because a future CHIP_DISH could.)
+    report.check(
+      "…so the SUBSTANCE is named exactly once in the whole warning",
+      !/fish/i.test(CHIP_DISH) && occurrences(after.warnText, "fish") === 1,
+      `${occurrences(after.warnText, "fish")}× "fish" in ${JSON.stringify(after.warnText)}`,
+    );
+    report.check(
+      "…and the ALLERGEN half still leads, exactly as the 200/050 ruling requires",
+      new RegExp(`^\\s*${FISH_OPTION} contains fish — you asked to avoid it`).test(after.warnText),
+      JSON.stringify(after.warnText),
+    );
+    report.check(
+      "…with the dietary consequence SURVIVING in that same sentence",
+      /you asked to avoid it, and this is no longer vegetarian\./.test(after.warnText),
+      JSON.stringify(after.warnText),
+    );
+    // The control. A merge that ate one sentence too many would pass every
+    // count above; this dish's SECOND, unrelated fact — the gluten-free label
+    // it can no longer vouch for — must still be on the page, and the whole
+    // warning must be two sentences where it was three.
+    report.check(
+      "…and the unrelated absence sentence is untouched — three sentences became two, not one",
+      fishSentences.length === 2 && occurrences(after.warnText, "isn't tagged gluten free") === 1,
+      `${fishSentences.length} sentence(s): ${JSON.stringify(fishSentences)}`,
+    );
+
     // Untick it: a row that can only ever LOSE chips is half a feature, and the
     // rebuild has to survive going backwards as well as forwards.
     await driver.click(`${chipDish} .addon-option`, "None");

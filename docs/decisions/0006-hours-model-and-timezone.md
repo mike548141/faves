@@ -2,6 +2,17 @@
 
 **Status**: accepted • **Date**: 2026-07-08
 
+**Extended by `0105-a-day-may-say-nothing-and-that-is-not-closed.md`
+(2026-09-08).** One sentence of the *Decision* below is now incomplete and is
+left standing rather than rewritten: **"`[]` = closed"** is still true of `[]`,
+but a day may also be **`null`**, meaning the venue publishes nothing about
+that day — which `[]` cannot say and which this record had no way to express.
+Abrakebabra publishes six days and no Wednesday line at all, so its record had
+to claim a day it did not know or drop all seven; it dropped all seven. The
+seven-key requirement, the interval shape, the null close and the timezone
+rule are all unchanged. (See also `0043`, and `0094`, which reversed this
+record's third *Rejected* alternative.)
+
 ## Context
 
 The hours data was a list of `{days, open, close}` where `days` was free
