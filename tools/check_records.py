@@ -301,6 +301,10 @@ def selftest(verbose):
         tree = Path(tmp) / "repo"
         (tree / "tools").mkdir(parents=True)
         shutil.copy(ROOT / "tools" / "check_records.py", tree / "tools")
+        # The tool imports its tree-line helper (ADR 0113), so the fixture tree
+        # has to carry it too. Copied rather than made optional: an import this
+        # file could silently skip is an announcement that would silently stop.
+        shutil.copytree(ROOT / "tools" / "lib", tree / "tools" / "lib")
 
         def run():
             r = subprocess.run([sys.executable, "tools/check_records.py"],
@@ -384,4 +388,11 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # Which tree did this actually read? ROOT — resolved from this file — and
+    # never the working directory, which can have drifted out from under it
+    # (ADR 0113, roadmap 340/260). Prints as the run's last line, on every
+    # exit path including a refusal.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lib.tree import announce
+    announce(ROOT)
     sys.exit(main())

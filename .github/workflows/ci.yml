@@ -43,7 +43,9 @@ jobs:
         run: python3 tools/test_validate.py
 
   # THE NAME IS THE WHOLE JOB, and it took a ruleset edit to say so. This runs
-  # fifteen checks (nine until 2026-09-08); it was displayed as "zero
+  # eighteen checks — counted from the file 2026-09-09, because this line has
+  # said "nine" and then "fifteen" while steps were added under it, and a count
+  # that lies is worse than none; it was displayed as "zero
   # dependencies", which describes one of them — so an audit by job name reported the ADR-index allocator and ADR
   # 0023's history guarantee as UNGATED WHEN THEY ARE GATED (ROADMAP 340/130).
   # Not a decorative guard: the guard works. A decorative LABEL, where the damage
@@ -199,6 +201,14 @@ jobs:
         run: python3 tools/check_provenance.py
       - name: Prove that provenance gate actually catches things
         run: python3 tools/check_provenance.py --selftest
+      # Every step above now ends with a line naming the tree it read (ADR
+      # 0113). That line is only worth anything if it DIFFERS between trees —
+      # a helper printing the same string from two checkouts is ADR 0072's
+      # decorative guard wearing the fix's clothes. The decisive case stages
+      # the original incident: a probe living in tree A, run with `cwd = B`,
+      # must still name A.
+      - name: Prove the tree line still tells two trees apart
+        run: python3 tools/lib/tree.py --self-test
 
   versions:
     name: service-worker version lockstep

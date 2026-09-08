@@ -16,6 +16,9 @@ import sys
 from functools import partial
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lib.tree import tree_line  # noqa: E402  (needs the path line above)
+
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
 
@@ -81,6 +84,11 @@ def main():
     bar = "─" * 46
     print(f"\n  Faves dev server — serving {SITE}")
     print(f"  {bar}")
+    # WHICH TREE — up front, not at exit. Every other gate announces at exit
+    # (ADR 0113), but this one does not return until Ctrl-C: an identity
+    # printed then arrives after every decision it could have informed, and
+    # after the browser has already been looking at the wrong site.
+    print(f"  {tree_line(ROOT).strip()}")
     print(f"  This laptop : http://localhost:{port}")
     print(f"  Your phone  : http://{ip}:{port}   (same Wi-Fi)")
     print(f"  {bar}")
