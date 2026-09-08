@@ -11,6 +11,19 @@ the file happened to be copied onto this machine.
     python3 tools/intake_exif.py intake/menus/foo    # one folder or file
     python3 tools/intake_exif.py --json              # machine-readable
     python3 tools/intake_exif.py --near site/data    # name the closest venue
+    python3 tools/intake_exif.py --for simmer        # the answer, for ONE venue
+
+🎯 `--for <venue-id>` is the mode to reach for before writing a record. The
+other modes report on files; this one reports on the **fields you are about to
+type** — the `verified` date and the `verifiedBy` method this venue's evidence
+supports, printed as a block to copy. It exists because reading the metadata
+was never the hard part: `--near` has printed the capture date since
+2026-08-15, and on 2026-09-07 a session still wrote `verified: 2026-09-07`
+over evidence dated 2026-08-25, because the answer was in a report nobody was
+looking at while they typed. `tools/check_provenance.py` is the guard that
+catches that afterwards; this is what stops it happening. It reads the live
+files when `intake/` is at hand and `data/intake/menu-sources.json` when it is
+not, so it answers in a worktree too.
 
 Stdlib only (ADR 0001 binds the tools too, by habit if not by rule): the JPEG
 APP1/TIFF walk below is a few dozen lines and saves an exiftool dependency.
@@ -276,12 +289,151 @@ def collect(targets):
     return [f for f in files if f.suffix.lower() in (".jpg", ".jpeg", ".tif", ".tiff", ".pdf", ".png", ".heic")]
 
 
+SOURCES = ROOT / "data" / "intake" / "menu-sources.json"
+
+
+def _rows_for(vid, base=None):
+    """(folder, rows, live) for one venue — live files if present, else the record.
+
+    The committed record carries the same four facts per file that the live
+    read produces (name, capture date/time, device, GPS presence), which is
+    what makes this mode answerable in a worktree. It carries no coordinate:
+    this repo is public.
+    """
+    if not SOURCES.exists():
+        return None, [], False
+    doc = json.loads(SOURCES.read_text())
+    entry = doc.get("venues", {}).get(vid)
+    if entry is None:
+        return None, sorted(doc.get("venues", {})), False
+    # `base` lets a worktree point at the checkout that actually holds the
+    # material — intake/** is gitignored, so it lives in exactly one tree.
+    folder = (Path(base) if base else ROOT) / entry["folder"]
+    if folder.is_dir():
+        rows = []
+        for f in sorted(folder.glob("*")):
+            if not f.is_file() or f.name.startswith("."):
+                continue
+            if f.suffix.lower() not in (".jpg", ".jpeg", ".tif", ".tiff", ".png", ".heic", ".pdf"):
+                continue
+            d = describe(f)
+            rows.append({"file": f.name,
+                         "kind": "pdf" if f.suffix.lower() == ".pdf" else "photo",
+                         "captured": d.get("captured"), "capturedAt": d.get("captured_at"),
+                         "device": d.get("device"),
+                         "gps": "present" if d.get("lat") is not None else "absent"})
+        if rows:
+            return entry["folder"], rows, True
+    return entry["folder"], entry.get("evidence", []), False
+
+
+def report_for(vid, base=None):
+    """Print the `verified` / `verifiedBy` this venue's evidence supports."""
+    folder, rows, live = _rows_for(vid, base)
+    if folder is None:
+        if rows:
+            print(f"no evidence recorded for `{vid}`. Known: {', '.join(rows)}")
+        else:
+            print(f"{SOURCES.relative_to(ROOT)} does not exist — run "
+                  "`python3 tools/check_provenance.py --rebuild` beside the intake material.")
+        return 1
+    if not rows:
+        print(f"{vid}: {folder} is recorded and holds no readable evidence.")
+        return 1
+
+    print(f"{vid} — {folder} ({'live files' if live else 'the committed record'}, {len(rows)} file(s))\n")
+    if live:
+        # Text intake — Apple Notes recipe exports, .txt, .md — carries NO
+        # embedded provenance of any kind. Saying so is the point: an empty
+        # report on a folder holding 24 recipes reads like an empty folder.
+        mute = [f.name for f in sorted(((Path(base) if base else ROOT) / folder).glob("*"))
+                if f.is_file() and not f.name.startswith(".")
+                and f.suffix.lower() not in (".jpg", ".jpeg", ".tif", ".tiff",
+                                             ".png", ".heic", ".pdf")]
+        if mute:
+            print(f"  ({len(mute)} further file(s) here carry no embedded provenance at all — "
+                  f"text\n   exports have none to carry: {', '.join(mute[:3])}"
+                  f"{' …' if len(mute) > 3 else ''})\n")
+    for r in rows:
+        print(f"  {r['file']:<28} {r['kind']:<6} {r.get('capturedAt') or r.get('captured') or '(no date)':<28} "
+              f"{r.get('device') or '—':<22} gps:{r['gps']}")
+
+    photos = [r for r in rows if r["kind"] == "photo" and r["captured"]]
+    pdfs = [r for r in rows if r["kind"] == "pdf" and r["captured"]]
+    newest = max((r["captured"] for r in photos), default=None)
+
+    # The VISIT, which is the fact nobody was recording. Two clusters 24
+    # minutes apart is one person working round a shop, not two readings — and
+    # a genuine second visit is what a session must not average away.
+    stamps = sorted(r["capturedAt"] for r in photos if r.get("capturedAt"))
+    if len(stamps) > 1:
+        days = sorted({s[:10] for s in stamps})
+        print(f"\n  spans {len(days)} day(s): {', '.join(days)}"
+              f" — first {stamps[0][11:16]}, last {stamps[-1][11:16]} on its own day")
+
+    # What the venue record says today, so a disagreement is visible here
+    # rather than discovered by the guard afterwards.
+    vfile = ROOT / "site" / "data" / "restaurants" / f"{vid}.json"
+    if vfile.exists():
+        rec = json.loads(vfile.read_text())
+        print(f"\n  the record today: verified {rec.get('verified') or '—'}, "
+              f"verifiedBy {rec.get('verifiedBy') or '—'}")
+
+    print()
+    photo_method = "in-store" if any(r["gps"] == "present" and r["device"] for r in photos) else "paper-menu"
+    if newest and pdfs:
+        # 🛑 The tool must NOT pick here, and this is not caution for its own
+        # sake — it got `spices-indian` wrong on its first run. That folder
+        # holds 2023 photographs beside a 2026 PDF, and the record's reading
+        # came off the PDF; a rule of "newest photograph wins" would have
+        # printed 2023-11-28 for a session to copy over a correct date.
+        print("  🛑 TWO SOURCES IN ONE FOLDER — nothing here can tell you which you read.\n")
+        print(f"  If the reading came off the PHOTOGRAPHS:")
+        print(f'      "verified": "{newest}",  "verifiedBy": "{photo_method}",')
+        print(f"  If it came off the PDF ({', '.join(r['file'] for r in pdfs)}):")
+        print(f'      "verified": "<the day YOU read it>",  "verifiedBy": "paper-menu",')
+        print(f"      — created {min(r['captured'] for r in pdfs)}, which bounds the reading from "
+              f"BELOW\n        only; a menu written in March is still read in September.")
+        print("\n  A record may legitimately be a MIX of the two. Say which source each part "
+              "came\n  from in the session log; the two dates are not interchangeable.")
+    elif newest:
+        print(f'  "verified": "{newest}",')
+        print(f'  "verifiedBy": "{photo_method}",')
+        print(f"\n  ← the newest photograph's capture date. NOT today's date, and never the "
+              f"file's\n    modification date (ADR 0038): copying a photo rewrites mtime and would "
+              f"claim\n    a fresher reading than the evidence supports.")
+        print(f"  ← `{photo_method}` is a SUGGESTION and the tool cannot settle it. GPS at a "
+              f"shopfront is\n    evidence somebody stood there; the same laminated card "
+              f"photographed on a kitchen\n    table is `paper-menu`, and only a human looking at "
+              f"the image can tell those apart.")
+    elif pdfs:
+        earliest = min(r["captured"] for r in pdfs)
+        print('  "verifiedBy": "paper-menu",')
+        print(f"\n  ← no photograph dates a reading here. The PDF was created {earliest}, which "
+              f"bounds\n    the reading from BELOW and says nothing above it: `verified` is the day "
+              f"YOU read\n    it, and it must not be earlier than {earliest}.")
+    else:
+        print("  ← nothing here dates a reading. Leave `verified` absent rather than "
+              "borrowing a date;\n    ADR 0031 makes the absent field the honest one.")
+    print("\n  Then: python3 tools/check_provenance.py   (it refuses a date the evidence "
+          "does not support)")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("paths", nargs="*", default=[str(INTAKE)], help="files or folders (default: intake/)")
     ap.add_argument("--json", action="store_true", help="emit JSON instead of a table")
     ap.add_argument("--near", action="store_true", help="name the nearest venue already in the data")
+    ap.add_argument("--for", dest="venue", metavar="VENUE-ID",
+                    help="print the `verified`/`verifiedBy` one venue's evidence supports")
+    ap.add_argument("--base", metavar="CHECKOUT",
+                    help="with --for: the checkout holding intake/ (a worktree has none; "
+                         "without this the committed record answers instead)")
     args = ap.parse_args()
+
+    if args.venue:
+        return report_for(args.venue, args.base)
 
     venues = known_venues() if args.near else None
     rows = [describe(f, venues) for f in collect(args.paths or [str(INTAKE)])]

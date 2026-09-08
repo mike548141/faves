@@ -1,0 +1,621 @@
+{
+  "what": "Provenance of the intake material each venue's menu was read from — file name, capture date and time, device, and whether the file carried GPS. Not the images: this repo is public.",
+  "written by": "tools/check_provenance.py --rebuild (the mapping below is hand-authored; GPS sorts photos, it never pins them)",
+  "checked by": "tools/check_provenance.py",
+  "venues": {
+    "bambina-pizzeria": {
+      "folder": "intake/menus/Bambina Pizzeria",
+      "evidence": [
+        {
+          "file": "IMG_9845.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-01",
+          "capturedAt": "2026-09-01T12:54:09+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9846.jpeg",
+          "kind": "photo",
+          "captured": "2026-09-01",
+          "capturedAt": "2026-09-01T12:54:16+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "burgerfuel": {
+      "folder": "intake/menus/Burger Fuel",
+      "evidence": [
+        {
+          "file": "IMG_9795.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:07:05+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9796.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:07:06+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "cook-at-home": {
+      "folder": "intake/recipes",
+      "evidence": [
+        {
+          "file": "IMG_0315.jpeg",
+          "kind": "photo",
+          "captured": "2025-11-15",
+          "capturedAt": "2025-11-15T13:28:36+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "gold-lining-cafe": {
+      "folder": "intake/menus/Gold Lining Cafe",
+      "evidence": [
+        {
+          "file": "IMG_9739.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-07",
+          "capturedAt": "2026-08-07T11:17:54+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9740.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-07",
+          "capturedAt": "2026-08-07T11:18:00+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9741.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-07",
+          "capturedAt": "2026-08-07T11:19:23+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9742.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-07",
+          "capturedAt": "2026-08-07T11:19:27+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9743.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-07",
+          "capturedAt": "2026-08-07T11:19:29+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9744.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-07",
+          "capturedAt": "2026-08-07T11:19:32+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "kc-cafe": {
+      "folder": "intake/menus/KC cafe",
+      "evidence": [
+        {
+          "file": "2015-09-29 21.58.40.jpeg",
+          "kind": "photo",
+          "captured": "2015-09-29",
+          "capturedAt": "2015-09-29T21:58:40+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "2015-09-29 21.58.58.jpeg",
+          "kind": "photo",
+          "captured": "2015-09-29",
+          "capturedAt": "2015-09-29T21:58:58+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "2015-09-29 21.59.34.jpeg",
+          "kind": "photo",
+          "captured": "2015-09-29",
+          "capturedAt": "2015-09-29T21:59:34+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_0327 (1).jpeg",
+          "kind": "photo",
+          "captured": "2015-01-17",
+          "capturedAt": "2015-01-17T21:22:58+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_0636.jpeg",
+          "kind": "photo",
+          "captured": "2015-09-29",
+          "capturedAt": "2015-09-29T21:58:40+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_0637.jpeg",
+          "kind": "photo",
+          "captured": "2015-09-29",
+          "capturedAt": "2015-09-29T21:58:58+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_0638.jpeg",
+          "kind": "photo",
+          "captured": "2015-09-29",
+          "capturedAt": "2015-09-29T21:59:34+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_0639.jpeg",
+          "kind": "photo",
+          "captured": "2015-09-29",
+          "capturedAt": "2015-09-29T22:00:02+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_0640.jpeg",
+          "kind": "photo",
+          "captured": "2015-09-29",
+          "capturedAt": "2015-09-29T22:00:13+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "menu 1.pdf",
+          "kind": "pdf",
+          "captured": "2026-07-06",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent"
+        }
+      ]
+    },
+    "kk-malaysian": {
+      "folder": "intake/menus/KK Malaysian",
+      "evidence": [
+        {
+          "file": "IMG_9835.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-26",
+          "capturedAt": "2026-08-26T18:32:18+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9836.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-26",
+          "capturedAt": "2026-08-26T18:32:23+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "noodle-canteen": {
+      "folder": "intake/menus/Noodle Canteen",
+      "evidence": [
+        {
+          "file": "IMG_9782.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:05:36+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9783.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:05:38+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9784.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:05:40+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9785.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:05:42+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9786.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:05:44+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9787.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:05:47+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9788.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:05:49+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "rs-satay-noodle-house": {
+      "folder": "intake/menus/R & S satay noodle house",
+      "evidence": [
+        {
+          "file": "IMG_1859.jpeg",
+          "kind": "photo",
+          "captured": "2017-01-11",
+          "capturedAt": "2017-01-11T18:58:27+13:00",
+          "device": "Apple iPhone 6",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9833.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-26",
+          "capturedAt": "2026-08-26T18:29:40+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9834.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-26",
+          "capturedAt": "2026-08-26T18:29:43+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "simmer": {
+      "folder": "intake/menus/Simmer Cafe",
+      "evidence": [
+        {
+          "file": "IMG_7255.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-25",
+          "capturedAt": "2026-08-25T09:49:44+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_7256.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-25",
+          "capturedAt": "2026-08-25T09:49:53+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_7257.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-25",
+          "capturedAt": "2026-08-25T10:13:25+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_7258.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-25",
+          "capturedAt": "2026-08-25T10:13:29+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "spices-indian": {
+      "folder": "intake/menus/Spices indian",
+      "evidence": [
+        {
+          "file": "IMG_2294.jpeg",
+          "kind": "photo",
+          "captured": "2023-11-28",
+          "capturedAt": "2023-11-28T19:36:59+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_2295.jpeg",
+          "kind": "photo",
+          "captured": "2023-11-28",
+          "capturedAt": "2023-11-28T19:37:28+13:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "menu 3.pdf",
+          "kind": "pdf",
+          "captured": "2026-07-06",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent"
+        }
+      ]
+    },
+    "takeaway-at-churton": {
+      "folder": "intake/menus/Takeaway at churton",
+      "evidence": [
+        {
+          "file": "IMG_2689.jpeg",
+          "kind": "photo",
+          "captured": "2019-06-04",
+          "capturedAt": "2019-06-04T13:24:34+12:00",
+          "device": "Apple iPhone 7",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_2690.jpeg",
+          "kind": "photo",
+          "captured": "2019-06-04",
+          "capturedAt": "2019-06-04T13:24:43+12:00",
+          "device": "Apple iPhone 7",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9745.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-08",
+          "capturedAt": "2026-08-08T18:07:15+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9746.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-08",
+          "capturedAt": "2026-08-08T18:07:23+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "menu 2.pdf",
+          "kind": "pdf",
+          "captured": "2026-07-06",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent"
+        }
+      ]
+    },
+    "thai-tara-express": {
+      "folder": "intake/menus/Thai tara express",
+      "evidence": [
+        {
+          "file": "IMG_9768.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:03:05+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9769.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:03:08+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9770.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:03:10+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9771.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:03:15+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9772.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:03:18+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9773.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:03:23+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9774.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:03:28+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9803.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T16:15:18+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9804.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T16:15:26+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "menu 4.pdf",
+          "kind": "pdf",
+          "captured": "2026-07-06",
+          "capturedAt": null,
+          "device": null,
+          "gps": "absent"
+        }
+      ]
+    },
+    "the-ramen-shop": {
+      "folder": "intake/menus/The Ramen Shop",
+      "evidence": [
+        {
+          "file": "IMG_9789.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:06:01+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9790.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:06:04+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9791.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:06:07+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9792.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:06:11+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9793.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:06:14+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9794.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:06:21+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    },
+    "wellington-kebab-grill": {
+      "folder": "intake/menus/Wellington Kebab Grill",
+      "evidence": [
+        {
+          "file": "IMG_9775.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:04:20+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9776.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:04:26+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9777.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:04:30+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9778.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:04:33+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9779.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:04:38+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9780.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:04:45+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        },
+        {
+          "file": "IMG_9781.jpeg",
+          "kind": "photo",
+          "captured": "2026-08-15",
+          "capturedAt": "2026-08-15T14:04:49+12:00",
+          "device": "Apple iPhone 14 Pro",
+          "gps": "present"
+        }
+      ]
+    }
+  }
+}
