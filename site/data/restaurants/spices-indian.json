@@ -75,7 +75,8 @@
     "Chicken Curry",
     "Garlic Naan"
   ],
-  "verified": null,
+  "verified": "2026-07-06",
+  "verifiedBy": "paper-menu",
   "lifecycle": {
     "added": "2026-07-06"
   },
@@ -560,7 +561,13 @@
           "name": "Chicken Fried Rice / Schezuan",
           "dishId": "chicken-fried-rice-schezuan",
           "desc": "Rice sautéed with chicken, eggs, capsicum, soy sauce and vinegar.",
-          "price": 18.0,
+          "price": [
+            {
+              "value": 18.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "contains-gluten",
             "contains-egg",
@@ -571,7 +578,13 @@
           "name": "Chicken Noodles / Schezuan",
           "dishId": "chicken-noodles-schezuan",
           "desc": "Egg noodles sautéed with chicken, capsicum, soy sauce and vinegar, finished with pepper.",
-          "price": 17.0,
+          "price": [
+            {
+              "value": 17.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "contains-gluten",
             "contains-egg",
@@ -582,7 +595,13 @@
           "name": "Vegetable Fried Rice / Schezuan",
           "dishId": "vegetable-fried-rice-schezuan",
           "desc": "Rice sautéed with onion, garlic, capsicum, carrots, soy sauce and vinegar.",
-          "price": 15.0,
+          "price": [
+            {
+              "value": 15.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "v",
             "contains-gluten",
@@ -593,7 +612,13 @@
           "name": "Vegetable Noodles / Schezuan",
           "dishId": "vegetable-noodles-schezuan",
           "desc": "Noodles sautéed with garlic, carrot, cabbage, capsicum and soy sauce.",
-          "price": 15.0,
+          "price": [
+            {
+              "value": 15.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "v",
             "contains-gluten",
@@ -604,7 +629,13 @@
           "name": "Chilli Chicken (dry / gravy)",
           "dishId": "chilli-chicken-dry-gravy",
           "desc": "Boneless chicken deep fried and sautéed with onion, garlic, capsicum, soy sauce and vinegar.",
-          "price": 23.0,
+          "price": [
+            {
+              "value": 23.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "contains-gluten",
             "contains-soy"
@@ -614,7 +645,13 @@
           "name": "Egg Noodles / Schezuan / Egg Fried Rice",
           "dishId": "egg-noodles-schezuan-egg-fried-rice",
           "desc": "Scrambled eggs sautéed with noodles or rice, garlic, ginger, onions, soy sauce, vinegar and coriander.",
-          "price": 16.0,
+          "price": [
+            {
+              "value": 16.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "contains-gluten",
             "contains-egg",
@@ -625,7 +662,13 @@
           "name": "Prawn Fried Rice / Schezuan",
           "dishId": "prawn-fried-rice-schezuan",
           "desc": "Prawns sautéed with rice, garlic, ginger, soy sauce, vinegar and spring onions.",
-          "price": 23.0,
+          "price": [
+            {
+              "value": 23.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-gluten",
@@ -636,7 +679,13 @@
           "name": "Prawn Noodles / Schezuan",
           "dishId": "prawn-noodles-schezuan",
           "desc": "Noodles sautéed with prawns, chillies, soy sauce and vinegar.",
-          "price": 23.0,
+          "price": [
+            {
+              "value": 23.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-gluten",
@@ -647,7 +696,13 @@
           "name": "Paneer Chilli (dry / gravy)",
           "dishId": "paneer-chilli-dry-gravy",
           "desc": "Marinated cottage cheese deep fried and cooked with capsicum and soy sauce.",
-          "price": 20.0,
+          "price": [
+            {
+              "value": 20.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "v",
             "contains-gluten",
@@ -665,7 +720,13 @@
           "name": "Combo",
           "dishId": "combo",
           "desc": "Half curry, half rice, plain naan and a cold drink can (without drink $12.00). Butter Chicken or Lamb Rogan Josh. Naan upgrade to other breads +$1.00, stuffed naan +$2.00.",
-          "price": 14.0,
+          "price": [
+            {
+              "value": 14.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": [
             "contains-gluten",
             "contains-dairy"
@@ -675,7 +736,13 @@
           "name": "Goat Curry",
           "dishId": "goat-curry",
           "desc": null,
-          "price": 23.0,
+          "price": [
+            {
+              "value": 23.0,
+              "recorded": "2023-11-28",
+              "method": "in-store"
+            }
+          ],
           "tags": []
         },
         {
