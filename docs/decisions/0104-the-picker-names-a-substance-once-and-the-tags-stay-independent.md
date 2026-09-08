@@ -1,4 +1,14 @@
-# 0103 — The picker names a substance once, and the two fish tags stay independent
+# 0104 — The picker names a substance once, and the two fish tags stay independent
+
+**Renumbered 0103 → 0104 on merge, 2026-09-08.** Two sub-agents of one
+orchestrating session each allocated `0103`, each correctly: both checked
+the allocator and both were right when they looked. The collision is
+invisible from either branch and visible only to whoever merges second.
+This record moved because `docs/decisions/README.md`'s tie-break is
+*cheapest repair, not precedence* — it had **3** inbound references
+against the branch-id record's **10**, and it moved even though it
+landed on `main` first. Cite an ADR by its file path, never a bare
+number.
 
 **Status:** accepted
 **Date:** 2026-09-08

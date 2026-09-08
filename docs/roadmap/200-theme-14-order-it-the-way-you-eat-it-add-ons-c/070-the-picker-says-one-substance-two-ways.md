@@ -5,8 +5,8 @@
 
   ✅ **DELIVERED 2026-09-08 (session faves-o1) — option 1, the substance map, as
   recommended.** Worktree `faves-o1-one-substance`, branch `one-substance`,
-  landing by PR. Full deliberation: ADR 0103,
-  [the picker names a substance once](../../decisions/0103-the-picker-names-a-substance-once-and-the-tags-stay-independent.md).
+  landing by PR. Full deliberation: ADR 0104,
+  [the picker names a substance once](../../decisions/0104-the-picker-names-a-substance-once-and-the-tags-stay-independent.md).
 
   ```
   BEFORE  "Salmon contains fish — you asked to avoid it. Salmon is fish, so

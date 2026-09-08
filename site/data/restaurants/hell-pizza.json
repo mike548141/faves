@@ -13,6 +13,7 @@
   "locations": [
     {
       "label": "Newlands",
+      "id": "newlands",
       "address": "225 Newlands Road, Newlands, Wellington 6037",
       "lat": -41.2236,
       "lng": 174.8228,
@@ -64,6 +65,7 @@
     },
     {
       "label": "Bond Street (CBD)",
+      "id": "bond-street-cbd",
       "address": "14 Bond Street, Te Aro, Wellington 6011",
       "lat": -41.28924,
       "lng": 174.77553,
@@ -115,6 +117,7 @@
     },
     {
       "label": "Cuba Street",
+      "id": "cuba-street",
       "address": "63 Webb Street, Mt Cook, Wellington 6011",
       "lat": -41.29766,
       "lng": 174.7728,
@@ -166,6 +169,7 @@
     },
     {
       "label": "Hataitai",
+      "id": "hataitai",
       "address": "30C Waitoa Road, Hataitai, Wellington 6021",
       "phone": "+64 4 939 0616",
       "hours": {
@@ -215,6 +219,7 @@
     },
     {
       "label": "Island Bay",
+      "id": "island-bay",
       "address": "129 The Parade, Island Bay, Wellington 6023",
       "lat": -41.33428,
       "lng": 174.77364,
@@ -266,6 +271,7 @@
     },
     {
       "label": "Kāpiti",
+      "id": "k-piti",
       "address": "136 Kāpiti Road, Paraparaumu 5032",
       "lat": -40.9054,
       "lng": 174.99744,
@@ -317,6 +323,7 @@
     },
     {
       "label": "Karori",
+      "id": "karori",
       "address": "156 Karori Road, Karori, Wellington 6012",
       "lat": -41.28238,
       "lng": 174.74512,
@@ -368,6 +375,7 @@
     },
     {
       "label": "Khandallah",
+      "id": "khandallah",
       "address": "1 Ganges Road, Khandallah, Wellington 6035",
       "lat": -41.24639,
       "lng": 174.79096,
@@ -419,6 +427,7 @@
     },
     {
       "label": "Lower Hutt",
+      "id": "lower-hutt",
       "address": "2 Pretoria Street, Hutt CBD, Lower Hutt 5010",
       "phone": "+64 4 570 0399",
       "hours": {
@@ -468,6 +477,7 @@
     },
     {
       "label": "Mana",
+      "id": "mana",
       "address": "99 Mana Esplanade, Paremata, Porirua 5026",
       "lat": -41.09323,
       "lng": 174.86859,
@@ -519,6 +529,7 @@
     },
     {
       "label": "Petone",
+      "id": "petone",
       "address": "340 Jackson Street, Petone, Lower Hutt 5012",
       "lat": -41.22711,
       "lng": 174.88342,
@@ -570,6 +581,7 @@
     },
     {
       "label": "Porirua",
+      "id": "porirua",
       "address": "5 Cobham Court, Porirua City Centre, Porirua 5022",
       "lat": -41.13568,
       "lng": 174.84053,
@@ -621,6 +633,7 @@
     },
     {
       "label": "Strathmore",
+      "id": "strathmore",
       "address": "508 Broadway, Strathmore Park, Wellington 6022",
       "lat": -41.32456,
       "lng": 174.82104,
@@ -672,6 +685,7 @@
     },
     {
       "label": "Upper Hutt",
+      "id": "upper-hutt",
       "address": "714 Fergusson Drive, Elderslea, Upper Hutt 5018",
       "lat": -41.12584,
       "lng": 175.05803,

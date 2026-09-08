@@ -17,6 +17,7 @@
   "locations": [
     {
       "label": "Johnsonville",
+      "id": "johnsonville",
       "address": "24 Johnsonville Road, Johnsonville, Wellington 6037",
       "lat": -41.22273,
       "lng": 174.80708,
@@ -25,6 +26,7 @@
     },
     {
       "label": "Tawa",
+      "id": "tawa",
       "address": "195 Main Road, Tawa, Wellington 5028",
       "lat": -41.16929,
       "lng": 174.82476,
@@ -33,6 +35,7 @@
     },
     {
       "label": "Karori",
+      "id": "karori",
       "address": "234 Karori Road, Karori, Wellington 6012",
       "lat": -41.2842,
       "lng": 174.73872,
@@ -41,6 +44,7 @@
     },
     {
       "label": "Courtenay Place",
+      "id": "courtenay-place",
       "address": "23 Courtenay Place, Te Aro, Wellington 6011",
       "lat": -41.29398,
       "lng": 174.78238,
@@ -49,6 +53,7 @@
     },
     {
       "label": "Mulgrave Street",
+      "id": "mulgrave-street",
       "address": "18 Mulgrave Street, Thorndon, Wellington 6011",
       "phone": null,
       "hours": null

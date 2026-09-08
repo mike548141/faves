@@ -17,6 +17,7 @@
   "locations": [
     {
       "label": "Courtenay Place",
+      "id": "courtenay-place",
       "address": "29 Courtenay Place, Te Aro, Wellington 6011",
       "lat": -41.2939,
       "lng": 174.78207,
@@ -68,6 +69,7 @@
     },
     {
       "label": "Cuba Street",
+      "id": "cuba-street",
       "address": "146 Cuba Street, Wellington",
       "lat": -41.29368,
       "lng": 174.77532,
@@ -119,6 +121,7 @@
     },
     {
       "label": "The Kiosk (TSB Bank Arena)",
+      "id": "the-kiosk-tsb-bank-arena",
       "address": "TSB Bank Arena, Wellington",
       "phone": "+64 4 499 7004",
       "hours": {

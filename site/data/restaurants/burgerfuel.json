@@ -13,6 +13,7 @@
   "locations": [
     {
       "label": "Johnsonville",
+      "id": "johnsonville",
       "address": "103 Johnsonville Road, Johnsonville, Wellington 6037",
       "lat": -41.22499,
       "lng": 174.8075,
@@ -64,6 +65,7 @@
     },
     {
       "label": "Adelaide Road",
+      "id": "adelaide-road",
       "address": "Cnr John Street and Adelaide Road, Newtown, Wellington 6021",
       "phone": "+64 4 380 0003",
       "hours": {
@@ -113,6 +115,7 @@
     },
     {
       "label": "Courtenay Place",
+      "id": "courtenay-place",
       "address": "101 Courtenay Place, Te Aro, Wellington 6011",
       "lat": -41.29286,
       "lng": 174.77884,
@@ -164,6 +167,7 @@
     },
     {
       "label": "Cuba Street",
+      "id": "cuba-street",
       "address": "191 Cuba Street, Te Aro, Wellington 6011",
       "lat": -41.29461,
       "lng": 174.77514,

@@ -13,6 +13,7 @@
   "locations": [
     {
       "label": "Tawa",
+      "id": "tawa",
       "address": "99 Main Road, Tawa, Wellington 5028",
       "lat": -41.17564,
       "lng": 174.82473,

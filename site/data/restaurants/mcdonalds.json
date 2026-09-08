@@ -17,11 +17,13 @@
   "locations": [
     {
       "label": "Courtenay Place",
+      "id": "courtenay-place",
       "address": "200 Courtenay Place, Te Aro, Wellington 6011",
       "phone": "+64 4 385 8646"
     },
     {
       "label": "Lambton Quay",
+      "id": "lambton-quay",
       "address": "276 Lambton Quay, Wellington Central, Wellington 6011",
       "lat": -41.28407,
       "lng": 174.77522,
@@ -29,6 +31,7 @@
     },
     {
       "label": "Bunny Street",
+      "id": "bunny-street",
       "address": "9 Bunny Street, Pipitea, Wellington 6011",
       "lat": -41.28012,
       "lng": 174.77971,
@@ -36,6 +39,7 @@
     },
     {
       "label": "Johnsonville",
+      "id": "johnsonville",
       "address": "2 Johnsonville Road, Johnsonville, Wellington 6037",
       "lat": -41.22193,
       "lng": 174.80719,
@@ -43,6 +47,7 @@
     },
     {
       "label": "Porirua",
+      "id": "porirua",
       "address": "2 Titahi Bay Road, Porirua 5022",
       "lat": -41.13653,
       "lng": 174.83886,
