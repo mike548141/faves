@@ -47,6 +47,28 @@ cold review, 2026-09-07).
 | `images/<venue>.json` | provenance and rights for every photograph the app ships | by hand | `tools/check_records.py` |
 | `withdrawn/<venue>.json` | rows pulled from the payload **by policy**, not by the shop | by hand | `tools/check_records.py` |
 | `products/<id>.json` | packaged products off the owner's own pantry photographs (ADR 0090) | `tools/products.py` | `tools/products.py` |
+| `intake/not-products.json` | capture bursts that were read and are deliberately **not** a product — the recipe pages and the menu leaflet | by hand | `tools/products.py` (shape) + `--coverage` (against the photographs) |
+| `intake/name-index.json` | what the prior food exports in `intake/ingredients/` **name** — names and source file only, no nutrition | `tools/intake_index.py` | `tools/intake_index.py --check` |
+
+**`intake/` here is a record ABOUT the intake, not a copy of it.** The intake
+itself (`intake/` at the repo root) is gitignored and stays that way; these two
+files hold what a reader needs once the raw material is no longer at hand.
+
+`not-products.json` exists so that "read, and it is not a packaged product" can
+be said out loud. Without it the 26 recipe and menu-leaflet photographs are a
+permanent gap in the coverage report, and a check that can never reach zero is
+one nobody runs. A row carries what the images hold, who read them and when: it
+is evidence that somebody looked, not a way to make a burst stop counting.
+
+`name-index.json` is the index ADR 0090 promised and did not write. 🛑 **No
+nutrition figure from those exports is recorded, ever.** ADR 0090 measured them
+wrong where it mattered — a sweetcorn percentage recorded as 62% where the label
+reads 48%, with two ingredients dropped — so copying their numbers in would
+launder bad data into this repo behind its own provenance rules. The index says
+*what was collected*; the packet is still the source. `conversation_export_partial.json`
+is excluded entirely (eating events, ADR 0090 rule 2), and the four rows that
+carried a household attribution or a personal dietary note are recorded with
+that part removed and a `redacted` note saying so.
 
 **`entities/` and `people/` do not exist yet**, and that is the honest state
 rather than a gap: `ownership.json` holds `{"edges": []}`, no ownership fact has

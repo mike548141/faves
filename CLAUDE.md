@@ -381,6 +381,37 @@ python3 tools/products.py     # data/products/ — the packaged-product record s
                               # MOVED here rather than vanishing. --reshoot ranks the
                               # gaps by what another photo would BUY, --stats counts
                               # what the corpus actually holds
+python3 tools/products.py --coverage --probe # …and how much of the intake was READ
+                              # (ADR 0102). Two tools existed and NOTHING JOINED THEM:
+                              # product_bursts.py printed 183 photos in 59 bursts,
+                              # products.py validated 87 records, and 15 bursts sat
+                              # uncited for two days with every gate green. 🛑
+                              # `source.burst` is sometimes a COMPOSITE ("b026+b045"),
+                              # so an exact-string comparison answers 17 where the
+                              # truth is 15 — the field is PARSED, and --probe prints
+                              # both numbers so that stays measured, not remembered.
+                              # A GAP REPORTS AND A CONTRADICTION FAILS: a check that
+                              # can never reach zero gets switched off, and 26 of the
+                              # photographs are recipes and a menu leaflet that will
+                              # never be a product — they say so in
+                              # data/intake/not-products.json, with what they hold and
+                              # who read them, because "we looked and it is not a
+                              # product" and "nobody looked" are otherwise identical.
+                              # `intake/**` is gitignored, so on a fresh clone, in CI
+                              # and in EVERY WORKTREE this prints "intake not present"
+                              # and exits 0 — it proves nothing there. Point --photos
+                              # at a checkout that has the material
+python3 tools/intake_index.py --check # data/intake/name-index.json still matches the
+                              # five food exports in intake/ingredients/ (ADR 0090's
+                              # promised index, unwritten for two days; roadmap
+                              # 500/040). 🛑 NAMES AND SOURCE FILE ONLY — not one
+                              # nutrition figure from those exports, because ADR 0090
+                              # measured them wrong where it mattered (sweetcorn 62%
+                              # against a label reading 48%, two ingredients dropped),
+                              # and copying them in would launder bad data into the
+                              # repo behind its own provenance rules. The chat export
+                              # is EATING EVENTS and is never opened. Same gitignore
+                              # caveat: absent intake ⇒ "intake not present", exit 0
 python3 tools/check_records.py # data/images/ and data/withdrawn/ — the two record
                               # stores NOTHING validated until 2026-09-08. The
                               # direction that matters is file→row: a photo shipped
