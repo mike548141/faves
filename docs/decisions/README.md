@@ -1152,3 +1152,18 @@ deliberation those compact docs omit.
   photographs say so out loud in `data/intake/not-products.json` — with what
   they hold, who read them and when, because *"we looked and it is not a
   product"* and *"nobody looked"* are otherwise identical.
+- [0103](0103-the-picker-names-a-substance-once-and-the-tags-stay-independent.md)
+  — **the picker names a substance once, and the two fish tags stay
+  independent.** [0095](0095-an-add-on-carries-both-axes.md) §1 writes
+  `has-fish` and `contains-fish` from two independent rules on purpose, so
+  `200/050`'s tag-keyed merge could not see *"Salmon contains fish — you asked
+  to avoid it. Salmon is fish, so this is no longer vegetarian."* — one fish,
+  twice. The merge keys on the **substance** now, through a map consulted in one
+  expression whose only job is deciding which two SENTENCES are one. 🛑 It
+  relates no two tags: the composer still reports them separately, neither
+  implies the other, and all four halves of that are **asserted** rather than
+  promised. Swept over 57 venues and 2,866 (dish, option) combinations in both
+  avoid states: **22 → 0**, on 11 pairs across 2 venues, with the unflagged
+  branch fixed for the same reason `050` fixed it. Break-probe: **4 of 6** new
+  browser assertions fail and nothing pre-existing does — the other two pass in
+  both states, and that is said rather than assumed.
