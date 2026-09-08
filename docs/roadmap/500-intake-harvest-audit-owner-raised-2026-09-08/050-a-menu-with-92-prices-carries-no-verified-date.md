@@ -3,9 +3,14 @@
       intake audit (session faves-o1). **(a) delivered 2026-09-08; (b) still
       owed** — see the note at the foot.
 
-  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — owner
-  authorised this one directly. Delivered by a sub-agent in its own
-  worktree (`faves-o1-spices-verified`, branch `spices-verified`), landing by PR.
+  📌 **CLAIM RELEASED 2026-09-08 (session faves-o1) — part (a) delivered and
+  merged (PR #20); part (b) is unclaimed and still owed.** (b) is the three
+  older photo sets with no price history, and the delivering session sized
+  them: **Spices is the LEAST valuable of the three** — its two documents
+  barely overlap, its 12 unique dishes already ship at 2023 prices, and the
+  one comparable price that moved (Tandoori Chicken half, $13.50 → $13.00)
+  was never in the record to supersede. **KC Cafe (9 photographs, 2015) is
+  the most valuable** and is where (b) should start.
 
   **(a) `spices-indian.json` has `verified: null` and `verifiedBy: null`**,
   with `status: "menu-complete"` and **92 priced items**. Its intake
@@ -13,6 +18,34 @@
   intake photographs got its date stamped, and the audit matched capture date
   to `verified` date exactly on **12 of 13** venues — this is the thirteenth.
   A menu with no date cannot age, so `refreshCaveat` says nothing about it.
+
+  ✅ **(a) DELIVERED 2026-09-08 (session faves-o1), and it was not two fields.**
+  `verified: "2026-07-06"`, `verifiedBy: "paper-menu"` — corroborated by commit
+  `1ba220f` of that date. But the record is a **mix of two readings**, and the
+  split is exact: **80 items** off the 2026-07-06 paper card, **12** off a
+  2023-11-28 in-store board (the record's own *"Bombay Indo-Chinese"* section
+  is that poster's heading verbatim), 80 + 12 = 92, and no dish sourced from
+  both. Setting the record date alone would have made a **new false claim**,
+  because `resolveRecord` passes it to every undated price — asserting the 12
+  were read off a card that provably does not contain them. So the 11 priced
+  2023 dishes carry a one-entry dated series, ADR 0031's per-entry override
+  and the corpus's first use of it. `isDated` needs `length > 1`, so no new
+  field reaches a screen (ADR 0047 holds) and all 92 prices resolve
+  byte-identically.
+  🔎 **GPS did not identify the venue; opening the photographs did.** The fix
+  sits **103 m** from Spices and **23 m** from a different venue, and
+  `--near` named the wrong one — the documented "sorts to a strip, does not
+  pin a shopfront" behaviour, and a useful counter-example to hold beside
+  `500/060`.
+
+  🚩 **The sweep found SIX records with a menu and no `verified` date, not
+  one** — a symptom count is not an enumeration, and here it multiplied the
+  answer by six. `hell-pizza` (99 items), `spices-indian` (92, now fixed),
+  `khandallah-trading-company` (72), `sprig-and-fern-tawa` (63), plus
+  `cook-at-home` (24) and `mcdonalds` (41), both unpriced. **The other five
+  are untouched and none has intake photographs to derive a date from**, so
+  each needs a different kind of evidence — that is why they are not folded
+  in here.
 
   **(b) Three older photo sets have no `data/history/prices/` file:** KC Cafe
   (9 photos, 2015), R&S (1, 2017), Spices (2, 2023). Whether those prices were
