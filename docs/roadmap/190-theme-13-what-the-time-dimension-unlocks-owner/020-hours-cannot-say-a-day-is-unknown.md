@@ -1,7 +1,11 @@
-- [ ] 🔎 **`hours` cannot say "we do not know about this day" — an empty day
+- [~] 🔎 **`hours` cannot say "we do not know about this day" — an empty day
       asserts CLOSED** `[S][data][js]` — found 2026-09-07 (session faves-b1)
       while transcribing Abrakebabra for `080/190`. The neighbour of `010`, and
       **not** fixed by ADR 0094.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — delivered by
+  a sub-agent in its own worktree (`faves-o1-hours-unknown`, branch
+  `hours-unknown`), landing by PR so CI runs before the merge.
 
   **The venue.** `abrakebabra` publishes its opening hours on its own site as
   four lines: **Sunday to Tuesday**, **Thursday**, **Friday**, **Saturday**.

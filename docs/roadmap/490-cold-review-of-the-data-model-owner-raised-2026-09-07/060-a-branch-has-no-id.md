@@ -1,7 +1,11 @@
-- [ ] 🔎 **A branch has no id, and every per-branch plan needs to name one**
+- [~] 🔎 **A branch has no id, and every per-branch plan needs to name one**
       `[S][schema][tools]` — Theme 38 review
       (`../../reviews/2026-09-07-1216-theme-38-cold-review.md` §6 C4, §7 E1).
       Engineering call; recommended, and a precondition for `210/040`.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — delivered by
+  a sub-agent in its own worktree (`faves-o1-branch-ids`, branch
+  `branch-ids`), landing by PR so CI runs before the merge.
 
   **The fact.** `BRANCH_KEYS` in `tools/validate.py:121-124` is `label, address,
   lat, lng, phone, hours, timezone, detailsVerified, detailsVerifiedBy`. No `id`.

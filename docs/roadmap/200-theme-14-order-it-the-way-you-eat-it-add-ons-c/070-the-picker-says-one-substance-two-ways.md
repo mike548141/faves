@@ -1,7 +1,11 @@
-- [ ] 🔎 **The picker still says one SUBSTANCE two ways when the option carries
+- [~] 🔎 **The picker still says one SUBSTANCE two ways when the option carries
       both fish tags** `[XS][ux][js]` — found 2026-09-07 (wt: faves-picker)
       while building `050`, **measured in a real browser**, and deliberately
       **left standing** rather than folded into that ruling.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — delivered by
+  a sub-agent in its own worktree (`faves-o1-one-substance`, branch
+  `one-substance`), landing by PR so CI runs before the merge.
 
   **Verbatim, headless Chrome, 390 px, `contains-fish` ticked in Settings'
   avoid list.** Sprig & Fern Tawa's *Potato, Rosemary + Basil Pesto*

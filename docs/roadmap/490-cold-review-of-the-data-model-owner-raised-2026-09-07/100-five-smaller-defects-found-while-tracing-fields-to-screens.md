@@ -1,8 +1,12 @@
-- [ ] 🔎 **Five smaller defects found while tracing fields to screens**
+- [~] 🔎 **Five smaller defects found while tracing fields to screens**
       `[S][js][docs]` — Theme 38 review
       (`../../reviews/2026-09-07-1216-theme-38-cold-review.md` §4c). None is a
       modelling question; each is a fix with a test. Filed together because they
       were found together; take them one at a time.
+
+  🔒 **CLAIMED 2026-09-08 (session faves-o1, orchestrating)** — delivered by
+  a sub-agent in its own worktree (`faves-o1-five-defects`, branch
+  `five-defects`), landing by PR so CI runs before the merge.
 
   1. **Every order line is hard-coded `NZD`.** `cart.js:237` writes
      `meta.currency || "NZD"` and no caller passes a currency (`menu.js:1474-1486`,
