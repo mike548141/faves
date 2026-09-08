@@ -125,7 +125,7 @@ CONTRADICTED_BY = {
 #
 # 🔑 WHY NOT A BARE LIST OF COMPOUND WORDS (`cheeseburger|hamburger|…`). That is
 # strictly safer and it is what `cheeseburgers?` in the dairy rule does — but it
-# is SILENT about the compound that arrives next week, and silence is how the
+# is SILENT about the compound that lands after it was written, and silence is
 # 13 BurgerFuel rows in the roadmap item went two months unnoticed. `--compounds`
 # is the half that makes the remaining gap falsifiable; the tail is the half
 # that closes the three the corpus can already prove are safe.

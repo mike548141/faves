@@ -9,6 +9,18 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A burger whose name is one word now carries its allergen warnings.** A
+  "Cheeseburger" is bread and cheese, but the allergen sweep read only whole
+  words, so it could see "burger" and never "Cheeseburger". Seventeen warnings
+  were missing across three venues, and a McDonald's Cheeseburger, Hamburger,
+  McMuffin and Chicken McNuggets showed none at all. They do now.
+- **McDonald's no longer reads as a menu with no allergens.** That record
+  carries dish names and photographs and nothing else — no ingredients were
+  ever read for it — so an empty tag row was silence being mistaken for an
+  all-clear. Every one of its 41 items now says so on the page: "Allergen
+  details unconfirmed. Ask the venue before ordering." Its unread prices say
+  so too, instead of looking like a shop that declines to print them.
+
 - **Searching for a cuisine now leads with the places that serve it.** Typing
   "Cafe" used to put KC Cafe and Satay Kingdom Cafe — a Chinese kitchen and a
   Malaysian one — above four venues actually tagged Cafe, because the word was
@@ -309,7 +321,7 @@ content freshness separately from this file.
   was the one that destroyed it. The countdown is now remembered and comes back
   still counting. A bell that fell due while you were away rings on the way back
   in; one that fell due more than an hour ago is quietly dropped, because a
-  kitchen timer going off about yesterday's dinner is not news.
+  kitchen timer going off about yesterday's dinner is not news. <!-- datescan:allow: idiom in an analogy about a kitchen timer, not a dated claim -->
 - **A step no longer hides the ingredient it is asking for.** Where a recipe
   lists the same thing twice — Upside-Down Plum Cake's butter, Chocolate
   Self-Saucing Pudding's cocoa, Easy Pad Thai's peanuts — a step that named it
@@ -552,7 +564,7 @@ content freshness separately from this file.
   route there — is still to come. "Nearest first" is unchanged.
 - **The "Clear ticks" button is gone**, from both the recipe page and cook
   mode. Ticks already clear themselves twelve hours after the last one is
-  made, so a recipe cooked again next week never started half-ticked without
+  made, so a recipe cooked again next week never started half-ticked without <!-- datescan:allow: a hypothetical future cook, not a dated claim -->
   it — the button had no job left to do (owner ruling).
 
 ### Fixed
@@ -845,7 +857,7 @@ content freshness separately from this file.
   open right now** ("Closed · opens 5pm") on the home screen, which they never
   did before. A venue we hold nothing but a name for still doesn't link.
 - **The venue page stops saying the same thing twice.** The standing "Read in
-  store, 15 Aug 2026" line is gone — the ⓘ beside the venue name already gives
+  store, 15 Aug 2026" line is gone — the ⓘ beside the venue name already gives <!-- datescan:allow: quoted UI copy — the line the venue page used to print, not a stamp -->
   that date, plus what was checked and how.
 
 ### Fixed
@@ -976,7 +988,7 @@ content freshness separately from this file.
   **The Borough** in Tawa and the **Southern Cross** in Te Aro, with full menus:
   164 dishes between them, plus hours, phones and directions. The Borough's
   **Burger Wellington** entry, The Aegean Melt, is in for its run and will drop
-  off the menu by itself once the festival ends on 23 Aug. 1841's prices come
+  off the menu by itself once the festival ends on 23 Aug. 1841's prices come <!-- datescan:allow: pre-existing published entry; '1841' here is the venue's name, not a year -->
   from the venue's own menu PDF and are dated **March 2025** in the data — the
   most recent reading anyone has published, and old enough to be worth checking
   at the counter.

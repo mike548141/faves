@@ -535,7 +535,8 @@
           "tags": [
             "gf-option",
             "contains-gluten",
-            "df-option"
+            "df-option",
+            "contains-dairy"
           ],
           "addOns": [
             "nga-bun"
@@ -920,7 +921,8 @@
           "desc": "Beef patty, cheese, tomato sauce with curly fries and carrot sticks.",
           "price": 15.0,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -1045,7 +1047,7 @@
           "dishId": "cheeseburger-gold-card",
           "desc": "Dairy free available.",
           "price": 21.0,
-          "tags": ["gf-option", "contains-gluten", "df-option"],
+          "tags": ["gf-option", "contains-gluten", "df-option", "contains-dairy"],
           "addOns": [
             "nga-bun"
           ]
