@@ -1202,7 +1202,7 @@ deliberation those compact docs omit.
   day between now and the next opening hedges the detail to *"next published
   opening Thu 12pm"*. 🚩 **Abrakebabra's hours were NOT restored** — no source
   in this repo records its times, only its days.
-- [0106](0106-the-evidences-provenance-is-committed-and-the-evidence-is-not.md)
+- [0107](0107-the-evidences-provenance-is-committed-and-the-evidence-is-not.md)
   — **the evidence's provenance is committed; the evidence is not.** Simmer's
   four photographs are EXIF-dated 2026-08-25 and the record was written
   `verified: 2026-09-07`, because today is what a transcribing session knows —

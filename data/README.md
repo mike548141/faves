@@ -49,7 +49,7 @@ cold review, 2026-09-07).
 | `products/<id>.json` | packaged products off the owner's own pantry photographs (ADR 0090) | `tools/products.py` | `tools/products.py` |
 | `intake/not-products.json` | capture bursts that were read and are deliberately **not** a product — the recipe pages and the menu leaflet | by hand | `tools/products.py` (shape) + `--coverage` (against the photographs) |
 | `intake/name-index.json` | what the prior food exports in `intake/ingredients/` **name** — names and source file only, no nutrition | `tools/intake_index.py` | `tools/intake_index.py --check` |
-| `intake/menu-sources.json` | the **provenance** of the material each venue's menu was read from: file name, capture date and time, device, GPS presence (ADR 0106) | `tools/check_provenance.py --rebuild` | `tools/check_provenance.py` |
+| `intake/menu-sources.json` | the **provenance** of the material each venue's menu was read from: file name, capture date and time, device, GPS presence (ADR 0107) | `tools/check_provenance.py --rebuild` | `tools/check_provenance.py` |
 
 **`intake/` here is a record ABOUT the intake, not a copy of it.** The intake
 itself (`intake/` at the repo root) is gitignored and stays that way; these

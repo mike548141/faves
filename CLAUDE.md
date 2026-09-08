@@ -435,7 +435,7 @@ python3 tools/intake_index.py --check # data/intake/name-index.json still matche
                               # is EATING EVENTS and is never opened. Same gitignore
                               # caveat: absent intake ⇒ "intake not present", exit 0
 python3 tools/check_provenance.py # a venue's `verified` is not FRESHER than the
-                              # evidence it was read from (ADR 0106). Simmer's four
+                              # evidence it was read from (ADR 0107). Simmer's four
                               # intake photos are EXIF-dated 2026-08-25 and the record
                               # said 2026-09-07, because today is what a transcribing
                               # session knows — and `refreshCaveat` AGES `verified`, so

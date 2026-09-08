@@ -9,7 +9,7 @@
       provenance recorded, historical data kept etc?"*
 
   ✅ **DELIVERED 2026-09-09 (session faves-o1)** — the tool and the guard, with
-  [ADR 0106]. 🛑 **Left OPEN deliberately: two parts of his ask are not met**,
+  [ADR 0107]. 🛑 **Left OPEN deliberately: two parts of his ask are not met**,
   and they are named at the bottom. Branch `intake-provenance`, by PR.
 
   ## 🛑 A correction to this item's own measurement, taken first
