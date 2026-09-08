@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **Spices Indian now says when its menu was read.** Its page carried "Menu
+  items and prices need a refresh", which reads as *nobody has ever looked* —
+  and we had. 80 of its 92 dishes were transcribed from the shop's own printed
+  takeaway card, and the other 12 — the Bombay Indo-Chinese list, the combo,
+  the goat curry — off photographs of the board hanging inside the shop, taken
+  two and a half years earlier. The page now says how and when the menu was
+  read instead of warning you about it, and those twelve older dishes carry
+  their own reading date in the record so the newer date is not claimed for
+  them.
 - **A saved link to a place now opens in flight mode.** Opening a menu and then
   bookmarking it, or sharing the link, gave you a slightly different address
   from the one you tapped — and that one was the single route the offline copy
