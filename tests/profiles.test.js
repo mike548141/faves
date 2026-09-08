@@ -5,6 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  CHECKLIST_BASE_KEY,
   PROFILES_KEY,
   SCOPED_BASE_KEYS,
   scopeKey,
@@ -195,6 +196,41 @@ test("remove deletes a profile and purges its per-profile data", () => {
   assert.equal(p.remove(id), true);
   assert.equal(p.list().length, 1);
   for (const base of SCOPED_BASE_KEYS) assert.equal(s.getItem(scopeKey(id, base)), null);
+});
+
+// —————————————— the ticks a deleted profile left behind (490/100 · 2) ——————————————
+//
+// checklist.js is per-profile like the three above, but it is NOT in
+// SCOPED_BASE_KEYS and must not be: that list is also what the backup export
+// walks, and ADR 0067 keeps cook-mode ticks out of the export. So the purge
+// walks a WIDER list, and this is the case that tells the two apart. Deleting
+// Sam used to leave `faves.p.<sam>.checklist.v1` in localStorage forever — the
+// last thing Sam was cooking, still on the device after Sam is gone, and
+// readable by the next profile that happens to be minted with the same id.
+test("remove purges the cook-mode ticks too — the store the export excludes", () => {
+  const s = fakeStorage();
+  const p = createProfiles(s);
+  const id = p.create("Sam");
+  s.setItem(scopeKey(id, CHECKLIST_BASE_KEY), '{"r:pav":{"ticks":["flour"]}}');
+  for (const base of SCOPED_BASE_KEYS) s.setItem(scopeKey(id, base), '["samdata"]');
+  p.setActive("default");
+  assert.equal(p.remove(id), true);
+  assert.equal(s.getItem(scopeKey(id, CHECKLIST_BASE_KEY)), null);
+});
+
+// The other half, and the one a careless fix breaks: the checklist must NOT
+// have joined the travelling list. If it had, `migrate` would copy it forward
+// and — the consequence that matters — personal-data.js would write a
+// `checklist` field per person into the backup file, silently reversing an
+// owner ruling. Asserted on the list itself, because that is the single fact
+// three modules read.
+test("the checklist is still absent from the list that travels (ADR 0067)", () => {
+  assert.equal(SCOPED_BASE_KEYS.includes(CHECKLIST_BASE_KEY), false);
+  assert.deepEqual(SCOPED_BASE_KEYS, [
+    "faves.favourites.v1",
+    "faves.settings.v1",
+    "faves.ratings.v1",
+  ]);
 });
 
 test("removing the active profile hands active to the first remaining", () => {

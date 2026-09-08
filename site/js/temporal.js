@@ -483,9 +483,13 @@ export function isRetired(obj, asOf) {
 function resolveItem(item, asOf, defaultRecorded, defaultMethod) {
   const out = { ...item };
   if ("price" in item) out.price = resolveValue(item.price, asOf, defaultRecorded);
-  // Only `priceSeries` carries the derivation: it is the history a trend view
-  // would draw, and a reading's method is exactly what stops two points seven
-  // years apart being drawn as though we had watched the years between.
+  // Only `priceSeries` carries the derivation, and a reading's method is what
+  // would stop two points seven years apart being read as though we had watched
+  // the years between. ⚠️ This said "the history a trend view would draw" until
+  // 2026-09-08: Theme 13 ruled on 2026-08-16 that there is no trend surface,
+  // "not 'not yet': not ever". NOTHING reads this field. It is computed here
+  // because the resolver is where the derivation is honest, not because a screen
+  // is coming.
   if (isDated(item.price)) out.priceSeries = series(item.price, defaultRecorded, defaultMethod);
   const next = pending(item.price, asOf);
   if (next) out.priceNext = next;
@@ -499,7 +503,7 @@ function resolveItem(item, asOf, defaultRecorded, defaultMethod) {
  * shape the app has always consumed — that is the whole point. Time lives in
  * the data and in this module; nothing downstream learns about it.
  *
- * History beyond `priceSeries` (which has a named future use) is not carried
+ * History beyond `priceSeries` (which no screen reads — see above) is not carried
  * into the projection: the source JSON keeps every dated fact, and anything
  * wanting full history reads the file rather than the resolved record.
  */

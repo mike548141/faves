@@ -1,6 +1,9 @@
 // Menu screen. Reads ?id=<restaurant>, fetches its file, renders the
 // header, "our picks", section nav (scroll-spy), and dish rows with
-// allergen warnings. Search hides non-matches; dietary chips dim them.
+// allergen warnings. Search and the dietary filters BOTH hide non-matches, and
+// a count line says how much was narrowed away. (This read "dietary chips dim
+// them" until 2026-09-08; the dimming went on 2026-09-06 with ADR 0088, and the
+// chip row went with it — the filters live in the Filters sheet.)
 
 import { loadRestaurant } from "./data.js";
 import { mapsUrl, recallOrigin } from "./geo.js";
@@ -1193,12 +1196,19 @@ function closePicks(venueId, section) {
 // Deep-link chips for "goes well with": a same-record dish name, or a
 // cross-record "id#Dish Name". Anchors match the dish li ids below.
 //
-// Only the same-record half can be resolved: `r` is the one menu this page
+// Only the same-record half can be resolved here: `r` is the one menu this page
 // holds, and fetching another venue's record to resolve a chip would put a
 // network round-trip behind a link. The cross-record half falls back to
-// `slug(name)`, which IS the id of any dish that hasn't been given one — so it
-// lands exactly where it always did, and the target page's own resolver has the
-// last word once you're there.
+// `slug(name)` and the target page's own resolver has the last word once you
+// are there.
+//
+// ⚠️ That last clause was FALSE until 2026-09-08 (roadmap `490/100`, defect 5).
+// `slug(name)` is the id of any dish that has not been given one, and 85 of
+// 3,506 now have: for those the anchor matched no element and `findDish` — the
+// resolver this sentence points at — could not recover it either, so the chip
+// dead-ended. The recovery belongs at the destination, where the other record
+// actually is, so `findDish` grew a final name-slug tier rather than this
+// function growing a fetch.
 function pairingLinks(refs, r) {
   const wrap = el("div", { className: "dish-pairs" }, [
     el("span", { className: "dish-pairs-label", "data-i18n": "menu.goesWith", textContent: "Goes well with" }),
@@ -1482,6 +1492,11 @@ function renderDish(
           // and what gets read down the phone, so both travel.
           dishId: dishId(item),
           price: item.price ?? null,
+          // The venue's own currency, stored on the line. An order can span
+          // venues in different countries, and a line that does not say what
+          // its number is in defaults to NZD — so a London price renders as
+          // "$8.95" beside a Wellington one and the two look addable.
+          currency: venueCurrency(r),
         })
       );
     }
@@ -1773,6 +1788,9 @@ function render(r) {
   const servedOrigin = recallOrigin();
   const servedTz = venueTimezone(r, servedOrigin);
   const servedHours = venueHours(r, servedOrigin);
+  // What this record's canonical strings are written in — the same value each
+  // dish row resolves for itself, read once here for the section headings.
+  const venueLang = venueLanguage(r);
   const servedNow = nowIn(servedTz);
   for (const section of r.menu) {
     // A section whose rows are all offered as add-ons is not shown twice
@@ -1787,8 +1805,32 @@ function render(r) {
     // has already failed validate.py's gate, and exists so one missing field
     // costs a link rather than the whole page. Same reasoning as `dish_id()`.
     const id = `section-${section.sectionId || slug(section.section)}`;
+    // The heading in the reader's language where the record offers one (ADR
+    // 0044), and every other rendering beneath it — exactly what a dish's name
+    // and description already do. `validate.py` has accepted `translations` on a
+    // section since ADR 0044 and ARCHITECTURE.md says why ("a heading is read
+    // before any dish under it"); nothing rendered it until 2026-09-08, so a
+    // Thai menu handed an English reader translated dishes under an
+    // untranslated heading (roadmap `490/100`, defect 4).
+    //
+    // Safe to translate BECAUSE of ADR 0058: the anchor above comes from the
+    // stored `sectionId`, so the words in the heading are display text and
+    // nothing links to them. That is exactly why a dish's `name` is NOT
+    // translated in the same sense — its slug is the dish's identity.
+    // For the ~all records carrying no translations, `lead.text` IS
+    // `section.section` and `others` is empty, so the markup does not move.
+    const secLead = preferred(section, "section", venueLang) ?? {
+      text: section.section,
+      lang: venueLang,
+    };
+    const secOthers = alternates(section, "section", venueLang);
     navScroll.append(
-      el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
+      el("a", {
+        className: "section-link",
+        href: `#${id}`,
+        lang: secLead.lang,
+        textContent: secLead.text,
+      })
     );
     const dishes = el("ul", { className: "dish-list" });
     for (const item of section.items)
@@ -1829,11 +1871,28 @@ function render(r) {
         ])
       );
     }
+    // The other renderings sit under the heading, above the notes — the same
+    // place, and the same shape, as a dish's `.dish-name-alt` line. `lang` on
+    // each is WCAG 2.2 AA 3.1.2, not decoration: unmarked, a screen reader
+    // pronounces a Thai heading with English rules.
+    const secAlt = secOthers.length
+      ? el(
+          "p",
+          { className: "section-title-alt" },
+          secOthers
+            .flatMap((n, i) => [
+              i ? el("span", { className: "dish-name-sep", "aria-hidden": "true", textContent: " · " }) : null,
+              el("span", { lang: n.lang, textContent: n.text }),
+            ])
+            .filter(Boolean)
+        )
+      : null;
     const sec = el("section", { className: "menu-section", id }, [
-      el("h2", { className: "section-title", textContent: section.section }),
+      el("h2", { className: "section-title", lang: secLead.lang, textContent: secLead.text }),
+      secAlt,
       ...notes,
       dishes,
-    ]);
+    ].filter(Boolean));
     sectionEls.push(sec);
     menuWrap.append(sec);
   }
@@ -2023,17 +2082,25 @@ function render(r) {
 function compactContactBar(r) {
   const inner = el("div", { className: "contact-bar-inner" });
 
-  // Reads `r.hours` / `r.phone` and that is correct even for a multi-location
-  // venue: `data.js` projects the primary branch up to the top level before
-  // anything here sees the record, precisely so these consumers stay simple.
+  // ⚠️ This read `r.hours` — the PRIMARY branch, projected up by data.js — with
+  // a comment saying that was correct for a chain. It was not (roadmap
+  // `490/100`, defect 3). The card below it, the header's freshness caveat and
+  // every section's serving window all resolve the NEAREST branch once the home
+  // screen has captured a location, so on a chain this bar could pin "Closed"
+  // over a card saying the branch you are reading is open. Same origin, same
+  // branch, same answer as the page it floats above.
+  const origin = recallOrigin();
+  const branch = nearestBranch(r, origin).branch;
+  const tz = venueTimezone(r, origin);
   // Open-now status, mirroring the full card's badge (dot + "Open · until 9pm").
-  // A lifecycle closure replaces it — the same precedence the card applies.
-  const closure = closureBadge(r, todayIn(venueTimezone(r)));
+  // A lifecycle closure replaces it — the same precedence the card applies. A
+  // closure is a fact about the whole venue, so it takes no branch.
+  const closure = closureBadge(r, todayIn(tz));
   if (closure) {
     closure.classList.add("contact-bar-status");
     inner.append(closure);
-  } else if (r.hours) {
-    const st = openStatus(r.hours, nowIn(venueTimezone(r)));
+  } else if (branch.hours) {
+    const st = openStatus(branch.hours, nowIn(tz));
     if (st.state !== "unknown") {
       const badge = el("span", {
         className: "hours-badge contact-bar-status",
@@ -2046,9 +2113,17 @@ function compactContactBar(r) {
 
   // Call is the star: a compact tel: button. It's why the bar exists for
   // phone-order venues, so it stays reachable the whole way down the menu.
-  if (r.phone) {
+  //
+  // The nearest branch's OWN number when it publishes one, so the button dials
+  // the shop the status above it is describing. The fallback is the venue's
+  // projected number rather than nothing, because most branches of a chain
+  // publish none — 6 of TJ Katsu's 7, measured 2026-09-08 — and a bar that
+  // disappears on six branches out of seven would be a worse answer than a
+  // number the venue itself gives out for the whole chain.
+  const phone = branch.phone || r.phone;
+  if (phone) {
     inner.append(
-      el("a", { className: "contact-bar-call", href: `tel:${r.phone.replace(/\s+/g, "")}` }, [
+      el("a", { className: "contact-bar-call", href: `tel:${phone.replace(/\s+/g, "")}` }, [
         el("span", { className: "contact-ico", textContent: "📞", "aria-hidden": "true" }),
         el("span", { "data-i18n": "menu.call", textContent: "Call to order" }),
       ])
@@ -2237,7 +2312,12 @@ function scrollToHash() {
   // now; the address bar keeps the link the reader was sent, which is fine —
   // it will resolve again next time.
   if (!target && current && id.startsWith("dish-")) {
-    const found = findDish(current, id.slice("dish-".length));
+    // `byNameSlug` — the ONE caller that wants the weak tier, because this is
+    // the only one holding a string built outside the record: a `#dish-…`
+    // fragment off a shared link or a cross-record pairing chip, which is a
+    // name's slug and not an id (roadmap `490/100`, defect 5). Every other
+    // caller of findDish is asking about identity and must not have it.
+    const found = findDish(current, id.slice("dish-".length), { byNameSlug: true });
     if (found) target = document.getElementById(`dish-${dishId(found.item)}`);
   }
   if (!target) return;

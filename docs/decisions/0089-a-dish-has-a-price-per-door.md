@@ -118,3 +118,27 @@ is 56 of 57.
 - **Leave the record and note it in prose.** Zero risk to the shipped app, and
   it leaves Faves telling the owner satay is $24 when the board says $19 — the
   defect he would be most annoyed to hit while standing in the shop.
+
+## Partly superseded, 2026-09-08 — the render, not the model
+
+**Recorded here as a pointer, not as an edit.** The Decision above is unchanged
+and its model still ships. One clause of it does not:
+
+> The dish row renders a quiet second line: *"$24 on Delivereasy — about 26%
+> more"*.
+
+That line shipped on 2026-09-06 under all 48 rows of the venue it was written
+for and the owner removed it the same day — *"this is not how we are going to
+show pricing variances over time, per channel, delivered vs in-store… this is
+just you dumping more content in the UI."* His reasoning, recorded because it is
+the useful half: the ruling he had given was about the DATA MODEL — how a record
+holds two prices honestly — and putting a second price on every row was a
+rendering decision nobody asked for.
+
+So **nothing renders `prices` today**. `price` — the counter price — is the one
+number on a dish row, and `menu.js` carries the removal and the quotation at the
+point where the second line used to be built. The 101 rows carrying a `prices`
+entry are payload no screen reads, which is a live question against ADR 0047 and
+is filed as roadmap item `490/030`, not answered here.
+
+Found by the Theme 38 cold review (`490/100`) while tracing fields to screens.

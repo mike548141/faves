@@ -264,3 +264,92 @@ test("within a venue, no two DIFFERENT dish names slug to the same value", () =>
   }
   assert.deepEqual(clashes, [], `distinct dish names sharing one id:\n${clashes.join("\n")}`);
 });
+
+// ———————— a cross-record pairing chip must not dead-end (490/100 · 5) ————————
+//
+// REPRODUCED FIRST, and the reproduction is what these tests encode. A
+// `goesWith` chip pointing at another venue is written "venue-id#Dish Name",
+// and menu.js can only anchor it at `#dish-<slug(name)>` — resolving it
+// properly would mean fetching the other record to draw a chip. On the target
+// page the browser looks for an element with that id and, failing, `scrollToHash`
+// hands the same string to `findDish`. Measured 2026-09-08 against these
+// modules, for a dish named "Fish and Chips" carrying `dishId:
+// "fish-and-chips-mains"`:
+//
+//   chip href       restaurant.html?id=b#dish-fish-and-chips
+//   element id      dish-fish-and-chips-mains        ← no such element
+//   findDish(B, "fish-and-chips")  →  null           ← and no recovery
+//
+// 85 of the corpus's 3,506 dishes carry an id that is not their name's slug, so
+// 85 are unreachable this way. There are 0 cross-record pairings today, so this
+// is latent — but the identical shape reaches any link SHARED before ADR 0051,
+// which held a name's slug and nothing else.
+//
+// The render half of that chain is page code and is not exported, so it is
+// mirrored here with the same `slug` menu.js calls rather than driven. What is
+// driven is the half that can recover: the resolver on the target page.
+const crossRecordTarget = {
+  id: "b",
+  menu: [
+    {
+      section: "Mains",
+      sectionId: "mains",
+      items: [{ name: "Fish and Chips", dishId: "fish-and-chips-mains" }],
+    },
+  ],
+};
+
+test("a cross-record chip's anchor still resolves when the target's id is not its slug", () => {
+  const target = crossRecordTarget.menu[0].items[0];
+  const anchor = slug("Fish and Chips"); // exactly what menu.js builds
+  // The premise, asserted rather than assumed: no element carries that id, so
+  // the browser's own anchor cannot do this and the resolver has to.
+  assert.notEqual(`dish-${anchor}`, `dish-${dishId(target)}`);
+  // …and the four strict tiers cannot recover it, which is the defect verbatim.
+  assert.equal(findDish(crossRecordTarget, anchor), null);
+  assert.equal(findDish(crossRecordTarget, anchor, { byNameSlug: true })?.item, target);
+});
+
+// 🛑 THE TIER IS OPT-IN BECAUSE THE FIRST VERSION WAS NOT, AND THAT BROKE
+// something real inside the hour: data.js asks this same resolver whether a
+// hearted dish is still on the live menu, and an always-on name tier answered
+// "present" for a menu that now prints the same name under a NEW id — a
+// different dish (ADR 0051), a stale heart, and the exact collision ADR 0051
+// exists to close. tests/data-loader.test.js caught it. This is that boundary,
+// pinned here as well, because the test that caught it is three modules away
+// and names none of this.
+test("the name tier is OFF for an identity question — a moved id is still absent", () => {
+  const renamed = {
+    menu: [{ section: "Mains", items: [{ name: "Mee Goreng", dishId: "mee-goreng-2" }] }],
+  };
+  assert.equal(findDish(renamed, "mee-goreng"), null);
+  assert.equal(findDish(renamed, "mee-goreng", { byNameSlug: true })?.item.name, "Mee Goreng");
+});
+
+test("…and a stored id still beats a name that merely slugs to it", () => {
+  // The tier order is the whole safety property: the new tier is DERIVED, so it
+  // must never take a link away from a dish that declares the id outright.
+  const record = {
+    menu: [
+      { section: "A", items: [{ name: "Fish and Chips", dishId: "fish-and-chips-mains" }] },
+      { section: "B", items: [{ name: "Battered snapper", dishId: "fish-and-chips" }] },
+    ],
+  };
+  assert.equal(findDish(record, "fish-and-chips", { byNameSlug: true })?.item.name, "Battered snapper");
+});
+
+test("…and a declared former id beats it too", () => {
+  const record = {
+    menu: [
+      { section: "A", items: [{ name: "Fish and Chips", dishId: "fish-and-chips-mains" }] },
+      { section: "B", items: [{ name: "Snapper", dishId: "snapper", formerIds: ["fish-and-chips"] }] },
+    ],
+  };
+  assert.equal(findDish(record, "fish-and-chips", { byNameSlug: true })?.item.name, "Snapper");
+});
+
+test("a ref that matches nothing at all is still null", () => {
+  // The tier is a fallback, not a fuzzy match: an unknown ref must not start
+  // resolving to whichever dish happens to come first.
+  assert.equal(findDish(crossRecordTarget, "pavlova", { byNameSlug: true }), null);
+});

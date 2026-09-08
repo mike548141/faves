@@ -9,6 +9,33 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A menu section's heading is now translated like the dishes under it.** A
+  menu written in another language could already hand you its dish names and
+  descriptions in yours, with the original underneath to point at — but the
+  heading above them stayed in the venue's own script. It reads the same way
+  now, in the jump-links along the top as well, with the original beneath it
+  and marked as the language it is in so a screen reader pronounces it. No
+  menu on the site carries a translation yet; this is the machinery being
+  finished rather than something changing on a page today.
+- **The bar pinned to the top of a chain's menu now talks about the branch you
+  are reading.** Scrolling down a chain's menu pins a slim strip with the
+  open/closed status and a call button. It read the venue's first branch, while
+  the card, the freshness note and every section's serving window read the one
+  nearest you — so on a chain the strip could say "Closed" over a page saying
+  the branch beside you is open. It follows the nearest branch now, and dials
+  that branch's own number where it publishes one.
+- **Deleting a profile now takes its cooking progress with it.** Everything
+  else that profile had — hearts, ratings, settings — was already removed, but
+  the ticks it left on a recipe's ingredients and steps stayed on the device
+  indefinitely, and could be picked up by a later profile minted with the same
+  internal id. They go with the rest now. Cook-mode ticks remain deliberately
+  absent from the backup file, which has not changed.
+- **An order line now shows the money the place actually charges in.** Every
+  line was recorded as New Zealand dollars whatever the venue's menu was priced
+  in, and the line's own price was printed with no currency at all — so a
+  London order would have read "$8.95" directly above a "£8.95" subtotal. No
+  venue on the site is priced in anything but NZD today, so nobody has seen
+  this; it is fixed before the first one is.
 - **A place is no longer called "Closed" on a day it never told us about.**
   Some venues publish six days and simply say nothing about the seventh, and
   the record had no way to write that down — so it either called that day shut

@@ -196,7 +196,11 @@ function noteRow(item) {
 function lineRow(item, collectMode) {
   const price = el("span", {
     className: "order-line-price",
-    textContent: item.price == null ? "—" : money(item.price * item.qty),
+    // The line's OWN currency, not the page's. The subtotal below already reads
+    // it (`g.currency`), so a line that formatted without one printed "$8.95"
+    // above a "£17.90" subtotal — the one place in the sheet where the two
+    // could disagree.
+    textContent: item.price == null ? "—" : money(item.price * item.qty, item.currency),
   });
 
   // What was asked for, read out the way you would say it at the counter —

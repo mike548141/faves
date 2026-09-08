@@ -359,8 +359,11 @@ type (recorded per the docs-as-code rule; no others planned).
 full-screen `<dialog>` built by `site/js/cook-ui.js` over whatever page you are
 on, offered from both the recipe page and the list's expanded detail wherever
 `steps` is non-empty. One step at a time, a "Step _n_ of _m_" counter, saturating
-Back/Next (no wrap) with arrow-key equivalents, and an ingredients panel that
-toggles without moving the step index. `site/js/cook.js` holds the step machine
+Back/Next (no wrap) with arrow-key equivalents, and the ingredients THIS step
+needs on the step itself. The **toggle** described here until 2026-09-08 went on
+2026-08-16: the panel is no longer a control, it is derived — `ingredientsForStep`
+matches the step's prose against the ingredient lines, and the panel is simply
+absent on a step that needs none. `site/js/cook.js` holds the step machine
 and a `navigator.wakeLock` lifecycle — request on open, re-acquire on every
 `visibilitychange` (the OS releases the lock when the page hides and never
 restores it), release on close — all dependency-injected and unit-tested.
@@ -622,8 +625,12 @@ resolver; `data.js` runs `resolveRecord()` on every record as it loads, so the
 rest of the app receives the same shape it always did: `item.price` is a number,
 out-of-season and retired dishes are already gone, `picks` never dangles. Only
 two things are added to the resolved record — `closure` (the folded lifecycle)
-and, where real history exists, `priceSeries`/`priceNext` for the future trend
-view. Time lives in the data and in that one module.
+and, where real history exists, `priceSeries`/`priceNext` — which **nothing
+reads**. This said "for the future trend view" until 2026-09-08; Theme 13 ruled
+on 2026-08-16 that there is no such surface, *"not 'not yet': not ever"*, so
+that phrase named a screen the house has decided against. The two fields are
+computed and unconsumed, and that is the current truth rather than a staging
+post. Time lives in the data and in that one module.
 
 The single exception where time reaches the screen is a **closure**
 (`closure-ui.js`): a badge on the card, a banner on the menu header, a badge on
@@ -986,9 +993,14 @@ each with their own hearts. A device-level registry `faves.profiles.v1`
 their KEY constant but read through `profileScopedStorage()`, which rewrites
 the key to `faves.p.<activeId>.<base>` (`scopeKey`). So a switch + `reload()`
 re-points the whole layer with no consumer rewrite. **Per-profile:** favourites,
-personal ratings, and *all* of settings (dietary/allergen prefs — safety-critical;
-ranking dials; reo language). **Shared/device:** the order tally (one order
-for the table) and
+personal ratings, *all* of settings (dietary/allergen prefs — safety-critical;
+ranking dials; reo language), and cook-mode ticks (`checklist.js`). That last
+one was missing from this list until 2026-09-08, and the omission was not
+cosmetic: `SCOPED_BASE_KEYS` — the list `migrate`, the backup export and sync
+all walk — deliberately EXCLUDES the checklist (ADR 0067 keeps ticks out of the
+export), and deleting a profile walked that same list and left its ticks behind.
+Deletion now walks a wider list; the export's exclusion is unchanged.
+**Shared/device:** the order tally (one order for the table) and
 the ephemeral Near-me origin. `migrate()` folds pre-profiles data into a default
 profile on upgrade (copies, doesn't move, so a briefly-cached old asset still
 works; idempotent). The switcher lives in the ⚙ Settings dialog; the menu/recipe
@@ -1165,8 +1177,10 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
   offers it, and the tap posts `{type:"SKIP_WAITING"}` and reloads on
   `controllerchange`. No unconditional `skipWaiting()`: that served new
   assets to a page still running old modules. Ignore the notice and the
-  worker activates on the next cold start. Settings → Your data → **Refresh
-  menus and app** is the escape hatch: clears the shell + data caches,
+  worker activates on the next cold start. Settings → **Refresh & reset** →
+  **Refresh menus and app** is the escape hatch (it is its own topic, not part
+  of "Your data" — Theme 15 split it out; ADR 0033): clears the shell + data
+  caches,
   unregisters the worker, reloads — refuses when offline, never touches
   `localStorage`.
 

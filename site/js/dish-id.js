@@ -95,8 +95,11 @@ export function eachDish(record) {
  * Returns `{ section, item }` or `null`. Ambiguity is not resolved here (the
  * first match wins, as it always did); `validate.py` refuses to ship data that
  * is ambiguous, which is the honest place to catch it.
+ *
+ * `byNameSlug` adds a fifth, weakest tier for callers resolving a LINK rather
+ * than an identity. See the block above it for why it is not the default.
  */
-export function findDish(record, ref) {
+export function findDish(record, ref, { byNameSlug = false } = {}) {
   if (typeof ref !== "string" || !ref) return null;
   const dishes = eachDish(record);
   const as = slug(ref);
@@ -107,6 +110,41 @@ export function findDish(record, ref) {
     const former = d.item?.formerIds;
     if (Array.isArray(former) && (former.includes(ref) || former.includes(as)))
       return d;
+  }
+  // LAST, AND OFF BY DEFAULT: the dish's own name, slugged. Nothing in the data
+  // is written this way — this tier exists for refs built OUTSIDE the record,
+  // which is to say for LINKS (roadmap `490/100`, defect 5).
+  //
+  // A cross-record `goesWith` chip is written "venue-id#Dish Name" and menu.js
+  // can only anchor it at `#dish-<slug(name)>`, because resolving it properly
+  // would mean fetching the other venue's record to render a chip. That anchor
+  // matched an element id only while every dish's id WAS its name's slug; 85 of
+  // 3,506 dishes now carry an explicit `dishId` that is something else, and for
+  // those the link dead-ended — the element did not exist and none of the four
+  // tiers above could recover it (reproduced 2026-09-08 against these modules:
+  // `findDish(record, "fish-and-chips")` returned null for a dish named "Fish
+  // and Chips" with `dishId: "fish-and-chips-mains"`). The same shape reaches
+  // any link shared before ADR 0051, which held only a name's slug.
+  //
+  // 🛑 IT IS OPT-IN, AND THE FIRST VERSION WAS NOT — which broke a real thing
+  // within the hour. `data.js` asks this resolver whether a hearted dish is
+  // still on the live menu, and tests/data-loader.js pins the case where the
+  // menu now prints the SAME NAME under a NEW id: that is a different dish
+  // (ADR 0051), the heart is stale, and the honest answer is "absent". An
+  // always-on name tier answers "present" and re-opens the collision ADR 0051
+  // exists to close. So identity questions — is this heart live, does this
+  // pick resolve, which row does this order line charge — get the four strict
+  // tiers, and only a caller resolving a LINK passes `byNameSlug`.
+  //
+  // Within the tier the first match wins, as everywhere here: `slug(name)` is
+  // not unique inside a venue (10 slugs across 22 rows, ADR 0051), and a link
+  // landing on the first of three "Cheeseburger" rows is the same answer the
+  // anchor gave before any of this.
+  if (byNameSlug) {
+    for (const d of dishes) {
+      const name = d.item?.name;
+      if (typeof name === "string" && slug(name) === as) return d;
+    }
   }
   return null;
 }

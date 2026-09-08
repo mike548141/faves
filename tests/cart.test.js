@@ -12,6 +12,7 @@ import {
   mergeItems,
   lineKey,
   normaliseNote,
+  orderTotals,
 } from "../site/js/cart.js";
 
 // A Map-backed stand-in for localStorage.
@@ -446,4 +447,42 @@ test("orderCount / orderTotal helpers are pure", () => {
   ];
   assert.equal(orderCount(items), 6);
   assert.equal(orderTotal(items), 35);
+});
+
+// —————————————— the currency a line is priced in (490/100 · 1) ——————————————
+//
+// A line's currency is stored ONCE, when it is added, and every later read —
+// the sheet's line price, the venue subtotal, the total, the shared link —
+// takes it from there. Until 2026-09-08 no caller passed one, so every line
+// stored "NZD" whatever the venue charged in; the venue subtotal read the
+// stored value and was therefore right, while the line above it formatted with
+// no currency at all and was therefore "$". Latent only because the corpus has
+// no non-NZD venue.
+//
+// This pins the MODEL half. The two call sites that were actually wrong are DOM
+// code (menu.js's row stepper, addons-ui.js's picker) and are driven by
+// addon_check.mjs against a GBP fixture — a unit test cannot see a missing
+// argument in a browser module.
+test("a line keeps the currency it was added in, through storage and totals", () => {
+  const s = fakeStorage();
+  const o = createOrder(s);
+  o.add({ venueId: "ldn", venueName: "Chip Shop", name: "Cod and chips", price: 8.95, currency: "GBP" });
+  o.add({ venueId: "ldn", venueName: "Chip Shop", name: "Mushy peas", price: 2, currency: "GBP" });
+
+  assert.deepEqual(o.items().map((i) => i.currency), ["GBP", "GBP"]);
+  // It survives the write, which is what a reload reads back.
+  assert.deepEqual(JSON.parse(s._raw()).map((i) => i.currency), ["GBP", "GBP"]);
+  // …and both the per-venue subtotal and the split total name it, rather than
+  // adding a British price into a New Zealand one.
+  assert.equal(o.groups()[0].currency, "GBP");
+  assert.deepEqual(orderTotals(o.items()), [{ currency: "GBP", total: 10.95 }]);
+});
+
+test("a line stored before currencies were passed still reads as NZD", () => {
+  // The back-compatibility half: a line written by an older build carries no
+  // `currency`, and must keep meaning what it meant rather than becoming
+  // undefined and formatting as a bare number.
+  const o = createOrder(fakeStorage(JSON.stringify([{ venueId: "kk", venueName: "KK", name: "Roti", price: 6, qty: 1 }])));
+  assert.equal(o.groups()[0].currency, "NZD");
+  assert.deepEqual(orderTotals(o.items()), [{ currency: "NZD", total: 6 }]);
 });

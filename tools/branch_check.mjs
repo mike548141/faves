@@ -139,6 +139,30 @@ const FIXTURES = [
   // browser can see that change. Without this the third of the three functions
   // the item names was measured, on 2026-08-19, to be covered by nothing.
   { id: "tj-katsu-lead-fixture", from: "tj-katsu", hours: [NEVER_OPEN, ALWAYS_OPEN], leadIsFirst: true },
+  // 490/100 defect 3. The PINNED COMPACT BAR — the strip that replaces this
+  // card once it scrolls away on a phone — read `r.hours`, the projected
+  // PRIMARY branch, while the card, the header caveat and every section's
+  // serving window resolve the NEAREST once an origin is known. So on a chain
+  // the bar could say "Closed" over a card saying the branch you are reading is
+  // open, and the bar's own comment claimed the opposite.
+  //
+  // Not closed: a lifecycle closure outranks the hours everywhere and would
+  // hide the exact disagreement this fixture exists to create. Branch 1 never
+  // opens, branch 2 always does, and the origin is branch 2's own coordinate —
+  // so at EVERY hour of every day the primary reads closed and the nearest
+  // reads open, and one number tells you which the bar followed.
+  {
+    id: "tj-katsu-origin-fixture",
+    from: "tj-katsu",
+    closed: false,
+    hours: [NEVER_OPEN, ALWAYS_OPEN],
+    // Two branches, so the card is a lead plus one row with no second step and
+    // nothing for the distance dial to drop — the disagreement under test, and
+    // none of the other machinery this file already covers on the seven-branch
+    // chains above.
+    keepBranches: 2,
+    originBranch: 1,
+  },
 ];
 
 // The states hours.js can produce. A chip carrying one of these is a claim
@@ -192,6 +216,26 @@ function parseArgs(argv) {
   }
   return opts;
 }
+
+/** The pinned compact bar (490/100 defect 3) and the card's lead, read together
+ *  — the two elements that must agree about which branch the page is about.
+ *  The bar starts `hidden` (an IntersectionObserver reveals it once the card
+ *  scrolls away), which changes nothing here: its text is built at render. */
+const barExpr = `(() => {
+  const bar = document.querySelector(".contact-bar");
+  const lead = document.querySelector(".contact-card-multi .contact-branch:not(.contact-branch-row)");
+  const leadChip = lead && lead.querySelector(".hours-badge");
+  const barChip = bar && bar.querySelector(".contact-bar-status");
+  return {
+    found: !!bar,
+    barState: barChip ? barChip.dataset.state ?? null : null,
+    barText: barChip ? barChip.textContent : null,
+    barPhone: (bar && bar.querySelector(".contact-bar-call")) ? bar.querySelector(".contact-bar-call").getAttribute("href") : null,
+    leadName: lead ? (lead.querySelector(".branch-name") || {}).textContent ?? null : null,
+    leadState: leadChip ? leadChip.dataset.state ?? null : null,
+    leadText: leadChip ? leadChip.textContent : null,
+  };
+})()`;
 
 /** Everything an assertion needs about the rendered branch card. */
 const snapshotExpr = `(() => {
@@ -315,6 +359,21 @@ async function checkVenue(driver, report, id, url, venue, spec = null) {
       (closed ? " — FIXTURE: permanently closed" : ""),
   );
 
+  // The viewer's captured location, or the absence of one. Written on every
+  // venue, not only the fixture that wants it: sessionStorage outlives a
+  // navigation, so a fixture that sets an origin would otherwise silently
+  // change the answer for every venue checked after it.
+  const originBranch = spec?.originBranch ?? null;
+  const origin = originBranch === null ? null : branches[originBranch];
+  await driver.cdpNavigate(url);
+  await untilPresent(async () => await driver.evalPage("!!document.body"), {
+    label: `${id}'s document to exist`,
+  });
+  await driver.evalPage(
+    origin
+      ? `sessionStorage.setItem("faves.origin.v1", ${JSON.stringify(JSON.stringify({ lat: origin.lat, lng: origin.lng }))}); true`
+      : `sessionStorage.removeItem("faves.origin.v1"); true`,
+  );
   await driver.cdpNavigate(url);
   await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
     label: `${id}'s branch card to render`,
@@ -481,11 +540,63 @@ async function checkVenue(driver, report, id, url, venue, spec = null) {
 
   // A fresh profile has no captured location, so the dial cannot have dropped
   // anything. If a note appears here, the dial is filtering on Infinity.
-  report.check(
-    `${id}: with no location captured, the distance dial hides nothing`,
-    s.dialNote === null,
-    `dialNote = ${JSON.stringify(s.dialNote)}`,
-  );
+  // Skipped where an origin IS captured (the 490/100 fixture): the dial then
+  // has real distances to work with and dropping a far branch is its job, so
+  // asserting a null note there would assert the feature away.
+  if (!origin) {
+    report.check(
+      `${id}: with no location captured, the distance dial hides nothing`,
+      s.dialNote === null,
+      `dialNote = ${JSON.stringify(s.dialNote)}`,
+    );
+  }
+
+  // --- (f) 490/100 defect 3: the pinned bar and the card agree ------------
+  // Only where an origin makes the question answerable. Without one, "nearest"
+  // is the primary by definition and every assertion below is vacuous — so
+  // they are not printed at all rather than padding the count with green that
+  // proves nothing.
+  if (origin) {
+    const bar = await driver.evalPage(barExpr);
+    const primary = branches[0];
+    report.check(
+      `${id}: the fixture actually disagrees — the primary is shut and the nearest is open`,
+      primary.hours && Object.keys(primary.hours).length === 0 &&
+        origin !== primary && Object.keys(origin.hours || {}).length === 7,
+      `primary "${primary.label}" has ${Object.keys(primary.hours || {}).length} day(s); ` +
+        `nearest "${origin.label}" has ${Object.keys(origin.hours || {}).length}`,
+    );
+    report.check(
+      `${id}: the pinned bar exists to be read at all`,
+      bar.found && bar.barState !== null,
+      `bar found=${bar.found}, status=${JSON.stringify(bar.barText)}`,
+    );
+    // NOT `=== "open"`: a segment ending at 24:00 reads "closing-soon" for the
+    // last half hour of the day, so an equality here would pass at 1pm and fail
+    // at 11:49pm — which is how it first ran. The time-independent fact is that
+    // the never-open primary can only ever produce "closed" and the always-open
+    // nearest can never produce it.
+    report.check(
+      `${id}: the pinned bar follows the NEAREST branch, not the primary`,
+      bar.barState !== null && bar.barState !== "closed",
+      `bar says ${JSON.stringify(bar.barText)} (state ${bar.barState}); ` +
+        `the primary branch is never open, the nearest never shut`,
+    );
+    report.check(
+      `${id}: …and it says the same thing as the card it floats above, word for word`,
+      bar.leadName === origin.label && bar.barState === bar.leadState && bar.barText === bar.leadText,
+      `bar ${JSON.stringify(bar.barText)} vs lead "${bar.leadName}" ${JSON.stringify(bar.leadText)}`,
+    );
+    // The number the bar dials. TJ Katsu publishes one number, on its primary
+    // branch, so this is the FALLBACK path — the assertion is that the bar
+    // still offers a call rather than going silent on a branch with no number
+    // of its own, which is the regression a naive per-branch read would ship.
+    report.check(
+      `${id}: the bar still offers a call on a branch that publishes no number`,
+      bar.barPhone !== null,
+      `href=${JSON.stringify(bar.barPhone)}; nearest "${origin.label}" publishes ${JSON.stringify(origin.phone ?? null)}`,
+    );
+  }
 
   // --- (c) one tap, and it is that branch's own detail --------------------
   if (s.rows.length) {
@@ -542,11 +653,19 @@ async function buildRecords(ids) {
     // the corpus's own rather than a hand-written miniature that could be wrong
     // in ways the real data never is. `spec.hours` overrides the first few
     // branches' hours where a fixture needs a clock-independent one.
-    const fixture = { ...real, id, lifecycle: { ...(real.lifecycle || {}), events: [CLOSED_EVENT] } };
+    // `closed: false` opts a fixture OUT of the injected closure: a closure
+    // outranks every branch's posted hours, so a fixture whose whole point is a
+    // disagreement between two branches' hours cannot also be shut.
+    const fixture = spec.closed === false
+      ? { ...real, id }
+      : { ...real, id, lifecycle: { ...(real.lifecycle || {}), events: [CLOSED_EVENT] } };
     if (spec.hours) {
       fixture.locations = (real.locations || []).map((b, i) =>
         i < spec.hours.length ? { ...b, hours: spec.hours[i] } : b,
       );
+    }
+    if (spec.keepBranches) {
+      fixture.locations = (fixture.locations || real.locations || []).slice(0, spec.keepBranches);
     }
     records.set(id, fixture);
     specs.set(id, spec);

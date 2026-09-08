@@ -33,9 +33,33 @@ import { safeStorage } from "./store.js";
 
 export const PROFILES_KEY = "faves.profiles.v1";
 
-// The base keys that are per-profile. Add one here when a new per-profile store
-// lands — this is the single list `migrate` copies forward and `remove` purges.
+// The per-profile stores that TRAVEL: `migrate` copies these forward, the
+// backup export writes one field per key per person (personal-data.js), and
+// sync merges them. Add a store here only if it should do all three.
+//
+// ⚠️ THIS IS NOT "every per-profile key", and the comment here said it was
+// until 2026-09-08 (roadmap `490/100`, defect 2). Cook-mode ticks are
+// per-profile — checklist.js reads through `profileScopedStorage()` like the
+// rest — and are deliberately OUTSIDE this list, because ADR 0067 and the
+// owner's 36g ruling ("if it isn't restored, it shouldn't be exported") keep
+// them out of the backup, and this list is what the export walks. Adding the
+// key here would purge the ticks and re-open the export in the same edit.
 export const SCOPED_BASE_KEYS = ["faves.favourites.v1", "faves.settings.v1", "faves.ratings.v1"];
+
+// checklist.js's own key, declared HERE so the purge below can name it without
+// importing checklist.js — which imports this module, and a cycle would leave
+// `profileScopedStorage` in its temporal dead zone at checklist.js's module
+// scope and break every page's boot. checklist.js re-exports it as
+// `CHECKLIST_KEY`, so there is still exactly one literal.
+export const CHECKLIST_BASE_KEY = "faves.checklist.v1";
+
+// What DELETING a profile has to remove: everything stored under that profile's
+// namespace, travelling or not. A store excluded from the export is still that
+// person's data sitting on the device after they are gone — and "make this
+// device look like the file" already treats it that way on a replace-import
+// (personal-data.js). Nothing but `remove` may use this list: it is deliberately
+// wider than what migrate copies and what the export carries.
+const PURGED_BASE_KEYS = [...SCOPED_BASE_KEYS, CHECKLIST_BASE_KEY];
 
 // The first profile's id is deterministic ("default") so two tabs migrating at
 // once converge on the same key instead of minting two rival profiles.
@@ -190,7 +214,7 @@ export function createProfiles(storage) {
       const profiles = reg.profiles.filter((p) => p.id !== id);
       const activeId = reg.activeId === id ? profiles[0].id : reg.activeId;
       reg = { ...reg, profiles, activeId };
-      for (const base of SCOPED_BASE_KEYS) {
+      for (const base of PURGED_BASE_KEYS) {
         try {
           storage.removeItem(scopeKey(id, base));
         } catch {
