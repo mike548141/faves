@@ -1,4 +1,4 @@
-# 0109 — A rule word may END a compound, never START one
+# 0110 — A rule word may END a compound, never START one
 
 **Status**: accepted
 **Date**: 2026-09-09

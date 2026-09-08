@@ -15,7 +15,7 @@
       every phone.
 
   ✅ **DELIVERED 2026-09-09 (session faves-o1)** — three of four halves are
-  settled; the fourth is an owner ask, so this stays `[ ]`. ADR 0109.
+  settled; the fourth is an owner ask, so this stays `[ ]`. ADR 0110.
 
   **RE-MEASURED FIRST, and the item's headline diagnosis does not survive.**
 
@@ -35,7 +35,7 @@
   does not contain. **This is a DATA gap, not a tagger gap**, and it needs a
   section note or an owner-directed read, not a rule.
 
-  **1 · The compound-word fix — DONE (ADR 0109).** Three tokens (`burger`,
+  **1 · The compound-word fix — DONE (ADR 0110).** Three tokens (`burger`,
   `muffin`, `nugget`) may now carry a prefix and must still END at the token
   (`\w*burgers?`). The CLOSING boundary is never opened. `cheeseburger`
   reaches the dairy rule as a spelled-out word, because `cheese\w*` also
@@ -68,7 +68,7 @@
   **2 · McDonald's — DONE, and "not checked" IS expressible.** The record is
   **names and photographs only**: 41 items, **no `desc` on any of them**, no
   ingredients, no prices, `verified: null`. The tagger got what words allow
-  (12 rows); nothing more is honestly reachable.
+  (11 rows, 13 tags); nothing more is honestly reachable.
   ✅ **The model can already say "not checked" — `needs: allergens` exists**,
   with a live renderer (`Allergen details unconfirmed. Ask the venue before
   ordering.`) and a precedent: Subway carries 21. So this is **not** the

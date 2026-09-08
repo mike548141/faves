@@ -255,7 +255,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [~] 🛑 [cook_check wedges on its DEFAULT recipe, deterministically, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/120-cook-check-wedges-on-its-default-recipe.md)
 - ✅ [✅ DONE 2026-08-17 (436041d) — the job is now repo invariants, and](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/130-the-guard-job-name-cannot-be-fixed-alone.md)
 - ⏳ [The "Dining" filter has no te reo, and the gloss on it is knowingly](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/140-the-dining-label-has-no-te-reo.md)
-- [~] 🔎 [The corpus is uniformly healthy, so a whole class of behaviour ships](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/150-the-corpus-holds-no-degenerate-state-to-test-against.md)
+- ✅ 🔎 [The corpus is uniformly healthy, so a whole class of behaviour ships](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/150-the-corpus-holds-no-degenerate-state-to-test-against.md)
 - ✅ [🚩 until() timeouts still exit 2, so a deleted element a check WAITS](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/160-until-timeouts-still-exit-2-as-a-transport-error.md)
 - ✅ [A tolerant OR-list selector can pass with every named target gone](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/170-a-tolerant-selector-can-pass-with-every-named-target-gone.md)
 - ✅ 🔎 [A direct push to main can never satisfy a required status check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/180-a-direct-push-to-main-can-never-satisfy-a-required-check.md)
