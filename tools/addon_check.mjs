@@ -84,6 +84,17 @@
 // between the stored line and the rendered one; on the NZD venue that is a
 // no-op, because NZD is already what it charges in.
 //
+// AND SINCE 2026-09-08, WHETHER A SECTION HEADING IS TRANSLATED (roadmap
+// `490/100`, defect 4). `validate.py` has accepted `translations` on a section
+// since ADR 0044 and ARCHITECTURE.md says why — "a heading is read before any
+// dish under it" — and nothing rendered it: a translated menu handed an English
+// reader translated dish names under an untranslated heading. A third overlay
+// declares the kebab record's canonical language as Thai and writes its first
+// heading in it, which is the only way to see this at all (0 records carry a
+// section translation). It lives in THIS file, rather than a new one, because
+// this is the only browser check that already reads `.section-title` and
+// `.section-link` — it does so for the `addOnsOnly` assertion above.
+//
 // WHAT A GREEN RUN HERE STILL CANNOT TELL YOU. It never proves the tagging is
 // right — that the sauce called "Garlic yogurt" really does contain dairy. That
 // is a claim about food, made by whoever transcribed the menu, and no browser
@@ -235,6 +246,25 @@ const sheetExpr = `(() => {
   };
 })()`;
 
+/** One printed section's heading, its jump-nav chip and its anchor (490/100·4).
+ *  Every string is read WITH its `lang`, because an untagged passage in another
+ *  script is a WCAG 2.2 AA 3.1.2 failure and reads identically without it. */
+const headingExpr = (sectionId) => `(() => {
+  const sec = document.getElementById(${JSON.stringify(`section-${sectionId}`)});
+  if (!sec) return { found: false, ids: [...document.querySelectorAll(".menu-section")].map((s) => s.id) };
+  const h = sec.querySelector(".section-title");
+  const alt = sec.querySelector(".section-title-alt");
+  const link = [...document.querySelectorAll(".section-link")].find((a) => a.getAttribute("href") === "#" + sec.id);
+  return {
+    found: true,
+    heading: h ? h.textContent : null,
+    headingLang: h ? h.getAttribute("lang") : null,
+    alts: alt ? [...alt.querySelectorAll("span[lang]")].map((s) => [s.textContent, s.getAttribute("lang")]) : [],
+    link: link ? link.textContent : null,
+    linkLang: link ? link.getAttribute("lang") : null,
+  };
+})()`;
+
 /** Tick the nth sauce by its visible label, through a real mouse click. */
 const sauceSelector = (name) => `.addon-option`;
 
@@ -259,6 +289,18 @@ const SILENT_OPTIONS = ["Spinach", "Tomatoes"];
 // and the render path under test are the corpus's own.
 const GBP_ID = `${VENUE}-gbp-fixture`;
 const GBP_SYMBOL = "£";
+
+// --- the section-heading fixture (490/100 · 4) -----------------------------
+// `validate.py` has accepted `translations` on a SECTION since ADR 0044 and
+// ARCHITECTURE.md says why — "a heading is read before any dish under it" —
+// and menu.js rendered `section.section` raw until 2026-09-08, so a translated
+// menu handed an English reader translated dishes under an untranslated
+// heading. 0 records carry one, hence a fixture: the same kebab record served
+// back with its canonical language declared as Thai and its first heading
+// written in it, which is the shape ADR 0044 is actually for.
+const LANG_ID = `${VENUE}-lang-fixture`;
+const LANG_CANONICAL = "ซุป"; // "ซุป" — soup
+const LANG_ENGLISH = "Soups";
 
 // `li.dish` carries the SEARCH-FOLDED name (menu.js `foldSearchText`), not the
 // menu's own capitalisation — lower-cased with macrons folded. Addressing a
@@ -296,8 +338,25 @@ async function run(opts) {
   if (!group) throw new Error(`${opts.id} has no "${SAUCES}" add-on group — pick another --id`);
   if (typeof group.max !== "number") throw new Error(`the "${SAUCES}" group has no max — this check exists to prove the cap`);
 
+  // The first section that is actually printed — an `addOnsOnly` one is not
+  // rendered at all, so translating its heading would assert nothing.
+  const langSection = (venue.menu || []).find((s) => !s.addOnsOnly);
+  if (!langSection?.sectionId) throw new Error(`${opts.id} has no printed section with a sectionId`);
   const overlay = new Map([
     [`/data/restaurants/${GBP_ID}.json`, JSON.stringify({ ...venue, id: GBP_ID, currency: "GBP" })],
+    [
+      `/data/restaurants/${LANG_ID}.json`,
+      JSON.stringify({
+        ...venue,
+        id: LANG_ID,
+        language: "th",
+        menu: venue.menu.map((s) =>
+          s === langSection
+            ? { ...s, section: LANG_CANONICAL, translations: { section: { en: LANG_ENGLISH } } }
+            : s,
+        ),
+      }),
+    ],
   ]);
   const { server, port } = await startServer(opts.port, SITE, overlay);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-addon-check-"));
@@ -697,6 +756,58 @@ async function run(opts) {
       gbp.subtotals.length > 0 && gbp.subtotals.every((t) => t.startsWith(GBP_SYMBOL)),
       `lines ${JSON.stringify(gbp.lines)} · subtotals ${JSON.stringify(gbp.subtotals)}`,
     );
+
+    // --- 490/100 · 4: a section heading is translated too -----------------
+    // First the CONTROL, on the real record, which carries no translations at
+    // all: the heading is exactly the string in the file, tagged with the
+    // record's OWN language (`en-NZ` — the truth, and what a dish name already
+    // does), and there is no second line under it. Without this, a build that
+    // rendered an alternates line where none exists — or that translated
+    // everything — passes everything below.
+    await cdp.send("Page.navigate", { url }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(headingExpr(langSection.sectionId))).found, {
+      label: `${opts.id} to render its own section heading`,
+    });
+    const ownHeading = await driver.evalPage(headingExpr(langSection.sectionId));
+    report.check(
+      "a section with no translations renders its own heading, unchanged, and no second line",
+      ownHeading.found && ownHeading.heading === langSection.section && ownHeading.alts.length === 0 &&
+        ownHeading.headingLang === "en-NZ",
+      `${JSON.stringify(ownHeading.heading)} lang=${JSON.stringify(ownHeading.headingLang)} · ${ownHeading.alts.length} alt(s)`,
+    );
+
+    const langUrl = `http://127.0.0.1:${port}/restaurant.html?id=${LANG_ID}`;
+    await cdp.send("Page.navigate", { url: langUrl }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(headingExpr(langSection.sectionId))).found, {
+      label: `${LANG_ID} to render the translated section`,
+    });
+    const tr = await driver.evalPage(headingExpr(langSection.sectionId));
+    report.check(
+      "a translated heading leads in the reader's language, not the venue's script",
+      tr.heading === LANG_ENGLISH && tr.headingLang === "en",
+      `${JSON.stringify(tr.heading)} lang=${JSON.stringify(tr.headingLang)}`,
+    );
+    report.check(
+      "…with the canonical heading beneath it, TAGGED — WCAG 3.1.2, not decoration",
+      tr.alts.length === 1 && tr.alts[0][0] === LANG_CANONICAL && tr.alts[0][1] === "th",
+      JSON.stringify(tr.alts),
+    );
+    report.check(
+      "the jump-nav chip says the same thing as the heading it jumps to",
+      tr.link === LANG_ENGLISH && tr.linkLang === "en",
+      `${JSON.stringify(tr.link)} lang=${JSON.stringify(tr.linkLang)}`,
+    );
+    // The reason translating a heading is safe at all (ADR 0058): the anchor is
+    // the STORED id, so the words are display text and nothing links to them.
+    // `found` is `getElementById("section-<sectionId>")`, so the fact is already
+    // established — restated because it is the load-bearing one and should not
+    // hide inside a helper.
+    report.check(
+      "…and the anchor is unmoved by it — the id, never the words (ADR 0058)",
+      tr.found,
+      `#section-${langSection.sectionId} still resolves with the heading in another language`,
+    );
+
     return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();

@@ -1778,6 +1778,9 @@ function render(r) {
   const servedOrigin = recallOrigin();
   const servedTz = venueTimezone(r, servedOrigin);
   const servedHours = venueHours(r, servedOrigin);
+  // What this record's canonical strings are written in — the same value each
+  // dish row resolves for itself, read once here for the section headings.
+  const venueLang = venueLanguage(r);
   const servedNow = nowIn(servedTz);
   for (const section of r.menu) {
     // A section whose rows are all offered as add-ons is not shown twice
@@ -1792,8 +1795,32 @@ function render(r) {
     // has already failed validate.py's gate, and exists so one missing field
     // costs a link rather than the whole page. Same reasoning as `dish_id()`.
     const id = `section-${section.sectionId || slug(section.section)}`;
+    // The heading in the reader's language where the record offers one (ADR
+    // 0044), and every other rendering beneath it — exactly what a dish's name
+    // and description already do. `validate.py` has accepted `translations` on a
+    // section since ADR 0044 and ARCHITECTURE.md says why ("a heading is read
+    // before any dish under it"); nothing rendered it until 2026-09-08, so a
+    // Thai menu handed an English reader translated dishes under an
+    // untranslated heading (roadmap `490/100`, defect 4).
+    //
+    // Safe to translate BECAUSE of ADR 0058: the anchor above comes from the
+    // stored `sectionId`, so the words in the heading are display text and
+    // nothing links to them. That is exactly why a dish's `name` is NOT
+    // translated in the same sense — its slug is the dish's identity.
+    // For the ~all records carrying no translations, `lead.text` IS
+    // `section.section` and `others` is empty, so the markup does not move.
+    const secLead = preferred(section, "section", venueLang) ?? {
+      text: section.section,
+      lang: venueLang,
+    };
+    const secOthers = alternates(section, "section", venueLang);
     navScroll.append(
-      el("a", { className: "section-link", href: `#${id}`, textContent: section.section })
+      el("a", {
+        className: "section-link",
+        href: `#${id}`,
+        lang: secLead.lang,
+        textContent: secLead.text,
+      })
     );
     const dishes = el("ul", { className: "dish-list" });
     for (const item of section.items)
@@ -1834,11 +1861,28 @@ function render(r) {
         ])
       );
     }
+    // The other renderings sit under the heading, above the notes — the same
+    // place, and the same shape, as a dish's `.dish-name-alt` line. `lang` on
+    // each is WCAG 2.2 AA 3.1.2, not decoration: unmarked, a screen reader
+    // pronounces a Thai heading with English rules.
+    const secAlt = secOthers.length
+      ? el(
+          "p",
+          { className: "section-title-alt" },
+          secOthers
+            .flatMap((n, i) => [
+              i ? el("span", { className: "dish-name-sep", "aria-hidden": "true", textContent: " · " }) : null,
+              el("span", { lang: n.lang, textContent: n.text }),
+            ])
+            .filter(Boolean)
+        )
+      : null;
     const sec = el("section", { className: "menu-section", id }, [
-      el("h2", { className: "section-title", textContent: section.section }),
+      el("h2", { className: "section-title", lang: secLead.lang, textContent: secLead.text }),
+      secAlt,
       ...notes,
       dishes,
-    ]);
+    ].filter(Boolean));
     sectionEls.push(sec);
     menuWrap.append(sec);
   }

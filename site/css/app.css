@@ -4274,6 +4274,17 @@ body.faves-view .to-top {
 .dish-name-sep {
   opacity: 0.55;
 }
+/* The same line under a SECTION heading (ADR 0044 — the heading is read before
+   any dish under it). Same treatment as the dish line above deliberately: it is
+   the same claim about the same reader, one level up. The margin closes the gap
+   the h2's own bottom margin would otherwise leave between a heading and its
+   own other rendering. */
+.section-title-alt {
+  margin: -2px 0 var(--space-2);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
 .dish-tags {
   display: flex;
   flex-wrap: wrap;

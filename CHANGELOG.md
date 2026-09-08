@@ -9,6 +9,14 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A menu section's heading is now translated like the dishes under it.** A
+  menu written in another language could already hand you its dish names and
+  descriptions in yours, with the original underneath to point at — but the
+  heading above them stayed in the venue's own script. It reads the same way
+  now, in the jump-links along the top as well, with the original beneath it
+  and marked as the language it is in so a screen reader pronounces it. No
+  menu on the site carries a translation yet; this is the machinery being
+  finished rather than something changing on a page today.
 - **The bar pinned to the top of a chain's menu now talks about the branch you
   are reading.** Scrolling down a chain's menu pins a slim strip with the
   open/closed status and a call button. It read the venue's first branch, while
