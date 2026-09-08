@@ -737,6 +737,58 @@ PROBES = {
         # not thereby wheat. A rice pudding is a rice pudding.
         ("Rice pudding", set(), {"contains-gluten", "contains-egg"}),
     ],
+    # (a2) COMPOUND TAILS (2026-09-09, roadmap 080/160). A rule word may sit at
+    # the END of a longer word — "Cheeseburger" — and the leading `\b` refused
+    # every one of them. Each line below is a real corpus row.
+    "a rule word at the end of a compound is read": [
+        ("Cheeseburger", {"contains-gluten", "contains-dairy"}, set()),
+        ("Double Cheeseburger", {"contains-gluten", "contains-dairy"}, set()),
+        ("Hamburger", {"contains-gluten"}, set()),
+        ("Schnitzburger", {"contains-gluten"}, set()),
+        ("Sausage & Egg McMuffin", {"contains-gluten"}, set()),
+        ("Chicken McNuggets (6 pack)", {"contains-gluten"}, set()),
+    ],
+    # (a3) 🛑 THE DANGEROUS HALF, AND THE ONLY REASON (a2) IS ALLOWED TO EXIST.
+    # A compound tail opens the word's HEAD. Opening its TAIL instead — or
+    # opening the head on a token that is merely a common English ENDING —
+    # produces a false allergen warning, and on three of these rows it lands on
+    # exactly the dish the reader was hunting for. Every string here is lifted
+    # from the real corpus with the count `--compounds` reports, so a widening
+    # that breaks one of them breaks a row that actually ships.
+    #
+    # Each entry names which boundary would have to fail for it to break:
+    #   TAIL  — the token starts the word (eggplant, Bundaberg, edamame)
+    #   HEAD  — the token ends the word (kale, buckwheat, kewpie)
+    "a compound tail does not open the other boundary": [
+        # TAIL: `egg` — the case ADR 0025's own comment names, 12 corpus rows.
+        ("Eggplant parmigiana", set(), {"contains-egg"}),
+        ("Grilled eggplants", set(), {"contains-egg"}),
+        # TAIL: `bun` — 4 corpus rows, and the reason `bun` is NOT a tail even
+        # though it sits in the same rule as `burger`, which is.
+        ("Bundaberg Ginger Beer", set(), {"contains-gluten"}),
+        ("A bunch of grapes", set(), {"contains-gluten"}),
+        # TAIL: `edam` inside `edamame` — 7 rows, and it is a soy bean.
+        ("Edamame beans", set(), {"contains-dairy"}),
+        # HEAD: `ale` — 24 rows of kale/pale/royale/cardinale/vale. The single
+        # widening that would do the most damage in this corpus.
+        ("Kale and quinoa salad", set(), {"contains-gluten"}),
+        ("Chook Royale", set(), {"contains-gluten"}),
+        # HEAD: `wheat` and `flour`. Buckwheat and cornflour are BOTH gluten
+        # free, so this is ADR 0097's harm — a false gluten warning on the row
+        # a coeliac is specifically looking for — not an ordinary over-warning.
+        ("Buckwheat soba noodles", set(), {"contains-gluten"}),
+        ("Cornflour dusted squid", {"contains-shellfish"}, {"contains-gluten"}),
+        # HEAD: `pie` inside `kewpie`, which is Japanese mayonnaise. The egg is
+        # real and is asserted, so a tool that had stopped matching cannot pass.
+        ("Kewpie mayonnaise", {"contains-egg"}, {"contains-gluten"}),
+        # TAIL: `katsu` inside `katsuobushi`, which is dried bonito — no wheat.
+        # This one is load-bearing for the tail that was REMOVED: see the
+        # tonkatsu note in tag_allergens.py.
+        ("Katsuobushi flakes", {"contains-fish"}, {"contains-gluten"}),
+        # TAIL: `cheese` inside `cheeseless`, which is why `cheeseburger` is
+        # spelled out in the dairy rule rather than reached by `cheese\\w*`.
+        ("Cheeseless pizza base", {"contains-gluten"}, {"contains-dairy"}),
+    ],
     # (b) The plural, once, for every rule.
     "a rule word matches its own plural": [
         ("Corn Cheese Toastie", {"contains-gluten"}, set()),
@@ -940,12 +992,51 @@ BREAKERS = {
         ["the eight missing food words are read",
          "a rule word matches its own plural"]),
     "the nugget rule word removed": (
-        [(r"|schnitzel|katsu|tempura|nugget)\b", r"|schnitzel|katsu|tempura)\b")],
+        [(r"|schnitzel|katsu|tempura|\w*nugget)\b", r"|schnitzel|katsu|tempura)\b")],
         ["the eight missing food words are read",
          "a rule word matches its own plural"]),
     "the sando rule word removed": (
-        [(r"\b(buns?|burgers?|sandwich|sando|toast|", r"\b(buns?|burgers?|sandwich|toast|")],
+        [(r"\b(buns?|\w*burgers?|sandwich|sando|toast|", r"\b(buns?|\w*burgers?|sandwich|toast|")],
         ["the eight missing food words are read"]),
+    # --- compound tails (2026-09-09, roadmap 080/160) -----------------------
+    # Reverting each tail must fail the group that reads it, and NOTHING else.
+    "the burger compound tail reverted": (
+        [(r"\b(buns?|\w*burgers?|sandwich", r"\b(buns?|burgers?|sandwich")],
+        ["a rule word at the end of a compound is read"]),
+    "the muffin compound tail reverted": (
+        [(r"brownies?|\w*muffins?|scones?", r"brownies?|muffins?|scones?")],
+        ["a rule word at the end of a compound is read"]),
+    "the nugget compound tail reverted": (
+        [(r"|schnitzel|katsu|tempura|\w*nugget)\b", r"|schnitzel|katsu|tempura|nugget)\b")],
+        ["a rule word at the end of a compound is read"]),
+    "the cheeseburger dairy word removed": (
+        [(r"\b(cheese|cheesy|cheeseburgers?|butter", r"\b(cheese|cheesy|butter")],
+        ["a rule word at the end of a compound is read"]),
+    # 🛑 THE DANGEROUS BREAKERS. These do not remove a rule — they WIDEN one,
+    # the way a future session reaching for "just drop the boundary" would, and
+    # the absence group above has to catch every one. A widening that nothing
+    # refuses is how `eggplant` gets an egg warning.
+    "the tail boundary opened on egg (eggplant)": (
+        [(r'("contains-egg", "STATED", "names egg", r"\beggs?\b"',
+          r'("contains-egg", "STATED", "names egg", r"\begg\w*"')],
+        ["a compound tail does not open the other boundary"]),
+    "the tail boundary opened on bun (Bundaberg)": (
+        [(r"\b(buns?|\w*burgers?|sandwich", r"\b(bun\w*|\w*burgers?|sandwich")],
+        ["a compound tail does not open the other boundary"]),
+    "the head boundary opened on ale (kale)": (
+        [(r"\b(beer|lager|ale|stout|pilsner|porter|ipa|apa)\b",
+          r"\b(beer|lager|\w*ale|stout|pilsner|porter|ipa|apa)\b")],
+        ["a compound tail does not open the other boundary"]),
+    "the head boundary opened on wheat (buckwheat)": (
+        [(r"\b(bread|breaded|flour|wheat|barley", r"\b(bread|breaded|flour|\w*wheat|barley")],
+        ["a compound tail does not open the other boundary"]),
+    "the head boundary opened on pie (kewpie)": (
+        [(r"sandwich|sando|toast|toastie|pies?|cakes?",
+          r"sandwich|sando|toast|toastie|\w*pies?|cakes?")],
+        ["a compound tail does not open the other boundary"]),
+    "the tail boundary opened on cheese (cheeseless)": (
+        [(r"\b(cheese|cheesy|cheeseburgers?|butter", r"\b(cheese\w*|cheesy|butter")],
+        ["a compound tail does not open the other boundary"]),
     # The Yorkshire pair, one breaker each. Deleting the gluten rule must NOT
     # take the egg tag with it and vice versa — that is what "two rules, one
     # fact" buys, and a single rule emitting both tags would pass one of these
