@@ -22,12 +22,30 @@ store: never served, never precached, never referenced from `site/`.
 ────────────────────────────────────────────────────────────────────────────
 THREE RULES THAT ARE NOT NEGOTIABLE, and the reasons are not stylistic.
 
-1. NO LOCATION. EVER. These photographs were taken in the owner's kitchen and
-   137 of 183 carry EXIF GPS clustered inside one 73 m × 51 m box — his home.
-   `source` records the file and the capture DATE and nothing else. A product
-   record carrying lat/lng would publish a private address to a PUBLIC repo,
-   and a date plus a position is a movement record. The schema has no field
-   for it and this validator rejects one if it appears.
+1. NO COORDINATE IN A PRODUCT RECORD, and no position derived from a
+   photograph taken at a PRIVATE ADDRESS. These photographs were taken in the
+   owner's kitchen and 137 of 183 carry EXIF GPS clustered inside one
+   73 m × 51 m box — his home. `source` records the file and the capture DATE.
+   A product record carrying lat/lng would publish a private address to a
+   PUBLIC repo, and a date plus a position is a movement record. The schema
+   has no field for a number and this validator rejects every spelling of one.
+
+   🛑 READING GPS AT INTAKE IS UNTOUCHED AND MUST CONTINUE. `intake_exif.py`
+   reads it for two live jobs — it sorts loose photographs to the right venue
+   without trusting the filename, and it is positive evidence of
+   `verifiedBy: in-store`. What enters the repo is the DERIVED fact (which
+   venue; that someone stood there), never the number. This paragraph exists
+   because the rule used to read "NO LOCATION. EVER.", which a session could
+   over-apply into "stop reading GPS" and silently break that harvest.
+
+   WHERE A PRODUCT WAS SEEN may be recorded as a VENUE REFERENCE or a SHOP
+   NAME — never a raw coordinate. A shop is a business and this repo publishes
+   facts about businesses by the hundred; the owner's kitchen is not one.
+   🎯 The positive half is NOT BUILT: there is no such key in SOURCE_KEYS
+   today, because there are zero in-shop photographs to shape it against. The
+   ban on a number below is the half that ships. Superseded wording and the
+   open fork: ADR 0115 (which supersedes ADR 0090's rule 1 in full), roadmap
+   item 500/060.
 
 2. NO EATING EVENTS. This is a store of PRODUCTS, not of meals. "Mike had this
    for lunch on Tuesday" is health-adjacent personal data about a named person
@@ -161,8 +179,12 @@ CITABLE = {
     "allergens", "ingredients", "nutrition", "identifiers", "manufacturer",
     "origin", "storage", "pack", "servings",
 }
-# Deliberately closed and deliberately WITHOUT lat/lng or any place field —
-# see rule 1 above. `kind` names how the fact reached us.
+# Deliberately closed and deliberately WITHOUT lat/lng — see rule 1 above. It
+# also has no key for WHERE a product was seen: rule 1 now permits that as a
+# venue reference or a shop name, but the key is unbuilt because no in-shop
+# photograph exists to shape it against (ADR 0115; ADR 0080 Decision 4 — a
+# shape recorded before its first instance is a hypothesis). `kind` names how
+# the fact reached us.
 SOURCE_KEYS = {"kind", "files", "burst", "captured", "read"}
 SOURCE_KINDS = {
     "own-photo",       # the owner photographed the packet himself
@@ -320,13 +342,21 @@ def validate(path: Path, problems: list[str]) -> dict | None:
             if src.get(k) and not DATE_RE.match(str(src[k])):
                 err(problems, rid, f"source.{k} must be YYYY-MM-DD")
 
-    # Rule 1, enforced rather than trusted. A location can only arrive by
-    # someone adding a field, and every spelling of it is refused here.
+    # Rule 1's NEGATIVE half, enforced rather than trusted: no coordinate, in
+    # any spelling. A number can only arrive by someone adding a field, and
+    # every spelling of it is refused here. The positive half — where a product
+    # was seen, as a venue reference or a shop name — is deliberately unbuilt
+    # (ADR 0115); when it lands it must stay on this side of the line, because
+    # once a record may hold a number this check can no longer tell a shop's
+    # position from a kitchen's.
     blob = json.dumps(rec).lower()
     for banned in ("\"lat\"", "\"lng\"", "\"latitude\"", "\"longitude\"", "\"gps\"", "\"coords\""):
         if banned in blob:
-            err(problems, rid, f"{banned} is present — these photographs were taken "
-                               "at a private address and this repo is public (rule 1)")
+            err(problems, rid, f"{banned} is present — a product record never carries a "
+                               "coordinate: these photographs were taken at a private "
+                               "address and this repo is public. Where a product was "
+                               "seen goes as a venue reference or a shop name, never a "
+                               "number (rule 1, ADR 0115)")
 
     # An address may appear in exactly ONE place: `manufacturer.address`, which
     # is a factory printed on the back of a retail packet. Anywhere else, a

@@ -226,6 +226,18 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [28b — A second price has nowhere to live](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/020-28b-a-second-price-has-nowhere-to-live.md)
 - [ ] 🎯 [28e — OWNER RULED 2026-08-16: yes, Faves may ask who the reader is.](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/030-28e-owner-ruled-2026-08-16-yes-faves-may-ask-w.md)
 - [ ] [28e (original filing) — eligibility is unstated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/040-28e-original-filing-eligibility-is-unstated.md)
+- [ ] [28h — The variant enumerator: nothing else here can be sized without](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/050-28h-the-variant-enumerator-nothing-can-be-plan.md)
+- [ ] 🎯 [28i — The ruling cannot be built for a protein ladder without one](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/060-28i-the-ruling-cannot-be-built-for-a-protein-l.md)
+- [ ] 🎯 [28j — What happens to an existing heart on "Large Butter Chicken"](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/070-28j-what-happens-to-an-existing-heart-on-large.md)
+- [ ] [28k — A group that SELECTS a variant: schema only, no data migrated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/080-28k-a-group-that-selects-a-variant-schema-only.md)
+- [ ] [28l — The absorption mechanics, and the gate that must exist BEFORE a](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/090-28l-the-absorption-mechanics-and-the-gate-that.md)
+- [ ] [28m — Render a selects group, and put its choice on the order line](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/100-28m-render-a-selects-group-and-put-its-choice.md)
+- [ ] [28n — Convert the prose size ladders: additive, and no id moves](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/110-28n-convert-the-prose-size-ladders-additive-no.md)
+- [ ] [28o — Merge the 63 ladders that differ only by name and price](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/120-28o-merge-the-63-ladders-that-differ-only-by-n.md)
+- [ ] [28p — The 70 ladders a human must rule on, one at a time](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/130-28p-the-70-ladders-a-human-must-rule-on-one-at.md)
+- [ ] [28q — An add-on option has no id, and this migration is what makes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/140-28q-an-add-on-option-has-no-id-and-this-migrat.md)
+- [ ] [28r — The intake rule: when is a choice a group, and when is it two](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/150-28r-the-intake-rule-when-is-a-choice-a-group-a.md)
+- [ ] [28s — The checks that would stay GREEN while being wrong](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/160-28s-the-checks-that-would-stay-green-while-bei.md)
 
 ## Theme 24 — cuisines the collection does not cover (owner-raised 2026-08-16)
 
@@ -271,6 +283,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [The Python gates print no tree line, so CLAUDE.md's "EVERY check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/260-the-python-gates-print-no-tree-line.md)
 - [ ] [🚩 The machine-side half of the 2026-08-17 force-push ruling does not](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
 - ✅ 🛑 [An unresolved merge conflict shipped to a PUBLIC main and stood](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/280-a-merge-conflict-shipped-to-a-public-main-and-no-gate-saw-it.md)
+- [ ] 🔎 [A gate that is on the verify list but not in CI went red on main,](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/290-a-gate-not-in-ci-went-red-on-main-and-nobody-saw-it.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 

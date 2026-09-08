@@ -99,3 +99,58 @@
   🎯 **Owed before build: a decomposition into parts**, and a statement of
   what happens to an existing heart on "Large Butter Chicken" the day the
   shape changes. Do not migrate data until that is written down.
+
+  ---
+
+  ✅ **DECOMPOSED 2026-09-09 (session faves-p1-sizes-plan). Written down, not
+  started** — this item stays `- [ ]`, and no byte of `site/data/`, `data/` or
+  `site/js/` moved. The twelve parts are `28h`–`28s` in
+  [Theme 28](../310-theme-28-one-dish-or-three-sizes-portions-and/), which is
+  the theme that owns the shape:
+
+  | part | what | effort |
+  |---|---|---|
+  | `310/050` **28h** | the variant enumerator — nothing else can be sized without it | `[M]` |
+  | `310/060` **28i** | 🎯 a `selects` option must be able to **add** a dietary claim, and ADR 0048 forbids it | `[design]` |
+  | `310/070` **28j** | 🎯 what happens to an existing heart | `[design]` |
+  | `310/080` **28k** | `kind: selects` in the schema, no data migrated | `[M]` |
+  | `310/090` **28l** | the absorption mechanics and the gate, before any row moves | `[M]` |
+  | `310/100` **28m** | render a `selects` group | `[M]` |
+  | `310/110` **28n** | convert the 336 prose ladders — additive, no id moves | `[L]` |
+  | `310/120` **28o** | merge the 63 mechanical split-row ladders | `[L]` |
+  | `310/130` **28p** | the 70 that need a human, one at a time | `[L]` |
+  | `310/140` **28q** | an add-on option has no id, and this makes it expensive | `[M]` |
+  | `310/150` **28r** | the intake rule, written down | `[S]` |
+  | `310/160` **28s** | the checks that would stay GREEN while being wrong | `[M]` |
+
+  🛑 **One of `28s`'s findings belongs in this item's own summary, because it
+  is an inversion rather than a gap.** `validate.py`'s `check_twin_allergens`
+  is the only check that compares one dish's allergen tags against another
+  row's, and it joins on the **duplicate display name**. The merge removes the
+  duplicate names *and* reduces tags to the sibling intersection in one
+  operation — so the check goes silent at the exact moment the fault it exists
+  to catch is applied as policy, and the run reads cleaner. It needs a second
+  join (base dish ↔ its `selects` options) landing with `28k`.
+
+  🛑 **Two corrections to this item's own sizing, both measured at `e50c0ee`
+  and both material.**
+  1. **"348 size-ladder rows" does not reproduce.** `find_addons.py --quiet`
+     reports **336 `size-ladder` offers on 187 distinct dish rows across 11
+     venues**; **363** is the tool's own *Theme 28b ownership total*
+     (336 + `diet-substitution-price` 16 + `per-head` 11), which is why the
+     earlier draft's 363 was right for the wrong reading. No combination of
+     the tool's twelve class tallies sums to 348 (checked over all 4,095
+     subsets). *"665 prose offers over 36 venues"* reproduces exactly.
+  2. **🔑 The sentence *"hearts, ratings, saved orders and price history all
+     currently join to the row that is about to stop being a dish"* is FALSE
+     of those 336 rows and TRUE of a different population this item never
+     counted.** A prose ladder is **one row with one `dishId`** — converting
+     it retires nothing. The rows whose ids actually disappear are the ones
+     **already split into separate dishes**, and no tool in the repo counts
+     them: **133 groups / 381 rows / 21 venues / 248 `dishId`s surrendered**
+     (78 protein, 47 size, 8 size × protein). Of those, 57 price-history rows
+     and 3 image-provenance rows already join in, and 7 of the corpus's 40
+     `picks` name a ladder row. So the migration is **smaller than feared in
+     the half this item measured and larger than described in the half it did
+     not** — and the split is what makes it decomposable at all: `28n` is
+     additive and safe, `28o`/`28p` are the real migration.
