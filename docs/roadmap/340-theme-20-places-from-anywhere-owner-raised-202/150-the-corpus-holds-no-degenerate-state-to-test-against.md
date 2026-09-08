@@ -1,4 +1,4 @@
-- [ ] 🔎 **The corpus is uniformly healthy, so a whole class of behaviour ships
+- [~] 🔎 **The corpus is uniformly healthy, so a whole class of behaviour ships
       unexercised** `[M][tools]` — found 2026-08-19 while shipping the branch
       card's closure precedence.
 
@@ -35,3 +35,7 @@
   the outside.
 
 [ADR 0047]: ../../decisions/0047-the-app-ships-only-what-it-renders.md
+
+  🔒 **CLAIMED 2026-09-09 (session faves-o1, orchestrating)** — delivered by
+  a sub-agent in its own worktree (`faves-o1-degenerate-fixtures`, branch
+  `degenerate-fixtures`), landing by PR so CI runs before the merge.

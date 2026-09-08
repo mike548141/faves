@@ -1,4 +1,4 @@
-- [ ] 🚩 **The allergen corpus has holes the tagger cannot see** `[M][data]`
+- [~] 🚩 **The allergen corpus has holes the tagger cannot see** `[M][data]`
       — found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`). Not a tagging *policy* question; the tagger is matching
       words the menu does not use:
       **BurgerFuel: 13 burgers carry no `contains-gluten`** while their
@@ -13,3 +13,7 @@
       are invisible to the worklist; and **`revisions` ships in the precached
       payload while no screen reads it** — an ADR 0047 breach, cost paid by
       every phone.
+
+  🔒 **CLAIMED 2026-09-09 (session faves-o1, orchestrating)** — delivered by
+  a sub-agent in its own worktree (`faves-o1-allergen-holes`, branch
+  `allergen-holes`), landing by PR so CI runs before the merge.
