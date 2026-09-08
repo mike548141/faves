@@ -367,3 +367,13 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] 🎯 [Household stock, leftovers and "what can I make" are a…](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/080-household-stock-and-leftovers-are-a-boundary-decision.md)
 - [ ] 🎯 [The first-visit budget is unmet, unmeasured and undefined](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/090-the-first-visit-budget-is-unmet-unmeasured-and-undefined.md)
 - [ ] 🔎 [Five smaller defects found while tracing fields to screens](roadmap/490-cold-review-of-the-data-model-owner-raised-2026-09-07/100-five-smaller-defects-found-while-tracing-fields-to-screens.md)
+
+## Intake harvest audit — owner-raised 2026-09-08
+
+*[Narrative](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/README.md)*
+
+- [ ] 🔥 [A live Google Gemini API key sits in plaintext in the intake working](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/010-a-live-api-key-sits-in-the-intake-working-tree.md)
+- [ ] 🔎 [Twenty-six of the 183 pantry photographs are not products — they are](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md)
+- [ ] 🔎 [Nothing joins the photograph population to the records, so a](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/030-nothing-reconciles-the-photo-population-against-the-records.md)
+- [ ] 🔎 [ADR 0090 promised a name index of the prior food databases and none](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/040-adr-0090-promised-a-name-index-of-the-food-exports-and-none-exists.md)
+- [ ] 🔎 [A complete menu carries no verified date, and three older menu](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/050-a-menu-with-92-prices-carries-no-verified-date.md)
