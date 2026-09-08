@@ -69,7 +69,7 @@
 
   ---
 
-  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — ONE DISH, THE CHOICE MADE
+  ✅ **OWNER RULED 2026-09-09 (session faves-3b) — ONE DISH, THE CHOICE MADE
   AT ORDER TIME.** Put to him in the reader's terms: *if someone hearts
   "Large Butter Chicken", have they hearted a dish or a size?* His answer is
   the dish. Not "separate dishes, as today", and not "let the venue's own
@@ -102,7 +102,7 @@
 
   ---
 
-  ✅ **DECOMPOSED 2026-09-09 (session faves-p1-sizes-plan). Written down, not
+  ✅ **DECOMPOSED 2026-09-09 (session faves-3b-sizes-plan). Written down, not
   started** — this item stays `- [ ]`, and no byte of `site/data/`, `data/` or
   `site/js/` moved. The twelve parts are `28h`–`28s` in
   [Theme 28](../310-theme-28-one-dish-or-three-sizes-portions-and/), which is

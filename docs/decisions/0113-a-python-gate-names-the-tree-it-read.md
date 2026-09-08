@@ -29,7 +29,7 @@ registers it.** The shape is byte-compatible with `browser.mjs`'s
 `treeIdentity` — a second shape for one fact is a second thing to learn:
 
 ```
-   tree /Users/mike/worktrees/faves-p1-gate-tree-line · shell 2026-09-09.2 · p1-gate-tree-line@cbfca81 · worktree
+   tree /Users/mike/worktrees/faves-3b-gate-tree-line · shell 2026-09-09.2 · p1-gate-tree-line@cbfca81 · worktree
 ```
 
 Three things about it are decisions rather than details.

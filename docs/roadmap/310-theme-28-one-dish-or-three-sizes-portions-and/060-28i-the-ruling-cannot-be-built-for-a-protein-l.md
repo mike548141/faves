@@ -96,7 +96,7 @@
   **Blocks:** `28k` (the schema), `28o` and `28p` (the two merge items).
   ---
 
-  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — OPTION 3: SPLIT IT. MERGE
+  ✅ **OWNER RULED 2026-09-09 (session faves-3b) — OPTION 3: SPLIT IT. MERGE
   THE GROUPS WHOSE CLAIMS ALREADY AGREE, AND SETTLE THE RULE SEPARATELY.**
   Put to him with the verified case (`Falafel kebab` carries `v`,
   `Chicken kebab` does not, in `wellington-kebab-grill.json` and

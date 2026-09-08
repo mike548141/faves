@@ -53,7 +53,7 @@
 
   ---
 
-  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — BOTH: fix the two false
+  ✅ **OWNER RULED 2026-09-09 (session faves-3b) — BOTH: fix the two false
   tags AND read image `alt`.** Put to him with four options; he took the
   widest. Not "fix the two rows only", and not "read `alt` only".
 

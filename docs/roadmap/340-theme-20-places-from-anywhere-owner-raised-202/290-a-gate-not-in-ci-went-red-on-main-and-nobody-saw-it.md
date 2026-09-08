@@ -1,6 +1,6 @@
 - [ ] 🔎 **A gate that is on the verify list but not in CI went red on `main`,
       and it took a passing agent on unrelated work to notice** `[S][tools]` —
-      found 2026-09-09 (session faves-p1) by the agent delivering `500/060`,
+      found 2026-09-09 (session faves-3b) by the agent delivering `500/060`,
       which ran `products.py` because its brief said to and found `main`
       already failing.
 
@@ -27,7 +27,7 @@
   ⇒ `main` was red on a repo invariant for the length of three merged PRs, on
   a repo where **a push is a deploy**.
 
-  ✅ **FIXED 2026-09-09 (session faves-p1), minimally and without deciding
+  ✅ **FIXED 2026-09-09 (session faves-3b), minimally and without deciding
   anything.** The two invented keys are gone; both readings are preserved
   inside the existing closed schema — `read` now carries the fuller 2026-09-09
   reading and `readBy` names both sessions and says what the first one could

@@ -94,7 +94,7 @@
 
   ---
 
-  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — SILENTLY ABSORB IT.** The
+  ✅ **OWNER RULED 2026-09-09 (session faves-3b) — SILENTLY ABSORB IT.** The
   heart lands on the base dish, which is what he ruled the heart was for in
   the first place. Not "absorb it and tell them", and not "let it lapse".
   📋 **So `formerIds` carries the 248 surrendered ids onto their base dishes**

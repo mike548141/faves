@@ -58,7 +58,7 @@
 
   ---
 
-  ✅ **OWNER RULED 2026-09-09 (session faves-p1) — OPTION 2: REWORD **AND**
+  ✅ **OWNER RULED 2026-09-09 (session faves-3b) — OPTION 2: REWORD **AND**
   OPEN THE SHOP CASE.** He overruled this item's own recommendation of (1)
   now / (2) later, and took the wider option in one step. Recorded as his,
   with the recommendation left standing above so the divergence is visible.
@@ -77,7 +77,7 @@
 
   ---
 
-  ✅ **DELIVERED IN PART 2026-09-09 (session faves-p1, PR on
+  ✅ **DELIVERED IN PART 2026-09-09 (session faves-3b, PR on
   `p1-location-rule`) — the rewording. The item stays OPEN on the validator
   fork alone.**
 
@@ -119,7 +119,7 @@
 
   ---
 
-  🎯 **OWNER CORRECTED THE PREMISE 2026-09-09 (session faves-p1).** Asked
+  🎯 **OWNER CORRECTED THE PREMISE 2026-09-09 (session faves-3b).** Asked
   whether the validator for the new shop field should ship now or wait for the
   first in-shop photograph — the ask stating there were **zero** — he replied:
   *"There are photos of products and menus taken in the restaurants."*

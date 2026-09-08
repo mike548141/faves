@@ -41,7 +41,7 @@
   **Also found:** `IMG_7562` (b053) and `IMG_8118` (b059) sit inside harvested
   bursts but are absent from their product's `source.files`.
 
-  📌 **CLAIMED 2026-09-08 21:46 UTC (session faves-p1) — the `b029` half only.**
+  📌 **CLAIMED 2026-09-08 21:46 UTC (session faves-3b) — the `b029` half only.**
   Reading the two 2025-11-25 leaflet frames and settling whether their 82
   prices are a price layer this repo threw away, against Takeaway @ Churton's
   2019 scan and its 2026-08-08 reading. The recipe half (the six recipes that
@@ -50,8 +50,8 @@
 
   ---
 
-  ✅ **`b029` DELIVERED 2026-09-09 (session faves-p1) — ADR 0112.** Worktree
-  `/Users/mike/worktrees/faves-p1-churton-leaflet`, branch
+  ✅ **`b029` DELIVERED 2026-09-09 (session faves-3b) — ADR 0112.** Worktree
+  `/Users/mike/worktrees/faves-3b-churton-leaflet`, branch
   `p1-churton-leaflet`, based on `main@cbfca81`. The recipe half is untouched
   and still the owner's; the item stays `- [~]`.
 

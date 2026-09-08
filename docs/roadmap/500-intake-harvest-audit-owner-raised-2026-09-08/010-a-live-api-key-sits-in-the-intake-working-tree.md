@@ -55,7 +55,7 @@
 
   ---
 
-  🎯 **OWNER RE-DIRECTED 2026-09-09 (session faves-p1): _"I want you to do it —
+  🎯 **OWNER RE-DIRECTED 2026-09-09 (session faves-3b): _"I want you to do it —
   you have access using the shed repo."_** This **supersedes** the
   2026-09-09 line above saying the rotation is his alone and no session may do
   it for him. He is the principal and may lift his own restriction; recorded

@@ -2,7 +2,7 @@
       until now** `[S][js]` — found 2026-09-09 (session faves-o1) while
       delivering `010`, and filed rather than folded in.
 
-  ✅ **DELIVERED 2026-09-09 (session faves-p1)** — the filing session's
+  ✅ **DELIVERED 2026-09-09 (session faves-3b)** — the filing session's
   recommendation, **(1) demote + (2) label**;
   [ADR 0111](../../decisions/0111-search-sinks-a-closed-venue-and-says-so-on-the-row.md).
   `SHELL_VERSION` → `2026-09-09.3`.
