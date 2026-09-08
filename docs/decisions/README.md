@@ -1328,3 +1328,24 @@ deliberation those compact docs omit.
   [0109](0109-a-fixture-is-a-real-record-with-one-transform.md) fixtures.
   Excluding a closed venue is rejected for the reader who is checking whether
   their old local has gone; a DISH at a shut venue is deliberately untouched.
+
+- [0112](0112-a-layer-is-dated-by-the-document-it-was-read-from.md) — **a price
+  layer is dated by the DOCUMENT it was read from, not by the folder it sits
+  beside.** Roadmap `500/020` asked whether two 2025-11-25 photographs of the
+  Takeaway @ Churton leaflet hid a price layer the repo had thrown away.
+  ✅ **They did not** — all 179 prices match the held layer to the cent, zero
+  differ, nothing to recover. 🔎 **But opening the other evidence showed the
+  held layer's DATE was wrong.** Its 179 entries read `recorded: "2019"`; they
+  were transcribed on **2026-07-06** from `menu 2.pdf`, a two-page scan of that
+  same leaflet. The folder's 2019 photographs are **in-store counter shots
+  carrying a price for seven dishes**, so they cannot be the source of 179 —
+  the ADR 0023 retrofit dated the layer from the only other file in the folder
+  and read one folder as one document. Corrected under ARCHITECTURE rule 5
+  (*we* got it wrong, not the shop): overwrite, add no entry, entry count
+  unchanged at 179 — which is why `check_append_only`, that counts entries,
+  passes an honest redate by design. The **seven** the photographs do evidence
+  keep that fact in their note. 🔑 The window on Churton's price rise goes from
+  **seven years to five weeks**. Nothing under `site/data/` changed and no
+  `DATA_VERSION` bump was owed. Also removes the premise of 0023's own
+  rejection of full-precision dates — *"the Churton scan is dated only 2019"*
+  was the corpus's one cited instance, and it was not real.

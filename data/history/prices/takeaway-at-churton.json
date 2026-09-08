@@ -1,6 +1,6 @@
 {
   "venue": "takeaway-at-churton",
-  "note": "Price entries superseded by a later reading. Appended, never rewritten (ADR 0023); moved out of the payload by ADR 0045 because no screen renders them. The current price stays on the dish in site/data/.",
+  "note": "Price entries superseded by a later reading. Appended, never rewritten (ADR 0023); moved out of the payload by ADR 0047 because no screen renders them. The current price stays on the dish in site/data/. These 174 entries were dated `2019` until 2026-09-09 and that was a misattribution: they were read on 2026-07-06 from `menu 2.pdf`, a two-page scan of the printed leaflet. The folder's 2019-06-04 photographs are in-store counter shots and carry a price for seven dishes only, which those seven entries now say. See ADR 0112.",
   "rows": [
     {
       "key": {
@@ -13,8 +13,8 @@
       "superseded": [
         {
           "value": 10.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -29,8 +29,8 @@
       "superseded": [
         {
           "value": 11.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -45,8 +45,8 @@
       "superseded": [
         {
           "value": 8.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -61,8 +61,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -77,8 +77,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -93,8 +93,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -109,8 +109,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -125,8 +125,8 @@
       "superseded": [
         {
           "value": 10.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -141,8 +141,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -157,8 +157,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -173,8 +173,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -189,8 +189,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -205,8 +205,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -221,8 +221,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -237,8 +237,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -253,8 +253,8 @@
       "superseded": [
         {
           "value": 12.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -269,8 +269,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -285,8 +285,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -301,8 +301,8 @@
       "superseded": [
         {
           "value": 4.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -317,8 +317,8 @@
       "superseded": [
         {
           "value": 6.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -333,8 +333,8 @@
       "superseded": [
         {
           "value": 8.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -349,8 +349,8 @@
       "superseded": [
         {
           "value": 12.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -365,8 +365,8 @@
       "superseded": [
         {
           "value": 12.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -381,8 +381,8 @@
       "superseded": [
         {
           "value": 12.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -397,8 +397,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -413,8 +413,8 @@
       "superseded": [
         {
           "value": 12.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -429,8 +429,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -445,8 +445,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -461,8 +461,8 @@
       "superseded": [
         {
           "value": 18.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -477,8 +477,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -493,8 +493,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -509,8 +509,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -525,8 +525,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -541,8 +541,8 @@
       "superseded": [
         {
           "value": 10.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -557,8 +557,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -573,8 +573,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -589,8 +589,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -605,8 +605,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -621,8 +621,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -637,8 +637,8 @@
       "superseded": [
         {
           "value": 11.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -653,8 +653,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -669,8 +669,8 @@
       "superseded": [
         {
           "value": 10.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -685,8 +685,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -701,8 +701,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -717,8 +717,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -733,8 +733,8 @@
       "superseded": [
         {
           "value": 15.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -749,8 +749,8 @@
       "superseded": [
         {
           "value": 15.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -765,8 +765,8 @@
       "superseded": [
         {
           "value": 15.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -781,8 +781,8 @@
       "superseded": [
         {
           "value": 10.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -797,8 +797,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -813,8 +813,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -829,8 +829,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -845,8 +845,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -861,8 +861,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -877,8 +877,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -893,8 +893,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -909,8 +909,8 @@
       "superseded": [
         {
           "value": 18.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -925,8 +925,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -941,8 +941,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -957,8 +957,8 @@
       "superseded": [
         {
           "value": 13.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -973,8 +973,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -989,8 +989,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1005,8 +1005,8 @@
       "superseded": [
         {
           "value": 18.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1021,8 +1021,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1037,8 +1037,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1053,8 +1053,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1069,8 +1069,8 @@
       "superseded": [
         {
           "value": 17.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1085,8 +1085,8 @@
       "superseded": [
         {
           "value": 17.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1101,8 +1101,8 @@
       "superseded": [
         {
           "value": 18.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1117,8 +1117,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1133,8 +1133,8 @@
       "superseded": [
         {
           "value": 14.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1149,8 +1149,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1165,8 +1165,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1181,8 +1181,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1197,8 +1197,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1213,8 +1213,8 @@
       "superseded": [
         {
           "value": 15.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1229,8 +1229,8 @@
       "superseded": [
         {
           "value": 18.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1245,8 +1245,8 @@
       "superseded": [
         {
           "value": 16.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1261,8 +1261,8 @@
       "superseded": [
         {
           "value": 4.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1277,8 +1277,8 @@
       "superseded": [
         {
           "value": 4.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1293,8 +1293,8 @@
       "superseded": [
         {
           "value": 4.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1309,8 +1309,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1325,8 +1325,8 @@
       "superseded": [
         {
           "value": 3.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1341,8 +1341,8 @@
       "superseded": [
         {
           "value": 4.4,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1357,8 +1357,8 @@
       "superseded": [
         {
           "value": 9.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1373,8 +1373,8 @@
       "superseded": [
         {
           "value": 9.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1389,8 +1389,8 @@
       "superseded": [
         {
           "value": 9.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1405,8 +1405,8 @@
       "superseded": [
         {
           "value": 4.4,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1421,8 +1421,8 @@
       "superseded": [
         {
           "value": 3.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1437,8 +1437,8 @@
       "superseded": [
         {
           "value": 2.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1453,8 +1453,8 @@
       "superseded": [
         {
           "value": 5.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1469,8 +1469,8 @@
       "superseded": [
         {
           "value": 5.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1485,8 +1485,8 @@
       "superseded": [
         {
           "value": 4.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1501,8 +1501,8 @@
       "superseded": [
         {
           "value": 1.2,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1517,8 +1517,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1533,8 +1533,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1549,8 +1549,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1565,8 +1565,8 @@
       "superseded": [
         {
           "value": 3.2,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1581,8 +1581,8 @@
       "superseded": [
         {
           "value": 1.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1597,8 +1597,8 @@
       "superseded": [
         {
           "value": 1.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1613,8 +1613,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1629,8 +1629,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1645,8 +1645,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1661,8 +1661,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1677,8 +1677,8 @@
       "superseded": [
         {
           "value": 3.2,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1693,8 +1693,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1709,8 +1709,8 @@
       "superseded": [
         {
           "value": 3.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1725,8 +1725,8 @@
       "superseded": [
         {
           "value": 8.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1741,8 +1741,8 @@
       "superseded": [
         {
           "value": 4.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1757,8 +1757,8 @@
       "superseded": [
         {
           "value": 4.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1773,8 +1773,8 @@
       "superseded": [
         {
           "value": 2.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1789,8 +1789,8 @@
       "superseded": [
         {
           "value": 2.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1805,8 +1805,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1821,8 +1821,8 @@
       "superseded": [
         {
           "value": 2.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1837,8 +1837,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1853,8 +1853,8 @@
       "superseded": [
         {
           "value": 2.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1869,8 +1869,8 @@
       "superseded": [
         {
           "value": 2.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1885,8 +1885,8 @@
       "superseded": [
         {
           "value": 4.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1901,8 +1901,8 @@
       "superseded": [
         {
           "value": 0.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1917,8 +1917,8 @@
       "superseded": [
         {
           "value": 1.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1933,8 +1933,8 @@
       "superseded": [
         {
           "value": 1.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1949,8 +1949,8 @@
       "superseded": [
         {
           "value": 2.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1965,8 +1965,8 @@
       "superseded": [
         {
           "value": 4.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1981,8 +1981,8 @@
       "superseded": [
         {
           "value": 5.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -1997,8 +1997,8 @@
       "superseded": [
         {
           "value": 1.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2013,8 +2013,8 @@
       "superseded": [
         {
           "value": 2.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2029,8 +2029,8 @@
       "superseded": [
         {
           "value": 2.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2045,8 +2045,8 @@
       "superseded": [
         {
           "value": 3.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2061,8 +2061,8 @@
       "superseded": [
         {
           "value": 6.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2077,8 +2077,8 @@
       "superseded": [
         {
           "value": 6.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2093,8 +2093,8 @@
       "superseded": [
         {
           "value": 4.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2109,8 +2109,8 @@
       "superseded": [
         {
           "value": 5.9,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2125,8 +2125,8 @@
       "superseded": [
         {
           "value": 5.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2141,8 +2141,8 @@
       "superseded": [
         {
           "value": 5.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2157,8 +2157,8 @@
       "superseded": [
         {
           "value": 4.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2173,8 +2173,8 @@
       "superseded": [
         {
           "value": 6.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2189,8 +2189,8 @@
       "superseded": [
         {
           "value": 6.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2205,8 +2205,8 @@
       "superseded": [
         {
           "value": 6.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2221,8 +2221,8 @@
       "superseded": [
         {
           "value": 6.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2237,8 +2237,8 @@
       "superseded": [
         {
           "value": 7.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2253,8 +2253,8 @@
       "superseded": [
         {
           "value": 6.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2269,8 +2269,8 @@
       "superseded": [
         {
           "value": 6.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2285,8 +2285,8 @@
       "superseded": [
         {
           "value": 7.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2301,8 +2301,8 @@
       "superseded": [
         {
           "value": 5.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2317,8 +2317,8 @@
       "superseded": [
         {
           "value": 9.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2333,8 +2333,8 @@
       "superseded": [
         {
           "value": 8.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2349,8 +2349,8 @@
       "superseded": [
         {
           "value": 9.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2365,8 +2365,8 @@
       "superseded": [
         {
           "value": 9.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2381,8 +2381,8 @@
       "superseded": [
         {
           "value": 9.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2397,8 +2397,8 @@
       "superseded": [
         {
           "value": 10.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2413,8 +2413,8 @@
       "superseded": [
         {
           "value": 8.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2429,8 +2429,8 @@
       "superseded": [
         {
           "value": 9.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2445,8 +2445,8 @@
       "superseded": [
         {
           "value": 8.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2461,8 +2461,8 @@
       "superseded": [
         {
           "value": 8.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2477,8 +2477,8 @@
       "superseded": [
         {
           "value": 8.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2493,8 +2493,8 @@
       "superseded": [
         {
           "value": 10.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2509,8 +2509,8 @@
       "superseded": [
         {
           "value": 10.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2525,8 +2525,8 @@
       "superseded": [
         {
           "value": 9.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2541,8 +2541,8 @@
       "superseded": [
         {
           "value": 9.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2557,8 +2557,8 @@
       "superseded": [
         {
           "value": 10.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2573,8 +2573,8 @@
       "superseded": [
         {
           "value": 10.8,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2589,8 +2589,8 @@
       "superseded": [
         {
           "value": 9.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2605,8 +2605,8 @@
       "superseded": [
         {
           "value": 9.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2621,8 +2621,8 @@
       "superseded": [
         {
           "value": 3.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2637,8 +2637,8 @@
       "superseded": [
         {
           "value": 3.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2653,8 +2653,8 @@
       "superseded": [
         {
           "value": 4.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2669,8 +2669,8 @@
       "superseded": [
         {
           "value": 28.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf); price also legible in-store 2019-06-04"
         }
       ]
     },
@@ -2685,8 +2685,8 @@
       "superseded": [
         {
           "value": 28.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf); price also legible in-store 2019-06-04"
         }
       ]
     },
@@ -2701,8 +2701,8 @@
       "superseded": [
         {
           "value": 35.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf); price also legible in-store 2019-06-04"
         }
       ]
     },
@@ -2717,8 +2717,8 @@
       "superseded": [
         {
           "value": 12.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf)"
         }
       ]
     },
@@ -2733,8 +2733,8 @@
       "superseded": [
         {
           "value": 28.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf); price also legible in-store 2019-06-04"
         }
       ]
     },
@@ -2749,8 +2749,8 @@
       "superseded": [
         {
           "value": 12.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf); price also legible in-store 2019-06-04"
         }
       ]
     },
@@ -2765,8 +2765,8 @@
       "superseded": [
         {
           "value": 8.5,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf); price also legible in-store 2019-06-04"
         }
       ]
     },
@@ -2781,8 +2781,8 @@
       "superseded": [
         {
           "value": 6.0,
-          "recorded": "2019",
-          "note": "2019 menu scan"
+          "recorded": "2026-07-06",
+          "note": "2026-07-06 leaflet scan (menu 2.pdf); price also legible in-store 2019-06-04"
         }
       ]
     }
