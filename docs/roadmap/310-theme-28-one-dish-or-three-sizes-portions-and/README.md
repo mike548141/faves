@@ -52,6 +52,17 @@ keep. Union-merging would wrongly put `contains-shellfish` on two Sushi Bi
 platters; intersection-merging would strip it off three rows that really do
 contain shellfish.
 
+🔑 **The theme's central question was RULED on 2026-09-09, and `28a` is
+overtaken.** Asked *"if someone hearts 'Large Butter Chicken', have they
+hearted a dish or a size?"*, the owner answered **the dish** — so a size or a
+protein is a **choice on one dish**, the id belongs to the base dish, and the
+choice lives on the order line. The ruling is recorded on
+[`490/050`](../490-cold-review-of-the-data-model-owner-raised-2026-09-07/050-one-shape-for-a-dish-with-choices.md);
+its decomposition is `28h`–`28r` below. `28a` keeps its reasoning with a dated
+note beside it, because its five-field test turned out to be the rubric `28p`
+uses. **Two of the eleven parts are asks the owner has not yet answered**
+(`28i` the dietary-claim rule, `28j` the heart), and both block the merges.
+
 **What that leaves.**
 
 - ✅ **28c — a section's serving window** — **done 2026-08-16**, [ADR 0081](../../decisions/0081-a-serving-window-annotates-it-never-filters.md).
