@@ -9,6 +9,9 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **Goldings Free Dive is pinned at the right end of Leeds Street.** Its
+  stored coordinate sat 158 m from its own address, which quietly skewed
+  the distance sort and every "what's close" decision that reads it.
 - **Spices Indian now says when its menu was read.** Its page carried "Menu
   items and prices need a refresh", which reads as *nobody has ever looked* —
   and we had. 80 of its 92 dishes were transcribed from the shop's own printed
