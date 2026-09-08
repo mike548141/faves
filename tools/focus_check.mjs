@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 // Do the menu's filters actually FOCUS the list — and does anything get lost
-// when they do? (ADR 0088.)
+// when they do? (ADR 0088.) Plus, since 2026-09-09, whether the HOME screen's
+// global search list puts a property above a spelling coincidence (Theme 27a,
+// ADR 0106) — a claim about rendered ORDER, which is why it is here and not in
+// tests/search.test.js: `search()` returning the right array and the page
+// painting that array in that order are two separate facts.
 //
 //     node tools/focus_check.mjs        # headless, exit 0 = pass
 //     node tools/focus_check.mjs -v     # narrate each step
@@ -47,6 +51,10 @@
 //   4. Anything about the search suggestions — those are suggest.js's own
 //      unit tests plus the combobox assertions at the end of this file, and the
 //      keyboard path through a real screen reader is untested by anyone.
+//   5. Whether the facet ranking's ANSWER is the one a hungry reader wants. It
+//      asserts that a place tagged Bar outranks a place named Bar; whether that
+//      is what you meant by typing "Bar" is a product question, and the tagging
+//      it rests on is the venue's own claim, which no browser can verify.
 
 import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -378,6 +386,107 @@ async function run(opts) {
       "choosing a suggestion just types it — no mode, no hidden state",
       chosen.query.length > 0 && chosen.shown > 0 && chosen.shown < chosen.total,
       `query=${JSON.stringify(chosen.query)}, ${chosen.shown} of ${chosen.total}`
+    );
+
+    // ─── The GLOBAL search list ranks a property above a spelling ──────────
+    //
+    // Theme 27a / ADR 0106. This is a claim about ORDER, on the home screen's
+    // results list — a different surface from everything above, and one no unit
+    // test can speak for: `search()` returning the right array and the page
+    // painting that array in that order are two facts, and only one of them is
+    // in tests/search.test.js.
+    //
+    // THE DISCIPLINE THIS FILE ALREADY OWNS (see the header, assertion 1): a
+    // fixture that CANNOT show the difference must make the check FAIL, not
+    // pass quietly. So the classification below is computed from the corpus
+    // rather than hard-coded, and the first assertion is a refusal — if the
+    // rendered page ever stops carrying both classes at once, every ordering
+    // assertion under it would be vacuously true, and this says so instead.
+    await cdp.send("Page.navigate", { url: `http://127.0.0.1:${port}/index.html` }, sessionId);
+    await untilPresent(
+      () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
+      { label: "home: the place list was rendered by app.js" }
+    );
+    await driver.settle();
+
+    // Which venues genuinely CARRY the query — read from the data, exactly the
+    // two fields search.js promotes (area, cuisine). Never from the rendered
+    // sub-line: a vibe hit is appended there too and is deliberately not a
+    // facet, so classifying off the screen would grade the feature against
+    // itself.
+    const records = await Promise.all(
+      index.map(async (id) => ({
+        id,
+        ...JSON.parse(await readFile(join(SITE, "data", "restaurants", `${id}.json`), "utf8")),
+      }))
+    );
+    const carries = (r, q) => {
+      const w = q.toLowerCase();
+      return (
+        String(r.area || "").toLowerCase().includes(w) ||
+        (r.cuisine || []).some((c) => String(c).toLowerCase().includes(w))
+      );
+    };
+
+    /** Type into the home search box and read back the rendered Places rows,
+     *  BY ID off each row's href — never by name. Two of this corpus's cafes
+     *  are `gold-lining-cafe` and `new-chapter-cafe` by id and "Gold Lining"
+     *  and "New Chapter" on screen, so a name-keyed read of this list is
+     *  reading a different set of venues than it thinks it is. */
+    async function searchPlaceIds(q) {
+      await driver.evalPage(
+        `(() => { const s = ${need("#search-input")}; s.focus(); s.value = ${JSON.stringify(q)};
+          s.dispatchEvent(new Event("input", { bubbles: true })); })()`
+      );
+      await sleep(160);
+      await driver.settle();
+      return driver.evalPage(`(() => {
+        const group = [...document.querySelectorAll("#search-groups .search-group")]
+          .find((g) => /Places/.test(g.querySelector(".search-group-title span")?.textContent || ""));
+        if (!group) return [];
+        return [...group.querySelectorAll("a.search-link")]
+          .map((a) => new URL(a.getAttribute("href"), location.href).searchParams.get("id"))
+          .filter(Boolean);
+      })()`);
+    }
+
+    const barIds = await searchPlaceIds("Bar");
+    const barFacet = barIds.filter((id) => carries(records.find((r) => r.id === id), "bar"));
+    const barText = barIds.filter((id) => !carries(records.find((r) => r.id === id), "bar"));
+    report.check(
+      'the "Bar" fixture can show the difference — both classes are on screen',
+      barFacet.length > 0 && barText.length > 0,
+      `${barFacet.length} tagged Bar, ${barText.length} merely named Bar, in ${barIds.join(" > ") || "(nothing)"}`
+    );
+    const lastFacet = barIds.lastIndexOf(barFacet[barFacet.length - 1]);
+    const firstText = barIds.indexOf(barText[0]);
+    report.check(
+      "every place TAGGED Bar is rendered above every place merely NAMED Bar",
+      barFacet.length > 0 && barText.length > 0 && lastFacet < firstText,
+      barIds.map((id) => `${id}${barFacet.includes(id) ? "*" : ""}`).join(" > ")
+    );
+    // The rejected alternative, pinned. 27a chose ranking over narrowing the
+    // haystack because narrowing loses real finds — the item's own words are
+    // "Charley Noble is a fair answer to 'Noble'". A future session that
+    // narrows instead would leave every ordering assertion above green.
+    const nobleIds = await searchPlaceIds("Noble");
+    report.check(
+      'the haystack was not narrowed — "Noble" still finds Charley Noble by name',
+      nobleIds.includes("charley-noble"),
+      nobleIds.join(" > ") || "(nothing)"
+    );
+    // The failure mode of the obvious implementation. Reading the facet off
+    // 27b's `matchField` would classify a venue that matches BOTH its name and
+    // its cuisine as a name match and sink it below venues it outranks on every
+    // reading. Groundup Cafe is the corpus's one such venue for this query.
+    const cafeIds = await searchPlaceIds("Cafe");
+    const both = records.find(
+      (r) => carries(r, "cafe") && String(r.name || "").toLowerCase().includes("cafe")
+    );
+    report.check(
+      "a place matching BOTH its name and its cuisine still leads — no demotion for being both",
+      !!both && cafeIds[0] === both.id,
+      `expected ${both?.id ?? "(no such venue in the corpus)"} first, got ${cafeIds.join(" > ")}`
     );
 
     return report.summary(SITE);

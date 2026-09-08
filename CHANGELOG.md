@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **Searching for a cuisine now leads with the places that serve it.** Typing
+  "Cafe" used to put KC Cafe and Satay Kingdom Cafe — a Chinese kitchen and a
+  Malaysian one — above four venues actually tagged Cafe, because the word was
+  in their name. Places whose area or cuisine carries what you typed now sort
+  first; the ones merely named for it still appear, just underneath. Nothing
+  became unfindable: "Noble" still finds Charley Noble.
 - **A menu section's heading is now translated like the dishes under it.** A
   menu written in another language could already hand you its dish names and
   descriptions in yours, with the original underneath to point at — but the
