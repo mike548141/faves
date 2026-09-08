@@ -1270,3 +1270,25 @@ deliberation those compact docs omit.
   at exit 2 and now sees no geometry failure at all. Paired interleaved: base
   **5/10** failures, branch **1/10** (load 29–85, not quiet), 41 consecutive
   passes when quieter, `0 re-scrolled` across the other tools' 261 clicks.
+- [0109](0109-a-fixture-is-a-real-record-with-one-transform.md) — **a fixture
+  is a real record with one transform, gated by the real validator.** The
+  corpus is uniformly healthy, so a class of behaviour ships unexercised
+  (roadmap `340/150`). Re-measured 2026-09-09 across all **57** venue files:
+  **0** carry a `lifecycle.events` entry, **0** hold a `null` day, **0** an
+  empty section, **0** an unpriced dish — while `menu.js` prints `—` for a dish
+  with no price and `closure-ui.js` drops an overdue closure's stated return
+  date, and **nothing had ever made either line run**. So a fixture is a REAL
+  record with one named transform applied — derive, never author, because a
+  hand-written venue is frozen on the day it was typed and does not grow
+  `sectionId`, `dishId` or a branch `id` when [0058](0058-a-section-has-an-id-and-its-heading-is-not-it.md),
+  [0051](0051-a-dish-has-an-id-and-its-name-is-not-it.md) and [0103](0103-a-branch-has-an-id-and-its-position-is-not-it.md)
+  land. 🛑 **And every generated fixture goes through the REAL
+  `tools/validate.py`**, not a second copy of the schema in JavaScript: it
+  caught three faults before this was committed, including a module-level
+  closure constant **aliased** into every fixture, so one `--selftest` case's
+  mutation leaked into the next five and satisfied all of them. Not one of the
+  three was visible in a browser. Rejected again: inventing a closed venue in
+  `site/data/` (precached to every phone, [0047](0047-the-app-ships-only-what-it-renders.md))
+  and a synthetic sibling corpus. 🚩 The standing consequence stands: these are
+  the states someone thought of, and an unnamed one still looks exactly like a
+  passing check.
