@@ -1,4 +1,4 @@
-- [ ] 🎯 **Two allergen decisions the tagger cannot take: reading image `alt`,
+- [x] 🎯 **Two allergen decisions the tagger cannot take: reading image `alt`,
       and removing a tag that is false** `[S][data][design]` — raised
       2026-09-09 by the agent delivering `160`, which found both and correctly
       left both alone.
@@ -73,3 +73,109 @@
   claims the corpus holds nothing else of that shape. It does — that is how
   row 1 above was tagged. Fixing the two rows without widening the hedge
   leaves the next *"gluten friendly"* row to be mis-tagged identically.
+
+  ---
+
+  ✅ **DELIVERED 2026-09-09 (session faves-p1) — ADR 0114, PR #35.** Both
+  halves of the ruling, in one commit. `DATA_VERSION` 2026-09-09.1 →
+  2026-09-09.2; `SHELL_VERSION` unmoved, because nothing under `site/`
+  outside `data/` changed.
+
+  **1 · The two false tags — REMOVED, and the class closed under it.**
+  `Gluten friendly bun` keeps its `gf-option` and loses the
+  `contains-gluten` that contradicted it; `Low Carborator lettuce bun` is
+  now untagged. Two guards, each swept out of the corpus first:
+
+  | Guard | Evidence | Fixes |
+  |---|---|---|
+  | hedge `gluten[\s-](?:free\|friendly)` | 57 records, 5,803 strings, 11 softener shapes | the NAME of row 1 |
+  | `(?<!lettuce )(?<!lettuce-)buns?` | "lettuce bun" ×5 / 5 venues; "milk bun" ×16 / 6 | row 2, whole |
+
+  🔎 **The hedge re-sweep found exactly ONE new form.** Searching every
+  declarable allergen word against `X free` · `X friendly` · `X conscious` ·
+  `X smart/wise/aware/safe/sensitive` · `no/without/zero X` · `no X added` ·
+  `low X` · `X-less` · `non-X` · `reduced/less X`: `gluten free` ×74 ·
+  `no gluten added` ×21 · `gluten-free` ×15 · `dairy free` ×10 ·
+  `dairy-free` ×8 · `no added gluten` ×7 · **`gluten friendly` ×2** — and
+  nothing else. Both occurrences of the new one are that single BurgerFuel
+  row. `dairy friendly` was NOT added: no venue writes it, and ADR 0097's own
+  comment is what a guard covering an invented form looks like.
+  🛑 **`vegan friendly` ×4 is not a hedge** — `vegan` is not an allergen
+  word, and all four are *"Speak to staff to make it vegan friendly"*.
+  A probe pins that the dairy on those rows survives.
+
+  🔑 **Two rows, two mechanisms, and neither covers the other.** Row 2 is not
+  hedged — a lettuce bun simply has no gluten — so the hedge could never have
+  reached it; row 1's name is hedged and the lookbehind could never have
+  reached that. The lookbehind rather than an `exclude` is load-bearing: four
+  OTHER rows read *"…milk bun, fries. No gluten added bun +$2.50 or lettuce
+  bun available"*, and an item-level veto would have lost the MILK BUN.
+
+  🎯 **⚠️ ROW 1 IS STILL PROPOSED ON EVERY DRY RUN, and that is filed, not
+  fixed** — see `080/220 §3`. Its description says *"Switch the **wholemeal
+  bun** for a gluten friendly bun"*, the words are really wheat, and what is
+  false is that this row contains them. That is **substitution**, which no
+  word rule reaches, and every mechanism that would silence it is the
+  item-level veto ADR 0097 rejected. Measured before filing: a name-level
+  veto costs zero tags today — but 12 of the corpus's 14 hedged-name dishes
+  carry `gf`, so `CONTRADICTED_BY` is already doing that work and the zero is
+  borrowed.
+
+  **2 · The `alt` tier — BUILT (ADR 0114). 34 tags on 19 dishes**, re-measured
+  from scratch rather than inherited, and it agrees with this item's figure
+  exactly: 14 dairy, 11 gluten, **5 sesame**, 4 egg. The five
+  `contains-sesame` burgers are the outcome that was worth having.
+
+  - **`PHOTO` sits below both existing tiers, and a finding is PHOTO
+    whichever rule fired** — `names sesame` is a STATED *rule*; reading it
+    off a photograph does not make the *evidence* stated.
+  - **Never merged into `ingredient_text`**, so one string never carries two
+    strengths of evidence, and **read LAST**, so `--tier PHOTO`'s count is
+    what the photographs bought rather than what they repeated.
+  - **ON SCREEN it is a GATE, not a chip.** A PHOTO tag is refused on a dish
+    with no `needs: allergens` entry, and every refusal is printed. That
+    entry already renders as *"Allergen details unconfirmed. Ask the venue
+    before ordering."*, so the caveat and the tag are inseparable. The 41
+    caveat notes were corrected in the same commit — they said *"a tag here
+    is inferred from the dish name"*, which this change made false.
+  - 🔑 **The gate refuses NOTHING today** (all 41 alt-bearing dishes carry
+    the caveat) — ADR 0072's shape, said out loud. What keeps it real is the
+    printed refusal and a case driving two rows with the same caption where
+    only one has the caveat.
+  - **No new chip treatment.** ADR 0025's deferred `may-contain` render is
+    untouched: it needs a vocabulary change and avoid-matching changes in
+    safety-critical code, and the owner has not ruled on it.
+
+  🛑 **Break-probed on the DANGEROUS direction, on the real corpus.** Every
+  caption was swept for what a naive read would tag WRONGLY. Findings:
+  - **`slices?` fires on *"a slice of melted cheese"***. No tag moved (both
+    rows carry gluten already) but the printed basis would have been false —
+    ADR 0110's `katsu` shape. Corpus-wide it also reaches *"Slices of
+    chicken"* ×3, *"Duck Slices"*, *"Fungus Slices"* ×2, *"sirloin slices"*
+    and a **cocktail** — `charley-noble`'s `Slice of Heaven`, carrying
+    `contains-gluten` on the word *slice* alone. **Not narrowed**: 17 shipped
+    rows rest on it and most are cabinet traybakes. Filed `080/220 §1`.
+  - **`Soft Serve Cone`** gains dairy from *"ice cream"* and says nothing
+    about the **wafer cone**, which is wheat and is not a rule word. Filed
+    `080/220 §2`.
+  - **Refused by the boundaries, correctly**: `pie` inside *"pieces"* ×4,
+    `toast` inside *"toasted"* ×9, `tart` inside *"tartare"*, `cakes` inside
+    *"hotcakes"*.
+  - **Packaging vocabulary reaches no rule today** — carton ×3, box ×2,
+    cup ×13, sleeve, straw ×2, cone. Named as the class to watch rather than
+    guarded against, because ADR 0097's lesson is that inventing a guard for
+    a form no venue writes is how a guard looks thorough while covering
+    nothing. No `pictured with` / `serving suggestion` / `garnish` anywhere.
+
+  **Verified:** `test_tag_allergens` 68 → **81 cases** (4 new probe groups,
+  1 end-to-end case on the real McDonald's record, 6 new breakers — and
+  **3 EXISTING breakers repaired**, which the runner caught itself as
+  `PATCH MATCHED NOTHING` after the lettuce lookbehind moved their patch
+  target). `validate.py` 57 files / **74 warnings, unmoved** either side of
+  the change. `test_validate` 147, `test_tag_addon_options` 25,
+  `split_data --check`, `seed_dish_ids --check`, `check_fallback`,
+  `check_no_deps`, `check_decisions`, `check_versions --range`,
+  `node --test` 1297, `boot_check` 24, `addon_check` 52, `focus_check` 26.
+
+  📌 **This item and `160`'s two owner asks were the SAME two questions.**
+  `160` now points here; nothing is delivered twice.

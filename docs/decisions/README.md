@@ -1364,3 +1364,23 @@ deliberation those compact docs omit.
   where a branch goes reads as an ordinary run. `--self-test` stages the
   incident itself — a probe in tree A run with `cwd = B` must still name A —
   and reverting the root to `Path.cwd()` fails that case and only that case.
+
+- [0114](0114-an-image-caption-is-evidence-one-tier-below-the-menu.md) — **an
+  image caption is evidence, one tier below the menu.** McDonald's is 41 items
+  with no description on any of them, and the only prose in the record is the
+  image `alt` — which names cheese, mayonnaise, egg and a *sesame seed bun* on
+  rows whose tag rows said nothing. Owner-ruled 2026-09-09 to read it. The
+  ruling's substance is the TIER: `alt` describes a PHOTOGRAPH, so a finding
+  from it is `PHOTO` **whichever rule fired**, never merged into
+  `ingredient_text`, and read LAST so the menu's own words keep the credit.
+  🔑 **What the weaker tier means on screen is a GATE, not a chip.** A PHOTO
+  tag is refused on a dish carrying no `needs: allergens` caveat — the line
+  that already renders as *"Allergen details unconfirmed"* — so no tag read off
+  a photograph can land where the page claims a confirmed allergen picture.
+  Today that gate refuses nothing (all 41 rows carry the caveat), which is
+  [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)'s
+  shape and is said out loud; the printed refusal and a two-row case with one
+  caption are what keep it real. 34 tags on 19 dishes, five of them
+  `contains-sesame`. Also re-runs [0097](0097-a-hedge-is-not-a-warning.md)'s
+  free-from sweep, which had missed *"gluten friendly"* and shipped a false
+  gluten warning on the row a coeliac reads the menu to find.
