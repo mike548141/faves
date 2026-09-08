@@ -1202,3 +1202,28 @@ deliberation those compact docs omit.
   day between now and the next opening hedges the detail to *"next published
   opening Thu 12pm"*. 🚩 **Abrakebabra's hours were NOT restored** — no source
   in this repo records its times, only its days.
+- [0106](0106-search-ranks-a-facet-match-above-a-text-match.md)
+  — **search ranks a facet match above a text match** (Theme 27a). The haystack
+  is wide on purpose and ADR 0050 measured that it never *misses* — it **adds**
+  venues whose name merely contains the word. Measured before: two venues that
+  are not cafés outranked four that are, and at `placeLimit` 6 two real cafés
+  never reached the screen. A hit on **`area` or `cuisine`** now sorts above a
+  hit on any other field, as a comparator key **above** the 1–4 text score, not
+  a bonus folded into it — `+2` was measured and left the defect applied
+  unevenly, which is worse than applying it consistently. Narrowing the haystack
+  stays rejected (*"Charley Noble is a fair answer to 'Noble'"*), and both
+  planes carry an assertion that a name coincidence is still findable, so a
+  session that narrows instead FAILS rather than differs.
+  🔑 The facet test is computed **independently of 27b's `matchField`**, which
+  reports only the first field it finds and would call Groundup Cafe — named
+  Cafe *and* tagged Cafe — a name match and demote it. Break-probe: 2 unit tests
+  and 1 `focus_check` assertion fail naming the behaviour, and nothing else
+  does; the fixture-refusal and both-match assertions deliberately still pass in
+  the broken state, because a precondition is not a feature test.
+  🚩 **Where the facet group exceeds `placeLimit`, the name coincidences fall
+  off the VISIBLE page** — `total` is unchanged and they return at a higher
+  limit, but that is not what "they still appear" predicts, so it is recorded.
+  🤔 **`vibe` is deliberately NOT a facet and the case for it is real** — a
+  closed vocabulary like the other two, but its keys are hyphenated compounds
+  matched by substring, so "Bar" hits `garden-bar` and would promote an Asian
+  restaurant over Charley Noble Eatery & Bar. Owner's call; one line to add.
