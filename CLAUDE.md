@@ -301,6 +301,13 @@ python3 tools/check_precache.py # every path site/sw.js precaches EXISTS in site
                               # `--self-test` proves it still refuses (9 cases, one
                               # of them the unmutated tree, so a gate broken into
                               # refusing everything cannot pass)
+python3 tools/lib/tree.py --self-test # the tree line every gate below prints
+                              # still TELLS TWO TREES APART (ADR 0113). 11 cases,
+                              # ~2s, also in CI. The decisive one stages the
+                              # incident the line exists for: a probe living in
+                              # tree A, run with `cwd = B`, must still name A —
+                              # a helper reading the cwd is right in every
+                              # ordinary run and wrong in exactly that one
 python3 tools/check_decisions.py # every ADR is in the decisions index (it's the
                               # allocator — an unindexed record is how a number
                               # gets reused; seven were missing on 2026-08-16)
@@ -539,7 +546,7 @@ node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 
                               # because NOTHING RUNS IT BUT YOU — see below.
 ```
 
-**Every check prints a SECOND, indented line naming the tree it served, that
+**Every check prints a SECOND, indented line naming the tree it read, that
 tree's `SHELL_VERSION`, and its `branch@sha`. Read it.** A green run against the
 wrong worktree is otherwise invisible, and one shipped that way: a session's
 shell cwd drifted out of its worktree via one compound `cd`, its edits were safe
@@ -547,6 +554,27 @@ shell cwd drifted out of its worktree via one compound `cd`, its edits were safe
 Everything green, everything meaningless. It surfaced only because a **passing**
 run reported 22 where an agent had just said 25 — nobody interrogates a green
 run, so this is a mechanism and not a discipline.
+⚠️ **That sentence said "every check" from 2026-08-17 and was FALSE for the
+Python gates until 2026-09-09** — more than half this list. Only the
+`*_check.mjs` family printed it (`tools/lib/browser.mjs`, `report.summary`);
+`validate.py` said `All 57 restaurant file(s) valid` and named no tree at all,
+which is worth nothing to an orchestrator reading a sub-agent's pasted output
+when the two trees differ by exactly the change under test (roadmap `340/260`).
+`tools/lib/tree.py` now prints it from **26** Python entry points — every one
+this list, `.github/workflows/ci.yml` or `.githooks/pre-commit` invokes
+(ADR 0113). 🔑 **Read the two families' lines as slightly different sentences.**
+A browser check names the directory it SERVED (`…/faves/site`); a Python gate
+names the repo ROOT it read, because it reads `site/`, `data/`, `docs/` and
+`tools/`. A Python gate also appends `worktree`, `detached@<sha>` or
+`REBASE IN PROGRESS` where those apply — `git branch --show-current` is EMPTY
+mid-rebase, and a blank where a branch name goes reads as an ordinary run.
+🛑 **What this does NOT cover:** the eleven authoring tools nothing on a gate
+list invokes (`registry.py`, `tag_allergens.py`, `find_addons.py`, `deploy.py`,
+`needs.py` and the rest) are unwired, and **nothing enforces that a tool added
+to this list gets wired** — wire it by hand. And the line REPORTS: no run fails
+because its tree is odd. `python3 tools/lib/tree.py --self-test` (11 cases, in
+CI) is what proves the line still tells two trees apart rather than printing
+one string from both.
 
 **A check that CLICKS anything prints a THIRD line, and it is about ANIMATION**
 (2026-09-08, ADR 0101). `app.css` sets `html { scroll-behavior: smooth }`, so a

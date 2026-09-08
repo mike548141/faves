@@ -1310,3 +1310,17 @@ deliberation those compact docs omit.
   tonkatsu SAUCE, proposing
   three tags whose printed basis was untrue of the dish. 17 tags landed; twin
   warnings 21 → 18.
+- [0113](0113-a-python-gate-names-the-tree-it-read.md) — **a Python gate names
+  the tree it read, and it is never the working directory.** CLAUDE.md said
+  EVERY check prints a second line naming its tree; only the browser checks
+  did, so for more than half the verify list the mechanism against the
+  drifted-cwd incident was a discipline again. `tools/lib/tree.py` now prints
+  it from 26 entry points, in `browser.mjs`'s shape.
+  🔑 **The root is the gate's own `__file__`, never `os.getcwd()`** — a
+  cwd-derived helper is right in every ordinary run and wrong in exactly the
+  case it exists to catch ([0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md),
+  face 5). Detached HEAD, a stopped rebase and a linked worktree are each named
+  out loud, because `git branch --show-current` is EMPTY mid-rebase and a blank
+  where a branch goes reads as an ordinary run. `--self-test` stages the
+  incident itself — a probe in tree A run with `cwd = B` must still name A —
+  and reverting the root to `Path.cwd()` fails that case and only that case.
