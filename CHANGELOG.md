@@ -21,6 +21,13 @@ content freshness separately from this file.
   details unconfirmed. Ask the venue before ordering." Its unread prices say
   so too, instead of looking like a shop that declines to print them.
 
+- **A place that has closed down now sorts last in search, and the row says
+  so.** Search could not see a closure at all: a shut venue came back exactly
+  like a trading one, and could lead the list. It is still findable — someone
+  typing the name of their old local is usually asking whether it has really
+  gone — but it now sits below every place you can still walk into, wearing the
+  same "Permanently closed" / "Temporarily closed" badge the venue's own page
+  and its card already show.
 - **Searching for a cuisine now leads with the places that serve it.** Typing
   "Cafe" used to put KC Cafe and Satay Kingdom Cafe — a Chinese kitchen and a
   Malaysian one — above four venues actually tagged Cafe, because the word was
