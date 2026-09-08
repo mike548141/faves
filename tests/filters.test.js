@@ -252,6 +252,28 @@ test("openNow: keeps only currently-open venues; unknown-hours + recipes drop", 
   assert.deepEqual(shown.map((r) => r.id), ["open"]);
 });
 
+test("openNow: a venue whose TODAY was never published drops out too", () => {
+  // ADR 0105, and the sharp question the fourth state raised. "Open now" is a
+  // CLAIM, and a week that says nothing about today cannot support it — so the
+  // `unknown-today` state is filtered out by the same clause as `unknown`,
+  // rather than being let in as a maybe. What stops that being a silent
+  // deletion is the test below: the venue is untouched in the unfiltered list,
+  // where its card reads "Hours not published today" rather than "Closed".
+  const partial = {
+    id: "partial",
+    services: ["takeaway"],
+    cuisine: [],
+    hours: { ...dailyHours("09:00", "22:00"), mon: null },
+  };
+  const list = [...OPEN_FIXTURE, partial];
+  const shown = applyFilters(list, { ...DEFAULT_FILTERS, openNow: true }, clockAt(MON_NOON));
+  assert.deepEqual(shown.map((r) => r.id), ["open"]);
+  // …and it is NOT removed from the list itself — the filter is the only thing
+  // that drops it, and turning the filter off brings it back.
+  const all = applyFilters(list, DEFAULT_FILTERS, clockAt(MON_NOON));
+  assert.ok(all.some((r) => r.id === "partial"));
+});
+
 test("openNow off (the default) keeps everything regardless of hours", () => {
   const shown = applyFilters(OPEN_FIXTURE, DEFAULT_FILTERS, clockAt(MON_NOON));
   assert.equal(shown.length, 4);

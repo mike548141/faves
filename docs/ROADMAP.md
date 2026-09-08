@@ -122,7 +122,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/README.md)*
 
 - ✅ 🛑 [hours cannot express a close after midnight, and the first venue](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/010-hours-cannot-express-a-past-midnight-close.md)
-- [~] 🔎 [hours cannot say "we do not know about this day" — an empty day](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/020-hours-cannot-say-a-day-is-unknown.md)
+- ✅ 🔎 [hours cannot say "we do not know about this day" — an empty day](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/020-hours-cannot-say-a-day-is-unknown.md)
 - ✅ [✅ The whole hours model is now tested across the daylight-saving](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/030-the-hours-model-is-untested-across-the-dst-switch.md)
 - ✅ 🔎 [The countdown understates by up to an hour during April's repeated](roadmap/190-theme-13-what-the-time-dimension-unlocks-owner/040-the-countdown-understates-during-aprils-repeated-hour.md)
 

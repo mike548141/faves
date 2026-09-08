@@ -219,6 +219,61 @@ const DST_CONTROL_BADGE = {
   monNzdt: "Open · until 10pm",
 };
 
+// ——————————— A DAY THE VENUE NEVER PUBLISHED (roadmap 190/020, ADR 0105) ——————
+//
+// WHY IT LIVES IN THIS FILE AND NOT IN served_check. Both freeze the clock, and
+// that is the only thing they share. `served_check` is about a menu SECTION's
+// window — a thing that annotates and never filters. This is a claim about the
+// venue's own open/closed BADGE, rendered from `hours` through the same two
+// paths (menu.js `hoursRow`, app.js `hoursBadge`) that every other assertion
+// here drives, and it is the neighbouring half of the same defect: 190/010 was
+// "the week cannot hold a close after midnight", 190/020 is "the week cannot
+// hold a day it was never told about". One subject, one file.
+//
+// 🛑 THE FIXTURE IS STAGED, AND SAYING SO IS THE POINT. No record in the corpus
+// carries an unknown day. Abrakebabra is the venue that needs one — it publishes
+// Sun–Tue, Thu, Fri and Sat and no Wednesday line at all — but NOTHING IN THIS
+// REPO RECORDS ITS TIMES, only which days it publishes, so its hours were not
+// restored and nothing here pretends to know them. Instead the control venue's
+// own response is intercepted in the page and its Wednesday replaced with
+// `null`, which stages the SHAPE without inventing a fact about any real venue.
+// The interception rewrites the parsed body rather than the network response, so
+// it survives the service worker answering from cache.
+//
+// THE PAIR IS THE ASSERTION, not either half. Every instant below is read TWICE
+// — once with the day nulled and once against the untouched record — because
+// "the badge says we do not know" is satisfiable by an engine that says it about
+// every venue on every day, which would be a worse bug than the one being fixed.
+// The unpatched reading at the same frozen instant is what refuses that.
+const UNKNOWN_SUBJECT = CONTROL; // 12:00–23:00 Wed; a full, ordinary week
+const UNKNOWN_DAY = "wed";
+
+// Two instants, and they fail differently.
+//   onTheDay  — ON the unpublished day. The verdict itself must change: a false
+//               "Closed" here is the bug, and a BLANK is the same shape as it.
+//   theEveBefore — the night before, when the venue really is shut and we know
+//               it. The verdict is unchanged and correct; what must change is
+//               the claim about which opening comes NEXT, because the answer
+//               "Thu 12pm" quietly re-asserts the Wednesday the record was
+//               rewritten to stop asserting.
+const UNKNOWN_WHEN = {
+  onTheDay: { iso: "2026-06-03T01:00:00Z", label: "Wed 3 Jun 13:00 NZST" },
+  theEveBefore: { iso: "2026-06-02T10:30:00Z", label: "Tue 2 Jun 22:30 NZST" },
+};
+
+// Read off the data by hand (sprig-and-fern-petone: Mon 14:00–22:00, Tue
+// 12:00–22:00, Wed–Sat 12:00–23:00, Sun 12:00–22:00), not derived from the
+// engine — an expectation read out of the code under test agrees with that code
+// by construction, including when the code is wrong (ADR 0072).
+const UNKNOWN_BADGE = {
+  onTheDay: "Hours not published today",
+  theEveBefore: "Closed · next published opening Thu 12pm",
+};
+const KNOWN_BADGE = {
+  onTheDay: "Open · until 11pm",
+  theEveBefore: "Closed · opens Wed 12pm",
+};
+
 const HELP = `Usage: node tools/midnight_check.mjs [options]
 
 Drives a real Chrome at 390 px, freezes the page clock at thirteen fixed
@@ -267,6 +322,31 @@ const freezeClock = (iso) => `(() => {
     }
   }
   globalThis.Date = FrozenDate;
+})()`;
+
+/**
+ * Blank one day out of one venue's record, in the page, before any module runs.
+ *
+ * It wraps `fetch` and rewrites the PARSED BODY rather than the network
+ * response, which is what makes it survive the service worker: whatever answers
+ * — network, cache, or the worker's own fallback — the page sees the staged
+ * shape. Nothing on disk is touched, so this cannot leak into the corpus or into
+ * another check's run.
+ */
+const nullOneDay = (id, day) => `(() => {
+  const real = globalThis.fetch;
+  const target = "data/restaurants/" + ${JSON.stringify(id)} + ".json";
+  globalThis.fetch = async (input, init) => {
+    const res = await real(input, init);
+    const url = typeof input === "string" ? input : (input && input.url) || "";
+    if (!url.includes(target) || !res.ok) return res;
+    const body = await res.clone().json();
+    if (body && body.hours) body.hours[${JSON.stringify(day)}] = null;
+    return new Response(JSON.stringify(body), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  };
 })()`;
 
 /** The hours badge and the week table as a reader sees them, on a menu page. */
@@ -639,6 +719,117 @@ async function run(opts) {
         `got ${JSON.stringify(ctrl.badge)}`,
       );
     }
+
+    // ——— A DAY THE VENUE NEVER PUBLISHED (roadmap 190/020, ADR 0105) ————————
+    // See the block above the fixtures for why the day is STAGED and why every
+    // instant is read twice. `patched` is tracked like `frozen` so the staging
+    // can be lifted for the unpatched half rather than being left running.
+    console.log(`\n  a day the venue never published — ${UNKNOWN_SUBJECT}, ${UNKNOWN_DAY} nulled in the page`);
+    let patched = null;
+    const setPatch = async (on) => {
+      if (patched) {
+        await cdp.send("Page.removeScriptToEvaluateOnNewDocument", { identifier: patched }, sessionId);
+        patched = null;
+      }
+      if (!on) return;
+      const r = await cdp.send(
+        "Page.addScriptToEvaluateOnNewDocument",
+        { source: nullOneDay(UNKNOWN_SUBJECT, UNKNOWN_DAY) },
+        sessionId,
+      );
+      patched = r.identifier;
+    };
+
+    for (const key of Object.keys(UNKNOWN_WHEN)) {
+      const when = UNKNOWN_WHEN[key];
+      await setClock(when.iso);
+      driver.reload = () => driver.cdpNavigate(menuUrl(UNKNOWN_SUBJECT));
+
+      // THE UNPATCHED HALF FIRST, so the pair cannot be read as "this venue
+      // always says that". Same venue, same instant, untouched record.
+      await setPatch(false);
+      const known = await checkMenu(driver, report, UNKNOWN_SUBJECT, KNOWN_BADGE[key], when);
+
+      await setPatch(true);
+      const s = await checkMenu(driver, report, UNKNOWN_SUBJECT, UNKNOWN_BADGE[key], when);
+      report.check(
+        `${UNKNOWN_SUBJECT} @ ${when.label}: nulling ${UNKNOWN_DAY} CHANGED the badge`,
+        s.badge !== known.badge,
+        `both read ${JSON.stringify(s.badge)} — the staging did not reach the page`,
+      );
+
+      // The week table, on both readings. The unknown day must print WORDS, and
+      // a real closed day elsewhere in the same table must be untouched — a
+      // formatter that printed "Not published" for everything would satisfy the
+      // first half and fail the second.
+      const row = (snap, days) => (snap.week.find((r) => r[0] === days) || [])[1] ?? null;
+      report.check(
+        `${UNKNOWN_SUBJECT} @ ${when.label}: the week table prints "Wed  Not published"`,
+        row(s, "Wed") === "Not published",
+        `got ${JSON.stringify(row(s, "Wed"))} from ${JSON.stringify(s.week)}`,
+      );
+      report.check(
+        `${UNKNOWN_SUBJECT} @ ${when.label}: the SAME table still prints "Mon  2pm–10pm"`,
+        row(s, "Mon") === "2pm–10pm",
+        `got ${JSON.stringify(row(s, "Mon"))} from ${JSON.stringify(s.week)}`,
+      );
+      report.check(
+        `${UNKNOWN_SUBJECT} @ ${when.label}: unpatched, Wednesday still prints its hours`,
+        row(known, "Wed–Sat") === "12pm–11pm",
+        `got ${JSON.stringify(row(known, "Wed–Sat"))} from ${JSON.stringify(known.week)}`,
+      );
+    }
+
+    // ON the unpublished day, the two claims that ARE the item — asserted
+    // separately from the badge string because they fail independently.
+    await setClock(UNKNOWN_WHEN.onTheDay.iso);
+    await setPatch(true);
+    driver.reload = () => driver.cdpNavigate(menuUrl(UNKNOWN_SUBJECT));
+    await driver.reload();
+    await untilPresent(
+      async () => await driver.evalPage(`!!document.querySelector(".contact-hours")`),
+      { label: `${UNKNOWN_SUBJECT}: the contact card's hours row` },
+    );
+    const onDay = await driver.evalPage(menuSnapshotExpr);
+    report.check(
+      `${UNKNOWN_SUBJECT} @ ${UNKNOWN_WHEN.onTheDay.label}: the state is "unknown-today", NOT "closed"`,
+      onDay.state === "unknown-today",
+      `dataset.state was ${JSON.stringify(onDay.state)}`,
+    );
+    // A BLANK IS THE SAME SHAPE AS THE BUG. `unknown` draws no badge at all at
+    // every call site on the site, so a fourth state that collapsed into it
+    // would leave a reader with nothing to read — which is indistinguishable
+    // from nobody having thought the day worth mentioning. This assertion is the
+    // one that refuses that, and it is the one most likely to rot.
+    report.check(
+      `${UNKNOWN_SUBJECT} @ ${UNKNOWN_WHEN.onTheDay.label}: a badge IS drawn — the day is not a blank`,
+      typeof onDay.badge === "string" && onDay.badge.trim().length > 0,
+      `badge was ${JSON.stringify(onDay.badge)}`,
+    );
+
+    // And the second render path: app.js's home card, built from the same
+    // engine through different code. A fix applied to one call site and not the
+    // other is a real shape this repo has shipped.
+    await driver.cdpNavigate(homeUrl);
+    await untilPresent(
+      async () =>
+        await driver.evalPage(
+          `(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`,
+        ),
+      { label: "home: app.js filled the result count" },
+    );
+    const homeUnknown = await driver.evalPage(homeSnapshotExpr(UNKNOWN_SUBJECT));
+    report.check(
+      `home @ ${UNKNOWN_WHEN.onTheDay.label}: ${UNKNOWN_SUBJECT}'s card is still on the page`,
+      homeUnknown.found === true,
+      `the card was not found — a venue we cannot place must not vanish from the list`,
+    );
+    report.check(
+      `home @ ${UNKNOWN_WHEN.onTheDay.label}: the card badge reads "${UNKNOWN_BADGE.onTheDay}"`,
+      homeUnknown.badge === UNKNOWN_BADGE.onTheDay,
+      `got ${JSON.stringify(homeUnknown.badge)}`,
+    );
+    await setPatch(false);
 
     return report.summary(SITE) ? 0 : 1;
   } finally {

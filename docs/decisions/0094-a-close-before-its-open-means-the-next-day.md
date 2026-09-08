@@ -4,6 +4,14 @@
 `0006-hours-model-and-timezone.md` (which itself is amended by `0043`); 0006
 otherwise stands.
 
+**Extended by `0105-a-day-may-say-nothing-and-that-is-not-closed.md`
+(2026-09-08)** — the neighbouring half of this record's own defect class, and
+nothing here is corrected by it. 0094 made the week able to hold *a close after
+midnight*; 0105 makes it able to hold *a day it was never told about*. The
+principle 0094 states — that reading a venue as shut while it is trading is the
+dangerous direction — is the whole argument for 0105, which is why the second
+followed the first rather than being folded into it.
+
 **Amended by `0098-the-verdict-reads-the-wall-clock-the-countdown-counts-real-time.md`
 (2026-09-08).** Two lines below are no longer accurate and are left standing
 rather than rewritten. *Consequences*: **"counts down correctly to its real

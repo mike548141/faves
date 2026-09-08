@@ -1258,6 +1258,18 @@ body.faves-view .filter-bar {
 .hours-badge[data-state="closed"] {
   color: var(--warn);
 }
+/* "We were never told about today" (ADR 0105). The one state that must NOT be a
+   traffic light: red would repeat the false "Closed" the fourth state exists to
+   stop, and green would be a claim. So it is the muted ink and a HOLLOW dot —
+   the light is off, not showing a colour. The words carry the meaning either
+   way; this only stops the eye reading a verdict that was never given. */
+.hours-badge[data-state="unknown-today"] {
+  color: var(--ink-soft);
+}
+.hours-badge[data-state="unknown-today"]::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px currentColor;
+}
 /* Lifecycle closures (temporal.js) reuse the hours badge so the eye reads one
    vocabulary. A refit is amber like "closing soon" — it comes back; gone for
    good is the warn colour, because it never does. */
