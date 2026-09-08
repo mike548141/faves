@@ -10448,7 +10448,9 @@ ahead of the options.
 ### Close
 
 ✅ Tree clean, `HEAD` = `origin/main`, one worktree, no branches, no PRs, no
-stashes, no orphan Chromes. Board **69 open / 16 claimed** (16 of those claims
+stashes. Board **70 open / 14 claimed** (every one of those 14 is a
+long-standing part-done item, none of them this session's — re-counted at close;
+the figures first written here were 69/16 and were wrong)  (14 of those claims
 are this session's two in-flight agents plus long-standing part-done items).
 🚩 Two agents were still running at the time of writing (`080/160` allergen
 corpus holes, `340/150` degenerate-state fixtures); their claims are live on the
@@ -10535,9 +10537,28 @@ note, or the next cold review correctly reports a breach.
 ### Close
 
 ✅ Tree clean, `HEAD` = `origin/main`, one worktree, no branches, no PRs, no
-stashes. ✅ CI and floor green on `main` through the session. Board **69 open /
-9 claimed** after this wave — the remaining claims are long-standing part-done
-items, not this session's.
+stashes. ✅ CI and floor green on `main` at `1b9580e`, verified at close rather
+than assumed. Board **70 open / 14 claimed**, re-counted at close — every one of
+the 14 is a long-standing part-done item and none is this session's.
+
+🛑 **Two errors in this session's OWN close record, found by auditing the claim
+instead of repeating it.**
+1. **The board figures above were wrong twice** — written as 69/16 and 69/9,
+   measured at close as **70/14**. Both were written from a count taken before
+   the last merges and filings landed. A board total is a measurement and goes
+   stale at the speed the session itself works.
+2. **"No orphan Chromes" was FALSE, and the attribution was false too.** A
+   `pgrep` at close found 8 matching processes. The delivering agent had
+   reported them as *"peer sessions', not mine; my probe's harness reaped its
+   own"*. Tracing the parent shows the Chrome's `ppid` is
+   `node .../scratchpad/mcd_probe.mjs` — **this session's own scratchpad**,
+   running since 01:45 and still holding a browser at 09:29, nearly eight
+   hours. A hand-rolled probe script does not inherit the harness's reaping;
+   only `tools/lib/browser.mjs` does. Reaped at close, verified 0 remaining.
+   🔑 Two lessons, and the second is the sharper: a bare `pgrep` count invites
+   the wrong answer because one browser shows as several helper processes, so
+   the useful check is the **parent**, not the count. And an agent's claim that
+   a process is somebody else's is a claim like any other.
 🚩 **Three item-number collisions and five ADR collisions** happened across the
 two entries. Every agent checked the allocator and every one was right when it
 looked; the collision is invisible from a branch and visible only at the merge.
