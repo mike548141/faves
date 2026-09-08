@@ -1310,6 +1310,25 @@ deliberation those compact docs omit.
   tonkatsu SAUCE, proposing
   three tags whose printed basis was untrue of the dish. 17 tags landed; twin
   warnings 21 → 18.
+- [0111](0111-search-sinks-a-closed-venue-and-says-so-on-the-row.md) — **search
+  sinks a venue that has CLOSED DOWN, and the row says which kind of closure it
+  is.** Search never consulted the lifecycle at all: measured on the corpus of
+  2026-09-09, a permanently-closed Sushi Bi led *both* "Japanese" and "Sushi",
+  above three trading venues — top of the list precisely because nothing in
+  `search.js` could see the one fact that disqualifies it. A closed key ABOVE
+  [0106](0106-search-ranks-a-facet-match-above-a-text-match.md)'s facet key and
+  the text score (last, not last-within-its-class: a shut café is a worse answer
+  to "Cafe" than an open place merely named one), read through the SAME
+  `isTrading` the home ranker uses — item `030`'s root cause was a second,
+  cheaper copy of that rule. The row reuses `closureBadge` unchanged, INSIDE the
+  link, so the closure joins the link's accessible name; `app.css` was not
+  touched. 🚩 Sibling item `030` reads as if it covered this and did not — both
+  surfaces it fixed are the home list. 🛑 Still latent: 57 records, every one
+  trading, so the browser half runs on
+  [0109](0109-a-fixture-is-a-real-record-with-one-transform.md) fixtures.
+  Excluding a closed venue is rejected for the reader who is checking whether
+  their old local has gone; a DISH at a shut venue is deliberately untouched.
+
 - [0112](0112-a-layer-is-dated-by-the-document-it-was-read-from.md) — **a price
   layer is dated by the DOCUMENT it was read from, not by the folder it sits
   beside.** Roadmap `500/020` asked whether two 2025-11-25 photographs of the

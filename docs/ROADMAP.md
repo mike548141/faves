@@ -151,7 +151,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [A shut seven-branch chain now says "Permanently closed" eight times](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/050-a-shut-chain-says-permanently-closed-eight-times.md)
 - ✅ 🔎 [The sticky contact bar is a NINTH place the closure sentence appears,](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/060-the-sticky-contact-bar-is-a-ninth-closure-notice.md)
 - ✅ 🔎 [The check harness reads and clicks geometry while it is still](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/070-the-harness-reads-geometry-while-it-is-still-animating.md)
-- [~] 🔎 [Search ignores lifecycle closure entirely, and no item covered it](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/080-search-ignores-lifecycle-closure.md)
+- ✅ 🔎 [Search ignores lifecycle closure entirely, and no item covered it](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/080-search-ignores-lifecycle-closure.md)
 
 ## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
 

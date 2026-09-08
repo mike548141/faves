@@ -40,12 +40,21 @@ function markedNodes(text, needle) {
  * is plain visible text (e.g. "Matched: address") for a hit whose field
  * isn't shown in `name` or `sub` at all, so that case still states its
  * reason rather than leaving the row unexplained.
+ *
+ * `badge` (item 210/080) is an already-built node the caller wants stated on
+ * the row — today only `closureBadge`'s "Permanently closed" / "Temporarily
+ * closed · back 27 Aug" (closure-ui.js). It goes INSIDE the link, like the
+ * badge on a home card, so the fact joins the link's accessible name instead of
+ * sitting beside it as decoration a screen reader meets separately. A node, not
+ * a string, because the treatment is the caller's — this module owns the row's
+ * shape and deliberately not the vocabulary of a closure.
  */
-export function resultRow({ name, sub, href, trailing, nameMatch, subMatch, note }) {
+export function resultRow({ name, sub, href, trailing, nameMatch, subMatch, note, badge }) {
   const link = el("a", { className: "search-link", href }, [
     el("span", { className: "search-row-name" }, markedNodes(name, nameMatch)),
     sub ? el("span", { className: "search-row-sub" }, markedNodes(sub, subMatch)) : null,
     note ? el("span", { className: "search-row-note", textContent: note }) : null,
+    badge || null,
   ]);
   return el("li", { className: "search-row" }, [link, trailing || null]);
 }
