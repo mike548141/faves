@@ -134,6 +134,9 @@ def fresh_tree(tmp, name, mutation=None):
     (tree / "tools").mkdir(parents=True)
     for tool in ("split_data.py", "seed_dish_ids.py"):
         shutil.copy(ROOT / "tools" / tool, tree / "tools")
+    # Both tools import the tree-line helper (ADR 0113); a fixture tree without
+    # it would fail on the import rather than on the thing under test.
+    shutil.copytree(ROOT / "tools" / "lib", tree / "tools" / "lib")
     if mutation:
         f = tree / "tools" / "split_data.py"
         src = f.read_text()
@@ -247,4 +250,11 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # Which tree did this actually read? ROOT — resolved from this file — and
+    # never the working directory, which can have drifted out from under it
+    # (ADR 0113, roadmap 340/260). Prints as the run's last line, on every
+    # exit path including a refusal.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lib.tree import announce
+    announce(ROOT)
     sys.exit(main())

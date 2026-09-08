@@ -696,4 +696,11 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    # Which tree did this actually read? ROOT — resolved from this file — and
+    # never the working directory, which can have drifted out from under it
+    # (ADR 0113, roadmap 340/260). Prints as the run's last line, on every
+    # exit path including a refusal.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lib.tree import announce
+    announce(ROOT)
     raise SystemExit(main())

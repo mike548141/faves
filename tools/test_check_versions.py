@@ -69,6 +69,10 @@ def make_repo(tmp):
     # The checker resolves paths from its OWN location, so it has to be run
     # against a tree that carries it — copy it in rather than pointing at ours.
     write(repo, "tools/check_versions.py", CHECKER.read_text(encoding="utf-8"))
+    # …and its tree-line helper (ADR 0113), for the same reason: the checker
+    # imports it, so a repo carrying only the checker would die on the import.
+    for f in sorted((CHECKER.parent / "lib").glob("*.py")):
+        write(repo, f"tools/lib/{f.name}", f.read_text(encoding="utf-8"))
     # Real-format constants in the base, so the monotonicity cases below have
     # something parseable to go backwards FROM. The opaque "v2"/"d2" the bump
     # cases write are deliberately left as they are: this checker owns ordering,
@@ -267,4 +271,11 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # Which tree did this actually read? ROOT — resolved from this file — and
+    # never the working directory, which can have drifted out from under it
+    # (ADR 0113, roadmap 340/260). Prints as the run's last line, on every
+    # exit path including a refusal.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lib.tree import announce
+    announce(ROOT)
     sys.exit(main())

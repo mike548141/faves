@@ -67,6 +67,8 @@ ROOT = TOOLS.parent
 sys.path.insert(0, str(TOOLS))
 from seed_dish_ids import slug  # noqa: E402
 
+
+ROOT = Path(__file__).resolve().parent.parent
 VENUES = ROOT / "site" / "data" / "restaurants"
 HIST = ROOT / "data" / "history"
 
@@ -677,4 +679,11 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
+    # Which tree did this actually read? ROOT — resolved from this file — and
+    # never the working directory, which can have drifted out from under it
+    # (ADR 0113, roadmap 340/260). Prints as the run's last line, on every
+    # exit path including a refusal.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lib.tree import announce
+    announce(ROOT)
     sys.exit(main())
