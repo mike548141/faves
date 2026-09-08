@@ -74,3 +74,45 @@
   silently breaking venue sorting.
   ⚠️ ADR 0090 is **accepted**, so this lands as a **superseding note**, never
   an edit to its Decision text.
+
+  ---
+
+  ✅ **DELIVERED IN PART 2026-09-09 (session faves-p1, PR on
+  `p1-location-rule`) — the rewording. The item stays OPEN on the validator
+  fork alone.**
+
+  **What landed.**
+  [ADR 0115](../../decisions/0115-where-a-product-was-seen-is-a-business-not-a-coordinate.md)
+  supersedes **ADR 0090's rule 1 in full**; 0090 keeps a pointer beside rule 1
+  (0064's shape) and its Decision text is otherwise untouched. Rule 1 now
+  reads: *no coordinate in a product record, and no position derived from a
+  photograph taken at a private address* — with **reading GPS at intake
+  explicitly preserved**, and *where a product was seen* admissible as a
+  **venue reference or shop name, never a raw coordinate**. The same wording
+  now stands in `tools/products.py`'s rules block, its coordinate-refusal
+  error message, `docs/ARCHITECTURE.md` and `CLAUDE.md`'s verify list — and
+  `tools/intake_exif.py` gained a header paragraph telling a future session
+  **not to delete its GPS read**, which is cost 1 above defended at the file
+  it would have been deleted from.
+
+  🎯 **STILL OWED, AND IT IS THE OWNER'S: does the validator's positive half
+  ship now, or when the first in-shop photograph exists?** Not resolved here.
+  Two measurements sharpen the question since it was written:
+  1. **The negative half already ships.** `products.py` refuses `lat`, `lng`,
+     `latitude`, `longitude`, `gps` and `coords` over the serialised record,
+     and `SOURCE_KEYS` is closed with no place field. *"Never a raw
+     coordinate"* is live today. Only the **positive** key — one that may hold
+     a venue reference or a shop name — is unbuilt, and it has **zero** rows
+     to shape it.
+  2. 🔎 **This item's stated reason for waiting cites the wrong record.**
+     ADR 0047 cuts on `site/data/` (precached to every phone) versus `data/`
+     (never served); a field in `data/products/` costs no phone a byte, and
+     *"a record store with no reader is exactly what `data/` is for"* is ADR
+     0090's own line. The precedent that **does** bite is
+     [ADR 0080](../../decisions/0080-a-venue-has-menus-plural.md) Decision 4 —
+     *a shape recorded before its first instance is a hypothesis, and the
+     session that builds it must re-derive against a real instance*. Same
+     answer, sounder reason, and a narrower question than the framing above
+     implied. The recommendation is unchanged: **build it against the first
+     real in-shop photograph**, so the key's shape is disciplined by an actual
+     record rather than invented.
