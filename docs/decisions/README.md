@@ -1136,3 +1136,19 @@ deliberation those compact docs omit.
   which `210/070` hoped one fix would cover: the evidence says that failure is
   not an animation at all — `anims: 0`, the menu `display:none`, the button at
   `top: -35`.
+- [0102](0102-a-harvest-reports-its-own-coverage-and-a-gap-is-not-a-failure.md)
+  — **a harvest reports its own coverage, and a gap is not a failure.**
+  [0090](0090-the-packaged-product-record-store.md) built two tools and no join:
+  one printed the 183 photographs in 59 bursts, the other validated the 87
+  records, and **15 bursts sat uncited for two days with every gate green** —
+  [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)'s
+  shape exactly. `products.py --coverage`
+  joins them. Three parts: the join lives with the **store** (whose completeness
+  is the claim) rather than with the population; `source.burst` is **parsed**,
+  never compared, because a composite like `"b026+b045"` makes an exact-string
+  answer read **17** where the truth is **15** (`--probe` prints both, for
+  ever); and a **gap reports while a contradiction fails**, because a check that
+  can never reach zero is one nobody runs. 🔑 The 26 recipe and menu-leaflet
+  photographs say so out loud in `data/intake/not-products.json` — with what
+  they hold, who read them and when, because *"we looked and it is not a
+  product"* and *"nobody looked"* are otherwise identical.
