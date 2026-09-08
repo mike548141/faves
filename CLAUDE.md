@@ -264,8 +264,10 @@ python3 tools/seed_branch_ids.py --check # …and every BRANCH its own (ADR 0103
                               # text. Nothing renders a branch id, so a wrong one has NO
                               # visible symptom: this and validate.py's uniqueness gate
                               # are the only things in the repo that can say so
-python3 tools/test_validate.py # …and that gate still catches things (144 mutations,
-                              # re-counted 2026-09-07; it said 113 and has grown since —
+python3 tools/test_validate.py # …and that gate still catches things (147 mutations,
+                              # re-counted 2026-09-09 — the number in this line has been
+                              # wrong at least four times, so read the tool's own summary
+                              # rather than this comment; it said 113 and has grown since —
                               # 131 on 2026-09-06, +6 with ADR 0092's add-on option rules,
                               # then 137 → 140 when ADR 0094 replaced the one case that
                               # asserted `close must be after open` with four: close ==
