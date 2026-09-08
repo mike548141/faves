@@ -317,7 +317,42 @@ function dishMatchField(d, forms) {
   return { field: "details", text: null };
 }
 
-function rank(entries, forms, limit, matchField) {
+// Theme 27a — does the query hit a property this place actually CARRIES?
+//
+// `area` and `cuisine` are the two facets the app treats as properties rather
+// than prose: they are what the sub-line under a venue's name states, what the
+// facet links filter the browse list by (ADR 0050), and the only two fields a
+// reader can also arrive at from a control instead of by typing. A hit on
+// either is the venue saying "I am this". A hit on name/address/city/phone/
+// service is a hit on a string that happens to contain the word.
+//
+// Deliberately NOT here: `vibe`. It is a closed vocabulary like the two above,
+// so the case for including it is real — but its KEYS are hyphenated compounds
+// and `findForm` is a substring match, so "Bar" hits `garden-bar` and Dragonfly
+// (an Asian restaurant with a garden bar) would be promoted over Charley Noble
+// Eatery & Bar as though it were a bar. Whether that is right is a product call
+// the item did not make and this module should not invent; ADR 0106 records it
+// as open. Adding it later is one entry in this function.
+function placeFacetHit(p, forms) {
+  if (findForm(p.area, forms)) return true;
+  for (const c of p.cuisine || []) {
+    if (findForm(c, forms)) return true;
+  }
+  return false;
+}
+
+// Theme 27a — a facet hit outranks a text hit, as a key ABOVE the text score
+// rather than a bonus added into it. A bonus large enough to matter would have
+// to be bigger than the whole 1–4 scale, at which point it *is* a leading key
+// but with an arbitrary number in it; a smaller one leaves the two classes
+// interleaved, which is the state this item exists to end.
+//
+// It is a separate question from `score()` on purpose: a venue can hit both
+// (Groundup Cafe is NAMED Cafe and is TAGGED Cafe) and must not be demoted for
+// it — so this is computed independently of `score` and independently of
+// `matchField`, which reports only the FIRST field it finds and would call that
+// venue a name match.
+function rank(entries, forms, limit, matchField, facetHit = null) {
   const scored = [];
   for (const e of entries) {
     // Best form wins, so a synonym never *lowers* a direct hit's rank: typing
@@ -325,9 +360,10 @@ function rank(entries, forms, limit, matchField) {
     // tagged vegetarian.
     let s = 0;
     for (const f of forms) s = Math.max(s, score(e.name, e.hay, f));
-    if (s > 0) scored.push({ e, s });
+    // 0 sorts first: this is a rank key, not a truthiness flag.
+    if (s > 0) scored.push({ e, s, facet: facetHit && facetHit(e, forms) ? 0 : 1 });
   }
-  scored.sort((a, b) => b.s - a.s || a.e.name.localeCompare(b.e.name));
+  scored.sort((a, b) => a.facet - b.facet || b.s - a.s || a.e.name.localeCompare(b.e.name));
   return {
     total: scored.length,
     // matchField/matchText are additive to every entry already returned
@@ -346,6 +382,14 @@ function rank(entries, forms, limit, matchField) {
  * the UI can say "showing 12 of 30". A query under 2 chars matches nothing
  * (a single letter would match almost everything — noise, not help).
  *
+ * Places rank facet-first (Theme 27a, ADR 0106): a venue whose `area` or
+ * `cuisine` carries the query sorts above one that merely has the word in its
+ * name or address, so "Cafe" leads with the places tagged Cafe and KC Cafe
+ * follows rather than leads. Nothing is dropped — the haystack is unchanged and
+ * `total` is unchanged; only the order moves. Note the consequence: where the
+ * facet group is bigger than `placeLimit`, the name-coincidences fall off the
+ * *visible* page, which is the ranking working, not the haystack narrowing.
+ *
  * Every item also carries `matchField` (Theme 27b) — "name"/"area"/"cuisine"/
  * "vibe" for a place, "name" for a dish, else "details" for a hit that's real but
  * lives somewhere the result row doesn't show — and `matchText`, the literal
@@ -360,7 +404,9 @@ export function search(index, query, { placeLimit = 6, dishLimit = 20 } = {}) {
   }
   const forms = expand(q);
   return {
-    places: rank(index.places, forms, placeLimit, placeMatchField),
+    // A dish has no facets — nothing it carries is a property in the sense
+    // above — so it ranks on text alone, exactly as it did before 27a.
+    places: rank(index.places, forms, placeLimit, placeMatchField, placeFacetHit),
     dishes: rank(index.dishes, forms, dishLimit, dishMatchField),
   };
 }

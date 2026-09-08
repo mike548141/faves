@@ -481,3 +481,90 @@ test("every scored result carries a matchField — no silent gap", () => {
     for (const d of r.dishes.items) assert.ok(d.matchField, `dish missing matchField for ${d.name}`);
   }
 });
+
+// ── Theme 27a — a facet match outranks a text match (ADR 0106) ────────────
+//
+// Every venue here is picked by ID, never by name, and every assertion reads
+// the ORDER OF IDS. Two of these venues are deliberately named for a property
+// they do not carry and one is named for a property it does — which is the
+// whole shape of the bug, and is unreadable if a fixture is looked up by name.
+const FACET_FIXTURE = [
+  // Carries the property AND is named for it. Must not be demoted for being
+  // both: `matchField` reports only the first field it finds and would call
+  // this a name match, so an implementation built on matchField fails here.
+  { id: "f-both", name: "Groundup Cafe", area: "Kaiwharawhara", cuisine: ["Cafe"] },
+  // Named for it, does not carry it. The "name coincidence" class.
+  { id: "f-name-only", name: "KC Cafe", area: "Newtown", cuisine: ["Chinese"] },
+  { id: "f-name-only-2", name: "Satay Kingdom Cafe", area: "Newtown", cuisine: ["Malaysian"] },
+  // Carries it, is not named for it. The class that was being buried: its text
+  // score is 1 (haystack only) against the name-coincidences' 3.
+  { id: "f-facet-only", name: "Caffiend", area: "Petone", cuisine: ["Cafe"] },
+  { id: "f-facet-only-2", name: "Simmer", area: "Churton Park", cuisine: ["Cafe"] },
+  // Carries it in AREA rather than cuisine — the item names both fields.
+  { id: "f-area", name: "Regal", area: "Cafe Lane", cuisine: ["Chinese"] },
+  // Has the word only in an address: a hit, and the weakest class of one.
+  // No street number — leakscan reads "<n> <Word> Lane" as an NZ address, and a
+  // fixture is not worth an exemption when the field is exercised either way.
+  { id: "f-address", name: "Dragonfly", area: "Te Aro", cuisine: ["Asian"], address: "Cafe Lane" },
+];
+const facetIndex = buildIndex(FACET_FIXTURE);
+const facetIds = (q) => search(facetIndex, q, { placeLimit: 20 }).places.items.map((p) => p.id);
+
+test("27a: a cuisine match outranks a name match", () => {
+  const ids = facetIds("cafe");
+  const lastFacet = Math.max(ids.indexOf("f-facet-only"), ids.indexOf("f-facet-only-2"));
+  const firstNameOnly = Math.min(ids.indexOf("f-name-only"), ids.indexOf("f-name-only-2"));
+  assert.ok(
+    lastFacet < firstNameOnly,
+    `every place TAGGED Cafe must precede every place merely NAMED Cafe; got ${ids.join(" > ")}`
+  );
+});
+
+test("27a: an area match outranks a name match", () => {
+  const ids = facetIds("cafe");
+  assert.ok(
+    ids.indexOf("f-area") < ids.indexOf("f-name-only"),
+    `a place whose AREA is the query must precede a name coincidence; got ${ids.join(" > ")}`
+  );
+});
+
+test("27a: an address match does NOT outrank a name match", () => {
+  // The bound on the rule. Address is in the haystack and stays there, but it
+  // is not a property the venue carries — promoting it would make the rule
+  // "anything but the name wins", which is a different and wrong rule.
+  const ids = facetIds("cafe");
+  assert.ok(
+    ids.indexOf("f-name-only") < ids.indexOf("f-address"),
+    `an address hit must not be promoted over a name hit; got ${ids.join(" > ")}`
+  );
+});
+
+test("27a: a place that matches BOTH its name and its cuisine still leads", () => {
+  // The failure mode of the obvious implementation. Reading the facet off
+  // `matchField` would classify Groundup as a name match and sink it below
+  // venues it outranks on every reading.
+  assert.equal(facetIds("cafe")[0], "f-both");
+});
+
+test("27a: a name coincidence still APPEARS — the haystack was not narrowed", () => {
+  // The item rejected narrowing explicitly: "Charley Noble is a fair answer to
+  // 'Noble'". Ranking moves a row; it must never remove one.
+  const ids = facetIds("cafe");
+  assert.ok(ids.includes("f-name-only"), `KC Cafe must still be findable; got ${ids.join(" > ")}`);
+  assert.ok(ids.includes("f-name-only-2"), `Satay Kingdom Cafe must still be findable`);
+  assert.equal(search(facetIndex, "cafe").places.total, 7, "every match still counted");
+  // And a query only a NAME can answer is untouched.
+  assert.deepEqual(facetIds("dragonfly"), ["f-address"]);
+});
+
+test("27a: dishes are unaffected — a dish carries no facet", () => {
+  // rank() takes the facet test as a parameter and dishes are given none, so
+  // their order is exactly the pre-27a text ranking. Asserted because a shared
+  // comparator is where a places-only rule leaks into dishes.
+  const { dishes } = search(index, "char");
+  assert.equal(dishes.items[0].name, "Char Kway Teow");
+  assert.deepEqual(search(index, "kumara").dishes.items.map((d) => d.name).sort(), [
+    "Kumara wedges",
+    "Kūmara fries",
+  ]);
+});
