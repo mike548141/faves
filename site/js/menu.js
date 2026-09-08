@@ -1193,12 +1193,19 @@ function closePicks(venueId, section) {
 // Deep-link chips for "goes well with": a same-record dish name, or a
 // cross-record "id#Dish Name". Anchors match the dish li ids below.
 //
-// Only the same-record half can be resolved: `r` is the one menu this page
+// Only the same-record half can be resolved here: `r` is the one menu this page
 // holds, and fetching another venue's record to resolve a chip would put a
 // network round-trip behind a link. The cross-record half falls back to
-// `slug(name)`, which IS the id of any dish that hasn't been given one — so it
-// lands exactly where it always did, and the target page's own resolver has the
-// last word once you're there.
+// `slug(name)` and the target page's own resolver has the last word once you
+// are there.
+//
+// ⚠️ That last clause was FALSE until 2026-09-08 (roadmap `490/100`, defect 5).
+// `slug(name)` is the id of any dish that has not been given one, and 85 of
+// 3,506 now have: for those the anchor matched no element and `findDish` — the
+// resolver this sentence points at — could not recover it either, so the chip
+// dead-ended. The recovery belongs at the destination, where the other record
+// actually is, so `findDish` grew a final name-slug tier rather than this
+// function growing a fetch.
 function pairingLinks(refs, r) {
   const wrap = el("div", { className: "dish-pairs" }, [
     el("span", { className: "dish-pairs-label", "data-i18n": "menu.goesWith", textContent: "Goes well with" }),
@@ -2302,7 +2309,12 @@ function scrollToHash() {
   // now; the address bar keeps the link the reader was sent, which is fine —
   // it will resolve again next time.
   if (!target && current && id.startsWith("dish-")) {
-    const found = findDish(current, id.slice("dish-".length));
+    // `byNameSlug` — the ONE caller that wants the weak tier, because this is
+    // the only one holding a string built outside the record: a `#dish-…`
+    // fragment off a shared link or a cross-record pairing chip, which is a
+    // name's slug and not an id (roadmap `490/100`, defect 5). Every other
+    // caller of findDish is asking about identity and must not have it.
+    const found = findDish(current, id.slice("dish-".length), { byNameSlug: true });
     if (found) target = document.getElementById(`dish-${dishId(found.item)}`);
   }
   if (!target) return;

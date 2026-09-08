@@ -1337,6 +1337,15 @@ def find_dish(dishes, ref):
     site/js/dish-id.js: id, then slug(ref) as an id, then exact name, then a
     former id. Returns `(tier, matches)` for the FIRST tier that matched.
 
+    ⚠️ `findDish` grew a FIFTH tier on 2026-09-08 — the dish's own name slugged
+    — and this function deliberately does NOT mirror it (roadmap `490/100`,
+    defect 5). That tier is off by default there and switched on by exactly one
+    caller, the one resolving a `#dish-…` LINK. This file asks the other
+    question: does this pick, this pairing, this reference name a dish the
+    record actually declares? Mirroring the link tier here would let a pick
+    written as a stale slug validate against a dish whose id has since moved,
+    which is the ADR 0051 collision the gate exists to catch.
+
     The browser takes the first match and moves on, as it always did. Here the
     whole tier comes back, because ambiguity is exactly what this file is for:
     a pick that matches two dishes must be refused at the gate rather than
