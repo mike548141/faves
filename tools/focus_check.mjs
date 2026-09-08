@@ -6,6 +6,12 @@
 // tests/search.test.js: `search()` returning the right array and the page
 // painting that array in that order are two separate facts.
 //
+// And, since 2026-09-09, whether that same list sinks a venue that has CLOSED
+// DOWN to the bottom and SAYS SO on its row (item 210/080, ADR 0111). The
+// corpus holds no closed venue, so those rows are served through
+// `startServer`'s overlay from a SECOND server — the real load path, fixture
+// bytes — rather than by putting a fiction in `site/data/`.
+//
 //     node tools/focus_check.mjs        # headless, exit 0 = pass
 //     node tools/focus_check.mjs -v     # narrate each step
 //
@@ -55,6 +61,9 @@
 //      asserts that a place tagged Bar outranks a place named Bar; whether that
 //      is what you meant by typing "Bar" is a product question, and the tagging
 //      it rests on is the venue's own claim, which no browser can verify.
+//   6. Whether a venue has ACTUALLY closed. The closure assertions run against
+//      injected fixture bytes; that a shop in `site/data/` is still trading is
+//      a fact about the world, kept current by a human refreshing the record.
 
 import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -73,6 +82,7 @@ import {
   untilPresent,
   sleep,
 } from "./lib/browser.mjs";
+import { buildFixtures, defaultId } from "./lib/fixtures.mjs";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -173,6 +183,10 @@ async function run(opts) {
   const profileDir = await mkdtemp(join(tmpdir(), "faves-focus-check-"));
   let chrome = null;
   let cdp = null;
+  // The second server, serving the closed-venue fixtures over the same tree
+  // (started late, closed in `finally` whatever happens before it).
+  let closureServer = null;
+  let closurePort = 0;
 
   try {
     console.log("Faves focus check — do the menu filters narrow the list honestly?");
@@ -489,11 +503,150 @@ async function run(opts) {
       `expected ${both?.id ?? "(no such venue in the corpus)"} first, got ${cafeIds.join(" > ")}`
     );
 
+    // ─── A venue that has CLOSED DOWN sorts last and SAYS SO ───────────────
+    //
+    // Item 210/080 / ADR 0111. Two claims, and they fail independently: the
+    // demotion is search.js's (unit-tested) but the ORDER ON THE PAGE is not,
+    // and the badge is a rendered node no unit test can see at all.
+    //
+    // THE CORPUS HOLDS NO CLOSED VENUE — 57 records, every one trading — which
+    // is exactly why item `030` shipped the same behaviour on the home list
+    // unit-tested only. So this serves fixtures through `startServer`'s overlay
+    // (see lib/browser.mjs): the browser does what it does in life, one HTTP GET
+    // of one venue JSON, and only the bytes are the fixture. The alternative —
+    // a closed venue in `site/data/` — would ship a fiction to every phone
+    // (ADR 0047), and it is rejected here for the third time.
+    //
+    // A SECOND server, not an overlay on the one above: a closed venue changes
+    // the order of every list it appears in, and the 27a assertions above must
+    // keep reading the real corpus.
+    //
+    // The fixtures are DERIVED, never authored: ADR 0109's library applies one
+    // named transform to a real corpus record, so a fixture gains every field
+    // the schema grows on the day the corpus does, and `fixture_check.mjs` runs
+    // the real `validate.py` over both of these states already.
+    const { records: closureRecords, overlay: closureOverlay } = await buildFixtures(SITE, [
+      { from: "sushi-bi", states: ["permanently-closed"] },
+      { from: "the-ramen-shop", states: ["temporarily-closed"] },
+    ]);
+    // A fixture takes an id of its own, so the home screen only loads it if the
+    // INDEX names it. Substituted for the source id rather than appended: two
+    // records with one name would leave the assertions below reading a list with
+    // a twin in it, and the point is a corpus where those two venues are shut.
+    const swap = new Map([
+      ["sushi-bi", defaultId("sushi-bi", ["permanently-closed"])],
+      ["the-ramen-shop", defaultId("the-ramen-shop", ["temporarily-closed"])],
+    ]);
+    closureOverlay.set(
+      "/data/index.json",
+      JSON.stringify(index.map((id) => swap.get(id) || id))
+    );
+    ({ server: closureServer, port: closurePort } = await startServer(0, SITE, closureOverlay));
+    await cdp.send("Page.navigate", { url: `http://127.0.0.1:${closurePort}/index.html` }, sessionId);
+    await untilPresent(
+      () => driver.evalPage(`(document.querySelector("#result-count")?.textContent ?? "").trim().length > 0`),
+      { label: "home (closure fixture): the place list was rendered by app.js" }
+    );
+    await driver.settle();
+
+    /** Every rendered Places row: its id, its NAME as painted, and whatever
+     *  closure badge the row carries. The badge is read from INSIDE the anchor
+     *  — that placement is the accessibility claim (it joins the link's
+     *  accessible name rather than sitting beside it), so a badge moved out of
+     *  the link must fail here rather than pass on a looser selector. */
+    async function searchPlaceRows(q) {
+      await driver.evalPage(
+        `(() => { const s = ${need("#search-input")}; s.focus(); s.value = ${JSON.stringify(q)};
+          s.dispatchEvent(new Event("input", { bubbles: true })); })()`
+      );
+      await sleep(160);
+      await driver.settle();
+      return driver.evalPage(`(() => {
+        const group = [...document.querySelectorAll("#search-groups .search-group")]
+          .find((g) => /Places/.test(g.querySelector(".search-group-title span")?.textContent || ""));
+        if (!group) return [];
+        return [...group.querySelectorAll("a.search-link")].map((a) => {
+          const b = a.querySelector(".hours-badge");
+          return {
+            id: new URL(a.getAttribute("href"), location.href).searchParams.get("id"),
+            name: (a.querySelector(".search-row-name")?.textContent || "").trim(),
+            badge: b ? (b.textContent || "").trim() : null,
+            state: b ? b.dataset.state : null,
+          };
+        });
+      })()`);
+    }
+
+    const jRows = await searchPlaceRows("Japanese");
+    const shutIds = [...closureRecords.keys()];
+    const GONE = swap.get("sushi-bi");
+    const REFIT = swap.get("the-ramen-shop");
+    const jIds = jRows.map((r) => r.id);
+    const jOpen = jRows.filter((r) => !shutIds.includes(r.id));
+    const jShut = jRows.filter((r) => shutIds.includes(r.id));
+    // The refusal, in this file's own tradition: a fixture that cannot show the
+    // difference must FAIL, not pass quietly. Both classes have to be on screen,
+    // AND the closed venue has to be one the OLD ranking would have put first —
+    // otherwise "it is last" is satisfied by an ordering that never moved.
+    // Sorted on the same key search.js breaks ties with — the venue NAME —
+    // which means stripping the kind icon the row prepends: leave it on and the
+    // sort is comparing four identical emoji, so a corpus whose kinds differ
+    // would make this refusal fire on the icon instead of the name.
+    const bare = (s) => s.replace(/^\P{L}+/u, "");
+    const alphaFirst = [...jRows].sort((a, b) => bare(a.name).localeCompare(bare(b.name)))[0];
+    report.check(
+      'the "Japanese" fixture can show the difference — both classes on screen, and a closed venue that used to lead',
+      jOpen.length > 0 && jShut.length === 2 && shutIds.includes(alphaFirst?.id),
+      `${jShut.length} closed, ${jOpen.length} trading; alphabetically first is ${alphaFirst?.name ?? "(nothing)"} — ${jIds.join(" > ") || "(nothing)"}`
+    );
+    const lastOpen = Math.max(...jOpen.map((r) => jIds.indexOf(r.id)));
+    const firstShut = Math.min(...jShut.map((r) => jIds.indexOf(r.id)));
+    report.check(
+      "every closed-down place is rendered below every trading one",
+      jOpen.length > 0 && jShut.length > 0 && lastOpen < firstShut,
+      jRows.map((r) => `${r.id}${shutIds.includes(r.id) ? "*" : ""}`).join(" > ")
+    );
+    report.check(
+      "the shut-for-good row SAYS SO, in the badge the card and the menu header use",
+      jRows.find((r) => r.id === GONE)?.badge === "Permanently closed" &&
+        jRows.find((r) => r.id === GONE)?.state === "closed-permanently",
+      JSON.stringify(jRows.find((r) => r.id === GONE) ?? null)
+    );
+    // The two closures are told APART on the row, not merged into one "closed".
+    // ADR 0109's `temporarily-closed` state is deliberately OVERDUE — the venue
+    // said it would be back and the date has gone — and `closure-ui.js` drops
+    // the stated return in that case rather than repeating a promise the record
+    // can no longer support. So the "· back <date>" half must be ABSENT here,
+    // and that is asserted rather than merely not looked for.
+    report.check(
+      "an overdue refit row says WHICH closure it is, and does NOT repeat a return date it can no longer support",
+      jRows.find((r) => r.id === REFIT)?.badge === "Temporarily closed" &&
+        jRows.find((r) => r.id === REFIT)?.state === "closed-temporarily",
+      JSON.stringify(jRows.find((r) => r.id === REFIT) ?? null)
+    );
+    // The absence assertion, and the one most likely to rot: without it a badge
+    // that fired on all 55 places would pass everything above.
+    report.check(
+      "a TRADING place carries no closure badge at all",
+      jOpen.length > 0 && jOpen.every((r) => r.badge === null),
+      jOpen.map((r) => `${r.id}=${r.badge ?? "none"}`).join(", ")
+    );
+    // Demoted, never dropped. Option (3) — excluding a closed venue — was
+    // rejected because the reader most likely to type its name is checking
+    // whether it has really gone.
+    const byName = await searchPlaceRows("Sushi Bi");
+    report.check(
+      "a closed venue is still FINDABLE by name — the demotion drops nothing",
+      byName.some((r) => r.id === GONE),
+      byName.map((r) => r.id).join(" > ") || "(nothing)"
+    );
+
     return report.summary(SITE);
   } finally {
     cdp?.close();
     await stopChrome(chrome?.proc);
     server.close();
+    closureServer?.close();
   }
 }
 

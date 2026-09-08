@@ -12,6 +12,7 @@ import { ingredientKeys } from "./ingredients.js";
 import { isRecipeKind, kindOf } from "./kinds.js";
 import { searchableText, venueLanguage } from "./lang.js";
 import { DIET_FILTERS } from "./dietary.js";
+import { isTrading } from "./temporal.js";
 import { vibesFor } from "./vibes.js";
 
 // Lower-cased AND macron-folded, so "kumara" finds "kūmara" and "kūmara"
@@ -121,7 +122,7 @@ function dietLabels(tags) {
  * { places, dishes }; each entry carries a lowercased `hay` (haystack) and,
  * for dishes, a ready-to-use deep-link `href`.
  *   place: { id, name, area, cuisine[], kind, address, city, services[],
- *            phone, vibes[], hay }
+ *            phone, vibes[], closure, hay }
  *   dish:  { name, venueId, venueName, isRecipe, section, href, hay }
  * Stubs (no menu) contribute a place but no dishes — which is correct: you
  * can still find the venue by name, there just aren't dishes to match yet.
@@ -158,6 +159,14 @@ export function buildIndex(restaurants) {
       services: r.services || [],
       phone: r.phone || "",
       vibes,
+      // The venue's lifecycle state for TODAY, already folded by
+      // `resolveRecord` (temporal.js) before the record reaches here. Carried
+      // rather than recomputed so the one fold answers both halves of item
+      // 210/080: `placeClosed` below demotes on it, and the result row renders
+      // the same object through `closureBadge` (closure-ui.js). Null for a
+      // record that was never resolved — a raw fixture, a caller of `buildIndex`
+      // outside the app — which `isTrading` reads as trading, the safe default.
+      closure: r.closure || null,
       // Address, city, service, phone and vibe join name/area/cuisine: people
       // look for a place by the street they remember it on, by "takeaway", by
       // the number in their call history, or by what the place is like — not
@@ -333,6 +342,24 @@ function dishMatchField(d, forms) {
 // Eatery & Bar as though it were a bar. Whether that is right is a product call
 // the item did not make and this module should not invent; ADR 0106 records it
 // as open. Adding it later is one entry in this function.
+// Item 210/080 — has this venue shut its doors? Read from the folded
+// `closure` the index entry carries, through the SAME `isTrading` the home
+// list's `availabilityTier` uses, deliberately: item `030`'s root cause was a
+// second, cheaper copy of this rule written beside the first, and two copies of
+// one rule both read correct in a diff. Trading is the default for anything
+// that has no closure at all, so an unresolved record is never demoted by
+// accident.
+//
+// Both closure states demote, exactly as the home ranker's tier 3 does: a refit
+// and a permanent closure are one answer to "can you eat there?". Which of the
+// two a reader is looking at is carried by the badge on the row, not by the
+// order. Whether a permanent closure should sink BELOW a temporary one is the
+// same product question `030` left open in ranking.js, and this does not answer
+// it either.
+function placeClosed(p) {
+  return !isTrading(p);
+}
+
 function placeFacetHit(p, forms) {
   if (findForm(p.area, forms)) return true;
   for (const c of p.cuisine || []) {
@@ -352,7 +379,15 @@ function placeFacetHit(p, forms) {
 // it — so this is computed independently of `score` and independently of
 // `matchField`, which reports only the FIRST field it finds and would call that
 // venue a name match.
-function rank(entries, forms, limit, matchField, facetHit = null) {
+//
+// Item 210/080 adds a THIRD key, above both: a venue that has closed down sorts
+// below every trading one, whatever it matched on. Same shape and the same
+// reason — the answer to "have they shut?" is not a shade of relevance, so it
+// cannot be a number added into one. It sits ABOVE the facet key because the
+// item's requirement is "last", not "last among its own class": a shut café is
+// a worse answer to "Cafe" than an open place merely named one, since the
+// reader can at least walk into the second.
+function rank(entries, forms, limit, matchField, facetHit = null, closedTest = null) {
   const scored = [];
   for (const e of entries) {
     // Best form wins, so a synonym never *lowers* a direct hit's rank: typing
@@ -360,10 +395,19 @@ function rank(entries, forms, limit, matchField, facetHit = null) {
     // tagged vegetarian.
     let s = 0;
     for (const f of forms) s = Math.max(s, score(e.name, e.hay, f));
-    // 0 sorts first: this is a rank key, not a truthiness flag.
-    if (s > 0) scored.push({ e, s, facet: facetHit && facetHit(e, forms) ? 0 : 1 });
+    // 0 sorts first: these are rank keys, not truthiness flags.
+    if (s > 0) {
+      scored.push({
+        e,
+        s,
+        closed: closedTest && closedTest(e) ? 1 : 0,
+        facet: facetHit && facetHit(e, forms) ? 0 : 1,
+      });
+    }
   }
-  scored.sort((a, b) => a.facet - b.facet || b.s - a.s || a.e.name.localeCompare(b.e.name));
+  scored.sort(
+    (a, b) => a.closed - b.closed || a.facet - b.facet || b.s - a.s || a.e.name.localeCompare(b.e.name)
+  );
   return {
     total: scored.length,
     // matchField/matchText are additive to every entry already returned
@@ -390,6 +434,13 @@ function rank(entries, forms, limit, matchField, facetHit = null) {
  * facet group is bigger than `placeLimit`, the name-coincidences fall off the
  * *visible* page, which is the ranking working, not the haystack narrowing.
  *
+ * A venue that has CLOSED DOWN ranks below every trading one (item 210/080,
+ * ADR 0111), on a key above even the facet one — still returned, still counted
+ * in `total`, never dropped, because the reader most likely to type a shut
+ * venue's name is someone checking whether it has really gone. Each place item
+ * carries the folded `closure` object so the row can say which kind of closure
+ * it is; nothing here renders.
+ *
  * Every item also carries `matchField` (Theme 27b) — "name"/"area"/"cuisine"/
  * "vibe" for a place, "name" for a dish, else "details" for a hit that's real but
  * lives somewhere the result row doesn't show — and `matchText`, the literal
@@ -405,8 +456,12 @@ export function search(index, query, { placeLimit = 6, dishLimit = 20 } = {}) {
   const forms = expand(q);
   return {
     // A dish has no facets — nothing it carries is a property in the sense
-    // above — so it ranks on text alone, exactly as it did before 27a.
-    places: rank(index.places, forms, placeLimit, placeMatchField, placeFacetHit),
+    // above — so it ranks on text alone, exactly as it did before 27a. It is
+    // given no closure test either: item 210/080 is about the place list, and
+    // whether a dish should sink with the venue that served it is a product
+    // question nobody has been asked (ADR 0111 records it as open). Both keys
+    // are parameters precisely so a places-only rule cannot leak into dishes.
+    places: rank(index.places, forms, placeLimit, placeMatchField, placeFacetHit, placeClosed),
     dishes: rank(index.dishes, forms, dishLimit, dishMatchField),
   };
 }

@@ -1310,3 +1310,57 @@ deliberation those compact docs omit.
   tonkatsu SAUCE, proposing
   three tags whose printed basis was untrue of the dish. 17 tags landed; twin
   warnings 21 → 18.
+- [0111](0111-search-sinks-a-closed-venue-and-says-so-on-the-row.md) — **search
+  sinks a venue that has CLOSED DOWN, and the row says which kind of closure it
+  is.** Search never consulted the lifecycle at all: measured on the corpus of
+  2026-09-09, a permanently-closed Sushi Bi led *both* "Japanese" and "Sushi",
+  above three trading venues — top of the list precisely because nothing in
+  `search.js` could see the one fact that disqualifies it. A closed key ABOVE
+  [0106](0106-search-ranks-a-facet-match-above-a-text-match.md)'s facet key and
+  the text score (last, not last-within-its-class: a shut café is a worse answer
+  to "Cafe" than an open place merely named one), read through the SAME
+  `isTrading` the home ranker uses — item `030`'s root cause was a second,
+  cheaper copy of that rule. The row reuses `closureBadge` unchanged, INSIDE the
+  link, so the closure joins the link's accessible name; `app.css` was not
+  touched. 🚩 Sibling item `030` reads as if it covered this and did not — both
+  surfaces it fixed are the home list. 🛑 Still latent: 57 records, every one
+  trading, so the browser half runs on
+  [0109](0109-a-fixture-is-a-real-record-with-one-transform.md) fixtures.
+  Excluding a closed venue is rejected for the reader who is checking whether
+  their old local has gone; a DISH at a shut venue is deliberately untouched.
+
+- [0112](0112-a-layer-is-dated-by-the-document-it-was-read-from.md) — **a price
+  layer is dated by the DOCUMENT it was read from, not by the folder it sits
+  beside.** Roadmap `500/020` asked whether two 2025-11-25 photographs of the
+  Takeaway @ Churton leaflet hid a price layer the repo had thrown away.
+  ✅ **They did not** — all 179 prices match the held layer to the cent, zero
+  differ, nothing to recover. 🔎 **But opening the other evidence showed the
+  held layer's DATE was wrong.** Its 179 entries read `recorded: "2019"`; they
+  were transcribed on **2026-07-06** from `menu 2.pdf`, a two-page scan of that
+  same leaflet. The folder's 2019 photographs are **in-store counter shots
+  carrying a price for seven dishes**, so they cannot be the source of 179 —
+  the ADR 0023 retrofit dated the layer from the only other file in the folder
+  and read one folder as one document. Corrected under ARCHITECTURE rule 5
+  (*we* got it wrong, not the shop): overwrite, add no entry, entry count
+  unchanged at 179 — which is why `check_append_only`, that counts entries,
+  passes an honest redate by design. The **seven** the photographs do evidence
+  keep that fact in their note. 🔑 The window on Churton's price rise goes from
+  **seven years to five weeks**. Nothing under `site/data/` changed and no
+  `DATA_VERSION` bump was owed. Also removes the premise of 0023's own
+  rejection of full-precision dates — *"the Churton scan is dated only 2019"*
+  was the corpus's one cited instance, and it was not real.
+
+- [0113](0113-a-python-gate-names-the-tree-it-read.md) — **a Python gate names
+  the tree it read, and it is never the working directory.** CLAUDE.md said
+  EVERY check prints a second line naming its tree; only the browser checks
+  did, so for more than half the verify list the mechanism against the
+  drifted-cwd incident was a discipline again. `tools/lib/tree.py` now prints
+  it from 26 entry points, in `browser.mjs`'s shape.
+  🔑 **The root is the gate's own `__file__`, never `os.getcwd()`** — a
+  cwd-derived helper is right in every ordinary run and wrong in exactly the
+  case it exists to catch ([0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md),
+  face 5). Detached HEAD, a stopped rebase and a linked worktree are each named
+  out loud, because `git branch --show-current` is EMPTY mid-rebase and a blank
+  where a branch goes reads as an ordinary run. `--self-test` stages the
+  incident itself — a probe in tree A run with `cwd = B` must still name A —
+  and reverting the root to `Path.cwd()` fails that case and only that case.

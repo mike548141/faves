@@ -866,8 +866,29 @@ function wireSearch(restaurants) {
     return { note: DISH_NOTE.details };
   }
 
+  // Item 210/080 — a venue that has closed down SAYS SO on its search row.
+  // search.js already sinks it below every trading place; the demotion alone
+  // would leave the reader who typed the name of their old local scrolling to
+  // the bottom to find it and none the wiser about why it was down there.
+  //
+  // The badge is `closureBadge` unchanged — the same node, the same words and
+  // the same colours the home card and the menu header already use, so the eye
+  // reads one vocabulary across three surfaces and this screen invents nothing.
+  // Built from the LOADED RECORD rather than the index entry because that is
+  // where the venue's timezone lives, and the date on "back 27 Aug" is a date in
+  // the shop's own today (ADR 0043); the entry's `closure` and the record's are
+  // the same folded object, so the badge and the demotion cannot disagree.
+  const byId = new Map(restaurants.map((r) => [r.id, r]));
+  function placeBadge(p, clock) {
+    const r = byId.get(p.id);
+    return r ? closureBadge(r, todayIn(venueTimezone(r), clock.date)) : null;
+  }
+
   function renderResults(q) {
     const { places, dishes } = search(index, q);
+    // One clock for the whole list, read per venue in that venue's own zone —
+    // the same pattern the card list uses.
+    const clock = makeClock();
     groups.replaceChildren();
 
     if (places.total === 0 && dishes.total === 0) {
@@ -887,6 +908,7 @@ function wireSearch(restaurants) {
             name: `${placeIcon(p)} ${p.name}`,
             sub: placeSub(p),
             href: `restaurant.html?id=${p.id}`,
+            badge: placeBadge(p, clock),
             ...placeMatch(p),
           })),
         })
