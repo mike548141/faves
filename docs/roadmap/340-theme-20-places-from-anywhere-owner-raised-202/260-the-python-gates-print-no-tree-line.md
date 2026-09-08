@@ -1,4 +1,4 @@
-- [ ] 🔎 **The Python gates print no tree line, so CLAUDE.md's "EVERY check
+- [~] 🔎 **The Python gates print no tree line, so CLAUDE.md's "EVERY check
       prints a second indented line naming the tree it served" is false for
       the half of the list that is not a browser check** `[S][tools]` — found
       2026-09-08 (session faves-o1) by the agent delivering `490/020`, while
@@ -26,3 +26,7 @@
   when the next gate is touched. Recommendation: (1) — the sentence is right
   about what a check should do, and the fix is smaller than the paragraph
   explaining the gap.
+
+  📌 **CLAIMED 2026-09-08 21:46 UTC (session faves-p1)** — delivering option
+  (1), the filing session's own recommendation: a shared helper every Python
+  gate calls last, printing the same shape the browser checks already print.

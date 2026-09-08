@@ -1,4 +1,4 @@
-- [ ] 🔎 **Twenty-six of the 183 pantry photographs are not products — they are
+- [~] 🔎 **Twenty-six of the 183 pantry photographs are not products — they are
       recipes and a menu leaflet, and no record cites any of them**
       `[M][content][data]` — found 2026-09-08 by the intake audit (session
       faves-o1), which read all 26 images.
@@ -40,3 +40,10 @@
 
   **Also found:** `IMG_7562` (b053) and `IMG_8118` (b059) sit inside harvested
   bursts but are absent from their product's `source.files`.
+
+  📌 **CLAIMED 2026-09-08 21:46 UTC (session faves-p1) — the `b029` half only.**
+  Reading the two 2025-11-25 leaflet frames and settling whether their 82
+  prices are a price layer this repo threw away, against Takeaway @ Churton's
+  2019 scan and its 2026-08-08 reading. The recipe half (the six recipes that
+  shared a page) stays the owner's call and is **not** claimed. ADR 0112
+  reserved if the answer needs one.

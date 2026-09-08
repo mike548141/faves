@@ -151,7 +151,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [A shut seven-branch chain now says "Permanently closed" eight times](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/050-a-shut-chain-says-permanently-closed-eight-times.md)
 - ✅ 🔎 [The sticky contact bar is a NINTH place the closure sentence appears,](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/060-the-sticky-contact-bar-is-a-ninth-closure-notice.md)
 - ✅ 🔎 [The check harness reads and clicks geometry while it is still](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/070-the-harness-reads-geometry-while-it-is-still-animating.md)
-- [ ] 🔎 [Search ignores lifecycle closure entirely, and no item covered it](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/080-search-ignores-lifecycle-closure.md)
+- [~] 🔎 [Search ignores lifecycle closure entirely, and no item covered it](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/080-search-ignores-lifecycle-closure.md)
 
 ## Theme 26 — Saved orders: the usual (owner-raised 2026-08-16)
 
@@ -267,7 +267,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
 - [ ] 🔎 [An orchestrator tore down a sub-agent's worktree while the agent was](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/240-a-pushed-branch-is-not-a-finished-agent.md)
 - [ ] 🛑 [Intake throws away the evidence's own provenance, and the first](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/250-intake-throws-away-the-evidences-own-provenance.md)
-- [ ] 🔎 [The Python gates print no tree line, so CLAUDE.md's "EVERY check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/260-the-python-gates-print-no-tree-line.md)
+- [~] 🔎 [The Python gates print no tree line, so CLAUDE.md's "EVERY check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/260-the-python-gates-print-no-tree-line.md)
 - [ ] [🚩 The machine-side half of the 2026-08-17 force-push ruling does not](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
 - ✅ 🛑 [An unresolved merge conflict shipped to a PUBLIC main and stood](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/280-a-merge-conflict-shipped-to-a-public-main-and-no-gate-saw-it.md)
 
@@ -377,7 +377,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/README.md)*
 
 - [ ] 🔥 [A live Google Gemini API key sits in plaintext in the intake working](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/010-a-live-api-key-sits-in-the-intake-working-tree.md)
-- [ ] 🔎 [Twenty-six of the 183 pantry photographs are not products — they are](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md)
+- [~] 🔎 [Twenty-six of the 183 pantry photographs are not products — they are](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md)
 - ✅ 🔎 [Nothing joins the photograph population to the records, so a](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/030-nothing-reconciles-the-photo-population-against-the-records.md)
 - ✅ 🔎 [ADR 0090 promised a name index of the prior food databases and none](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/040-adr-0090-promised-a-name-index-of-the-food-exports-and-none-exists.md)
 - [ ] 🔎 [A complete menu carries no verified date, and three older menu](roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/050-a-menu-with-92-prices-carries-no-verified-date.md)

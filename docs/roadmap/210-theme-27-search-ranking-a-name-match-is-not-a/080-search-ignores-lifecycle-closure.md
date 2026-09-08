@@ -1,6 +1,9 @@
-- [ ] 🔎 **Search ignores lifecycle closure entirely, and no item covered it
+- [~] 🔎 **Search ignores lifecycle closure entirely, and no item covered it
       until now** `[S][js]` — found 2026-09-09 (session faves-o1) while
       delivering `010`, and filed rather than folded in.
+
+  📌 **CLAIMED 2026-09-08 21:46 UTC (session faves-p1)** — delivering the
+  filing session's recommendation, **(1) + (2)**. ADR 0111 reserved.
 
   **The fact.** A venue's `lifecycle` can say it has closed. The home list
   honours that — `030` fixed `rankVenues` and the *Open now* filter. **Search
