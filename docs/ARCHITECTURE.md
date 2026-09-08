@@ -782,7 +782,25 @@ precached payload nothing on any screen can reach (ADR 0047).
   intervals in `"HH:MM"` 24h local time: `[]` = closed that day; two or
   more intervals express a lunch/dinner split, e.g.
   `"mon": [["12:00","15:00"],["17:00","21:00"]]`. `close` may be `null`
-  meaning open-ended ("late"). **A `close` BEFORE its `open` means the
+  meaning open-ended ("late"). **A DAY may itself be `null`, and that is
+  NOT `[]`** (ADR 0105): `[]` is the venue saying it is closed that day,
+  `null` is the venue publishing nothing about it. Abrakebabra lists
+  Sun–Tue, Thu, Fri and Sat and no Wednesday line at all, so before this the
+  record had to claim a day it did not know or drop all seven and carry
+  `hours: null` — it dropped all seven. All seven keys are still required:
+  an explicit `null` records *we asked and were not told*, where a missing key
+  is indistinguishable from a typo (the engine reads a missing key the same
+  safe way regardless). A week where **every** day is `null` is refused —
+  that is `hours: null`. `openStatus` answers `unknown-today` for a day it
+  holds nothing for, and that state **carries words** ("Hours not published
+  today"); the week table prints "Not published" for the row. Being open
+  beats an unknown day: a Tuesday span running to 3am still reads *Open* at
+  2am on an unpublished Wednesday. And an unknown day between now and the
+  next opening hedges the detail to *"next published opening Thu 12pm"*,
+  because "opens Thu" would re-assert the day the record stopped asserting.
+  `served` is deliberately **not** extended this way — a section's window is
+  our own transcription, where `[]` genuinely means "not served".
+  **A `close` BEFORE its `open` means the
   NEXT DAY** (ADR 0094, owner-ruled 2026-09-07): `["16:30","03:00"]` is a
   Friday night ending Saturday morning, and `["16:30","00:00"]` closes at
   midnight. This reverses ADR 0006's rule that past-midnight be expressed

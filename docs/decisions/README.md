@@ -1152,3 +1152,20 @@ deliberation those compact docs omit.
   photographs say so out loud in `data/intake/not-products.json` — with what
   they hold, who read them and when, because *"we looked and it is not a
   product"* and *"nobody looked"* are otherwise identical.
+- [0105](0105-a-day-may-say-nothing-and-that-is-not-closed.md)
+  — **a day may say nothing, and that is not "closed".** `hours` had three
+  states and needed four: `[]` said *the venue is closed that day* and nothing
+  said *the venue did not say*. Abrakebabra publishes Sun–Tue, Thu, Fri and Sat
+  and **no Wednesday line at all**, so its record had to claim a day it did not
+  know or drop the six it did — and it dropped the six. A day may now be
+  **`null`**, chosen over a sentinel because `hours: null` already means
+  "nothing known about the venue’s week" and this is the same word one level down.
+  🔑 Omitting the key was checked first and is **not** free: `segments()` and
+  `groupWeek` read a missing key identically to `[]`, and `validate.py` demands
+  all seven. `openStatus` gains a sixth state, `unknown-today`, which
+  **carries words** — folding it into `unknown` draws no badge, and a blank is
+  the same shape as the bug. Being open beats an unknown day (a Tuesday span
+  running to 3am still reads *Open* on an unpublished Wednesday), and an unknown
+  day between now and the next opening hedges the detail to *"next published
+  opening Thu 12pm"*. 🚩 **Abrakebabra's hours were NOT restored** — no source
+  in this repo records its times, only its days.

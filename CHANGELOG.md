@@ -9,6 +9,16 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A place is no longer called "Closed" on a day it never told us about.**
+  Some venues publish six days and simply say nothing about the seventh, and
+  the record had no way to write that down — so it either called that day shut
+  (sending you home while the shop is trading) or threw away all seven days to
+  avoid saying so. Such a day now reads **"Hours not published today"** on the
+  card and **"Not published"** in the week, and the night before, a place whose
+  next day is unpublished says *"next published opening Thu 12pm"* rather than
+  claiming it. A place we can't vouch for stays out of "Open now" — that button
+  is a promise — but it keeps its place in the list, above everywhere we know
+  is shut.
 - **Spices Indian now says when its menu was read.** Its page carried "Menu
   items and prices need a refresh", which reads as *nobody has ever looked* —
   and we had. 80 of its 92 dishes were transcribed from the shop's own printed
