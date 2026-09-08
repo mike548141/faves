@@ -1,4 +1,4 @@
-- [ ] 🛑 **Intake throws away the evidence's own provenance, and the first
+- [~] 🛑 **Intake throws away the evidence's own provenance, and the first
       record to prove it overstates its freshness by thirteen days**
       `[M][tools][schema]` — owner-raised 2026-09-07, minutes after the Simmer
       intake landed: *"When you pulled in the Simmer menus you don't appear to
@@ -7,6 +7,10 @@
       dishes, menus, restaurants, recipes, ingredients etc. Do we need a tool or
       guard or something to ensure all the relevant data is harvested,
       provenance recorded, historical data kept etc?"*
+
+  🔒 **CLAIMED 2026-09-09 (session faves-o1, orchestrating)** — delivered by
+  a sub-agent in its own worktree (`faves-o1-intake-provenance`, branch
+  `intake-provenance`), landing by PR so CI runs before the merge.
 
   ## 🔎 The measurement, taken before answering him
 

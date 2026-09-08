@@ -1,8 +1,12 @@
-- [ ] 🚩 **Two of the harness guarantees CLAUDE.md states are not true — a
+- [~] 🚩 **Two of the harness guarantees CLAUDE.md states are not true — a
       THIRD failure shape it does not describe, and one check that never prints
       the tree line** `[S][tools]` — found 2026-09-07 (session faves-24) while
       building ADR 0091, and both were found the honest way: by a run that
       looked like a regression and was not.
+
+  🔒 **CLAIMED 2026-09-09 (session faves-o1, orchestrating)** — delivered by
+  a sub-agent in its own worktree (`faves-o1-picks-flake`, branch
+  `picks-flake`), landing by PR so CI runs before the merge.
 
   **(a) `picks_check.mjs` is flaky on the PRISTINE baseline, and its failure
   wears a shape CLAUDE.md does not list.** Building ADR 0091 produced
