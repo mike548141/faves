@@ -3,6 +3,25 @@
       38 review (`../../reviews/2026-09-07-1216-theme-38-cold-review.md` §6 C1,
       C2, §7 D2). Owner's decision on the shape; a recommendation is given.
 
+  ⏳ **OWNER LEANING, NOT YET A RULING (2026-09-08).** Asked to choose, he said:
+  *"I'm not sure - I'm leaning toward your recommendation"* — which is option
+  (a), one group type that either **adds** to the plate or **selects** a
+  variant.
+  🛑 **Recorded as a lean on purpose, and it must not harden into a ruling by
+  being repeated.** This repo has three recorded instances of a record ending up
+  stronger than the thing it describes, always in the same direction. *"Leaning
+  toward"* is not *"do it"*, and this item is `[L]` and touches the shape four
+  accepted records already disagree about — the cost of guessing his intent
+  wrong here is a schema migration, not an edit.
+  🎯 **What would turn the lean into a decision**, and it is a fair thing to
+  bring him: the sub-question the recommendation itself flagged as his —
+  **whether a size or a protein is ever "one dish"** for hearts, ratings and
+  links. Under (a) the id belongs to the base dish and the choice lives on the
+  order line, which is the *opposite* of `310/010` (28a)'s premise that a size
+  is a dish. He cannot settle (a) without settling that, and it is a question
+  about what a reader thinks they are saving, not about data.
+
+
   **Measured at `de6d2b7`.** The owner's own example, beef or chicken satay, is in
   the corpus four ways, each under an accepted record:
   1. **Two rows** — ADR 0089: *"Nasi Lemak split into chicken ($21) and beef ($23)

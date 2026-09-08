@@ -3,6 +3,25 @@
       (`../../reviews/2026-09-07-1216-theme-38-cold-review.md` §5 strand 8, §6 C3,
       §7 D1).
 
+  ✅ **OWNER RULED 2026-09-08 — OPTION 3, DESIGN A RENDER HE WOULD ACCEPT.**
+  Not option 1 (keep them shipping on a promise) and not option 2 (move them to
+  `data/`). So the fields stay in the payload **and** ADR 0047's test now has a
+  deadline rather than an exemption: a screen must be named.
+  🛑 **What the ruling does NOT license.** The thing he rejected on 2026-09-06
+  is on the record in `site/js/menu.js:1417-1429`: *"this is not how we are
+  going to show pricing variances over time, per channel, delivered vs
+  in-store… this is just you dumping more content in the UI."* A quiet second
+  line under every price is the design that already failed. Anything proposed
+  here has to be a different idea, not the same idea in a smaller font.
+  🎯 **Still his, and unanswered:** what the render actually is. This session
+  put the disposition to him, not the design. The next session should bring him
+  **two or three sketched alternatives with their costs**, not ask him an open
+  question — the open question is what produced the rejected line.
+  📌 And whichever lands, ADR 0089 is accepted, so his 2026-09-06 reversal needs
+  a superseding note. It currently lives **only in a code comment**, which is
+  the narrowest possible home for a ruling that changed a shipped feature.
+
+
   **The facts, measured at `de6d2b7`.** ADR 0089 (accepted 2026-09-06, owner-ruled)
   put a per-door price on the dish and a `priceChannels` block on the venue: **101
   dishes in 2 venues** (`kk-malaysian` delivery ×29, `rs-satay-noodle-house` online

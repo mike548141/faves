@@ -4,6 +4,26 @@
       (`../../reviews/2026-09-07-1216-theme-38-cold-review.md` §5 strand 13, §7
       D5 and E4).
 
+  ✅ **OWNER RULED 2026-09-08 on the venue note — OPTION 3, DESIGN IT WIDER
+  FIRST.** He declined adding `note` now, taking his own earlier steer
+  seriously: *"adding a field now means designing it twice"*. So the note waits
+  for the prose design it belongs to, and Simmer's kitchen-wide allergen
+  statement stays attached to its Breakfast section meanwhile — which is a
+  known, accepted wrong until that design lands.
+  🚩 **The cost of waiting, stated so it is a choice and not a drift:** a
+  statement that all dishes may contain allergens is currently invisible to
+  anyone reading the dinner menu. That is the one prose case where the
+  misfiling has a safety edge, and it is worth revisiting sooner than the rest
+  of the prose question if the design stalls.
+
+  💡 **AND HE ADDED A NEW IDEA IN THE SAME BREATH, which is filed as its own
+  item** — *"perhaps we should consider having allergen and dietary tags at a
+  per restaurant and per branch level like how we have them on dishes"*. See
+  `110` in this section. It is not a variant of the note question; it is a
+  different mechanism (tags, which the app already filters and warns on) aimed
+  at the same evidence.
+
+
   ## Claim strength
 
   **What is settled.** ADR 0040 (2026-08-15) maps the Star Group's `NGA` → `gf`

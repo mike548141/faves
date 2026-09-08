@@ -3,6 +3,23 @@
       (`../../reviews/2026-09-07-1216-theme-38-cold-review.md` §2, §7 D4). Owner's
       number; a recommendation that whichever number he picks gets a check.
 
+  ✅ **OWNER RULED 2026-09-08 — OPTION 3, DROP THE NUMBER.** He declined both
+  the restated budget (option 1) and the shell cut (option 2). ADR 0047's
+  discipline — name the screen that renders it — stays and is what actually
+  governs payload growth.
+  🚩 **The consequence, stated so nobody re-derives it as a defect later:**
+  there is now **no ceiling on first-visit transfer**, deliberately. The
+  measured position at the time of the ruling was ~380 KB to paint the home
+  screen and ~660 KB precached, against a bar of 300 KB that nothing had ever
+  measured. So the number was not being met and was not being watched; dropping
+  it removes a claim the repo could not support rather than removing a
+  guarantee it was keeping.
+  📋 **What this ruling owes**, and it is small: CLAUDE.md's *Quality bar*
+  loses the transfer line, `WORKPLAN.md`'s `[~]` for it is closed with a dated
+  note, and both say the decision was his and when. Until that lands, the repo
+  still asserts a bar its owner has withdrawn.
+
+
   **The bar.** CLAUDE.md: *"Total transfer for first visit < 300 KB (excluding
   photos, which lazy-load)."* `WORKPLAN.md` carries it as `[~]`. No tool measures
   it. The last recorded figure was ADR 0047's on 2026-08-16: venue files 56 KB
