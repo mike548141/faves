@@ -1202,3 +1202,23 @@ deliberation those compact docs omit.
   day between now and the next opening hedges the detail to *"next published
   opening Thu 12pm"*. 🚩 **Abrakebabra's hours were NOT restored** — no source
   in this repo records its times, only its days.
+- [0106](0106-the-evidences-provenance-is-committed-and-the-evidence-is-not.md)
+  — **the evidence's provenance is committed; the evidence is not.** Simmer's
+  four photographs are EXIF-dated 2026-08-25 and the record was written
+  `verified: 2026-09-07`, because today is what a transcribing session knows —
+  and `refreshCaveat` ages `verified`, so those 13 days delay the refresh
+  warning by 13 days. ADR 0038's reader existed the whole time; nothing made a
+  session use it and nothing could tell afterwards.
+  🔑 The guard reads a **committed** provenance record
+  (`data/intake/menu-sources.json`) rather than `intake/`, because `intake/**`
+  is gitignored and a guard that only runs beside the raw material never runs
+  in CI or in a worktree. 🛑 Presence is tested as **material, not a path** —
+  `.gitignore` keeps three files inside `intake/`, so an `exists()` test read
+  every clean worktree as live and reported all 14 venues as drift.
+  🔑 A photograph dates a reading **exactly**; a PDF's `/CreationDate` bounds it
+  **from below only** — `spices-indian` reads 2026-07-06 against 2023
+  photographs and is correct. Only `in-store` and `paper-menu` are enforced;
+  the other four methods leave no file to check and are listed, never silently
+  skipped. 🚩 **The images are still NOT in the repo**, which the owner asked
+  for: 64 of 68 files carry GPS and 4 photographs are 32 MB, so the size rule
+  and the strip-or-refuse rule come first.

@@ -434,6 +434,25 @@ python3 tools/intake_index.py --check # data/intake/name-index.json still matche
                               # repo behind its own provenance rules. The chat export
                               # is EATING EVENTS and is never opened. Same gitignore
                               # caveat: absent intake ⇒ "intake not present", exit 0
+python3 tools/check_provenance.py # a venue's `verified` is not FRESHER than the
+                              # evidence it was read from (ADR 0106). Simmer's four
+                              # intake photos are EXIF-dated 2026-08-25 and the record
+                              # said 2026-09-07, because today is what a transcribing
+                              # session knows — and `refreshCaveat` AGES `verified`, so
+                              # those 13 days delayed the "needs a refresh" warning by
+                              # exactly 13 days. ADR 0038's reader had existed since
+                              # 2026-08-15; nothing made a session use it. Reads the
+                              # COMMITTED record data/intake/menu-sources.json, so it
+                              # runs in CI and in a worktree where `intake/` is not —
+                              # 🛑 and it tests for MATERIAL, not for the path, because
+                              # .gitignore keeps a README and two .gitkeep INSIDE
+                              # intake/: an exists() test read every clean worktree as
+                              # live and called all 14 venues drift. A photograph dates
+                              # a reading exactly; a PDF's /CreationDate bounds it from
+                              # BELOW only, so spices-indian's 2026-07-06 over 2023
+                              # photos is CORRECT and a "newest photo wins" rule would
+                              # refuse it. `--sweep` for the table, `--selftest` for the
+                              # 9 break-probes, `--for` on intake_exif before you type
 python3 tools/check_records.py # data/images/ and data/withdrawn/ — the two record
                               # stores NOTHING validated until 2026-09-08. The
                               # direction that matters is file→row: a photo shipped

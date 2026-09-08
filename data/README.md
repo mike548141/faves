@@ -49,10 +49,22 @@ cold review, 2026-09-07).
 | `products/<id>.json` | packaged products off the owner's own pantry photographs (ADR 0090) | `tools/products.py` | `tools/products.py` |
 | `intake/not-products.json` | capture bursts that were read and are deliberately **not** a product — the recipe pages and the menu leaflet | by hand | `tools/products.py` (shape) + `--coverage` (against the photographs) |
 | `intake/name-index.json` | what the prior food exports in `intake/ingredients/` **name** — names and source file only, no nutrition | `tools/intake_index.py` | `tools/intake_index.py --check` |
+| `intake/menu-sources.json` | the **provenance** of the material each venue's menu was read from: file name, capture date and time, device, GPS presence (ADR 0106) | `tools/check_provenance.py --rebuild` | `tools/check_provenance.py` |
 
 **`intake/` here is a record ABOUT the intake, not a copy of it.** The intake
-itself (`intake/` at the repo root) is gitignored and stays that way; these two
-files hold what a reader needs once the raw material is no longer at hand.
+itself (`intake/` at the repo root) is gitignored and stays that way; these
+three files hold what a reader needs once the raw material is no longer at hand.
+
+`menu-sources.json` is what lets a guard run where the raw material is not.
+`verified` is the date `refreshCaveat` ages, so a date fresher than the
+evidence delays the refresh warning by exactly its own error — and one shipped
+that way (Simmer, 13 days). The record carries **no coordinate and no pixel**:
+64 of the 68 files it describes carry GPS, this repo is public, and ADR 0090
+measured 137 product photographs carrying GPS on a private address. 🚩 The
+owner asked for the **original evidence** to be kept as well. It is not here
+yet, deliberately: four photographs are 32 MB and git history is permanent, so
+the per-evidence-type size rule and the strip-or-refuse rule are decided before
+the first image lands, not after (roadmap `340/250`).
 
 `not-products.json` exists so that "read, and it is not a packaged product" can
 be said out loud. Without it the 26 recipe and menu-leaflet photographs are a
