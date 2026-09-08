@@ -1247,3 +1247,26 @@ deliberation those compact docs omit.
   skipped. 🚩 **The images are still NOT in the repo**, which the owner asked
   for: 64 of 68 files carry GPS and 4 photographs are 32 MB, so the size rule
   and the strip-or-refuse rule come first.
+- [0108](0108-a-click-hit-tests-the-point-it-is-about-to-dispatch-at.md) — **a
+  click hit-tests the point it is about to dispatch at.**
+  [0101](0101-a-click-waits-for-a-still-box-and-a-starved-wait-buys-one-whole-retry.md)
+  made a click wait for a **still** box; a box eleven pixels above the top of
+  the viewport is perfectly still and 48 × 48, so both its conditions held and
+  it dispatched at **y = −11**, hitting nothing. That is roadmap `340/190` (a),
+  open since 2026-09-07 through two confident wrong diagnoses. Measured in the
+  failing click: the harness's own `scrollIntoView` **works** (`scrollY 0`,
+  centre `y = 40`) and the page moves 51 px on the **next frame** with no
+  script touching it — `scrollTo`, `scrollIntoView` and `focus` were all
+  monkey-patched and only the harness appears. ⚠️ Scroll anchoring is **ruled
+  out** by probe and the Chrome mechanism is **not identified**; the fix asks
+  about the outcome, not the cause. So after the box settles, `elementFromPoint`
+  answers *will this click land?* — a descendant counts, an ancestor does not.
+  🛑 **Off-screen re-scrolls (3 goes, inside the one existing budget); covered
+  FAILS ON THE SPOT and is never scrolled away from**, because a control with
+  something painted over it is exactly the defect `to_top_check` exists for, and
+  a harness that scrolled until the overlay cleared would green that in
+  seventeen tools at once. Both are `UnreachableElementError` → **exit 1**, the
+  answer to the classification question `340/190` held open; the fallback stays
+  at exit 2 and now sees no geometry failure at all. Paired interleaved: base
+  **5/10** failures, branch **1/10** (load 29–85, not quiet), 41 consecutive
+  passes when quieter, `0 re-scrolled` across the other tools' 261 clicks.

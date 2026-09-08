@@ -255,6 +255,44 @@ export class UnstableElementError extends Error {
   }
 }
 
+/** The sentinel prefix a reachability failure carries. Third of its family, and
+ *  named apart from {@link UNSTABLE_TAG} because the two say opposite things
+ *  about the same box: "it will not hold still" and "it is perfectly still, in
+ *  a place a tap cannot land". */
+const UNREACHABLE_TAG = "UNREACHABLE ELEMENT —";
+
+/**
+ * Raised when a control settled to a real box that a click still cannot land
+ * on: off the edge of the viewport, or with something else painted over it.
+ *
+ * 🔑 WHY THIS IS NOT COVERED BY {@link UnstableElementError}. [ADR 0101] made
+ * `click` wait until the target's box stops moving, and that wait passes
+ * happily on a 48x48 button sitting **eleven pixels above the top of the
+ * viewport** — it is not moving, and it is not zero-sized, so both of the
+ * wait's conditions hold. Stillness and reachability are different questions
+ * and only the first was being asked. Measured 2026-09-09 on `picks_check`:
+ * `#overflow-btn` was scrolled into view, the page moved 51px on the very next
+ * animation frame with no script touching it, and the click was dispatched at
+ * **y = -11** — off the screen, hitting nothing. The menu never opened, and the
+ * failure surfaced one line later as `#settings-btn has no clickable box`,
+ * which is the wrong element, the wrong line and the wrong cause.
+ *
+ * 🛑 THE COVERED CASE IS THE ONE THAT MUST NEVER BE SCROLLED AWAY FROM. A
+ * control a person cannot tap because a fixed button sits on top of it is
+ * exactly the defect `to_top_check` exists for — the back-to-top button owning
+ * the tap on a dish price. If `click` quietly moved the page until the overlay
+ * stopped covering the target, it would convert that defect into a green run in
+ * sixteen tools at once. So an off-screen target is re-scrolled (a harness
+ * problem, and the harness says how often it happened) and a covered one is
+ * reported immediately, naming what is on top.
+ */
+export class UnreachableElementError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "UnreachableElementError";
+  }
+}
+
 /**
  * Raised when the browser stopped answering — never when a page is wrong.
  *
@@ -296,7 +334,25 @@ export const CLICK_SETTLE_MS = Number(process.env.FAVES_CLICK_SETTLE_MS) || 2_00
  * into a green run. So every run reports how many clicks needed more than the
  * single comparison frame, and the worst one by name.
  */
-export const clickStats = { clicks: 0, waited: 0, settleMs: 0, worstMs: 0, worst: null };
+export const clickStats = {
+  clicks: 0,
+  waited: 0,
+  settleMs: 0,
+  worstMs: 0,
+  worst: null,
+  /**
+   * 🔑 HOW A RUN TELLS "I SCROLLED TO REACH IT" FROM "IT WAS REACHABLE".
+   * `rescrolled` counts the clicks whose target had to be scrolled at the
+   * target MORE THAN ONCE because the browser undid the first scroll. A
+   * harness that silently scrolls until a click lands can hide a control a
+   * person cannot reach, so the number is printed on every run's third line
+   * and this object is exported: a check that cares can assert on it.
+   * `rescrollWorst` names the target that needed the most goes.
+   */
+  rescrolled: 0,
+  rescrollWorstScrolls: 0,
+  rescrollWorst: null,
+};
 
 export class Cdp {
   #ws;
@@ -983,6 +1039,21 @@ export function exitFromError(err) {
     );
     process.exit(1);
   }
+  // A control that settled to a real box a click cannot land on is the SITE
+  // being wrong too — same ruling, same reasoning, one layer further along:
+  // `210/070` says a box that never settles is a failed assertion, and a box
+  // that settles off-screen or under an overlay is the same claim about the
+  // same tap. NOT retried, for the same reason: the harness already re-scrolled
+  // (and counted it), so a second whole run would only hide what is left.
+  if (err instanceof UnreachableElementError) {
+    console.log(`\nFAIL  ${err.message}`);
+    console.log(
+      `\nFAILED — the run stopped here; the assertions after this point did not run.` +
+        `\n   This is NOT retried: the harness already scrolled at this target and` +
+        `\n   re-measured. What is left is the page, not the machine.`
+    );
+    process.exit(1);
+  }
   // A missing element is the SITE being wrong, so it exits 1 (assertions
   // failed) and never 2 (harness error) — and it says what it wanted, which a
   // null TypeError never did.
@@ -1072,6 +1143,14 @@ export class Report {
           `${clickStats.waited} waited · ${Math.round(clickStats.settleMs)}ms total` +
           (clickStats.waited
             ? `, worst ${clickStats.worstMs}ms (${clickStats.worst})`
+            : "") +
+          // Always printed, INCLUDING the zero. "0 re-scrolled" is the sentence
+          // that says every control was reachable where it was first put — an
+          // absence worth stating, because the line silently going non-zero is
+          // how a harness starts scrolling to make clicks land.
+          ` · ${clickStats.rescrolled} re-scrolled` +
+          (clickStats.rescrolled
+            ? ` (worst ${clickStats.rescrollWorstScrolls} goes at ${clickStats.rescrollWorst})`
             : "")
       );
     }
@@ -1131,17 +1210,19 @@ export function createDriver(cdp, sessionId, log = () => {}) {
     // click, in sixteen tools. Comparing two consecutive ANIMATION FRAMES in
     // the page costs one frame and keeps the round-trip count exactly what it
     // was before this existed.
+    // 🛑 AND THE WAIT IS ONLY HALF THE QUESTION (2026-09-09, roadmap `340/190`).
+    // A still box can still be unclickable. So after it settles, the point we
+    // are about to dispatch at is HIT-TESTED: is it inside the viewport, and is
+    // the element under it the target (or a child of it)? If it is off-screen
+    // the scroll is re-issued — measured, that is a browser undoing our own
+    // scroll on the next frame, and a second scroll from the new position
+    // sticks. If it is covered by something else, the run STOPS: see
+    // UnreachableElementError for why that one is never scrolled away from.
     const box = await evalPage(`(async () => {
       const els = [...document.querySelectorAll(${JSON.stringify(selector)})];
       const want = ${JSON.stringify(text)};
       const el = want == null ? els[0] : els.find((e) => e.textContent.includes(want));
       if (!el) return null;
-      // "instant" is load-bearing: the site sets scroll-behavior: smooth (for
-      // readers who haven't asked for reduced motion), so a plain
-      // scrollIntoView returns before the page has moved and the rect read
-      // straight after is the pre-scroll one — a click into empty space for
-      // anything far down the page.
-      el.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
       const read = () => {
         const r = el.getBoundingClientRect();
         return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height };
@@ -1152,36 +1233,86 @@ export function createDriver(cdp, sessionId, log = () => {}) {
         Math.abs(a.x - b.x) <= 0.5 && Math.abs(a.y - b.y) <= 0.5 &&
         Math.abs(a.w - b.w) <= 0.5 && Math.abs(a.h - b.h) <= 0.5;
       const raf = () => new Promise((r) => requestAnimationFrame(r));
+      // The covering element is named WITH its position and z-index, because
+      // "something is on top" is not actionable and "a position: fixed thing at
+      // z-index 30" is: those two properties are what put it there.
+      const name = (n) => {
+        if (!n) return "nothing at all";
+        const c = typeof n.className === "string" ? n.className.trim().split(/\\s+/).filter(Boolean) : [];
+        const id = n.id ? "#" + n.id : n.tagName.toLowerCase() + (c.length ? "." + c.slice(0, 3).join(".") : "");
+        const s = getComputedStyle(n);
+        return id + " (" + s.position + ", z-index " + s.zIndex + ")";
+      };
+      // ONE budget for the whole call, not one per scroll: three goes at 2s
+      // each would turn a bounded wait into a six-second one, and the bound is
+      // the half of the owner's ruling that stops a hang.
       const t0 = performance.now();
-      let prev = read();
-      for (let frames = 1; ; frames++) {
-        await raf();
-        const now = read();
-        const elapsed = +(performance.now() - t0).toFixed(1);
-        // Clickable AND unchanged: a control mid-open can be perfectly still
-        // at 0x0 for a frame, and dispatching at its centre would be a click
-        // into nothing.
-        if (same(prev, now) && now.w >= 1 && now.h >= 1) {
-          return { ...now, frames, settleMs: elapsed, stable: true };
+      // Three, because the measured fault needs exactly two and a target that
+      // is still off-screen after three is not a scheduling accident.
+      for (let scrolls = 1; ; scrolls++) {
+        // "instant" is load-bearing: the site sets scroll-behavior: smooth (for
+        // readers who haven't asked for reduced motion), so a plain
+        // scrollIntoView returns before the page has moved and the rect read
+        // straight after is the pre-scroll one — a click into empty space for
+        // anything far down the page.
+        el.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
+        let prev = read();
+        let box = null;
+        for (let frames = 1; ; frames++) {
+          await raf();
+          const now = read();
+          const elapsed = +(performance.now() - t0).toFixed(1);
+          // Clickable AND unchanged: a control mid-open can be perfectly still
+          // at 0x0 for a frame, and dispatching at its centre would be a click
+          // into nothing.
+          if (same(prev, now) && now.w >= 1 && now.h >= 1) {
+            box = { ...now, frames, settleMs: elapsed, scrolls, stable: true };
+            break;
+          }
+          if (elapsed >= ${CLICK_SETTLE_MS}) {
+            return {
+              ...now, frames, settleMs: elapsed, scrolls, stable: false,
+              step: { dx: +(now.x - prev.x).toFixed(1), dy: +(now.y - prev.y).toFixed(1) },
+              // Diagnostic only, never a decision: a box can move for reasons
+              // the Web Animations API never sees, so this narrows the hunt
+              // where it can and says nothing where it cannot.
+              animating: (document.getAnimations ? document.getAnimations() : [])
+                .filter((a) => a.playState === "running")
+                .map((a) => a.animationName || a.transitionProperty || "an animation")
+                .slice(0, 6),
+            };
+          }
+          prev = now;
         }
-        if (elapsed >= ${CLICK_SETTLE_MS}) {
-          return {
-            ...now, frames, settleMs: elapsed, stable: false,
-            step: { dx: +(now.x - prev.x).toFixed(1), dy: +(now.y - prev.y).toFixed(1) },
-            // Diagnostic only, never a decision: a box can move for reasons
-            // the Web Animations API never sees, so this narrows the hunt
-            // where it can and says nothing where it cannot.
-            animating: (document.getAnimations ? document.getAnimations() : [])
-              .filter((a) => a.playState === "running")
-              .map((a) => a.animationName || a.transitionProperty || "an animation")
-              .slice(0, 6),
-          };
-        }
-        prev = now;
+        const vw = innerWidth, vh = innerHeight;
+        const inView = box.x >= 0 && box.y >= 0 && box.x <= vw && box.y <= vh;
+        // elementFromPoint answers the ONLY question that matters here: what
+        // will the browser deliver this click to? A child counts — clicking the
+        // <span> inside a button reaches the button by bubbling — but an
+        // ancestor does not: if the target's own centre hit-tests to its parent
+        // then the target is not painted there and its handler never runs.
+        const hit = inView ? document.elementFromPoint(box.x, box.y) : null;
+        if (hit && (hit === el || el.contains(hit))) return { ...box, reach: "ok" };
+        if (!inView && scrolls < 3 && performance.now() - t0 < ${CLICK_SETTLE_MS}) continue;
+        return {
+          ...box,
+          reach: inView ? "covered" : "offscreen",
+          cover: name(hit),
+          vw, vh, sy: window.scrollY,
+        };
       }
     })()`);
     const what = `${selector}${text ? ` containing "${text}"` : ""}`;
-    if (!box) throw new Error(`no element matching ${what}`);
+    // A selector that matches nothing is a statement about the SITE, and it
+    // used to be a plain `Error` — unclassified, so `exitFromError` sent it to
+    // exit 2 with no FAIL line, which is the exact shape roadmap `340/190`
+    // filed. `need()` has classified this since 2026-08-17; the click path had
+    // been missed.
+    if (!box) {
+      throw new MissingElementError(
+        `${MISSING_TAG} this check wanted to click ${what}, and nothing on the page matches it`
+      );
+    }
     clickStats.clicks++;
     clickStats.settleMs += box.settleMs;
     if (box.frames > 1) {
@@ -1190,6 +1321,26 @@ export function createDriver(cdp, sessionId, log = () => {}) {
         clickStats.worstMs = box.settleMs;
         clickStats.worst = what;
       }
+    }
+    if (box.scrolls > 1) {
+      clickStats.rescrolled++;
+      if (box.scrolls > clickStats.rescrollWorstScrolls) {
+        clickStats.rescrollWorstScrolls = box.scrolls;
+        clickStats.rescrollWorst = what;
+      }
+    }
+    if (box.reach === "covered" || box.reach === "offscreen") {
+      throw new UnreachableElementError(
+        box.reach === "covered"
+          ? `${UNREACHABLE_TAG} ${what} is covered at its own centre: it settled to a` +
+            ` ${box.w.toFixed(1)}x${box.h.toFixed(1)} box, but a click at (${box.x.toFixed(1)},` +
+            ` ${box.y.toFixed(1)}) would land on ${box.cover} instead. Something is painted` +
+            ` over a control this check presses, which is a tap a person would also miss.`
+          : `${UNREACHABLE_TAG} ${what} could not be brought into the viewport: after` +
+            ` ${box.scrolls} scrolls at it its centre is (${box.x.toFixed(1)},` +
+            ` ${box.y.toFixed(1)}) in a ${box.vw}x${box.vh} viewport (scrollY ${box.sy}).` +
+            ` A control that will not scroll into view is one a person cannot reach.`
+      );
     }
     if (!box.stable) {
       const still = box.animating?.length ? `; still running: ${box.animating.join(", ")}` : "";

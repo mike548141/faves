@@ -96,6 +96,17 @@
 
   Both exit **1**, both named, neither retried.
 
+  📌 **2026-09-09 — `340/190` (a) IS NOW CLOSED, and this item's reading of it
+  was right about the class and wrong about the trigger.** The paragraph below
+  concluded "scroll / hit-test fault", which was correct, and the sentence
+  higher up saying `picks_check` *"performs no scroll at all"* stopped being
+  true the moment ADR 0101 put a `scrollIntoView` inside `driver.click` — so by
+  the time this was read, the harness **was** scrolling and the scroll **was**
+  working. The fault is one frame later: the page moves 51 px on its own with
+  no script touching it, and the click is dispatched at `y = -11`. Fixed at the
+  same layer by hit-testing the dispatch point (ADR 0108). Nothing here needs
+  changing; this note only records that the sibling is closed.
+
   ❌ **IT DOES NOT COVER `340/190` (a), and the evidence says why.** This item
   hoped "one fix could cover both". It does not, and the instrumentation is
   what proves it: `picks_check` still fails intermittently, and the new message

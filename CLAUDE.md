@@ -562,6 +562,28 @@ jank**: it says how many clicks were still on the first frame, how many had to
 wait, and the worst one by name. `#overflow-btn` measures ~25 ms and
 *"Show suggestions again"* ~120 ms today; if either grows, someone shipped a
 slower animation and the check will keep passing.
+🛑 **A STILL BOX IS NOT A CLICKABLE ONE, and that gap cost this repo two days**
+(2026-09-09, ADR 0108). A box eleven pixels above the top of the viewport is
+perfectly still and 48×48, so both of the conditions above hold and the click
+went to `y = -11`, hitting nothing — the whole of `340/190` (a). So after the
+box settles, `click` **hit-tests the point it is about to dispatch at**
+(`elementFromPoint`: the target or a descendant of it, never an ancestor). Two
+outcomes, split on purpose: **off-screen re-scrolls** (up to 3 goes, inside the
+same one budget) and the third line says so — `· 1 re-scrolled (worst 2 goes at
+#overflow-btn)`, with **the zero printed too**; **covered FAILS ON THE SPOT**
+and is never scrolled away from, naming what is on top with its `position` and
+`z-index`. That asymmetry is the point: a control with something painted over
+it is the defect `to_top_check` exists for, and a harness that scrolled until
+the overlay cleared would green it in seventeen tools at once. Both raise
+`UnreachableElementError` → `FAIL UNREACHABLE ELEMENT`, **exit 1**, never
+retried. `clickStats` is exported, so a check can assert the difference between
+*"I scrolled to reach it"* and *"it was reachable"*.
+🔑 **And the fallback question `340/190` held open is answered: it stays at
+exit 2.** An *unclassified* throw says nothing about the site and must not be
+written down as if it did — what changed is that no geometry or presence
+failure reaches it any more. A click whose selector matches nothing was a plain
+`Error` landing there (exit 2, **no `FAIL` line**, the exact shape the item
+filed); it now raises `MissingElementError` like `need()` always did.
 🚩 **New scroll code: use `driver.scrollTo(y)`.** It passes
 `behavior: "instant"` *and* refuses to continue unless the page arrived — the
 three-line assertion that turned an undetectable wrong answer into a
