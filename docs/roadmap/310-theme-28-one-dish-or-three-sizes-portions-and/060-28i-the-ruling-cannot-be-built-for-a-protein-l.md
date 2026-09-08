@@ -62,9 +62,12 @@
        accessibility and allergen handling non-negotiable, and this is the
        adjacent surface. **Not recommended, stated for completeness.**
 
-  3. **Merge only where the claims agree.** Take the 97 groups whose siblings
-     carry the same dietary claims; leave the 36 divergent ones as separate
-     dishes with a note.
+  3. **Merge only where the claims agree.** Take the **97** groups whose
+     siblings carry the same dietary claims; leave the 36 divergent ones as
+     separate dishes with a note. (97 is the *eligible* set, not a batch: 63 of
+     them are `28o`'s mechanical merges and the other 34 still differ in `desc`
+     or `prices` and go through `28p`'s rubric. 133 = 97 + 36 = 63 + 70, two
+     different cuts of the same corpus.)
      - ✅ Nothing is lost, nothing is invented, and it is deliverable now.
      - ✅ It keeps the corpus honest while option 1 is decided on its own
        evidence rather than under migration pressure.
