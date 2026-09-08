@@ -9,6 +9,28 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **Two BurgerFuel rows no longer warn about gluten they do not contain.** The
+  *Gluten friendly bun* was flagged as containing gluten while the same row
+  offered itself as the gluten-friendly option, and the *Low Carborator lettuce
+  bun* — a lettuce leaf — was flagged too. Both had matched on the word "bun".
+  A false warning on exactly the row someone avoiding gluten is hunting for is
+  worse than no warning at all, because the way a reader fixes it is by
+  learning to distrust the warnings. The tagger has also been taught that
+  "gluten friendly" is a venue saying the allergen is *absent*, and that a
+  lettuce bun is a lettuce leaf, so the next such row is not flagged either.
+
+### Added
+- **McDonald's burgers now warn about the sesame in their buns.** Every one of
+  that record's photographs carries a written description — *"a sesame seed
+  bun"*, *"melted cheese"*, *"with lettuce and mayonnaise"* — which a screen
+  reader has always read aloud while the allergen row beside it said nothing.
+  It is now read for allergens too: **34 warnings across 19 dishes**, including
+  sesame on five burgers, a declarable New Zealand allergen those rows showed
+  nothing about. A photograph is weaker evidence than a menu, so a warning that
+  comes from one can only appear on a dish that already tells you its allergen
+  details are unconfirmed — and those rows now say that the tags may have been
+  read from the picture.
+
 - **A burger whose name is one word now carries its allergen warnings.** A
   "Cheeseburger" is bread and cheese, but the allergen sweep read only whole
   words, so it could see "burger" and never "Cheeseburger". Seventeen warnings

@@ -118,7 +118,24 @@
     salad, miso, and rice"* and the sesame plausibly rides on the salad a
     donburi does not come with.
 
-  🎯 **OWNER ASKS — why this stays `[ ]`.**
+  ✅ **BOTH OWNER ASKS BELOW WERE RULED AND DELIVERED 2026-09-09 UNDER
+  `210` (ADR 0114, PR #35) — do not deliver them again.** `210` restates the
+  same two questions in better form and carries the ruling, the measurements
+  and the delivery note; this section is left standing as the place they were
+  first found, not as work still owed. In short: the owner took **both** —
+  the two false BurgerFuel tags are removed and ADR 0097's hedge widened to
+  cover *"gluten friendly"*, and `alt` is read under a new `PHOTO` tier below
+  `STATED`, gated on the dish carrying `needs: allergens` so the weaker
+  evidence cannot land where the page claims a confirmed allergen picture.
+  34 tags on 19 dishes, five of them the `contains-sesame` burgers.
+
+  🚩 **What still keeps THIS item `[ ]` is §5 alone** — the four Subway
+  `contains-soy` disagreements (curated from a guide that may not be
+  fetched) and the two Catch Donburi `contains-sesame` rows. Neither is
+  settleable from the corpus.
+
+  🎯 **OWNER ASKS — ruled 2026-09-09, delivered under `210`; kept for the
+  record.**
   1. **Reading `alt` would resolve 34 more tags on 19 dishes.** McDonald's
      images carry written alt text describing the food — *"melted cheese in a
      toasted English muffin"*, *"a sesame seed bun"*, *"golden crumbed

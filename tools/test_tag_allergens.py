@@ -49,6 +49,7 @@ KEBAB = "site/data/restaurants/wellington-kebab-grill.json"
 CHARLEY = "site/data/restaurants/charley-noble.json"
 SIMMER = "site/data/restaurants/simmer.json"
 ABRAKEBABRA = "site/data/restaurants/abrakebabra.json"
+MCDONALDS = "site/data/restaurants/mcdonalds.json"
 
 # --- the hedge (2026-09-07) -----------------------------------------------
 # Simmer is the record the fault was MEASURED on, so it is the record the cases
@@ -489,7 +490,86 @@ def check_a_plural_rule_word_is_tagged(after, out):
     return None
 
 
+# --- the PHOTO tier, end to end (2026-09-09, ADR 0114, roadmap 080/210) -----
+# The probes below prove the RULE. This proves the PATH, on the record the tier
+# was ruled for: McDonald's, 41 items, no description on any of them, every one
+# carrying `needs: allergens`.
+#
+# 🔑 The two mutations are deliberately asymmetric and that is the whole case.
+# Big Mac loses its tags and keeps its caveat, so the caption must put all three
+# back. Quarter Pounder loses its tags AND its caveat, so the caption must put
+# NOTHING back — and the two rows carry near-identical captions, so nothing but
+# the gate can tell them apart. Either half alone is satisfiable by a tool that
+# is broken in the other direction.
+
+
+def check_a_caption_tags_only_behind_the_caveat(after, out):
+    """The PHOTO tier's two halves, on one record, in one run.
+
+    Big Mac keeps its `needs: allergens` and must regain all three tags from its
+    caption. Quarter Pounder has the caveat removed and must regain NONE — its
+    caption names the same cheese, the same sesame seed bun. And the refusal has
+    to be PRINTED: a tag the tool could see and chose not to write is exactly
+    the kind of decision this repo has twice let disappear behind a green line.
+    """
+    big = _dish(after, "big-mac") or set()
+    want = {"contains-gluten", "contains-dairy", "contains-sesame"}
+    if not want <= big:
+        return (f"the caption did not put {sorted(want - big)} back on the Big Mac "
+                f"— the tool wrote nothing here and the case proves nothing "
+                f"(has {sorted(big)})")
+    qp = _dish(after, "quarter-pounder") or set()
+    if qp:
+        return ("a caption tagged a row carrying NO `needs: allergens` caveat — the "
+                f"weaker tier landed where the page claims a confirmed allergen "
+                f"picture (has {sorted(qp)})")
+    if "REFUSED" not in out:
+        return "the withheld PHOTO tags were not reported — a silent refusal"
+    return None
+
+
 CASES = {
+    "a caption tags only behind the unconfirmed-allergens caveat": (
+        MCDONALDS,
+        [# Big Mac: tags emptied, caveat kept.
+         ("""          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Quarter Pounder",""",
+          """          "tags": []
+        },
+        {
+          "name": "Quarter Pounder","""),
+         # Quarter Pounder: tags emptied AND the caveat taken away.
+         ("""            {
+              "what": "allergens",
+              "note": "No ingredient list was read for this record. A tag here is inferred from the dish name or from the caption written for its photograph — not from an ingredient list, and a photograph is not a promise about what you are served. No tag does not mean no allergen. Ask the counter.",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": [
+            "contains-gluten",
+            "contains-dairy",
+            "contains-sesame"
+          ]
+        },
+        {
+          "name": "Double Quarter Pounder",""",
+          """            {
+              "what": "name",
+              "since": "2026-09-09"
+            }
+          ],
+          "tags": []
+        },
+        {
+          "name": "Double Quarter Pounder","""),
+         ],
+        0, check_a_caption_tags_only_behind_the_caveat),
     "a venue with add-ons is patched, not skipped": (
         THORNDON, STRIP_BURGERS, 0, check_addon_venue_is_patched),
     "add-on option tags survive a menu-item patch": (
@@ -830,6 +910,124 @@ PROBES = {
         ("Blue cod, chips", {"contains-fish"}, set()),
         ("Boysenberry tart", {"contains-gluten"}, set()),
     ],
+    # (e) 🛑 THE HEDGE, WIDENED (2026-09-09, roadmap 080/210). ADR 0097 swept
+    # the corpus for free-from forms and reported that nothing but `X free` and
+    # `no added X` existed. `gluten friendly` did exist, the sweep had not
+    # looked for it, and BurgerFuel's `Gluten friendly bun` shipped
+    # `contains-gluten` beside its own `gf-option` for a month — a false gluten
+    # warning on the row a coeliac reads the menu to find, which is the one
+    # over-warning ADR 0097 says is not fail-safe.
+    #
+    # The second line is the narrowness control and it is the important one: a
+    # hedge cancels the match it stands in front of and NOTHING ELSE. Widen it
+    # into an item-level veto and the wheat croutons go unwarned, which is an
+    # over-warning traded for a MISS.
+    "a hedge covers gluten FRIENDLY, not only gluten free": [
+        ("Gluten friendly bun", set(), {"contains-gluten"}),
+        ("Gluten friendly pizza with wheat croutons", {"contains-gluten"}, set()),
+        # Not every softener is a hedge: `vegan friendly` is four corpus rows of
+        # "Speak to staff to make it vegan friendly" and says nothing about an
+        # allergen. The dairy has to survive it.
+        ("Mushroom patty with mascarpone, vegan friendly on request",
+         {"contains-dairy"}, set()),
+    ],
+    # (f) 🛑 A LETTUCE BUN IS A LETTUCE LEAF (2026-09-09, roadmap 080/210).
+    # BurgerFuel's `Low Carborator lettuce bun` is the burger with the bread
+    # taken away, and `\bbuns?\b` gave it `contains-gluten`. The lookbehind is
+    # the water-chestnut shape and the third line is why it had to be one: four
+    # corpus rows read "…milk bun, fries. No gluten added bun +$2.50 or lettuce
+    # bun available", so an item-level `exclude` would have lost the MILK BUN.
+    "a lettuce bun is a lettuce leaf": [
+        ("Low Carborator lettuce bun", set(), {"contains-gluten"}),
+        ("Beef patty in a lettuce bun with a side of garlic bread",
+         {"contains-gluten"}, set()),
+        ("150g brisket patty, American cheese, milk bun, fries. No gluten added "
+         "bun or lettuce bun available", {"contains-gluten", "contains-dairy"}, set()),
+    ],
+}
+
+# --- the PHOTO tier's probes (2026-09-09, ADR 0114, roadmap 080/210) --------
+# A separate driver because the subject is a different FIELD and a different
+# TIER, and both have to be asserted. Each line is
+# (dish name, alt caption, does the row carry `needs: allergens`, want, forbid)
+# and the answers are `tag@TIER` strings — because "the caption produced
+# contains-sesame" is not the claim being made here. The claim is that it
+# produced `contains-sesame@PHOTO`, and a tier nothing asserts is a tier that
+# quietly becomes STATED in the next refactor.
+ALT_PROBE_DRIVER = """
+import json, sys
+sys.path.insert(0, "tools")
+from tag_allergens import audit
+out = []
+for name, alt, caveat in json.load(sys.stdin):
+    item = {"name": name, "alt": alt, "tags": []}
+    if caveat:
+        item["needs"] = [{"what": "allergens"}]
+    record = {"menu": [{"items": [item]}]}
+    out.append(sorted({f"{tag}@{tier}" for _i, tag, tier, _w in audit(record)}))
+json.dump(out, sys.stdout)
+"""
+
+ALT_PROBES = {
+    # The five sesame burgers are the whole reason the owner ruled to read
+    # captions: `contains-sesame` is a declarable New Zealand allergen and those
+    # rows showed nothing. Every caption below is verbatim from the record.
+    "a photo caption is read, and recorded as PHOTO": [
+        ("Big Mac",
+         "A Big Mac: two beef patties, lettuce, cheese, pickles and sauce in a "
+         "three-layer sesame seed bun", True,
+         {"contains-sesame@PHOTO", "contains-dairy@PHOTO", "contains-gluten@PHOTO"},
+         # The tier is the substance of ADR 0114, so the STATED spelling of the
+         # same tag is named as forbidden rather than left to be inferred from
+         # the want set. `names sesame` is a STATED RULE; reading it off a
+         # photograph does not make the EVIDENCE stated.
+         {"contains-sesame@STATED", "contains-dairy@STATED", "contains-gluten@DERIVED"}),
+        ("McChicken",
+         "A McChicken: a crumbed chicken patty with lettuce and mayonnaise in a "
+         "sesame seed bun", True,
+         {"contains-sesame@PHOTO", "contains-egg@PHOTO", "contains-gluten@PHOTO"}, set()),
+    ],
+    # 🛑 THE DANGEROUS HALF. A caption is the weakest evidence in the corpus, so
+    # it may only land on a row that already tells the reader its allergen
+    # picture is unconfirmed. Both lines carry a caption naming a sesame seed
+    # bun; only one carries the caveat, and nothing else separates them.
+    "a caption is refused where the row claims a confirmed picture": [
+        ("Quarter Pounder",
+         "A Quarter Pounder: a thick beef patty with melted cheese, onion and "
+         "pickles in a sesame seed bun", False,
+         set(),
+         {"contains-sesame@PHOTO", "contains-dairy@PHOTO", "contains-gluten@PHOTO"}),
+        # The control, and it is doing real work: without it a tier that had
+        # stopped reading captions altogether passes the line above perfectly.
+        ("Quarter Pounder",
+         "A Quarter Pounder: a thick beef patty with melted cheese, onion and "
+         "pickles in a sesame seed bun", True,
+         {"contains-sesame@PHOTO"}, set()),
+    ],
+    # A caption never RE-CLAIMS what the menu's own words already say. The tier
+    # is an accounting as well as a guard: `--tier PHOTO`'s count has to be what
+    # the photographs actually bought, not what they happened to repeat.
+    "the menu's own words outrank the caption for the same tag": [
+        ("Cheeseburger",
+         "A cheeseburger: a beef patty with a slice of melted cheese, onion, "
+         "pickle, ketchup and mustard in a soft bun", True,
+         {"contains-gluten@DERIVED", "contains-dairy@STATED"},
+         {"contains-gluten@PHOTO", "contains-dairy@PHOTO"}),
+    ],
+    # The four guards are the same four guards. A caption is text like any
+    # other text, so a hedge inside one cancels the match it stands in front of
+    # — and, exactly as in the menu's own words, cancels NOTHING ELSE.
+    #
+    # 🛑 BOTH dish names here are deliberately meaningless to the rules. Name
+    # the first row "Toast" and its own NAME earns contains-gluten before the
+    # caption is ever consulted, the caption's finding is deduped away, and the
+    # probe passes with the hedge guard deleted.
+    "the hedge guard reads a caption too": [
+        ("Item one", "A plate of gluten free toast", True,
+         set(), {"contains-gluten@PHOTO"}),
+        ("Item two", "Gluten free bread beside a bowl of pasta", True,
+         {"contains-gluten@PHOTO"}, set()),
+    ],
 }
 
 
@@ -996,12 +1194,12 @@ BREAKERS = {
         ["the eight missing food words are read",
          "a rule word matches its own plural"]),
     "the sando rule word removed": (
-        [(r"\b(buns?|\w*burgers?|sandwich|sando|toast|", r"\b(buns?|\w*burgers?|sandwich|toast|")],
+        [(r"\w*burgers?|sandwich|sando|toast|", r"\w*burgers?|sandwich|toast|")],
         ["the eight missing food words are read"]),
     # --- compound tails (2026-09-09, roadmap 080/160) -----------------------
     # Reverting each tail must fail the group that reads it, and NOTHING else.
     "the burger compound tail reverted": (
-        [(r"\b(buns?|\w*burgers?|sandwich", r"\b(buns?|burgers?|sandwich")],
+        [(r"buns?|\w*burgers?|sandwich", r"buns?|burgers?|sandwich")],
         ["a rule word at the end of a compound is read"]),
     "the muffin compound tail reverted": (
         [(r"brownies?|\w*muffins?|scones?", r"brownies?|muffins?|scones?")],
@@ -1021,7 +1219,7 @@ BREAKERS = {
           r'("contains-egg", "STATED", "names egg", r"\begg\w*"')],
         ["a compound tail does not open the other boundary"]),
     "the tail boundary opened on bun (Bundaberg)": (
-        [(r"\b(buns?|\w*burgers?|sandwich", r"\b(bun\w*|\w*burgers?|sandwich")],
+        [(r"(?<!lettuce )(?<!lettuce-)buns?|", r"(?<!lettuce )(?<!lettuce-)bun\w*|")],
         ["a compound tail does not open the other boundary"]),
     "the head boundary opened on ale (kale)": (
         [(r"\b(beer|lager|ale|stout|pilsner|porter|ipa|apa)\b",
@@ -1089,6 +1287,57 @@ BREAKERS = {
           "        return 0")],
         ["a record it cannot write makes the run fail"],
     ),
+
+    # --- 2026-09-09, roadmap 080/210 ---------------------------------------
+    # (1) The hedge back to ADR 0097's word list, which is the state that
+    # shipped a false gluten warning on `Gluten friendly bun`.
+    "the hedge narrowed back to gluten FREE only": (
+        [(r'"contains-gluten": r"(?:gluten[\s-](?:free|friendly)|'
+          r'no\s+(?:added\s+gluten|gluten\s+added))",',
+          r'"contains-gluten": r"(?:gluten[\s-]free|'
+          r'no\s+(?:added\s+gluten|gluten\s+added))",')],
+        ["a hedge covers gluten FRIENDLY, not only gluten free"]),
+    # (2) The lettuce lookbehind removed — `Low Carborator lettuce bun` is a
+    # wheat bakery item again.
+    "the lettuce-bun lookbehind removed": (
+        [(r'r"\b((?<!lettuce )(?<!lettuce-)buns?|\w*burgers?|sandwich|',
+          r'r"\b(buns?|\w*burgers?|sandwich|')],
+        ["a lettuce bun is a lettuce leaf"]),
+    # (3) 🛑 The one that would be easiest to "tidy" — recording a caption's
+    # finding at the RULE's tier instead of PHOTO. Nothing on screen changes and
+    # the same 34 tags land, so only an assertion about the tier can see it.
+    "a caption's finding recorded at the rule's own tier": (
+        [("""                (tag, "PHOTO", f'photo caption — {why} ({hit.group(0).lower()})')""",
+          """                (tag, _rule_tier, f'photo caption — {why} ({hit.group(0).lower()})')""")],
+        ["a photo caption is read, and recorded as PHOTO"]),
+    # (4) The caveat gate removed. A caption then tags any row at all, including
+    # one whose page says nothing about its allergen picture being unconfirmed —
+    # which is the entire on-screen meaning of the weaker tier.
+    "the unconfirmed-allergens gate removed": (
+        [('                if rule_tier == "PHOTO" and not caveat:',
+          '                if False and rule_tier == "PHOTO" and not caveat:')],
+        ["a caption is refused where the row claims a confirmed picture",
+         "a caption tags only behind the unconfirmed-allergens caveat"]),
+    # (5) The caption read FIRST instead of last. Every tag still lands and the
+    # corpus is byte-identical; what breaks is the accounting — `--tier PHOTO`
+    # would then count tags the menu's own words already justified.
+    "the caption read before the menu's own words": (
+        [("            findings += [\n"
+          '                (tag, "PHOTO",',
+          "            findings[:0] = [\n"
+          '                (tag, "PHOTO",')],
+        ["the menu's own words outrank the caption for the same tag"]),
+    # (6) The captions not read at all — the state of the tool before this
+    # ruling. Without it every absence assertion above is satisfiable by a tier
+    # that does nothing.
+    "captions not read at all": (
+        [("    alt = item.get(\"alt\")\n"
+          "    return alt if isinstance(alt, str) else \"\"",
+          "    alt = item.get(\"alt\")\n"
+          "    return \"\"")],
+        ["a photo caption is read, and recorded as PHOTO",
+         "the hedge guard reads a caption too",
+         "a caption tags only behind the unconfirmed-allergens caveat"]),
 }
 
 
@@ -1130,12 +1379,39 @@ def run_case(work, name, verbose=False):
             path.write_bytes(data)
 
 
+def run_alt_probes(work, name, verbose=False):
+    """Run one ALT_PROBES group — a caption, a caveat flag, and a tag@TIER answer."""
+    lines = ALT_PROBES[name]
+    if not any(want for *_h, want, _n in lines):
+        return "the group asserts no PRESENCE — a tier that reads nothing passes it"
+    proc = subprocess.run(
+        [sys.executable, "-c", ALT_PROBE_DRIVER], cwd=work, timeout=120,
+        input=json.dumps([[n, a, c] for n, a, c, _w, _f in lines]),
+        capture_output=True, text=True,
+    )
+    if proc.returncode != 0:
+        return f"the rule set would not load: {proc.stderr.strip().splitlines()[-1:]}"
+    got = json.loads(proc.stdout)
+    for (dish, alt, caveat, want, forbid), tags in zip(lines, got):
+        if verbose:
+            print(f"       | {dish!r} caveat={caveat} {alt!r} -> {tags}")
+        missing = want - set(tags)
+        if missing:
+            return f"{dish!r} did not gain {sorted(missing)} (got {tags})"
+        wrong = forbid & set(tags)
+        if wrong:
+            return f"{dish!r} was given {sorted(wrong)} (got {tags})"
+    return None
+
+
 def run_named(work, name, verbose=False):
     """Run a CASE or a PROBE group by name, whichever this is."""
     if name in CASES:
         return run_case(work, name, verbose)
     if name in PROBES:
         return run_probes(work, name, verbose)
+    if name in ALT_PROBES:
+        return run_alt_probes(work, name, verbose)
     return f"no case or probe called {name!r}"
 
 
@@ -1196,7 +1472,7 @@ def main() -> int:
             if complaint:
                 failures.append(label)
 
-        for name in list(CASES) + list(PROBES):
+        for name in list(CASES) + list(PROBES) + list(ALT_PROBES):
             complaint = run_named(work, name, args.verbose)
             print(f"  {'❌' if complaint else '✅'} {name:52} {complaint or 'as specified'}")
             if complaint:
@@ -1231,7 +1507,8 @@ def main() -> int:
     if failures:
         print(f"\n{len(failures)} failure(s): {', '.join(failures)}", file=sys.stderr)
         return 1
-    print(f"\nAll {len(CASES) + len(PROBES) + len(BREAKERS) + 2} cases behaved as specified.")
+    print(f"\nAll {len(CASES) + len(PROBES) + len(ALT_PROBES) + len(BREAKERS) + 2} "
+          "cases behaved as specified.")
     return 0
 
 
