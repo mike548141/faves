@@ -15,11 +15,9 @@
       "files": 2,
       "kind": "menu",
       "what": "Takeaway @ Churton printed menu leaflet, both sides, photographed 2025-11-25 20:36 NZDT — 180 dishes, 179 priced (82 numbered Chinese items on one side, 98 unnumbered fish-and-chip, burger, wrap and pack items on the other; Bluff Oysters is seasonal and unpriced). SETTLED 2026-09-09 by roadmap 500/020: no price layer was lost. All 179 prices match the layer the record already held, to the cent. What the frames DID settle is that layer's date — it was labelled `2019` and was really a 2026-07-06 reading of this leaflet. See ADR 0112.",
-      "read": "2026-09-08",
-      "readBy": "intake audit, session faves-o1",
-      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md",
-      "readAlso": "2026-09-09",
-      "readAlsoBy": "session faves-p1, roadmap 500/020 (b029 half)"
+      "read": "2026-09-09",
+      "readBy": "session faves-p1, roadmap 500/020 (b029 half) — the full read of both frames. First read 2026-09-08 by the intake audit, session faves-o1, which could not crop and counted one side (82) as the whole.",
+      "seeAlso": "docs/roadmap/500-intake-harvest-audit-owner-raised-2026-09-08/020-twenty-six-intake-photos-are-not-products-and-nothing-read-them.md"
     },
     {
       "id": "b030",
