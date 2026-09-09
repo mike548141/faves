@@ -1,4 +1,4 @@
-- [ ] 🎯 **ADR 0090's "No location, ever" is wider than the reason it gives, and
+- [x] 🎯 **ADR 0090's "No location, ever" is wider than the reason it gives, and
       it does not distinguish reading a coordinate from storing one**
       `[S][docs][schema]` — owner challenged the rule 2026-09-08 (*"that seems
       like useful metadata to me"*), and he is right that the wording overreaches.
@@ -151,3 +151,18 @@
   that a shape recorded before its first instance is a hypothesis.
   📌 Nothing built either way. The rewording — the half he ruled on that was
   unambiguous — is delivered and merged (ADR 0115).
+
+  ✅ **ANSWERED 2026-09-09 (session faves-3b): he meant the MENUS.** His words:
+  *"I meant menus. The product photos of ingredients were probably taken at
+  home."* That agrees exactly with the measurement above — 119 GPS-bearing
+  pantry frames in a single cluster — and it settles the fork.
+  📌 **So the validator rule for the shop field is NOT built**, and the reason
+  is now his statement rather than an inference from a sweep: there is no
+  in-shop product photograph, so the field would have no rows. ADR 0080 D4 —
+  *a shape recorded before its first instance is a hypothesis* — applies, and
+  the session that builds it should re-derive against the real photograph.
+  ✅ **The rule change he ruled on is delivered** (ADR 0115): the wording no
+  longer forbids what it never meant to, the intake GPS read is explicitly
+  preserved, and the permission for the shop case is recorded and waiting.
+  **This item is now `- [x]`** — nothing is owed. Building the field is not
+  work owed, it is work that starts when a photograph exists.

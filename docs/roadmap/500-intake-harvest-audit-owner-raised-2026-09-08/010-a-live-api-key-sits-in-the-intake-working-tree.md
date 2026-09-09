@@ -97,3 +97,40 @@
   the keyless pattern. 📌 His call; nothing is done either way until he
   answers, and the revoke-before-edit ordering still binds if he keeps
   *rotate*.
+
+  ---
+
+  ✅ **DONE 2026-09-09 (session faves-3b) — THE KEY IS DELETED, NOT ROTATED.**
+  The owner re-authenticated `gcloud` himself, then ruled **delete with no
+  replacement** — accepting the challenge above and setting aside his own
+  earlier *rotate* ruling. Recorded as a changed mind, not as a reinterpretation
+  of the first one.
+
+  🔎 **Verified BEFORE the irreversible act, and the checks are the point.**
+  - Both scripts carried the **same** literal, and that literal **was** the live
+    *Default Gemini API Key* — compared by hashing the file value against the
+    console's `get-key-string` and printing only the boolean, so no secret
+    entered the transcript.
+  - `uid 1ff0b2c5-…047d3` matched the estate registry's record exactly.
+  - It was the **only API key in the whole organisation** — all five projects
+    enumerated, four already held none.
+  - 🛑 Stated plainly to him before he chose: **Google cannot regenerate a key
+    in place.** Rotate and delete BOTH destroy it; the only difference is
+    whether a replacement exists after. So "anything unknown that uses it
+    breaks" was true of both options, and was put to him as a third choice
+    (*stop — something else uses it*) which he declined.
+
+  ✅ **After:** `gcloud services api-keys list` returns **zero keys in every
+  project in the org**. Both scripts now read `os.environ["GEMINI_API_KEY"]`
+  and raise `SystemExit` with instructions when it is unset — the guard was
+  tested both ways in isolation (raises when unset; reads the value when set),
+  because `google.genai` is not installed on this machine and the import fails
+  before the guard is reached. **Zero `AIza` literals remain anywhere under
+  `intake/`.**
+  🔑 **The revoke-before-edit order proved itself immediately:** the literal
+  appeared in a `grep` output while locating it, and was already dead when it
+  did. Under the order the owner declined — edit first, revoke later — that
+  same grep would have leaked a live credential.
+  ⚠️ **Both files are gitignored, so this edit leaves no trace in the repo or
+  in CI.** This note is the only durable record that it happened, which is why
+  it is here rather than only in a session log.
