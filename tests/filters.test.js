@@ -17,6 +17,7 @@ import {
   DEFAULT_FILTERS,
   filterHref,
   filtersFromQuery,
+  ORDER_MODES,
 } from "../site/js/filters.js";
 // The closure fixture below is built through the REAL fold, not hand-written.
 import { resolveRecord } from "../site/js/temporal.js";
@@ -37,7 +38,11 @@ const FIXTURE = [
     name: "KK Malaysian",
     area: "Te Aro",
     cuisine: ["Malaysian"],
-    services: ["dine-in", "takeaway"],
+    // The only three-door venue in the fixture, and deliberately so: `delivery`
+    // (ADR 0117) has to be provable as a THIRD door rather than a synonym for
+    // takeaway, which needs one venue carrying both and one carrying only the
+    // one (`churton`, below).
+    services: ["dine-in", "takeaway", "delivery"],
     vibe: ["sit-down", "byo"],
   },
   {
@@ -161,6 +166,32 @@ test("applyFilters: orderMode=takeaway keeps only takeaway venues, drops recipes
 test("applyFilters: orderMode=dine-in", () => {
   const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode: "dine-in" });
   assert.deepEqual(shown.map((r) => r.id).sort(), ["kk", "ktc", "rs"]);
+});
+
+test("applyFilters: orderMode=delivery keeps only venues that declare that door", () => {
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode: "delivery" });
+  assert.deepEqual(shown.map((r) => r.id), ["kk"]);
+});
+
+test("applyFilters: delivery is a THIRD door, not a spelling of takeaway", () => {
+  // The assertion that would catch the likeliest wrong implementation — one
+  // that treats "you don't eat here" as one mode. `churton` is takeaway-only
+  // and must be absent from delivery; `ktc` is dine-in-only and must be absent
+  // from both. Without this, a clause that OR-ed the two non-dine-in doors
+  // together would pass every other test on this axis.
+  const delivery = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode: "delivery" });
+  assert.ok(!delivery.some((r) => r.id === "churton"), "takeaway-only must not answer delivery");
+  assert.ok(!delivery.some((r) => r.id === "ktc"), "dine-in-only must not answer delivery");
+  const takeaway = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode: "takeaway" });
+  assert.ok(takeaway.some((r) => r.id === "churton"), "…and takeaway still answers takeaway");
+});
+
+test("applyFilters: a recipe has no doors, so delivery drops it", () => {
+  // `services: []` — the relaxation kinds.js declares. Same rule the other two
+  // modes follow, asserted here because a new mode is exactly where an
+  // "empty means anything" shortcut gets written.
+  const shown = applyFilters(FIXTURE, { ...DEFAULT_FILTERS, orderMode: "delivery" });
+  assert.ok(!shown.some((r) => r.id === "cook"));
 });
 
 test("applyFilters: area is an exact match", () => {
@@ -475,9 +506,16 @@ test("a ?service= URL therefore narrows nothing — the whole list comes back", 
 test("order mode is validated against its vocabulary", () => {
   // Same rule as the facets: a value no <option> carries means "all", never a
   // control reading "Any …" over a list filtered on something else.
-  for (const q of ["?order-mode=delivery", "?order-mode=Takeaway"]) {
+  //
+  // 🚩 `?order-mode=delivery` USED TO BE THE UNKNOWN-VALUE FIXTURE HERE, and it
+  // stopped being one on 2026-09-09 when the owner asked for the option (ADR
+  // 0117). Kept as a note rather than silently swapped: a test whose fixture
+  // becomes valid is the one shape that turns green by MEANING LESS, and the
+  // positive case below is what replaces the coverage it was giving.
+  for (const q of ["?order-mode=courier", "?order-mode=Takeaway"]) {
     assert.equal(filtersFromQuery(q, FACETS).orderMode, "all", q);
   }
+  assert.equal(filtersFromQuery("?order-mode=delivery", FACETS).orderMode, "delivery");
 });
 
 test("a filterHref value always filters to venues that actually carry it", () => {
@@ -565,6 +603,68 @@ test("order mode 'all' is the absence of a filter, not a filter set to everythin
     activeFilters({ ...DEFAULT_FILTERS, orderMode: "dine-in" }).map((f) => f.label),
     ["Dine-in"]
   );
+});
+
+test("every order mode can name itself on a chip, and carries a te reo key", () => {
+  // The failure this catches is silent and permanent: a mode added to
+  // ORDER_MODES but not to ORDER_MODE_LABEL filters the list correctly and then
+  // names NOTHING on the chip row — which is the one thing standing between a
+  // reader and a mystery short list (see activeFilters' own doc comment). It is
+  // written over the exported vocabulary rather than over a literal so the next
+  // mode is covered on the day it is added.
+  for (const mode of ORDER_MODES) {
+    const [chip] = activeFilters({ ...DEFAULT_FILTERS, orderMode: mode });
+    assert.ok(chip, `${mode} names no chip`);
+    assert.equal(chip.kind, "orderMode");
+    assert.equal(chip.value, mode);
+    assert.ok(chip.label, `${mode} has no label`);
+    assert.ok(chip.key, `${mode} has no te reo key`);
+  }
+});
+
+test("delivery names itself in words, not by its stored value", () => {
+  const [chip] = activeFilters({ ...DEFAULT_FILTERS, orderMode: "delivery" });
+  assert.equal(chip.label, "Delivery");
+  assert.equal(chip.key, "orderMode.delivery");
+});
+
+// --- the vocabulary and the control it is painted on -------------------------
+//
+// 🚩 THE ONLY THING JOINING THESE TWO IS A HUMAN REMEMBERING. `ORDER_MODES`
+// lives in filters.js and the <option> list lives in index.html, hand-written;
+// nothing else in the repo reads both. Either half being right on its own is
+// invisible: a mode in the vocabulary with no <option> is unreachable (nobody
+// can select it), and an <option> with no vocabulary entry silently resolves to
+// "all", so the control reads "Delivery" over the UNFILTERED list — the exact
+// fault filtersFromQuery's doc comment describes, arriving through the markup
+// instead of through a URL. Delivery is the first mode added since the axis
+// shipped, which is the moment to wire this rather than the moment to trust it.
+test("the <select> in index.html offers exactly the modes the vocabulary knows", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const html = await readFile(new URL("../site/index.html", import.meta.url), "utf8");
+  const select = html.match(/<select id="filter-order-mode"[\s\S]*?<\/select>/);
+  assert.ok(select, "the order-mode <select> is not in index.html under that id");
+  const values = [...select[0].matchAll(/<option value="([^"]+)"/g)].map((m) => m[1]);
+  // "all" is the absence of a filter, so it is an <option> and NOT an
+  // ORDER_MODES entry — asserted rather than filtered away, because a vocabulary
+  // that grew an "all" member would break applyFilters and nothing else here.
+  assert.equal(values[0], "all", "the first option must be the unfiltered one");
+  assert.deepEqual(values.slice(1), ORDER_MODES);
+});
+
+test("every <option> carries the i18n key its chip uses", async () => {
+  // Same join, one layer down: reo.js is keyed off these, and a mismatch shows
+  // up only for a reader who has switched language — the smallest audience and
+  // the least likely to be testing.
+  const { readFile } = await import("node:fs/promises");
+  const html = await readFile(new URL("../site/index.html", import.meta.url), "utf8");
+  const reo = await readFile(new URL("../site/js/reo.js", import.meta.url), "utf8");
+  const select = html.match(/<select id="filter-order-mode"[\s\S]*?<\/select>/)[0];
+  const keys = [...select.matchAll(/data-i18n="([^"]+)"/g)].map((m) => m[1]);
+  assert.equal(keys.length, ORDER_MODES.length + 1, "every option needs a key, 'all' included");
+  for (const key of keys) {
+    assert.ok(reo.includes(`"${key}"`), `${key} has no entry in reo.js`);
+  }
 });
 
 test("the count matches what applyFilters actually did — badge and list agree", () => {

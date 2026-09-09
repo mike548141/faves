@@ -820,6 +820,13 @@
                   <option value="all" data-i18n="orderMode.all">All dining</option>
                   <option value="takeaway" data-i18n="orderMode.takeaway">Takeaway</option>
                   <option value="dine-in" data-i18n="orderMode.dineIn">Dine-in</option>
+                  <!-- Delivery joined the axis 2026-09-09, owner-asked. It is
+                       the same axis, not a fourth word — his own framing in 30g
+                       was "dine-in vs takeaway (pickup) vs delivery". A venue
+                       reaches this option by DECLARING the door in `services`;
+                       a dish's `prices.delivery` (ADR 0089) is a different
+                       claim and does not qualify one (ADR 0117). -->
+                  <option value="delivery" data-i18n="orderMode.delivery">Delivery</option>
                 </select>
               </div>
             </div>

@@ -150,7 +150,10 @@ excluded from both stores, always.
   "ordering": [                      // 0..n online-order links (link out, never build)
     { "platform": "Uber Eats", "url": "https://..." }
   ],
-  "services": ["dine-in", "takeaway"],
+  "services": ["dine-in", "takeaway", "delivery"],  // the DOORS this venue opens;
+                                     //   "delivery" added 2026-09-09 (ADR 0117).
+                                     //   Declared, never derived from `ordering`
+                                     //   or from a dish's `prices.delivery`
   "hours": null,                     // null, or a full week (see below)
   "locations": [                     // OPTIONAL: for a venue with several branches
     { "label": "Courtenay Place",    //   sharing this name/menu (see "Multi-location"

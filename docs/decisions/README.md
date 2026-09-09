@@ -1424,3 +1424,20 @@ deliberation those compact docs omit.
   `substitute` refused because English uses it in **both** directions.
   Measured with every tag cleared: **3,213 findings → 3,212**, the one
   difference being that row. `--swaps` keeps the reach falsifiable.
+- [0117](0117-a-door-is-declared-never-derived.md) — **a door is DECLARED,
+  never derived.** Owner-asked 2026-09-09: *"the All dining drop down … needs
+  Delivery added"*. Same axis he framed himself in 30g, so no fourth word — but
+  the `<option>` alone would have shipped a control returning an EMPTY list on
+  all 57 records, because `SERVICES` did not permit the value. 🛑 **The rejected
+  alternative is the tempting one:** deriving delivery from a dish's
+  `prices.delivery` ([0089](0089-a-dish-has-a-price-per-door.md)) needs no data
+  edit and was already in the tree — and a venue that delivers at COUNTER prices
+  has nothing to derive from, which on today's corpus is **nine of the ten**, so
+  the derived filter offers ONE place and looks complete. Ten venues marked from
+  their own `ordering` links naming a courier; **nine deliberately left unmarked**
+  because *"Order on our site"* does not say whether it is delivered or
+  collected, and the guess fails in the expensive direction. Reading that field
+  ONCE by hand is what declaring means; reading it at query time is the ban.
+  Also joins `ORDER_MODES` to `index.html`'s `<option>` list by test — each half
+  is right alone while broken, and an option with no vocabulary entry reads
+  "Delivery" over the UNFILTERED list. Break-probed 3 ways, failing 3 · 2 · 1.

@@ -123,6 +123,19 @@ const MI = {
   "orderMode.all": "Ngā ratonga katoa",
   "orderMode.takeaway": "Mau atu",
   "orderMode.dineIn": "Kai ā-whare",
+  // "Delivery" (added 2026-09-09 with the English option). LOOKED UP, NOT
+  // COMPOSED — `hīkawekawe` is the owner-nominated dictionary's own headword,
+  // noun, glossed "(goods) deliveries", and it is the only one of the four
+  // results for "delivery" in that sense: `whare kahu` is a childbirth room,
+  // `pū haurehu` a gas tube, `karere tuawhenua` the rural post. So this is the
+  // `tāera` case (see "filter.style"), not the "dining" case above — an
+  // attested entry taken whole, which the SAFETY BOUNDARY allows, rather than a
+  // phrase built out of parts, which it does not.
+  // ⚠️ Marked draft for a real reason: the entry is *goods* deliveries, the
+  // logistics sense, and this control means "the shop brings dinner to you".
+  // Close, attested, and still worth a fluent speaker's eye — the same standing
+  // as "filter.allStyles" beside it.
+  "orderMode.delivery": "Hīkawekawe", // draft — "(goods) deliveries"
   // Filter select defaults
   "filter.allAreas": "Ngā rohe katoa",
   "filter.allCuisines": "Ngā momo kai katoa",

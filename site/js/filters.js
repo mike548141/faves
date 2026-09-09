@@ -72,10 +72,22 @@ export function filterHref(facet, value, page = "index.html") {
   return `${page}?${facet}=${encodeURIComponent(value)}`;
 }
 
-/** The two values the order-mode axis offers. "all" is the absence of a
+/** The values the order-mode axis offers. "all" is the absence of a
  *  filter, so it is not one of them. These are also the values a venue's
- *  `services` array holds — the record field kept its name (see applyFilters). */
-export const ORDER_MODES = ["takeaway", "dine-in"];
+ *  `services` array holds — the record field kept its name (see applyFilters).
+ *
+ *  `delivery` joined the other two on 2026-09-09, owner-asked, and it is the
+ *  same axis rather than a fourth word: he framed it that way himself in 30g —
+ *  *"choosing dine-in vs takeaway (pickup) vs delivery?"*.
+ *
+ *  🚩 A DOOR IS DECLARED, NEVER DERIVED (ADR 0117). A venue is a delivery venue
+ *  because its record says `services: [… "delivery"]`, not because some dish of
+ *  its carries a `prices.delivery` (ADR 0089). The two answer different
+ *  questions — *does this place deliver* against *what does this dish cost
+ *  through that door* — and a venue can deliver at counter prices, which would
+ *  make the derived answer a silent false negative on every one of its dishes.
+ */
+export const ORDER_MODES = ["takeaway", "dine-in", "delivery"];
 
 /** The query key this axis is read under. Both ends read it from here so a URL
  *  and the state can never disagree about the spelling. */
@@ -131,15 +143,19 @@ export function filtersFromQuery(search, facets) {
     // the migration would carry.
     style: pick("style", (facets.styles || []).map((s) => s.key)),
     // Validated against the vocabulary rather than against `facets`: unlike area
-    // and cuisine, this axis's two values are fixed by the schema and are not
-    // derived from whatever the corpus happens to hold today.
+    // and cuisine, this axis's values are fixed by the schema and are not
+    // derived from whatever the corpus happens to hold today. That asymmetry is
+    // deliberate and it now has a live instance: `delivery` is a legitimate
+    // option with a thin corpus behind it, and deriving the axis would have made
+    // the option appear and disappear as venues are added.
     orderMode: orderModeFromQuery(params),
   };
 }
 
 /**
  * Filter state shape:
- * { orderMode: 'all'|'takeaway'|'dine-in', area, cuisine, style, openNow: bool,
+ * { orderMode: 'all'|'takeaway'|'dine-in'|'delivery', area, cuisine, style,
+ *   openNow: bool,
  *   cheap: bool }. `style` is a `vibes.js` style KEY ("sit-down"), never a
  * label.
  *
@@ -160,6 +176,7 @@ export const DEFAULT_FILTERS = {
 const ORDER_MODE_LABEL = {
   takeaway: { label: "Takeaway", key: "orderMode.takeaway" },
   "dine-in": { label: "Dine-in", key: "orderMode.dineIn" },
+  delivery: { label: "Delivery", key: "orderMode.delivery" },
 };
 
 /**

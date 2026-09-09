@@ -65,7 +65,8 @@
     }
   ],
   "services": [
-    "takeaway"
+    "takeaway",
+    "delivery"
   ],
   "website": "https://www.pizzahut.co.nz",
   "ordering": [

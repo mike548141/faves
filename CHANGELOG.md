@@ -20,6 +20,16 @@ content freshness separately from this file.
   lettuce bun is a lettuce leaf, so the next such row is not flagged either.
 
 ### Added
+- **The Dining filter now offers Delivery.** It sat alongside Takeaway and
+  Dine-in as the third way you actually get your dinner, and it was the one the
+  control could not say. **Ten places** are marked as delivering today, each
+  from an ordering link already in its own record naming a courier — Uber Eats,
+  DoorDash, Delivereasy, Easy Eats, or Pizza Hut's own delivery page. Nine
+  places whose only ordering link says *"Order on our site"* are deliberately
+  **not** marked: nothing there says whether that order arrives at your door or
+  waits on the counter, and being told a place delivers when it does not is the
+  expensive way to be wrong.
+
 - **McDonald's burgers now warn about the sesame in their buns.** Every one of
   that record's photographs carries a written description — *"a sesame seed
   bun"*, *"melted cheese"*, *"with lettuce and mayonnaise"* — which a screen

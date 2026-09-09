@@ -12,7 +12,8 @@
   "lng": 174.77551,
   "services": [
     "dine-in",
-    "takeaway"
+    "takeaway",
+    "delivery"
   ],
   "phone": "+64 4 385 6698",
   "website": null,

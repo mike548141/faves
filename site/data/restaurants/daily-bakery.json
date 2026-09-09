@@ -11,7 +11,8 @@
   "lat": -41.20545,
   "lng": 174.91069,
   "services": [
-    "takeaway"
+    "takeaway",
+    "delivery"
   ],
   "phone": "+64 4 568 2223",
   "website": null,

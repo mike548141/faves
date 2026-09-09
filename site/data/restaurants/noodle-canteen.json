@@ -76,7 +76,8 @@
   ],
   "services": [
     "dine-in",
-    "takeaway"
+    "takeaway",
+    "delivery"
   ],
   "website": "https://www.noodlecanteen.co.nz",
   "ordering": [

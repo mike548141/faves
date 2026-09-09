@@ -22,7 +22,11 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "site" / "data"
 RESTAURANTS = DATA / "restaurants"
 
-SERVICES = {"dine-in", "takeaway"}
+# The doors a venue can declare. `delivery` joined on 2026-09-09 (owner-asked;
+# ADR 0117) — it is the same axis as the other two, not a new one, and it is
+# DECLARED here rather than derived from a dish's `prices.delivery` (ADR 0089)
+# or from an `ordering` link, both of which answer different questions.
+SERVICES = {"dine-in", "takeaway", "delivery"}
 STATUSES = {"stub", "menu-complete", "verified"}
 PRICE_BANDS = {"$", "$$", "$$$"}
 KINDS = {"venue", "recipes"}
