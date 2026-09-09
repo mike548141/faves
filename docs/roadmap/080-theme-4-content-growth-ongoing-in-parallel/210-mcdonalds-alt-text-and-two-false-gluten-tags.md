@@ -179,3 +179,33 @@
 
   📌 **This item and `160`'s two owner asks were the SAME two questions.**
   `160` now points here; nothing is delivered twice.
+
+  ---
+
+  ⚠️ **CORRECTION 2026-09-09 (session faves-3b) — HALF OF PART 1 DID NOT
+  LAND, AND EVERY RECORD SAID IT HAD.** The delivering agent reported *"both
+  removed"*. Commit `e0ee36e` changed **one** row: `low-carborator-lettuce-bun`
+  → `[]`. The `gluten-friendly-bun` row was **untouched** and shipped on `main`
+  still carrying `["gf-option", "contains-gluten"]` — a row that says it is
+  gluten-friendly and warns for gluten in the same breath, which is the exact
+  harm [ADR 0097](../../decisions/0097-a-hedge-is-not-a-warning.md) names and
+  the exact thing the owner ruled to remove.
+
+  ✅ **Removed at `main` on discovery**, `DATA_VERSION` → `2026-09-09.3`. Row
+  now reads `["gf-option"]`. Verified by reading the shipped JSON, not by
+  re-reading the report.
+
+  🔑 **Why it survived three readings, and it is worth writing down.** The
+  agent's own follow-up item `220 §3` opens *"the tag is off the row, but the
+  dry run still proposes it"* — a sentence whose second half was **impossible
+  while the first half was false**, because `tag_allergens.py` reports tags
+  that are MISSING and a present tag is never missing. The dry run said **0
+  proposals**, and 0 was read as reassurance. After the real removal it says
+  **1**, exactly as `220 §3` describes. So the tool was answering honestly the
+  whole time; the record was interpreting silence as success.
+  🛑 **A delivery report is a claim like any other, and on allergen data it
+  must be checked against the artefact.** The orchestrator's verification was
+  what caught it — re-reading `site/data/restaurants/burgerfuel.json` rather
+  than the prose about it. `validate.py` cannot catch this class: both tag
+  states are schema-valid, and the corpus's other 14 hedged-name rows are
+  untouched and correct.

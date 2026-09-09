@@ -49,9 +49,28 @@
 
   ## 3. 🎯 `Gluten friendly bun` is still PROPOSED on every dry run
 
-  Item `210` removed its false `contains-gluten` and widened ADR 0097's
-  hedge to cover *"gluten friendly"*. The hedge cancels the match in the
-  **name**. It does not cancel the one in the **description**:
+  ⚠️ **CORRECTED 2026-09-09 (session faves-3b): this section was written as
+  if the removal had happened, and it had not.** `210`'s commit `e0ee36e`
+  changed **one** row — `low-carborator-lettuce-bun`. The
+  `gluten-friendly-bun` row kept `["gf-option", "contains-gluten"]` on
+  `main`, so for the length of that merge the corpus still carried the false
+  warning the owner had ruled removed, *and* every record said it was gone.
+  The dry run reported **0 proposals**, not the 1 described below — because a
+  tag that is present is not "missing", so the sentence that reads like a
+  warning was actually the sound of the fault being invisible. Removed at
+  `main` immediately after, `DATA_VERSION` → `2026-09-09.3`, and re-measured:
+  the dry run now reports exactly the **1 proposal** described below. So
+  everything from here down is true **as of that removal** and was not true
+  when written.
+  🔑 **The lesson is the repo's own and it landed on a safety row: a delivery
+  report is a claim like any other.** Three records asserted the removal —
+  the agent's report, `210`'s delivery note and this section — and the data
+  said otherwise. What caught it was re-reading the shipped JSON, not
+  re-reading the prose.
+
+  Item `210` widened ADR 0097's hedge to cover *"gluten friendly"*. The hedge
+  cancels the match in the **name**. It does not cancel the one in the
+  **description**:
 
   > *"Switch the **wholemeal bun** for a gluten friendly bun. Not a
   > dedicated gluten free kitchen."*
@@ -60,6 +79,22 @@
   false is that **this row contains it** — the row IS the swap, and the
   wholemeal bun is the thing being swapped *away*. That is a fact about
   **substitution**, and no word rule reaches it.
+
+  🚩 **AND IT IS WORSE THAN ONE DRY-RUN LINE — measured 2026-09-09 after the
+  real removal.** `validate.py` also warns, and `validate.py` is the first
+  entry on CLAUDE.md's mandatory verify list:
+
+  > `warning: [burgerfuel] Gluten friendly bun: missing contains-gluten`
+  > `(DERIVED — a wheat bakery item (bun)) — run tools/tag_allergens.py`
+
+  So the corpus's warning count moved **74 → 75**, and the new warning is an
+  instruction to run the tool that would re-land a false allergen warning the
+  owner ruled removed. A session that treats a clean warning list as the goal
+  will do exactly that, in good faith, and the diff will look like tidying up.
+  🔑 That changes the weight of the options below: option (1) *"leave it, a
+  person refuses it each time"* now means leaving a **standing instruction to
+  reintroduce it** on the one gate nobody skips — which is a different and
+  worse proposition than the visible-dry-run-line this section first described.
 
   🛑 **So the dry run now reports 1 proposal that must never be applied**,
   and a careless `--apply` would re-land a false gluten warning on the row a

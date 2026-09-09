@@ -639,8 +639,7 @@
           "desc": "Switch the wholemeal bun for a gluten friendly bun. Not a dedicated gluten free kitchen.",
           "price": 2,
           "tags": [
-            "gf-option",
-            "contains-gluten"
+            "gf-option"
           ]
         },
         {
