@@ -1,4 +1,4 @@
-- [~] 🔎 **Twenty-six of the 183 pantry photographs are not products — they are
+- [ ] 🔎 **Twenty-six of the 183 pantry photographs are not products — they are
       recipes and a menu leaflet, and no record cites any of them**
       `[M][content][data]` — found 2026-09-08 by the intake audit (session
       faves-o1), which read all 26 images.
@@ -141,3 +141,10 @@
   `check_no_deps.py` · `check_fallback.py` ·
   `check_versions.py --range origin/main..HEAD` · `node --test` ·
   `boot_check.mjs`.
+
+  📌 **CLAIM RELEASED 2026-09-09 (session faves-3b) at close.** The `b029`
+  half is delivered (above, ADR 0112) and nothing of it is owed. What keeps
+  this item open is the **recipe half alone** — the six recipes that shared a
+  notebook page with ones already shipped — and that is the owner's call, not
+  work waiting for a session. It is **unclaimed**: a `[~]` left standing after
+  a session ends reads as taken and blocks the next reader for no reason.
