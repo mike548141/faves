@@ -10848,3 +10848,26 @@ that survives that pin bump is drift"* — so a bump is exactly when it must be
 re-tested. Atelier's `310/060` and `310/070`, the two items the narrowing waits
 on, are both still `- [ ]` open upstream. This bump does not carry their answer,
 so the line stays and is not drift.
+
+### The close audit found three more, which is why the close is audited
+
+*"Ready to close?"* is a claim like any other. Re-running the checks rather
+than repeating the earlier close found:
+
+1. **The atelier pin was stale by 10 commits** — the start-of-session drift
+   check was clean, so the movement happened *during* the session. Read (zero
+   `docs/method/` files changed), bumped to `eb6449d`, and the board README's
+   pending-upstream line re-tested and correctly kept.
+2. **Three `faves-p1` references survived the rename sweep**, because two
+   agent branches merged *after* it and carried the old name in from the claim
+   notes they were reading. A one-pass rename does not hold while parallel
+   branches are still in flight.
+3. 🔎 **A wrong PR number, in two records.** `080/210`'s delivery note and
+   `080/160`'s pointer both cited **PR #35** for ADR 0114. #35 is the
+   *location-rule* PR; ADR 0114 landed in **#37**. One agent wrote it, and the
+   pointer it added elsewhere copied it — so the error propagated to a second
+   record before anyone read either. Both corrected.
+   🔑 **The check is cheap and nobody runs it:** `gh pr view <n> --json title`
+   on every `PR #n` a session's records cite. Four citations, two wrong. A
+   number is the easiest thing in a record to get wrong and the hardest to
+   notice, because it reads as precision.

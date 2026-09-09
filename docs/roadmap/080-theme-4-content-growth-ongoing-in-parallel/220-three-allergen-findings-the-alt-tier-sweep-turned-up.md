@@ -125,7 +125,7 @@
   🎯 Recommendation: none offered. This is the owner's, and it is a decision
   about how much mechanism a single row is worth.
 
-  ### ✅ §3 RESOLVED 2026-09-09 (session faves-p1) — ADR 0116, none of the four
+  ### ✅ §3 RESOLVED 2026-09-09 (session faves-3b) — ADR 0116, none of the four
 
   Owner ruled *"we should fix that"*. The delivered fix is **none of the four
   options above**: it is a fifth, and it is the shape ADR 0097 already

@@ -119,7 +119,7 @@
     donburi does not come with.
 
   ✅ **BOTH OWNER ASKS BELOW WERE RULED AND DELIVERED 2026-09-09 UNDER
-  `210` (ADR 0114, PR #35) — do not deliver them again.** `210` restates the
+  `210` (ADR 0114, PR #37) — do not deliver them again.** `210` restates the
   same two questions in better form and carries the ruling, the measurements
   and the delivery note; this section is left standing as the place they were
   first found, not as work still owed. In short: the owner took **both** —

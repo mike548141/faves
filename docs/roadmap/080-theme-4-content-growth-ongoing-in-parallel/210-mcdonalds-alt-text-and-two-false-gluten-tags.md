@@ -76,7 +76,7 @@
 
   ---
 
-  ✅ **DELIVERED 2026-09-09 (session faves-p1) — ADR 0114, PR #35.** Both
+  ✅ **DELIVERED 2026-09-09 (session faves-3b) — ADR 0114, PR #37.** Both
   halves of the ruling, in one commit. `DATA_VERSION` 2026-09-09.1 →
   2026-09-09.2; `SHELL_VERSION` unmoved, because nothing under `site/`
   outside `data/` changed.
