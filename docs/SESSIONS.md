@@ -10757,3 +10757,73 @@ one new form, declining to guard against `dairy friendly` because no venue
 writes it. `test_tag_allergens` 68 → **81**. Two further findings filed as
 `080/220 §1` and `§2` (`slices?` reaching *Slice of Heaven*, a cocktail; a
 Soft Serve Cone silent about its wafer).
+
+## 2026-09-09 — faves-3b second addendum: the key is deleted, and the warning that told the next session to undo a ruling
+
+Three things landed after the close was first written, all owner-initiated.
+
+### 🔥 The Gemini key: DELETED, not rotated
+
+He re-authenticated `gcloud` himself, then **took the challenge** and set aside
+his own earlier *rotate* ruling. Recorded as a changed mind, not as a
+reinterpretation of the first one.
+
+**Verified before the irreversible act** — both scripts carried the *same*
+literal; it *was* the live *Default Gemini API Key* (compared by hashing the
+file value against `get-key-string` and printing only the boolean, so no secret
+entered the transcript); `uid` matched the estate registry; it was the **only
+API key in the whole organisation**, all five projects enumerated. He was told
+plainly first that **Google cannot regenerate a key in place** — rotate and
+delete both destroy it, so "something unknown breaks" was true of both — and
+offered *stop, something else uses it* as a real third option, which he
+declined.
+
+**After:** zero keys in every project. Both scripts read
+`os.environ["GEMINI_API_KEY"]` and `SystemExit` with instructions when unset;
+the guard was tested both ways in isolation, because `google.genai` is not
+installed here and the import fails before the guard is reached. Zero `AIza`
+literals anywhere under `intake/`.
+🔑 **Revoke-before-edit justified itself within a minute**: the literal appeared
+in a `grep` while being located, and was already dead when it did. Under the
+order he declined, that same grep would have leaked a live credential.
+⚠️ Both files are gitignored, so `500/010` is the only durable record.
+
+### `500/060` closes — he meant the menus
+
+*"I meant menus. The product photos of ingredients were probably taken at
+home."* That agrees exactly with the measurement (119 GPS-bearing pantry frames,
+one cluster), so the shop-case validator stays unbuilt for want of a real
+instance — ADR 0080 D4. The rewording he ruled on shipped as ADR 0115. `[x]`.
+
+### 🛑 `080/220 §3` — and the orchestrator's proposed fix was wrong
+
+Removing the false gluten tag left `validate.py` — first on the mandatory verify
+list — printing *"missing contains-gluten … run tools/tag_allergens.py"*: a
+standing instruction, on the gate nobody skips, to reinstate what the owner had
+just ruled out. He said fix it.
+
+**The brief proposed narrowing on grammar** — don't read an allergen word that
+is the object of *"switch the X for…"*. The delivering agent built it, measured
+it, and **refused it**:
+
+> *"Grass fed beef, cheddar, pickles. **Swap the bun for lettuce**"* is the
+> identical sentence shape, on a dish that really does arrive in a bun. One row
+> **is** the swap, the other **offers** it, and no grammar tells them apart.
+
+Grammar alone would have traded the over-warning for a **miss** — the one
+direction the tool may not move. The shipped guard (ADR 0116) adds a **mirror
+condition**: a match is cancelled only when *the same food is named after the
+pivot*, and the destination then decides. So *"…for a milk bun"* keeps its
+gluten and gains dairy; *"…for lettuce"* cancels nothing.
+
+✅ **Verified independently by the orchestrator rather than taken on report** —
+which mattered, because the first probe read as a regression and was not one.
+Testing `swapped_away` in isolation on the real row looks wrong until you see
+that the row has **two** matches on different layers: the swap-away *"wholemeal
+bun"* is cancelled by the new fix, and the destination *"gluten friendly bun"*
+by ADR 0097's existing hedge. Neither layer does the job alone. End to end:
+dry run **1 → 0** proposals, `validate.py` **75 → 74** warnings,
+`test_tag_allergens` **81 → 90**, and with every tag in the corpus cleared the
+rules make 3,213 findings before and 3,212 after — one lost, none gained.
+🔑 **The lesson for the next probe: a negative result on one layer of a
+multi-layer guard is not a defect.** Reproduce end to end before reporting one.
