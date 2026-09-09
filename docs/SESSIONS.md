@@ -10871,3 +10871,24 @@ than repeating the earlier close found:
    on every `PR #n` a session's records cite. Four citations, two wrong. A
    number is the easiest thing in a record to get wrong and the hardest to
    notice, because it reads as precision.
+
+### One more, after the close: a teardown that impersonated a test failure
+
+The `080/220 §3` agent reported, its PR was merged on that report, and its
+worktree was removed — and it then **woke and kept working**, re-running a check
+it had been unable to finish at load 128. The re-run died with `cd: no such file
+or directory`, which reads exactly like a failing gate and is not one.
+
+🔑 **A completion notification is not proof an agent is finished** — the same
+task can notify more than once and resume after reporting. Nothing was lost
+(both commits were on `origin`, the merge was gated on green CI, and the agent
+confirmed it changed nothing afterwards), but the failure mode is real: a
+teardown makes a *live* agent report a phantom failure about the repository.
+**Merging its branch on the report is fine and should not wait; deleting the
+worktree can wait until close** — that is the only irreversible half and it
+costs nothing to leave.
+
+⚠️ This is the second time this session repeated a lesson already in the
+record. It is also the second time the refinement was *"the rule as written did
+not cover this shape"* rather than *"the rule was ignored"* — which is the more
+useful kind of finding and the harder one to notice.
