@@ -42,3 +42,18 @@
   📌 **Until it moves, leave the gloss exactly as it is.** A wrong gloss that is
   visibly recorded as wrong beats a right-looking one that was guessed — and the
   record is what stops the next session "tidying" it into an invention.
+
+  ⚠️ **The control gained a THIRD option on 2026-09-09 and this item did not
+  move** (session faves-c1, [ADR 0117](../../decisions/0117-a-door-is-declared-never-derived.md)).
+  Delivery joined Takeaway and Dine-in, and it **does** have a gloss:
+  `Hīkawekawe`, the owner-nominated dictionary's own headword, noun, *"(goods)
+  deliveries"* — an attested entry taken whole, which is the `tāera` case and
+  not the composition this item is barred from. Marked draft, because the entry
+  is the *logistics* sense and the control means *the shop brings dinner to
+  you*.
+  🔑 **So the shape of the problem has narrowed, and it is worth saying
+  precisely:** the three *options* now all carry attested te reo. What still has
+  none is the control's own **label** — the word "Dining", and `All dining` —
+  which is where `Ratonga` (*service*) still stands and still says the wrong
+  thing. Route 3 above (reconsider the English) therefore got cheaper: it is one
+  word on one label, not a re-gloss of the whole control.

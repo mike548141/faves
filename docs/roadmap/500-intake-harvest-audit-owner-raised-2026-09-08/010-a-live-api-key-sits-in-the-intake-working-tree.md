@@ -1,5 +1,5 @@
-- [ ] 🔥 **A live Google Gemini API key sits in plaintext in the intake working
-      tree, and it was reported once and never rotated** `[XS][security]` —
+- [x] ✅ **A live Google Gemini API key sat in plaintext in the intake working
+      tree — DELETED 2026-09-09, see the foot of this item** `[XS][security]` —
       re-found 2026-09-08 by the intake audit (session faves-o1), and raised
       again because finding it twice is the point.
 
@@ -134,3 +134,15 @@
   ⚠️ **Both files are gitignored, so this edit leaves no trace in the repo or
   in CI.** This note is the only durable record that it happened, which is why
   it is here rather than only in a session log.
+
+  🔎 **The BRACKET was still `- [ ]` and the item still opened with 🔥 until
+  2026-09-09 (session faves-c1), four sections after its own ✅ DONE.** So the
+  generated `docs/ROADMAP.md` — the file anyone skims to find the work — carried
+  *"a live Google Gemini API key sits in plaintext"* as the board's single
+  highest-severity **open** item, about a key that no longer exists. Found by
+  reading the item before reporting it, which is the only reason it was caught.
+  🔑 **A closing session updates the BODY and forgets the one character the
+  index is generated from.** Everything downstream of it — the board, any count,
+  any sweep that ranks by severity — reads the bracket and never the prose. The
+  body was impeccable; the state line was a lie, and the state line is the half
+  that travels.
