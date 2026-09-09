@@ -124,3 +124,43 @@
   `menu[].items[]` means.
   🎯 Recommendation: none offered. This is the owner's, and it is a decision
   about how much mechanism a single row is worth.
+
+  ### ✅ §3 RESOLVED 2026-09-09 (session faves-p1) — ADR 0116, none of the four
+
+  Owner ruled *"we should fix that"*. The delivered fix is **none of the four
+  options above**: it is a fifth, and it is the shape ADR 0097 already
+  established — **narrow the match, never veto the row.** A rule word standing
+  in the swap-**AWAY** half of a `switch/swap X for/with Y` construction is not
+  evidence the dish contains it. `swapped_away()` cancels that ONE match and
+  `first_unhedged` walks on, exactly as `hedge_before` does.
+
+  🛑 **The grammatical half alone would have been WORSE than leaving it, and
+  that is the finding worth carrying forward.** *"Grass fed beef, cheddar,
+  pickles. Swap the bun for lettuce"* is the identical sentence shape on a dish
+  that really does arrive in a bun — one row IS the swap, the other OFFERS it,
+  and no grammar tells them apart. So a **mirror condition** is required before
+  anything is cancelled: the same food must be named on the far side of the
+  pivot. The destination then decides, which means *"…for a **milk bun**"* keeps
+  both its wheat and its dairy, *"Switch **to** a brioche bun"* is never touched
+  at all, and *"…for **lettuce**"* cancels nothing. 🔑 The invariant: a tag can
+  only be lost here where the venue printed a free-from claim about the
+  **destination** — so this reaches no further than ADR 0097's hedge does.
+
+  📊 **Measured, not reasoned.** Corpus swept for 14 substitution forms across
+  57 records / 5,844 strings: 37 strings carry one, and **exactly one** is a
+  substitution reaching an allergen word. With every tag in the corpus
+  **cleared**, the old rules make 3,213 findings and the new rules make 3,212 —
+  one lost (this row), **none gained, none else lost**. Dry run 1 → 0
+  proposals; `validate.py` **75 → 74 warnings**; **no file under `site/`
+  changed**, so no version bump. `test_tag_allergens.py` 81 → **90** cases,
+  including six breakers — the guard off, the mirror removed, the span run on,
+  `substitute` admitted, the word cap lifted, `switch` dropped. Reverting the
+  narrowing fails the three new cases **and nothing else** (verified by running
+  the whole suite with it reverted). `--swaps` prints every substitution phrase
+  in the corpus and which the guard refuses, so the verb list cannot go silent.
+  🚩 One probe was wrong on first write — it kept its gluten from the word
+  *Buns* in its own first clause, so the word-cap breaker passed with the bug
+  back. Caught by the breaker, reworded, recorded in ADR 0116.
+
+  §1 (`slices?` reaching *Slice of Heaven*) and §2 (the Soft Serve Cone's
+  wafer) are **untouched and still owed** — the item stays open on those two.

@@ -1406,3 +1406,21 @@ deliberation those compact docs omit.
   a field in the record store costs no phone a byte. The precedent that bites is
   [0080](0080-a-venue-has-menus-plural.md) Decision 4: a shape recorded before
   its first instance is a hypothesis.
+- [0116](0116-a-substitution-names-the-food-you-are-not-getting.md) — **a
+  substitution names the food you are NOT getting.** Amends
+  [0097](0097-a-hedge-is-not-a-warning.md) with a second per-match
+  cancellation. BurgerFuel's `Gluten friendly bun` reads *"Switch the wholemeal
+  bun for a gluten friendly bun"*, and the hedge cannot reach it — the negation
+  qualifies the **other** bun — so `validate.py` carried a standing instruction,
+  on the one gate nobody skips, to re-land a false gluten warning the owner had
+  ruled off. 🛑 **The MIRROR CONDITION is the whole safety argument, not a
+  refinement:** *"Swap the bun for lettuce"* is the same sentence shape on a
+  dish that really does arrive in a bun, so grammar is not allowed to decide
+  alone — a match is cancelled only when the **same food** is named after the
+  pivot, which makes the destination the authoritative half and leaves
+  *"…for a milk bun"* fully tagged. Roadmap `080/220 §3`'s name-level veto and
+  `noTags` field are both the item-level veto ADR 0097 refused. Two verbs
+  (`switch`, `swap`) because two verbs is what 5,844 corpus strings write;
+  `substitute` refused because English uses it in **both** directions.
+  Measured with every tag cleared: **3,213 findings → 3,212**, the one
+  difference being that row. `--swaps` keeps the reach falsifiable.
