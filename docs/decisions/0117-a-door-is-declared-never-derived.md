@@ -35,7 +35,7 @@ interchangeable:
 |---|---|---|
 | `services[]` | the doors this venue opens | 0 (the value was not permitted) |
 | a dish's `prices.delivery` (ADR 0089) | what this dish costs through that door | 1 |
-| `ordering[].platform` | a link we hand the reader | 20, of which 10 name a courier |
+| `ordering[].platform` | a link we hand the reader | 19, of which 10 name a courier |
 
 ## Decision
 
@@ -95,7 +95,7 @@ guess, and the guess fails in the expensive direction: a reader who filters to
 Delivery and rings a shop that does not deliver has been told something untrue by
 this app. They stay out until the owner or a reading says otherwise.
 
-The remaining 37 venues carry no `ordering` link at all. **Absence of a link is
+The remaining 38 venues carry no `ordering` link at all. **Absence of a link is
 not evidence of absence of delivery** — it is silence, and the filter treats it
 as such.
 
