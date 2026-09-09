@@ -50,6 +50,40 @@ CHARLEY = "site/data/restaurants/charley-noble.json"
 SIMMER = "site/data/restaurants/simmer.json"
 ABRAKEBABRA = "site/data/restaurants/abrakebabra.json"
 MCDONALDS = "site/data/restaurants/mcdonalds.json"
+BURGERFUEL = "site/data/restaurants/burgerfuel.json"
+
+# --- the swap (2026-09-09, ADR 0116, roadmap 080/220 §3) -------------------
+# BurgerFuel is the record the fault was MEASURED on, so it is the record the
+# cases run against: a "Bun swaps" section whose `Gluten friendly bun` reads
+# "Switch the wholemeal bun for a gluten friendly bun."
+#
+# Every case below empties the Bambina's tags as well, and that is the PROOF OF
+# WRITE the absence assertions need — its description ends "On a smaller
+# wholemeal bun", so the tag must come back. Without it a tagger that had
+# stopped writing anything at all satisfies "the gluten friendly bun gained no
+# gluten tag" perfectly, which is this file's oldest lesson.
+STRIP_BAMBINA = [
+    ("""          "desc": "Grass fed beef. On a smaller wholemeal bun.",
+          "price": 10.5,
+          "tags": [
+            "contains-gluten"
+          ]""",
+     """          "desc": "Grass fed beef. On a smaller wholemeal bun.",
+          "price": 10.5,
+          "tags": []"""),
+]
+
+# 🛑 THE HALF THAT MUST STILL BE TAGGED. The same row, rewritten so the thing
+# swapped TO carries the allergen — "milk bun" is the corpus's own wording, 16
+# occurrences across 6 venues. If the guard were an item-level veto, or if it
+# cancelled from the verb to the end of the sentence, this row would go silent
+# about both the wheat and the dairy it is made of.
+SWAP_TO_AN_ALLERGEN = [
+    ('''          "dishId": "low-carborator-lettuce-bun",
+          "desc": "Free.",''',
+     '''          "dishId": "low-carborator-lettuce-bun",
+          "desc": "Switch the wholemeal bun for a milk bun.",'''),
+]
 
 # --- the hedge (2026-09-07) -----------------------------------------------
 # Simmer is the record the fault was MEASURED on, so it is the record the cases
@@ -455,6 +489,57 @@ def check_a_hedge_does_not_cancel_a_real_item_beside_it(after, out):
     return _tart_wrote_something(after)
 
 
+# --- the swap (2026-09-09, ADR 0116, roadmap 080/220 §3) -------------------
+
+def _bambina_wrote_something(after):
+    """The proof-of-write every swap case needs. See STRIP_BAMBINA."""
+    tags = _dish(after, "bambina") or set()
+    if "contains-gluten" not in tags:
+        return ("the Bambina did not get its gluten tag back — the tool wrote "
+                f"nothing here and the case proves nothing (has {sorted(tags)})")
+    return None
+
+
+def check_a_swap_row_is_not_warned_about_the_bun_it_replaces(after, out):
+    """The row IS the substitution, so the wholemeal bun is what you do NOT get.
+
+    Measured, not imagined: this proposal survived ADR 0097's hedge (which
+    cancels the OTHER bun, five words later) and put a standing instruction to
+    re-land a false gluten warning on `validate.py`'s output — the one gate
+    nobody skips. The lettuce bun beside it is re-asserted in the same breath,
+    so a "fix" that switched the lettuce lookbehind off cannot pass either.
+    """
+    gf = _dish(after, "gluten-friendly-bun") or set()
+    if "contains-gluten" in gf:
+        return f"warned that the GLUTEN FRIENDLY BUN contains gluten (has {sorted(gf)})"
+    lettuce = _dish(after, "low-carborator-lettuce-bun") or set()
+    if "contains-gluten" in lettuce:
+        return f"warned that the LETTUCE BUN contains gluten (has {sorted(lettuce)})"
+    return _bambina_wrote_something(after)
+
+
+def check_a_swap_to_an_allergen_is_still_tagged(after, out):
+    """THE case an item-level veto fails, on a real record. "…for a milk bun."
+
+    Both tags matter and they fail for different reasons: the WHEAT is the
+    match on the far side of the pivot, which a veto or a run-on span would
+    swallow along with the one it meant to cancel; the DAIRY is a different
+    rule entirely, which a veto scoped to the item would take down with it.
+    The gluten friendly bun is re-asserted here too, so a tool that had simply
+    stopped cancelling anything cannot pass this case.
+    """
+    swapped = _dish(after, "low-carborator-lettuce-bun") or set()
+    for tag, what in (("contains-gluten", "the bun it is swapped TO"),
+                      ("contains-dairy", "the MILK in the bun it is swapped TO")):
+        if tag not in swapped:
+            return (f"lost {tag} — an over-warning traded for a miss on "
+                    f"{what} (has {sorted(swapped)})")
+    gf = _dish(after, "gluten-friendly-bun") or set()
+    if "contains-gluten" in gf:
+        return f"the swap guard is off — the gluten friendly bun was warned ({sorted(gf)})"
+    return _bambina_wrote_something(after)
+
+
 def check_single_line_layout_survives(after, out):
     """A one-line tags array must stay on one line. The whole reason this tool
     patches raw text instead of re-serialising is that the diff stays readable."""
@@ -570,6 +655,12 @@ CASES = {
           "name": "Double Quarter Pounder","""),
          ],
         0, check_a_caption_tags_only_behind_the_caveat),
+    "a bun swap is not a warning about the bun it replaces": (
+        BURGERFUEL, STRIP_BAMBINA, 0,
+        check_a_swap_row_is_not_warned_about_the_bun_it_replaces),
+    "a swap TO an allergen is still tagged, on a real record": (
+        BURGERFUEL, STRIP_BAMBINA + SWAP_TO_AN_ALLERGEN, 0,
+        check_a_swap_to_an_allergen_is_still_tagged),
     "a venue with add-ons is patched, not skipped": (
         THORNDON, STRIP_BURGERS, 0, check_addon_venue_is_patched),
     "add-on option tags survive a menu-item patch": (
@@ -937,6 +1028,51 @@ PROBES = {
     # the water-chestnut shape and the third line is why it had to be one: four
     # corpus rows read "…milk bun, fries. No gluten added bun +$2.50 or lettuce
     # bun available", so an item-level `exclude` would have lost the MILK BUN.
+    # (a3) THE SWAP (2026-09-09, ADR 0116, roadmap 080/220 §3). A substitution
+    # names the thing you are NOT getting — and the guard's whole safety
+    # argument is that grammar alone is not allowed to decide that, because
+    # "Swap the bun for lettuce" is the SAME SENTENCE SHAPE on a dish that
+    # really does arrive in a bun. Six lines, and five of them are the ways
+    # this goes wrong rather than the way it goes right.
+    "a swap names the food you are NOT getting": [
+        # The real row, as `ingredient_text` joins its name and description.
+        ("Gluten friendly bun Switch the wholemeal bun for a gluten friendly bun",
+         set(), {"contains-gluten"}),
+        # The swap-TO half is READ, which is what dissolves the obvious
+        # objection that refusing to infer here errs toward a miss. "milk bun"
+        # is the corpus's own wording (×16 across 6 venues).
+        ("Switch the wholemeal bun for a milk bun",
+         {"contains-gluten", "contains-dairy"}, set()),
+        # 🛑 THE DANGEROUS ONE, and the reason the mirror condition exists.
+        # Identical grammar; the dish really is served in a bun; nothing on the
+        # far side of the pivot is a bun, so NOTHING is cancelled.
+        ("Grass fed beef, cheddar, pickles. Swap the bun for lettuce",
+         {"contains-gluten", "contains-dairy"}, set()),
+        # No swap-away half at all — a bare "switch to" is left entirely alone.
+        ("Switch to a milk bun", {"contains-gluten", "contains-dairy"}, set()),
+        # A hedge on the far side rescues only the food it names. `pasta` and
+        # `bread` are alternatives of the same rule, so a guard that cancelled
+        # on "some match after the pivot" would lose the pasta.
+        ("Swap the pasta for gluten free bread", {"contains-gluten"}, set()),
+        # `substitute` is refused outright: English uses it in BOTH directions,
+        # so its object cannot be read positionally. Under the standard reading
+        # this sentence means you GET the milk bun.
+        ("Substitute the milk bun for a gluten free bun",
+         {"contains-gluten", "contains-dairy"}, set()),
+        # Not a veto: the guard cancels one match and the walk goes on.
+        ("Switch the wholemeal bun for a gluten friendly bun, served with garlic bread",
+         {"contains-gluten"}, set()),
+        # The word cap. `ingredient_text` joins a description's clauses with a
+        # space, so a distant "for" could otherwise open a span across two
+        # unrelated sentences — and here the far side's only bun is hedged, so
+        # the tag would be LOST rather than merely re-found.
+        # 🛑 Nothing before the verb may be a rule word: put "Buns" in the first
+        # clause and the sentence keeps its gluten from THERE, and the case
+        # passes with the cap lifted. Measured on first write — it did.
+        ("Speak to staff to swap. Grass fed beef, cheddar, pickles on a "
+         "wholemeal bun for the classic size. Gluten free bun available",
+         {"contains-gluten", "contains-dairy"}, set()),
+    ],
     "a lettuce bun is a lettuce leaf": [
         ("Low Carborator lettuce bun", set(), {"contains-gluten"}),
         ("Beef patty in a lettuce bun with a side of garlic bread",
@@ -1327,6 +1463,53 @@ BREAKERS = {
           "            findings[:0] = [\n"
           '                (tag, "PHOTO",')],
         ["the menu's own words outrank the caption for the same tag"]),
+    # --- the swap (2026-09-09, ADR 0116, roadmap 080/220 §3) ---------------
+    # (1) The guard off altogether — the state that put a standing instruction
+    # to re-land a false gluten warning on validate.py's output.
+    "the swap guard removed": (
+        [("        if swapped_away(pattern, text, match):",
+          "        if False and swapped_away(pattern, text, match):")],
+        ["a swap names the food you are NOT getting",
+         "a bun swap is not a warning about the bun it replaces",
+         "a swap TO an allergen is still tagged, on a real record"]),
+    # (2) 🛑 THE DANGEROUS ONE, and the whole reason this record exists. Cancel
+    # on GRAMMAR ALONE and "Swap the bun for lettuce" loses its gluten — an
+    # over-warning traded for a MISS, the one direction this tool may not move.
+    # Every other assertion in the group still passes with this bug present.
+    "the swap cancels on grammar alone (no mirror condition)": (
+        [("        for other in pattern.finditer(text, to_start):\n"
+          "            if _same_food(other.group(0), match.group(0)):\n"
+          "                return True",
+          "        return True")],
+        ["a swap names the food you are NOT getting"]),
+    # (3) The span run on to the end of the text — the veto in disguise. It
+    # swallows the match on the far side of the pivot along with the one it
+    # meant to cancel, so the bun you ARE getting goes unwarned.
+    "the swap-away span runs to the end of the text": (
+        [("        spans.append((verb.end(), pivot.start(), pivot.end()))",
+          "        spans.append((verb.end(), len(text), pivot.end()))")],
+        ["a swap names the food you are NOT getting",
+         "a swap TO an allergen is still tagged, on a real record"]),
+    # (4) `substitute` admitted as a read verb. It passes every "looks like a
+    # swap" check and is directionally ambiguous in English, so half its
+    # sentences cancel the thing you ARE getting.
+    "the swap guard reads `substitute` too": (
+        [(r'SWAP_VERB = re.compile(r"\b(?:switch(?:es|ed|ing)?|swap(?:s|ped|ping)?)\b", re.I)',
+          r'SWAP_VERB = re.compile(r"\b(?:switch(?:es|ed|ing)?|swap(?:s|ped|ping)?|'
+          r'substitutes?)\b", re.I)')],
+        ["a swap names the food you are NOT getting"]),
+    # (5) The word cap lifted. A "swap" in one clause and a "for" three clauses
+    # later then open a span across an unrelated ingredient list.
+    "the swap-away word cap lifted": (
+        [("SWAP_AWAY_MAX_WORDS = 5", "SWAP_AWAY_MAX_WORDS = 99")],
+        ["a swap names the food you are NOT getting"]),
+    # (6) Only `swap` read, not `switch` — the verb the one real row uses.
+    "the swap guard reads `swap` but not `switch`": (
+        [(r'SWAP_VERB = re.compile(r"\b(?:switch(?:es|ed|ing)?|swap(?:s|ped|ping)?)\b", re.I)',
+          r'SWAP_VERB = re.compile(r"\b(?:swap(?:s|ped|ping)?)\b", re.I)')],
+        ["a swap names the food you are NOT getting",
+         "a bun swap is not a warning about the bun it replaces"]),
+
     # (6) The captions not read at all — the state of the tool before this
     # ruling. Without it every absence assertion above is satisfiable by a tier
     # that does nothing.

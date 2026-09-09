@@ -35,7 +35,7 @@ Three tiers, kept apart so the count is auditable (ADR 0025, extended by 0114):
   only this file knows about — ADR 0072's decorative guard, in the one place
   in the repo where being wrong hurts someone.
 
-Four guards keep it honest:
+Five guards keep it honest:
   • EXCLUDE patterns per rule — "rice noodles" are not wheat, "peanut butter"
     is not dairy, a "doughnut" is not a tree nut.
   • CONTRADICTED_BY — a dish the data already calls gf/df/vegan is not
@@ -43,6 +43,11 @@ Four guards keep it honest:
   • THE HEDGE (added 2026-09-07) — a venue writing an allergen word in order to
     say the allergen is ABSENT. "Gluten free toast" is not a gluten warning.
     See the HEDGE block below; it is the one over-warning that is not fail-safe.
+  • THE SWAP (added 2026-09-09, ADR 0116) — a substitution row names the thing
+    you are NOT getting. "Switch the wholemeal bun for a gluten friendly bun" is
+    not a gluten warning about the bun you receive. Cancelled only when the same
+    food is named on the far side of the swap, so the DESTINATION decides; see
+    the SWAP block below.
   • Paid add-ons are not ingredients — "add prawns +$7" doesn't make a garden
     salad shellfish.
 
@@ -74,6 +79,7 @@ unswept behind a green run.
     python3 tools/tag_allergens.py               # report (default)
     python3 tools/tag_allergens.py --tier DERIVED  # just the inferences
     python3 tools/tag_allergens.py --tier PHOTO  # just what a caption says
+    python3 tools/tag_allergens.py --swaps       # every substitution phrase
     python3 tools/tag_allergens.py --apply       # write them
 """
 
@@ -555,6 +561,116 @@ def hedge_before(tag, text, start):
     return bool(pattern and pattern.search(text[:start]))
 
 
+# --- the swap (2026-09-09, ADR 0116, roadmap 080/220 §3) --------------------
+# A SUBSTITUTION ROW NAMES THE THING YOU ARE NOT GETTING. BurgerFuel's
+# `Gluten friendly bun` reads "Switch the wholemeal bun for a gluten friendly
+# bun." — and a wholemeal bun really is wheat, so `\bbuns?\b` matched and the
+# tool proposed `contains-gluten` on the one row a coeliac is hunting for. The
+# hedge cannot reach it (the negation qualifies the OTHER bun, five words
+# later) and no word rule can, because the fact is not about a word: it is
+# about which side of the swap the word sits on.
+#
+# 🛑 IT IS A LOOKBEHIND IN SPIRIT, NOT AN ITEM-LEVEL VETO — the same shape as
+# `(?<!water )chestnuts?`, `(?<!lettuce )buns?` and `hedge_before`. It cancels
+# ONE match, and `first_unhedged` walks on to the next. Roadmap 080/220 §3
+# offered a name-level veto and a `noTags` data field; both are the shape
+# ADR 0097 refused, and on a future row reading "Gluten free base — served with
+# garlic bread" both lose the garlic bread.
+#
+# 🛑 AND THE MIRROR CONDITION IS THE WHOLE SAFETY ARGUMENT, not a refinement.
+# Cancelling on grammar alone would be a MISS waiting to happen: "Grass fed
+# beef, cheddar, pickles. Swap the bun for lettuce." is the SAME SENTENCE SHAPE
+# and its default really does arrive in a bun. Grammar cannot tell the two
+# apart — one row IS the swap, the other OFFERS it — so grammar is not allowed
+# to decide alone. A match is cancelled only when the thing swapped **TO** is
+# the same food by name, which makes the destination the authoritative half:
+#
+#   • "Switch the wholemeal bun for a gluten friendly bun" — bun → bun, so the
+#     destination decides, and there the existing hedge cancels it. No tag.
+#   • "Switch the wholemeal bun for a brioche bun" — bun → bun, so the
+#     destination decides, and `brioche`/`bun` are unhedged. TAG STANDS, and
+#     the swap-TO half is read exactly as it would have been anyway.
+#   • "Swap the bun for lettuce" — no bun on the far side, so nothing is
+#     cancelled and the warning stays. This is the fail-safe default and it is
+#     what the whole condition exists for.
+#
+# 🔑 The invariant that falls out of it: a tag can only be LOST here when the
+# venue has printed a free-from claim about the swap DESTINATION — because any
+# unhedged destination match is still returned by `first_unhedged`. The guard
+# therefore cannot reach further than ADR 0097's hedge already does.
+#
+# THE VERBS WERE SWEPT OUT OF THE CORPUS, NOT GUESSED (2026-09-09, 57 records,
+# 5,844 name/desc/ingredient/note/option/alt strings, against `switch`, `swap`,
+# `replace`, `substitute`, `instead of`, `sub`, `upgrade`, `change to`, `in
+# place of`, `in lieu of`, `exchange`, `rather than`, `without`, `hold the`):
+# 37 strings carry any of them and exactly ONE is a substitution reaching an
+# allergen word — the BurgerFuel row above. `switch` ×1 and `swap` ×2 are the
+# only verbs the corpus writes in this construction, so they are the only two
+# admitted. `replace` and `exchange` appear nowhere; adding a form no venue
+# writes is how a guard starts looking thorough while covering nothing
+# (ADR 0097 §3's rule, applied to verbs instead of hedges).
+#
+# 🛑 `substitute` IS DELIBERATELY REFUSED AND IT IS NOT AN OVERSIGHT. English
+# uses it in BOTH directions — "substitute margarine for butter" means use the
+# margarine — so its object cannot be read positionally at all, and a guard
+# that read it would cancel the thing you ARE getting half the time. The
+# corpus's four occurrences are the NOUN ("as substitute"), not the verb.
+#
+# `--swaps` prints every substitution-shaped phrase in the corpus and says
+# which the guard reads and which it refuses, for the same reason `--compounds`
+# exists: a hand-written list is silent about the phrase that lands after it.
+SWAP_VERB = re.compile(r"\b(?:switch(?:es|ed|ing)?|swap(?:s|ped|ping)?)\b", re.I)
+SWAP_PIVOT = re.compile(r"\b(?:for|with)\b", re.I)
+
+# The displaced item is a NOUN PHRASE, never a paragraph. `ingredient_text`
+# joins a description's clauses with a space, so sentence boundaries are gone
+# by the time the rules see the text and a far-away "for" could otherwise open
+# a span across two unrelated sentences. Measured: the corpus's one real span
+# is "the wholemeal bun" — three words.
+SWAP_AWAY_MAX_WORDS = 5
+
+
+def swap_spans(text):
+    """(away_start, away_end, to_start) for each "switch/swap X for Y" phrase.
+
+    No pivot, or a displaced phrase longer than a noun phrase, yields NO span —
+    so the fail-safe default is that nothing is cancelled. "Switch to a brioche
+    bun" has no swap-away half at all and is left entirely alone.
+    """
+    spans = []
+    for verb in SWAP_VERB.finditer(text):
+        pivot = SWAP_PIVOT.search(text, verb.end())
+        if not pivot:
+            continue
+        away = text[verb.end():pivot.start()]
+        if not away.split() or len(away.split()) > SWAP_AWAY_MAX_WORDS:
+            continue
+        spans.append((verb.end(), pivot.start(), pivot.end()))
+    return spans
+
+
+def _same_food(a, b):
+    """Do two matched rule words name the same food? Plural-tolerant."""
+    a, b = " ".join(a.lower().split()), " ".join(b.lower().split())
+    return a == b or a.rstrip("s") == b.rstrip("s")
+
+
+def swapped_away(pattern, text, match):
+    """True when `match` is the food being swapped AWAY, for the same food.
+
+    See the block above: the grammatical half alone would trade an over-warning
+    for a miss, so the mirror condition — the same food named on the far side of
+    the pivot — is required before anything is cancelled.
+    """
+    for away_start, away_end, to_start in swap_spans(text):
+        if not away_start <= match.start() < away_end:
+            continue
+        for other in pattern.finditer(text, to_start):
+            if _same_food(other.group(0), match.group(0)):
+                return True
+    return False
+
+
 def first_unhedged(tag, pattern, text):
     """The first match of `pattern` in `text` that a hedge does NOT cancel.
 
@@ -565,10 +681,17 @@ def first_unhedged(tag, pattern, text):
     and the exact failure an item-level `exclude` would have shipped. Walking
     every occurrence is what keeps the cancellation as narrow as the lookbehind
     it is named for.
+
+    Two cancellations, both per-match and both narrow: the HEDGE (the venue says
+    this allergen is absent) and the SWAP (the venue says this food is the one
+    being taken away). The walk is what keeps either from becoming a veto.
     """
     for match in pattern.finditer(text):
-        if not hedge_before(tag, text, match.start()):
-            return match
+        if hedge_before(tag, text, match.start()):
+            continue
+        if swapped_away(pattern, text, match):
+            continue
+        return match
     return None
 
 
@@ -1174,6 +1297,47 @@ def compound_misses():
     return out
 
 
+# Every substitution-shaped form a menu might write, INCLUDING the ones the
+# guard deliberately refuses. That is the point of the report: `--compounds`'s
+# lesson is that a hand-written list goes silent about what lands after it, and
+# a guard reading only `switch` and `swap` needs the phrase that arrives next
+# to be visible rather than merely absent.
+SWAP_NEAR = re.compile(
+    r"\b(?:switch(?:es|ed|ing)?|swap(?:s|ped|ping)?|replac(?:e[sd]?|ing)|"
+    r"substitut\w*|exchange[sd]?|instead\s+of|in\s+place\s+of|in\s+lieu\s+of|"
+    r"upgrade[sd]?(?:\s+to)?|change[sd]?\s+to|rather\s+than)\b", re.I)
+
+
+def swap_findings():
+    """(record, dish, phrase, verdict, cancelled) for every substitution phrase.
+
+    `verdict` says why the guard did or did not read the phrase; `cancelled` is
+    the (tag, word) pairs it actually silences. A phrase this tool refuses is
+    printed too — a refusal errs toward an over-warning, which is visible as a
+    dry-run proposal, but only if somebody can see the phrase that caused it.
+    """
+    for rec, dish, text in corpus_strings():
+        spans = swap_spans(text)
+        for near in SWAP_NEAR.finditer(text):
+            a = max(0, near.start() - 30)
+            phrase = ("…" if a else "") + text[a:near.end() + 60].strip()
+            covering = [s for s in spans if s[0] <= near.end() <= s[1] or near.end() == s[0]]
+            if not SWAP_VERB.fullmatch(near.group(0)):
+                verdict = f"refused — {near.group(0).lower()!r} is not a read verb"
+            elif not covering:
+                verdict = "refused — no 'for'/'with' pivot, or the phrase is too long"
+            else:
+                verdict = "read"
+            cancelled = []
+            for tag, _tier, _why, pattern, exclude in COMPILED:
+                if exclude and exclude.search(text):
+                    continue
+                for m in pattern.finditer(text):
+                    if swapped_away(pattern, text, m):
+                        cancelled.append((tag, m.group(0).lower()))
+            yield rec, dish, phrase, verdict, sorted(set(cancelled))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write the tags (default: report only)")
@@ -1181,7 +1345,26 @@ def main():
     ap.add_argument("--quiet", action="store_true", help="counts only")
     ap.add_argument("--compounds", action="store_true",
                     help="words a rule ALMOST matches, and which boundary refused them")
+    ap.add_argument("--swaps", action="store_true",
+                    help="every substitution phrase, and whether the swap guard reads it")
     args = ap.parse_args()
+
+    if args.swaps:
+        print("Substitution-shaped phrases in the corpus, and what the swap guard")
+        print("does with each. A REFUSED phrase costs an over-warning, never a")
+        print("miss — but only a printed refusal is falsifiable (ADR 0116).\n")
+        n = read = silenced = 0
+        for rec, dish, phrase, verdict, cancelled in swap_findings():
+            n += 1
+            read += verdict == "read"
+            silenced += bool(cancelled)
+            print(f"  [{rec}] {dish}")
+            print(f"      {phrase}")
+            print(f"      {verdict}"
+                  + (f" — cancels {cancelled}" if cancelled else ""))
+        print(f"\n{n} phrase(s); {read} read by the guard; "
+              f"{silenced} with a match actually cancelled.")
+        return 0
 
     if args.compounds:
         misses = compound_misses()
