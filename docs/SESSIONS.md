@@ -10827,3 +10827,24 @@ dry run **1 → 0** proposals, `validate.py` **75 → 74** warnings,
 rules make 3,213 findings before and 3,212 after — one lost, none gained.
 🔑 **The lesson for the next probe: a negative result on one layer of a
 multi-layer guard is not a defect.** Reproduce end to end before reporting one.
+
+### Pin bump at close — `35912e3` → `eb6449d`
+
+The drift check at session start reported nothing; re-run at close it reported
+**10 commits**, so the bump is this session's to make rather than the next
+one's to trip over.
+
+🔎 **Read before bumping, and the reading is the point: ZERO files under
+`docs/method/` changed.** The ten are atelier's instrument layer (`ccmail`,
+`ccgrab`), its own roadmap and session records, and one addendum to its
+ADR 0006 admitting the first instrument that holds a third-party credential.
+None of it is doctrine and none of it binds this repo's practice, so there is
+nothing here to apply — only a stale baseline to retire.
+
+✅ **The pending-upstream line in `docs/roadmap/README.md` correctly SURVIVES
+this bump**, checked rather than assumed. CLAUDE.md's rule is that such a line
+*"goes at the pin bump that carries the answer"* and *"a pending-upstream line
+that survives that pin bump is drift"* — so a bump is exactly when it must be
+re-tested. Atelier's `310/060` and `310/070`, the two items the narrowing waits
+on, are both still `- [ ]` open upstream. This bump does not carry their answer,
+so the line stays and is not drift.
