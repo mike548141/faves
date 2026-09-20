@@ -1,4 +1,10 @@
-- [~] **Our inlined floor is a stamped copy nothing watches** `[S][docs]`
+- [x] **Our inlined floor is a stamped copy nothing watches** `[S][docs]`
+  ✅ **DONE 2026-09-21 (session `3e87e0bf`, branch `floor-restamp`,
+  [ADR 0119](../../decisions/0119-the-inlined-floor-is-a-verbatim-stamp-and-our-enrichments-live-beneath-it.md))
+  — the owner's ruling is executed in full. 🛑 AND THE ITEM'S OWN TITLE IS
+  STILL TRUE: nothing watches it, and now we know it cannot.** What changed is
+  that the block is *worth* watching and the check that can pass it is written
+  down. The detail is below the claim record.
   📌 **CLAIMED 2026-09-21 (session `3e87e0bf`) — AND THE OWNER RULED THE OPEN
   FORK QUESTION.** atelier ruled `115/030` on 2026-09-19: *"A child's copy of
   the `floor` region is the canonical text word for word — no compression, no
@@ -14,6 +20,65 @@
   and arrive with the re-stamp: **Asking** (the account must have *reached* the
   principal before the choice is put) and **Concurrency** (read `git status`
   first; never autostash a stranger's work).
+
+  ⚠️ **One clause of that claim paragraph is WRONG and is corrected here rather
+  than edited away: *"`stampscan` can finally watch the block"*.** It cannot,
+  and the reasons are structural. Measured 2026-09-21 in this worktree, both
+  numbers from the tool rather than from its documentation:
+
+  - `python3 …/stampscan.py --root /Users/mike/worktrees/faves-floor CLAUDE.md`
+    → `CLAUDE.md:3 [missing-source] canonical source does not resolve:
+    docs/method/PROPAGATION.md`, **exit 2**. That is atelier's **ST3**, and it <!-- pathscan:allow: atelier cross-repo path — exists in atelier's docs/method/, not this repo's tree -->
+    is **still open**: `resolve_source()` in `stampscan.py` resolves `source=`
+    against `--root` and returns `unconfined-source` for anything outside it,
+    with no parent-path or pin-aware escape hatch anywhere in the tool; the
+    module docstring still says a scaffolded child running it would exit 2;
+    and atelier's board carries `320/160` and `020/110` as `- [ ]`.
+  - 🛑 **And ST3 is not the binding obstacle.** Staging a copy of the canonical
+    `PROPAGATION.md` beside a copy of our `CLAUDE.md` so `source=` *does*
+    resolve gives **exit 1, drift** — first offending line the filled pin,
+    the heading carrying `atelier@09cd4d2` where canonical has `<SHA>`. Every
+    child must fill four placeholders; substitution **rewords**; `stampscan`
+    reds on anything not obtainable by pure deletion. **A fully compliant child
+    reds by construction**, and no fix to ST3 touches that.
+  - 🔎 **A third, smaller one found on the way, worth a line because it is the
+    decorative-guard shape:** `stampscan`'s default scope is `<root>/docs`, and
+    a child's stamped floor lives in `CLAUDE.md` at the **root**. Run with no
+    path argument it prints *"✓ stampscan clean — no stamped blocks found"* and
+    **exit 0**. The one invocation an adopter is most likely to type is the one
+    that cannot see the thing.
+
+  🔑 **So the consequence atelier's `320/160` draws is adopted here: the hand
+  check is not a stopgap.** It is the only instrument that can pass a compliant
+  child, it runs **every pin bump**, and `CLAUDE.md`'s onramp now carries it
+  with its command — filling the placeholders **by script** so "verbatim" is a
+  property of the construction rather than a claim about care. Run against
+  `937eea6` it reports zero drift outside the six placeholder-bearing canonical
+  lines, zero residual placeholders, and no line at or over 86 columns.
+
+  🚩 **Owed upstream, and it is a CORROBORATION not a new item** — atelier
+  `320/160` already carries both obstacles, filed by a private child on
+  2026-09-06 and corroborated by a second on 2026-09-20. This is the **third**,
+  and the first from a **public** child, which adds only two things: the
+  default-scope blind spot above, and the observation that the two obstacles
+  have different owners — ST3 is a tool fix, the placeholder problem is a
+  *doctrine* question about what a stamped copy even means when the house
+  itself instructs the child to reword four of its lines. Hand it over the peer
+  channel or append to `320/160`; do **not** open a duplicate.
+
+  📋 **What the re-stamp moved, so nothing is lost by accident.** Every passage
+  below that used to live inside the doctrine block now lives under a named
+  heading in `CLAUDE.md`'s onramp: the three `00-APEX` practice clauses →
+  *Above the apex*; BS1 and the whole dirty-checkout history →
+  *Concurrency — BS1*; the staged-index provenance note → the same section;
+  the CI-result clause and the cancelled-run sub-clause → *Session rhythm*; the
+  `5ef28ae` baseline history, the `origin/main` reasoning and the worktree trap
+  → *Source & drift*; the two forks and their reasoning → *The two deliberate
+  forks — retired 2026-09-21*; the 2026-08-18 owner quotation and its five-step
+  route → *A house rule is not ours to write*; the publication-bound wording →
+  *Estate resources*. The heading's *"owner-ratified 2026-07-25, bumped
+  2026-09-09"* is **not** carried into the stamp — the canonical heading has no
+  date and an addition reds like a reword — and lives in ADR 0119 instead.
 
   **The record as it stood before that ruling is kept below, unchanged.**
   **Claim DISCHARGED 2026-08-17: the copy-vs-source check was done properly**
