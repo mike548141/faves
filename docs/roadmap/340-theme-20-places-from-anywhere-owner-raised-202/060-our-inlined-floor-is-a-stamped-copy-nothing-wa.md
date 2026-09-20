@@ -1,5 +1,22 @@
-- [~] **Our inlined floor is a stamped copy nothing watches** `[S][docs]` —
-  **claim DISCHARGED 2026-08-17: the copy-vs-source check was done properly**
+- [~] **Our inlined floor is a stamped copy nothing watches** `[S][docs]`
+  📌 **CLAIMED 2026-09-21 (session `3e87e0bf`) — AND THE OWNER RULED THE OPEN
+  FORK QUESTION.** atelier ruled `115/030` on 2026-09-19: *"A child's copy of
+  the `floor` region is the canonical text word for word — no compression, no
+  declared narrowing — and `narrow=` on a `region=floor` stamp reds instead of
+  excusing anything."* That collides head-on with **(c)**, which this repo's
+  owner ruled on 2026-08-17 as *the two forks: KEPT*. Put to him 2026-09-21
+  with the collision stated and three options; **his ruling: re-stamp the floor
+  region VERBATIM and relocate every faves-specific enrichment into the
+  repo-specific onramp directly beneath it** — nothing is lost, `stampscan`
+  can finally watch the block, and the `Source & drift` fork's original
+  justification is already fixed upstream (atelier `54201e0` now carries the
+  `fetch` and reads `origin/main`). Two floor bullets also moved in the delta
+  and arrive with the re-stamp: **Asking** (the account must have *reached* the
+  principal before the choice is put) and **Concurrency** (read `git status`
+  first; never autostash a stranger's work).
+
+  **The record as it stood before that ruling is kept below, unchanged.**
+  **Claim DISCHARGED 2026-08-17: the copy-vs-source check was done properly**
   (results below). The item stays open on **three owner decisions** and on
   atelier's ST3, not on a session; there is nothing to claim. —
   found 2026-08-09 bumping the pin to `atelier@6887118`. `CLAUDE.md`'s

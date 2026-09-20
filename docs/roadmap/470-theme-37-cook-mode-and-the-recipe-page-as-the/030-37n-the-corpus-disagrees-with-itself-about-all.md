@@ -1,9 +1,11 @@
-- [~] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
-      📌 **CLAIMED 2026-09-20 10:53 UTC (session `3e87e0bf`, orchestrated queue
-      run) — the data sweep.** The 2026-09-07 deferral reason was a second live
-      agent on the same files; that agent is gone (tree clean, every `p1-*`
-      branch merged and pruned). Re-run today the tool reports **8
-      class/allergen splits over 86 rows**, grown with the corpus.
+- [ ] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+      📌 **CLAIMED AND DELIVERED 2026-09-20 (session `3e87e0bf`, orchestrated
+      queue run); CLAIM RELEASED.** The 2026-09-07 deferral reason was a second
+      live agent on the same files; that agent was gone (tree clean, every
+      `p1-*` branch merged and pruned), so the sweep ran. **The bracket stays
+      open because work is still owed** — four rulings, listed at the foot —
+      **not because the sweep is unfinished.** Do not re-run the sweep; read
+      the delivery note before touching this.
       — **TOOLING DELIVERED 2026-08-16, THE DATA SWEEP IS NOT.** The report the
       item asked for exists: `tools/allergen_disagreements.py` groups dishes into
       ten declared classes across all 55 venues and names every row whose tagging
@@ -74,3 +76,52 @@
       McDonald's McMuffins can never be found; and the "wheat bakery item" rule
       fires on `slices`, which tagged *"Black Fungus Slices"* as gluten — a
       fail-safe tag for a wrong reason, and an EXCLUDE candidate.
+
+  ✅ **DELIVERED 2026-09-20 (session `3e87e0bf`, branch `allergen-37n-sweep`,
+  merged at `322db41`).** The sweep the item had owed since 2026-08-16 is run:
+  **8 class/allergen splits over 86 rows → 3 over 44.** 46 tags added across 45
+  rows in 16 records, 1 removed. Every addition rests on an ingredient the menu
+  itself names — never on a bare dish name.
+
+  🛑 **THE REMOVAL IS THE FINDING, AND THE SECOND RULE BUG WAS WORSE THAN
+  FILED.** `slices?` in the *"a wheat bakery item"* rule read **both senses of
+  the word**. Swept across every name, description, ingredient and note: 11
+  true cabinet slices and **7 false ones** — including one this item never
+  mentioned. Charley Noble's cocktail ***Dave Dobbyn · Slice of Heaven*** (gin,
+  sherry, amaro, lemon) was the **only one of that venue's six cocktails**
+  carrying `contains-gluten`, on the strength of a **song title**.
+  🔑 Fixed with a lookbehind/lookahead, **never the `exclude` this item's own
+  text proposed** — and that distinction was break-probed rather than argued:
+  rebuilding it as the proposed veto fails the assertion *"a cabinet slice is
+  still a wheat bakery item"* on the line `'Caramel slice, with slices of ham'`
+  while every *"not gluten"* line still passes. The veto would have traded an
+  over-warning for a miss, which is the water-chestnut fault this repo has
+  already recorded once. `test_tag_allergens.py` 92 → **94 cases**.
+
+  ❌ **The FIRST reported rule bug was NOT REAL, and checking is the point.**
+  `\bmuffins?\b` no longer exists — `f7717a1` (2026-09-09, item `080/160`) had
+  already made it a compound tail, all five McMuffins carry `contains-gluten`,
+  and the test suite already pins it. **Nothing was changed.** Acting on the
+  finding as handed over would have been an edit to a working safety rule. A
+  findings list is evidence, not a work order.
+
+  🎯 **Four questions left open rather than guessed, each needing a ruling:**
+  (1) does an *Italian sausage* carry wheat rusk, or join the continental-
+  sausage exclude beside chorizo and salami (Bambina, 2 rows)? (2) Abrakebabra
+  sells a **cheaper** *Cheese Lovers Turkish Pizza* ($15 vs $18) — positive
+  evidence cheese is **not** its default, so should the pizza class narrow for
+  Turkish pizza, or are all six a data gap? (3) Dragonfly's Taiwanese Popcorn
+  Chicken **was** tagged, on the venue's own `gf-option` rather than on the
+  coating — classically it is sweet-potato starch, so check that call. (4)
+  🛑 **The report can never reach zero while the 2026-09-07 ruling on
+  `crumbed → contains-egg` stands** — 36 of the 44 remaining rows are that
+  class. So `--strict` in CI, the tool's own stated endgame, is unreachable:
+  either drop `contains-egg` from that class's watch list or accept a report
+  that always fires, which is ADR 0072's decorative-guard shape.
+
+  🚩 **And a bigger finding fell out of it, filed separately as
+  [`470/060`](060-a-section-name-is-evidence-the-tagger-never-reads.md):** 68
+  items sit under a section named `Pizza`, `Gourmet Burgers` or `Sandwiches`
+  carrying neither `contains-gluten` nor `gf`, because **neither tool reads a
+  section's name**. Re-measured independently by the orchestrator before
+  filing: 230 items in those sections, 162 tagged, **68 not**, across 5 venues.

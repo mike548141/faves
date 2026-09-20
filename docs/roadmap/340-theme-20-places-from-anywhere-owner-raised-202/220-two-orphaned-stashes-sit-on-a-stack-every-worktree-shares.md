@@ -1,4 +1,4 @@
-- [ ] 🚩 **Two orphaned stashes have sat on the shared stash stack for three
+- [~] 🚩 **Two orphaned stashes have sat on the shared stash stack for three
       weeks, and nothing in the house rules says anyone should ever look**
       `[XS][tools]` — found 2026-09-07 (session faves-b1) while reviewing an
       agent's branch, and filed rather than acted on: **a stash is another
@@ -157,3 +157,13 @@
     same silent-staleness this section's `040` item was just closed for. A
     child's upstream filings need re-reading at every pin bump, because their
     close event happens somewhere else.
+
+  🎯 **OWNER RULED 2026-09-21 (session `3e87e0bf`): BUILD THE LOCAL CHECK.**
+  Option 2 was put to him against *"leave it to the floor"*, with the argument
+  for leaving it stated — the house rule now covers this at session start, and
+  this repo already carries ~20 gates a human must type. He chose the
+  mechanism. **Claimed the same day.** The reasoning he was given, and which
+  he took: a doctrine line is a discipline, and ADR 0072 in this repo is
+  precisely about a guard that exists but cannot change an outcome. Scope is
+  the item's own words — *warn when the stack is non-empty and any entry
+  predates today* — and nothing wider.

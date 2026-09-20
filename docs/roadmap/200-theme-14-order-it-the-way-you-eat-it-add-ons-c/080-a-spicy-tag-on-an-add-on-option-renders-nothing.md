@@ -1,4 +1,13 @@
-- [ ] 🔎 **A `spicy-*` tag on an add-on option is legal and renders nothing**
+- [~] 🔎 **A `spicy-*` tag on an add-on option is legal and renders nothing**
+      📌 **CLAIMED 2026-09-21 (session `3e87e0bf`) — OWNER RULED: option (1),
+      RENDER IT.** Put to him with the item's own three options and its
+      recommendation against (3). His ruling is that the picker's chip row says
+      "spicy" the way a dish row already does — the heat scale has words in
+      `menu.js` — rather than `validate.py` refusing the tag. Reasoning
+      recorded because it reads against ADR 0047's *name the screen that
+      renders it*: the answer here is to **name the screen**, not to delete the
+      data. A chilli sauce that renders as neutral is a silence about heat, and
+      this repo does not do silences on the safety-adjacent surfaces.
       `[XS][js][data]` — found 2026-09-08 (session faves-o1) by the agent that
       built `tests/tag-labels.test.js` (item `340/230`), and filed rather than
       folded in.
