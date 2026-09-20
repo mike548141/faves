@@ -90,7 +90,12 @@
           "dishId": "chicken-curry-on-rice",
           "code": "1",
           "desc": null,
-          "price": 21.7,
+          "price": [
+            {
+              "value": 21.7,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -98,7 +103,12 @@
           "dishId": "chicken-satay-kebab-6-pcs",
           "code": "2",
           "desc": null,
-          "price": 19.4,
+          "price": [
+            {
+              "value": 19.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-peanuts",
             "contains-soy"
@@ -109,7 +119,12 @@
           "dishId": "nasi-goreng",
           "code": "3",
           "desc": null,
-          "price": 21.7,
+          "price": [
+            {
+              "value": 21.7,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -117,7 +132,12 @@
           "dishId": "bbq-pork-chicken-on-rice",
           "code": "4",
           "desc": null,
-          "price": 23.4,
+          "price": [
+            {
+              "value": 23.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -125,7 +145,12 @@
           "dishId": "grill-pork-dumpling-6-pcs",
           "code": "5",
           "desc": null,
-          "price": 16.7,
+          "price": [
+            {
+              "value": 16.7,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -135,7 +160,12 @@
           "dishId": "seafood-udon",
           "code": "6",
           "desc": null,
-          "price": 24.5,
+          "price": [
+            {
+              "value": 24.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-gluten"
@@ -146,7 +176,12 @@
           "dishId": "curry-laksa",
           "code": "7",
           "desc": null,
-          "price": 24.0,
+          "price": [
+            {
+              "value": 24.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -156,7 +191,12 @@
           "dishId": "mee-goreng",
           "code": "8",
           "desc": null,
-          "price": 22.3,
+          "price": [
+            {
+              "value": 22.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -166,7 +206,12 @@
           "dishId": "roti-chanai",
           "code": "9",
           "desc": null,
-          "price": 19.5,
+          "price": [
+            {
+              "value": 19.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -176,7 +221,12 @@
           "dishId": "chow-kueh-teow-bbq-pork-with-stir-fried-rice-noodle",
           "code": "10",
           "desc": null,
-          "price": 24.0,
+          "price": [
+            {
+              "value": 24.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -184,7 +234,12 @@
           "dishId": "roast-duck-or-bbq-pork-with-rice-noodle-or-egg-noodle-soup",
           "code": "11",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten",
             "contains-egg"
@@ -195,7 +250,12 @@
           "dishId": "bbq-pork-wonton-noodle-soup",
           "code": "12",
           "desc": null,
-          "price": 24.0,
+          "price": [
+            {
+              "value": 24.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -211,7 +271,12 @@
           "dishId": "soya-chicken-on-rice",
           "code": "13",
           "desc": null,
-          "price": 23.4,
+          "price": [
+            {
+              "value": 23.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -221,7 +286,12 @@
           "dishId": "honey-bbq-pork-ribs-on-rice",
           "code": "14",
           "desc": null,
-          "price": 23.4,
+          "price": [
+            {
+              "value": 23.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -229,7 +299,12 @@
           "dishId": "two-combination-bbq-meat-on-rice",
           "code": "15",
           "desc": null,
-          "price": 26.8,
+          "price": [
+            {
+              "value": 26.8,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -237,7 +312,12 @@
           "dishId": "three-combination-bbq-meat-on-rice",
           "code": "16",
           "desc": null,
-          "price": 30.7,
+          "price": [
+            {
+              "value": 30.7,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -245,7 +325,12 @@
           "dishId": "roast-duck-on-rice",
           "code": "17",
           "desc": null,
-          "price": 24.0,
+          "price": [
+            {
+              "value": 24.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -253,7 +338,12 @@
           "dishId": "crispy-roast-pork-on-rice",
           "code": "19",
           "desc": null,
-          "price": 24.0,
+          "price": [
+            {
+              "value": 24.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -261,7 +351,12 @@
           "dishId": "prawn-wonton-soup",
           "code": "20",
           "desc": null,
-          "price": 18.2,
+          "price": [
+            {
+              "value": 18.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-gluten"
@@ -272,7 +367,12 @@
           "dishId": "prawn-wonton-noodle-soup-or-noodle-dry",
           "code": "21",
           "desc": null,
-          "price": 21.0,
+          "price": [
+            {
+              "value": 21.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-gluten"
@@ -283,7 +383,12 @@
           "dishId": "honey-bbq-pork-wontons-noodle-soup-or-noodle-dry",
           "code": "22",
           "desc": null,
-          "price": 24.0,
+          "price": [
+            {
+              "value": 24.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -293,7 +398,12 @@
           "dishId": "roast-duck-or-crispy-roast-pork-or-bbq-pork-noodle-dry",
           "code": "23",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -301,7 +411,12 @@
           "dishId": "soya-chicken-or-bbq-pork-ribs-noodle-dry",
           "code": "24",
           "desc": null,
-          "price": 24.5,
+          "price": [
+            {
+              "value": 24.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -311,7 +426,12 @@
           "dishId": "beef-brisket-noodle-soup-or-noodle-dry",
           "code": "25",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -319,7 +439,12 @@
           "dishId": "hot-spicy-mix-ox-combination-noodle-soup-or-noodle-dry",
           "code": "26",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -327,7 +452,12 @@
           "dishId": "braised-pork-noodle-soup-or-noodle-dry",
           "code": "27",
           "desc": null,
-          "price": 23.4,
+          "price": [
+            {
+              "value": 23.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -335,7 +465,12 @@
           "dishId": "vietnamese-style-beef-noodle-soup",
           "code": "28",
           "desc": null,
-          "price": 23.6,
+          "price": [
+            {
+              "value": 23.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -343,7 +478,12 @@
           "dishId": "shredded-duck-meat-lai-fen-noodle-soup",
           "code": "29",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         }
       ]
@@ -357,7 +497,12 @@
           "dishId": "chicken-sweet-corn-soup",
           "code": "30",
           "desc": null,
-          "price": 11.2,
+          "price": [
+            {
+              "value": 11.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -365,7 +510,12 @@
           "dishId": "mince-beef-and-egg-soup",
           "code": "31",
           "desc": null,
-          "price": 11.2,
+          "price": [
+            {
+              "value": 11.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-egg"
           ]
@@ -375,7 +525,12 @@
           "dishId": "hot-sour-soup",
           "code": "32",
           "desc": null,
-          "price": 13.4,
+          "price": [
+            {
+              "value": 13.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -383,7 +538,12 @@
           "dishId": "tofu-vegetable-soup",
           "code": "33",
           "desc": null,
-          "price": 10.6,
+          "price": [
+            {
+              "value": 10.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -393,7 +553,12 @@
           "dishId": "shredded-duck-meat-soup",
           "code": "34",
           "desc": null,
-          "price": 15.6,
+          "price": [
+            {
+              "value": 15.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -401,7 +566,12 @@
           "dishId": "hot-sour-wonton-soup",
           "code": "35",
           "desc": null,
-          "price": 19.5,
+          "price": [
+            {
+              "value": 19.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -411,7 +581,12 @@
           "dishId": "chinese-pork-dumpling-soup",
           "code": "36",
           "desc": null,
-          "price": 19.5,
+          "price": [
+            {
+              "value": 19.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -449,7 +624,12 @@
           "dishId": "chicken-salad",
           "code": "40",
           "desc": null,
-          "price": 13.3,
+          "price": [
+            {
+              "value": 13.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -457,7 +637,12 @@
           "dishId": "pig-ears-with-chilli-sauce",
           "code": "41",
           "desc": null,
-          "price": 15.1,
+          "price": [
+            {
+              "value": 15.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -465,7 +650,12 @@
           "dishId": "duck-feet-with-chilli-sauce",
           "code": "42",
           "desc": null,
-          "price": 15.8,
+          "price": [
+            {
+              "value": 15.8,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -545,7 +735,12 @@
           "dishId": "pork-and-preserved-egg-congee",
           "code": "51",
           "desc": null,
-          "price": 14.0,
+          "price": [
+            {
+              "value": 14.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-egg"
           ]
@@ -555,7 +750,12 @@
           "dishId": "fish-congee",
           "code": "52",
           "desc": null,
-          "price": 14.0,
+          "price": [
+            {
+              "value": 14.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-fish"
           ]
@@ -565,7 +765,12 @@
           "dishId": "seafood-congee",
           "code": "53",
           "desc": null,
-          "price": 14.0,
+          "price": [
+            {
+              "value": 14.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -581,7 +786,12 @@
           "dishId": "eggplant-with-salted-fish-pork-mince",
           "code": "54",
           "desc": null,
-          "price": 27.3,
+          "price": [
+            {
+              "value": 27.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-fish"
           ]
@@ -591,7 +801,12 @@
           "dishId": "roast-pork-with-tofu-vegetable",
           "code": "55",
           "desc": null,
-          "price": 24.5,
+          "price": [
+            {
+              "value": 24.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -601,7 +816,12 @@
           "dishId": "groper-wing-with-tofu-roast-pork",
           "code": "56",
           "desc": null,
-          "price": 26.8,
+          "price": [
+            {
+              "value": 26.8,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy",
             "contains-fish"
@@ -620,7 +840,12 @@
           "dishId": "braised-pork-with-dried-vegetable-or-taro",
           "code": "58",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -628,7 +853,12 @@
           "dishId": "chicken-wing-with-chinese-mushroom",
           "code": "59",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -636,7 +866,12 @@
           "dishId": "chicken-feet-with-pork-spare-ribs",
           "code": "60",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -644,7 +879,12 @@
           "dishId": "bitter-melon-with-pork-spare-ribs",
           "code": "61",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -652,7 +892,12 @@
           "dishId": "hot-spicy-chicken",
           "code": "62",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -660,7 +905,12 @@
           "dishId": "salted-fish-chicken-with-tofu",
           "code": "63",
           "desc": null,
-          "price": 26.1,
+          "price": [
+            {
+              "value": 26.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy",
             "contains-fish"
@@ -671,7 +921,12 @@
           "dishId": "chicken-with-wine-soup",
           "code": "64",
           "desc": null,
-          "price": 27.9,
+          "price": [
+            {
+              "value": 27.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -679,7 +934,12 @@
           "dishId": "chicken-with-soya-and-oyster-sauce",
           "code": "65",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-soy"
@@ -690,7 +950,12 @@
           "dishId": "lamb-flap-with-oyster-sauce",
           "code": "66",
           "desc": null,
-          "price": 27.3,
+          "price": [
+            {
+              "value": 27.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-soy"
@@ -709,7 +974,12 @@
           "dishId": "beef-brisket",
           "code": "68",
           "desc": null,
-          "price": 27.3,
+          "price": [
+            {
+              "value": 27.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -717,7 +987,12 @@
           "dishId": "hot-spicy-tendon",
           "code": "69",
           "desc": null,
-          "price": 28.0,
+          "price": [
+            {
+              "value": 28.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -725,7 +1000,12 @@
           "dishId": "hot-spicy-beef-tripe",
           "code": "70",
           "desc": null,
-          "price": 26.2,
+          "price": [
+            {
+              "value": 26.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -733,7 +1013,12 @@
           "dishId": "beef-vegetable-with-satay-sauce",
           "code": "71",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-peanuts",
             "contains-soy"
@@ -744,7 +1029,12 @@
           "dishId": "duck-with-garlic-and-oyster-sauce",
           "code": "72",
           "desc": null,
-          "price": 26.2,
+          "price": [
+            {
+              "value": 26.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-soy"
@@ -755,7 +1045,12 @@
           "dishId": "seafood-with-japanese-style-tofu",
           "code": "73",
           "desc": null,
-          "price": 28.0,
+          "price": [
+            {
+              "value": 28.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-soy"
@@ -766,7 +1061,12 @@
           "dishId": "mix-vegetable-with-vermicelli",
           "code": "74",
           "desc": null,
-          "price": 24.5,
+          "price": [
+            {
+              "value": 24.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         }
       ]
@@ -780,7 +1080,12 @@
           "dishId": "mapo-tofu-tofu-with-pork-mince",
           "code": "75",
           "desc": null,
-          "price": 24.3,
+          "price": [
+            {
+              "value": 24.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -790,7 +1095,12 @@
           "dishId": "tofu-vegetable-pork-with-oyster-sauce",
           "code": "76",
           "desc": null,
-          "price": 24.9,
+          "price": [
+            {
+              "value": 24.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-soy"
@@ -801,7 +1111,12 @@
           "dishId": "homestyle-tofu-with-pork",
           "code": "77",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -811,7 +1126,12 @@
           "dishId": "belly-pork-with-chilli-sauce",
           "code": "78",
           "desc": null,
-          "price": 26.1,
+          "price": [
+            {
+              "value": 26.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -819,7 +1139,12 @@
           "dishId": "belly-pork-with-bean-sauce",
           "code": "79",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -835,7 +1160,12 @@
           "dishId": "mao-s-braised-pork-with-chilli",
           "code": "81",
           "desc": null,
-          "price": 26.1,
+          "price": [
+            {
+              "value": 26.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -843,7 +1173,12 @@
           "dishId": "pork-with-chilli-sauce",
           "code": "82",
           "desc": null,
-          "price": 24.9,
+          "price": [
+            {
+              "value": 24.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -851,7 +1186,12 @@
           "dishId": "pork-with-peking-sauce",
           "code": "83",
           "desc": null,
-          "price": 24.9,
+          "price": [
+            {
+              "value": 24.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -859,7 +1199,12 @@
           "dishId": "pork-with-chinese-black-mushroom",
           "code": "84",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -867,7 +1212,12 @@
           "dishId": "fried-beans-with-pork-mince-and-chilli",
           "code": "85",
           "desc": null,
-          "price": 26.1,
+          "price": [
+            {
+              "value": 26.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -885,7 +1235,12 @@
           "dishId": "kc-homemade-tofu-with-pork-mince",
           "code": "87",
           "desc": null,
-          "price": 26.8,
+          "price": [
+            {
+              "value": 26.8,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -895,7 +1250,12 @@
           "dishId": "salt-pepper-pork-spare-ribs",
           "code": "88",
           "desc": null,
-          "price": 25.3,
+          "price": [
+            {
+              "value": 25.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -903,7 +1263,12 @@
           "dishId": "pork-maw-with-vegetable-and-pickle",
           "code": "89",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -911,7 +1276,12 @@
           "dishId": "seasonal-vegetable-with-chinese-sausage-and-pork",
           "code": "90",
           "desc": null,
-          "price": 30.7,
+          "price": [
+            {
+              "value": 30.7,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -929,7 +1299,12 @@
           "dishId": "sweet-sour-pork-with-pineapple",
           "code": "92",
           "desc": null,
-          "price": 26.2,
+          "price": [
+            {
+              "value": 26.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -937,7 +1312,12 @@
           "dishId": "chicken-hot-pepper-sauce",
           "code": "93",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -945,7 +1325,12 @@
           "dishId": "sichuan-chicken",
           "code": "94",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -953,7 +1338,12 @@
           "dishId": "hot-and-sour-chicken",
           "code": "95",
           "desc": null,
-          "price": 24.3,
+          "price": [
+            {
+              "value": 24.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -969,7 +1359,12 @@
           "dishId": "deep-fried-chilli-chicken",
           "code": "97",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -985,7 +1380,12 @@
           "dishId": "salt-and-pepper-chicken-ribs",
           "code": "99",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -993,7 +1393,12 @@
           "dishId": "sichuan-fish-with-spicy-soya-sauce",
           "code": "100",
           "desc": null,
-          "price": 25.4,
+          "price": [
+            {
+              "value": 25.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten",
             "contains-soy",
@@ -1005,7 +1410,12 @@
           "dishId": "pickle-cabbage-with-fish-fillet",
           "code": "101",
           "desc": null,
-          "price": 26.2,
+          "price": [
+            {
+              "value": 26.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-fish"
           ]
@@ -1015,7 +1425,12 @@
           "dishId": "hot-spicy-beef-soup",
           "code": "102",
           "desc": null,
-          "price": 28.4,
+          "price": [
+            {
+              "value": 28.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1023,7 +1438,12 @@
           "dishId": "korean-style-chilli-beef",
           "code": "103",
           "desc": null,
-          "price": 28.5,
+          "price": [
+            {
+              "value": 28.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1031,7 +1451,12 @@
           "dishId": "stir-fried-beef-with-chilli-bean-paste",
           "code": "104",
           "desc": null,
-          "price": 28.5,
+          "price": [
+            {
+              "value": 28.5,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1050,7 +1475,12 @@
           "dishId": "orange-beef-or-chicken",
           "code": "106",
           "desc": null,
-          "price": 27.3,
+          "price": [
+            {
+              "value": 27.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1066,7 +1496,12 @@
           "dishId": "stir-fried-lamb-with-spicy-sauce",
           "code": "108",
           "desc": null,
-          "price": 27.3,
+          "price": [
+            {
+              "value": 27.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1074,7 +1509,12 @@
           "dishId": "sambal-king-prawns",
           "code": "109",
           "desc": null,
-          "price": 25.9,
+          "price": [
+            {
+              "value": 25.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1084,7 +1524,12 @@
           "dishId": "salt-and-pepper-king-prawns",
           "code": "110",
           "desc": null,
-          "price": 25.9,
+          "price": [
+            {
+              "value": 25.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1094,7 +1539,12 @@
           "dishId": "stir-fried-king-prawn-with-chilli-bean-paste",
           "code": "111",
           "desc": null,
-          "price": 25.9,
+          "price": [
+            {
+              "value": 25.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1104,7 +1554,12 @@
           "dishId": "salt-pepper-squid",
           "code": "112",
           "desc": null,
-          "price": 26.1,
+          "price": [
+            {
+              "value": 26.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1114,7 +1569,12 @@
           "dishId": "stir-fried-squid-with-shrimp-paste",
           "code": "113",
           "desc": null,
-          "price": 26.1,
+          "price": [
+            {
+              "value": 26.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1124,7 +1584,12 @@
           "dishId": "stir-fried-squid-with-chinese-satay-sauce",
           "code": "114",
           "desc": null,
-          "price": 26.1,
+          "price": [
+            {
+              "value": 26.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-peanuts",
@@ -1136,7 +1601,12 @@
           "dishId": "stir-fried-fish-with-fish-flavour-sauce",
           "code": "115",
           "desc": null,
-          "price": 25.3,
+          "price": [
+            {
+              "value": 25.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-fish"
           ]
@@ -1146,7 +1616,12 @@
           "dishId": "stir-fried-beans-with-dace-fish",
           "code": "116",
           "desc": null,
-          "price": 26.1,
+          "price": [
+            {
+              "value": 26.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-fish"
           ]
@@ -1174,7 +1649,12 @@
           "dishId": "plum-sauce-duck-with-pickle",
           "code": "119",
           "desc": null,
-          "price": 26.8,
+          "price": [
+            {
+              "value": 26.8,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1182,7 +1662,12 @@
           "dishId": "kc-chef-s-stir-fried-special",
           "code": "120",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1204,7 +1689,12 @@
           "dishId": "hot-spicy-fish-fillet-with-pickles",
           "code": "122",
           "desc": null,
-          "price": 32.3,
+          "price": [
+            {
+              "value": 32.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-fish"
           ]
@@ -1214,7 +1704,12 @@
           "dishId": "hot-spicy-beef-brisket-with-bean-curd",
           "code": "123",
           "desc": null,
-          "price": 32.9,
+          "price": [
+            {
+              "value": 32.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1292,7 +1787,12 @@
           "dishId": "hot-spicy-tora-tora",
           "code": "132",
           "desc": null,
-          "price": 34.0,
+          "price": [
+            {
+              "value": 34.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1300,7 +1800,12 @@
           "dishId": "kc-chicken-pork-duck-and-seafood-hot-wok",
           "code": "133",
           "desc": null,
-          "price": 32.3,
+          "price": [
+            {
+              "value": 32.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1316,7 +1821,12 @@
           "dishId": "shanghai-style-fried-noodle-with-bbq-pork-bok-choy",
           "code": "134",
           "desc": null,
-          "price": 22.9,
+          "price": [
+            {
+              "value": 22.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1324,7 +1834,12 @@
           "dishId": "beef-brisket-stirred-noodle-or-fried-noodle",
           "code": "135",
           "desc": null,
-          "price": 26.8,
+          "price": [
+            {
+              "value": 26.8,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1332,7 +1847,12 @@
           "dishId": "stir-fried-udon-with-black-pepper-and-beef",
           "code": "136",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -1342,7 +1862,12 @@
           "dishId": "chow-mein-noodle-with-chicken-beef-bbq-pork",
           "code": "137",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -1352,7 +1877,12 @@
           "dishId": "chow-kueh-teow-with-beef-or-black-bean-sauce",
           "code": "138",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -1362,7 +1892,12 @@
           "dishId": "seafood-soft-egg-on-rice-noodle",
           "code": "139",
           "desc": null,
-          "price": 26.2,
+          "price": [
+            {
+              "value": 26.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-egg"
@@ -1373,7 +1908,12 @@
           "dishId": "singapore-fried-noodle-with-bbq-pork-and-shrimp",
           "code": "140",
           "desc": null,
-          "price": 23.4,
+          "price": [
+            {
+              "value": 23.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1383,7 +1923,12 @@
           "dishId": "shredded-duck-meat-with-vermicelli",
           "code": "141",
           "desc": null,
-          "price": 24.0,
+          "price": [
+            {
+              "value": 24.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1391,7 +1936,12 @@
           "dishId": "pad-thai-with-chicken-beef-vegetarian",
           "code": "142",
           "desc": null,
-          "price": 22.9,
+          "price": [
+            {
+              "value": 22.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-peanuts"
           ]
@@ -1409,7 +1959,12 @@
           "dishId": "hainanese-chicken-with-rice",
           "code": "144",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1417,7 +1972,12 @@
           "dishId": "salted-fish-and-chicken-fried-rice",
           "code": "145",
           "desc": null,
-          "price": 24.1,
+          "price": [
+            {
+              "value": 24.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-fish"
           ]
@@ -1427,7 +1987,12 @@
           "dishId": "fried-rice-with-chinese-pork-vegetable",
           "code": "146",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1435,7 +2000,12 @@
           "dishId": "young-chow-fried-rice-with-shrimp-and-bbq-pork",
           "code": "147",
           "desc": null,
-          "price": 22.9,
+          "price": [
+            {
+              "value": 22.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1445,7 +2015,12 @@
           "dishId": "hokkien-fried-rice-or-noodle",
           "code": "148",
           "desc": null,
-          "price": 25.6,
+          "price": [
+            {
+              "value": 25.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-gluten"
           ]
@@ -1455,7 +2030,12 @@
           "dishId": "roast-pork-fried-rice-with-shrimp-paste",
           "code": "149",
           "desc": null,
-          "price": 22.9,
+          "price": [
+            {
+              "value": 22.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish"
           ]
@@ -1465,7 +2045,12 @@
           "dishId": "pork-chop-with-lemon-grass-or-black-pepper",
           "code": "150",
           "desc": null,
-          "price": 22.9,
+          "price": [
+            {
+              "value": 22.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1473,7 +2058,12 @@
           "dishId": "salted-chicken-on-rice",
           "code": "151",
           "desc": null,
-          "price": 22.3,
+          "price": [
+            {
+              "value": 22.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1481,7 +2071,12 @@
           "dishId": "deep-fried-garlic-chicken-on-rice",
           "code": "152",
           "desc": null,
-          "price": 23.4,
+          "price": [
+            {
+              "value": 23.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1489,7 +2084,12 @@
           "dishId": "shredded-duck-meat-fried-rice",
           "code": "153",
           "desc": null,
-          "price": 24.0,
+          "price": [
+            {
+              "value": 24.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1497,7 +2097,12 @@
           "dishId": "bitter-melon-beef-on-rice",
           "code": "154",
           "desc": null,
-          "price": 22.9,
+          "price": [
+            {
+              "value": 22.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1505,7 +2110,12 @@
           "dishId": "beef-vegetable-on-rice",
           "code": "155",
           "desc": null,
-          "price": 22.9,
+          "price": [
+            {
+              "value": 22.9,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1513,7 +2123,12 @@
           "dishId": "beef-brisket-on-rice",
           "code": "156",
           "desc": null,
-          "price": 24.3,
+          "price": [
+            {
+              "value": 24.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1521,7 +2136,12 @@
           "dishId": "curry-beef-or-lamb-flap-brisket-on-rice",
           "code": "157",
           "desc": null,
-          "price": 25.1,
+          "price": [
+            {
+              "value": 25.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1529,7 +2149,12 @@
           "dishId": "beef-or-shrimp-soft-egg-on-rice",
           "code": "158",
           "desc": null,
-          "price": 23.4,
+          "price": [
+            {
+              "value": 23.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-shellfish",
             "contains-egg"
@@ -1540,7 +2165,12 @@
           "dishId": "beef-tomato-egg-on-rice",
           "code": "159",
           "desc": null,
-          "price": 23.4,
+          "price": [
+            {
+              "value": 23.4,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-egg"
           ]
@@ -1550,7 +2180,12 @@
           "dishId": "sweet-corn-with-soft-egg-and-fish-fillet-on-rice",
           "code": "160",
           "desc": null,
-          "price": 22.3,
+          "price": [
+            {
+              "value": 22.3,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-egg",
             "contains-fish"
@@ -1566,7 +2201,12 @@
           "name": "Hong Kong Style Milk Tea",
           "dishId": "hong-kong-style-milk-tea",
           "desc": null,
-          "price": 7.2,
+          "price": [
+            {
+              "value": 7.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-dairy"
           ]
@@ -1575,35 +2215,60 @@
           "name": "Hong Kong Style Coffee",
           "dishId": "hong-kong-style-coffee",
           "desc": null,
-          "price": 7.2,
+          "price": [
+            {
+              "value": 7.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
           "name": "Lemon Tea",
           "dishId": "lemon-tea",
           "desc": null,
-          "price": 7.2,
+          "price": [
+            {
+              "value": 7.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
           "name": "Lemon & Honey Tea",
           "dishId": "lemon-honey-tea",
           "desc": null,
-          "price": 7.2,
+          "price": [
+            {
+              "value": 7.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
           "name": "Lemon and Coke",
           "dishId": "lemon-and-coke",
           "desc": null,
-          "price": 7.2,
+          "price": [
+            {
+              "value": 7.2,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
           "name": "Soya Milk",
           "dishId": "soya-milk",
           "desc": null,
-          "price": 6.7,
+          "price": [
+            {
+              "value": 6.7,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -1612,7 +2277,12 @@
           "name": "Chinese Tea",
           "dishId": "chinese-tea",
           "desc": null,
-          "price": 5.0,
+          "price": [
+            {
+              "value": 5.0,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": []
         },
         {
@@ -1628,7 +2298,12 @@
           "name": "Tofu Far",
           "dishId": "tofu-far",
           "desc": null,
-          "price": 6.1,
+          "price": [
+            {
+              "value": 6.1,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-soy"
           ]
@@ -1637,7 +2312,12 @@
           "name": "Deep Fried Milk Cube",
           "dishId": "deep-fried-milk-cube",
           "desc": null,
-          "price": 15.6,
+          "price": [
+            {
+              "value": 15.6,
+              "recorded": "2026-07-06"
+            }
+          ],
           "tags": [
             "contains-dairy"
           ]
