@@ -59,6 +59,7 @@ import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { favourites } from "./favourites.js";
 import { ratings } from "./ratings.js";
 import { DIET_FILTERS, dishFlagged, dishSatisfiesDiet } from "./dietary.js";
+import { isSpicy, heatLabel } from "./heat.js";
 import { summarise } from "./dish-filters.js";
 import { textCandidate } from "./suggest.js";
 import { attachSuggestions } from "./suggest-ui.js";
@@ -156,7 +157,10 @@ const ALLERGEN = {
   "contains-sesame": "Contains sesame",
 };
 const isAllergen = (t) => t in ALLERGEN;
-const isSpicy = (t) => /^spicy-[123]$/.test(t);
+// `isSpicy`/`heatLabel` come from heat.js — the heat scale's one vocabulary,
+// shared with the recipe page's chips and the add-on picker's option rows
+// (roadmap 200/080). It used to be a regex and a template typed out here and
+// again in recipe.js, which is one rule with two implementations.
 
 // Does this dietary/option tag answer a need the reader has actually declared?
 // `dietary` is the viewer's STORED preference (settings `diet.dietary`), not the
@@ -201,11 +205,7 @@ function tagChip(t, avoid = EMPTY_SET, dietary = EMPTY_SET) {
     });
   }
   if (isSpicy(t)) {
-    const level = Number(t.slice(-1));
-    return el("span", {
-      className: "tag tag-spicy",
-      textContent: `${"🌶".repeat(level)} Spicy`,
-    });
+    return el("span", { className: "tag tag-spicy", textContent: heatLabel(t) });
   }
   if (t in DIETARY) {
     // Same rule for the positive tags: Vegan/GF/DF-option stay bright for the

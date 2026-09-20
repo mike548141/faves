@@ -55,6 +55,7 @@ import { settings } from "./settings.js";
 import { dishFlagged } from "./dietary.js";
 import { groupsFor, optionPrice, selectionPrice, selectionAllowed, composeTags } from "./addons.js";
 import { formatMoney, venueCurrency } from "./place.js";
+import { isSpicy, heatLabel } from "./heat.js";
 
 const ALLERGEN_LABEL = {
   "contains-nuts": "nuts",
@@ -284,6 +285,35 @@ const priceSuffix = (amount, currency) =>
   amount > 0 ? ` +${formatMoney(amount, currency)}` : "";
 
 /**
+ * HEAT, ON THE OPTION ROW ITSELF (roadmap 200/080, owner-ruled 2026-09-21).
+ *
+ * 🛑 What was wrong, said precisely, because the item's own summary is broader
+ * than the defect and a fix aimed at the summary would have been aimed at
+ * nothing. Heat was NOT missing from the app once an option was ticked: since
+ * `200/060` wired the chip row to the composed tags, ticking a `spicy-2` sauce
+ * paints "🌶🌶 Spicy" on the DISH row like any other composed tag. What was
+ * missing is the only moment it is any use — WHILE YOU ARE CHOOSING. Wellington
+ * Kebab Grill offers "Mild chilli" and "Hot chilli" side by side in one sauce
+ * group, tagged `spicy-1` and `spicy-2`, and the picker drew them identically:
+ * the reader had to tick one to find out, and ticking is how you order it.
+ *
+ * So the words come from heat.js — the same vocabulary the dish row and the
+ * recipe page render — rather than a third copy of the template. That is the
+ * whole of the reuse: this function decides WHERE a chip goes, never what it
+ * says.
+ *
+ * 🔑 Heat only. The option's other tags are spoken by the warning line the
+ * moment the option is ticked, and saying them here as well would be the second
+ * chip for one fact that ADR 0096 ruled against. Heat has no warning-line branch
+ * — it contradicts no claim and nobody avoids it in Settings — so a chip is the
+ * only place it can be said at all.
+ */
+const heatChips = (option) =>
+  (option.tags || [])
+    .filter(isSpicy)
+    .map((t) => el("span", { className: "tag tag-spicy addon-option-tag", textContent: heatLabel(t) }));
+
+/**
  * Build the picker for one dish, or return null when the dish offers nothing.
  *
  * Returns `{ node, stepper }` — `node` is the disclosure to append to the dish
@@ -435,10 +465,16 @@ export function dishAddOns(record, section, item, onCompose) {
         refresh();
       });
 
+      // The heat chip sits between the name and the price, INSIDE the label —
+      // so it is part of the control's accessible name ("Hot chilli, 🌶🌶
+      // Spicy, +$1.00"), exactly as the price already is. A chip outside the
+      // label would be read after the whole list by a screen reader, or not at
+      // all, and heat you learn about after choosing is the silence this fixed.
       fields.append(
         el("label", { className: "addon-option" }, [
           input,
           el("span", { className: "addon-option-name", textContent: option.name }),
+          ...heatChips(option),
           el("span", {
             className: "addon-option-price",
             textContent: priceSuffix(cost, currency),
