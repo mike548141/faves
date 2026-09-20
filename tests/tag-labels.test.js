@@ -35,6 +35,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { ALLERGEN_PREFS, DIETARY_PREFS } from "../site/js/settings.js";
+// The heat scale is one shared module now (roadmap 200/080), and it is DOM-free,
+// so it is imported rather than parsed — the same preference the header states
+// for settings.js.
+import { isSpicy, heatLabel } from "../site/js/heat.js";
 
 const ROOT = new URL("../", import.meta.url);
 const read = (rel) => readFileSync(new URL(rel, ROOT), "utf8");
@@ -157,21 +161,52 @@ function jsTable(source, name, where) {
   return table;
 }
 
-const SPICY_LINE = /^const isSpicy = \(t\) => \/(.+)\/([a-z]*)\.test\(t\);$/;
+const HEAT_IMPORT = /^import \{ ([A-Za-z0-9_$, ]+) \} from "\.\/heat\.js";$/;
 
 /**
- * The heat levels are a REGEX, not a table — so read the regex and run every
- * tag past it. That is what makes a hypothetical `spicy-4` fail here rather
- * than paint as a bare chip.
+ * DOES THIS SURFACE REACH THE SHARED HEAT VOCABULARY? (roadmap 200/080.)
+ *
+ * Heat used to be a regex and a template typed out in each screen, and this
+ * file parsed the regex out of the source — which worked, and which quietly
+ * blessed the duplication it was reading. It is one module now (site/js/heat.js),
+ * imported by the three surfaces, so the REAL function is available here and a
+ * real value beats a parsed one wherever one exists (see the header).
+ *
+ * What is still parsed is the only thing that cannot be imported: whether THIS
+ * file reaches it. Two facts, and each fails on its own —
+ *
+ *   (1) the module is imported, by a line that re-emits byte for byte (ADR
+ *       0076), with `heatLabel` among the names; and
+ *   (2) `heatLabel` is actually CALLED, so the import is not an unused one
+ *       satisfying a check while the screen paints something else.
+ *
+ * …plus the refusal that closes the loop it was opened to close: a surface may
+ * not define its own `isSpicy` any more. A second copy is what 200/080 found,
+ * and a check that tolerates one is a check that will read the wrong one.
  */
-function spicyMatcher(source, where) {
+function reachesHeat(source, where) {
   const lines = source.split("\n");
-  const at = lines.findIndex((l) => l.startsWith("const isSpicy ="));
-  if (at < 0) throw new Error(`${where}: no \`const isSpicy =\` line`);
-  const m = SPICY_LINE.exec(lines[at]);
-  if (!m) throw new Error(`${where}: \`isSpicy\` is not a plain regex test: ${lines[at]}`);
-  roundTrip([`const isSpicy = (t) => /${m[1]}/${m[2]}.test(t);`], lines, at, at, where);
-  return new RegExp(m[1], m[2]);
+  const at = lines.findIndex((l) => l.includes('from "./heat.js"'));
+  if (at < 0) {
+    throw new Error(`${where}: does not import the heat vocabulary from "./heat.js"`);
+  }
+  const m = HEAT_IMPORT.exec(lines[at]);
+  if (!m) throw new Error(`${where}: the heat import is not a plain named import: ${lines[at]}`);
+  const names = m[1].split(/\s*,\s*/);
+  roundTrip([`import { ${names.join(", ")} } from "./heat.js";`], lines, at, at, where);
+  if (!names.includes("heatLabel")) {
+    throw new Error(`${where}: imports [${names.join(", ")}] from heat.js but not \`heatLabel\` — ` +
+      "the words are what this file is about");
+  }
+  if (!/\bheatLabel\(/.test(source)) {
+    throw new Error(`${where}: imports \`heatLabel\` and never calls it — an unused import ` +
+      "is not a rendered chip");
+  }
+  if (/^const isSpicy\s*=/m.test(source)) {
+    throw new Error(`${where}: defines its own \`isSpicy\` as well as importing one — ` +
+      "two implementations of the heat scale is the defect 200/080 removed");
+  }
+  return new Set(TAGS.filter(isSpicy));
 }
 
 // --- The vocabulary --------------------------------------------------------
@@ -189,8 +224,8 @@ const addonsUiJs = read("site/js/addons-ui.js");
 function chipSurface(source, file) {
   const dietary = jsTable(source, "DIETARY", file);
   const allergen = jsTable(source, "ALLERGEN", file);
-  const isSpicy = spicyMatcher(source, file);
-  const labelled = new Set([...dietary.keys(), ...allergen.keys(), ...TAGS.filter((t) => isSpicy.test(t))]);
+  const heat = reachesHeat(source, file);
+  const labelled = new Set([...dietary.keys(), ...allergen.keys(), ...heat]);
   return { labelled, keys: [...dietary.keys(), ...allergen.keys()] };
 }
 
@@ -200,6 +235,17 @@ const recipe = chipSurface(recipeJs, "site/js/recipe.js");
 const addonAllergen = jsTable(addonsUiJs, "ALLERGEN_LABEL", "site/js/addons-ui.js");
 const addonClaim = jsTable(addonsUiJs, "CLAIM_LABEL", "site/js/addons-ui.js");
 const addonCarries = jsTable(addonsUiJs, "CARRIES", "site/js/addons-ui.js");
+// 🛑 THIS LINE REPLACES AN EXEMPTION (roadmap 200/080, owner-ruled 2026-09-21).
+// Until now the picker's surface exempted `spicy-1/2/3` with the reason "heat is
+// not part of the picker — no add-on contradiction and no allergy/diet
+// preference names a spicy level, so nothing here has words for one". Every
+// clause of that was TRUE and the conclusion was wrong: `validate.py` accepts a
+// heat tag on an add-on option, two options in the corpus carry one, and the
+// picker drew "Mild chilli" and "Hot chilli" identically. The exemption was the
+// record of that gap, not a fix for it — and an exemption that guards nothing is
+// ADR 0072's decorative guard. The words are here now, so this is an ordinary
+// completeness assertion like every other surface's.
+const addonHeat = reachesHeat(addonsUiJs, "site/js/addons-ui.js");
 
 const settingsKeys = [...ALLERGEN_PREFS, ...DIETARY_PREFS].map((p) => p.key);
 
@@ -217,28 +263,24 @@ const SPICY_NOT_HERE = (surface) =>
 const SURFACES = [
   {
     file: "site/js/menu.js",
-    what: "the menu's tag chips (DIETARY + ALLERGEN + isSpicy)",
+    what: "the menu's tag chips (DIETARY + ALLERGEN + heat.js)",
     labelled: menu.labelled,
     tableKeys: menu.keys,
     exempt: Object.fromEntries(OPTION_ONLY.map((t) => [t, OPTION_ONLY_REASON])),
   },
   {
     file: "site/js/recipe.js",
-    what: "the recipe page's tag chips (DIETARY + ALLERGEN + isSpicy)",
+    what: "the recipe page's tag chips (DIETARY + ALLERGEN + heat.js)",
     labelled: recipe.labelled,
     tableKeys: recipe.keys,
     exempt: Object.fromEntries(OPTION_ONLY.map((t) => [t, OPTION_ONLY_REASON])),
   },
   {
     file: "site/js/addons-ui.js",
-    what: "the add-on picker's words (ALLERGEN_LABEL + CLAIM_LABEL + CARRIES)",
-    labelled: new Set([...addonAllergen.keys(), ...addonClaim.keys(), ...addonCarries.keys()]),
+    what: "the add-on picker's words (ALLERGEN_LABEL + CLAIM_LABEL + CARRIES + heat.js)",
+    labelled: new Set([...addonAllergen.keys(), ...addonClaim.keys(), ...addonCarries.keys(), ...addonHeat]),
     tableKeys: [...addonAllergen.keys(), ...addonClaim.keys(), ...addonCarries.keys()],
-    exempt: {
-      "spicy-1": SPICY_NOT_HERE("the picker"),
-      "spicy-2": SPICY_NOT_HERE("the picker"),
-      "spicy-3": SPICY_NOT_HERE("the picker"),
-    },
+    exempt: {},
   },
   {
     file: "site/js/settings.js",
@@ -343,6 +385,47 @@ for (const s of SURFACES) {
     }
   });
 }
+
+// --- The gap the picker's exemption used to record (roadmap 200/080) --------
+
+test("every heat level in the vocabulary has words, and they are not empty", () => {
+  // The assertion that REPLACES the add-on surface's `spicy-*` exemption. That
+  // exemption said the picker never shows heat; the owner ruled on 2026-09-21
+  // that it should, so what used to be recorded as "this surface is exempt" is
+  // now checked as "this surface is covered", by the same completeness test
+  // every other tag gets in the loop above.
+  const heat = TAGS.filter(isSpicy);
+  assert.equal(heat.length, 3, `the heat scale parsed as ${heat.length}: ${heat.join(", ")}`);
+  for (const t of heat) {
+    assert.ok(heatLabel(t).trim().length > 0, `${t} renders as an EMPTY chip`);
+    assert.match(heatLabel(t), /Spicy/, `${t}'s chip does not carry the word`);
+  }
+  // A tag the schema has never heard of must not acquire words — the reverse
+  // direction the loop above checks for the tables, checked here for the regex.
+  assert.equal(heatLabel("spicy-4"), "", "heat.js labels a level validate.py does not have");
+});
+
+test("the three surfaces cannot word the same heat level differently", () => {
+  // Not "they agree today" — they cannot disagree, because there is one
+  // implementation and `reachesHeat` refuses a file that keeps a second. Stated
+  // as a test so the property is asserted where a reader looks for it, rather
+  // than only being true as a side effect of how the modules happen to import.
+  for (const [file, source] of [
+    ["site/js/menu.js", menuJs],
+    ["site/js/recipe.js", recipeJs],
+    ["site/js/addons-ui.js", addonsUiJs],
+  ]) {
+    assert.deepEqual(
+      [...reachesHeat(source, file)].sort(),
+      TAGS.filter(isSpicy).sort(),
+      `${file} does not reach the whole heat scale`
+    );
+    assert.ok(
+      !/"🌶"\.repeat\(/.test(source) && !/spicy-\[/.test(source),
+      `${file} still builds the heat words itself — heat.js is the one vocabulary`
+    );
+  }
+});
 
 // --- The surface the ruling singles out ------------------------------------
 
