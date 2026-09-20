@@ -1,7 +1,14 @@
-- [ ] 🔎 **A complete menu carries no `verified` date, and three older menu
+- [~] 🔎 **A complete menu carries no `verified` date, and three older menu
       photo sets have no price history** `[S][data]` — found 2026-09-08 by the
       intake audit (session faves-o1). **(a) delivered 2026-09-08; (b) still
       owed** — see the note at the foot.
+
+  📌 **CLAIMED 2026-09-20 10:53 UTC (session `3e87e0bf`, orchestrated queue
+  run) — part (b), KC Cafe only.** Taking the target the delivering session
+  named as most valuable: `intake/menus/KC cafe/` holds 9 photographs dated
+  2015-09-29 plus a PDF, and `data/history/prices/kc-cafe.json` does not
+  exist. Spices is explicitly out of scope here — this item's own evidence
+  sizes it as the least valuable of the three and nothing has changed that.
 
   📌 **CLAIM RELEASED 2026-09-08 (session faves-o1) — part (a) delivered and
   merged (PR #20); part (b) is unclaimed and still owed.** (b) is the three

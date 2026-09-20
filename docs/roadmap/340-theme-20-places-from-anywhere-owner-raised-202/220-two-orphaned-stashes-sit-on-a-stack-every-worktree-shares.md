@@ -1,4 +1,4 @@
-- [ ] 🚩 **Two orphaned stashes have sat on the shared stash stack for three
+- [~] 🚩 **Two orphaned stashes have sat on the shared stash stack for three
       weeks, and nothing in the house rules says anyone should ever look**
       `[XS][tools]` — found 2026-09-07 (session faves-b1) while reviewing an
       agent's branch, and filed rather than acted on: **a stash is another
