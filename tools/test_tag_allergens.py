@@ -1080,6 +1080,43 @@ PROBES = {
         ("150g brisket patty, American cheese, milk bun, fries. No gluten added "
          "bun or lettuce bun available", {"contains-gluten", "contains-dairy"}, set()),
     ],
+    # (g) 🛑 A SLICE OF SOMETHING IS NOT A SLICE (2026-09-20, roadmap 470/030).
+    # `slices?` sat in the wheat-bakery rule reading BOTH senses of the word:
+    # the NZ cabinet slice (caramel, ginger, custard) and the ordinary English
+    # cut piece. Three Regal dishes and one COCKTAIL shipped `contains-gluten`
+    # on the second sense — `Dave Dobbyn • Slice of Heaven` is gin, sherry,
+    # amaro and lemon, and the only wheat in it was the song title.
+    #
+    # THE CONTROL IS THE HALF THAT MATTERS, and it is the first block below: a
+    # narrowing written as an item-level `exclude` — which is what the roadmap
+    # item proposed — passes every "not gluten" line here and silently deletes
+    # eleven real cabinet slices. The break-probe for this group is therefore
+    # the cabinet slice, not the black fungus.
+    "a cabinet slice is still a wheat bakery item": [
+        ("Caramel Slice", {"contains-gluten"}, set()),
+        ("Ginger Slice", {"contains-gluten"}, set()),
+        # PLURAL, standing alone as its own dish name — Daily Bakery's row. It
+        # is the line that refuses the "only match the singular" shortcut, which
+        # would pass every absence below and lose this.
+        ("Slices", {"contains-gluten"}, set()),
+        # …and the narrowing must cancel ONE match, never the item. Both senses
+        # in one string, which is the shape an `exclude` cannot survive.
+        ("Caramel slice, with slices of ham", {"contains-gluten"}, set()),
+    ],
+    "a cut piece is not a cabinet slice": [
+        ("Sauteed Chicken with Chili and Black Fungus Slices",
+         set(), {"contains-gluten"}),
+        ("Jellyfish & Spiced Pork Leg Slices (cold dish)",
+         set(), {"contains-gluten"}),
+        ("Dave Dobbyn • Slice of Heaven London Dry Gin, dry sherry, lemon",
+         set(), {"contains-gluten"}),
+        ("Wok-fried medium-rare beef sirloin slices, pineapple, capsicum",
+         set(), {"contains-gluten"}),
+        # The presence control the runner requires, and it earns its place
+        # twice: `pancake` is a rule word in the SAME alternation, so a rule
+        # broken into matching nothing fails here rather than passing quietly.
+        ("Crispy duck slices with pancake wraps", {"contains-gluten"}, set()),
+    ],
 }
 
 # --- the PHOTO tier's probes (2026-09-09, ADR 0114, roadmap 080/210) --------
@@ -1439,6 +1476,25 @@ BREAKERS = {
         [(r'r"\b((?<!lettuce )(?<!lettuce-)buns?|\w*burgers?|sandwich|',
           r'r"\b(buns?|\w*burgers?|sandwich|')],
         ["a lettuce bun is a lettuce leaf"]),
+    # (2b) The slice narrowing taken back out — the fault as it shipped, with
+    # `slices?` reading both senses of the word (roadmap 470/030).
+    "the slice narrowing reverted to a bare slices?": (
+        [(r'r"(?<!fungus )(?<!duck )(?<!leg )(?<!sirloin )slice(?!s?\s+of\b)s?|"',
+          r'r"slices?|"')],
+        ["a cut piece is not a cabinet slice"]),
+    # 🛑 (2c) THE DANGEROUS ONE, and the reason the cabinet-slice group exists.
+    # This breaker does not remove the narrowing — it rewrites it the way the
+    # roadmap item proposed, as an item-level `exclude`. Every "not gluten" line
+    # in the cut group still passes; what dies is the CARAMEL SLICE standing
+    # beside a slice of ham, because an `exclude` vetoes the whole rule for the
+    # item. Over-warning traded for a miss, which is the one direction this tool
+    # may not move (the water-chestnut ruling, ADR 0025's one-way rule).
+    "the slice narrowing rewritten as an item-level exclude": (
+        [(r'r"(?<!fungus )(?<!duck )(?<!leg )(?<!sirloin )slice(?!s?\s+of\b)s?|"',
+          r'r"(?<!fungus )(?<!duck )(?<!leg )(?<!sirloin )slices?|"'),
+         (r'r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),',
+          r'r"\b(pie\s?spice|slices?\s+of|(fish|crab|rice)\s?cakes?)\b"),')],
+        ["a cabinet slice is still a wheat bakery item"]),
     # (3) 🛑 The one that would be easiest to "tidy" — recording a caption's
     # finding at the RULE's tier instead of PHOTO. Nothing on screen changes and
     # the same 34 tags land, so only an assertion about the tier can see it.
