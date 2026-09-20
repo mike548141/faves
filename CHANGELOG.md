@@ -9,7 +9,7 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
-- **45 dishes that were as allergenic as the one beside them now say so.** A
+- **45 rows that were as allergenic as the one beside them now say so.** A
   sausage at one pub warned about gluten and the identical sausage at the next
   one did not; a kids' pizza warned about dairy and the same pizza *with a
   drink* did not. A reader who finds one of a pair flagged and the other not
