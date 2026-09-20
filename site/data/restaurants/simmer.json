@@ -1332,7 +1332,8 @@
           "dishId": "vege-pizza",
           "price": 14.5,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -1340,7 +1341,8 @@
           "dishId": "bacon-pizza",
           "price": 14.5,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {

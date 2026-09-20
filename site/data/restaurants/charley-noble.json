@@ -511,7 +511,8 @@
           "price": 15,
           "tags": [
             "contains-dairy",
-            "gf"
+            "gf",
+            "contains-egg"
           ]
         },
         {
@@ -1158,7 +1159,7 @@
           "dishId": "dave-dobbyn-slice-of-heaven",
           "desc": "London Dry Gin, dry sherry, Americano Apéritif, Amaro Montenegro, lemon.",
           "price": 20,
-          "tags": ["contains-gluten"]
+          "tags": []
         },
         {
           "name": "Flight of the Concords • Think About It",

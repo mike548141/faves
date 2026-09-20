@@ -543,7 +543,8 @@
           "tags": [
             "v",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         },
         {
@@ -582,7 +583,8 @@
           "tags": [
             "v",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         },
         {

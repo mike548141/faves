@@ -150,7 +150,8 @@
           "desc": "Honey sriracha, ranch, garden pickles.",
           "price": 24.5,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         },
         {
@@ -318,7 +319,8 @@
             "v",
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         }
       ]

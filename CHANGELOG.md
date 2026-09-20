@@ -9,6 +9,23 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **45 dishes that were as allergenic as the one beside them now say so.** A
+  sausage at one pub warned about gluten and the identical sausage at the next
+  one did not; a kids' pizza warned about dairy and the same pizza *with a
+  drink* did not. A reader who finds one of a pair flagged and the other not
+  learns that the absence of a warning means nothing — and once they learn
+  that, every correct warning stops working too. Swept against the ten dish
+  classes `tools/allergen_disagreements.py` reports: **eight disagreements over
+  86 rows became three over 44**, with sausages, brioche, ranch dressing and
+  pesto now consistent across every venue that serves them. Two Regal dishes
+  and six Turkish pizzas were deliberately left alone and written up instead —
+  where the evidence runs out, guessing is not the fail-safe option.
+- **A cocktail no longer warns about wheat.** Charley Noble's *Dave Dobbyn •
+  Slice of Heaven* is gin, sherry, amaro and lemon; the only wheat in it was
+  the word "Slice" in the song title, which the tagger had been reading as the
+  caramel-slice kind. It now tells the two senses apart, so a plate of sliced
+  duck is no longer a bakery item either — while every real cabinet slice keeps
+  its warning.
 - **Two BurgerFuel rows no longer warn about gluten they do not contain.** The
   *Gluten friendly bun* was flagged as containing gluten while the same row
   offered itself as the gluten-friendly option, and the *Low Carborator lettuce

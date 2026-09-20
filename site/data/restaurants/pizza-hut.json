@@ -657,7 +657,8 @@
           "desc": "2 large pizzas & 2 Sides*",
           "price": 35.99,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -677,7 +678,8 @@
           "desc": "1 Large Favourites Pizza and 2 Sides delivered for $25",
           "price": 25.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -686,7 +688,8 @@
           "desc": "3 Large Classic Value Pizzas, Upgrade to a Favourites or Deluxe pizza,",
           "price": 34.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -695,7 +698,8 @@
           "desc": "1 regular pizza* & small Fries",
           "price": 8.49,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -704,7 +708,8 @@
           "desc": "1 regular pizza*, small Fries & 330ml Can Drink",
           "price": 10.49,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -713,7 +718,8 @@
           "desc": "3 Large Classic Value Pizzas & 3 Sides* (online only).",
           "price": 47.99,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -722,7 +728,8 @@
           "desc": "3 large pizzas & 2 Sides*",
           "price": 43.99,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -731,7 +738,8 @@
           "desc": "4 large pizzas & 2 Sides*",
           "price": 52.99,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -1568,7 +1576,8 @@
           "desc": "Choose any 3 Favourites Pizzas & any 4 Classic Value Pizzas with 4 Garlic Breads. Fee applies on delivery orders.",
           "price": 95.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -1577,7 +1586,8 @@
           "desc": "Choose any 6 Favourites Pizzas & any 6 Classic Value Pizzas with 6 Garlic Breads. Fee applies on delivery orders.",
           "price": 135.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -1586,7 +1596,8 @@
           "desc": "Choose any 7 Favourites Pizzas & any 7 Classic Value Pizzas with 8 Garlic Breads. Fee applies on delivery orders.",
           "price": 160.0,
           "tags": [
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         }
       ]
