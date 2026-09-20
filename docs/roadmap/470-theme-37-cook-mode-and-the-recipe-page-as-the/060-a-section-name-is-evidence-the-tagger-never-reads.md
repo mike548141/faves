@@ -26,14 +26,23 @@
   reader filtering for gluten sees one of them and not the other, and there is
   no fact about the food behind the difference.
 
-  🔑 **The mechanism, and it is one line.** `dish_text()` in
-  `tools/tag_allergens.py` composes the name, description, ingredients and the
-  section's **note** — and never the section's **`section`** field. So the
-  single most reliable piece of evidence on the page, the heading the shop
-  itself wrote over the dish, is the one input the tagger cannot see.
+  🔑 **The mechanism, read in the file rather than taken from the report.**
+  The composition the matcher runs over is **`ingredient_text()`** in
+  `tools/tag_allergens.py` (line ~922): it keeps the item's `name`, each clause
+  of its `desc` that is not a priced add-on, and `ingredient_lines(item)`.
+  A section's **note** reaches a dish by a separate path (`read_section_note`),
+  but the section's own **`section`** field — the heading the shop wrote over
+  the dish — is never fed to the matcher at all. Grepped across both tools, the
+  only read of `section.get("section")` is at line 1265, where it labels a
+  section note **for a human to review**; nothing matches on it.
   `tools/allergen_disagreements.py` is blind the same way, which is why 37n's
   report never named these rows: **both tools share the blind spot, so their
   agreement is not corroboration.**
+  ⚠️ **This paragraph named `dish_text()` when the item was filed. There is no
+  such function** — the worker's report said so, the orchestrator published it
+  unchecked, and a `grep` found it in neither tool. The *finding* survived the
+  check and the *citation* did not, which is the difference between a symptom
+  and its site. Corrected 2026-09-21 in the same session that introduced it.
 
   ⚠️ **This is NOT the same item as [080/160](../080-theme-4-content-growth-ongoing-in-parallel/160-the-allergen-corpus-has-holes-the-tagger-cannot-see.md).**
   That one is *"the tagger is matching words the menu does not use"* — a
