@@ -1,4 +1,4 @@
-- [~] 🚩 **Two orphaned stashes have sat on the shared stash stack for three
+- [ ] 🚩 **Two orphaned stashes have sat on the shared stash stack for three
       weeks, and nothing in the house rules says anyone should ever look**
       `[XS][tools]` — found 2026-09-07 (session faves-b1) while reviewing an
       agent's branch, and filed rather than acted on: **a stash is another
@@ -123,3 +123,37 @@
   option 2 *"Owner's call"*, and this pass does not overturn that — it is cheap
   and local, but whether to spend a session-start check on it is his to say. The
   bracket stays `- [ ]`.
+
+  ✅ **THE HAND-UP CAME BACK AS DOCTRINE — 2026-09-20 (session `3e87e0bf`),
+  and it moves option 2, not just option 3.** Verified at atelier's
+  `origin/main`, not taken from this item's own text:
+  - **atelier PR #71 is real and MERGED 2026-09-17** —
+    *"320/150 hand-up: the session-start autostash reaches a peer's
+    uncommitted work"*. ⚠️ **The item number in the table above is wrong**:
+    `320/150` is the PR's *branch* name and atelier's live `320/150` is a
+    different finding (the open-time sync command's misleading error text).
+    This hand-up settled as atelier **`320/210`**, *"the session-start
+    autostash contradicts the shared checkout premise"*. Cite that.
+  - **The rule landed in the FLOOR REGION itself** at atelier `54201e0`, so it
+    binds every child, not just this one. The Concurrency bullet's opening
+    clause is now: *"At session start read `git status` first — dirty work this
+    session didn't make means stop and move, never autostash it — then, where
+    there is a remote, `git pull --rebase --autostash`; push after each
+    commit."*
+  - 🔑 **So option 2 is largely answered from above.** It asked for *"a
+    session-start / floor warning"*; the house put the check at session start
+    in the floor and named the failure mode. What is left here is strictly
+    narrower and is still the owner's: whether to **mechanise** it locally
+    (a `tools/` check, or a line on the verify list) rather than rely on a
+    session reading the floor. `[XS][tools]`, and it stays `- [ ]`.
+  - 📌 **The stash stack is still empty, re-measured today** — `git stash list`
+    prints nothing in the primary checkout *and* in a live worktree, and
+    `git reflog show stash` now errors with *"unknown revision"*, meaning the
+    ref itself is gone. **Who dropped them, and when, is unrecoverable** — the
+    reflog went with the ref. Said plainly rather than smoothed over: this item
+    can report the residue is cleared and cannot report by whom.
+  - 🔎 **And the shape worth keeping.** This repo filed a finding upward, the
+    house ruled on it, and *nothing in this repo changed on that day* — the
+    same silent-staleness this section's `040` item was just closed for. A
+    child's upstream filings need re-reading at every pin bump, because their
+    close event happens somewhere else.

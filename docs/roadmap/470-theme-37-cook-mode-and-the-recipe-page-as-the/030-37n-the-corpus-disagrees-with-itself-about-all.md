@@ -1,4 +1,9 @@
 - [~] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+      📌 **CLAIMED 2026-09-20 10:53 UTC (session `3e87e0bf`, orchestrated queue
+      run) — the data sweep.** The 2026-09-07 deferral reason was a second live
+      agent on the same files; that agent is gone (tree clean, every `p1-*`
+      branch merged and pruned). Re-run today the tool reports **8
+      class/allergen splits over 86 rows**, grown with the corpus.
       — **TOOLING DELIVERED 2026-08-16, THE DATA SWEEP IS NOT.** The report the
       item asked for exists: `tools/allergen_disagreements.py` groups dishes into
       ten declared classes across all 55 venues and names every row whose tagging

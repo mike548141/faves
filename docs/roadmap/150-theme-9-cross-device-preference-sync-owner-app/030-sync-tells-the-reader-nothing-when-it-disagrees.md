@@ -1,4 +1,8 @@
 - [~] **Sync resolves conflicts and tells the reader nothing** `[M][js]` —
+      📌 **CLAIMED 2026-09-20 10:53 UTC (session `3e87e0bf`, orchestrated queue
+      run)** — taking the two findings that are engineering, not design: the
+      error view's missing turn-off, and the silent allergen-flag loss when an
+      older client drops unknown keys.
       found by the three-day cold review (`docs/reviews/2026-08-17-0643-three-day-cold-review.md`), four findings that share a shape:
       the error view offers no way to **turn sync off**; **rating and setting
       conflicts, and profile-identity mismatches, are reported by the merge and

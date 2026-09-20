@@ -1,9 +1,14 @@
-- [~] 🚩 **`linkscan` is blind to reference-style links, and it is an ENFORCED
+- [x] 🚩 **`linkscan` is blind to reference-style links, and it is an ENFORCED
       floor guard** `[S][docs]` — **claim DISCHARGED 2026-08-17: the local half
       is finished** (queued upstream, accepted as atelier `020/320`). The item
       stays open **blocked on that upstream fix**, not on anyone here; there is
       nothing to claim. ⏳ **owed upstream to atelier; nothing to fix
-      locally.** Found 2026-08-16 when `pathscan` (warn-only) caught a broken ADR
+      locally.** — ✅ **superseded: the fix landed 2026-08-23 and this item is
+      CLOSED 2026-09-20; see the dated note at the foot.** The two sentences
+      before this one describe the state on 2026-08-17 and are kept as the
+      record, not as the current truth.
+
+      Found 2026-08-16 when `pathscan` (warn-only) caught a broken ADR
       link in a commit that `linkscan` (enforced) had just passed.
       🔎 **Isolated with a two-line probe, not inferred.** A file containing both
       `[inline](../../does-not-exist-a.md)` and a `[refstyle]` whose definition is
@@ -61,3 +66,22 @@
       sharper version of this item's own point than the version it was filed
       with, and it was found only because a third party probed a claim nobody
       had reason to doubt.
+
+  ✅ **CLOSED 2026-09-20 (session `3e87e0bf`) — the upstream fix landed and is
+  LIVE HERE, reproduced rather than taken on trust.** atelier closed `020/320`
+  on 2026-08-23; this repo's `.githooks/pre-commit` calls atelier's tool by
+  path, so the fix arrived with **no local change and no pin bump**.
+  **The probe, because a closed item deserves better than a changelog line:**
+  a scratch tree carrying one inline link, one reference-style definition
+  pointing at a missing file, and one reference-style definition pointing at a
+  real file. `linkscan` reported **exactly one** finding, and it named the
+  **definition line** — the line the old scanner could not see. The good
+  reference-style link was not flagged, so this is not a scanner mangled into
+  refusing everything. <!-- pathscan:allow: the probe lived in a scratch tree outside the repo; its paths are deliberately absent here -->
+  🔑 **The blocker was real when written and had been dead for four weeks.** An
+  item blocked on someone else's work has **no local event that closes it**:
+  nothing in this repo changes on the day the upstream fix merges, so the
+  staleness is silent by construction. That is the finding worth keeping, not
+  the regex — and it is the same shape as `220`'s hand-up, which also came back
+  as doctrine with nothing here to notice. **A child's upstream filings need
+  re-reading at every pin bump.**
