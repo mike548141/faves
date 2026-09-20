@@ -311,6 +311,21 @@ python3 tools/lib/tree.py --self-test # the tree line every gate below prints
 python3 tools/check_decisions.py # every ADR is in the decisions index (it's the
                               # allocator — an unindexed record is how a number
                               # gets reused; seven were missing on 2026-08-16)
+python3 tools/check_stashes.py # the shared stash stack is not carrying somebody
+                              # ELSE'S uncommitted work (ADR 0119). refs/stash
+                              # lives in the COMMON git dir, so every worktree
+                              # shares one stack and a bare `git stash pop`
+                              # anywhere pops stash@{0}, whoever made it — two
+                              # entries sat there three weeks, one an autostash
+                              # nobody typed. It WARNS and never mutates; an
+                              # entry is not a delivering session's to drop.
+                              # 🛑 Deliberately NOT in the floor or CI: exit 1
+                              # describes a PEER'S work, so in pre-commit one
+                              # live stash blocks every commit in the repo, and
+                              # a CI clone's stack is empty by construction.
+                              # `--selftest` (14 cases, throwaway repos) is what
+                              # proves it can still fire, because this repo's
+                              # stack has been empty since 2026-09-08
 python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py # docs/ROADMAP.md
                               # is GENERATED from docs/roadmap/ — one file per item
                               # (owner-ruled 2026-08-16, ADR 0086). Edit the ITEM, never
