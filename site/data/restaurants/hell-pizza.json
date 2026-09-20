@@ -837,7 +837,8 @@
           "tags": [
             "spicy-1",
             "contains-gluten",
-            "contains-egg"
+            "contains-egg",
+            "contains-dairy"
           ]
         },
         {
@@ -963,7 +964,8 @@
           "desc": "Free-range buttermilk fried popcorn chicken, free-range bacon, red onion, mustard BBQ sauce, melted Swiss cheese and gherkin mayo.",
           "tags": [
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -1487,7 +1489,8 @@
           "desc": "A kids pizza plus a Keri juice or Pump mini.",
           "tags": [
             "v",
-            "contains-gluten"
+            "contains-gluten",
+            "contains-dairy"
           ]
         },
         {
@@ -1495,7 +1498,9 @@
           "dishId": "werewolf",
           "price": 9,
           "desc": "Free-range chicken tenders and wedges with tomato sauce and a kids drink.",
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Kids Keri Apple",

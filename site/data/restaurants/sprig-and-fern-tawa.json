@@ -102,7 +102,8 @@
           "name": "Sausages",
           "price": 8.0,
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-gluten"
           ]
         },
         {
@@ -418,7 +419,8 @@
           "price": 19.0,
           "tags": [
             "gf",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         },
         {
@@ -440,7 +442,8 @@
             "v",
             "contains-nuts",
             "contains-gluten",
-            "contains-sesame"
+            "contains-sesame",
+            "contains-dairy"
           ]
         },
         {
@@ -602,7 +605,8 @@
           "tags": [
             "v",
             "gf-option",
-            "contains-nuts"
+            "contains-nuts",
+            "contains-dairy"
           ],
           "addOns": [
             "add-salmon"
@@ -765,7 +769,9 @@
           "dishId": "sausages",
           "desc": null,
           "price": 8.0,
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Bacon",
@@ -913,7 +919,9 @@
           "dishId": "chicken-tenders",
           "desc": "Housemade chicken tenders with curly fries and carrot sticks.",
           "price": 15.0,
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Cheeseburger",
@@ -940,7 +948,9 @@
           "dishId": "cheerio-sausages",
           "desc": "Warm mini sausages with tomato sauce, curly fries and carrot sticks.",
           "price": 15.0,
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Cheese Pizza",

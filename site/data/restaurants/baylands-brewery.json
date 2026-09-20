@@ -308,7 +308,8 @@
           "price": 35.0,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         },
         {
@@ -318,7 +319,8 @@
           "price": 35.0,
           "tags": [
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         }
       ]

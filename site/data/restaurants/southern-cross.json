@@ -162,7 +162,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten",
-            "spicy-1"
+            "spicy-1",
+            "contains-egg"
           ]
         },
         {
@@ -337,7 +338,8 @@
             "v",
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         }
       ]
@@ -578,7 +580,9 @@
           "dishId": "sausages-2",
           "desc": null,
           "price": 6.0,
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Avocado",

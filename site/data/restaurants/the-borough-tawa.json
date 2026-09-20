@@ -165,7 +165,8 @@
           "tags": [
             "contains-dairy",
             "contains-gluten",
-            "spicy-1"
+            "spicy-1",
+            "contains-egg"
           ]
         },
         {
@@ -299,7 +300,8 @@
             "v",
             "gf-option",
             "contains-gluten",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-egg"
           ]
         }
       ]

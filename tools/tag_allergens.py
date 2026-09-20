@@ -319,10 +319,36 @@ RULES = [
     # milk bun two clauses earlier. Both spellings, because each lookbehind
     # must be fixed-width. Measured 2026-09-09: "lettuce bun" ×5 across 5
     # venues, "milk bun" ×16 across 6.
+    #
+    # A SLICE OF SOMETHING IS NOT A SLICE (2026-09-20, roadmap 470/030). A NZ
+    # cabinet `slice` — caramel, ginger, custard, citrus — is a wheat bakery
+    # item and 11 corpus rows depend on it, so the alternative stays. But
+    # `slice` is also the ordinary English word for a CUT PIECE, and in that
+    # sense it says nothing about wheat at all: Regal's "Black Fungus Slices"
+    # and "Pork Leg Slices" shipped `contains-gluten` on the strength of it, and
+    # so did a COCKTAIL — Charley Noble's `Dave Dobbyn • Slice of Heaven` is gin,
+    # sherry, amaro and lemon, and the only wheat in it was a song title.
+    # 🛑 Two narrowings, both LOOKBEHIND/LOOKAHEAD and never an `exclude`, for
+    # the water-chestnut reason: an item-level veto on "Caramel slice, or slices
+    # of ham" would lose the CARAMEL SLICE — an over-warning traded for a miss.
+    #   (1) `slice(s) of X` is a portion phrase. The lookahead has to tolerate
+    #       the optional `s` ITSELF (`(?!s?\s+of\b)`), because the rule's
+    #       closing plural would otherwise let `slice` match and the `s` be
+    #       eaten by PLURAL — measured on first write, it did exactly that.
+    #   (2) `<flesh or fungus> slices` is a cut. The four heads are the four the
+    #       corpus holds (`--compounds`-style sweep of every name, desc,
+    #       ingredient and note, 2026-09-20): fungus ×2, leg ×1, duck ×2,
+    #       sirloin ×1. A fifth is added by sweeping again, not by guessing.
+    # What this does NOT do is untag the rows already carrying the tag — this
+    # tool only ever adds (ADR 0025). Regal's three keep theirs: a Chinese
+    # sautéed dish is finished with soy sauce far too often to call it wheat
+    # free, and removing on no evidence is the absence claim this repo refuses.
     ("contains-gluten", "DERIVED", "a wheat bakery item",
      r"\b((?<!lettuce )(?<!lettuce-)buns?|\w*burgers?|sandwich|sando|toast|toastie|pies?|cakes?|biscuits?|cookies?|"
      r"brownies?|\w*muffins?|scones?|doughnuts?|donuts?|pizzas?|pancakes?|waffles?|"
-     r"crackers?|tarts?|slices?|danish|éclair|eclair)\b",
+     r"crackers?|tarts?|"
+     r"(?<!fungus )(?<!duck )(?<!leg )(?<!sirloin )slice(?!s?\s+of\b)s?|"
+     r"danish|éclair|eclair)\b",
      r"\b(pie\s?spice|(fish|crab|rice)\s?cakes?)\b"),
     ("contains-gluten", "DERIVED", "a wheat noodle",
      r"\b(udon|ramen|egg\s?noodles?|chow\s?mein|lo\s?mein|hokkien|mee\s?goreng|"

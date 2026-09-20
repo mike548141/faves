@@ -946,7 +946,9 @@
               "recorded": "2025-03-27"
             }
           ],
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Mushroom Gravy",
