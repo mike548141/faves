@@ -1462,7 +1462,7 @@ deliberation those compact docs omit.
   else, so the one verb that ends a broken pairing was reachable from every
   state except the one that needed it. `sync_check` 16 → 22; break-probe fails
   exactly 1, with its precondition and its control still passing.
-- [0119](0119-the-inlined-floor-is-a-verbatim-stamp-and-our-enrichments-live-beneath-it.md)
+- [0120](0120-the-inlined-floor-is-a-verbatim-stamp-and-our-enrichments-live-beneath-it.md)
   — **the inlined floor is a VERBATIM stamp, and our enrichments live beneath
   it.** atelier ruled `115/030` on 2026-09-19 that a child's copy of the `floor`
   region is the canonical text word for word — no compression, and `narrow=` on

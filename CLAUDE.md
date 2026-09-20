@@ -112,7 +112,7 @@ placeholders a child fills (`<SHA>`, `<atelier-path>`, `<visibility fact>`,
 line of it we believe is wrong goes **up** — atelier's board, via
 § *Pointing up* — never out.
 
-🚩 **Why this section exists (ADR 0119, owner-ruled 2026-09-21).** Until today
+🚩 **Why this section exists (ADR 0120, owner-ruled 2026-09-21).** Until today
 this repo's doctrine block was an *enriched and compressed* restatement of the
 floor rather than a copy of it, carrying two forks the owner had deliberately
 ratified on 2026-08-17 (*"keep them, and here is why"*). atelier then ruled

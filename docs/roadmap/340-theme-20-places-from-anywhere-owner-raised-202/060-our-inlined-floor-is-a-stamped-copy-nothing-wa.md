@@ -1,6 +1,6 @@
 - [x] **Our inlined floor is a stamped copy nothing watches** `[S][docs]`
   ✅ **DONE 2026-09-21 (session `3e87e0bf`, branch `floor-restamp`,
-  [ADR 0119](../../decisions/0119-the-inlined-floor-is-a-verbatim-stamp-and-our-enrichments-live-beneath-it.md))
+  [ADR 0120](../../decisions/0120-the-inlined-floor-is-a-verbatim-stamp-and-our-enrichments-live-beneath-it.md))
   — the owner's ruling is executed in full. 🛑 AND THE ITEM'S OWN TITLE IS
   STILL TRUE: nothing watches it, and now we know it cannot.** What changed is
   that the block is *worth* watching and the check that can pass it is written
@@ -78,7 +78,7 @@
   route → *A house rule is not ours to write*; the publication-bound wording →
   *Estate resources*. The heading's *"owner-ratified 2026-07-25, bumped
   2026-09-09"* is **not** carried into the stamp — the canonical heading has no
-  date and an addition reds like a reword — and lives in ADR 0119 instead.
+  date and an addition reds like a reword — and lives in ADR 0120 instead.
 
   **The record as it stood before that ruling is kept below, unchanged.**
   **Claim DISCHARGED 2026-08-17: the copy-vs-source check was done properly**

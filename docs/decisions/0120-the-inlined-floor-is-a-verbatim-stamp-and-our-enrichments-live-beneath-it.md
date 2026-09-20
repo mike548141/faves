@@ -1,4 +1,4 @@
-# 0119 — The inlined floor is a VERBATIM stamp, and our enrichments live beneath it
+# 0120 — The inlined floor is a VERBATIM stamp, and our enrichments live beneath it
 
 **Status**: accepted
 **Date**: 2026-09-21

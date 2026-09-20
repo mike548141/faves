@@ -11382,7 +11382,7 @@ region carrying two forks he ratified on 2026-08-17. atelier's `115/030`
 (2026-09-19) made that unlawful — *floor copy verbatim, and `narrow=` on a
 `region=floor` stamp reds*. Ruled: **re-stamp verbatim, relocate every
 enrichment into the onramp beneath, lose nothing.** Done, with
-[ADR 0119](decisions/0119-the-inlined-floor-is-a-verbatim-stamp-and-our-enrichments-live-beneath-it.md).
+[ADR 0120](decisions/0120-the-inlined-floor-is-a-verbatim-stamp-and-our-enrichments-live-beneath-it.md).
 Pin `eb6449d` → `09cd4d2`.
 
 ### The block is constructed, not transcribed
@@ -11452,3 +11452,20 @@ worktree; the orchestrator rebuilds at merge.
 staging command carrying `rm -rf` into the scratchpad was denied; I rebuilt the
 staging directory under a fresh name and deleted nothing. Disclosed in the turn
 it happened, per the 2026-08-17 ruling.
+
+### 🛑 An ADR number collision, caught by the post-push check and not before
+
+I checked the allocator before writing — `0118` was the highest on `main`, on
+every pushed branch and in every sibling worktree — took `0119`, committed,
+pushed, and **then** ran `check_decisions.py` and re-listed the remotes, which
+is the order `docs/decisions/README.md` insists on. A sibling worker had pushed
+its own `0119` **56 seconds earlier**. Neither of us could have seen the other
+at the moment we chose; the collision is visible only from the outside, which
+is exactly what that README's 2026-08-16 write-up says.
+
+Repaired by the house rule — **move whichever record has FEWER inbound
+references, not whichever landed second.** Theirs carried 7, mine 5, so mine
+moved to **`0120`** and all five inbound references went with it (CLAUDE.md's
+onramp, this record, the roadmap item twice, the index). Theirs is untouched.
+Both criteria happened to agree here, which is luck: the rule is cheapest
+repair, and it would have moved theirs had the counts run the other way.
