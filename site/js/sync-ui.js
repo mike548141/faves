@@ -370,6 +370,64 @@ export function syncControls() {
     return { node, focusTarget: heading, refs: null };
   }
 
+  /**
+   * "Turn off sync on this device", with its inline confirm.
+   *
+   * Built once and used by BOTH the "on" view and the ERROR view. Shared
+   * rather than written twice on purpose: the confirmation's wording is a
+   * ruling (ADR 0060's addendum — name the *scope*, never a device count),
+   * and a rule with two implementations is one this repo has already watched
+   * go out of step, each copy locally correct and only one of them updated.
+   *
+   * Inline confirm, same shape as the People panel's delete confirm and
+   * refreshResetSection's refresh confirm — hidden=true then focus(), the
+   * order already established across this file's siblings.
+   */
+  function turnOffControl() {
+    const button = el("button", {
+      type: "button",
+      className: "profile-btn",
+      textContent: "Turn off sync on this device",
+    });
+    const confirmText = el("p", {
+      className: "profile-confirm-text",
+      textContent:
+        "Turn off sync on this device? Only this device stops — your data here stays exactly as it is, " +
+        "and any other device using this code carries on syncing with each other.",
+    });
+    // ADR 0060's addendum: the blob has no device roster, so a device count is
+    // an upper bound, not a fact, and the owner ruled the confirmation names
+    // the *scope* ("every device signed in with this code"), never a number.
+    const confirmGo = el("button", { type: "button", className: "profile-btn profile-btn-primary", textContent: "Turn off" });
+    const confirmCancel = el("button", { type: "button", className: "profile-btn", textContent: "Cancel" });
+    const confirm = el("div", { className: "profile-confirm", role: "group", hidden: true }, [
+      confirmText,
+      el("div", { className: "profile-form-actions" }, [confirmGo, confirmCancel]),
+    ]);
+    confirm.setAttribute("aria-label", "Confirm turn off sync");
+
+    function hideConfirm(refocus) {
+      confirm.hidden = true;
+      if (refocus) button.focus();
+    }
+    button.addEventListener("click", () => {
+      confirm.hidden = false;
+      confirmGo.focus();
+    });
+    confirmCancel.addEventListener("click", () => hideConfirm(true));
+    confirmGo.addEventListener("click", () => {
+      local.joining = false;
+      local.justOn = false;
+      // sync.disable() calls setState(OFF) synchronously, which reenters this
+      // module's render() (subscribed below) before this handler returns —
+      // render()'s own hadFocus guard is what moves focus off confirmGo, not
+      // this handler; there is nothing left to do here after the call.
+      sync.disable();
+    });
+
+    return { button, confirm, hideConfirm: () => hideConfirm(false) };
+  }
+
   // --- on --------------------------------------------------------------------
   function buildOn(st) {
     const status = el("p", {
@@ -387,12 +445,8 @@ export function syncControls() {
       textContent: "Show my code",
       "aria-expanded": "false",
     });
-    const offBtn = el("button", {
-      type: "button",
-      className: "profile-btn",
-      textContent: "Turn off sync on this device",
-    });
-    const actions = el("div", { className: "profile-form-actions" }, [syncBtn, showBtn, offBtn]);
+    const off = turnOffControl();
+    const actions = el("div", { className: "profile-form-actions" }, [syncBtn, showBtn, off.button]);
 
     // aria-disabled, deliberately not the `disabled` property: sync.js
     // already de-duplicates concurrent syncNow() calls (an `inFlight`
@@ -417,46 +471,7 @@ export function syncControls() {
     }
     showBtn.addEventListener("click", toggleReveal);
 
-    // Inline confirm, same shape as the People panel's delete confirm and
-    // refreshResetSection's refresh confirm — hidden=true then focus(), the
-    // order already established across this file's siblings.
-    const confirmText = el("p", {
-      className: "profile-confirm-text",
-      textContent:
-        "Turn off sync on this device? Only this device stops — your data here stays exactly as it is, " +
-        "and any other device using this code carries on syncing with each other.",
-    });
-    // ADR 0060's addendum: the blob has no device roster, so a device count is
-    // an upper bound, not a fact, and the owner ruled the confirmation names
-    // the *scope* ("every device signed in with this code"), never a number.
-    const confirmGo = el("button", { type: "button", className: "profile-btn profile-btn-primary", textContent: "Turn off" });
-    const confirmCancel = el("button", { type: "button", className: "profile-btn", textContent: "Cancel" });
-    const confirm = el("div", { className: "profile-confirm", role: "group", hidden: true }, [
-      confirmText,
-      el("div", { className: "profile-form-actions" }, [confirmGo, confirmCancel]),
-    ]);
-    confirm.setAttribute("aria-label", "Confirm turn off sync");
-
-    function hideConfirm(refocus) {
-      confirm.hidden = true;
-      if (refocus) offBtn.focus();
-    }
-    offBtn.addEventListener("click", () => {
-      confirm.hidden = false;
-      confirmGo.focus();
-    });
-    confirmCancel.addEventListener("click", () => hideConfirm(true));
-    confirmGo.addEventListener("click", () => {
-      local.joining = false;
-      local.justOn = false;
-      // sync.disable() calls setState(OFF) synchronously, which reenters this
-      // module's render() (subscribed below) before this handler returns —
-      // render()'s own hadFocus guard is what moves focus off confirmGo, not
-      // this handler; there is nothing left to do here after the call.
-      sync.disable();
-    });
-
-    const node = el("div", {}, [status, actions, codeReveal, confirm]);
+    const node = el("div", {}, [status, actions, codeReveal, off.confirm]);
     return {
       node,
       focusTarget: status,
@@ -465,7 +480,7 @@ export function syncControls() {
           status.textContent = statusLine(st2);
           syncBtn.setAttribute("aria-disabled", String(st2.state === SYNCING));
         },
-        hideConfirm: () => hideConfirm(false),
+        hideConfirm: off.hideConfirm,
       },
     };
   }
@@ -536,6 +551,17 @@ export function syncControls() {
   }
 
   // --- error -----------------------------------------------------------------
+  //
+  // THIS VIEW HAS TWO WAYS OUT, AND UNTIL 2026-09-20 IT HAD ONE (ADR 0118).
+  // It offered Retry and nothing else, so a reader whose sync was broken for a
+  // reason retrying cannot fix — a code that no longer matches the data on the
+  // server, a Worker that has gone away, a device wedged offline — had no
+  // route back to the "on" view's controls, because the panel only ever shows
+  // ONE view and ERROR outranks them all (computeViewKey). The one verb that
+  // ends the problem, `sync.disable()`, was reachable from every state except
+  // the one that needed it. Same control and same confirmation as the "on"
+  // view, deliberately: turning sync off does not mean something different
+  // because sync happens to be unhappy.
   function buildError(st) {
     const message = el("p", {
       className: "settings-note",
@@ -548,12 +574,32 @@ export function syncControls() {
     });
     const retryBtn = el("button", { type: "button", className: "profile-btn profile-btn-primary", textContent: "Retry" });
     retryBtn.addEventListener("click", () => sync.syncNow());
+    const off = turnOffControl();
+    // Says the thing a person in this state is actually afraid of. sync.js's
+    // own error prose already promises the data is safe on this device; this
+    // says the same of the way *out*, because "turn it off" is exactly the
+    // button someone worried about losing their favourites will not press
+    // without being told.
+    const offHint = el("p", {
+      className: "settings-hint",
+      textContent:
+        "Retrying won’t always help — if sync can’t be fixed from here, you can turn it off. " +
+        "Nothing on this device is deleted.",
+    });
 
-    const node = el("div", {}, [message, retryBtn]);
+    const node = el("div", {}, [
+      message,
+      el("div", { className: "profile-form-actions" }, [retryBtn, off.button]),
+      offHint,
+      off.confirm,
+    ]);
     return {
       node,
       focusTarget: message,
-      refs: { patch: (st2) => { message.textContent = st2.error || "Something went wrong with sync."; } },
+      refs: {
+        patch: (st2) => { message.textContent = st2.error || "Something went wrong with sync."; },
+        hideConfirm: off.hideConfirm,
+      },
     };
   }
 
