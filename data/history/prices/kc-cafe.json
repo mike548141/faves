@@ -1,0 +1,2318 @@
+{
+  "venue": "kc-cafe",
+  "note": "Price entries superseded by a later reading. Appended, never rewritten (ADR 0023); moved out of the payload by ADR 0047 because no screen renders them. The current price stays on the dish in site/data/. These entries were read on 2015-09-29 from the shop's own boards, photographed in-store (intake/menus/KC cafe/, EXIF DateTimeOriginal 2015-09-29; ADR 0038, ADR 0107) — a wall board, a lit menu box numbered 1-30 and a side board. Each entry's note names the photograph it was read from and the wording the board used, because the menu was restructured between 2015 and the current reading and a name alone no longer identifies the line. Where a 2015 line could not be joined to exactly one dish that still ships, nothing was written: see docs/SESSIONS.md for what was read and not recorded. The current entries are a 2026-07-06 delivery-app reading and the 2015 ones are counter prices, so the two are not like for like — each entry states its own method (ADR 0031).",
+  "rows": [
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Chicken Curry on Rice",
+        "code": "1",
+        "dishId": "chicken-curry-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 1 'CHICKEN CURRY'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Chicken Satay Kebab (6 Pcs)",
+        "code": "2",
+        "dishId": "chicken-satay-kebab-6-pcs"
+      },
+      "superseded": [
+        {
+          "value": 11.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 2 'KEBABS SATAY (chicken or beef)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Nasi Goreng",
+        "code": "3",
+        "dishId": "nasi-goreng"
+      },
+      "superseded": [
+        {
+          "value": 12.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 3"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "BBQ Pork & Chicken on Rice",
+        "code": "4",
+        "dishId": "bbq-pork-chicken-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 4 'B.B.Q PORK CHICKEN ON RICE'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Grill Pork Dumpling (6 Pcs)",
+        "code": "5",
+        "dishId": "grill-pork-dumpling-6-pcs"
+      },
+      "superseded": [
+        {
+          "value": 8.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 5 'GRILL DUMPLING'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Seafood Udon",
+        "code": "6",
+        "dishId": "seafood-udon"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 6"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Curry Laksa",
+        "code": "7",
+        "dishId": "curry-laksa"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 7"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Mee Goreng",
+        "code": "8",
+        "dishId": "mee-goreng"
+      },
+      "superseded": [
+        {
+          "value": 12.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 8"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Roti Chanai",
+        "code": "9",
+        "dishId": "roti-chanai"
+      },
+      "superseded": [
+        {
+          "value": 9.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 9 'ROTI CHANNAI'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Chow Kueh Teow (BBQ Pork with Stir Fried Rice Noodle)",
+        "code": "10",
+        "dishId": "chow-kueh-teow-bbq-pork-with-stir-fried-rice-noodle"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 10 'CHOW KUEY TEOW'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "Roast Duck or BBQ Pork with Rice Noodle or Egg Noodle Soup",
+        "code": "11",
+        "dishId": "roast-duck-or-bbq-pork-with-rice-noodle-or-egg-noodle-soup"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 11 'RICE NOODLE SOUP (roast duck or B.B.Q pork)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Entree",
+        "sectionId": "entree",
+        "name": "BBQ Pork Wonton Noodle Soup",
+        "code": "12",
+        "dishId": "bbq-pork-wonton-noodle-soup"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0640), item 12 'WON TON & B.B.Q PORK NOODLE SOUP'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Soya Chicken on Rice",
+        "code": "13",
+        "dishId": "soya-chicken-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0638 + IMG_0640), item 13"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Honey BBQ Pork Ribs on Rice",
+        "code": "14",
+        "dishId": "honey-bbq-pork-ribs-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0638 + IMG_0640), item 14"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Two Combination BBQ Meat on Rice",
+        "code": "15",
+        "dishId": "two-combination-bbq-meat-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 15.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0638 + IMG_0640), item 15 'Combination (2) of BBQ Meats on Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Three Combination BBQ Meat on Rice",
+        "code": "16",
+        "dishId": "three-combination-bbq-meat-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 16.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0638 + IMG_0640), item 16 'Combination (3) of BBQ Meats on Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Roast Duck on Rice",
+        "code": "17",
+        "dishId": "roast-duck-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0638 + IMG_0640), item 17"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Crispy Roast Pork on Rice",
+        "code": "19",
+        "dishId": "crispy-roast-pork-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0638 + IMG_0640), item 19"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Prawn Wonton Soup",
+        "code": "20",
+        "dishId": "prawn-wonton-soup"
+      },
+      "superseded": [
+        {
+          "value": 10.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 20"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Prawn Wonton Noodle Soup or Noodle Dry",
+        "code": "21",
+        "dishId": "prawn-wonton-noodle-soup-or-noodle-dry"
+      },
+      "superseded": [
+        {
+          "value": 11.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 21"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Honey BBQ Pork Wontons Noodle Soup or Noodle Dry",
+        "code": "22",
+        "dishId": "honey-bbq-pork-wontons-noodle-soup-or-noodle-dry"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 22 'BBQ Pork & Wonton Noodle Soup (Dry)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Roast Duck or Crispy Roast Pork or BBQ Pork Noodle Dry",
+        "code": "23",
+        "dishId": "roast-duck-or-crispy-roast-pork-or-bbq-pork-noodle-dry"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 23 'Roast Duck Noodle Soup (Dry)' — the line was regrouped after 2015; crispy roast pork and BBQ pork were item 24 then"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Soya Chicken or BBQ Pork Ribs Noodle Dry",
+        "code": "24",
+        "dishId": "soya-chicken-or-bbq-pork-ribs-noodle-dry"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 24 '(BBQ Pork / Crispy Roast Pork / Soya Chicken / Honey BBQ Pork Ribs) Noodle Soup (Dry)' — regrouped after 2015"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Beef Brisket Noodle Soup or Noodle Dry",
+        "code": "25",
+        "dishId": "beef-brisket-noodle-soup-or-noodle-dry"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 25"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Hot & Spicy Mix OX Combination Noodle Soup or Noodle Dry",
+        "code": "26",
+        "dishId": "hot-spicy-mix-ox-combination-noodle-soup-or-noodle-dry"
+      },
+      "superseded": [
+        {
+          "value": 13.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 26 'Hot & Spicy OX Combination Noodle Soup (Dry)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Braised Pork Noodle Soup or Noodle Dry",
+        "code": "27",
+        "dishId": "braised-pork-noodle-soup-or-noodle-dry"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 28 — renumbered to 27 after item 27 (Pork Chop Noodle Soup) left the menu"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Vietnamese Style Beef Noodle Soup",
+        "code": "28",
+        "dishId": "vietnamese-style-beef-noodle-soup"
+      },
+      "superseded": [
+        {
+          "value": 12.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 29 — renumbered to 28"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "BBQ Meat Dishes",
+        "sectionId": "bbq-meat-dishes",
+        "name": "Shredded Duck Meat Lai Fen Noodle Soup",
+        "code": "29",
+        "dishId": "shredded-duck-meat-lai-fen-noodle-soup"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0639), item 30 'Roast Duck Meat Rice Noodle Soup' (鴨肉湯瀨粉) — renumbered to 29"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Chicken Sweet Corn Soup",
+        "code": "30",
+        "dishId": "chicken-sweet-corn-soup"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Sweet Corn Chicken Soup'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Mince Beef and Egg Soup",
+        "code": "31",
+        "dishId": "mince-beef-and-egg-soup"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Minced Beef and Egg Soup'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Hot & Sour Soup",
+        "code": "32",
+        "dishId": "hot-sour-soup"
+      },
+      "superseded": [
+        {
+          "value": 7.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Tofu & Vegetable Soup",
+        "code": "33",
+        "dishId": "tofu-vegetable-soup"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Tofu and Vegetable Soup'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Shredded Duck Meat Soup",
+        "code": "34",
+        "dishId": "shredded-duck-meat-soup"
+      },
+      "superseded": [
+        {
+          "value": 8.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Hot & Sour Wonton Soup",
+        "code": "35",
+        "dishId": "hot-sour-wonton-soup"
+      },
+      "superseded": [
+        {
+          "value": 10.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hot and Sour Won Ton Soup'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Chinese Pork Dumpling Soup",
+        "code": "36",
+        "dishId": "chinese-pork-dumpling-soup"
+      },
+      "superseded": [
+        {
+          "value": 9.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Chinese Dumpling Soup'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Chicken Salad",
+        "code": "40",
+        "dishId": "chicken-salad"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Pig Ears with Chilli Sauce",
+        "code": "41",
+        "dishId": "pig-ears-with-chilli-sauce"
+      },
+      "superseded": [
+        {
+          "value": 7.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pig Ear with Chilli Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Duck Feet with Chilli Sauce",
+        "code": "42",
+        "dishId": "duck-feet-with-chilli-sauce"
+      },
+      "superseded": [
+        {
+          "value": 8.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Spicy Duck Feet (boned)' — joined as the only duck-feet dish, not on an exact name match"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Eggplant with Salted Fish & Pork Mince",
+        "code": "54",
+        "dishId": "eggplant-with-salted-fish-pork-mince"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), Hot Clay Pot 'Egg Plant' — joined as the only claypot eggplant, not on an exact name match"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Chicken Wing with Chinese Mushroom",
+        "code": "59",
+        "dishId": "chicken-wing-with-chinese-mushroom"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Chicken Wing With Chinese Mushroom'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Chicken Feet with Pork Spare Ribs",
+        "code": "60",
+        "dishId": "chicken-feet-with-pork-spare-ribs"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Chicken Feet with Pork Spareribs'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Roast Pork with Tofu & Vegetable",
+        "code": "55",
+        "dishId": "roast-pork-with-tofu-vegetable"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Roast Pork Tofu'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Hot & Spicy Chicken",
+        "code": "62",
+        "dishId": "hot-spicy-chicken"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hot and Spicy Chicken'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Lamb Flap with Oyster Sauce",
+        "code": "66",
+        "dishId": "lamb-flap-with-oyster-sauce"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Lamb Flab and Oyster Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Mix Vegetable with Vermicelli",
+        "code": "74",
+        "dishId": "mix-vegetable-with-vermicelli"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Mixed Vege and Vermicelli Pot'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Hot & Spicy Beef Tripe",
+        "code": "70",
+        "dishId": "hot-spicy-beef-tripe"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hot & Spicy Beef Tripe'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Groper Wing with Tofu & Roast Pork",
+        "code": "56",
+        "dishId": "groper-wing-with-tofu-roast-pork"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Groper Wing and Tofu'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Duck with Garlic and Oyster Sauce",
+        "code": "72",
+        "dishId": "duck-with-garlic-and-oyster-sauce"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Beef Brisket",
+        "code": "68",
+        "dishId": "beef-brisket"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Beef Brisket Clay Pot'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Braised Pork with Dried Vegetable or Taro",
+        "code": "58",
+        "dishId": "braised-pork-with-dried-vegetable-or-taro"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pork With (Dried Vege / Taro)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Hot & Spicy Tendon",
+        "code": "69",
+        "dishId": "hot-spicy-tendon"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hot & Spicy Beef tendon'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Salted Fish & Chicken with Tofu",
+        "code": "63",
+        "dishId": "salted-fish-chicken-with-tofu"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Salted Fish and Tofu'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Chicken with Wine Soup",
+        "code": "64",
+        "dishId": "chicken-with-wine-soup"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Chicken Wine Soup'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Bitter Melon with Pork Spare Ribs",
+        "code": "61",
+        "dishId": "bitter-melon-with-pork-spare-ribs"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pork Spareribs with Bitter Melon'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Beef & Vegetable with Satay Sauce",
+        "code": "71",
+        "dishId": "beef-vegetable-with-satay-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Beef Vegetable with Satay Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Chicken with Soya and Oyster Sauce",
+        "code": "65",
+        "dishId": "chicken-with-soya-and-oyster-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Chicken with Soya & Oyster Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Claypot Dishes",
+        "sectionId": "claypot-dishes",
+        "name": "Seafood with Japanese Style Tofu",
+        "code": "73",
+        "dishId": "seafood-with-japanese-style-tofu"
+      },
+      "superseded": [
+        {
+          "value": 14.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Seafood Japanese Style Tofu'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Pork and Preserved Egg Congee",
+        "code": "51",
+        "dishId": "pork-and-preserved-egg-congee"
+      },
+      "superseded": [
+        {
+          "value": 8.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pork with Preserved Egg Congee'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Fish Congee",
+        "code": "52",
+        "dishId": "fish-congee"
+      },
+      "superseded": [
+        {
+          "value": 8.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Soup, Starters & Congee",
+        "sectionId": "soup-starters-congee",
+        "name": "Seafood Congee",
+        "code": "53",
+        "dishId": "seafood-congee"
+      },
+      "superseded": [
+        {
+          "value": 8.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Shanghai Style Fried Noodle with BBQ Pork & Bok Choy",
+        "code": "134",
+        "dishId": "shanghai-style-fried-noodle-with-bbq-pork-bok-choy"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Shanghai Style Fried Noodles' — an overlay added to the board after the 2015-01-17 photograph"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Beef Brisket Stirred Noodle or Fried Noodle",
+        "code": "135",
+        "dishId": "beef-brisket-stirred-noodle-or-fried-noodle"
+      },
+      "superseded": [
+        {
+          "value": 13.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Beef Brisket (Stirred Noodle / Fried Noodle)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Stir Fried Udon with Black Pepper and Beef",
+        "code": "136",
+        "dishId": "stir-fried-udon-with-black-pepper-and-beef"
+      },
+      "superseded": [
+        {
+          "value": 13.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir-fried Udon Noodles with Black Pepper'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Chow Mein Noodle with Chicken / Beef / BBQ Pork",
+        "code": "137",
+        "dishId": "chow-mein-noodle-with-chicken-beef-bbq-pork"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Chow Mein (Pork / Chicken / Beef)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Chow Kueh Teow with Beef or Black Bean Sauce",
+        "code": "138",
+        "dishId": "chow-kueh-teow-with-beef-or-black-bean-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Fried Kuey Teow (Beef or Beef Black Bean)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Seafood Soft Egg on Rice Noodle",
+        "code": "139",
+        "dishId": "seafood-soft-egg-on-rice-noodle"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Seafood and Soft Egg on Rice Noodle'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Singapore Fried Noodle with BBQ Pork and Shrimp",
+        "code": "140",
+        "dishId": "singapore-fried-noodle-with-bbq-pork-and-shrimp"
+      },
+      "superseded": [
+        {
+          "value": 12.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Singapore Fried Noodle'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Shredded Duck Meat with Vermicelli",
+        "code": "141",
+        "dishId": "shredded-duck-meat-with-vermicelli"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Shredded Duck Meat Fried Vermicelli'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Pad Thai with Chicken / Beef / Vegetarian",
+        "code": "142",
+        "dishId": "pad-thai-with-chicken-beef-vegetarian"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pad Thai (Chicken / Beef)' — an overlay added to the board after the 2015-01-17 photograph"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Hainanese Chicken with Rice",
+        "code": "144",
+        "dishId": "hainanese-chicken-with-rice"
+      },
+      "superseded": [
+        {
+          "value": 13.3,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hainanese Chicken Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Fried Rice with Chinese Pork & Vegetable",
+        "code": "146",
+        "dishId": "fried-rice-with-chinese-pork-vegetable"
+      },
+      "superseded": [
+        {
+          "value": 13.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Chinese Sausages & Pork Fried Rice' — joined as the only remaining Chinese-pork fried rice, not on an exact name match"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Salted Chicken on Rice",
+        "code": "151",
+        "dishId": "salted-chicken-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Salted Chicken with Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Deep Fried Garlic Chicken on Rice",
+        "code": "152",
+        "dishId": "deep-fried-garlic-chicken-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Fried Garlic Chicken on Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Shredded Duck Meat Fried Rice",
+        "code": "153",
+        "dishId": "shredded-duck-meat-fried-rice"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Roast Duck Meat Fried Rice' (鴨絲炒飯, shredded duck)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Bitter Melon & Beef on Rice",
+        "code": "154",
+        "dishId": "bitter-melon-beef-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Bitter Melon Beef on Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Beef & Vegetable on Rice",
+        "code": "155",
+        "dishId": "beef-vegetable-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Vegetable & Beef on Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Beef Brisket on Rice",
+        "code": "156",
+        "dishId": "beef-brisket-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Beef or Shrimp Soft Egg on Rice",
+        "code": "158",
+        "dishId": "beef-or-shrimp-soft-egg-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Soft Egg with (Beef / Shrimp) on Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Beef Tomato Egg on Rice",
+        "code": "159",
+        "dishId": "beef-tomato-egg-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Beef Tomato Egg'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Sweet Corn with Soft Egg and Fish Fillet on Rice",
+        "code": "160",
+        "dishId": "sweet-corn-with-soft-egg-and-fish-fillet-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Sweet Corn & Fish Fillet on Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Curry Beef or Lamb Flap Brisket on Rice",
+        "code": "157",
+        "dishId": "curry-beef-or-lamb-flap-brisket-on-rice"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Curry (Beef Flank / Lambflank) on Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Young Chow Fried Rice with Shrimp and BBQ Pork",
+        "code": "147",
+        "dishId": "young-chow-fried-rice-with-shrimp-and-bbq-pork"
+      },
+      "superseded": [
+        {
+          "value": 12.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Young Chow Fried Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Salted Fish and Chicken Fried Rice",
+        "code": "145",
+        "dishId": "salted-fish-and-chicken-fried-rice"
+      },
+      "superseded": [
+        {
+          "value": 12.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Salted Fish Chicken Fried Rice'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Hokkien Fried Rice or Noodle",
+        "code": "148",
+        "dishId": "hokkien-fried-rice-or-noodle"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hokkien Style Fried Rice / Fried Noodle'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Roast Pork Fried Rice with Shrimp Paste",
+        "code": "149",
+        "dishId": "roast-pork-fried-rice-with-shrimp-paste"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Noodle & Rice",
+        "sectionId": "noodle-rice",
+        "name": "Pork Chop with Lemon Grass or Black Pepper",
+        "code": "150",
+        "dishId": "pork-chop-with-lemon-grass-or-black-pepper"
+      },
+      "superseded": [
+        {
+          "value": 12.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pork Chop with Lemon Grass Sauce or Black Pepper Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Mapo Tofu (Tofu with Pork Mince)",
+        "code": "75",
+        "dishId": "mapo-tofu-tofu-with-pork-mince"
+      },
+      "superseded": [
+        {
+          "value": 13.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Ma PO Tofu'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Belly Pork with Chilli Sauce",
+        "code": "78",
+        "dishId": "belly-pork-with-chilli-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Belly Pork with Chill Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Pork with Chilli Sauce",
+        "code": "82",
+        "dishId": "pork-with-chilli-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pork with Chill Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Chicken Hot Pepper Sauce",
+        "code": "93",
+        "dishId": "chicken-hot-pepper-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Hot & Spicy Beef Soup",
+        "code": "102",
+        "dishId": "hot-spicy-beef-soup"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hot & Spicy Beef Soup'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Sichuan Chicken",
+        "code": "94",
+        "dishId": "sichuan-chicken"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Szchan Spicy Chicken'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Sichuan Fish with Spicy & Soya Sauce",
+        "code": "100",
+        "dishId": "sichuan-fish-with-spicy-soya-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Szchan Spicy Fish with Soya Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Pork with Chinese Black Mushroom",
+        "code": "84",
+        "dishId": "pork-with-chinese-black-mushroom"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir-fried Pork with Chinese Black Mushrooms'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Hot and Sour Chicken",
+        "code": "95",
+        "dishId": "hot-and-sour-chicken"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hot & Sour Chicken'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Pork Maw with Vegetable and Pickle",
+        "code": "89",
+        "dishId": "pork-maw-with-vegetable-and-pickle"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pork Maw with Vegetable Pickle'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Fried Beans with Pork Mince and Chilli",
+        "code": "85",
+        "dishId": "fried-beans-with-pork-mince-and-chilli"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Mince Meat Fried Bean and Chill'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Pickle Cabbage with Fish Fillet",
+        "code": "101",
+        "dishId": "pickle-cabbage-with-fish-fillet"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pickled Cabbage Fish'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Stir Fried Lamb with Spicy Sauce",
+        "code": "108",
+        "dishId": "stir-fried-lamb-with-spicy-sauce"
+      },
+      "superseded": [
+        {
+          "value": 14.3,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir Fried Lamb with Spicy Sauce' — the price was amended by hand on the board"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Korean Style Chilli Beef",
+        "code": "103",
+        "dishId": "korean-style-chilli-beef"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Korean Style Chill Beef' — the price was amended by hand on the board"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "KC Homemade Tofu with Pork Mince",
+        "code": "87",
+        "dishId": "kc-homemade-tofu-with-pork-mince"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Pork Mince and K.C' (肉松K.C.豆腐)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Salt & Pepper Pork Spare Ribs",
+        "code": "88",
+        "dishId": "salt-pepper-pork-spare-ribs"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Salt Pepper Pork rib'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Sambal King Prawns",
+        "code": "109",
+        "dishId": "sambal-king-prawns"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Sambal King Prawn'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Salt and Pepper King Prawns",
+        "code": "110",
+        "dishId": "salt-and-pepper-king-prawns"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Salt Pepper King Prawn'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Stir Fried King Prawn with Chilli Bean Paste",
+        "code": "111",
+        "dishId": "stir-fried-king-prawn-with-chilli-bean-paste"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir-fried Prawn with Chill Bean Paste'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Pork with Peking Sauce",
+        "code": "83",
+        "dishId": "pork-with-peking-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Stir Fried Beef with Chilli Bean Paste",
+        "code": "104",
+        "dishId": "stir-fried-beef-with-chilli-bean-paste"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir-fried Beef with Chill Bean Paste'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Orange Beef or Chicken",
+        "code": "106",
+        "dishId": "orange-beef-or-chicken"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Orange Beef'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Seasonal Vegetable with Chinese Sausage and Pork",
+        "code": "90",
+        "dishId": "seasonal-vegetable-with-chinese-sausage-and-pork"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Seasonal Chinese Vege and Chinese Sausage'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Tofu, Vegetable & Pork with Oyster Sauce",
+        "code": "76",
+        "dishId": "tofu-vegetable-pork-with-oyster-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'ToFu with Oyster Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Homestyle Tofu with Pork",
+        "code": "77",
+        "dishId": "homestyle-tofu-with-pork"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Home style cooked with ToFu'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Stir Fried Squid with Shrimp Paste",
+        "code": "113",
+        "dishId": "stir-fried-squid-with-shrimp-paste"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir-fried Squid with Shimp Paste'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Stir Fried Squid with Chinese Satay Sauce",
+        "code": "114",
+        "dishId": "stir-fried-squid-with-chinese-satay-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Satay Squid'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Stir Fried Fish with Fish Flavour Sauce",
+        "code": "115",
+        "dishId": "stir-fried-fish-with-fish-flavour-sauce"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir-fried fish with Fish-flavored'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Stir Fried Beans with Dace Fish",
+        "code": "116",
+        "dishId": "stir-fried-beans-with-dace-fish"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir-fried Bean with Fried Dace fish'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Salt & Pepper Squid",
+        "code": "112",
+        "dishId": "salt-pepper-squid"
+      },
+      "superseded": [
+        {
+          "value": 13.9,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Salt Pepper Squid'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Plum Sauce Duck with Pickle",
+        "code": "119",
+        "dishId": "plum-sauce-duck-with-pickle"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Plum Sauce Duck'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Sweet & Sour Pork with Pineapple",
+        "code": "92",
+        "dishId": "sweet-sour-pork-with-pineapple"
+      },
+      "superseded": [
+        {
+          "value": 14.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Sweet & Sour Pork with Pineapples'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "KC Chef's Stir Fried Special",
+        "code": "120",
+        "dishId": "kc-chef-s-stir-fried-special"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), \"KC Chef's Special Stir Fried\""
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Salt and Pepper Chicken Ribs",
+        "code": "99",
+        "dishId": "salt-and-pepper-chicken-ribs"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Salted Pepper Chicken Ribs'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Belly Pork with Bean Sauce",
+        "code": "79",
+        "dishId": "belly-pork-with-bean-sauce"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Stir-fried Pork Belly with Bean Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Deep Fried Chilli Chicken",
+        "code": "97",
+        "dishId": "deep-fried-chilli-chicken"
+      },
+      "superseded": [
+        {
+          "value": 13.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Fried Chilli Chicken'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Stir Fried Dishes",
+        "sectionId": "stir-fried-dishes",
+        "name": "Mao's Braised Pork with Chilli",
+        "code": "81",
+        "dishId": "mao-s-braised-pork-with-chilli"
+      },
+      "superseded": [
+        {
+          "value": 14.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), \"Mao's Pork with Chill\""
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Steamboat Dishes",
+        "sectionId": "steamboat-dishes",
+        "name": "Hot & Spicy Beef Brisket with Bean Curd",
+        "code": "123",
+        "dishId": "hot-spicy-beef-brisket-with-bean-curd"
+      },
+      "superseded": [
+        {
+          "value": 16.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hot & Spicy Beef Brisket' — joined as the only steamboat beef brisket; the price was amended by hand on the board"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Steamboat Dishes",
+        "sectionId": "steamboat-dishes",
+        "name": "Hot & Spicy Fish Fillet with Pickles",
+        "code": "122",
+        "dishId": "hot-spicy-fish-fillet-with-pickles"
+      },
+      "superseded": [
+        {
+          "value": 17.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Hot & Spicy Fish' — joined as the only steamboat fish"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Steamboat Dishes",
+        "sectionId": "steamboat-dishes",
+        "name": "Hot & Spicy Tora Tora",
+        "code": "132",
+        "dishId": "hot-spicy-tora-tora"
+      },
+      "superseded": [
+        {
+          "value": 17.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'Tora Tora with Spicy Sauce'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Steamboat Dishes",
+        "sectionId": "steamboat-dishes",
+        "name": "KC Chicken, Pork Duck and Seafood Hot Wok",
+        "code": "133",
+        "dishId": "kc-chicken-pork-duck-and-seafood-hot-wok"
+      },
+      "superseded": [
+        {
+          "value": 17.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board (IMG_0636), 'KC Mixed in Hot Wok' (KC盆菜)"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Hong Kong Style Milk Tea",
+        "code": null,
+        "dishId": "hong-kong-style-milk-tea"
+      },
+      "superseded": [
+        {
+          "value": 3.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637) — hot $3.80, cold $4.00; the board priced hot and cold separately and the record carries one price"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Hong Kong Style Coffee",
+        "code": null,
+        "dishId": "hong-kong-style-coffee"
+      },
+      "superseded": [
+        {
+          "value": 3.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637) — hot $3.80, cold $4.00"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Lemon Tea",
+        "code": null,
+        "dishId": "lemon-tea"
+      },
+      "superseded": [
+        {
+          "value": 3.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637) — hot $3.80, cold $4.00"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Lemon & Honey Tea",
+        "code": null,
+        "dishId": "lemon-honey-tea"
+      },
+      "superseded": [
+        {
+          "value": 4.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637), 'Lemon & Honey' — hot $4.00, cold $4.50"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Lemon and Coke",
+        "code": null,
+        "dishId": "lemon-and-coke"
+      },
+      "superseded": [
+        {
+          "value": 3.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637), 'Lemon Coke' — hot $3.80, cold $4.00"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Soya Milk",
+        "code": null,
+        "dishId": "soya-milk"
+      },
+      "superseded": [
+        {
+          "value": 3.8,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637) — hot $3.80, cold $4.00"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Chinese Tea",
+        "code": null,
+        "dishId": "chinese-tea"
+      },
+      "superseded": [
+        {
+          "value": 3.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637) — per pot"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Tofu Far",
+        "code": null,
+        "dishId": "tofu-far"
+      },
+      "superseded": [
+        {
+          "value": 4.0,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637), 'Tofu Far (Sweet / Salted)'"
+        }
+      ]
+    },
+    {
+      "key": {
+        "section": "Drinks & Desserts",
+        "sectionId": "drinks-desserts",
+        "name": "Deep Fried Milk Cube",
+        "code": null,
+        "dishId": "deep-fried-milk-cube"
+      },
+      "superseded": [
+        {
+          "value": 6.5,
+          "recorded": "2015-09-29",
+          "method": "in-store",
+          "note": "2015-09-29 in-store board side board (IMG_0637), 'Deep Fried Milk Cube'"
+        }
+      ]
+    }
+  ]
+}
