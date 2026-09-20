@@ -135,8 +135,12 @@ function clampField(value, key) {
   return Math.min(hi, Math.max(lo, value));
 }
 
-// Keep only known keys, in vocabulary order, deduped — a hand-edited or stale
-// value can't smuggle in a bogus tag that would never match a dish.
+// Keep only known keys, in the order they arrive, deduped — a hand-edited or
+// stale value can't smuggle in a bogus tag that would never match a dish.
+// (This comment said "in vocabulary order" until 2026-09-20 and the code never
+// did that: the output follows the INPUT's order. Corrected rather than
+// changed — the order is what is stored, exported and synced, and re-ordering
+// it would rewrite every reader's settings blob to no purpose.)
 function cleanKeys(arr, allowed) {
   if (!Array.isArray(arr)) return [];
   const seen = new Set();
@@ -173,14 +177,88 @@ function cleanVenueIds(arr) {
   return [...seen];
 }
 
+// AN ALLERGEN KEY THIS BUILD DOES NOT KNOW IS KEPT, NOT DROPPED (ADR 0118).
+//
+// This is the one place in this file where the fail-soft "drop what you don't
+// recognise" rule is unsafe, and the reason is sync. `avoid` travels between a
+// person's own devices (ADR 0060), and those devices need not be running the
+// same build — a phone serves whatever its service worker last cached, and a
+// laptop opened once a month can be months behind. So the day a key is added
+// to ALLERGEN_PREFS:
+//
+//   1. the newer device flags it and pushes;
+//   2. the OLDER device pulls, `read()` strips the key it has never heard of,
+//      and the next `set()` commits the stripped list to its own storage;
+//   3. the older device pushes that back, and the newer device's three-way
+//      merge reads it as "only they moved" — a DELETION — and clears the flag.
+//
+// An allergen flag, cleared by the act of syncing, reported to nobody. No step
+// is wrong on its own; the loss lives in the seam, which is why no test on
+// either side could see it. Measured in this repo, 2026-09-20.
+//
+// Carrying an unrecognised key costs nothing that matters: no dish in the
+// corpus is tagged with it, so `dishFlagged` never matches it, no filter reads
+// it and no screen renders a chip for it. Dropping it cannot be undone.
+// sync.js already holds exactly this rule one level up, for whole stores —
+// *"overwriting data we do not understand is worse than not syncing it"* —
+// and this is the same rule applied inside the one field where getting it
+// wrong can hurt somebody.
+//
+// Bounded three ways, because this list is sealed into a synced blob: the
+// `contains-` namespace an allergen key is actually written in (so "a key from
+// a newer build" stays distinguishable from junk in a hand-edited file), a
+// length, and a count.
+const FUTURE_ALLERGEN_RE = /^contains-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const FUTURE_ALLERGEN_MAX_LEN = 40;
+const FUTURE_ALLERGEN_MAX = 20;
+
+/** Is this an allergen key the build in front of you can name and render? */
+export const isKnownAllergen = (key) => ALLERGEN_KEYS.has(key);
+
+/** The flagged keys this build has no chip for — what a newer version of Faves
+ *  set and we are carrying rather than destroying. Exported so the Settings
+ *  screen can SAY it is holding them (an allergen flag nothing can show and
+ *  nothing can clear would be a state with no door). */
+export const futureAllergens = (avoid) =>
+  (Array.isArray(avoid) ? avoid : []).filter((k) => typeof k === "string" && !ALLERGEN_KEYS.has(k));
+
+function cleanAvoid(arr) {
+  const known = cleanKeys(arr, ALLERGEN_KEYS);
+  if (!Array.isArray(arr)) return known;
+  const seen = new Set(known);
+  const future = [];
+  for (const x of arr) {
+    if (typeof x !== "string" || seen.has(x)) continue;
+    if (x.length > FUTURE_ALLERGEN_MAX_LEN || !FUTURE_ALLERGEN_RE.test(x)) continue;
+    seen.add(x);
+    future.push(x);
+  }
+  if (!future.length) return known;
+  // Sorted, and always after the known keys: the value has to be a function of
+  // the SET rather than of whichever device's array order it arrived in. Two
+  // devices that agree on the set but not the order serialise to different
+  // JSON, each pull sees a changed blob, and the pair ping-pongs writes forever
+  // against the one resource ADR 0017 names as scarce (KV writes, 1k/day free).
+  return [...known, ...future.sort().slice(0, FUTURE_ALLERGEN_MAX)];
+}
+
 /** Exported because import (personal-data.js) has to *compare* two diet
  *  objects before it may touch either — an incoming file's allergen prefs are
  *  safety data and never overwrite silently, so the comparison has to run on
- *  the same cleaned, canonically-ordered shape the store persists. */
+ *  the same cleaned, canonically-ordered shape the store persists.
+ *
+ *  The two lists are deliberately NOT symmetrical, and the asymmetry is
+ *  recorded so nobody "tidies" it: `avoid` carries keys from a newer build
+ *  (above), `dietary` does not. A dietary key has no namespace — `v`, `vg`,
+ *  `gf`, `df` — so there is no test that separates "a claim key a later
+ *  version added" from a typo, and keeping everything would mean keeping
+ *  junk. The consequence is real and is accepted: a dietary preference added
+ *  later can still be dropped by an older client. It costs a filter someone
+ *  has to re-tick. The `avoid` half costs an allergen warning. */
 export function sanitiseDiet(d) {
   return {
     dietary: cleanKeys(d?.dietary, DIETARY_KEYS),
-    avoid: cleanKeys(d?.avoid, ALLERGEN_KEYS),
+    avoid: cleanAvoid(d?.avoid),
   };
 }
 

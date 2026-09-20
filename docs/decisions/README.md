@@ -1441,3 +1441,24 @@ deliberation those compact docs omit.
   Also joins `ORDER_MODES` to `index.html`'s `<option>` list by test — each half
   is right alone while broken, and an option with no vocabulary entry reads
   "Delivery" over the UNFILTERED list. Break-probed 3 ways, failing 3 · 2 · 1.
+- [0118](0118-an-allergen-key-a-build-cannot-name-is-carried-not-dropped.md) —
+  **an allergen key a build cannot name is CARRIED, not dropped.** The cold
+  review's suspicion (roadmap `150/030`) is real and was reproduced in two real
+  browsers: two of a person's devices need not run the same build, so an older
+  one strips a key it has never heard of, commits the stripped list on the next
+  `set()`, pushes it — and the newer device's merge reads that as *"only they
+  moved"* and **deletes the flag**, before the `DIET_FIELD` branch that would
+  have asked. 🛑 **Every step is individually correct**, which is why 1,311 unit
+  tests stayed green over it; the loss lives in the seam. Fixed at
+  `sanitiseDiet`, the one gate every diet value passes, bounded by the
+  `contains-` namespace + a length + a cap. **Rejected:** making the merge
+  refuse any narrowing (cannot tell a stripped key from a deliberate un-tick, so
+  it would ask forever), and declaring each client's vocabulary in the blob (the
+  only thing that saves builds ALREADY cached — recorded as the next step, and
+  the residual hole is stated rather than papered over). `dietary` is
+  deliberately NOT given the same treatment: no namespace to tell a later
+  version's key from a typo, and the cost is a filter rather than a warning.
+  Also gives the ERROR view a way to turn sync off — it had Retry and nothing
+  else, so the one verb that ends a broken pairing was reachable from every
+  state except the one that needed it. `sync_check` 16 → 22; break-probe fails
+  exactly 1, with its precondition and its control still passing.

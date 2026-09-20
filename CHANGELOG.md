@@ -9,6 +9,17 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **Syncing with a device running an older Faves can no longer clear an
+  allergen flag.** The older device dropped any allergen it had never heard of,
+  and the newer one then read that as *"you removed it"* and cleared its own —
+  a warning lost to the act of syncing, reported to nobody. An allergen this
+  version cannot name is now kept exactly as it was set, still flagged and
+  still syncing, and the Food preferences screen says it is holding it.
+- **Sync's error screen now has a way out.** It offered Retry and nothing else,
+  so if sync broke for a reason retrying could not fix — a code that no longer
+  matches, a device stuck offline — there was no route back to turning it off.
+  "Turn off sync on this device" is now on that screen too, with the same
+  confirmation and the same promise: nothing on this device is deleted.
 - **Two BurgerFuel rows no longer warn about gluten they do not contain.** The
   *Gluten friendly bun* was flagged as containing gluten while the same row
   offered itself as the gluten-friendly option, and the *Low Carborator lettuce

@@ -43,7 +43,15 @@
 // Everything writes straight to the store; the home list re-ranks live via
 // app.js's own subscription, and each menu reads the preferences on load.
 
-import { settings, DIETARY_PREFS, ALLERGEN_PREFS, MAPS_APPS, AS_CHARGED, LOCAL } from "./settings.js";
+import {
+  settings,
+  DIETARY_PREFS,
+  ALLERGEN_PREFS,
+  MAPS_APPS,
+  AS_CHARGED,
+  LOCAL,
+  futureAllergens,
+} from "./settings.js";
 import { recallOrigin } from "./geo.js";
 import { UNIT_OPTIONS, unitsLabel, dialSpec, dialValue, dialKm, formatDial } from "./units.js";
 import { fxAsOf, fxCurrencies } from "./fx.js";
@@ -955,11 +963,19 @@ export function initSettingsUI() {
     f.out.textContent = formatDial(km, key, units);
   }
 
+  // An allergen flagged on a device running a NEWER Faves is carried rather
+  // than destroyed (settings.js `cleanAvoid`, ADR 0118) — but this build has no
+  // chip for it, so without this line it would be a flag nobody here can see,
+  // name or clear, while `dietSummary` counted it. A held value with no door is
+  // exactly the state this repo keeps finding and calling a defect. Hidden
+  // whenever there are none, which is every reader today.
+  const futureNote = el("p", { className: "settings-hint", hidden: true });
   const dietPanel = el("div", { className: "settings-panel" }, [
     el("p", { className: "settings-sub", textContent: "Your dietary needs" }),
     dietary.group,
     allergenHeadRow,
     avoid.group,
+    futureNote,
   ]);
   // THE ONLY ROUTE BACK (ADR 0083). With the home-screen pill removed and the
   // ask suppressible forever by a tickbox, a reader who changes their mind had
@@ -1304,6 +1320,13 @@ export function initSettingsUI() {
     for (const { key, chip } of dietary.chips) chip.setAttribute("aria-pressed", String(dietarySet.has(key)));
     const avoidSet = new Set(s.diet.avoid);
     for (const { key, chip } of avoid.chips) chip.setAttribute("aria-pressed", String(avoidSet.has(key)));
+    const carried = futureAllergens(s.diet.avoid).length;
+    futureNote.hidden = carried === 0;
+    futureNote.textContent = carried
+      ? `Plus ${carried} allergen${carried === 1 ? "" : "s"} flagged on a device running a newer ` +
+        `Faves. This version can’t name ${carried === 1 ? "it" : "them"}, so ${carried === 1 ? "it stays" : "they stay"} ` +
+        `flagged exactly as set and still ${carried === 1 ? "syncs" : "sync"}.`
+      : "";
     applyDial(fav, "favBoostKm", s.favBoostKm, s.units);
     applyDial(far, "farKm", s.farKm, s.units);
     // Re-read on every sync rather than once at build: the sheet is built lazily

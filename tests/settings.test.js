@@ -4,7 +4,17 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createSettings, DEFAULTS, BOUNDS, LANGS, LOCAL, AS_CHARGED } from "../site/js/settings.js";
+import {
+  createSettings,
+  DEFAULTS,
+  BOUNDS,
+  LANGS,
+  LOCAL,
+  AS_CHARGED,
+  sanitiseDiet,
+  futureAllergens,
+  isKnownAllergen,
+} from "../site/js/settings.js";
 
 // `get()` returns settings with every LOCAL already resolved to a concrete
 // value, which is what every consumer wants and what makes "local" invisible to
@@ -152,6 +162,69 @@ test("diet: reset clears preferences", () => {
 test("diet: a non-array or corrupt value falls back to empty", () => {
   const s = createSettings(fakeStorage('{"diet":{"dietary":"gf","avoid":null}}'));
   assert.deepEqual(s.get().diet, { dietary: [], avoid: [] });
+});
+
+// --- an allergen key from a NEWER build (ADR 0118) -------------------------
+// The loss these cover is a silent one across two devices running two builds:
+// the older one strips a key it has never heard of, and the newer one's
+// three-way merge then reads the stripped list as a deletion and clears the
+// flag. The fix is here, at the one gate every diet value passes through.
+
+test("diet: an allergen key this build doesn't know is KEPT, not dropped", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ diet: { dietary: [], avoid: ["contains-nuts", "contains-mustard"] } });
+  assert.deepEqual(s.get().diet.avoid, ["contains-nuts", "contains-mustard"]);
+});
+
+test("diet: a carried key sorts after the known ones, so two devices agree on order", () => {
+  // The SET is what matters; the array order must not depend on which device's
+  // list it arrived in, or the pair ping-pongs writes forever (ADR 0017's
+  // scarce KV budget).
+  const a = sanitiseDiet({ avoid: ["contains-zeta", "contains-nuts", "contains-alpha"] });
+  const b = sanitiseDiet({ avoid: ["contains-alpha", "contains-zeta", "contains-nuts"] });
+  assert.deepEqual(a.avoid, ["contains-nuts", "contains-alpha", "contains-zeta"]);
+  assert.deepEqual(a.avoid, b.avoid);
+});
+
+test("diet: the carried key survives the read → change → write round trip an older client does", () => {
+  // THE BREAK-PROBE for this fix, at unit level. This is the exact sequence
+  // the older device performs: it hydrates from a pulled blob, the reader
+  // changes something unrelated, and the whole sanitised state is committed
+  // back over the top. Strip on read and the key is gone from storage here —
+  // and the newer device deletes its own copy on the next merge.
+  const storage = fakeStorage('{"diet":{"dietary":[],"avoid":["contains-nuts","contains-mustard"]}}');
+  const s = createSettings(storage);
+  s.set({ favBoostKm: 9 }); // nothing to do with diet — and it rewrites diet anyway
+  assert.deepEqual(createSettings(storage).get().diet.avoid, ["contains-nuts", "contains-mustard"]);
+});
+
+test("diet: junk in `avoid` is still dropped — the namespace is the whole test", () => {
+  const { avoid } = sanitiseDiet({
+    avoid: ["contains-nuts", "nope", "CONTAINS-NUTS", "contains-", "contains--x", "contains-x-", 7, null],
+  });
+  assert.deepEqual(avoid, ["contains-nuts"]);
+});
+
+test("diet: carried keys are capped and length-bounded — this list is sealed into a synced blob", () => {
+  const many = Array.from({ length: 40 }, (_, i) => `contains-future-${String(i).padStart(2, "0")}`);
+  const { avoid } = sanitiseDiet({ avoid: [...many, "contains-" + "x".repeat(60)] });
+  assert.equal(avoid.length, 20);
+  assert.ok(avoid.every((k) => k.length <= 40));
+});
+
+test("diet: `dietary` is deliberately NOT given the same treatment", () => {
+  // Recorded as a test so the asymmetry is a decision rather than an
+  // oversight: a dietary key has no namespace to tell a later version's claim
+  // apart from a typo, and the cost of getting it wrong is a filter, not a
+  // warning. sanitiseDiet's docstring carries the reasoning.
+  assert.deepEqual(sanitiseDiet({ dietary: ["gf", "keto"] }).dietary, ["gf"]);
+});
+
+test("diet: the screen can tell which flagged keys it has no chip for", () => {
+  assert.ok(isKnownAllergen("contains-nuts"));
+  assert.ok(!isKnownAllergen("contains-mustard"));
+  assert.deepEqual(futureAllergens(["contains-nuts", "contains-mustard"]), ["contains-mustard"]);
+  assert.deepEqual(futureAllergens(null), []);
 });
 
 test("subscribe fires on change; unsubscribe stops it", () => {

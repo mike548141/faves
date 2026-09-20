@@ -7,14 +7,15 @@
 //     node tools/sync_check.mjs             # headless, exit 0 = pass
 //     node tools/sync_check.mjs --help
 //
-// CURRENT STATUS — the run reaches the end. 16 assertions, all passing, in a
-// real two-browser run (2026-08-17). Read the verdict the same way regardless:
-// a harness abort is exit 2, not exit 1 (see "the verdict" in
-// tools/lib/browser.mjs), so an abort leaves the assertions after it ABSENT,
-// not failed, and the run still looks orderly. Trust nothing until the run has
-// printed its own final "OK/FAILED — N passed, N failed" summary line, and
-// check that N is 16 — a *shrunken* N is the shape this file failed in for
-// however long nobody ran it.
+// CURRENT STATUS — the run reaches the end. 22 assertions, all passing, in a
+// real two-browser run (2026-09-20; 16 until then, +6 with ADR 0118 — three
+// for the allergen key an older build drops, three for the error view's way
+// out). Read the verdict the same way regardless: a harness abort is exit 2,
+// not exit 1 (see "the verdict" in tools/lib/browser.mjs), so an abort leaves
+// the assertions after it ABSENT, not failed, and the run still looks orderly.
+// Trust nothing until the run has printed its own final "OK/FAILED — N passed,
+// N failed" summary line, and check that N is 22 — a *shrunken* N is the shape
+// this file failed in for however long nobody ran it.
 //
 // HOW THIS FILE WENT DECORATIVE, because the next refactor will try it again.
 // Commit e745923 ("settings: remove Transfer to another device, and fold Sync
@@ -389,6 +390,32 @@ const syncStatusExpr = `(() => {
   return s ? s.textContent : null;
 })()`;
 
+// The flagged-allergen list as it stands ON DISK, not as a chip row renders it.
+// That is deliberate and it is the whole point of the ADR 0118 assertions: the
+// key under test is one this build has no chip for, so a DOM read of the
+// allergen chips cannot see it at all — present or absent, the row looks
+// identical. Only the store can say whether the flag still exists.
+const avoidExpr = `(() => {
+  try {
+    const s = JSON.parse(localStorage.getItem("faves.p.default.settings.v1") || "{}");
+    const a = (s.diet || {}).avoid;
+    return Array.isArray(a) ? a : [];
+  } catch { return []; }
+})()`;
+
+/** Write an allergen list straight into a device's store, the way a pull from
+ *  a NEWER build would have left it, and reload so the live settings store
+ *  hydrates from it. Seeded rather than clicked because the key under test is
+ *  by definition one no chip on this build can set. */
+const seedAvoidExpr = (keys) => `(() => {
+  const KEY = "faves.p.default.settings.v1";
+  let s = {};
+  try { s = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch {}
+  s.diet = { dietary: (s.diet && s.diet.dietary) || [], avoid: ${JSON.stringify(keys)} };
+  localStorage.setItem(KEY, JSON.stringify(s));
+  return true;
+})()`;
+
 // --- Small driving helpers, shared by both devices --------------------------
 
 // EVERY selector used to WALK the Settings UI lives here, in one block, and
@@ -410,6 +437,12 @@ const NAV = {
   // Sync is a *section* inside this index row's panel, not a row of its own.
   syncTopic: "Your data",
   syncBody: ".sync-body",
+  // The allergen chips (ADR 0118's assertions) live under their own index row,
+  // a different drill-in from Sync's — so they get their own two entries here
+  // rather than a selector buried three functions down, which is the mistake
+  // this block exists to stop recurring.
+  dietTopic: "Food preferences",
+  avoidChip: ".pref-chips-avoid .pref-chip",
 };
 
 /** Wrap one move of the Settings walk so a break names the STEP, not just a
@@ -507,6 +540,35 @@ async function openSyncPanel(d) {
     `a visible ${NAV.syncBody}`,
     () => untilPresent(async () => d.evalPage(syncBodyVisibleExpr), { label: "the Sync panel to render" })
   );
+}
+
+/** Settings → "Food preferences" → tap one allergen chip. A REAL settings
+ *  write on this device, which is the step that matters: an older build only
+ *  loses a key it doesn't know when it commits its own view of the list back
+ *  over the top, and nothing else in this file makes a device do that. */
+async function flagAllergen(d, key) {
+  await openSettings(d);
+  await nav(
+    `drill into the "${NAV.dietTopic}" panel`,
+    `${NAV.indexRow} containing "${NAV.dietTopic}"`,
+    () => d.click(NAV.indexRow, NAV.dietTopic)
+  );
+  const sel = `${NAV.avoidChip}[data-key=${JSON.stringify(key)}]`;
+  await nav(`flag the "${key}" allergen`, sel, async () => {
+    await untilPresent(
+      async () =>
+        d.evalPage(
+          `(() => { const c = document.querySelector(${JSON.stringify(sel)}); ` +
+            `return !!c && c.getClientRects().length > 0; })()`
+        ),
+      { label: "the allergen chips to render" }
+    );
+    await d.click(sel);
+  });
+  // Flagging an allergen fires menu.js's safety-critical reapply() — a full
+  // rebuild of the dish list. Let it finish before clicking anything else.
+  await d.waitQuiet();
+  await closeSettings(d);
 }
 
 async function closeSettings(d) {
@@ -707,6 +769,14 @@ async function openDevice({ label, profileDir, headed, siteUrl, fakeBlobPort, re
   const d = {
     ...driver,
     insertText: (text) => cdp.send("Input.insertText", { text }, sessionId),
+    /** Reload the page and wait for the menu to be back. Needed only by the
+     *  ADR 0118 assertions, which seed a store directly and then have to make
+     *  the live singletons hydrate from it — settings.js reads storage once,
+     *  at module construction. */
+    reload: async (why) => {
+      await cdp.send("Page.navigate", { url: siteUrl }, sessionId);
+      await waitForMenu(why || "after a reload");
+    },
     /** Wait until the page has stopped mutating itself — see the comment on
      *  the MutationObserver above. Polls rather than sleeping a fixed period
      *  (a fixed sleep is exactly the kind of time-dependent wait this file's
@@ -857,6 +927,61 @@ async function run(opts) {
       `B's raw ratings store holds ${bRaw.ratingKeys.length} key(s): ${JSON.stringify(bRaw.ratings)}`
     );
 
+    // --- 5b. AN ALLERGEN KEY ONE BUILD DOESN'T KNOW SURVIVES THE OTHER ---
+    //
+    // The safety-critical one (ADR 0118). Two of a person's devices need not
+    // run the same build — a phone serves whatever its service worker last
+    // cached — so the day an allergen key is added, the older device pulls it,
+    // strips a key it has never heard of, writes the stripped list back, and
+    // the newer device's three-way merge reads that as a DELETION and clears
+    // the flag. An allergen warning, lost to the act of syncing, reported
+    // nowhere.
+    //
+    // WHY IT HAS TO BE THIS CHECK AND NOT A UNIT TEST. Every step is correct
+    // in isolation and each module's own tests stay green: the sanitiser is
+    // right to distrust input, the merge is right to propagate a deletion, and
+    // the settings store is right to write what it holds. The loss exists only
+    // in the seam, across two devices, two stores and a round trip — which is
+    // the one thing this file can see and nothing else in the repo can.
+    //
+    // The unknown key is SEEDED rather than clicked, because by definition no
+    // control on this build can set it. Everything after the seed is the real
+    // app: A's own push, B's pull, a real tap on B's allergen chips, B's push,
+    // A's pull.
+    const FUTURE_KEY = "contains-zzz-future";
+    const KNOWN_KEY = "contains-nuts";
+    await A.d.evalPage(seedAvoidExpr(["contains-peanuts", FUTURE_KEY]));
+    await A.d.reload("after seeding A's allergen list");
+    await syncNowAndWait(A.d);
+    await syncNowAndWait(B.d);
+    const bAvoid = await B.d.evalPage(avoidExpr);
+    report.check(
+      "an allergen key from a newer build reaches B's store rather than being refused on arrival",
+      bAvoid.includes(FUTURE_KEY),
+      `B's stored avoid list: ${JSON.stringify(bAvoid)}`
+    );
+
+    // A REAL settings write on B — the step that made the older build commit
+    // its own stripped view of the list. Without this, B never rewrites its
+    // settings and the bug cannot appear at all.
+    await flagAllergen(B.d, KNOWN_KEY);
+    await syncNowAndWait(B.d);
+    await syncNowAndWait(A.d);
+    const aAvoid = await A.d.evalPage(avoidExpr);
+    report.check(
+      "an allergen flag on A is NOT cleared by syncing with a device that has no chip for that key",
+      aAvoid.includes(FUTURE_KEY),
+      `A's stored avoid list after the round trip: ${JSON.stringify(aAvoid)}`
+    );
+    // The control, and it is load-bearing: a merge that had simply stopped
+    // accepting anything from B would satisfy the assertion above and be a far
+    // worse bug. This is the half that proves B's changes still cross.
+    report.check(
+      "…and the ordinary allergen flagged on B crossed back to A in the same sync",
+      aAvoid.includes(KNOWN_KEY),
+      `A's stored avoid list: ${JSON.stringify(aAvoid)} (B flagged ${KNOWN_KEY})`
+    );
+
     // --- 6. Turning sync off on B leaves B's own data intact -------------
     const bBeforeOff = await dishState(B.d, DISH_X);
     const bRawBeforeOff = await B.d.evalPage(rawStoreExpr);
@@ -907,6 +1032,60 @@ async function run(opts) {
       "the app itself keeps working while sync is unreachable — hearting still works, the menu is still there",
       aStillWorks.heart === "true" && stillRendered > 0,
       `${DISH_Y}: heart=${aStillWorks.heart}, ${stillRendered} dishes still rendered`
+    );
+
+    // --- 9. THE ERROR VIEW HAS A WAY OUT, NOT JUST A RETRY ---------------
+    //
+    // A is now genuinely in the error state (the blob server above is closed,
+    // and A's sync failed against it) — which is why these assertions live
+    // here rather than being staged: the view is reached the way a reader
+    // reaches it, by sync actually breaking.
+    //
+    // Until 2026-09-20 this view offered Retry and nothing else. The panel
+    // shows exactly ONE view and ERROR outranks every other (sync-ui.js's
+    // computeViewKey), so a reader whose sync was broken for a reason retrying
+    // cannot fix — a code that no longer matches the data on the server, a
+    // Worker that has gone away — had no route to the one verb that ends it.
+    // The exit was reachable from every state except the one that needed it.
+    const aRawBeforeOff = await A.d.evalPage(rawStoreExpr);
+    const aStateBeforeOff = await dishState(A.d, DISH_Y);
+    await openSyncPanel(A.d);
+    const errorView = await A.d.evalPage(`(() => {
+      const body = document.querySelector(".sync-body");
+      const btns = [...body.querySelectorAll("button")].map((b) => b.textContent.trim());
+      const msg = body.querySelector("[role=status]");
+      return { buttons: btns, message: msg ? msg.textContent : null };
+    })()`);
+    report.check(
+      "the error view offers a way to turn sync off, not only Retry",
+      errorView.buttons.includes("Turn off sync on this device") &&
+        errorView.buttons.includes("Retry") &&
+        errorView.message === EXPECTED_UNREACHABLE,
+      `buttons: ${JSON.stringify(errorView.buttons)}; message: "${errorView.message}"`
+    );
+
+    await A.d.click(".sync-body .profile-btn", "Turn off sync on this device");
+    await A.d.click(".sync-body .profile-btn-primary", "Turn off");
+    await untilPresent(
+      async () => A.d.evalPage(`!!document.querySelector(".sync-body .settings-reset")`),
+      { label: "A's sync panel to return to the \"off\" view" }
+    );
+    const aOffViewText = await A.d.evalPage(`${need(".sync-body .settings-reset")}.textContent`);
+    report.check(
+      "turning sync off from the ERROR view actually turns it off, error state and all",
+      aOffViewText === "Turn on sync",
+      `button reads "${aOffViewText}"`
+    );
+    await closeSettings(A.d);
+    const aRawAfterOff = await A.d.evalPage(rawStoreExpr);
+    const aStateAfterOff = await dishState(A.d, DISH_Y);
+    report.check(
+      "…and leaves A's own data exactly as it was — the promise the confirmation makes",
+      aRawAfterOff.favCount === aRawBeforeOff.favCount &&
+        JSON.stringify(aRawAfterOff.ratings) === JSON.stringify(aRawBeforeOff.ratings) &&
+        aStateAfterOff.heart === aStateBeforeOff.heart,
+      `before: fav=${aRawBeforeOff.favCount} heart=${aStateBeforeOff.heart}; ` +
+        `after: fav=${aRawAfterOff.favCount} heart=${aStateAfterOff.heart}`
     );
 
     return report.summary(SITE) ? 0 : 1;
