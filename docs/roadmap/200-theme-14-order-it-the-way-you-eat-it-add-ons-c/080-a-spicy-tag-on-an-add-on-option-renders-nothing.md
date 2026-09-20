@@ -11,7 +11,7 @@
       `[XS][js][data]` — found 2026-09-08 (session faves-o1) by the agent that
       built `tests/tag-labels.test.js` (item `340/230`), and filed rather than
       folded in. Recorded as
-      [ADR 0119](../../decisions/0119-heat-is-one-vocabulary-and-the-picker-is-a-screen-that-renders-it.md).
+      [ADR 0121](../../decisions/0121-heat-is-one-vocabulary-and-the-picker-is-a-screen-that-renders-it.md).
 
   **The fact.** `validate.py` accepts any member of `TAGS` on an add-on option,
   but `addons-ui.js` only ever gives words to a tag that appears in its

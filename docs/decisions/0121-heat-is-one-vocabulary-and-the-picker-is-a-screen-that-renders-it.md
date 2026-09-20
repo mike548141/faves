@@ -1,4 +1,4 @@
-# 0119 — Heat is ONE vocabulary, and the picker is a screen that renders it
+# 0121 — Heat is ONE vocabulary, and the picker is a screen that renders it
 
 **Status**: accepted
 **Date**: 2026-09-21

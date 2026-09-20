@@ -1462,7 +1462,7 @@ deliberation those compact docs omit.
   else, so the one verb that ends a broken pairing was reachable from every
   state except the one that needed it. `sync_check` 16 → 22; break-probe fails
   exactly 1, with its precondition and its control still passing.
-- [0119](0119-heat-is-one-vocabulary-and-the-picker-is-a-screen-that-renders-it.md)
+- [0121](0121-heat-is-one-vocabulary-and-the-picker-is-a-screen-that-renders-it.md)
   — **heat is ONE vocabulary, and the picker is a screen that renders it.**
   Roadmap `200/080`, owner-ruled 2026-09-21: *name the screen, don't delete the
   data* — a chilli sauce that renders as neutral is a silence about heat. 🛑 The
