@@ -1485,3 +1485,25 @@ deliberation those compact docs omit.
   opposite verdicts, a genuine leftover `autostash` from a rebase that **exited
   0**, and a before/after SHA comparison proving the read-only promise.
   Break-probed 4 ways, failing 6 · 4 · 4 · 9.
+
+- [0120](0120-the-inlined-floor-is-a-verbatim-stamp-and-our-enrichments-live-beneath-it.md)
+  — **the inlined floor is a VERBATIM stamp, and our enrichments live beneath
+  it.** atelier ruled `115/030` on 2026-09-19 that a child's copy of the `floor`
+  region is the canonical text word for word — no compression, and `narrow=` on
+  a `region=floor` stamp *reds* rather than excusing anything. That collided
+  with the owner's own 2026-08-17 ruling keeping two deliberate forks; put to
+  him with the collision stated, he ruled on 2026-09-21 **re-stamp verbatim,
+  relocate every enrichment into the onramp beneath, lose nothing**. The block
+  is now built by script from `floor:begin`/`floor:end` with the four
+  placeholders filled by script, so "verbatim" is a property of the
+  construction. 🚩 **The heading's pin carries no date** — the canonical heading
+  has none, and an addition reds like a reword. **Rejected:** declaring
+  `narrow=` (removed for this region, and it excuses omission not rewording),
+  adding no markers at all (the marker is not the claim — the text is), merging
+  the enrichments back into the canonical bullets (the exact compressed-copy
+  failure our own block committed on 2026-09-06), and reinstating the
+  `Source & drift` fork (upstream already adopted our fix). 🛑 **Nothing checks
+  the block:** `stampscan` exits 2 here on the cross-repo `source=` (atelier's
+  ST3) and reds by construction on the filled placeholders even when it
+  resolves — both measured. The hand check, with its command, is now in the
+  onramp and runs every pin bump.
