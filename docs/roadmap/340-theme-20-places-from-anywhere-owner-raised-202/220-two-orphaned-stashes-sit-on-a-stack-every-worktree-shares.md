@@ -167,3 +167,102 @@
   precisely about a guard that exists but cannot change an outcome. Scope is
   the item's own words — *warn when the stack is non-empty and any entry
   predates today* — and nothing wider.
+
+  ✅ **BUILT 2026-09-21 (session `3e87e0bf`, branch `stash-residue-check`) —
+  `tools/check_stashes.py`, [ADR 0119](../../decisions/0119-the-stash-residue-check-warns-and-is-deliberately-not-automated.md).**
+  Stdlib only, one git command (`git stash list --format=…`) and no other.
+  Scope held to the item's sentence: it warns, it never drops, pops, applies,
+  shows or clears, and it adds no flag that could.
+
+  🔎 **THE SHARED-STACK FACT, MEASURED RATHER THAN QUOTED** (git 2.50.1,
+  2026-09-21). From the worktree `/Users/…/worktrees/faves-stashcheck`,
+  `git rev-parse --git-dir --git-common-dir` answers
+  `…/faves/.git/worktrees/faves-stashcheck` and `…/faves/.git` — two different
+  paths — and `git stash list` run there lists entries pushed from the
+  **primary checkout**, in the same order, under the same `stash@{N}`
+  selectors. `refs/stash` lives in the common dir. The item's premise holds:
+  one stack, every worktree. The check therefore prints the **common git dir**
+  in its verdict alongside the checkout it read from, so two worktrees visibly
+  name the same stack rather than the fact living only in a docstring.
+
+  🔎 **AND A SHARP EDGE THE ITEM DID NOT HAVE, found while building the
+  fixture.** An autostash reaches `refs/stash` only when the rebase
+  **completes** and the *re-apply* conflicts — git then prints *"Your changes
+  are safe in the stash"* and **exits 0**. A successful-looking rebase is what
+  leaves somebody's uncommitted work on the shared stack. Conversely a rebase
+  *stopped* by a conflict keeps its autostash in `.git/rebase-merge/autostash`,
+  where this check cannot see it — stated as a blind spot rather than left to
+  be discovered; the tree line's `REBASE IN PROGRESS` marker covers that state
+  from the other direction.
+
+  🛑 **DELIBERATELY NOT IN `.githooks/pre-commit` OR `ci.yml`, and that is a
+  decision, not an omission** (ADR 0119 §3). Exit 1 here describes *somebody
+  else's* uncommitted work: in the floor, one peer's live stash would block
+  every commit in the repository — the blocking this item refuses — and in CI a
+  fresh clone's stack is empty by construction, which is ADR 0072 face 2. It
+  belongs on CLAUDE.md's verify list, typed in the checkout that has the stack.
+  The verify-list line is handed to the merging session rather than written
+  here: this worker's file set was `tools/` and `docs/`, and a peer held
+  `CLAUDE.md`.
+
+  📌 **`--selftest` EVIDENCE — 14 cases, all passing, in throwaway repositories
+  under a temp dir; this repo's stack was never touched.** Both halves, because
+  a check that only ever refuses and a check that never refuses both pass half
+  a suite:
+
+  | Half | Cases |
+  |---|---|
+  | **Stays QUIET** | an empty stack (`Stash stack OK: 0 entries`); a stack of two entries dated 2026-09-21; `2026-09-21T00:00:00` against the same frozen `--now` |
+  | **FIRES** | one entry dated 2026-08-17 (exit 1, names `stash@{0}` and `35d old`); a **mixed** stack counted honestly as `1 of 2` with the 2026-09-21 entry still listed; `2026-09-20T23:59:59` against a frozen `--now` of 2026-09-21; a genuine leftover **autostash** named as one |
+  | **Neither — "did not check" ≠ "checked and fine"** | a directory that is not a checkout exits **2**; an unparseable `--now` exits **2** rather than falling back to a default |
+  | **The promises** | a firing run leaves the stack **byte-identical** (selectors + SHAs before/after); a **worktree** sees the primary checkout's stash and both name the same stack home; the **tree line** still names this gate's tree and not the fixture |
+  | **Controls** | the fixtures really put entries on their stacks — without it every "fires" case would be testing an empty stack |
+
+  🔑 **The boundary is testable, which is the half a date guard usually
+  lacks.** `--now` freezes today, and one case pushes **one fixed instant**
+  (`2026-09-20T13:30:00+00:00`) and runs the check twice under two `TZ` values,
+  demanding **opposite verdicts**: quiet under `Pacific/Auckland`, firing under
+  `UTC`. Local was chosen over UTC and over a hard-coded `Pacific/Auckland` —
+  the reasoning is in ADR 0119 §2 and in `predates_today`'s docstring.
+
+  ✅ **BREAK-PROBED FOUR WAYS, each reverted and the file restored
+  byte-identical.** A selftest that cannot fail is the thing this item's own
+  ADR 0072 citation is about:
+
+  | Break | Cases that failed |
+  |---|---|
+  | `predates_today` → always `False` (can never fire) | **6**, every "fires" case; all "quiet" cases still passed |
+  | `predates_today` → always `True` (always fires) | **4**, every "quiet" case and both boundary cases |
+  | entry dates read in **UTC** instead of local | **4**, including the two-zone case that exists for exactly this |
+  | a `git stash drop` added to the read path (guarded to fixtures) | **9**, the read-only before/after assertion among them |
+
+  📌 **The stack is still empty here** — `python3 tools/check_stashes.py` from
+  the worktree prints `Stash stack OK: 0 entries, none predating 2026-09-21
+  (local). Stack: /Users/mike/.pets/faves/.git (read from …)`, exit 0. So the
+  check has never yet fired on real residue, and says so: its evidence is the
+  selftest and the break-probes, not a live catch.
+
+  ⏳ **The bracket is LEFT AT `[~]` on purpose, and two things are owed to the
+  merging session.** (1) The state line flips to `[x]` with a `board.py rebuild`
+  in the same commit; this worker was told not to rebuild while peers were live,
+  and flipping the bracket without it fails the floor's `board` check. (2) The
+  verify-list line for `CLAUDE.md` is handed over rather than written — a peer
+  held that file. The line to add, after `check_decisions.py`:
+
+  ```
+  python3 tools/check_stashes.py # the shared stash stack is not carrying somebody
+                                # ELSE'S uncommitted work (ADR 0119). refs/stash
+                                # lives in the COMMON git dir, so every worktree
+                                # shares one stack and a bare `git stash pop`
+                                # anywhere pops stash@{0}, whoever made it — two
+                                # entries sat there three weeks, one an autostash
+                                # nobody typed. It WARNS and never mutates; an
+                                # entry is not a delivering session's to drop.
+                                # 🛑 Deliberately NOT in the floor or CI: exit 1
+                                # describes a PEER'S work, so in pre-commit one
+                                # live stash blocks every commit in the repo, and
+                                # a CI clone's stack is empty by construction.
+                                # `--selftest` (14 cases, throwaway repos) is what
+                                # proves it can still fire, because this repo's
+                                # stack has been empty since 2026-09-08
+  ```

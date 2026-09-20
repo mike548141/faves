@@ -1462,3 +1462,26 @@ deliberation those compact docs omit.
   else, so the one verb that ends a broken pairing was reachable from every
   state except the one that needed it. `sync_check` 16 → 22; break-probe fails
   exactly 1, with its precondition and its control still passing.
+- [0119](0119-the-stash-residue-check-warns-and-is-deliberately-not-automated.md)
+  — **the stash-residue check warns, and is deliberately NOT automated.**
+  `tools/check_stashes.py`, owner-ruled on roadmap `340/220` against *"leave it
+  to the floor"*. The stack is per-**repository** — measured on git 2.50.1, a
+  linked worktree lists the primary checkout's entries under the same
+  `stash@{N}` selectors — so a bare `pop` anywhere takes `stash@{0}`, whoever
+  made it. 🛑 **Three rejections are the record's substance.** It never mutates
+  (no `--clean`: the residue this item found was dropped by somebody and
+  `git reflog show stash` now says *"unknown revision"*, so who is
+  unrecoverable); *"predates today"* is a **LOCAL** calendar day, not UTC (which
+  would call a stash made at 1am NZST part of the previous UTC day) and not a
+  hard-coded
+  `Pacific/Auckland` (right on one machine, wrong on every other, and local
+  already equals it there); and it is **kept out of the pre-commit floor and
+  CI** although ADR [0072](0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)
+  face 7 says an un-automated guard is no guard — because exit 1 describes
+  *somebody else's* uncommitted work, so in the floor one peer's live stash
+  blocks every commit in the repository, and in CI a fresh clone's empty stack
+  makes it face 2 instead. `--selftest` builds throwaway repos (never this
+  one's stack): 14 cases, including one instant under two `TZ` values demanding
+  opposite verdicts, a genuine leftover `autostash` from a rebase that **exited
+  0**, and a before/after SHA comparison proving the read-only promise.
+  Break-probed 4 ways, failing 6 · 4 · 4 · 9.
