@@ -1527,3 +1527,26 @@ deliberation those compact docs omit.
   absence and geometry assertions still passing. 🚩 Carries one thing for the
   owner: this centralises **heat only**, next to his 2026-09-07 *"one shared
   source of truth … is declined for today"* on `340/230`.
+- [0122](0122-declining-to-infer-is-not-asserting-an-absence.md)
+  — **declining to infer is not asserting an absence.** Roadmap `470/030`, four
+  owner rulings of 2026-09-21. In all three tagging calls the safer-*looking*
+  move was to tag — cheese on a Turkish pizza, egg on a crumbed cutlet, rusk in
+  an Italian sausage — and he declined all three, narrowing the class instead,
+  on his 2026-09-07 reasoning that **an over-warning is not free**. ADR 0025's
+  one-way rule permits adding a `contains-*` tag; it never said adding one is
+  therefore right, and three sessions have read it as if it did. The fourth
+  ruling is the counterweight: Dragonfly's Taiwanese Popcorn Chicken **keeps**
+  its gluten tag, because the venue's own `gf-option` says the default is not
+  gluten-free and removing it would be inferring an absence from a cookbook.
+  🛑 A narrowing is a **lookbehind**, never an `exclude` — in that tool an
+  exclude vetoes the row's membership of the whole class, so "pork sausages,
+  italian sausage" would lose the pork. **Rejected:** tagging the six Turkish
+  pizzas, the **price** argument for not tagging them (worthless, and recorded
+  as worthless because a bad argument that reaches the right answer gets
+  reused), a report that always fires, splitting `crumbed` by venue type, and
+  silencing `abrakebabra/pizza-slice` by hard-coding a venue or by reading the
+  section heading — which is `470/060`'s open question and not a child
+  decision's to pre-empt. Report **3 splits/44 rows → 1/1**; `--strict` still
+  not reachable. **No dish's tags changed.** The class table gets its first
+  test (14 cases, 6 break-probes, in CI), two of them probing the **mechanism**
+  because the veto and the lookbehind print an identical report today.
