@@ -1,4 +1,15 @@
-- [ ] 🛑 **A section's NAME is evidence, and neither allergen tool reads it —
+- [~] 🛑 **A section's NAME is evidence, and neither allergen tool reads it —
+      📌 **CLAIMED 2026-09-24 (session `3e87e0bf`) — OWNER RULED option (3),
+      BOTH HALVES, in that order.** The data pass now, tagging the 68 rows by
+      hand on the heading the shop itself wrote; **then** the tool change,
+      behind its own break-probe. He was shown the tool-only option and its
+      danger — a section named *"Gluten Free Pizza"* would feed the word
+      `pizza` to the gluten rule — and the data-only option and its cost, that
+      the next pizza added restarts the gap with nothing to notice. Branch
+      `section-name-evidence`.
+      ⚠️ **Re-measured at `1afd916`, after the four allergen rulings landed:
+      still 230 items in those sections, 162 tagged, 68 not, same five venues.
+      The rulings did not touch it** — nothing in them reads a section name.
       68 items sit under `Pizza`, `Gourmet Burgers` or `Sandwiches` carrying
       neither `contains-gluten` nor `gf`** `[M][data][tools]` — found
       2026-09-20 by the worker delivering [37n](030-37n-the-corpus-disagrees-with-itself-about-all.md),
