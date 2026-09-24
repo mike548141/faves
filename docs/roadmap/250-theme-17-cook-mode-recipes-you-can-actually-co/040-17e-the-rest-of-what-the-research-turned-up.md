@@ -1,4 +1,9 @@
-- [~] **17e — The rest of what the research turned up**
+- [ ] **17e — The rest of what the research turned up**
+      📌 **CLAIM RELEASED 2026-09-24 (session `3e87e0bf`).** The shopping-list
+      bullet is shipped and struck below; **personal notes** and
+      **substitutions** are untouched and still owed, so the bracket stays
+      open. Substitutions are owner-authored content and must never be
+      generated — a wrong substitution ruins a dinner.
       ✅ **THE SHOPPING LIST IS SHIPPED** (2026-09-24, session `3e87e0bf`,
       branch `recipe-shopping-list`,
       [ADR 0124](../../decisions/0124-the-shopping-list-is-the-order-tallys-twin-not-a-second-list.md)).
