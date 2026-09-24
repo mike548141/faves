@@ -68,3 +68,55 @@
       same decision from two sides: a check too flaky to gate is also a check
       too flaky to *trust when typed by hand*, and "leave them manual" quietly
       assumes the manual runs are believed.
+
+  🛑 **ONE OF THE "FLAKES" WAS NOT A FLAKE — it was a defect in the check, and
+  it was found 2026-09-24 (session `3e87e0bf`) only because a worker refused to
+  claim a green run it could not account for.**
+
+  **What happened.** A worker delivering `17e` reported `cook_check` at
+  **83/85** once and 85/85 on four other runs of the same commit, on the two
+  notification assertions, and said plainly it had *not* bisected against
+  `main` and so could not rule its own branch out. That honesty is the whole
+  reason this was found: the documented loaded-laptop explanation was sitting
+  right there and would have absorbed it.
+
+  **The bisect, run by the orchestrator before merging.**
+
+  | commit | shell files precached | runs |
+  |---|---|---|
+  | `935f44e` (session start) | 96 | **3 of 3 green** |
+  | `9178b5b` | 96 | **3 of 3 green** |
+  | `3db205f` (`js/heat.js` joins the precache) | 97 | **1 of 3 RED** |
+  | `f3a93c5` (current `main` at the time) | 97 | **2 of 3 RED** |
+
+  🔑 **The failure rate TRACKED THE PRECACHE SIZE, and that is what made it
+  diagnosable.** It is not a transport timeout, not a loaded machine — the
+  machine was at load 1.7 — and **not a product defect**: cook mode's
+  notification path was never broken.
+
+  **The defect.** The check waited on
+  `navigator.serviceWorker.getRegistration().then((r) => !!r)`, which resolves
+  the moment the worker is **registered** — which it is while still
+  `installing`. `showNotification()` requires an **active** worker. So the two
+  assertions raced the install step, and every file added to `sw.js`'s
+  precache list widened the window. Fixed to
+  `navigator.serviceWorker.ready.then((r) => !!(r && r.active))`, which cannot
+  be satisfied by an installing worker however long the install takes.
+  **4 of 4 green after, on the same tree that was 2 of 3 red before** — the
+  before-state is the break-probe.
+
+  🚩 **Two lessons, and the second is the uncomfortable one.**
+  1. *A guard written to close a hole is not thereby free of holes of its own
+     class.* This check exists because unit tests against a fake wake lock let
+     two leaks ship; it then shipped its own race against a real platform
+     object.
+  2. **The check's own comment said it was waiting for the right thing** —
+     *"wait for the registration rather than letting the run silently take the
+     fallback"* — so a reader auditing it would have read the sentence and
+     moved on. *A check's description is not evidence about the check*, for the
+     third time in this repo and the second time in this session.
+  🔎 **And it was invisible because CI runs `boot_check` and nothing else.**
+  `main` was red on a verify-list gate across four merges; the deploys were
+  fine, because the fault was never in the product. This is `290`'s shape
+  arriving again from the other side: there the gate was right and `main` was
+  broken; here `main` was right and the gate was broken. Both are unwatched.

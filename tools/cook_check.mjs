@@ -1517,12 +1517,37 @@ async function run(opts) {
       await setNotifications("granted");
       await goto(urlFor(longTimer.item), ".cook-start");
       // The SW path is the only one Chrome on Android accepts, so wait for the
-      // registration rather than letting the run silently take the fallback.
+      // worker rather than letting the run silently take the fallback.
       // untilStable: registration is the PLATFORM's to complete, and it is the
       // step on this whole run most exposed to a loaded machine.
+      //
+      // 🛑 WAIT FOR AN **ACTIVE** WORKER, NOT FOR A REGISTRATION. This read
+      // `getRegistration().then((r) => !!r)` until 2026-09-24, and that
+      // resolves the moment the worker is *registered* — which it is while
+      // still `installing`. `showNotification()` needs an **active** one, so
+      // the two assertions below raced the install step and lost whenever the
+      // install was slow enough.
+      //
+      // 🔑 The tell was that the failure rate TRACKED THE PRECACHE SIZE, which
+      // is what made this diagnosable at all: 3/3 green at 96 shell files,
+      // 1 of 3 red at 97 (`3db205f`, when `js/heat.js` joined the list), 2 of 3
+      // red at 99. Bisected — `935f44e` and `9178b5b` were 3/3 green and
+      // `3db205f` was the first red, so this was NOT the documented
+      // loaded-laptop transport flake and NOT a product defect: cook mode's
+      // notification path was never broken, the check was racing it. A guard
+      // written to close a hole had a hole of its own class (ADR 0072's
+      // neighbourhood), and it hid behind a comment that said it was waiting
+      // for the right thing.
+      //
+      // `navigator.serviceWorker.ready` is the correct wait: it resolves only
+      // once there is an active worker, so it cannot be satisfied by an
+      // installing one however long the install takes.
       const registered = await untilStable(
-        async () => await evalPage(`navigator.serviceWorker.getRegistration().then((r) => !!r)`),
-        { label: "the service worker to register" }
+        async () =>
+          await evalPage(
+            `navigator.serviceWorker.ready.then((r) => !!(r && r.active))`
+          ),
+        { label: "the service worker to become ACTIVE" }
       );
       await openCook();
       await press("Home");
