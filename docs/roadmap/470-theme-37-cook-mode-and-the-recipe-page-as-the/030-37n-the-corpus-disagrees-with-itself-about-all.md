@@ -1,4 +1,16 @@
-- [~] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+- [ ] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+      📌 **CLAIM RELEASED 2026-09-24 (session `3e87e0bf`) — the four owner
+      rulings of 2026-09-21 are DELIVERED and merged** (`1afd916`, ADR 0122).
+      The report stands at **1 split / 1 row**: `abrakebabra/pizza-slice`,
+      which the delivering worker deliberately left reporting because nothing
+      says which pizza it is cut from and silencing it would need either a
+      venue hard-coded into a corpus-wide table or a section heading read —
+      and reading headings is [`470/060`](060-a-section-name-is-evidence-the-tagger-never-reads.md)'s
+      answered question, not this item's to pre-empt.
+      🛑 **So `--strict` is still NOT reachable, and that is now a known
+      one-row gap rather than an unbounded one.** Wiring it is a separate item
+      and was not attempted. The bracket stays open for that row alone — the
+      sweep and all four rulings are done. **Do not re-run the sweep.**
       📌 **RE-CLAIMED 2026-09-24 (session `3e87e0bf`) for the FOUR OWNER
       RULINGS of 2026-09-21** — narrow the pizza class for Turkish pizza; drop
       `contains-egg` from the `crumbed` watch list; add `italian sausage` to
