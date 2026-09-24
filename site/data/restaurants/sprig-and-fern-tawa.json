@@ -594,7 +594,8 @@
           "tags": [
             "v",
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -606,7 +607,8 @@
             "v",
             "gf-option",
             "contains-nuts",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ],
           "addOns": [
             "add-salmon"
@@ -619,7 +621,8 @@
           "price": 24.5,
           "tags": [
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -629,7 +632,8 @@
           "price": 26.5,
           "tags": [
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -639,7 +643,8 @@
           "price": 24.0,
           "tags": [
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -649,7 +654,8 @@
           "price": 26.5,
           "tags": [
             "gf-option",
-            "contains-shellfish"
+            "contains-shellfish",
+            "contains-gluten"
           ]
         }
       ]

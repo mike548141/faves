@@ -103,7 +103,8 @@
           "tags": [
             "v",
             "vg-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -111,7 +112,9 @@
           "dishId": "italian-sausage-hot-honey",
           "desc": "'Nduja, garlic, basil.",
           "price": 23,
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Carne Italiano",
@@ -119,7 +122,8 @@
           "desc": "Provolone, spinach, beef meatball, capsicum, ricotta. Add chilli oil.",
           "price": 22,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -128,7 +132,8 @@
           "desc": "Provolone, alla vodka, 'nduja, mascarpone, basil.",
           "price": 21,
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -145,7 +150,8 @@
           ],
           "tags": [
             "contains-nuts",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -162,7 +168,8 @@
           ],
           "tags": [
             "v",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -179,7 +186,8 @@
           ],
           "tags": [
             "v",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -189,7 +197,8 @@
           "price": 21,
           "tags": [
             "v",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         }
       ]
@@ -213,7 +222,8 @@
           "tags": [
             "df",
             "contains-nuts",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -223,7 +233,8 @@
           "price": 18,
           "tags": [
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -233,7 +244,8 @@
           "price": 18,
           "tags": [
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -243,7 +255,8 @@
           "price": 18,
           "tags": [
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         },
         {
@@ -261,7 +274,8 @@
           "tags": [
             "v",
             "contains-dairy",
-            "contains-egg"
+            "contains-egg",
+            "contains-gluten"
           ]
         }
       ]

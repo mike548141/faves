@@ -9,6 +9,15 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **67 pizzas, burgers and sandwiches now warn about gluten.** A shop that
+  prints **Pizza** over a list of pizzas has told you what the dough is, and
+  Faves was not reading it — so at five venues the warning tracked whether the
+  *dish's own name* happened to say "pizza" rather than whether it was one.
+  Hell Pizza's *Morning After* warned and *Mordor*, off the same dough in the
+  same oven, said nothing. All 67 now carry the warning. Nothing gained a
+  gluten-free claim, and nothing lost a tag. One row was deliberately left
+  alone: the lamb shank under Hell's **Anti Pizza** heading, which is the shop
+  saying it is *not* a pizza.
 - **A hot sauce now says it is hot while you are choosing it, not after.** The
   add-on picker drew "Mild chilli" and "Hot chilli" identically, so the only way
   to find out which was which was to tick one — and ticking is how you order it.

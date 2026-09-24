@@ -826,7 +826,8 @@
           "price": 26,
           "desc": "Free-range chicken, cranberry sauce and camembert.",
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -846,7 +847,9 @@
           "dishId": "mordor",
           "price": 26,
           "desc": "Smokey BBQ sauce, free-range chicken, 5-pepper pepperoni, onions, capsicum and bacon.",
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Grimm",
@@ -855,7 +858,8 @@
           "desc": "Apricot sauce, free-range chicken, pine nuts, spring onions, cream cheese and rosemary.",
           "tags": [
             "contains-nuts",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -874,7 +878,8 @@
           "price": 26,
           "desc": "Honey mustard, free-range chicken, ham, onions, gherkins, bacon and smoked cheddar.",
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -883,7 +888,8 @@
           "price": 26,
           "desc": "Italian buffalo mozzarella and 5-pepper free-range pepperoni on a tangy tomato base. Thin stretched base only.",
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -893,7 +899,8 @@
           "desc": "Italian buffalo mozzarella, tangy tomato base, finished with basil pesto. Thin stretched base only. Not suitable for vegetarians.",
           "tags": [
             "contains-nuts",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -901,7 +908,9 @@
           "dishId": "half-buffalo-half-beast",
           "price": 26,
           "desc": "Half The Buffalo and half The Beast. Thin stretched base only.",
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Mayhem",
@@ -910,7 +919,8 @@
           "desc": "Peanut satay, free-range chicken, sweet chilli, onions and capsicum.",
           "tags": [
             "contains-peanuts",
-            "contains-soy"
+            "contains-soy",
+            "contains-gluten"
           ]
         },
         {
@@ -919,7 +929,8 @@
           "price": 26,
           "desc": "Chorizo, free-range chicken, cajun herbs, onions, garlic, chilli, tomatoes, capsicum and black pepper.",
           "tags": [
-            "spicy-1"
+            "spicy-1",
+            "contains-gluten"
           ]
         },
         {
@@ -929,7 +940,8 @@
           "desc": "Avocado, cajun, free-range chicken, onions, chipotle salsa, tomatoes, sour cream and black pepper.",
           "tags": [
             "spicy-1",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -938,7 +950,8 @@
           "price": 26,
           "desc": "Salami, onions, chicken, bacon, pineapple and camembert.",
           "tags": [
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         }
       ]
@@ -954,7 +967,8 @@
           "desc": "Slow-cooked pulled lamb with kofta spices — cumin, paprika, coriander, garlic — feta, jalapeños, roasted capsicum and red onions, with house-made tzatziki on the side.",
           "tags": [
             "spicy-1",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -973,7 +987,9 @@
           "dishId": "lust-deluxe",
           "price": 28.5,
           "desc": "Marinated steak, 5-pepper pepperoni, salami, ham, bacon, smoked chorizo, black pepper and béarnaise. Free-range.",
-          "tags": []
+          "tags": [
+            "contains-gluten"
+          ]
         },
         {
           "name": "Serpent",
@@ -982,7 +998,8 @@
           "desc": "Smoked salmon, spring onion and cream cheese.",
           "tags": [
             "contains-dairy",
-            "contains-fish"
+            "contains-fish",
+            "contains-gluten"
           ]
         }
       ]
@@ -998,7 +1015,8 @@
           "desc": "Mushrooms, sundried tomatoes, fresh spinach, feta, onions, garlic and black pepper.",
           "tags": [
             "v",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -1009,7 +1027,8 @@
           "tags": [
             "v",
             "contains-nuts",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -1019,7 +1038,8 @@
           "desc": "Blue cheese, caramelised onions, mushrooms, tomatoes and black pepper.",
           "tags": [
             "v",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -1041,7 +1061,8 @@
           "tags": [
             "v",
             "contains-egg",
-            "spicy-1"
+            "spicy-1",
+            "contains-gluten"
           ]
         },
         {
@@ -1051,7 +1072,8 @@
           "desc": "Plant-based chorizo, onion, capsicum, tomatoes, chilli and black pepper.",
           "tags": [
             "v",
-            "spicy-1"
+            "spicy-1",
+            "contains-gluten"
           ]
         },
         {
@@ -1062,7 +1084,8 @@
           "tags": [
             "v",
             "contains-egg",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -1074,7 +1097,8 @@
             "v",
             "contains-egg",
             "contains-nuts",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -1086,7 +1110,8 @@
             "v",
             "contains-egg",
             "contains-peanuts",
-            "contains-soy"
+            "contains-soy",
+            "contains-gluten"
           ]
         },
         {
@@ -1098,7 +1123,8 @@
             "v",
             "contains-egg",
             "spicy-1",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -1109,7 +1135,8 @@
           "tags": [
             "v",
             "spicy-1",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         }
       ]
@@ -1124,7 +1151,8 @@
           "price": 23.5,
           "desc": "Dairy-free mozzarella, mushrooms, capsicum, tomatoes, pineapple, onions and black pepper.",
           "tags": [
-            "vg"
+            "vg",
+            "contains-gluten"
           ]
         },
         {
@@ -1144,7 +1172,8 @@
           "desc": "Dairy-free mozzarella, mushrooms, fresh spinach, cashews, avocado, sundried tomatoes and onions.",
           "tags": [
             "vg",
-            "contains-nuts"
+            "contains-nuts",
+            "contains-gluten"
           ]
         },
         {
@@ -1165,7 +1194,8 @@
           "desc": "Plant-based chorizo, dairy-free mozzarella, onion, capsicum, tomatoes, chilli and black pepper.",
           "tags": [
             "vg",
-            "spicy-1"
+            "spicy-1",
+            "contains-gluten"
           ]
         },
         {
@@ -1198,7 +1228,8 @@
           "desc": "Refried beans, avocado, onions, chipotle salsa, tomatoes, jalapeño peppers, capsicum and black pepper. No cheese.",
           "tags": [
             "vg",
-            "spicy-1"
+            "spicy-1",
+            "contains-gluten"
           ]
         }
       ]
