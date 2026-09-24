@@ -1,17 +1,24 @@
 - [~] **17e — The rest of what the research turned up**
-      📌 **SHOPPING LIST CLAIMED 2026-09-24 (session `3e87e0bf`), branch
-      `recipe-shopping-list`.** ⚠️ **Whether this item is buildable work or an
+      ✅ **THE SHOPPING LIST IS SHIPPED** (2026-09-24, session `3e87e0bf`,
+      branch `recipe-shopping-list`,
+      [ADR 0124](../../decisions/0124-the-shopping-list-is-the-order-tallys-twin-not-a-second-list.md)).
+      ⚠️ **Whether this item is buildable work or an
       idea-only research record was put to the owner and the question was a bad
-      one — the item's own history already answers it.** Three of its bullets
-      are struck as shipped (the checklist, read-aloud, ingredient-first
-      search), so sessions have been building from this list since 2026-08-16.
+      one — the item's own history already answers it.** Four of its bullets
+      are now struck as shipped (the checklist, read-aloud, ingredient-first
+      search, the shopping list), so sessions have been building from this list
+      since 2026-08-16.
       The list is a work queue with its findings written beside it, not a
       record to leave alone. Recorded so the next session does not re-ask.
-      🔑 The design direction is the item's own and is not being re-opened:
+      🔑 The design direction was the item's own and was followed:
       **the tally's cook-at-home twin, reusing `cart.js`, never a second
-      list.** Only the shopping-list bullet is taken; personal notes and
+      list** — `createOrder` took its storage key as a parameter and nothing
+      gathers, groups, totals or persists twice. Personal notes and
       substitutions stay open (substitutions are owner-authored content and
-      must never be generated). `[S]`–`[M]` each,
+      must never be generated). 🎯 The `[~]` is left exactly as the
+      orchestrator set it: this session took the ONE bullet and handed back,
+      so releasing the item or re-claiming it for the remaining two is not
+      this session's call to make. `[S]`–`[M]` each,
   ✅ **The checklist and read-aloud bullets are SHIPPED** (claim released
   2026-08-17: `wt: faves-cook-checklist` no longer exists and both bullets are
   in the tree with tests). **Checklist** — `site/js/checklist.js` +
@@ -23,8 +30,8 @@
   omitted entirely where the browser has no `speechSynthesis`, stopped on every
   exit path, and never speaking unprompted; covered by `tests/cook.test.js`
   including the unsupported-browser and user-initiated cases.
-  **Still open and unclaimed:** the shopping list, personal notes and
-  substitutions bullets. Files: `cook.js`, `cook-ui.js`,
+  **Still open and unclaimed:** the personal notes and substitutions
+  bullets. Files: `cook.js`, `cook-ui.js`,
   `tools/cook_check.mjs`, `tests/cook*.test.js`.
   ordered by how well they fit a zero-dependency offline app. ✅ **Ingredient-
   first search is delivered** and was struck from the list below on 2026-08-16
@@ -36,9 +43,20 @@
   - ~~**Ingredient-first search** — "what can I make with mince and a lemon?".
     Faves already has a search index; recipes just aren't in it by
     ingredient.~~ ✅ **Shipped** — see the note above the list.
-  - **Shopping list from a recipe** — and note it is the same machinery as the
-    order tally (`cart.js`), which already gathers, groups and totals. Build it
-    as the tally's cook-at-home twin rather than a second list.
+  - ~~**Shopping list from a recipe** — and note it is the same machinery as
+    the order tally (`cart.js`), which already gathers, groups and totals. Build
+    it as the tally's cook-at-home twin rather than a second list.~~
+    ✅ **Shipped 2026-09-24** — `site/js/shopping.js` + `shopping-ui.js`,
+    16 unit tests in `tests/shopping.test.js`, and 10 new assertions in
+    `tools/recipe_check.mjs` (29 → 39), three of them break-probed. The four
+    judgements the bullet did not answer — scaling, where it lives, combining,
+    clearing — are in
+    [ADR 0124](../../decisions/0124-the-shopping-list-is-the-order-tallys-twin-not-a-second-list.md)
+    with the export/import/sync tables it was walked through, each one asserted
+    rather than reasoned about. ⚠️ **It does not sync across devices**, for
+    the same reason the order tally does not — sync's unit is a profile and this
+    store is device-level. That is an open question for the owner, not a
+    defect.
   - **Read the steps aloud** (`speechSynthesis`) — built into the browser, no
     dependency, and genuinely useful with your hands in a bowl. Voice
     *recognition* is the opposite: unreliable in a noisy kitchen and, on most

@@ -63,6 +63,19 @@ content freshness separately from this file.
   lettuce bun is a lettuce leaf, so the next such row is not flagged either.
 
 ### Added
+- **A recipe's ingredients can go on a shopping list.** Open a recipe, tap
+  **Add to shopping list** next to Start cooking, and the ingredients are there
+  — grouped by recipe, with a link back to each one. Tick things off as you put
+  them in the trolley, ✕ anything you already have at home, remove a whole
+  recipe, or clear the lot. It is the same list the order tally has always been,
+  pointed at your kitchen instead of a counter, and it lives on the ⋯ menu from
+  every screen so it is in your hand in the shop. The list is **yours to change
+  and nobody else's to move**: scaling a recipe to 2× does not rewrite a list
+  you have already taken shopping — the page tells you the two disagree and
+  offers to bring the amounts over, and if you do, anything already in the
+  trolley whose amount has not changed stays ticked. Two recipes that both want
+  butter stay two lines, because adding *125g* to *half a cup* is a sum we would
+  rather you did than we guessed at.
 - **The Dining filter now offers Delivery.** It sat alongside Takeaway and
   Dine-in as the third way you actually get your dinner, and it was the one the
   control could not say. **Ten places** are marked as delivering today, each

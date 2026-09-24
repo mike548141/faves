@@ -1573,3 +1573,28 @@ deliberation those compact docs omit.
   `allergen_disagreements.py`; and the sibling-agreement test. Reuses ADR 0097's
   `first_unhedged`/`declared_free` rather than writing a second rule. 🛑 The
   breaker caught a **decorative guard in this record's own first draft**.
+- [0124](0124-the-shopping-list-is-the-order-tallys-twin-not-a-second-list.md)
+  — **the shopping list is the order tally's twin, not a second list.** Roadmap
+  `250/040` (17e), whose bullet named the implementation: *"the same machinery
+  as the order tally (`cart.js`) … build it as the tally's cook-at-home twin
+  rather than a second list."* `createOrder` takes its storage key as a
+  parameter — one line — and a shopping line **is** an order line with the
+  vocabulary moved: `venueId` is the recipe, `dishId` is the ingredient's raw
+  key (ADR 0070), `collected` is the trolley instead of the till, `price` is an
+  ignored column. Nothing gathers, groups, totals or persists twice; the sheet
+  reuses `.order-sheet`'s frame and its **collect-mode row**. Four judgements
+  the bullet did not answer: **scaling** keys identity on the raw line and moves
+  only the text (ADR 0076's seam), so rescaling the page does **not** rewrite a
+  list you already took to a shop — it says the two disagree, in words, and
+  offers to update, detecting it by comparing **amounts** rather than by storing
+  a scale key (**rejected:** a new field, which is weaker *and* a walk of every
+  table); **where it lives** is device-level like the tally (ADR 0012, *"one
+  order for the table"* — **rejected:** per-profile, the consistent-looking
+  wrong answer); **combining** never sums across recipes, because `125g butter`
+  + `½ cup butter` is unit arithmetic over prose with **no round trip to prove
+  it**; **clearing** has three sizes of exit and the big one asks twice. A tick
+  survives an update where the amount did not move and dies where it did — a
+  wrong tick walks the shopper past the shelf. Every table a new store touches
+  is **asserted**, not reasoned about (the sweep has leaked twice). 🛑 One
+  break-probe made `recipe_check` **abort instead of report**, because Clear
+  correctly hides on an empty list; the guard that fixes it is in the check.
