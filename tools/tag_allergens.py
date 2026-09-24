@@ -11,7 +11,8 @@ fail-safe — the worst case is someone avoids a dish they could have eaten.
 Inferring absence would be asserting safety from a guess, which is the failure
 this whole feature exists to prevent. "No tag = not stated" still holds.
 
-Three tiers, kept apart so the count is auditable (ADR 0025, extended by 0114):
+Four tiers, kept apart so the count is auditable (ADR 0025, extended by 0114
+and 0123):
 
   STATED   the menu names the allergen or an unambiguous form of it —
            "Prawn Cutlet", "…with Oyster Sauce", "Almond Croissant".
@@ -34,6 +35,21 @@ Three tiers, kept apart so the count is auditable (ADR 0025, extended by 0114):
   a confirmed allergen picture. Without it the tier would be a distinction
   only this file knows about — ADR 0072's decorative guard, in the one place
   in the repo where being wrong hurts someone.
+
+  SECTION  the heading the shop printed OVER the dish says it — "Pizza" above
+           eleven pizzas (ADR 0123, owner-ruled 2026-09-24). Read for the same
+           reason the note is: 68 dishes sat under a heading naming what they
+           are made of and carried no gluten tag, while 162 of their own
+           neighbours did.
+           🛑 A SECTION FINDING IS REPORTED AND NEVER WRITTEN, and that is the
+           decision, not an implementation detail. Measured over all 57 records
+           the day it landed: 70 findings, roughly 48 of them FALSE, because a
+           heading is frequently a DISJUNCTION naming the union of what sits
+           under it — "Beer & Cider" is not a claim that the cider is barley,
+           "Chicken & Fish" is not a claim that a McNugget is fish — and
+           frequently not about food at all ("Anti Pizza", "Bun swaps"). No
+           hedge can see either class; the negation a hedge needs is not there.
+           So the count is a tripwire and a human rules. `--tier SECTION`.
 
 Five guards keep it honest:
   • EXCLUDE patterns per rule — "rice noodles" are not wheat, "peanut butter"
@@ -982,6 +998,58 @@ def photo_text(item):
     return alt if isinstance(alt, str) else ""
 
 
+# --- the SECTION tier (2026-09-24, ADR 0123, roadmap 470/060) --------------
+# THE HEADING THE SHOP WROTE OVER THE DISH IS EVIDENCE, AND NOTHING READ IT.
+# A section's `note` has reached a dish since 2026-08-17; its `section` — the
+# word "Pizza" printed above eleven pizzas — was never fed to the matcher at
+# all. The cost was measured, not argued: 230 items sat in a section named
+# Pizza / Gourmet Burgers / Sandwiches, 162 carried `contains-gluten` or `gf`
+# and 68 carried neither, with the corpus contradicting itself inside a single
+# section — hell-pizza's `Morning After Pizza` warned and `Mordor`, same dough
+# and same oven, said nothing. The tag tracked whether the DISH'S OWN NAME
+# happened to contain the word "pizza".
+#
+# 🛑 AND THE HEADING IS READ, REPORTED, AND NEVER WRITTEN. That is the whole
+# decision, and it is the opposite of what the item's cheapest option proposed.
+# The 57-record dry run is why (2026-09-24 — 70 findings, ~48 of them false):
+#
+#   • A HEADING IS OFTEN A DISJUNCTION. It names the UNION of what sits under
+#     it, and a word match reads it as a claim about every member. "Beer &
+#     Cider" put `contains-gluten` on an apple cider ×11; "Chicken & Fish" put
+#     `contains-fish` on Chicken McNuggets ×7; "Sushi & Sashimi" put it on an
+#     Avocado Roll ×16; "Laksa & Noodle Soup" put `contains-shellfish` on a Beef
+#     Noodle Soup ×5; "Waffle & Popcorn" made popcorn wheat ×5.
+#   • A HEADING IS OFTEN NOT ABOUT FOOD AT ALL. hell-pizza's `Anti Pizza` is the
+#     venue's own word for the part of its menu that is NOT a pizza — a lamb
+#     shank sits under it — and BurgerFuel's `Bun swaps` holds `Gluten friendly
+#     bun` and `Low Carborator lettuce bun`, the exact two rows ADR 0097 and
+#     ADR 0116 exist to keep a false gluten warning off.
+#
+# 🔑 NO HEDGE CAN REACH EITHER CLASS, and that is the finding. `hedge_before`
+# handles "Gluten Free Pizza" perfectly — the negation directly precedes the
+# matched word, so the machinery ADR 0097 already built is reused here rather
+# than duplicated, and `declared_free` handles a heading that is nothing but the
+# claim. But "Beer & Cider" and "Bun swaps" carry NO negation for a hedge to
+# read. Writing from a heading would therefore put a false gluten warning on a
+# cider and on a gluten-friendly bun, which is ADR 0097's harm — the
+# over-warning that trains a coeliac to stop reading the chips — not an ordinary
+# one. So the tier reports and a human rules, exactly as `review_notes` does for
+# a note clause this tool will not tag from.
+#
+# 🛑 AND IT IS NEVER MERGED INTO `ingredient_text`, for ADR 0114's reason. Glue
+# the heading onto the dish's name and one string carries two strengths of
+# evidence, `first_unhedged` lets a hedge in one cancel a match in the other,
+# and the tier cannot be counted — so the refusal to write could not be
+# expressed at all. Separate text, separate tier, same rules, same guards.
+def section_text(section):
+    """The heading the shop printed above this dish, or "".
+
+    Deliberately not folded into `ingredient_text` — see the block above.
+    """
+    heading = section.get("section") if isinstance(section, dict) else None
+    return heading if isinstance(heading, str) else ""
+
+
 def has_allergen_caveat(item):
     """Does this dish already tell a reader its allergen picture is unconfirmed?
 
@@ -1019,6 +1087,19 @@ def audit(record, tier=None, refusals=None):
             continue
         # Read the heading's note once, then offer it to every dish under it.
         note_applies, _ = read_section_note(section.get("note"))
+        # …and the heading itself, read once for the same reason. A heading that
+        # is NOTHING BUT the venue's free-from claim — a section called "Gluten
+        # Free" — is read the way a `gf` tag is read, and silences that allergen
+        # for every dish under it. Per-allergen, and only on a whole-clause
+        # match, so "Gluten free bases, and pasta" declares nothing.
+        heading = section_text(section)
+        heading_declared = declared_free(heading)
+        heading_findings = [
+            (tag, "SECTION", f'section heading “{heading}” — {why} ({hit.group(0).lower()})')
+            for tag, _rule_tier, why, pattern, exclude in COMPILED
+            if heading and not (exclude and exclude.search(heading))
+            for hit in [first_unhedged(tag, pattern, heading)] if hit
+        ]
         for item in section.get("items") or []:
             if not isinstance(item, dict):
                 continue
@@ -1030,7 +1111,7 @@ def audit(record, tier=None, refusals=None):
             # arrives as part of one long line and the whole-clause anchor —
             # which is the entire safety argument for this guard — can no longer
             # see where the sentence begins and ends.
-            declared = declared_free(item.get("desc"))
+            declared = declared_free(item.get("desc")) | heading_declared
             # The dish's own words first, so a burger that says "sesame" itself
             # is reported against its own name rather than against the note.
             findings = [
@@ -1053,6 +1134,16 @@ def audit(record, tier=None, refusals=None):
                 if caption and not (exclude and exclude.search(caption))
                 for hit in [first_unhedged(tag, pattern, caption)] if hit
             ]
+            # THE SECTION TIER GOES LAST, after the photo, and the order is its
+            # accounting exactly as it is PHOTO's. A dish whose own words, whose
+            # section note or whose caption already carry the evidence is
+            # credited to the stronger source; the heading is only ever asked
+            # about a tag nothing else supports, so `--tier SECTION`'s count is
+            # what reading the heading actually BUYS. The rule's own tier is
+            # discarded on purpose — a heading finding is SECTION whichever rule
+            # fired, because the tier names the EVIDENCE, and this one is never
+            # written.
+            findings += heading_findings
             caveat = has_allergen_caveat(item)
             for tag, rule_tier, why in findings:
                 if tag in tags:
@@ -1367,7 +1458,8 @@ def swap_findings():
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write the tags (default: report only)")
-    ap.add_argument("--tier", choices=["STATED", "DERIVED", "PHOTO"], help="only this tier")
+    ap.add_argument("--tier", choices=["STATED", "DERIVED", "PHOTO", "SECTION"],
+                    help="only this tier (SECTION is never written — see ADR 0123)")
     ap.add_argument("--quiet", action="store_true", help="counts only")
     ap.add_argument("--compounds", action="store_true",
                     help="words a rule ALMOST matches, and which boundary refused them")
@@ -1410,6 +1502,7 @@ def main():
     skipped = []
     reviews = []
     refusals = []
+    headings = []
     swept_records = swept_dishes = 0
     for path in sorted(DATA.glob("*.json")):
         raw = path.read_text()
@@ -1426,7 +1519,17 @@ def main():
             )
 
         record_refusals = []
-        findings = list(audit(record, args.tier, record_refusals))
+        findings = []
+        # A SECTION finding is split off HERE, before anything can write it, and
+        # it is the only tier separated this way. The heading is read, counted
+        # and printed; it never reaches `additions`. See the SECTION tier block
+        # above `section_text` for the 70-finding dry run that settled it.
+        for finding in audit(record, args.tier, record_refusals):
+            item, tag, tier, why = finding
+            if tier == "SECTION":
+                headings.append(f"{record['id']} / {item.get('name')}: {tag} — {why}")
+            else:
+                findings.append(finding)
         for item, tag, why in record_refusals:
             refusals.append(f"{record['id']} / {item.get('name')}: {tag} — {why}")
         if not findings:
@@ -1479,6 +1582,23 @@ def main():
               f"land on a row that claims a confirmed allergen picture (ADR 0114):")
         for r in refusals:
             print(f"  • {r}")
+
+    # NEVER SILENT, third time and same reasoning: these are tags this tool CAN
+    # see and has chosen not to write. The COUNT prints on every run and is the
+    # tripwire — it moving from N to N+1 is a dish that arrived under a heading
+    # saying what it is made of, which is the gap 470/060 measured at 68 rows
+    # before anything noticed. The LIST is on demand, because roughly two
+    # thirds of it is the disjunctive-heading class ("Beer & Cider" is not a
+    # claim that the cider is barley) and a report nobody reads is worth
+    # nothing — `--tier SECTION` prints it, with each finding's basis.
+    if headings:
+        print(f"\n{len(headings)} SECTION-name finding(s) — READ, REPORTED, NEVER "
+              f"WRITTEN (ADR 0123). A heading is evidence about the dishes under "
+              f"it and not every dish under a pizza heading is a pizza; a human "
+              f"rules on these." + ("" if args.tier == "SECTION" else
+                                    " Run with `--tier SECTION` to see them."))
+        for h in headings if args.tier == "SECTION" else []:
+            print(f"  • {h}")
 
     if reviews:
         print(f"\n{len(reviews)} section note(s) need a human — this tool will not tag from them:")

@@ -2120,6 +2120,18 @@ def check_allergen_tags():
     ADR records, and a venue's own correction must always be able to win. But
     the gap this closes was created by hand-tagging record by record, so a
     transcription that reintroduces it should say so on the way past.
+
+    🛑 THE `SECTION` TIER IS SKIPPED, AND THE ADVICE IS WHY. Every warning here
+    ends "run tools/tag_allergens.py", and for a SECTION finding that sentence
+    is FALSE: ADR 0123 makes the tagger read a section's heading and refuse to
+    write from it, because a heading is frequently a disjunction naming the
+    union beneath it ("Beer & Cider" is not a claim that the cider is barley).
+    Passing them through added 69 warnings to this gate the day the tier landed
+    — 69 rows pointed at a tool that will never act on them, on a list whose
+    whole value is that a reader works through it. A warning nobody can act on
+    is how a warning list stops being read. The SECTION findings have their own
+    home: `tag_allergens.py` prints the count on every run and the list under
+    `--tier SECTION`.
     """
     try:
         sys.path.insert(0, str(Path(__file__).parent))
@@ -2131,6 +2143,8 @@ def check_allergen_tags():
         if not isinstance(record, dict):
             continue
         for item, tag, tier, why in audit(record):
+            if tier == "SECTION":
+                continue  # read, reported, never written — see the docstring
             warn(record.get("id", path.stem), f"{item['name']}: missing {tag} ({tier} — {why}) — run tools/tag_allergens.py")
 
 

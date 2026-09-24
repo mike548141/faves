@@ -1550,3 +1550,26 @@ deliberation those compact docs omit.
   not reachable. **No dish's tags changed.** The class table gets its first
   test (14 cases, 6 break-probes, in CI), two of them probing the **mechanism**
   because the veto and the lookbehind print an identical report today.
+- [0123](0123-a-section-heading-is-evidence-a-report-may-read-and-the-writer-may-not.md)
+  — **a section heading is evidence a report may read and the writer may not.**
+  Roadmap `470/060`, owner-ruled 2026-09-24 (both halves, data first). The
+  tagger read a dish's name, description, ingredients, photo caption and its
+  section's **note**, and never the section's own **heading** — so 68 of 230
+  items under `Pizza`/`Gourmet Burgers`/`Sandwiches` carried no gluten tag while
+  162 neighbours did, and `hell-pizza`'s *Morning After* warned where *Mordor*,
+  same dough, did not. 🛑 The probe, written **before** the feature, found a
+  danger bigger than the *"Gluten Free Pizza"* one it was written for: a dry run
+  over 57 records proposes **70 findings, ~48 of them false**, because a heading
+  is often a **disjunction** naming the union beneath it (`Beer & Cider` →
+  gluten on an apple cider; `Chicken & Fish` → fish on a McNugget) and often not
+  about food at all (`Anti Pizza`, `Bun swaps`). **No hedge can see either** —
+  there is no negation to read. So the heading becomes a fourth tier, `SECTION`,
+  that is **reported and never written**; the count is the tripwire,
+  `--tier SECTION` is the list. **Rejected:** the item's own option 1 (merge it
+  into `ingredient_text`, which writes gluten onto a gluten-friendly bun, and is
+  break-probed under that name); a no-disjunction filter (**measured: 19 of 70
+  survive, 16 right — and the 3 wrong are the lamb shank and *both* protected
+  BurgerFuel rows**); a `noPropagate` data field; putting it in
+  `allergen_disagreements.py`; and the sibling-agreement test. Reuses ADR 0097's
+  `first_unhedged`/`declared_free` rather than writing a second rule. 🛑 The
+  breaker caught a **decorative guard in this record's own first draft**.

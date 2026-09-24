@@ -540,6 +540,34 @@ def check_a_swap_to_an_allergen_is_still_tagged(after, out):
     return _bambina_wrote_something(after)
 
 
+def check_a_heading_writes_nothing(after, out):
+    """THE assertion the other five exist to protect: a heading NEVER writes.
+
+    BurgerFuel's `Bun swaps` section is the corpus's own proof that no hedge can
+    make this safe. The heading says "Bun" with no negation anywhere near it, so
+    `hedge_before` has nothing to cancel — and the two rows underneath are
+    `Gluten friendly bun` and `Low Carborator lettuce bun`, which are precisely
+    the two rows ADR 0097 and ADR 0116 were written to keep a false gluten
+    warning off. A SECTION finding that could write would put one there.
+
+    So this drives the REAL tool with `--apply` and reads what landed on disk.
+    The Bambina is the proof of write: its own description says "wholemeal bun",
+    so its tag must come back, or a tool that had stopped writing anything at
+    all satisfies every absence here.
+    """
+    for dish in ("gluten-friendly-bun", "low-carborator-lettuce-bun"):
+        tags = _dish(after, dish)
+        if tags is None:
+            return f"{dish!r} is not in the record any more — the case proves nothing"
+        if "contains-gluten" in tags:
+            return (f"a SECTION heading WROTE contains-gluten onto {dish!r} "
+                    f"(has {sorted(tags)}) — the one row a coeliac is hunting for")
+    if "SECTION" not in out:
+        return ("the run never mentioned a SECTION finding — the tier is not "
+                "reading the heading at all and the absences above are free")
+    return _bambina_wrote_something(after)
+
+
 def check_single_line_layout_survives(after, out):
     """A one-line tags array must stay on one line. The whole reason this tool
     patches raw text instead of re-serialising is that the diff stays readable."""
@@ -658,6 +686,12 @@ CASES = {
     "a bun swap is not a warning about the bun it replaces": (
         BURGERFUEL, STRIP_BAMBINA, 0,
         check_a_swap_row_is_not_warned_about_the_bun_it_replaces),
+    # 🛑 The SECTION tier's safety case (2026-09-24, ADR 0123). Same record, and
+    # deliberately so: `Bun swaps` is a heading whose words are wheat and whose
+    # contents are the opposite, with no negation in the heading for any hedge
+    # to read. See check_a_heading_writes_nothing.
+    "a section heading is reported and never written": (
+        BURGERFUEL, STRIP_BAMBINA, 0, check_a_heading_writes_nothing),
     "a swap TO an allergen is still tagged, on a real record": (
         BURGERFUEL, STRIP_BAMBINA + SWAP_TO_AN_ALLERGEN, 0,
         check_a_swap_to_an_allergen_is_still_tagged),
@@ -1204,6 +1238,162 @@ ALT_PROBES = {
 }
 
 
+# --- the SECTION tier's probes (2026-09-24, ADR 0123, roadmap 470/060) -----
+# 🛑 WRITTEN BEFORE THE FEATURE, ON THE OWNER'S RULING OF 2026-09-24. He was
+# shown the danger by name — a section called "Gluten Free Pizza" feeds the word
+# `pizza` to the gluten rule, and a `gf` section starts warning about the one
+# allergen it declares freedom from — and ruled the probe comes FIRST, because
+# what it guards is the row a coeliac is hunting for.
+#
+# Each line is (section heading, dish name, dish desc, want, forbid) and the
+# answers are `tag@TIER` strings, for ALT_PROBES' reason: "it produced
+# contains-gluten" is not the claim. The claim is that it produced
+# `contains-gluten@SECTION` — a tier nothing asserts becomes STATED in the next
+# refactor, and STATED is what the WRITER writes.
+SECTION_PROBE_DRIVER = """
+import json, sys
+sys.path.insert(0, "tools")
+from tag_allergens import audit
+out = []
+for heading, name, desc, note in json.load(sys.stdin):
+    item = {"name": name, "tags": []}
+    if desc:
+        item["desc"] = desc
+    section = {"section": heading, "items": [item]}
+    if note:
+        section["note"] = note
+    out.append(sorted({f"{tag}@{tier}" for _i, tag, tier, _w in audit({"menu": [section]})}))
+json.dump(out, sys.stdout)
+"""
+
+SECTION_PROBES = {
+    # (2) THE FEATURE ITSELF. An ordinary heading reaches the rule, at its own
+    # tier. `Margherita` is chosen because NOTHING in the dish's own words says
+    # wheat — that is the entire finding of 470/060, where 68 rows sat under a
+    # heading that said so and carried nothing.
+    "an ordinary Pizza heading reaches the gluten rule, as SECTION": [
+        ("Pizza", "Margherita", "Tomato, mozzarella, basil.",
+         None, {"contains-gluten@SECTION"}, set()),
+        # …and the tier is not the dish's. A heading is weaker evidence than a
+        # dish's own name and has to be countable separately, or the refusal to
+        # write from it cannot be expressed at all.
+        ("Pizza", "Margherita", "Tomato, mozzarella, basil.",
+         None, set(), {"contains-gluten@STATED", "contains-gluten@DERIVED"}),
+    ],
+    # (1) THE DANGEROUS HALF, and the reason the owner ruled probe-first. Both
+    # rows are the SAME dish under a heading that differs by two words.
+    # Two groups, not one, and the split is deliberate: the heading is guarded
+    # by the SAME TWO MECHANISMS ADR 0097 built for a dish's own words, they
+    # fail independently, and one group would let either breaker below be
+    # credited to the other's assertion.
+    "a hedged heading does not warn about the allergen it negates": [
+        ("Gluten Free Pizza", "Margherita", "Tomato, mozzarella, basil.",
+         None, set(), {"contains-gluten@SECTION"}),
+        # 🛑 THE CONTROL THAT MAKES THE ABSENCE MEAN ANYTHING. Same heading
+        # word, hedge removed. Without it, a SECTION tier deleted outright — or
+        # mangled into reading nothing — satisfies the absence perfectly.
+        ("Gourmet Pizza", "Margherita", "Tomato, mozzarella, basil.",
+         None, {"contains-gluten@SECTION"}, set()),
+        # …and the cancellation is as NARROW as `hedge_before` is everywhere
+        # else. A heading naming a free-from thing AND a real one must keep the
+        # real one: an item-level veto here loses the pasta, which is an
+        # over-warning traded for a MISS.
+        ("Gluten free bases, and pasta", "House special", None,
+         None, {"contains-gluten@SECTION"}, set()),
+    ],
+    # 🛑 THE DISH'S OWN WORDS ARE THE SUBJECT HERE, NOT THE HEADING'S, AND THE
+    # FIRST DRAFT OF THIS GROUP PASSED FOR THE WRONG REASON. It used a
+    # `Margherita` under a heading called "Gluten Free" and asserted no
+    # `contains-gluten@SECTION` — which is true with the guard DELETED, because
+    # no rule matches a bare "gluten" anyway (the rules deliberately never do:
+    # in a description that word sits inside "gluten free" far more often than
+    # inside "contains gluten"). The guard was decorative and its breaker said
+    # so, which is the one thing a break-probe is for.
+    #
+    # What `declared_free` on a heading actually does is read the venue's own
+    # printed claim the way a `gf` tag is read, and silence that allergen for
+    # the dishes underneath — dishes whose OWN names are wheat words. A section
+    # called "Gluten Free" holding a Brownie and Toast is exactly the shape, and
+    # a false gluten warning there lands on the one row a coeliac is hunting
+    # for (ADR 0097's harm, not an ordinary over-warning).
+    "a heading that is NOTHING BUT a free-from claim silences that allergen": [
+        ("Gluten Free", "Toast", None, None, set(),
+         {"contains-gluten@STATED", "contains-gluten@DERIVED"}),
+        ("Gluten Free", "Brownie", "Rich and fudgy.", None,
+         set(), {"contains-gluten@STATED", "contains-gluten@DERIVED"}),
+        # Per-allergen, never per-item: a `gf` claim says nothing about milk.
+        ("Gluten Free", "Milkshake", None, None, {"contains-dairy@STATED"}, set()),
+        # 🛑 THE ANCHOR IS THE WHOLE HEADING, and this is the line that proves
+        # it. "Gluten Free Pizza" is a heading that QUALIFIES rather than
+        # declares, so the toast under it keeps its warning — the same
+        # full-clause rule that stops "gluten free option available" silencing
+        # a sourdough. Without it the guard is an item-level veto by another
+        # name, and this repo has paid for that shape three times.
+        ("Gluten Free Pizza", "Toast", None, None,
+         {"contains-gluten@DERIVED"}, set()),
+    ],
+    # (3) THE EXISTING PATH IS UNCHANGED. `read_section_note` has reached a dish
+    # since 2026-08-17 and must keep doing it at ITS tier, off the NOTE and not
+    # off the heading — two fields, two mechanisms, and a refactor that merged
+    # them would pass every assertion above.
+    "the section NOTE path still tags, at its own tier": [
+        ("Mains", "House special", None, "Our pizza bases contain dairy.",
+         {"contains-dairy@STATED"}, {"contains-dairy@SECTION"}),
+        # The note's own guard survives too: an OFFER is not what is served.
+        ("Mains", "House special", None, "Dairy free cheese available.",
+         set(), {"contains-dairy@STATED", "contains-dairy@SECTION",
+                 "contains-dairy@DERIVED"}),
+    ],
+    # (4) THE CONTROL. A dish tagged off its OWN words, under a heading that
+    # says nothing — so a change that mangled the matcher into tagging nothing,
+    # or into reading only headings, fails here and nowhere else.
+    "a dish's own words still tag it, under a silent heading": [
+        ("Sides", "Garlic Bread", "Toasted and buttered.",
+         None, {"contains-gluten@STATED"}, {"contains-gluten@SECTION"}),
+    ],
+    # 🛑 THE CLASS THE CORPUS ACTUALLY HOLDS, AND THE HEDGE CANNOT SEE IT
+    # (measured 2026-09-24 over all 57 records — 70 findings, of which ~48 are
+    # of this shape). A heading is frequently a DISJUNCTION: it names the union
+    # of what sits under it, and a word match reads it as a claim about every
+    # member. "Beer & Cider" is not a claim that the cider is barley. Nothing in
+    # the hedge machinery can tell these from "Gourmet Pizza", which is why a
+    # SECTION finding is REPORTED and never WRITTEN — these lines pin the tier,
+    # and `check_a_heading_writes_nothing` below pins that nothing reaches disk.
+    "a disjunctive heading is reported, never promoted to a writing tier": [
+        ("Beer & Cider", "Orchard Thieves Cider", None,
+         None, {"contains-gluten@SECTION"},
+         {"contains-gluten@STATED", "contains-gluten@DERIVED"}),
+        ("Chicken & Fish", "Chicken McNuggets", None,
+         None, set(), {"contains-fish@STATED", "contains-fish@DERIVED"}),
+    ],
+}
+
+
+def run_section_probes(work, name, verbose=False):
+    """Run one SECTION_PROBES group — a heading, a dish, a note, a tag@TIER."""
+    lines = SECTION_PROBES[name]
+    if not any(want for *_h, want, _f in lines):
+        return "the group asserts no PRESENCE — a tier that reads nothing passes it"
+    proc = subprocess.run(
+        [sys.executable, "-c", SECTION_PROBE_DRIVER], cwd=work, timeout=120,
+        input=json.dumps([[h, n, d, nt] for h, n, d, nt, _w, _f in lines]),
+        capture_output=True, text=True,
+    )
+    if proc.returncode != 0:
+        return f"the rule set would not load: {proc.stderr.strip().splitlines()[-1:]}"
+    got = json.loads(proc.stdout)
+    for (heading, dish, _desc, _note, want, forbid), tags in zip(lines, got):
+        if verbose:
+            print(f"       | §{heading!r} {dish!r} -> {tags}")
+        missing = want - set(tags)
+        if missing:
+            return f"§{heading!r}/{dish!r} did not gain {sorted(missing)} (got {tags})"
+        wrong = forbid & set(tags)
+        if wrong:
+            return f"§{heading!r}/{dish!r} was given {sorted(wrong)} (got {tags})"
+    return None
+
+
 def run_probes(work, name, verbose=False):
     """Run one PROBES group against the tool as it currently sits in `work`."""
     lines = PROBES[name]
@@ -1290,6 +1480,46 @@ BREAKERS = {
           "    return False")],
         ["a hedged name gains no allergen warning",
          "a hedge does not cancel a real wheat item beside it"]),
+    # --- the SECTION tier (2026-09-24, ADR 0123, roadmap 470/060) ----------
+    # Four breakers, and the FIRST is the one that matters: it is the item's own
+    # cheapest option — "teach the matcher to read the section name, one line" —
+    # staged exactly as it would have shipped. The heading joins the dish's own
+    # words, so the finding arrives as STATED/DERIVED and the WRITER writes it,
+    # onto a gluten-friendly bun and an apple cider.
+    "the heading merged into ingredient_text (the item's option 1, shipped)": (
+        [('    kept.extend(ingredient_lines(item))\n    return " ".join(kept)',
+          '    kept.extend(ingredient_lines(item))\n'
+          '    kept.append(_HEADING_FOR_TEST)\n    return " ".join(kept)'),
+         # The heading has to reach `ingredient_text`, which takes only an item,
+         # so the break plants it the only way a one-line version could: a
+         # module global set as each section is read.
+         ('        heading = section_text(section)',
+          '        heading = section_text(section)\n'
+          '        globals()["_HEADING_FOR_TEST"] = heading'),
+         ('_HEDGE_BEFORE = {', '_HEADING_FOR_TEST = ""\n_HEDGE_BEFORE = {')],
+        ["a section heading is reported and never written",
+         "an ordinary Pizza heading reaches the gluten rule, as SECTION",
+         "a disjunctive heading is reported, never promoted to a writing tier"]),
+    # The split in main() is the ONLY thing between a SECTION finding and the
+    # patcher. Take it out and the heading writes.
+    "the SECTION findings allowed through to the writer": (
+        [('            if tier == "SECTION":\n'
+          '                headings.append',
+          '            if False:\n'
+          '                headings.append')],
+        ["a section heading is reported and never written"]),
+    # The hedge, applied to the heading. `search` instead of `first_unhedged`
+    # is the whole of the bug — and it is the bug the owner named before a line
+    # of this was written.
+    "the hedge not read on the heading": (
+        [('            for hit in [first_unhedged(tag, pattern, heading)] if hit',
+          '            for hit in [pattern.search(heading)] if hit')],
+        ["a hedged heading does not warn about the allergen it negates"]),
+    "the heading's own free-from declaration ignored": (
+        [('        heading_declared = declared_free(heading)',
+          '        heading_declared = set()')],
+        ["a heading that is NOTHING BUT a free-from claim silences that allergen"]),
+
     "the venue's free-from declaration ignored": (
         [("                if tag in declared:\n"
           "                    continue  # the venue's own printed free-from claim, ditto",
@@ -1651,6 +1881,8 @@ def run_named(work, name, verbose=False):
         return run_probes(work, name, verbose)
     if name in ALT_PROBES:
         return run_alt_probes(work, name, verbose)
+    if name in SECTION_PROBES:
+        return run_section_probes(work, name, verbose)
     return f"no case or probe called {name!r}"
 
 
@@ -1711,7 +1943,7 @@ def main() -> int:
             if complaint:
                 failures.append(label)
 
-        for name in list(CASES) + list(PROBES) + list(ALT_PROBES):
+        for name in list(CASES) + list(PROBES) + list(ALT_PROBES) + list(SECTION_PROBES):
             complaint = run_named(work, name, args.verbose)
             print(f"  {'❌' if complaint else '✅'} {name:52} {complaint or 'as specified'}")
             if complaint:
@@ -1746,7 +1978,7 @@ def main() -> int:
     if failures:
         print(f"\n{len(failures)} failure(s): {', '.join(failures)}", file=sys.stderr)
         return 1
-    print(f"\nAll {len(CASES) + len(PROBES) + len(ALT_PROBES) + len(BREAKERS) + 2} "
+    print(f"\nAll {len(CASES) + len(PROBES) + len(ALT_PROBES) + len(SECTION_PROBES) + len(BREAKERS) + 2} "
           "cases behaved as specified.")
     return 0
 
