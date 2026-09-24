@@ -162,6 +162,12 @@ jobs:
         run: python3 tools/test_find_addons.py
       - name: Prove the allergen tagger still writes what it finds
         run: python3 tools/test_tag_allergens.py
+      # …and its read-only sibling, whose CLASS TABLE had no test at all until
+      # 2026-09-24 (roadmap 470/030). Same limit as the line above: it guards
+      # the REPORT, so a failure means the corpus stopped being watched the way
+      # it was meant to be, never that a phone is showing a wrong allergen.
+      - name: Prove the allergen disagreement classes still hold
+        run: python3 tools/test_allergen_disagreements.py
       # The Theme 38 cold review found three stores under data/ that no
       # document described and two that nothing validated. data/images/ is the
       # PROVENANCE of every photograph this public repo ships, so a photo with

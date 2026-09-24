@@ -603,6 +603,24 @@ node tools/geo_check.mjs      # the location ask (ADR 0083). The tickbox on the
                               # pins the pill's ABSENCE, which is the assertion
                               # most likely to rot silently
 python3 tools/test_tag_allergens.py # the allergen tagger still writes what it finds
+python3 tools/test_allergen_disagreements.py # …and the CLASS TABLE its read-only
+                              # sibling reports from still says what it means
+                              # (new 2026-09-24, in CI). Ten-plus claims about
+                              # food, each a regex, and NOTHING tested any of
+                              # them — a class narrowed to nothing just makes
+                              # the report SHORTER, which reads as progress.
+                              # 14 cases + 6 break-probes, and the breakers
+                              # assert the covered cases fail AND THAT NO OTHER
+                              # ONE DOES. Two of the six are about the
+                              # MECHANISM, not the outcome: this tool's
+                              # `exclude` vetoes a row's membership of the whole
+                              # class, so b3/b6 rebuild each 2026-09-21
+                              # narrowing as that veto and require exactly one
+                              # synthetic line to notice — "pork sausages,
+                              # italian sausage" and "Turkish pizza, or a
+                              # Margherita pizza". On today's corpus the veto
+                              # and the lookbehind print an IDENTICAL report,
+                              # so no outcome test can tell them apart
 python3 tools/test_tag_addon_options.py # …and the add-on option tagger still REFUSES
                               # what it must (ADR 0092). Half its cases assert an
                               # ABSENCE of writing — "Spinach still carries no tags" —

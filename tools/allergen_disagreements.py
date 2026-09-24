@@ -73,12 +73,42 @@ CLASSES = [
     (
         "sausage",
         "an NZ sausage is bound with wheat rusk unless the butcher says otherwise",
-        r"\b(sausages?|snarlers?|cheerios?|saveloys?|savs?|bangers?|frankfurters?|"
-        r"hot\s?dogs?|hotdogs?)\b",
+        # AN ITALIAN SAUSAGE IS A CONTINENTAL SAUSAGE (owner-ruled 2026-09-21).
+        # Salsiccia is coarse-ground pork, salt and fennel in a natural casing —
+        # no wheat rusk — so it belongs beside the chorizo and salami in the
+        # exclude below, and the two Bambina rows carrying no gluten tag are not
+        # a gap. Nothing is tagged or untagged by this: the class is what the
+        # REPORT groups by, and this tool never writes.
+        # 🛑 It is a LOOKBEHIND on the `sausages?` alternative and NOT a new
+        # entry in `exclude`, and the difference is the one this repo has paid
+        # for twice (the water chestnut beside the almonds in
+        # `tag_allergens.py`, and the cabinet slice in this item's own sweep).
+        # `exclude` vetoes the row's membership of the whole class, so a big
+        # breakfast reading "pork sausages, italian sausage, eggs" would stop
+        # being watched for the rusk in its PORK sausages — an over-warning
+        # traded for a miss, the one direction a safety report may not move. The
+        # lookbehind neutralises only the alternative an "italian " precedes and
+        # leaves every other sausage word on the line matching. Two fixed-width
+        # forms because each lookbehind must be one.
+        r"\b((?<!italian )(?<!italian-)sausages?|snarlers?|cheerios?|saveloys?|"
+        r"savs?|bangers?|frankfurters?|hot\s?dogs?|hotdogs?)\b",
         # A sausage ROLL is pastry — its gluten is obvious and its class is
         # different. Cured continental sausages are a different food entirely:
         # chorizo, salami, pepperoni and lap cheong carry no rusk, and lumping
         # them in is exactly the false positive that makes a report ignorable.
+        # ⚠️ These are vetoes of the shape the paragraph above declines, they
+        # carry the same fault, AND THE FAULT IS LIVE — measured 2026-09-24, of
+        # the 11 rows this veto catches, THREE also name a sausage that is no
+        # part of the excluded phrase, so a true rusk claim is silenced:
+        # daily-bakery/sausage-roll ("pastry filled with savoury sausage",
+        # vetoed by `sausage roll`) and pizza-pomodoro's Carne small and large
+        # ("salami, ham, and sausage", vetoed by `salami`). All three already
+        # carry contains-gluten, so THE REPORT READS THE SAME EITHER WAY, which
+        # is why it went unnoticed — and the first measurement of it counted the
+        # vetoed rows without asking that second question and concluded
+        # "nothing is wrong today". Reported rather than changed: converting
+        # these to lookbehinds is a separate finding, not part of the
+        # 2026-09-21 rulings, and it wants its own break-probe.
         r"\bsausage\s?rolls?\b|\b(chorizo|salami|pepperoni|kransky|lap\s?cheong|"
         r"chinese\s+sausages?)\b",
         ["contains-gluten"],
@@ -94,7 +124,19 @@ CLASSES = [
         r"\b(crumbed|breaded|panko|schnitzels?|schnitty|katsu|parmigianas?|parmas?|"
         r"goujons?|nuggets?|tenders|popcorn\s+chicken|cordon\s+bleu)\b",
         r"\bparma\s+ham\b",  # prosciutto, not a chicken parma
-        ["contains-gluten", "contains-egg"],
+        # 🛑 `contains-egg` IS NOT WATCHED, and its absence is a ruling rather
+        # than an oversight. The owner ruled on 2026-09-07 that `crumbed →
+        # contains-egg` is not a reliable rule — the word cannot tell a house
+        # egg-wash from a frozen commercial crumb — so the tagger will never
+        # write it. A class that goes on watching for a tag the house has
+        # already decided not to infer cannot ever be satisfied: 36 of the 44
+        # rows this report carried on 2026-09-20 were that one column, and they
+        # would have stayed there for as long as the corpus existed, making
+        # `--strict` unreachable and this tool the decorative guard ADR 0072
+        # names. Ruled again on 2026-09-21: stop watching. The class's OTHER
+        # half is untouched — a breadcrumb coating is still wheat flour, and
+        # `contains-gluten` below is still the claim this row exists to police.
+        ["contains-gluten"],
     ),
     (
         "battered",
@@ -115,10 +157,47 @@ CLASSES = [
     (
         "pizza",
         "a pizza base is wheat dough and a pizza is cheese-topped by default",
-        r"\b(pizzas?|calzones?)\b",
+        # A TURKISH PIZZA IS NOT CHEESE-TOPPED BY DEFAULT, and the owner ruled on
+        # 2026-09-21 that the class narrows rather than the six rows gaining a
+        # dairy tag. Lahmacun is a thin wheat flatbread baked with minced meat,
+        # onion, tomato and parsley; cheese is a variant, not the default, so the
+        # second half of this row's food claim is simply not true of it. The
+        # wheat half still is — which is why the narrowing hands them to
+        # `turkish-pizza` below rather than dropping them out of the table.
+        # 🔑 The ruling rests on the FOOD, not on the price. Abrakebabra's
+        # "Cheese Lovers Turkish Pizza" being $3 cheaper than the others was
+        # offered as evidence and is worthless: it is cheaper because it has no
+        # meat on it, which says nothing about what the others carry.
+        # 🛑 It is a LOOKBEHIND and not a third entry in `exclude`, for the
+        # reason the water-chestnut narrowing in `tag_allergens.py` records and
+        # this item has already paid for once: `exclude` here vetoes the row's
+        # membership of the WHOLE class, so a menu line reading "Turkish pizza or
+        # a Margherita pizza" would leave the cheese-topped one unwatched too.
+        # The lookbehind neutralises only the `pizzas?` alternative that a
+        # "turkish " precedes, and `calzones?` is untouched. It is spelled with
+        # the same two fixed-width forms as the `turkish-pizza` match below, so
+        # the two are exactly complementary rather than approximately so.
+        r"\b((?<!turkish )(?<!turkish-)pizzas?|calzones?)\b",
         # A "pizza sauce" or "pizza spice" dip is not a pizza.
         r"\bpizza\s+(sauce|spice|seasoning)\b",
         ["contains-gluten", "contains-dairy"],
+    ),
+    (
+        "turkish-pizza",
+        "a Turkish pizza is a wheat flatbread like any other pizza, but unlike "
+        "an Italian one it is not cheese-topped by default",
+        # Exactly complementary to the two lookbehinds in `pizza` above: a
+        # literal space or a hyphen, never `\s?`, or "turkishpizza" would fall
+        # into both classes at once.
+        r"\bturkish[ -]pizzas?\b",
+        None,
+        # 🛑 `contains-dairy` is ABSENT from this watch list and that is the
+        # whole ruling. Declining to infer cheese is not a claim that there is
+        # none: no `df` is written, no tag is removed, and a venue that states
+        # dairy on a Turkish pizza keeps it. ADR 0025's one-way rule cuts both
+        # ways — the report may fall silent about a presence it cannot vouch
+        # for, and may never assert an absence.
+        ["contains-gluten"],
     ),
     (
         "brioche",

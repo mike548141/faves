@@ -130,6 +130,107 @@
   either drop `contains-egg` from that class's watch list or accept a report
   that always fires, which is ADR 0072's decorative-guard shape.
 
+  ✅ **ALL FOUR QUESTIONS RULED BY THE OWNER 2026-09-21, AND EXECUTED
+  2026-09-24 (branch `allergen-rulings`, [ADR 0122](../../decisions/0122-declining-to-infer-is-not-asserting-an-absence.md)).**
+  The report goes **3 class/allergen splits over 44 rows → 1 split over 1 row**.
+  🛑 **Not one dish's tags changed, in either direction.** `site/data/` is
+  byte-identical, a `tag_allergens.py` dry run proposes 0 tags, and a case in
+  the new test suite fingerprints `site/data/` around three report runs so it
+  stays that way. Every change is to the CLASS TABLE — what the report
+  *watches*, never what the corpus *carries*.
+  1. **Turkish pizza — the class narrows.** A new `turkish-pizza` class keeps
+     `contains-gluten` and drops `contains-dairy`; the six Abrakebabra rows
+     leave the cheese-by-default class. 🔑 **Ruled on the FOOD, not the price.**
+     Lahmacun is a wheat flatbread baked with minced meat, onion, tomato and
+     parsley — cheese is a variant, not the default. The *Cheese Lovers* row
+     being $3 cheaper was offered as evidence and was put to him as **worthless**
+     (a cheese-only pizza is cheaper because it has no meat on it); he ruled
+     without it. Recorded because a bad argument that reached the right answer
+     is the kind that gets reused. **No row gained `contains-dairy` and none
+     gained `df`** — narrowing declines to infer a presence, it does not assert
+     an absence.
+  2. **`crumbed` stops watching `contains-egg`.** 36 rows leave the report. The
+     2026-09-07 ruling already said the tagger will never infer it; a class
+     that goes on watching for a tag the house has decided not to write can
+     never be satisfied, which is [ADR 0072](../../decisions/0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md)'s
+     decorative-guard shape aimed at this repo's own safety report. The
+     `crumbed → contains-gluten` half is untouched and the class still holds
+     **75 rows** — verified, because deleting the class satisfies "no longer
+     reports" just as well.
+  3. **`italian sausage` leaves the wheat-rusk class.** Salsiccia is pork, salt
+     and fennel in a natural casing. 4 rows leave the class — Bambina's two
+     (the split) and Pizza Pomodoro's two Salsiccia pizzas, which were carriers
+     for the wrong reason. 🛑 **Done as a LOOKBEHIND on the `sausages?`
+     alternative, NOT as a fifth `exclude` entry beside chorizo and salami**,
+     because an `exclude` hit here vetoes the row's membership of the whole
+     class: a plate reading *"pork sausages, italian sausage"* would stop being
+     watched for the rusk in its **pork** sausages. Break-probed, not argued —
+     rebuilt as the veto it fails *"a plate naming BOTH sausages keeps the
+     plain one watched"* **and nothing else**.
+     ⚠️ Bambina's `italian-sausage-hot-honey` still carries **no tags at all**.
+     That is its own defect and it belongs to [`470/060`](060-a-section-name-is-evidence-the-tagger-never-reads.md)
+     (it is one of that item's 68 rows) — leaving the sausage class did not
+     silence it, because the pizza class never held it either.
+  4. **Dragonfly's Taiwanese Popcorn Chicken KEEPS `contains-gluten`.** No code
+     change; recorded here so nobody removes it later. Classically the coating
+     is sweet-potato starch, so a future session will reason its way to
+     removal — but the venue advertises a **`gf-option`** on that dish, which
+     is the shop saying the default preparation is not gluten-free. Removing
+     the tag would not be declining to infer; it would be **inferring an
+     absence** from a cookbook, against the kitchen's own statement.
+
+  🎯 **THE BRACKET STAYS OPEN, and here is exactly what is left.** One row and
+  one wiring decision, neither of them the sweep:
+  - **`abrakebabra/pizza-slice` still reports, deliberately.** A $4 *"Pizza
+    Slice / Chicken."* in the **Sides** section, at a shop whose only pizza is
+    Turkish — but it prints neither the word "Turkish" nor anything else saying
+    which pizza it is cut from, and no intake material exists for this venue
+    (`data/intake/menu-sources.json` has no Abrakebabra row). The two ways to
+    silence it are hard-coding the venue into a corpus-wide table of food
+    claims, or reading the **section heading** — and that capability is
+    `470/060`'s open question, which a child decision may not pre-empt. So it
+    reports, and a human rules. A case in the test suite pins its presence so
+    nobody silences it by reflex.
+  - **`--strict` is therefore still NOT reachable**, and wiring it was out of
+    scope for this session. It needs its own item once the row above is called.
+
+  ✅ **The class table gets its first test: `tools/test_allergen_disagreements.py`
+  — 14 cases, 6 break-probes, wired into CI and the verify list.** Nothing had
+  ever tested any of the table's ten-plus food claims, and the failure mode is
+  invisible: a class narrowed to nothing just makes the report **shorter**,
+  which reads as progress. 🔑 **Two of the six breakers are about the
+  MECHANISM, not the outcome** — on today's corpus the veto and the lookbehind
+  print an **identical** report, so no outcome test can tell them apart. `b3`
+  and `b6` rebuild each narrowing as the veto and require exactly one synthetic
+  menu line to notice. The harness asserts each breaker's covered cases fail
+  **and that no other case does**, because a case that fires on every breaker
+  localises nothing.
+
+  🔎 **One finding, reported and NOT fixed — and the fault is LIVE, not
+  hypothetical.** The `exclude` entries already in the `sausage` class
+  (`sausage roll` · chorizo · salami · pepperoni · kransky · lap cheong ·
+  Chinese sausage) are vetoes of exactly the shape ruling 3 declines.
+  ⚠️ **This paragraph said "nothing is wrong today" when it was first written
+  and that was WRONG** — the first measurement counted the rows the veto
+  catches and never asked whether any of them *also* named an ordinary sausage.
+  Re-measured properly the same day: of the **11** rows vetoed, **3 carry a
+  sausage token that is no part of the excluded phrase**, so the veto silences a
+  true rusk claim:
+
+  | row | the line | vetoed by |
+  |---|---|---|
+  | `daily-bakery/sausage-roll` | *"Flaky pastry filled with savoury **sausage**"* | `sausage roll` |
+  | `pizza-pomodoro/carne-small` | *"salami, ham, and **sausage**"* | `salami` |
+  | `pizza-pomodoro/carne-large` | *"salami, ham, and **sausage**"* | `salami` |
+
+  🔑 **All three already carry `contains-gluten`, so the report reads the same
+  either way** — which is exactly why nobody had noticed, and exactly the
+  measurement trap the corrected sentence above records. The two Carne rows are
+  the fault shape proper: an unqualified *sausage* losing its watch because a
+  **salami** sits on the same line. Converting these to lookbehinds is a
+  separate finding, outside the four rulings, and it wants its own break-probe
+  against `'Caramel slice, with slices of ham'`-shaped lines.
+
   🚩 **And a bigger finding fell out of it, filed separately as
   [`470/060`](060-a-section-name-is-evidence-the-tagger-never-reads.md):** 68
   items sit under a section named `Pizza`, `Gourmet Burgers` or `Sandwiches`
