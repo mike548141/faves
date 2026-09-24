@@ -1,4 +1,15 @@
-- [ ] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+- [~] 🚩 **37n — the corpus disagrees with itself about allergens** `[M][data]`
+      📌 **RE-CLAIMED 2026-09-24 (session `3e87e0bf`) for the FOUR OWNER
+      RULINGS of 2026-09-21** — narrow the pizza class for Turkish pizza; drop
+      `contains-egg` from the `crumbed` watch list; add `italian sausage` to
+      the continental exclude; keep Dragonfly's tag. Branch
+      `allergen-rulings`.
+      ⚠️ **This claim went in AFTER the worker was dispatched, not before, and
+      that is the wrong order** — the rule is claim before work, and releasing
+      the earlier claim when the sweep delivered left the item open while a
+      worker was live on it. No peer took it in the window, so nothing was
+      lost; recorded because a near miss that goes unwritten is how the rule
+      erodes.
       📌 **CLAIMED AND DELIVERED 2026-09-20 (session `3e87e0bf`, orchestrated
       queue run); CLAIM RELEASED.** The 2026-09-07 deferral reason was a second
       live agent on the same files; that agent was gone (tree clean, every
