@@ -85,6 +85,28 @@ export function recipeId(venueId, item) {
   return `${venueId ?? ""} ${dishId(item ?? {})}`;
 }
 
+/**
+ * The inverse: `"cook-at-home ginger-crunch"` → `{ venueId, dishId }`.
+ *
+ * Here rather than in the one module that needs it (shopping.js, which keys its
+ * groups on a recipe id and has to build a `recipe.html?id=…&dish=…` link back
+ * out of one) so the FORMAT has exactly one owner. A second place that knew a
+ * recipe id is "two slugs joined by a space" would be a second place to update
+ * if it ever stopped being that, and the two would disagree silently.
+ *
+ * Split on the FIRST space only: a venue id is a slug and never contains one,
+ * while a dish id read off an old stored entry falls through to `slug(name)` and
+ * is likewise space-free — but a hand-edited store is not ours to trust, and
+ * giving the remainder to the dish is the reading that round-trips.
+ * Returns nulls for anything that is not a joined pair, so a caller cannot
+ * mistake a malformed id for a venue with no dish.
+ */
+export function parseRecipeId(rid) {
+  const at = typeof rid === "string" ? rid.indexOf(" ") : -1;
+  if (at <= 0 || at === rid.length - 1) return { venueId: null, dishId: null };
+  return { venueId: rid.slice(0, at), dishId: rid.slice(at + 1) };
+}
+
 /** Coerce anything read out of storage into `{ recipeId: { at, t: [...] } }`. */
 export function sanitiseTicks(raw, { now = Date.now(), staleMs = STALE_MS } = {}) {
   const out = {};

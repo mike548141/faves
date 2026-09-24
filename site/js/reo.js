@@ -190,6 +190,22 @@ const MI = {
   "nav.about": "Mō tēnei", // draft
   "nav.shareApp": "Tuaritia tēnei taupānga", // draft
   "nav.report": "Tukua mai he kōrero", // draft — "send us word"
+  // 🚩 `nav.shopping` — the ⋯ menu's "Shopping list" (17e) — is ENGLISH-ONLY and
+  // deliberately has no entry here, along with every other string the shopping
+  // list shows: "Add to shopping list" / "On your shopping list", "Update the
+  // amounts", "View the list", "Clear the list", "Remove", the two ✕ labels, and
+  // the "Your list holds this recipe at different amounts" line. None is a
+  // safety string, so the SAFETY BOUNDARY above is not what keeps them out —
+  // sourcing is. A gloss here is checked against the owner's nominated
+  // dictionary (maoridictionary.co.nz), never composed from single-word lookups,
+  // and composing is exactly what "shopping list" would need. That is the same
+  // refusal the `filter.orderMode` note below records for "dining", and the same
+  // one ADR 0083's seven `geo.*` keys were declared under. Most of them are also
+  // shapes this engine cannot carry anyway: two swap under the reader's own tap
+  // and the rest are composed in JS with a count in them, and "the engine swaps
+  // whole strings only". Falling back to English is automatic and safe; an
+  // invented gloss is not recoverable. Keys owed: `nav.shopping`, plus whatever
+  // the sheet's strings are keyed as when they are wired.
   // English is now "← All places" (ADR 0035: one noun, "place", for a venue as
   // the reader sees it). "wharekai" is specifically a restaurant/eating-house,
   // so it desynced the moment the English stopped saying "restaurants"; this

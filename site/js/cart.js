@@ -17,6 +17,16 @@ import { dishId } from "./dish-id.js";
 
 const KEY = "faves.order.v1";
 
+// ⚠️ The store below takes its storage KEY as a parameter, and that is the only
+// thing separating the order tally from the shopping list (shopping.js, ADR
+// 0124). The roadmap's direction for 17e was "the tally's cook-at-home twin
+// rather than a second list", and a second `createX(storage)` here would have
+// been that second list wearing a different name — this repo has already paid
+// for one question with two implementations, both locally right and only one
+// ever updated. So there is one gather/group/total/clear, one storage
+// lifecycle, one corrupt-payload fallback and one subscriber model; a caller
+// says which shelf it wants and gets all of it.
+
 /**
  * A note as the line's IDENTITY sees it (Theme 14c): whitespace runs collapsed
  * to one space, ends trimmed, anything that isn't a string → `""`.
@@ -174,13 +184,19 @@ export function mergeItems(base, incoming) {
 /**
  * Create an order store over a storage backend (injectable for tests).
  * Subscribers are notified on every mutation and on cross-tab changes.
+ *
+ * `key` names the shelf. It defaults to the order tally's, so every existing
+ * caller and every existing test is untouched; `shopping.js` passes its own to
+ * get the same store over a different list (ADR 0124). Two stores built over
+ * one storage backend never see each other: each reads and writes only its own
+ * key, and `commit()` notifies only its own subscribers.
  */
-export function createOrder(storage) {
+export function createOrder(storage, key = KEY) {
   const subs = new Set();
 
   function read() {
     try {
-      const a = migrateEntries(JSON.parse(storage.getItem(KEY) || "[]"));
+      const a = migrateEntries(JSON.parse(storage.getItem(key) || "[]"));
       return Array.isArray(a) ? a : [];
     } catch {
       return []; // corrupt payload → start clean rather than crash
@@ -191,7 +207,7 @@ export function createOrder(storage) {
 
   function commit() {
     try {
-      storage.setItem(KEY, JSON.stringify(items));
+      storage.setItem(key, JSON.stringify(items));
     } catch {
       /* over quota / blocked — the in-memory state still drives the UI */
     }

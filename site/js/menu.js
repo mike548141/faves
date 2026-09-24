@@ -102,6 +102,7 @@ import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { dishReportButton, venueReportRow, initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
+import { initShoppingEntry } from "./shopping-ui.js";
 import { initSettingsUI } from "./settings-ui.js";
 import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js";
 import { startSync } from "./sync-start.js";
@@ -2251,6 +2252,7 @@ function initChrome() {
   initReportEntry();
   initOverflowMenu();
   initSettingsUI();
+  initShoppingEntry(); // the ⋯ menu's route to the shopping list (17e)
 
   // Any settings change (allergen/dietary prefs included) → re-apply live.
   settings.subscribe(reapply);
