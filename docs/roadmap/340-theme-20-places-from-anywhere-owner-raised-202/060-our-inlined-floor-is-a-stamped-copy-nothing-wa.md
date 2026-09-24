@@ -47,6 +47,26 @@
     path argument it prints *"✓ stampscan clean — no stamped blocks found"* and
     **exit 0**. The one invocation an adopter is most likely to type is the one
     that cannot see the thing.
+    ⚠️ **THAT LAST SENTENCE PAIR DOES NOT REPRODUCE, re-measured 2026-09-24 at
+    `3db205f` with the exit code captured clear of any pipe.** The scope claim
+    is right and is confirmed by the tool's own `--help`; **the symptom is
+    wrong**. The bare run **exits 2**, not 0, because ADR 0120 — written *about*
+    this very problem — **quotes the `stamp:begin` marker syntax**, and that
+    quotation lives under `docs/`, inside the default scope. So the bare run
+    trips on the ADR and never scans `CLAUDE.md` at all: grepping its output for
+    `CLAUDE.md` returns **zero**.
+    🔑 **And the corrected shape is worse than the one first written down.** A
+    stable false pass is at least learnable. What actually happens is that both
+    invocations exit 2 with near-identical messages while **only one of them
+    looked at the floor** — so the exit code gives a reader no way to tell the
+    difference, and the symptom depends on whether anything under `docs/`
+    happens to mention a marker. The same defect therefore presents two
+    different ways in two children.
+    🚩 **This is the repo's own lesson landing on the repo:** *a check's
+    description is not evidence about the check* — and here the description was
+    a worker's report, published into an item, an ADR and a hand-up before
+    anyone ran the command clear of a pipe. Corrected upstream in the same pass
+    (atelier PR #87 carries the corrected version, not the original).
 
   🔑 **So the consequence atelier's `320/160` draws is adopted here: the hand
   check is not a stopgap.** It is the only instrument that can pass a compliant
