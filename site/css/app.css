@@ -2461,10 +2461,11 @@ body.faves-view .to-top {
 .fav-share {
   margin-bottom: var(--space-3);
 }
-/* The share, receive and report sheets reuse .order-sheet's frame. */
+/* The share, receive, report and shopping sheets reuse .order-sheet's frame. */
 .share-sheet,
 .recv-sheet,
-.report-sheet {
+.report-sheet,
+.shop-sheet {
   width: 100%;
   max-width: 34rem;
   max-height: 85vh;
@@ -2479,14 +2480,16 @@ body.faves-view .to-top {
 @media (min-width: 34rem) {
   .share-sheet,
   .recv-sheet,
-  .report-sheet {
+  .report-sheet,
+  .shop-sheet {
     margin: auto;
     border-radius: var(--radius);
   }
 }
 .share-sheet::backdrop,
 .recv-sheet::backdrop,
-.report-sheet::backdrop {
+.report-sheet::backdrop,
+.shop-sheet::backdrop {
   background: rgba(23, 19, 16, 0.45);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
@@ -4794,6 +4797,12 @@ body.faves-view .to-top {
    whose subject is a recipe (owner, 2026-08-16). Sized to its words now. */
 .cook-start-row {
   margin-top: var(--space-4);
+  /* Grid rather than a bare block since 17e put a second control here: the
+     cook button keeps its natural width (justify-items) while the shopping
+     row stretches for its explanation line, and at 390px they simply stack. */
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
 }
 .cook-start {
   justify-content: center;
@@ -6177,4 +6186,113 @@ mark.search-match {
   color: var(--ink-soft);
   font-size: var(--step-sub);
   text-align: left;
+}
+
+/* ---------- Shopping list (ROADMAP 17e) ---------- */
+/* The SHEET reuses .order-sheet's frame and .order-* internals wholesale — see
+   the selector lists above and shopping-ui.js's header. Only the parts a
+   shopping list has and an order does not are written here. No transition or
+   transform anywhere in this block, which is why it needs no
+   prefers-reduced-motion clause: there is no motion to reduce. Every colour is
+   a token, so dark mode follows without a second rule. */
+
+/* The recipe page's control, under "Start cooking". */
+.shop-row {
+  justify-self: stretch;
+  display: grid;
+  gap: var(--space-2);
+}
+.shop-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+/* On the list. The tick is decoration; the state a screen reader announces is
+   aria-pressed, and the LABEL changes too — so neither the glyph nor the fill
+   is the only thing carrying the fact (WCAG 1.4.1). */
+.shop-add.is-on {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.shop-add.is-on::before {
+  content: "✓ ";
+}
+.shop-update {
+  background: var(--warn-bg);
+  border-color: var(--warn);
+  color: var(--warn-ink);
+}
+.shop-note {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.is-stale .shop-note {
+  color: var(--warn-ink);
+}
+.shop-warn-mark {
+  font-weight: 700;
+}
+/* A real button, because it opens a dialog rather than navigating — but it sits
+   mid-sentence, so it reads as the link it behaves like. 44px is met by the
+   padding plus the line box around it. */
+.shop-view {
+  min-height: 44px;
+  padding: 0 0.2em;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* The sheet's own bits. */
+.shop-recipe-link {
+  color: inherit;
+  text-decoration: underline;
+}
+.shop-group-remove {
+  min-height: 44px;
+  padding: 0 0.8em;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+/* Per line: "I already have this". Distinct from the tick beside it, which
+   means "it is in the trolley" — one removes, the other marks. */
+.shop-remove {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.shop-remove:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+/* No strike-through rule here on purpose. A shopping line carries .order-line
+   as well as .shop-line, so `.order-line.collected .order-line-name` above
+   already does it — and two rules answering one question is the fault this
+   repo names in its own records: both read correct in every diff and only one
+   ever gets updated. */
+.overflow-item .shop-count:not(:empty) {
+  min-width: 1.4em;
+  padding: 0.05em 0.35em;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
 }

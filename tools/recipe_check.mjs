@@ -105,6 +105,10 @@ import {
 import { slug } from "../site/js/slug.js";
 import { ingredientBlocks, ingredientCount } from "../site/js/ingredients.js";
 import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
+// …and the shopping list's own view of a recipe, for the same reason: an
+// expectation hand-typed here would only prove the tool and the page agreed on
+// the day it was written.
+import { recipeLines } from "../site/js/shopping.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -122,7 +126,7 @@ const HEIGHT = 844;
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 29;
+const EXPECTED_ASSERTIONS = 39;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
@@ -137,6 +141,9 @@ and measures the recipe page at two explicit widths and two text sizes:
   · a wrapped step's number sits beside its FIRST line, measured off the
     pseudo-element's own box over the DevTools protocol (37m)
   · two columns only where a second fits, and only on a list of six or more (37d)
+  · the shopping list: reachable with the ingredients folded away, says when it
+    disagrees with the scale on screen, updates without lying about what is
+    already in the trolley, and can be emptied (17e)
 
 Fixtures are chosen from site/data/restaurants/${COLLECTION}.json at run time —
 never hard-coded line numbers — and named in the output, so an edited corpus
@@ -329,6 +336,19 @@ async function run(opts) {
     .filter((i) => count(i, "half", "blocked") >= 1 && count(i, "half", "scaled") >= 1)
     .sort((a, b) => count(b, "half", "blocked") - count(a, "half", "blocked"))[0];
   if (!blockedFixture) throw new Error(`no partly-scalable recipe fixture in ${COLLECTION}`);
+
+  // 17e's fixture: a recipe with lines that DO move at 2× and at least one that
+  // does not. Both halves are load-bearing — the tick assertion needs one line
+  // whose amount changes (its tick must die) and one whose amount does not (its
+  // tick must live), and a fixture with only the first would let a store that
+  // drops every tick on update pass.
+  const shopFixture = [...items]
+    .filter(
+      (i) =>
+        count(i, "double", "scaled") >= 2 && statuses(i, "double").some((s) => s !== "scaled")
+    )
+    .sort(byLines)[0];
+  if (!shopFixture) throw new Error(`no part-scalable recipe fixture in ${COLLECTION} for 17e`);
 
   // The counter-example: nothing to scale at all. May legitimately not exist —
   // handled at the assertion rather than thrown here, so its absence is
@@ -793,6 +813,250 @@ async function run(opts) {
           "so this assertion is unproven rather than passing"
       );
     }
+
+    // --- 7. The shopping list (17e, ADR 0124) -----------------------------
+    //
+    // Everything here is out of a unit test's reach, and three of them fail
+    // SILENTLY: a control the reader cannot get to, a list that disagrees with
+    // the page and says nothing, and a tick that is wrong rather than missing.
+    await rootFont(16);
+    await size(NARROW);
+    await goto(url(shopFixture));
+
+    // A device that already has an order in it. Planted rather than built,
+    // because a recipe page has no dish stepper to build one with — and the
+    // claim being set up is about the STORE, not about how the order got there:
+    // `createOrder`'s key became a parameter for this feature, and "the shopping
+    // list emptied my order tally" is the failure that change could introduce.
+    await evalPage(`localStorage.setItem("faves.order.v1", ${JSON.stringify(
+      JSON.stringify([
+        { venueId: "x", venueName: "X", currency: "NZD", phone: null, name: "Chips",
+          price: 5, options: [], qty: 1, collected: false },
+      ])
+    )})`);
+
+    // (a) 🔑 REACHABLE WITH THE INGREDIENTS FOLDED AWAY. This is the entire
+    // reason the control sits beside "Start cooking" rather than inside the
+    // ingredients panel: the fold is remembered, and remembered for EVERY
+    // recipe (37c), so a reader who once folded it would never see this button
+    // again. Proven across a real page load out of real storage, because a
+    // preference that survives a re-render proves nothing.
+    await click(".ingredients-summary");
+    await settle();
+    await goto(url(shopFixture));
+    const folded = await evalPage(`(() => {
+      const fold = document.querySelector("details.ingredients-fold");
+      const btn = document.querySelector(".shop-add");
+      const r = btn ? btn.getBoundingClientRect() : null;
+      return { open: !!fold?.open, w: Math.round(r?.width ?? 0), h: Math.round(r?.height ?? 0) };
+    })()`);
+    report.check(
+      "the shopping control is reachable with the ingredients FOLDED AWAY, and clears 44px",
+      folded.open === false && folded.w > 1 && folded.h >= 44,
+      `fold open=${folded.open} · button ${folded.w}×${folded.h}px`
+    );
+    await click(".ingredients-summary"); // back open for the scale picker below
+    await settle();
+
+    // (b) Adding puts the recipe's WHOLE list on, at the scale on screen.
+    const want1 = recipeLines(shopFixture, "one");
+    await click(".shop-add");
+    await settle();
+    const added = await evalPage(`(() => {
+      const btn = document.querySelector(".shop-add");
+      const list = JSON.parse(localStorage.getItem("faves.shopping.v1") || "[]");
+      return {
+        n: list.length,
+        names: list.map((i) => i.name),
+        label: btn.textContent,
+        pressed: btn.getAttribute("aria-pressed"),
+      };
+    })()`);
+    report.check(
+      "adding puts every ingredient on the list, at the amounts on screen, and the button says so",
+      added.n === want1.length &&
+        added.names.join("|") === want1.map((l) => l.text).join("|") &&
+        added.pressed === "true" &&
+        /On your shopping list/.test(added.label),
+      `${added.n} of ${want1.length} lines · button “${added.label}” aria-pressed=${added.pressed}`
+    );
+
+    // (c) The sheet: grouped under the recipe, with a way back to it.
+    await click("#overflow-btn");
+    await click("#shopping-btn");
+    await settle();
+    const sheetView = await evalPage(`(() => {
+      const rows = [...document.querySelectorAll(".shop-sheet .shop-line")];
+      const h = (s) => Math.round(s.getBoundingClientRect().height);
+      return {
+        open: !!document.querySelector("dialog.shop-sheet")?.open,
+        groups: document.querySelectorAll(".shop-sheet .order-group").length,
+        heading: document.querySelector(".shop-sheet .shop-recipe-link")?.textContent ?? null,
+        href: document.querySelector(".shop-sheet .shop-recipe-link")?.getAttribute("href") ?? null,
+        rows: rows.length,
+        texts: rows.map((li) => li.querySelector(".order-line-name").textContent),
+        minDrop: Math.min(...rows.map((li) => h(li.querySelector(".shop-remove")))),
+        minTick: Math.min(...rows.map((li) => h(li.querySelector(".order-collect-line")))),
+        minGroupRemove: Math.min(
+          ...[...document.querySelectorAll(".shop-sheet .shop-group-remove")].map(h)
+        ),
+        minClear: h(document.querySelector(".shop-sheet .order-clear")),
+      };
+    })()`);
+    report.check(
+      "the sheet lists them in ONE group under the recipe's name, with a link back to it",
+      sheetView.open === true &&
+        sheetView.groups === 1 &&
+        sheetView.heading === shopFixture.name &&
+        (sheetView.href || "").includes(`id=${COLLECTION}`) &&
+        sheetView.rows === want1.length &&
+        sheetView.texts.join("|") === want1.map((l) => l.text).join("|"),
+      `${sheetView.groups} group(s), ${sheetView.rows} rows under “${sheetView.heading}” → ${sheetView.href}`
+    );
+    // Read one-handed in a supermarket, with a trolley in the other (CLAUDE.md:
+    // every target ≥ 44px). The ✕ is the one that matters most — it deletes,
+    // and it sits a thumb's width from the tick that does not.
+    report.check(
+      "every control in the sheet clears the 44px tap target",
+      sheetView.minDrop >= 44 && sheetView.minTick >= 44 &&
+        sheetView.minGroupRemove >= 44 && sheetView.minClear >= 44,
+      `✕ ${sheetView.minDrop}px · tick row ${sheetView.minTick}px · ` +
+        `remove ${sheetView.minGroupRemove}px · clear ${sheetView.minClear}px`
+    );
+
+    // Tick two lines: one whose amount will move at 2×, one whose will not.
+    const want2 = recipeLines(shopFixture, "double");
+    const movedAt = want1.findIndex((l, k) => l.text !== want2[k].text);
+    const stillAt = want1.findIndex((l, k) => l.text === want2[k].text);
+    await click(".shop-sheet .shop-line .order-collect-line", want1[movedAt].text);
+    await click(".shop-sheet .shop-line .order-collect-line", want1[stillAt].text);
+    await click(".shop-sheet .order-close");
+    await settle();
+
+    // (e) 🚩 THE HONESTY CASE. The reader is looking at 2× and their list holds
+    // 1×. Nothing else on either screen would say so, and the failure lands in
+    // a shop with neither screen open — so it is said in WORDS, never in the
+    // amber alone (WCAG 1.4.1), and the way out is on the same line.
+    await click(".scale-row .scale-btn:nth-child(3)"); // 2×
+    await settle();
+    const stale = await evalPage(`(() => {
+      const upd = document.querySelector(".shop-update");
+      return {
+        stale: !!document.querySelector(".shop-row.is-stale"),
+        updateShown: !!upd && !upd.hidden && Math.round(upd.getBoundingClientRect().height) >= 44,
+        note: document.querySelector(".shop-note")?.textContent ?? null,
+        live: document.querySelector(".shop-note")?.getAttribute("aria-live") ?? null,
+        pressed: document.querySelector(".shop-add").getAttribute("aria-pressed"),
+      };
+    })()`);
+    report.check(
+      "scaling the page does not rewrite the list — it SAYS the two disagree, in words",
+      stale.stale === true &&
+        stale.updateShown === true &&
+        /different amounts/.test(stale.note || "") &&
+        stale.live === "polite" &&
+        stale.pressed === "true",
+      `is-stale=${stale.stale} · update shown=${stale.updateShown} · aria-live=${stale.live} · ` +
+        `note: ${stale.note ? `“${stale.note}”` : "MISSING"}`
+    );
+
+    // (f) Updating brings the amounts over, and the disagreement goes away.
+    await click(".shop-update");
+    await settle();
+    await click("#overflow-btn");
+    await click("#shopping-btn");
+    await settle();
+    const updated = await evalPage(`(() => {
+      const rows = [...document.querySelectorAll(".shop-sheet .shop-line")];
+      return {
+        texts: rows.map((li) => li.querySelector(".order-line-name").textContent),
+        ticked: rows
+          .filter((li) => li.querySelector(".order-check").checked)
+          .map((li) => li.querySelector(".order-line-name").textContent),
+        struck: rows.filter((li) => li.classList.contains("collected")).length,
+      };
+    })()`);
+    report.check(
+      "updating rewrites the amounts, in the recipe's own order",
+      updated.texts.join("|") === want2.map((l) => l.text).join("|"),
+      `got [${updated.texts.slice(0, 3).join(", ")}…] · wanted [${want2.slice(0, 3).map((l) => l.text).join(", ")}…]`
+    );
+    // 🔑 THE ONE THAT FAILS SILENTLY, and the twin of ADR 0076's tick rule one
+    // screen over. A tick means "that is in my trolley". It is still true of a
+    // line whose amount did not move and is a LIE about one that doubled — and
+    // a wrong tick is worse than a missing one, because the shopper walks past
+    // the shelf. Neither direction throws, logs or looks wrong on screen.
+    report.check(
+      "a tick survives an update where the amount did NOT move, and dies where it did",
+      updated.ticked.length === 1 &&
+        updated.ticked[0] === want2[stillAt].text &&
+        updated.struck === 1,
+      `ticked [${updated.ticked.join(", ")}] · expected only “${want2[stillAt].text}” ` +
+        `(the moved line “${want1[movedAt].text}” → “${want2[movedAt].text}” must not be)`
+    );
+
+    // (d) EMPTYING, at all three sizes. A list you cannot empty is a trap, and
+    // this app shipped that trap once already.
+    await click(".shop-sheet .shop-line .shop-remove");
+    await settle();
+    const afterDrop = await evalPage(`document.querySelectorAll(".shop-sheet .shop-line").length`);
+    await click(".shop-sheet .order-clear");
+    await settle();
+    const midClear = await evalPage(`(() => ({
+      rows: document.querySelectorAll(".shop-sheet .shop-line").length,
+      label: document.querySelector(".shop-sheet .order-clear").textContent,
+    }))()`);
+    report.check(
+      "✕ takes one line off, and the FIRST tap of Clear empties nothing — it asks",
+      afterDrop === want2.length - 1 && midClear.rows === afterDrop && /sure/i.test(midClear.label),
+      `${want2.length} → ${afterDrop} after ✕ · after one Clear tap: ${midClear.rows} rows, ` +
+        `button reads “${midClear.label}”`
+    );
+    // 🛑 GUARDED, and the guard is the point. If the tap above already emptied
+    // the list then the Clear button is GONE — it hides on an empty list,
+    // correctly — and a blind second click would stop the whole run on a
+    // control that is not there, burying this verdict and every one after it
+    // under a `FAIL UNSTABLE ELEMENT`. Measured: that is exactly what happened
+    // when the confirm latch was break-probed out. So a broken guard is
+    // REPORTED as unproven here, the same way a missing fixture is above,
+    // rather than aborting the run that was about to describe it.
+    let emptied = { rows: midClear.rows, empty: null, stored: -1, skipped: true };
+    if (midClear.rows > 0) {
+      await click(".shop-sheet .order-clear");
+      await settle();
+      emptied = await evalPage(`(() => ({
+        rows: document.querySelectorAll(".shop-sheet .shop-line").length,
+        empty: document.querySelector(".shop-sheet .order-empty")?.textContent ?? null,
+        stored: JSON.parse(localStorage.getItem("faves.shopping.v1") || "[]").length,
+        skipped: false,
+      }))()`);
+    }
+    report.check(
+      "the second tap empties it, and the empty sheet says how to fill it again",
+      !emptied.skipped &&
+        emptied.rows === 0 &&
+        emptied.stored === 0 &&
+        /Add to shopping list/.test(emptied.empty || ""),
+      emptied.skipped
+        ? "NOT PROVEN — the first tap had already emptied the list, so there was no second tap to make"
+        : `${emptied.rows} rows, ${emptied.stored} stored · “${emptied.empty}”`
+    );
+
+    // (h) …and none of that touched the order tally sitting on the same device.
+    const tally = await evalPage(`(() => {
+      const fab = document.querySelector(".order-fab");
+      return {
+        stored: JSON.parse(localStorage.getItem("faves.order.v1") || "[]").length,
+        fab: document.querySelector(".order-fab-count")?.textContent ?? null,
+        hidden: !fab || fab.hidden,
+      };
+    })()`);
+    report.check(
+      "clearing the shopping list leaves the ORDER TALLY untouched — two shelves, one backend",
+      tally.stored === 1 && tally.fab === "1" && tally.hidden === false,
+      `faves.order.v1 holds ${tally.stored} line(s) · the order button reads “${tally.fab}” ` +
+        `(hidden=${tally.hidden})`
+    );
 
     report.check(
       "no uncaught page exception anywhere in the run",

@@ -15,6 +15,7 @@ import { convertTemperatures } from "./units.js";
 import { profiles, PROFILES_KEY, reloadProfileStores } from "./profiles.js";
 import { initReo, translate } from "./reo.js";
 import { cookButton } from "./cook-ui.js";
+import { initShoppingEntry, shoppingButton } from "./shopping-ui.js";
 import { CHECKLIST_KEY, checklist, recipeId } from "./checklist.js";
 import { syncTicks, tickRow } from "./checklist-ui.js";
 import { ingredientBlocks } from "./ingredients.js";
@@ -166,7 +167,6 @@ function render(collection, item) {
   // 2026-08-17), and that is not a bug to leave one refactor away from
   // returning.
   const cook = cookButton(item, { venueId: id, scale: () => scaleKey });
-  if (cook) parts.push(el("div", { className: "cook-start-row" }, [cook]));
 
   // Ticking off what you have already done (ROADMAP 17e). Every ingredient and
   // every step is a real checkbox, keyed on the RAW line — never on the
@@ -174,6 +174,15 @@ function render(collection, item) {
   // they flipped units, and never on the index, or an edited recipe would slide
   // every tick onto the wrong line (checklist.js).
   const rid = recipeId(id, item);
+
+  // The shopping list (17e), beside cook mode rather than inside the ingredients
+  // fold — the fold is REMEMBERED and remembered for every recipe, so a reader
+  // who folded it away once would never see this control again. `scale` goes
+  // through as a getter for the same reason cook mode's does: a list built off a
+  // stale scale is a wrong amount discovered in a supermarket.
+  const shop = shoppingButton(item, { venueId: id, rid, scale: () => scaleKey });
+  if (cook || shop) parts.push(el("div", { className: "cook-start-row" }, [cook, shop]));
+
   const blocks = ingredientBlocks(item.ingredients);
   if (blocks.length) {
     // Folded away once everything is in the bowl (37c). Native <details>, the
@@ -380,6 +389,7 @@ function initChrome() {
   initReportEntry();
   initOverflowMenu();
   initSettingsUI();
+  initShoppingEntry(); // the ⋯ menu's route to the list, on every screen (17e)
   // A profile switch inside that dialog must re-point THIS page's stores before
   // anything repaints, or the new person would inherit the last one's hearts.
   // settings.reload() fires last by contract, so the reRender below is already

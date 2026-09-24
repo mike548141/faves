@@ -56,6 +56,11 @@
           <!-- Settings (owner wants it here). Safe because menu.js now re-applies
                the allergen/dietary treatment live on a change (wireLiveSafety) —
                same markup as index.html so both ⋯ menus read identically. -->
+          <button type="button" id="shopping-btn" class="overflow-item" role="menuitem" hidden>
+            <span class="overflow-item-icon" aria-hidden="true">🛒</span>
+            <span data-i18n="nav.shopping">Shopping list</span>
+            <span class="shop-count" aria-hidden="true" hidden></span>
+          </button>
           <button
             type="button"
             id="settings-btn"

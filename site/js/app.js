@@ -43,6 +43,7 @@ import { initAboutUI } from "./about-ui.js";
 import { initShareApp } from "./share-app.js";
 import { initReportEntry } from "./report-ui.js";
 import { initOverflowMenu } from "./overflow-ui.js";
+import { initShoppingEntry } from "./shopping-ui.js";
 import { startSync } from "./sync-start.js";
 import { initBackToTop } from "./to-top.js";
 import { displayPrice, formatMoney, venueTimezone, zoneLabel } from "./place.js";
@@ -763,6 +764,7 @@ function init(restaurants) {
   initShareApp();
   initReportEntry();
   initOverflowMenu();
+  initShoppingEntry(); // the ⋯ menu's route to the shopping list (17e)
   initBackToTop();
   // Hearting something, or changing a distance dial, re-ranks the list (also
   // covers un-favouriting in the view, or a change synced from another tab).
