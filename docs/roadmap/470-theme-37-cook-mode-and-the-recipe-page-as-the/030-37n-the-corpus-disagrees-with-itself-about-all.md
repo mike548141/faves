@@ -195,14 +195,30 @@
   **and that no other case does**, because a case that fires on every breaker
   localises nothing.
 
-  🚩 **One finding, reported and NOT fixed.** The four `exclude` entries already
-  in the `sausage` class (chorizo · salami · pepperoni · kransky · lap cheong ·
-  Chinese sausage) are vetoes of exactly the shape ruling 3 declines. Measured
-  2026-09-24: the twelve rows they catch are all sausage rolls, Chinese sausage
-  dishes, or pizzas with no rusk-bound sausage on them, so **nothing is wrong
-  today** — but a breakfast plate naming a chorizo beside a plain sausage would
-  leave the class. Converting them is a separate finding, outside the four
-  rulings.
+  🔎 **One finding, reported and NOT fixed — and the fault is LIVE, not
+  hypothetical.** The `exclude` entries already in the `sausage` class
+  (`sausage roll` · chorizo · salami · pepperoni · kransky · lap cheong ·
+  Chinese sausage) are vetoes of exactly the shape ruling 3 declines.
+  ⚠️ **This paragraph said "nothing is wrong today" when it was first written
+  and that was WRONG** — the first measurement counted the rows the veto
+  catches and never asked whether any of them *also* named an ordinary sausage.
+  Re-measured properly the same day: of the **11** rows vetoed, **3 carry a
+  sausage token that is no part of the excluded phrase**, so the veto silences a
+  true rusk claim:
+
+  | row | the line | vetoed by |
+  |---|---|---|
+  | `daily-bakery/sausage-roll` | *"Flaky pastry filled with savoury **sausage**"* | `sausage roll` |
+  | `pizza-pomodoro/carne-small` | *"salami, ham, and **sausage**"* | `salami` |
+  | `pizza-pomodoro/carne-large` | *"salami, ham, and **sausage**"* | `salami` |
+
+  🔑 **All three already carry `contains-gluten`, so the report reads the same
+  either way** — which is exactly why nobody had noticed, and exactly the
+  measurement trap the corrected sentence above records. The two Carne rows are
+  the fault shape proper: an unqualified *sausage* losing its watch because a
+  **salami** sits on the same line. Converting these to lookbehinds is a
+  separate finding, outside the four rulings, and it wants its own break-probe
+  against `'Caramel slice, with slices of ham'`-shaped lines.
 
   🚩 **And a bigger finding fell out of it, filed separately as
   [`470/060`](060-a-section-name-is-evidence-the-tagger-never-reads.md):** 68

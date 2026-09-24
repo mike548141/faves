@@ -96,13 +96,19 @@ CLASSES = [
         # different. Cured continental sausages are a different food entirely:
         # chorizo, salami, pepperoni and lap cheong carry no rusk, and lumping
         # them in is exactly the false positive that makes a report ignorable.
-        # ⚠️ These four are vetoes of the shape the paragraph above declines,
-        # and they carry the same latent fault: a plate naming both a chorizo
-        # and a plain sausage leaves the class. No row in the corpus does so
-        # today (measured 2026-09-24 — the twelve rows the veto catches are all
-        # sausage rolls, Chinese sausage, or pizzas with no rusk-bound sausage
-        # on them), so this is reported rather than changed; converting them is
-        # a separate finding, not part of the 2026-09-21 rulings.
+        # ⚠️ These are vetoes of the shape the paragraph above declines, they
+        # carry the same fault, AND THE FAULT IS LIVE — measured 2026-09-24, of
+        # the 11 rows this veto catches, THREE also name a sausage that is no
+        # part of the excluded phrase, so a true rusk claim is silenced:
+        # daily-bakery/sausage-roll ("pastry filled with savoury sausage",
+        # vetoed by `sausage roll`) and pizza-pomodoro's Carne small and large
+        # ("salami, ham, and sausage", vetoed by `salami`). All three already
+        # carry contains-gluten, so THE REPORT READS THE SAME EITHER WAY, which
+        # is why it went unnoticed — and the first measurement of it counted the
+        # vetoed rows without asking that second question and concluded
+        # "nothing is wrong today". Reported rather than changed: converting
+        # these to lookbehinds is a separate finding, not part of the
+        # 2026-09-21 rulings, and it wants its own break-probe.
         r"\bsausage\s?rolls?\b|\b(chorizo|salami|pepperoni|kransky|lap\s?cheong|"
         r"chinese\s+sausages?)\b",
         ["contains-gluten"],

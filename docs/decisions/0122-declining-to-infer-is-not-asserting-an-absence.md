@@ -116,8 +116,17 @@ call; silence would be a decision taken by default.
   On today's corpus the veto and the lookbehind print an identical report, so no
   outcome test can tell them apart. `b3` and `b6` rebuild each narrowing as the
   veto and require one synthetic menu line — and only that line — to notice.
-- The four `exclude` entries already in the `sausage` class (chorizo, salami,
-  pepperoni, lap cheong / Chinese sausage) are vetoes of exactly the shape this
-  record declines. **Measured 2026-09-24: no row in the corpus names one of
-  them beside a rusk-bound sausage**, so nothing is wrong today. Converting
-  them is a separate finding and is deliberately not done here.
+- 🔎 **The `exclude` entries already in the `sausage` class are vetoes of the
+  shape this record declines, and the fault is LIVE.** ⚠️ This consequence read
+  *"no row in the corpus names one of them beside a rusk-bound sausage, so
+  nothing is wrong today"* when the record was first written, and that was
+  **wrong** — the measurement counted the rows the veto catches and never asked
+  whether any of them *also* named an ordinary sausage. Re-measured the same
+  day: of the 11 rows vetoed, **3 carry a sausage token that is no part of the
+  excluded phrase** — `daily-bakery/sausage-roll` (*"pastry filled with savoury
+  sausage"*, vetoed by `sausage roll`) and Pizza Pomodoro's Carne small and
+  large (*"salami, ham, and sausage"*, vetoed by `salami`). All three already
+  carry `contains-gluten`, so **the report reads the same either way**, which is
+  why nobody had noticed. Converting them is a separate finding and is
+  deliberately not done here; the correction is recorded because a wrong reason
+  is how a right rule gets argued away.
