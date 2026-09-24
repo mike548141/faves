@@ -702,7 +702,8 @@
           "price": 26.0,
           "tags": [
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -712,7 +713,8 @@
           "price": 24.0,
           "tags": [
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -722,7 +724,8 @@
           "price": 25.0,
           "tags": [
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         },
         {
@@ -733,7 +736,8 @@
           "tags": [
             "v",
             "gf-option",
-            "contains-dairy"
+            "contains-dairy",
+            "contains-gluten"
           ]
         }
       ]
