@@ -1,4 +1,17 @@
-- [~] **17e — The rest of what the research turned up** `[S]`–`[M]` each,
+- [~] **17e — The rest of what the research turned up**
+      📌 **SHOPPING LIST CLAIMED 2026-09-24 (session `3e87e0bf`), branch
+      `recipe-shopping-list`.** ⚠️ **Whether this item is buildable work or an
+      idea-only research record was put to the owner and the question was a bad
+      one — the item's own history already answers it.** Three of its bullets
+      are struck as shipped (the checklist, read-aloud, ingredient-first
+      search), so sessions have been building from this list since 2026-08-16.
+      The list is a work queue with its findings written beside it, not a
+      record to leave alone. Recorded so the next session does not re-ask.
+      🔑 The design direction is the item's own and is not being re-opened:
+      **the tally's cook-at-home twin, reusing `cart.js`, never a second
+      list.** Only the shopping-list bullet is taken; personal notes and
+      substitutions stay open (substitutions are owner-authored content and
+      must never be generated). `[S]`–`[M]` each,
   ✅ **The checklist and read-aloud bullets are SHIPPED** (claim released
   2026-08-17: `wt: faves-cook-checklist` no longer exists and both bullets are
   in the tree with tests). **Checklist** — `site/js/checklist.js` +
