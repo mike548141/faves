@@ -9,6 +9,12 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Fixed
+- **A hot sauce now says it is hot while you are choosing it, not after.** The
+  add-on picker drew "Mild chilli" and "Hot chilli" identically, so the only way
+  to find out which was which was to tick one — and ticking is how you order it.
+  An extra tagged for heat now carries the same "🌶🌶 Spicy" chip a dish row has
+  always shown, on the option itself, before anything is chosen. An extra that
+  carries no heat tag still says nothing, because we do not know.
 - **Syncing with a device running an older Faves can no longer clear an
   allergen flag.** The older device dropped any allergen it had never heard of,
   and the newer one then read that as *"you removed it"* and cleared its own —

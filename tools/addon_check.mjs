@@ -75,6 +75,16 @@
 //      tags anywhere else. Counted the same way (j) is, plus the absence — the
 //      second phrasing is GONE — and a control on the dish's unrelated absence
 //      sentence, so a merge that ate one sentence too many cannot pass.
+//   m) AND SINCE 2026-09-21 (roadmap 200/080, owner-ruled), HEAT BEFORE THE
+//      TICK. `validate.py` accepts a `spicy-*` tag on an add-on option and two
+//      of the kebab card's sauces carry one — "Mild chilli" and "Hot chilli",
+//      side by side in one group, drawn identically. Composition already spoke
+//      heat AFTER a tick (k's path carries it onto the dish row), so the silence
+//      was in the only moment it is any use: while you are choosing. The picker
+//      now paints the dish row's own chip on the option row, from the shared
+//      vocabulary in site/js/heat.js, which this file IMPORTS rather than
+//      re-types. Two levels and one untagged-but-chilli-named sauce, so neither
+//      a hard-coded chip nor a chip on every row can pass.
 //   k) THE CHIP ROW WENT STALE. It was built once from `item.tags` and never
 //      rebuilt, so a `v` pizza with salmon on it wore a green `Veg` chip beside
 //      a warning saying it is no longer vegetarian. The chips are recomposed
@@ -122,6 +132,11 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Cdp, Report, createDriver, exitFromError, launchChrome, need, startServer, stopChrome, untilPresent } from "./lib/browser.mjs";
+// The shipped heat vocabulary, imported rather than re-typed (roadmap 200/080).
+// heat.js is DOM-free, so this is the app's OWN words — which makes the heat
+// assertions below a claim that the picker renders the shared vocabulary, not a
+// claim that it renders a string this file also happens to know.
+import { heatLabel } from "../site/js/heat.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -141,6 +156,23 @@ const ALLERGEN = "contains-peanuts";
 // "avoid Fish" and added Salmon to a fish-free dish was told nothing whatsoever.
 // Every assertion in this file passed while that was true, because the fish axis
 // walked straight past all of them.
+// --- 200/080: heat, said BEFORE the tick (owner-ruled 2026-09-21) ----------
+// The same counter card, and the reason this item is not academic: these two
+// sauces sit side by side in one group and the picker drew them identically. A
+// reader had to TICK one to learn which was which, and ticking is how you order
+// it. Two levels rather than one, because a single hard-coded chip passes any
+// assertion made about one of them.
+const HOT_OPTION = "Hot chilli";
+const HOT_TAG = "spicy-2";
+const MILD_OPTION = "Mild chilli";
+const MILD_TAG = "spicy-1";
+// 🔑 THE ABSENCE FIXTURE, AND IT IS CHOSEN ON PURPOSE. "Sweet chilli" carries no
+// heat tag at all, and its NAME says chilli — so a build that read heat off the
+// option's name instead of its tags, or that painted the chip on every row,
+// fails here and nowhere else. An untagged sauce is not a mild one: we do not
+// know, and a chip would be a claim about food (ADR 0025's line).
+const NEUTRAL_OPTION = "Sweet chilli";
+
 const FISH_ALLERGEN = "contains-fish";
 const FISH_OPTION = "Salmon";
 // Chosen because it makes NO dietary claim. On a `v` dish the picker would have
@@ -235,6 +267,11 @@ const snapshotExpr = `(() => {
     warnHidden: warn.hidden,
     warnFlagged: warn.classList.contains("is-flagged"),
     warnText: warn.textContent,
+    // The dish's own chip row, verbatim — the same read dishExpr does for the
+    // named-dish blocks, so the kebab venue's heat block (m) can assert the
+    // picker's words and the row's words are one vocabulary. (No backticks in
+    // this comment: the whole expression is a template literal.)
+    chips: [...dish.querySelectorAll(".dish-tags .tag")].map((c) => c.textContent),
     addLabel: (box.querySelector(".addon-stepper .stepper-add") || {}).ariaLabel || null,
     lines: JSON.parse(localStorage.getItem("faves.order.v1") || "[]").map((l) => [l.name, l.price, l.qty, (l.options || []).map((o) => o.name).join("+")]),
     sections: [...document.querySelectorAll(".menu-section .section-title")].map((h) => h.textContent),
@@ -278,6 +315,38 @@ const headingExpr = (sectionId) => `(() => {
 
 /** Tick the nth sauce by its visible label, through a real mouse click. */
 const sauceSelector = (name) => `.addon-option`;
+
+/**
+ * Every option row in the first picker on the page — name, the chips it carries,
+ * and its box (roadmap 200/080).
+ *
+ * Read with NOTHING ticked, which is the whole of what this item is about: the
+ * composed chip row on the dish already spoke heat once an option was chosen.
+ * The box travels with it because the chip goes INSIDE a 44px tap target, and
+ * "the words are there" and "the row is still tappable at 390px" are two claims
+ * that fail independently.
+ */
+const optionsExpr = `(() => {
+  const dish = [...document.querySelectorAll("li.dish")].find((d) => d.querySelector(".dish-addons"));
+  if (!dish) return { found: false };
+  return {
+    found: true,
+    width: window.innerWidth,
+    rows: [...dish.querySelectorAll(".addon-option")].map((l) => {
+      const r = l.getBoundingClientRect();
+      return {
+        name: (l.querySelector(".addon-option-name") || { textContent: "" }).textContent,
+        // The label's WHOLE text — what a screen reader announces as the
+        // control's accessible name, price and all.
+        label: l.textContent.replace(/\\s+/g, " ").trim(),
+        chips: [...l.querySelectorAll(".tag")].map((c) => c.textContent),
+        heatChips: [...l.querySelectorAll(".tag-spicy")].map((c) => c.textContent),
+        height: Math.round(r.height),
+        right: Math.round(r.right),
+      };
+    }),
+  };
+})()`;
 
 // --- 14h: what the warning SAYS when a claim dies (ADR 0092) --------------
 // A second venue, because the kebab card has no dish making a dietary claim and
@@ -437,6 +506,136 @@ async function run(opts) {
 
     // --- (b)+(c) satay names peanuts, loudly ---------------------------
     await driver.click(".dish-addons-summary");
+
+    // --- (m) 200/080: heat is said WHILE YOU ARE CHOOSING ----------------
+    // 🛑 STATE THE DEFECT PRECISELY, because the item's own summary — "a
+    // `spicy-*` tag on an add-on option is legal and renders NOTHING" — is
+    // broader than what was measured here on 2026-09-21, and a fix aimed at the
+    // summary would have been aimed at nothing. Since 200/060 wired the chip row
+    // to the composed tags, ticking a hot sauce DID paint "🌶🌶 Spicy" on the
+    // dish row. What rendered nothing was the picker itself: the group below
+    // offers "Mild chilli" and "Hot chilli" side by side and drew them
+    // identically, so the only way to find out which was which was to tick one.
+    // Everything here is read with the selection still empty, for that reason.
+    const picker = await driver.evalPage(optionsExpr);
+    const rowOf = (name) => picker.rows.find((x) => x.name === name);
+    const hotRow = rowOf(HOT_OPTION);
+    const mildRow = rowOf(MILD_OPTION);
+    const neutralRow = rowOf(NEUTRAL_OPTION);
+    // Refuse to run against a picker missing a fixture, rather than passing on
+    // three `undefined`s: `need()`'s rule, applied to data rather than to a node.
+    if (!hotRow || !mildRow || !neutralRow) {
+      throw new Error(
+        `the "${SAUCES}" group no longer offers ${[HOT_OPTION, MILD_OPTION, NEUTRAL_OPTION]
+          .filter((n) => !rowOf(n))
+          .join(", ")} — this block needs two heat levels and one untagged sauce`,
+      );
+    }
+    report.check(
+      `a hot sauce says so BEFORE it is ticked — "${HOT_OPTION}" carries its heat on the row`,
+      hotRow.heatChips.length === 1 && hotRow.heatChips[0] === heatLabel(HOT_TAG),
+      `${JSON.stringify(hotRow.heatChips)} · expected ${JSON.stringify([heatLabel(HOT_TAG)])}`,
+    );
+    report.check(
+      "…in the SAME words the dish row and the recipe page use, not a second vocabulary",
+      // heatLabel is the shipped module (site/js/heat.js), imported at the top
+      // of this file — so this asserts the picker renders what the app renders,
+      // and would fail if the picker grew its own copy of the template.
+      hotRow.heatChips[0] === heatLabel(HOT_TAG) && /Spicy/.test(hotRow.heatChips[0] || ""),
+      JSON.stringify(hotRow.heatChips[0]),
+    );
+    report.check(
+      `…and the two levels are DIFFERENT — "${MILD_OPTION}" is not the same chip`,
+      mildRow.heatChips.length === 1 && mildRow.heatChips[0] === heatLabel(MILD_TAG) &&
+        mildRow.heatChips[0] !== hotRow.heatChips[0],
+      `mild ${JSON.stringify(mildRow.heatChips)} vs hot ${JSON.stringify(hotRow.heatChips)}`,
+    );
+    // The absence half, and the assertion most likely to rot. Without it a build
+    // that painted a chip on all twelve sauces passes everything above.
+    report.check(
+      `a sauce with no heat tag carries NO heat chip — "${NEUTRAL_OPTION}" is named for one and is not tagged`,
+      neutralRow.heatChips.length === 0,
+      `${JSON.stringify(neutralRow.heatChips)} on a row reading ${JSON.stringify(neutralRow.label)}`,
+    );
+    report.check(
+      "…and it is the only kind of chip the picker paints — an option's other tags stay in the warning line",
+      picker.rows.every((r) => r.chips.length === r.heatChips.length) &&
+        picker.rows.filter((r) => r.chips.length > 0).length === 2,
+      `${picker.rows.filter((r) => r.chips.length > 0).length} row(s) with chips, of ${picker.rows.length}`,
+    );
+    // WCAG 2.2 AA, and the reason the chip is not three chillies on their own:
+    // a reader whose renderer drops emoji, or who is listening to the page, gets
+    // the level from the word or not at all. Asserted on the RENDERED string.
+    report.check(
+      "the heat is carried in WORDS as well as glyphs — never by colour or emoji alone",
+      /Spicy/.test(hotRow.heatChips[0] || "") && /Spicy/.test(mildRow.heatChips[0] || ""),
+      `${JSON.stringify(hotRow.heatChips[0])} · ${JSON.stringify(mildRow.heatChips[0])}`,
+    );
+    report.check(
+      "…and it is INSIDE the label, so the control announces it with its name and price",
+      hotRow.label.includes(HOT_OPTION) && hotRow.label.includes(heatLabel(HOT_TAG)),
+      JSON.stringify(hotRow.label),
+    );
+    // 🛑 AND THE COMPUTED ACCESSIBLE NAME, WHICH IS NOT THE SAME READ. The
+    // label's `textContent` is "Hot chilli🌶🌶 Spicy" — no space, because the two
+    // spans are adjacent. Chrome's accname algorithm inserts one only because
+    // `.tag` is `display: inline-flex` rather than `inline`; change that one CSS
+    // word and a screen reader says "Hot chillinot-a-word" while every
+    // assertion above, and every pixel on the page, stays exactly as it is.
+    // Measured through the AX tree, which is the only place that fact lives.
+    await cdp.send("DOM.enable", {}, sessionId);
+    await cdp.send("Accessibility.enable", {}, sessionId);
+    const axName = async (selector) => {
+      const { root } = await cdp.send("DOM.getDocument", { depth: -1 }, sessionId);
+      const { nodeId } = await cdp.send("DOM.querySelector", { nodeId: root.nodeId, selector }, sessionId);
+      if (!nodeId) return null;
+      const { nodes } = await cdp.send("Accessibility.getPartialAXTree", { nodeId, fetchRelatives: false }, sessionId);
+      return nodes.find((n) => n.name)?.name?.value ?? null;
+    };
+    const hotName = await axName(`.addon-option input[value=${JSON.stringify(HOT_OPTION)}]`);
+    const neutralName = await axName(`.addon-option input[value=${JSON.stringify(NEUTRAL_OPTION)}]`);
+    report.check(
+      "the CONTROL is announced as its name AND its heat, with the two words apart",
+      hotName === `${HOT_OPTION} ${heatLabel(HOT_TAG)}`,
+      `${JSON.stringify(hotName)} · expected ${JSON.stringify(`${HOT_OPTION} ${heatLabel(HOT_TAG)}`)}`,
+    );
+    report.check(
+      "…and the untagged sauce is announced as its name alone — the control on the absence half",
+      neutralName === NEUTRAL_OPTION,
+      `${JSON.stringify(neutralName)} · expected ${JSON.stringify(NEUTRAL_OPTION)}`,
+    );
+    // Mobile first: the chip went inside a 44px tap target and the page is 390px
+    // wide. Both are measured rather than reasoned about — a chip that pushes a
+    // row past the viewport is a horizontal scroll on a phone.
+    report.check(
+      "every option row is still a 44px target at 390px, with the chip on it",
+      picker.rows.every((r) => r.height >= 44) && picker.rows.every((r) => r.right <= picker.width),
+      `${picker.rows.length} row(s), shortest ${Math.min(...picker.rows.map((r) => r.height))}px, ` +
+        `widest right edge ${Math.max(...picker.rows.map((r) => r.right))} of ${picker.width}px`,
+    );
+    // The other half of the item, pinned rather than assumed: ticking it puts
+    // the SAME words on the dish row. This is 200/060's path, and it is the
+    // behaviour the item reported as missing — so it is asserted here, once,
+    // rather than left as a paragraph claiming it already worked.
+    await driver.click(sauceSelector(), HOT_OPTION);
+    const heated = await driver.evalPage(snapshotExpr);
+    report.check(
+      "ticking it carries the heat onto the dish row, in the same words again",
+      heated.tags.includes(HOT_TAG) && heated.chips.includes(heatLabel(HOT_TAG)),
+      `dataset.tags = ${heated.tags.join(" ")} · chips ${JSON.stringify(heated.chips)}`,
+    );
+    // …and back off. The rest of this run counts taps against the venue's cap of
+    // three, so the selection must be empty again before (b) starts.
+    await driver.click(sauceSelector(), HOT_OPTION);
+    const cooled = await driver.evalPage(snapshotExpr);
+    report.check(
+      "…and unticking it takes the heat back off — the row does not keep a claim the reader undid",
+      !cooled.tags.includes(HOT_TAG) && cooled.checked.length === 0 &&
+        !cooled.chips.includes(heatLabel(HOT_TAG)),
+      `dataset.tags = ${cooled.tags.join(" ") || "(none)"} · ${cooled.checked.length} ticked · ` +
+        `chips ${JSON.stringify(cooled.chips)}`,
+    );
+
     await driver.click(sauceSelector(), PEANUT_OPTION);
     s = await driver.evalPage(snapshotExpr);
     report.check(

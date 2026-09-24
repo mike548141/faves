@@ -20,6 +20,7 @@ import { syncTicks, tickRow } from "./checklist-ui.js";
 import { ingredientBlocks } from "./ingredients.js";
 import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
 import { el } from "./dom.js";
+import { isSpicy, heatLabel } from "./heat.js";
 // The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
 // a recipe could show CONTAINS GLUTEN chips with no route to the Settings that
 // decide which allergens are flagged, and no way to reach Favourites, Share or
@@ -54,7 +55,10 @@ const ALLERGEN = {
   "contains-sesame": "Contains sesame",
 };
 const isAllergen = (t) => t in ALLERGEN;
-const isSpicy = (t) => /^spicy-[123]$/.test(t);
+// Heat is NOT mirrored from menu.js any more: `isSpicy`/`heatLabel` are imported
+// from heat.js, so the recipe page and the menu row cannot word the same scale
+// differently (roadmap 200/080). The two tables above are still mirrors and are
+// held in step by tests/tag-labels.test.js.
 
 function tagChip(t, avoid = EMPTY_SET) {
   if (isAllergen(t)) {
@@ -62,8 +66,7 @@ function tagChip(t, avoid = EMPTY_SET) {
     return el("span", { className: cls, textContent: `⚠ ${ALLERGEN[t]}` });
   }
   if (isSpicy(t)) {
-    const level = Number(t.slice(-1));
-    return el("span", { className: "tag tag-spicy", textContent: `${"🌶".repeat(level)} Spicy` });
+    return el("span", { className: "tag tag-spicy", textContent: heatLabel(t) });
   }
   if (t in DIETARY) return el("span", { className: "tag tag-diet", textContent: DIETARY[t] });
   return el("span", { className: "tag", textContent: t });

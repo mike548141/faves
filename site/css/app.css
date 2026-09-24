@@ -5910,6 +5910,15 @@ body.faves-view .to-top {
   height: 1.1em;
   accent-color: var(--accent);
 }
+/* Heat, said on the option row while you are still choosing (roadmap 200/080).
+   The LOOK is `.tag.tag-spicy` — the same chip the dish row and the recipe page
+   paint, deliberately not a second style for one idea — so this rule only
+   changes what being inside a 44px tap target does to it. `flex: none` because
+   the row is an inline-flex box and a shrinkable chip turns "🌶🌶 Spicy" into a
+   wrapped or clipped one at 390px, which is where this is read. */
+.addon-option-tag {
+  flex: none;
+}
 .addon-option-price {
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;

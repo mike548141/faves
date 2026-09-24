@@ -1507,3 +1507,23 @@ deliberation those compact docs omit.
   ST3) and reds by construction on the filled placeholders even when it
   resolves — both measured. The hand check, with its command, is now in the
   onramp and runs every pin bump.
+- [0121](0121-heat-is-one-vocabulary-and-the-picker-is-a-screen-that-renders-it.md)
+  — **heat is ONE vocabulary, and the picker is a screen that renders it.**
+  Roadmap `200/080`, owner-ruled 2026-09-21: *name the screen, don't delete the
+  data* — a chilli sauce that renders as neutral is a silence about heat. 🛑 The
+  item's summary ("renders nothing") is **broader than the defect**: since
+  `200/060` the composed chip row already showed heat AFTER a tick; what was
+  silent was the picker, where Mild chilli and Hot chilli were drawn
+  identically — so you had to tick one to find out, and ticking is how you order
+  it. The words lived TWICE (menu.js, recipe.js) and a third copy was the
+  cheapest fix; they live in `site/js/heat.js` once now, and the label test
+  **refuses** a surface that does not reach it. **Rejected:** forbidding
+  `spicy-*` in `validate.py` (the owner's ruling), a third local copy, chips for
+  ALL of an option's tags (ADR 0096 — but heat is the exception, because it has
+  no warning-line voice at all), and an emoji-only chip (WCAG 2.2 AA). The
+  computed **accessible name** is asserted through the AX tree, because the
+  space between the name and the chip exists only while `.tag` is
+  `inline-flex`. `addon_check` 52 → 64; break-probe fails exactly 7, with the
+  absence and geometry assertions still passing. 🚩 Carries one thing for the
+  owner: this centralises **heat only**, next to his 2026-09-07 *"one shared
+  source of truth … is declined for today"* on `340/230`.
