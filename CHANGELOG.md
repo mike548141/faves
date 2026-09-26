@@ -8,6 +8,12 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Chocolate Lava Cakes in Cook at Home**, adapted from Whittaker's and
+  credited on the recipe page. The cakes warn about soy, because the chocolate's
+  label lists it, and the description repeats the label's may-contain line
+  for peanuts and tree nuts.
+
 ### Fixed
 - **67 pizzas, burgers and sandwiches now warn about gluten.** A shop that
   prints **Pizza** over a list of pizzas has told you what the dough is, and

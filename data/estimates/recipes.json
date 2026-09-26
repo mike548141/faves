@@ -1156,6 +1156,68 @@
           "working": "Wrapped in a tea towel to hold a soft crust."
         }
       ]
+    },
+    "chocolate-lava-cakes": {
+      "name": "Chocolate Lava Cakes",
+      "serves": 8,
+      "servesSource": "stated",
+      "servesWorking": "The source's structured data gives recipeYield 8, and the method greases 8 ramekins, one cake each.",
+      "yield": "8 cakes",
+      "yieldSource": "stated",
+      "timeTotal": 82,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The source's own prepTime PT60M + cookTime PT22M = 82 min (read from the page's schema.org Recipe block). The 60 min of prep includes the stated 30 min in the freezer; the 22 min of cooking is the upper 15 min bake plus some of the stated 10 min cool.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 12,
+          "source": "estimated",
+          "phase": "prep",
+          "working": "A domestic oven reaches 180°C in about 10–12 min; the 8 ramekins are greased and lined while it heats. Because the batter then freezes for 30 min, the oven only needs switching on towards the end of that rest, so this adds nothing to the elapsed total."
+        },
+        {
+          "index": 1,
+          "minutes": 4,
+          "source": "estimated",
+          "phase": "prep",
+          "working": "250g chocolate and 225g butter melted in short microwave bursts: about 3–4 bursts plus stirring. The stated '30-second bursts' is the burst length, not the step's duration."
+        },
+        {
+          "index": 2,
+          "minutes": 5,
+          "source": "estimated",
+          "phase": "prep",
+          "working": "6 eggs whisked with the sugar, the chocolate mixed in, the flour sifted and folded."
+        },
+        {
+          "index": 3,
+          "minutes": 30,
+          "source": "stated",
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Freeze for 30 minutes to rest.\" ⇒ 30 min. Filling 8 ramekins takes a couple of minutes more on top."
+        },
+        {
+          "index": 4,
+          "minutes": 12,
+          "source": "stated",
+          "phase": "cook",
+          "working": "Stated by the recipe: \"bake for 12–15 minutes\" ⇒ 12 min, the lower bound. Check the wobble at 12; the source warns that underdone cakes break when turned out."
+        },
+        {
+          "index": 5,
+          "minutes": 10,
+          "source": "stated",
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Cool on a wire rack for 10 minutes\" ⇒ 10 min."
+        },
+        {
+          "index": 6,
+          "minutes": 1,
+          "source": "estimated",
+          "phase": "prep",
+          "working": "Plated with fruit and ice cream."
+        }
+      ]
     }
   }
 }

@@ -711,6 +711,39 @@
             "v",
             "contains-dairy"
           ]
+        },
+        {
+          "name": "Chocolate Lava Cakes",
+          "dishId": "chocolate-lava-cakes",
+          "desc": "Dark chocolate puddings with a runny centre, rested in the freezer before they bake. The ingredients list flaky sea salt, but the method never says where it goes. The chocolate's label says it may contain peanuts and tree nuts.",
+          "serves": 8,
+          "time": "~82 min",
+          "ingredients": [
+            "50g butter, melted, for greasing",
+            "250g Whittaker's 72% Dark Ghana chocolate, roughly chopped",
+            "225g salted butter, diced",
+            "6 large eggs, at room temperature",
+            "⅔ cup (150g) caster sugar",
+            "½ cup (75g) plain flour",
+            "½ tsp flaky sea salt"
+          ],
+          "steps": [
+            "Preheat the oven to 180°C (bake). Grease 8 ovenproof ramekins with the melted butter and line each base with a circle of baking paper about 7cm across.",
+            "Melt the chocolate and diced butter together in a heatproof bowl in the microwave, in 30-second bursts, stirring until smooth. Set aside to cool.",
+            "In a large bowl, whisk the eggs and caster sugar until combined. Mix in the melted chocolate until just combined, then sift in the flour and fold it through until just combined.",
+            "Divide the batter between the ramekins, filling each to about 0.5cm from the top. Freeze for 30 minutes to rest.",
+            "Set the ramekins on an oven tray and bake for 12–15 minutes, until the edges are set but the centre still jiggles a lot. The runny centre should be about the size of a $2 coin — take them out too early and they break when you turn them out.",
+            "Cool on a wire rack for 10 minutes, until you can handle them. Run a knife around each edge and turn the cakes out onto plates.",
+            "Serve warm, with fresh fruit and ice cream if you like."
+          ],
+          "tags": [
+            "v",
+            "contains-gluten",
+            "contains-dairy",
+            "contains-egg",
+            "contains-soy"
+          ],
+          "attribution": "Adapted from Whittaker's (whittakers.co.nz)"
         }
       ]
     },

@@ -50,10 +50,11 @@ cold review, 2026-09-07).
 | `intake/not-products.json` | capture bursts that were read and are deliberately **not** a product — the recipe pages and the menu leaflet | by hand | `tools/products.py` (shape) + `--coverage` (against the photographs) |
 | `intake/name-index.json` | what the prior food exports in `intake/ingredients/` **name** — names and source file only, no nutrition | `tools/intake_index.py` | `tools/intake_index.py --check` |
 | `intake/menu-sources.json` | the **provenance** of the material each venue's menu was read from: file name, capture date and time, device, GPS presence (ADR 0107) | `tools/check_provenance.py --rebuild` | `tools/check_provenance.py` |
+| `intake/recipe-sources.json` | the **provenance** of a recipe read off a **web page**: URL, fetch time, SHA-256 of the page as fetched, the page's own dates, and what was adapted. `menu-sources.json` cannot hold these, because its rebuild regenerates it from the photos and PDFs in `intake/` | by hand | **nothing yet**: a JSON parse in `validate.py`'s sweep at most. No tool checks that each web-sourced recipe has a row |
 
 **`intake/` here is a record ABOUT the intake, not a copy of it.** The intake
 itself (`intake/` at the repo root) is gitignored and stays that way; these
-three files hold what a reader needs once the raw material is no longer at hand.
+files hold what a reader needs once the raw material is no longer at hand.
 
 `menu-sources.json` is what lets a guard run where the raw material is not.
 `verified` is the date `refreshCaveat` ages, so a date fresher than the

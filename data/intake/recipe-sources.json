@@ -1,0 +1,36 @@
+{
+  "what": "Provenance of Cook at Home recipes read from a web page rather than from a photograph or PDF in intake/. menu-sources.json cannot hold these: check_provenance.py --rebuild regenerates it from the photo and PDF files in intake/, so a web row there would be deleted on the next rebuild.",
+  "written by": "by hand, one row per recipe, when the recipe is transcribed",
+  "checked by": "nothing yet; see data/README.md",
+  "recipes": {
+    "chocolate-lava-cakes": {
+      "venue": "cook-at-home",
+      "sectionId": "desserts",
+      "kind": "web",
+      "url": "https://www.whittakers.co.nz/en_NZ/recipes/choc-lava-cakes",
+      "publisher": "Whittaker's",
+      "handedOverBy": "owner, 2026-09-27, as the URL: 'Add this recipe to Faves'",
+      "fetched": "2026-09-26T22:29:08Z",
+      "http": { "status": 200, "bytes": 41165 },
+      "sha256": "0552232c5f59c36efc2939c579fcc03b95f6f59d780ecc97bd9036c466252a3c",
+      "snapshot": "intake/recipes/web/whittakers-choc-lava-cakes.html (gitignored; the raw page as fetched at the time above)",
+      "pageDates": {
+        "datePublished": "2026-03-24 01:58:00",
+        "dateModified": "2026-09-22 13:23:31",
+        "note": "As the page's schema.org Recipe block states them, with no timezone given."
+      },
+      "readFrom": [
+        "The page's schema.org Recipe block (application/ld+json): name, recipeIngredient, recipeInstructions, recipeYield 8, prepTime PT60M, cookTime PT22M.",
+        "The page's embedded product panel for 72% Dark Ghana Block 250g: 'CONTAINS: SOY. MAY BE PRESENT: MILK, PEANUTS, TREE NUTS, GLUTEN.' This is the source of the contains-soy tag and the may-contain line in desc."
+      ],
+      "adapted": [
+        "The method is reworded in our voice and condensed from eight steps to seven, with the same quantities, temperatures and times. It is credited in the payload's attribution field, following the Edmonds precedent on Chocolate Self-Saucing Pudding.",
+        "Ingredient lines are rewritten in the collection's style ('⅔ cup (150g)' for the source's '⅔ Cup / 150g'). No quantity is changed.",
+        "The source lists '½ tsp Flaky sea salt' but its method never uses it. The line is kept, the gap is stated in desc, and no step was invented to use it."
+      ],
+      "notTaken": [
+        "The page's photograph. It is not ours to ship: see data/images/ and ADR 0053."
+      ]
+    }
+  }
+}
