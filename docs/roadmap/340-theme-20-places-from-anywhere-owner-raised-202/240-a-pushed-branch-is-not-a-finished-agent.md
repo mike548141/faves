@@ -1,9 +1,9 @@
 - [~] 🔎 **An orchestrator tore down a sub-agent's worktree while the agent was
-      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — inline, by the orchestrator.
-      (claimed 2026-09-27-1350, wt: main)
       still running, because a clean tree and a pushed HEAD look exactly like a
       finished agent** `[S][docs]` — found 2026-09-07 (session faves-b1) by
       doing it **twice**, and reported by both agents it happened to.
+      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — inline, by the orchestrator.
+      (claimed 2026-09-27-1350, wt: main)
 
   ⚠️ **It says TWICE because the second report corrected the first count.** This
   item was written from the `past-midnight` agent's report and said "an agent".

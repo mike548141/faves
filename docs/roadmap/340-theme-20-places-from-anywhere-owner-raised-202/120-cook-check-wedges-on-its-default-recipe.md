@@ -1,13 +1,13 @@
 - [ ] 🛑 **`cook_check` wedges on its DEFAULT recipe, deterministically, and it
+  is not machine load** `[M][js]` — found and **controlled** 2026-08-17 while
+  merging the cook-mode work. This is a different fault from `010` in this
+  section (transport flakiness under load), and conflating the two is how it
+  stays unfixed.
   📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
   branch, no live session behind it. The bracket was standing in for
   "part-done", which the house board does not define — `[~]` means
   *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
   § Claiming work). What is done is carried in the body below.
-  is not machine load** `[M][js]` — found and **controlled** 2026-08-17 while
-  merging the cook-mode work. This is a different fault from `010` in this
-  section (transport flakiness under load), and conflating the two is how it
-  stays unfixed.
 
   ⚠️ **THE HEADLINE CLAIM IS REFUTED — 2026-08-19, on byte-identical code.**
   `git log 5e23592..HEAD -- tools/cook_check.mjs tools/lib/browser.mjs

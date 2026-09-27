@@ -1,10 +1,10 @@
 - [~] 🔎 **A gate that is on the verify list but not in CI went red on `main`,
-      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — inline, after `28h` lands.
-      (claimed 2026-09-27-1350, wt: main)
       and it took a passing agent on unrelated work to notice** `[S][tools]` —
       found 2026-09-09 (session faves-3b) by the agent delivering `500/060`,
       which ran `products.py` because its brief said to and found `main`
       already failing.
+      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — inline, after `28h` lands.
+      (claimed 2026-09-27-1350, wt: main)
 
   **What happened, exactly.** PR #31 (`500/020`, the Churton leaflet) added
   `readAlso` and `readAlsoBy` to the `b029` row of

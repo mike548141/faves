@@ -1,9 +1,4 @@
 - [ ] ✅ **RULED AND SHIPPED (first half) 2026-08-17 — the answer is DULL, NOT
-  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
-  branch, no live session behind it. The bracket was standing in for
-  "part-done", which the house board does not define — `[~]` means
-  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
-  § Claiming work). What is done is carried in the body below.
       HIDE.** The owner ruled it from a screenshot of a dish wearing two
       identical red warnings when only one of them was his:
       > *"If an allergen is enabled in the users settings … it shoud work
@@ -51,6 +46,11 @@
       dietary preferences, no allergens, or simply other allergens that don't
       affect them… not sure how this will work. Something to think on."* Filed
       as thinking, not as a build order.
+  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
+  branch, no live session behind it. The bracket was standing in for
+  "part-done", which the house board does not define — `[~]` means
+  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
+  § Claiming work). What is done is carried in the body below.
 
 ## Why it belongs in Theme 22
 

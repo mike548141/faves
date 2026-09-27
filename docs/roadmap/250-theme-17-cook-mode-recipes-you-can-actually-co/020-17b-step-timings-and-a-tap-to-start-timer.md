@@ -1,11 +1,11 @@
 - [x] **17b — Step timings and a tap-to-start timer** `[M][design]` — the
+  owner's item 2. Per-step time where it is useful, and beside any step with a
+  duration, a **Start timer** that counts down and sounds an alarm.
   ✅ **CLOSED 2026-09-27 (session `40d6dea4`) — shipped, only the bracket was
   stale.** Per-step countdowns with an alarm are in the tree: `site/js/alarm.js`,
   `createTimerStore`/`createAlarm` in `cook.js`/`cook-ui.js`, several labelled
   timers at once, paired with the wake lock (ADR 0034). ADR 0066 put a
   countdown on every step, estimated ones labelled on the timer face.
-  owner's item 2. Per-step time where it is useful, and beside any step with a
-  duration, a **Start timer** that counts down and sounds an alarm.
   - **Where the duration comes from:** authored per step (`{ text, minutes }`)
     beats parsing the prose, but parsing is what makes it work on the 24 recipes
     that already exist. Recommend **parse to suggest, author to confirm** — the

@@ -1,9 +1,4 @@
 - [ ] **14b — The content sweep** `[M][content]` — ✅ **the TOOL half is DONE
-  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
-  branch, no live session behind it. The bracket was standing in for
-  "part-done", which the house board does not define — `[~]` means
-  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
-  § Claiming work). What is done is carried in the body below.
   2026-08-16** (wt: faves-schema30): `tools/find_addons.py` + 44 test cases +
   17 breakers, and a `validate.py` **warning** on the 15 high-confidence
   convertible rows. **The conversion half stays open and is the bulk of it** —
@@ -33,3 +28,8 @@
   the scanner structure-aware; a dry run reports 0 missing and 0 skipped today.
   The bail is still there and is now a correct guard rather than a silent
   refusal.
+  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
+  branch, no live session behind it. The bracket was standing in for
+  "part-done", which the house board does not define — `[~]` means
+  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
+  § Claiming work). What is done is carried in the body below.

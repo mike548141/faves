@@ -1,9 +1,4 @@
 - [ ] 🚩 **PART-DONE, not open — the mechanism half shipped (`ecbc82e`), the
-  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
-  branch, no live session behind it. The bracket was standing in for
-  "part-done", which the house board does not define — `[~]` means
-  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
-  § Claiming work). What is done is carried in the body below.
       contention half is not repo work.** Marked 2026-08-17 by a board sweep;
       free to pick up, not claimed. What remains is a loaded laptop, which no
       commit fixes; what a session *could* still take is capping concurrent
@@ -73,6 +68,11 @@
       same decision from two sides: a check too flaky to gate is also a check
       too flaky to *trust when typed by hand*, and "leave them manual" quietly
       assumes the manual runs are believed.
+  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
+  branch, no live session behind it. The bracket was standing in for
+  "part-done", which the house board does not define — `[~]` means
+  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
+  § Claiming work). What is done is carried in the body below.
 
   🛑 **ONE OF THE "FLAKES" WAS NOT A FLAKE — it was a defect in the check, and
   it was found 2026-09-24 (session `3e87e0bf`) only because a worker refused to

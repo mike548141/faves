@@ -1,11 +1,11 @@
 - [ ] 🚩 **The branch picker is a FIFTH surface that disagrees about a closed
+  venue — and the schema cannot answer it yet** `[S][js][schema]` — found
+  2026-08-17 while shipping `030`, and deliberately left rather than guessed at.
   📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
   branch, no live session behind it. The bracket was standing in for
   "part-done", which the house board does not define — `[~]` means
   *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
   § Claiming work). What is done is carried in the body below.
-  venue — and the schema cannot answer it yet** `[S][js][schema]` — found
-  2026-08-17 while shipping `030`, and deliberately left rather than guessed at.
 
   `030` made ranking and "Open now" agree with the card badge and the dice. The
   branch picker did not move. `branchOpenStateOf` (`site/js/menu.js:291`),

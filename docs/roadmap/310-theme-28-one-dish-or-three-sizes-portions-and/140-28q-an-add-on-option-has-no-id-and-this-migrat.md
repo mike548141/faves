@@ -1,8 +1,8 @@
 - [~] **28q — An add-on option has no id, and this migration is what makes
-      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — orchestrated queue run, worker.
-      (claimed 2026-09-27-1350, wt: faves-28q)
       that expensive** `[M][schema]` — found while decomposing `490/050`;
       independently real, and independently deliverable.
+      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — orchestrated queue run, worker.
+      (claimed 2026-09-27-1350, wt: faves-28q)
 
   🔎 **The defect.** An order line's identity is
   `` `${i.venueId}\n${dishId(i)}\n${selectionKey(i.options)}\n${note}` ``

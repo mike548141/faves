@@ -1,9 +1,4 @@
 - [ ] **Other venues with drinks nobody has captured** `[M][content]` —
-  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
-  branch, no live session behind it. The bracket was standing in for
-  "part-done", which the house board does not define — `[~]` means
-  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
-  § Claiming work). What is done is carried in the body below.
       ✅ **the derivation is done 2026-08-16** (`tools/drinks_gap.py`);
       transcribing what it finds stays open and owner-gated.
       **Derived, not re-typed** (same fix as ADR 0041 gave dish-level gaps):
@@ -35,3 +30,8 @@
       answer a *different* question (which venues lack drinks?) to surface
       it, which is the argument for deriving worklists rather than eyeballing
       them.
+  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
+  branch, no live session behind it. The bracket was standing in for
+  "part-done", which the house board does not define — `[~]` means
+  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
+  § Claiming work). What is done is carried in the body below.
