@@ -35,7 +35,7 @@ import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 // fed was removed 2026-08-16 as a duplicate of the ⓘ note. It stays exported
 // and tested in temporal.js because it is the canonical phrasing of "how we
 // know", and the ⓘ would need it back if the date ever left that note.
-import { todayIn, isTrading, refreshCaveat, detailsVerification } from "./temporal.js";
+import { todayIn, isBranchTrading, branchClosure, refreshCaveat, detailsVerification } from "./temporal.js";
 import {
   branchTimezone,
   displayCurrency,
@@ -339,8 +339,9 @@ function hoursRow(hours, now, tz, closed = false) {
       textContent: onVenueTime ? "Hours" : `Hours · ${zoneLabel(tz)}`,
     }),
   ]);
-  // A venue-level closure silences the live chip (branchClosureBadge). The
-  // closure itself is stated ONCE per branch, on the branch's heading, because
+  // A closure — the branch's own or its venue's (branchClosureBadge, ADR 0132)
+  // — silences the live chip. The closure itself is stated ONCE per branch, on
+  // the branch's heading, because
   // that is the one place every branch has — a branch with no captured hours
   // gets no hours row at all, and the lead branch of an hours-less chain was
   // therefore the one row on the card still saying nothing while the header
@@ -362,16 +363,15 @@ function hoursRow(hours, now, tz, closed = false) {
   ]);
 }
 
-// A venue-level closure, as a badge for ONE branch of it — or null when the
-// venue is trading, which is the ordinary case.
+// The closure that applies to ONE branch, as a badge — or null when the branch
+// is trading, which is the ordinary case.
 //
-// WHY EVERY BRANCH GETS THE VENUE'S CLOSURE. The schema holds no per-branch
-// lifecycle: `venueState` folds `lifecycle.events[]` for the WHOLE venue
-// (temporal.js), so "has this branch shut down?" is not a question the data can
-// answer. The only closure we hold is the venue's, and a venue that has shut
-// down has shut every branch with it. Until per-branch closure exists (an open
-// design question, not ours to settle), the venue's answer is the only honest
-// one a branch row can give.
+// PER BRANCH SINCE ADR 0132 (owner-ruled 2026-08-22). A branch may carry its
+// own `lifecycle`, so one branch of a chain can shut while the others trade.
+// `branchClosure` (temporal.js) settles the branch's closure against the
+// venue's, and the VENUE'S IS THE FLOOR: a chain that has shut down has shut
+// every branch with it, whatever a branch's own record says. Until 2026-09-28
+// this read the venue alone, because the schema had nowhere else to look.
 //
 // It is also what the rest of this screen already does: the header banner
 // (`renderHeader`) and the sticky contact bar both let `closureBadge` REPLACE
@@ -380,14 +380,14 @@ function hoursRow(hours, now, tz, closed = false) {
 // header said "Permanently closed" — one screen, two answers, and the wrong one
 // was the actionable-looking one.
 //
-// `isTrading` and `closureBadge` agree by construction — both treat a missing
-// or "trading" state as trading, and both treat the two closure states alike —
-// so `branchOpenStateOf` below can gate on the predicate while the two
-// rendering surfaces gate on the badge, without the three drifting apart.
+// `isBranchTrading` and this badge agree by construction — both read the ONE
+// `branchClosure` answer — so `branchOpenStateOf` below can gate on the
+// predicate while the two rendering surfaces gate on the badge, without the
+// three drifting apart.
 //
 // Mints a NEW element per call: one DOM node cannot sit in two branch rows.
-function branchClosureBadge(r) {
-  return closureBadge(r, todayIn(venueTimezone(r)));
+function branchClosureBadge(r, b) {
+  return closureBadge({ closure: branchClosure(r, b) }, todayIn(venueTimezone(r)));
 }
 
 // The call / address / hours rows for one branch, in order (any may be absent).
@@ -399,7 +399,7 @@ function branchRows(r, b, clock) {
   // one and shut in the other, and one shared `now` would have said otherwise.
   if (b.hours) {
     const tz = branchTimezone(r, b);
-    rows.push(hoursRow(b.hours, clock.at(tz), tz, !isTrading(r)));
+    rows.push(hoursRow(b.hours, clock.at(tz), tz, !isBranchTrading(r, b)));
   }
   return rows;
 }
@@ -418,7 +418,7 @@ function branchBlock(r, b, clock) {
     // Same badge, same place, as a collapsed row's heading (branchSummary) —
     // so the lead and the rows beside it answer alike. Null when trading, which
     // is why the lead keeps its familiar heading in the ordinary case.
-    branchClosureBadge(r),
+    branchClosureBadge(r, b),
   ]);
   return el("section", { className: "contact-branch", "aria-label": `${r.name} — ${heading}` }, [
     head,
@@ -426,17 +426,18 @@ function branchBlock(r, b, clock) {
   ]);
 }
 
-// A branch's open/closed state as the three-way answer leadBranch needs. The
-// third state is the honest one: no hours on the branch means we cannot say,
-// and saying nothing is not the same as saying "shut".
+// A branch's open/closed state as the answer leadBranch needs. "unknown" is
+// the honest one for a branch with no hours: we cannot say, and saying nothing
+// is not the same as saying "closed".
 function branchOpenStateOf(r, clock) {
   return (b) => {
-    // A closed venue has no open branches, whatever any branch's posted hours
-    // say — so this answers "closed" for EVERY branch, including the ones with
-    // no hours at all. That is not the "unknown" case below: there we cannot
-    // say, here we can. It also keeps leadBranch honest — without it a shut
-    // chain still led with a branch tier 1 had called open.
-    if (!isTrading(r)) return "closed";
+    // A branch that has stopped TRADING — its own closure or its venue's
+    // (ADR 0132) — is "shut", whatever its posted hours say, including a branch
+    // with no hours at all. That is not the "unknown" case below: there we
+    // cannot say, here we can. And it is not "closed" either: leadBranch prefers
+    // a branch that is merely shut TONIGHT over one that is shut for good, so
+    // it never leads with a shut branch while any trading one exists.
+    if (!isBranchTrading(r, b)) return "shut";
     if (!b.hours) return "unknown";
     return openStatus(b.hours, clock.at(branchTimezone(r, b))).state;
   };
@@ -454,10 +455,11 @@ function branchSummary(r, b, clock) {
     }));
   }
   // Closure first, for the reason branchClosureBadge gives — and note it is
-  // NOT gated on `b.hours`: the venue's closure is a fact about this branch
-  // whether or not anyone ever captured its opening times, so a hoursless
-  // branch of a shut chain says "Permanently closed" rather than nothing.
-  const closure = branchClosureBadge(r);
+  // NOT gated on `b.hours`: a closure is a fact about this branch whether or
+  // not anyone ever captured its opening times, so a hoursless branch of a shut
+  // chain (or a hoursless branch that has itself shut) says "Permanently
+  // closed" rather than nothing.
+  const closure = branchClosureBadge(r, b);
   if (closure) {
     bits.push(closure);
   } else if (b.hours) {

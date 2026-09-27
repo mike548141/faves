@@ -11,6 +11,7 @@
 // unit-testable and offline-safe.
 
 import { haversineKm } from "./distance.js";
+import { isBranchTrading } from "./temporal.js";
 
 /**
  * Canonical branch list for a venue — always ≥ 1. When the record carries a
@@ -47,9 +48,19 @@ export function branchCoords(b) {
  */
 export function nearestBranch(r, origin = null) {
   const branches = branchesOf(r);
-  let best = { branch: branches[0], index: 0, distanceKm: Infinity };
+  // A branch that has SHUT (its own lifecycle, ADR 0132) is not a candidate
+  // while a trading one exists: this is the branch whose hours drive the home
+  // card's badge, "Open now" and the ranking tier, and a shut branch's posted
+  // week would otherwise print "Open · until 9pm" for a door that is locked —
+  // on the home screen, while the menu page's card led with a different branch.
+  // When NOTHING trades (a venue-level closure, or every branch shut) every
+  // branch stays a candidate, exactly as before: the closure is then stated by
+  // the closure badge, and the pick only has to be the nearest.
+  const live = branches.map((branch, index) => ({ branch, index })).filter(({ branch }) => isBranchTrading(r, branch));
+  const pool = live.length ? live : branches.map((branch, index) => ({ branch, index }));
+  let best = { branch: pool[0].branch, index: pool[0].index, distanceKm: Infinity };
   if (!origin) return best;
-  branches.forEach((branch, index) => {
+  pool.forEach(({ branch, index }) => {
     const c = branchCoords(branch);
     if (!c) return;
     const distanceKm = haversineKm(origin, c);
@@ -112,11 +123,16 @@ export const NEAR_BRANCH_LIMIT = 4;
  * rule would never fire on the very chain that prompted it — the decorative
  * check this repo keeps re-inventing.
  *
- * So the preference runs in three tiers, each nearest-first:
+ * It may also return `"shut"` — the branch has stopped TRADING (a lifecycle
+ * closure, ADR 0132), which is not the same as closed tonight.
+ *
+ * So the preference runs in four tiers, each nearest-first:
  *   1. a branch we know is **open**
  *   2. a branch whose hours we **don't have** — unverified beats known-shut,
  *      because it may well be open and we have no evidence either way
- *   3. the nearest branch, even though we know it is closed
+ *   3. a branch that still trades, even though we know it is closed right now
+ *   4. the nearest branch, even though it has shut — only when EVERY branch has
+ *      (a venue-level closure), so there is nothing better to offer
  *
  * `branches` must already be nearest-first (orderedBranches). Pure.
  */
@@ -128,11 +144,19 @@ export function leadBranch(branches, openStateOf = () => "unknown") {
   // 2026-08-17 menu.js passed the raw state through, so at 8:30pm the nearest
   // branch closing at 9pm lost the lead to a farther one open till 11pm —
   // ranking.js already folds the pair this way for the home list.
+  //
+  // "shut" is the fourth answer (ADR 0132): the BRANCH has stopped trading — a
+  // lifecycle closure, its own or its venue's — which is a different fact from
+  // "closed tonight". It never leads while any branch that still trades exists,
+  // even one whose hours say it is shut right now: a branch you can go to
+  // tomorrow is a better offer than one you can never go to again.
   const isOpen = (s) => s === "open" || s === "closing-soon";
-  const isClosed = (s) => s === "closed" || s === "opening-soon";
+  const isShut = (s) => s === "shut";
+  const isClosed = (s) => s === "closed" || s === "opening-soon" || isShut(s);
   return (
     branches.find((b) => isOpen(openStateOf(b))) ??
     branches.find((b) => !isClosed(openStateOf(b))) ??
+    branches.find((b) => !isShut(openStateOf(b))) ??
     branches[0]
   );
 }
