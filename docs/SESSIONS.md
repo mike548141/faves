@@ -12071,3 +12071,39 @@ the measured number.
 - **17c.** It is blocked behind 36b's unasked schema question.
 - **340/290.** The item's "does the intake record need a repeat-reading
   concept?" question is still open.
+
+### 2026-09-28 addendum (`faves-8e`, same session): waves 2–3
+
+| Item | What | Where |
+|---|---|---|
+| 310/140 (28q) | Every add-on option has a stored id | PR #44 → `a9f6347`, ADR 0126 |
+| 280/020 | The FX refresh restamps itself | PR #45 → `ebac4a6`, ADR 0129 |
+| 340/250 (1)–(3) | Stripper, image gate, size report | PR #46 → `7a0a647`, ADR 0128 |
+| — | The image gate also runs in the pre-commit hook | `39502ec` |
+
+- **28q merge check.** Measured on the merge: all 200 options gained an id
+  and nothing else. No name, price or tag moved. 🔎 **The item's "no
+  delimiter" finding was false.** `selectionKey` always separated its
+  fields with raw U+001F and U+001E, which most editors don't show. `od -c`
+  at `055c594` confirms it.
+- **The FX push trigger ran live on the merge itself** (`ebac4a6`, event
+  `push`, success). It exits early when no refresh PR is open. Reason 1 (the
+  floor judging the whole tree) is untouched; that is the owner's ruleset
+  call.
+- **Images.** All 51 already-published images are clean, with 0 carrying a
+  location. The gate runs in CI and as a `local` floor check on the hook.
+  That matters because CI on this repo reports only after a push to `main`
+  has already deployed. Break-probed in a throwaway worktree: a staged
+  synthetic GPS JPEG was **BLOCKED**.
+- 🛑 **340/250 part (4) goes back to the owner because its premise moved.**
+  He ruled on 68 files. `intake/` holds **410**, 236 of them carrying GPS,
+  and committing them stripped adds **≈1.84 GB permanently**. Stripping
+  saves under 5%.
+- 🚩 **A refused command, disclosed at the time.** `rm -rf` of the 1.7 GB of
+  stripped copies in this session's scratch was denied. I did not route
+  around it. The copies carry no location (the gate checked all 406), and
+  deleting them is put to the owner.
+- 🔎 **Theme 32 (32a) has a blocking owner question the triage missed:**
+  the "deletion paradox" in its README.
+- **Theme 26 (saved orders) should wait for 28o.** Its own README gates it
+  on the add-on shape settling, and Theme 28 is about to change that shape.
