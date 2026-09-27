@@ -1679,3 +1679,16 @@ deliberation those compact docs omit.
   written refusals where a check cannot see dishes. 🔎 A heart under a
   `formerIds` id does **not** light the menu row (measured) — a fourth follow-on
   28j did not list, left for 28l.
+- [0133](0133-a-chosen-variant-prices-the-row-and-the-default-is-the-dish.md) —
+  **a chosen variant prices the row, and the default IS the dish** (roadmap
+  28m). Amends 0130 §5: the picker draws a `selects` group — radios, default
+  checked, no "None", no cap, whole prices, offered first. The row's price is
+  the chosen variant's `dishPrice`, never the dish's price plus it
+  (`configuredPrice`). A non-default variant goes on the order line as an
+  ordinary `{ group, id, name, price: 0 }` option, so Small and Large are two
+  lines and every table that carries a line (cart, share codec, backup) carries
+  it with no new field; the **default is left off**, because it is the dish as
+  listed — so a line saved before the dish had a ladder still merges. 🚩 A fork:
+  recording the default would name it on the order sheet and split every saved
+  line on the day 28n migrates. An unlabelled variant is named by its price and
+  group ("$24 size"). Search unchanged (open owner question).
