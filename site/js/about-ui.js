@@ -68,9 +68,11 @@ function buildDialog() {
 
       group(
         "Private by design",
-        "No accounts, no tracking, no third-party scripts. Your favourites, " +
-          "order and settings stay on your device — the only thing this site " +
-          "ever fetches is its own pages."
+        "No accounts, no cookies, no personal information. Your favourites, " +
+          "order and settings stay on your device. Like any website, our host " +
+          "(Cloudflare) sees each visit, and we use its cookie-free visitor " +
+          "statistics to see how Faves is used and keep it secure and running."
+          // ↑ ADR 0134. Keep in step with the no-JS footer in index.html.
       ),
 
       group(

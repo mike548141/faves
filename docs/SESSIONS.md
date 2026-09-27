@@ -12199,3 +12199,24 @@ Asked via AskUserQuestion, after the report:
   laptop, because `cook_check` drives the real alarm and read-aloud.
   `--mute-audio` is now the harness default (`096da8a`). `cook_check` passed
   85/85 muted, including all eight sound assertions.
+
+### 2026-09-28 — who uses Faves, and a privacy promise that was false (ADR 0134)
+
+- 🔎 **Uptake, from Cloudflare's own data** (shed's read-only `estate-cf-read`;
+  edge logs keep 31 days on Free). 351 IPs, nearly all bots. The humans: the
+  home WAN (Mac Chrome, `curl`), iPhones on 11–13 Sep only — two at once on
+  12 Sep, one on home Wi-Fi and one via iCloud Private Relay — and six
+  iMessage link previews with no visit following five of them. **No visitor
+  identifiable as outside the household.** Installed-vs-browser is **not
+  answerable** from edge data: iOS sends the same UA, and the precache fetches
+  the manifest and icons on every shell bump.
+- 🛑 **The live page carried Cloudflare's Web Analytics beacon** — zone-wide
+  auto-install on `myspot.nz` since 2025-10-20, invisible to plain `curl`,
+  unmentioned anywhere in the repo — while the footer, About and
+  `SECURITY.md` said "no analytics, no tracking, no third-party scripts".
+- 🎯 **Owner ruled: keep it and disclose it** ("recording when someone uses
+  my web services" is not tracking location or personal info). ADR 0134;
+  footer, About, `SECURITY.md`, `ARCHITECTURE.md` reworded; `010/020` notes
+  its premise moved (its ruling stays open).
+- ⚠️ **Nothing guards the new wording.** The beacon lives in the Cloudflare
+  dashboard, outside every gate here.

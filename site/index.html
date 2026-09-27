@@ -673,9 +673,10 @@
              it and reveals the "About & privacy" link (which opens the About
              dialog carrying the same, fuller text). -->
         <p class="footer-privacy">
-          No accounts, no tracking, no third-party scripts. Your favourites,
-          order and settings stay on your device — the only thing this site
-          ever fetches is its own pages.
+          No accounts, no cookies, no personal information. Your favourites,
+          order and settings stay on your device. Like any website, our host
+          (Cloudflare) sees each visit, and we use its cookie-free visitor
+          statistics to see how Faves is used and keep it secure and running.
         </p>
         <p class="footer-line">
           <button type="button" id="about-open" class="footer-link" hidden data-i18n="footer.about">About &amp; privacy</button>
@@ -753,9 +754,11 @@
           Faves can put the places nearest you first, hide the ones too far to
           reach tonight, and pick the closest branch of a chain.
         </p>
-        <!-- The promise, and it is verifiable rather than decorative: this app
-             makes exactly two network requests, both in data.js, both for our own
-             menu JSON. No analytics, no telemetry, no beacon, no backend. Your
+        <!-- The promise, and it is verifiable rather than decorative: this app's
+             own code makes exactly two network requests, both in data.js, both
+             for our own menu JSON, and nothing reads the coordinates but the
+             sort. Cloudflare injects its cookie-free visit-count beacon at the
+             edge (ADR 0134, owner-ruled) — it never sees the location. Your
              coordinates are held in this browser and used to sort a list.
              If that ever stops being true, this sentence must be the first thing
              that changes — it is a claim about privacy on a screen asking for a

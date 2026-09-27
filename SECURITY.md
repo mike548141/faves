@@ -12,8 +12,9 @@ acknowledgement within about a week. There is no bounty.
 ## What is in scope
 
 The site is a static, offline-first PWA. It has **no backend, no
-accounts, no login and no third-party code** — no framework, no CDN, no
-analytics, no trackers. That removes most of the usual attack surface,
+accounts, no login and no third-party code in `site/`** — no framework,
+no CDN, no trackers. (Cloudflare, the host, injects its own cookie-free
+Web Analytics beacon at the edge; see *Privacy*.) That removes most of the usual attack surface,
 and it also means the interesting reports are the few things that are
 left:
 
@@ -48,7 +49,16 @@ left:
 
 ## Privacy
 
-The site collects nothing, sends nothing, and has no server to send it
-to. Favourites, ratings, order tallies and settings stay in the
-browser's own storage on the device. There are no cookies, no analytics
-and no third-party requests.
+The site has no accounts and collects no personal information.
+Favourites, ratings, order tallies and settings stay in the browser's
+own storage on the device, and a device's location never leaves it.
+There are no cookies.
+
+What *is* recorded is that the site is used (owner-ruled 2026-09-28,
+[ADR 0134](docs/decisions/0134-anonymous-visit-analytics-are-allowed-and-disclosed.md)):
+Cloudflare, the host, keeps its standard edge request logs (which, as
+for any website, include the requesting IP address and browser) and
+injects its cookie-free Web Analytics beacon, which reports page loads
+in aggregate. Both serve usage, security and cost management. The
+optional cross-device sync stores only an encrypted blob and logs
+nothing (`worker/README.md`).

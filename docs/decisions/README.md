@@ -1724,3 +1724,10 @@ deliberation those compact docs omit.
   recording the default would name it on the order sheet and split every saved
   line on the day 28n migrates. An unlabelled variant is named by its price and
   group ("$24 size"). Search unchanged (open owner question).
+- [0134](0134-anonymous-visit-analytics-are-allowed-and-disclosed.md) —
+  **anonymous visit analytics are allowed, and the site says so** (owner-ruled
+  2026-09-28). Cloudflare Web Analytics had been injected zone-wide on
+  `myspot.nz` since 2025-10-20, making "no analytics, no beacon" false on the
+  live page; the owner ruled keep it and disclose it. Recording *use* is
+  allowed; accounts, cookies, personal information and location stay out.
+  Supersedes the no-analytics goal 0001 cites; the zero-build decision stands.

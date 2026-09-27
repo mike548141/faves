@@ -1249,8 +1249,11 @@ later local-only features and the bridge to the health app (roadmap Themes 5–6
 
 ## Constraints
 
-- No external requests at runtime: no CDNs, no web fonts (system font
-  stack), no analytics in v1. Everything self-contained → fast, private,
-  offline-safe.
+- No external requests at runtime from our own code: no CDNs, no web
+  fonts (system font stack), no analytics of our own. Everything
+  self-contained → fast, private, offline-safe. The one exception is not in
+  `site/`: Cloudflare injects its cookie-free Web Analytics beacon at the
+  edge (zone-wide auto-install on `myspot.nz`), allowed and disclosed on
+  the owner's ruling — ADR 0134.
 - JavaScript is enhancement-heavy but the shells must still render a
   usable restaurant list if a module fails: fail soft, show data.

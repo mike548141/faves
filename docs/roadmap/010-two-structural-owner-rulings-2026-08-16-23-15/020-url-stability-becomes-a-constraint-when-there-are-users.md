@@ -35,6 +35,15 @@
     can reach it* — which is the thing that actually makes a broken link cost
     something.
 
+  📎 **2026-09-28 — the premise above changed; the ruling is still open.**
+  *"This repo measures no users at all"* was not true of the live site:
+  Cloudflare Web Analytics has been injected zone-wide on `myspot.nz` since
+  2025-10-20, and the owner ruled to keep and disclose it ([ADR 0134]). The
+  edge request logs (31 days, per IP and browser) are the usable signal; that
+  day they showed no visitor from outside the household in the window. So the
+  second option is now concrete — but it is still a dashboard nobody is
+  required to open, and choosing it is still his.
+
   ⚠️ **Until he rules, treat the permission as live but SAY SO at every use.**
   Any commit retiring a URL key must name this item, so the change is
   attributable to a permission with a stated expiry rather than to nobody's
@@ -48,3 +57,4 @@
 [ADR 0001]: ../../decisions/0001-zero-build-vanilla.md
 [ADR 0050]: ../../decisions/0050-a-facet-link-filters-the-list-rather-than-searching.md
 [ADR 0072]: ../../decisions/0072-a-guard-is-decorative-when-its-verdict-does-not-depend-on-the-thing-it-guards.md
+[ADR 0134]: ../../decisions/0134-anonymous-visit-analytics-are-allowed-and-disclosed.md

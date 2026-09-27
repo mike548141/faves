@@ -31,6 +31,12 @@ content freshness separately from this file.
   uses the same chocolate and now carries the same nut warnings.
 
 ### Fixed
+- **The privacy note now tells the truth about visit statistics.** It said
+  "no tracking, no third-party scripts", but the host (Cloudflare) has been
+  adding its cookie-free visitor-statistics script to every page. The footer,
+  About screen and `SECURITY.md` now say so plainly; no accounts, cookies or
+  personal information, and your location still never leaves your device
+  (ADR 0134).
 - **A recipe's time on the list is now the whole job — prep plus cook.** Five
   bakes used to show their oven time alone (B's Brownie read "~22 min"; it
   takes about 27), and 13 recipes showed no time at all. A total that rests
