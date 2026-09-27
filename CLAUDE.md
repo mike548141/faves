@@ -713,6 +713,12 @@ python3 tools/test_split_data.py # history joins to a dish by ID, not by its nam
 python3 tools/recipe_estimates.py --check # data/estimates/ still lines up with the
                               # recipes, and every countdown names its source.
                               # Human-typed only until 2026-09-08; now in CI
+python3 tools/find_variants.py --selftest # Theme 28h's variant enumerator — every
+                              # sibling-group classifier (shape, mechanical-vs-human)
+                              # still discriminates. Reports only, exits 0 in normal
+                              # runs; --selftest is the gate, including a probe that
+                              # a classifier hard-wired to one answer fails the case
+                              # it should catch
 node tools/note_check.mjs     # the order-line note (Theme 14c). A note is part of
                               # LINE IDENTITY, so the sheet can show the same dish
                               # twice differing only by its note — and the ± control
