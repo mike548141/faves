@@ -115,3 +115,31 @@ test("isCheapEats: a curated $$ band is not cheap even with a cheap median", () 
   assert.equal(isCheapEats(curated([8, 10, 12], { priceBand: "$$" })), false);
   assert.equal(isCheapEats(curated([40, 40, 40], { priceBand: "$" })), true);
 });
+
+test("priceBand: a dish with a size ladder counts ONCE, at its default price (ADR 0130)", () => {
+  // Synthetic — no record in site/data carries a `selects` group yet. A ladder
+  // is one dish, so it is one entry in the median at the price its row shows
+  // before anything is tapped (validate.py holds item.price equal to the
+  // default variant's dishPrice). Its other variants live in `dishPrice` on an
+  // add-on option, which ADR 0048 already keeps away from the band: a $40
+  // Large must not drag a $12 venue upwards any more than a $2.50 topping may
+  // drag one down.
+  const r = venue([10, 12, 14]);
+  r.addOnGroups = [{
+    id: "size", name: "Size", kind: "selects",
+    options: [
+      { name: "Regular", id: "regular", dishPrice: 10, default: true, tags: [] },
+      { name: "Large", id: "large", dishPrice: 40, tags: [] },
+    ],
+  }];
+  r.menu[0].items[0].addOns = ["size"];
+  const p = priceBand(r);
+  assert.equal(p.count, 3);
+  assert.equal(p.band, "$");
+  assert.equal(p.perPerson, 12);
+  // What this does NOT cover, said so nobody reads it as cover: merging N rows
+  // into one ladder REMOVES N-1 entries from this median, which can move a
+  // venue's band or drop it under MIN_ITEMS. That is a property of the corpus
+  // before and after a merge, not of this function, and it is roadmap 28o's
+  // per-batch proof to print — no test here reads a real venue.
+});
