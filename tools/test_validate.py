@@ -59,6 +59,19 @@ SUBJECT = "site/data/restaurants/gold-lining-cafe.json"
 _DAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
 
 
+def _one_branch(d, lifecycle):
+    """The single-site subject re-expressed as a one-branch `locations` array
+    (the per-branch fields move down, as validate.py requires), optionally with
+    a `lifecycle` on that branch."""
+    branch = {"id": "only", "label": "Only"}
+    for k in ("address", "lat", "lng", "phone", "hours"):
+        if k in d:
+            branch[k] = d.pop(k)
+    if lifecycle is not None:
+        branch["lifecycle"] = lifecycle
+    d["locations"] = [branch]
+
+
 def _first_item(d):
     """The first menu item of the first section — where price/tag cases land."""
     return d["menu"][0]["items"][0]
@@ -400,6 +413,16 @@ CASES = {
     ),
     "timezone as a number": (lambda d: d.update(timezone=12), "error", r'card: timezone must be a non-empty string or absent'),
     "a real IANA zone is legal": (lambda d: d.update(timezone="Europe/London"), "clean", None),
+    # ADR 0132. A one-branch `locations` is legal; a lifecycle on that sole
+    # branch is not — its life IS the venue's. The control proves the one-branch
+    # shape itself validates, so the error below is the lifecycle's alone.
+    "a one-branch locations array is legal (control for the next case)": (
+        lambda d: _one_branch(d, None), "clean", None,
+    ),
+    "a lifecycle on a venue's ONLY branch": (
+        lambda d: _one_branch(d, {"events": [{"type": "closed-permanently", "date": "2026-09-01"}]}),
+        "error", r"locations\[0\]\.lifecycle: a venue's only branch has no life of its own",
+    ),
     # This used to read "absent timezone is legal (means home)" and popped a key
     # the subject does not carry — no venue in the corpus does — so it mutated
     # nothing and validated the pristine record. An explicit null is the shape
@@ -1157,8 +1180,77 @@ SOURCE_CASES = {
             lambda s: s.replace('"id": "melling",', '"id": "   ",', 1),
             "error", r"locations\[0\]: id must be a non-empty string, got",
         ),
+        # ADR 0132 — per-branch closure (owner-ruled 2026-08-22). The corpus
+        # holds no closed branch, so every rule below is new code on a path no
+        # real record exercises; each is mutated on Pandan, whose two branches
+        # make the "one shut, the other trading" case the whole ruling is for.
+        "one branch shut, the other trading — the case the ruling is for": (
+            lambda s: _branch_lc(s, "melling", '{"events": [{"type": "closed-permanently", "date": "2026-09-01"}]}'),
+            "clean", None,
+        ),
+        "a branch refit, overdue, reopened — the full vocabulary is legal": (
+            lambda s: _branch_lc(s, "melling", '{"added": "2026-08-15", "events": ['
+                                 '{"type": "closed-temporarily", "date": "2026-08-20", "until": "2026-08-25", "note": "refit"}, '
+                                 '{"type": "reopened", "date": "2026-08-28"}]}'),
+            "clean", None,
+        ),
+        "an unknown key inside a branch lifecycle": (
+            lambda s: _branch_lc(s, "melling", '{"closed": true}'),
+            "error", r"locations\[0\]\.lifecycle has unknown key 'closed'",
+        ),
+        "a branch lifecycle that is not an object": (
+            lambda s: _branch_lc(s, "melling", '"closed"'),
+            "error", r"locations\[0\]\.lifecycle must be an object",
+        ),
+        "a branch event type outside the vocabulary": (
+            lambda s: _branch_lc(s, "melling", '{"events": [{"type": "sold", "date": "2026-09-01"}]}'),
+            "error", r"locations\[0\]\.lifecycle\.events\[0\]: type must be one of",
+        ),
+        "a branch reopening that was never closed": (
+            lambda s: _branch_lc(s, "melling", '{"events": [{"type": "reopened", "date": "2026-09-01"}]}'),
+            "error", r"locations\[0\]\.lifecycle\.events\[0\]: 'reopened' but the branch was not closed",
+        ),
+        "an event after a branch's permanent closure": (
+            lambda s: _branch_lc(s, "melling", '{"events": [{"type": "closed-permanently", "date": "2026-09-01"}, '
+                                 '{"type": "reopened", "date": "2026-09-02"}]}'),
+            "error", r"locations\[0\]\.lifecycle\.events\[1\]: nothing can follow 'closed-permanently'",
+        ),
+        "a branch that entered Faves before its venue did": (
+            lambda s: _branch_lc(s, "melling", '{"added": "2026-01-01"}'),
+            "error", r"locations\[0\]\.lifecycle\.added 2026-01-01 precedes the venue's added 2026-08-15",
+        ),
+        "a branch added date that is not a date": (
+            lambda s: _branch_lc(s, "melling", '{"added": "last winter"}'),
+            "error", r"locations\[0\]\.lifecycle\.added must be an ISO date",
+        ),
+        "every branch gone while the venue still trades": (
+            lambda s: _branch_lc(_branch_lc(s, "melling", _GONE), "press-hall", _GONE),
+            "error", r"every branch is permanently closed but the venue's lifecycle is not",
+        ),
+        "every branch gone AND the venue says so — legal": (
+            lambda s: _branch_lc(_branch_lc(s, "melling", _GONE), "press-hall", _GONE).replace(
+                '"added": "2026-08-15"\n  }',
+                '"added": "2026-08-15",\n    "events": [{"type": "closed-permanently", "date": "2026-09-02"}]\n  }', 1),
+            "clean", None,
+        ),
+        "every branch shut for a refit while the venue trades — a warning": (
+            lambda s: _branch_lc(_branch_lc(s, "melling", _REFIT), "press-hall", _REFIT),
+            "warn", r"every branch is closed but the venue's lifecycle says trading",
+        ),
     },
 }
+
+
+# ADR 0132 helpers: put a `lifecycle` on one branch of the Pandan record by its
+# id line. Text-level, like every other SOURCE_CASES mutation, so a case whose
+# anchor stops matching fails as MUTATION MATCHED NOTHING rather than passing.
+_GONE = '{"events": [{"type": "closed-permanently", "date": "2026-09-01"}]}'
+_REFIT = '{"events": [{"type": "closed-temporarily", "date": "2026-09-01"}]}'
+
+
+def _branch_lc(s, branch_id, block):
+    return s.replace(f'      "id": "{branch_id}",\n',
+                     f'      "id": "{branch_id}",\n      "lifecycle": {block},\n', 1)
 
 
 def run_validate(cwd: Path):

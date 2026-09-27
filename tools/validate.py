@@ -144,6 +144,9 @@ ESTIMABLE = {"serves", "prepMinutes", "cookMinutes", "difficulty"}
 BRANCH_KEYS = {
     "id", "label", "address", "lat", "lng", "phone", "hours",
     "timezone", "detailsVerified", "detailsVerifiedBy",
+    # ADR 0132: a branch may shut while its chain trades. Same shape as the
+    # venue's block, `added` optional — see check_branch_lifecycles.
+    "lifecycle",
 }
 
 
@@ -1438,34 +1441,48 @@ def check_lifecycle(rid, data):
     REQUIRED — every venue entered Faves on a knowable day, and git knows it.
     `opened` is world time and is optional: absent means we never established
     it, which is honest, where a guess would not be. States are transitions
-    with dates; there is deliberately no `closed: true` flag to go stale."""
+    with dates; there is deliberately no `closed: true` flag to go stale.
+
+    Returns the state the events END in ("trading" when there are none, None
+    when the block is unreadable) — `check_branch_lifecycles` needs it."""
     lc = data.get("lifecycle")
     if lc is None:
         err(rid, "lifecycle is required — at minimum {\"added\": \"<ISO date>\"} (ADR 0023)")
-        return
+        return None
+    return check_lifecycle_block(rid, lc, "lifecycle", "venue", require_added=True)
+
+
+def check_lifecycle_block(rid, lc, where, noun, require_added):
+    """One lifecycle block — a venue's, or (ADR 0132) one branch's. The same
+    shape at both levels on purpose: `temporal.venueState` folds a branch's
+    block with the very function that folds a venue's, so a rule enforced on
+    one and not the other is a branch the app would fold differently from how
+    this gate read it. Only `added` differs: required on a venue, optional on a
+    branch (absent = it entered Faves with its venue)."""
     if not isinstance(lc, dict):
-        err(rid, "lifecycle must be an object")
-        return
-    if not is_part_date(lc.get("added")):
-        err(rid, f"lifecycle.added must be an ISO date (when it entered Faves), got {lc.get('added')!r}")
+        err(rid, f"{where} must be an object")
+        return None
+    if require_added or "added" in lc:
+        if not is_part_date(lc.get("added")):
+            err(rid, f"{where}.added must be an ISO date (when it entered Faves), got {lc.get('added')!r}")
     if "opened" in lc and lc["opened"] is not None and not is_part_date(lc["opened"]):
-        err(rid, f"lifecycle.opened must be an ISO date or absent, got {lc['opened']!r}")
+        err(rid, f"{where}.opened must be an ISO date or absent, got {lc['opened']!r}")
     if is_part_date(lc.get("opened")) and is_part_date(lc.get("added")) and start_of(lc["added"]) < start_of(lc["opened"]):
-        warn(rid, f"lifecycle: added {lc['added']} precedes opened {lc['opened']} — one of them is wrong")
+        warn(rid, f"{where}: added {lc['added']} precedes opened {lc['opened']} — one of them is wrong")
     for k in lc:
         if k not in ("opened", "added", "events"):
-            err(rid, f"lifecycle has unknown key {k!r}")
+            err(rid, f"{where} has unknown key {k!r}")
 
     events = lc.get("events")
     if events is None:
-        return
+        return "trading"
     if not isinstance(events, list):
-        err(rid, "lifecycle.events must be a list or absent")
-        return
+        err(rid, f"{where}.events must be a list or absent")
+        return None
     prev = None
     state = "trading"
     for i, e in enumerate(events):
-        at = f"lifecycle.events[{i}]"
+        at = f"{where}.events[{i}]"
         if not isinstance(e, dict):
             err(rid, f"{at} must be an object")
             continue
@@ -1491,12 +1508,67 @@ def check_lifecycle(rid, data):
         # them silently reports the wrong state.
         t = e.get("type")
         if t == "reopened" and state == "trading":
-            err(rid, f"{at}: 'reopened' but the venue was not closed")
+            err(rid, f"{at}: 'reopened' but the {noun} was not closed")
         if t == "closed-temporarily" and state != "trading":
-            err(rid, f"{at}: 'closed-temporarily' but the venue was already {state}")
+            err(rid, f"{at}: 'closed-temporarily' but the {noun} was already {state}")
         if state == "closed-permanently":
             err(rid, f"{at}: nothing can follow 'closed-permanently'")
         state = "trading" if t == "reopened" else (t if t in LIFECYCLE_EVENTS else state)
+    return state
+
+
+def check_branch_lifecycles(rid, data, venue_state):
+    """Per-branch closure (ADR 0132, owner-ruled 2026-08-22). One branch of a
+    chain can shut while the others trade, and until this landed the only way
+    to record that was to DELETE the branch — destroying the record that it
+    ever traded, the exact loss ADR 0023 exists to prevent.
+
+    The venue's closure stays the floor (`temporal.branchClosure`): a branch's
+    own lifecycle can only say MORE than its venue's, never less. So three
+    things are refused here rather than resolved quietly in the browser:
+
+    * a lifecycle on the SOLE branch of a one-branch `locations` — that
+      branch's life is the venue's, and two places to say one thing is two
+      answers waiting to drift;
+    * a branch `added` before its venue's — a branch cannot enter Faves before
+      the venue it belongs to did;
+    * EVERY branch ending permanently closed while the venue does not. The app
+      reads the venue's closure for ranking, "Open now", search and the home
+      card; a chain whose every branch is gone but whose venue still trades
+      would be offered as open forever. The closure belongs on the venue.
+      (Every branch shut only TEMPORARILY is a warning: they may reopen on
+      different days, and a warning is the honest strength for "probably".)
+    """
+    locations = data.get("locations")
+    if not isinstance(locations, list):
+        return
+    venue_added = (data.get("lifecycle") or {}).get("added") if isinstance(data.get("lifecycle"), dict) else None
+    finals = []
+    for i, b in enumerate(locations):
+        if not isinstance(b, dict):
+            continue
+        lc = b.get("lifecycle")
+        where = f"locations[{i}].lifecycle"
+        if lc is None:
+            finals.append("trading")
+            continue
+        if len(locations) == 1:
+            err(rid, f"{where}: a venue's only branch has no life of its own — "
+                     "record its closure on the venue's lifecycle")
+        state = check_lifecycle_block(rid, lc, where, "branch", require_added=False)
+        finals.append(state)
+        if (isinstance(lc, dict) and is_part_date(lc.get("added")) and is_part_date(venue_added)
+                and start_of(lc["added"]) < start_of(venue_added)):
+            err(rid, f"{where}.added {lc['added']} precedes the venue's added {venue_added} — "
+                     "a branch cannot enter Faves before its venue did")
+    if len(finals) < 2 or venue_state is None or None in finals:
+        return
+    if venue_state != "closed-permanently" and all(f == "closed-permanently" for f in finals):
+        err(rid, "every branch is permanently closed but the venue's lifecycle is not — "
+                 "record the closure on the venue, or it is offered as open forever (ADR 0132)")
+    elif venue_state == "trading" and all(f != "trading" for f in finals):
+        warn(rid, "every branch is closed but the venue's lifecycle says trading — "
+                  "if the whole chain is shut, record it on the venue (ADR 0132)")
 
 
 def check_verification(rid, data, status):
@@ -2031,7 +2103,8 @@ def check_restaurant(path):
     check_rating(rid, data, "card")
 
     # The venue's dated lifecycle, and the contact fields that change over time.
-    check_lifecycle(rid, data)
+    venue_state = check_lifecycle(rid, data)
+    check_branch_lifecycles(rid, data, venue_state)
     for field in ("address", "phone"):
         for v in check_temporal(rid, data, field, "card"):
             if v is not None and not isinstance(v, str):
