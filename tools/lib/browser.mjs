@@ -792,6 +792,13 @@ export async function launchChrome({ profileDir, headed, width = 390, height = 8
     "about:blank",
   ];
   if (!headed) args.unshift("--headless=new", "--disable-gpu");
+  // Silent by default (roadmap 340/300). cook_check drives the REAL alarm
+  // (Web Audio) and the REAL read-aloud (speechSynthesis), and headless Chrome
+  // on macOS plays both through the owner's speakers — "my laptop beeping away
+  // when you are working". --mute-audio silences only the OUTPUT: the APIs
+  // still run, so every assertion still counts real calls. FAVES_AUDIO=1 to
+  // hear it when debugging the alarm itself.
+  if (process.env.FAVES_AUDIO !== "1") args.unshift("--mute-audio");
   const proc = spawn(CHROME, args, { stdio: ["ignore", "ignore", "pipe"] });
   // Registered the instant it exists, not once it is known healthy: a Chrome
   // that dies on the way up still has to be reaped, and the `await` below is
