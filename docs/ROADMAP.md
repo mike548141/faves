@@ -237,7 +237,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [28n — Convert the prose size ladders: additive, and no id moves](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/110-28n-convert-the-prose-size-ladders-additive-no.md)
 - [ ] [28o — Merge the 63 ladders that differ only by name and price](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/120-28o-merge-the-63-ladders-that-differ-only-by-n.md)
 - [ ] [28p — The 70 ladders a human must rule on, one at a time](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/130-28p-the-70-ladders-a-human-must-rule-on-one-at.md)
-- [~] [28q — An add-on option has no id, and this migration is what makes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/140-28q-an-add-on-option-has-no-id-and-this-migrat.md)
+- ✅ [28q — An add-on option has no id, and this migration is what makes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/140-28q-an-add-on-option-has-no-id-and-this-migrat.md)
 - [ ] [28r — The intake rule: when is a choice a group, and when is it two](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/150-28r-the-intake-rule-when-is-a-choice-a-group-a.md)
 - [ ] [28s — The checks that would stay GREEN while being wrong](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/160-28s-the-checks-that-would-stay-green-while-bei.md)
 

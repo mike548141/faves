@@ -1,8 +1,16 @@
-- [~] **28q — An add-on option has no id, and this migration is what makes
+- [x] **28q — An add-on option has no id, and this migration is what makes
       that expensive** `[M][schema]` — found while decomposing `490/050`;
       independently real, and independently deliverable.
-      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — orchestrated queue run, worker.
-      (claimed 2026-09-27-1350, wt: faves-28q)
+      ✅ **DONE 2026-09-28 (session `40d6dea4`, PR #44, `a9f6347`, ADR 0126).**
+      Option (1): all 200 options carry a stored `id`, seeded as `slug(name)`
+      by `tools/seed_option_ids.py` (`--check` in CI); lines keyed before the
+      change still merge. Measured on the merge: every option gained an id
+      and nothing else — no name, price or tag moved.
+      🛑 **Consequence 2 below is REFUTED.** `selectionKey` always had a
+      delimiter: raw U+001F between group and name, U+001E between entries,
+      invisible in most editors (confirmed with `od -c` at `055c594`). The
+      real gap was narrower — a separator smuggled inside a crafted name —
+      and is closed; the separators are now written as visible escapes.
 
   🔎 **The defect.** An order line's identity is
   `` `${i.venueId}\n${dishId(i)}\n${selectionKey(i.options)}\n${note}` ``

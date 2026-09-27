@@ -192,6 +192,8 @@ jobs:
         run: python3 tools/seed_section_ids.py --check
       - name: Assert every branch carries its own id
         run: python3 tools/seed_branch_ids.py --check
+      - name: Assert every add-on option carries its own id
+        run: python3 tools/seed_option_ids.py --check
       - name: Assert the shipped exchange rates load
         run: python3 tools/fetch_fx.py --check
       # The Theme 38 cold review found three stores under data/ that no
