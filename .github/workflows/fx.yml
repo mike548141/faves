@@ -1,5 +1,6 @@
-# Refresh the exchange rates Faves ships (ADR 0045), weekly, via an
-# auto-merging pull request.
+# Refresh the exchange rates Faves ships (ADR 0045), via an auto-merging pull
+# request that restamps itself so it stays correct until the moment it lands
+# (ADR 0129, roadmap 280/020).
 #
 # Faves converts menu prices offline from rates committed as data — it never
 # calls an FX API at runtime, because the site must work in flight mode and
@@ -25,17 +26,78 @@
 # be satisfied, and `--auto` means it lands the moment they pass with nobody
 # waiting on it. Nothing here is special: the rule is met the ordinary way.
 #
+# ——————————————— A PR that waits does not stay correct —————————————
+#
+# Found 2026-09-08 (roadmap 280/020): PR #5 and PR #6 each stamped
+# `DATA_VERSION` once, at cut time, then sat for one to two weeks blocked by
+# `floor / scanner floor` (below) and were closed by hand, unmerged. Two
+# things go wrong the longer a PR like that waits:
+#
+#   1. Its branch used to be named `fx/refresh-<AS_OF>` — a fresh name every
+#      time the rates moved — so an old, never-merged PR was simply
+#      abandoned in place rather than superseded. Nothing pointed at it, and
+#      nothing rebuilt it.
+#   2. Its `DATA_VERSION` bump was computed once, against whatever `main`
+#      was on the day it was cut. Any further data-affecting change on
+#      `main` in the meantime makes that stamp EARLIER than main's own — and
+#      merging it would move the constant backwards, which `check_versions.py`
+#      exists to catch (`went_backwards()`) precisely because a cache name
+#      already deployed is already installed, and the worker serves the OLD
+#      files from it. Forever, silently, CI green.
+#
+# The fix is two changes, both below:
+#
+#   • ONE STABLE BRANCH (`fx/refresh`), not a date-suffixed one. There is at
+#     most one open fx PR ever, and re-running this workflow — for any
+#     reason — RESTAMPS it rather than abandoning it and opening another.
+#   • RESTAMP ON EVERY PUSH TO MAIN, not only on the weekly schedule. Every
+#     invocation of this workflow starts from a fresh checkout of `main` — the
+#     default ref for `schedule`, `workflow_dispatch` AND `push` alike — so
+#     recreating the branch here (`git checkout -B`) is always a rebase onto
+#     *whatever `main` is right now*, never onto whatever it was when an
+#     earlier run cut the branch. Doing that on every push (not just weekly)
+#     means the open PR is never more than one `main` commit stale, so if it
+#     is sitting on `floor` for two weeks and something ELSE bumps
+#     `DATA_VERSION` in that time, the very next push restamps it forward
+#     before floor even has a chance to go green on a stale base. The push
+#     trigger is cheap on the common case — most pushes find no fx PR open
+#     and exit after one `gh pr list` call, before Python is even set up.
+#
+# 🔑 WHAT THIS DOES NOT FIX. `floor / scanner floor` runs atelier's scanners
+# at THEIR current HEAD against the WHOLE tree, not just this PR's diff — so
+# a branch that changes only `site/data/fx.json` can still fail it on
+# findings that live elsewhere in `main`'s tree and have nothing to do with
+# FX. Restamping onto fresher `main` does nothing for that: if the findings
+# are still in `main`'s tree, they are still in the freshly-cut branch's tree
+# too. This PR can sit open, correctly restamped every time `main` moves,
+# indefinitely, without ever passing floor — that is a SEPARATE, still-open
+# problem (roadmap 280/020's "reason 1"), and its real fix is a narrower
+# required-check set for this one-file data change (roadmap 340/180) — a
+# ruleset change, and the owner's to make, not this workflow's.
+#
+# `check_versions.py`'s `went_backwards()` check (the `service-worker version
+# lockstep` required job) stays the backstop underneath all of this: even if a
+# push somehow lands between a restamp and an actual merge, that check runs
+# fresh against `main` at whatever moment CI executes it, and refuses a
+# backwards move outright. Closing that residual window completely needs
+# "require branches to be up to date before merging" in the ruleset — again
+# the owner's call, not something this workflow can reach for on its own.
+#
 # ————————————————————————— Worth knowing —————————————————————————
 #
 #   • A merge to `main` IS a deploy — Cloudflare Pages builds from it. So this
-#     deploys the site up to once a week, by design.
+#     deploys the site up to once a week from the schedule, plus whenever a
+#     restamped PR's checks happen to pass — by design either way.
 #   • `--bump` moves DATA_VERSION in the same commit, because fx.json lives
 #     under site/data/ and an unbumped version means installed phones keep
 #     serving the old rates (the lockstep rule in CLAUDE.md).
-#   • Most weeks this does nothing at all: the tool writes only when a rate
-#     actually moved, and refuses to write twice in a day. A run that opens no
-#     PR is the normal outcome, not a failure.
-#   • The branch deletes itself on merge (`delete_branch_on_merge` is on).
+#   • Most runs do nothing at all: the tool writes only when a rate actually
+#     moved (compared against whatever `main` currently holds) and refuses to
+#     write twice in a day. A run that opens no PR and touches no branch is
+#     the normal outcome, not a failure — and a push-triggered run with no fx
+#     PR open does not even reach the fetch step.
+#   • `fx/refresh` deletes itself on merge (`delete_branch_on_merge` is on)
+#     and gets recreated, fresh, the next time there is something to propose.
 #
 # ——————— The thing that used to need a human, and now does not ———————
 #
@@ -50,9 +112,10 @@
 # the run red. That is the good outcome — the red run IS the rotation reminder.
 # The estate registry carries the expiry and warns 30 days out.
 # 🚩 One wrinkle that makes that failure read wrong: `gh pr create` below is
-# guarded by `|| echo "PR already open … reusing it"`, so a 401 there prints
-# that reassuring line before the run actually dies on `gh pr merge`. If this
-# workflow fails, look for a 401 before believing the "reusing it" message.
+# guarded by `|| echo "PR already open … restamped it instead"`, so a 401 there
+# prints that reassuring line before the run actually dies later on `gh pr
+# edit`/`gh pr merge`. If this workflow fails, look for a 401 before believing
+# the "restamped" message.
 #
 # A PR opened by the built-in GITHUB_TOKEN counts as coming from an *external
 # contributor*, and this repo requires approval before workflows run for those
@@ -82,6 +145,12 @@ on:
     # delay a scheduled job under load; a missed week is harmless here, which is
     # why this is a schedule and not an alarm.
     - cron: "10 14 * * 0"
+  push:
+    # Restamps an already-open fx/refresh PR the moment main moves, so it is
+    # never more than one main commit stale when its checks are evaluated —
+    # see "A PR that waits does not stay correct" above. A push with no fx PR
+    # open exits almost immediately (below), so this is not a standing cost.
+    branches: [main]
   workflow_dispatch:
     inputs:
       force:
@@ -95,7 +164,12 @@ permissions:
   pull-requests: write
 
 concurrency:
-  # Never two refreshes racing each other.
+  # Never two refreshes racing each other. A push-triggered burst (several
+  # commits landing in a row) queues rather than overlaps; each queued run is
+  # cheap when there is nothing to restamp (see "Is a restamp already open?"),
+  # so a short backlog of them is harmless. Cancelling an in-flight run instead
+  # risks killing one mid-push, between the force-push and the merge call,
+  # which would leave the branch and the PR's queued state disagreeing.
   group: fx-rates
   cancel-in-progress: false
 
@@ -105,15 +179,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Cheap (one `gh` call, no Python, no network fetch) and answers the
+      # question every push-triggered run needs first: is there anything of
+      # ours out there to restamp? The weekly schedule and a manual dispatch
+      # always proceed regardless — they are the paths allowed to propose a
+      # BRAND NEW refresh, not just restamp an existing one.
+      - name: Is a restamp already open?
+        id: open_pr
+        env:
+          GH_TOKEN: ${{ secrets.FX_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          N=$(gh pr list --state open --base main --head fx/refresh --json number --jq 'length')
+          if [ "$N" -gt 0 ]; then
+            echo "open=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "open=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Open fx/refresh PR(s) against main: $N"
+
+      - name: Should this run do anything?
+        id: proceed
+        run: |
+          if [ "${{ github.event_name }}" != "push" ] || [ "${{ steps.open_pr.outputs.open }}" = "true" ]; then
+            echo "do=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "do=false" >> "$GITHUB_OUTPUT"
+            echo "Push to main with no fx/refresh PR open — nothing to restamp. Stopping here."
+          fi
+
       - uses: actions/setup-python@v5
+        if: steps.proceed.outputs.do == 'true'
         with:
           python-version: "3.12"
 
       - name: Fetch the latest rates
+        if: steps.proceed.outputs.do == 'true'
         run: python3 tools/fetch_fx.py --bump ${{ inputs.force && '--force' || '' }}
 
       - name: Did anything change?
         id: diff
+        if: steps.proceed.outputs.do == 'true'
         run: |
           if git diff --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -130,7 +237,7 @@ jobs:
         if: steps.diff.outputs.changed == 'true'
         run: python3 tools/fetch_fx.py --check
 
-      - name: Open a pull request and let it merge itself
+      - name: Open or restamp the pull request, and let it merge itself
         if: steps.diff.outputs.changed == 'true'
         env:
           # FX_TOKEN when it exists (no approval gate), GITHUB_TOKEN otherwise
@@ -140,35 +247,49 @@ jobs:
         run: |
           set -euo pipefail
           AS_OF=$(python3 -c "import json;print(json.load(open('site/data/fx.json'))['asOf'])")
-          BRANCH="fx/refresh-${AS_OF}"
+          BRANCH="fx/refresh"
 
           git config user.name "faves-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
+
+          # ONE STABLE BRANCH (ADR 0129). This checkout is already sitting on
+          # whatever `main` is RIGHT NOW — the default ref for schedule,
+          # workflow_dispatch and push-to-main alike — so recreating the branch
+          # here is always a rebase onto CURRENT main, never onto whatever main
+          # was when an earlier run (maybe weeks ago) first cut it. That is the
+          # whole fix: `fetch_fx.py --bump` above computed its DATA_VERSION bump
+          # from THIS main, so it cannot be behind a bump that landed since.
+          git checkout -B "$BRANCH"
           git add site/data/fx.json site/sw.js
           git commit -m "data: refresh FX rates (as at ${AS_OF})" \
-                     -m "Automated weekly refresh — tools/fetch_fx.py --bump." \
+                     -m "Automated refresh — tools/fetch_fx.py --bump." \
                      -m "Reference rates, not transaction rates; the app says so beside the prices."
-          # --force so a rerun on the same day reuses the branch cleanly. Safe:
-          # the ref is this job's own scratch space, outside protect-main (which
-          # covers the default branch only).
+          # --force so this run REPLACES whatever commit was here before — an
+          # earlier same-day run's, or a week-old one's. Safe: the ref is this
+          # job's own scratch space, outside protect-main (which covers the
+          # default branch only), and never a human's branch.
           git push --force origin "$BRANCH"
 
-          gh pr create \
-            --base main \
-            --head "$BRANCH" \
-            --title "data: refresh FX rates (as at ${AS_OF})" \
-            --body "Automated weekly refresh — \`tools/fetch_fx.py --bump\`.
+          TITLE="data: refresh FX rates (as at ${AS_OF})"
+          BODY="Automated refresh — \`tools/fetch_fx.py --bump\`.
 
           Rates are daily reference rates, not transaction rates: what a card
           actually charges includes the issuer's margin, so a converted price in
           Faves is an estimate and the app says so beside the prices (ADR 0045).
 
-          \`DATA_VERSION\` is bumped in the same commit so installed phones
-          refetch the new rates rather than serving the cached old ones.
+          \`DATA_VERSION\` is bumped in the same commit, computed from THIS run's
+          current \`main\` (ADR 0129) — so it stays correct however long this PR
+          has to wait on the required checks below, and every push to \`main\`
+          while it waits restamps it again.
 
-          Merges itself once the required checks pass." \
-            || echo "PR already open for $BRANCH — reusing it"
+          Merges itself once the required checks pass."
+
+          gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "$BODY" \
+            || echo "PR already open for $BRANCH — restamped it instead of opening a new one"
+          # Keep the visible title/body in step with the freshest restamp even
+          # when the PR already existed — a reader should never see a stale
+          # as-of date on a PR that was just moved forward.
+          gh pr edit "$BRANCH" --title "$TITLE" --body "$BODY"
 
           # The point of the whole design: the required checks run on this PR
           # the ordinary way, and it lands the moment they pass. Their number
@@ -181,9 +302,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.FX_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
-          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
-            echo "Opened a PR and queued it for auto-merge:"
-            gh pr list --state open --head "fx/refresh-$(python3 -c "import json;print(json.load(open('site/data/fx.json'))['asOf'])")" || true
+          if [ "${{ steps.proceed.outputs.do }}" != "true" ]; then
+            echo "Nothing to do — push to main, no fx/refresh PR open."
+          elif [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "Opened or restamped the pull request and queued it for auto-merge:"
+            gh pr list --state open --head fx/refresh --base main || true
             if [ -z "${{ secrets.FX_TOKEN }}" ]; then
               echo "::warning::Opened with the built-in token, so its checks need an"
               echo "::warning::'Approve and run' click before auto-merge can fire. Add an"

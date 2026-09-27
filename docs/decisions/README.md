@@ -1622,3 +1622,19 @@ deliberation those compact docs omit.
   of unnamed stores — is documented, not fixed: nothing is destroyed today, and
   merging a store this build cannot validate is the exact case `sync.js`'s own
   rule already refuses one level down.
+- [0129](0129-the-fx-refresh-restamps-itself-instead-of-going-stale.md) —
+  **the FX refresh restamps itself instead of going stale** (roadmap
+  `280/020`). The weekly PR used to cut a per-date branch
+  (`fx/refresh-<AS_OF>`) and stamp `DATA_VERSION` once, at cut time; a PR
+  blocked for weeks by an unrelated floor finding then risked merging a
+  `DATA_VERSION` *behind* whatever `main` had moved to since —
+  `check_versions.py`'s `went_backwards()` exists exactly for this. Now: one
+  stable branch (`fx/refresh`), rebuilt from *current* `main` on every run,
+  restamped on every push to `main` as well as the weekly schedule — so an
+  open PR is never more than one `main` commit stale when its checks are
+  judged. Fixes the backward-version hazard (reason 2); does **not** fix the
+  floor failing on unrelated findings elsewhere in the tree (reason 1) — that
+  is `340/180`'s narrower-required-check-set question, the owner's ruleset
+  call. Verified against the repo's own `check_versions.py` in a throwaway
+  local git repo staging the exact incident: the old dated branch is refused,
+  the restamped branch is not.
