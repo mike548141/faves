@@ -284,6 +284,22 @@ const sameName = (a, b) =>
  * Returns `{ merged, conflicts, changes }`. `merged` is a snapshot in the same
  * shape, ready to be written back and re-encrypted. `conflicts` carrying any
  * `CONFLICT_DIET` entry means the caller must ask before it writes.
+ *
+ * 🔑 **`mine.other`/`theirs.other` — the catch-all bag `collectPersonalData`
+ * fills with any `faves.` store this build cannot name (personal-data.js) — is
+ * READ BY NEITHER SIDE HERE, and `merged` never carries an `other` key at all**
+ * (found while filing roadmap 150/040; recorded rather than fixed, ADR 0127).
+ * That is deliberate, not an oversight this docstring is patching over: it is
+ * the same rule `sync.js`'s `writeSnapshot` already states one level down —
+ * *"overwriting data we do not understand is worse than not syncing it"* — and
+ * merging an unnamed store would mean writing bytes this build cannot validate
+ * into a reader's device. The consequence today is narrower than "dropped":
+ * nothing is destroyed (the local copy is untouched), a store this build
+ * cannot name simply never syncs. `collectPersonalData`'s `other` bag is real
+ * and does its job for the manual backup/restore path (`personal-data.js`'s
+ * `applyPersonalData`); it is only the continuous, unattended sync path here
+ * that stops short of it, and ADR 0127 records why that gap is left open
+ * rather than closed by teaching this function to merge bytes it cannot name.
  */
 export function mergePersonal(base, mine, theirs) {
   const baseProfiles = new Map(list(base?.profiles).map((p) => [profileKey(p), p]));

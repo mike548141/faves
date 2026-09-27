@@ -266,6 +266,13 @@ export function collectPersonalData(storage, { exportedAt } = {}) {
   // per-profile store's real keys carry a profile id (see `excludedEntry`). The
   // filter is still derived from EXCLUDED rather than naming a key, so moving
   // or renaming a store doesn't quietly reopen the hole.
+  //
+  // 🚩 This bag only does its job on the manual backup/restore path
+  // (`applyPersonalData`, below). `sync.js` calls this same function to build
+  // what it pushes, and `sync-merge.js`'s `mergePersonal` does not read `other`
+  // at all — an unnamed store is collected here and then never delivered by
+  // continuous sync. Deliberate, not a bug; see `mergePersonal`'s docstring and
+  // ADR 0127 for why.
   const other = {};
   for (const key of listStoredKeys(storage)) {
     if (!known.has(key) && !isExcludedKey(key)) other[key] = storage.getItem(key);
