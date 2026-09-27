@@ -160,6 +160,10 @@ jobs:
         run: python3 tools/test_registry.py
       - name: Prove the add-on finder still behaves
         run: python3 tools/test_find_addons.py
+      # Theme 28's variant enumerator (310/050). Its selftest carries its own
+      # breaker, so a classifier wired to one answer cannot pass it.
+      - name: Prove the variant enumerator still classifies
+        run: python3 tools/find_variants.py --selftest
       - name: Prove the allergen tagger still writes what it finds
         run: python3 tools/test_tag_allergens.py
       # …and its read-only sibling, whose CLASS TABLE had no test at all until

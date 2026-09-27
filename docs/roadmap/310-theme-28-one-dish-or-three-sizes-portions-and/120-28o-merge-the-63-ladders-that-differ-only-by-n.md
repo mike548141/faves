@@ -2,6 +2,9 @@
       `[L][data]` — population B of `28h`, the mechanical half. **This is the
       first item in the whole decomposition that retires a `dishId`, and it
       must not start before `28l`'s gate exists.**
+  🚩 **"63" in this title is stale — measured 2026-09-28 at `1dfd012`, it is
+  48.** Re-run `python3 tools/find_variants.py` for the live count; it prints
+  both. The title keeps its old number so existing links and the index hold.
 
   **Measured at `e50c0ee`.** Of the 133 split-row groups, **63 have siblings
   identical in `tags`, `desc`, `addOns`, `served` and `prices`** — the only
