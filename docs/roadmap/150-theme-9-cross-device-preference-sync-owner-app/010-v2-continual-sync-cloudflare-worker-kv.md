@@ -1,4 +1,9 @@
-- [~] **v2 — continual sync (Cloudflare Worker + KV)** `[M][constraint]` ⚑ —
+- [ ] **v2 — continual sync (Cloudflare Worker + KV)** `[M][constraint]` ⚑ —
+  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
+  branch, no live session behind it. The bracket was standing in for
+  "part-done", which the house board does not define — `[~]` means
+  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
+  § Claiming work). What is done is carried in the body below.
   **part-done, claim released 2026-08-16.** The **merge engine is built, tested
   and shipped** (`site/js/sync-merge.js`, 26 tests, **ADR 0060**) — owner-directed
   this session ("so my iphone and laptop show the same favourites, ratings etc").

@@ -1,4 +1,6 @@
-- [ ] **28h — The variant enumerator: nothing else here can be sized without
+- [~] **28h — The variant enumerator: nothing else here can be sized without
+      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — orchestrated queue run, worker.
+      (claimed 2026-09-27-1350, wt: faves-28h)
       it** `[M][tools]` — the first part of `490/050`'s decomposition
       (owner ruled 2026-09-09: a size or a protein is a **choice on one dish**).
       Build `tools/find_variants.py`, a reporter over `site/data/restaurants/` <!-- pathscan:allow: the tool this item exists to create — deliberately absent -->

@@ -10,7 +10,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/README.md)*
 
-- [~] 🛑 [service is renamed to order-mode, INCLUDING the shipped filter](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/010-service-is-renamed-to-order-mode-including-the.md)
+- [ ] 🛑 [service is renamed to order-mode, INCLUDING the shipped filter](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/010-service-is-renamed-to-order-mode-including-the.md)
 - [ ] [🚩 URL stability is NOT a constraint yet, and the day it becomes one is](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/020-url-stability-becomes-a-constraint-when-there-are-users.md)
 - ✅ 🛑 [The roadmap is SPLIT — one file per item](roadmap/010-two-structural-owner-rulings-2026-08-16-23-15/030-the-roadmap-is-split-one-file-per-item.md)
 
@@ -26,7 +26,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/040-theme-2-location-maps/README.md)*
 
-- [~] [McDonald's — finish the flesh-out](roadmap/040-theme-2-location-maps/010-mcdonald-s-finish-the-flesh-out.md)
+- [ ] [McDonald's — finish the flesh-out](roadmap/040-theme-2-location-maps/010-mcdonald-s-finish-the-flesh-out.md)
 - [ ] ["Along a route" → free-text destination + unified search bar](roadmap/040-theme-2-location-maps/020-along-a-route-free-text-destination-unified-se.md)
 
 ## Owner rulings — 2026-07-23 (session Q&A, raw where quoted)
@@ -49,7 +49,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [Gold Lining — brunch window vs opening hours](roadmap/080-theme-4-content-growth-ongoing-in-parallel/020-gold-lining-brunch-window-vs-opening-hours.md)
 - [ ] [1841 — the menu we have is a March 2025 document](roadmap/080-theme-4-content-growth-ongoing-in-parallel/030-1841-the-menu-we-have-is-a-march-2025-document.md)
 - [ ] [1841 publishes no drinks list](roadmap/080-theme-4-content-growth-ongoing-in-parallel/040-1841-publishes-no-drinks-list.md)
-- [~] [Other venues with drinks nobody has captured](roadmap/080-theme-4-content-growth-ongoing-in-parallel/050-other-venues-with-drinks-nobody-has-captured.md)
+- [ ] [Other venues with drinks nobody has captured](roadmap/080-theme-4-content-growth-ongoing-in-parallel/050-other-venues-with-drinks-nobody-has-captured.md)
 - [ ] [1841 — kids menu not transcribed](roadmap/080-theme-4-content-growth-ongoing-in-parallel/060-1841-kids-menu-not-transcribed.md)
 - [ ] [The Borough — phone is the one third-party detail](roadmap/080-theme-4-content-growth-ongoing-in-parallel/070-the-borough-phone-is-the-one-third-party-detai.md)
 - [ ] ⏳ [Baylands — the food menu we hold is a festival menu](roadmap/080-theme-4-content-growth-ongoing-in-parallel/080-baylands-the-food-menu-we-hold-is-a-festival-m.md)
@@ -104,10 +104,10 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/150-theme-9-cross-device-preference-sync-owner-app/README.md)*
 
-- [~] [v2 — continual sync (Cloudflare Worker + KV)](roadmap/150-theme-9-cross-device-preference-sync-owner-app/010-v2-continual-sync-cloudflare-worker-kv.md)
+- [ ] [v2 — continual sync (Cloudflare Worker + KV)](roadmap/150-theme-9-cross-device-preference-sync-owner-app/010-v2-continual-sync-cloudflare-worker-kv.md)
 - ✅ [✅ DONE 2026-08-17 — the Worker is redeployed and sync works end to](roadmap/150-theme-9-cross-device-preference-sync-owner-app/020-the-worker-needs-redeploying-before-sync-works-at-all.md)
 - [ ] [Sync resolves conflicts and tells the reader nothing](roadmap/150-theme-9-cross-device-preference-sync-owner-app/030-sync-tells-the-reader-nothing-when-it-disagrees.md)
-- [ ] 🔎 [Sync still silently discards two OTHER kinds of thing it cannot](roadmap/150-theme-9-cross-device-preference-sync-owner-app/040-sync-still-drops-two-kinds-of-thing-it-cannot-name.md)
+- [~] 🔎 [Sync still silently discards two OTHER kinds of thing it cannot](roadmap/150-theme-9-cross-device-preference-sync-owner-app/040-sync-still-drops-two-kinds-of-thing-it-cannot-name.md)
 
 ## Theme 10 — Cross-person sharing (ongoing, revocable) — owner-gated
 
@@ -134,7 +134,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/README.md)*
 
-- [~] [14b — The content sweep](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/010-14b-the-content-sweep.md)
+- [ ] [14b — The content sweep](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/010-14b-the-content-sweep.md)
 - [ ] [14f — Combos: several dishes ordered as one](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/020-14f-combos-several-dishes-ordered-as-one.md)
 - [ ] [14g — Extras you cannot configure until the dish is ordered](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/030-14g-extras-you-cannot-configure-until-the-dish.md)
 - ✅ [14h — The "we can't say" warning fires 807 times, and Spinach is one…](roadmap/200-theme-14-order-it-the-way-you-eat-it-add-ons-c/040-14h-the-cant-say-warning-fires-807-times.md)
@@ -150,7 +150,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [27a — Rank a facet match above a text match](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/010-27a-rank-a-facet-match-above-a-text-match.md)
 - ✅ [Settings promises to hide places and nothing hides](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/020-settings-says-hide-when-nothing-hides.md)
 - ✅ [Ranking and "Open now" ignore lifecycle closure](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/030-ranking-and-open-now-ignore-a-closed-venue.md)
-- [~] [🚩 The branch picker is a FIFTH surface that disagrees about a closed](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/040-the-branch-picker-is-a-fifth-surface-that-disagrees.md)
+- [ ] [🚩 The branch picker is a FIFTH surface that disagrees about a closed](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/040-the-branch-picker-is-a-fifth-surface-that-disagrees.md)
 - ✅ [A shut seven-branch chain now says "Permanently closed" eight times](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/050-a-shut-chain-says-permanently-closed-eight-times.md)
 - ✅ 🔎 [The sticky contact bar is a NINTH place the closure sentence appears,](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/060-the-sticky-contact-bar-is-a-ninth-closure-notice.md)
 - ✅ 🔎 [The check harness reads and clicks geometry while it is still](roadmap/210-theme-27-search-ranking-a-name-match-is-not-a/070-the-harness-reads-geometry-while-it-is-still-animating.md)
@@ -182,7 +182,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 *[Narrative](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/README.md)*
 
 - [ ] [17a — Serves, and scaling it](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/010-17a-serves-and-scaling-it.md)
-- [ ] [17b — Step timings and a tap-to-start timer](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/020-17b-step-timings-and-a-tap-to-start-timer.md)
+- ✅ [17b — Step timings and a tap-to-start timer](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/020-17b-step-timings-and-a-tap-to-start-timer.md)
 - [ ] [17c — Quantities inside the step](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/030-17c-quantities-inside-the-step.md)
 - [ ] [17e — The rest of what the research turned up](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/040-17e-the-rest-of-what-the-research-turned-up.md)
 - ✅ [SHIPPED — cook mode carries the reader's scale](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/050-cook-mode-ignores-the-recipe-page-s-scale.md)
@@ -228,7 +228,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [28b — A second price has nowhere to live](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/020-28b-a-second-price-has-nowhere-to-live.md)
 - [ ] 🎯 [28e — OWNER RULED 2026-08-16: yes, Faves may ask who the reader is.](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/030-28e-owner-ruled-2026-08-16-yes-faves-may-ask-w.md)
 - [ ] [28e (original filing) — eligibility is unstated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/040-28e-original-filing-eligibility-is-unstated.md)
-- [ ] [28h — The variant enumerator: nothing else here can be sized without](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/050-28h-the-variant-enumerator-nothing-can-be-plan.md)
+- [~] [28h — The variant enumerator: nothing else here can be sized without](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/050-28h-the-variant-enumerator-nothing-can-be-plan.md)
 - [ ] 🎯 [28i — The ruling cannot be built for a protein ladder without one](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/060-28i-the-ruling-cannot-be-built-for-a-protein-l.md)
 - [ ] 🎯 [28j — What happens to an existing heart on "Large Butter Chicken"](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/070-28j-what-happens-to-an-existing-heart-on-large.md)
 - [ ] [28k — A group that SELECTS a variant: schema only, no data migrated](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/080-28k-a-group-that-selects-a-variant-schema-only.md)
@@ -237,7 +237,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [28n — Convert the prose size ladders: additive, and no id moves](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/110-28n-convert-the-prose-size-ladders-additive-no.md)
 - [ ] [28o — Merge the 63 ladders that differ only by name and price](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/120-28o-merge-the-63-ladders-that-differ-only-by-n.md)
 - [ ] [28p — The 70 ladders a human must rule on, one at a time](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/130-28p-the-70-ladders-a-human-must-rule-on-one-at.md)
-- [ ] [28q — An add-on option has no id, and this migration is what makes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/140-28q-an-add-on-option-has-no-id-and-this-migrat.md)
+- [~] [28q — An add-on option has no id, and this migration is what makes](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/140-28q-an-add-on-option-has-no-id-and-this-migrat.md)
 - [ ] [28r — The intake rule: when is a choice a group, and when is it two](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/150-28r-the-intake-rule-when-is-a-choice-a-group-a.md)
 - [ ] [28s — The checks that would stay GREEN while being wrong](roadmap/310-theme-28-one-dish-or-three-sizes-portions-and/160-28s-the-checks-that-would-stay-green-while-bei.md)
 
@@ -257,7 +257,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/README.md)*
 
-- [~] [🚩 PART-DONE, not open — the mechanism half shipped (ecbc82e), the](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/010-cook-check-mjs-is-the-shared-harness-is-flaky.md)
+- [ ] [🚩 PART-DONE, not open — the mechanism half shipped (ecbc82e), the](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/010-cook-check-mjs-is-the-shared-harness-is-flaky.md)
 - [ ] [CI runs NONE of the browser checks](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/020-ci-runs-none-of-the-browser-checks.md)
 - ⏳ [WAITING ON THE OWNER — (a) is shipped, (b) is his alone.](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/030-two-ci-jobs-run-on-every-push-and-cannot-block.md)
 - ✅ [🚩 linkscan is blind to reference-style links, and it is an ENFORCED](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/040-linkscan-is-blind-to-reference-style-links-and.md)
@@ -268,7 +268,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [The decision records have drifted from the decisions](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/090-the-decision-records-have-drifted-from-the-decisions.md)
 - [ ] [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
 - ✅ [📤 FILED UPSTREAM — the board's state vocabulary is atelier's, and…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
-- [~] 🛑 [cook_check wedges on its DEFAULT recipe, deterministically, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/120-cook-check-wedges-on-its-default-recipe.md)
+- [ ] 🛑 [cook_check wedges on its DEFAULT recipe, deterministically, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/120-cook-check-wedges-on-its-default-recipe.md)
 - ✅ [✅ DONE 2026-08-17 (436041d) — the job is now repo invariants, and](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/130-the-guard-job-name-cannot-be-fixed-alone.md)
 - ⏳ [The "Dining" filter has no te reo, and the gloss on it is knowingly](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/140-the-dining-label-has-no-te-reo.md)
 - ✅ 🔎 [The corpus is uniformly healthy, so a whole class of behaviour ships](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/150-the-corpus-holds-no-degenerate-state-to-test-against.md)
@@ -280,18 +280,18 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🛑 [to_top_check described a sweep it never ran, and its key assertion](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/210-a-check-described-a-sweep-it-never-ran.md)
 - ✅ [🚩 Two orphaned stashes have sat on the shared stash stack for three](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/220-two-orphaned-stashes-sit-on-a-stack-every-worktree-shares.md)
 - ✅ 🔎 [Nothing holds the four JavaScript allergen LABEL tables in step with](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/230-nothing-holds-the-allergen-label-tables-in-step.md)
-- [ ] 🔎 [An orchestrator tore down a sub-agent's worktree while the agent was](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/240-a-pushed-branch-is-not-a-finished-agent.md)
+- [~] 🔎 [An orchestrator tore down a sub-agent's worktree while the agent was](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/240-a-pushed-branch-is-not-a-finished-agent.md)
 - [ ] 🛑 [Intake throws away the evidence's own provenance, and the first](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/250-intake-throws-away-the-evidences-own-provenance.md)
 - ✅ 🔎 [The Python gates print no tree line, so CLAUDE.md's "EVERY check](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/260-the-python-gates-print-no-tree-line.md)
 - [ ] [🚩 The machine-side half of the 2026-08-17 force-push ruling does not](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
 - ✅ 🛑 [An unresolved merge conflict shipped to a PUBLIC main and stood](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/280-a-merge-conflict-shipped-to-a-public-main-and-no-gate-saw-it.md)
-- [ ] 🔎 [A gate that is on the verify list but not in CI went red on main,](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/290-a-gate-not-in-ci-went-red-on-main-and-nobody-saw-it.md)
+- [~] 🔎 [A gate that is on the verify list but not in CI went red on main,](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/290-a-gate-not-in-ci-went-red-on-main-and-nobody-saw-it.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
 *[Narrative](roadmap/350-theme-22-the-personal-layer-holistically-owner/README.md)*
 
-- [~] [✅ RULED AND SHIPPED (first half) 2026-08-17 — the answer is DULL, NOT](roadmap/350-theme-22-the-personal-layer-holistically-owner/010-22d-hide-what-does-not-apply-to-this-reader.md)
+- [ ] [✅ RULED AND SHIPPED (first half) 2026-08-17 — the answer is DULL, NOT](roadmap/350-theme-22-the-personal-layer-holistically-owner/010-22d-hide-what-does-not-apply-to-this-reader.md)
 
 ## Theme 23 — what the app says, and where it says it (owner-raised 2026-08-16)
 
@@ -352,7 +352,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 - [ ] 🎯 [36a — what the data says about time, and what it doesn't](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/010-36a-what-the-data-says-about-time-and-what-it.md)
 - [ ] 🎯 [36b — the quantity used at this step](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/020-36b-the-quantity-used-at-this-step-l-schema-da.md)
-- [ ] 🎯 [36c — serving sizes](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/030-36c-serving-sizes-m-data-not-researchable.md)
+- ✅ 🎯 [36c — serving sizes](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/030-36c-serving-sizes-m-data-not-researchable.md)
 - ✅ [36d — the timer's alarm](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/040-36d-the-timer-s-alarm-shipped-2026-08-16.md)
 - [ ] [36e — one place to look, not two](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/050-36e-one-place-to-look-not-two-m-ux.md)
 - ✅ [⏸️ PARKED 2026-08-16 by the owner — no work owed, and this is not](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/060-36f-what-it-costs-to-make-it-l-schema-data-own.md)

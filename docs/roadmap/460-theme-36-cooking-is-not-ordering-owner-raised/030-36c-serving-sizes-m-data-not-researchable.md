@@ -1,4 +1,8 @@
-- [ ] **36c — serving sizes** `[M][data]` ⚠️ ~~🎯 **not researchable**~~
+- [x] **36c — serving sizes** `[M][data]` ⚠️ ~~🎯 **not researchable**~~
+  ✅ **CLOSED 2026-09-27 (session `40d6dea4`) — the render pass this item said was
+  owed has shipped.** ADR 0125 (`a35d863`) put `serves` on 23 of 25 recipes
+  and `menu.js` renders it, saying "about" where the count is our estimate.
+  Measured on the data, not taken from the ADR.
       🛑 **OVERRULED 2026-08-16 — everything below this line is the SUPERSEDED
       recommendation, kept for the record. Read the note at the foot first.**
 

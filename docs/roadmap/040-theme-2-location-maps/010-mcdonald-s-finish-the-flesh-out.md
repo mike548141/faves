@@ -1,4 +1,9 @@
-- [~] **McDonald's — finish the flesh-out** `[M][content]` (parts (a) ✅ done
+- [ ] **McDonald's — finish the flesh-out** `[M][content]` (parts (a) ✅ done
+  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
+  branch, no live session behind it. The bracket was standing in for
+  "part-done", which the house board does not define — `[~]` means
+  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
+  § Claiming work). What is done is carried in the body below.
   2026-08-09 and **(b) ✅ done 2026-08-16** — all 41 dishes now carry McDonald's
   own NZ product photography, ADR 0053, provenance in `data/images/`; **c/d stay
   open**: the record still has no allergen or dietary tags and no prices) —

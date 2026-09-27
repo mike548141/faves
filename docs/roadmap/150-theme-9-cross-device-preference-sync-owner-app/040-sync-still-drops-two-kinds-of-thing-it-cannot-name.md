@@ -1,4 +1,6 @@
-- [ ] 🔎 **Sync still silently discards two OTHER kinds of thing it cannot
+- [~] 🔎 **Sync still silently discards two OTHER kinds of thing it cannot
+      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — orchestrated queue run, worker.
+      (claimed 2026-09-27-1350, wt: faves-sync-040)
       name — a settings field, and a whole store** `[S][js]` — found
       2026-09-20 by the worker delivering
       [`150/030`](030-sync-tells-the-reader-nothing-when-it-disagrees.md),

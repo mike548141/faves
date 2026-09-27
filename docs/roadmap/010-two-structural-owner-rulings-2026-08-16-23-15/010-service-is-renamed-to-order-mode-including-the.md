@@ -1,4 +1,9 @@
-- [~] 🛑 **`service` is renamed to `order-mode`, INCLUDING the shipped filter**
+- [ ] 🛑 **`service` is renamed to `order-mode`, INCLUDING the shipped filter**
+  📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
+  branch, no live session behind it. The bracket was standing in for
+  "part-done", which the house board does not define — `[~]` means
+  *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
+  § Claiming work). What is done is carried in the body below.
       `[M][js]` — owner-ruled 2026-08-16.
       ✅ **THE CODE RENAME IS SHIPPED 2026-08-17 (`7bc0ee6`)** — claim released.
       `filters.js`, `app.js`, `index.html`, `reo.js` and `tests/filters.test.js`
