@@ -1,4 +1,6 @@
-- [ ] **36a — what the data says about time, and what it doesn't** `[S][data]` 🎯
+- [~] **36a — what the data says about time, and what it doesn't** `[S][data]` 🎯
+  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — owner ruled 2026-09-27:
+  the list row shows the TOTAL, prep + cook. (claimed 2026-09-27-1917, wt: main)
 
 > 🎯 **Owner ruling 2026-08-16, relayed from a peer session:** *estimate the
 > per-step and total times, and label them as estimates.* Same ruling for 36c.
