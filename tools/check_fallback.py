@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Enforce the no-JS fallback lockstep: `site/index.html` vs `site/data/index.json`.
 
+🛑 VENUE-ONLY, AND SAID SO (roadmap 28s, 2026-09-28). Its three patterns read the
+card, the venue name and the `restaurant.html?id=` href; the fallback list has no
+dishes in it and neither does this tool. A menu losing a third of its rows to a
+ladder merge (roadmap 28o) leaves this check exactly as green as before, and that
+is correct — it is not cover for dishes, and nobody should read it as such.
+
 CLAUDE.md has carried this rule since the repo's working conventions were
 written:
 
