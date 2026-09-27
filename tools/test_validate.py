@@ -134,6 +134,35 @@ def _twin(d, dish_id=None):
     return twin
 
 
+def _selects(d):
+    """Give the subject's first dish a size ladder (ADR 0130) and return it.
+
+    Hand-written, and only ever inside this file's temporary copy — never in
+    `site/data/`, which is precached onto every phone (ADR 0047) and carries no
+    `selects` group until 28m draws one. The dish is Eggs on Toast at $14.00,
+    tagged `v` and `gf-option`, so a variant has claims to restate and a price
+    to agree with — the two rules a size ladder most plausibly gets wrong."""
+    group = {
+        "id": "size",
+        "name": "Size",
+        "kind": "selects",
+        "options": [
+            {"name": "Regular", "id": "regular", "dishPrice": 14.0, "default": True,
+             "tags": ["v", "gf-option"]},
+            {"name": "Large", "id": "large", "dishPrice": 18.5, "tags": ["v", "gf-option"]},
+        ],
+    }
+    d["addOnGroups"] = [group]
+    _first_item(d)["addOns"] = ["size"]
+    return group
+
+
+def _ladder(fn):
+    """A case that installs the good size ladder, then breaks it: `fn(group,
+    record)`."""
+    return lambda d: fn(_selects(d), d)
+
+
 def _breaks(fn):
     """A case that installs the good add-on group, then breaks it: `fn(group,
     record)`."""
@@ -603,6 +632,145 @@ CASES = {
     "unknown key on an add-on group": (
         _breaks(lambda g, d: g.update(maxx=2)),
         "error", r"add-on group 'sauces': unknown key 'maxx'",
+    ),
+    # --- ADR 0130: a group that SELECTS a variant (roadmap 28k) -----------
+    # The positive cases first, because the field arrives on a corpus of 50
+    # groups that must not notice: absent `kind` is `adds`, and so is the word.
+    'an existing group saying "kind": "adds" is legal': (
+        _breaks(lambda g, d: g.update(kind="adds")),
+        "clean", None,
+    ),
+    "a well-formed selects group is legal": (_selects, "clean", None),
+    "kind off the closed set": (
+        _breaks(lambda g, d: g.update(kind="choose")),
+        "error", r"add-on group 'sauces': kind must be one of \['adds', 'selects'\] or absent, got 'choose'",
+    ),
+    # 28b's counter-examples must be EXPRESSIBLE: the venue that prints two
+    # prices and never names the larger size, and two volumes at one price.
+    "an unlabelled variant is legal": (
+        _ladder(lambda g, d: g["options"][1].pop("name")),
+        "clean", None,
+    ),
+    "two variants at one price is legal": (
+        _ladder(lambda g, d: g["options"][1].update(dishPrice=14.0)),
+        "clean", None,
+    ),
+    "the dish's price as a dated series agrees through its latest entry": (
+        _ladder(lambda g, d: _first_item(d).update(price=[
+            {"value": 12.0, "recorded": "2026-01-01"}, {"value": 14.0, "recorded": "2026-08-01"}])),
+        "clean", None,
+    ),
+    # The item's five named refusals.
+    "a selects group with no default": (
+        _ladder(lambda g, d: g["options"][0].pop("default")),
+        "error", r"add-on group 'size': a selects group needs exactly one option marked \"default\": true",
+    ),
+    "a selects group with two defaults": (
+        _ladder(lambda g, d: g["options"][1].update(default=True)),
+        "error", r"add-on group 'size': 2 options are marked default \('Regular', 'Large'\)",
+    ),
+    "a variant with a null price": (
+        _ladder(lambda g, d: g["options"][1].update(dishPrice=None)),
+        "error", r"option 'Large': dishPrice must not be null",
+    ),
+    "max on a selects group": (
+        _ladder(lambda g, d: g.update(max=1)),
+        "error", r"add-on group 'size': max does not apply to a selects group",
+    ),
+    "a dish whose price disagrees with its default variant": (
+        _ladder(lambda g, d: _first_item(d).update(price=15.0)),
+        "error", r"item 'Eggs on Toast': price 15\.0 disagrees with 'Regular', the default of selects group 'size' \(dishPrice 14\.0\)",
+    ),
+    # …and the rest of the shape.
+    "a variant priced as a surcharge": (
+        _ladder(lambda g, d: g["options"][1].update(price=4.5)),
+        "error", r"option 'Large': a variant carries `dishPrice`.*not `price`",
+    ),
+    "a variant with no dishPrice at all": (
+        _ladder(lambda g, d: g["options"][1].pop("dishPrice")),
+        "error", r"option 'Large': no dishPrice",
+    ),
+    "a variant priced as a string": (
+        _ladder(lambda g, d: g["options"][1].update(dishPrice="18.50")),
+        "error", r"option 'Large': dishPrice must be a number, got '18.50'",
+    ),
+    "a negative variant price": (
+        _ladder(lambda g, d: g["options"][1].update(dishPrice=-1)),
+        "error", r"option 'Large': dishPrice must be a finite, non-negative number",
+    ),
+    "default written as false": (
+        _ladder(lambda g, d: g["options"][1].update(default=False)),
+        "error", r"option 'Large': default must be true or absent, got False",
+    ),
+    "select on a selects group": (
+        _ladder(lambda g, d: g.update(select="one")),
+        "error", r"add-on group 'size': select does not apply to a selects group",
+    ),
+    "a group price on a selects group": (
+        _ladder(lambda g, d: g.update(price=0)),
+        "error", r"add-on group 'size': price does not apply to a selects group",
+    ),
+    "a ladder of one variant": (
+        _ladder(lambda g, d: g["options"].pop()),
+        "error", r"add-on group 'size': a selects group needs at least two options",
+    ),
+    "an unlabelled variant with no id": (
+        _ladder(lambda g, d: (g["options"][1].pop("name"), g["options"][1].pop("id"))),
+        "error", r'options\[1\]: no "id", and no name to seed one from',
+    ),
+    "dishPrice on an adds option": (
+        _breaks(lambda g, d: g["options"][0].update(dishPrice=2)),
+        "error", r"option 'Satay': dishPrice belongs to a variant",
+    ),
+    "default on an adds option": (
+        _breaks(lambda g, d: g["options"][0].update(default=True)),
+        "error", r"option 'Satay': default belongs to a variant",
+    ),
+    "two selects groups on one dish": (
+        _ladder(lambda g, d: (
+            d["addOnGroups"].append({**copy.deepcopy(g), "id": "protein"}),
+            _first_item(d)["addOns"].append("protein"),
+        )),
+        "error", r"item 'Eggs on Toast': 2 selects groups \('size', 'protein'\) on one dish",
+    ),
+    "per-channel prices beside a ladder": (
+        _ladder(lambda g, d: (_channels(d), _first_item(d).update(price=14.0))),
+        "error", r"item 'Eggs on Toast': per-channel prices beside selects group 'size'",
+    ),
+    # ADR 0048 §3 is NOT amended (28i). A variant restates its dish's claims —
+    # no fewer, or picking it strips one; no more, or it reads as a restore
+    # that intersection can never deliver; and nothing that contradicts one.
+    "a variant that drops the dish's claim": (
+        _ladder(lambda g, d: g["options"][1].update(tags=[])),
+        "error", r"variant 'Large' of selects group 'size' does not restate the dish's gf-option, v",
+    ),
+    "a variant that claims what its dish does not": (
+        _ladder(lambda g, d: g["options"][1].update(tags=["v", "gf-option", "vg"])),
+        "error", r"variant 'Large' of selects group 'size' claims vg, which the dish does not",
+    ),
+    "a variant that is meat on a vegetarian dish": (
+        _ladder(lambda g, d: g["options"][1].update(tags=["v", "gf-option", "has-meat"])),
+        "error", r"variant 'Large' of selects group 'size' carries has-meat, which contradicts the dish's v",
+    ),
+    # Roadmap 28s: the twin-allergen sweep's SECOND join. A merge removes the
+    # duplicate names the first join keys on, so without this the sweep goes
+    # quieter at the moment it should speak.
+    "a variant lacking an allergen its sibling variant carries is reported": (
+        _ladder(lambda g, d: g["options"][1]["tags"].append("contains-nuts")),
+        "warn", r"'Eggs on Toast' as 'Regular' \(selects group 'size'\) lacks contains-nuts, which its variant 'Large' carries",
+    ),
+    # Roadmap 28s: find_dish resolves a reference that no longer NAMES its dish.
+    "a pick reaching a renamed dish only through its id is reported": (
+        lambda d: (d.update(picks=["Eggs on Toast"]), _first_item(d).update(name="Eggs, toasted")),
+        "warn", r"pick 'Eggs on Toast' reaches 'Eggs, toasted' only through its dish id",
+    ),
+    "a pick naming a retired id is reported": (
+        lambda d: (d.update(picks=["old-eggs"]), _first_item(d).update(formerIds=["old-eggs"])),
+        "warn", r"pick 'old-eggs' reaches 'Eggs on Toast' only through a RETIRED id",
+    ),
+    "a pick still naming its dish says nothing": (
+        lambda d: d.update(picks=["Eggs on Toast"]),
+        "clean", None,
     ),
     # addOnsOnly must never be a delete wearing a nicer name: it may only hide
     # rows that some group still offers.
