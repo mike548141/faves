@@ -17,6 +17,7 @@
 
 import { favourites } from "./favourites.js";
 import { ratings } from "./ratings.js";
+import { notes } from "./notes.js";
 import { settings } from "./settings.js";
 import { profiles, reloadProfileStores } from "./profiles.js";
 import { sync } from "./sync.js";
@@ -32,13 +33,14 @@ import { sync } from "./sync.js";
 export function startSync() {
   try {
     return sync.start({
-      stores: [favourites, ratings, settings],
+      stores: [favourites, ratings, notes, settings],
       // The half that only exists in a browser: a pull rewrites localStorage,
-      // and these three singletons hold their state in memory. Without this the
+      // and these singletons hold their state in memory. Without this the
       // synced data is correct on disk and every open screen keeps rendering
-      // what it read at load — a heart arrives and nothing moves until reload.
-      // Order is load-bearing inside reloadProfileStores (settings last, so the
-      // allergen repaint runs after the data it reads is in place).
+      // what it read at load — a heart (or a note) arrives and nothing moves
+      // until reload. Order is load-bearing inside reloadProfileStores
+      // (settings last, so the allergen repaint runs after the data it reads
+      // is in place).
       // The REGISTRY first: a pull can add a profile, or remove the one this
       // device is showing (writeSnapshot then moves activeId in storage). The
       // profiles singleton holds the registry in memory and only re-read it
@@ -50,7 +52,7 @@ export function startSync() {
       // still on screen, no allergens flagged. Cold review, 2026-08-17.
       onApplied: () => {
         profiles.reload();
-        reloadProfileStores({ favourites, ratings, settings });
+        reloadProfileStores({ favourites, ratings, notes, settings });
       },
     });
   } catch {

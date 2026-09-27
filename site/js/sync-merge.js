@@ -16,7 +16,8 @@
 // which device happens to be asking.
 //
 // WHY THREE WAY. The personal layer carries no clock: not favourites (an array
-// of entry objects), not ratings (a bare `{key: 1..5}` map), not settings, not
+// of entry objects), not ratings (a bare `{key: 1..5}` map), not notes (a bare
+// `{key: text}` map — the same shape, added ADR 0131), not settings, not
 // the profile registry. So there is nothing to do last-write-wins with, and
 // ADR 0017's "union hearts, last-write-wins settings" cannot be implemented as
 // written. The way out costs no schema change: keep the snapshot as it stood at
@@ -49,6 +50,7 @@ export const DIET_FIELD = "diet";
  *  what it did rather than change something behind the reader's back. */
 export const CONFLICT_DIET = "diet";
 export const CONFLICT_RATING = "rating";
+export const CONFLICT_NOTE = "note";
 export const CONFLICT_SETTING = "setting";
 export const CONFLICT_PROFILE_IDENTITY = "profile-identity";
 
@@ -164,12 +166,22 @@ export function mergeSet(base, mine, theirs, keyOf = favKey) {
 }
 
 /**
- * Three-way merge of a flat `{key: value}` map (ratings).
+ * Three-way merge of a flat `{key: value}` map (ratings, and — since ADR
+ * 0131 — personal notes on a recipe).
  *
- * Absence is treated as a value, so a cleared rating flows through the same
- * three rules as a changed one and deletion needs no separate branch.
+ * Absence is treated as a value, so a cleared rating (or note) flows through
+ * the same three rules as a changed one and deletion needs no separate
+ * branch. `kind` labels a genuine two-sided conflict for the caller — a
+ * rating conflict and a note conflict are reported distinctly even though the
+ * merge itself is identical, because "your 3 vs their 5" and "your note vs
+ * their note" want different words in a UI that ever shows them. A note's
+ * conflict is resolved the SAME deterministic way a rating's is — there is no
+ * clock in this layer to do real last-write-wins with (see the header above);
+ * a genuine two-sided edit of one recipe's note between two devices is rare
+ * enough that settling on a reproducible pick, rather than losing one edit
+ * silently, is the right trade.
  */
-export function mergeMap(base, mine, theirs) {
+export function mergeMap(base, mine, theirs, kind = CONFLICT_RATING) {
   const b = map(base);
   const m = map(mine);
   const t = map(theirs);
@@ -186,7 +198,7 @@ export function mergeMap(base, mine, theirs) {
     else if (same(tv, bv)) value = mv; // only I moved
     else {
       value = tieBreak(mv, tv);
-      conflicts.push({ kind: CONFLICT_RATING, key, mine: mv, theirs: tv, resolved: value });
+      conflicts.push({ kind, key, mine: mv, theirs: tv, resolved: value });
     }
     if (value !== undefined) out[key] = value;
   }
@@ -307,19 +319,32 @@ export function mergePersonal(base, mine, theirs) {
   const theirsProfiles = new Map(list(theirs?.profiles).map((p) => [profileKey(p), p]));
 
   const conflicts = [];
-  const changes = { favouritesAdded: 0, favouritesRemoved: 0, ratingsChanged: 0, settingsChanged: 0, profilesAdded: 0 };
+  const changes = {
+    favouritesAdded: 0,
+    favouritesRemoved: 0,
+    ratingsChanged: 0,
+    notesChanged: 0,
+    settingsChanged: 0,
+    profilesAdded: 0,
+  };
   const merged = [];
   const handled = new Set();
 
   const mergeOne = (b, m, t) => {
     const fav = mergeSet(b?.favourites, m?.favourites, t?.favourites);
-    const rat = mergeMap(b?.ratings, m?.ratings, t?.ratings);
+    const rat = mergeMap(b?.ratings, m?.ratings, t?.ratings, CONFLICT_RATING);
+    // A note is a flat `{recipeId: text}` map — the exact shape ratings
+    // already use — so it merges through the same three-way logic rather than
+    // a second implementation of "merge a map" (this repo's own scar: one
+    // question, two implementations, only one ever updated).
+    const note = mergeMap(b?.notes, m?.notes, t?.notes, CONFLICT_NOTE);
     const set = mergeSettings(b?.settings, m?.settings, t?.settings);
     changes.favouritesAdded += fav.added.length;
     changes.favouritesRemoved += fav.removed.length;
     changes.ratingsChanged += rat.conflicts.length;
+    changes.notesChanged += note.conflicts.length;
     changes.settingsChanged += set.conflicts.length;
-    for (const c of [...rat.conflicts, ...set.conflicts]) {
+    for (const c of [...rat.conflicts, ...note.conflicts, ...set.conflicts]) {
       conflicts.push({ ...c, profileId: profileKey(m ?? t), profileName: (m ?? t)?.name ?? "" });
     }
     return {
@@ -331,6 +356,7 @@ export function mergePersonal(base, mine, theirs) {
       active: !!m?.active,
       favourites: fav.items,
       ratings: rat.map,
+      notes: note.map,
       settings: set.settings,
     };
   };

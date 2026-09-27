@@ -113,6 +113,7 @@ export function writeSnapshot(storage, snapshot) {
     };
     put("faves.favourites.v1", Array.isArray(p.favourites) ? p.favourites : []);
     put("faves.ratings.v1", p.ratings && typeof p.ratings === "object" ? p.ratings : {});
+    put("faves.notes.v1", p.notes && typeof p.notes === "object" ? p.notes : {});
     if (p.settings && typeof p.settings === "object") put("faves.settings.v1", p.settings);
   }
 
@@ -167,6 +168,7 @@ export function sameSnapshot(a, b) {
           name: p?.name ?? "",
           favourites: Array.isArray(p?.favourites) ? p.favourites : [],
           ratings: p?.ratings && typeof p.ratings === "object" ? p.ratings : {},
+          notes: p?.notes && typeof p.notes === "object" ? p.notes : {},
           settings:
             p?.settings && typeof p.settings === "object" && Object.keys(p.settings).length
               ? p.settings

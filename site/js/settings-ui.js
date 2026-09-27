@@ -375,6 +375,7 @@ function dataSection(syncCtl) {
         `${s.favourites} ${s.favourites === 1 ? "favourite" : "favourites"}`,
         `${s.ratings} ${s.ratings === 1 ? "rating" : "ratings"}`,
       ];
+      if (s.notes) bits.push(`${s.notes} ${s.notes === 1 ? "note" : "notes"}`);
       if (s.orderItems) bits.push(`${s.orderItems} order ${s.orderItems === 1 ? "item" : "items"}`);
       status.textContent = `Saved ${name} — ${bits.join(", ")}.`;
     } catch {

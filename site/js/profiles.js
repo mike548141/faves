@@ -8,13 +8,16 @@
 //
 // WHAT IS PER-PROFILE vs SHARED (recorded in ADR 0012):
 //   • Per-profile — favourites (`faves.favourites.v1`), personal ratings
-//     (`faves.ratings.v1`: the viewer's own 1–3 marks) and *all* of settings
-//     (`faves.settings.v1`: dietary/allergen prefs [safety-critical — allergies
-//     differ per person], plus the ranking dials and the reo language). We
-//     scope by whole store, not by field: shattering one store's fields across
-//     two scopes is where migration/namespacing bugs breed, and this is safety
-//     code. A consequence is the language toggle is per-profile — defensible
-//     (each person reads their own tongue) and flagged for the owner to revisit.
+//     (`faves.ratings.v1`: the viewer's own 1–3 marks), personal notes on a
+//     recipe (`faves.notes.v1`: added 17e/ADR 0131 — "used half the sugar,
+//     better" is exactly as much the reader's own judgement as a rating is)
+//     and *all* of settings (`faves.settings.v1`: dietary/allergen prefs
+//     [safety-critical — allergies differ per person], plus the ranking dials
+//     and the reo language). We scope by whole store, not by field: shattering
+//     one store's fields across two scopes is where migration/namespacing bugs
+//     breed, and this is safety code. A consequence is the language toggle is
+//     per-profile — defensible (each person reads their own tongue) and
+//     flagged for the owner to revisit.
 //   • Shared (device-level, NOT namespaced) — the order tally
 //     (`faves.order.v1`: one order for the table) and the ephemeral Near-me
 //     origin (`faves.origin.v1`, sessionStorage). Theme follows the OS and is
@@ -44,7 +47,12 @@ export const PROFILES_KEY = "faves.profiles.v1";
 // owner's 36g ruling ("if it isn't restored, it shouldn't be exported") keep
 // them out of the backup, and this list is what the export walks. Adding the
 // key here would purge the ticks and re-open the export in the same edit.
-export const SCOPED_BASE_KEYS = ["faves.favourites.v1", "faves.settings.v1", "faves.ratings.v1"];
+export const SCOPED_BASE_KEYS = [
+  "faves.favourites.v1",
+  "faves.settings.v1",
+  "faves.ratings.v1",
+  "faves.notes.v1",
+];
 
 // checklist.js's own key, declared HERE so the purge below can name it without
 // importing checklist.js — which imports this module, and a cycle would leave
@@ -264,17 +272,19 @@ export const profiles = createProfiles(deviceStorage);
 
 /**
  * Reload every per-profile store after a profile switch. ORDER IS LOAD-BEARING:
- * the "silent" stores (favourites, ratings) reload FIRST; `settings` reloads
- * LAST, because on the menu/recipe screens it's `settings.reload()`'s
+ * the "silent" stores (favourites, ratings, notes) reload FIRST; `settings`
+ * reloads LAST, because on the menu/recipe screens it's `settings.reload()`'s
  * subscription that drives the safety re-render — and that re-render must read
- * favourites and ratings already re-pointed at the new profile, or it would
- * rebuild hearts/marks from the previous person's data. Pure + injectable: the
- * screens pass the real singletons, tests pass fakes, so it carries no import
- * cycle. `ratings` is optional (the recipe screen has no rating control).
+ * favourites, ratings and notes already re-pointed at the new profile, or it
+ * would rebuild hearts/marks/notes from the previous person's data. Pure +
+ * injectable: the screens pass the real singletons, tests pass fakes, so it
+ * carries no import cycle. `ratings` and `notes` are optional (a screen with
+ * no rating control, or no note control, simply omits them).
  */
-export function reloadProfileStores({ favourites, ratings, settings }) {
+export function reloadProfileStores({ favourites, ratings, notes, settings }) {
   favourites?.reload();
   ratings?.reload();
+  notes?.reload();
   settings.reload(); // MUST be last — its subscribers repaint the menu
 }
 
