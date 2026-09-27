@@ -47,6 +47,7 @@ import { CONSENT_KEY } from "./geo-consent.js";
 import { createFavourites, favKey } from "./favourites.js";
 import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
+import { normaliseNoteText } from "./notes.js";
 import { createSettings, sanitiseDiet, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
 import { mergeItems, normaliseNote } from "./cart.js";
 import { optionId } from "./addons.js";
@@ -73,7 +74,7 @@ export const FORMAT_VERSION = 1;
 export const ORDER_KEY = "faves.order.v1";
 
 const README =
-  "Your own Faves data — favourites, ratings, settings, profiles and the order tally. " +
+  "Your own Faves data — favourites, ratings, notes, settings, profiles and the order tally. " +
   "Faves keeps this in your browser only; this file is a copy you asked for, and " +
   "producing it sent nothing anywhere.";
 
@@ -304,6 +305,10 @@ export function summarisePersonalData(data) {
       (n, p) => n + (p.ratings && typeof p.ratings === "object" ? Object.keys(p.ratings).length : 0),
       0
     ),
+    notes: people.reduce(
+      (n, p) => n + (p.notes && typeof p.notes === "object" ? Object.keys(p.notes).length : 0),
+      0
+    ),
     orderItems: count(data?.order),
   };
 }
@@ -398,6 +403,25 @@ function sanitiseRatings(map) {
   return out;
 }
 
+// Personal notes (17e, ADR 0131) — a flat `{recipeId: text}` map, exactly the
+// shape ratings already use, so it goes through the same drop-rather-than-trust
+// gate: `normaliseNoteText` is the one function every write, sync merge and
+// import passes through, so a payload cannot smuggle in an over-length or
+// non-string note.
+function sanitiseNotes(map) {
+  const out = {};
+  if (!isObj(map)) return out;
+  let n = 0;
+  for (const [k, v] of Object.entries(map)) {
+    const key = clip(k);
+    const text = normaliseNoteText(v);
+    if (!key || !text) continue;
+    out[key] = text;
+    if (++n >= MAX_ITEMS) break;
+  }
+  return out;
+}
+
 // An imported file is as untrusted as a shared link — same clipping, same
 // drop-rather-than-trust rule for a half-formed option.
 function sanitiseOptions(list) {
@@ -479,6 +503,7 @@ function normaliseProfile(p) {
     active: !!p.active,
     favourites: sanitiseFavourites(p.favourites),
     ratings: sanitiseRatings(p.ratings),
+    notes: sanitiseNotes(p.notes),
     // Settings stay raw here; settings.js's own sanitiser is the single gate
     // they pass through on the way to storage, and `diet` has to survive
     // untouched until the comparison below can see whether it differs.
@@ -614,6 +639,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       name: p.name,
       favourites: p.favourites.length,
       ratings: Object.keys(p.ratings).length,
+      notes: Object.keys(p.notes).length,
       hasSettings: !!p.settings,
       match: mode === "replace" ? null : idMatch ? "id" : nameMatch ? "name" : null,
       collides: ambiguous,
@@ -653,6 +679,7 @@ export function planImport(storage, data, { mode = "merge", decisions = {} } = {
       profiles: clean.profiles.length,
       favourites: clean.profiles.reduce((n, p) => n + p.favourites.length, 0),
       ratings: clean.profiles.reduce((n, p) => n + Object.keys(p.ratings).length, 0),
+      notes: clean.profiles.reduce((n, p) => n + Object.keys(p.notes).length, 0),
       orderItems: clean.order.length,
       otherStores: Object.keys(clean.other).length,
     },
@@ -712,6 +739,7 @@ function writeProfileStores(storage, id, p) {
   const view = profileView(storage, id);
   if (p.favourites.length) writeKey(storage, scopeKey(id, "faves.favourites.v1"), JSON.stringify(p.favourites));
   if (Object.keys(p.ratings).length) writeKey(storage, scopeKey(id, "faves.ratings.v1"), JSON.stringify(p.ratings));
+  if (Object.keys(p.notes).length) writeKey(storage, scopeKey(id, "faves.notes.v1"), JSON.stringify(p.notes));
   // Through the store, so the payload's settings pass settings.js's clamps.
   if (p.settings) createSettings(view).set(p.settings);
 }
@@ -746,6 +774,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     unchanged: [], // matched, but the payload held nothing this device lacked
     favouritesAdded: 0,
     ratingsAdded: 0,
+    notesAdded: 0,
     settingsUpdated: 0,
     dietChanged: [],
     orderRestored: false,
@@ -789,6 +818,7 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
       report.created.push(p.name);
       report.favouritesAdded += p.favourites.length;
       report.ratingsAdded += Object.keys(p.ratings).length;
+      report.notesAdded += Object.keys(p.notes).length;
       if (p.settings) report.settingsUpdated += 1;
       return;
     }
@@ -813,6 +843,20 @@ export function applyPersonalData(storage, data, { mode = "merge", decisions = {
     if (added) writeKey(storage, scopeKey(id, "faves.ratings.v1"), JSON.stringify(mineRatings));
     report.ratingsAdded += added;
     touched += added;
+
+    // Notes: yours win, same reasoning as ratings — a note you have since
+    // edited or cleared is a judgement, and a restore is not grounds to
+    // overwrite it. A recipe with no existing note gets the incoming one.
+    const mineNotes = sanitiseNotes(parse(view.getItem("faves.notes.v1")));
+    let notesAdded = 0;
+    for (const [k, v] of Object.entries(p.notes)) {
+      if (mineNotes[k]) continue;
+      mineNotes[k] = v;
+      notesAdded += 1;
+    }
+    if (notesAdded) writeKey(storage, scopeKey(id, "faves.notes.v1"), JSON.stringify(mineNotes));
+    report.notesAdded += notesAdded;
+    touched += notesAdded;
 
     if (isObj(p.settings)) {
       const patch = {};

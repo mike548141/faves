@@ -23,6 +23,7 @@ import { applyPersonalData, parsePersonalData, planImport } from "./personal-dat
 import { favourites } from "./favourites.js";
 import { settings, ALLERGEN_PREFS, DIETARY_PREFS } from "./settings.js";
 import { ratings } from "./ratings.js";
+import { notes } from "./notes.js";
 import { deviceStorage, profiles, reloadProfileStores } from "./profiles.js";
 import { el } from "./dom.js";
 
@@ -95,6 +96,7 @@ export function importReview({ data, sourceLine, onApplied }) {
       people(plan.totals.profiles),
       plural(plan.totals.favourites, "favourite"),
       plural(plan.totals.ratings, "rating"),
+      plural(plan.totals.notes, "note"),
     ];
     const when = exportedOn(plan.exportedAt);
     summary.replaceChildren(
@@ -167,7 +169,7 @@ export function importReview({ data, sourceLine, onApplied }) {
   function renderEntries(plan) {
     entriesBox.replaceChildren(
       ...plan.entries.map((entry) => {
-        const what = [plural(entry.favourites, "favourite"), plural(entry.ratings, "rating")];
+        const what = [plural(entry.favourites, "favourite"), plural(entry.ratings, "rating"), plural(entry.notes, "note")];
         if (entry.hasSettings) what.push("settings");
         const verb =
           entry.action === "new"
@@ -230,6 +232,7 @@ export function importReview({ data, sourceLine, onApplied }) {
     }
     if (result.favouritesAdded) bits.push(`${plural(result.favouritesAdded, "new favourite")}`);
     if (result.ratingsAdded) bits.push(`${plural(result.ratingsAdded, "new rating")}`);
+    if (result.notesAdded) bits.push(`${plural(result.notesAdded, "new note")}`);
     if (result.dietChanged.length) bits.push(`food preferences changed for ${result.dietChanged.join(", ")}`);
     if (result.orderRestored) bits.push("order tally restored");
     status.textContent = bits.length ? `Done — ${bits.join(", ")}.` : "Done — nothing here was new.";
@@ -241,7 +244,7 @@ export function importReview({ data, sourceLine, onApplied }) {
     // Re-point the live stores so hearts, marks and preferences update without
     // a page reload; profiles.reload() also repaints the Settings roster.
     profiles.reload();
-    reloadProfileStores({ favourites, ratings, settings });
+    reloadProfileStores({ favourites, ratings, notes, settings });
     entriesBox.replaceChildren();
     actions.hidden = true;
     // The buttons just vanished from under the keyboard: move focus to the

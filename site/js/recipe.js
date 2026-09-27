@@ -18,6 +18,8 @@ import { cookButton } from "./cook-ui.js";
 import { initShoppingEntry, shoppingButton } from "./shopping-ui.js";
 import { CHECKLIST_KEY, checklist, recipeId } from "./checklist.js";
 import { syncTicks, tickRow } from "./checklist-ui.js";
+import { notes } from "./notes.js";
+import { noteControl } from "./notes-ui.js";
 import { ingredientBlocks } from "./ingredients.js";
 import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
 import { el } from "./dom.js";
@@ -208,6 +210,12 @@ function render(collection, item) {
   // stale scale is a wrong amount discovered in a supermarket.
   const shop = shoppingButton(item, { venueId: id, rid, scale: () => scaleKey });
   if (cook || shop) parts.push(el("div", { className: "cook-start-row" }, [cook, shop]));
+
+  // Personal notes on this recipe (17e, ADR 0131) — "used half the sugar,
+  // better". Keyed on the same `rid` cook mode and the shopping list use, so a
+  // recipe renamed on the page keeps its note (ADR 0051: `dishId` is a stored
+  // fact, never derived from the name). Always offered, quiet when empty.
+  parts.push(noteControl(rid, item.name));
 
   const blocks = ingredientBlocks(item.ingredients);
   if (blocks.length) {
@@ -439,7 +447,7 @@ function initChrome() {
   // settings.reload() fires last by contract, so the reRender below is already
   // the new person's. Without this line the ⋯ menu would have shipped a
   // cross-profile data leak, which is the whole reason it is here.
-  profiles.subscribe(() => reloadProfileStores({ favourites, ratings, settings }));
+  profiles.subscribe(() => reloadProfileStores({ favourites, ratings, notes, settings }));
   const nameEl = document.querySelector(".profile-caption-name");
   if (nameEl) {
     const setName = () => { nameEl.textContent = profiles.active().name; };

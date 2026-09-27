@@ -35,12 +35,14 @@ function fakeStorage(initial = {}) {
   return s;
 }
 
-/** A device: a storage seeded with one profile holding `favs` and `ratings`. */
-function device({ favs = [], ratings = {}, settings = null, id = "default", name = "Me" } = {}) {
+/** A device: a storage seeded with one profile holding `favs`, `ratings` and
+ *  `notes` (ADR 0131 — a note is the same flat-map shape a rating is). */
+function device({ favs = [], ratings = {}, notes = {}, settings = null, id = "default", name = "Me" } = {}) {
   const st = fakeStorage({
     [PROFILES_KEY]: JSON.stringify({ v: 1, activeId: id, profiles: [{ id, name }] }),
     [scopeKey(id, "faves.favourites.v1")]: JSON.stringify(favs),
     [scopeKey(id, "faves.ratings.v1")]: JSON.stringify(ratings),
+    [scopeKey(id, "faves.notes.v1")]: JSON.stringify(notes),
   });
   if (settings) st.setItem(scopeKey(id, "faves.settings.v1"), JSON.stringify(settings));
   return st;
@@ -97,6 +99,8 @@ const mk = (storage, server, extra = {}) =>
 
 const favsOf = (storage, id = "default") =>
   JSON.parse(storage.getItem(scopeKey(id, "faves.favourites.v1")) || "[]").map(favKey).sort();
+const notesOf = (storage, id = "default") =>
+  JSON.parse(storage.getItem(scopeKey(id, "faves.notes.v1")) || "{}");
 
 // --- the whole point: two devices actually converge -----------------------
 
@@ -114,6 +118,44 @@ test("two devices with different hearts end up holding the same set", async () =
 
   assert.deepEqual(favsOf(a), ["v:kk", "v:pandan"]);
   assert.deepEqual(favsOf(b), ["v:kk", "v:pandan"]);
+});
+
+test("two devices with different notes end up holding the same set (ADR 0131)", async () => {
+  const server = fakeServer();
+  const a = device({ notes: { "cook-at-home gingernut": "less sugar" } });
+  const b = device({ notes: { "cook-at-home pavlova": "double it" } });
+
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+
+  const syncB = mk(b, server);
+  await syncB.join(code);
+  await syncA.syncNow(); // A picks up what B pushed
+
+  assert.deepEqual(notesOf(a), {
+    "cook-at-home gingernut": "less sugar",
+    "cook-at-home pavlova": "double it",
+  });
+  assert.deepEqual(notesOf(b), notesOf(a));
+});
+
+test("clearing a note on one device removes it on the other — same base-diff rule as a heart", async () => {
+  const server = fakeServer();
+  const a = device({ notes: { r: "keep this one", gone: "will be cleared" } });
+  const b = device({ notes: {} });
+
+  const syncA = mk(a, server);
+  const { code } = await syncA.enable();
+  const syncB = mk(b, server);
+  await syncB.join(code);
+  assert.deepEqual(notesOf(b), { r: "keep this one", gone: "will be cleared" });
+
+  a.setItem(scopeKey("default", "faves.notes.v1"), JSON.stringify({ r: "keep this one" }));
+  await syncA.syncNow();
+  await syncB.syncNow();
+
+  assert.deepEqual(notesOf(a), { r: "keep this one" });
+  assert.deepEqual(notesOf(b), { r: "keep this one" }, "the cleared note must not come back from B");
 });
 
 test("un-hearting on one device removes it on the other — the whole reason for the base", async () => {
@@ -277,11 +319,21 @@ test("writeSnapshot purges the stores of a profile deleted on the other device",
   const st = device({ favs: [venue("kk")] });
   st.setItem(PROFILES_KEY, JSON.stringify({ v: 1, activeId: "default", profiles: [{ id: "default", name: "Me" }, { id: "p2", name: "Ruth" }] }));
   st.setItem(scopeKey("p2", "faves.favourites.v1"), JSON.stringify([venue("gone")]));
+  st.setItem(scopeKey("p2", "faves.notes.v1"), JSON.stringify({ r: "Ruth's note" }));
 
   writeSnapshot(st, { profiles: [{ id: "default", name: "Me", favourites: [venue("kk")], ratings: {}, settings: null }] });
 
   assert.equal(st.getItem(scopeKey("p2", "faves.favourites.v1")), null, "orphaned hearts must not survive the profile");
+  assert.equal(st.getItem(scopeKey("p2", "faves.notes.v1")), null, "orphaned notes must not survive the profile either");
   assert.deepEqual(JSON.parse(st.getItem(PROFILES_KEY)).profiles.map((p) => p.id), ["default"]);
+});
+
+test("writeSnapshot writes a profile's notes verbatim, replacing rather than merging", async () => {
+  const st = device({ notes: { r: "old note" } });
+  writeSnapshot(st, {
+    profiles: [{ id: "default", name: "Me", favourites: [], ratings: {}, notes: { r: "new note" }, settings: null }],
+  });
+  assert.deepEqual(notesOf(st), { r: "new note" });
 });
 
 test("writeSnapshot never touches the order tally or an unknown store", async () => {

@@ -10,6 +10,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PROFILES_KEY, scopeKey } from "../site/js/profiles.js";
 import { CHECKLIST_KEY } from "../site/js/checklist.js";
+import { NOTES_KEY, MAX_NOTE } from "../site/js/notes.js";
 import { SYNC_KEY, SYNC_BASE_KEY } from "../site/js/sync.js";
 import { CONSENT_KEY } from "../site/js/geo-consent.js";
 import { mergePersonal } from "../site/js/sync-merge.js";
@@ -70,6 +71,7 @@ function seeded() {
       "d:kk-malaysian Roti Canai": 4,
       "v:gold-lining-cafe": 3,
     }),
+    [scopeKey("p2", NOTES_KEY)]: JSON.stringify({ "cook-at-home gingernut": "less sugar, better" }),
     [ORDER_KEY]: JSON.stringify([
       { venueId: "kk-malaysian", venueName: "KK Malaysian", name: "Roti Canai", price: 8.5, qty: 2 },
     ]),
@@ -92,6 +94,8 @@ test("collects every profile, not just the active one", () => {
   assert.equal(data.profiles[0].favourites.length, 1);
   assert.equal(data.profiles[1].favourites.length, 2);
   assert.equal(data.profiles[1].ratings["d:kk-malaysian Roti Canai"], 4);
+  assert.equal(data.profiles[0].notes, null); // Me never wrote a note — nothing stored
+  assert.equal(data.profiles[1].notes["cook-at-home gingernut"], "less sugar, better");
 });
 
 test("per-profile stores land on readable field names", () => {
@@ -101,6 +105,7 @@ test("per-profile stores land on readable field names", () => {
     "favourites",
     "id",
     "name",
+    "notes",
     "ratings",
     "settings",
   ]);
@@ -188,7 +193,7 @@ test("listStoredKeys returns [] when the backend cannot enumerate", () => {
 
 test("summary counts across all profiles", () => {
   const s = summarisePersonalData(collectPersonalData(seeded(), { exportedAt: AT }));
-  assert.deepEqual(s, { profiles: 2, favourites: 3, ratings: 3, orderItems: 1 });
+  assert.deepEqual(s, { profiles: 2, favourites: 3, ratings: 3, notes: 1, orderItems: 1 });
 });
 
 test("summary tolerates a corrupt/empty shape", () => {
@@ -196,12 +201,14 @@ test("summary tolerates a corrupt/empty shape", () => {
     profiles: 0,
     favourites: 0,
     ratings: 0,
+    notes: 0,
     orderItems: 0,
   });
   assert.deepEqual(summarisePersonalData({ profiles: [{ favourites: "nope", ratings: 7 }] }), {
     profiles: 1,
     favourites: 0,
     ratings: 0,
+    notes: 0,
     orderItems: 0,
   });
 });
@@ -255,6 +262,7 @@ function device() {
       diet: { dietary: [], avoid: ["contains-shellfish"] },
     }),
     [scopeKey("default", RAT_KEY)]: JSON.stringify({ "v:gold-lining-cafe": 2 }),
+    [scopeKey("default", NOTES_KEY)]: JSON.stringify({ "cook-at-home gingernut": "less sugar" }),
   });
 }
 
@@ -272,6 +280,7 @@ function file(overrides = {}) {
         active: true,
         favourites: [{ type: "dish", venueId: "kk-malaysian", venueName: "KK Malaysian", name: "Roti Canai" }],
         ratings: { "v:gold-lining-cafe": 5, "d:kk-malaysian Roti Canai": 4 },
+        notes: { "cook-at-home gingernut": "more butter", "cook-at-home pavlova": "double it" },
         settings: {
           farKm: 15,
           lang: "mi",
@@ -285,6 +294,7 @@ function file(overrides = {}) {
         name: "Sam",
         favourites: [{ type: "venue", venueId: "kk-malaysian", venueName: "KK Malaysian" }],
         ratings: {},
+        notes: { "cook-at-home pavlova": "Sam's note" },
         settings: null,
       },
     ],
@@ -341,6 +351,7 @@ test("a hostile payload is clipped, clamped and deduped before it can be stored"
           { type: "dish", venueId: "kk", name: "z".repeat(400) },
         ],
         ratings: { "v:kk": 99, "d:kk bad": -1, "": 3 },
+        notes: { "cook-at-home kk": "  spaced   note  ", "": "no key", empty: "   ", over: "z".repeat(400) },
         settings: { farKm: 9999 },
       },
     ],
@@ -353,6 +364,11 @@ test("a hostile payload is clipped, clamped and deduped before it can be stored"
   assert.deepEqual(p.favourites.map((f) => f.type), ["venue", "dish"]);
   assert.equal(p.favourites[1].name.length, 200);
   assert.deepEqual(p.ratings, { "v:kk": 5 }); // clamped to MAX, junk dropped
+  // Notes: whitespace normalised, empty/nameless/blank entries dropped, an
+  // over-length one capped rather than refused.
+  assert.deepEqual(Object.keys(p.notes).sort(), ["cook-at-home kk", "over"]);
+  assert.equal(p.notes["cook-at-home kk"], "spaced note");
+  assert.equal(p.notes.over.length, MAX_NOTE);
   // The Near-me origin is never re-imported, and non-faves keys never land.
   assert.deepEqual(Object.keys(r.data.other), ["faves.recipes.v1"]);
 });
@@ -425,6 +441,7 @@ test("totals describe the payload, for the preview shown before anything happens
     profiles: 2,
     favourites: 2,
     ratings: 2,
+    notes: 3,
     orderItems: 0,
     otherStores: 0,
   });
@@ -479,6 +496,20 @@ test("your own rating wins over the file's for the same thing", () => {
   assert.equal(report.ratingsAdded, 1);
 });
 
+// Notes follow the SAME "yours win" rule as ratings (ADR 0131) — a note is a
+// judgement about your own cooking, and a restore is not grounds to overwrite
+// one you have since edited.
+test("your own note wins over the file's for the same recipe; a recipe with none gets the file's", () => {
+  const { store, report } = applied({ 0: { diet: "keep" }, 1: { target: "pZ" } });
+  const n = read(store, scopeKey("default", NOTES_KEY));
+  assert.equal(n["cook-at-home gingernut"], "less sugar"); // ours, not the file's "more butter"
+  assert.equal(n["cook-at-home pavlova"], "double it"); // theirs — we had none
+  // Sam's own note merges into pZ (the existing "Sam") the same way.
+  assert.deepEqual(read(store, scopeKey("pZ", NOTES_KEY)), { "cook-at-home pavlova": "Sam's note" });
+  // "Me"'s "pavlova" note + Sam's one note — the "gingernut" one is skipped.
+  assert.equal(report.notesAdded, 2);
+});
+
 test("“keep” leaves the allergen flags exactly as they were", () => {
   const { store, report } = applied({ 0: { diet: "keep" }, 1: { target: "pZ" } });
   const s = read(store, scopeKey("default", SET_KEY));
@@ -527,6 +558,13 @@ test("“import as a new person” leaves the existing namesake untouched", () =
   // The new profile got its own scoped bucket, and the old Sam's is untouched.
   assert.equal(read(store, scopeKey("p-other-device", FAV_KEY)).length, 1);
   assert.equal(store.getItem(scopeKey("pZ", FAV_KEY)), null);
+  // Notes travel with a brand-new profile too, same as favourites/ratings.
+  assert.deepEqual(read(store, scopeKey("p-other-device", NOTES_KEY)), {
+    "cook-at-home pavlova": "Sam's note",
+  });
+  // 2 = Sam's one note (new profile) + "Me"'s "pavlova" note, which this
+  // device had none of yet (the "gingernut" one is skipped — yours wins).
+  assert.equal(report.notesAdded, 2);
 });
 
 // The `default` id is deterministic on every device (profiles.js), so a file

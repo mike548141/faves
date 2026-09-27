@@ -1679,3 +1679,22 @@ deliberation those compact docs omit.
   written refusals where a check cannot see dishes. 🔎 A heart under a
   `formerIds` id does **not** light the menu row (measured) — a fourth follow-on
   28j did not list, left for 28l.
+- [0131](0131-personal-notes-on-a-recipe-merge-like-a-rating.md) —
+  **personal notes on a recipe merge like a rating, not like a heart** (roadmap
+  `250/040`, 17e's personal-notes bullet). Keyed on `recipeId(venueId, item)` —
+  the same rename-safe join `checklist.js`/`shopping.js` already use, so a
+  renamed recipe keeps its note for free. Stored as the same flat
+  `{key: text}` shape a rating's `{key: score}` map is, so it goes through the
+  identical three-way `mergeMap` sync already had, rather than a second
+  implementation of "merge a map" — `mergeMap` now takes an explicit conflict
+  `kind` so a rating conflict and a note conflict are labelled apart
+  (`CONFLICT_RATING` vs `CONFLICT_NOTE`) without being two functions. A
+  genuine two-sided edit resolves the same deterministic-but-not-chronological
+  way a rating's does; a wall-clock `editedAt` was considered and rejected —
+  this layer trusts no device's clock over another's, on purpose
+  (sync-merge.js's own header). Walked through `profiles.js`
+  `SCOPED_BASE_KEYS`, `personal-data.js`'s collect/sanitise/summarise/apply,
+  `sync.js`'s `writeSnapshot`/`sameSnapshot`, `sync-merge.js`'s `mergeOne` and
+  `sync-start.js`'s wiring — each asserted, not reasoned about. Substitutions
+  (17e's other bullet) remain untouched: owner-authored content, never
+  generated.

@@ -133,7 +133,7 @@ const HEIGHT = 844;
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 48;
+const EXPECTED_ASSERTIONS = 53;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
@@ -153,6 +153,9 @@ and measures the recipe page at three explicit widths and two text sizes:
   · the shopping list: reachable with the ingredients folded away, says when it
     disagrees with the scale on screen, updates without lying about what is
     already in the trolley, and can be emptied (17e)
+  · personal notes: quiet when empty, the cap is stated and enforced, a saved
+    note survives a real reload, a crafted note comes back as characters never
+    markup, and it belongs to whoever is browsing (17e, ADR 0131)
 
 Fixtures are chosen from site/data/restaurants/${COLLECTION}.json at run time —
 never hard-coded line numbers — and named in the output, so an edited corpus
@@ -1075,6 +1078,115 @@ async function run(opts) {
       tally.stored === 1 && tally.fab === "1" && tally.hidden === false,
       `faves.order.v1 holds ${tally.stored} line(s) · the order button reads “${tally.fab}” ` +
         `(hidden=${tally.hidden})`
+    );
+
+    // --- 8. Personal notes on a recipe (17e, ADR 0131) ---------------------
+    //
+    // Free text the reader wrote about their own cooking. Quiet when there is
+    // nothing to say — no unit test can see whether a control READS as
+    // optional rather than as a field demanding to be filled in. Rendered as
+    // characters, never markup, the same property Theme 14c's order-line note
+    // is proven against (tools/note_check.mjs) — proven again here because
+    // this is a second, independent implementation of "render free text
+    // safely", not a reuse of that one. And scoped to whoever is browsing: a
+    // note is stored per profile (profiles.js SCOPED_BASE_KEYS), so the
+    // isolation is a real claim about storage, not merely about what one
+    // profile's page happens to show.
+    await rootFont(16);
+    await size(NARROW);
+    await goto(url(groupFixture));
+
+    const noteSnap = `(() => {
+      const wrap = document.querySelector(".recipe-note");
+      const btn = wrap ? wrap.querySelector(".recipe-note-btn") : null;
+      const text = wrap ? wrap.querySelector(".recipe-note-text") : null;
+      const input = wrap ? wrap.querySelector(".recipe-note-input") : null;
+      const help = wrap ? wrap.querySelector(".recipe-note-help") : null;
+      const box = (e) => (e ? { w: Math.round(e.getBoundingClientRect().width), h: Math.round(e.getBoundingClientRect().height) } : null);
+      return {
+        btnLabel: btn ? btn.textContent : null,
+        btnBox: box(btn),
+        noteText: text ? text.textContent : null,
+        hasEditor: !!input,
+        maxLength: input ? input.maxLength : null,
+        help: help ? help.textContent : null,
+        imgs: wrap ? wrap.querySelectorAll("img").length : -1,
+        xssRan: window.__xss === 1,
+      };
+    })()`;
+
+    // (a) quiet when there is nothing to say.
+    let ns = await evalPage(noteSnap);
+    report.check(
+      "the note control is quiet when empty — just 'Add a note', a real 44px target, no note text at all",
+      ns.btnLabel === "Add a note" && ns.noteText === null && ns.btnBox.h >= 44,
+      `button “${ns.btnLabel}” ${JSON.stringify(ns.btnBox)} · note text: ${ns.noteText}`
+    );
+
+    // (b) the cap is stated AND enforced, then a save survives a REAL reload —
+    // a re-render proves nothing (37c's own lesson, applied to a new store).
+    await click(".recipe-note-btn");
+    await settle();
+    ns = await evalPage(noteSnap);
+    report.check(
+      "the editor states the character cap, and the field's own maxlength enforces it",
+      ns.hasEditor && ns.maxLength === 240 && /240 characters/.test(ns.help || ""),
+      `maxlength=${ns.maxLength} · help: “${ns.help}”`
+    );
+    await evalPage(`document.querySelector(".recipe-note-input").value = "  used half the sugar,   better  "; true`);
+    await click(".recipe-note-save");
+    await settle();
+    await goto(url(groupFixture)); // a real navigation, a real read out of localStorage
+    ns = await evalPage(noteSnap);
+    report.check(
+      "a saved note survives a real page reload, whitespace normalised, and the button now offers to edit it",
+      ns.noteText === "✎ Your note: used half the sugar, better" && ns.btnLabel === "Edit note",
+      `note: “${ns.noteText}” · button “${ns.btnLabel}”`
+    );
+
+    // (c) a crafted note is characters, never markup — the same property
+    // note_check.mjs proves for the order-line note, proven again here because
+    // this is a second, independent renderer.
+    await click(".recipe-note-btn");
+    await evalPage(`document.querySelector(".recipe-note-input").value = "<img src=x onerror=window.__xss=1>"; true`);
+    await click(".recipe-note-save");
+    await settle();
+    ns = await evalPage(noteSnap);
+    report.check(
+      "a note crafted with markup renders as characters — zero <img> elements, and nothing ran",
+      ns.imgs === 0 && !ns.xssRan && (ns.noteText || "").includes("<img src=x onerror=window.__xss=1>"),
+      `${ns.imgs} img(s) · xssRan=${ns.xssRan} · “${ns.noteText}”`
+    );
+
+    // (d) belongs to whoever is browsing. A brand-new profile must see none of
+    // it, and switching back must bring it straight back — the pair that would
+    // betray a one-way scope (device_check.mjs's own reasoning for testing
+    // both directions of a profile switch).
+    await click("#overflow-btn");
+    await click("#settings-btn");
+    await click(".settings-row", "using Faves");
+    await click('.profile-btn[data-act="add"]');
+    await click("#profile-name-input");
+    await cdp.send("Input.insertText", { text: "Guest" }, sessionId);
+    await click(".profile-btn-primary");
+    await settle();
+    ns = await evalPage(noteSnap);
+    const guestQuiet = ns.btnLabel === "Add a note" && ns.noteText === null;
+
+    await click(".profile-list .profile-chip", "Me");
+    await settle();
+    await click(".settings-sheet .settings-close");
+    await settle();
+    ns = await evalPage(noteSnap);
+    // "Me"'s note is whatever (c) left behind — the crafted string, since it
+    // ran immediately before this block. The claim under test is SCOPING, not
+    // content, so this checks the note that is actually on disk for "Me" came
+    // back untouched, rather than an earlier value this step deliberately
+    // overwrote.
+    report.check(
+      "a note belongs to whoever is browsing — a new profile sees none of it, and switching back restores it",
+      guestQuiet && ns.noteText === "✎ Your note: <img src=x onerror=window.__xss=1>",
+      `new profile: quiet=${guestQuiet} · back as Me: “${ns.noteText}”`
     );
 
     // --- 9. The hero and the side column (ADR 0125) -----------------------
