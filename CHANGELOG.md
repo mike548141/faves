@@ -9,6 +9,11 @@ content freshness separately from this file.
 ## [Unreleased]
 
 ### Added
+- **Personal notes on a recipe** ("used half the sugar, better") — profile-
+  scoped, up to 240 characters, on the recipe page under the cook/shopping
+  controls, and echoed read-only in cook mode when there is one. Included in
+  the data export and continual sync alongside favourites and ratings (ADR
+  0131).
 - **Recipe pages look like a recipe site now.** A photo at the top (beside the
   title on a wide screen), then a panel with **Prep · Cook · Serves ·
   Difficulty**. On a wide screen the ingredients sit in a column beside the
