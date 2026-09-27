@@ -1608,3 +1608,17 @@ deliberation those compact docs omit.
   about 4". `recipe_estimates --check` fails when payload and record disagree
   on a value or on whether it is ours. `recipe_check` moves 37d to 900 px and
   adds nine side-column and labelling assertions, two of them break-probed.
+- [0127](0127-a-settings-field-a-build-cannot-name-is-carried-not-dropped.md) —
+  **a settings field this build cannot name is carried, not dropped**, the
+  ADR 0118 pattern applied one level up (roadmap `150/040`). `sanitise()`
+  used to drop any top-level field it didn't name, so a newer build's added
+  preference was wiped by an older device's very next unrelated `set()`, and
+  the next sync read the absence as a deletion. `futureSettings()` carries an
+  unknown field through opaquely — never read or rendered, bounded by count,
+  key length and value size, refusing the three prototype-touching key names
+  — the same bounded-carry shape as `cleanAvoid`'s allergen keys. Break-probed:
+  reverting it fails exactly the round-trip test and nothing else. The sibling
+  finding — `mergePersonal` never carries `collectPersonalData`'s `other` bag
+  of unnamed stores — is documented, not fixed: nothing is destroyed today, and
+  merging a store this build cannot validate is the exact case `sync.js`'s own
+  rule already refuses one level down.

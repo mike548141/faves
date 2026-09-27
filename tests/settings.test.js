@@ -227,6 +227,104 @@ test("diet: the screen can tell which flagged keys it has no chip for", () => {
   assert.deepEqual(futureAllergens(null), []);
 });
 
+// --- a settings field from a NEWER build (ADR 0127) -------------------------
+// The loss these cover is the settings-field sibling of ADR 0118's allergen
+// bug (roadmap 150/040): an older device strips a field it has never heard
+// of, its next unrelated `set()` commits the stripped object over the top,
+// and the next sync reads the field's absence as a deletion.
+
+test("settings: an unknown top-level field is KEPT, not dropped", () => {
+  const storage = fakeStorage(JSON.stringify({ favBoostKm: 5, colorScheme: "dark" }));
+  const s = createSettings(storage);
+  assert.equal(s.raw().colorScheme, "dark");
+  assert.equal(s.raw().favBoostKm, 5);
+});
+
+test("settings: the carried field survives the read → unrelated set → write round trip an older client does", () => {
+  // THE BREAK-PROBE for this fix, at unit level — the exact sequence an older
+  // device performs: it hydrates from a pulled blob holding a field it has
+  // never heard of, changes something unrelated, and commits the whole
+  // sanitised state back over the top. Strip it on read and it is gone from
+  // storage here, and a newer device's sync then deletes its own copy.
+  const storage = fakeStorage(JSON.stringify({ colorScheme: "dark" }));
+  const s = createSettings(storage);
+  s.set({ favBoostKm: 9 }); // nothing to do with colorScheme — and rewrites the whole object anyway
+  assert.equal(createSettings(storage).get().colorScheme, "dark");
+});
+
+test("settings: a carried field rides set()'s patch, not only a stored payload", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ colorScheme: "dark" });
+  assert.equal(s.raw().colorScheme, "dark");
+  s.set({ favBoostKm: 3 }); // unrelated patch — the carried field must survive it too
+  assert.equal(s.raw().colorScheme, "dark");
+});
+
+test("settings: reset() clears carried fields along with known ones", () => {
+  const s = createSettings(fakeStorage());
+  s.set({ colorScheme: "dark" });
+  s.reset();
+  assert.deepEqual(s.raw(), DEFAULTS);
+});
+
+test("settings: a known field's own validation is unchanged by carrying unknown ones", () => {
+  // The control for the fix above: known-field clamping/allow-lists must be
+  // exactly as strict with an unknown field present as without one.
+  const s = createSettings(fakeStorage());
+  s.set({ colorScheme: "dark", favBoostKm: 999, mapsApp: "bingmaps" });
+  assert.equal(s.get().favBoostKm, BOUNDS.favBoostKm[1]);
+  assert.equal(s.get().mapsApp, "auto");
+  assert.equal(s.raw().colorScheme, "dark");
+});
+
+test("settings: carried fields are capped, sorted, and independent of arrival order", () => {
+  const many = Object.fromEntries(
+    Array.from({ length: 30 }, (_, i) => [`future${String(i).padStart(2, "0")}`, i])
+  );
+  const a = createSettings(fakeStorage(JSON.stringify(many)));
+  const reversed = Object.fromEntries(Object.entries(many).reverse());
+  const b = createSettings(fakeStorage(JSON.stringify(reversed)));
+  const keysOf = (s) => Object.keys(s.raw()).filter((k) => k.startsWith("future"));
+  assert.equal(keysOf(a).length, 20);
+  assert.deepEqual(keysOf(a), keysOf(a).slice().sort(), "surviving keys are sorted");
+  // Same SET of fields regardless of which order they arrived in.
+  assert.deepEqual(keysOf(a), keysOf(b));
+});
+
+test("settings: an oversized key or value is dropped rather than truncated", () => {
+  // The value bound is on the SERIALISED length (JSON.stringify adds the
+  // wrapping quotes), so a string of exactly the max carries 2 fewer raw
+  // characters than the constant.
+  const s = createSettings(
+    fakeStorage(
+      JSON.stringify({
+        ["k".repeat(41)]: "too long a key",
+        bigValue: "x".repeat(2000), // serialises to 2002 chars — over the cap
+        okValue: "x".repeat(1998), // serialises to exactly 2000 — the cap itself
+      })
+    )
+  );
+  assert.equal(s.raw()["k".repeat(41)], undefined);
+  assert.equal(s.raw().bigValue, undefined);
+  assert.equal(s.raw().okValue, "x".repeat(1998));
+});
+
+test("settings: property names that could reach a prototype are refused", () => {
+  // "constructor" is an ordinary WRITABLE data property inherited from
+  // Object.prototype, so an unguarded `out[key] = value` assignment would
+  // shadow it with the string below rather than being blocked by any
+  // accessor — a real behaviour change for anything downstream that ever
+  // checks `.constructor`. "prototype" is excluded on the same principle,
+  // even though a plain object has no such inherited property to collide
+  // with, so the refusal doesn't depend on which JS engine detail saves it.
+  const storage = fakeStorage('{"__proto__":{"polluted":true},"constructor":"x","prototype":"y"}');
+  const s = createSettings(storage);
+  const state = s.raw();
+  assert.equal(state.constructor, Object, 'not overwritten with the string "x"');
+  assert.equal(Object.keys(state).includes("prototype"), false);
+  assert.equal(Object.keys(state).includes("__proto__"), false);
+});
+
 test("subscribe fires on change; unsubscribe stops it", () => {
   const s = createSettings(fakeStorage());
   let calls = 0;

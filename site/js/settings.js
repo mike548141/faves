@@ -269,8 +269,63 @@ export function sanitiseDiet(d) {
 const CURRENCY_RE = /^[A-Z]{3}$/;
 const validCurrency = (v) => v === LOCAL || v === AS_CHARGED || (typeof v === "string" && CURRENCY_RE.test(v));
 
+// A SETTINGS FIELD THIS BUILD DOES NOT KNOW IS CARRIED, NOT DROPPED (ADR 0127).
+//
+// The same seam as ADR 0118's allergen key, one level up. `sanitise()` used to
+// return only the fields it names, so a newer build's added preference was
+// wiped on an older device's very next round trip: `read()` strips the field,
+// the next `set()` — of anything, unrelated — commits the stripped object back
+// over the top, and the newer device's sync then reads the field's absence as
+// a deletion (roadmap 150/040). The cost is a reverted preference, not a lost
+// safety warning, which is why this is the smaller half of that item.
+//
+// A carried field is never read, rendered or interpreted by this build — only
+// round-tripped as opaque JSON — so a hostile or malformed value can reach
+// storage and a future sanitise() call, but never a screen. Bounded three
+// ways, because the object is sealed into a synced blob: how many unknown
+// fields survive, each key's length, and each value's serialised size — plus a
+// refusal of the three property names that would let a plain assignment touch
+// an object's prototype instead of its data, rather than trusting that nothing
+// downstream ever does `for...in` or a naive deep-copy over this state.
+const KNOWN_SETTINGS_FIELDS = new Set(Object.keys(DEFAULTS));
+const UNSAFE_SETTINGS_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+const FUTURE_SETTINGS_MAX = 20;
+const FUTURE_SETTINGS_KEY_MAX_LEN = 40;
+const FUTURE_SETTINGS_VALUE_MAX_LEN = 2000; // JSON.stringify length, not the raw value
+
+/** The unknown top-level fields that survive `sanitise()`, sorted by key. Like
+ *  `cleanAvoid`'s carried allergen keys, the surviving set has to be a function
+ *  of the SET of unknown fields rather than of the order they arrived in, or
+ *  two devices that agree on content but not key order serialise to different
+ *  JSON and ping-pong writes forever against ADR 0017's scarce KV budget. */
+function futureSettings(obj) {
+  if (!obj || typeof obj !== "object" || Array.isArray(obj)) return {};
+  const out = {};
+  let n = 0;
+  for (const key of Object.keys(obj).sort()) {
+    if (n >= FUTURE_SETTINGS_MAX) break;
+    if (KNOWN_SETTINGS_FIELDS.has(key) || UNSAFE_SETTINGS_KEYS.has(key)) continue;
+    if (key.length > FUTURE_SETTINGS_KEY_MAX_LEN) continue;
+    let json;
+    try {
+      json = JSON.stringify(obj[key]);
+    } catch {
+      continue; // a circular reference, a BigInt — drop rather than throw
+    }
+    if (json === undefined || json.length > FUTURE_SETTINGS_VALUE_MAX_LEN) continue;
+    out[key] = obj[key];
+    n += 1;
+  }
+  return out;
+}
+
 function sanitise(obj) {
   return {
+    // Spread first: every field named below is filtered out of futureSettings
+    // by construction (KNOWN_SETTINGS_FIELDS), so this can never override a
+    // validated value — it only ever adds fields sanitise() doesn't otherwise
+    // produce.
+    ...futureSettings(obj),
     favBoostKm: clampField(obj?.favBoostKm, "favBoostKm"),
     farKm: clampField(obj?.farKm, "farKm"),
     diet: sanitiseDiet(obj?.diet),
