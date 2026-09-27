@@ -79,6 +79,7 @@
       "options": [
         {
           "name": "No added gluten bun",
+          "id": "no-added-gluten-bun",
           "price": 2.5,
           "tags": []
         }
@@ -91,6 +92,7 @@
       "options": [
         {
           "name": "Curly fries",
+          "id": "curly-fries",
           "price": 2.0,
           "tags": []
         }
@@ -103,6 +105,7 @@
       "options": [
         {
           "name": "No added gluten base",
+          "id": "no-added-gluten-base",
           "price": 3.5,
           "tags": []
         }

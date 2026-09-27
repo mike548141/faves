@@ -486,3 +486,44 @@ test("a line stored before currencies were passed still reads as NZD", () => {
   assert.equal(o.groups()[0].currency, "NZD");
   assert.deepEqual(orderTotals(o.items()), [{ currency: "NZD", total: 6 }]);
 });
+
+// --- an add-on option has an id (ADR 0126, roadmap 28q) -------------------
+// The order line keys on the option's id, not its display name. Both halves
+// of the promise are asserted against the STORE, because the store is where a
+// family's saved order actually lives.
+
+const doner = { venueId: "kebab", venueName: "Kebab Grill", name: "Doner", dishId: "doner" };
+
+test("renaming an add-on option leaves lineKey unchanged", () => {
+  const before = { ...doner, price: 29, options: [{ group: "size", id: "large", name: "Large", price: 10 }] };
+  const after = { ...doner, price: 29, options: [{ group: "size", id: "large", name: "Lg", price: 10 }] };
+  assert.equal(lineKey(before), lineKey(after));
+});
+
+test("a line stored BEFORE option ids existed still merges with the one the picker makes now", () => {
+  // Exactly the shape cart.js wrote until this change: the option carries a
+  // group and a NAME, nothing else.
+  const legacy = [{
+    ...doner, currency: "NZD", phone: null, price: 16.5, qty: 1, collected: false,
+    options: [{ group: "sauces", name: "Satay", price: 0 }],
+  }];
+  const storage = fakeStorage(JSON.stringify(legacy));
+  const o = createOrder(storage);
+  // What addons-ui.js hands `add` today — and after the venue renamed it.
+  o.add({ ...doner, price: 16.5, options: [{ group: "sauces", id: "satay", name: "Satay", price: 0 }] });
+  o.add({ ...doner, price: 16.5, options: [{ group: "sauces", id: "satay", name: "Satay sauce", price: 0 }] });
+  assert.equal(o.items().length, 1, JSON.stringify(o.items()));
+  assert.equal(o.items()[0].qty, 3);
+  // …and a DIFFERENT option is still its own line, so a key that ignored the
+  // selection could not pass the assertion above.
+  o.add({ ...doner, price: 16.5, options: [{ group: "sauces", id: "garlic", name: "Garlic", price: 0 }] });
+  assert.equal(o.items().length, 2);
+});
+
+test("a shared order merged in keys old-shape and new-shape options together", () => {
+  const base = [{ ...doner, price: 16.5, qty: 1, options: [{ group: "sauces", name: "Satay", price: 0 }] }];
+  const incoming = [{ ...doner, price: 16.5, qty: 2, options: [{ group: "sauces", id: "satay", name: "Satay", price: 0 }] }];
+  const out = mergeItems(base, incoming);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].qty, 3);
+});

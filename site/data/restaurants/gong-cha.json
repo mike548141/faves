@@ -88,11 +88,13 @@
       "options": [
         {
           "name": "Regular",
+          "id": "regular",
           "price": 0,
           "tags": []
         },
         {
           "name": "Large",
+          "id": "large",
           "price": 1.0,
           "tags": []
         }
@@ -106,11 +108,13 @@
       "options": [
         {
           "name": "Herbal Jelly",
+          "id": "herbal-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Pudding Jelly",
+          "id": "pudding-jelly",
           "price": 1.0,
           "tags": [
             "contains-dairy",
@@ -119,21 +123,25 @@
         },
         {
           "name": "Aiyu Jelly",
+          "id": "aiyu-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Pearl",
+          "id": "pearl",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Coconut Jelly",
+          "id": "coconut-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Milk Foam",
+          "id": "milk-foam",
           "price": 1.0,
           "tags": [
             "contains-dairy"
@@ -141,6 +149,7 @@
         },
         {
           "name": "Oreo",
+          "id": "oreo",
           "price": 1.0,
           "tags": [
             "contains-gluten",
@@ -149,26 +158,31 @@
         },
         {
           "name": "Aloe Vera",
+          "id": "aloe-vera",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "White Pearl",
+          "id": "white-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Azuki",
+          "id": "azuki",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Mango Pearl",
+          "id": "mango-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Lychee Pearl",
+          "id": "lychee-pearl",
           "price": 1.3,
           "tags": []
         }
@@ -182,11 +196,13 @@
       "options": [
         {
           "name": "Herbal Jelly",
+          "id": "herbal-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Pudding Jelly",
+          "id": "pudding-jelly",
           "price": 1.0,
           "tags": [
             "contains-dairy",
@@ -195,21 +211,25 @@
         },
         {
           "name": "Aiyu Jelly",
+          "id": "aiyu-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Pearl",
+          "id": "pearl",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Coconut Jelly",
+          "id": "coconut-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Milk Foam",
+          "id": "milk-foam",
           "price": 1.0,
           "tags": [
             "contains-dairy"
@@ -217,6 +237,7 @@
         },
         {
           "name": "Oreo",
+          "id": "oreo",
           "price": 1.0,
           "tags": [
             "contains-gluten",
@@ -225,26 +246,31 @@
         },
         {
           "name": "Aloe Vera",
+          "id": "aloe-vera",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "White Pearl",
+          "id": "white-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Azuki",
+          "id": "azuki",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Mango Pearl",
+          "id": "mango-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Lychee Pearl",
+          "id": "lychee-pearl",
           "price": 1.3,
           "tags": []
         }
@@ -258,11 +284,13 @@
       "options": [
         {
           "name": "Herbal Jelly",
+          "id": "herbal-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Pudding Jelly",
+          "id": "pudding-jelly",
           "price": 1.0,
           "tags": [
             "contains-dairy",
@@ -271,21 +299,25 @@
         },
         {
           "name": "Aiyu Jelly",
+          "id": "aiyu-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Pearl",
+          "id": "pearl",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Coconut Jelly",
+          "id": "coconut-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Milk Foam",
+          "id": "milk-foam",
           "price": 1.0,
           "tags": [
             "contains-dairy"
@@ -293,6 +325,7 @@
         },
         {
           "name": "Oreo",
+          "id": "oreo",
           "price": 1.0,
           "tags": [
             "contains-gluten",
@@ -301,26 +334,31 @@
         },
         {
           "name": "Aloe Vera",
+          "id": "aloe-vera",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "White Pearl",
+          "id": "white-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Azuki",
+          "id": "azuki",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Mango Pearl",
+          "id": "mango-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Lychee Pearl",
+          "id": "lychee-pearl",
           "price": 1.3,
           "tags": []
         }
@@ -334,16 +372,19 @@
       "options": [
         {
           "name": "Pearl",
+          "id": "pearl",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Coconut Jelly",
+          "id": "coconut-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Milk Foam",
+          "id": "milk-foam",
           "price": 1.0,
           "tags": [
             "contains-dairy"
@@ -351,21 +392,25 @@
         },
         {
           "name": "White Pearl",
+          "id": "white-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Azuki",
+          "id": "azuki",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Mango Pearl",
+          "id": "mango-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Lychee Pearl",
+          "id": "lychee-pearl",
           "price": 1.3,
           "tags": []
         }
@@ -379,16 +424,19 @@
       "options": [
         {
           "name": "Pearl",
+          "id": "pearl",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Coconut Jelly",
+          "id": "coconut-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Milk Foam",
+          "id": "milk-foam",
           "price": 1.0,
           "tags": [
             "contains-dairy"
@@ -396,21 +444,25 @@
         },
         {
           "name": "White Pearl",
+          "id": "white-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Azuki",
+          "id": "azuki",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Mango Pearl",
+          "id": "mango-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Lychee Pearl",
+          "id": "lychee-pearl",
           "price": 1.3,
           "tags": []
         }
@@ -424,16 +476,19 @@
       "options": [
         {
           "name": "Pearl",
+          "id": "pearl",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Coconut Jelly",
+          "id": "coconut-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Milk Foam",
+          "id": "milk-foam",
           "price": 1.0,
           "tags": [
             "contains-dairy"
@@ -441,21 +496,25 @@
         },
         {
           "name": "White Pearl",
+          "id": "white-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Azuki",
+          "id": "azuki",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Mango Pearl",
+          "id": "mango-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Lychee Pearl",
+          "id": "lychee-pearl",
           "price": 1.3,
           "tags": []
         }
@@ -469,31 +528,37 @@
       "options": [
         {
           "name": "Pearl",
+          "id": "pearl",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "Coconut Jelly",
+          "id": "coconut-jelly",
           "price": 1.0,
           "tags": []
         },
         {
           "name": "White Pearl",
+          "id": "white-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Aloe Vera",
+          "id": "aloe-vera",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Mango Pearl",
+          "id": "mango-pearl",
           "price": 1.3,
           "tags": []
         },
         {
           "name": "Lychee Pearl",
+          "id": "lychee-pearl",
           "price": 1.3,
           "tags": []
         }

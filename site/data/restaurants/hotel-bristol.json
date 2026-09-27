@@ -76,6 +76,7 @@
       "options": [
         {
           "name": "No gluten added bun",
+          "id": "no-gluten-added-bun",
           "price": 2.5,
           "tags": []
         }
@@ -88,6 +89,7 @@
       "options": [
         {
           "name": "Grilled chicken",
+          "id": "grilled-chicken",
           "price": 8.0,
           "tags": [
             "has-meat"

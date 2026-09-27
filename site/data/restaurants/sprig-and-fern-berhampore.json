@@ -79,6 +79,7 @@
       "options": [
         {
           "name": "Gravy",
+          "id": "gravy",
           "price": 3.0,
           "tags": []
         }
@@ -91,6 +92,7 @@
       "options": [
         {
           "name": "Cheese",
+          "id": "cheese",
           "price": 3.0,
           "tags": [
             "v",
@@ -107,16 +109,19 @@
       "options": [
         {
           "name": "Dry rubbed",
+          "id": "dry-rubbed",
           "tags": []
         },
         {
           "name": "Korean BBQ",
+          "id": "korean-bbq",
           "tags": [
             "contains-soy"
           ]
         },
         {
           "name": "Buffalo sauce",
+          "id": "buffalo-sauce",
           "tags": [
             "contains-dairy"
           ]
@@ -130,6 +135,7 @@
       "options": [
         {
           "name": "Additional topping",
+          "id": "additional-topping",
           "price": 3.0,
           "tags": []
         }
@@ -144,12 +150,14 @@
       "options": [
         {
           "name": "Salami",
+          "id": "salami",
           "tags": [
             "has-meat"
           ]
         },
         {
           "name": "Feta",
+          "id": "feta",
           "tags": [
             "v",
             "contains-dairy"
@@ -157,18 +165,22 @@
         },
         {
           "name": "Sun dried tomatoes",
+          "id": "sun-dried-tomatoes",
           "tags": []
         },
         {
           "name": "Rocket",
+          "id": "rocket",
           "tags": []
         },
         {
           "name": "Olives",
+          "id": "olives",
           "tags": []
         },
         {
           "name": "Basil",
+          "id": "basil",
           "tags": []
         }
       ]
@@ -181,12 +193,14 @@
       "options": [
         {
           "name": "Aioli",
+          "id": "aioli",
           "tags": [
             "contains-egg"
           ]
         },
         {
           "name": "Korean BBQ",
+          "id": "korean-bbq",
           "tags": [
             "contains-soy"
           ]
@@ -201,10 +215,12 @@
       "options": [
         {
           "name": "Fizzy",
+          "id": "fizzy",
           "tags": []
         },
         {
           "name": "Juice",
+          "id": "juice",
           "tags": []
         }
       ]

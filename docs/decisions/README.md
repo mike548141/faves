@@ -1608,6 +1608,20 @@ deliberation those compact docs omit.
   about 4". `recipe_estimates --check` fails when payload and record disagree
   on a value or on whether it is ours. `recipe_check` moves 37d to 900 px and
   adds nine side-column and labelling assertions, two of them break-probed.
+- [0126](0126-an-add-on-option-has-an-id-and-its-name-is-not-it.md) — **an
+  add-on option has an id, and its name is not it.**
+  [0051](0051-a-dish-has-an-id-and-its-name-is-not-it.md)'s identity rule one
+  entity down: the order line keyed each chosen option on its display name, so a
+  venue renaming "Large" stranded every saved order, backup and share link that
+  chose it. All 200 options seeded from `slug(name)` by
+  `tools/seed_option_ids.py`, required, slug-form and unique **per group** in
+  `validate.py`; stored rather than derived because a derived id cannot pass
+  "a rename leaves the key unchanged" (**+0.74 KB gzipped**). A line stored
+  before ids resolves by `slug(name)` and still merges; `CODEC_VERSION` is
+  untouched — the id rides as an optional fourth tuple element, emitted only
+  after a rename. 🔎 The item's "no delimiter" finding was false: the key
+  always carried raw U+001F/U+001E, invisible in an editor; what was open was a
+  separator *inside* a crafted part, now closed by construction.
 - [0127](0127-a-settings-field-a-build-cannot-name-is-carried-not-dropped.md) —
   **a settings field this build cannot name is carried, not dropped**, the
   ADR 0118 pattern applied one level up (roadmap `150/040`). `sanitise()`

@@ -88,11 +88,13 @@
       "options": [
         {
           "name": "Spinach",
+          "id": "spinach",
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Halloumi",
+          "id": "halloumi",
           "price": 7.0,
           "tags": [
             "contains-dairy"
@@ -100,6 +102,7 @@
         },
         {
           "name": "Sausages",
+          "id": "sausages",
           "price": 8.0,
           "tags": [
             "has-meat",
@@ -108,6 +111,7 @@
         },
         {
           "name": "Bacon",
+          "id": "bacon",
           "price": 8.0,
           "tags": [
             "has-meat"
@@ -115,6 +119,7 @@
         },
         {
           "name": "Salmon",
+          "id": "salmon",
           "price": 9.0,
           "tags": [
             "has-fish",
@@ -123,6 +128,7 @@
         },
         {
           "name": "Free Range Egg",
+          "id": "free-range-egg",
           "price": 4.0,
           "tags": [
             "contains-egg"
@@ -130,11 +136,13 @@
         },
         {
           "name": "Tomatoes",
+          "id": "tomatoes",
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Hollandaise",
+          "id": "hollandaise",
           "price": 2.0,
           "tags": [
             "contains-egg"
@@ -142,16 +150,19 @@
         },
         {
           "name": "Potato Rosti",
+          "id": "potato-rosti",
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Roasted Field Mushrooms",
+          "id": "roasted-field-mushrooms",
           "price": 5.0,
           "tags": []
         },
         {
           "name": "Toast",
+          "id": "toast",
           "price": 4.0,
           "tags": [
             "contains-gluten"
@@ -159,6 +170,7 @@
         },
         {
           "name": "Gluten Free Toast",
+          "id": "gluten-free-toast",
           "price": 6.0,
           "tags": [
             "gf"
@@ -173,6 +185,7 @@
       "options": [
         {
           "name": "Gravy",
+          "id": "gravy",
           "price": 3.0,
           "tags": [
             "v"
@@ -188,24 +201,28 @@
       "options": [
         {
           "name": "Chicken",
+          "id": "chicken",
           "tags": [
             "has-meat"
           ]
         },
         {
           "name": "Halloumi",
+          "id": "halloumi",
           "tags": [
             "contains-dairy"
           ]
         },
         {
           "name": "Prawns",
+          "id": "prawns",
           "tags": [
             "contains-shellfish"
           ]
         },
         {
           "name": "Beef",
+          "id": "beef",
           "tags": [
             "has-meat"
           ]
@@ -219,6 +236,7 @@
       "options": [
         {
           "name": "No gluten added bun",
+          "id": "no-gluten-added-bun",
           "price": 2.5,
           "tags": []
         }
@@ -231,6 +249,7 @@
       "options": [
         {
           "name": "Gluten free toast",
+          "id": "gluten-free-toast",
           "price": 2.0,
           "tags": [
             "gf"
@@ -245,6 +264,7 @@
       "options": [
         {
           "name": "Salmon",
+          "id": "salmon",
           "price": 7.0,
           "tags": [
             "has-fish",
@@ -261,16 +281,19 @@
       "options": [
         {
           "name": "Baileys",
+          "id": "baileys",
           "tags": [
             "contains-dairy"
           ]
         },
         {
           "name": "Kahlua",
+          "id": "kahlua",
           "tags": []
         },
         {
           "name": "Butterscotch liqueur",
+          "id": "butterscotch-liqueur",
           "tags": [
             "contains-dairy"
           ]
@@ -284,6 +307,7 @@
       "options": [
         {
           "name": "Prawns",
+          "id": "prawns",
           "price": 7.0,
           "tags": [
             "contains-shellfish"
@@ -299,6 +323,7 @@
       "options": [
         {
           "name": "Garlic butter",
+          "id": "garlic-butter",
           "tags": [
             "v",
             "gf",
@@ -307,6 +332,7 @@
         },
         {
           "name": "Mushroom sauce",
+          "id": "mushroom-sauce",
           "tags": [
             "contains-dairy"
           ]
@@ -321,16 +347,19 @@
       "options": [
         {
           "name": "Caramel sauce",
+          "id": "caramel-sauce",
           "tags": [
             "contains-dairy"
           ]
         },
         {
           "name": "Strawberry sauce",
+          "id": "strawberry-sauce",
           "tags": []
         },
         {
           "name": "Chocolate sauce",
+          "id": "chocolate-sauce",
           "tags": [
             "contains-dairy"
           ]

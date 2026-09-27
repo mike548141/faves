@@ -587,3 +587,61 @@ test("a crafted `k` cannot smuggle anything past the sanitisers", () => {
   assert.equal("dishId" in decodeShare(craft(["a"])).items[0], false); // == slug("A")
   assert.equal("dishId" in decodeShare(craft([{ evil: 1 }])).items[0], false);
 });
+
+// --- an add-on option's id on the wire (ADR 0126, roadmap 28q) -------------
+// Appended as element 3 of the option tuple, and ONLY where it says something
+// the name doesn't. CODEC_VERSION is not touched: every link already in the
+// wild must keep decoding.
+
+const withOption = (opt) => [{
+  venueId: "kebab", venueName: "Kebab Grill", phone: null,
+  items: [{ name: "Doner", price: 16.5, qty: 1, options: [opt] }],
+}];
+
+test("an option whose id is slug(name) encodes byte-for-byte as it always did", () => {
+  const today = payloadOf(encodeShare({ groups: withOption({ group: "sauces", id: "satay", name: "Satay", price: 0 }) }));
+  const before = payloadOf(encodeShare({ groups: withOption({ group: "sauces", name: "Satay", price: 0 }) }));
+  assert.deepEqual(today, before);
+  assert.deepEqual(today.g[0].i[0][3], [["sauces", "Satay", 0]]);
+});
+
+test("a renamed option carries its id in element 3, and it round-trips into the same line", () => {
+  const renamed = { group: "size", id: "large", name: "Lg", price: 10 };
+  const p = payloadOf(encodeShare({ groups: withOption(renamed) }));
+  assert.deepEqual(p.g[0].i[0][3], [["size", "Lg", 10, "large"]]);
+  const decoded = decodeShare(encodeShare({ groups: withOption(renamed) }));
+  assert.deepEqual(decoded.items[0].options, [{ group: "size", name: "Lg", price: 10, id: "large" }]);
+  // The receiver's phone holds the same dish saved under the OLD name, with no
+  // id at all — it must become one line, not two.
+  const mine = [{ venueId: "kebab", venueName: "Kebab Grill", name: "Doner", price: 16.5, qty: 1,
+    options: [{ group: "size", name: "Large", price: 10 }] }];
+  const merged = mergeItems(mine, decoded.items);
+  assert.equal(merged.length, 1);
+  assert.equal(merged[0].qty, 2);
+});
+
+test("a link minted before option ids existed decodes and merges with a line made today", () => {
+  const token = Buffer.from(JSON.stringify({
+    v: CODEC_VERSION, t: "o",
+    g: [{ v: "kebab", n: "Kebab Grill", p: null, i: [["Doner", 16.5, 1, [["sauces", "Satay", 0]]]] }],
+  })).toString("base64url");
+  const decoded = decodeShare(token);
+  assert.deepEqual(decoded.items[0].options, [{ group: "sauces", name: "Satay", price: 0 }]);
+  const mine = [{ venueId: "kebab", venueName: "Kebab Grill", name: "Doner", price: 16.5, qty: 1,
+    options: [{ group: "sauces", id: "satay", name: "Satay", price: 0 }] }];
+  assert.equal(mergeItems(mine, decoded.items).length, 1);
+});
+
+test("a crafted option id is reduced to a slug before it reaches a key", () => {
+  const token = Buffer.from(JSON.stringify({
+    v: CODEC_VERSION, t: "o",
+    g: [{ v: "kebab", n: "Kebab Grill", p: null, i: [["Doner", 16.5, 1, [["size", "Lg", 10, "La\u001fRGE"]]]] }],
+  })).toString("base64url");
+  const opt = decodeShare(token).items[0].options[0];
+  assert.equal(opt.id, "la-rge");
+  assert.equal(lineKey(decodeShare(token).items[0]).split("\n")[2], "size\u001fla-rge");
+});
+
+test("CODEC_VERSION is untouched by option ids", () => {
+  assert.equal(CODEC_VERSION, 1);
+});

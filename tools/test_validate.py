@@ -81,8 +81,8 @@ def _add_ons(d):
         "max": 2,
         "price": 0,
         "options": [
-            {"name": "Satay", "tags": ["contains-peanuts", "vg", "gf", "df"]},
-            {"name": "Garlic yogurt", "tags": ["contains-dairy", "v", "gf"]},
+            {"name": "Satay", "id": "satay", "tags": ["contains-peanuts", "vg", "gf", "df"]},
+            {"name": "Garlic yogurt", "id": "garlic-yogurt", "tags": ["contains-dairy", "v", "gf"]},
         ],
     }
     d["addOnGroups"] = [group]
@@ -566,6 +566,36 @@ CASES = {
     ),
     # The typo that sells an extra free: a mistyped price key inside a group
     # that defaults to 0 is not a harmless no-op, it is an under-stated total.
+    # --- ADR 0126: an add-on option has an id ----------------------------
+    # The order line keys on it, so a missing, malformed or repeated one is a
+    # line that merges with the wrong thing or stops merging with the right one.
+    "an add-on option with no id": (
+        _breaks(lambda g, d: g["options"][0].pop("id")),
+        "error", r'option \'Satay\': no "id" — add "id": "satay"',
+    ),
+    "an add-on option id not in slug form": (
+        _breaks(lambda g, d: g["options"][0].update(id="Satay Sauce")),
+        "error", r"option 'Satay': id 'Satay Sauce' is not in slug form .* write 'satay-sauce'",
+    ),
+    "two options in one group sharing an id": (
+        _breaks(lambda g, d: g["options"][1].update(id="satay")),
+        "error", r"option 'Garlic yogurt': id 'satay' is already used by option 'Satay' in this group",
+    ),
+    # The POSITIVE case, and the reason the field exists: a venue renames the
+    # option, the transcriber changes the name and leaves the id. Legal, and
+    # the id no longer equals slug(name) — which must not be read as an error.
+    "a renamed add-on option keeping its pinned id is legal": (
+        _breaks(lambda g, d: g["options"][0].update(name="Satay (peanut)")),
+        "clean", None,
+    ),
+    # Uniqueness is per GROUP: two groups may each offer a "large".
+    "the same option id in two different groups is legal": (
+        _breaks(lambda g, d: (
+            d["addOnGroups"].append({**copy.deepcopy(g), "id": "more-sauces"}),
+            _first_item(d)["addOns"].append("more-sauces"),
+        )),
+        "clean", None,
+    ),
     "mistyped price key on an add-on option": (
         _breaks(lambda g, d: g["options"][0].update(prive=2.5)),
         "error", r"option 'Satay': unknown key 'prive'",

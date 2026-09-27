@@ -999,3 +999,36 @@ test("the sealed sync blob carries no `other` stores at all", () => {
   const { merged } = mergePersonal(null, mine, mine);
   assert.deepEqual(Object.keys(merged).sort(), ["format", "order", "profiles", "v"]);
 });
+
+test("an add-on option's id survives the backup round trip, and an old backup still merges (ADR 0126)", () => {
+  // The option id is what the order line KEYS on. This whitelist is exhaustive,
+  // so a field it does not name is shed on export — which here would leave a
+  // restored line keyed on its NAME, stranded the day the venue renames it.
+  // (A restore never folds into an order already on the device — planImport's
+  // rule — so the merge under test is between the two backup lines below.)
+  const store = device();
+  const data = file({
+    order: [
+      // A backup written today: the renamed option, carrying its id.
+      { venueId: "fixture-venue", venueName: "Fixture Venue", name: "Doner", dishId: "doner", price: 26.5, qty: 1,
+        options: [{ group: "size", id: "large", name: "Lg", price: 10 }] },
+      // A backup written BEFORE ids existed, under the option's old name.
+      { venueId: "fixture-venue", venueName: "Fixture Venue", name: "Doner", dishId: "doner", price: 26.5, qty: 2,
+        options: [{ group: "size", name: "Large", price: 10 }] },
+      // A crafted id is reduced to a slug, never carried raw into a key.
+      { venueId: "fixture-venue", venueName: "Fixture Venue", name: "Doner", dishId: "doner", price: 16.5, qty: 1,
+        options: [{ group: "sauces", id: "Sa\u001fTAY", name: "Satay", price: 0 }] },
+    ],
+  });
+  const r = parsePersonalData(personalDataJson(data));
+  assert.equal(r.ok, true);
+  assert.equal(r.data.order[0].options[0].id, "large");
+  assert.equal("id" in r.data.order[1].options[0], false);
+  assert.equal(r.data.order[2].options[0].id, "sa-tay");
+  const decisions = { [keyFor(data, 0)]: { diet: "keep" }, [keyFor(data, 1)]: { target: "new" } };
+  applyPersonalData(store, r.data, { decisions });
+  const lines = read(store, ORDER_KEY);
+  const large = lines.filter((l) => l.options?.[0]?.group === "size");
+  assert.equal(large.length, 1, JSON.stringify(lines));
+  assert.equal(large[0].qty, 3);
+});

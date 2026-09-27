@@ -51,7 +51,10 @@ export function normaliseNote(note) {
  * A dish added twice with different add-ons is two lines, not a quantity of 2
  * (ADR 0048 §4) — "eggs on toast with bacon" and "eggs on toast" are different
  * things to make and different money. `selectionKey` sorts its parts, so the
- * same choices in a different order stay one line.
+ * same choices in a different order stay one line, and keys each option on its
+ * ID rather than its display name (ADR 0126), so a venue renaming an option
+ * does not strand a line already saved — one stored before ids existed resolves
+ * by `slug(name)`, which is what every seeded id is.
  *
  * The middle component is the dish's id, not its name, because a name is not
  * unique within a venue and this is the one place that costs money (ADR 0051).

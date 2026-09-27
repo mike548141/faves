@@ -408,6 +408,27 @@ const dishExpr = (name) => `(() => {
   };
 })()`;
 
+// --- 28q (ADR 0126): an order line stored before option ids existed -------
+// The kebab record served back under a third id with ONE option renamed and its
+// id pinned — what a transcriber does when a venue renames something. The name
+// is chosen to still contain the old one, so a text match on "Satay" alone
+// would find it and this block addresses it by the full new name instead.
+const RENAME_ID = `${VENUE}-rename-fixture`;
+const RENAMED_OPTION = "Satay (peanut sauce)";
+
+/** The raw stored order — the thing a family's phone actually holds. */
+const storedExpr = `JSON.parse(localStorage.getItem("faves.order.v1") || "[]")`;
+
+/** What the first picker's OWN stepper counts: `order.qtyOf` for exactly the
+ *  dish, selection and note the picker currently holds. A count of 1 before
+ *  anything is added through it means the store matched a line that was
+ *  already there — which is the merge, observed from the reader's side. */
+const pickerQtyExpr = `(() => {
+  const dish = [...document.querySelectorAll("li.dish")].find((d) => d.querySelector(".dish-addons"));
+  const st = dish && dish.querySelector(".addon-stepper .stepper");
+  return st ? Number(st.dataset.qty) : null;
+})()`;
+
 /** How many times `needle` occurs in `hay` — the assertion 14h is actually about. */
 const occurrences = (hay, needle) => hay.split(needle).length - 1;
 
@@ -424,6 +445,20 @@ async function run(opts) {
   if (!langSection?.sectionId) throw new Error(`${opts.id} has no printed section with a sectionId`);
   const overlay = new Map([
     [`/data/restaurants/${GBP_ID}.json`, JSON.stringify({ ...venue, id: GBP_ID, currency: "GBP" })],
+    // 28q: the venue renamed its satay, and its transcriber — correctly — left
+    // the option's id where it was. Nothing else about the record moves.
+    [
+      `/data/restaurants/${RENAME_ID}.json`,
+      JSON.stringify({
+        ...venue,
+        id: RENAME_ID,
+        addOnGroups: venue.addOnGroups.map((g) =>
+          g.id !== SAUCES
+            ? g
+            : { ...g, options: g.options.map((o) => (o.name === PEANUT_OPTION ? { ...o, name: RENAMED_OPTION } : o)) },
+        ),
+      }),
+    ],
     [
       `/data/restaurants/${LANG_ID}.json`,
       JSON.stringify({
@@ -1075,6 +1110,91 @@ async function run(opts) {
       "…and the anchor is unmoved by it — the id, never the words (ADR 0058)",
       tr.found,
       `#section-${langSection.sectionId} still resolves with the heading in another language`,
+    );
+
+    // --- 28q (ADR 0126): a line stored BEFORE option ids still merges -----
+    // The order line keys on the option's id now, not its display name. That is
+    // only safe if the lines ALREADY on people's phones — `{ group, name }`, no
+    // id — key the same way, so this stages one: add a configured dish through
+    // the real picker, strip the id back out of storage to leave the exact shape
+    // cart.js wrote until this change, and ask the picker to add it again.
+    const peanutDef = group.options.find((o) => o.name === PEANUT_OPTION);
+    await cdp.send("Page.navigate", { url }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
+      label: `${opts.id} to render for the stored-line block`,
+    });
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await cdp.send("Page.navigate", { url }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
+      label: `${opts.id} to render with an empty order`,
+    });
+    await driver.click(".dish-addons-summary");
+    await driver.click(".dish-addons .addon-option", PEANUT_OPTION);
+    await driver.click(".addon-stepper .stepper-add");
+    const fresh = await driver.evalPage(storedExpr);
+    const freshOpt = fresh[0]?.options?.[0] || {};
+    report.check(
+      "the picker writes the option's id onto the order line, beside its name",
+      fresh.length === 1 && freshOpt.id === peanutDef?.id && freshOpt.name === PEANUT_OPTION,
+      JSON.stringify(freshOpt),
+    );
+
+    // The legacy shape: same line, option id removed. Stored, then reloaded, so
+    // the store reads it cold exactly as it would a line saved last month.
+    const legacy = (venueId) =>
+      fresh.map((l) => ({ ...l, venueId, qty: 1, options: l.options.map(({ id: _drop, ...rest }) => rest) }));
+    const stash = (lines) =>
+      driver.evalPage(`localStorage.setItem("faves.order.v1", ${JSON.stringify(JSON.stringify(lines))}); true`);
+    await stash(legacy(opts.id));
+    await cdp.send("Page.navigate", { url }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
+      label: `${opts.id} to render over a legacy stored line`,
+    });
+    await driver.click(".dish-addons-summary");
+    // The CONTROL, read with nothing ticked: the plain dish is NOT the stored
+    // line. Without it, a key that ignored the selection entirely would read 1
+    // below and pass.
+    const plainQty = await driver.evalPage(pickerQtyExpr);
+    await driver.click(".dish-addons .addon-option", PEANUT_OPTION);
+    const legacyQty = await driver.evalPage(pickerQtyExpr);
+    report.check(
+      "a line stored before option ids existed is FOUND by today's picker for the same choice",
+      plainQty === 0 && legacyQty === 1,
+      `plain ${plainQty} (want 0) · with ${PEANUT_OPTION} ${legacyQty} (want 1)`,
+    );
+    // "＋" matches BOTH the stepper's increment and the "＋ Add" button, so a
+    // broken merge adds a second line and the assertion below says so, rather
+    // than the run stopping on a missing element.
+    await driver.click(".addon-stepper button", "＋");
+    let stored = await driver.evalPage(storedExpr);
+    report.check(
+      "…and adding it again MERGES into that line — one line of 2, not two lines of 1",
+      stored.length === 1 && stored[0].qty === 2,
+      stored.map((l) => `${l.qty}× ${l.name} [${(l.options || []).map((o) => `${o.group}/${o.id ?? "(no id)"}/${o.name}`).join(",")}]`).join(" | "),
+    );
+
+    // And the case the id exists for: the venue has RENAMED the option since
+    // that line was stored. The old line holds the old name and no id; the
+    // picker now shows the new name and carries the pinned id.
+    await stash(legacy(RENAME_ID));
+    const renameUrl = `http://127.0.0.1:${port}/restaurant.html?id=${RENAME_ID}`;
+    await cdp.send("Page.navigate", { url: renameUrl }, sessionId);
+    await untilPresent(async () => (await driver.evalPage(snapshotExpr)).found, {
+      label: `${RENAME_ID} to render over a line stored under the old name`,
+    });
+    await driver.click(".dish-addons-summary");
+    await driver.click(".dish-addons .addon-option", RENAMED_OPTION);
+    const renamedQty = await driver.evalPage(pickerQtyExpr);
+    // "＋" matches BOTH the stepper's increment and the "＋ Add" button, so a
+    // broken merge adds a second line and the assertion below says so, rather
+    // than the run stopping on a missing element.
+    await driver.click(".addon-stepper button", "＋");
+    stored = await driver.evalPage(storedExpr);
+    report.check(
+      `after the venue renames "${PEANUT_OPTION}" to "${RENAMED_OPTION}", the old line still merges`,
+      renamedQty === 1 && stored.length === 1 && stored[0].qty === 2,
+      `picker saw ${renamedQty} (want 1) · ` +
+        stored.map((l) => `${l.qty}× ${l.name} [${(l.options || []).map((o) => o.name).join(",")}]`).join(" | "),
     );
 
     return report.summary(SITE) ? 0 : 1;

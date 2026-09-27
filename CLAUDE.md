@@ -449,6 +449,9 @@ python3 tools/seed_dish_ids.py --check # every dish carries its own id (ADR 0051
 python3 tools/seed_section_ids.py --check # …and every section its own (ADR 0058) —
                               # the anchor comes from the id, so a heading can be
                               # renamed without breaking every link to it
+python3 tools/seed_option_ids.py --check # …and every ADD-ON OPTION its own
+                              # (ADR 0126) — the order line keys on it, so a
+                              # renamed option keeps its id and strands no saved line
 python3 tools/seed_branch_ids.py --check # …and every BRANCH its own (ADR 0103). A
                               # branch used to be named by its POSITION — data.js
                               # projects locations[0] to the top level, so inserting a

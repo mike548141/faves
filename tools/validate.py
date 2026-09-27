@@ -66,7 +66,7 @@ SEASONS = {"summer", "autumn", "winter", "spring"}
 # site/js/addons.js `selectionAllowed`, which enforces the same two words.
 ADD_ON_SELECT = {"one", "many"}
 ADD_ON_GROUP_KEYS = {"id", "name", "select", "max", "price", "options"}
-ADD_ON_OPTION_KEYS = {"name", "price", "tags"}
+ADD_ON_OPTION_KEYS = {"name", "id", "price", "tags"}
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
@@ -1078,6 +1078,7 @@ def check_add_on_groups(rid, data):
                 err(rid, f"{where}: max {m} exceeds the {len(options)} option(s) in the group")
 
         seen_names = set()
+        seen_ids = {}
         for j, o in enumerate(options):
             at = f"{where}: options[{j}]"
             if not isinstance(o, dict):
@@ -1091,6 +1092,29 @@ def check_add_on_groups(rid, data):
                 if oname in seen_names:
                     err(rid, f"{at}: duplicate option name in this group")
                 seen_names.add(oname)
+            # `id`: the option's identity, REQUIRED (ADR 0126) for the reason
+            # `dishId` is (ADR 0051): the order line keys on it, so a key derived
+            # from the display name moves when the venue renames the option and
+            # every stored line, backup and share link that chose it stops
+            # merging. Seeded once from `slug(name)` — what a line stored before
+            # ids existed still resolves to — and never rewritten. It must BE a
+            # slug: it sits between the order key's control-character delimiters,
+            # and a slug cannot contain one. Unique within its GROUP, the scope
+            # the key uses; two groups may each have a "large".
+            oid = o.get("id")
+            if oid is None:
+                want = slug(oname) if isinstance(oname, str) else ""
+                err(rid, f'{at}: no "id" — add "id": "{want}" (run tools/seed_option_ids.py)')
+            elif not (isinstance(oid, str) and ID_RE.match(oid)):
+                suggestion = (slug(oid) if isinstance(oid, str) else "") or (
+                    slug(oname) if isinstance(oname, str) else "")
+                err(rid, f"{at}: id {oid!r} is not in slug form (lower-case, digits, "
+                         f"single hyphens) — write {suggestion!r}")
+            elif oid in seen_ids:
+                err(rid, f"{at}: id {oid!r} is already used by option {seen_ids[oid]!r} in this group "
+                         "— two options sharing an id are one order line")
+            else:
+                seen_ids[oid] = oname
             check_add_on_price(rid, o, at)
             if "price" not in o and "price" not in g:
                 err(
