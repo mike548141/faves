@@ -49,6 +49,7 @@ import { migrateDishKeys } from "./dish-id.js";
 import { clampRating } from "./ratings.js";
 import { createSettings, sanitiseDiet, DEFAULTS as SETTINGS_DEFAULTS } from "./settings.js";
 import { mergeItems, normaliseNote } from "./cart.js";
+import { optionId } from "./addons.js";
 
 // Every settings field EXCEPT diet, which is handled just below by its own
 // safety-critical choice logic (keep/incoming/combine) rather than a plain
@@ -408,7 +409,18 @@ function sanitiseOptions(list) {
     const name = clip(o.name);
     if (!group || !name) continue;
     const price = Number(o.price);
-    out.push({ group, name, price: Number.isFinite(price) && price >= 0 ? price : null });
+    const option = { group, name, price: Number.isFinite(price) && price >= 0 ? price : null };
+    // The option's id is what the order line KEYS on (ADR 0126) — the field
+    // this whitelist would otherwise shed, and a restored line would then key
+    // on its name and stop merging with the line the picker makes once the
+    // venue renames the option. Kept in slug form whatever the file says, via
+    // the same resolver the key uses; absent on a backup written before ids
+    // existed, which then resolves by name exactly as it always did.
+    if (typeof o.id === "string" && o.id) {
+      const id = optionId({ id: clip(o.id) });
+      if (id) option.id = id;
+    }
+    out.push(option);
   }
   return out;
 }

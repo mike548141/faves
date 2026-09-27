@@ -98,6 +98,7 @@
       "options": [
         {
           "name": "Toasted",
+          "id": "toasted",
           "tags": [
             "vg",
             "gf",
@@ -106,6 +107,7 @@
         },
         {
           "name": "Fresh",
+          "id": "fresh",
           "tags": [
             "vg",
             "gf",
@@ -123,6 +125,7 @@
       "options": [
         {
           "name": "Garlic yogurt",
+          "id": "garlic-yogurt",
           "tags": [
             "v",
             "gf",
@@ -131,6 +134,7 @@
         },
         {
           "name": "Plain yogurt",
+          "id": "plain-yogurt",
           "tags": [
             "v",
             "gf",
@@ -139,6 +143,7 @@
         },
         {
           "name": "Hot chilli",
+          "id": "hot-chilli",
           "tags": [
             "vg",
             "gf",
@@ -148,6 +153,7 @@
         },
         {
           "name": "Mild chilli",
+          "id": "mild-chilli",
           "tags": [
             "vg",
             "gf",
@@ -157,6 +163,7 @@
         },
         {
           "name": "Tomato sauce",
+          "id": "tomato-sauce",
           "tags": [
             "vg",
             "gf",
@@ -165,6 +172,7 @@
         },
         {
           "name": "Mayonnaise",
+          "id": "mayonnaise",
           "tags": [
             "v",
             "gf",
@@ -174,6 +182,7 @@
         },
         {
           "name": "Sweet chilli",
+          "id": "sweet-chilli",
           "tags": [
             "vg",
             "gf",
@@ -182,6 +191,7 @@
         },
         {
           "name": "Satay",
+          "id": "satay",
           "tags": [
             "vg",
             "gf",
@@ -192,6 +202,7 @@
         },
         {
           "name": "Tahini",
+          "id": "tahini",
           "tags": [
             "vg",
             "gf",
@@ -201,6 +212,7 @@
         },
         {
           "name": "Garlic aioli",
+          "id": "garlic-aioli",
           "tags": [
             "v",
             "gf",
@@ -210,12 +222,14 @@
         },
         {
           "name": "Mint sauce",
+          "id": "mint-sauce",
           "tags": [
             "v"
           ]
         },
         {
           "name": "BBQ sauce",
+          "id": "bbq-sauce",
           "tags": [
             "df"
           ]
@@ -229,6 +243,7 @@
       "options": [
         {
           "name": "Extra meat",
+          "id": "extra-meat",
           "price": 6,
           "tags": [
             "has-meat"
@@ -236,6 +251,7 @@
         },
         {
           "name": "Extra falafel",
+          "id": "extra-falafel",
           "price": 3,
           "tags": [
             "v"
@@ -243,6 +259,7 @@
         },
         {
           "name": "Extra mucver",
+          "id": "extra-mucver",
           "price": 3,
           "tags": [
             "v"
@@ -250,6 +267,7 @@
         },
         {
           "name": "Extra halloumi",
+          "id": "extra-halloumi",
           "price": 3,
           "tags": [
             "v",
@@ -258,6 +276,7 @@
         },
         {
           "name": "Extra cheese",
+          "id": "extra-cheese",
           "price": 1.5,
           "tags": [
             "v",

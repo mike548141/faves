@@ -37,6 +37,7 @@
       "options": [
         {
           "name": "Chimichurri",
+          "id": "chimichurri",
           "price": 0,
           "tags": [
             "gf"
@@ -44,6 +45,7 @@
         },
         {
           "name": "Garlic butter",
+          "id": "garlic-butter",
           "price": 0,
           "tags": [
             "gf",
@@ -52,6 +54,7 @@
         },
         {
           "name": "Port jus",
+          "id": "port-jus",
           "price": 0,
           "tags": [
             "gf"
@@ -59,16 +62,19 @@
         },
         {
           "name": "Dijon",
+          "id": "dijon",
           "price": 0,
           "tags": []
         },
         {
           "name": "Hot English",
+          "id": "hot-english",
           "price": 0,
           "tags": []
         },
         {
           "name": "Mushroom sauce",
+          "id": "mushroom-sauce",
           "price": 5,
           "tags": [
             "gf",
@@ -85,11 +91,13 @@
       "options": [
         {
           "name": "Oat",
+          "id": "oat",
           "price": 1,
           "tags": []
         },
         {
           "name": "Almond",
+          "id": "almond",
           "price": 1,
           "tags": [
             "contains-nuts"
@@ -97,6 +105,7 @@
         },
         {
           "name": "Coconut",
+          "id": "coconut",
           "price": 1,
           "tags": []
         }

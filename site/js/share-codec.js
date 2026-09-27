@@ -16,6 +16,7 @@
 
 import { dishId } from "./dish-id.js";
 import { slug } from "./slug.js";
+import { optionId } from "./addons.js";
 
 const PARAM = "share";
 export const CODEC_VERSION = 1;
@@ -175,7 +176,7 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
       // earlier optional one, and each condition is "mine, or anything after
       // mine".
       if (opts.length || carryId || note)
-        line.push(opts.length ? opts.map((o) => [clip(o.group, MAX_NAME), clip(o.name, MAX_NAME), priceOrNull(o.price)]) : null);
+        line.push(opts.length ? opts.map(packOption) : null);
       if (carryId || note) line.push(carryId ? id : null);
       if (note) line.push(note);
       return line;
@@ -183,6 +184,31 @@ export function encodeShare({ type = "order", label = "", groups = [] }) {
   }));
 
   return toB64url(JSON.stringify(payload));
+}
+
+/**
+ * One chosen add-on on the wire: `[group, name, price]`, plus the option's id as
+ * an optional FOURTH element (ADR 0126) — only where the id says something the
+ * name doesn't, i.e. where the venue has renamed the option since its id was
+ * seeded. On the day this shipped every seeded id equals `slug(name)`, so every
+ * link is byte-identical to what it was.
+ *
+ * The same append-a-slot move as the dish id (ADR 0051), and for the same
+ * reason: CODEC_VERSION is shared by orders and shortlists and checked with a
+ * strict `!==`, so it is never bumped. A decoder that predates the slot reads
+ * o[0..2] and ignores o[3]; it keys that option by `slug(name)`, which for a
+ * renamed option is not the sender's key — the line arrives with the right
+ * words and price and may fail to MERGE with an identical one already on the
+ * receiver's phone. It never mis-states the order, which is the safe direction.
+ * Resolved against the CLIPPED name, so encoder and decoder agree about what
+ * "the name alone would have meant".
+ */
+function packOption(o) {
+  const name = clip(o.name, MAX_NAME);
+  const tuple = [clip(o.group, MAX_NAME), name, priceOrNull(o.price)];
+  const id = clip(optionId({ id: o.id, name: name.trim() }), MAX_NAME);
+  if (id && id !== optionId({ name: name.trim() })) tuple.push(id);
+  return tuple;
 }
 
 /**
@@ -295,7 +321,7 @@ export function decodeShare(token) {
 }
 
 /**
- * The optional fourth slot: `[[group, name, price], …]`. Absent on every link
+ * The optional fourth slot: `[[group, name, price, id?], …]`. Absent on every link
  * minted before add-ons existed, which is exactly why it is optional — an old
  * link decodes to a line with no selection, which is what it meant.
  *
@@ -312,7 +338,15 @@ function decodeOptions(raw) {
     const group = clip(o[0] ?? "", MAX_NAME).trim();
     const name = clip(o[1] ?? "", MAX_NAME).trim();
     if (!group || !name) continue;
-    out.push({ group, name, price: priceOrNull(o[2]) });
+    const option = { group, name, price: priceOrNull(o[2]) };
+    // Element 3, the option id (ADR 0126). Absent on every link minted before
+    // ids existed and on every link whose option was never renamed — both of
+    // which mean `slug(name)`, exactly what `optionId()` falls through to. Put
+    // through the slug here because a crafted link can say anything, and the
+    // id lands between the order key's control-character delimiters.
+    const id = typeof o[3] === "string" ? slug(clip(o[3], MAX_NAME)) : "";
+    if (id && id !== optionId({ name })) option.id = id;
+    out.push(option);
   }
   return out;
 }

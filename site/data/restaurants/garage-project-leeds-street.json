@@ -81,6 +81,7 @@
       "options": [
         {
           "name": "House French onion dip",
+          "id": "house-french-onion-dip",
           "price": 5,
           "tags": [
             "v",
@@ -96,6 +97,7 @@
       "options": [
         {
           "name": "Second patty",
+          "id": "second-patty",
           "price": 5,
           "tags": [
             "has-meat"
@@ -110,6 +112,7 @@
       "options": [
         {
           "name": "Shoestring fries",
+          "id": "shoestring-fries",
           "price": 4,
           "tags": []
         }

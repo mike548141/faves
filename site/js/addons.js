@@ -34,6 +34,7 @@
 // problem (Theme 14b), not a reason to soften the predicate.
 
 import { DIET_FILTERS } from "./dietary.js";
+import { slug } from "./slug.js";
 
 const ALLERGEN_PREFIX = "contains-";
 
@@ -228,18 +229,57 @@ export function composeTags(dishTags, selection) {
 }
 
 /**
+ * An option's identity (ADR 0126): its `id` where it has one, `slug(name)`
+ * otherwise — `dishId()`'s rule, one level down (ADR 0051).
+ *
+ * Every option in `site/data/` carries an `id` (validate.py requires it; seeded
+ * once by tools/seed_option_ids.py from `slug(name)`), so renaming "Large" to
+ * "Lg" no longer moves it. The fallback is NOT dead code: it reads what the repo
+ * does not control — an order line stored on a phone before ids existed, a
+ * backup file, a share link — which carry only `{ group, name }`. Those resolve
+ * to `slug(name)`, and the seeded id IS `slug(name)`, so an old line and a new
+ * one for the same option produce the same key.
+ *
+ * Always returned in slug form, even from a hostile `id` off the wire: the key
+ * below separates its parts with control characters, and a slug cannot hold one.
+ * The one exception is a name that slugs to NOTHING ("炒饭" — the slug keeps only
+ * a-z and 0-9): two such names would otherwise share the empty id, so it is
+ * percent-encoded instead, behind a `~` no slug can start with. Still free of
+ * control characters (encodeURIComponent escapes them), still distinct. No
+ * option in the corpus takes this path — validate.py requires a slug `id`, and
+ * the seeder refuses a name like that — so it only ever reads a stored line.
+ */
+export function optionId(option) {
+  if (!option || typeof option !== "object") return "";
+  const raw = typeof option.id === "string" && option.id ? option.id : option.name;
+  if (typeof raw !== "string") return "";
+  return slug(raw) || (raw.trim() ? `~${encodeURIComponent(raw.trim())}` : "");
+}
+
+/**
  * A stable identity for a selection, so the order tally can tell one
  * configuration of a dish from another (Theme 14e: a dish added twice with
  * different add-ons is two lines, not a quantity of 2).
  *
  * Sorted, so the same choices made in a different order are the same line —
  * otherwise "chips then drink" and "drink then chips" quietly become two.
+ *
+ * Built from the group id and the OPTION ID, never the display name (ADR 0126):
+ * a name-keyed selection re-keyed every stored line the day a venue renamed an
+ * option. The parts are joined by U+001F (unit separator) and the entries by
+ * U+001E (record separator), written as escapes here because the raw bytes this
+ * line used to carry are invisible in most editors — which is how a review came
+ * to read it as having no delimiter at all. Neither half can CONTAIN a separator:
+ * the option half is a slug (or percent-encoded, see `optionId`) and the group
+ * half is percent-encoded — which leaves a kebab-case group id byte-identical and
+ * escapes a control character in a crafted one. So two different (group, option)
+ * pairs cannot produce one key by construction, whatever a link or backup says.
  */
 export function selectionKey(selection) {
   return (selection || [])
-    .map((s) => `${s.group}${s.name}`)
+    .map((s) => `${encodeURIComponent(String(s?.group ?? ""))}\u001f${optionId(s)}`)
     .sort()
-    .join("");
+    .join("\u001e");
 }
 
 /** Human-readable configuration, for the order sheet and collect mode. */

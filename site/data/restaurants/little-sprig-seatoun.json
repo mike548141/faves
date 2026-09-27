@@ -74,6 +74,7 @@
       "options": [
         {
           "name": "Prosciutto",
+          "id": "prosciutto",
           "price": 5.0,
           "tags": [
             "has-meat"
@@ -88,6 +89,7 @@
       "options": [
         {
           "name": "Cheese & beef gravy",
+          "id": "cheese-beef-gravy",
           "price": 5.0,
           "tags": [
             "contains-dairy",
@@ -103,6 +105,7 @@
       "options": [
         {
           "name": "Fries",
+          "id": "fries",
           "price": 6.0,
           "tags": []
         }
@@ -115,16 +118,19 @@
       "options": [
         {
           "name": "Fries",
+          "id": "fries",
           "price": 6.0,
           "tags": []
         },
         {
           "name": "Patty",
+          "id": "patty",
           "price": 7.0,
           "tags": []
         },
         {
           "name": "Bacon",
+          "id": "bacon",
           "price": 5.0,
           "tags": [
             "has-meat"
@@ -132,6 +138,7 @@
         },
         {
           "name": "Cheese",
+          "id": "cheese",
           "price": 3.0,
           "tags": [
             "contains-dairy"
@@ -139,6 +146,7 @@
         },
         {
           "name": "Egg",
+          "id": "egg",
           "price": 3.0,
           "tags": [
             "contains-egg"
@@ -146,6 +154,7 @@
         },
         {
           "name": "GF bun",
+          "id": "gf-bun",
           "price": 3.0,
           "tags": [
             "gf"
@@ -160,6 +169,7 @@
       "options": [
         {
           "name": "Gravy",
+          "id": "gravy",
           "price": 3.0,
           "tags": []
         }

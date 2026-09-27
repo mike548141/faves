@@ -17,8 +17,11 @@ import {
   composeTags,
   selectionKey,
   selectionSummary,
+  optionId,
   CONTRADICTS,
 } from "../site/js/addons.js";
+import { readFileSync, readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { dishFlagged, dishSatisfiesDiet } from "../site/js/dietary.js";
 
 const SATAY = { group: "sauces", name: "Satay", price: 0, tags: ["contains-peanuts", "vg", "gf", "df"] };
@@ -338,6 +341,91 @@ test("selectionKey: the same option name in two groups does not collide", () => 
   const a = { group: "sides", name: "Egg" };
   const b = { group: "extras", name: "Egg" };
   assert.notEqual(selectionKey([a]), selectionKey([b]));
+});
+
+// --- an option has an id (ADR 0126, roadmap 28q) ------------------------
+// Three properties, and each is a claim about money on a real order line: a
+// key cannot be shared by two different choices, a venue renaming an option
+// cannot strand a saved line, and a line saved before ids existed still merges.
+
+test("optionId: the explicit id where there is one, slug(name) where there isn't", () => {
+  assert.equal(optionId({ id: "large", name: "Lg" }), "large");
+  assert.equal(optionId({ name: "Extra Cheese!" }), "extra-cheese");
+  assert.equal(optionId({ id: "", name: "Satay" }), "satay"); // blank id is no id
+  assert.equal(optionId(null), "");
+  assert.equal(optionId({}), "");
+});
+
+test("selectionKey: two different (group, option) pairs can never produce one key", () => {
+  // The item's worked example. It was already safe — the old key carried
+  // U+001F between the halves, invisible in an editor — and it stays safe.
+  assert.notEqual(
+    selectionKey([{ group: "a", name: "bc" }]),
+    selectionKey([{ group: "ab", name: "c" }]),
+  );
+  // What the old key could NOT survive: a separator INSIDE a part, which a
+  // crafted share link or backup file is free to send. Under the name-keyed
+  // scheme these two were byte-identical keys.
+  assert.notEqual(
+    selectionKey([{ group: "a\u001fb", name: "c" }]),
+    selectionKey([{ group: "a", name: "b\u001fc" }]),
+  );
+  assert.notEqual(
+    selectionKey([{ group: "g", name: "x\u001ey" }]),
+    selectionKey([{ group: "g", name: "x" }, { group: "g", name: "y" }]),
+  );
+  // A name that slugs to nothing must not share the empty id with another.
+  assert.notEqual(selectionKey([{ group: "g", name: "炒饭" }]), selectionKey([{ group: "g", name: "面" }]));
+  // No part of a key may contain a separator, whatever went in.
+  for (const s of [
+    { group: "a\u001fb", name: "c\u001ed" },
+    { group: "g", id: "x\u001fy", name: "z" },
+    { group: "g", name: "炒\u001f饭" },
+  ]) {
+    const parts = selectionKey([s]).split("\u001f");
+    assert.equal(parts.length, 2, JSON.stringify(s));
+    assert.ok(!parts.some((p) => p.includes("\u001e")), JSON.stringify(s));
+  }
+});
+
+test("selectionKey: across the WHOLE corpus, no two options in a venue share a key", () => {
+  // The property over the data a person actually orders from, not a fixture:
+  // every (group, option) a venue offers keys distinctly from every other.
+  const dir = fileURLToPath(new URL("../site/data/restaurants/", import.meta.url));
+  let checked = 0;
+  for (const f of readdirSync(dir).filter((n) => n.endsWith(".json"))) {
+    const rec = JSON.parse(readFileSync(dir + f, "utf8"));
+    const seen = new Map();
+    for (const g of rec.addOnGroups || []) {
+      for (const o of g.options || []) {
+        const k = selectionKey([{ group: g.id, id: o.id, name: o.name }]);
+        assert.ok(!seen.has(k), `${f}: ${g.id}/${o.name} keys like ${seen.get(k)}`);
+        seen.set(k, `${g.id}/${o.name}`);
+        checked += 1;
+      }
+    }
+  }
+  assert.ok(checked >= 200, `only ${checked} options read — is the corpus there?`);
+});
+
+test("selectionKey: renaming an option's display name leaves the key unchanged", () => {
+  const before = { group: "size", id: "large", name: "Large", price: 29 };
+  const after = { group: "size", id: "large", name: "Lg", price: 29 };
+  assert.equal(selectionKey([before]), selectionKey([after]));
+  // …and the id is what carries it: a DIFFERENT id is a different line.
+  assert.notEqual(selectionKey([before]), selectionKey([{ ...after, id: "regular" }]));
+});
+
+test("selectionKey: a selection stored before ids existed keys as the same option today", () => {
+  // What is sitting in a family's browser, a backup file and every share link
+  // minted before this change: `{ group, name }`, no id. The seeded id IS
+  // slug(name), so the two meet — and after a rename, the old line still meets
+  // the renamed option, because the id was pinned when the name moved.
+  const stored = { group: "sauces", name: "Satay", price: 0 };
+  const today = { group: "sauces", id: "satay", name: "Satay", price: 0 };
+  const renamed = { group: "sauces", id: "satay", name: "Satay (peanut)", price: 0 };
+  assert.equal(selectionKey([stored]), selectionKey([today]));
+  assert.equal(selectionKey([stored]), selectionKey([renamed]));
 });
 
 test("selectionSummary: reads as what you would say at the counter", () => {

@@ -53,7 +53,7 @@ import { dishId } from "./dish-id.js";
 import { dishStepper } from "./cart-ui.js";
 import { settings } from "./settings.js";
 import { dishFlagged } from "./dietary.js";
-import { groupsFor, optionPrice, selectionPrice, selectionAllowed, composeTags } from "./addons.js";
+import { groupsFor, optionPrice, optionId, selectionPrice, selectionAllowed, composeTags } from "./addons.js";
 import { formatMoney, venueCurrency } from "./place.js";
 import { isSpicy, heatLabel } from "./heat.js";
 
@@ -356,7 +356,10 @@ export function dishAddOns(record, section, item, onCompose) {
       // Same reason as the plain row's stepper (menu.js): the line carries the
       // currency it was priced in, or it silently becomes NZD.
       currency: venueCurrency(record),
-      options: selection.map((s) => ({ group: s.group, name: s.name, price: s.price })),
+      // `id` travels with the name (ADR 0126): the line is KEYED on it, so a
+      // venue renaming the option later does not strand this line. The name
+      // stays because it is what the order sheet reads out at the counter.
+      options: selection.map((s) => ({ group: s.group, id: s.id, name: s.name, price: s.price })),
     };
   }
 
@@ -457,10 +460,10 @@ export function dishAddOns(record, section, item, onCompose) {
           }
         }
         if (!input.checked && !single) {
-          const at = selection.findIndex((s) => s.group === group.id && s.name === option.name);
+          const at = selection.findIndex((s) => s.group === group.id && s.id === optionId(option));
           if (at >= 0) selection.splice(at, 1);
         } else {
-          selection.push({ group: group.id, name: option.name, price: cost, tags: option.tags || [] });
+          selection.push({ group: group.id, id: optionId(option), name: option.name, price: cost, tags: option.tags || [] });
         }
         refresh();
       });

@@ -85,6 +85,7 @@
       "options": [
         {
           "name": "Plain crepe base",
+          "id": "plain-crepe-base",
           "price": 6,
           "tags": [
             "gf",
@@ -93,6 +94,7 @@
         },
         {
           "name": "Free range egg",
+          "id": "free-range-egg",
           "price": 2.5,
           "tags": [
             "contains-egg"
@@ -100,6 +102,7 @@
         },
         {
           "name": "Feta",
+          "id": "feta",
           "price": 3.5,
           "tags": [
             "contains-dairy"
@@ -107,6 +110,7 @@
         },
         {
           "name": "Cheddar cheese",
+          "id": "cheddar-cheese",
           "price": 4,
           "tags": [
             "contains-dairy"
@@ -114,6 +118,7 @@
         },
         {
           "name": "Blue cheese",
+          "id": "blue-cheese",
           "price": 4,
           "tags": [
             "contains-dairy"
@@ -121,6 +126,7 @@
         },
         {
           "name": "Cream cheese",
+          "id": "cream-cheese",
           "price": 3.5,
           "tags": [
             "contains-dairy"
@@ -128,16 +134,19 @@
         },
         {
           "name": "Sundried tomatoes",
+          "id": "sundried-tomatoes",
           "price": 2.5,
           "tags": []
         },
         {
           "name": "Caramelised onion",
+          "id": "caramelised-onion",
           "price": 2,
           "tags": []
         },
         {
           "name": "Ham",
+          "id": "ham",
           "price": 4,
           "tags": [
             "has-meat"
@@ -145,6 +154,7 @@
         },
         {
           "name": "Chicken",
+          "id": "chicken",
           "price": 4,
           "tags": [
             "has-meat"
@@ -152,6 +162,7 @@
         },
         {
           "name": "Salmon",
+          "id": "salmon",
           "price": 4.5,
           "tags": [
             "has-fish",
@@ -160,6 +171,7 @@
         },
         {
           "name": "Béchamel",
+          "id": "b-chamel",
           "price": 2,
           "tags": [
             "contains-dairy"
@@ -167,6 +179,7 @@
         },
         {
           "name": "Hummus",
+          "id": "hummus",
           "price": 3,
           "tags": [
             "contains-sesame"
@@ -174,21 +187,25 @@
         },
         {
           "name": "Mushrooms",
+          "id": "mushrooms",
           "price": 2.5,
           "tags": []
         },
         {
           "name": "Spinach",
+          "id": "spinach",
           "price": 2.5,
           "tags": []
         },
         {
           "name": "Fresh tomatoes",
+          "id": "fresh-tomatoes",
           "price": 2.5,
           "tags": []
         },
         {
           "name": "Basil",
+          "id": "basil",
           "price": 1.5,
           "tags": []
         }
@@ -201,6 +218,7 @@
       "options": [
         {
           "name": "Homemade salted caramel",
+          "id": "homemade-salted-caramel",
           "price": 3,
           "tags": [
             "contains-dairy"
@@ -208,6 +226,7 @@
         },
         {
           "name": "Chocolate or Nutella",
+          "id": "chocolate-or-nutella",
           "price": 4,
           "tags": [
             "contains-nuts"
@@ -215,6 +234,7 @@
         },
         {
           "name": "Whipped cream",
+          "id": "whipped-cream",
           "price": 2,
           "tags": [
             "contains-dairy"
@@ -222,6 +242,7 @@
         },
         {
           "name": "Grilled almonds",
+          "id": "grilled-almonds",
           "price": 2.5,
           "tags": [
             "contains-nuts"
@@ -229,31 +250,37 @@
         },
         {
           "name": "Banana",
+          "id": "banana",
           "price": 2,
           "tags": []
         },
         {
           "name": "Berry sauce",
+          "id": "berry-sauce",
           "price": 2.5,
           "tags": []
         },
         {
           "name": "Maple syrup",
+          "id": "maple-syrup",
           "price": 2.5,
           "tags": []
         },
         {
           "name": "Arataki honey",
+          "id": "arataki-honey",
           "price": 2.5,
           "tags": []
         },
         {
           "name": "Strawberries",
+          "id": "strawberries",
           "price": 3,
           "tags": []
         },
         {
           "name": "Plain crepe base",
+          "id": "plain-crepe-base",
           "price": 6,
           "tags": []
         }
