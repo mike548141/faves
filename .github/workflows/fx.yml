@@ -178,7 +178,18 @@ jobs:
     name: refresh site/data/fx.json
     runs-on: ubuntu-latest
     steps:
+      # The token checkout stores is the one `git push` uses below. With the
+      # default (the built-in GITHUB_TOKEN) a RESTAMP — a force-push onto an
+      # fx/refresh PR that is already open — arrives as a bot's `synchronize`,
+      # which `approval_policy: all_external_contributors` holds for "Approve and
+      # run". Measured 2026-09-28 on PR #52: every restamp after the first sat
+      # at `action_required`, so auto-merge could never fire. Opening the PR was
+      # never affected, because `gh pr create` already used FX_TOKEN. FX_TOKEN
+      # carries Contents: read & write for exactly this repo (see above), so
+      # pushing with it widens nothing.
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.FX_TOKEN || github.token }}
 
       # Cheap (one `gh` call, no Python, no network fetch) and answers the
       # question every push-triggered run needs first: is there anything of

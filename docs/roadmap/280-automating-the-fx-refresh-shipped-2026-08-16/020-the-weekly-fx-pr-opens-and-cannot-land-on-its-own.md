@@ -9,6 +9,14 @@
   merge itself and exited cleanly with no PR open. **Reason 1 is NOT fixed**
   — the floor still judges the whole tree; that is option (2), the owner's
   ruleset call alongside `340/180`.
+  🛑 **REGRESSION FOUND AND FIXED THE SAME DAY (2026-09-28).** A restamp
+  force-pushed with the built-in token, so each one reached open PR #52 as
+  a bot's `synchronize` and sat at `action_required` ("Approve and run"):
+  five restamps, all blocked, auto-merge unable to fire. Opening a PR was
+  unaffected because `gh pr create` already used `FX_TOKEN`. Fix: checkout
+  stores `FX_TOKEN`, so the push is the owner's. The pre-merge review
+  checked that `FX_TOKEN` existed and missed that `git push` does not use
+  it; only a live run could show that.
 
   **What the record shows.** PR #5 (cut 2026-08-23) and PR #6 (2026-08-30)
   were opened by the owner's token, queued for `--auto --squash`, and never
