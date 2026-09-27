@@ -380,6 +380,7 @@ where the last session left off. Do not deviate from the architecture
 without recording the decision — a short ADR in `docs/decisions/`
 (see its README) for anything a future session might re-propose, and a
 line in `docs/ARCHITECTURE.md` if it changes the compact current-truth.
+Guard postures (cheap-failure vs. forbids-the-act) are declared in `docs/GUARDS.md`.
 
 ## Hard constraints
 
