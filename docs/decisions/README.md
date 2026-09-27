@@ -1698,6 +1698,19 @@ deliberation those compact docs omit.
   `sync-start.js`'s wiring — each asserted, not reasoned about. Substitutions
   (17e's other bullet) remain untouched: owner-authored content, never
   generated.
+- [0132](0132-closure-is-per-branch-and-the-venue-is-the-floor.md) — **closure
+  is per branch, and the venue's closure is the floor** (roadmap `210/040`,
+  items 1–4, owner-ruled 2026-08-22). A branch may carry `lifecycle` — the
+  venue's block one level down, `added` optional — folded by the same
+  `venueState` and validated by the same code. `branchClosure` settles it
+  against the venue's: the more severe wins, ties go to the venue, so a
+  venue-level closure still shuts every branch. `leadBranch` gains `"shut"`
+  and a tier, so a shut branch never leads while a trading one exists — even
+  one its hours call shut right now — and `nearestBranch` skips shut
+  branches so the home card agrees. `isGone` is given its job (it replaces a
+  hand-typed copy in `app.js`), not deleted. Zero data changes. 🔎
+  `NEVER_OPEN` (`{}`) had read as `unknown-today` since ADR 0105, not closed;
+  now every day `[]`.
 - [0133](0133-a-chosen-variant-prices-the-row-and-the-default-is-the-dish.md) —
   **a chosen variant prices the row, and the default IS the dish** (roadmap
   28m). Amends 0130 §5: the picker draws a `selects` group — radios, default
