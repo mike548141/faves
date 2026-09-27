@@ -12107,3 +12107,49 @@ the measured number.
   the "deletion paradox" in its README.
 - **Theme 26 (saved orders) should wait for 28o.** Its own README gates it
   on the add-on shape settling, and Theme 28 is about to change that shape.
+
+### 2026-09-28 addendum (`faves-8e`): waves 4–5, and the close
+
+| Item | What | Where |
+|---|---|---|
+| 340/100 | `docs/GUARDS.md` declares every guard's posture | PR #47 → `cda5052` |
+| 310/080 + 160 (28k, 28s) | The `selects` schema only, and the checks it would fool | PR #48 → `82b377e`, ADR 0130 |
+| 250/040 (17e) | Personal notes on a recipe | PR #49 → `de2245a`, ADR 0131 |
+| 310/100 (28m) | Render a `selects` group and put its choice on the order line | PR #50 → `470c748`, ADR 0133 |
+| 210/040 | Closure becomes per-branch (worklist 1–4) | PR #51 → `9fe21af`, ADR 0132 |
+
+- 🔎 **`docs/GUARDS.md`'s census found an orphan.** `fixture_check.mjs` had
+  been listed nowhere and run by nothing since 2026-09-09. It passed on 2026-09-28,
+  so it is now on the verify list. It is **not** in CI, because it is
+  browser-driven and the 2026-08-16 subset ruling holds.
+- **The browser-check count was hard-coded in three files and wrong in all
+  of them** (19 today). The sentences now name the counting command, or
+  date the number where it can't be dropped.
+- **Data safety.** No venue file changed in any wave-3 to wave-5 merge
+  (measured). 28q changed only option ids, and I measured that on all 200
+  options.
+- 🔎 **28l has a fourth follow-on that 28j didn't list.** A heart stored
+  under a `formerIds` id doesn't light its row. It is recorded on 28l.
+
+**Stopped because of economics, not an empty queue.** The orchestrator's
+context was large enough that the next wave belongs to a fresh session.
+Unblocked for it: **28l** (now 28h and 28j are done), **28n** (after 28m),
+**470/050** (it edits `validate.py`'s branch rules, which are free now),
+**050** under 210, and 330/010 and 110/020.
+
+🎯 **Owner questions raised this session** (each is recorded on its item):
+- 340/250 part 4: the import is **1.84 GB**, not 68 files.
+- 36a: bake-only `time` on the list row.
+- 28m: whether the default size goes on the order line.
+- 210/040: `nearestBranch` skipping shut branches, and the closure
+  tie-break.
+- 28k: two ladders on one dish, and channel prices beside a ladder.
+- Search for variants.
+- 340/290: a repeat-reading concept for the intake record.
+- 32a: the deletion paradox.
+- 17c: blocked on 36b.
+- Deleting the 1.7 GB of stripped copies in scratch.
+
+**Put away:** every worktree this session created (six in faves, one
+in atelier) is removed, and the stash stack is empty. Atelier PR #90 (the
+hand-up) stays open for atelier to rule on.
