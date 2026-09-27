@@ -1,0 +1,25 @@
+{
+ "venue": "cook-at-home",
+ "note": "Provenance for the recipe photographs shipped under site/img/cook-at-home/. Repo-only record (ADR 0047): no screen renders any of this, and nothing under site/ refers to it.",
+ "retrieved": "2026-09-27",
+ "rights": {
+  "holder": "J.H. Whittaker and Sons, Ltd (named in the whittakers.co.nz page footer: 'Copyright © 2026 J.H. Whittaker and Sons, Ltd')",
+  "licence": "none — all rights reserved",
+  "basis": "The publisher's own photograph of its own recipe, taken from the recipe page the owner handed over, and used beside that recipe with a visible credit (the recipe's attribution line). Not openly licensed. The owner authorised this route on 2026-09-27, asked with the copyright risk stated: 'Use theirs, credited'. Same reasoning as ADR 0053: the accurate picture of a named dish is its maker's.",
+  "attributionRequired": false,
+  "ifChallenged": "Remove site/img/cook-at-home/chocolate-lava-cakes.webp and the image/alt fields from the recipe in site/data/restaurants/cook-at-home.json. The recipe page renders without a photo. Git history keeps the file; say so to whoever raised it."
+ },
+ "processing": "Fetched once at authoring time as the page's full-size 5092x5092 JPEG, scaled to 800x800 with sips, then encoded as WebP q0.75 through a Chrome canvas, which drops every metadata segment. 800px is about 2x the widest box it is shown in (the hero's photo column at the 60rem .wrap). The source carried no EXIF date.",
+ "images": [
+  {
+   "dishId": "chocolate-lava-cakes",
+   "dish": "Chocolate Lava Cakes",
+   "file": "site/img/cook-at-home/chocolate-lava-cakes.webp",
+   "bytes": 61530,
+   "sourceUrl": "https://cdn.whittake.rs/public/Uploads/Tuckshop-Whittakers-Autumn-2026-0567-Chocolate-Lava-Cakes-1x1.jpg",
+   "sourcePage": "https://www.whittakers.co.nz/en_NZ/recipes/choc-lava-cakes",
+   "fetched": "2026-09-27T04:05:34Z",
+   "sourceBytes": 17023353
+  }
+ ]
+}

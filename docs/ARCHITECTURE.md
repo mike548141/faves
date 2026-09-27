@@ -350,10 +350,19 @@ takeaways. It reuses the restaurant shape with a `kind` discriminator:
     out of the string at RENDER time for scaling (ADR 0076); nothing about a
     quantity is stored.
   - `steps`: list of strings (the method, rendered as an ordered list).
+  - `prepMinutes`, `cookMinutes`: whole minutes; `difficulty`: `very-easy` ·
+    `easy` · `medium` · `challenging`. The recipe page's stats panel (ADR 0125).
+  - `estimated`: which of `serves`, `prepMinutes`, `cookMinutes` and
+    `difficulty` are OUR estimate rather than the recipe's. The panel prints
+    `est.` beside them, and the list says "Serves about N". The number's working
+    lives in `data/estimates/recipes.json`, and `recipe_estimates.py --check`
+    fails when the two disagree.
 - `section` groups recipes (e.g. "Weeknight dinners"); `picks`, `tags`,
   `desc`, search and dietary chips all work unchanged.
 
-Rendering: the menu screen shows ingredients + method in a collapsed
+Rendering: the recipe page leads with a hero (photo, title, stats panel) and,
+from 60rem, stands the ingredients in a column beside the method (ADR 0125).
+The menu screen shows ingredients + method in a collapsed
 `<details>` per recipe; the home card is an accent-tinted pin with a recipe
 count; the collection is excluded from the area/cuisine facets. Each recipe
 name also links to a focused page `recipe.html?id=<collection>&dish=<slug>`

@@ -80,7 +80,22 @@
           "phase": "prep",
           "working": "Plating and pouring syrup."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 15,
+        "source": "estimated",
+        "working": "The milk curdling (5, stated) plus sifting, beating and mixing (7) and plating (2) = 14, rounded."
+      },
+      "cook": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "The pan heating (5) and one minute a hotcake, several at once = 6, rounded."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "A batter and a frying pan; the only skill is judging the pan's heat, which the recipe teaches with its water-drop test."
+      }
     },
     "booth-s-ginger-crunch": {
       "name": "Booth's Ginger Crunch",
@@ -92,7 +107,22 @@
       "timeTotal": null,
       "timeTotalSource": null,
       "timeTotalWorking": "NO NUMBER, DELIBERATELY. This record has no method at all — `steps` is empty. A total would be inventing the method as well as its duration. The owner has the recipe.",
-      "steps": []
+      "steps": [],
+      "prep": {
+        "minutes": null,
+        "source": null,
+        "working": "The recipe carries no method, so there is nothing to time."
+      },
+      "cook": {
+        "minutes": null,
+        "source": null,
+        "working": "No method, so no bake time."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "A pressed shortbread base and a poured icing: two simple stages, no technique."
+      }
     },
     "b-s-dope-as-brownie": {
       "name": "B's Dope-As Brownie",
@@ -133,7 +163,22 @@
           "phase": "cook",
           "working": "Stated by the recipe: \"Bake at 170°C for about 22 minutes.\" ⇒ 22 min. The bake is the only timed part of this recipe."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "The melting and mixing in step 0, about 6 min, counted as prep because no food is cooking yet, rounded."
+      },
+      "cook": {
+        "minutes": 22,
+        "source": "stated",
+        "working": "The one stated bake: 'Bake at 170°C for about 22 minutes.'"
+      },
+      "difficulty": {
+        "value": "very-easy",
+        "source": "estimated",
+        "working": "One pot, stir, bake."
+      }
     },
     "chocolate-chewy-cookies": {
       "name": "Chocolate Chewy Cookies",
@@ -160,7 +205,22 @@
           "phase": "cook",
           "working": "Stated by the recipe: \"Bake for 15 minutes at 170°C.\" ⇒ 15 min. One tray. A second tray repeats the 15 min."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 10,
+        "source": "estimated",
+        "working": "Mixing the dough and rolling about 24 balls, 12 min in the record, rounded."
+      },
+      "cook": {
+        "minutes": 15,
+        "source": "stated",
+        "working": "Stated: 'Bake for 15 minutes at 170°C.' Per tray."
+      },
+      "difficulty": {
+        "value": "very-easy",
+        "source": "estimated",
+        "working": "Mix, roll, bake."
+      }
     },
     "gingerbread-cookies": {
       "name": "Gingerbread Cookies",
@@ -229,7 +289,22 @@
           "phase": "cook",
           "working": "Stated by the recipe: \"Bake on the pizza setting for 8 minutes at 180°C.\" ⇒ 8 min. Per tray. A 1.7 kg batch is four or five trays, so the oven time repeats."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 60,
+        "source": "estimated",
+        "working": "Creaming, mixing and adding flour (10), the stated 30 min chill, rolling and cutting (15) and the stated 5 min second chill = 60."
+      },
+      "cook": {
+        "minutes": 8,
+        "source": "stated",
+        "working": "Stated: 'Bake … for 8 minutes at 180°C.' Per tray; a full batch is several trays."
+      },
+      "difficulty": {
+        "value": "medium",
+        "source": "estimated",
+        "working": "Two chills and rolling a stiff dough to an even 4–5mm is where these go wrong."
+      }
     },
     "li-ge-waffles": {
       "name": "Liège Waffles",
@@ -277,7 +352,22 @@
           "phase": "cook",
           "working": "12 waffles at about 3 min in the iron, two at a time: about 20 min."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 570,
+        "source": "estimated",
+        "working": "The sponge (15, stated), the rise (60, stated), an overnight rest taken as 8 hr (the recipe gives no hours) and shaping 12 portions (15) = 570, or 9 hr 30 min."
+      },
+      "cook": {
+        "minutes": 20,
+        "source": "estimated",
+        "working": "12 waffles at about 3 min each, two at a time."
+      },
+      "difficulty": {
+        "value": "medium",
+        "source": "estimated",
+        "working": "A yeasted, enriched dough across two days; each step is simple but the timing has to be managed."
+      }
     },
     "orange-yoghurt-cake": {
       "name": "Orange Yoghurt Cake",
@@ -332,7 +422,22 @@
           "phase": "cook",
           "working": "Stated by the recipe: \"Bake at 160°C for about 1 hour.\" ⇒ 60 min. The bake, and the whole of the recipe's stated total."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 15,
+        "source": "estimated",
+        "working": "Lining the tin, creaming, alternate additions, whisking whites and folding: 15 min in the record."
+      },
+      "cook": {
+        "minutes": 60,
+        "source": "stated",
+        "working": "Stated: 'Bake at 160°C for about 1 hour.'"
+      },
+      "difficulty": {
+        "value": "medium",
+        "source": "estimated",
+        "working": "Whisked egg whites folded in without knocking the air out."
+      }
     },
     "queen-cakes": {
       "name": "Queen Cakes",
@@ -366,7 +471,22 @@
           "phase": "cook",
           "working": "Stated by the recipe: \"Bake for 10–12 minutes at 200°C.\" ⇒ 10 min. A range, so the lower bound: 10 min, and they are watched from there."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 10,
+        "source": "estimated",
+        "working": "Creaming and mixing (6) and filling 21 patty tins (5) = 11, rounded."
+      },
+      "cook": {
+        "minutes": 10,
+        "source": "stated",
+        "working": "Stated: 'Bake for 10–12 minutes', taken at the lower bound."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "A creamed cake mix spooned into patty tins."
+      }
     },
     "upside-down-plum-cake": {
       "name": "Upside-Down Plum Cake",
@@ -435,7 +555,22 @@
           "phase": "wait",
           "working": "Stated by the recipe: \"Cool in the pan on a wire rack for 30 minutes, then invert onto a plate to serve.\" ⇒ 30 min. Cooling in the pan before it will turn out in one piece."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 45,
+        "source": "estimated",
+        "working": "Buttering the pan, laying the plums, sifting, creaming and mixing (14; the oven heats alongside) and the stated 30 min cool in the pan = 44, rounded."
+      },
+      "cook": {
+        "minutes": 60,
+        "source": "stated",
+        "working": "Stated: 'bake for about 60 minutes'."
+      },
+      "difficulty": {
+        "value": "medium",
+        "source": "estimated",
+        "working": "Laying fruit in one layer and turning the cake out clean."
+      }
     },
     "easy-pad-thai": {
       "name": "Easy Pad Thai",
@@ -490,7 +625,22 @@
           "phase": "prep",
           "working": "Garnished and plated."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 15,
+        "source": "estimated",
+        "working": "The stated 15 min noodle soak, with garnishing alongside; 17 in the record, rounded."
+      },
+      "cook": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "Four quick wok stages: 1 and 1 stated, 1 and 3 estimated = 6, rounded."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "The recipe's own name says so, and the wok stages are quick and forgiving."
+      }
     },
     "famous-brade-green-chicken-curry": {
       "name": "Famous Brade Green Chicken Curry",
@@ -545,7 +695,22 @@
           "phase": "cook",
           "working": "The recipe says 'for a while' and gives no number. 20 min is what about 800ml of coconut takes to reduce to a sauce, and it is the step that cooks the chicken through — so DONENESS GOVERNS, not this number. It must never drive a timer."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "Not in the method: dicing the chicken and an onion before step 0."
+      },
+      "cook": {
+        "minutes": 35,
+        "source": "estimated",
+        "working": "Browning (8), four quick additions (5) and a simmer the recipe gives no number for, taken as 20 = 33, rounded."
+      },
+      "difficulty": {
+        "value": "very-easy",
+        "source": "estimated",
+        "working": "One pan, things added in order."
+      }
     },
     "jesse-s-garlic-chicken-thighs": {
       "name": "Jesse's Garlic Chicken Thighs",
@@ -621,7 +786,22 @@
           "phase": "prep",
           "working": "Served over rice cooked alongside."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "Not in the method: crushing 6–8 cloves and slicing an onion."
+      },
+      "cook": {
+        "minutes": 45,
+        "source": "estimated",
+        "working": "Sautéing, browning, reducing and adding (26 estimated), the stated 15 min covered cook and the greens (3) = 44, rounded."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "One pan; the only care is adding the evaporated milk slowly so it does not split."
+      }
     },
     "shane-s-ribs": {
       "name": "Shane's Ribs",
@@ -662,7 +842,22 @@
           "phase": "cook",
           "working": "About a cup of slow-cooker liquid reduced to a thick sauce: 10–15 min."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "Ribs and sauce into the slow cooker."
+      },
+      "cook": {
+        "minutes": 505,
+        "source": "estimated",
+        "working": "Sauce on the stove (10, stated), the stated 8 hr slow cook and reducing the sauce (15) = 505, or 8 hr 25 min."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "Long, but hands-off."
+      }
     },
     "lamb-shanks": {
       "name": "Lamb Shanks",
@@ -710,7 +905,22 @@
           "phase": "cook",
           "working": "Stated by the recipe: \"Bake at 180°C for 2 hours.\" ⇒ 120 min. The braise, and the whole of the recipe's stated total."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "Shanks into the dish with the braise poured over (3), rounded."
+      },
+      "cook": {
+        "minutes": 135,
+        "source": "estimated",
+        "working": "Browning four shanks (10), bringing the braise to the boil (7) and the stated 2 hr bake = 137, rounded."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "Brown, pour, bake."
+      }
     },
     "slow-cooked-chicken-noodle-soup": {
       "name": "Slow-Cooked Chicken Noodle Soup",
@@ -737,7 +947,22 @@
           "phase": "cook",
           "working": "Dried noodles take 4–8 min; the packet governs, and it is not in this recipe."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 15,
+        "source": "estimated",
+        "working": "Not in the method: peeling and chopping the potatoes, carrots, onion and garlic."
+      },
+      "cook": {
+        "minutes": null,
+        "source": null,
+        "working": "Deliberately no number: the recipe says 'until tender' and never says low or high, which is 4 hr against 8. See the step's own working."
+      },
+      "difficulty": {
+        "value": "very-easy",
+        "source": "estimated",
+        "working": "Everything into the slow cooker."
+      }
     },
     "mussels": {
       "name": "Mussels",
@@ -764,7 +989,22 @@
           "phase": "cook",
           "working": "Stated by the recipe: \"Add the rinsed and scrubbed mussels and cook covered for 5 minutes, until the shells open.\" ⇒ 5 min. Stated — and the shells opening is the real test, which is why the number is safe to time."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 10,
+        "source": "estimated",
+        "working": "Not in the method: rinsing, scrubbing and debearding the mussels that step 1 assumes."
+      },
+      "cook": {
+        "minutes": 10,
+        "source": "estimated",
+        "working": "The wine and butter to a simmer (5) and the stated 5 min covered."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "Quick, but mussels need checking and any that stay shut thrown away."
+      }
     },
     "bbq-prawns": {
       "name": "BBQ Prawns",
@@ -798,7 +1038,22 @@
           "phase": "cook",
           "working": "Prawns take 2–3 min a side on a hot BBQ, turned once. The recipe's test is colour ('until golden brown') and colour governs — this number must not drive a timer."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 60,
+        "source": "estimated",
+        "working": "The stated 'at least an hour' marinating, taken at its lower bound."
+      },
+      "cook": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "2–3 min a side on a hot BBQ, turned once: 6 in the record, rounded."
+      },
+      "difficulty": {
+        "value": "very-easy",
+        "source": "estimated",
+        "working": "Marinate and grill."
+      }
     },
     "sticky-date-pudding": {
       "name": "Sticky Date Pudding",
@@ -846,7 +1101,22 @@
           "phase": "prep",
           "working": "Sauce poured over."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "Beating in the pudding ingredients and pouring the sauce over (6), rounded."
+      },
+      "cook": {
+        "minutes": 40,
+        "source": "estimated",
+        "working": "Softening the dates (8), the stated 25 min bake and the stated 5 min sauce boil = 38, rounded."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "A simple batter and a boiled sauce."
+      }
     },
     "chocolate-self-saucing-pudding": {
       "name": "Chocolate Self-Saucing Pudding",
@@ -901,7 +1171,22 @@
           "phase": "cook",
           "working": "Stated by the recipe: \"Bake at 180°C for 35 minutes, or until cooked through (try covering two-thirds of the dish with a lid).\" ⇒ 35 min. The bake, and the whole of the recipe's stated total."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 10,
+        "source": "estimated",
+        "working": "Beating, folding, spooning and pouring the boiling water (10); the oven heats alongside."
+      },
+      "cook": {
+        "minutes": 35,
+        "source": "stated",
+        "working": "Stated: 'Bake at 180°C for 35 minutes'."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "A family standby; the one trick is pouring the water over the back of a spoon."
+      }
     },
     "tiramisu": {
       "name": "Tiramisu",
@@ -970,7 +1255,22 @@
           "phase": "wait",
           "working": "Stated by the recipe: \"Chill for at least 3 hours, ideally overnight.\" ⇒ 180 min. 'At least 3 hours' — the lower bound, and the recipe itself prefers overnight."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 210,
+        "source": "estimated",
+        "working": "Assembly (27) and the stated 'at least 3 hours' chill = 207, rounded; the recipe prefers overnight."
+      },
+      "cook": {
+        "minutes": 10,
+        "source": "estimated",
+        "working": "The stated 'about 10 minutes' whisking over the water; the 2 min cool that follows is not heat."
+      },
+      "difficulty": {
+        "value": "medium",
+        "source": "estimated",
+        "working": "The yolks are whisked over simmering water and can scramble."
+      }
     },
     "pumpkin-pie": {
       "name": "Pumpkin Pie",
@@ -1025,7 +1325,22 @@
           "phase": "wait",
           "working": "A custard pie has to cool before it will cut; about an hour."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 65,
+        "source": "estimated",
+        "working": "Mixing the filling (6; the oven heats alongside) and cooling about an hour before it will cut = 66, rounded."
+      },
+      "cook": {
+        "minutes": 40,
+        "source": "stated",
+        "working": "Stated: 10 minutes at 220°C, then 'a further 30–40 minutes', taken at the lower bound = 40."
+      },
+      "difficulty": {
+        "value": "easy",
+        "source": "estimated",
+        "working": "A poured custard filling in a bought or ready shell."
+      }
     },
     "caramel-banana": {
       "name": "Caramel Banana",
@@ -1059,7 +1374,22 @@
           "phase": "cook",
           "working": "Stirred slowly until the sugar becomes a caramel: 3–4 min."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "Slicing the bananas while the pan warms (3), rounded."
+      },
+      "cook": {
+        "minutes": 10,
+        "source": "estimated",
+        "working": "Melting the sugar (5) and stirring to a caramel (4) = 9, rounded."
+      },
+      "difficulty": {
+        "value": "very-easy",
+        "source": "estimated",
+        "working": "Butter, sugar, banana, one pan."
+      }
     },
     "creamy-mushrooms": {
       "name": "Creamy Mushrooms",
@@ -1093,7 +1423,22 @@
           "phase": "cook",
           "working": "The cream reduces and thickens in 3–5 min; thickness is the test."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 5,
+        "source": "estimated",
+        "working": "Not in the method: slicing 200g of mushrooms and crushing garlic."
+      },
+      "cook": {
+        "minutes": 15,
+        "source": "estimated",
+        "working": "Softening (6), boiling (3) and thickening the cream (4) = 13, rounded."
+      },
+      "difficulty": {
+        "value": "very-easy",
+        "source": "estimated",
+        "working": "One pan."
+      }
     },
     "turkish-flatbread": {
       "name": "Turkish Flatbread",
@@ -1155,7 +1500,99 @@
           "phase": "prep",
           "working": "Wrapped in a tea towel to hold a soft crust."
         }
-      ]
+      ],
+      "prep": {
+        "minutes": 75,
+        "source": "estimated",
+        "working": "Mixing (7), the stated 1 hr rise, and shaping, seeding and wrapping (8) = 75."
+      },
+      "cook": {
+        "minutes": 15,
+        "source": "estimated",
+        "working": "The stated 12 min bake plus a further 5–8 min at the lower bound = 17, rounded."
+      },
+      "difficulty": {
+        "value": "medium",
+        "source": "estimated",
+        "working": "A very wet dough pressed out onto a tray at 250°C."
+      }
+    },
+    "chocolate-lava-cakes": {
+      "name": "Chocolate Lava Cakes",
+      "serves": 8,
+      "servesSource": "stated",
+      "servesWorking": "The source's structured data gives recipeYield 8, and the method greases 8 ramekins, one cake each.",
+      "yield": "8 cakes",
+      "yieldSource": "stated",
+      "timeTotal": 82,
+      "timeTotalSource": "stated",
+      "timeTotalWorking": "The source's own prepTime PT60M + cookTime PT22M = 82 min (read from the page's schema.org Recipe block). The 60 min of prep includes the stated 30 min in the freezer; the 22 min of cooking is the upper 15 min bake plus some of the stated 10 min cool.",
+      "steps": [
+        {
+          "index": 0,
+          "minutes": 12,
+          "source": "estimated",
+          "phase": "prep",
+          "working": "A domestic oven reaches 180°C in about 10–12 min; the 8 ramekins are greased and lined while it heats. Because the batter then freezes for 30 min, the oven only needs switching on towards the end of that rest, so this adds nothing to the elapsed total."
+        },
+        {
+          "index": 1,
+          "minutes": 4,
+          "source": "estimated",
+          "phase": "prep",
+          "working": "250g chocolate and 225g butter melted in short microwave bursts: about 3–4 bursts plus stirring. The stated '30-second bursts' is the burst length, not the step's duration."
+        },
+        {
+          "index": 2,
+          "minutes": 5,
+          "source": "estimated",
+          "phase": "prep",
+          "working": "6 eggs whisked with the sugar, the chocolate mixed in, the flour sifted and folded."
+        },
+        {
+          "index": 3,
+          "minutes": 30,
+          "source": "stated",
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Freeze for 30 minutes to rest.\" ⇒ 30 min. Filling 8 ramekins takes a couple of minutes more on top."
+        },
+        {
+          "index": 4,
+          "minutes": 12,
+          "source": "stated",
+          "phase": "cook",
+          "working": "Stated by the recipe: \"bake for 12–15 minutes\" ⇒ 12 min, the lower bound. Check the wobble at 12; the source warns that underdone cakes break when turned out."
+        },
+        {
+          "index": 5,
+          "minutes": 10,
+          "source": "stated",
+          "phase": "wait",
+          "working": "Stated by the recipe: \"Cool on a wire rack for 10 minutes\" ⇒ 10 min."
+        },
+        {
+          "index": 6,
+          "minutes": 1,
+          "source": "estimated",
+          "phase": "prep",
+          "working": "Plated with fruit and ice cream."
+        }
+      ],
+      "prep": {
+        "minutes": 60,
+        "source": "stated",
+        "working": "Stated by the source page: 'Prep time 1 hour' (schema.org prepTime PT60M). It includes the 30 min in the freezer."
+      },
+      "cook": {
+        "minutes": 22,
+        "source": "stated",
+        "working": "Stated by the source page: 'Cook time 22 minutes' (cookTime PT22M). Longer than the 12–15 min bake in the method; the source does not say what the rest is."
+      },
+      "difficulty": {
+        "value": "very-easy",
+        "source": "stated",
+        "working": "Stated by the source page: 'Difficulty: Very Easy'. The hard part is judging when the centre is ready."
+      }
     }
   }
 }

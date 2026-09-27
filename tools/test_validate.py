@@ -216,6 +216,14 @@ CASES = {
         ),
         "clean", None,
     ),
+    # --- the recipe stats panel (ADR 0125) ---------------------------------
+    # The panel's promise is that our estimate never reaches the page bare, and
+    # `estimated` is the label that carries it. A label naming a field the dish
+    # does not carry would mark nothing and let the real estimate show unmarked.
+    "prepMinutes is prose": (lambda d: _first_item(d).update(prepMinutes="20 min"), "error", r"prepMinutes for .* must be a whole number of minutes"),
+    "difficulty off the scale": (lambda d: _first_item(d).update(difficulty="fiendish"), "error", r"difficulty 'fiendish' on .* is not one of"),
+    "estimated names an absent field": (lambda d: _first_item(d).update(estimated=["cookMinutes"]), "error", r"estimated on .* names 'cookMinutes', which the dish does not carry"),
+    "estimated names a field that cannot be estimated": (lambda d: _first_item(d).update(price=5, estimated=["price"]), "error", r"estimated on .* names 'price', which is not one of"),
     # --- values, not just types (the class the first run found a hole in) --
     "negative price": (lambda d: _first_item(d).update(price=-5), "error", r'price for .* must not be negative'),
     # --- unknown keys on the four objects a transcriber types into ---------

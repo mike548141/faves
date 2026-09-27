@@ -8,6 +8,17 @@ content freshness separately from this file.
 
 ## [Unreleased]
 
+### Added
+- **Recipe pages look like a recipe site now.** A photo at the top (beside the
+  title on a wide screen), then a panel with **Prep · Cook · Serves ·
+  Difficulty**. On a wide screen the ingredients sit in a column beside the
+  method. Every recipe has the panel. Where a number is our estimate rather
+  than the recipe's it says **est.**, and the list says "Serves about 4".
+- **Chocolate Lava Cakes in Cook at Home**, adapted from Whittaker's and
+  credited on the recipe page, with Whittaker's own photo. The cakes warn about
+  soy, peanuts and nuts, from the chocolate's own label. B's Dope-As Brownie
+  uses the same chocolate and now carries the same nut warnings.
+
 ### Fixed
 - **67 pizzas, burgers and sandwiches now warn about gluten.** A shop that
   prints **Pizza** over a list of pizzas has told you what the dough is, and

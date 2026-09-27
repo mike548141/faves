@@ -4615,14 +4615,93 @@ body.faves-view .to-top {
   color: var(--ink-soft);
   margin: var(--space-2) 0;
 }
+/* The recipe page's hero and body (ADR 0125), after the owner's reference: the
+   Whittaker's recipe page. The DOM is the phone's reading order — photo, title,
+   stats, description, tags, controls, ingredients, method — and the wide layout
+   is a grid laid over it, so a keyboard or screen-reader reader meets things in
+   the same order at every width. */
 .recipe-photo {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius);
-  margin: var(--space-3) 0;
+  margin-bottom: var(--space-3);
   background: var(--surface-2);
+}
+/* Prep · Cook · Serves · Difficulty. Two by two on a phone, one row of four
+   from 36rem. Explicit counts rather than `auto-fit`: auto-fit gave three and
+   an orphan at both 390 and 1280 px, which reads as a missing cell. */
+.recipe-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-3);
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+@media (min-width: 36rem) {
+  .recipe-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.recipe-stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+.recipe-stat-value {
+  margin: 0.15em 0 0;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+/* The estimate marker is WORDS, not a tint (WCAG 1.4.1) — the key line below
+   the panel says what they mean. */
+.recipe-stat-est,
+.recipe-stats-key {
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+  font-style: italic;
+}
+.recipe-stats-key {
+  margin-top: var(--space-1);
+}
+/* The goes-with chips sit after both columns, across the full width. */
+.recipe-columns > .dish-pairs {
+  grid-column: 1 / -1;
+}
+/* Wide: photo beside the title block, and the ingredients as a column beside
+   the method. 60rem is the breakpoint the rest of the app already turns on
+   (the filter row), and the width at which the `.wrap` column stops growing,
+   so both columns have room here and nowhere narrower. Fractions, not a fixed
+   sidebar width: a fixed rem sidebar at large text would crush the method,
+   where a third of the column scales with it. */
+@media (min-width: 60rem) {
+  .recipe-hero.has-photo {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+  .recipe-hero.has-photo .recipe-photo {
+    aspect-ratio: 1 / 1;
+    margin-bottom: 0;
+  }
+  .recipe-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+  /* No rule is needed to keep the side column's ingredients to ONE column:
+     37d's split asks for 16rem columns, and a third of the 60rem wrap is
+     narrower than two of them, so `column-width` declines the second column
+     by itself. An override written here was break-probed and shown to change
+     nothing; recipe_check asserts the outcome instead. */
 }
 .recipe-detail-page .dish-tags {
   margin-top: var(--space-3);

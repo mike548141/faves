@@ -1598,3 +1598,13 @@ deliberation those compact docs omit.
   is **asserted**, not reasoned about (the sweep has leaked twice). 🛑 One
   break-probe made `recipe_check` **abort instead of report**, because Clear
   correctly hides on an empty list; the guard that fixes it is in the check.
+- [0125](0125-the-recipe-page-leads-with-a-photo-and-a-stats-panel.md) — **the
+  recipe page leads with a photo and a stats panel, and the ingredients stand
+  beside the method.** After the owner's reference page (Whittaker's). The DOM
+  keeps the phone's reading order and a 60rem grid lays photo beside title and
+  ingredients beside method in fractions, not a fixed sidebar. Four payload
+  fields (`prepMinutes`, `cookMinutes`, `difficulty`, `estimated`), each
+  rendered. Our estimates print **`est.` in words**, and the list says "Serves
+  about 4". `recipe_estimates --check` fails when payload and record disagree
+  on a value or on whether it is ours. `recipe_check` moves 37d to 900 px and
+  adds nine side-column and labelling assertions, two of them break-probed.

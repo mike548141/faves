@@ -109,6 +109,7 @@ import { SCALES, scaleFor, scaleLineStatus } from "../site/js/quantity.js";
 // expectation hand-typed here would only prove the tool and the page agreed on
 // the day it was written.
 import { recipeLines } from "../site/js/shopping.js";
+import { recipeStats } from "../site/js/recipe-stats.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -119,21 +120,27 @@ const COLLECTION = "cook-at-home";
 // depends on the laptop it ran on gets switched off within a week
 // (branch_check.mjs's header, and the same reason it refuses to read the clock).
 const NARROW = 390; // the design target (CLAUDE.md)
-const WIDE = 1100; // comfortably past the 45rem two-column breakpoint
+// Two wide widths since ADR 0125, because there are now two wide LAYOUTS. MID
+// sits between the 45rem two-column ingredient split and the 60rem side column,
+// so 37d's claims are measured where 37d still governs; at 900px a 24px-text
+// reader still has room for two 16rem columns and a 32px one does not, which
+// is what the column-width guard needs. WIDE is the side-column layout.
+const MID = 900;
+const WIDE = 1280;
 const HEIGHT = 844;
 
 // The number of assertions a COMPLETE run makes. Checked at the end, so the
 // summary line cannot be reached by a run that fell out of the middle: this
 // repo has shipped a wall of PASS lines followed by a harness error and no
 // verdict more than once (sync_check.mjs, still). Add an assertion, bump this.
-const EXPECTED_ASSERTIONS = 39;
+const EXPECTED_ASSERTIONS = 48;
 
 const HELP = `Faves recipe-page check — verify the ingredient list's layout in a real browser.
 
   node tools/recipe_check.mjs [options]
 
 Serves site/ locally, launches Google Chrome headless on a throwaway profile,
-and measures the recipe page at two explicit widths and two text sizes:
+and measures the recipe page at three explicit widths and two text sizes:
 
   · components render as real headings and no ingredient line is lost (37l)
   · the fold is remembered across a real page load (37c)
@@ -141,6 +148,8 @@ and measures the recipe page at two explicit widths and two text sizes:
   · a wrapped step's number sits beside its FIRST line, measured off the
     pseudo-element's own box over the DevTools protocol (37m)
   · two columns only where a second fits, and only on a list of six or more (37d)
+  · the hero and side column: photo beside the title, ingredients beside the
+    method, and every estimated stat marked "est." in words (ADR 0125)
   · the shopping list: reachable with the ingredients folded away, says when it
     disagrees with the scale on screen, updates without lying about what is
     already in the trolley, and can be emptied (17e)
@@ -357,6 +366,13 @@ async function run(opts) {
     (i) => ingredientCount(i.ingredients) > 0 && count(i, "double", "scaled") === 0
   );
 
+  // ADR 0125's fixtures. A recipe WITH a photo (the hero's two-column claim is
+  // only testable on one), and the grouped fixture as the no-photo control —
+  // asserted to have none, so a photo added to it later fails loudly rather
+  // than quietly turning the control into a second copy of the case.
+  const photoFixture = items.find((i) => i.image);
+  const estimatedFixture = items.find((i) => !i.image && recipeStats(i).some((c) => c.estimated));
+
   const { server, port } = await startServer(opts.port, SITE);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-recipe-check-"));
   let chrome = null;
@@ -374,7 +390,7 @@ async function run(opts) {
     console.log(`  blocked  ${blockedFixture.name} (${count(blockedFixture, "half", "blocked")} refused at ½×,` +
       ` ${count(blockedFixture, "half", "scaled")} scaled)`);
     console.log(`  none     ${unscalableFixture ? unscalableFixture.name : "— no fixture in corpus"}`);
-    console.log(`  widths   ${NARROW}px and ${WIDE}px, set explicitly`);
+    console.log(`  widths   ${NARROW}px, ${MID}px and ${WIDE}px, set explicitly`);
     console.log(`  profile  ${profileDir} (fresh — no service worker, no storage)\n`);
 
     chrome = await launchChrome({ profileDir, headed: opts.headed, width: NARROW, height: HEIGHT });
@@ -541,7 +557,10 @@ async function run(opts) {
     // --- 3. The two tick columns share a left edge (37m, horizontal) ------
     // Measured at BOTH widths. The gutter is the fix; a gutter that only
     // survives at the width someone happened to look at is not a fix.
-    for (const width of [NARROW, WIDE]) {
+    // NARROW and MID, not WIDE: from 60rem the ingredients stand in a column
+    // BESIDE the method (ADR 0125), so a shared left edge is no longer the
+    // promise there — the side-column assertions in section 9 are.
+    for (const width of [NARROW, MID]) {
       await size(width);
       const s = await layout();
       const gap = Math.abs(s.ingTickLeft - s.methodTickLeft);
@@ -644,18 +663,18 @@ async function run(opts) {
         ` · document overflow ${narrow.docOverflow}px`
     );
 
-    await size(WIDE);
+    await size(MID);
     const wide = await layout();
     const wideLong = long(wide);
     const wideShort = short(wide);
     report.check(
-      `${WIDE}px: a list of six or more splits into two columns`,
+      `${MID}px: a list of six or more splits into two columns`,
       wideLong.lines >= 6 && wideLong.cols === 2,
       `${wideLong.lines} lines → ${wideLong.cols} column(s) at x=${wideLong.lefts.join("/")} ` +
         `in a ${wideLong.width}px list`
     );
     report.check(
-      `${WIDE}px: …while a list of under six stays one column, in the same container`,
+      `${MID}px: …while a list of under six stays one column, in the same container`,
       wideShort.lines < 6 && wideShort.cols === 1,
       `“${wideShort.component ?? "(unnamed)"}”: ${wideShort.lines} lines → ${wideShort.cols} column(s) ` +
         `at x=${wideShort.lefts.join("/")} in a ${wideShort.width}px list`
@@ -665,10 +684,10 @@ async function run(opts) {
     // a grouped one — a rule that only ever fires on the second block of a
     // grouped recipe would pass the assertion above and still be wrong.
     await goto(url(shortFixture));
-    await size(WIDE);
+    await size(MID);
     const shortWide = await layout();
     report.check(
-      `${WIDE}px: a whole recipe with a short list stays one column too`,
+      `${MID}px: a whole recipe with a short list stays one column too`,
       shortWide.lists.length === 1 &&
         shortWide.lists[0].lines < 6 &&
         shortWide.lists[0].cols === 1,
@@ -682,11 +701,11 @@ async function run(opts) {
     // ONE column back rather than two columns of four characters. Same width,
     // same list, only the text size moved.
     await goto(url(groupFixture));
-    await size(WIDE);
+    await size(MID);
     await rootFont(24);
     const big = await layout();
     report.check(
-      `${WIDE}px at 24px text: two columns still fit, so the reader still gets them`,
+      `${MID}px at 24px text: two columns still fit, so the reader still gets them`,
       long(big).cols === 2,
       `root ${big.rootFontSize}: ${long(big).lines} lines → ${long(big).cols} column(s) ` +
         `in a ${long(big).width}px list`
@@ -694,7 +713,7 @@ async function run(opts) {
     await rootFont(32);
     const huge = await layout();
     report.check(
-      `${WIDE}px at 32px text: a second column no longer fits, so the list goes back to one`,
+      `${MID}px at 32px text: a second column no longer fits, so the list goes back to one`,
       long(huge).cols === 1 && huge.docOverflow <= 0,
       `root ${huge.rootFontSize}: ${long(huge).lines} lines → ${long(huge).cols} column(s) ` +
         `in a ${long(huge).width}px list · document overflow ${huge.docOverflow}px`
@@ -1057,6 +1076,126 @@ async function run(opts) {
       `faves.order.v1 holds ${tally.stored} line(s) · the order button reads “${tally.fab}” ` +
         `(hidden=${tally.hidden})`
     );
+
+    // --- 9. The hero and the side column (ADR 0125) -----------------------
+    //
+    // The owner's reference layout: photo beside the title block, a stats panel
+    // (Prep · Cook · Serves · Difficulty), and the ingredients as a column
+    // beside the method. Everything is measured off rendered boxes at WIDE and
+    // NARROW. What the stats panel may never do is show OUR number bare, so the
+    // estimate marks are counted against the module's own verdict on the data.
+    const HERO = `(() => {
+      const box = (el) => {
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return { left: Math.round(r.left), right: Math.round(r.right), top: Math.round(r.top + scrollY), bottom: Math.round(r.bottom + scrollY), width: Math.round(r.width) };
+      };
+      const img = document.querySelector(".recipe-hero .recipe-photo");
+      const cells = [...document.querySelectorAll(".recipe-stats .recipe-stat")];
+      return {
+        photo: box(img),
+        photoLoaded: !!img && img.complete && img.naturalWidth > 0,
+        title: box(document.querySelector(".recipe-hero .menu-title")),
+        ingHead: box(document.querySelector(".recipe-ingredients .recipe-head")),
+        methodHead: box(document.querySelector(".recipe-method .recipe-head")),
+        ingredients: box(document.querySelector(".recipe-ingredients")),
+        method: box(document.querySelector(".recipe-method")),
+        cells: cells.map((c) => ({
+          label: c.querySelector("dt")?.textContent,
+          value: c.querySelector("dd")?.firstChild?.textContent,
+          est: !!c.querySelector(".recipe-stat-est"),
+          left: Math.round(c.getBoundingClientRect().left),
+        })),
+        key: !!document.querySelector(".recipe-stats-key"),
+        docOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      };
+    })()`;
+    const hero = () => evalPage(HERO);
+    const statsAgree = (h, item) => {
+      const want = recipeStats(item);
+      return (
+        h.cells.length === want.length &&
+        want.every((c, k) => h.cells[k].label === c.label && h.cells[k].value === c.value && h.cells[k].est === c.estimated) &&
+        h.key === want.some((c) => c.estimated)
+      );
+    };
+    const cellText = (h) => h.cells.map((c) => `${c.label} ${c.value}${c.est ? " est." : ""}`).join(" · ") + (h.key ? " + key line" : "");
+
+    await rootFont(16);
+    if (!photoFixture) {
+      for (const label of ["WIDE photo beside title", "photo loaded", "NARROW photo above title"]) {
+        report.check(`${label}: NOT PROVEN — no recipe in the corpus carries a photo`, false, "no fixture");
+      }
+    } else {
+      await goto(url(photoFixture));
+      await size(WIDE);
+      const hw = await hero();
+      report.check(
+        `${WIDE}px: the photo stands BESIDE the title block, the title to its right`,
+        !!hw.photo && !!hw.title && hw.title.left >= hw.photo.right && hw.title.top < hw.photo.bottom,
+        `“${photoFixture.name}”: photo x ${hw.photo?.left}–${hw.photo?.right}, title at x ${hw.title?.left} y ${hw.title?.top}`
+      );
+      report.check(
+        "the photo actually loads — a hero with a broken image is worse than none",
+        hw.photoLoaded,
+        `${photoFixture.image} · complete+naturalWidth: ${hw.photoLoaded}`
+      );
+      report.check(
+        `${WIDE}px: a recipe whose numbers are all the recipe's own shows no "est." and no key line`,
+        statsAgree(hw, photoFixture) && !hw.cells.some((c) => c.est),
+        cellText(hw)
+      );
+      await size(NARROW);
+      const hn = await hero();
+      report.check(
+        `${NARROW}px: the photo leads, full width, above the title — and nothing scrolls sideways`,
+        !!hn.photo && !!hn.title && hn.photo.bottom <= hn.title.top && hn.docOverflow <= 0,
+        `photo y ${hn.photo?.top}–${hn.photo?.bottom} (${hn.photo?.width}px wide), title y ${hn.title?.top} · overflow ${hn.docOverflow}px`
+      );
+    }
+
+    // The no-photo control, and the estimate labelling.
+    await goto(url(groupFixture));
+    await size(WIDE);
+    const g9 = await hero();
+    report.check(
+      `${WIDE}px: a recipe with no photo draws no image box, and its title starts at the column's edge`,
+      !groupFixture.image && !g9.photo && !!g9.title && !!g9.ingredients && Math.abs(g9.title.left - g9.ingredients.left) <= 1,
+      `“${groupFixture.name}”: title x ${g9.title?.left}, ingredients x ${g9.ingredients?.left}`
+    );
+    report.check(
+      `${WIDE}px: the ingredients stand BESIDE the method, their headings level`,
+      !!g9.ingredients && !!g9.method && g9.ingredients.right <= g9.method.left &&
+        !!g9.ingHead && !!g9.methodHead && Math.abs(g9.ingHead.top - g9.methodHead.top) <= 2,
+      `ingredients x ${g9.ingredients?.left}–${g9.ingredients?.right}, method from x ${g9.method?.left} · ` +
+        `headings at y ${g9.ingHead?.top} / ${g9.methodHead?.top}`
+    );
+    const g9l = await layout();
+    report.check(
+      `${WIDE}px: in the side column every ingredient list is ONE column, long ones included`,
+      g9l.lists.length > 0 && g9l.lists.every((l) => l.cols === 1) && g9l.lists.some((l) => l.lines >= 6),
+      g9l.lists.map((l) => `${l.lines} lines → ${l.cols} column(s)`).join(" | ")
+    );
+    if (!estimatedFixture) {
+      report.check("an estimated value is marked est.: NOT PROVEN — no fixture", false, "no fixture");
+      report.check("the stats panel is two by two on a phone: NOT PROVEN — no fixture", false, "no fixture");
+    } else {
+      await goto(url(estimatedFixture));
+      await size(WIDE);
+      const he = await hero();
+      report.check(
+        "every value the recipe did not give carries \"est.\" in words, and the key line says what that means",
+        statsAgree(he, estimatedFixture) && he.cells.some((c) => c.est) && he.key,
+        `“${estimatedFixture.name}”: ${cellText(he)}`
+      );
+      await size(NARROW);
+      const hp = await hero();
+      report.check(
+        `${NARROW}px: a four-cell stats panel is two by two — no orphan cell`,
+        hp.cells.length !== 4 || new Set(hp.cells.map((c) => c.left)).size === 2,
+        `${hp.cells.length} cells at x ${[...new Set(hp.cells.map((c) => c.left))].join("/")}`
+      );
+    }
 
     report.check(
       "no uncaught page exception anywhere in the run",

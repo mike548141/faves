@@ -321,7 +321,7 @@ test("cook-at-home: only the °C steps change, and every one of them converts", 
     assert.equal(strip(before), strip(after), `${path} lost or gained words`);
   }
 
-  assert.equal(changed.length, 14, "the collection's 14 oven temperatures");
+  assert.equal(changed.length, 15, "the collection's 15 oven temperatures");
 });
 
 // --- widenDialTo (ADR 0091) -----------------------------------------------

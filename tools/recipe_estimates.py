@@ -56,6 +56,8 @@ VENUES = ROOT / "site" / "data" / "restaurants"
 ESTIMATES = ROOT / "data" / "estimates" / "recipes.json"
 
 SOURCES = {"stated", "estimated"}
+# The stats panel's difficulty scale (ADR 0125), the same closed set validate.py holds.
+DIFFICULTY = {"very-easy", "easy", "medium", "challenging"}
 PHASES = {"prep", "cook", "wait"}
 
 UNIT_MINUTES = {"sec": 1 / 60, "second": 1 / 60, "min": 1, "minute": 1, "hr": 60, "hour": 60}
@@ -183,21 +185,68 @@ def check_recipe(errs, dish_id, item, rec):
         check_step(errs, dish_id, item, index, est)
 
     # serves: the payload's own value wins, always. 36c's ruling was to estimate
-    # what is missing, never to restate what the data already knows.
+    # what is missing, never to restate what the data already knows. Since ADR
+    # 0125 the payload ALSO carries our estimate, marked in its `estimated`
+    # list, so a payload serves is the recipe's own unless that list says
+    # otherwise, and the record must agree about which it is.
     serves, source = rec.get("serves"), rec.get("servesSource")
     stated = item.get("serves")
+    payload_est = set(item.get("estimated") or [])
     if serves is None:
         if source is not None:
             errs.append((False, f"{dish_id}: serves is null so servesSource must be null, not {source!r}"))
     elif source not in SOURCES:
         errs.append((False, f"{dish_id}: servesSource {source!r} is not one of {sorted(SOURCES)}"))
-    if stated is not None and (source != "stated" or serves != stated):
+    want = "estimated" if "serves" in payload_est else "stated"
+    if stated is not None and (source != want or serves != stated):
         errs.append((
             False,
-            f"{dish_id}: the recipe states serves {stated}; the record says {serves!r} ({source!r})",
+            f"{dish_id}: the recipe shows serves {stated} as {want}; the record says {serves!r} ({source!r})",
         ))
     if stated is None and source == "stated":
         errs.append((False, f"{dish_id}: servesSource is stated, but the recipe has no serves field"))
+    if stated is None and serves is not None:
+        errs.append((False, f"{dish_id}: the record sizes this at {serves} but the recipe page would show no serves (ADR 0125)"))
+
+    # The stats panel's other three cells (ADR 0125). The record holds the number
+    # AND its working; the payload holds the number and whether it is ours. They
+    # must agree on both, or the page shows a value this file cannot explain, or
+    # shows our guess without its "est.".
+    for block, field in (("prep", "prepMinutes"), ("cook", "cookMinutes")):
+        b = rec.get(block)
+        if not isinstance(b, dict):
+            errs.append((False, f"{dish_id}: no `{block}` block; every recipe carries one since ADR 0125"))
+            continue
+        minutes, bsource = b.get("minutes"), b.get("source")
+        if not (b.get("working") or "").strip():
+            errs.append((False, f"{dish_id}: {block} with no working, even for a null"))
+        if minutes is None:
+            if bsource is not None:
+                errs.append((False, f"{dish_id}: {block} minutes is null so its source must be null, not {bsource!r}"))
+        elif not isinstance(minutes, int) or isinstance(minutes, bool) or minutes <= 0:
+            errs.append((False, f"{dish_id}: {block} minutes {minutes!r} is not a positive whole number"))
+        elif bsource not in SOURCES:
+            errs.append((False, f"{dish_id}: {block} source {bsource!r} is not one of {sorted(SOURCES)}"))
+        if item.get(field) != minutes:
+            errs.append((False, f"{dish_id}: the recipe's {field} is {item.get(field)!r}, the record says {minutes!r}"))
+        if minutes is not None and (field in payload_est) != (bsource == "estimated"):
+            marks = "marks" if field in payload_est else "does not mark"
+            errs.append((False, f"{dish_id}: {field} is {bsource} in the record but the recipe {marks} it estimated"))
+    d = rec.get("difficulty")
+    if not isinstance(d, dict):
+        errs.append((False, f"{dish_id}: no `difficulty` block; every recipe carries one since ADR 0125"))
+    else:
+        if d.get("value") not in DIFFICULTY:
+            errs.append((False, f"{dish_id}: difficulty {d.get('value')!r} is not one of {sorted(DIFFICULTY)}"))
+        if d.get("source") not in SOURCES:
+            errs.append((False, f"{dish_id}: difficulty source {d.get('source')!r} is not one of {sorted(SOURCES)}"))
+        if not (d.get("working") or "").strip():
+            errs.append((False, f"{dish_id}: difficulty with no working"))
+        if item.get("difficulty") != d.get("value"):
+            errs.append((False, f"{dish_id}: the recipe's difficulty is {item.get('difficulty')!r}, the record says {d.get('value')!r}"))
+        if ("difficulty" in payload_est) != (d.get("source") == "estimated"):
+            marks = "marks" if "difficulty" in payload_est else "does not mark"
+            errs.append((False, f"{dish_id}: difficulty is {d.get('source')} in the record but the recipe {marks} it estimated"))
     if serves is not None and not (rec.get("servesWorking") or "").strip():
         errs.append((False, f"{dish_id}: serves {serves} with no working"))
 
