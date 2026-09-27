@@ -777,9 +777,11 @@ node tools/precache_check.mjs # the service worker's install guard and the
                               # a separate target), and its own probe caught it
                               # doing nothing while everything else stayed green
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
-                              # Reaches its end: "OK — 16 passed, 0 failed". Check the
-                              # summary line is there AND that N is still 16 — a
-                              # shrunken N is the tell. A harness abort exits 2 and
+                              # Reaches its end: "OK — 22 passed, 0 failed". Check the
+                              # summary line is there AND that N is still 22 — a
+                              # shrunken N is the tell. (It read 16 until 2026-09-28,
+                              # six short since e95bbac added ADR 0118's assertions
+                              # on 2026-09-20 — measured 22 at b6b9bc9.) A harness abort exits 2 and
                               # prints no "FAIL" line, so it does not look like a
                               # failure; if it aborts, the message now names which
                               # Settings navigation step broke — fix the NAV block in
