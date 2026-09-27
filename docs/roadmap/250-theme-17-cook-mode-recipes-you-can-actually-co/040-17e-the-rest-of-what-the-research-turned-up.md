@@ -1,4 +1,4 @@
-- [ ] **17e — The rest of what the research turned up**
+- [~] **17e — The rest of what the research turned up**
       📌 **CLAIM RELEASED 2026-09-24 (session `3e87e0bf`).** The shopping-list
       bullet is shipped and struck below; **personal notes** and
       **substitutions** are untouched and still owed, so the bracket stays
@@ -43,6 +43,9 @@
   by audit: `search.js buildIndex()` folds `item.ingredients` into the haystack
   (*"so 'lemon' finds the pasta"*), mirroring the menu screen, covered by
   `tests/search.test.js`, and reaching all 24 ingredient-bearing dishes:
+  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — the PERSONAL NOTES bullet only.
+  Substitutions stay open: owner-authored content, never generated.
+  (claimed 2026-09-27-1432, wt: faves-recipe-notes)
   - **Tick off ingredients and steps as you go** — a checklist with state that
     survives a phone call. Cheap, and every app tested has it.
   - ~~**Ingredient-first search** — "what can I make with mince and a lemon?".

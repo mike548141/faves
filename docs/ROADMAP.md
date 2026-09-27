@@ -184,7 +184,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [17a — Serves, and scaling it](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/010-17a-serves-and-scaling-it.md)
 - ✅ [17b — Step timings and a tap-to-start timer](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/020-17b-step-timings-and-a-tap-to-start-timer.md)
 - [ ] [17c — Quantities inside the step](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/030-17c-quantities-inside-the-step.md)
-- [ ] [17e — The rest of what the research turned up](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/040-17e-the-rest-of-what-the-research-turned-up.md)
+- [~] [17e — The rest of what the research turned up](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/040-17e-the-rest-of-what-the-research-turned-up.md)
 - ✅ [SHIPPED — cook mode carries the reader's scale](roadmap/250-theme-17-cook-mode-recipes-you-can-actually-co/050-cook-mode-ignores-the-recipe-page-s-scale.md)
 
 ## Theme 18 — Metric or imperial, the reader's choice (owner-raised 2026-08-09)
@@ -266,7 +266,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ [🚩 A browser check that names an element by id is only as durable as](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/070-a-browser-check-that-names-an-element-by-id-is.md)
 - ✅ [The data gates accept what their own comments say they reject](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/080-the-data-gates-accept-what-their-own-comments-forbid.md)
 - ✅ [The decision records have drifted from the decisions](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/090-the-decision-records-have-drifted-from-the-decisions.md)
-- [ ] [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
+- [~] [Every guard here must declare: cheap failure, or forbid the act?](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/100-every-guard-here-must-declare-cheap-failure-or-forbid.md)
 - ✅ [📤 FILED UPSTREAM — the board's state vocabulary is atelier's, and…](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/110-the-board-cannot-say-decided-not-to-do.md)
 - [ ] 🛑 [cook_check wedges on its DEFAULT recipe, deterministically, and it](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/120-cook-check-wedges-on-its-default-recipe.md)
 - ✅ [✅ DONE 2026-08-17 (436041d) — the job is now repo invariants, and](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/130-the-guard-job-name-cannot-be-fixed-alone.md)

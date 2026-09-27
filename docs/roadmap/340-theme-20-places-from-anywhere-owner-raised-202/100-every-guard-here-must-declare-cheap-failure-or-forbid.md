@@ -1,4 +1,4 @@
-- [ ] **Every guard here must declare: cheap failure, or forbid the act?**
+- [~] **Every guard here must declare: cheap failure, or forbid the act?**
   `[M][docs]` — arrived 2026-08-17 with the `atelier@e2fddc5` pin. Atelier's
   `GUARDS.md` gained a **fourth requirement** beside *narrow, noisy, reasoned*
   (owner's ruling, 2026-08-17), from `PRINCIPLES.md` §10 *Posture*: **engineer
@@ -8,6 +8,8 @@
   survivable; the cost is building the recovery) or *forbids the act* (the bad
   event is prevented by removing the ability; the cost is freedom of action,
   permanently). **Both are legitimate. The defect is not declaring which.**
+  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — declarations in their own document.
+  (claimed 2026-09-27-1432, wt: faves-guard-postures)
 
   🔑 **Why the declaration is not paperwork.** Every guard here already carries a
   reason, and a reason with no standard behind it is a sentence; the same reason
