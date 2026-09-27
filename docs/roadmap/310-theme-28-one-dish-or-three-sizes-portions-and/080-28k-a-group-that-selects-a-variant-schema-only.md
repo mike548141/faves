@@ -1,8 +1,11 @@
-- [ ] **28k — A group that SELECTS a variant: schema only, no data migrated**
+- [~] **28k — A group that SELECTS a variant: schema only, no data migrated**
       `[M][schema]` — `490/050` option (a), which the owner's ruling of
       2026-09-09 adopts in substance. Add `kind: "adds" | "selects"` to
       `record.addOnGroups` (ADR 0048 §1's shape), teach `validate.py` about it,
       and stop there. **Not one venue file changes in this item.**
+  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — 28k and 28s together,
+  one worker, because 28s must land with 28k.
+  (claimed 2026-09-27-1422, wt: faves-28ks)
 
   **What `selects` means, and it is three rules, not one.**
   1. **It chooses a variant instead of adding to the plate**, so it is
