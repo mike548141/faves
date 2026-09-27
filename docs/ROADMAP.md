@@ -68,7 +68,8 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - ✅ 🎯 [Two allergen decisions the tagger cannot take: reading image alt,](roadmap/080-theme-4-content-growth-ongoing-in-parallel/210-mcdonalds-alt-text-and-two-false-gluten-tags.md)
 - [ ] [🚩 Three allergen findings the caption sweep turned up, none of them](roadmap/080-theme-4-content-growth-ongoing-in-parallel/220-three-allergen-findings-the-alt-tier-sweep-turned-up.md)
 - [ ] 🎯 [Which of the remaining 47 venues deliver?](roadmap/080-theme-4-content-growth-ongoing-in-parallel/230-which-of-the-remaining-47-venues-deliver.md)
-- [ ] 🎯 [A photo for every item, eventually — OWNER GOAL 2026-09-28, not a](roadmap/080-theme-4-content-growth-ongoing-in-parallel/240-a-photo-for-every-item-owner-goal.md)
+- [ ] [A photo for every item, eventually — OWNER GOAL 2026-09-28, not a](roadmap/080-theme-4-content-growth-ongoing-in-parallel/240-a-photo-for-every-item-owner-goal.md)
+- [ ] 🔎 [Nine Simmer photographs dropped into intake/ on 2026-09-09 were](roadmap/080-theme-4-content-growth-ongoing-in-parallel/250-nine-simmer-photos-never-read.md)
 
 ## Theme 4b — Meals vs dishes: pairings & "goes with"
 

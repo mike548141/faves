@@ -17,6 +17,14 @@
   ruled on "68 files"; `intake/` holds **410** (236 carrying GPS), and the
   measured cost of committing them stripped is **≈1.84 GB, permanently** —
   stripping saves under 5%. Six are refused outright (4 PDF, 2 HEIC).
+  🎯 **OWNER REPLY 2026-09-28, re-briefed on the 1.84 GB:** *"I've already
+  answered this question."* Read as: the 2026-09-09 ruling stands, commit
+  ALL 404 stripped files, now informed of the size. **Confirm that reading
+  in one line before executing** — it is irreversible on a public repo, and
+  the reply could also mean his earlier "help me understand" answer.
+  The stripped copies wait in the gitignored `evidence-stripped/` (406
+  files, 1.7 GB), kept OUT of `intake/` so the intake tools do not read
+  them as new evidence.
 
   ✅ **DELIVERED 2026-09-09 (session faves-o1)** — the tool and the guard, with
   [ADR 0107]. 🛑 **Left OPEN deliberately: two parts of his ask are not met**,

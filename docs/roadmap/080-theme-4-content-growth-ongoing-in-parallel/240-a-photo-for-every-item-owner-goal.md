@@ -1,4 +1,4 @@
-- [ ] 🎯 **A photo for every item, eventually — OWNER GOAL 2026-09-28, not a
+- [ ] **A photo for every item, eventually — OWNER GOAL 2026-09-28, not a
   build order** `[XL][content]` — said while answering 340/250's import
   question: *"I do want photos in the app for every item eventually."*
   Recorded as a direction. Nothing here is claimable until he says how
@@ -34,3 +34,9 @@
   (ADR 0053's rules), or both. Every other design choice follows from
   that. ADR 0047's precache test (name the screen that renders it) and
   ADR 0128's location gate already apply to anything added under `site/img/`.
+
+  ✅ **OWNER RULED 2026-09-28 (via AskUserQuestion): VENUE IMAGES ONLY.** A
+  dish photo comes from the venue's own published images, under ADR 0053's
+  rules with a provenance row, never from his own photos. Expect coverage to
+  stay low where small venues publish few photos. The goal is now buildable
+  venue by venue, but it is still a direction, not a claimed sweep.

@@ -13,6 +13,12 @@ package-lock.json
 *.token
 tools/.cf-token
 
+# Location-stripped copies of intake/ written by tools/strip_exif.py (ADR
+# 0128), kept OUTSIDE intake/ on purpose: the intake tools scan that folder
+# and `menu-sources.json --rebuild` would read a second, GPS-free copy of
+# every photo as new evidence. Held until 340/250 part 4 decides the import.
+evidence-stripped/
+
 # Raw menu scans, board photos and Notes exports — transcribed into
 # site/data, never shipped. Keep the folder structure + README; ignore
 # the drops themselves.
