@@ -20,6 +20,7 @@ import {
   needsDecision,
   CONFLICT_DIET,
   CONFLICT_RATING,
+  CONFLICT_NOTE,
   CONFLICT_SETTING,
   CONFLICT_PROFILE_IDENTITY,
 } from "../site/js/sync-merge.js";
@@ -120,14 +121,42 @@ test("tieBreak is symmetric for every type it handles", () => {
 });
 
 test("mergePersonal is symmetric across the whole snapshot", () => {
-  const base = snap({ favourites: [venue("kk")], ratings: { "v:kk": 3 }, settings: { lang: "local" } });
-  const mine = snap({ favourites: [venue("kk"), venue("m")], ratings: { "v:kk": 5 }, settings: { lang: "local" } });
-  const theirs = snap({ favourites: [venue("kk")], ratings: { "v:kk": 3 }, settings: { lang: "mi" } });
+  const base = snap({
+    favourites: [venue("kk")], ratings: { "v:kk": 3 }, notes: { r: "base note" }, settings: { lang: "local" },
+  });
+  const mine = snap({
+    favourites: [venue("kk"), venue("m")], ratings: { "v:kk": 5 }, notes: { r: "mine" }, settings: { lang: "local" },
+  });
+  const theirs = snap({
+    favourites: [venue("kk")], ratings: { "v:kk": 3 }, notes: { r: "theirs" }, settings: { lang: "mi" },
+  });
   const ab = mergePersonal(base, mine, theirs).merged.profiles[0];
   const ba = mergePersonal(base, theirs, mine).merged.profiles[0];
   assert.deepEqual(ab.favourites.map(favKey), ba.favourites.map(favKey));
   assert.deepEqual(ab.ratings, ba.ratings);
+  assert.deepEqual(ab.notes, ba.notes);
   assert.deepEqual(ab.settings, ba.settings);
+});
+
+test("mergePersonal carries a per-profile notes field, three-way merged and counted in changes", () => {
+  const base = snap({ notes: { r: "half the sugar" } });
+  const mine = snap({ notes: { r: "half the sugar" } });
+  const theirs = snap({ notes: { r: "half the sugar, better" } });
+  const { merged, changes, conflicts } = mergePersonal(base, mine, theirs);
+  assert.deepEqual(merged.profiles[0].notes, { r: "half the sugar, better" });
+  assert.equal(changes.notesChanged, 0); // one-sided change, not a conflict
+  assert.deepEqual(conflicts, []);
+});
+
+test("a genuine two-sided note conflict is reported with CONFLICT_NOTE and counted", () => {
+  const base = snap({ notes: { r: "base" } });
+  const mine = snap({ notes: { r: "mine" } });
+  const theirs = snap({ notes: { r: "theirs" } });
+  const { changes, conflicts } = mergePersonal(base, mine, theirs);
+  assert.equal(changes.notesChanged, 1);
+  assert.equal(conflicts.length, 1);
+  assert.equal(conflicts[0].kind, CONFLICT_NOTE);
+  assert.equal(conflicts[0].profileId, "default");
 });
 
 // --- ratings ---------------------------------------------------------------
@@ -150,6 +179,37 @@ test("a rating changed on both devices is resolved symmetrically AND reported", 
   assert.equal(ab.conflicts.length, 1);
   assert.equal(ab.conflicts[0].kind, CONFLICT_RATING);
   assert.equal(ab.conflicts[0].resolved, 5);
+});
+
+// --- notes (ADR 0131) --------------------------------------------------
+// A note is the SAME shape a rating is — a flat `{key: value}` map — so it
+// goes through the identical mergeMap three-way logic. Only the reported
+// conflict `kind` differs, which is what these mirror the rating tests to
+// prove: the mechanism is shared, the label is not.
+
+test("mergeMap defaults its conflict kind to CONFLICT_RATING (existing callers are unaffected)", () => {
+  const out = mergeMap({ "v:kk": 3 }, { "v:kk": 4 }, { "v:kk": 5 });
+  assert.equal(out.conflicts[0].kind, CONFLICT_RATING);
+});
+
+test("a note changed on one device only wins without being called a conflict", () => {
+  const out = mergeMap({ r: "half the sugar" }, { r: "half the sugar" }, { r: "half the sugar, better" }, CONFLICT_NOTE);
+  assert.deepEqual(out.map, { r: "half the sugar, better" });
+  assert.deepEqual(out.conflicts, []);
+});
+
+test("a note cleared on one device propagates rather than being restored", () => {
+  const out = mergeMap({ r: "a note" }, { r: "a note" }, {}, CONFLICT_NOTE);
+  assert.deepEqual(out.map, {});
+});
+
+test("a note edited on both devices is resolved symmetrically AND reported as a NOTE conflict", () => {
+  const ab = mergeMap({ r: "base" }, { r: "mine" }, { r: "theirs" }, CONFLICT_NOTE);
+  const ba = mergeMap({ r: "base" }, { r: "theirs" }, { r: "mine" }, CONFLICT_NOTE);
+  assert.deepEqual(ab.map, ba.map);
+  assert.equal(ab.conflicts.length, 1);
+  assert.equal(ab.conflicts[0].kind, CONFLICT_NOTE);
+  assert.notEqual(ab.conflicts[0].kind, CONFLICT_RATING); // distinct label, same mechanism
 });
 
 // --- settings --------------------------------------------------------------

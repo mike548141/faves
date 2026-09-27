@@ -230,6 +230,7 @@ test("the checklist is still absent from the list that travels (ADR 0067)", () =
     "faves.favourites.v1",
     "faves.settings.v1",
     "faves.ratings.v1",
+    "faves.notes.v1",
   ]);
 });
 
@@ -305,15 +306,20 @@ test("reload re-reads the registry (cross-tab switch) and notifies", () => {
 // new person's — or the rebuilt menu shows the previous profile's data. This is
 // exactly the race the adversarial review caught (first render baking in a stale
 // allergen filter), so the ordering is pinned here.
-test("reloadProfileStores reloads favourites & ratings BEFORE settings (settings drives the repaint)", () => {
+test("reloadProfileStores reloads favourites, ratings & notes BEFORE settings (settings drives the repaint)", () => {
   const calls = [];
   const store = (name) => ({ reload: () => calls.push(name) });
-  reloadProfileStores({ favourites: store("favourites"), ratings: store("ratings"), settings: store("settings") });
-  assert.deepEqual(calls, ["favourites", "ratings", "settings"]);
+  reloadProfileStores({
+    favourites: store("favourites"),
+    ratings: store("ratings"),
+    notes: store("notes"),
+    settings: store("settings"),
+  });
+  assert.deepEqual(calls, ["favourites", "ratings", "notes", "settings"]);
   assert.equal(calls.at(-1), "settings", "settings must reload last — its subscribers repaint the menu");
 });
 
-test("reloadProfileStores tolerates a missing ratings store (the recipe screen has none)", () => {
+test("reloadProfileStores tolerates a missing ratings/notes store (some screens have neither)", () => {
   const calls = [];
   const store = (name) => ({ reload: () => calls.push(name) });
   reloadProfileStores({ favourites: store("favourites"), settings: store("settings") });
