@@ -172,6 +172,7 @@ import {
 // the app's own validator, so "well-formed" here means exactly what the app
 // means by it, not a regex this file re-derives and could drift from.
 import { isValidSyncCode } from "../site/js/sync-code.js";
+import { foldSearchText } from "../site/js/search.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -809,6 +810,33 @@ async function openDevice({ label, profileDir, headed, siteUrl, fakeBlobPort, re
 
 // --- Runner -------------------------------------------------------------
 
+/**
+ * Refuse a re-derived fixture dish that the page could confuse with another
+ * (roadmap 28s). This check picks its dish from the data rather than naming
+ * one, and finds it on the page by `li.dish[data-name]` — the FOLDED name
+ * (menu.js sets `data-name = foldSearchText(item.name)`). Two rows folding
+ * alike and the lookup takes the first, which is the wrong-line bug this
+ * family exists to catch, asserted against the wrong row. A merge of ladder
+ * rows (roadmap 28o) is the likeliest way to produce that, and nothing would
+ * have said so. So say it before a browser is launched: exit 2, never a PASS.
+ */
+function refuseAmbiguousFixture(items, name, venueId) {
+  const folded = foldSearchText(name);
+  const alike = items.filter((i) => typeof i.name === "string" && foldSearchText(i.name) === folded);
+  if (alike.length !== 1) {
+    throw new Error(
+      `${venueId}: the fixture dish "${name}" folds to "${folded}", which ${alike.length} rows share — ` +
+        `the page lookup would take whichever comes first. Pick another --id.`
+    );
+  }
+  if (folded !== name.toLowerCase()) {
+    throw new Error(
+      `${venueId}: the fixture dish "${name}" folds to "${folded}", not "${name.toLowerCase()}" — ` +
+        `this check looks it up by the latter and would find nothing.`
+    );
+  }
+}
+
 async function run(opts) {
   const report = new Report(opts.verbose);
 
@@ -820,6 +848,8 @@ async function run(opts) {
   }
   const DISH_X = items[0].name; // hearted + rated: the headline crossing
   const DISH_Y = items[1].name; // only ever touched after the server goes dark
+  refuseAmbiguousFixture(items, DISH_X, opts.id);
+  refuseAmbiguousFixture(items, DISH_Y, opts.id);
 
   const { server: siteServer, port: sitePort } = await startServer(opts.port, SITE);
   const { server: blobServer, port: blobPort } = await startFakeBlobServer(opts.blobPort);
