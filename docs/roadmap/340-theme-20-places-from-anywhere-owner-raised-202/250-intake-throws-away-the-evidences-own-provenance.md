@@ -1,4 +1,4 @@
-- [~] 🛑 **Intake throws away the evidence's own provenance, and the first
+- [ ] 🛑 **Intake throws away the evidence's own provenance, and the first
       record to prove it overstates its freshness by thirteen days**
       `[M][tools][schema]` — owner-raised 2026-09-07, minutes after the Simmer
       intake landed: *"When you pulled in the Simmer menus you don't appear to
@@ -7,11 +7,16 @@
       dishes, menus, restaurants, recipes, ingredients etc. Do we need a tool or
       guard or something to ensure all the relevant data is harvested,
       provenance recorded, historical data kept etc?"*
-  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — parts (1)–(3) only:
-  the stripper with its refusal path, the gate, the size report. Part (4),
-  the import, is NOT claimed: it goes back to the owner with the measured
-  size first.
-  (claimed 2026-09-27-1407, wt: faves-exif-strip)
+  ✅ **PARTS (1)–(3) DONE 2026-09-28 (session `40d6dea4`, PR #46, `7a0a647`,
+  ADR 0128); claim released.** `tools/strip_exif.py` strips to an allowlist and
+  proves each output from the written bytes or refuses it; `tools/check_images.py`
+  gates every tracked image in CI AND in the pre-commit hook (a `local` floor
+  check — break-probed: a staged synthetic GPS JPEG is BLOCKED). All 51 images
+  already published were checked: 0 carry a location.
+  🛑 **Part (4), the import, is the owner's again — its premise moved.** He
+  ruled on "68 files"; `intake/` holds **410** (236 carrying GPS), and the
+  measured cost of committing them stripped is **≈1.84 GB, permanently** —
+  stripping saves under 5%. Six are refused outright (4 PDF, 2 HEIC).
 
   ✅ **DELIVERED 2026-09-09 (session faves-o1)** — the tool and the guard, with
   [ADR 0107]. 🛑 **Left OPEN deliberately: two parts of his ask are not met**,

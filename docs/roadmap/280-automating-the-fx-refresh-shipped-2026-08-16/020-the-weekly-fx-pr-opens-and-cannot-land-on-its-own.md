@@ -1,10 +1,14 @@
-- [~] 🚩 **The weekly FX PR opens correctly and cannot land on its own — the
+- [x] 🚩 **The weekly FX PR opens correctly and cannot land on its own — the
       floor fails it, and a week on the shelf moves `DATA_VERSION` backwards**
       `[S][ci]` — found 2026-09-08 (session faves-o1) while confirming `010`'s
       trigger, from the PR record rather than from memory.
-  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — option (1),
-  rebase-and-restamp.
-  (claimed 2026-09-27-1407, wt: faves-fx-restamp)
+  ✅ **DONE 2026-09-28 (session `40d6dea4`, PR #45, `ebac4a6`, ADR 0129) —
+  option (1).** One stable `fx/refresh` branch, rebuilt from current `main` on
+  every run and restamped on every push to `main`, so its `DATA_VERSION` is
+  computed at merge time, not cut time. The push trigger ran live on the
+  merge itself and exited cleanly with no PR open. **Reason 1 is NOT fixed**
+  — the floor still judges the whole tree; that is option (2), the owner's
+  ruleset call alongside `340/180`.
 
   **What the record shows.** PR #5 (cut 2026-08-23) and PR #6 (2026-08-30)
   were opened by the owner's token, queued for `--auto --squash`, and never
