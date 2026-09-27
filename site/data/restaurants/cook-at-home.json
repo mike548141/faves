@@ -35,7 +35,17 @@
           "name": "Perfectly Pretty Hotcakes",
           "dishId": "perfectly-pretty-hotcakes",
           "desc": "Makes 10–15.",
+          "serves": 4,
           "time": "~50 min",
+          "prepMinutes": 15,
+          "cookMinutes": 5,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "2 tbsp fresh lemon juice",
             "2 cups milk",
@@ -76,6 +86,12 @@
           "name": "Booth's Ginger Crunch",
           "dishId": "booth-s-ginger-crunch",
           "desc": "Base doubled and icing tripled from the original recipe.",
+          "serves": 24,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "difficulty"
+          ],
           "ingredients": [
             "250g butter, softened",
             "1 cup sugar",
@@ -102,8 +118,17 @@
         {
           "name": "B's Dope-As Brownie",
           "dishId": "b-s-dope-as-brownie",
-          "desc": null,
+          "desc": "The label on Whittaker's dark chocolate says it may contain peanuts and tree nuts.",
+          "serves": 9,
           "time": "~22 min",
+          "prepMinutes": 5,
+          "cookMinutes": 22,
+          "difficulty": "very-easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "100g dark chocolate, preferably Whittaker's",
             "100g butter",
@@ -123,6 +148,8 @@
             "v",
             "contains-gluten",
             "contains-dairy",
+            "contains-nuts",
+            "contains-peanuts",
             "contains-egg"
           ]
         },
@@ -130,7 +157,16 @@
           "name": "Chocolate Chewy Cookies",
           "dishId": "chocolate-chewy-cookies",
           "desc": null,
+          "serves": 12,
           "time": "15 min",
+          "prepMinutes": 10,
+          "cookMinutes": 15,
+          "difficulty": "very-easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "2 cups flour",
             "½ tsp baking soda",
@@ -156,6 +192,15 @@
           "name": "Gingerbread Cookies",
           "dishId": "gingerbread-cookies",
           "desc": null,
+          "serves": 20,
+          "prepMinutes": 60,
+          "cookMinutes": 8,
+          "difficulty": "medium",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "250g butter",
             "1 cup packed brown sugar",
@@ -190,6 +235,14 @@
           "dishId": "li-ge-waffles",
           "desc": "Plan to let the dough rest in the fridge overnight for light, flavourful waffles.",
           "serves": 12,
+          "prepMinutes": 570,
+          "cookMinutes": 20,
+          "difficulty": "medium",
+          "estimated": [
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "¾ cup milk, warmed",
             "1 tablespoon active dry yeast",
@@ -220,7 +273,16 @@
           "name": "Orange Yoghurt Cake",
           "dishId": "orange-yoghurt-cake",
           "desc": null,
+          "serves": 8,
           "time": "~1 hr",
+          "prepMinutes": 15,
+          "cookMinutes": 60,
+          "difficulty": "medium",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "125g butter",
             "1 tablespoon grated orange rind",
@@ -249,7 +311,16 @@
           "name": "Queen Cakes",
           "dishId": "queen-cakes",
           "desc": "Makes 21.",
+          "serves": 10,
           "time": "~12 min",
+          "prepMinutes": 10,
+          "cookMinutes": 10,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "125g butter",
             "125g sugar",
@@ -274,6 +345,15 @@
           "name": "Upside-Down Plum Cake",
           "dishId": "upside-down-plum-cake",
           "desc": null,
+          "serves": 10,
+          "prepMinutes": 45,
+          "cookMinutes": 60,
+          "difficulty": "medium",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             {
               "component": "Topping",
@@ -327,6 +407,16 @@
           "name": "Easy Pad Thai",
           "dishId": "easy-pad-thai",
           "desc": null,
+          "serves": 4,
+          "prepMinutes": 15,
+          "cookMinutes": 5,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "200g rice stick noodles (available in supermarkets)",
             "4 tablespoons peanut oil",
@@ -362,6 +452,16 @@
           "name": "Famous Brade Green Chicken Curry",
           "dishId": "famous-brade-green-chicken-curry",
           "desc": null,
+          "serves": 4,
+          "prepMinutes": 5,
+          "cookMinutes": 35,
+          "difficulty": "very-easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "Chicken",
             "Onion",
@@ -391,6 +491,16 @@
           "name": "Jesse's Garlic Chicken Thighs",
           "dishId": "jesse-s-garlic-chicken-thighs",
           "desc": null,
+          "serves": 4,
+          "prepMinutes": 5,
+          "cookMinutes": 45,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "6–8 garlic cloves, crushed",
             "1 onion, chopped thin",
@@ -422,7 +532,17 @@
           "name": "Shane's Ribs",
           "dishId": "shane-s-ribs",
           "desc": "Made up from a few recipes, but it went something like this.",
+          "serves": 4,
           "time": "8 hr (slow cooker)",
+          "prepMinutes": 5,
+          "cookMinutes": 505,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "1 tsp coriander seeds",
             "1 tsp cumin seeds",
@@ -453,7 +573,17 @@
           "name": "Lamb Shanks",
           "dishId": "lamb-shanks",
           "desc": null,
+          "serves": 4,
           "time": "2 hr",
+          "prepMinutes": 5,
+          "cookMinutes": 135,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "Lamb shanks",
             "Flour, to coat",
@@ -481,6 +611,14 @@
           "name": "Slow-Cooked Chicken Noodle Soup",
           "dishId": "slow-cooked-chicken-noodle-soup",
           "desc": null,
+          "serves": 6,
+          "prepMinutes": 15,
+          "difficulty": "very-easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "4 potatoes, peeled & diced",
             "4 carrots, peeled & sliced",
@@ -501,6 +639,16 @@
           "name": "Mussels",
           "dishId": "mussels",
           "desc": null,
+          "serves": 4,
+          "prepMinutes": 10,
+          "cookMinutes": 10,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "2 cups dry white wine",
             "Spring onion",
@@ -524,6 +672,14 @@
           "name": "BBQ Prawns",
           "dishId": "bbq-prawns",
           "desc": null,
+          "prepMinutes": 60,
+          "cookMinutes": 5,
+          "difficulty": "very-easy",
+          "estimated": [
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "Olive oil",
             "Garlic",
@@ -556,6 +712,16 @@
           "name": "Sticky Date Pudding",
           "dishId": "sticky-date-pudding",
           "desc": null,
+          "serves": 6,
+          "prepMinutes": 5,
+          "cookMinutes": 40,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "185g dates",
             "1 cup water",
@@ -592,6 +758,13 @@
           "desc": "A Clements family dessert since the early 1980s. Doubles well for a crowd.",
           "serves": 6,
           "time": "~35 min",
+          "prepMinutes": 10,
+          "cookMinutes": 35,
+          "difficulty": "easy",
+          "estimated": [
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "¾ cup (190 ml) white sugar",
             "100g butter, softened",
@@ -633,6 +806,14 @@
           "desc": "Coffee-soaked sponge fingers layered with creamy mascarpone and dusted with dark cocoa.",
           "serves": 6,
           "time": "30 min + chill",
+          "prepMinutes": 210,
+          "cookMinutes": 10,
+          "difficulty": "medium",
+          "estimated": [
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "6 egg yolks",
             "1 cup caster sugar",
@@ -664,6 +845,15 @@
           "name": "Pumpkin Pie",
           "dishId": "pumpkin-pie",
           "desc": null,
+          "serves": 8,
+          "prepMinutes": 65,
+          "cookMinutes": 40,
+          "difficulty": "easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "2 cups pumpkin (canned or purée)",
             "2 eggs",
@@ -696,6 +886,14 @@
           "name": "Caramel Banana",
           "dishId": "caramel-banana",
           "desc": "Warm caramelised banana spooned over vanilla ice cream.",
+          "prepMinutes": 5,
+          "cookMinutes": 10,
+          "difficulty": "very-easy",
+          "estimated": [
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "Bananas, sliced",
             "Butter",
@@ -718,6 +916,9 @@
           "desc": "Dark chocolate puddings with a runny centre, rested in the freezer before they bake. The ingredients list flaky sea salt, but the method never says where it goes. The chocolate's label says it may contain peanuts and tree nuts.",
           "serves": 8,
           "time": "~82 min",
+          "prepMinutes": 60,
+          "cookMinutes": 22,
+          "difficulty": "very-easy",
           "ingredients": [
             "50g butter, melted, for greasing",
             "250g Whittaker's 72% Dark Ghana chocolate, roughly chopped",
@@ -741,8 +942,12 @@
             "contains-gluten",
             "contains-dairy",
             "contains-egg",
+            "contains-nuts",
+            "contains-peanuts",
             "contains-soy"
           ],
+          "image": "img/cook-at-home/chocolate-lava-cakes.webp",
+          "alt": "A chocolate lava cake on a cream plate, dusted with icing sugar and topped with vanilla ice cream and chocolate shavings, its runny centre spilling out.",
           "attribution": "Adapted from Whittaker's (whittakers.co.nz)"
         }
       ]
@@ -755,6 +960,16 @@
           "name": "Creamy Mushrooms",
           "dishId": "creamy-mushrooms",
           "desc": null,
+          "serves": 4,
+          "prepMinutes": 5,
+          "cookMinutes": 15,
+          "difficulty": "very-easy",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "30g butter",
             "200g mushrooms",
@@ -776,6 +991,16 @@
           "name": "Turkish Flatbread",
           "dishId": "turkish-flatbread",
           "desc": "Makes 1 large flatbread.",
+          "serves": 4,
+          "prepMinutes": 75,
+          "cookMinutes": 15,
+          "difficulty": "medium",
+          "estimated": [
+            "serves",
+            "prepMinutes",
+            "cookMinutes",
+            "difficulty"
+          ],
           "ingredients": [
             "Approx. 2 cups flour",
             "2 tbsp olive oil (or yoghurt)",

@@ -21,7 +21,7 @@
       },
       "readFrom": [
         "The page's schema.org Recipe block (application/ld+json): name, recipeIngredient, recipeInstructions, recipeYield 8, prepTime PT60M, cookTime PT22M.",
-        "The page's embedded product panel for 72% Dark Ghana Block 250g: 'CONTAINS: SOY. MAY BE PRESENT: MILK, PEANUTS, TREE NUTS, GLUTEN.' This is the source of the contains-soy tag and the may-contain line in desc."
+        "The page's embedded product panel for 72% Dark Ghana Block 250g: 'CONTAINS: SOY. MAY BE PRESENT: MILK, PEANUTS, TREE NUTS, GLUTEN.' This is the source of the contains-soy tag, of the desc's may-contain line, and (owner ruling 2026-09-27: 'Tag peanuts and nuts') of the contains-peanuts and contains-nuts tags."
       ],
       "adapted": [
         "The method is reworded in our voice and condensed from eight steps to seven, with the same quantities, temperatures and times. It is credited in the payload's attribution field, following the Edmonds precedent on Chocolate Self-Saucing Pudding.",

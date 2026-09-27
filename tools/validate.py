@@ -121,7 +121,13 @@ ITEM_KEYS = {
     # Recipe-only fields (kind: "recipes"), all optional and all validated
     # above whether or not the record is a recipe collection.
     "steps", "ingredients", "serves", "time", "attribution",
+    "prepMinutes", "cookMinutes", "difficulty", "estimated",
 }
+# The stats panel's difficulty scale (ADR 0125), easiest first.
+DIFFICULTY = {"very-easy", "easy", "medium", "challenging"}
+# The recipe fields that may be marked as our estimate rather than the recipe's.
+ESTIMABLE = {"serves", "prepMinutes", "cookMinutes", "difficulty"}
+
 BRANCH_KEYS = {
     "id", "label", "address", "lat", "lng", "phone", "hours",
     "timezone", "detailsVerified", "detailsVerifiedBy",
@@ -1961,6 +1967,37 @@ def check_restaurant(path):
             time = item.get("time")
             if time is not None and not isinstance(time, str):
                 err(rid, f"time for {name!r} must be a string or absent")
+            # The recipe page's stats panel (ADR 0125). Minutes as integers so
+            # the page formats them and nothing parses prose; difficulty from a
+            # closed scale so four recipes cannot invent five words for "easy".
+            for key in ("prepMinutes", "cookMinutes"):
+                v = item.get(key)
+                if v is not None and (
+                    not isinstance(v, int) or isinstance(v, bool) or v < 0
+                ):
+                    err(rid, f"{key} for {name!r} must be a whole number of minutes or absent")
+            diff = item.get("difficulty")
+            if diff is not None and diff not in DIFFICULTY:
+                err(rid, f"difficulty {diff!r} on {name!r} is not one of {sorted(DIFFICULTY)}")
+            # Which of those numbers are OURS. The owner's ruling (2026-08-16)
+            # lets a recipe carry an estimate only if it is labelled as one, and
+            # this list is the label — so it may only name a field that is
+            # actually present, or the page would mark a value that isn't there
+            # and leave the real estimate bare.
+            est = item.get("estimated")
+            if est is not None:
+                if not isinstance(est, list) or not est or not all(
+                    isinstance(x, str) for x in est
+                ):
+                    err(rid, f"estimated for {name!r} must be a non-empty list of field names or absent")
+                else:
+                    for f in est:
+                        if f not in ESTIMABLE:
+                            err(rid, f"estimated on {name!r} names {f!r}, which is not one of {sorted(ESTIMABLE)}")
+                        elif item.get(f) is None:
+                            err(rid, f"estimated on {name!r} names {f!r}, which the dish does not carry")
+                    if len(set(est)) != len(est):
+                        err(rid, f"estimated on {name!r} names a field twice")
             # Where the recipe came from (37e). ONE string, holding the credit as
             # it should read — "Adapted from the Edmonds cookbook" — not a
             # {source, relation} pair. A pair would make the app supply the

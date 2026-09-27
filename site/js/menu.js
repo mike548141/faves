@@ -1309,9 +1309,13 @@ function renderDish(
 ) {
   const kind = kindOf(r);
   const collectionId = r?.id ?? null;
-  // The price slot doubles as a recipe meta chip (serves · time).
+  // The price slot doubles as a recipe meta chip (serves · time). A serving
+  // count that is OUR estimate (ADR 0125) says "about" in words: most recipes
+  // gained one from data/estimates/, and a bare number would present our guess
+  // as the recipe's own, which the estimates ruling forbids.
+  const servesEst = Array.isArray(item.estimated) && item.estimated.includes("serves");
   const recipeMeta = kind.itemsHaveRecipeFields
-    ? [item.serves ? `Serves ${item.serves}` : null, item.time || null]
+    ? [item.serves ? `Serves ${servesEst ? "about " : ""}${item.serves}` : null, item.time || null]
         .filter(Boolean)
         .join(" · ")
     : "";

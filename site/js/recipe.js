@@ -22,6 +22,7 @@ import { ingredientBlocks } from "./ingredients.js";
 import { SCALES, DEFAULT_SCALE, scaleFor, scaleLineStatus, scaleServes } from "./quantity.js";
 import { el } from "./dom.js";
 import { isSpicy, heatLabel } from "./heat.js";
+import { recipeStats } from "./recipe-stats.js";
 // The app chrome behind the ⋯ menu. Until 2026-08-16 this page had none of it:
 // a recipe could show CONTAINS GLUTEN chips with no route to the Settings that
 // decide which allergens are flagged, and no way to reach Favourites, Share or
@@ -96,7 +97,13 @@ function render(collection, item) {
   back.href = `restaurant.html?id=${id}`;
   back.textContent = `← ${collection.name}`;
 
+  // Two regions, laid out by CSS (ADR 0125): the HERO — photo, title, stats,
+  // description, tags, the cook and shopping controls — and the BODY, where the
+  // ingredients sit beside the method on a wide screen and above it on a phone.
+  // Built as two lists so the DOM order is the phone's reading order and the
+  // wide layout is a grid over it, never a reordering the keyboard would miss.
   const parts = [];
+  const body = [];
   const heart = heartButton(
     {
       type: "dish",
@@ -130,8 +137,33 @@ function render(collection, item) {
       ? `Serves ${scaled}`
       : `Serves ${item.serves}`
     : null;
-  const metaBits = [servesText, item.time || null].filter(Boolean);
-  if (metaBits.length) parts.push(el("p", { className: "menu-sub", textContent: metaBits.join(" · ") }));
+  // The stats panel (ADR 0125), Whittaker's shape: Prep · Cook · Serves ·
+  // Difficulty. A value that is OUR estimate carries "est." in words beside it
+  // and a key line under the panel — never colour alone (WCAG 1.4.1), and never
+  // bare, because an unlabelled estimate is the one thing the owner's ruling on
+  // estimates forbade. `time` is not repeated here: prep + cook say it better,
+  // and the list screen still shows it.
+  const stats = recipeStats(item, servesText ? (scaled != null && scaleKey !== DEFAULT_SCALE ? scaled : item.serves) : null);
+  if (stats.length) {
+    const dl = el("dl", { className: "recipe-stats" });
+    for (const c of stats) {
+      const dd = el("dd", { className: "recipe-stat-value" }, [c.value]);
+      if (c.estimated) dd.append(" ", el("span", { className: "recipe-stat-est", textContent: "est." }));
+      dl.append(el("div", { className: "recipe-stat", "data-stat": c.key }, [
+        el("dt", { className: "recipe-stat-label", textContent: c.label }),
+        dd,
+      ]));
+    }
+    parts.push(dl);
+    if (stats.some((c) => c.estimated)) {
+      parts.push(el("p", {
+        className: "recipe-stats-key",
+        textContent: "est. — our estimate; the recipe doesn’t say.",
+      }));
+    }
+  } else if (item.time) {
+    parts.push(el("p", { className: "menu-sub", textContent: item.time }));
+  }
   if (item.desc) parts.push(el("p", { className: "recipe-lede", textContent: item.desc }));
   // Where it came from, as a field rather than buried in the prose (37e). The
   // field ships WITH this line and never before it: site/data/ is precached to
@@ -143,12 +175,6 @@ function render(collection, item) {
     parts.push(el("p", { className: "recipe-credit", textContent: item.attribution }));
   }
 
-  if (item.image) {
-    parts.push(el("img", {
-      className: "recipe-photo", src: item.image, alt: item.alt || "",
-      loading: "lazy", decoding: "async",
-    }));
-  }
 
   if (item.tags?.length) {
     // Foreground any allergen the viewer flagged in their preferences.
@@ -198,7 +224,7 @@ function render(collection, item) {
     const verdicts = blocks.flatMap((b) => b.lines.map((l) => scaleLineStatus(l.text, scale)));
     const blocked = verdicts.filter((v) => v.status === "blocked").length;
 
-    const body = [];
+    const foldBody = [];
     // The scale picker, offered only where it can do something. A recipe of
     // nothing but "Garlic" and "Herbs" — and the corpus has several — would get
     // a control that changes nothing on screen, which reads as a broken button
@@ -223,14 +249,14 @@ function render(collection, item) {
         });
         group.append(b);
       }
-      body.push(group);
+      foldBody.push(group);
       // 🚩 The honesty line. A recipe where some lines scaled and others could
       // not is HALF-SCALED, and nothing else on the page would say so — the
       // reader sees doubled flour beside un-doubled chocolate and no hint that
       // the second was a refusal rather than a quantity that happens to be
       // written that way. Counted, not listed: the lines carry their own mark.
       if (blocked && scaleKey !== DEFAULT_SCALE) {
-        body.push(el("p", {
+        foldBody.push(el("p", {
           className: "scale-note",
           textContent:
             blocked === 1
@@ -245,7 +271,7 @@ function render(collection, item) {
       // so the list is navigable by heading on a screen reader rather than a
       // bolded line that only looks like one.
       if (b.component) {
-        body.push(el("h3", { className: "ingredient-component", textContent: b.component }));
+        foldBody.push(el("h3", { className: "ingredient-component", textContent: b.component }));
       }
       const ul = el("ul", { className: "ingredients" });
       // `line.key` carries the component, `line.text` does not: the tick is
@@ -268,13 +294,13 @@ function render(collection, item) {
         }
         ul.append(li);
       }
-      body.push(ul);
+      foldBody.push(ul);
     }
     const fold = el("details", { className: "ingredients-fold", open: !settings.get().ingredientsFolded }, [
       el("summary", { className: "ingredients-summary" }, [
         el("h2", { className: "recipe-head", "data-i18n": "recipe.ingredients", textContent: "Ingredients" }),
       ]),
-      el("div", { className: "ingredients-fold-body" }, body),
+      el("div", { className: "ingredients-fold-body" }, foldBody),
     ]);
     // Write the preference, never read it back here: `settings.subscribe` below
     // re-renders on any change, and re-rendering the panel the reader is in the
@@ -288,10 +314,10 @@ function render(collection, item) {
         foldWrite = false;
       }
     });
-    parts.push(fold);
+    body.push(el("section", { className: "recipe-ingredients" }, [fold]));
   }
   if (item.steps?.length) {
-    parts.push(el("h2", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" }));
+    const method = [el("h2", { className: "recipe-head", "data-i18n": "recipe.method", textContent: "Method" })];
     // Oven temperatures live inside the step text, so an imperial reader gets
     // the °C swapped for °F as the step is built (units.js, ADR 0029). The
     // stored recipe is untouched; settings.subscribe below repaints on a flip.
@@ -300,7 +326,8 @@ function render(collection, item) {
     for (const step of item.steps) {
       ol.append(el("li", {}, [tickRow(rid, "s", step, convertTemperatures(step, units))]));
     }
-    parts.push(ol);
+    method.push(ol);
+    body.push(el("section", { className: "recipe-method" }, method));
   }
   if (item.goesWith?.length) {
     const wrap = el("div", { className: "dish-pairs" }, [
@@ -321,11 +348,28 @@ function render(collection, item) {
       const name = hash === -1 ? ref : ref.slice(hash + 1);
       wrap.append(el("a", { className: "pair-chip", href, textContent: name }));
     }
-    parts.push(wrap);
+    body.push(wrap);
   }
 
+  // The photo leads the hero and is NOT lazy: it is the first thing on the page,
+  // and lazy-loading an above-the-fold image only delays the paint it is for.
+  // Explicit width/height give the box its shape before the bytes arrive, so
+  // nothing below it jumps (CLS).
+  const hero = item.image
+    ? el("header", { className: "recipe-hero has-photo" }, [
+        el("img", {
+          className: "recipe-photo", src: item.image, alt: item.alt || "",
+          width: 800, height: 800, decoding: "async",
+        }),
+        el("div", { className: "recipe-hero-text" }, parts),
+      ])
+    : el("header", { className: "recipe-hero" }, [el("div", { className: "recipe-hero-text" }, parts)]);
+
   // recipe-body so the shared .ingredients/.method list styling applies.
-  root.replaceChildren(el("article", { className: "recipe-detail-page recipe-body" }, parts));
+  root.replaceChildren(el("article", { className: "recipe-detail-page recipe-body" }, [
+    hero,
+    el("div", { className: "recipe-columns" }, body),
+  ]));
   // Chrome renders in English with data-i18n keys; apply the stored language
   // (later switches re-translate the whole page via reo's subscription).
   translate(root);
