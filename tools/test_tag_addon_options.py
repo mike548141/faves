@@ -46,14 +46,20 @@ CREPES = "site/data/restaurants/crepes-a-go-go.json"
 # Tawa's brunch sides, with the tags this sweep applies taken back off. Bacon
 # and Sausages must return; Spinach and Tomatoes must not gain anything.
 STRIP_TAWA = [
+    # Only `has-meat` is this tool's to take off. `contains-gluten` arrived
+    # from the dish-level sweep (7a62c57) and stays, so the case still reads
+    # the real row rather than a snapshot of it that silently stops matching.
     ('''          "name": "Sausages",
           "price": 8.0,
           "tags": [
-            "has-meat"
+            "has-meat",
+            "contains-gluten"
           ]''',
      '''          "name": "Sausages",
           "price": 8.0,
-          "tags": []'''),
+          "tags": [
+            "contains-gluten"
+          ]'''),
     ('''          "name": "Bacon",
           "price": 8.0,
           "tags": [
@@ -608,12 +614,20 @@ def main() -> int:
                 continue
             tool.write_text(broken, encoding="utf-8")
             try:
-                survived = [c for c in covered if run_case(work, c, args.verbose) is None]
+                outcome = {c: run_case(work, c, args.verbose) for c in covered}
             finally:
                 tool.write_text(good, encoding="utf-8")
-            ok = not survived
-            print(f"  {'✅' if ok else '❌'} {('break: ' + bug):52} "
-                  f"{'caught' if ok else 'PASSED WITH THE BUG BACK: ' + ', '.join(survived)}")
+            survived = [c for c, why in outcome.items() if why is None]
+            # A case that could not even be set up says nothing about the bug.
+            # Counting it as a catch printed "caught" beside four cases whose
+            # fixture had drifted from the data (2026-09-20 → 09-27).
+            unset = [c for c, why in outcome.items()
+                     if why and why.startswith("MUTATION MATCHED NOTHING")]
+            ok = not survived and not unset
+            verdict = ("caught" if ok else
+                       "PASSED WITH THE BUG BACK: " + ", ".join(survived) if survived else
+                       "PROVES NOTHING — case could not be set up: " + ", ".join(unset))
+            print(f"  {'✅' if ok else '❌'} {('break: ' + bug):52} {verdict}")
             if not ok:
                 failures.append(f"breaker {bug}")
 

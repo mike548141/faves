@@ -168,6 +168,28 @@ jobs:
       # it was meant to be, never that a phone is showing a wrong allergen.
       - name: Prove the allergen disagreement classes still hold
         run: python3 tools/test_allergen_disagreements.py
+      # The add-on option tagger's suite sat RED on main from 2026-09-20 to
+      # 09-27 because nothing ran it: a data sweep (7a62c57) added a tag to a
+      # row its fixture quoted byte for byte, and four cases stopped being
+      # able to set up. Same limit as the tagger's line above.
+      - name: Prove the add-on option tagger still refuses what it must
+        run: python3 tools/test_tag_addon_options.py
+      # Five gates from CLAUDE.md's verify list that CI never ran (roadmap
+      # 340/290): `products.py` let main go red through three merged PRs on
+      # 2026-09-09 because the brief that was the only gate omitted it. All
+      # stdlib, offline, under a second. The intake tools stay OFF this list on
+      # purpose: `intake/` is gitignored, so here they print "intake not
+      # present" and prove nothing.
+      - name: Assert the packaged-product records hold together
+        run: python3 tools/products.py
+      - name: Assert every dish carries its own id
+        run: python3 tools/seed_dish_ids.py --check
+      - name: Assert every section carries its own id
+        run: python3 tools/seed_section_ids.py --check
+      - name: Assert every branch carries its own id
+        run: python3 tools/seed_branch_ids.py --check
+      - name: Assert the shipped exchange rates load
+        run: python3 tools/fetch_fx.py --check
       # The Theme 38 cold review found three stores under data/ that no
       # document described and two that nothing validated. data/images/ is the
       # PROVENANCE of every photograph this public repo ships, so a photo with

@@ -1,10 +1,17 @@
-- [~] 🔎 **A gate that is on the verify list but not in CI went red on `main`,
+- [ ] 🔎 **A gate that is on the verify list but not in CI went red on `main`,
       and it took a passing agent on unrelated work to notice** `[S][tools]` —
       found 2026-09-09 (session faves-3b) by the agent delivering `500/060`,
       which ran `products.py` because its brief said to and found `main`
       already failing.
-      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — inline, after `28h` lands.
-      (claimed 2026-09-27-1350, wt: main)
+      ✅ **CI HALF DONE 2026-09-27 (session `40d6dea4`), claim released.**
+      `products.py`, the three `seed_*_ids --check` gates, `fetch_fx.py
+      --check` and `test_tag_addon_options.py` now run in CI's `guard` job.
+      🔎 **The class recurred while doing it:** `test_tag_addon_options.py`
+      was RED on main from 2026-09-20 (`7a62c57` tagged a row its fixture
+      quoted byte for byte) — and six of its break-probes printed *caught*
+      throughout, because a case that could not be set up counted as a
+      catch. Both fixed. What stays open is the 🎯 below: does the intake
+      record need a repeat-reading concept? That one is the owner's.
 
   **What happened, exactly.** PR #31 (`500/020`, the Churton leaflet) added
   `readAlso` and `readAlsoBy` to the `b029` row of
