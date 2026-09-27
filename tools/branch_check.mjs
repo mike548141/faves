@@ -113,8 +113,9 @@ const NEAR_LIMIT = 4; // must match locations.NEAR_BRANCH_LIMIT
 // for "a venue that is permanently closed" by name rather than hand-rolling
 // the JSON — and so a fixture built here is put through the REAL validate.py
 // by tools/fixture_check.mjs instead of being trusted (roadmap 340/150, ADR
-// 0109). `{}` has no segments at all, which hours.js answers as "closed" (not
-// "unknown" — that needs no `hours` key whatsoever); "00:00"–"24:00" every day
+// 0109). NEVER_OPEN is every day `[]`, which hours.js answers as "closed" (it
+// was `{}` until 2026-09-28, which ADR 0105 reads as "never published" —
+// unknown-today — see its comment in fixtures.mjs); "00:00"–"24:00" every day
 // ends each segment exactly where the next begins, so there is no minute of
 // the week it is shut. Both exist so the lead-branch probe below is true at
 // 1am as well as 1pm.
@@ -161,6 +162,47 @@ const FIXTURES = [
     // chains above.
     keepBranches: 2,
     originBranch: 1,
+  },
+  // ─── ADR 0132: closure is PER BRANCH (owner-ruled 2026-08-22) ──────────────
+  // The mixed case every fixture above lacks — they are all-or-nothing. The
+  // corpus holds no shut branch, so these inject one, never into a real record.
+  //
+  // One branch of seven shut for good, and its posted hours say ALWAYS open, so
+  // a branch card that ignores the branch's own closure prints "Open" on it and
+  // LEADS with it (tier 1: nearest known-open). Branch 2 is always open too, so
+  // the right lead is known at every hour: branch 2, never branch 1.
+  {
+    id: "tj-katsu-branch-shut-fixture",
+    from: "tj-katsu",
+    closed: false,
+    states: ["one-branch-shut"],
+    hours: [ALWAYS_OPEN, ALWAYS_OPEN],
+    shutBranches: [0],
+    expectLead: 1,
+  },
+  // Item 4's harder half. The only OTHER branch is shut tonight (never open),
+  // so no branch is open and none is unknown: the old three-tier rule fell
+  // through to "the nearest", which is the shut one. A branch you can go to
+  // tomorrow must lead over one you can never go to again.
+  {
+    id: "tj-katsu-branch-shut-lead-fixture",
+    from: "tj-katsu",
+    closed: false,
+    states: ["one-branch-shut"],
+    hours: [ALWAYS_OPEN, NEVER_OPEN],
+    keepBranches: 2,
+    shutBranches: [0],
+    expectLead: 1,
+  },
+  // The regression the ruling was conditional on: a venue-level closure still
+  // shuts EVERY branch — including a branch whose own record says something
+  // milder. Branch 1 is on a refit; the chain has closed for good. Every
+  // branch must say what the header says ("Permanently closed"), which the
+  // closed-venue assertions below already demand of every closed fixture.
+  {
+    id: "tj-katsu-closed-branch-refit-fixture",
+    from: "tj-katsu",
+    states: ["permanently-closed", "one-branch-refit"],
   },
 ];
 
@@ -298,6 +340,15 @@ const snapshotExpr = `(() => {
     // PER BRANCH rather than a card-wide total. The total above (allChips)
     // would be satisfied by two badges on one row and none on another, which
     // is exactly the shape a half-finished "tidy up the repeats" leaves behind.
+    // ADR 0132: per SECTION, by name — which branch says what. The lead and
+    // every row (the ones behind "Show all" included), in document order.
+    sections: [...card.querySelectorAll(".contact-branch")].map((sec) => ({
+      name: (sec.querySelector(".branch-name") || {}).textContent || null,
+      closures: [...sec.querySelectorAll('.hours-badge[data-state^="closed-"]')].map((b) => b.dataset.state),
+      hoursChips: [...sec.querySelectorAll(".hours-badge")]
+        .map((b) => b.dataset.state)
+        .filter((st) => !st.startsWith("closed-")),
+    })),
     perBranchClosures: [...card.querySelectorAll(".contact-branch")].map(
       (b) => b.querySelectorAll('.hours-badge[data-state^="closed-"]').length,
     ),
@@ -515,6 +566,45 @@ async function checkVenue(driver, report, id, url, venue, spec = null) {
     s = await driver.evalPage(snapshotExpr);
   }
 
+  // --- (g) ADR 0132: ONE branch shut, the others trading ------------------
+  // Printed only for the fixtures that shut a branch; on any other venue every
+  // one of these is vacuous, and green that proves nothing is not printed.
+  // All time-independent: the shut branch's closure is a decade old, and the
+  // lead is chosen between an always-open, a never-open and a shut branch.
+  if (spec?.shutBranches) {
+    const nameOf = (b) => b.label || b.address || venue.name;
+    const shutNames = new Set(spec.shutBranches.map((i) => nameOf(branches[i])));
+    const shutSecs = s.sections.filter((x) => shutNames.has(x.name));
+    const liveSecs = s.sections.filter((x) => !shutNames.has(x.name));
+    report.check(
+      `${id}: the page header carries NO closure — one shut branch does not shut the venue`,
+      s.headerClosure === null,
+      `header closure = ${JSON.stringify(s.headerClosure)}`,
+    );
+    report.check(
+      `${id}: the shut branch says so, exactly once, on its own section`,
+      shutSecs.length === shutNames.size &&
+        shutSecs.every((x) => x.closures.length === 1 && x.closures[0] === "closed-permanently"),
+      shutSecs.map((x) => `${x.name}: ${JSON.stringify(x.closures)}`).join(" | ") || "shut branch not on the card",
+    );
+    report.check(
+      `${id}: …and prints NO posted-hours status, though its hours say always open`,
+      shutSecs.every((x) => x.hoursChips.length === 0),
+      shutSecs.map((x) => `${x.name}: ${JSON.stringify(x.hoursChips)}`).join(" | "),
+    );
+    report.check(
+      `${id}: every OTHER branch carries no closure — the shut one did not leak`,
+      liveSecs.length === branches.length - shutNames.size && liveSecs.every((x) => x.closures.length === 0),
+      `${liveSecs.length} trading section(s); closures on: ` +
+        JSON.stringify(liveSecs.filter((x) => x.closures.length).map((x) => x.name)),
+    );
+    report.check(
+      `${id}: the lead is never a shut branch while a trading one exists`,
+      !shutNames.has(s.lead?.name) && s.lead?.name === nameOf(branches[spec.expectLead]),
+      `lead "${s.lead?.name}" — want "${nameOf(branches[spec.expectLead])}", shut: ${JSON.stringify([...shutNames])}`,
+    );
+  }
+
   // --- the second step appears only when it is needed --------------------
   const needsStep = branches.length - 1 > NEAR_LIMIT;
   report.check(
@@ -560,9 +650,13 @@ async function checkVenue(driver, report, id, url, venue, spec = null) {
     const primary = branches[0];
     report.check(
       `${id}: the fixture actually disagrees — the primary is shut and the nearest is open`,
-      primary.hours && Object.keys(primary.hours).length === 0 &&
+      // Every day PRESENT and empty — not `{}`, which ADR 0105 reads as "never
+      // published" (unknown-today), and which let the assertion below pass
+      // for the primary branch too until 2026-09-28.
+      primary.hours && Object.keys(primary.hours).length === 7 &&
+        Object.values(primary.hours).every((d) => Array.isArray(d) && d.length === 0) &&
         origin !== primary && Object.keys(origin.hours || {}).length === 7,
-      `primary "${primary.label}" has ${Object.keys(primary.hours || {}).length} day(s); ` +
+      `primary "${primary.label}" is shut ${Object.values(primary.hours || {}).filter((d) => Array.isArray(d) && !d.length).length} of 7 day(s); ` +
         `nearest "${origin.label}" has ${Object.keys(origin.hours || {}).length}`,
     );
     report.check(
@@ -653,10 +747,12 @@ async function buildRecords(ids) {
     // `closed: false` opts a fixture OUT of the injected closure: a closure
     // outranks every branch's posted hours, so a fixture whose whole point is a
     // disagreement between two branches' hours cannot also be shut.
+    // `states` names them outright where a fixture needs more than the venue
+    // closure (ADR 0132's per-branch states); otherwise the old default holds.
     const fixture = await buildFixture(SITE, {
       id,
       from: spec.from,
-      states: spec.closed === false ? [] : ["permanently-closed"],
+      states: spec.states ?? (spec.closed === false ? [] : ["permanently-closed"]),
       hours: spec.hours,
       keepBranches: spec.keepBranches,
     });

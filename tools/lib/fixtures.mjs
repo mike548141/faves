@@ -82,10 +82,19 @@ const CLOSED_PERMANENTLY = {
 
 const DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
-/** `{}` has no segments at all, which hours.js answers as CLOSED. That is not
- *  the same as "unknown", which needs no `hours` key whatsoever — see the
- *  `no-hours-anywhere` state below, which is the other one. */
-export const NEVER_OPEN = {};
+/** Every day present and `[]` — "shut that day", seven times — so there is no
+ *  minute of the week this is open, and hours.js answers CLOSED at every hour.
+ *
+ *  🛑 This was `{}` until 2026-09-28, with a comment saying hours.js answers it
+ *  CLOSED. That stopped being true with ADR 0105: a day with no key is a day
+ *  never PUBLISHED, so `{}` answers `unknown-today` — measured on the real
+ *  clock while building ADR 0132's lead-tier fixture, which could not fail
+ *  because its "never open" branch was reading as unknown. `leadBranch` treats
+ *  unknown-today as neither open nor closed, and the 490/100 bar fixture's
+ *  "the bar is not `closed`" held for the primary branch as well as the
+ *  nearest. `{}` was also not a legal week (validate.py wants every day), and
+ *  nothing gates a fixture's `hours` override, so nothing said so. */
+export const NEVER_OPEN = Object.fromEntries(DAYS.map((d) => [d, []]));
 
 /** Every segment ends exactly where the next begins, so there is no minute of
  *  the week this is shut. Clock-independent by construction. */
@@ -185,6 +194,37 @@ export const STATES = {
     apply(r, { index = 0 } = {}) {
       const b = (r.locations || [])[index];
       if (b) delete b.hours;
+    },
+  },
+
+  "one-branch-shut": {
+    summary: "ONE branch of a chain shut for good while its siblings trade (ADR 0132)",
+    absent: "0 branches carry a lifecycle — per-branch closure landed 2026-09-28",
+    requires: (r) => (r.locations || []).length > 1,
+    apply(r, { shutIndex = 0 } = {}) {
+      // `shutIndex`, not `index`: `branch-without-hours` already reads `index`,
+      // and composing the two must be able to point them at different branches.
+      // The branch is KEPT and told it has stopped — never removed (ADR 0023).
+      const b = (r.locations || [])[shutIndex];
+      if (b) b.lifecycle = { events: [clone(CLOSED_PERMANENTLY)] };
+    },
+  },
+
+  "one-branch-refit": {
+    summary: "ONE branch shut for a refit whose stated reopening has passed (ADR 0132)",
+    absent: "0 branches carry a lifecycle — per-branch closure landed 2026-09-28",
+    requires: (r) => (r.locations || []).length > 1,
+    apply(r, { shutIndex = 0 } = {}) {
+      // The LESS severe closure, on purpose: composed with `permanently-closed`
+      // it is the case where the venue's closure must win over the branch's
+      // own — a branch reading "Temporarily closed" under a banner reading
+      // "Permanently closed" is the regression per-branch closure could ship.
+      const b = (r.locations || [])[shutIndex];
+      if (b) {
+        b.lifecycle = {
+          events: [{ type: "closed-temporarily", date: "2016-04-01", until: "2016-05-01", note: "fixture" }],
+        };
+      }
     },
   },
 

@@ -526,6 +526,14 @@ export function resolveRecord(record, asOf = todayIn(), hemisphere = "south") {
       for (const f of ["address", "phone"]) {
         if (Array.isArray(b[f])) branch[f] = resolveValue(b[f], asOf, recorded);
       }
+      // A branch's OWN closure (ADR 0132), folded by the same `venueState` a
+      // venue's is — the shape is the same block, one level down. Only where the
+      // branch carries a lifecycle, so every existing record resolves to exactly
+      // the shape it always did; `branchClosure` below reads an absent one as
+      // "nothing of its own to say", which is what it is.
+      if (b && typeof b.lifecycle === "object" && b.lifecycle !== null) {
+        branch.closure = venueState(b, asOf);
+      }
       return branch;
     });
   }
@@ -573,7 +581,56 @@ export function isTrading(record) {
 }
 
 /** Permanently closed: kept in the data (a hard delete would destroy the record
- *  that it ever existed), but no longer offered as a place to eat. */
-export function isGone(record) {
-  return record?.closure?.state === "closed-permanently";
+ *  that it ever existed), but no longer offered as a place to eat.
+ *
+ *  Dead code from the day it was written until 2026-09-28 — while its one real
+ *  job sat in app.js as a hand-typed copy (`r.closure?.state !==
+ *  "closed-permanently"`, the home card's "Menu coming soon" suppression).
+ *  ADR 0132 gave it that job rather than deleting it: the distinction it names
+ *  — gone for good vs shut for a refit — is one the app DOES make (a stub that
+ *  will reopen still promises a menu; one that never will does not), and a
+ *  predicate plus an inline twin is two answers to one question waiting to
+ *  drift. Takes an optional branch, so a branch-level "gone" is asked the same
+ *  way. */
+export function isGone(record, branch = null) {
+  const c = branch ? branchClosure(record, branch) : record?.closure;
+  return c?.state === "closed-permanently";
+}
+
+// How far a closure reaches: a permanent one outranks a temporary one outranks
+// trading. Used ONLY to settle a venue closure against a branch's own.
+const SEVERITY = { trading: 0, "closed-temporarily": 1, "closed-permanently": 2 };
+const severity = (c) => SEVERITY[c?.state ?? "trading"] ?? 0;
+
+/**
+ * The closure that applies to ONE branch of a venue (ADR 0132) — the resolved
+ * `closure` object, or null when neither the venue nor the branch says anything
+ * (read as trading, like an absent venue closure).
+ *
+ * The venue's closure is the FLOOR: a chain that has shut down has shut every
+ * branch with it, whatever an individual branch's record says — that is the
+ * regression the per-branch schema must not reintroduce. A branch's own closure
+ * wins only where it is MORE severe than the venue's:
+ *
+ *   venue trading,    branch refit      → the branch's (the mixed case)
+ *   venue refit,      branch gone       → the branch's: when the chain reopens,
+ *                                          that branch does not
+ *   venue gone,       branch anything   → the venue's
+ *   equal severity                      → the venue's, which is the one the
+ *                                          page header already states, so the
+ *                                          card and the banner say the same words
+ *
+ * A branch is never given a closure by deleting it (ADR 0023): the record that
+ * it traded is kept, and this is how it is told it has stopped.
+ */
+export function branchClosure(record, branch) {
+  const venue = record?.closure ?? null;
+  const own = branch?.closure ?? null;
+  return severity(own) > severity(venue) ? own : venue;
+}
+
+/** Is this ONE branch open for business today? The per-branch `isTrading`,
+ *  with the venue's closure as the floor (`branchClosure`). */
+export function isBranchTrading(record, branch) {
+  return severity(branchClosure(record, branch)) === 0;
 }

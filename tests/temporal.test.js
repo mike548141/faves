@@ -17,6 +17,8 @@ import {
   resolveRecord,
   isTrading,
   isGone,
+  branchClosure,
+  isBranchTrading,
   todayIn,
   seasonMonths,
   VERIFY_METHODS,
@@ -196,6 +198,67 @@ test("isTrading / isGone read the resolved closure", () => {
   assert.equal(isTrading(gone), false);
   assert.equal(isGone(gone), true);
   assert.equal(isTrading({}), true, "a record with no closure block is trading");
+});
+
+// ---------- per-branch closure (ADR 0132) ----------
+
+// A two-branch chain, resolved on one day: the venue's lifecycle and each
+// branch's own, folded by resolveRecord exactly as data.js does in life.
+const chainWith = (venueEvents, branchEvents) =>
+  resolveRecord(
+    {
+      lifecycle: { added: "2026-01-01", events: venueEvents },
+      locations: [
+        { id: "a", address: "A", ...(branchEvents[0] ? { lifecycle: { events: branchEvents[0] } } : {}) },
+        { id: "b", address: "B", ...(branchEvents[1] ? { lifecycle: { events: branchEvents[1] } } : {}) },
+      ],
+    },
+    "2026-08-08",
+  );
+const GONE = [{ type: "closed-permanently", date: "2026-05-01" }];
+const REFIT = [{ type: "closed-temporarily", date: "2026-05-01", until: "2026-12-01" }];
+
+test("resolveRecord folds a branch's own lifecycle, and ONLY where it has one", () => {
+  const r = chainWith([], [GONE, null]);
+  assert.equal(r.locations[0].closure.state, "closed-permanently");
+  assert.equal("closure" in r.locations[1], false, "a branch without a lifecycle resolves to the shape it always had");
+});
+
+test("branchClosure: one branch shut, the other trading — the mixed case", () => {
+  const r = chainWith([], [GONE, null]);
+  assert.equal(branchClosure(r, r.locations[0]).state, "closed-permanently");
+  assert.equal(isBranchTrading(r, r.locations[0]), false);
+  assert.equal(isBranchTrading(r, r.locations[1]), true);
+  assert.equal(isTrading(r), true, "one shut branch does not shut the venue");
+  assert.equal(isGone(r, r.locations[0]), true);
+  assert.equal(isGone(r, r.locations[1]), false);
+});
+
+test("branchClosure REGRESSION: a venue-level closure still shuts EVERY branch", () => {
+  // The owner's condition on the ruling: per-branch closure must not become
+  // the way a shut chain's branches read as trading. A branch with no lifecycle
+  // AND a branch whose own record says it reopened both answer the venue's.
+  const r = chainWith(GONE, [null, [...REFIT, { type: "reopened", date: "2026-06-01" }]]);
+  for (const b of r.locations) {
+    assert.equal(isBranchTrading(r, b), false, `branch ${b.id} must be shut`);
+    assert.equal(branchClosure(r, b).state, "closed-permanently");
+  }
+});
+
+test("branchClosure: the more severe closure wins; a tie goes to the venue", () => {
+  // Venue refit, branch gone: when the chain reopens, that branch does not.
+  const r1 = chainWith(REFIT, [GONE, null]);
+  assert.equal(branchClosure(r1, r1.locations[0]).state, "closed-permanently");
+  assert.equal(branchClosure(r1, r1.locations[1]).state, "closed-temporarily");
+  // Both refits: the venue's — the words the page header already says.
+  const r2 = chainWith(REFIT, [[{ type: "closed-temporarily", date: "2026-07-01" }], null]);
+  assert.equal(branchClosure(r2, r2.locations[0]), r2.closure);
+});
+
+test("branchClosure: a synthesised branch (no closure key) reads the venue's", () => {
+  const r = resolveRecord(lc(GONE), "2026-08-08");
+  assert.equal(isBranchTrading(r, { address: "x" }), false);
+  assert.equal(isBranchTrading({}, {}), true, "nothing said anywhere is trading");
 });
 
 // ---------- availability ----------

@@ -104,6 +104,31 @@ test("nearestBranch: a coordless branch never beats a located one", () => {
   assert.equal(nb.branch.label, "Pinned");
 });
 
+// ADR 0132: a branch that has shut (its resolved `closure`) is not a candidate
+// for "the branch this venue's card is about" while one that trades exists.
+const shutFirst = {
+  ...chain,
+  closure: { state: "trading" },
+  locations: [{ ...chain.locations[0], closure: { state: "closed-permanently" } }, chain.locations[1]],
+};
+
+test("nearestBranch: a SHUT branch is passed over for a trading one, origin or not", () => {
+  assert.equal(nearestBranch(shutFirst).branch.label, "Lower Hutt");
+  assert.equal(nearestBranch(shutFirst).index, 1, "the index is still the DATA index");
+  // From the CBD the shut Courtenay Place branch is 500 m away and the Hutt
+  // one 13 km — and the Hutt one is still the answer, because the other door is locked.
+  const nb = nearestBranch(shutFirst, CBD);
+  assert.equal(nb.branch.label, "Lower Hutt");
+  assert.ok(nb.distanceKm > 10);
+  assert.deepEqual(venueHours(shutFirst), chain.locations[1].hours);
+});
+
+test("nearestBranch: when NOTHING trades, every branch is a candidate again (venue closure)", () => {
+  const gone = { ...shutFirst, closure: { state: "closed-permanently" } };
+  assert.equal(nearestBranch(gone).branch.label, "Courtenay Place");
+  assert.equal(nearestBranch(gone, CBD).branch.label, "Courtenay Place");
+});
+
 test("venueDistanceKm: nearest-branch distance, or Infinity without an origin", () => {
   assert.equal(venueDistanceKm(chain), Infinity);
   assert.ok(venueDistanceKm(chain, CBD) < 2);
@@ -185,6 +210,21 @@ test("leadBranch: unknown hours beat known-closed — absence of evidence is not
 test("leadBranch: every branch known closed → the nearest still leads", () => {
   const branches = [b("a", 1), b("b", 3)];
   assert.equal(leadBranch(branches, states({ a: "closed", b: "closed" })).label, "a");
+});
+
+test("leadBranch: a SHUT branch never leads while any trading one exists (ADR 0132)", () => {
+  const branches = [b("a", 1), b("b", 3), b("c", 8)];
+  // Even over a branch that is merely closed tonight: that one reopens.
+  assert.equal(leadBranch(branches, states({ a: "shut", b: "closed", c: "closed" })).label, "b");
+  assert.equal(leadBranch(branches, states({ a: "shut", b: "opening-soon", c: "closed" })).label, "b");
+  // Tier 2 must not take "shut" for "not known closed".
+  assert.equal(leadBranch(branches, states({ a: "shut", b: "shut", c: "closed" })).label, "c");
+  assert.equal(leadBranch(branches, states({ a: "shut", b: "open" })).label, "b");
+});
+
+test("leadBranch: every branch shut (a venue closure) → the nearest still leads", () => {
+  const branches = [b("a", 1), b("b", 3)];
+  assert.equal(leadBranch(branches, states({ a: "shut", b: "shut" })).label, "a");
 });
 
 test("leadBranch: no oracle at all behaves as all-unknown → nearest", () => {

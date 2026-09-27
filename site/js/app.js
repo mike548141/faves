@@ -24,7 +24,7 @@ import { askSurface, suppressAsk, declineAsk, readConsent } from "./geo-consent.
 import { openStatus, makeClock, viewerOnVenueTime } from "./hours.js";
 import { isRecipeKind, kindOf, labelsOf } from "./kinds.js";
 import { closureBadge } from "./closure-ui.js";
-import { todayIn } from "./temporal.js";
+import { todayIn, isGone } from "./temporal.js";
 import { initPicker } from "./picker.js";
 import { buildIndex, search } from "./search.js";
 import { rotateHints, defaultHints } from "./search-hints.js";
@@ -236,8 +236,10 @@ function card(r, clock, origin = null) {
   if (r.status === "stub") {
     // ...unless it has closed for good: "Menu coming soon" for a venue that
     // will never serve again is worse than saying nothing. The closure badge
-    // below carries the real news.
-    if (r.closure?.state !== "closed-permanently") {
+    // below carries the real news. Asked of `isGone`, not spelled out here:
+    // this line WAS isGone, typed by hand, while the named predicate sat in
+    // temporal.js with zero callers (ADR 0132).
+    if (!isGone(r)) {
       chips.append(el("span", { className: "chip chip-status", textContent: labels.stubChip }));
     }
   } else if (labels.chip) {

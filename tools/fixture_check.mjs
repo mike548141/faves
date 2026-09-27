@@ -189,7 +189,10 @@ async function everyFixture(skipped) {
   records.push(
     await buildFixture(SITE, {
       from: "tj-katsu",
-      states: ["permanently-closed", "no-hours-anywhere", "empty-section", "unpriced-dish"],
+      // `one-branch-shut` composed with a venue closure is the shape ADR 0132's
+      // precedence rule is about — the venue's closure is the floor — so it
+      // is gated here as well as alone.
+      states: ["permanently-closed", "one-branch-shut", "no-hours-anywhere", "empty-section", "unpriced-dish"],
     }),
   );
   return records;
@@ -328,6 +331,15 @@ const SELFTEST = {
     },
     /menu item missing a name/,
   ],
+  // ADR 0132. The branch's block is checked by the same code as the venue's,
+  // one level down; this proves the one-level-down half is actually reached
+  // on a fixture, not only on test_validate's Pandan mutations.
+  "a shut branch whose closure lost its date": [
+    (r) => {
+      r.locations[0].lifecycle.events[0].date = "sometime in 2016";
+    },
+    /locations\[0\]\.lifecycle\.events\[0\]: date must be an ISO date/,
+  ],
   "a fixture that lost its lifecycle entirely": [
     (r) => {
       delete r.lifecycle;
@@ -362,7 +374,7 @@ async function selfTest(report) {
       }
       const record = await buildFixture(SITE, {
         from: "tj-katsu",
-        states: ["permanently-closed", "empty-section", "unpriced-dish"],
+        states: ["permanently-closed", "one-branch-shut", "empty-section", "unpriced-dish"],
       });
       if (mutate) mutate(record);
       await stage(work, [record]);

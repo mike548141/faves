@@ -163,9 +163,13 @@ excluded from both stores, always.
       "hours": { /* week */ },       //   present, the branches carry address/lat/lng/
       "timezone": null,              //   phone/hours — those five must then be ABSENT
       "detailsVerified": null,       //   at the top level. `timezone`, `detailsVerified`
-      "detailsVerifiedBy": null }    //   and `detailsVerifiedBy` are DIFFERENT: legal at
-  ],                                 //   both levels, branch winning, top level the
-                                     //   default (ADR 0043; per-branch provenance)
+      "detailsVerifiedBy": null,     //   and `detailsVerifiedBy` are DIFFERENT: legal at
+      "lifecycle": {                 //   both levels, branch winning, top level the
+        "events": [ … ] } }          //   default (ADR 0043; per-branch provenance).
+  ],                                 //   `lifecycle` (optional, ADR 0132): the venue's
+                                     //   block one level down, `added` optional — one
+                                     //   branch shut while the others trade. The venue's
+                                     //   closure is the floor; never on a sole branch
 
   "image": null,                     // optional self-hosted card photo, e.g. "img/kk/hero.jpg"
   "alt": null,                       // required when image is set (a11y)
@@ -657,14 +661,24 @@ every branch heading in the contact card, and `ranking.js` treats a closed venue
 as unavailable whatever its posted hours say. A stale price costs a dollar; a
 closed venue costs a wasted trip.
 
-**A venue-level closure outranks every branch's posted hours.** The fold is
-venue-wide (`venueState`) and the schema has no per-branch `lifecycle`, so the
-only closure we hold applies to all of a chain's branches: the branch card
-states it once per branch heading and prints no live open/closed chip anywhere,
-and `leadBranch` is told every branch is shut rather than leading with one its
-hours call open. Guarded by `tools/branch_check.mjs`, which has to inject the
-closure itself — no venue in the corpus is closed. Whether closure *should* be
-per-branch is an open question for the owner (Theme 27, item 040).
+**Closure is per branch, and the venue's closure is the floor (ADR 0132).**
+A branch may carry its own `lifecycle` (same block, `added` optional), folded by
+the same `venueState` into `branch.closure` — only where one exists, so an
+ordinary record resolves exactly as before. `temporal.branchClosure(r, b)` is
+the one answer every branch surface reads: the **more severe** of the venue's
+closure and the branch's own wins, and a tie goes to the venue — so a
+venue-level closure still shuts every branch, and a branch that has gone for
+good stays gone when its chain reopens from a refit. A closed branch states it
+once on its heading and prints no live open/closed chip anywhere; its week
+stays, as the record of when it traded. `leadBranch` hears `"shut"` for it (not
+`"closed"`) and never leads with it while any branch still trades, even one
+shut by its hours right now; `nearestBranch` skips it for the same reason, so
+the home card, "Open now" and ranking agree with the menu page's card. A shut
+branch is never recorded by deleting it (ADR 0023). `validate.py` refuses a
+lifecycle on a sole branch, a branch added before its venue, and every branch
+gone while the venue trades. Guarded by `tools/branch_check.mjs` and the
+`one-branch-shut` / `one-branch-refit` fixture states — nothing in the corpus
+is closed.
 
 #### What we still owe a dish — `needs` (ADR 0041)
 
@@ -1014,13 +1028,16 @@ precached payload nothing on any screen can reach (ADR 0047).
   branch to the top level so every consumer keeps working; "Near me" distance,
   the drive-time hint, the card's open/closed status and the maps handoff then
   use the **nearest** branch when the viewer's location is known, and the
-  **primary** branch when it isn't (never "any branch open" — that would
+  **primary** branch when it isn't — in both cases among the branches that
+  still trade, when any does (ADR 0132) — (never "any branch open" — that would
   contradict the distance shown). The menu screen shows **one branch expanded —
   the nearest that is open — up to four more as one-tap collapsed rows, and any
   remainder behind "Show all N"** (ADR 0054, `locations.leadBranch` /
   `branchCard`), each with its own directions link, phone and hours. Openness is
-  three-state (`open`/`closed`/`unknown`): a branch with no `hours` is never
-  given a status chip, and never ranks below one known to be shut. The viewer's
+  three-state (`open`/`closed`/`unknown`), plus `shut` for a branch that has
+  stopped trading (ADR 0132), which leads only when every branch has: a branch
+  with no `hours` is never given a status chip, and never ranks below one known
+  to be shut. The viewer's
   branch distance limit (`favBoostKm`) filters both lists, the lead always
   survives it, and whatever it hid is counted on the card. A one-branch array
   renders identically to a flat single-location venue.
