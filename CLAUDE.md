@@ -479,6 +479,8 @@ python3 tools/test_validate.py # …and that gate still catches things (147 muta
 python3 tools/check_no_deps.py # zero-dependency invariant (ADR 0001) holds
 python3 tools/gen_sbom.py --check # published SBOM matches the tree (ADR 0008)
 python3 tools/fetch_fx.py --check # the shipped FX rates load (ADR 0045); no network
+python3 tools/test_fetch_fx.py # …and its DATA_VERSION bump is NZ-dated and never
+                              # goes backwards (the UTC runner did, PR #52, 2026-09-28)
 python3 tools/check_visibility.py # the visibility bullet above is still true
 python3 tools/check_fallback.py # the no-JS <ul> in site/index.html still mirrors
                               # site/data/index.json — same ids, same order, and a

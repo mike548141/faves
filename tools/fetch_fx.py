@@ -237,18 +237,37 @@ def bump_data_version():
     Same-day reruns get `.1`, `.2`, … so two refreshes in a day are distinct.
     """
     text = SW.read_text()
-    today = date.today().isoformat()
     m = re.search(r'const DATA_VERSION = "([^"]+)";', text)
     if not m:
         raise SystemExit("could not find DATA_VERSION in site/sw.js")
     old = m.group(1)
-    if old.startswith(today):
-        tail = old[len(today):].lstrip(".")
-        nxt = f"{today}.{int(tail) + 1}" if tail.isdigit() else f"{today}.1"
-    else:
-        nxt = f"{today}.1"
+    nxt = next_data_version(old, nz_today())
     SW.write_text(text.replace(f'const DATA_VERSION = "{old}";', f'const DATA_VERSION = "{nxt}";', 1))
     return f"DATA_VERSION {old} -> {nxt}"
+
+
+def nz_today():
+    """Today in New Zealand, which is how the version constants are dated
+    (CLAUDE.md, lockstep rules). `date.today()` is the MACHINE's date: on the
+    UTC Actions runner it is a day behind NZ from midday UTC, and stamped a
+    restamped FX PR BELOW main's constant on 2026-09-28 (PR #52)."""
+    from zoneinfo import ZoneInfo
+    return datetime.now(ZoneInfo("Pacific/Auckland")).date().isoformat()
+
+
+def next_data_version(old, today):
+    """The constant after `old`, dated `today` (YYYY-MM-DD), and NEVER below
+    `old`: a version is a cache name, and a lower one is already installed
+    somewhere and served stale (check_versions.py's went_backwards). If `old`
+    carries a later date than `today` — a clock behind the one that stamped
+    it — the counter on `old`'s own date moves on instead."""
+    m = re.fullmatch(r"(\d{4}-\d{2}-\d{2})(?:\.(\d+))?", old)
+    if not m:
+        return f"{today}.1"
+    old_day, old_n = m.group(1), int(m.group(2) or 0)
+    if old_day > today:
+        today = old_day
+    return f"{today}.{old_n + 1}" if old_day == today else f"{today}.1"
 
 
 def check():
