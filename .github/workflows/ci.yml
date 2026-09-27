@@ -233,6 +233,17 @@ jobs:
         run: python3 tools/check_provenance.py
       - name: Prove that provenance gate actually catches things
         run: python3 tools/check_provenance.py --selftest
+      # This repo is public and history cannot be edited, so an image that
+      # lands carrying GPS publishes an address for ever — and the owner has
+      # ruled that evidence photographs WILL be committed once clean (ADR
+      # 0128). Every tracked file is sniffed by its bytes and read with an
+      # ALLOWLIST: any structure the reader cannot vouch for fails, not just
+      # GPS. 🛑 It reports AFTER a direct push has already published; the
+      # before-the-fact half belongs in the pre-commit floor (`--staged`).
+      - name: Assert no tracked image carries a location or unvetted metadata
+        run: python3 tools/check_images.py
+      - name: Prove that image gate actually catches things
+        run: python3 tools/check_images.py --selftest
       # Every step above now ends with a line naming the tree it read (ADR
       # 0113). That line is only worth anything if it DIFFERS between trees —
       # a helper printing the same string from two checkouts is ADR 0072's

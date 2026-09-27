@@ -698,6 +698,19 @@ python3 tools/check_provenance.py # a venue's `verified` is not FRESHER than the
                               # photos is CORRECT and a "newest photo wins" rule would
                               # refuse it. `--sweep` for the table, `--selftest` for the
                               # 9 break-probes, `--for` on intake_exif before you type
+python3 tools/check_images.py # no TRACKED image carries a location — or anything
+                              # else the reader cannot vouch for (ADR 0128). An
+                              # ALLOWLIST, not a GPS detector: XMP, IPTC, MakerNote,
+                              # thumbnails, Apple's MPF image appended AFTER the end
+                              # of the JPEG, and every format it does not parse
+                              # (HEIC, PDF…) all fail. Files are sniffed by BYTES —
+                              # four intake files lie about their format in their
+                              # name. In CI. `--selftest` (28 cases, two break-probes:
+                              # reader disabled ⇒ 19 of 20 refusals must fail;
+                              # location naming disabled ⇒ all still refused).
+                              # Before ANY image is staged: `tools/strip_exif.py
+                              # SRC --out DIR` writes a stripped copy and refuses
+                              # what it cannot prove from the written bytes
 python3 tools/check_records.py # data/images/ and data/withdrawn/ — the two record
                               # stores NOTHING validated until 2026-09-08. The
                               # direction that matters is file→row: a photo shipped

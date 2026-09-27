@@ -1622,3 +1622,15 @@ deliberation those compact docs omit.
   of unnamed stores — is documented, not fixed: nothing is destroyed today, and
   merging a store this build cannot validate is the exact case `sync.js`'s own
   rule already refuses one level down.
+- [0128](0128-an-image-is-stripped-to-an-allowlist-and-proven-or-refused.md) —
+  **an image is stripped to an allowlist and proven clean from the written
+  bytes, or refused** (roadmap `340/250` parts 1–3; the import, part 4, stays
+  with the owner). One strict reader, `tools/lib/imagemeta.py`, fails a file
+  on ANY structure outside its list — GPS, XMP, IPTC, MakerNote, thumbnails,
+  Apple's MPF image appended after EOI — and on any format it does not parse
+  (HEIC, PDF…). `strip_exif.py` keeps the coded pixels byte-identical,
+  Orientation, and a sanitised colour profile, then refuses unless the
+  verifier, a second reader and a pixel-bytes comparison all agree.
+  `check_images.py` gates every tracked file in CI. A decode comparison was
+  measured and rejected: macOS picks a different JPEG decoder on Apple's
+  `AMPF` hint. Stripping saves under 5% of 1.94 GB; size is still the owner's.
