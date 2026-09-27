@@ -1,9 +1,14 @@
-- [~] 🔎 **An orchestrator tore down a sub-agent's worktree while the agent was
+- [x] 🔎 **An orchestrator tore down a sub-agent's worktree while the agent was
       still running, because a clean tree and a pushed HEAD look exactly like a
       finished agent** `[S][docs]` — found 2026-09-07 (session faves-b1) by
       doing it **twice**, and reported by both agents it happened to.
-      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — inline, by the orchestrator.
-      (claimed 2026-09-27-1350, wt: main)
+      ✅ **CLOSED 2026-09-27 (session `40d6dea4`).** The obligation is now written
+      where an orchestrator reads it — a dated pending-upstream line in
+      `CLAUDE.md` § Working conventions — and was practised the same day: all
+      four briefs in that run required a final `WORKER DONE:` line. The rule is
+      house-shaped, so it was handed up rather than kept: atelier `180/020`
+      (PR #90), which quotes atelier's *"Delete a worktree when its branch
+      lands"* as the line that produced this incident.
 
   ⚠️ **It says TWICE because the second report corrected the first count.** This
   item was written from the `past-midnight` agent's report and said "an agent".

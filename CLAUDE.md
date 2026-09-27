@@ -1128,6 +1128,14 @@ build-less static site. See `CONTRIBUTING.md` for the fuller version.
   line under _Unreleased_ in `CHANGELOG.md` when a user-visible feature
   or fix lands. Append a `docs/SESSIONS.md` entry (append-only, newest
   last) before finishing a session.
+- ⏳ **Pending upstream (atelier `180/020`, PR #90, filed 2026-09-27) — remove
+  this line when atelier rules.** Owner-ruled here 2026-09-07 (roadmap
+  `340/240`): **every sub-agent brief ends by requiring a terminal line**,
+  e.g. `WORKER DONE: <branch>@<sha>`, and **a worker's worktree is not removed
+  until the harness's completion notification arrives**. A clean tree plus a
+  pushed HEAD means nothing is unpushed, not that the agent has stopped — two
+  workers had their directory torn down mid-verification. Merging from
+  `origin/<branch>` early stays safe.
 - **A blocked command is a decision. Say so THE MOMENT you route around it**
   (owner-ruled 2026-08-17) — not in your closing report. If the permission
   system refuses a command and you reach for another way to get the same
