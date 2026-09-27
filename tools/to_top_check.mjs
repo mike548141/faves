@@ -323,6 +323,19 @@ async function run(opts) {
           refuseUnlessItArrived(`${at}: the ${s.positions}-position sweep`, s.missedAt);
           const scale = `${s.positions} positions over ${s.maxY + 844}px of document`;
 
+          // --- 0. The sweep has something to say (roadmap 28s). -------------
+          // Every presence assertion below is gated on `y >= SHOW_AT`, and the
+          // first one's verdict is `notOffered.length === 0` — so a document
+          // too short to reach the threshold scores `past === 0` and printed
+          // "0 positions past the threshold, shown at every one". A menu that
+          // got SHORTER (a ladder merge folds rows into one) would pass that
+          // vacuously. Assert the sweep actually crossed the threshold.
+          report.check(
+            `${at}: the document reaches past the ${SHOW_AT}px threshold, so the sweep tests something`,
+            s.past > 0,
+            `${s.past} position(s) past the threshold (${scale})`
+          );
+
           // --- 1. The 2026-09-07 report. It must BE there on the way down. ---
           report.check(
             `${at}: the ↑ is offered at every scroll position past ${SHOW_AT}px`,
@@ -366,6 +379,14 @@ async function run(opts) {
 
           // --- 4. Direction must no longer decide anything. ------------------
           const depths = [1200, 2400, 4000].filter((d) => d + 500 <= s.maxY);
+          // The same vacuity one level down: the depths are filtered by the
+          // document's length, and an empty list used to skip the comparison
+          // silently. A skip is now a failure that says why (roadmap 28s).
+          report.check(
+            `${at}: the document is deep enough for the up/down comparison to run`,
+            depths.length > 0,
+            depths.length ? `compared at y=${depths.join(", ")}` : `maxY ${s.maxY}px < 1700px — nothing to compare`
+          );
           if (depths.length) {
             const both = await driver.evalPage(BOTH_WAYS(depths));
             refuseUnlessItArrived(`${at}: the up/down comparison`, both.missed);

@@ -25,6 +25,17 @@ must not destroy the rows it did not touch.
     python3 tools/test_split_data.py -v     # show each run's output
 
 Exit 0 = every case behaved and every probe fired. 1 = a hole.
+
+🛑 WHAT A GREEN RUN HERE DOES NOT SAY (roadmap 28s, 2026-09-28). Every venue,
+price row and dish row here is a LITERAL in a temporary tree; the real corpus is
+never opened — `ROOT` is only where the tool under test is copied from. So this
+stays green while every real history row is orphaned, and its CI job's name
+("history is joined to dishes by id, not by name") describes the TOOL, not the
+data. The corpus is `python3 tools/split_data.py --check`'s job. And the one
+change it would have to learn for a ladder merge — N sibling rows folding into
+one dish, which `split_data.py`'s round-trip count cannot survive — is roadmap
+28l's to decide (re-key the history, or change the arithmetic); a case for it
+here would be written against an answer nobody has given yet.
 Stdlib only; the temporary tree is deleted on exit and nothing outside it is read
 or written.
 """

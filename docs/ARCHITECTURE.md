@@ -198,7 +198,9 @@ excluded from both stores, always.
   "addOnGroups": [                   // OPTIONAL: priced extras, defined ONCE per
     { "id": "sauces",                //   venue and named by id from a section or a
       "name": "Our sauces",          //   dish (ADR 0048) — see "Add-ons" below
-      "select": "many",              //   "one" | "many"
+      "kind": "adds",                //   OPTIONAL: "adds" (absent = adds) | "selects"
+                                     //   — a variant ladder, see "Add-ons" (ADR 0130)
+      "select": "many",              //   "one" | "many" ("adds" only)
       "max": 3,                      //   optional cap, "many" only, <= option count
       "price": 0,                    //   optional group default for its options
       "options": [                   //   1..n. tags is REQUIRED on every option and
@@ -771,6 +773,28 @@ section is written once.
 - `tags` is **required** on every option, against the same closed
   vocabulary as a dish. It may be empty, which says "not stated" — a
   state composition treats differently from a stated clash.
+
+**A group that SELECTS a variant (ADR 0130).** `"kind": "selects"` makes a
+group a size or protein ladder — which plate, not what goes on it. Absent
+`kind` means `"adds"`, so every earlier group is unchanged. A `selects` group:
+
+- has no `select`, `max` or group `price` (each is an error, not ignored);
+- has at least two options, **exactly one** marked `"default": true`;
+- prices each option with **`dishPrice`** — the dish's whole price as that
+  variant, never `price` (a surcharge every older reader would add to the
+  dish). Never `null`: an unstated size price stays in the prose. Two
+  options may share one;
+- may leave an option **unlabelled** (the venue printed two prices and named
+  neither); its `id` is then written by hand.
+
+Per dish, `validate.py` also requires: the dish's `price` equals its default's
+`dishPrice`; at most one `selects` group on the dish (size × protein is **not
+expressible yet**); no per-channel `prices` beside a ladder (**not expressible
+yet**); and every variant carries **exactly** the dish's dietary claim tags and
+nothing that contradicts one — so intersection (below, unamended) can never
+strip a claim when a variant is picked, and a variant can never pretend to
+restore one. Until roadmap 28m draws the control, `groupsFor` withholds a
+`selects` group from the picker and the row shows the dish's own price.
 
 Safety composes in `site/js/addons.js`: allergens **union** (present on
 any part ⇒ present on the whole) and dietary claims **intersect** (the

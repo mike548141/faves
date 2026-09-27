@@ -65,8 +65,21 @@ SEASONS = {"summer", "autumn", "winter", "spring"}
 # How many of a group's options you may take (ADR 0048). Kept in step with
 # site/js/addons.js `selectionAllowed`, which enforces the same two words.
 ADD_ON_SELECT = {"one", "many"}
-ADD_ON_GROUP_KEYS = {"id", "name", "select", "max", "price", "options"}
-ADD_ON_OPTION_KEYS = {"name", "id", "price", "tags"}
+# What choosing an option DOES (ADR 0130). `adds` puts something on the plate —
+# a sauce, a side — and is every group written before this field existed, so an
+# absent `kind` means `adds` and no existing record changes. `selects` chooses
+# WHICH plate — a size, a protein — so exactly one option is always chosen, one
+# is the default, and each option states the dish's whole price for that
+# variant (`dishPrice`), never a surcharge.
+ADD_ON_KINDS = {"adds", "selects"}
+ADD_ON_GROUP_KEYS = {"id", "name", "kind", "select", "max", "price", "options"}
+ADD_ON_OPTION_KEYS = {"name", "id", "price", "dishPrice", "default", "tags"}
+# The tags that make a dietary CLAIM, `-option` forms included — the Python
+# mirror of DIET_FILTERS' `satisfies` lists in site/js/dietary.js, which is what
+# addons.js composeTags intersects. A `selects` option must restate exactly the
+# claims of every dish it is a variant of (ADR 0130), so this is the set that
+# comparison is made over.
+CLAIM_TAGS = {"v", "vg", "gf", "df", "v-option", "vg-option", "gf-option", "df-option"}
 TIME_RE = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
@@ -1018,6 +1031,192 @@ def check_item_prices(rid, item, where, declared):
             err(rid, f"{where}: prices.{key} must be a finite, non-negative number")
 
 
+def check_selects_group(rid, g, where, options):
+    """The group-level rules for `"kind": "selects"` (ADR 0130).
+
+    A selects group chooses WHICH plate, so exactly one option is always chosen.
+    That makes three fields of an `adds` group meaningless here, and each is
+    refused rather than ignored, because a field that is silently ignored is a
+    field a transcriber believes is doing something:
+
+    - `select` — "one" or "many" answers "how many may I add?", and the answer
+      for a variant is always exactly one; `kind` already says so.
+    - `max` — a cap on a group where exactly one is chosen can never bind.
+    - `price` — a group default. On an `adds` group it is the terseness that
+      writes twelve free sauces once; on a ladder it would be ONE price for
+      every size, which is a price the menu did not state.
+
+    And one the item did not name: a ladder of one option chooses nothing. It
+    is a dish with a price, and it already has a place to put that."""
+    for k, why in (
+        ("select", "a variant group always chooses exactly one — `kind` already says so"),
+        ("max", "exactly one is chosen, so a cap can never bind"),
+        ("price", "each variant states its own `dishPrice`; one default for every "
+                  "size would be a price the menu did not state"),
+    ):
+        if k in g:
+            err(rid, f"{where}: {k} does not apply to a selects group — {why} (ADR 0130)")
+    if 0 < len(options) < 2:
+        err(rid, f"{where}: a selects group needs at least two options — one variant "
+                 "chooses nothing; that is the dish's own price")
+    defaults = [o for o in options if isinstance(o, dict) and o.get("default") is True]
+    if options and not defaults:
+        err(rid, f"{where}: a selects group needs exactly one option marked "
+                 '"default": true — the row shows a price before anything is tapped, '
+                 "and that price is the default's (ADR 0130)")
+    elif len(defaults) > 1:
+        labels = ", ".join(repr(o.get("name") or o.get("id")) for o in defaults)
+        err(rid, f"{where}: {len(defaults)} options are marked default ({labels}) — "
+                 "exactly one is, or the row's price has two answers")
+
+
+def check_selects_option(rid, o, at):
+    """One option of a `selects` group (ADR 0130): `dishPrice`, never `price`.
+
+    `dishPrice` is the WHOLE price of the dish as that variant — Margherita
+    Small $14.50 / Large $29.00 — not a surcharge. It is its own word, not
+    `price` re-read by kind, because every consumer written before ADR 0130
+    (site/js/addons.js `optionPrice`, `selectionPrice`, and cart.js summing it
+    onto the dish price) reads an option's `price` as a delta. The same number
+    under the same key would be charged twice by every one of them the moment a
+    ladder reached the screen: $14.50 + $29.00. A new key is one no old reader
+    can misread.
+
+    Never null, for ADR 0048 §2's reason. If the menu does not state what a
+    size costs, the ladder stays in the prose (28b's refusal): a structure that
+    required a price per size would force inventing one. Two options may share
+    a price — Hell's drinks state two volumes at one — and that is not an
+    error."""
+    if "price" in o:
+        err(rid, f"{at}: a variant carries `dishPrice` (the dish's whole price as this "
+                 "variant), not `price` (a surcharge added to the dish) — ADR 0130")
+    if "dishPrice" not in o:
+        err(rid, f"{at}: no dishPrice — a variant states the dish's price as that "
+                 "variant. If the menu does not say, the ladder stays in the prose (28b)")
+    else:
+        p = o["dishPrice"]
+        if p is None:
+            err(rid, f"{at}: dishPrice must not be null — a variant whose price the menu "
+                     "does not state stays in the prose, never structured with a gap (ADR 0130)")
+        elif isinstance(p, bool) or not isinstance(p, (int, float)):
+            err(rid, f"{at}: dishPrice must be a number, got {p!r}")
+        elif not math.isfinite(p) or p < 0:
+            err(rid, f"{at}: dishPrice must be a finite, non-negative number, got {p!r}")
+    if "default" in o and o["default"] is not True:
+        err(rid, f"{at}: default must be true or absent, got {o['default']!r} — "
+                 "only the default says so")
+
+
+def current_price(item):
+    """A dish's price as the row shows it today: the plain value, or the LAST
+    entry of a dated series (ADR 0023 — series are oldest first). None when
+    there is no number to be had."""
+    p = item.get("price")
+    if isinstance(p, list):
+        p = p[-1].get("value") if p and isinstance(p[-1], dict) else None
+    return p if isinstance(p, (int, float)) and not isinstance(p, bool) else None
+
+
+def groups_for(defs, section, item):
+    """The add-on groups that apply to `item`, section's first then its own,
+    each once — the Python mirror of `groupsFor` in site/js/addons.js. A
+    dangling id is dropped here as it is there; the reference check reports it."""
+    out, seen = [], set()
+    for gid in [*(section.get("addOns") or []), *(item.get("addOns") or [])]:
+        if not isinstance(gid, str) or gid in seen:
+            continue
+        seen.add(gid)
+        if isinstance(defs.get(gid), dict):
+            out.append(defs[gid])
+    return out
+
+
+def is_selects(group):
+    return isinstance(group, dict) and group.get("kind") == "selects"
+
+
+def check_selects_on_dish(rid, section, item, defs):
+    """The rules a `selects` group can only be held to against the DISH it is
+    a variant of (ADR 0130). Each is an error.
+
+    1. **One ladder per dish.** Two absolute price ladders cannot price the
+       plate they jointly choose: Regular/Large × Chicken/Lamb has four prices
+       and two lists of two cannot say them. The corpus has exactly one venue
+       shaped like this (Abrakebabra). Refused, not guessed at — an open
+       question recorded in ADR 0130.
+    2. **The dish's `price` IS its default variant's `dishPrice`.** The row
+       prints `item.price` before anything is tapped, so the two are one number
+       or the screen shows a price no variant has.
+    3. **No per-channel prices beside a ladder.** ADR 0089's `prices.delivery`
+       is one number for the dish; with variants it would be the default's
+       delivery price and nothing would say what the Large costs on delivery.
+       Not expressible yet, so refused rather than half-said.
+    4. **A variant restates its dish's dietary claims exactly, and contradicts
+       none of them.** ADR 0048 §3 is NOT amended (28i, owner-ruled 2026-09-09):
+       composition intersects claims, so a variant that states fewer would
+       strip a claim from the dish the moment it is picked — a Large carrying
+       no `v` would make a vegetarian pizza unvegetarian — and a variant that
+       states MORE claims something intersection can never deliver: `Falafel`
+       tagged `v` on a `Kebab` that is not cannot make the kebab vegetarian.
+       So the only variant this schema can carry honestly is one whose claims
+       agree with its dish's, which is exactly 28i's option 3 — merge the
+       groups whose claims already agree, hold the rest as separate dishes.
+       Enforced here, not trusted to the migration."""
+    name = item.get("name")
+    ladders = [g for g in groups_for(defs, section, item) if is_selects(g)]
+    if not ladders:
+        return
+    where = f"item {name!r}"
+    if len(ladders) > 1:
+        ids = ", ".join(repr(g.get("id")) for g in ladders)
+        err(rid, f"{where}: {len(ladders)} selects groups ({ids}) on one dish — two absolute "
+                 "price ladders cannot price the plate they choose together; not "
+                 "expressible yet (ADR 0130)")
+    g = ladders[0]
+    gid = g.get("id")
+    options = [o for o in (g.get("options") or []) if isinstance(o, dict)]
+
+    defaults = [o for o in options if o.get("default") is True]
+    if len(defaults) == 1:
+        want = defaults[0].get("dishPrice")
+        have = current_price(item)
+        if isinstance(want, (int, float)) and not isinstance(want, bool) and (
+            have is None or abs(have - want) > 1e-9
+        ):
+            label = defaults[0].get("name") or defaults[0].get("id")
+            err(rid, f"{where}: price {have!r} disagrees with {label!r}, the default of "
+                     f"selects group {gid!r} (dishPrice {want!r}) — the row shows the dish's "
+                     "price before anything is tapped, so the two are one number")
+
+    if "prices" in item:
+        err(rid, f"{where}: per-channel prices beside selects group {gid!r} — a delivery "
+                 "price per variant is not expressible yet, so it is refused rather than "
+                 "left to mean only the default (ADR 0130)")
+
+    tags = item.get("tags") if isinstance(item.get("tags"), list) else []
+    dish_claims = {t for t in tags if t in CLAIM_TAGS}
+    for o in options:
+        otags = o.get("tags") if isinstance(o.get("tags"), list) else []
+        label = o.get("name") or o.get("id")
+        at = f"{where}: variant {label!r} of selects group {gid!r}"
+        opt_claims = {t for t in otags if t in CLAIM_TAGS}
+        missing = sorted(dish_claims - opt_claims)
+        extra = sorted(opt_claims - dish_claims)
+        if missing:
+            err(rid, f"{at} does not restate the dish's {', '.join(missing)} — claims "
+                     "intersect (ADR 0048 §3), so picking it would strip them; a variant "
+                     "states its dish's claims exactly, and a ladder whose variants "
+                     "disagree stays separate dishes (28i, ADR 0130)")
+        if extra:
+            err(rid, f"{at} claims {', '.join(extra)}, which the dish does not — a variant "
+                     "cannot restore a claim (ADR 0048 §3 is not amended; 28i, ADR 0130)")
+        for t in sorted(dish_claims):
+            for hit in sorted(CONTRADICTS.get(t.replace("-option", ""), set())):
+                if hit in otags:
+                    err(rid, f"{at} carries {hit}, which contradicts the dish's {t} — a "
+                             "variant of a dish making that claim cannot be one (ADR 0130)")
+
+
 def check_add_on_groups(rid, data):
     """`record.addOnGroups`: the venue's priced extras, defined once and named
     by id from a section or a dish (ADR 0048). Returns {id: group} so the caller
@@ -1056,19 +1255,32 @@ def check_add_on_groups(rid, data):
 
         if not (isinstance(g.get("name"), str) and g["name"].strip()):
             err(rid, f"{where}: name must be a non-empty string (what the venue calls the group)")
-        if g.get("select") not in ADD_ON_SELECT:
-            err(rid, f"{where}: select must be one of {sorted(ADD_ON_SELECT)}, got {g.get('select')!r}")
-        check_add_on_price(rid, g, where)
+
+        # `kind` (ADR 0130). Absent means `adds`, so every group written before
+        # the field existed validates unchanged — and is checked by exactly the
+        # code below that always checked it.
+        kind = g.get("kind", "adds")
+        if kind not in ADD_ON_KINDS:
+            err(rid, f"{where}: kind must be one of {sorted(ADD_ON_KINDS)} or absent, got {kind!r}")
+            kind = "adds"
+        selects = kind == "selects"
 
         options = g.get("options")
         if not isinstance(options, list) or not options:
             err(rid, f"{where}: options must be a non-empty list")
             options = []
 
+        if selects:
+            check_selects_group(rid, g, where, options)
+        else:
+            if g.get("select") not in ADD_ON_SELECT:
+                err(rid, f"{where}: select must be one of {sorted(ADD_ON_SELECT)}, got {g.get('select')!r}")
+            check_add_on_price(rid, g, where)
+
         # "Choose up to 3" is a rule the venue set, so it lives in the data — but
         # only a pick-many group can have one, and a cap above the options is a
         # cap that can never bind, i.e. a rule nobody wrote.
-        if g.get("max") is not None:
+        if g.get("max") is not None and not selects:
             m = g["max"]
             if isinstance(m, bool) or not isinstance(m, int) or m < 1:
                 err(rid, f"{where}: max must be an integer >= 1, got {m!r}")
@@ -1085,7 +1297,14 @@ def check_add_on_groups(rid, data):
                 err(rid, f"{at} must be an object")
                 continue
             oname = o.get("name")
-            if not (isinstance(oname, str) and oname.strip()):
+            # A `selects` option may be UNLABELLED (ADR 0130): 26 rows in the
+            # corpus record that the venue prints two prices and never names the
+            # larger size, and inventing "Large" would put a word on the screen
+            # the menu never printed. Its id then names it in every message.
+            if selects and "name" not in o:
+                if isinstance(o.get("id"), str) and o["id"]:
+                    at = f"{where}: option id {o['id']!r}"
+            elif not (isinstance(oname, str) and oname.strip()):
                 err(rid, f"{at}: name must be a non-empty string")
             else:
                 at = f"{where}: option {oname!r}"
@@ -1103,8 +1322,12 @@ def check_add_on_groups(rid, data):
             # the key uses; two groups may each have a "large".
             oid = o.get("id")
             if oid is None:
-                want = slug(oname) if isinstance(oname, str) else ""
-                err(rid, f'{at}: no "id" — add "id": "{want}" (run tools/seed_option_ids.py)')
+                if not isinstance(oname, str):
+                    err(rid, f'{at}: no "id", and no name to seed one from — an unlabelled '
+                             'variant needs its "id" written by hand (ADR 0130)')
+                else:
+                    want = slug(oname)
+                    err(rid, f'{at}: no "id" — add "id": "{want}" (run tools/seed_option_ids.py)')
             elif not (isinstance(oid, str) and ID_RE.match(oid)):
                 suggestion = (slug(oid) if isinstance(oid, str) else "") or (
                     slug(oname) if isinstance(oname, str) else "")
@@ -1115,8 +1338,17 @@ def check_add_on_groups(rid, data):
                          "— two options sharing an id are one order line")
             else:
                 seen_ids[oid] = oname
-            check_add_on_price(rid, o, at)
-            if "price" not in o and "price" not in g:
+            if selects:
+                check_selects_option(rid, o, at)
+            else:
+                for k in ("dishPrice", "default"):
+                    if k in o:
+                        err(rid, f"{at}: {k} belongs to a variant — only an option in a "
+                                 'group with "kind": "selects" carries one (ADR 0130); '
+                                 "an add-on's cost is its `price`, added to the dish")
+            if not selects:
+                check_add_on_price(rid, o, at)
+            if not selects and "price" not in o and "price" not in g:
                 err(
                     rid,
                     f"{at}: no price, and its group sets no default — an add-on "
@@ -1461,6 +1693,30 @@ def find_dish(dishes, ref):
         if hits:
             return tier, hits
     return None, []
+
+
+def stale_reference(ref, tier, item):
+    """Why `ref` RESOLVED to `item` without naming it — or None when it names it.
+
+    `find_dish` answers "does this reference reach a dish?", and two of its
+    tiers can answer yes about a dish the reference was never written for
+    (roadmap 28s): the `slug` tier, where "Chicken kebab" slugs to a
+    `chicken-kebab` id that a merge has kept on a base dish now DISPLAYED as
+    "Kebab"; and the `formerId` tier, where the reference names an id that has
+    been retired onto another dish. Both resolve silently to a dish nobody
+    curated, so the gate reads a merge as a clean pass. A warning, not an
+    error: resolving IS what those tiers are for, and the answer may well be
+    right — it is the silence that is wrong. Written as the dish id, a
+    reference is deliberate and says nothing here."""
+    name = item.get("name")
+    if tier == "slug" and isinstance(name, str) and slug(name) != slug(ref):
+        return (f"{ref!r} reaches {name!r} only through its dish id — the name it was "
+                f"written against is gone; confirm it still means this dish, or write it "
+                f"as {dish_id(item)!r}")
+    if tier == "formerId":
+        return (f"{ref!r} reaches {name!r} only through a RETIRED id in its formerIds — "
+                f"write it as {dish_id(item)!r}")
+    return None
 
 
 def _no_constants(token):
@@ -1847,6 +2103,7 @@ def check_restaurant(path):
             dishes.append((sec_name, item))
             check_translations(rid, item, f"item {name!r}", {"name", "desc"})
             add_on_refs += collect_add_on_refs(rid, item, f"item {name!r}")
+            check_selects_on_dish(rid, section, item, add_on_defs)
             check_item_prices(rid, item, f"item {name!r}", declared_channels)
             # price may be a plain number/null, or a dated series (ADR 0023).
             # Every value in the series is type-checked exactly as a flat price
@@ -2104,6 +2361,10 @@ def check_restaurant(path):
                     f"pick {p!r} matches {len(by_name)} dishes ({where}) — name the "
                     f"one you mean by its dish id ({ids})",
                 )
+            elif len(hits) == 1:
+                stale = stale_reference(p, tier, hits[0][1])
+                if stale:
+                    warn(rid, f"pick {stale}")
     if status in ("menu-complete", "verified") and not picks:
         warn(rid, "no picks set yet")
 
@@ -2120,8 +2381,14 @@ def check_restaurant(path):
                 err(rid, f"goesWith {ref!r} on {dish!r}: unknown restaurant id {ref_id!r}")
             elif ref_name not in ALL_NAMES[ref_id]:
                 err(rid, f"goesWith {ref!r} on {dish!r}: no dish {ref_name!r} in {ref_id}")
-        elif not find_dish(dishes, ref)[1]:
-            err(rid, f"goesWith {ref!r} on {dish!r} does not match a dish in this menu")
+        else:
+            tier, hits = find_dish(dishes, ref)
+            if not hits:
+                err(rid, f"goesWith {ref!r} on {dish!r} does not match a dish in this menu")
+            else:
+                stale = stale_reference(ref, tier, hits[0][1])
+                if stale:
+                    warn(rid, f"goesWith on {dish!r}: {stale}")
 
     # Both directions of the add-on reference, because both are silent failures.
     # A dangling id renders nothing — groupsFor() drops it rather than throwing,
@@ -2293,6 +2560,49 @@ def check_twin_allergens():
                         f"another row of the same name carries — same food, or a "
                         f"stub description the allergen sweep could not read?",
                     )
+
+        # THE SECOND JOIN (roadmap 28s, ADR 0130): a dish against its own
+        # variants. The join above keys on a DUPLICATE NAME, and merging a
+        # ladder into one dish with a `selects` group is precisely the operation
+        # that removes duplicate names — so without this, the day a merge
+        # reduced a Gold Card row's allergens to its sibling's, the sweep would
+        # go QUIETER, reading as a cleaner corpus at the exact moment the fault
+        # it exists for had been applied. The variants of one dish are the
+        # pair now: each variant is the dish's allergens ∪ its option's, and a
+        # variant lacking what another variant carries is the same question
+        # the twin join asks. A warning for the same reason: a protein really is
+        # different food (halloumi is dairy, chicken is not), so a divergence
+        # must stay expressible — it is the silence that needs saying.
+        defs = {g.get("id"): g for g in (record.get("addOnGroups") or []) if isinstance(g, dict)}
+        for section in record.get("menu", []):
+            if not isinstance(section, dict):
+                continue
+            for item in section.get("items", []):
+                if not isinstance(item, dict):
+                    continue
+                base = {t for t in (item.get("tags") or []) if str(t).startswith("contains-")}
+                for g in groups_for(defs, section, item):
+                    if not is_selects(g):
+                        continue
+                    variants = [
+                        (o.get("name") or o.get("id"),
+                         base | {t for t in (o.get("tags") or []) if str(t).startswith("contains-")})
+                        for o in (g.get("options") or []) if isinstance(o, dict)
+                    ]
+                    if len(variants) < 2:
+                        continue
+                    union = set().union(*(t for _, t in variants))
+                    for label, tags in variants:
+                        missing = sorted(union - tags)
+                        if missing:
+                            others = [l for l, t in variants if set(missing) & t]
+                            warn(
+                                rid,
+                                f"{item.get('name')!r} as {label!r} (selects group "
+                                f"{g.get('id')!r}) lacks {', '.join(missing)}, which its "
+                                f"variant {others[0]!r} carries — different food, or an "
+                                f"allergen lost when the rows were merged?",
+                            )
 
 
 def check_self_contradicting_claims():

@@ -36,6 +36,7 @@ import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { foldSearchText } from "../site/js/search.js";
 import {
   Cdp,
   Report,
@@ -165,6 +166,33 @@ function seedExpr(venueId, venueName, dishName) {
 
 const same = (a, b) => JSON.stringify([...a].sort()) === JSON.stringify([...b].sort());
 
+/**
+ * Refuse a re-derived fixture dish that the page could confuse with another
+ * (roadmap 28s). This check picks its dish from the data rather than naming
+ * one, and finds it on the page by `li.dish[data-name]` — the FOLDED name
+ * (menu.js sets `data-name = foldSearchText(item.name)`). Two rows folding
+ * alike and the lookup takes the first, which is the wrong-line bug this
+ * family exists to catch, asserted against the wrong row. A merge of ladder
+ * rows (roadmap 28o) is the likeliest way to produce that, and nothing would
+ * have said so. So say it before a browser is launched: exit 2, never a PASS.
+ */
+function refuseAmbiguousFixture(items, name, venueId) {
+  const folded = foldSearchText(name);
+  const alike = items.filter((i) => typeof i.name === "string" && foldSearchText(i.name) === folded);
+  if (alike.length !== 1) {
+    throw new Error(
+      `${venueId}: the fixture dish "${name}" folds to "${folded}", which ${alike.length} rows share — ` +
+        `the page lookup would take whichever comes first. Pick another --id.`
+    );
+  }
+  if (folded !== name.toLowerCase()) {
+    throw new Error(
+      `${venueId}: the fixture dish "${name}" folds to "${folded}", not "${name.toLowerCase()}" — ` +
+        `this check looks it up by the latter and would find nothing.`
+    );
+  }
+}
+
 async function run(opts) {
   const report = new Report(opts.verbose);
 
@@ -177,6 +205,7 @@ async function run(opts) {
   if (!seedDish) {
     throw new Error(`${opts.id} has no ${ALLERGEN.key} dish — pick another --id`);
   }
+  refuseAmbiguousFixture(items, seedDish.name, opts.id);
 
   const { server, port } = await startServer(opts.port, SITE);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-device-check-"));
@@ -187,6 +216,10 @@ async function run(opts) {
     const url = `http://127.0.0.1:${port}/restaurant.html?id=${encodeURIComponent(opts.id)}`;
     console.log(`Faves device check — live allergen re-highlight`);
     console.log(`  venue    ${venue.name} (${opts.id})`);
+    // Re-derived, not named — so print it: a merge that changes which dish is
+    // "the first one tagged" changes this line, and a reader can see the
+    // subject moved (roadmap 28s).
+    console.log(`  dish     ${seedDish.name}  (first tagged ${ALLERGEN.key}; hearted + rated)`);
     console.log(`  page     ${url}`);
     console.log(`  profile  ${profileDir} (fresh — no service worker, no storage)\n`);
 

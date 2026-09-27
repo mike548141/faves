@@ -250,6 +250,18 @@ def _seed_one(path):
     return text, added, skipped
 
 
+def _count_dishes(path):
+    """How many dishes one venue file holds — for the summary line only."""
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return 0
+    return sum(
+        len(sec.get("items") or [])
+        for sec in (record.get("menu") or []) if isinstance(sec, dict)
+    )
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description=__doc__.split("\n")[0],
@@ -295,7 +307,18 @@ def main(argv=None):
             print(f"\n✗ {total} dish(es) across {touched} file(s) have no \"dishId\". "
                   "Run tools/seed_dish_ids.py.")
             return 1
-        print(f"✓ every dish in {len(files)} file(s) carries its own \"dishId\".")
+        # The COUNT is printed because this check can only ever see an id that
+        # is MISSING — a dish with a `dishId` is skipped, and an id that has
+        # GONE (its dish merged into another's `selects` ladder, roadmap 28o)
+        # leaves no row behind to be missing from. So the tick is exactly as
+        # true of a corpus that lost 250 dishes as of one that lost none, and
+        # the number beside it is the only thing that moves (roadmap 28s). A
+        # retired id being CLAIMED by some `formerIds` is roadmap 28l's
+        # coverage check, not this tool's — it has no memory of the corpus
+        # before the merge to compare with.
+        dishes = sum(_count_dishes(f) for f in files)
+        print(f"✓ every one of {dishes} dish(es) in {len(files)} file(s) carries its own "
+              f"\"dishId\" — a count, not a proof that none has gone.")
         return 0
 
     print(f"\n✓ seeded {total} dish(es) across {touched} file(s) "

@@ -292,6 +292,51 @@ test("groupsFor: an id with no definition is dropped, never thrown on", () => {
   assert.deepEqual(groupsFor(RECORD, {}, { addOns: ["nope", "sides"] }).map((g) => g.id), ["sides"]);
 });
 
+// --- a group that SELECTS a variant (ADR 0130, roadmap 28k) -------------
+// A synthetic size ladder: no record in site/data carries one yet.
+const LADDER = {
+  id: "size", name: "Size", kind: "selects",
+  options: [
+    { name: "Regular", id: "regular", dishPrice: 14, default: true, tags: ["v", "gf-option"] },
+    { name: "Large", id: "large", dishPrice: 29, tags: ["v", "gf-option"] },
+  ],
+};
+
+test("groupsFor: a selects group is withheld until a screen draws it (28m)", () => {
+  // The picker as it stands would offer it as a pick-one of extras: nothing
+  // chosen, each size priced +$0 and composed onto the plate. Withheld, the row
+  // shows the dish's own price, which validate.py holds equal to the default's.
+  const rec = { addOnGroups: [...RECORD.addOnGroups, LADDER] };
+  assert.deepEqual(groupsFor(rec, { addOns: ["size"] }, { addOns: ["sides", "size"] }).map((g) => g.id), ["sides"]);
+  // …and only the selects group: an explicit `kind: "adds"` is today's group.
+  const adds = { ...RECORD.addOnGroups[1], kind: "adds" };
+  assert.deepEqual(groupsFor({ addOnGroups: [adds] }, {}, { addOns: ["sides"] }).map((g) => g.id), ["sides"]);
+});
+
+test("optionPrice: a variant's dishPrice is never read as a surcharge", () => {
+  // Why `dishPrice` is its own word: every reader of `price` adds it to the
+  // dish. The Large is a $29 plate, not a $29 extra on a $14 one.
+  assert.equal(optionPrice(LADDER, LADDER.options[1]), 0);
+  assert.equal(selectionPrice([{ group: "size", ...LADDER.options[1] }]), 0);
+});
+
+test("composeTags: a variant that restates its dish's claims costs none of them", () => {
+  // ADR 0048 §3 is not amended (28i): claims still INTERSECT. What keeps a
+  // Large from stripping `v` off a vegetarian dish is the data — validate.py
+  // makes every variant restate its dish's claims exactly — so this is the
+  // half of that bargain the composer has to keep.
+  const large = { group: "size", ...LADDER.options[1] };
+  const out = composeTags(["v", "gf-option", "contains-dairy"], [large]);
+  assert.deepEqual(out.dropped, []);
+  assert.deepEqual(out.tags, ["v", "gf-option", "contains-dairy"]);
+  // …and why validate.py must hold it: an untagged variant would strip both.
+  const bare = composeTags(["v", "gf-option"], [{ ...large, tags: [] }]);
+  assert.deepEqual(bare.dropped.map((d) => d.tag), ["v", "gf-option"]);
+  // …and a variant claiming more than its dish restores nothing.
+  const restore = composeTags([], [{ ...large, tags: ["v"] }]);
+  assert.deepEqual(restore.tags, []);
+});
+
 // --- price ------------------------------------------------------------
 test("optionPrice: the group's price is a default the option overrides", () => {
   const g = { price: 0, options: [] };

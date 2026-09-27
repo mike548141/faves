@@ -397,15 +397,15 @@ def main():
             total += 1
             by_tag[tag] = by_tag.get(tag, 0) + 1
             if not args.stats:
-                print(f"{rid:28} {group.get('id',''):22} {option['name']:26} + {tag}  ({why})")
+                print(f"{rid:28} {group.get('id',''):22} {(option.get('name') or option.get('id', '')):26} + {tag}  ({why})")
 
         for group, option, why in review(record):
-            reviews.append((rid, group.get("id", ""), option["name"], why))
+            reviews.append((rid, group.get("id", ""), option.get("name") or option.get("id", ""), why))
         gained = {id(flat[i]) for i in additions}
         newly_tagged += sum(1 for i in additions if not flat[i].get("tags"))
         for group, option in options_of(record):
             if not option.get("tags") and id(option) not in gained:
-                gaps.append((rid, group.get("id", ""), option["name"]))
+                gaps.append((rid, group.get("id", ""), option.get("name") or option.get("id", "")))
 
         if args.apply and additions:
             raw = path.read_text(encoding="utf-8")

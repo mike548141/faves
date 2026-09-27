@@ -29,12 +29,14 @@
 //      dropped or muted them would leave every unit test green and would be
 //      visible only to someone with an allergy, in a shop, holding a phone.
 //
-//   2. THE ONE THE DESIGN WAS CHANGED TO AVOID. A dish whose add-on
-//      configuration knocks it out of the active filter must DIM, not vanish:
-//      the finger that just added prawns to a vegan salad is still on that row.
-//      That distinction lives entirely in which dataset field applyView reads
-//      (`baseTags` vs `tags`) and is a one-word edit away from being wrong in
-//      either direction. Both directions are asserted.
+//   2. RETIRED 2026-09-06, AND SAID SO ON 2026-09-28 (roadmap 28s). This read
+//      "a dish whose add-on configuration knocks it out of the active filter
+//      must DIM, not vanish … Both directions are asserted." Neither was: the
+//      dim lived in `baseTags`/`.dimmed`, which d03f443 ("the search box IS the
+//      filter") removed from site/js entirely, and no assertion in this file
+//      configures a dish. What a configured dish does under a search filter is
+//      now UNCHECKED by any browser check — stated here so nobody reads this
+//      file as cover for it.
 //
 //   3. THE LIVE ONE. The ♥ chip only exists when this reader has hearted a dish
 //      HERE, and un-hearting one while the filter is on must move the row on the
@@ -91,12 +93,13 @@ const SITE = join(ROOT, "site");
 // empty and lose their jump-nav chips. Chosen because the ratio is extreme
 // enough that an off-by-one cannot hide in it.
 const FILTER_VENUE = "rs-satay-noodle-house";
-// "Garden Salad" is tagged `vg`; the Small Plates add-on group offers Prawns
-// (contains-shellfish), which composeTags refuses to carry a vegan claim
-// through. The one real pair in the corpus for assertion 2 above.
+// The venue the search-is-the-filter half drives. Its NAME is historical: until
+// d03f443 (2026-09-06) it also named a dish and an add-on — "Garden Salad" +
+// Prawns — for assertion 2 in the header, and the banner went on printing that
+// pair for three weeks after d03f443 removed the behaviour and nothing drove it
+// (roadmap 28s: a fixture declared and never opened is ADR 0072's decorative
+// guard). The pair is gone; the venue is still what `openVenue` loads below.
 const CONFIG_VENUE = "sprig-and-fern-tawa";
-const CONFIG_DISH = "Garden Salad";
-const CONFIG_OPTION = "Prawns";
 
 // Everything the screen is claiming right now, in one read.
 const PROBE = `(() => {
@@ -191,7 +194,7 @@ async function run(opts) {
   try {
     console.log("Faves focus check — do the menu filters narrow the list honestly?");
     console.log(`  filters  ${FILTER_VENUE}`);
-    console.log(`  add-ons  ${CONFIG_VENUE} — "${CONFIG_DISH}" + ${CONFIG_OPTION}`);
+    console.log(`  search   ${CONFIG_VENUE}`);
     console.log(`  profile  ${profileDir} (fresh — no service worker, no storage)\n`);
 
     chrome = await launchChrome({ profileDir, headed: opts.headed });

@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Every path `site/sw.js` precaches must actually exist in `site/`.
 
+🛑 PATHS, NOT CONTENT (roadmap 28s, 2026-09-28). It asks whether each precached
+file EXISTS; `sw.js` itself keys its caches by venue file. Neither can see a dish
+appear, vanish or merge — a venue file that lost 40 rows is the same path — so a
+ladder merge (roadmap 28o) is invisible here by construction, not by oversight.
+
 Nothing checked this until 2026-09-08. The only thing standing in for it was
 the install step's own `!res.ok → throw`, and on Cloudflare Pages that guard
 cannot fire: a path Pages does not have is answered with `index.html` and a

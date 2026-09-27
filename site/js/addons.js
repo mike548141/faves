@@ -101,7 +101,15 @@ export function groupsFor(record, section, item) {
     if (seen.has(id)) continue;
     seen.add(id);
     const g = defs.get(id);
-    if (g) out.push(g);
+    // A `selects` group (ADR 0130) chooses WHICH plate — a size, a protein —
+    // and no screen draws that control yet (roadmap 28m). Offered through the
+    // picker as it stands it would read as a pick-one of extras: nothing
+    // chosen by default, each variant priced +$0 (its price lives in
+    // `dishPrice`, which `optionPrice` rightly never reads), and composed as if
+    // it went ON the plate. So it is withheld until 28m, and the row shows the
+    // dish's own `price` — which validate.py holds equal to the default
+    // variant's — rather than a control that misprices. 28m deletes this line.
+    if (g && g.kind !== "selects") out.push(g);
   }
   return out;
 }

@@ -1664,3 +1664,18 @@ deliberation those compact docs omit.
   call. Verified against the repo's own `check_versions.py` in a throwaway
   local git repo staging the exact incident: the old dated branch is refused,
   the restamped branch is not.
+- [0130](0130-a-group-that-selects-a-variant-is-not-an-add-on.md) — **a group
+  that SELECTS a variant is not an add-on** (roadmap 28k + 28s). An add-on group
+  gains `kind: "adds" | "selects"`, absent = adds, so no existing group moves. A
+  `selects` group chooses which plate: exactly one `default`, each variant priced
+  with its own word `dishPrice` (the whole dish price, never a surcharge every
+  older reader would add), `select`/`max`/group `price` refused, labels optional
+  and prices shareable (28b's counter-examples). ADR 0048 §3 is **not** amended:
+  a variant must restate its dish's dietary claims exactly, so intersection can
+  neither strip one nor be asked to restore one — 28i's option 3, enforced. Two
+  ladders on one dish and channel prices beside one are **refused, open**. The
+  picker withholds `selects` until 28m. 28s: twin-allergen second join, stale
+  pick/pairing warning, `rename_check.mjs`, vacuity guards in `to_top_check`,
+  written refusals where a check cannot see dishes. 🔎 A heart under a
+  `formerIds` id does **not** light the menu row (measured) — a fourth follow-on
+  28j did not list, left for 28l.
