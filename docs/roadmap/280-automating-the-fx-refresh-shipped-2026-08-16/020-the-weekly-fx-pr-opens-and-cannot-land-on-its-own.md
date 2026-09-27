@@ -1,7 +1,10 @@
-- [ ] 🚩 **The weekly FX PR opens correctly and cannot land on its own — the
+- [~] 🚩 **The weekly FX PR opens correctly and cannot land on its own — the
       floor fails it, and a week on the shelf moves `DATA_VERSION` backwards**
       `[S][ci]` — found 2026-09-08 (session faves-o1) while confirming `010`'s
       trigger, from the PR record rather than from memory.
+  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — option (1),
+  rebase-and-restamp.
+  (claimed 2026-09-27-1407, wt: faves-fx-restamp)
 
   **What the record shows.** PR #5 (cut 2026-08-23) and PR #6 (2026-08-30)
   were opened by the owner's token, queued for `--auto --squash`, and never
