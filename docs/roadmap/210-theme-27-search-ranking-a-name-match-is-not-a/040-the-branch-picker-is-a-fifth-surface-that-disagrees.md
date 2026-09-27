@@ -1,4 +1,4 @@
-- [~] 🚩 **The branch picker is a FIFTH surface that disagrees about a closed
+- [x] 🚩 **The branch picker is a FIFTH surface that disagrees about a closed
   venue — and the schema cannot answer it yet** `[S][js][schema]` — found
   2026-08-17 while shipping `030`, and deliberately left rather than guessed at.
   📌 **`[~]` → `[ ]` 2026-09-27 (session `40d6dea4`):** no claim stamp, no
@@ -6,9 +6,14 @@
   "part-done", which the house board does not define — `[~]` means
   *claimed*, and a released claim reverts (atelier `CONCURRENCY.md`
   § Claiming work). What is done is carried in the body below.
-  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — decision 2's worklist,
-  items 1-4; 050 stays after it.
-  (claimed 2026-09-27-1459, wt: faves-branch-closure)
+  ✅ **DONE 2026-09-28 (session `40d6dea4`, PR #51, `9fe21af`, ADR 0132) —
+  decision 2's worklist items 1–4.** A branch may carry `lifecycle`; the
+  more severe of venue and branch closure wins, so a venue closure still
+  shuts every branch; `leadBranch` never leads with a shut branch while one
+  trades; `isGone` given a job. No data changed. Item 5 is `050`, still open.
+  🎯 **Two owner questions in ADR 0132:** `nearestBranch` now skips shut
+  branches (beyond the worklist — it changes what the home card reads), and
+  a venue-vs-branch temporary-closure tie goes to the venue.
 
   `030` made ranking and "Open now" agree with the card badge and the dice. The
   branch picker did not move. `branchOpenStateOf` (`site/js/menu.js:291`),
