@@ -1,8 +1,11 @@
-- [ ] **28m — Render a `selects` group, and put its choice on the order line**
+- [~] **28m — Render a `selects` group, and put its choice on the order line**
       `[M][js][ux]` — the screen ADR 0047 asks `28k` to name. Theme 14's ruling
       of 2026-08-17 governs the look: upsizing is the same control as choosing
       a sauce, and *"the reader should not be able to tell which of the six they
       are doing"*.
+  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — render and order line;
+  search is excluded (an open owner question from 28k).
+  (claimed 2026-09-27-1459, wt: faves-28m)
 
   **What changes.** `site/js/addons-ui.js` gains the variant control;
   `site/js/menu.js`'s dish row shows the price of the **default** variant with
