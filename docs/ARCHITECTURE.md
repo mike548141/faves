@@ -203,6 +203,8 @@ excluded from both stores, always.
       "price": 0,                    //   optional group default for its options
       "options": [                   //   1..n. tags is REQUIRED on every option and
         { "name": "Satay",           //   may be [] ("not stated"); a price must
+          "id": "satay",             //   REQUIRED, immutable, unique in the GROUP —
+                                     //   the order line keys on it (ADR 0126)
           "price": 2.5,              //   resolve from the option or its group, and
           "tags": ["contains-peanuts"] }
       ] }                            //   is NEVER null — free is written as 0
@@ -761,6 +763,11 @@ section is written once.
   read it" (`?`, with a `needs` entry). Nothing on the add-on screen tells
   those apart, so an extra whose price we do not know stays in the prose
   and is not structured yet.
+- **`id` is required on every option** and is its identity (ADR 0126): the
+  order line keys on it, never on the display name, so a venue renaming
+  "Large" to "Lg" strands no saved order, backup or share link. Seeded once
+  from `slug(name)` (`tools/seed_option_ids.py`); on a rename, change the
+  `name` and **leave the `id`**. Slug form, unique within its group.
 - `tags` is **required** on every option, against the same closed
   vocabulary as a dish. It may be empty, which says "not stated" — a
   state composition treats differently from a stated clash.
