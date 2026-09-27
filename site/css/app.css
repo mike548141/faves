@@ -6375,3 +6375,82 @@ mark.search-match {
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
+
+/* ---------- Personal notes on a recipe (ROADMAP 17e, ADR 0131) ----------
+   Modelled on the order-line note's own shapes (.order-note-*, Theme 14c)
+   because it is the same job: free text, a labelled field, a stated cap. Kept
+   as its own block rather than reusing those classes directly — this control
+   sits in the recipe hero, not inside a flex order line, and needs a block
+   layout instead of a wrapped flex row. */
+.recipe-note {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+/* Full --ink, not --ink-soft: this is the reader's own words, not a caption
+   (same call the order-line note makes, for the same reason). */
+.recipe-note-text {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--step-sub);
+  white-space: pre-wrap; /* a note may carry a deliberate line break */
+}
+.recipe-note-btn {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--step-sub);
+  font-weight: 600;
+  cursor: pointer;
+}
+.recipe-note-btn:hover {
+  background: var(--surface-2);
+}
+.recipe-note-input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  /* --step-body is 1rem: iOS Safari zooms the whole page when a focused field
+     is under 16px, and this page never zooms back out (same reason as the
+     order-line note's own input). */
+  font-size: var(--step-body);
+  resize: vertical;
+}
+.recipe-note-help {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--step-sub);
+}
+.recipe-note-save {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--step-sub);
+  font-weight: 700;
+  cursor: pointer;
+}
+.recipe-note-save:hover {
+  filter: brightness(0.96);
+}
+/* Cook mode's read-only echo of the same note (cook-ui.js), beside the recipe
+   name — reuses .cook-awake's soft-note shape so the header keeps one voice,
+   but at full --ink: same reasoning as .recipe-note-text above. */
+.cook-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35em;
+  color: var(--ink);
+  font-size: var(--step-sub);
+}

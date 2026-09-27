@@ -50,6 +50,7 @@ import {
 } from "./cook.js";
 import { createAlarm, wantsNotification } from "./alarm.js";
 import { safeStorage } from "./store.js";
+import { notes } from "./notes.js";
 
 // A running timer is remembered across a close, a reload and a discarded tab
 // (cook.js, Theme 36). DEVICE-level like the order tally, not per-profile like
@@ -186,6 +187,23 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
         // picture, and the accessible name is built from characters — without
         // it a screen reader is handed "2×mixture" as one word.
         el("span", { textContent: " mixture" }),
+      ])
+    : null;
+  // The reader's own note (17e, ADR 0131), read-only here — cook mode has no
+  // editor of its own, deliberately: adding one would mean a second commit
+  // path into notes.js's store, and this is cheap only because it stays a
+  // display. Read ONCE, at open: unlike the ticks and the timer, which this
+  // dialog holds open across a phone call, a note someone edited on the recipe
+  // page WHILE cook mode is open over it is the rare case, and re-reading it
+  // live would mean subscribing a store this module otherwise never writes to,
+  // for a display nobody asked to be live. Absent entirely when there is
+  // nothing to say — a "no personal note" line would be noise on every recipe
+  // that has never had one.
+  const noteText = notes.get(rid);
+  const noteLine = noteText
+    ? el("p", { className: "cook-note" }, [
+        el("span", { "aria-hidden": "true", textContent: "✎" }),
+        el("span", { textContent: noteText }),
       ])
     : null;
   // Shown only on a lock we actually hold. On iOS before 16.4, or a refusal,
@@ -427,7 +445,7 @@ export function openCookMode(item, { venueId, scaleKey = DEFAULT_SCALE } = {}) {
   const dialog = el("dialog", { className: "cook-sheet", "aria-labelledby": titleId }, [
     el("div", { className: "cook-inner" }, [
       el("div", { className: "cook-top" }, [
-        el("div", { className: "cook-heading" }, [title, scaleBadge, awake]),
+        el("div", { className: "cook-heading" }, [title, scaleBadge, awake, noteLine]),
         close,
       ]),
       progress,
