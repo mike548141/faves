@@ -14,6 +14,12 @@ content freshness separately from this file.
   controls, and echoed read-only in cook mode when there is one. Included in
   the data export and continual sync alongside favourites and ratings (ADR
   0131).
+- **A dish can come in sizes.** Where a menu prices a dish by size, the dish's
+  options open on its usual size with the price beside it; choose another and
+  the price on the dish changes to that size's price. Each size is its own line
+  on your order, and a size the menu never named is shown by its price
+  ("$24 size"). No menu uses this yet — the sizes are still being moved out of
+  the descriptions.
 - **Recipe pages look like a recipe site now.** A photo at the top (beside the
   title on a wide screen), then a panel with **Prep · Cook · Serves ·
   Difficulty**. On a wide screen the ingredients sit in a column beside the
