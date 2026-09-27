@@ -12022,3 +12022,52 @@ removed; `recipe_check` asserts the outcome.
   (`2b29bb7..origin/main`). Reading those commits and bumping the pin is its
   own job, and this lane didn't take it.
 - **Lighthouse** was not run on the new recipe page.
+
+## 2026-09-27-1341 — session `faves-8e` (`40d6dea4`): orchestrated queue run, waves 1–2
+
+**Asked:** an orchestrated queue run: drain the board in doctrine order,
+with sub-agents doing the work. Tier stated at open: Opus 5.5.
+
+**Opened on:** the atelier pin was 44 commits behind. None of those commits
+touch `docs/method/`; they are review records and a `filewalk.py`
+single-sourcing across 12 scanners the hooks already call live. The pin is
+now bumped to `c600f62` (`2dc0eb1`) and the stamp hand-check comes back empty.
+
+**Board hygiene (`4a97e5f`, repaired in `d645dca`).**
+- **Nine `[~]` items had no claim stamp, no branch and no live session.**
+  The bracket was standing in for "part-done", which the house board doesn't
+  define. All nine are back to `[ ]`, each with a note.
+- **17b and 36c are closed on evidence measured in the tree.** A five-agent
+  triage called nine items stale-done. I checked them, and **only two held**:
+  340/020 and 080/220 say in their own text that they aren't done, and 36a
+  is half done (next point).
+- 🚩 **My own script put its notes in the middle of 16 wrapped titles.** The
+  index was unaffected because `board.py` reads line 1 only. `d645dca` moved
+  every note to the end of its opening paragraph.
+
+**Delivered.**
+| Item | What | Where |
+|---|---|---|
+| 340/290 | Six verify-list gates now run in CI | `64c8176` (CI green) |
+| 340/240 | Terminal-marker ruling written down and handed up | `e93470e`, atelier PR #90 |
+| 150/040 | Sync carries a settings field it can't name | PR #42 → `ff20c80`, ADR 0127 |
+| 310/050 (28h) | Variant enumerator, with its selftest in CI | PR #43 → `1dfd012`, `b6b9bc9` |
+| — | `sync_check`'s expected N corrected from 16 to 22 | `6f8fbb5` |
+
+🔎 **`test_tag_addon_options.py` was red on `main` for seven days.** `7a62c57`
+(2026-09-20) added `contains-gluten` to a row that the fixture quoted byte for
+byte. Nothing ran the test, so nobody saw. Worse, **six of its break-probes
+printed "caught" the whole time**, because a case that couldn't be set up was
+counted as a catch. Both are fixed, and the breaker fix was break-probed.
+
+🔎 **The 28h tool doesn't reproduce the item's figures.** It retires 285 ids,
+not 248, and finds 48 mechanical groups against 78 that need a human, not
+63 against 70. 28o's title still says "63", and a note under it now carries
+the measured number.
+
+🚩 **For the owner:**
+- **36a.** Bake-only `time` still reads as the total on the recipe list row,
+  and ADR 0125 kept `time` on that row deliberately.
+- **17c.** It is blocked behind 36b's unasked schema question.
+- **340/290.** The item's "does the intake record need a repeat-reading
+  concept?" question is still open.
