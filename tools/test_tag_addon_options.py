@@ -45,36 +45,46 @@ CREPES = "site/data/restaurants/crepes-a-go-go.json"
 
 # Tawa's brunch sides, with the tags this sweep applies taken back off. Bacon
 # and Sausages must return; Spinach and Tomatoes must not gain anything.
+#
+# Every option fixture carries its `id` (ADR 0126), and a RENAMED fixture keeps
+# the id of the option it renames — Kingfish is still `salmon`, Chicken salt is
+# still `cotto-ham` — because that is what a transcriber renaming an option does.
 STRIP_TAWA = [
     # Only `has-meat` is this tool's to take off. `contains-gluten` arrived
     # from the dish-level sweep (7a62c57) and stays, so the case still reads
     # the real row rather than a snapshot of it that silently stops matching.
     ('''          "name": "Sausages",
+          "id": "sausages",
           "price": 8.0,
           "tags": [
             "has-meat",
             "contains-gluten"
           ]''',
      '''          "name": "Sausages",
+          "id": "sausages",
           "price": 8.0,
           "tags": [
             "contains-gluten"
           ]'''),
     ('''          "name": "Bacon",
+          "id": "bacon",
           "price": 8.0,
           "tags": [
             "has-meat"
           ]''',
      '''          "name": "Bacon",
+          "id": "bacon",
           "price": 8.0,
           "tags": []'''),
     ('''          "name": "Salmon",
+          "id": "salmon",
           "price": 9.0,
           "tags": [
             "has-fish",
             "contains-fish"
           ]''',
      '''          "name": "Salmon",
+          "id": "salmon",
           "price": 9.0,
           "tags": []'''),
 ]
@@ -84,12 +94,14 @@ STRIP_TAWA = [
 # only list — so this case fails the moment the two drift apart again.
 STRIP_KINGFISH = [
     ('''          "name": "Salmon",
+          "id": "salmon",
           "price": 4.5,
           "tags": [
             "has-fish",
             "contains-fish"
           ]''',
      '''          "name": "Kingfish",
+          "id": "salmon",
           "price": 4.5,
           "tags": []'''),
 ]
@@ -99,6 +111,7 @@ STRIP_KINGFISH = [
 # time, so this renames two of them and leaves the rest alone.
 PEARL = '''        {
           "name": "Pearl",
+          "id": "pearl",
           "price": 1.0,
           "tags": []
         },'''
@@ -111,19 +124,23 @@ PEARL_TO_BACON = (PEARL, PEARL.replace('"Pearl"', '"Bacon"'))
 # own name.
 STRIP_CREPES_ALLERGENS = [
     ('''          "name": "Hummus",
+          "id": "hummus",
           "price": 3,
           "tags": [
             "contains-sesame"
           ]''',
      '''          "name": "Hummus",
+          "id": "hummus",
           "price": 3,
           "tags": []'''),
     ('''          "name": "Chocolate or Nutella",
+          "id": "chocolate-or-nutella",
           "price": 4,
           "tags": [
             "contains-nuts"
           ]''',
      '''          "name": "Chocolate or Nutella",
+          "id": "chocolate-or-nutella",
           "price": 4,
           "tags": []'''),
 ]
@@ -133,9 +150,11 @@ STRIP_CREPES_ALLERGENS = [
 # LOSES THE HUMMUS, which is an over-warning traded for a miss.
 NGA_BUN_WITH_HUMMUS = [
     ('''          "name": "No gluten added bun",
+          "id": "no-gluten-added-bun",
           "price": 2.5,
           "tags": []''',
      '''          "name": "No gluten added bun with hummus",
+          "id": "no-gluten-added-bun",
           "price": 2.5,
           "tags": []'''),
 ]
@@ -359,30 +378,30 @@ CASES = {
         0, check_curation_outranks_the_pattern),
     "chicken salt is not chicken": (
         BAMBINA,
-        [('''        { "name": "Cotto ham", "tags": ["has-meat"] },''',
-          '''        { "name": "Chicken salt", "tags": [] },'''),
-         ('''        { "name": "Pepperoni", "tags": ["has-meat"] },''',
-          '''        { "name": "Pepperoni", "tags": [] },'''),
-         ('''        { "name": "Italian sausage", "tags": ["has-meat"] },''',
-          '''        { "name": "Italian sausage", "tags": [] },'''),
-         ('''        { "name": "Beef meatball", "tags": ["has-meat"] }''',
-          '''        { "name": "Beef meatball", "tags": [] }''')],
+        [('''        { "name": "Cotto ham", "id": "cotto-ham", "tags": ["has-meat"] },''',
+          '''        { "name": "Chicken salt", "id": "cotto-ham", "tags": [] },'''),
+         ('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat"] },''',
+          '''        { "name": "Pepperoni", "id": "pepperoni", "tags": [] },'''),
+         ('''        { "name": "Italian sausage", "id": "italian-sausage", "tags": ["has-meat"] },''',
+          '''        { "name": "Italian sausage", "id": "italian-sausage", "tags": [] },'''),
+         ('''        { "name": "Beef meatball", "id": "beef-meatball", "tags": ["has-meat"] }''',
+          '''        { "name": "Beef meatball", "id": "beef-meatball", "tags": [] }''')],
         0, check_chicken_salt_is_not_chicken),
     "two identical options are patched separately": (
         GONG_CHA, [PEARL_TO_BACON, PEARL_TO_BACON], 0,
         check_same_shaped_options_are_patched_separately),
     "a one-line option array stays on one line": (
         BAMBINA,
-        [('''        { "name": "Pepperoni", "tags": ["has-meat"] },''',
-          '''        { "name": "Pepperoni", "tags": [] },''')],
+        [('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat"] },''',
+          '''        { "name": "Pepperoni", "id": "pepperoni", "tags": [] },''')],
         0, check_one_line_layout_survives),
     "a record it cannot write makes the run fail": (
         BAMBINA,
         # Take the tags key away from an option that is about to gain one.
-        [('''        { "name": "Pepperoni", "tags": ["has-meat"] },''',
-          '''        { "name": "Pepperoni" },'''),
-         ('''        { "name": "Cotto ham", "tags": ["has-meat"] },''',
-          '''        { "name": "Cotto ham", "tags": [] },''')],
+        [('''        { "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat"] },''',
+          '''        { "name": "Pepperoni", "id": "pepperoni" },'''),
+         ('''        { "name": "Cotto ham", "id": "cotto-ham", "tags": ["has-meat"] },''',
+          '''        { "name": "Cotto ham", "id": "cotto-ham", "tags": [] },''')],
         1, check_unwritable_record_is_loud),
 }
 
@@ -390,7 +409,7 @@ CASES = {
 # the property, so parsing it away would test nothing.
 RAW_CHECKS = {
     "a one-line option array stays on one line":
-        lambda raw: None if '{ "name": "Pepperoni", "tags": ["has-meat"] },' in raw
+        lambda raw: None if '{ "name": "Pepperoni", "id": "pepperoni", "tags": ["has-meat"] },' in raw
         else "the array was reflowed or not patched",
 }
 
