@@ -17,6 +17,12 @@
   stores `FX_TOKEN`, so the push is the owner's. The pre-merge review
   checked that `FX_TOKEN` existed and missed that `git push` does not use
   it; only a live run could show that.
+  🔎 **A second latent bug, same day:** `fetch_fx.py` dated the bump by the
+  machine clock (UTC on the runner), so the restamp went BACKWARDS against
+  main's NZ-dated constant and `check_versions` refused it. Fixed in
+  `0798c30` (NZ date, never below the current constant; `test_fetch_fx.py`
+  in CI). ✅ **PROVEN LIVE:** PR #52 then restamped, ran its checks with no
+  approval, stamped `2026-09-28.1` → `.2`, and auto-merged as `ab005d0`.
 
   **What the record shows.** PR #5 (cut 2026-08-23) and PR #6 (2026-08-30)
   were opened by the owner's token, queued for `--auto --squash`, and never

@@ -12182,3 +12182,20 @@ Asked via AskUserQuestion, after the report:
   `menu-sources.json --rebuild` would read GPS-free copies as new evidence.
 - 🔎 **080/250 (new).** Nine Simmer photos dropped 2026-09-09 were never
   read, and `check_provenance` is red locally. CI can't see `intake/`.
+
+### 2026-09-28 addendum (`faves-8e`): the FX loop proven live, and silence
+
+- 🛑 **ADR 0129 shipped a regression, and it was caught live.** Restamps
+  force-pushed with the bot token, so every restamp of open PR #52 waited at
+  `action_required`. `7b26772` makes the push use `FX_TOKEN`, which is scoped
+  Contents read/write for this repo only.
+- 🔎 **A latent clock bug surfaced once that was fixed.** `fetch_fx.py`
+  stamped by the runner's UTC date, which went backwards against main's
+  NZ-dated `DATA_VERSION`, and `check_versions` refused it. Fixed in
+  `0798c30`, and `test_fetch_fx.py` runs in CI.
+- ✅ **Proven live:** #52 restamped, ran unapproved, went `.1` → `.2` and
+  auto-merged (`ab005d0`).
+- 🔇 **340/300, owner-raised:** the browser checks beeped through the
+  laptop, because `cook_check` drives the real alarm and read-aloud.
+  `--mute-audio` is now the harness default (`096da8a`). `cook_check` passed
+  85/85 muted, including all eight sound assertions.
