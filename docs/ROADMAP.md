@@ -288,6 +288,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 - [ ] [🚩 The machine-side half of the 2026-08-17 force-push ruling does not](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/270-the-auto-mode-rules-do-not-reach-a-worktree.md)
 - ✅ 🛑 [An unresolved merge conflict shipped to a PUBLIC main and stood](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/280-a-merge-conflict-shipped-to-a-public-main-and-no-gate-saw-it.md)
 - [ ] 🔎 [A gate that is on the verify list but not in CI went red on main,](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/290-a-gate-not-in-ci-went-red-on-main-and-nobody-saw-it.md)
+- [~] [The browser checks beep through the owner's speakers](roadmap/340-theme-20-places-from-anywhere-owner-raised-202/300-browser-checks-beep-through-the-owners-speakers.md)
 
 ## Theme 22 — the personal layer, holistically (owner-raised 2026-08-16)
 
