@@ -12153,3 +12153,32 @@ Unblocked for it: **28l** (now 28h and 28j are done), **28n** (after 28m),
 **Put away:** every worktree this session created (six in faves, one
 in atelier) is removed, and the stash stack is empty. Atelier PR #90 (the
 hand-up) stays open for atelier to rule on.
+
+### 2026-09-28 addendum (`faves-8e`): owner rulings at the close
+
+Asked via AskUserQuestion, after the report:
+
+| Question | Ruling | Result |
+|---|---|---|
+| 28m: default size on the order line | Leave it off | Confirmed as built (ADR 0133 §3) |
+| 210/040: `nearestBranch` skips shut branches | Yes | Confirmed as built (ADR 0132) |
+| 36a: the list row's time | Prep + cook | **Built and shipped, `b04f674`** |
+| 080/240: dish photo source | Venue images only | Recorded; the goal is queued as a direction |
+| 340/250 part 4: import 1.84 GB | "Already answered" | Read as the 2026-09-09 ruling standing |
+| Stripped copies in scratch | Somewhere safer | Moved to gitignored `evidence-stripped/` |
+
+- **36a detail.** The row uses `totalTime()` and says "about" when either
+  half is our estimate. `recipe_check` §10 asserts the rendered row with a
+  control, and a break-probe confirms it catches the old wiring. Thirteen
+  recipes now show a time for the first time.
+- 🔎 **The first photo question conflated two things.** Evidence photos
+  (410 menu and label photos, ≈1.84 GB) are not app photos (42 WebP,
+  1.3 MB). A photo for all 3,507 dishes is an estimated ~110 MB, and
+  importing the evidence does nothing towards it. The distinction is now in
+  080/240.
+- 🛑 **340/250's reading must be confirmed in one line before the import
+  runs.** The reply is ambiguous and the act is irreversible.
+- **`evidence-stripped/` sits outside `intake/` deliberately.**
+  `menu-sources.json --rebuild` would read GPS-free copies as new evidence.
+- 🔎 **080/250 (new).** Nine Simmer photos dropped 2026-09-09 were never
+  read, and `check_provenance` is red locally. CI can't see `intake/`.
