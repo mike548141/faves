@@ -1,6 +1,10 @@
-- [~] **36a — what the data says about time, and what it doesn't** `[S][data]` 🎯
-  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — owner ruled 2026-09-27:
-  the list row shows the TOTAL, prep + cook. (claimed 2026-09-27-1917, wt: main)
+- [x] **36a — what the data says about time, and what it doesn't** `[S][data]` 🎯
+  ✅ **DONE 2026-09-28 (session `40d6dea4`) — OWNER RULED: the list row
+  shows the TOTAL, prep + cook.** `totalTime()` in `recipe-stats.js`; "about"
+  when either half is our estimate; `time` only as the fallback when a half
+  is missing (never a half-total). `recipe_check` §10 asserts the rendered
+  row, with a control; break-probed by restoring the `item.time` wiring.
+  The live ask below (the five bake-only `time` values) is answered by this.
 
 > 🎯 **Owner ruling 2026-08-16, relayed from a peer session:** *estimate the
 > per-step and total times, and label them as estimates.* Same ruling for 36c.

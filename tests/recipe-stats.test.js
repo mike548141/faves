@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { formatMinutes, recipeStats } from "../site/js/recipe-stats.js";
+import { formatMinutes, recipeStats, totalTime } from "../site/js/recipe-stats.js";
 
 test("formatMinutes: minutes under the hour, hours and minutes past it", () => {
   assert.equal(formatMinutes(0), "0 min");
@@ -49,4 +49,34 @@ test("cook-at-home: every estimated field the data marks reaches the panel marke
     const shown = new Set(recipeStats(item).filter((c) => c.estimated).map((c) => c.key));
     assert.deepEqual(new Set(item.estimated || []), shown, `${item.name}: estimated fields vs est. marks`);
   }
+});
+
+// Roadmap 36a (owner ruling 2026-09-28): the list row's time is prep + cook.
+test("totalTime: prep + cook, said as a reader says it", () => {
+  assert.deepEqual(totalTime({ prepMinutes: 5, cookMinutes: 22 }), { value: "27 min", estimated: false });
+  assert.deepEqual(totalTime({ prepMinutes: 570, cookMinutes: 20 }), { value: "9 hr 50 min", estimated: false });
+});
+
+test("totalTime: either half being ours makes the total ours", () => {
+  assert.equal(totalTime({ prepMinutes: 5, cookMinutes: 22, estimated: ["prepMinutes"] }).estimated, true);
+  assert.equal(totalTime({ prepMinutes: 5, cookMinutes: 22, estimated: ["cookMinutes"] }).estimated, true);
+  assert.equal(totalTime({ prepMinutes: 5, cookMinutes: 22, estimated: ["serves"] }).estimated, false);
+});
+
+test("totalTime: half a total is refused, not shown", () => {
+  assert.equal(totalTime({ prepMinutes: 15 }), null);
+  assert.equal(totalTime({ cookMinutes: 15 }), null);
+  assert.equal(totalTime({ time: "~22 min" }), null);
+  assert.equal(totalTime({ prepMinutes: -1, cookMinutes: 5 }), null);
+});
+
+test("cook-at-home: the five bake-only times now read as the whole job", () => {
+  const data = JSON.parse(
+    readFileSync(new URL("../site/data/restaurants/cook-at-home.json", import.meta.url), "utf8")
+  );
+  const items = data.menu.flatMap((s) => s.items);
+  const brownie = items.find((i) => i.name === "B's Dope-As Brownie");
+  // The bug: the list said "~22 min", the oven time alone.
+  assert.equal(brownie.time, "~22 min");
+  assert.deepEqual(totalTime(brownie), { value: "27 min", estimated: true });
 });

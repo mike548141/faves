@@ -1326,6 +1326,32 @@ async function run(opts) {
       `${ran + 1} of ${EXPECTED_ASSERTIONS} — a short run is a failed run, not a pass`
     );
 
+    // --- 10. The list row's time is prep + cook (roadmap 36a) ----------------
+    // Owner ruling 2026-09-28. `time` on five bakes is the oven time alone, so
+    // the list said "~22 min" for a 27-minute brownie. The arithmetic is unit-
+    // tested; what only a browser can show is that the ROW uses it.
+    await goto(`${base}/restaurant.html?id=${COLLECTION}`, ".dish-meta");
+    const rowMeta = (name) => evalPage(`(() => {
+      for (const m of document.querySelectorAll(".dish-meta")) {
+        const row = m.closest("li, article, section > div") || m.parentElement;
+        if (row && row.textContent.includes(${JSON.stringify(name)})) return m.textContent;
+      }
+      return null;
+    })()`);
+    const brownieMeta = await rowMeta("B's Dope-As Brownie");
+    report.check(
+      "a bake's list row shows prep + cook, not the oven time alone",
+      typeof brownieMeta === "string" && brownieMeta.includes("about 27 min") && !brownieMeta.includes("22 min"),
+      `row reads ${JSON.stringify(brownieMeta)}`
+    );
+    // Control: prep with no cook must NOT become a half-total ("15 min").
+    const soupMeta = await rowMeta("Slow-Cooked Chicken Noodle");
+    report.check(
+      "a recipe missing either half shows no invented total",
+      soupMeta === null || !/\b15 min\b/.test(soupMeta),
+      `row reads ${JSON.stringify(soupMeta)}`
+    );
+
     return report.summary(SITE) ? 0 : 1;
   } finally {
     cdp?.close();

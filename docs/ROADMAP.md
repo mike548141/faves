@@ -350,7 +350,7 @@ then `python3 "${ATELIER_TOOLS:-$(git config hooks.atelierTools)}"/board.py rebu
 
 *[Narrative](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/README.md)*
 
-- [~] 🎯 [36a — what the data says about time, and what it doesn't](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/010-36a-what-the-data-says-about-time-and-what-it.md)
+- ✅ 🎯 [36a — what the data says about time, and what it doesn't](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/010-36a-what-the-data-says-about-time-and-what-it.md)
 - [ ] 🎯 [36b — the quantity used at this step](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/020-36b-the-quantity-used-at-this-step-l-schema-da.md)
 - ✅ 🎯 [36c — serving sizes](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/030-36c-serving-sizes-m-data-not-researchable.md)
 - ✅ [36d — the timer's alarm](roadmap/460-theme-36-cooking-is-not-ordering-owner-raised/040-36d-the-timer-s-alarm-shipped-2026-08-16.md)

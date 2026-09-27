@@ -22,6 +22,23 @@ export function formatMinutes(n) {
 }
 
 /**
+ * The recipe list's one time: prep + cook (owner ruling 2026-09-28, roadmap
+ * 36a). The list used to print `time`, which on five bakes is the oven time
+ * alone, so "~22 min" read as the whole job. Null unless BOTH halves are
+ * known — half a total is the same understatement again — and `estimated`
+ * if either half is ours, so the caller can say "about" in words.
+ */
+export function totalTime(item) {
+  const { prepMinutes: p, cookMinutes: c } = item ?? {};
+  if (!Number.isInteger(p) || !Number.isInteger(c) || p < 0 || c < 0) return null;
+  const est = Array.isArray(item.estimated) ? item.estimated : [];
+  return {
+    value: formatMinutes(p + c),
+    estimated: est.includes("prepMinutes") || est.includes("cookMinutes"),
+  };
+}
+
+/**
  * The cells to draw, in order, each `{ key, label, value, estimated }`. A field
  * the recipe does not carry is left out rather than shown as "—": a panel of
  * blanks reads as broken, and "not stated" is already what absence means here.

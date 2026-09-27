@@ -108,6 +108,7 @@ import { captureUiState, restoreUiState, initScrollMemory } from "./ui-state.js"
 import { startSync } from "./sync-start.js";
 import { cookButton } from "./cook-ui.js";
 import { mountNotFound } from "./cache-refresh.js";
+import { totalTime } from "./recipe-stats.js";
 
 const root = document.getElementById("menu-root");
 const EMPTY_SET = new Set();
@@ -1315,9 +1316,14 @@ function renderDish(
   // count that is OUR estimate (ADR 0125) says "about" in words: most recipes
   // gained one from data/estimates/, and a bare number would present our guess
   // as the recipe's own, which the estimates ruling forbids.
+  // The time is prep + cook (owner ruling 2026-09-28, roadmap 36a): `time` on
+  // five bakes is the oven time alone and read as the whole job. `time` stays
+  // only as the fallback for a recipe that lacks either half.
   const servesEst = Array.isArray(item.estimated) && item.estimated.includes("serves");
+  const total = kind.itemsHaveRecipeFields ? totalTime(item) : null;
+  const timeText = total ? `${total.estimated ? "about " : ""}${total.value}` : item.time || null;
   const recipeMeta = kind.itemsHaveRecipeFields
-    ? [item.serves ? `Serves ${servesEst ? "about " : ""}${item.serves}` : null, item.time || null]
+    ? [item.serves ? `Serves ${servesEst ? "about " : ""}${item.serves}` : null, timeText]
         .filter(Boolean)
         .join(" · ")
     : "";

@@ -14,6 +14,8 @@
   🎯 **Two owner questions in ADR 0132:** `nearestBranch` now skips shut
   branches (beyond the worklist — it changes what the home card reads), and
   a venue-vs-branch temporary-closure tie goes to the venue.
+  ✅ **OWNER CONFIRMED 2026-09-28 (via AskUserQuestion):**
+  `nearestBranch` skips shut branches (ADR 0132), as built.
 
   `030` made ranking and "Open now" agree with the card badge and the dice. The
   branch picker did not move. `branchOpenStateOf` (`site/js/menu.js:291`),

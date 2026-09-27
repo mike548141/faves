@@ -31,6 +31,10 @@ content freshness separately from this file.
   uses the same chocolate and now carries the same nut warnings.
 
 ### Fixed
+- **A recipe's time on the list is now the whole job — prep plus cook.** Five
+  bakes used to show their oven time alone (B's Brownie read "~22 min"; it
+  takes about 27), and 13 recipes showed no time at all. A total that rests
+  on our estimate says "about"; a recipe missing either half shows none.
 - **67 pizzas, burgers and sandwiches now warn about gluten.** A shop that
   prints **Pizza** over a list of pizzas has told you what the dough is, and
   Faves was not reading it — so at five venues the warning tracked whether the

@@ -11,6 +11,8 @@
   size is left off the order line so a line saved before 28n still merges —
   at the cost of the sheet saying "Eggs on Toast", not "…with Regular".
   🎯 Search (does a size's name find its dish?) is still unasked.
+  ✅ **OWNER CONFIRMED 2026-09-28 (via AskUserQuestion):**
+  default size stays off the order line (ADR 0133 §3), as built.
   🔎 This item's claim that the row already renders channel prices (ADR
   0089) is stale: that rendering was removed on 2026-09-06.
 
