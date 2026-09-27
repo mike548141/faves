@@ -53,7 +53,18 @@ import { dishId } from "./dish-id.js";
 import { dishStepper } from "./cart-ui.js";
 import { settings } from "./settings.js";
 import { dishFlagged } from "./dietary.js";
-import { groupsFor, optionPrice, optionId, selectionPrice, selectionAllowed, composeTags } from "./addons.js";
+import {
+  groupsFor,
+  optionPrice,
+  optionId,
+  selectionAllowed,
+  composeTags,
+  isSelects,
+  defaultVariant,
+  variantLabel,
+  configuredPrice,
+  lineOptions,
+} from "./addons.js";
 import { formatMoney, venueCurrency } from "./place.js";
 import { isSpicy, heatLabel } from "./heat.js";
 
@@ -324,14 +335,48 @@ const heatChips = (option) =>
  * `onCompose(tags)` is called with the composed tag list whenever the selection
  * changes, so the dish row can re-apply its own flagged treatment and keep
  * `dataset.tags` — which the live diet filter re-reads — in step.
+ *
+ * `onVariant({ price, options })` is called whenever the chosen VARIANT changes
+ * (a `selects` group, ADR 0130/0133), and once on build: `price` is that
+ * variant's whole `dishPrice` — never the dish's price plus it — and `options`
+ * is what the row's own ＋ Add should record for it (empty for the default,
+ * which IS the dish as listed). Never called for a dish with no variant group.
  */
-export function dishAddOns(record, section, item, onCompose) {
-  const groups = groupsFor(record, section, item);
+export function dishAddOns(record, section, item, onCompose, onVariant) {
+  // WHICH plate before WHAT is on it: a variant group is offered first,
+  // whatever order the section and the dish named their groups in. The control
+  // is otherwise the same fieldset of radios a pick-one sauce is (Theme 14's
+  // ruling, 2026-08-17: the reader should not be able to tell an upsize from a
+  // sauce by how it is chosen).
+  const all = groupsFor(record, section, item);
+  const groups = [...all.filter(isSelects), ...all.filter((g) => !isSelects(g))];
   if (groups.length === 0) return null;
 
   const currency = record?.currency || "NZD";
+  const fmt = (n) => formatMoney(n, currency);
   const base = typeof item.price === "number" ? item.price : null;
-  const selection = [];
+  // A variant's entry in the selection. `price: 0` because `dishPrice` is the
+  // whole plate, not an extra (configuredPrice reads it in place of the dish's
+  // price); `isDefault` is what keeps the default off the order line
+  // (lineOptions). Its tags compose like any option's: allergens UNION, claims
+  // intersect — and validate.py makes a variant restate its dish's claims
+  // exactly, so choosing one never produces a residue sentence (ADR 0130 §3).
+  const variantEntry = (group, option) => ({
+    group: group.id,
+    id: optionId(option),
+    name: variantLabel(group, option, fmt),
+    price: 0,
+    dishPrice: option.dishPrice,
+    isDefault: option.default === true,
+    tags: option.tags || [],
+  });
+  // A dish starts on its default variant — exactly one is always chosen, and
+  // the row's price before anything is tapped is the default's.
+  const selection = groups
+    .filter(isSelects)
+    .map((g) => [g, defaultVariant(g)])
+    .filter(([, o]) => o)
+    .map(([g, o]) => variantEntry(g, o));
   // This dish's identity, used for the radio/checkbox group names below and for
   // the order line the stepper counts. Two dishes of the same name on one page
   // are two dishes here, which the raw name could not express.
@@ -342,25 +387,35 @@ export function dishAddOns(record, section, item, onCompose) {
   const stepperSlot = el("div", { className: "addon-stepper" });
 
   function meta() {
-    const extra = selectionPrice(selection);
     return {
       venueId: record.id,
       venueName: record.name,
       phone: record.phone,
       name: item.name,
       dishId: id,
-      // The configured unit price: the dish plus what has been added to it.
-      // null stays null — an unpriced dish with a paid extra is still a dish we
-      // cannot total, and guessing would be worse than the honest "—".
-      price: base == null ? null : base + extra,
+      // The configured unit price: the dish — or the chosen variant's WHOLE
+      // price in its place — plus what has been added to it. null stays null:
+      // an unpriced dish with a paid extra is still a dish we cannot total, and
+      // guessing would be worse than the honest "—".
+      price: configuredPrice(base, selection),
       // Same reason as the plain row's stepper (menu.js): the line carries the
       // currency it was priced in, or it silently becomes NZD.
       currency: venueCurrency(record),
       // `id` travels with the name (ADR 0126): the line is KEYED on it, so a
       // venue renaming the option later does not strand this line. The name
       // stays because it is what the order sheet reads out at the counter.
-      options: selection.map((s) => ({ group: s.group, id: s.id, name: s.name, price: s.price })),
+      // The default variant is left OFF the line (lineOptions, ADR 0133): it
+      // is the dish as listed, so it keys exactly as the plain row's ＋ Add and
+      // every line saved before the dish had a ladder.
+      options: lineOptions(selection),
     };
+  }
+
+  /** What the row shows and its own ＋ Add records for the chosen variant. */
+  function variantState() {
+    const v = selection.filter((s) => typeof s.dishPrice === "number");
+    if (v.length === 0) return null;
+    return { price: configuredPrice(base, v), options: lineOptions(v) };
   }
 
   // `notice` is a one-off line appended AFTER the allergen text — the refused
@@ -382,11 +437,68 @@ export function dishAddOns(record, section, item, onCompose) {
     warn.textContent = lines.join(" ");
 
     stepperSlot.replaceChildren(dishStepper(meta()));
+    const v = variantState();
+    if (v) onVariant?.(v);
+  }
+
+  /**
+   * A `selects` group as a control (ADR 0133): radios, the default checked,
+   * no "None" — a plate always has a size — and no cap to state. Each option
+   * shows its WHOLE price, not a "+" surcharge, because that is what the
+   * menu prints and what the row will then read. The fieldset's legend is the
+   * group's accessible name, so a screen reader hears "Size, Regular, $13".
+   */
+  function variantFieldset(group) {
+    const fields = el("div", { className: "addon-options" });
+    const legend = el("legend", { className: "addon-legend" }, [
+      el("span", { className: "addon-group-name", textContent: group.name }),
+      el("span", { className: "addon-rule", textContent: "Choose one" }),
+    ]);
+    const chosen = selection.find((s) => s.group === group.id);
+    for (const option of group.options || []) {
+      const entry = variantEntry(group, option);
+      const input = el("input", {
+        type: "radio",
+        className: "addon-input",
+        name: `addon-${record.id}-${id}-${group.id}`,
+        value: entry.name,
+        checked: !!chosen && chosen.id === entry.id,
+      });
+      input.addEventListener("change", () => {
+        if (!input.checked) return;
+        // Replaced IN PLACE, so the variant stays first in the selection and
+        // reads first on the order line ("Large, Bacon", not "Bacon, Large").
+        const at = selection.findIndex((s) => s.group === group.id);
+        if (at >= 0) selection[at] = entry;
+        else selection.unshift(entry);
+        refresh();
+      });
+      // An unlabelled variant's label already IS its price ("$24 size"), so
+      // the price is not said twice.
+      const labelled = typeof option.name === "string" && option.name.trim();
+      fields.append(
+        el("label", { className: "addon-option" }, [
+          input,
+          el("span", { className: "addon-option-name", textContent: entry.name }),
+          ...heatChips(option),
+          el("span", {
+            className: "addon-option-price",
+            textContent: labelled && typeof option.dishPrice === "number" ? ` ${fmt(option.dishPrice)}` : "",
+          }),
+        ]),
+      );
+    }
+    const set = el("fieldset", { className: "addon-group addon-group-variant" }, [legend, fields]);
+    return set;
   }
 
   const body = el("div", { className: "addon-groups" });
 
   for (const group of groups) {
+    if (isSelects(group)) {
+      body.append(variantFieldset(group));
+      continue;
+    }
     const single = group.select === "one";
     const cap = single ? 1 : group.max;
     const rule = single
@@ -489,9 +601,19 @@ export function dishAddOns(record, section, item, onCompose) {
     body.append(el("fieldset", { className: "addon-group" }, [legend, fields]));
   }
 
+  // The summary names what the disclosure holds. A lone group names itself, as
+  // it always did; a variant group beside extras says both ("Size and extras"),
+  // because "Add extras" alone hides that the plate itself is a choice.
+  const variantGroups = groups.filter(isSelects);
+  const summaryText =
+    groups.length === 1
+      ? groups[0].name
+      : variantGroups.length > 0 && variantGroups.length < groups.length
+        ? `${variantGroups.map((g) => g.name).join(", ")} and extras`
+        : "Add extras";
   const details = el("details", { className: "dish-addons" }, [
     el("summary", { className: "dish-addons-summary" }, [
-      el("span", { textContent: groups.length === 1 ? groups[0].name : "Add extras" }),
+      el("span", { textContent: summaryText }),
     ]),
     body,
     warn,

@@ -116,6 +116,24 @@
 // this is the only browser check that already reads `.section-title` and
 // `.section-link` — it does so for the `addOnsOnly` assertion above.
 //
+// AND SINCE 2026-09-28 (roadmap 28m, ADR 0133), A DISH WITH SIZES. A `selects`
+// group (ADR 0130) chooses WHICH plate rather than adding to it, and its price
+// is the WHOLE plate (`dishPrice`), never a surcharge. No record carries one
+// until 28n, so Sprig & Fern Tawa's Eggs on Toast is served back under a fourth
+// id with a synthetic three-rung ladder — Regular (the default), Large (which
+// adds sesame) and an UNLABELLED third rung, the shape 26 real rows have:
+//   n) the default is chosen on open and priced on the row before any tap, the
+//      group states no cap, and the unlabelled rung has visible words;
+//   o) choosing Large puts Large's `dishPrice` on the row — asserted NOT to be
+//      the dish's price plus it, which is the misreading ADR 0130 exists to
+//      prevent — and the row's own ＋ Add follows the choice;
+//   p) a variant adds NO residue sentence (a dish with two claims to lose,
+//      read before and after), and its allergen is said when it is chosen and
+//      gone when it is not — union, following the choice;
+//   q) Regular and Large are TWO order lines, each at its whole price;
+//   r) a line stored before the dish had a ladder — the plain dish, no options
+//      — is the SAME line as the default, so it still merges; Large is not.
+//
 // WHAT A GREEN RUN HERE STILL CANNOT TELL YOU. It never proves the tagging is
 // right — that the sauce called "Garlic yogurt" really does contain dairy. That
 // is a claim about food, made by whoever transcribed the menu, and no browser
@@ -137,6 +155,8 @@ import { Cdp, Report, createDriver, exitFromError, launchChrome, need, startServ
 // assertions below a claim that the picker renders the shared vocabulary, not a
 // claim that it renders a string this file also happens to know.
 import { heatLabel } from "../site/js/heat.js";
+// The app's own money formatter, for the size block's expected prices (28m).
+import { formatMoney } from "../site/js/place.js";
 
 const ROOT = resolve(fileURLToPath(import.meta.url), "..", "..");
 const SITE = join(ROOT, "site");
@@ -416,6 +436,55 @@ const dishExpr = (name) => `(() => {
 const RENAME_ID = `${VENUE}-rename-fixture`;
 const RENAMED_OPTION = "Satay (peanut sauce)";
 
+// --- 28m (ADR 0133): a dish with sizes -------------------------------------
+// A synthetic ladder on a real dish, served as overlay bytes — site/data is
+// untouched, and nothing there carries a `selects` group until 28n. Every
+// variant restates the dish's claims (`v`, `gf-option`) as validate.py
+// requires; Large alone adds an allergen, so (p) has something to union and
+// the unlabelled rung has nothing, which is the pure residue probe.
+const SIZE_ID = `${WARN_VENUE}-size-fixture`;
+const SIZE_DISH = TWO_CLAIM_DISH; // "Eggs on Toast": v + gf-option, $13
+const SIZE_GROUP = {
+  id: "size",
+  name: "Size",
+  kind: "selects",
+  options: [
+    { name: "Regular", id: "regular", dishPrice: 13, default: true, tags: ["v", "gf-option"] },
+    { name: "Large", id: "large", dishPrice: 19.5, tags: ["v", "gf-option", "contains-sesame"] },
+    { id: "size-3", dishPrice: 24, tags: ["v", "gf-option"] },
+  ],
+};
+// What the page must print, formatted by the app's OWN formatter (imported
+// above), so a change to money formatting cannot fail this for the wrong reason.
+const REGULAR_LABEL = "Regular";
+const LARGE_LABEL = "Large";
+const THIRD_LABEL = `${formatMoney(24, "NZD")} size`;
+
+/** The size fixture's dish: its row price, its variant radios, its warning. */
+const sizeExpr = `(() => {
+  const dish = ${need(dishSel(SIZE_DISH))};
+  const box = ${need(".dish-addons", "dish")};
+  const warn = ${need(".addon-warning", "box")};
+  const variant = box.querySelector(".addon-group-variant");
+  const radios = variant ? [...variant.querySelectorAll("input.addon-input")] : [];
+  const plain = dish.querySelector(".dish-actions .stepper");
+  const picker = box.querySelector(".addon-stepper .stepper");
+  return {
+    price: (dish.querySelector(".dish-head .dish-price") || {}).textContent ?? null,
+    summary: (box.querySelector(".dish-addons-summary") || {}).textContent ?? null,
+    legend: variant ? (variant.querySelector(".addon-legend") || {}).textContent : null,
+    firstGroupIsVariant: box.querySelector(".addon-group") === variant,
+    radios: radios.map((r) => ({ type: r.type, value: r.value, checked: r.checked,
+      label: r.closest("label").textContent.replace(/\\s+/g, " ").trim() })),
+    noneOption: variant ? [...variant.querySelectorAll(".addon-option-name")].some((n) => n.textContent === "None") : null,
+    tags: (dish.dataset.tags || "").split(" ").filter(Boolean),
+    warnHidden: warn.hidden,
+    warnText: warn.textContent,
+    plainQty: plain ? Number(plain.dataset.qty) : null,
+    pickerQty: picker ? Number(picker.dataset.qty) : null,
+  };
+})()`;
+
 /** The raw stored order — the thing a family's phone actually holds. */
 const storedExpr = `JSON.parse(localStorage.getItem("faves.order.v1") || "[]")`;
 
@@ -473,6 +542,27 @@ async function run(opts) {
       }),
     ],
   ]);
+  // 28m: the size fixture, derived from the real Sprig & Fern Tawa record.
+  const warnVenue = JSON.parse(await readFile(join(SITE, "data", "restaurants", `${WARN_VENUE}.json`), "utf8"));
+  const sizeDishDef = warnVenue.menu.flatMap((x) => x.items).filter((i) => i.name === SIZE_DISH);
+  if (sizeDishDef.length !== 1 || sizeDishDef[0].price !== SIZE_GROUP.options[0].dishPrice) {
+    throw new Error(
+      `${WARN_VENUE} has ${sizeDishDef.length} "${SIZE_DISH}" row(s) at ${sizeDishDef[0]?.price} — the size ` +
+        `fixture needs exactly one, priced at its default's dishPrice (${SIZE_GROUP.options[0].dishPrice})`,
+    );
+  }
+  overlay.set(
+    `/data/restaurants/${SIZE_ID}.json`,
+    JSON.stringify({
+      ...warnVenue,
+      id: SIZE_ID,
+      addOnGroups: [...warnVenue.addOnGroups, SIZE_GROUP],
+      menu: warnVenue.menu.map((x) => ({
+        ...x,
+        items: x.items.map((i) => (i.name === SIZE_DISH ? { ...i, addOns: [...(i.addOns || []), SIZE_GROUP.id] } : i)),
+      })),
+    }),
+  );
   const { server, port } = await startServer(opts.port, SITE, overlay);
   const profileDir = await mkdtemp(join(tmpdir(), "faves-addon-check-"));
   let chrome = null;
@@ -1195,6 +1285,159 @@ async function run(opts) {
       renamedQty === 1 && stored.length === 1 && stored[0].qty === 2,
       `picker saw ${renamedQty} (want 1) · ` +
         stored.map((l) => `${l.qty}× ${l.name} [${(l.options || []).map((o) => o.name).join(",")}]`).join(" | "),
+    );
+
+    // --- (n)–(r) 28m, ADR 0133: a dish with sizes ------------------------
+    const sizeUrl = `http://127.0.0.1:${port}/restaurant.html?id=${SIZE_ID}`;
+    const sizeDish = dishSel(SIZE_DISH);
+    const openSize = async (label) => {
+      await cdp.send("Page.navigate", { url: sizeUrl }, sessionId);
+      await untilPresent(async () => (await driver.evalPage(`!!document.querySelector(${JSON.stringify(`${sizeDish} .dish-addons`)})`)), {
+        label,
+      });
+    };
+    await openSize(`${SIZE_ID} to render the size fixture`);
+    await driver.evalPage(`localStorage.removeItem("faves.order.v1"); true`);
+    await openSize(`${SIZE_ID} to render with an empty order`);
+    // (n) read BEFORE anything is tapped — the disclosure is not even open.
+    let z = await driver.evalPage(sizeExpr);
+    report.check(
+      "(n) the default variant is chosen on open — exactly one radio, and it is Regular",
+      z.radios.length === 3 && z.radios.every((r) => r.type === "radio") &&
+        z.radios.filter((r) => r.checked).map((r) => r.value).join() === REGULAR_LABEL,
+      JSON.stringify(z.radios),
+    );
+    report.check(
+      "(n) …and the row is priced at the default's dishPrice before any tap",
+      z.price === formatMoney(13, "NZD"),
+      `row reads ${JSON.stringify(z.price)}`,
+    );
+    report.check(
+      "(n) a size group states NO cap — no \"Choose up to\", and no \"None\" (a plate always has a size)",
+      z.legend && z.legend.includes("Size") && !/choose up to/i.test(z.legend) && z.noneOption === false,
+      `legend ${JSON.stringify(z.legend)} · None offered: ${z.noneOption}`,
+    );
+    report.check(
+      "(n) which plate comes first: the size group leads the picker, and the summary says it is there",
+      z.firstGroupIsVariant && /^Size and extras$/.test((z.summary || "").trim()),
+      `first group is the variant: ${z.firstGroupIsVariant} · summary ${JSON.stringify(z.summary)}`,
+    );
+    report.check(
+      "(n) an UNLABELLED variant has visible words — its price and the group, nothing invented",
+      z.radios[2]?.label === THIRD_LABEL,
+      `${JSON.stringify(z.radios[2]?.label)} · expected ${JSON.stringify(THIRD_LABEL)}`,
+    );
+    report.check(
+      "(p) the default adds no warning at all — the baseline (p) reads against",
+      z.warnHidden && z.tags.includes("v") && z.tags.includes("gf-option"),
+      `hidden=${z.warnHidden} ${JSON.stringify(z.warnText)} · tags ${z.tags.join(" ")}`,
+    );
+    // (o) choose Large.
+    await driver.click(`${sizeDish} .dish-addons-summary`);
+    // Read once the disclosure is open: a closed <details> keeps its controls
+    // out of the accessibility tree, so the name would read null.
+    const regularAx = await axName(`${sizeDish} .addon-group-variant input[value=${JSON.stringify(REGULAR_LABEL)}]`);
+    report.check(
+      "(n) the control is announced as the variant AND its whole price",
+      regularAx === `${REGULAR_LABEL} ${formatMoney(13, "NZD")}`,
+      `${JSON.stringify(regularAx)}`,
+    );
+    await driver.click(`${sizeDish} .addon-group-variant .addon-option`, LARGE_LABEL);
+    z = await driver.evalPage(sizeExpr);
+    report.check(
+      "(o) choosing Large puts Large's dishPrice on the row",
+      z.price === formatMoney(19.5, "NZD"),
+      `row reads ${JSON.stringify(z.price)} · want ${formatMoney(19.5, "NZD")}`,
+    );
+    report.check(
+      "(o) …and NOT the dish's price plus it — dishPrice is the plate, never a surcharge",
+      z.price !== formatMoney(13 + 19.5, "NZD"),
+      `row reads ${JSON.stringify(z.price)}; the sum would be ${formatMoney(13 + 19.5, "NZD")}`,
+    );
+    // (p) Large carries sesame: said while chosen — union — and no residue.
+    report.check(
+      "(p) Large's allergen is said the moment it is chosen, and joins the composed tags",
+      !z.warnHidden && z.warnText.includes(`${LARGE_LABEL} contains sesame`) && z.tags.includes("contains-sesame"),
+      `${JSON.stringify(z.warnText)} · tags ${z.tags.join(" ")}`,
+    );
+    report.check(
+      "(p) …and choosing a size costs the dish NO claim — no residue sentence, both claims still on it",
+      occurrences(z.warnText, "tagged") === 0 && !/no longer/.test(z.warnText) &&
+        z.tags.includes("v") && z.tags.includes("gf-option"),
+      `${JSON.stringify(z.warnText)} · tags ${z.tags.join(" ")}`,
+    );
+    // The unlabelled rung carries no allergen, so the warning must go away
+    // ENTIRELY — the purest form of "a variant adds no residue".
+    await driver.click(`${sizeDish} .addon-group-variant .addon-option`, THIRD_LABEL);
+    z = await driver.evalPage(sizeExpr);
+    report.check(
+      "(p) a size with no allergen of its own leaves NO warning — and takes Large's sesame back off",
+      z.warnHidden && !z.tags.includes("contains-sesame") && z.tags.includes("v") && z.tags.includes("gf-option"),
+      `hidden=${z.warnHidden} ${JSON.stringify(z.warnText)} · tags ${z.tags.join(" ")}`,
+    );
+    report.check(
+      "(o) …and the row now reads that rung's whole price",
+      z.price === formatMoney(24, "NZD"),
+      `row reads ${JSON.stringify(z.price)}`,
+    );
+
+    // (q) two sizes, two lines. Regular through the ROW's ＋ Add, Large
+    // through the picker's — both call sites, as the currency block does.
+    await driver.click(`${sizeDish} .addon-group-variant .addon-option`, REGULAR_LABEL);
+    await driver.click(`${sizeDish} .dish-actions .stepper-add`);
+    await driver.click(`${sizeDish} .addon-group-variant .addon-option`, LARGE_LABEL);
+    // "＋" matches the "＋ Add" button AND a stepper increment, so a build that
+    // merged Large into the Regular line reaches the assertion below and fails
+    // THERE, by name, instead of stopping on a missing "Add" button.
+    await driver.click(`${sizeDish} .addon-stepper button`, "＋");
+    stored = await driver.evalPage(storedExpr);
+    const describe = (lines) =>
+      lines.map((l) => `${l.qty}× ${l.name} @ ${l.price} [${(l.options || []).map((o) => `${o.group}/${o.id}`).join(",")}]`).join(" | ");
+    report.check(
+      "(q) Regular and Large of one dish are TWO order lines, each at its whole price",
+      stored.length === 2 &&
+        stored.some((l) => l.price === 13 && (l.options || []).length === 0) &&
+        stored.some((l) => l.price === 19.5 && l.options?.[0]?.id === "large" && l.options?.[0]?.price === 0),
+      describe(stored),
+    );
+    // The row's ＋ Add follows the chosen size: with Large chosen it counts the
+    // Large line, not the Regular one beside it.
+    z = await driver.evalPage(sizeExpr);
+    report.check(
+      "(o) the row's own ＋ Add follows the choice — with Large chosen it counts the Large line",
+      z.plainQty === 1 && z.pickerQty === 1,
+      `row stepper ${z.plainQty} · picker stepper ${z.pickerQty}`,
+    );
+    await driver.click(`${sizeDish} .dish-actions .stepper button`, "＋");
+    stored = await driver.evalPage(storedExpr);
+    report.check(
+      "(q) …and a second Large from the row is a quantity of that line, not a third line",
+      stored.length === 2 && stored.find((l) => l.price === 19.5)?.qty === 2,
+      describe(stored),
+    );
+
+    // (r) a line stored before the dish had a ladder: the plain dish.
+    await stash([{ venueId: SIZE_ID, venueName: warnVenue.name, currency: "NZD", phone: null,
+      name: SIZE_DISH, dishId: sizeDishDef[0].dishId, price: 13, options: [], qty: 1, collected: false }]);
+    await openSize(`${SIZE_ID} to render over a line stored before the ladder`);
+    await driver.click(`${sizeDish} .dish-addons-summary`);
+    z = await driver.evalPage(sizeExpr);
+    const defaultQty = z.pickerQty;
+    await driver.click(`${sizeDish} .addon-group-variant .addon-option`, LARGE_LABEL);
+    z = await driver.evalPage(sizeExpr);
+    const largeQty = z.pickerQty;
+    await driver.click(`${sizeDish} .addon-group-variant .addon-option`, REGULAR_LABEL);
+    await driver.click(`${sizeDish} .addon-stepper button`, "＋");
+    stored = await driver.evalPage(storedExpr);
+    report.check(
+      "(r) a line stored before the ladder is FOUND by the default — and Large (the control) does not find it",
+      defaultQty === 1 && largeQty === 0,
+      `default sees ${defaultQty} (want 1) · Large sees ${largeQty} (want 0)`,
+    );
+    report.check(
+      "(r) …and adding the default again MERGES into it — one line of 2, not two lines of 1",
+      stored.length === 1 && stored[0].qty === 2,
+      describe(stored),
     );
 
     return report.summary(SITE) ? 0 : 1;

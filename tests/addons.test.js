@@ -302,13 +302,13 @@ const LADDER = {
   ],
 };
 
-test("groupsFor: a selects group is withheld until a screen draws it (28m)", () => {
-  // The picker as it stands would offer it as a pick-one of extras: nothing
-  // chosen, each size priced +$0 and composed onto the plate. Withheld, the row
-  // shows the dish's own price, which validate.py holds equal to the default's.
+test("groupsFor: a selects group is offered since 28m drew it (ADR 0133)", () => {
+  // Withheld until roadmap 28m, because the picker would have offered it as a
+  // pick-one of extras. addons-ui.js now draws it as a single choice; the
+  // pricing and keying rules are tested in tests/variants.test.js.
   const rec = { addOnGroups: [...RECORD.addOnGroups, LADDER] };
-  assert.deepEqual(groupsFor(rec, { addOns: ["size"] }, { addOns: ["sides", "size"] }).map((g) => g.id), ["sides"]);
-  // …and only the selects group: an explicit `kind: "adds"` is today's group.
+  assert.deepEqual(groupsFor(rec, { addOns: ["size"] }, { addOns: ["sides", "size"] }).map((g) => g.id), ["size", "sides"]);
+  // …and an explicit `kind: "adds"` is today's group, unchanged.
   const adds = { ...RECORD.addOnGroups[1], kind: "adds" };
   assert.deepEqual(groupsFor({ addOnGroups: [adds] }, {}, { addOns: ["sides"] }).map((g) => g.id), ["sides"]);
 });

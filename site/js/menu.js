@@ -1477,6 +1477,9 @@ function renderDish(
   // Actions: a ♥ on every dish (restaurant + recipe); a quantity stepper on
   // restaurant dishes only — Cook at Home is for cooking, not an order to
   // read down the phone.
+  let plainStepper = null;
+  let plainStepperMeta = null;
+  let plainStepperKey = JSON.stringify([item.price ?? null, []]);
   if (r) {
     // ⚑ leftmost, furthest from the primary "Add" — a report is a rare,
     // deliberate action and must never be a mis-tap of the order stepper. Venue
@@ -1487,23 +1490,25 @@ function renderDish(
       heartButton(dishEntry, item.name),
     ]);
     if (kind.canOrder) {
-      actions.append(
-        dishStepper({
-          venueId: r.id,
-          venueName: r.name,
-          phone: r.phone,
-          name: item.name,
-          // The order line keys on the id; `name` is what the tally reads out
-          // and what gets read down the phone, so both travel.
-          dishId: dishId(item),
-          price: item.price ?? null,
-          // The venue's own currency, stored on the line. An order can span
-          // venues in different countries, and a line that does not say what
-          // its number is in defaults to NZD — so a London price renders as
-          // "$8.95" beside a Wellington one and the two look addable.
-          currency: venueCurrency(r),
-        })
-      );
+      // Kept so a chosen VARIANT (roadmap 28m) can swap it: the row's ＋ Add
+      // orders the plate the row is showing the price of.
+      plainStepperMeta = {
+        venueId: r.id,
+        venueName: r.name,
+        phone: r.phone,
+        name: item.name,
+        // The order line keys on the id; `name` is what the tally reads out
+        // and what gets read down the phone, so both travel.
+        dishId: dishId(item),
+        price: item.price ?? null,
+        // The venue's own currency, stored on the line. An order can span
+        // venues in different countries, and a line that does not say what
+        // its number is in defaults to NZD — so a London price renders as
+        // "$8.95" beside a Wellington one and the two look addable.
+        currency: venueCurrency(r),
+      };
+      plainStepper = dishStepper(plainStepperMeta);
+      actions.append(plainStepper);
     }
     children.push(actions);
   }
@@ -1564,6 +1569,22 @@ function renderDish(
       // saw it because it never configures a dish. Found by focus_check, which
       // is the first check to do both at once.
       onConfigured?.();
+    }, (variant) => {
+      // A dish with sizes (a `selects` group, ADR 0130/0133): the row's price
+      // IS the chosen variant's whole `dishPrice` — never the dish's price plus
+      // it — so choosing Large changes the number the reader is looking at.
+      // The row's own ＋ Add follows, so it orders the plate whose price is
+      // printed beside it; for the default that is the plain dish, unchanged.
+      if (aside && aside.classList.contains("dish-price")) aside.textContent = money(variant.price);
+      // Rebuilt only when the plate moved: a stepper subscribes to the order
+      // store for life, so one per tap on the same variant would pile up.
+      const key = JSON.stringify([variant.price, variant.options]);
+      if (plainStepper && plainStepperMeta && key !== plainStepperKey) {
+        plainStepperKey = key;
+        const next = dishStepper({ ...plainStepperMeta, price: variant.price, options: variant.options });
+        plainStepper.replaceWith(next);
+        plainStepper = next;
+      }
     });
     if (picker) li.append(picker.node);
   }

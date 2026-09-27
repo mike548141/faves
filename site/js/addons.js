@@ -101,17 +101,97 @@ export function groupsFor(record, section, item) {
     if (seen.has(id)) continue;
     seen.add(id);
     const g = defs.get(id);
-    // A `selects` group (ADR 0130) chooses WHICH plate — a size, a protein —
-    // and no screen draws that control yet (roadmap 28m). Offered through the
-    // picker as it stands it would read as a pick-one of extras: nothing
-    // chosen by default, each variant priced +$0 (its price lives in
-    // `dishPrice`, which `optionPrice` rightly never reads), and composed as if
-    // it went ON the plate. So it is withheld until 28m, and the row shows the
-    // dish's own `price` — which validate.py holds equal to the default
-    // variant's — rather than a control that misprices. 28m deletes this line.
-    if (g && g.kind !== "selects") out.push(g);
+    // A `selects` group (ADR 0130) is offered too since roadmap 28m — it was
+    // withheld until a screen could draw it as the single choice it is rather
+    // than as a pick-one of extras. addons-ui.js is that screen; the rules it
+    // prices and keys by are the pure functions below (ADR 0133).
+    if (g) out.push(g);
   }
   return out;
+}
+
+/** Does this group choose WHICH plate (a size, a protein) rather than add to it? (ADR 0130) */
+export const isSelects = (group) => group?.kind === "selects";
+
+/**
+ * The option a `selects` group starts on: the one marked `default`. validate.py
+ * requires exactly one; the first option is a fallback for a record that got
+ * past it, so the control can never render with nothing chosen.
+ */
+export function defaultVariant(group) {
+  const opts = group?.options || [];
+  return opts.find((o) => o?.default === true) || opts[0] || null;
+}
+
+/**
+ * What a variant is CALLED, on the picker and on the order line (ADR 0133).
+ *
+ * Its `name` where the menu gave one. ADR 0130 lets a variant be unlabelled —
+ * 26 rows print two prices and never say what the bigger one is called — and
+ * a radio with no words is not a control anybody can choose, nor a line anybody
+ * can read out at a counter. So an unlabelled variant is named by the one thing
+ * the menu DID state about it, its price, followed by the group's own name:
+ * "$24 size". Nothing is invented — no "Large", no "Size 2" — and the words say
+ * which plate the reader means in terms the shop printed.
+ *
+ * Two unlabelled variants may share a `dishPrice` (ADR 0130 permits it), which
+ * would give them one label: then each is suffixed with its position in the
+ * group, "(2)", so the two radios are still two things to a screen reader.
+ *
+ * `fmt` formats money — injected so this stays a pure function of the data.
+ */
+export function variantLabel(group, option, fmt = (n) => String(n)) {
+  const own = typeof option?.name === "string" ? option.name.trim() : "";
+  if (own) return own;
+  const bare = (o) => {
+    const noun = typeof group?.name === "string" ? group.name.trim().toLowerCase() : "";
+    const price = typeof o?.dishPrice === "number" ? fmt(o.dishPrice) : "";
+    return [price, noun].filter(Boolean).join(" ");
+  };
+  const opts = group?.options || [];
+  const label = bare(option) || optionId(option);
+  const twins = opts.filter((o) => !(typeof o?.name === "string" && o.name.trim()) && bare(o) === bare(option));
+  if (twins.length < 2) return label;
+  return `${label} (${opts.indexOf(option) + 1})`;
+}
+
+/**
+ * The configured unit price of a dish: its own price, or the chosen variant's
+ * WHOLE `dishPrice` in its place — never the two added (ADR 0130: `dishPrice`
+ * is the plate, not a surcharge) — plus every add-on's surcharge.
+ *
+ * `selection` entries for a variant carry `dishPrice` (and `price: 0`, so
+ * `selectionPrice` sums only the add-ons). An unpriced dish with no variant
+ * chosen stays null: a dish we cannot total is not totalled by guessing.
+ */
+export function configuredPrice(base, selection) {
+  const chosen = selection || [];
+  const variant = chosen.find((s) => typeof s?.dishPrice === "number");
+  const plate = variant ? variant.dishPrice : base;
+  if (typeof plate !== "number") return null;
+  return plate + selectionPrice(chosen);
+}
+
+/**
+ * The selection as the ORDER LINE records it (ADR 0133): `{ group, id, name,
+ * price }` per option — the four fields every table that carries a line
+ * already knows (cart.js, the backup whitelist in personal-data.js, the share
+ * codec's option tuple) — with the DEFAULT variant left out.
+ *
+ * Why the default is absent rather than recorded: it IS the dish as the menu
+ * lists it — the row's own price is the default's `dishPrice` (validate.py holds
+ * them equal) — so "Eggs on Toast" and "Eggs on Toast, Regular" are one plate
+ * and must be one line. Recording it would split every line already stored for
+ * a dish the day that dish gains a ladder (roadmap 28n): the saved "Eggs on
+ * Toast" and the next tap on it would be two lines for one plate, the defect
+ * 28j names. A non-default variant IS recorded, so Small and Large are two
+ * lines. A variant's `price` on the line is 0; the line's own `price` carries
+ * the whole plate, which is what every consumer already totals.
+ */
+export function lineOptions(selection) {
+  return (selection || [])
+    .filter((s) => !s?.isDefault)
+    .map((s) => ({ group: s.group, id: s.id, name: s.name, price: s.price }));
 }
 
 /**
