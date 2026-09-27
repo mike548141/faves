@@ -793,6 +793,13 @@ node tools/precache_check.mjs # the service worker's install guard and the
                               # controlled page's fetches (they are the WORKER's,
                               # a separate target), and its own probe caught it
                               # doing nothing while everything else stayed green
+node tools/fixture_check.mjs --selftest # the degenerate-state venue fixtures
+                              # (a venue with no hours, no menu, one branch…) are
+                              # still valid under the REAL validate.py, and render.
+                              # Built 2026-09-09 and listed nowhere until 2026-09-28,
+                              # when docs/GUARDS.md's census found it: 15 + 23 passed
+                              # that day, ~6 s. Browser-driven, so NOT in CI (the
+                              # 2026-08-16 subset ruling) — type it
 node tools/sync_check.mjs     # cross-device sync in TWO real browsers (Theme 9 v2).
                               # Reaches its end: "OK — 22 passed, 0 failed". Check the
                               # summary line is there AND that N is still 22 — a

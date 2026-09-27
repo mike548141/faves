@@ -1,4 +1,4 @@
-- [~] **Every guard here must declare: cheap failure, or forbid the act?**
+- [x] **Every guard here must declare: cheap failure, or forbid the act?**
   `[M][docs]` — arrived 2026-08-17 with the `atelier@e2fddc5` pin. Atelier's
   `GUARDS.md` gained a **fourth requirement** beside *narrow, noisy, reasoned*
   (owner's ruling, 2026-08-17), from `PRINCIPLES.md` §10 *Posture*: **engineer
@@ -8,8 +8,17 @@
   survivable; the cost is building the recovery) or *forbids the act* (the bad
   event is prevented by removing the ability; the cost is freedom of action,
   permanently). **Both are legitimate. The defect is not declaring which.**
-  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — declarations in their own document.
-  (claimed 2026-09-27-1432, wt: faves-guard-postures)
+  ✅ **DONE 2026-09-28 (session `40d6dea4`, PR #47, `cda5052`).**
+  `docs/GUARDS.md` declares every guard's posture, enumerated from the
+  sources (verify fence, `ci.yml`, floor config, ruleset, `sw.js`) rather
+  than from this item. The 16 inherited floor scanners are pointed up, not
+  declared. 🔎 **The census found an orphan:** `tools/fixture_check.mjs` was
+  listed nowhere and run by nothing; it passes today and is now on the
+  verify list (not CI: it is browser-driven, and 340/020's ruling holds).
+  🚩 **Three mismatches flagged in the doc for the owner**, not acted on:
+  17 of 18 browser checks declare cheap-failure with nothing wired to
+  detect it; `protect-main` cannot forbid a direct push; and the image
+  gate's CI half reports only after a deploy (the hook half forbids).
 
   🔑 **Why the declaration is not paperwork.** Every guard here already carries a
   reason, and a reason with no standard behind it is a sentence; the same reason
