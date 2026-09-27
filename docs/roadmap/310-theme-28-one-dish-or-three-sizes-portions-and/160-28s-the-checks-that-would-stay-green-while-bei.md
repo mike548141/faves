@@ -1,10 +1,17 @@
-- [~] **28s — The checks that would stay GREEN while being wrong** `[M][tools]`
+- [x] **28s — The checks that would stay GREEN while being wrong** `[M][tools]`
       — swept 2026-09-09 while decomposing `490/050`. The reds are easy; these
       are the ones that would let a bad merge ship, and two of them get
       *quieter* as the fault is applied.
-  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — 28k and 28s together,
-  one worker, because 28s must land with 28k.
-  (claimed 2026-09-27-1422, wt: faves-28ks)
+  ✅ **DONE 2026-09-28 (session `40d6dea4`, PR #48, `82b377e`, ADR 0130), with
+  its sibling in one branch.** Schema only: no venue file changed and no
+  `dishId` moved (measured on the merge). `kind: "adds" | "selects"`; a
+  variant carries `dishPrice`, never `price`; it must restate its dish's
+  dietary claims exactly (28i option 3, enforced). The picker withholds
+  `selects` until 28m. 🎯 **Refused and left OPEN for the owner:** two
+  ladders on one dish (only Abrakebabra), and channel prices beside a
+  ladder (KK Malaysian). 🎯 Whether a variant's name searches its dish.
+  28s check by check, including the written refusals where a check cannot
+  see a dish, is in ADR 0130; `tools/rename_check.mjs` is new.
 
   🛑 **The worst one, and it is an inversion.** `validate.py`
   `check_twin_allergens` (`tools/validate.py:2196–2216`) is the only check in

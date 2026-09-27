@@ -1,11 +1,16 @@
-- [~] **28k — A group that SELECTS a variant: schema only, no data migrated**
+- [x] **28k — A group that SELECTS a variant: schema only, no data migrated**
       `[M][schema]` — `490/050` option (a), which the owner's ruling of
       2026-09-09 adopts in substance. Add `kind: "adds" | "selects"` to
       `record.addOnGroups` (ADR 0048 §1's shape), teach `validate.py` about it,
       and stop there. **Not one venue file changes in this item.**
-  📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — 28k and 28s together,
-  one worker, because 28s must land with 28k.
-  (claimed 2026-09-27-1422, wt: faves-28ks)
+  ✅ **DONE 2026-09-28 (session `40d6dea4`, PR #48, `82b377e`, ADR 0130), with
+  its sibling in one branch.** Schema only: no venue file changed and no
+  `dishId` moved (measured on the merge). `kind: "adds" | "selects"`; a
+  variant carries `dishPrice`, never `price`; it must restate its dish's
+  dietary claims exactly (28i option 3, enforced). The picker withholds
+  `selects` until 28m. 🎯 **Refused and left OPEN for the owner:** two
+  ladders on one dish (only Abrakebabra), and channel prices beside a
+  ladder (KK Malaysian). 🎯 Whether a variant's name searches its dish.
 
   **What `selects` means, and it is three rules, not one.**
   1. **It chooses a variant instead of adding to the plate**, so it is

@@ -311,9 +311,9 @@ jobs:
 
   # THE ONE BROWSER CHECK CI RUNS — owner's ruling, 2026-08-16.
   #
-  # SEVENTEEN real-browser guards live in tools/ (count them: `ls tools/*_check.mjs`,
+  # Nineteen real-browser guards live in tools/ on 2026-09-28 (count them: `ls tools/*_check.mjs`,
   # and note the roadmap item that authorised this still says eight — the family
-  # grew under it). Sixteen stay on CLAUDE.md's manual list; this one is wired up
+  # grew under it). The rest stay on CLAUDE.md's manual list; this one is wired up
   # because it is the only one that is both cheap and
   # unconditional — it makes no timing assumptions, and it catches the worst
   # failure class there is: a screen whose JavaScript does not run at all.

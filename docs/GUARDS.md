@@ -152,7 +152,7 @@ at a glance, like the same undeclared-wiring gap the browser checks
 have below — it isn't; this one's absence from CI is a stated ruling,
 not a silent drift.
 
-## The 18 browser checks (`tools/*_check.mjs`)
+## The browser checks (`tools/*_check.mjs` — 19 on 2026-09-28)
 
 **Declared posture, as a group: makes the failure cheap.** Every one of
 these drives a real browser, reports what broke, and removes nobody's
@@ -167,10 +167,11 @@ check.
 🚩 **The wiring does not support the declaration, for 17 of the 18.**
 Only `boot_check.mjs` runs anywhere but a human's terminal — it is CI's
 `boot` job (**"every screen boots"**), added to `protect-main`'s required
-contexts 2026-08-17. The other seventeen —
+contexts 2026-08-17. The other eighteen —
 `addon`, `branch`, `cook`, `device`, `distance`, `filter_row`,
 `fixture`, `focus`, `geo`, `midnight`, `note`, `picks`, `precache`,
-`recipe`, `served`, `sync`, `to_top` — run **only when a human or an
+`recipe`, `rename`, `served`, `sync`, `to_top` — run **only when a
+human or an
 agent types them**, per CLAUDE.md's own admission repeated at the foot
 of its verify fence. "Makes the failure cheap" presumes the failure gets
 *noticed* — `PRINCIPLES.md` §10's own precondition, "we will know if
@@ -303,7 +304,7 @@ fixed:
    to `main` in this repo's normal workflow, bypass or no bypass —
    already tracked as its own roadmap item; this document adds no new
    claim, only confirms the mechanism against today's live ruleset.
-3. Seventeen of eighteen browser checks declare a posture (cheap
+3. Eighteen of nineteen browser checks declare a posture (cheap
    failure) that depends on detection, and nothing wires their
    detection to run without a human typing it — `fixture_check.mjs`
    most acutely, being absent from CLAUDE.md's own manual list too.

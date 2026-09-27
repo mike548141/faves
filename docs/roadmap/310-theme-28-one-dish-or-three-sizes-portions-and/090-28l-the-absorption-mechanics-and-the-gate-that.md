@@ -1,6 +1,14 @@
 - [ ] **28l — The absorption mechanics, and the gate that must exist BEFORE a
       single row is merged** `[M][tools][js]` — the safety rail for `28o` and
       `28p`. Nothing under `site/data/` changes in this item either.
+  🔎 **A FOURTH follow-on 28j does not list (measured 2026-09-28, 28s's
+  worker):** with a dish's id moved and the old id in `formerIds`, a stored
+  heart does NOT light the menu row, the rating reads 0, and the favourites
+  search hides the dish — the row compares the raw stored id and never
+  consults `formerIds`. Unmeasured, by reading only: the 10 existing
+  `formerIds` rows in `thai-tara-express` may already behave this way.
+  `rename_check` deliberately does not assert it yet — that would enforce
+  the defect.
 
   🛑 **Order matters here more than anywhere else in this decomposition.**
   `28o` retires 248 `dishId`s. Every join listed below already exists; the
