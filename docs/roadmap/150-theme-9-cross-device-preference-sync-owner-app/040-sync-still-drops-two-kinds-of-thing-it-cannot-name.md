@@ -1,12 +1,16 @@
-- [~] 🔎 **Sync still silently discards two OTHER kinds of thing it cannot
+- [x] 🔎 **Sync still silently discards two OTHER kinds of thing it cannot
       name — a settings field, and a whole store** `[S][js]` — found
       2026-09-20 by the worker delivering
       [`150/030`](030-sync-tells-the-reader-nothing-when-it-disagrees.md),
       while walking every export/import/codec/sync/precache table looking for
       siblings of the allergen bug. **Filed, not fixed** — both are outside
       that item's scope and neither is a safety loss.
-      📌 **CLAIMED 2026-09-27 (session `40d6dea4`)** — orchestrated queue run, worker.
-      (claimed 2026-09-27-1350, wt: faves-sync-040)
+      ✅ **DONE 2026-09-28 (session `40d6dea4`, PR #42, `ff20c80`, ADR 0127).**
+      (a) `sanitise()` now carries a settings field it cannot name, bounded
+      and never rendered; (b) documented rather than fixed, as recommended —
+      nothing is destroyed there, and the gap is now written at the seam.
+      Break-probed. One question left in ADR 0127, not decided: whether
+      `sync_check` should gain a seeded assertion for this seam.
 
   🔑 **Both are the same shape as [ADR 0118](../../decisions/0118-an-allergen-key-a-build-cannot-name-is-carried-not-dropped.md),
   which is exactly why they are worth an item.** That ADR's rule — *a value
